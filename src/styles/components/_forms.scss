@@ -1,0 +1,52 @@
+// 表单控件基础样式
+.form-control {
+  display: block;
+  width: 100%;
+  padding: $spacing-sm;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: $border-radius-md;
+  transition: border-color 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+  }
+  
+  &--error {
+    border-color: #e53e3e;
+    
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(#e53e3e, 0.2);
+    }
+  }
+}
+
+// 表单组
+.form-group {
+  margin-bottom: $spacing-md;
+  
+  label {
+    display: block;
+    margin-bottom: $spacing-xs;
+    font-weight: 500;
+  }
+  
+  &__help {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: $font-size-sm;
+    color: #666;
+  }
+  
+  &__error {
+    display: block;
+    margin-top: $spacing-xs;
+    font-size: $font-size-sm;
+    color: #e53e3e;
+  }
+}
