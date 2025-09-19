@@ -1,0 +1,20 @@
+/* 
+ * main.css
+ * 主样式文件，导入所有其他样式模块
+ */
+
+/* 导入基础样式 */
+@import './base/reset.css';
+@import './base/variables.css';
+@import './base/typography.css';
+
+/* 导入布局样式 */
+@import './layouts/grid.css';
+
+/* 导入组件样式 */
+@import './components/buttons.css';
+@import './components/forms.css';
+
+/* 导入工具样式 */
+@import './utils/animations.css';
+@import './utils/helpers.css';

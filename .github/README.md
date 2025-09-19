@@ -33,22 +33,22 @@ vxture/
 
 ## 开发指南
 
-1. 安装依赖  
-    ```bash
-    npm install
-    ```
-2. 启动开发服务器  
-    ```bash
-    npm run dev
-    ```
-3. 构建生产版本  
-    ```bash
-    npm run build
-    ```
-4. 启动生产服务器  
-    ```bash
-    npm start
-    ```
+1. 安装依赖
+   ```bash
+   npm install
+   ```
+2. 启动开发服务器
+   ```bash
+   npm run dev
+   ```
+3. 构建生产版本
+   ```bash
+   npm run build
+   ```
+4. 启动生产服务器
+   ```bash
+   npm start
+   ```
 
 ## 迁移路线图
 

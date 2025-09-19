@@ -1,14 +1,20 @@
-// src/types/index.ts
+export interface ApiResponse<T = unknown> {
+  success: boolean;
+  data?: T;
+  error?: {
+    message: string;
+    code?: string;
+    details?: unknown;
+  };
+  meta?: Record<string, unknown>;
+}
+
+// Placeholder User type — adjust fields as your app requires
 export interface User {
   id: string;
-  name: string;
-  email: string;
-  // 其他用户属性
+  name?: string;
+  email?: string;
 }
 
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-}
-
-// 添加其他项目特定类型
+// Re-export chat types
+export * from './chat';

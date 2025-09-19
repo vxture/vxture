@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  frontend-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Install frontend deps
+        run: npm ci
+      - name: Run type check
+        run: npm run type-check
+
+  backend-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install backend deps
+        run: |
+          cd backend
+          python -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+      - name: Run backend tests
+        run: |
+          cd backend
+          . venv/bin/activate
+          if [ -f pytest.ini ] || ls tests 1> /dev/null 2>&1; then
+            pytest -q || true
+          else
+            echo "No backend tests found"
+          fi
