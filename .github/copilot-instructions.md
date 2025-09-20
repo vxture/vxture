@@ -1,82 +1,72 @@
-````instructions
 # Copilot Instructions for vxture
 
-## 项目概览
-- vxture 正在从静态网站迁移到现代化的 Next.js 应用，同时增加智能体集成功能。
-- 项目目标：构建一个高性能、可扩展的网站，为未来智能体集成提供基础架构。
+目标：让 AI 编码助手快速上手 `vxture` 项目并能给出高质量、可执行的代码改动建议。
 
-## 技术栈
-- **前端框架**: Next.js 14+ (App Router)，基于 React 18+
-- **样式方案**: Tailwind CSS + 组件库 (建议 Chakra UI 或原生 Tailwind 组件)
-- **状态管理**: React Query + Context API
-- **后端选项**: 
-  - Node.js + Express (JavaScript 全栈)
-  - Python + FastAPI (AI/ML 集成优势)
-- **数据库**: PostgreSQL + pgvector (向量搜索支持)
-- **智能体集成**: LangChain + OpenAI API
-- **部署平台**: Vercel (前端) + Railway/Render (后端)
+简要架构（大局观）：
 
-## 项目结构
-```
-vxture/
-├── .github/                # GitHub配置、工作流和说明文件
-├── public/                 # 静态资源（从原始 image/ 迁移）
-├── src/                    # 源代码目录
-│   ├── app/                # Next.js App Router
-│   │   ├── api/            # API路由
-│   │   │   └── chat/       # 智能体API
-│   │   ├── (routes)/       # 页面路由组
-│   ├── components/         # 可复用组件
-│   ├── lib/                # 工具库
-│   │   ├── agents/         # 智能体逻辑
-│   ├── hooks/              # 自定义React Hooks
-│   └── styles/             # 全局样式
-└── ... 其他配置文件
+- **前端（Next.js 14+）**: 位于 `src/`，使用 App Router。主要入口：`src/app/page.tsx`。
+- **后端（FastAPI）**: 位于 `backend/app/`，主入口 `backend/app/main.py`。
+- **数据/向量存储**: 存放于 `backend/data/vectorstore`（项目约定，参考 `backend/data/` 目录）。
+
+常见开发工作流：
+
+- 启动前端开发服务器：`npm run dev`（仓库根目录）。
+- 前端类型检查：`npm run type-check`。
+- 后端本地运行（PowerShell）：
+```powershell
+cd backend
+python -m venv venv; .\venv\Scripts\Activate; pip install -r requirements.txt; python app/main.py
 ```
 
-## 开发工作流
-- **本地开发**: 
-  ```bash
-  # 安装依赖
-  npm install
-  # 开发服务器
-  npm run dev
-  # 构建生产版本
-  npm run build
-  # 启动生产服务器
-  npm start
-  ```
-- **代码规范**: ESLint + Prettier
-- **测试策略**: Jest + React Testing Library
-- **版本控制**: Git 分支策略 (feature/fix/release)
+项目特有约定：
 
-## 迁移路线图
-1. **阶段1**: 基础框架迁移 (HTML转React组件)
-2. **阶段2**: 增强功能与交互体验
-3. **阶段3**: 后端和智能体集成
-4. **阶段4**: 完善与上线
+- 所有 API 响应通过 `ApiResponseHandler`（文件：`src/lib/utils/apiResponse.ts`）封装，请在修改 API 时使用该处理器以保证统一响应格式。
+- 聊天/智能体功能已从本仓库移除；如需实现，请在独立服务或仓库中维护运行时与依赖，通过明确的 HTTP API 与本项目对接，不要在仓库中托管模型权重或敏感凭据。
+- 客户端组件请遵循仓库约定；需要在客户端运行的组件请在文件顶部声明 `'use client'`。
 
-## 编码约定
-- 使用 TypeScript 类型定义，保证代码健壮性
-- 遵循组件化原则，构建可复用UI模块
-- 保持 React 函数组件和Hooks最佳实践
-- 保留原网站的可访问性设计 (ARIA属性等)
-- 使用服务端组件 (RSC) 优化首屏加载
-- 客户端组件使用"use client"指令标记
+调试提示：
 
-## 智能体集成指南
-- 使用 API Routes 构建智能体服务端点
-- 实现基于 RAG (检索增强生成) 的问答系统
-- 考虑添加流式响应支持（SSE/WebSockets）
-- 使用向量数据库存储和检索相关内容
+- 后端运行失败时，先检查 `backend/requirements.txt` 并确保依赖已正确安装。
 
-## 原始网站参考
-- 原静态网站结构保存在项目历史中
-- 关键页面设计和内容可参考 `home/index.html`
-- 确保新版本保持或改进原有内容的信息架构
+首要打开文件：
 
----
+- `src/lib/utils/apiResponse.ts`
+- `src/app/page.tsx`
+- `backend/app/main.py`
+- `src/types/`
 
-> 注意：此文档反映项目的规划状态，实际实现可能根据需求和技术评估调整。
-> 如需具体实施帮助，可请求生成启动模板或特定组件的迁移代码。
-````
+如果不确定如何修改，请先在仓库中搜索 `ApiResponseHandler` 等关键字以查看现有用例。
+# Copilot Instructions for vxture
+
+目标：让 AI 编码助手快速上手 `vxture` 项目并能给出高质量、可执行的代码改动建议。
+
+简要架构（大局观）：
+
+- **前端（Next.js 14+）**: 位于 `src/`，使用 App Router。主要入口：`src/app/page.tsx`。
+- **后端（FastAPI）**: 位于 `backend/app/`，主入口 `backend/app/main.py`。
+- **数据/向量存储**: 存放于 `backend/data/vectorstore`（项目约定，参考 `backend/data/` 目录）。
+
+关键工作流与命令：
+
+- 启动前端开发：`npm run dev`（workspace 根目录）。
+- 前端类型检查：`npm run type-check`。
+- 后端开发：在 `backend/` 中创建并激活虚拟环境，`pip install -r requirements.txt`，运行 `python app/main.py`（或 `uvicorn main:app --reload`）。
+
+项目特有约定与样例：
+
+- 所有 API 响应通过 `src/lib/utils/apiResponse.ts` 的 `ApiResponseHandler` 封装；修改 API 时请使用该处理器以保证统一响应格式。
+- 聊天/智能体功能已从本仓库移除，请参考仓库文档中关于外部服务集成的说明。
+- 前端客户端组件必须声明 `'use client'`（例如客户端 UI 组件）。
+
+调试与测试提示：
+
+- 后端运行失败时，先检查 `backend/requirements.txt` 并确保必要依赖已正确安装与版本匹配。
+
+快速文件参考（常用位置）：
+
+- 前端入口: `src/app/page.tsx`
+- API 响应封装: `src/lib/utils/apiResponse.ts`
+- 类型定义: `src/types/`
+- 后端入口: `backend/app/main.py`
+
+如需实现 LLM/agent 功能，请在独立仓库或服务中维护相应运行时与依赖，并通过明确的 HTTP API 将其与本仓库后端集成。不要在此仓库中直接托管模型或敏感凭据。

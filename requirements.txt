@@ -1,0 +1,46 @@
+# Python 后端依赖
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.6.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+httpx>=0.27.0
+
+# 数据库
+psycopg>=3.1.18
+psycopg-pool>=3.2.1
+pgvector>=0.2.5
+redis>=5.0.1
+alembic>=1.13.1
+
+# 向量存储和嵌入
+chromadb>=0.4.22
+qdrant-client>=1.7.0
+faiss-cpu>=1.7.4  # 添加FAISS向量存储支持
+sentence-transformers>=2.6.0  # 嵌入模型
+
+# RAG工具
+llama-index>=0.10.0  # 添加LlamaIndex支持
+pypdf>=4.0.0  # PDF处理
+bs4>=0.0.2  # 网页解析
+beautifulsoup4>=4.12.0  # 网页解析
+
+# 安全和工具
+python-jose>=3.3.0
+passlib>=1.7.4
+bcrypt>=4.1.2
+python-multipart>=0.0.7
+tenacity>=8.2.3
+aiofiles>=23.2.1  # 异步文件处理
+
+# 测试
+pytest>=8.0.0
+pytest-asyncio>=0.23.5
+pytest-cov>=4.1.0  # 测试覆盖率
+
+# 日志和监控
+structlog>=24.1.0
+prometheus-client>=0.18.0
+opentelemetry-api>=1.22.0  # 添加OpenTelemetry支持
+opentelemetry-sdk>=1.22.0
+opentelemetry-exporter-prometheus>=1.12.0rc1

@@ -1,118 +1,84 @@
-'use client';
+﻿import Link from 'next/link';
 
-import React from 'react';
-import Link from 'next/link';
-
-const Footer = () => {
+export default function Footer() {
+  // 获取当前年份
   const currentYear = new Date().getFullYear();
-  
+
+  // 页脚链接组定义
+  const footerGroups = [
+    {
+      title: '产品',
+      links: [
+        { name: '产品中心', href: '/products' },
+        { name: '数据分析', href: '/products/data-analytics' },
+        { name: '集成服务', href: '/products/integration' },
+      ],
+    },
+    {
+      title: '解决方案',
+      links: [
+        { name: '企业智能化', href: '/solutions/enterprise' },
+        { name: '数据决策', href: '/solutions/data-decision' },
+        { name: '流程自动化', href: '/solutions/automation' },
+      ],
+    },
+    {
+      title: '资源',
+      links: [
+        { name: '博客', href: '/blog' },
+        { name: '案例研究', href: '/cases' },
+        { name: '文档', href: '/docs' },
+      ],
+    },
+    {
+      title: '公司',
+      links: [
+        { name: '关于我们', href: '/about' },
+        { name: '联系我们', href: '/contact' },
+        { name: '加入我们', href: '/careers' },
+      ],
+    },
+  ];
+
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 py-8">
-      <div className="container mx-auto px-4">
-        {/* 主要内容 */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          {/* 公司信息 */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Vxture</h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
-              提供先进的智能体解决方案，助力企业数字化转型。
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-primary">
-                <span className="sr-only">微信</span>
-                WeChat
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary">
-                <span className="sr-only">微博</span>
-                Weibo
-              </a>
-              <a href="#" className="text-gray-400 hover:text-primary">
-                <span className="sr-only">GitHub</span>
-                GitHub
-              </a>
-            </div>
-          </div>
-          
-          {/* 快速链接 */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">快速链接</h3>
+    <footer className="bg-gray-50">
+      {/* 内容链接区 */}
+      <div className="container mx-auto py-12 px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {footerGroups.map(group => (
+          <div key={group.title}>
+            <h2 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
+              {group.title}
+            </h2>
             <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  首页
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  关于我们
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  服务
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  联系我们
-                </Link>
-              </li>
+              {group.links.map(link => (
+                <li key={link.name}>
+                  <Link href={link.href} className="text-base text-gray-600 hover:text-blue-600">
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          
-          {/* 服务 */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">服务</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/services/ai-solutions" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  智能体解决方案
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/digital-transformation" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  数字化转型
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/web-development" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  网站开发
-                </Link>
-              </li>
-              <li>
-                <Link href="/services/consulting" className="text-gray-600 dark:text-gray-400 hover:text-primary">
-                  技术咨询
-                </Link>
-              </li>
-            </ul>
+        ))}
+      </div>
+
+      {/* 版权声明区 */}
+      <div className="bg-gray-100 py-6">
+        <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-gray-600 text-sm">
+          <p> {currentYear} Vxture. 保留所有权利。</p>
+          <div className="flex space-x-6 mt-4 md:mt-0">
+            <Link href="/privacy" className="hover:text-blue-600">
+              隐私政策
+            </Link>
+            <Link href="/terms" className="hover:text-blue-600">
+              使用条款
+            </Link>
+            <Link href="/sitemap" className="hover:text-blue-600">
+              网站地图
+            </Link>
           </div>
-          
-          {/* 联系信息 */}
-          <div>
-            <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">联系我们</h3>
-            <address className="not-italic text-gray-600 dark:text-gray-400">
-              <p className="mb-2">中国北京市</p>
-              <p className="mb-2">
-                <a href="mailto:info@vxture.com" className="hover:text-primary">
-                  info@vxture.com
-                </a>
-              </p>
-              <p>
-                <a href="tel:+86123456789" className="hover:text-primary">
-                  +86 123 456 789
-                </a>
-              </p>
-            </address>
-          </div>
-        </div>
-        
-        {/* 版权信息 */}
-        <div className="pt-8 border-t border-gray-200 dark:border-gray-700 text-center text-gray-600 dark:text-gray-400">
-          <p>&copy; {currentYear} Vxture. 保留所有权利。</p>
         </div>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

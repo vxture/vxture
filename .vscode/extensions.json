@@ -1,0 +1,36 @@
+{
+  "recommendations": [
+    // 代码质量和格式化
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "stylelint.vscode-stylelint",
+    "sonarsource.sonarlint-vscode",
+    "streetsidesoftware.code-spell-checker",
+
+    // React和Next.js开发
+    "bradlc.vscode-tailwindcss",
+    "dsznajder.es7-react-js-snippets",
+    "pulkitgangwar.nextjs-snippets",
+    "ms-vscode.vscode-typescript-next",
+
+    // 可访问性和代码质量增强
+    "deque-systems.vscode-axe-linter",
+    "usernamehw.errorlens",
+
+    // 编辑器增强
+    "visualstudioexptteam.vscodeintellicode",
+    "eamodio.gitlens",
+    "christian-kohler.path-intellisense",
+    "steoates.autoimport",
+    "wix.vscode-import-cost",
+    "aaron-bond.better-comments",
+    "formulahendry.auto-rename-tag",
+
+    // 文档和样式
+    "davidanson.vscode-markdownlint",
+    "clinyong.vscode-css-modules",
+    "mikestead.dotenv",
+    "meganrogge.template-string-converter",
+    "vivaxy.vscode-conventional-commits"
+  ]
+}

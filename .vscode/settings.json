@@ -1,0 +1,118 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.linkedEditing": true,
+  "editor.suggestSelection": "first",
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+  "editor.rulers": [100],
+  "editor.snippetSuggestions": "top",
+
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "scss"],
+
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.suggest.paths": true,
+  "typescript.suggest.autoImports": true,
+
+  "tailwindCSS.includeLanguages": {
+    "typescript": "javascript",
+    "typescriptreact": "javascript"
+  },
+  "tailwindCSS.emmetCompletions": true,
+
+  "files.associations": {
+    "*.scss": "scss",
+    ".env.*": "dotenv"
+  },
+  "files.exclude": {
+    "**/.git": false,
+    "**/.DS_Store": false,
+    "**/node_modules": false,
+    "**/.next": false
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.eol": "\n",
+
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+
+  "search.exclude": {
+    "**/node_modules": false,
+    "**/.next": false,
+    "**/dist": false
+  },
+
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.wordWrap": "on"
+  },
+
+  // 拼写检查设置
+  "cSpell.words": ["vxture", "tailwindcss", "nextjs", "chakra"],
+
+  // TypeScript规范设置
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.suggest.autoImports": true,
+  "typescript.format.enable": false,
+
+  // ESLint设置增强
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.workingDirectories": [{ "mode": "auto" }],
+
+  // Markdown lint设置
+  "markdownlint.config": {
+    "MD013": false,
+    "MD033": false
+  },
+
+  // SonarLint设置
+  "sonarlint.disableTelemetry": true,
+
+  // 可访问性检查设置
+  "axe-linter.disable": false,
+
+  // Next.js设置
+  "javascript.suggestionActions.enabled": false,
+  "typescript.suggestionActions.enabled": false,
+
+  // 代码健康设置
+  "editor.stickyScroll.enabled": true,
+  "editor.guides.indentation": true,
+  "editor.renderWhitespace": "boundary"
+}
