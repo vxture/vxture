@@ -13,6 +13,7 @@
 - 启动前端开发服务器：`npm run dev`（仓库根目录）。
 - 前端类型检查：`npm run type-check`。
 - 后端本地运行（PowerShell）：
+
 ```powershell
 cd backend
 python -m venv venv; .\venv\Scripts\Activate; pip install -r requirements.txt; python app/main.py
@@ -36,37 +37,3 @@ python -m venv venv; .\venv\Scripts\Activate; pip install -r requirements.txt; p
 - `src/types/`
 
 如果不确定如何修改，请先在仓库中搜索 `ApiResponseHandler` 等关键字以查看现有用例。
-# Copilot Instructions for vxture
-
-目标：让 AI 编码助手快速上手 `vxture` 项目并能给出高质量、可执行的代码改动建议。
-
-简要架构（大局观）：
-
-- **前端（Next.js 14+）**: 位于 `src/`，使用 App Router。主要入口：`src/app/page.tsx`。
-- **后端（FastAPI）**: 位于 `backend/app/`，主入口 `backend/app/main.py`。
-- **数据/向量存储**: 存放于 `backend/data/vectorstore`（项目约定，参考 `backend/data/` 目录）。
-
-关键工作流与命令：
-
-- 启动前端开发：`npm run dev`（workspace 根目录）。
-- 前端类型检查：`npm run type-check`。
-- 后端开发：在 `backend/` 中创建并激活虚拟环境，`pip install -r requirements.txt`，运行 `python app/main.py`（或 `uvicorn main:app --reload`）。
-
-项目特有约定与样例：
-
-- 所有 API 响应通过 `src/lib/utils/apiResponse.ts` 的 `ApiResponseHandler` 封装；修改 API 时请使用该处理器以保证统一响应格式。
-- 聊天/智能体功能已从本仓库移除，请参考仓库文档中关于外部服务集成的说明。
-- 前端客户端组件必须声明 `'use client'`（例如客户端 UI 组件）。
-
-调试与测试提示：
-
-- 后端运行失败时，先检查 `backend/requirements.txt` 并确保必要依赖已正确安装与版本匹配。
-
-快速文件参考（常用位置）：
-
-- 前端入口: `src/app/page.tsx`
-- API 响应封装: `src/lib/utils/apiResponse.ts`
-- 类型定义: `src/types/`
-- 后端入口: `backend/app/main.py`
-
-如需实现 LLM/agent 功能，请在独立仓库或服务中维护相应运行时与依赖，并通过明确的 HTTP API 将其与本仓库后端集成。不要在此仓库中直接托管模型或敏感凭据。

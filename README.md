@@ -23,8 +23,8 @@ Vxture 是一个基于 Next.js 14+ 的现代化平台网站。本仓库专注于
 
 2. 设置环境变量:
 
-   ```bash
-   cp .env.example .env.local
+   ```powershell
+   Copy-Item .env.example .env.local
    # 编辑 .env.local 文件，添加必要的配置
    ```
 
@@ -46,10 +46,9 @@ Vxture 是一个基于 Next.js 14+ 的现代化平台网站。本仓库专注于
 
 2. 创建虚拟环境:
 
-   ```bash
+   ```powershell
    python -m venv venv
-   source venv/bin/activate  # Linux/Mac
-   venv\Scripts\activate     # Windows
+   .\venv\Scripts\Activate
    ```
 
 3. 安装依赖:
@@ -60,19 +59,20 @@ Vxture 是一个基于 Next.js 14+ 的现代化平台网站。本仓库专注于
 
 4. 设置环境变量:
 
-   ```bash
-   cp .env.example .env
+   ```powershell
+   Copy-Item .env.example .env
    # 编辑 .env 文件，添加必要的配置
    ```
 
 5. 启动后端服务器:
-   ```bash
+
+   ```powershell
    python app/main.py
    ```
 
 ## 项目结构
 
-```
+```text
 vxture/
 ├── src/                    # 前端源代码
 │   ├── app/                # Next.js App Router
