@@ -13,24 +13,6 @@ pgvector>=0.2.5
 redis>=5.0.1
 alembic>=1.13.1
 
-# 智能体框架
-langgraph>=0.0.45  # 基于图的工作流框架，使用最新版本
-langchain>=0.1.20  # 更新到最新版本
-langchain-community>=0.0.25
-langchain-openai>=0.0.10
-langchain-anthropic>=0.1.1  # 添加Anthropic模型支持
-langchain-experimental>=0.0.47
-dashscope>=1.15.0  # 阿里通义API
-deepseek>=0.0.1
-pyautogen>=0.2.25  # AutoGen 多智能体框架，解除注释启用
-
-# LLM集成
-openai>=1.15.0
-anthropic>=0.15.0
-huggingface_hub>=0.21.0  # 本地模型支持
-transformers>=4.39.0  # 本地模型支持
-tokenizers>=0.15.0
-
 # 向量存储和嵌入
 chromadb>=0.4.22
 qdrant-client>=1.7.0

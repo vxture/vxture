@@ -8,16 +8,7 @@ import uvicorn
 import logging
 from dotenv import load_dotenv
 
-# 导入LangGraph代理
-try:
-    from app.agents.langgraph.simple_agent import process_chat_request
-except ImportError:
-    # 开发阶段可能尚未实现
-    def process_chat_request(messages):
-        return {
-            "response": {"role": "assistant", "content": "LangGraph代理尚未实现或无法加载"},
-            "conversation_id": "mock-id"
-        }
+# Platform backend entry point.
 
 # 配置日志
 logging.basicConfig(level=logging.INFO)
@@ -28,8 +19,8 @@ load_dotenv()
 
 # 创建应用
 app = FastAPI(
-    title="Vxture 智能代理 API",
-    description="用于处理与LangGraph智能代理的交互的API服务",
+    title="Vxture Platform API",
+    description="平台后端服务",
     version="0.1.0"
 )
 
@@ -42,49 +33,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 定义数据模型
-class ChatMessage(BaseModel):
-    role: str  # user, assistant, system
-    content: str
-
-class ChatRequest(BaseModel):
-    messages: List[ChatMessage]
-    conversation_id: Optional[str] = None
-    options: Optional[Dict[str, Any]] = None
-
-class ChatResponse(BaseModel):
-    response: ChatMessage
-    conversation_id: str
-    metadata: Optional[Dict[str, Any]] = None
-
 # 健康检查
 @app.get("/health")
 async def health_check():
-    return {"status": "ok", "service": "vxture-agent-api"}
-
-# 聊天API
-@app.post("/api/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
-    try:
-        logger.info(f"Received chat request with {len(request.messages)} messages")
-
-        # 转换消息格式
-        messages = [{"role": msg.role, "content": msg.content} for msg in request.messages]
-
-        # 处理请求
-        result = process_chat_request(messages)
-
-        return ChatResponse(
-            response=ChatMessage(
-                role=result["response"]["role"],
-                content=result["response"]["content"]
-            ),
-            conversation_id=result.get("conversation_id", "default-id"),
-            metadata=result.get("metadata", {})
-        )
-    except Exception as e:
-        logger.error(f"Error processing chat request: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"处理请求时出错: {str(e)}")
+    return {"status": "ok", "service": "vxture-platform-api"}
 
 # 主入口
 if __name__ == "__main__":

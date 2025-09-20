@@ -4,8 +4,8 @@ export default function Home() {
   // 特色/优势数据
   const features = [
     {
-      title: '智能集成',
-      description: '无缝集成多种AI模型和智能体，提供统一的管理界面',
+      title: 'AI 集成',
+      description: '无缝集成多种 AI 模型与服务，提供统一的管理界面',
       icon: (
         <svg
           className="w-12 h-12 text-blue-600"
@@ -84,7 +84,7 @@ export default function Home() {
   // 客户证言数据
   const testimonials = [
     {
-      quote: 'Vxture的智能体平台帮助我们将客户服务响应时间缩短了60%，同时提高了客户满意度。',
+      quote: 'Vxture 的 AI 平台帮助我们将客户服务响应时间缩短了60%，同时提高了客户满意度。',
       name: '张明',
       title: '某科技公司 CTO',
     },
@@ -101,9 +101,9 @@ export default function Home() {
       {/* 英雄区域 */}
       <section className="py-20 bg-gradient-to-r from-blue-600 to-indigo-700 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">智能体解决方案平台</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">企业 AI 集成平台</h1>
           <p className="text-xl mb-8 max-w-3xl mx-auto">
-            为企业提供先进的AI智能体集成与解决方案，释放数据价值，加速业务创新
+            为企业提供先进的 AI 集成与解决方案，释放数据价值，加速业务创新
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link
@@ -128,7 +128,7 @@ export default function Home() {
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">为什么选择 Vxture</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              我们提供领先的智能体技术和解决方案，帮助企业实现数字化转型
+              我们提供领先的 AI 技术与解决方案，帮助企业实现数字化转型
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -158,12 +158,11 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <div className="p-6">
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">智能体平台</h3>
-                <p className="text-gray-600 mb-4">统一管理和部署多种AI智能体，实现业务流程自动化</p>
-                <Link
-                  href="/products/agent-platform"
-                  className="text-blue-600 hover:text-blue-800 font-medium"
-                >
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">企业 AI 平台</h3>
+                <p className="text-gray-600 mb-4">
+                  统一管理和部署多种 AI 模型与服务，支持业务自动化
+                </p>
+                <Link href="/products" className="text-blue-600 hover:text-blue-800 font-medium">
                   了解更多 &rarr;
                 </Link>
               </div>
@@ -185,7 +184,7 @@ export default function Home() {
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">集成服务</h3>
-                <p className="text-gray-600 mb-4">连接现有系统与智能体平台，打造无缝的业务生态</p>
+                <p className="text-gray-600 mb-4">连接现有系统与 AI 平台，打造无缝的业务生态</p>
                 <Link
                   href="/products/integration"
                   className="text-blue-600 hover:text-blue-800 font-medium"
@@ -208,7 +207,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {testimonials.map((testimonial, index) => (
               <div key={index} className="bg-gray-50 p-8 rounded-lg">
-                <p className="text-gray-700 italic mb-6">"{testimonial.quote}"</p>
+                <p className="text-gray-700 italic mb-6">&ldquo;{testimonial.quote}&rdquo;</p>
                 <div>
                   <p className="font-semibold text-gray-900">{testimonial.name}</p>
                   <p className="text-gray-600">{testimonial.title}</p>

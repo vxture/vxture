@@ -40,14 +40,7 @@ const nextConfig = {
 
   // 配置API代理 (开发环境)
   async rewrites() {
-    return [
-      {
-        source: '/api/agent/:path*',
-        destination: process.env.NEXT_PUBLIC_API_URL
-          ? `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`
-          : 'http://localhost:8000/api/:path*',
-      },
-    ];
+    return [];
   },
 
   // 输出文件追踪排除项

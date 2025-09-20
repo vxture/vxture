@@ -9,7 +9,7 @@ export default function Footer() {
     {
       title: '产品',
       links: [
-        { name: '智能体平台', href: '/products/agent-platform' },
+        { name: '产品中心', href: '/products' },
         { name: '数据分析', href: '/products/data-analytics' },
         { name: '集成服务', href: '/products/integration' },
       ],

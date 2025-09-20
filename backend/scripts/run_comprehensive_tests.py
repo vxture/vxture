@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-综合测试脚本
+综合测试脚本（简化版）
 用于测试整个系统的各个组件
 """
 
@@ -23,6 +23,8 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger("comprehensive_test")
+
+# 简化：保留环境、前端和后端基础检查
 
 def check_imports(modules):
     """检查必要的模块是否已安装"""
@@ -56,111 +58,27 @@ def check_environment():
 
     # 检查必要的模块
     required_modules = [
-        "langchain", "langgraph", "fastapi", "pydantic",
-        "requests", "openai", "langchain_openai",
-        "beautifulsoup4", "python-dotenv"
+        "fastapi", "pydantic", "requests", "python-dotenv"
     ]
 
-    # 检查是否有autogen
-    try:
-        importlib.import_module("autogen")
-        has_autogen = True
-    except ImportError:
-        has_autogen = False
-
-    if has_autogen:
-        required_modules.append("autogen")
-
-    # 检查缺失模块
+    # 检查缺失模块并尝试安装
     missing_modules = check_imports(required_modules)
     if missing_modules:
         logger.warning(f"缺失以下模块: {', '.join(missing_modules)}")
         if not install_missing_modules(missing_modules):
             return False
 
-    # 检查环境变量
+    # 检查基础环境变量（非LLM相关）
     required_env_vars = [
-        "OPENAI_API_KEY",
-        "DEFAULT_LLM_PROVIDER",
-        "DEFAULT_LLM_MODEL",
         "VXTURE_ENV"
     ]
 
     missing_env_vars = [var for var in required_env_vars if not os.getenv(var)]
     if missing_env_vars:
         logger.warning(f"缺失以下环境变量: {', '.join(missing_env_vars)}")
-        logger.warning("请确保在.env文件中设置这些环境变量，或手动设置")
         # 继续执行，不阻止测试
 
     return True
-
-def run_agent_tests():
-    """运行智能代理测试"""
-    logger.info("运行智能代理测试")
-    try:
-        # 动态导入测试模块
-        test_module_path = script_dir / "scripts" / "test_agents.py"
-        if not test_module_path.exists():
-            logger.error(f"找不到测试脚本: {test_module_path}")
-            return False
-
-        # 执行测试脚本
-        logger.info("执行test_agents.py")
-        result = subprocess.run(
-            [sys.executable, str(test_module_path), "--all"],
-            capture_output=True,
-            text=True
-        )
-
-        # 打印输出
-        logger.info("测试输出:")
-        print(result.stdout)
-
-        if result.stderr:
-            logger.error("测试错误:")
-            print(result.stderr)
-
-        # 检查返回码
-        return result.returncode == 0
-    except Exception as e:
-        logger.error(f"运行智能代理测试时出错: {str(e)}")
-        import traceback
-        traceback.print_exc()
-        return False
-
-def run_chat_interface_tests():
-    """运行聊天界面测试"""
-    logger.info("运行聊天界面测试")
-    try:
-        # 动态导入测试模块
-        test_module_path = script_dir / "scripts" / "test_chat_interface.py"
-        if not test_module_path.exists():
-            logger.error(f"找不到测试脚本: {test_module_path}")
-            return False
-
-        # 执行测试脚本
-        logger.info("执行test_chat_interface.py")
-        result = subprocess.run(
-            [sys.executable, str(test_module_path), "--ui"],
-            capture_output=True,
-            text=True
-        )
-
-        # 打印输出
-        logger.info("测试输出:")
-        print(result.stdout)
-
-        if result.stderr:
-            logger.error("测试错误:")
-            print(result.stderr)
-
-        # 检查返回码
-        return result.returncode == 0
-    except Exception as e:
-        logger.error(f"运行聊天界面测试时出错: {str(e)}")
-        import traceback
-        traceback.print_exc()
-        return False
 
 def check_frontend():
     """检查前端应用是否正常运行"""
@@ -215,8 +133,6 @@ def main():
     """主函数"""
     parser = argparse.ArgumentParser(description="综合测试脚本")
     parser.add_argument("--env", action="store_true", help="检查环境")
-    parser.add_argument("--agents", action="store_true", help="测试智能代理")
-    parser.add_argument("--chat", action="store_true", help="测试聊天界面")
     parser.add_argument("--frontend", action="store_true", help="检查前端应用")
     parser.add_argument("--backend", action="store_true", help="检查后端API")
     parser.add_argument("--all", action="store_true", help="运行所有测试")
@@ -224,7 +140,7 @@ def main():
     args = parser.parse_args()
 
     # 如果没有指定参数，默认运行所有测试
-    if not (args.all or args.env or args.agents or args.chat or args.frontend or args.backend):
+    if not (args.all or args.env or args.frontend or args.backend):
         args.all = True
 
     results = {}
@@ -233,14 +149,6 @@ def main():
     if args.all or args.env:
         logger.info("=== 检查环境 ===")
         results["env"] = check_environment()
-
-    if args.all or args.agents:
-        logger.info("=== 测试智能代理 ===")
-        results["agents"] = run_agent_tests()
-
-    if args.all or args.chat:
-        logger.info("=== 测试聊天界面 ===")
-        results["chat"] = run_chat_interface_tests()
 
     if args.all or args.frontend:
         logger.info("=== 检查前端应用 ===")

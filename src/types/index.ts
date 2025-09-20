@@ -15,6 +15,3 @@ export interface User {
   name?: string;
   email?: string;
 }
-
-// Re-export chat types
-export * from './chat';

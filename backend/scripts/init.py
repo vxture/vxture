@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
 初始化脚本
-用于设置智能代理系统环境
+用于设置项目开发/运行所需的本地环境与目录
 """
 
 import os
@@ -51,7 +51,6 @@ def setup_directories():
     data_dirs = [
         "data/workspace",
         "data/vectorstore",
-        "data/langgraph_states",
         "data/uploads",
         "data/tmp",
         "logs"
@@ -68,8 +67,7 @@ def setup_directories():
 def check_dependencies():
     """检查必要的依赖项"""
     required_packages = [
-        "langchain", "langgraph", "fastapi", "uvicorn",
-        "pydantic", "python-dotenv", "openai", "langchain_openai"
+        "fastapi", "uvicorn", "pydantic", "python-dotenv"
     ]
 
     missing_packages = []
@@ -91,24 +89,6 @@ def check_dependencies():
                 return False
         else:
             logger.warning("跳过依赖项安装，请手动安装")
-
-    # 检查是否安装了AutoGen
-    try:
-        __import__("autogen")
-        has_autogen = True
-    except ImportError:
-        has_autogen = False
-
-    if not has_autogen:
-        logger.info("未检测到AutoGen")
-        install_autogen = input("是否安装AutoGen? [Y/n]: ").lower() != 'n'
-        if install_autogen:
-            try:
-                subprocess.check_call([sys.executable, "-m", "pip", "install", "pyautogen>=0.2.25"])
-                logger.info("AutoGen安装完成")
-            except subprocess.CalledProcessError as e:
-                logger.error(f"安装AutoGen失败: {e}")
-                logger.warning("AutoGen安装失败，但这不会影响LangGraph功能")
 
     return True
 
@@ -182,12 +162,6 @@ def verify_setup():
     # 测试导入主要模块
     try:
         import fastapi
-        import langchain
-        try:
-            import langgraph
-        except ImportError:
-            logger.warning("无法导入langgraph，智能代理功能可能受限")
-            return False
     except ImportError as e:
         logger.error(f"导入核心模块失败: {e}")
         return False
@@ -197,7 +171,7 @@ def verify_setup():
 
 def main():
     """主函数"""
-    parser = argparse.ArgumentParser(description="智能代理系统初始化脚本")
+    parser = argparse.ArgumentParser(description="项目初始化脚本：创建目录、检查依赖并配置开发环境")
     parser.add_argument("--env", action="store_true", help="设置环境变量文件")
     parser.add_argument("--dirs", action="store_true", help="创建必要的目录结构")
     parser.add_argument("--deps", action="store_true", help="检查依赖项")
