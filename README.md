@@ -1,123 +1,179 @@
-# Vxture 项目
+# Vxture 平台
 
-Vxture 是一个基于 Next.js 14+ 的现代化平台网站。本仓库专注于官方网站和平台功能；聊天/智能体功能（LLM/agents）不在本仓库运行或托管。如需集成，请在独立仓库或服务中实现并通过 HTTP API 与本项目后端对接。
+官网和账户系统平台，采用现代化的 PNPM Monorepo 架构，前后端分离设计。
 
-## 技术栈
+## 🎯 项目目标
 
-- **前端**: Next.js 14+ (App Router)，React 18+，TypeScript
-- **样式**: Tailwind CSS
-- **状态管理**: React Query + Context API
-- **后端**: Python + FastAPI
-- **数据库**: PostgreSQL + pgvector
-- **部署**: Vercel (前端) + Railway/Render (后端)
+- **官网展示**: 企业官网和产品展示
+- **账户系统**: 用户注册、登录、个人中心
+- **权限管理**: 用户权限和角色管理
+- **订阅授权**: 管理各个应用的用户和业务订阅授权
 
-## 开始使用
+## 🏗️ 技术栈 (简化版)
 
-### 前端开发
+### 前端 (packages/web)
 
-1. 安装依赖:
+- **框架**: Next.js 15 + React 18 + TypeScript
+- **样式**: TailwindCSS
+- **状态管理**: TanStack Query
+- **数据验证**: Zod
+- **代码规范**: ESLint + Prettier
 
-   ```bash
-   npm install
-   ```
+### 后端 (packages/api)
 
-2. 设置环境变量:
+- **框架**: FastAPI + Uvicorn
+- **数据库**: PostgreSQL + Redis
+- **认证**: JWT + OAuth2
+- **数据验证**: Pydantic
+- **数据库迁移**: Alembic
 
-   ```powershell
-   Copy-Item .env.example .env.local
-   # 编辑 .env.local 文件，添加必要的配置
-   ```
+### 工具链
 
-3. 启动开发服务器:
+- **包管理**: PNPM Workspace
+- **开发环境**: Python 3.11+, Node.js 18+
+- **部署**: Docker + 云服务
 
-   ```bash
-   npm run dev
-   ```
+## 🚀 快速开始
 
-4. 打开浏览器访问 [http://localhost:3000](http://localhost:3000)
+### 1. 安装依赖
 
-### 后端开发
+```bash
+# 安装所有包依赖
+pnpm install
+```
 
-1. 进入后端目录:
+### 2. 前端开发
 
-   ```bash
-   cd backend
-   ```
+```bash
+# 启动前端开发服务器
+pnpm dev
+# 或者
+pnpm --filter web dev
+```
 
-2. 创建虚拟环境:
+### 3. 后端开发
 
-   ```powershell
-   python -m venv venv
-   .\venv\Scripts\Activate
-   ```
+```bash
+# 启动后端 API 服务器
+pnpm dev:api
+# 或者
+cd packages/api
+python -m uvicorn app.main:app --reload
+```
 
-3. 安装依赖:
+## 📂 项目结构
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+```text
+vxture/
+├── package.json              # PNPM 工作区根配置
+├── pnpm-workspace.yaml       # 工作区包配置
+├── packages/
+│   ├── web/                  # Next.js 前端
+│   │   ├── src/
+│   │   ├── package.json
+│   │   └── next.config.js
+│   └── api/                  # FastAPI 后端
+│       ├── app/
+│       ├── requirements.txt
+│       └── package.json
+├── docs/                     # 项目文档
+└── README.md
+```
 
-4. 设置环境变量:
+## 🛠️ 开发命令
 
-   ```powershell
-   Copy-Item .env.example .env
-   # 编辑 .env 文件，添加必要的配置
-   ```
+```bash
+# 开发
+pnpm dev          # 启动前端
+pnpm dev:api      # 启动后端
 
-5. 启动后端服务器:
+# 构建
+pnpm build        # 构建前端
 
-   ```powershell
-   python app/main.py
-   ```
+# 代码检查
+pnpm lint         # 检查所有包
+pnpm type-check   # 类型检查
+
+# 清理
+pnpm clean        # 清理构建文件
+```
+
+## 🌐 环境配置
+
+### 环境变量模板与本地配置
+
+- **模板**: 仓库中已提供 `.env.local.template`，包含前后端常见的环境变量与注释。请复制并重命名为 `.env.local` 用于本地开发。
+
+- **生成本地 `.env.local`（建议）**:
+
+```powershell
+# 在项目根目录运行（Windows PowerShell）
+cp .env.local.template .env.local
+# 然后用编辑器填写真实值，或者使用 sed/PowerShell 替换敏感值
+```
+
+- **提示**: 不要将 `.env.local` 提交到版本库；模板 `.env.local.template` 用于共享配置示例和说明。
+
+### 后端示例（仅供参考）
+
+```env
+DATABASE_URL=postgresql://user:password@localhost/vxture
+REDIS_URL=redis://localhost:6379
+SECRET_KEY=your-secret-key
+```
+
+## 📝 开发注意事项
+
+- 确保 Python 3.11+ 和 Node.js 18+ 已安装
+- 后端需要 PostgreSQL 和 Redis 服务
+- 使用 PNPM 作为包管理器
+- 代码提交前请运行 `pnpm lint` 检查
 
 ## 项目结构
 
 ```text
 vxture/
-├── src/                    # 前端源代码
-│   ├── app/                # Next.js App Router
-│   │   ├── api/            # API路由
-│   │   ├── (features)/     # 页面路由组
-│   ├── components/         # 可复用组件
-│   ├── lib/                # 工具库
-│   ├── styles/             # 全局样式
-│   └── types/              # TypeScript类型定义
-├── backend/                # 后端源代码
-│   ├── app/                # FastAPI应用
-│   │   ├── api/            # API端点
-│   └── data/               # 数据相关文件
-├── public/                 # 静态资源
-└── docs/                   # 文档
+├── packages/
+│   ├── web/                # 前端 Next.js 应用
+│   │   └── src/            # 前端源代码
+│   └── backend/            # 后端 FastAPI 应用
+│       ├── app/            # FastAPI 主程序
+│       ├── scripts/        # 后端脚本
+│       └── requirements.txt# Python 依赖
+├── docs/                   # 文档
+├── pnpm-workspace.yaml     # pnpm workspace 配置
+├── package.json            # 根 workspace 配置
+└── ...
 ```
 
 ## 说明
 
-本仓库专注于平台与官方网站功能。若需要额外的扩展或集成，请在独立仓库中维护并通过明确的 API 与平台集成。
+本仓库专注于平台与官方网站功能。若需扩展或集成，请在独立仓库维护并通过 API 对接。
 
 ## 样式指南
 
-### 何时使用SCSS
+### 何时使用 SCSS
 
 - 复杂动画和过渡效果
 - 需要嵌套选择器的复杂组件
 - 全局样式和重置
 - 主题相关的颜色方案
-- 需要SCSS函数和混合的场景
+- 需要 SCSS 函数和混合的场景
 
-### 何时使用Tailwind
+### 何时使用 Tailwind
 
 - 布局和间距调整
 - 简单的颜色应用
 - 响应式设计调整
 - 快速原型设计
-- 小型UI调整
+- 小型 UI 调整
 
 ## 贡献指南
 
 1. Fork 仓库
-2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
-3. 提交更改 (`git commit -m 'Add some amazing feature'`)
-4. 推送到分支 (`git push origin feature/amazing-feature`)
+2. 创建功能分支 (`git checkout -b feature/xxx`)
+3. 提交更改 (`git commit -m 'feat: xxx'`)
+4. 推送到分支 (`git push origin feature/xxx`)
 5. 创建 Pull Request
 
 ## 许可证
