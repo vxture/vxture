@@ -83,16 +83,13 @@
     "editor.wordWrap": "on"
   },
 
-  // 拼写检查设置
-  "cSpell.words": ["vxture", "tailwindcss", "nextjs", "chakra"],
-
-  // TypeScript规范设置
-  "typescript.preferences.quoteStyle": "single",
-  "typescript.suggest.autoImports": true,
-  "typescript.format.enable": false,
-
   // ESLint设置增强
-  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
   "eslint.workingDirectories": [{ "mode": "auto" }],
 
   // Markdown lint设置

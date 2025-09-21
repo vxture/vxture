@@ -1,0 +1,111 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "aiofiles",
+    "alembic",
+    "ankane",
+    "asgi",
+    "asyncio",
+    "autoprefixer",
+    "bcrypt",
+    "chakra",
+    "chromadb",
+    "dbname",
+    "dotenv",
+    "eslint",
+    "faiss",
+    "fastapi",
+    "httpx",
+    "javascriptreact",
+    "jose",
+    "middlewares",
+    "minification",
+    "monorepo",
+    "multipart",
+    "musl",
+    "nextjs",
+    "pgvector",
+    "pnpm",
+    "postcss",
+    "postgres",
+    "postgresql",
+    "psycopg",
+    "pycache",
+    "pydantic",
+    "pypdf",
+    "pytest",
+    "qdrant",
+    "repo",
+    "scss",
+    "stylelint",
+    "stylelintrc",
+    "tailwindcss",
+    "tanstack",
+    "typedef",
+    "typescript",
+    "typescriptreact",
+    "upstash",
+    "uvicorn",
+    "venv",
+    "vercel",
+    "vxture",
+    "zustand"
+  ],
+  "dictionaries": ["typescript", "node", "npm", "html", "css"],
+  "ignorePaths": [
+    "node_modules/**",
+    ".next/**",
+    "dist/**",
+    "build/**",
+    "**/*.min.js",
+    "**/*.min.css",
+    "coverage/**",
+    ".venv/**",
+    "__pycache__/**",
+    "*.pyc",
+    "pnpm-lock.yaml"
+  ],
+  "overrides": [
+    {
+      "filename": "**/*.py",
+      "dictionaries": ["python"],
+      "words": [
+        "fastapi",
+        "uvicorn",
+        "pydantic",
+        "alembic",
+        "psycopg",
+        "asyncio",
+        "dotenv",
+        "httpx",
+        "pytest",
+        "aiofiles"
+      ]
+    },
+    {
+      "filename": "**/*.{ts,tsx,js,jsx}",
+      "dictionaries": ["typescript", "node", "npm"],
+      "words": [
+        "nextjs",
+        "tailwindcss",
+        "tanstack",
+        "zustand",
+        "autoprefixer",
+        "postcss"
+      ]
+    },
+    {
+      "filename": "**/*.{css,scss}",
+      "dictionaries": ["css"],
+      "words": ["tailwindcss", "autoprefixer", "postcss"]
+    },
+    {
+      "filename": "**/*.md",
+      "dictionaries": ["en"],
+      "words": ["monorepo", "vxture"]
+    }
+  ],
+  "allowCompoundWords": true,
+  "caseSensitive": false
+}

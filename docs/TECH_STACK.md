@@ -1,28 +1,81 @@
-# Vxture 技术栈
+# Vxture Tech Stack (Simplified v1.0)
 
-以下为项目主要技术栈与关键路径的简要说明，供维护者与新贡献者参考。
+A modern stack focused on the company website and account system
+本技术栈专注于公司官网与账号系统。
 
-## 核心技术
+## 🏗️ Core Architecture
 
-- 前端框架: Next.js (App Router, 14+)
-- 语言与类型: TypeScript + React 18+
-- 样式: Tailwind CSS
-- 后端: Python + FastAPI
-- 数据库: PostgreSQL（可选 pgvector 用于向量检索）
-- 缓存/队列: Redis（按需）
-- 向量存储: 项目约定目录 `backend/data/vectorstore`（可配 Chroma/Qdrant/FAISS 等）
-- 认证/安全: python-jose, passlib 等（见 `requirements.txt`）
-- 开发工具链: npm, ESLint, Prettier, TypeScript
-- 测试: pytest / pytest-asyncio
+### PNPM Monorepo Structure
 
-## 运行与部署
+```text
+vxture/
+├── packages/web/    # Next.js frontend
+└── packages/api/    # FastAPI backend
+```
 
-- 本地开发：前端 `npm run dev`，后端可使用 `uvicorn main:app --reload` 或 `python app/main.py`。
-- 推荐部署平台：Vercel（前端）、Railway/Render（后端）。
+## 📦 Technology Choices
 
-## 关键路径
+### Frontend Stack (`packages/web`)
 
-- 前端入口：`src/app/page.tsx`
-- 后端入口：`backend/app/main.py`
-- API 响应处理：`src/lib/utils/apiResponse.ts`
-- 向量数据约定：`backend/data/vectorstore`
+- **Framework:** Next.js 15 (App Router) + React 18 + TypeScript
+- **Styling:** TailwindCSS
+- **State Management:** TanStack Query
+- **Data Validation:** Zod
+- **Code Quality:** ESLint + Prettier + Husky
+
+### Backend Stack (`packages/api`)
+
+- **Framework:** FastAPI + Uvicorn[standard]
+- **Database:** PostgreSQL + Redis
+- **Authentication:** JWT (python-jose) + Password Hashing (passlib + bcrypt)
+- **Data Validation:** Pydantic
+- **DB Migration:** Alembic
+- **Testing:** pytest + pytest-asyncio
+
+### Removed Dependencies (v1.0 Simplified)
+
+- ❌ OpenAI API
+- ❌ Vector stores (ChromaDB, Qdrant, FAISS)
+- ❌ AI toolchains (LlamaIndex, sentence-transformers)
+- ❌ Complex monitoring (Prometheus, OpenTelemetry)
+- ❌ Duplicate config files
+
+## 🚀 Development Commands
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start dev servers
+pnpm dev          # Frontend (localhost:3000)
+pnpm dev:api      # Backend (localhost:8000)
+
+# Build & check
+pnpm build        # Build frontend
+pnpm lint         # Lint code
+pnpm type-check   # TypeScript check
+```
+
+## 🎯 Core Features
+
+1. **Website Presentation:** Company website and product showcase
+2. **User System:** Registration, login, user center
+3. **Access Control:** Roles and permissions
+4. **Subscription Management:** User subscriptions and licensing
+
+## 🌐 Service Integration
+
+- **vxture:** Main platform (this project)
+- **vxture-auth:** Standalone authentication service
+- **ruins-agent:** Agent app (integrates with auth)
+
+## 📝 Key Paths
+
+- **Frontend entry:** `packages/web/src/app/page.tsx`
+- **Backend entry:** `packages/api/app/main.py`
+- **API utility:** `packages/web/src/lib/utils/apiResponse.ts`
+- **Workspace config:** `pnpm-workspace.yaml`
+
+---
+
+**Version:** v1.0 Simplified | **Last updated:** Sep 21, 2025
