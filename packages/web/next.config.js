@@ -25,7 +25,7 @@ const nextConfig = {
   },
 
   // Webpack 配置
-  webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+  webpack: (config) => {
     // 自定义 webpack 配置
     return config;
   },

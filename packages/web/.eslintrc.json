@@ -1,6 +1,4 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "next/typescript"
-  ]
+  "$schema": "https://json.schemastore.org/eslintrc.json",
+  "extends": ["next/core-web-vitals", "next/typescript"]
 }

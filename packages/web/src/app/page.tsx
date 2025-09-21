@@ -1,8 +1,19 @@
+import CaseSection from "@/components/home/CaseSection";
+import CTASection from "@/components/home/CTASection";
+import FeaturesSection from "@/components/home/FeaturesSection";
+import HeroSection from "@/components/home/HeroSection";
+import ProductSection from "@/components/home/ProductSection";
+import StatsSection from "@/components/home/StatsSection";
+
 export default function Home() {
   return (
-    <section style={{ maxWidth: 1024, margin: "2rem auto", padding: "0 1rem" }}>
-      <h2>欢迎来到 Vxture</h2>
-      <p>这是迁移到 Monorepo + pnpm 后的演示首页。</p>
-    </section>
+    <main>
+      <HeroSection />
+      <FeaturesSection />
+      <ProductSection />
+      <CaseSection />
+      <StatsSection />
+      <CTASection />
+    </main>
   );
 }
