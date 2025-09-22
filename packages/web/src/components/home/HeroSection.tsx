@@ -10,16 +10,34 @@ export default function HeroSection() {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      video.addEventListener("loadeddata", () => setVideoLoaded(true));
-      video.addEventListener("error", () => setVideoError(true));
+      const handleLoadedData = () => {
+        setVideoLoaded(true);
+        console.log("✅ Video loaded successfully");
+      };
+
+      const handleError = (e: Event) => {
+        setVideoError(true);
+        console.log("❌ Video error:", e);
+      };
+
+      const handleLoadStart = () => {
+        console.log("🔄 Video load started");
+      };
+
+      video.addEventListener("loadeddata", handleLoadedData);
+      video.addEventListener("error", handleError);
+      video.addEventListener("loadstart", handleLoadStart);
+
+      // 强制开始加载视频
+      video.load();
 
       return () => {
-        video.removeEventListener("loadeddata", () => setVideoLoaded(true));
-        video.removeEventListener("error", () => setVideoError(true));
+        video.removeEventListener("loadeddata", handleLoadedData);
+        video.removeEventListener("error", handleError);
+        video.removeEventListener("loadstart", handleLoadStart);
       };
     }
   }, []);
-
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
       {/* 背景视频 */}
@@ -29,23 +47,29 @@ export default function HeroSection() {
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
             videoLoaded && !videoError ? "opacity-100" : "opacity-0"
           }`}
+          poster="/images/banner-hero-poster-01.jpg"
           autoPlay
-          muted
           loop
+          muted
           playsInline
-          preload="metadata"
+          preload="auto"
         >
-          <source src="/videos/banner-hero-01.mp4" type="video/mp4" />
+          <source src="/videos/banner-hero-011.mp4" type="video/mp4" />
+          <source src="/videos/banner-hero-011.webm" type="video/webm" />
         </video>
 
-        {/* 渐变遮罩层 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/70 via-blue-900/60 to-slate-900/70"></div>
+        {/* 渐变遮罩层 - 只在视频播放时显示 */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-br from-slate-900/70 via-blue-900/60 to-slate-900/70 transition-opacity duration-1000 ${
+            videoLoaded && !videoError ? "opacity-100" : "opacity-0"
+          }`}
+        ></div>
       </div>
 
-      {/* 备用背景（视频未加载时显示） */}
+      {/* 备用背景（在视频未加载或错误时显示） */}
       <div
         className={`absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 transition-opacity duration-1000 ${
-          videoLoaded && !videoError ? "opacity-0" : "opacity-100"
+          !videoLoaded || videoError ? "opacity-100" : "opacity-0"
         }`}
       >
         {/* 背景动画元素 */}
