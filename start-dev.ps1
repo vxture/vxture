@@ -1,107 +1,270 @@
-# Vxture 一键启动（PowerShell）
-# 功能：以不阻塞当前终端的方式启动前端与后端，并尝试记录 PID/端口信息到 .vxture_pids.json
+<#
+.SYNOPSIS
+    Vxture backend development environment startup script
+.DESCRIPTION
+    仅启动 FastAPI 后端开发服务
+    - 检查 Python 依赖
+    - 清理端口冲突
+    - 后台启动服务
+    - 记录进程信息
+.PARAMETER BackendPort
+    后端服务端口，默认 8000
+.PARAMETER SkipDependencyCheck
+    跳过依赖检查（加速启动）
+.EXAMPLE
+    .\start-dev.ps1
+    .\start-dev.ps1 -BackendPort 8001
+    .\start-dev.ps1 -SkipDependencyCheck
+#>
 
 param(
-    [int]$FrontendPort = 3000,
-    [int]$BackendPort = 8000
+    [int]$BackendPort = 8000,
+    [switch]$SkipDependencyCheck
 )
 
-function Write-JsonFile($path, $obj) {
-    $json = $obj | ConvertTo-Json -Depth 5
-    Set-Content -Path $path -Value $json -Encoding UTF8
-}
+$ErrorActionPreference = "Stop"
+$root = Split-Path -Parent $MyInvocation.MyCommand.Path
+$pidFile = Join-Path $root '.vxture_pids.json'
+$apiDir = Join-Path $root 'packages\api'
 
-function Get-PidsByPort($port) {
-    $out = @()
-    $lines = netstat -ano | Select-String ":$port\s"
-    foreach ($l in $lines) {
-        $parts = ($l -split '\s+') | Where-Object { $_ -ne '' }
-        $pidStr = $parts[-1]
-        if ($pidStr -match '^\d+$') { $out += [int]$pidStr }
+function Write-ColorOutput {
+    param(
+        [string]$Message,
+        [string]$Color = "White"
+    )
+    $colors = @{
+        "Red"     = [ConsoleColor]::Red
+        "Green"   = [ConsoleColor]::Green
+        "Yellow"  = [ConsoleColor]::Yellow
+        "Cyan"    = [ConsoleColor]::Cyan
+        "Magenta" = [ConsoleColor]::Magenta
+        "White"   = [ConsoleColor]::White
     }
-    return $out | Select-Object -Unique
+    $colorValue = $colors[$Color]
+    if ($null -eq $colorValue) { $colorValue = [ConsoleColor]::White }
+    Write-Host $Message -ForegroundColor $colorValue
 }
 
-function Stop-ProcessByPid($pid) {
+function Write-JsonFile {
+    param(
+        [string]$path,
+        [object]$obj
+    )
     try {
-        Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
-        Write-Host "Stopped process PID: $pid"
+        $json = $obj | ConvertTo-Json -Depth 5
+        Set-Content -Path $path -Value $json -Encoding UTF8
         return $true
-    } catch {
-        Write-Host "Failed to stop process PID: $pid - $($_.Exception.Message)"
+    }
+    catch {
+        Write-ColorOutput "Warning: Cannot write to $path - $($_.Exception.Message)" "Yellow"
         return $false
     }
 }
 
-function Clear-Port($port) {
-    Write-Host "Checking port $port..."
-    $pids = Get-PidsByPort -port $port
-    
-    if ($pids.Count -gt 0) {
-        Write-Host "Port $port is occupied by PIDs: $($pids -join ', '). Stopping processes..."
-        foreach ($pid in $pids) {
-            Stop-ProcessByPid -pid $pid
+function Get-PidsByPort {
+    param([int]$port)
+    try {
+        $pids = @()
+        $netstatOutput = netstat -ano | Select-String ":$port\s"
+        foreach ($line in $netstatOutput) {
+            $parts = ($line -split '\s+') | Where-Object { $_ -ne '' }
+            if ($parts.Length -ge 5) {
+                $pidStr = $parts[-1]
+                if ($pidStr -match '^\d+$') {
+                    $pids += [int]$pidStr
+                }
+            }
         }
-        
-        # 等待进程完全停止
-        Start-Sleep -Seconds 2
-        
-        # 再次检查端口是否清理成功
-        $remainingPids = Get-PidsByPort -port $port
-        if ($remainingPids.Count -gt 0) {
-            Write-Host "Warning: Port $port still occupied by PIDs: $($remainingPids -join ', ')"
-            return $false
-        } else {
-            Write-Host "Port $port cleared successfully."
+        return $pids | Select-Object -Unique
+    }
+    catch {
+        Write-ColorOutput "Warning: Cannot check port $port - $($_.Exception.Message)" "Yellow"
+        return @()
+    }
+}
+
+function Stop-ProcessByPid {
+    param([int]$pid)
+    try {
+        $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
+        if ($process) {
+            $processName = $process.ProcessName
+            Stop-Process -Id $pid -Force -ErrorAction Stop
+            Write-ColorOutput "Stopped process: $processName (PID: $pid)" "Green"
             return $true
         }
-    } else {
-        Write-Host "Port $port is available."
+        else {
+            Write-ColorOutput "Process PID $pid does not exist" "Yellow"
+            return $false
+        }
+    }
+    catch {
+        Write-ColorOutput "Cannot stop process PID $pid - $($_.Exception.Message)" "Red"
+        return $false
+    }
+}
+
+function Clear-Port {
+    param(
+        [int]$port,
+        [string]$serviceName
+    )
+    Write-ColorOutput "Checking $serviceName port $port..." "Cyan"
+    $pids = Get-PidsByPort -port $port
+    if ($pids.Count -gt 0) {
+        Write-ColorOutput "Port $port is occupied by processes: $($pids -join ', ')" "Yellow"
+        Write-ColorOutput "Stopping conflicting processes..." "Yellow"
+        foreach ($pid in $pids) { Stop-ProcessByPid -pid $pid | Out-Null }
+        Start-Sleep -Seconds 3
+        $remainingPids = Get-PidsByPort -port $port
+        if ($remainingPids.Count -eq 0) {
+            Write-ColorOutput "Port $port cleared successfully" "Green"
+            return $true
+        }
+        else {
+            Write-ColorOutput "Port $port still occupied by: $($remainingPids -join ', ')" "Yellow"
+            return $false
+        }
+    }
+    else {
+        Write-ColorOutput "Port $port is available" "Green"
         return $true
     }
 }
 
-$root = Split-Path -Parent $MyInvocation.MyCommand.Path
-$pidFile = Join-Path $root '.vxture_pids.json'
-
-Write-Host "Starting vxture development servers..."
-
-Write-Host "Checking and clearing ports if necessary..."
-$frontendCleared = Clear-Port -port $FrontendPort
-$backendCleared = Clear-Port -port $BackendPort
-
-if (-not $frontendCleared -or -not $backendCleared) {
-    Write-Host "Warning: Some ports could not be cleared. Proceeding anyway..."
+function Test-Dependencies {
+    Write-ColorOutput "Checking backend development environment dependencies..." "Cyan"
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+    Write-ColorOutput "Refreshed PATH environment variable for current session." "Green"
+    try {
+        $pythonVersion = python --version 2>$null
+        if ($pythonVersion) {
+            Write-ColorOutput "Python: $pythonVersion" "Green"
+        }
+        else {
+            throw "Python not installed"
+        }
+    }
+    catch {
+        Write-ColorOutput "Python not found, please install Python 3.11+ first" "Red"
+        return $false
+    }
+    if (-not (Test-Path $apiDir)) {
+        Write-ColorOutput "Backend directory does not exist: $apiDir" "Red"
+        return $false
+    }
+    Write-ColorOutput "Backend environment check passed" "Green"
+    return $true
 }
 
-Write-Host "Launching services (detached) - recording to $pidFile"
-
-# Launch frontend detached via cmd start (ensures no prompt blocks current shell)
-$frontendCmdArg = ("cd `"{0}`"; pnpm dev" -f $root)
-
-Start-Process -FilePath "pnpm" -ArgumentList "dev" -WorkingDirectory $root -PassThru -WindowStyle Minimized
-
-# 启动后端 (FastAPI) - 假设 dev:api 能正确激活.venv
-
-Start-Sleep -Seconds 10
-
-# Launch backend detached
-$backendCmdArg = ("cd `"{0}`"; pnpm dev:api" -f $root)
-Start-Process -FilePath "pnpm" -ArgumentList "dev:api" -WorkingDirectory $root -PassThru -WindowStyle Minimized
-
-Start-Sleep -Seconds 10
-
-$frontendPids = Get-PidsByPort -port $FrontendPort
-$backendPids = Get-PidsByPort -port $BackendPort
-
-$data = [ordered]@{
-    startedAt = (Get-Date).ToString('o')
-    frontend = @{ pids = $frontendPids; requestedPort = $FrontendPort }
-    backend = @{ pids = $backendPids; requestedPort = $BackendPort }
+function Start-Backend {
+    Write-ColorOutput "Starting backend service (FastAPI)..." "Cyan"
+    try {
+        $envSetup = '$env:PATH = [System.Environment]::GetEnvironmentVariable("PATH", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("PATH", "User")'
+        $command = "$envSetup; cd '$root'; pnpm dev:api"
+        $backendProcess = Start-Process -FilePath "powershell" -ArgumentList "-Command", $command -PassThru
+        if ($backendProcess) {
+            Write-ColorOutput "Backend service starting... PID: $($backendProcess.Id)" "Green"
+            return $backendProcess.Id
+        }
+        else {
+            throw "Cannot start backend process"
+        }
+    }
+    catch {
+        Write-ColorOutput "Backend startup failed: $($_.Exception.Message)" "Red"
+        return $null
+    }
 }
 
-try { Write-JsonFile -path $pidFile -obj $data } catch { Write-Host ("Warning: failed writing {0}: {1}" -f $pidFile, $_) }
+function Wait-ForBackend {
+    Write-ColorOutput "Waiting for backend service to start..." "Cyan"
+    $maxWaitTime = 60
+    $waitInterval = 2
+    $elapsed = 0
+    while ($elapsed -lt $maxWaitTime) {
+        Start-Sleep -Seconds $waitInterval
+        $elapsed += $waitInterval
+        $backendPids = Get-PidsByPort -port $BackendPort
+        $backendReady = $backendPids.Count -gt 0
+        $backendStatus = if ($backendReady) { "OK" } else { "STARTING" }
+        Write-ColorOutput "Checking backend status... $backendStatus ($elapsed/${maxWaitTime}s)" "Cyan"
+        if ($backendReady) {
+            return @{
+                backend = $backendPids
+                success = $true
+            }
+        }
+    }
+    Write-ColorOutput "Backend startup timeout, but process may still be starting" "Yellow"
+    return @{
+        backend = (Get-PidsByPort -port $BackendPort)
+        success = $false
+    }
+}
 
-Write-Host "Started (detached). Frontend PIDs:$($data.frontend.pids -join ',') Backend PIDs:$($data.backend.pids -join ',')"
-Write-Host "If ports are occupied, Next.js may use an alternate port. Use stop-dev.ps1 to cleanup."
-Write-Host "Development servers are running in background. Check task manager or use stop-dev.ps1 to stop them."
+function Main {
+    Write-ColorOutput "Vxture Backend Development Startup Script" "Magenta"
+    Write-ColorOutput ("=" * 50) "Magenta"
+    if (-not $SkipDependencyCheck) {
+        if (-not (Test-Dependencies)) {
+            Write-ColorOutput "Dependency check failed, please fix and retry" "Red"
+            exit 1
+        }
+    }
+    else {
+        Write-ColorOutput "Skipping dependency check" "Yellow"
+    }
+    $backendPortClear = Clear-Port -port $BackendPort -serviceName "backend"
+    if (-not $backendPortClear) {
+        Write-ColorOutput "Backend port failed to clear, continuing startup..." "Yellow"
+    }
+    Write-ColorOutput ""
+    Write-ColorOutput "Starting backend development service..." "Cyan"
+    $backendPid = Start-Backend
+    if (-not $backendPid) {
+        Write-ColorOutput "Backend service failed to start" "Red"
+        exit 1
+    }
+    $serviceStatus = Wait-ForBackend
+    $data = [ordered]@{
+        startedAt = (Get-Date).ToString('o')
+        ports     = @{ backend = $BackendPort }
+        processes = @{
+            backend = @{
+                initialPid = $backendPid
+                activePids = $serviceStatus.backend
+            }
+        }
+        status    = if ($serviceStatus.success) { "ready" } else { "starting" }
+    }
+    Write-JsonFile -path $pidFile -obj $data | Out-Null
+    Write-ColorOutput ""
+    Write-ColorOutput "Startup Complete!" "Green"
+    Write-ColorOutput ("=" * 50) "Green"
+    if ($serviceStatus.backend.Count -gt 0) {
+        Write-ColorOutput "Backend service: http://localhost:$BackendPort (PID: $($serviceStatus.backend -join ', '))" "Green"
+        Write-ColorOutput "API documentation: http://localhost:$BackendPort/docs" "Green"
+    }
+    else {
+        Write-ColorOutput "Backend service: Starting... (check http://localhost:$BackendPort)" "Yellow"
+    }
+    Write-ColorOutput ""
+    Write-ColorOutput "Usage tips:" "Cyan"
+    Write-ColorOutput "   - Stop service: .\stop-dev.ps1" "White"
+    Write-ColorOutput "   - View logs: Check terminal or Task Manager" "White"
+    Write-ColorOutput "   - Process info: .vxture_pids.json" "White"
+    if (-not $serviceStatus.success) {
+        Write-ColorOutput ""
+        Write-ColorOutput "Note: Service may still be starting, please wait a moment before accessing" "Yellow"
+    }
+}
+
+try {
+    Main
+}
+catch {
+    Write-ColorOutput "Script execution failed: $($_.Exception.Message)" "Red"
+    Write-ColorOutput "Please check error information and retry" "Red"
+    exit 1
+}

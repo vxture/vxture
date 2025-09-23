@@ -1,6 +1,10 @@
 {
   "version": "0.2",
   "language": "en",
+  "flagWords": [],
+  "allowCompoundWords": true,
+  "caseSensitive": false,
+  "checkLimit": 500,
   "words": [
     "aiofiles",
     "alembic",
@@ -19,7 +23,6 @@
     "fastapi",
     "httpx",
     "ipynb",
-    "javascriptreact",
     "jose",
     "middlewares",
     "minification",
@@ -42,14 +45,13 @@
     "repo",
     "scss",
     "SIGNUP",
+    "sonarjs",
     "stylelint",
     "stylelintrc",
     "tailwindcss",
     "tanstack",
-    "Turborepo",
+    "turborepo",
     "typedef",
-    "typescript",
-    "typescriptreact",
     "umami",
     "upstash",
     "uvicorn",
@@ -58,24 +60,67 @@
     "vxture",
     "zustand"
   ],
-  "dictionaries": ["typescript", "node", "npm", "html", "css"],
+  "dictionaries": [
+    "typescript",
+    "node",
+    "npm",
+    "html",
+    "css",
+    "python",
+    "en-us"
+  ],
   "ignorePaths": [
+    // Node.js and package manager files
     "node_modules/**",
+    "pnpm-lock.yaml",
+    ".pnpm-store/**",
+    // Build outputs
     ".next/**",
     "dist/**",
     "build/**",
+    "out/**",
     "**/*.min.js",
     "**/*.min.css",
+    // Testing and coverage
     "coverage/**",
+    ".nyc_output/**",
+    "test-results/**",
+    // Python environment
     ".venv/**",
+    "venv/**",
     "__pycache__/**",
     "*.pyc",
-    "pnpm-lock.yaml"
+    "*.pyo",
+    "*.pyd",
+    ".pytest_cache/**",
+    // IDE and OS files
+    ".vscode/**",
+    ".idea/**",
+    "*.DS_Store",
+    "Thumbs.db",
+    "*.tmp",
+    "*.temp",
+    // Logs and cache
+    "logs/**",
+    "*.log",
+    ".cache/**",
+    ".turbo/**",
+    // Git and version control
+    ".git/**",
+    "*.patch",
+    // Environment and config
+    ".env*",
+    "!.env.example",
+    "!.env.template",
+    ".vxture_pids.json"
   ],
   "overrides": [
     {
-      "filename": "**/*.py",
-      "dictionaries": ["python"],
+      "filename": "**/*.{py,pyi}",
+      "dictionaries": [
+        "python",
+        "en-us"
+      ],
       "words": [
         "fastapi",
         "uvicorn",
@@ -83,35 +128,119 @@
         "alembic",
         "psycopg",
         "asyncio",
+        "aiofiles",
         "dotenv",
         "httpx",
         "pytest",
-        "aiofiles"
+        "bcrypt",
+        "jose",
+        "middlewares"
       ]
     },
     {
-      "filename": "**/*.{ts,tsx,js,jsx}",
-      "dictionaries": ["typescript", "node", "npm"],
+      "filename": "**/*.{ts,tsx,js,jsx,mts,cts}",
+      "dictionaries": [
+        "typescript",
+        "node",
+        "npm",
+        "en-us"
+      ],
       "words": [
         "nextjs",
         "tailwindcss",
         "tanstack",
         "zustand",
         "autoprefixer",
-        "postcss"
+        "postcss",
+        "eslint",
+        "stylelint",
+        "javascriptreact",
+        "typescriptreact"
       ]
     },
     {
-      "filename": "**/*.{css,scss}",
-      "dictionaries": ["css"],
-      "words": ["tailwindcss", "autoprefixer", "postcss"]
+      "filename": "**/*.{css,scss,sass,less}",
+      "dictionaries": [
+        "css",
+        "en-us"
+      ],
+      "words": [
+        "tailwindcss",
+        "autoprefixer",
+        "postcss",
+        "scss"
+      ]
     },
     {
-      "filename": "**/*.md",
-      "dictionaries": ["en"],
-      "words": ["monorepo", "vxture"]
+      "filename": "**/*.{md,mdx}",
+      "dictionaries": [
+        "en-us"
+      ],
+      "words": [
+        "monorepo",
+        "vxture",
+        "pnpm",
+        "nextjs",
+        "fastapi",
+        "postgresql",
+        "tailwindcss"
+      ]
+    },
+    {
+      "filename": "**/package.json",
+      "dictionaries": [
+        "npm",
+        "node",
+        "en-us"
+      ],
+      "words": [
+        "pnpm",
+        "nextjs",
+        "tailwindcss",
+        "tanstack",
+        "zustand",
+        "stylelint",
+        "eslint"
+      ]
+    },
+    {
+      "filename": "**/*.{yml,yaml}",
+      "dictionaries": [
+        "en-us"
+      ],
+      "words": [
+        "pnpm",
+        "vxture",
+        "nextjs",
+        "fastapi"
+      ]
+    },
+    {
+      "filename": "**/requirements*.txt",
+      "dictionaries": [
+        "python",
+        "en-us"
+      ],
+      "words": [
+        "fastapi",
+        "uvicorn",
+        "pydantic",
+        "psycopg",
+        "alembic",
+        "httpx",
+        "pytest",
+        "aiofiles",
+        "bcrypt",
+        "jose"
+      ]
     }
   ],
-  "allowCompoundWords": true,
-  "caseSensitive": false
+  "import": [],
+  "includeRegExpList": [],
+  "excludeRegExpList": [
+    "\\b[A-Z]{2,}\\b(?![a-z])",
+    "\\b\\d+px\\b",
+    "\\b#[0-9a-fA-F]{3,8}\\b",
+    "\\b[a-z]+\\d+[a-z]*\\b"
+  ]
 }

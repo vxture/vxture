@@ -2,8 +2,8 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Next.js: 浏览器",
-      "type": "chrome",
+      "name": "Next.js: Edge Browser",
+      "type": "edge",
       "request": "launch",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}",
@@ -12,21 +12,30 @@
       }
     },
     {
-      "name": "Next.js: 节点",
+      "name": "Next.js: Node (pnpm)",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
       "env": {
         "NODE_OPTIONS": "--inspect"
       },
       "console": "integratedTerminal"
+    },
+    {
+      "name": "FastAPI: Code Runner",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/packages/api/app/main.py",
+      "console": "integratedTerminal",
+      "env": {},
+      "justMyCode": true
     }
   ],
   "compounds": [
     {
-      "name": "Next.js: 全栈",
-      "configurations": ["Next.js: 节点", "Next.js: 浏览器"]
+      "name": "Next.js: Fullstack (Edge)",
+      "configurations": ["Next.js: Node (pnpm)", "Next.js: Edge Browser"]
     }
   ]
 }

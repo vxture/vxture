@@ -1,34 +1,71 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-开发环境启动脚本 - 专为 pnpm dev:api 优化
+Development environment startup script - optimized for pnpm dev:api (Windows only)
 """
 import sys
 import os
 import subprocess
 from pathlib import Path
 
-def main():
-    # 获取API目录
+def check_uvicorn(venv_python: Path) -> bool:
+    """Check if uvicorn is installed in the virtual environment."""
+    try:
+        result = subprocess.run(
+            [str(venv_python), "-m", "uvicorn", "--version"],
+            capture_output=True, text=True, check=True
+        )
+        print(f"✅ Uvicorn version: {result.stdout.strip()}")
+        return True
+    except subprocess.CalledProcessError:
+        print("❌ Uvicorn is not installed in the virtual environment.")
+        print("Please run: pip install -r requirements.txt")
+        return False
+
+def load_dotenv(api_dir: Path) -> None:
+    """Load .env file if exists (for local development)."""
+    dotenv_path = api_dir / ".env"
+    if dotenv_path.exists():
+        try:
+            from dotenv import load_dotenv
+            load_dotenv(dotenv_path)
+            print(f"🔑 Loaded environment variables from {dotenv_path}")
+        except ImportError:
+            print("⚠️  python-dotenv not installed, skipping .env loading.")
+
+def main() -> None:
+    # Get API directory and venv python path
     api_dir = Path(__file__).parent.absolute()
     venv_python = api_dir / ".venv" / "Scripts" / "python.exe"
 
-    print(f"🔍 API目录: {api_dir}")
-    print(f"🐍 Python解释器: {venv_python}")
+    print(f"🔍 API directory: {api_dir}")
+    print(f"🐍 Python interpreter: {venv_python}")
 
-    # 检查虚拟环境是否存在
-    if not venv_python.exists():
-        print(f"❌ 虚拟环境不存在: {venv_python}")
-        print("请先创建虚拟环境：python -m venv .venv")
+    # Check Windows platform
+    if os.name != "nt":
+        print("❌ This script is for Windows only.")
         sys.exit(1)
 
-    # 检查app目录
+    # Check virtual environment
+    if not venv_python.exists():
+        print(f"❌ Virtual environment not found: {venv_python}")
+        print("Please create it first: python -m venv .venv")
+        sys.exit(1)
+
+    # Check app directory
     app_dir = api_dir / "app"
     if not app_dir.exists():
-        print(f"❌ app目录不存在: {app_dir}")
+        print(f"❌ app directory not found: {app_dir}")
         sys.exit(1)
 
-    # 构建启动命令
+    # Check uvicorn
+    if not check_uvicorn(venv_python):
+        sys.exit(1)
+
+    # Load .env if exists
+    load_dotenv(api_dir)
+
+    # Build command
     cmd = [
         str(venv_python),
         "-m", "uvicorn",
@@ -38,19 +75,18 @@ def main():
         "--reload"
     ]
 
-    print(f"🚀 启动命令: {' '.join(cmd)}")
-    print(f"📂 工作目录: {api_dir}")
+    print(f"🚀 Launch command: {' '.join(cmd)}")
+    print(f"📂 Working directory: {api_dir}")
     print("=" * 50)
 
     try:
-        # 切换到API目录并启动服务器
         os.chdir(api_dir)
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
-        print(f"❌ 启动失败: {e}")
+        print(f"❌ Startup failed: {e}")
         sys.exit(1)
     except KeyboardInterrupt:
-        print("\n👋 服务器已停止")
+        print("\n👋 Server stopped")
         sys.exit(0)
 
 if __name__ == "__main__":

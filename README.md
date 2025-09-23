@@ -1,186 +1,386 @@
 # Vxture 平台
 
-官网和账户系统平台，采用现代化的 PNPM Monorepo 架构，前后端分离设计。
+> 现代化企业官网平台 - Next.js 15 + FastAPI + PostgreSQL
 
-## 🎯 项目目标
+基于 PNPM Monorepo 架构的全栈 Web 平台，专注于企业官网展示和用户账户系统。
 
-- **官网展示**: 企业官网和产品展示
-- **账户系统**: 用户注册、登录、个人中心
-- **权限管理**: 用户权限和角色管理
-- **订阅授权**: 管理各个应用的用户和业务订阅授权
+[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org/)
+[![PNPM](https://img.shields.io/badge/PNPM-8.15%2B-orange.svg)](https://pnpm.io/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## 🏗️ 技术栈 (简化版)
+## 🎯 功能特性
 
-### 前端 (packages/web)
+- **🏢 企业官网**: 响应式设计，SEO 优化，现代化 UI/UX
+- **👤 账户系统**: 用户注册、登录、个人中心管理
+- **🔐 权限管理**: 基于角色的访问控制 (RBAC)
+- **💳 订阅授权**: 应用授权和业务订阅管理
+- **🚀 高性能**: 服务端渲染 + 客户端优化
+- **🔒 安全可靠**: JWT 认证 + OAuth2 + 数据加密
 
-- **框架**: Next.js 15 + React 18 + TypeScript
-- **样式**: TailwindCSS
-- **状态管理**: TanStack Query
-- **数据验证**: Zod
-- **代码规范**: ESLint + Prettier
+## 🏗️ 技术架构
 
-### 后端 (packages/api)
+### 前端 (`packages/web`)
 
-- **框架**: FastAPI + Uvicorn
-- **数据库**: PostgreSQL + Redis
-- **认证**: JWT + OAuth2
-- **数据验证**: Pydantic
-- **数据库迁移**: Alembic
+```text
+Next.js 15 + App Router + TypeScript
+├── TailwindCSS - 样式系统和响应式设计
+├── TanStack Query - 服务器状态管理
+├── Zod - 运行时类型验证
+└── ESLint + Prettier - 代码质量工具
+```
 
-### 工具链
+### 后端 (`packages/api`)
 
-- **包管理**: PNPM Workspace
-- **开发环境**: Python 3.13+, Node.js 18+
-- **部署**: Docker + 云服务
-- **代码质量**: ESLint, Prettier, cSpell
-- **CI/CD**: GitHub Actions
+```text
+FastAPI + Uvicorn + Python 3.11+
+├── PostgreSQL - 主数据库
+├── Redis - 缓存和会话存储
+├── JWT + OAuth2 - 身份认证
+├── Pydantic - 数据验证
+└── Alembic - 数据库迁移
+```
+
+### 开发工具链
+
+```text
+PNPM Workspace - Monorepo 包管理
+├── GitHub Actions - CI/CD 自动化
+├── Docker - 容器化部署
+├── cSpell - 拼写检查
+└── Husky + lint-staged - Git 工作流
+```
 
 ## 🚀 快速开始
 
-### 1. 安装依赖
+### 环境要求
 
-```bash
-# 安装所有包依赖
+- **Node.js** 18.17.0+
+- **Python** 3.11+
+- **PNPM** 8.15.0+
+- **PostgreSQL** 13+ (可选，开发环境可用 SQLite)
+- **Redis** 6+ (可选，开发环境可禁用)
+
+### 一键启动
+
+```powershell
+# 克隆仓库
+git clone https://github.com/your-org/vxture.git
+cd vxture
+
+# 安装依赖
 pnpm install
+
+# 配置环境变量
+cp .env.local.template .env.local
+# 编辑 .env.local 填写必要配置
+
+# 启动完整开发环境（推荐）
+.\start-dev.ps1
+
+# 或分别启动前后端
+pnpm dev      # 前端: http://localhost:3000
+pnpm dev:api  # 后端: http://localhost:8000
 ```
 
-### 2. 前端开发
+### 手动配置后端
 
-```bash
-# 启动前端开发服务器
-pnpm dev
-# 或者
-pnpm --filter web dev
-```
-
-### 3. 后端开发
-
-```bash
-# 启动后端 API 服务器
-pnpm dev:api
-# 或者
+```powershell
+# 进入后端目录
 cd packages/api
-python -m uvicorn app.main:app --reload
+
+# 创建 Python 虚拟环境
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+
+# 安装 Python 依赖
+pip install -r requirements.txt
+
+# 运行数据库迁移（如果使用 PostgreSQL）
+alembic upgrade head
+
+# 启动后端服务
+python start_dev.py
 ```
 
 ## 📂 项目结构
 
 ```text
 vxture/
-├── package.json              # PNPM 工作区根配置
-├── pnpm-workspace.yaml       # 工作区包配置
-├── pnpm-lock.yaml           # 锁定文件
-├── .github/
-│   ├── copilot-instructions.md  # AI 开发指南
-│   └── workflows/ci.yml         # CI/CD 配置
-├── packages/
-│   ├── web/                  # Next.js 前端
-│   │   ├── src/
-│   │   │   ├── app/         # App Router 页面
-│   │   │   └── components/  # React 组件
-│   │   ├── package.json
-│   │   ├── next.config.js
-│   │   ├── tailwind.config.js
-│   │   └── tsconfig.json
-│   └── api/                  # FastAPI 后端
-│       ├── app/
-│       │   └── main.py      # FastAPI 入口
-│       ├── scripts/
-│       ├── requirements.txt
+├── 📁 packages/
+│   ├── 📁 web/                   # Next.js 前端应用
+│   │   ├── 📁 src/
+│   │   │   ├── 📁 app/          # App Router 页面和布局
+│   │   │   │   ├── page.tsx     # 首页
+│   │   │   │   └── layout.tsx   # 根布局
+│   │   │   └── 📁 components/   # React 组件库
+│   │   │       ├── 📁 home/     # 首页组件
+│   │   │       └── 📁 layout/   # 布局组件
+│   │   ├── tailwind.config.js   # TailwindCSS 配置
+│   │   ├── next.config.js       # Next.js 配置
+│   │   └── package.json
+│   └── 📁 api/                   # FastAPI 后端应用
+│       ├── 📁 app/
+│       │   ├── main.py          # FastAPI 应用入口
+│       │   ├── 📁 models/       # 数据模型
+│       │   ├── 📁 routes/       # API 路由
+│       │   └── 📁 core/         # 核心配置
+│       ├── start_dev.py         # 开发服务器启动
+│       ├── requirements.txt     # Python 依赖
 │       └── package.json
-├── docs/                     # 项目文档
-├── cspell.json              # 拼写检查配置
-└── README.md
+├── 📁 .github/
+│   ├── copilot-instructions.md  # AI 开发助手指南
+│   └── 📁 workflows/            # GitHub Actions
+├── 📁 docs/                     # 项目文档
+├── start-dev.ps1               # Windows 开发启动脚本
+├── stop-dev.ps1                # Windows 开发停止脚本
+├── package.json                # Monorepo 根配置
+├── pnpm-workspace.yaml         # PNPM 工作区配置
+└── cspell.json                 # 拼写检查配置
 ```
 
-## 🛠️ 开发命令
+## 🛠️ 开发工作流
 
-```bash
-# 开发
-pnpm dev          # 启动前端
-pnpm dev:api      # 启动后端
+### 常用开发命令
 
-# 构建
-pnpm build        # 构建前端
+```powershell
+# 🚀 开发环境
+pnpm dev          # 启动前端开发服务器
+pnpm dev:api      # 启动后端 API 服务器
+pnpm start        # 同时启动前后端（等同于 .\start-dev.ps1）
 
-# 代码检查
-pnpm lint         # 检查所有包
-pnpm type-check   # 类型检查
+# 🏗️ 构建部署
+pnpm build        # 构建前端生产版本
+pnpm build:all    # 构建所有包
+pnpm preview      # 预览生产构建
 
-# 清理
+# 🔍 代码质量
+pnpm lint         # 检查所有包的代码规范
+pnpm lint:fix     # 自动修复代码问题
+pnpm type-check   # TypeScript 类型检查
+pnpm format       # 代码格式化
+
+# 🧪 测试
+pnpm test         # 运行所有测试
+pnpm test:watch   # 监听模式运行测试
+pnpm test:coverage # 生成测试覆盖率报告
+
+# 🧹 清理维护
 pnpm clean        # 清理构建文件
+pnpm reset        # 完全重置项目（清理 + 重新安装）
+pnpm health       # 环境健康检查
+```
+
+### 数据库操作
+
+```powershell
+# 数据库迁移
+pnpm db:migrate   # 执行数据库迁移
+pnpm db:reset     # 重置数据库
+pnpm db:seed      # 填充测试数据
 ```
 
 ## 🌐 环境配置
 
-### 环境变量模板与本地配置
+### 环境变量配置
 
-- **模板**: 仓库中已提供 `.env.local.template`，包含前后端常见的环境变量与注释。请复制并重命名为 `.env.local` 用于本地开发。
-
-- **生成本地 `.env.local`（建议）**:
+项目提供 `.env.local.template` 模板文件，包含所有必要的环境变量说明：
 
 ```powershell
-# 在项目根目录运行（Windows PowerShell）
+# 复制环境变量模板
 cp .env.local.template .env.local
-# 然后用编辑器填写真实值，或者使用 sed/PowerShell 替换敏感值
+
+# 编辑配置文件，填写真实值
+notepad .env.local
 ```
 
-- **提示**: 不要将 `.env.local` 提交到版本库；模板 `.env.local.template` 用于共享配置示例和说明。
-
-### 后端示例（仅供参考）
+### 关键环境变量
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost/vxture
+# 🌐 应用配置
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=http://localhost:3000
+
+# 🗄️ 数据库配置
+DATABASE_URL=postgresql://user:password@localhost:5432/vxture
 REDIS_URL=redis://localhost:6379
-SECRET_KEY=your-secret-key
+
+# 🔐 安全配置
+JWT_SECRET_KEY=your-jwt-secret-key
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
-## 📝 开发注意事项
+## 💡 开发约定
 
-- 确保 Python 3.13+ 和 Node.js 18+ 已安装
-- 后端需要 PostgreSQL 和 Redis 服务
-- 使用 PNPM 作为包管理器
-- 代码提交前请运行 `pnpm lint` 检查
-- 查看 `.github/copilot-instructions.md` 了解 AI 开发指导
+### 组件开发模式
 
-## 🔧 AI 开发支持
+- **🖥️ 服务器组件**: 默认模式，用于静态内容和 SEO
+- **💻 客户端组件**: 需要交互的组件，文件顶部声明 `'use client'`
+- **📁 组件组织**: 按功能分组 (`components/home/`, `components/layout/`)
 
-本项目包含 `.github/copilot-instructions.md` 文件，为 AI 编码助手提供项目特定的指导，包括：
+```tsx
+// 客户端组件示例
+'use client'
 
-- 架构概览和开发工作流
-- 关键文件路径和约定
-- 常见开发任务的最佳实践
+import { useState } from 'react'
 
-## 💼 项目说明
+export default function InteractiveButton() {
+  const [count, setCount] = useState(0)
+  // ...
+}
+```
 
-本仓库专注于平台与官方网站功能。若需扩展或集成，请在独立仓库维护并通过 API 对接。
+### 样式开发策略
 
-## 样式指南
+**🎨 TailwindCSS 优先**（90% 的样式需求）
 
-### 何时使用 SCSS
+```tsx
+<div className="bg-primary-500 text-white p-4 rounded-lg shadow-lg">
+  <h1 className="text-2xl font-bold mb-2">标题</h1>
+</div>
+```
 
-- 复杂动画和过渡效果
-- 需要嵌套选择器的复杂组件
-- 全局样式和重置
-- 主题相关的颜色方案
-- 需要 SCSS 函数和混合的场景
+**🎭 SCSS 补充**（复杂动画和主题）
 
-### 何时使用 Tailwind
+```scss
+.hero-animation {
+  @apply transition-all duration-500;
+  
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+  }
+}
+```
 
-- 布局和间距调整
-- 简单的颜色应用
-- 响应式设计调整
-- 快速原型设计
-- 小型 UI 调整
+### API 通信模式
 
-## 贡献指南
+使用 TanStack Query 管理服务器状态：
 
-1. Fork 仓库
-2. 创建功能分支 (`git checkout -b feature/xxx`)
-3. 提交更改 (`git commit -m 'feat: xxx'`)
-4. 推送到分支 (`git push origin feature/xxx`)
-5. 创建 Pull Request
+```tsx
+import { useQuery } from '@tanstack/react-query'
 
-## 许可证
+function UserProfile() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['user', 'profile'],
+    queryFn: () => fetch('/api/user/profile').then(res => res.json())
+  })
+  
+  // ...
+}
+```
 
-[MIT](LICENSE)
+## 🔧 故障排除
+
+### 常见问题
+
+#### **🚨 后端启动失败**
+
+```powershell
+# 检查 Python 环境
+python --version  # 确保 3.11+
+pip list          # 查看已安装包
+
+# 重新创建虚拟环境
+cd packages/api
+rm -rf .venv
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+#### **🚨 前端构建错误**
+
+```powershell
+# 清理缓存重新安装
+pnpm clean
+pnpm reset
+pnpm dev
+```
+
+#### **🚨 端口冲突**
+
+```powershell
+# 停止所有开发进程
+.\stop-dev.ps1
+
+# 或手动检查端口
+netstat -ano | findstr :3000
+netstat -ano | findstr :8000
+```
+
+## 🤖 AI 开发支持
+
+本项目包含完整的 AI 编程助手配置：
+
+- **📋 `.github/copilot-instructions.md`**: GitHub Copilot 专用指南
+- **🔧 开发工作流**: 自动化脚本和环境检查
+- **📚 项目约定**: 编码规范和最佳实践
+
+AI 助手可以帮助你：
+
+- 快速生成符合项目约定的组件
+- 自动处理 TypeScript 类型定义
+- 提供项目特定的代码建议
+
+## 📈 部署指南
+
+### 开发环境部署
+
+```powershell
+# 构建所有包
+pnpm build:all
+
+# 预览生产版本
+pnpm preview
+```
+
+### 生产环境部署
+
+详细部署指南请参考 `docs/DEPLOYMENT.md`
+
+## 🤝 贡献指南
+
+1. **Fork** 本仓库
+2. **创建特性分支**: `git checkout -b feature/amazing-feature`
+3. **提交更改**: `git commit -m 'feat: add amazing feature'`
+4. **推送分支**: `git push origin feature/amazing-feature`
+5. **创建 Pull Request**
+
+### 提交规范
+
+使用 [Conventional Commits](https://conventionalcommits.org/) 规范：
+
+```text
+feat: 新功能
+fix: 修复问题
+docs: 文档更新
+style: 代码格式
+refactor: 重构代码
+test: 测试相关
+chore: 构建或工具更新
+```
+
+## 📚 文档资源
+
+- 📖 **[开发指南](docs/DEVELOPMENT_GUIDE.md)**: 详细开发说明
+- 🏗️ **[技术架构](docs/TECH_STACK.md)**: 架构设计文档
+- 🚀 **[部署指南](docs/DEPLOYMENT.md)**: 生产环境部署
+- 🎨 **[设计系统](docs/DESIGN_SYSTEM.md)**: UI/UX 设计规范
+
+## 📄 许可证
+
+本项目采用 [MIT 许可证](LICENSE) - 详情请查看 LICENSE 文件
+
+---
+
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+
+<strong>[⭐ 给个 Star](../../stargazers) • [🐛 报告问题](../../issues) • [💡 功能建议](../../issues)</strong>
+
+Made with ❤️ by <a href="https://github.com/your-org">vxture team</a>
+
+</p>
+<!-- markdownlint-enable MD033 -->
