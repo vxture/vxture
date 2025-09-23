@@ -1,0 +1,15 @@
+﻿{
+    "startedAt":  "2025-09-23T01:20:12.5303583+08:00",
+    "frontend":  {
+                     "requestedPort":  3000,
+                     "pids":  {
+
+                              }
+                 },
+    "backend":  {
+                    "requestedPort":  8000,
+                    "pids":  {
+
+                             }
+                }
+}

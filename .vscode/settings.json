@@ -1,4 +1,24 @@
 {
+  "code-runner.runInTerminal": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.executorMap": {
+    "powershell": "powershell -ExecutionPolicy Bypass -NoProfile -File",
+    "bat": "cmd /c"
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "editor.formatOnSave": true,
+  "files.eol": "\n"
+}
+{
+  "code-runner.runInTerminal": true,
+  "code-runner.clearPreviousOutput": true,
+  "code-runner.executorMap": {
+    "powershell": "powershell -ExecutionPolicy Bypass -NoProfile -File",
+    "bat": "cmd /c"
+  },
+  "terminal.integrated.defaultProfile.windows": "PowerShell"
+}
+{
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
