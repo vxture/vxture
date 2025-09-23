@@ -12,7 +12,7 @@ export default function StatsSection() {
       label: "企业客户",
       description: "覆盖政府、金融、制造等多个行业",
       icon: "🏢",
-      color: "from-blue-500 to-cyan-500",
+      color: "from-blue-400 to-cyan-400",
     },
     {
       number: 1000,
@@ -20,7 +20,7 @@ export default function StatsSection() {
       label: "项目交付",
       description: "成功交付数字化转型项目",
       icon: "🚀",
-      color: "from-purple-500 to-blue-500",
+      color: "from-blue-400 to-cyan-400",
     },
     {
       number: 99.8,
@@ -28,7 +28,7 @@ export default function StatsSection() {
       label: "客户满意度",
       description: "客户续约率持续保持行业领先",
       icon: "⭐",
-      color: "from-cyan-500 to-green-500",
+      color: "from-blue-400 to-cyan-400",
     },
     {
       number: 50,
@@ -36,7 +36,7 @@ export default function StatsSection() {
       label: "数据处理量",
       description: "每日处理海量数据，服务亿级用户",
       icon: "📊",
-      color: "from-orange-500 to-red-500",
+      color: "from-blue-400 to-cyan-400",
     },
   ];
 
@@ -83,7 +83,7 @@ export default function StatsSection() {
         if (!startTime) startTime = currentTime;
         const progress = Math.min((currentTime - startTime) / duration, 1);
 
-        // 使用缓动函数使动画更自然
+        // Easing function for smoother animation
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         setDisplayValue(value * easeOutQuart);
 
@@ -99,7 +99,7 @@ export default function StatsSection() {
           cancelAnimationFrame(animationFrame);
         }
       };
-    }, [value, duration]);
+    }, [value, duration, inView]);
 
     const formatNumber = (num: number) => {
       if (suffix === "%") {
@@ -122,32 +122,32 @@ export default function StatsSection() {
   return (
     <section
       id="stats-section"
-      className="py-24 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden"
+      className="py-24 bg-gradient-to-r from-blue-50 via-blue-100 to-cyan-50 relative overflow-hidden"
     >
-      {/* 背景装饰 */}
+      {/* Background decoration */}
       <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-cyan-500/5 to-purple-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl"></div>
       </div>
 
-      {/* 网格背景 */}
+      {/* Grid background */}
       <div className="absolute inset-0 opacity-10">
-        <div className="h-full w-full bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+        <div className="h-full w-full bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
       </div>
 
       <div className="relative max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 标题区域 */}
+        {/* Title area */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-blue-900 mb-6">
             数据说话
           </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+          <p className="text-xl text-blue-700 max-w-3xl mx-auto">
             用数字见证我们在数据智能领域的专业实力与客户信赖
           </p>
         </div>
 
-        {/* 统计数据网格 */}
+        {/* Stats grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <div
@@ -155,36 +155,36 @@ export default function StatsSection() {
               className={`relative group ${inView ? "animate-in slide-in-from-bottom-8 duration-700" : "opacity-0"}`}
               style={{ animationDelay: `${index * 150}ms` }}
             >
-              {/* 卡片背景 */}
-              <div className="relative p-8 bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl hover:bg-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
-                {/* 渐变边框效果 */}
+              {/* Card background */}
+              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:border-blue-400">
+                {/* Gradient border effect */}
                 <div
                   className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${stat.color} p-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
                 >
-                  <div className="h-full w-full rounded-2xl bg-slate-900"></div>
+                  <div className="h-full w-full rounded-2xl bg-transparent"></div>
                 </div>
 
-                {/* 图标 */}
+                {/* Icon */}
                 <div className="text-4xl mb-4 text-center">{stat.icon}</div>
 
-                {/* 数字 */}
+                {/* Number */}
                 <div
                   className={`text-4xl lg:text-5xl font-bold text-center mb-3 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
                 >
                   <AnimatedNumber value={stat.number} suffix={stat.suffix} />
                 </div>
 
-                {/* 标签 */}
-                <h3 className="text-xl font-semibold text-white text-center mb-3">
+                {/* Label */}
+                <h3 className="text-xl font-semibold text-blue-900 text-center mb-3">
                   {stat.label}
                 </h3>
 
-                {/* 描述 */}
-                <p className="text-gray-300 text-center text-sm leading-relaxed">
+                {/* Description */}
+                <p className="text-blue-700 text-center text-sm leading-relaxed">
                   {stat.description}
                 </p>
 
-                {/* 装饰性元素 */}
+                {/* Decorative overlay */}
                 <div
                   className={`absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-r ${stat.color} rounded-full opacity-10 group-hover:opacity-20 transition-opacity duration-500`}
                 ></div>
@@ -193,12 +193,12 @@ export default function StatsSection() {
           ))}
         </div>
 
-        {/* 底部装饰文本 */}
+        {/* Bottom decorative text */}
         <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-2 text-gray-400">
-            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-400"></div>
+          <div className="inline-flex items-center space-x-2 text-blue-400">
+            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-300"></div>
             <span className="text-sm font-medium">持续创新，共创数字未来</span>
-            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-400"></div>
+            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-blue-300"></div>
           </div>
         </div>
       </div>

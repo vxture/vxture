@@ -39,17 +39,13 @@ export default function CTASection() {
       <div className="relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* 主标题 */}
         <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-          开启您的
           <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent block lg:inline lg:ml-4">
-            数据智能之旅
+            准备好释放您数据的潜力了吗？
           </span>
         </h2>
-
+        <br/>
         {/* 副标题 */}
         <p className="text-xl lg:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-          无论您是寻求数字化转型的企业，还是追求技术创新的团队，
-          <br className="hidden lg:block" />
-          vxture 都将为您提供最专业的数据智能解决方案
         </p>
 
         {/* 特色亮点 */}
@@ -114,6 +110,7 @@ export default function CTASection() {
 
         {/* CTA 按钮组 */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          {/*
           <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-2xl min-w-[200px]">
             <span className="flex items-center justify-center space-x-2">
               <span>免费试用</span>
@@ -132,6 +129,7 @@ export default function CTASection() {
               </svg>
             </span>
           </button>
+          */}
 
           <button className="group px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all duration-300 hover:scale-105 hover:shadow-lg min-w-[200px]">
             <span className="flex items-center justify-center space-x-2">

@@ -4,7 +4,13 @@
   "private": true,
   "version": "0.1.0",
   "description": "现代化企业官网平台 - Next.js 15 + FastAPI + PostgreSQL",
-  "keywords": ["monorepo", "nextjs", "fastapi", "enterprise", "web-platform"],
+  "keywords": [
+    "monorepo",
+    "nextjs",
+    "fastapi",
+    "enterprise",
+    "web-platform"
+  ],
   "author": "vxture team",
   "license": "MIT",
   "packageManager": "pnpm@8.15.0",
@@ -18,13 +24,11 @@
     "dev:api": "pnpm --filter api dev",
     "dev:full": "concurrently \"pnpm dev\" \"pnpm dev:api\" --names \"web,api\" --prefix-colors \"cyan,yellow\"",
     "start": "pnpm dev:full",
-    
     "// === 构建和部署 ===": "",
     "build": "pnpm --filter web build",
     "build:api": "pnpm --filter api build",
     "build:all": "pnpm --parallel build",
     "preview": "pnpm --filter web preview",
-    
     "// === 代码质量 ===": "",
     "lint": "pnpm --recursive lint",
     "lint:fix": "pnpm --recursive lint:fix",
@@ -32,28 +36,23 @@
     "type-check:all": "pnpm --recursive type-check",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,json,md}\"",
-    
     "// === 测试 ===": "",
     "test": "pnpm --recursive test",
     "test:watch": "pnpm --recursive test:watch",
     "test:coverage": "pnpm --recursive test:coverage",
-    
     "// === 依赖管理 ===": "",
     "clean": "pnpm --recursive clean && rimraf node_modules",
     "clean:cache": "pnpm store prune && rimraf .turbo .next dist build",
     "reset": "pnpm clean && pnpm clean:cache && pnpm install",
     "update": "pnpm --recursive update",
     "check-deps": "pnpm audit && pnpm --recursive outdated",
-    
     "// === 环境检查 ===": "",
     "check-env": "node -e \"console.log('Node:', process.version); console.log('PNPM:', process.env.npm_config_user_agent)\"",
     "health": "pnpm check-env && pnpm type-check && pnpm lint",
-    
     "// === 数据库操作 ===": "",
     "db:migrate": "pnpm --filter api db:migrate",
     "db:reset": "pnpm --filter api db:reset",
     "db:seed": "pnpm --filter api db:seed",
-    
     "// === 部署相关 ===": "",
     "prepare": "husky install",
     "precommit": "pnpm lint:fix && pnpm type-check",
@@ -61,12 +60,12 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.0",
-    "typescript": "^5.3.0",
-    "prettier": "^3.1.0",
     "concurrently": "^8.2.0",
-    "rimraf": "^5.0.0",
     "husky": "^8.0.0",
-    "lint-staged": "^15.2.0"
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.3.0"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
@@ -81,5 +80,10 @@
     "overrides": {
       "@types/node": "$@types/node"
     }
+  },
+  "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
+    "@tabler/icons-react": "^3.35.0",
+    "react-icons": "^5.5.0"
   }
 }

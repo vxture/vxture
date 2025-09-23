@@ -15,6 +15,7 @@
     "bcrypt",
     "chakra",
     "chromadb",
+    "Codeceptjs",
     "dbname",
     "dotenv",
     "ehthumbs",
