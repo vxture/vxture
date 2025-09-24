@@ -1,10 +1,17 @@
 "use client";
 
+// 引入 React 的 hooks
 import { useEffect, useState } from "react";
 
+/**
+ * StatsSection 组件
+ * 展示公司核心数据统计，带有动画和卡片交互效果
+ */
 export default function StatsSection() {
+  // 控制动画是否触发（进入视口时）
   const [inView, setInView] = useState(false);
 
+  // 统计数据列表，每个对象代表一个卡片
   const stats = [
     {
       number: 500,
@@ -12,7 +19,7 @@ export default function StatsSection() {
       label: "企业客户",
       description: "覆盖政府、金融、制造等多个行业",
       icon: "🏢",
-      color: "from-blue-400 to-cyan-400",
+      color: "from-blue-400 to-cyan-400", // Tailwind 渐变色
     },
     {
       number: 1000,
@@ -40,14 +47,18 @@ export default function StatsSection() {
     },
   ];
 
+  /**
+   * 进入视口时触发动画
+   * 使用 IntersectionObserver 监听组件是否进入视口
+   */
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setInView(true);
+          setInView(true); // 进入视口，触发动画
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 } // 30% 可见时触发
     );
 
     const element = document.getElementById("stats-section");
@@ -55,6 +66,7 @@ export default function StatsSection() {
       observer.observe(element);
     }
 
+    // 清理 observer
     return () => {
       if (element) {
         observer.unobserve(element);
@@ -62,6 +74,12 @@ export default function StatsSection() {
     };
   }, []);
 
+  /**
+   * 数字动画组件
+   * @param value 目标数字
+   * @param suffix 单位后缀
+   * @param duration 动画时长（毫秒）
+   */
   const AnimatedNumber = ({
     value,
     suffix,
@@ -71,19 +89,21 @@ export default function StatsSection() {
     suffix: string;
     duration?: number;
   }) => {
+    // 当前显示的数字
     const [displayValue, setDisplayValue] = useState(0);
 
     useEffect(() => {
-      if (!inView) return;
+      if (!inView) return; // 未进入视口不动画
 
       let startTime: number;
       let animationFrame: number;
 
+      // 动画函数
       const animate = (currentTime: number) => {
         if (!startTime) startTime = currentTime;
         const progress = Math.min((currentTime - startTime) / duration, 1);
 
-        // Easing function for smoother animation
+        // 四次缓出函数，动画更平滑
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         setDisplayValue(value * easeOutQuart);
 
@@ -94,21 +114,23 @@ export default function StatsSection() {
 
       animationFrame = requestAnimationFrame(animate);
 
+      // 清理动画帧
       return () => {
         if (animationFrame) {
           cancelAnimationFrame(animationFrame);
         }
       };
-    }, [value, duration, inView]);
+    }, [value, duration]);
 
+    // 格式化数字显示
     const formatNumber = (num: number) => {
       if (suffix === "%") {
-        return num.toFixed(1);
+        return num.toFixed(1); // 百分比保留一位小数
       }
       if (suffix === "PB+") {
-        return Math.floor(num);
+        return Math.floor(num); // PB+取整
       }
-      return Math.floor(num);
+      return Math.floor(num); // 其他取整
     };
 
     return (
@@ -124,20 +146,20 @@ export default function StatsSection() {
       id="stats-section"
       className="py-24 bg-gradient-to-r from-blue-50 via-blue-100 to-cyan-50 relative overflow-hidden"
     >
-      {/* Background decoration */}
+      {/* 背景装饰圆形 */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Grid background */}
+      {/* 网格背景 */}
       <div className="absolute inset-0 opacity-10">
         <div className="h-full w-full bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
       </div>
 
       <div className="relative max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title area */}
+        {/* 标题区 */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-blue-900 mb-6">
             数据说话
@@ -147,53 +169,69 @@ export default function StatsSection() {
           </p>
         </div>
 
-        {/* Stats grid */}
+        {/* 统计卡片网格 */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <div
               key={stat.label}
+              // 卡片动画：进入视口时 slide-in-from-bottom，未进入时透明
               className={`relative group ${inView ? "animate-in slide-in-from-bottom-8 duration-700" : "opacity-0"}`}
-              style={{ animationDelay: `${index * 150}ms` }}
+              style={{ animationDelay: `${index * 150}ms` }} // 瀑布式动画延迟
             >
-              {/* Card background */}
-              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:border-blue-400">
-                {/* Gradient border effect */}
+              {/* 卡片主体 */}
+              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:border-blue-400 overflow-hidden">
+                {/* 渐变边框效果，hover 时显现, 用伪元素实现渐变边框 */}
+
+
                 <div
-                  className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${stat.color} p-[1px] opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" // 关键：使用 -z-10 将其置于底层
+                  style={{ background: `linear-gradient(to right, ${stat.color})` }} // 使用行内样式设置渐变背景
                 >
                   <div className="h-full w-full rounded-2xl bg-transparent"></div>
                 </div>
 
-                {/* Icon */}
-                <div className="text-4xl mb-4 text-center">{stat.icon}</div>
-
-                {/* Number */}
+                {/* temp yanhaoguo
                 <div
-                  className={`text-4xl lg:text-5xl font-bold text-center mb-3 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
+                  className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${stat.color} p-[1px] opacity-0 group-hover:opacity-50 transition-opacity duration-500`}
                 >
-                  <AnimatedNumber value={stat.number} suffix={stat.suffix} />
+                  <div className="h-full w-full rounded-2xl bg-transparent"></div>
+                </div>
+                */}
+
+                <div className="relative z-10">
+
+                  {/* 图标 */}
+                  <div className="text-4xl mb-4 text-center">{stat.icon}</div>
+
+                  {/* 动画数字 */}
+                  <div
+                    className={`text-4xl lg:text-5xl font-bold text-center mb-3 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
+                  >
+                    <AnimatedNumber value={stat.number} suffix={stat.suffix} />
+                  </div>
+
+                  {/* 标签 */}
+                  <h3 className="text-xl font-semibold text-blue-900 text-center mb-3">
+                    {stat.label}
+                  </h3>
+
+                  {/* 描述 */}
+                  <p className="text-blue-700 text-center text-sm leading-relaxed">
+                    {stat.description}
+                  </p>
                 </div>
 
-                {/* Label */}
-                <h3 className="text-xl font-semibold text-blue-900 text-center mb-3">
-                  {stat.label}
-                </h3>
-
-                {/* Description */}
-                <p className="text-blue-700 text-center text-sm leading-relaxed">
-                  {stat.description}
-                </p>
-
-                {/* Decorative overlay */}
+                {/* 装饰圆形，hover 时增强透明度 */}
                 <div
-                  className={`absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-r ${stat.color} rounded-full opacity-10 group-hover:opacity-20 transition-opacity duration-500`}
+                  className={`absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-r ${stat.color} rounded-full opacity-10 group-hover:opacity-40 transition-opacity duration-500`}
                 ></div>
+                
               </div>
             </div>
           ))}
         </div>
 
-        {/* Bottom decorative text */}
+        {/* 底部装饰文本 */}
         <div className="text-center mt-16">
           <div className="inline-flex items-center space-x-2 text-blue-400">
             <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-300"></div>

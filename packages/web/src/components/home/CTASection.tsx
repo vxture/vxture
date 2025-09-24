@@ -154,7 +154,7 @@ export default function CTASection() {
         {/* 联系方式 */}
         <div className="mt-12 p-6 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl border border-gray-100">
           <p className="text-gray-600 mb-4">
-            还有疑问？我们的专家团队随时为您服务
+            我们的专家团队随时为您服务
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center text-sm">
             <div className="flex items-center space-x-2 text-gray-700">

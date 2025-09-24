@@ -34,7 +34,17 @@ module.exports = {
         18: "4.5rem",
         88: "22rem",
       },
+      keyframes: {
+        "slide-in-from-bottom": {
+          "0%": { transform: "translateY(2rem)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+      },
+      animation: {
+        "slide-in-from-bottom-8":
+          "slide-in-from-bottom 0.7s cubic-bezier(0.4, 0, 0.2, 1) both",
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 };
