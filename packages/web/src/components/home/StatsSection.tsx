@@ -2,7 +2,7 @@
 
 // 引入 React 的 hooks
 import { useEffect, useState } from "react";
-import { HiBuildingLibrary, HiBuildingOffice2, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
+import { HiBuildingLibrary, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
 
 /**
  * StatsSection 组件
@@ -146,7 +146,7 @@ export default function StatsSection() {
   return (
     <section
       id="stats-section"
-      className="py-24 bg-gradient-to-r from-blue-50 via-blue-100 to-cyan-50 relative overflow-hidden snap-start min-h-screen"
+      className="snap-section py-24 bg-gradient-to-b from-white to-white relative"
     >
       {/* 背景装饰圆形 */}
       <div className="absolute inset-0">
@@ -156,12 +156,12 @@ export default function StatsSection() {
       </div>
 
       {/* 网格背景 */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="h-full w-full bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+      <div className="absolute inset-0 opacity-50">
+        <div className="h-full w-full bg-[radial-gradient(circle,rgba(0,0,0,0.08)_10%,transparent_10%)] bg-[size:20px_20px]"></div>
       </div>
 
-      <div className="relative max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 标题区，样式与 FeaturesSection 完全一致 */}
+      <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 标题区 */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             数据说话

@@ -75,9 +75,9 @@ export default function RootLayout({
 
         {/* Additional meta tags can be added below */}
       </head>
-      <body className="snap-y snap-mandatory">
+      <body>
         <Header />
-        <main>{children}</main>
+          <main>{children}</main>
         <Footer />
       </body>
     </html>

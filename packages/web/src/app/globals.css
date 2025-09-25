@@ -13,14 +13,31 @@
   margin: 0;
 }
 
-html,
-body {
+html {
   height: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
+  height: 100%; /* 继承html的100%高度 */
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+
+  /* 核心：启用垂直滚动并设置吸附 */
+  overflow-y: auto;
+  -webkit-scroll-snap-type: y mandatory;
+          scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 80px;
+}
+
+main {
+  height: auto;
+  overflow: visible;
+}
+
+.snap-section {
+  scroll-snap-align: start;
 }
 
 img,

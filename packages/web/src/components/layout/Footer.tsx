@@ -3,7 +3,7 @@
 export default function Footer() {
   return (
     <footer className="bg-gradient-to-r from-gray-50 via-slate-100 to-gray-200 text-slate-800">
-      <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 主要内容区域 */}
         <div className="py-16 grid lg:grid-cols-4 md:grid-cols-2 gap-8">
           {/* 品牌信息 */}

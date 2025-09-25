@@ -4,7 +4,7 @@
   "flagWords": [],
   "allowCompoundWords": true,
   "caseSensitive": false,
-  "checkLimit": 500,
+  //"checkLimit": 500,
   "words": [
     "aiofiles",
     "alembic",
@@ -240,10 +240,4 @@
   ],
   "import": [],
   "includeRegExpList": [],
-  "excludeRegExpList": [
-    "\\b[A-Z]{2,}\\b(?![a-z])",
-    "\\b\\d+px\\b",
-    "\\b#[0-9a-fA-F]{3,8}\\b",
-    "\\b[a-z]+\\d+[a-z]*\\b"
-  ]
 }

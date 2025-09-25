@@ -17,7 +17,7 @@ export default function ProductSection() {
       subtitle: "统一数据接入与处理",
       description:
         "支持多种数据源接入，包括结构化、半结构化和非结构化数据，提供实时数据清洗、转换和标准化服务。",
-      features: ["多源数据接入", "实时数据处理", "数据质量管控", "标准化转换"],
+      features: ["多源数据接入", "实时数据处理", "数据质量管控", "数据标准转换"],
       image: "/images/products/product-intro-01.jpg",
       color: "blue",
     },
@@ -91,8 +91,8 @@ export default function ProductSection() {
   };
 
   return (
-    <section className="snap-start min-h-screen bg-gradient-to-b from-blue-50 to-gray-50 py-24">
-      <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="snap-section py-24 bg-gradient-to-b from-blue-50 to-gray-50 relative">
+      <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title area with left/right navigation arrows */}
         <div className="flex items-center justify-between mb-16">
           {/* Left arrow button */}
@@ -105,10 +105,10 @@ export default function ProductSection() {
           </button>
           {/* Section title and subtitle */}
           <div className="flex-1 text-center">
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-2">
+            <h2 className="text-3xl lg:text-4xl font-bold text-blue-800 mb-6">
               产品与服务
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-400 max-w-4xl mx-auto">
               覆盖数据本体构建、融合分析决策、智能指挥调度、场景推演仿真的全业务流程
             </p>
           </div>
@@ -135,7 +135,7 @@ export default function ProductSection() {
                 {/* Two-column layout: left for text, right for image */}
                 <div className="grid grid-cols-1 lg:grid-cols-2">
                   {/* Left: text content */}
-                  <div className="flex flex-col justify-center p-8">
+                  <div className="flex flex-col justify-center">
                     {/* Card header: icon and title */}
                     <div className="flex items-center space-x-4 mb-6">
                       <div
@@ -144,20 +144,22 @@ export default function ProductSection() {
                         {idx + 1}
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold text-gray-900">
+                        <h3 className="text-2xl font-bold text-blue-800 text-center">
                           {product.title}
                         </h3>
-                        <p className="text-gray-600">{product.subtitle}</p>
+                        <p className="text-sm text-gray-600">
+                          {product.subtitle}
+                        </p>
                       </div>
                     </div>
-                    <p className="text-gray-700 text-lg leading-relaxed ml-16 mr-8 mb-8">
+                    <p className="text-gray-600 text-lg leading-relaxed ml-16 mr-8 mb-8">
                       {product.description}
                     </p>
                     <div>
-                      <h4 className="font-semibold text-gray-900 ml-16 mr-8 mb-8">
+                      <h4 className="font-semibold text-gray-800 ml-16 mr-8 mb-8">
                         特色功能
                       </h4>
-                      <div className="grid grid-cols-2 gap-2 ml-16 mr-8 mb-8">
+                      <div className="grid grid-cols-2 gap-4 ml-16 mr-16 mb-16">
                         {product.features.map((feature) => (
                           <div
                             key={feature}
@@ -173,24 +175,37 @@ export default function ProductSection() {
                     </div>
                     {/* Learn More button */}
                     <button
-                      className={`px-6 py-3 ${colors.button} text-white rounded-lg transition-colors duration-300 font-semibold w-max ml-16 mr-8 mb-30`}
+                      className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max ml-16 mr-8 mb-30`}
                     >
-                      More
+                      了解更多
                     </button>
                   </div>
                   {/* Right: image area */}
-                  <div className="relative flex items-center justify-center p-8">
-                    {/* Gradient background decoration */}
-                    <div
-                      className={`absolute -inset-2 bg-gradient-to-r ${colors.gradient} rounded-xl blur-lg opacity-25`}
-                    ></div>
-                    {/* Product image */}
-                    <div className="relative bg-white rounded-xl p-0 shadow-lg w-full h-full flex items-center">
+                  <div className="relative flex items-center justify-center">
+                    {/* Monitor frame with custom images */}
+                    <div className="relative w-full max-w-2xl aspect-[16/10] flex items-center justify-center">
+                      {/* Monitor frame image */}
                       <img
-                        src={product.image}
-                        alt={product.title}
-                        className="w-full h-72 object-cover rounded-lg"
-                        style={{ maxHeight: 360 }}
+                        src="/images/products/monitor-frame.png"
+                        alt="Monitor Frame"
+                        className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none z-10"
+                        draggable={false}
+                      />
+                      {/* Product image inside monitor screen area */}
+                      <div className="absolute w-[92%] h-[92%] overflow-hidden z-20 flex items-center justify-center">
+                        <img
+                          src={product.image}
+                          alt={product.title}
+                          className="w-full h-full object-cover"
+                          style={{ aspectRatio: "16/9" }}
+                        />
+                      </div>
+                      {/* Monitor base image */}
+                      <img
+                        src="/images/products/monitor-base.png"
+                        alt="Monitor Base"
+                        className="absolute left-1/2 bottom-[-138px] -translate-x-1/2 w-[100%] object-contain pointer-events-none select-none z-10"
+                        draggable={false}
                       />
                     </div>
                   </div>

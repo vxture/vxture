@@ -23,7 +23,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative snap-start min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative flex items-center justify-center overflow-hidden">
       {/* 背景视频与遮罩 */}
       <div className="absolute inset-0 w-full h-full z-0">
         <video

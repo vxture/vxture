@@ -13,8 +13,7 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
     window.scrollTo(0, 0);
   }, []);
   return (
-    // 让 body 作为滚动容器，main 只负责 snap 类型，不设置 h-screen/overflow
-    <main>
+    <>
       <HeroSection />
       <FeaturesSection />
       <ProductSection />
@@ -22,6 +21,6 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
       <StatsSection />
       <CTASection />
       {children}
-    </main>
+    </>
   );
 }

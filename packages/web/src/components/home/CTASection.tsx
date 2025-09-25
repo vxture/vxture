@@ -2,7 +2,7 @@
 
 export default function CTASection() {
   return (
-    <section className="py-24 bg-white relative overflow-hidden snap-start min-h-screen">
+    <section className="snap-section py-24 bg-gradient-to-b from-slate-50 to-white relative">
       {/* 背景装饰 */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-50"></div>

@@ -53,8 +53,8 @@ export default function CaseSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50 snap-start min-h-screen scroll-mt-20">
-      <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="snap-section py-24 bg-gradient-to-b from-slate-50 to-white relative">
+      <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
@@ -90,30 +90,42 @@ export default function CaseSection() {
 
                 {/* Content area */}
                 <div className="p-6 space-y-4">
-                  <h3 className="text-xl font-bold text-gray-900">{item.title}</h3>
-                  <p className="text-gray-600">{item.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full border border-blue-200"
+                    {/* Title */}
+                    <h3 className="text-2xl font-bold text-blue-800 text-center">{item.title}</h3>
+                    {/* Description */}
+                    <p className="text-gray-600 leading-relaxed text-center">{item.description}</p>
+                    {/* Highlights tags */}
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 bg-blue-50 text-blue-700 text-sm font-semibold rounded-full border border-blue-50"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    {/* Learn more button */}
+                    <div className="pt-4 text-center">
+                      <button
+                        className={`inline-flex items-center px-6 py-2 font-semibold rounded-lg transition-all duration-300 border ${buttonClass}`}
                       >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="pt-2 flex items-center justify-between">
-                    {/* Year tag on the left */}
-                    <span className="flex items-center text-sm text-gray-400 font-medium">
-                      <LuCalendarDays className="w-4 h-4 mr-1" color="gray-400" />
-                      {item.year}
-                    </span>
-                    <button
-                      className={`px-6 py-3 font-semibold rounded-lg transition-all duration-300 border ${buttonClass}`}
-                    >
-                      查看详情
-                    </button>
-                  </div>
+                        查看详情
+                        <svg
+                          className="ml-2 w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                 </div>
               </div>
             );
