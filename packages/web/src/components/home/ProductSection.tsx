@@ -2,11 +2,15 @@
 "use client";
 
 import { useState } from "react";
+import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
 
+/**
+ * ProductSection component
+ * - Section uses snap-start for scroll snap, no sticky/minHeight/position
+ * - Carousel with left/right navigation, two-column layout
+ */
 export default function ProductSection() {
-  // Default: first product expanded
-  const [expandedProduct, setExpandedProduct] = useState<number>(0);
-
+  // Product data array
   const products = [
     {
       title: "数据融合平台",
@@ -46,6 +50,15 @@ export default function ProductSection() {
     },
   ];
 
+  // Carousel state
+  const [current, setCurrent] = useState(0);
+  const total = products.length;
+
+  // Carousel navigation
+  const prev = () => setCurrent((prev) => (prev - 1 + total) % total);
+  const next = () => setCurrent((prev) => (prev + 1) % total);
+
+  // Color mapping for different product cards
   const colorMap = {
     blue: {
       gradient: "from-blue-500 to-cyan-500",
@@ -78,148 +91,107 @@ export default function ProductSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section className="snap-start min-h-screen bg-gradient-to-b from-blue-50 to-gray-50 py-24">
       <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title area */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            产品与服务
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            覆盖数据本体构建、融合分析决策、智能指挥调度、场景推演仿真的全业务流程
-          </p>
+        {/* Title area with left/right navigation arrows */}
+        <div className="flex items-center justify-between mb-16">
+          {/* Left arrow button */}
+          <button
+            aria-label="Previous"
+            onClick={prev}
+            className="p-2 rounded-full hover:bg-gray-200 transition"
+          >
+            <PiCaretLeftBold className="w-7 h-7 text-gray-500" />
+          </button>
+          {/* Section title and subtitle */}
+          <div className="flex-1 text-center">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-2">
+              产品与服务
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              覆盖数据本体构建、融合分析决策、智能指挥调度、场景推演仿真的全业务流程
+            </p>
+          </div>
+          {/* Right arrow button */}
+          <button
+            aria-label="Next"
+            onClick={next}
+            className="p-2 rounded-full hover:bg-gray-200 transition"
+          >
+            <PiCaretRightBold className="w-7 h-7 text-gray-500" />
+          </button>
         </div>
 
-        {/* Product list */}
-        <div className="space-y-4">
-          {products.map((product, index) => {
+        {/* Carousel: show only the current product card, card is full width */}
+        <div className="w-full flex justify-center">
+          {products.map((product, idx) => {
+            if (idx !== current) return null;
             const colors = colorMap[product.color as keyof typeof colorMap];
-            const isExpanded = expandedProduct === index;
-
             return (
               <div
                 key={product.title}
-                id={`product-card-${index}`}
-                className={`border-2 rounded-2xl transition-all duration-500 cursor-pointer hover:shadow-lg ${
-                  isExpanded
-                    ? `${colors.border} ${colors.bg} shadow-xl`
-                    : "border-gray-200 bg-white hover:border-gray-300"
-                }`}
+                className={`w-full border-2 rounded-2xl transition-all duration-500 ${colors.border} ${colors.bg} shadow-xl`}
               >
-                {/* Product header (clickable for expand/collapse) */}
-                <div
-                  className="p-6 flex items-center justify-between select-none"
-                  onClick={() => {
-                    if (isExpanded) {
-                      setExpandedProduct(-1); // Collapse if already expanded
-                    } else {
-                      setExpandedProduct(index); // Expand if not expanded
-                      // Scroll card into center of viewport (absolute center)
-                      setTimeout(() => {
-                        const card = document.getElementById(`product-card-${index}`);
-                        if (card) {
-                          const rect = card.getBoundingClientRect();
-                          const cardTop = rect.top + window.scrollY;
-                          const cardHeight = rect.height;
-                          const viewportHeight = window.innerHeight;
-                          // 让卡片顶部距离窗口顶部 = (窗口高度 - 卡片高度) / 2，实现绝对居中
-                          window.scrollTo({
-                            top: cardTop - ((viewportHeight - cardHeight) / 2),
-                            behavior: "smooth",
-                          });
-                        }
-                      }, 10);
-                    }
-                  }}
-                  style={{ cursor: "pointer" }}
-                >
-                  <div className="flex items-center space-x-4">
-                    <div
-                      className={`w-12 h-12 rounded-xl bg-gradient-to-r ${colors.gradient} flex items-center justify-center text-white font-bold text-xl shadow-lg`}
-                    >
-                      {index + 1}
+                {/* Two-column layout: left for text, right for image */}
+                <div className="grid grid-cols-1 lg:grid-cols-2">
+                  {/* Left: text content */}
+                  <div className="flex flex-col justify-center p-8">
+                    {/* Card header: icon and title */}
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div
+                        className={`w-12 h-12 rounded-xl bg-gradient-to-r ${colors.gradient} flex items-center justify-center text-white font-bold text-xl shadow-lg`}
+                      >
+                        {idx + 1}
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900">
+                          {product.title}
+                        </h3>
+                        <p className="text-gray-600">{product.subtitle}</p>
+                      </div>
                     </div>
+                    <p className="text-gray-700 text-lg leading-relaxed ml-16 mr-8 mb-8">
+                      {product.description}
+                    </p>
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-900">
-                        {product.title}
-                      </h3>
-                      <p className="text-gray-600">{product.subtitle}</p>
-                    </div>
-                  </div>
-
-                  <div
-                    className={`transform transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
-                  >
-                    <svg
-                      className="w-6 h-6 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                {/* Expanded content (not clickable for collapse) */}
-                <div
-                  className={`overflow-hidden transition-all duration-500 ${
-                    isExpanded ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
-                  }`}
-                >
-                  <div className="px-6 pb-6">
-                    <div className="grid lg:grid-cols-2 gap-8">
-                      {/* Description and features */}
-                      <div className="space-y-6">
-                        <p className="text-gray-700 text-lg leading-relaxed">
-                          {product.description}
-                        </p>
-
-                        <div>
-                          <h4 className="font-semibold text-gray-900 mb-3">
-                            Core Features
-                          </h4>
-                          <div className="grid grid-cols-2 gap-2">
-                            {product.features.map((feature) => (
-                              <div
-                                key={feature}
-                                className="flex items-center space-x-2"
-                              >
-                                <div
-                                  className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
-                                ></div>
-                                <span className="text-gray-600">{feature}</span>
-                              </div>
-                            ))}
+                      <h4 className="font-semibold text-gray-900 ml-16 mr-8 mb-8">
+                        特色功能
+                      </h4>
+                      <div className="grid grid-cols-2 gap-2 ml-16 mr-8 mb-8">
+                        {product.features.map((feature) => (
+                          <div
+                            key={feature}
+                            className="flex items-center space-x-2"
+                          >
+                            <div
+                              className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
+                            ></div>
+                            <span className="text-gray-600">{feature}</span>
                           </div>
-                        </div>
-
-                        <button
-                          className={`px-6 py-3 ${colors.button} text-white rounded-lg transition-colors duration-300 font-semibold`}
-                        >
-                          Learn More
-                        </button>
+                        ))}
                       </div>
-
-                      {/* Product image */}
-                      <div className="relative flex items-center h-full">
-                        <div
-                          className={`absolute -inset-2 bg-gradient-to-r ${colors.gradient} rounded-xl blur-lg opacity-25`}
-                        ></div>
-                        <div className="relative bg-white rounded-xl p-0 shadow-lg w-full h-full flex items-center">
-                          <img
-                            src={product.image}
-                            alt={product.title}
-                            className="w-full h-full object-cover rounded-lg"
-                            style={{ maxHeight: 360 }}
-                          />
-                        </div>
-                      </div>
+                    </div>
+                    {/* Learn More button */}
+                    <button
+                      className={`px-6 py-3 ${colors.button} text-white rounded-lg transition-colors duration-300 font-semibold w-max ml-16 mr-8 mb-30`}
+                    >
+                      More
+                    </button>
+                  </div>
+                  {/* Right: image area */}
+                  <div className="relative flex items-center justify-center p-8">
+                    {/* Gradient background decoration */}
+                    <div
+                      className={`absolute -inset-2 bg-gradient-to-r ${colors.gradient} rounded-xl blur-lg opacity-25`}
+                    ></div>
+                    {/* Product image */}
+                    <div className="relative bg-white rounded-xl p-0 shadow-lg w-full h-full flex items-center">
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-full h-72 object-cover rounded-lg"
+                        style={{ maxHeight: 360 }}
+                      />
                     </div>
                   </div>
                 </div>

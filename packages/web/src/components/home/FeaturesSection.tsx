@@ -49,7 +49,7 @@ export default function FeaturesSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-50 to-white">
+    <section className="snap-start scroll-mt-20 min-h-screen py-24 bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title area */}
         <div className="text-center mb-16">

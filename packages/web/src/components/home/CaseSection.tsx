@@ -8,29 +8,29 @@ import { LuCalendarDays } from 'react-icons/lu';
 export default function CaseSection() {
   const cases = [
     {
-      title: "智慧城市数据中台",
+      title: "地质灾害数据图谱",
       description:
-        "为某地政府打造统一数据中台，实现多部门数据融合与智能分析，提升城市治理效率。",
+        "构建数据智能平台，整合分散的静态基础数据和动态监测监管数据，实现深度关联分析与图形结合展示",
       image: "/images/cases/case-intro-01.jpg",
-      tags: ["数据融合", "城市治理", "智能分析"],
+      tags: ["数据融合", "本体构建", "业务分析"],
       year: "2024-03",
       color: "blue",
     },
     {
-      title: "金融风控智能平台",
+      title: "智能应急指挥平台",
       description:
-        "为大型银行构建实时风控系统，支持大数据建模与风险预测，保障金融安全。",
+        "搭建智能决策指挥调度平台，整合跨领域数据资源，实现灾害预警、资源调度和应急决策的一体化支持",
       image: "/images/cases/case-intro-02.jpg",
-      tags: ["金融风控", "实时建模", "风险预测"],
+      tags: ["智能决策", "应急管理", "数据整合"],
       year: "2024-12",
       color: "cyan",
     },
     {
-      title: "制造业数字孪生",
+      title: "公共安全情报分析",
       description:
-        "助力制造企业实现生产流程数字化仿真，优化资源配置，提升生产效率。",
+        "通过深度应用大模型技术，实现了案件智能融合分析与实时研判决策，构建起精准高效的安全防控体系",
       image: "/images/cases/case-intro-03.jpg",
-      tags: ["数字孪生", "流程优化", "生产效率"],
+      tags: ["融合分析", "动态研判", "事件响应"],
       year: "2025-06",
       color: "purple",
     },
@@ -53,7 +53,7 @@ export default function CaseSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section className="py-24 bg-gradient-to-b from-white to-gray-50 snap-start min-h-screen scroll-mt-20">
       <div className="max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}
         <div className="text-center mb-16">
@@ -75,8 +75,8 @@ export default function CaseSection() {
                 key={item.title}
                 className="group relative bg-white hover:bg-blue-50 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-blue-50"
               >
-                {/* Image area with overlay opacity 20% */}
-                <div className="relative w-full h-56">
+                {/* Image area with 16:9 aspect ratio */}
+                <div className="relative w-full aspect-[16/9]">
                   <Image
                     src={item.image}
                     alt={item.title + "案例图片"}

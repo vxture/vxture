@@ -2,7 +2,7 @@
 
 export default function CTASection() {
   return (
-    <section className="py-24 bg-white relative overflow-hidden">
+    <section className="py-24 bg-white relative overflow-hidden snap-start min-h-screen">
       {/* 背景装饰 */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-50"></div>
@@ -49,7 +49,11 @@ export default function CTASection() {
         </p>
 
         {/* 特色亮点 */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+
+        <div className="grid md:grid-cols-5 gap-6 mb-12">
+          {/* 左侧占位格 */}
+          <div className="flex items-center justify-center space-x-3 p-4"></div>
+
           <div className="flex items-center justify-center space-x-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
               <svg
@@ -68,6 +72,7 @@ export default function CTASection() {
             </div>
             <span className="font-semibold text-gray-800">快速部署</span>
           </div>
+          
 
           <div className="flex items-center justify-center space-x-3 p-4 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-100 hover:shadow-lg transition-all duration-300">
             <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
@@ -106,11 +111,13 @@ export default function CTASection() {
             </div>
             <span className="font-semibold text-gray-800">持续创新</span>
           </div>
+
+          {/* 右侧占位格 */}
+          <div className="flex items-center justify-center space-x-3 p-4"></div>
         </div>
 
         {/* CTA 按钮组 */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          {/*
           <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-2xl min-w-[200px]">
             <span className="flex items-center justify-center space-x-2">
               <span>免费试用</span>
@@ -129,7 +136,6 @@ export default function CTASection() {
               </svg>
             </span>
           </button>
-          */}
 
           <button className="group px-8 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:border-blue-500 hover:text-blue-600 transition-all duration-300 hover:scale-105 hover:shadow-lg min-w-[200px]">
             <span className="flex items-center justify-center space-x-2">
@@ -150,6 +156,7 @@ export default function CTASection() {
             </span>
           </button>
         </div>
+        <br/><br/>
 
         {/* 联系方式 */}
         <div className="mt-12 p-6 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl border border-gray-100">

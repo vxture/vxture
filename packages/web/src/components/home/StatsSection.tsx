@@ -2,10 +2,12 @@
 
 // 引入 React 的 hooks
 import { useEffect, useState } from "react";
+import { HiBuildingLibrary, HiBuildingOffice2, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
 
 /**
  * StatsSection 组件
  * 展示公司核心数据统计，带有动画和卡片交互效果
+ * 标题、副标题、底部装饰文字样式与 FeaturesSection 完全一致
  */
 export default function StatsSection() {
   // 控制动画是否触发（进入视口时）
@@ -14,35 +16,35 @@ export default function StatsSection() {
   // 统计数据列表，每个对象代表一个卡片
   const stats = [
     {
-      number: 500,
+      number: 10,
       suffix: "+",
       label: "企业客户",
-      description: "覆盖政府、金融、制造等多个行业",
-      icon: "🏢",
+      description: "覆盖政府、国央企等多个行业",
+      icon: <HiBuildingLibrary className="w-16 h-16 text-blue-400" />,
       color: "from-blue-400 to-cyan-400", // Tailwind 渐变色
     },
     {
-      number: 1000,
+      number: 50,
       suffix: "+",
-      label: "项目交付",
-      description: "成功交付数字化转型项目",
-      icon: "🚀",
+      label: "智能化项目",
+      description: "成功交付智能体应用",
+      icon: <HiMiniCube className="w-16 h-16 text-blue-400" />,
       color: "from-blue-400 to-cyan-400",
     },
     {
-      number: 99.8,
+      number: 98.0,
       suffix: "%",
       label: "客户满意度",
       description: "客户续约率持续保持行业领先",
-      icon: "⭐",
+      icon: <HiStar className="w-16 h-16 text-blue-400" />,
       color: "from-blue-400 to-cyan-400",
     },
     {
-      number: 50,
-      suffix: "PB+",
-      label: "数据处理量",
-      description: "每日处理海量数据，服务亿级用户",
-      icon: "📊",
+      number: 2000,
+      suffix: "+",
+      label: "业务用户",
+      description: "在线智能业务用户规模",
+      icon: <HiMiniUserGroup className="w-16 h-16 text-blue-400" />,
       color: "from-blue-400 to-cyan-400",
     },
   ];
@@ -144,7 +146,7 @@ export default function StatsSection() {
   return (
     <section
       id="stats-section"
-      className="py-24 bg-gradient-to-r from-blue-50 via-blue-100 to-cyan-50 relative overflow-hidden"
+      className="py-24 bg-gradient-to-r from-blue-50 via-blue-100 to-cyan-50 relative overflow-hidden snap-start min-h-screen"
     >
       {/* 背景装饰圆形 */}
       <div className="absolute inset-0">
@@ -159,12 +161,12 @@ export default function StatsSection() {
       </div>
 
       <div className="relative max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 标题区 */}
+        {/* 标题区，样式与 FeaturesSection 完全一致 */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-blue-900 mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             数据说话
           </h2>
-          <p className="text-xl text-blue-700 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             用数字见证我们在数据智能领域的专业实力与客户信赖
           </p>
         </div>
@@ -192,7 +194,13 @@ export default function StatsSection() {
                 <div className="relative z-10">
 
                   {/* 图标 */}
-                  <div className="text-4xl mb-4 text-center">{stat.icon}</div>
+                  <div className="flex justify-center">
+                    <div
+                      className="w-32 h-32 flex items-center justify-center transition-transform duration-300"
+                    >
+                      {stat.icon}
+                    </div>
+                  </div>
 
                   {/* 动画数字 */}
                   <div
@@ -202,12 +210,12 @@ export default function StatsSection() {
                   </div>
 
                   {/* 标签 */}
-                  <h3 className="text-xl font-semibold text-blue-900 text-center mb-3">
+                  <h3 className="text-xl font-semibold text-gray-900 text-center mb-3">
                     {stat.label}
                   </h3>
 
                   {/* 描述 */}
-                  <p className="text-blue-700 text-center text-sm leading-relaxed">
+                  <p className="text-gray-600 text-center text-base leading-relaxed">
                     {stat.description}
                   </p>
                 </div>
@@ -222,12 +230,12 @@ export default function StatsSection() {
           ))}
         </div>
 
-        {/* 底部装饰文本 */}
+        {/* 底部装饰文本，样式与 FeaturesSection 完全一致 */}
         <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-2 text-blue-400">
-            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-300"></div>
+          <div className="inline-flex items-center space-x-2 text-gray-500">
+            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300"></div>
             <span className="text-sm font-medium">持续创新，共创数字未来</span>
-            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-blue-300"></div>
+            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300"></div>
           </div>
         </div>
       </div>

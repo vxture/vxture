@@ -2,7 +2,7 @@
 .SYNOPSIS
     Vxture frontend development environment startup script (PowerShell)
 .DESCRIPTION
-    一键启动 Next.js 前端开发服务
+    一键后台启动 Next.js 前端开发服务，不占用当前 terminal
     - 后台启动服务
     - 记录进程 PID 到 .vxture_frontend.pid
     - 输出服务信息
@@ -23,11 +23,12 @@ if (!(Test-Path $webDir)) {
     exit 1
 }
 
-Write-Host "Starting frontend..."
+Write-Host "Starting frontend in background..."
 try {
+    # 使用 -NoNewWindow 可选，-WindowStyle Hidden 保证不弹窗且不占用当前 terminal
     $p = Start-Process -FilePath "cmd.exe" -ArgumentList "/c pnpm dev" -WorkingDirectory $webDir -WindowStyle Hidden -PassThru
     $p.Id | Out-File -Encoding ascii $pidFile
-    Write-Host "✅ Frontend process started. PID: $($p.Id)"
+    Write-Host "✅ Frontend process started in background. PID: $($p.Id)"
     Write-Host "Frontend is starting at: http://localhost:3000"
 }
 catch {

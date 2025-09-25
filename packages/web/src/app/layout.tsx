@@ -1,6 +1,3 @@
-"use client"
-
-import React, { useEffect } from "react";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
 import "./globals.css";
@@ -15,10 +12,6 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
   return (
     <html lang="zh">
       <head>
@@ -82,7 +75,7 @@ export default function RootLayout({
 
         {/* Additional meta tags can be added below */}
       </head>
-      <body>
+      <body className="snap-y snap-mandatory">
         <Header />
         <main>{children}</main>
         <Footer />
