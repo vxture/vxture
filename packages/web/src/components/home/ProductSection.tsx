@@ -83,7 +83,7 @@ export default function ProductSection() {
         {/* Title area */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            完整的产品生态
+            产品与服务
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             覆盖数据本体构建、融合分析决策、智能指挥调度、场景推演仿真的全业务流程
@@ -99,6 +99,7 @@ export default function ProductSection() {
             return (
               <div
                 key={product.title}
+                id={`product-card-${index}`}
                 className={`border-2 rounded-2xl transition-all duration-500 cursor-pointer hover:shadow-lg ${
                   isExpanded
                     ? `${colors.border} ${colors.bg} shadow-xl`
@@ -113,6 +114,21 @@ export default function ProductSection() {
                       setExpandedProduct(-1); // Collapse if already expanded
                     } else {
                       setExpandedProduct(index); // Expand if not expanded
+                      // Scroll card into center of viewport (absolute center)
+                      setTimeout(() => {
+                        const card = document.getElementById(`product-card-${index}`);
+                        if (card) {
+                          const rect = card.getBoundingClientRect();
+                          const cardTop = rect.top + window.scrollY;
+                          const cardHeight = rect.height;
+                          const viewportHeight = window.innerHeight;
+                          // 让卡片顶部距离窗口顶部 = (窗口高度 - 卡片高度) / 2，实现绝对居中
+                          window.scrollTo({
+                            top: cardTop - ((viewportHeight - cardHeight) / 2),
+                            behavior: "smooth",
+                          });
+                        }
+                      }, 10);
                     }
                   }}
                   style={{ cursor: "pointer" }}

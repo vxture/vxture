@@ -179,9 +179,8 @@ export default function StatsSection() {
               style={{ animationDelay: `${index * 150}ms` }} // 瀑布式动画延迟
             >
               {/* 卡片主体 */}
-              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:border-blue-400 overflow-hidden">
+              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 overflow-hidden">
                 {/* 渐变边框效果，hover 时显现, 用伪元素实现渐变边框 */}
-
 
                 <div
                   className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" // 关键：使用 -z-10 将其置于底层
@@ -189,14 +188,6 @@ export default function StatsSection() {
                 >
                   <div className="h-full w-full rounded-2xl bg-transparent"></div>
                 </div>
-
-                {/* temp yanhaoguo
-                <div
-                  className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${stat.color} p-[1px] opacity-0 group-hover:opacity-50 transition-opacity duration-500`}
-                >
-                  <div className="h-full w-full rounded-2xl bg-transparent"></div>
-                </div>
-                */}
 
                 <div className="relative z-10">
 

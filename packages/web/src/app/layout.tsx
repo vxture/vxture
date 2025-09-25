@@ -1,11 +1,13 @@
-import React from "react";
+"use client"
+
+import React, { useEffect } from "react";
 import Footer from "../components/layout/Footer";
 import Header from "../components/layout/Header";
 import "./globals.css";
 
 export const metadata = {
   title: "vxture AI | 释放数据潜力",
-  description: "AI-based virtual nature exploration platform",
+  description: "AI-based virtual nature exploration平台",
 };
 
 export default function RootLayout({
@@ -13,6 +15,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <html lang="zh">
       <head>
