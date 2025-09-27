@@ -73,7 +73,7 @@ export default function CaseSection() {
             return (
               <div
                 key={item.title}
-                className="group relative bg-white hover:bg-blue-50 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-blue-50"
+                className="group relative bg-white hover:bg-blue-50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500 overflow-hidden border border-blue-50"
               >
                 {/* Image area with 16:9 aspect ratio */}
                 <div className="relative w-full aspect-[16/9]">

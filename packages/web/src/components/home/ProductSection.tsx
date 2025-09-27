@@ -51,7 +51,7 @@ export default function ProductSection() {
   ];
 
   // Carousel state
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState<number | null>(0);
   const total = products.length;
 
   // Carousel navigation
@@ -130,83 +130,121 @@ export default function ProductSection() {
             return (
               <div
                 key={product.title}
-                className={`w-full border-2 rounded-2xl transition-all duration-500 ${colors.border} ${colors.bg} shadow-xl`}
+                className={`w-full rounded-2xl transition-all duration-500 ${colors.border} ${colors.bg} shadow-xl`}
               >
-                {/* Two-column layout: left for text, right for image */}
-                <div className="grid grid-cols-1 lg:grid-cols-2">
-                  {/* Left: text content */}
-                  <div className="flex flex-col justify-center">
-                    {/* Card header: icon and title */}
-                    <div className="flex items-center space-x-4 mb-6">
-                      <div
-                        className={`w-12 h-12 rounded-xl bg-gradient-to-r ${colors.gradient} flex items-center justify-center text-white font-bold text-xl shadow-lg`}
-                      >
-                        {idx + 1}
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-bold text-blue-800 text-center">
-                          {product.title}
-                        </h3>
-                        <p className="text-sm text-gray-600">
-                          {product.subtitle}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-gray-600 text-lg leading-relaxed ml-16 mr-8 mb-8">
-                      {product.description}
-                    </p>
-                    <div>
-                      <h4 className="font-semibold text-gray-800 ml-16 mr-8 mb-8">
-                        特色功能
-                      </h4>
-                      <div className="grid grid-cols-2 gap-4 ml-16 mr-16 mb-16">
-                        {product.features.map((feature) => (
+                <div className="grid grid-cols-1 lg:grid-cols-[38%_62%]">
+                  <div
+                    className="bg-gradient-to-r from-red-500 via-gray-100 to-gray-200"
+                  >
+                    {/* Left: text content */}
+                    <div className="relative flex h-full items-center justify-items-start bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200 border-2 border-red-800 px-10 py-10">
+                      <div className="relative w-full h-full flex flex-col justify-items-start border-2 border-red-800">
+                        {/* Title and subtitle */}
+                        <div className="border-2 border-red-800 flex items-center space-x-4 mb-6">
                           <div
-                            key={feature}
-                            className="flex items-center space-x-2"
+                            className={`border-2 border-red-800 w-12 h-12 rounded-xl bg-gradient-to-r ${colors.gradient} flex items-center justify-center text-white font-bold text-xl shadow-lg`}
                           >
-                            <div
-                              className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
-                            ></div>
-                            <span className="text-gray-600">{feature}</span>
+                            {idx + 1}
                           </div>
-                        ))}
+                          <div className="border-2 border-red-800">
+                            <h3 className="border-2 border-red-800 text-2xl font-bold text-blue-800 text-center">
+                              {product.title}
+                            </h3>
+                            <p className="border-2 border-red-800 text-sm text-gray-600">
+                              {product.subtitle}
+                            </p>
+                          </div>
+                        </div>
+                        {/* Description */}
+                        <div className="border-2 border-red-800">
+                          <p className="border-2 border-red-800 text-gray-600 text-lg leading-relaxed ml-16 mr-8 mb-8">
+                            {product.description}
+                          </p>
+                        </div>
+                        {/* Feature list container */}
+                        <div className="border-2 border-red-800">
+                          {/* Feature Title */}
+                          <h4 className="font-semibold text-gray-800 ml-16 mr-8 mb-8 border-2 border-red-800">
+                            特色功能
+                          </h4>
+                          {/* Feature list grid */}
+                          <div className="grid grid-cols-2 gap-4 ml-16 mr-16 mb-16 border-2 border-red-800">
+                            {product.features.map((feature) => (
+                              <div
+                                key={feature}
+                                className="flex items-center space-x-2 border-2 border-red-800"
+                              >
+                                <div
+                                  className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient} border-2 border-red-800`}
+                                ></div>
+                                <span className="text-gray-600 border-2 border-red-800">{feature}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        {/* Learn more button */}
+                        <div>
+                          <button
+                            className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max ml-16 mr-8 mb-30 border-2 border-red-800`}
+                          >
+                            了解更多
+                          </button>
+                        </div>
                       </div>
                     </div>
-                    {/* Learn More button */}
-                    <button
-                      className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max ml-16 mr-8 mb-30`}
-                    >
-                      了解更多
-                    </button>
                   </div>
-                  {/* Right: image area */}
-                  <div className="relative flex items-center justify-center">
-                    {/* Monitor frame with custom images */}
-                    <div className="relative w-full max-w-2xl aspect-[16/10] flex items-center justify-center">
-                      {/* Monitor frame image */}
-                      <img
-                        src="/images/products/monitor-frame.png"
-                        alt="Monitor Frame"
-                        className="absolute inset-0 w-full h-full object-contain pointer-events-none select-none z-10"
-                        draggable={false}
-                      />
-                      {/* Product image inside monitor screen area */}
-                      <div className="absolute w-[92%] h-[92%] overflow-hidden z-20 flex items-center justify-center">
-                        <img
-                          src={product.image}
-                          alt={product.title}
-                          className="w-full h-full object-cover"
-                          style={{ aspectRatio: "16/9" }}
-                        />
+                  <div
+                    className="bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200"
+                  >
+                    {/* Right: image area */}
+                    <div className="relative flex items-center justify-items-start bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200 px-40 py-10 border-2 border-red-800">
+                      <div className="relative w-full h-auto flex flex-col items-center justify-items-start">
+                        {/* Monitor frame image（上方） */}
+                        <div className="relative w-full pointer-events-none select-none">
+                          {/* 底层：Frame Image 容器 - 优先加载 */}
+                          <div className="w-full h-full">
+                            <img
+                              src="/images/products/monitor-frame.png"
+                              alt="Monitor Frame"
+                              draggable={false}
+                              loading="eager" // 优先加载
+                              className="block w-full h-auto"
+                              onContextMenu={(e) => e.preventDefault()} // 禁止右键菜单
+                            />
+                          </div>
+                          {/* 上层：Product Image 容器 - 延迟加载 */}
+                          <div
+                            className="absolute z-20 flex items-center justify-center"
+                            style={{
+                              top: "4%",
+                              right: "3%",
+                              bottom: "4.5%",
+                              left: "3%",
+                            }}
+                          >
+                            <div className="w-full h-full overflow-hidden">
+                              <img
+                                src={product.image}
+                                alt={product.title}
+                                draggable={false}
+                                loading="lazy" // 延迟加载
+                                className="w-full h-full object-cover" // 使用 cover 填充
+                                onContextMenu={(e) => e.preventDefault()} // 禁止右键菜单
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        {/* Monitor base image（下方） */}
+                        <div className="relative w-full pointer-events-none select-none mt-2">
+                          <img
+                            src="/images/products/monitor-base.png"
+                            alt="Monitor Base"
+                            draggable={false}
+                            className="block w-full h-auto"
+                            onContextMenu={(e) => e.preventDefault()} // 禁止右键菜单
+                          />
+                        </div>
                       </div>
-                      {/* Monitor base image */}
-                      <img
-                        src="/images/products/monitor-base.png"
-                        alt="Monitor Base"
-                        className="absolute left-1/2 bottom-[-138px] -translate-x-1/2 w-[100%] object-contain pointer-events-none select-none z-10"
-                        draggable={false}
-                      />
                     </div>
                   </div>
                 </div>
