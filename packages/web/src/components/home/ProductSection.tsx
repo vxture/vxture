@@ -132,60 +132,64 @@ export default function ProductSection() {
                 key={product.title}
                 className={`w-full rounded-2xl transition-all duration-500 ${colors.border} ${colors.bg} shadow-xl`}
               >
-                <div className="grid grid-cols-1 lg:grid-cols-[38%_62%]">
+                <div className="grid grid-cols-1 lg:grid-cols-[38%_62%] h-full">
                   <div
-                    className="bg-gradient-to-r from-red-500 via-gray-100 to-gray-200"
+                    className="h-full"
                   >
                     {/* Left: text content */}
-                    <div className="relative flex h-full items-center justify-items-start bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200 border-2 border-red-800 px-10 py-10">
-                      <div className="relative w-full h-full flex flex-col justify-items-start border-2 border-red-800">
+                    <div className="relative flex h-full items-center justify-start pr-10">
+                      <div className="relative w-full h-full flex flex-col gap-4 justify-items-start">
+                        
                         {/* Title and subtitle */}
-                        <div className="border-2 border-red-800 flex items-center space-x-4 mb-6">
-                          <div
-                            className={`border-2 border-red-800 w-12 h-12 rounded-xl bg-gradient-to-r ${colors.gradient} flex items-center justify-center text-white font-bold text-xl shadow-lg`}
+                        <div className="relative flex items-center h-24 min-h-[96px] bg-gradient-to-r from-blue-50 via-blue-100 to-blue-200">
+                          {/* 背景修饰：设计感数字，居左，带渐变和阴影 */}
+                          <span
+                            className="absolute right-0 top-1/2 -translate-y-1/2 text-[88px] font-extrabold text-blue-200 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg"
+                            aria-hidden="true"
+                            style={{
+                              letterSpacing: '-0.05em',
+                              textShadow: '0 4px 24px #60a5fa, 0 1px 0 #fff'
+                            }}
                           >
                             {idx + 1}
-                          </div>
-                          <div className="border-2 border-red-800">
-                            <h3 className="border-2 border-red-800 text-2xl font-bold text-blue-800 text-center">
-                              {product.title}
-                            </h3>
-                            <p className="border-2 border-red-800 text-sm text-gray-600">
-                              {product.subtitle}
-                            </p>
+                          </span>
+                          {/* 标题内容，居右显示，置于背景之上 */}
+                          <div className="relative z-10 flex-1 flex flex-col items-start pr-4">
+                            <h3 className="text-2xl font-bold text-blue-800 text-left">{product.title}</h3>
+                            <p className="text-base text-gray-400 mt-1 text-left">{product.subtitle}</p>
                           </div>
                         </div>
                         {/* Description */}
-                        <div className="border-2 border-red-800">
-                          <p className="border-2 border-red-800 text-gray-600 text-lg leading-relaxed ml-16 mr-8 mb-8">
+                        <div className="items-center justify-left">
+                          <p className="text-gray-600 text-lg leading-relaxed">
                             {product.description}
                           </p>
                         </div>
                         {/* Feature list container */}
-                        <div className="border-2 border-red-800">
+                        <div className="items-center justify-items-left ml-8 my-4">
                           {/* Feature Title */}
-                          <h4 className="font-semibold text-gray-800 ml-16 mr-8 mb-8 border-2 border-red-800">
+                          <h4 className="font-semibold text-gray-800">
                             特色功能
                           </h4>
                           {/* Feature list grid */}
-                          <div className="grid grid-cols-2 gap-4 ml-16 mr-16 mb-16 border-2 border-red-800">
+                          <div className="grid grid-cols-2 gap-4 justify-items-left my-4">
                             {product.features.map((feature) => (
                               <div
                                 key={feature}
-                                className="flex items-center space-x-2 border-2 border-red-800"
+                                className="flex items-center justify-start space-x-2"
                               >
                                 <div
-                                  className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient} border-2 border-red-800`}
+                                  className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
                                 ></div>
-                                <span className="text-gray-600 border-2 border-red-800">{feature}</span>
+                                <span className="text-gray-600">{feature}</span>
                               </div>
                             ))}
                           </div>
                         </div>
                         {/* Learn more button */}
-                        <div>
+                        <div className="items-center justify-center my-4">
                           <button
-                            className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max ml-16 mr-8 mb-30 border-2 border-red-800`}
+                            className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max`}
                           >
                             了解更多
                           </button>
@@ -197,8 +201,8 @@ export default function ProductSection() {
                     className="bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200"
                   >
                     {/* Right: image area */}
-                    <div className="relative flex items-center justify-items-start bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200 px-40 py-10 border-2 border-red-800">
-                      <div className="relative w-full h-auto flex flex-col items-center justify-items-start">
+                    <div className="relative flex items-center justify-items-start bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200 px-40 py-10">
+                      <div className="relative w-full h-auto flex flex-col items-center justify-items-start pb-48">
                         {/* Monitor frame image（上方） */}
                         <div className="relative w-full pointer-events-none select-none">
                           {/* 底层：Frame Image 容器 - 优先加载 */}
