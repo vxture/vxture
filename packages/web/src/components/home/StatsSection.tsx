@@ -19,7 +19,7 @@ export default function StatsSection() {
       number: 10,
       suffix: "+",
       label: "企业客户",
-      description: "覆盖政府、国央企等多个行业",
+      description: "服务政府、国央企等多个大客户",
       icon: <HiBuildingLibrary className="w-16 h-16 text-blue-400" />,
       color: "from-blue-400 to-cyan-400", // Tailwind 渐变色
     },
@@ -27,7 +27,7 @@ export default function StatsSection() {
       number: 50,
       suffix: "+",
       label: "智能化项目",
-      description: "成功交付智能体应用",
+      description: "成功交付数据智能平台和应用",
       icon: <HiMiniCube className="w-16 h-16 text-blue-400" />,
       color: "from-blue-400 to-cyan-400",
     },
@@ -43,7 +43,7 @@ export default function StatsSection() {
       number: 2000,
       suffix: "+",
       label: "业务用户",
-      description: "在线智能业务用户规模",
+      description: "在线业务用户规模持续增长",
       icon: <HiMiniUserGroup className="w-16 h-16 text-blue-400" />,
       color: "from-blue-400 to-cyan-400",
     },
@@ -181,7 +181,7 @@ export default function StatsSection() {
               style={{ animationDelay: `${index * 150}ms` }} // 瀑布式动画延迟
             >
               {/* 卡片主体 */}
-              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 overflow-hidden">
+              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 hover:scale-105 overflow-hidden">
                 {/* 渐变边框效果，hover 时显现, 用伪元素实现渐变边框 */}
 
                 <div

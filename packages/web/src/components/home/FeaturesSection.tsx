@@ -68,7 +68,7 @@ export default function FeaturesSection() {
             return (
               <div
                 key={feature.title}
-                className={`group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden`}
+                className={`group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 `}
               >
                 {/* 简洁科技感装饰 */}
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-200 via-blue-100 to-transparent" />

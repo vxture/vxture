@@ -23,7 +23,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative flex items-center justify-center overflow-hidden">
+    <section className="relative flex items-center justify-center overflow-hidden h-screen">
       {/* 背景视频与遮罩 */}
       <div className="absolute inset-0 w-full h-full z-0">
         <video
@@ -80,9 +80,6 @@ export default function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-lg font-semibold rounded-xl hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-2xl hover:shadow-cyan-500/25 hover:scale-105">
                 开启数据智能之旅
-              </button>
-              <button className="px-8 py-4 border-2 border-white/30 text-white text-lg font-semibold rounded-xl hover:bg-white/10 hover:border-white/50 transition-all duration-300 backdrop-blur-sm">
-                查看演示
               </button>
             </div>
           </div>
