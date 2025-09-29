@@ -1,7 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useState } from "react";
+import React from 'react';
+import { useRef, useEffect, useState } from "react";
+import { useScrollSnap } from '@/hooks/useScrollSnap';
+
 import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
 
 /**
@@ -10,6 +13,10 @@ import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
  * - Carousel with left/right navigation, two-column layout
  */
 export default function ProductSection() {
+
+  const sectionRef = useRef(null);
+  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
+
   // Product data array
   const products = [
     {
@@ -91,7 +98,10 @@ export default function ProductSection() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-b from-blue-50 to-gray-50 relative">
+      <section
+        ref={sectionRef}
+        className={`snap-section pt-28 bg-gradient-to-b from-blue-50 to-blue-50 ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
+      >
       <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title area with left/right navigation arrows */}
         <div className="flex items-center justify-between mb-16">

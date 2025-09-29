@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useState } from 'react';
-import { CACHE_ONE_YEAR } from "next/dist/lib/constants";
+import React from 'react';
+import { useRef, useEffect, useState } from "react";
+import { useScrollSnap } from '@/hooks/useScrollSnap';
+
 import Image from "next/image";
+
 import { LuCalendarDays } from 'react-icons/lu';
 
 export default function CaseSection() {
+  const sectionRef = useRef(null);
+  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
+
   const cases = [
     {
       title: "地质灾害数据图谱",
@@ -55,8 +61,11 @@ export default function CaseSection() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="py-24 bg-gradient-to-b from-slate-50 to-white relative">
-      <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      ref={sectionRef}
+      className={`snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
+    >
+      <div className="h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}
         <div className="flex items-center justify-between mb-16">
           {/* Section title and subtitle */}
@@ -69,7 +78,6 @@ export default function CaseSection() {
             </p>
           </div>
         </div>
-
         {/* Case grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {cases.map((item) => {
@@ -144,6 +152,14 @@ export default function CaseSection() {
               </div>
             );
           })}
+        </div>
+        {/* Bottom decorative text */}
+        <div className="text-center mt-16">
+          <div className="inline-flex items-center space-x-2 text-gray-500">
+            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300"></div>
+            <span className="text-sm font-medium">查看更多案例</span>
+            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300"></div>
+          </div>
         </div>
       </div>
     </section>

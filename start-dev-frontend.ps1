@@ -1,43 +1,43 @@
-<#
-.SYNOPSIS
-    Vxture frontend development environment startup script (PowerShell)
-.DESCRIPTION
-    一键后台启动 Next.js 前端开发服务，不占用当前 terminal
-    - 后台启动服务
-    - 记录进程 PID 到 .vxture_frontend.pid
-    - 输出服务信息
-.EXAMPLE
-    .\start-dev-frontend.ps1
-#>
+# 核心：仅后台启动前端服务，保留完整提示样式
+$webDir = Join-Path $PSScriptRoot "packages\web"
+$pidFile = Join-Path $PSScriptRoot ".vxture_frontend.pid"
 
-$webDir = Join-Path $PSScriptRoot 'packages\web'
-$pidFile = Join-Path $PSScriptRoot '.vxture_frontend.pid'
-
-Write-Host "====================================="
-Write-Host "  Start Vxture Frontend Dev Env"
-Write-Host "====================================="
-Write-Host ""
-
-if (!(Test-Path $webDir)) {
-    Write-Host "❌ Frontend directory not found: $webDir"
+# 1. 前端目录校验 + 错误提示
+if (-not (Test-Path $webDir)) {
+    Write-Host "❌ 前端目录不存在：$webDir" -ForegroundColor Red
     exit 1
 }
 
-Write-Host "Starting frontend in background..."
+# 2. 启动前端服务
 try {
-    # 使用 -NoNewWindow 可选，-WindowStyle Hidden 保证不弹窗且不占用当前 terminal
-    $p = Start-Process -FilePath "cmd.exe" -ArgumentList "/c pnpm dev" -WorkingDirectory $webDir -WindowStyle Hidden -PassThru
-    $p.Id | Out-File -Encoding ascii $pidFile
-    Write-Host "✅ Frontend process started in background. PID: $($p.Id)"
-    Write-Host "Frontend is starting at: http://localhost:3000"
+    Write-Host "====================================="
+    Write-Host "  Start Vxture Frontend Dev Env"
+    Write-Host "====================================="
+    Write-Host ""
+    Write-Host "Starting frontend in background..." -ForegroundColor Cyan
+
+    # 后台启动服务并获取PID
+    $proc = Start-Process "cmd.exe" "/c pnpm dev" `
+        -WorkingDirectory $webDir `
+        -WindowStyle Hidden `
+        -PassThru `
+        -ErrorAction Stop
+    
+    # 记录PID
+    $proc.Id | Out-File $pidFile -Encoding ascii -Force
+
+    # 启动成功提示
+    Write-Host "✅ Frontend process started in background. PID: $($proc.Id)" -ForegroundColor Green
+    Write-Host "Frontend is starting at: http://localhost:3000" -ForegroundColor Green
+    Write-Host ""
+    # 保留你需要的启动完成分割线提示
+    Write-Host "====================================="
+    Write-Host "  Startup process completed!"
+    Write-Host "  You can safely close this window."
+    Write-Host "====================================="
 }
 catch {
-    Write-Host "❌ Failed to start frontend: $($_.Exception.Message)"
+    # 失败提示
+    Write-Host "❌ Failed to start frontend: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
-
-Write-Host ""
-Write-Host "====================================="
-Write-Host "  Startup process completed!"
-Write-Host "  You can safely close this window."
-Write-Host "====================================="

@@ -12,8 +12,10 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  // 只修改return部分，添加外层滚动容器
   return (
-    <>
+    // 新增滚动容器，启用纵向滚动吸附
+    <main>
       <HeroSection />
       <FeaturesSection />
       <ProductSection />
@@ -21,6 +23,7 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
       <StatsSection />
       <CTASection />
       {children}
-    </>
+    </main>
   );
+
 }

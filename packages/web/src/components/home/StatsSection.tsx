@@ -1,15 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
-// 引入 React 的 hooks
-import { useEffect, useState } from "react";
-import { HiBuildingLibrary, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
 
 /**
  * StatsSection 组件
  * 展示公司核心数据统计，带有动画和卡片交互效果
  * 标题、副标题、底部装饰文字样式与 FeaturesSection 完全一致
  */
+
+// 引入 React 的 hooks
+import React from 'react';
+import { useRef, useEffect, useState } from "react";
+import { useScrollSnap } from '@/hooks/useScrollSnap';
+import Image from 'next/image';
+
+// 引入图标
+import { HiBuildingLibrary, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
+
 export default function StatsSection() {
+  // 监听当前 section 是否处于吸附状态
+  const sectionRef = useRef(null);
+  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
+
   // 控制动画是否触发（进入视口时）
   const [inView, setInView] = useState(false);
 
@@ -145,22 +156,12 @@ export default function StatsSection() {
 
   return (
     <section
+      ref={sectionRef}
       id="stats-section"
-      className="py-24 bg-gradient-to-b from-white to-white relative"
+      className={`relative snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
     >
-      {/* 背景装饰圆形 */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl"></div>
-      </div>
-
-      {/* 网格背景 */}
-      <div className="absolute inset-0 opacity-50">
-        <div className="h-full w-full bg-[radial-gradient(circle,rgba(0,0,0,0.08)_10%,transparent_10%)] bg-[size:20px_20px]"></div>
-      </div>
-
-      <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 内容容器（z-10） */}
+      <div className="relative z-10 h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}
         <div className="flex items-center justify-between mb-16">
           {/* Section title and subtitle */}
@@ -173,7 +174,6 @@ export default function StatsSection() {
             </p>
           </div>
         </div>
-
         {/* 统计卡片网格 */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
@@ -184,7 +184,7 @@ export default function StatsSection() {
               style={{ animationDelay: `${index * 150}ms` }} // 瀑布式动画延迟
             >
               {/* 卡片主体 */}
-              <div className="relative p-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 hover:scale-105 overflow-hidden">
+              <div className="relative pb-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 hover:scale-105 overflow-hidden">
                 {/* 渐变边框效果，hover 时显现, 用伪元素实现渐变边框 */}
 
                 <div
@@ -199,7 +199,7 @@ export default function StatsSection() {
                   {/* 图标 */}
                   <div className="flex justify-center">
                     <div
-                      className="w-32 h-32 flex items-center justify-center transition-transform duration-300"
+                      className="w-24 h-24 flex items-center justify-center transition-transform duration-300"
                     >
                       {stat.icon}
                     </div>
@@ -232,15 +232,46 @@ export default function StatsSection() {
             </div>
           ))}
         </div>
-
         {/* 底部装饰文本，样式与 FeaturesSection 完全一致 */}
-        <div className="text-center mt-16">
+        <div className="text-center my-16">
           <div className="inline-flex items-center space-x-2 text-gray-500">
             <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300"></div>
             <span className="text-sm font-medium">持续创新，共创数字未来</span>
             <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300"></div>
           </div>
         </div>
+        {/* 客户logo展示区域，两行五列布局 */}
+        <div className="my-8 grid grid-cols-5 gap-x-24 gap-y-8">
+          {Array.from({ length: 10 }).map((_, idx) => {
+            const num = String(idx + 1).padStart(2, '0');
+            const src = `/images/costomlogo/costom-logo-${num}.png`;
+            return (
+              <div key={num} className="flex items-center justify-center h-12 rounded-lg">
+                <Image
+                  src={src}
+                  alt={`客户Logo${num}`}
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-fill rounded-lg"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    if (e.currentTarget.parentElement) {
+                      e.currentTarget.parentElement.innerHTML =
+                        `<span class='flex items-center justify-center w-full h-full bg-blue-200 text-gray-400 text-xs rounded-lg'>客户Logo${num}</span>`;
+                    }
+                  }}
+                  unoptimized
+                />
+              </div>
+            );
+          })}
+        </div>        
+      </div>
+      {/* 背景装饰圆形（z-0，放在内容容器后面） */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl"></div>
       </div>
     </section>
   );
