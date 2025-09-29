@@ -91,7 +91,7 @@ export default function ProductSection() {
   };
 
   return (
-    <section className="snap-section py-24 bg-gradient-to-b from-blue-50 to-gray-50 relative">
+    <section className="py-24 bg-gradient-to-b from-blue-50 to-gray-50 relative">
       <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title area with left/right navigation arrows */}
         <div className="flex items-center justify-between mb-16">

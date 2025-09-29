@@ -146,7 +146,7 @@ export default function StatsSection() {
   return (
     <section
       id="stats-section"
-      className="snap-section py-24 bg-gradient-to-b from-white to-white relative"
+      className="py-24 bg-gradient-to-b from-white to-white relative"
     >
       {/* 背景装饰圆形 */}
       <div className="absolute inset-0">
@@ -161,14 +161,17 @@ export default function StatsSection() {
       </div>
 
       <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 标题区 */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            数据说话
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            用数字见证我们在数据智能领域的专业实力与客户信赖
-          </p>
+        {/* Section title */}
+        <div className="flex items-center justify-between mb-16">
+          {/* Section title and subtitle */}
+          <div className="flex-1 text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-blue-800 mb-6">
+              服务的客户
+            </h2>
+            <p className="text-lg text-gray-400 max-w-4xl mx-auto">
+              用数字见证我们在数据智能领域的专业实力与客户信赖
+            </p>
+          </div>
         </div>
 
         {/* 统计卡片网格 */}

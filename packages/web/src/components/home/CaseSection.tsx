@@ -55,16 +55,19 @@ export default function CaseSection() {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <section className="snap-section py-24 bg-gradient-to-b from-slate-50 to-white relative">
+    <section className="py-24 bg-gradient-to-b from-slate-50 to-white relative">
       <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-            最佳实践
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            我们数据智能平台的真实应用场景
-          </p>
+        <div className="flex items-center justify-between mb-16">
+          {/* Section title and subtitle */}
+          <div className="flex-1 text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold text-blue-800 mb-6">
+              最佳实践
+            </h2>
+            <p className="text-lg text-gray-400 max-w-4xl mx-auto">
+              为客户业务赋能的最佳应用场景
+            </p>
+          </div>
         </div>
 
         {/* Case grid */}
@@ -97,11 +100,11 @@ export default function CaseSection() {
                     {/* Description */}
                     <p className="text-gray-600 leading-relaxed text-left">{item.description}</p>
                     {/* Highlights tags */}
-                    <div className="flex flex-wrap gap-2 justify-center">
+                    <div className="flex flex-wrap gap-2 justify-start">
                       {item.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-3 py-1 bg-blue-50 text-blue-700 text-sm font-semibold rounded-full border border-blue-50"
+                          className="px-3 py-1 bg-blue-50 text-blue-500 text-sm font-semibold rounded-full border border-blue-50"
                         >
                           {tag}
                         </span>
