@@ -162,7 +162,7 @@ export default function StatsSection() {
     <section
       ref={sectionRef}
       id="stats-section"
-      className={`relative snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
     >
       {/* 背景装饰圆形（z-0，放在内容容器后面，仅限section内定位） */}
       <div className="absolute inset-0 z-0 pointer-events-none">

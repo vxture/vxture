@@ -28,7 +28,7 @@ try {
     $proc.Id | Out-File $pidFile -Encoding ascii -Force
 
     # 启动成功提示
-    Write-Host "✅ Frontend process started in background. PID: $($proc.Id)" -ForegroundColor Green
+    Write-Host "Frontend process started in background. PID: $($proc.Id)" -ForegroundColor Green
     Write-Host "Frontend is starting at: http://localhost:3000" -ForegroundColor Green
     Write-Host ""
     # 保留你需要的启动完成分割线提示
@@ -40,6 +40,6 @@ try {
 }
 catch {
     # 失败提示
-    Write-Host "❌ Failed to start frontend: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Failed to start frontend: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }

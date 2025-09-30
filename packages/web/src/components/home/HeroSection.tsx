@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"; // 声明为客户端组件
 
+import { useScrollSnap } from "@/hooks/useScrollSnap";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react"; // 引入 React hooks
+import { useEffect, useRef, useState } from "react";
 
 export default function HeroSection() {
+  const sectionRef = useRef(null);
+  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
+
   // 视频加载状态：false 表示未加载完成，true 表示加载完成
   const [videoLoaded, setVideoLoaded] = useState(false);
   // 视频错误状态：false 表示无错误，true 表示加载/播放出错
@@ -35,15 +40,19 @@ export default function HeroSection() {
 
   return (
     // 页面主视觉区块，绝对定位撑满屏幕
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section
+      ref={sectionRef}
+      className={`relative snap-section h-screen flex items-center justify-center overflow-hidden ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
+    >
       {/* 背景视频与遮罩层 */}
       <div className="absolute inset-0 w-full h-full z-0">
         {/* 视频封面作为加载前的遮罩，加载完成后隐藏 */}
         <Image
           src="/images/banner-hero-poster-01.png"
           alt="视频封面"
-          width={1920} // 必须指定宽度
-          height={1080} // 建议同时指定高度
+          fill // 使用 fill 属性确保图片始终撑满父容器
+          // width={1920}
+          // height={1080}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
             !videoLoaded && !videoError ? "opacity-100" : "opacity-0"
           }`}

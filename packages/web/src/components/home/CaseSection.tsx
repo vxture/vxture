@@ -65,7 +65,7 @@ export default function CaseSection() {
   return (
     <section
       ref={sectionRef}
-      className={`snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
     >
       <div className="relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}

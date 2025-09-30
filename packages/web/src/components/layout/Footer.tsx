@@ -1,7 +1,7 @@
 "use client";
 
-import { VscGithubInverted } from 'react-icons/vsc';
-import { AiFillWechatWork,AiFillTikTok } from 'react-icons/ai';
+import { AiFillTikTok, AiFillWechatWork } from "react-icons/ai";
+import { VscGithubInverted } from "react-icons/vsc";
 
 export default function Footer() {
   return (
@@ -13,7 +13,9 @@ export default function Footer() {
           <div className="flex flex-col h-full basis-[38%] min-w-[260px] pl-32">
             {/* Brand */}
             <div className="flex items-center space-x-3">
-              <span className="text-2xl font-bold text-gray-500">vxture.ai</span>
+              <span className="text-2xl font-bold text-gray-500">
+                vxture.ai
+              </span>
             </div>
             {/* Contact Info */}
             <div className="flex flex-col items-start justify-start text-sm py-2">
@@ -53,29 +55,19 @@ export default function Footer() {
             {/* 社交媒体 联系方式，底部对齐 */}
             <div className="flex flex-col md:flex-row justify-between space-y-4 md:space-y-0 mt-auto">
               <div className="flex items-center justify-center space-x-4 self-end">
-                <a
-                  href="#"
-                  aria-label="GitHub"
-                >
+                <a href="#" aria-label="GitHub">
                   {/* GitHub SVG */}
                   <VscGithubInverted className="w-7 h-7 text-gray-500 mr-2" />
                 </a>
-                <a
-                  href="#"
-                  aria-label="Douyin"
-                >
+                <a href="#" aria-label="Douyin">
                   {/* Tiktok SVG */}
                   <AiFillTikTok className="w-8 h-8 text-gray-500 mr-2" />
                 </a>
-                <a
-                  href="#"
-                  aria-label="WeChat Official Account"
-                >
+                <a href="#" aria-label="WeChat Official Account">
                   {/* Wechat SVG */}
                   <AiFillWechatWork className="w-8 h-8 text-gray-500 mr-2" />
                 </a>
               </div>
-
             </div>
           </div>
 
@@ -83,7 +75,9 @@ export default function Footer() {
           <div className="flex h-full flex-col md:flex-row basis-[62%] justify-between  pt-1">
             {/* 产品服务 */}
             <div className="w-full">
-              <h3 className="text-lg font-semibold mb-6 text-gray-500">产品服务</h3>
+              <h3 className="text-lg font-semibold mb-6 text-gray-500">
+                产品服务
+              </h3>
               <ul className="space-y-3">
                 <li>
                   <a
@@ -114,7 +108,9 @@ export default function Footer() {
 
             {/* 解决方案 */}
             <div className="w-full">
-              <h3 className="text-lg font-semibold mb-6 text-gray-500">解决方案</h3>
+              <h3 className="text-lg font-semibold mb-6 text-gray-500">
+                解决方案
+              </h3>
               <ul className="space-y-3">
                 <li>
                   <a
@@ -145,7 +141,9 @@ export default function Footer() {
 
             {/* 关于我们 */}
             <div className="w-full">
-              <h3 className="text-lg font-semibold mb-6 text-gray-500">关于我们</h3>
+              <h3 className="text-lg font-semibold mb-6 text-gray-500">
+                关于我们
+              </h3>
               <ul className="space-y-3">
                 <li>
                   <a
@@ -206,7 +204,17 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center space-x-4 text-sm text-gray-500">
-            <span>备案：<a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" className="hover:text-blue-700">陕ICP备2025076448号</a></span>
+            <span>
+              备案：
+              <a
+                href="https://beian.miit.gov.cn/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-700"
+              >
+                陕ICP备2025076448号
+              </a>
+            </span>
             <span>|</span>
             <span>增值电信业务经营许可证：B2-20180000</span>
           </div>

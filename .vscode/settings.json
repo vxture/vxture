@@ -1,78 +1,97 @@
 {
   // 编辑器行为相关
-  "workbench.list.smoothScrolling": true,                          //  侧边栏列表平滑滚动
-  "editor.smoothScrolling": true,                                  //  平滑滚动
-  "editor.cursorBlinking": "expand",                               //  光标闪烁动画
-  "editor.cursorSmoothCaretAnimation": "on",                       //  光标移动动画
-  "editor.guides.bracketPairs": true,                              //  显示括号配对线
-  "editor.bracketPairColorization.enabled": true,                  //  括号配对高亮
-  "editor.suggest.insertMode": "replace",                          //  补全时替换模式
-  "editor.suggest.snippetsPreventQuickSuggestions": false,         //  代码片段不阻止建议
-  "editor.acceptSuggestionOnEnter": "smart",                       //  Enter键智能接受建议
-  "editor.suggestSelection": "recentlyUsedByPrefix",               //  补全优先最近使用
-  "editor.autoClosingBrackets": "beforeWhitespace",                //  自动补全括号
-  "editor.autoClosingDelete": "always",                            //  删除时自动关闭括号
-  "editor.autoClosingOvertype": "always",                          //  覆盖时自动关闭括号
-  "editor.autoClosingQuotes": "beforeWhitespace",                  //  自动补全引号
-  "editor.wordWrap": "on",                                         //  自动换行
-  "editor.lineHeight": 1.5,                                        //  行高
+  "workbench.list.smoothScrolling": true, //  侧边栏列表平滑滚动
+  "editor.smoothScrolling": true, //  平滑滚动
+  "editor.cursorBlinking": "expand", //  光标闪烁动画
+  "editor.cursorSmoothCaretAnimation": "on", //  光标移动动画
+  "editor.guides.bracketPairs": true, //  显示括号配对线
+  "editor.bracketPairColorization.enabled": true, //  括号配对高亮
+  "editor.suggest.insertMode": "replace", //  补全时替换模式
+  "editor.suggest.snippetsPreventQuickSuggestions": false, //  代码片段不阻止建议
+  "editor.acceptSuggestionOnEnter": "smart", //  Enter键智能接受建议
+  "editor.autoClosingBrackets": "beforeWhitespace", //  自动补全括号
+  "editor.autoClosingDelete": "always", //  删除时自动关闭括号
+  "editor.autoClosingOvertype": "always", //  覆盖时自动关闭括号
+  "editor.autoClosingQuotes": "beforeWhitespace", //  自动补全引号
+  "editor.wordWrap": "on", //  自动换行
+  "editor.lineHeight": 1.5, //  行高
+
+  // 禁用原生的尾部空格修剪（避免冲突）
+  "files.trimTrailingWhitespace": false,
+
+  // 启用扩展的修剪功能
+  "trailing-spaces.trimOnSave": true,
+  // 配置需要忽略的模式（关键：保留代码与注释间的空格）
+  "trailing-spaces.ignorePatterns": [
+    // 匹配行内注释前的空格（如 "code;  // comment" 中的空格）
+    "\\s+//",
+    // 匹配CSS注释前的空格（如 "property: value;  /* comment */"）
+    "\\s+/\\*"
+  ],
+  // 可选：设置忽略的文件类型
+  "trailing-spaces.excludeFileTypes": [],
 
   // 代码补全相关
   "editor.quickSuggestions": {
     "other": true,
     "comments": true,
     "strings": true
-  },                                                               //  行内建议
-  "editor.wordSeparators": "`~!@%^&*()=+[{]}\\|;:'\",.<>/?（），。；：",          //  单词分隔符
+  }, //  行内建议
+  "editor.wordSeparators": "`~!@%^&*()=+[{]}\\|;:'\",.<>/?（），。；：", //  单词分隔符
 
   // 鼠标与缩进相关
-  "editor.mouseWheelZoom": true,                                   //  鼠标滚轮缩放字体
-  "window.density.editorTabHeight": "compact",                     //  标签页高度紧凑
-  "editor.detectIndentation": false,                               //  关闭自动缩进检测
-  "editor.tabSize": 4,                                             //  Tab宽度
+  "editor.mouseWheelZoom": true, //  鼠标滚轮缩放字体
+  "editor.detectIndentation": false, //  关闭自动缩进检测
+  "editor.tabSize": 2, //  Tab宽度
+  "editor.insertSpaces": true, //  使用空格代替Tab
+  "editor.trimAutoWhitespace": true, //  修剪自动插入的空白
+  "editor.indentSize": 2, //  缩进大小
+  "editor.indentStyle": "space", //  缩进风格为空格
+  "editor.formatOnType": true, //  输入时格式化
+  "editor.formatOnPaste": true, //  粘贴时格式化
+  "editor.suggestFontSize": 14, //  补全字体大小
+  "editor.suggestLineHeight": 22, //  补全行高
 
   // 代码格式化相关
-  "javascript.format.semicolons": "remove",                        //  JS去除分号
-  "typescript.format.semicolons": "remove",                        //  TS去除分号
-  "editor.formatOnSave": true,                                     //  保存时自动格式化
-  "editor.defaultFormatter": "esbenp.prettier-vscode",             //  默认格式化工具
+  "javascript.format.semicolons": "remove", //  JS去除分号
+  "typescript.format.semicolons": "remove", //  TS去除分号
+  "editor.formatOnSave": true, //  保存时自动格式化
+  "editor.defaultFormatter": "esbenp.prettier-vscode", //  默认格式化工具
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit",
     "source.organizeImports": "explicit"
-  },                                                               //  保存时自动修复和整理
+  }, //  保存时自动修复和整理
 
   // 终端相关
-  "terminal.integrated.fontFamily": "BitstromWera Nerd Font Mono",                   //  终端字体
-  "terminal.integrated.shellIntegration.suggestEnabled": true,                       //  终端命令建议
-  "terminal.integrated.stickyScroll.enabled": true,                                  //  终端粘性滚动
+  "terminal.integrated.fontFamily": "BitstromWera Nerd Font Mono", //  终端字体
+  "terminal.integrated.shellIntegration.suggestEnabled": true, //  终端命令建议
+  "terminal.integrated.stickyScroll.enabled": true, //  终端粘性滚动
   "terminal.integrated.profiles.windows": {
     "PowerShell 7": {
       "path": "C:/Program Files/PowerShell/7/pwsh.exe"
     }
-  },                                                                                 //  终端配置
-  "terminal.integrated.defaultProfile.windows": "PowerShell 7",                      //  默认终端
-  "terminal.integrated.cursorBlinking": true,                                        //  终端光标闪烁
-  "terminal.integrated.cursorWidth": 2,                                              //  终端光标宽度
-  "terminal.integrated.cursorStyle": "line",                                         //  终端光标样式
-  "terminal.integrated.rightClickBehavior": "copyPaste",                             //  右键复制粘贴
-  "terminal.integrated.gpuAcceleration": "on",                                       //  GPU加速
+  }, //  终端配置
+  "terminal.integrated.cursorBlinking": true, //  终端光标闪烁
+  "terminal.integrated.cursorWidth": 2, //  终端光标宽度
+  "terminal.integrated.cursorStyle": "line", //  终端光标样式
+  "terminal.integrated.rightClickBehavior": "copyPaste", //  右键复制粘贴
+  "terminal.integrated.gpuAcceleration": "on", //  GPU加速
   "accessibility.signals.terminalCommandFailed": {
     "sound": "auto",
     "announcement": "auto"
-  },                                                                                 //  终端命令失败提示
+  }, //  终端命令失败提示
 
   // 文件与搜索相关
-  "files.autoGuessEncoding": true,                                                   //  自动识别编码
-  "files.trimTrailingWhitespace": true,                                              //  去除行尾空格
-  "files.insertFinalNewline": true,                                                  //  文件末尾插入新行
-  "files.eol": "\n",                                                                 //  换行符
+  "files.autoGuessEncoding": true, //  自动识别编码
+  "files.insertFinalNewline": true, //  文件末尾插入新行
+  "files.eol": "\n", //  换行符
   "files.exclude": {
     "**/.git": false,
     "**/.DS_Store": false,
     "**/node_modules": false,
     "**/.next": false
-  },                                                                                 //  文件资源管理器排除
+  }, //  文件资源管理器排除
   "search.exclude": {
     "**/node_modules": true,
     "**/pnpm-lock.yaml": true,
@@ -87,68 +106,67 @@
     "**/dist": true,
     "**/tmp": true,
     "**/yarn.lock": true
-  },                                                                                 //  搜索排除
+  }, //  搜索排除
 
   // 语言相关
-  "typescript.locale": "zh-CN",                                                      //  TypeScript语言
-  "typescript.inlayHints.enumMemberValues.enabled": true,                            //  TS枚举成员提示
-  "typescript.preferences.preferTypeOnlyAutoImports": true,                          //  TS类型导入
-  "typescript.updateImportsOnFileMove.enabled": "always",                            //  TS移动文件自动更新导入
-  "typescript.preferences.includePackageJsonAutoImports": "on",                      //  TS自动导入package.json
-  "typescript.suggest.autoImports": true,                                            //  TS自动导入建议
-  "typescript.preferences.quoteStyle": "single",                                     //  TS单引号
-  "typescript.tsdk": "node_modules/typescript/lib",                                  //  TS SDK路径
-  "typescript.preferences.importModuleSpecifier": "relative",                        //  TS导入路径相对
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",                   //  TS导入路径结尾
-  "typescript.suggest.paths": true,                                                  //  TS路径建议
+  "typescript.locale": "zh-CN", //  TypeScript语言
+  "typescript.inlayHints.enumMemberValues.enabled": true, //  TS枚举成员提示
+  "typescript.preferences.preferTypeOnlyAutoImports": true, //  TS类型导入
+  "typescript.updateImportsOnFileMove.enabled": "always", //  TS移动文件自动更新导入
+  "typescript.preferences.includePackageJsonAutoImports": "on", //  TS自动导入package.json
+  "typescript.suggest.autoImports": true, //  TS自动导入建议
+  "typescript.preferences.quoteStyle": "single", //  TS单引号
+  "typescript.tsdk": "node_modules/typescript/lib", //  TS SDK路径
+  "typescript.preferences.importModuleSpecifier": "relative", //  TS导入路径相对
+  "typescript.preferences.importModuleSpecifierEnding": "minimal", //  TS导入路径结尾
+  "typescript.suggest.paths": true, //  TS路径建议
 
-  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true,          //  JSX花括号空格
-  "javascript.format.semicolons": "remove",                                         //  JS去除分号
-  "javascript.inlayHints.enumMemberValues.enabled": true,                           //  JS枚举成员提示
-  "javascript.inlayHints.functionLikeReturnTypes.enabled": false,                   //  JS函数返回类型提示
-  "javascript.inlayHints.parameterNames.enabled": "none",                           //  JS参数名提示
-  "javascript.updateImportsOnFileMove.enabled": "always",                           //  JS移动文件自动更新导入
-  "javascript.preferences.quoteStyle": "single",                                    //  JS单引号
-  "javascript.suggestionActions.enabled": false,                                    //  JS建议动作
-  "javascript.suggest.autoImports": true,                                           //  JS自动导入建议
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": true, //  JSX花括号空格
+  "javascript.inlayHints.enumMemberValues.enabled": true, //  JS枚举成员提示
+  "javascript.inlayHints.functionLikeReturnTypes.enabled": false, //  JS函数返回类型提示
+  "javascript.inlayHints.parameterNames.enabled": "none", //  JS参数名提示
+  "javascript.updateImportsOnFileMove.enabled": "always", //  JS移动文件自动更新导入
+  "javascript.preferences.quoteStyle": "single", //  JS单引号
+  "javascript.suggestionActions.enabled": false, //  JS建议动作
+  "javascript.suggest.autoImports": true, //  JS自动导入建议
 
   // Vue相关
-  "vue.updateImportsOnFileMove.enabled": true,                                      //  Vue移动文件自动更新导入
-  "vue.inlayHints.missingProps": true,                                              //  Vue缺失props提示
-  "vue.autoInsert.dotValue": true,                                                  //  Vue自动插入.value
+  "vue.updateImportsOnFileMove.enabled": true, //  Vue移动文件自动更新导入
+  "vue.inlayHints.missingProps": true, //  Vue缺失props提示
+  "vue.autoInsert.dotValue": true, //  Vue自动插入.value
 
   // 代码片段与标签相关
-  "explorer.copyRelativePathSeparator": "/",                                        //  资源管理器路径分隔符
-  "window.dialogStyle": "custom",                                                   //  窗口对话框样式
-  "window.density.editorTabHeight": "compact",                                      //  编辑器标签高度紧凑
+  "explorer.copyRelativePathSeparator": "/", //  资源管理器路径分隔符
+  "window.dialogStyle": "custom", //  窗口对话框样式
+  "window.density.editorTabHeight": "compact", //  编辑器标签高度紧凑
 
   // 代码健康与辅助
-  "editor.stickyScroll.enabled": true,                                              //  编辑器粘性滚动
-  "editor.guides.indentation": true,                                                //  显示缩进线
-  "editor.renderWhitespace": "boundary",                                            //  显示空白字符
-  "editor.linkedEditing": true,                                                     //  联动编辑
-  "editor.snippetSuggestions": "top",                                               //  代码片段建议优先
-  "editor.rulers": [100],                                                           //  右侧标尺
-  "editor.suggestSelection": "first",                                               //  补全优先第一个
+  "editor.stickyScroll.enabled": true, //  编辑器粘性滚动
+  "editor.guides.indentation": true, //  显示缩进线
+  "editor.renderWhitespace": "boundary", //  显示空白字符
+  "editor.linkedEditing": true, //  联动编辑
+  "editor.snippetSuggestions": "top", //  代码片段建议优先
+  "editor.rulers": [100], //  右侧标尺
+  "editor.suggestSelection": "first", //  补全优先第一个
 
   // 代码格式化与样式
-  "css.validate": false,                                                            //  关闭CSS校验
-  "less.validate": false,                                                           //  关闭LESS校验
-  "scss.validate": false,                                                           //  关闭SCSS校验
-  "stylelint.validate": ["css", "scss"],                                            //  启用stylelint校验
+  "css.validate": false, //  关闭CSS校验
+  "less.validate": false, //  关闭LESS校验
+  "scss.validate": false, //  关闭SCSS校验
+  "stylelint.validate": ["css", "scss"], //  启用stylelint校验
 
   // TailwindCSS相关
   "tailwindCSS.includeLanguages": {
     "typescript": "javascript",
     "typescriptreact": "javascript"
-  },                                                                               //  TailwindCSS语言映射
-  "tailwindCSS.emmetCompletions": true,                                            //  TailwindCSS支持Emmet
+  }, //  TailwindCSS语言映射
+  "tailwindCSS.emmetCompletions": true, //  TailwindCSS支持Emmet
 
   // Emmet相关
   "emmet.includeLanguages": {
     "javascript": "javascriptreact",
     "typescript": "typescriptreact"
-  },                                                                               //  Emmet语言映射
+  }, //  Emmet语言映射
 
   // 文件关联
   "files.associations": {
@@ -161,15 +179,15 @@
     "*.json": "jsonc",
     "*.scss": "scss",
     ".env.*": "dotenv"
-  },                                                                               //  文件类型关联
+  }, //  文件类型关联
 
   // 代码运行相关
-  "code-runner.runInTerminal": true,                                               //  代码运行在终端
-  "code-runner.clearPreviousOutput": true,                                         //  运行前清空输出
+  "code-runner.runInTerminal": true, //  代码运行在终端
+  "code-runner.clearPreviousOutput": true, //  运行前清空输出
   "code-runner.executorMap": {
     "powershell": "powershell -ExecutionPolicy Bypass -NoProfile -File",
     "bat": "cmd /c"
-  },                                                                               //  代码运行器映射
+  }, //  代码运行器映射
 
   // 代码健康与Lint相关
   "eslint.validate": [
@@ -177,23 +195,23 @@
     "javascriptreact",
     "typescript",
     "typescriptreact"
-  ],                                                                               //  ESLint校验语言
-  "eslint.workingDirectories": [{ "mode": "auto" }],                               //  ESLint工作目录
+  ], //  ESLint校验语言
+  "eslint.workingDirectories": [{ "mode": "auto" }], //  ESLint工作目录
   "markdownlint.config": {
     "MD013": false,
     "MD033": false
-  },                                                                               //  MarkdownLint配置
-  "sonarlint.disableTelemetry": true,                                              //  关闭SonarLint遥测
-  "axe-linter.disable": false,                                                     //  启用axe-linter
+  }, //  MarkdownLint配置
+  "sonarlint.disableTelemetry": true, //  关闭SonarLint遥测
+  "axe-linter.disable": false, //  启用axe-linter
 
   // Next.js相关
-  "typescript.suggestionActions.enabled": false,                                   //  关闭TS建议动作
+  "typescript.suggestionActions.enabled": false, //  关闭TS建议动作
 
   // Markdown相关
   "[markdown]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.wordWrap": "on"
-  },                                                                               //  Markdown格式化和自动换行
+  }, //  Markdown格式化和自动换行
 
   // 语言格式化器
   "[javascript]": {
@@ -214,103 +232,4 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
-}
-  "editor.snippetSuggestions": "top",
-
-  "css.validate": false,
-  "less.validate": false,
-  "scss.validate": false,
-  "stylelint.validate": ["css", "scss"],
-
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.preferences.quoteStyle": "single",
-  "typescript.suggest.paths": true,
-  "typescript.suggest.autoImports": true,
-
-  "tailwindCSS.includeLanguages": {
-    "typescript": "javascript",
-    "typescriptreact": "javascript"
-  },
-  "tailwindCSS.emmetCompletions": true,
-
-  "files.associations": {
-    "*.scss": "scss",
-    ".env.*": "dotenv"
-  },
-  "files.exclude": {
-    "**/.git": false,
-    "**/.DS_Store": false,
-    "**/node_modules": false,
-    "**/.next": false
-  },
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
-  "files.eol": "\n",
-
-  "emmet.includeLanguages": {
-    "javascript": "javascriptreact",
-    "typescript": "typescriptreact"
-  },
-
-  "search.exclude": {
-    "**/node_modules": false,
-    "**/.next": false,
-    "**/dist": false
-  },
-
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[markdown]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.wordWrap": "on"
-  },
-
-  // ESLint设置增强
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
-  "eslint.workingDirectories": [{ "mode": "auto" }],
-
-  // Markdown lint设置
-  "markdownlint.config": {
-
-  },
-
-  // SonarLint设置
-  "sonarlint.disableTelemetry": true,
-
-  // 可访问性检查设置
-  "axe-linter.disable": false,
-
-  // Next.js设置
-  "javascript.suggestionActions.enabled": false,
-  "typescript.suggestionActions.enabled": false,
-
-  // 代码健康设置
-  "editor.stickyScroll.enabled": true,
-  "editor.guides.indentation": true,
-  "editor.renderWhitespace": "boundary"
 }

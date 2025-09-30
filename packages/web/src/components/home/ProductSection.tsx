@@ -1,9 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import React from 'react';
-import { useRef, useEffect, useState } from "react";
-import { useScrollSnap } from '@/hooks/useScrollSnap';
+import { useScrollSnap } from "@/hooks/useScrollSnap";
+import { useRef, useState } from "react";
 
 import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
 
@@ -13,7 +12,6 @@ import { PiCaretLeftBold, PiCaretRightBold } from "react-icons/pi";
  * - Carousel with left/right navigation, two-column layout
  */
 export default function ProductSection() {
-
   const sectionRef = useRef(null);
   const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
 
@@ -24,7 +22,12 @@ export default function ProductSection() {
       subtitle: "统一数据接入与处理",
       description:
         "支持多种数据源接入，包括结构化、半结构化和非结构化数据，提供实时数据清洗、转换和标准化服务。",
-      features: ["多源数据接入", "实时数据处理", "数据质量管控", "数据标准转换"],
+      features: [
+        "多源数据接入",
+        "实时数据处理",
+        "数据质量管控",
+        "数据标准转换",
+      ],
       image: "/images/products/product-intro-01.jpg",
       color: "blue",
     },
@@ -62,8 +65,10 @@ export default function ProductSection() {
   const total = products.length;
 
   // Carousel navigation
-  const prev = () => setCurrent((prev) => (prev - 1 + total) % total);
-  const next = () => setCurrent((prev) => (prev + 1) % total);
+  const prev = () =>
+    setCurrent((prev) => (prev === null ? 0 : (prev - 1 + total) % total));
+  const next = () =>
+    setCurrent((prev) => (prev === null ? 0 : (prev + 1) % total));
 
   // Color mapping for different product cards
   const colorMap = {
@@ -98,10 +103,10 @@ export default function ProductSection() {
   };
 
   return (
-      <section
-        ref={sectionRef}
-        className={`snap-section pt-28 bg-gradient-to-b from-blue-50 to-blue-50 ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
-      >
+    <section
+      ref={sectionRef}
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-blue-50 to-blue-50 ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
+    >
       <div className="max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title area with left/right navigation arrows */}
         <div className="flex items-center justify-between mb-16">
@@ -130,7 +135,6 @@ export default function ProductSection() {
                   {/* Left: text content */}
                   <div className="relative flex h-full items-center justify-start px-16">
                     <div className="relative w-full h-full flex flex-col gap-4 justify-items-start">
-                      
                       {/* Title and subtitle */}
                       <div className="relative flex items-center h-24 min-h-[96px] ${colors.border} ${colors.bg} ">
                         {/* 背景修饰：设计感数字，居左，带渐变和阴影 */}
@@ -138,16 +142,20 @@ export default function ProductSection() {
                           className="absolute left-0 top-1/2 -translate-y-1/2 text-[64px] font-semibold text-blue-400 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg"
                           aria-hidden="true"
                           style={{
-                            letterSpacing: '-0.05em',
-                            textShadow: '0 4px 24px #60a5fa, 0 1px 0 #fff'
+                            letterSpacing: "-0.05em",
+                            textShadow: "0 4px 24px #60a5fa, 0 1px 0 #fff",
                           }}
                         >
                           {idx + 1}
                         </span>
                         {/* 标题内容，居右显示，置于背景之上 */}
                         <div className="relative z-10 flex-1 flex flex-col items-start pl-16">
-                          <h3 className="text-2xl font-bold text-blue-800 text-left">{product.title}</h3>
-                          <p className="text-base text-gray-600 mt-1 text-left">{product.subtitle}</p>
+                          <h3 className="text-2xl font-bold text-blue-800 text-left">
+                            {product.title}
+                          </h3>
+                          <p className="text-base text-gray-600 mt-1 text-left">
+                            {product.subtitle}
+                          </p>
                         </div>
                       </div>
                       {/* Description */}
@@ -172,7 +180,9 @@ export default function ProductSection() {
                               <div
                                 className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
                               ></div>
-                              <span className="text-lg text-gray-600">{feature}</span>
+                              <span className="text-lg text-gray-600">
+                                {feature}
+                              </span>
                             </div>
                           ))}
                         </div>
@@ -187,7 +197,9 @@ export default function ProductSection() {
 
                         {/* Left/Right navigation arrows */}
                         <div className="flex justify-normal">
-                          <div className="flex gap-8"> {/* 添加间隙让两个按钮分开 */}
+                          <div className="flex gap-8">
+                            {" "}
+                            {/* 添加间隙让两个按钮分开 */}
                             {/* Previous 按钮 */}
                             <button
                               aria-label="Previous"
@@ -195,16 +207,19 @@ export default function ProductSection() {
                               className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md"
                             >
                               <PiCaretLeftBold className="w-5 h-5 text-gray-700" />
-                              <span className="text-gray-400 font-medium">Prev</span>
+                              <span className="text-gray-400 font-medium">
+                                Prev
+                              </span>
                             </button>
-
                             {/* Next 按钮 */}
                             <button
                               aria-label="Next"
                               onClick={next}
                               className="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md"
                             >
-                              <span className="text-gray-400 font-medium">Next</span>
+                              <span className="text-gray-400 font-medium">
+                                Next
+                              </span>
                               <PiCaretRightBold className="w-5 h-5 text-gray-700" />
                             </button>
                           </div>
@@ -213,9 +228,7 @@ export default function ProductSection() {
                     </div>
                   </div>
 
-                  <div
-                    className="bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200"
-                  >
+                  <div className="bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200">
                     {/* Right: image area */}
                     <div className="relative flex items-center justify-start bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 px-40 py-10">
                       <div className="relative w-full h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300">

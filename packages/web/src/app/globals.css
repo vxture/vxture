@@ -17,19 +17,19 @@ html {
   height: 100%;
   scroll-snap-type: y proximity;
   scroll-behavior: smooth; /* 平滑滚动 */
-  overflow: visible; 
+  overflow: visible;
 }
 
 body {
   height: auto;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
-    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   line-height: 1.5;
 }
 
 main {
   height: auto;
-  overflow: visible; 
 }
 /* Start: 每个滚动区块的样式 */
 
@@ -38,7 +38,6 @@ main {
   scroll-snap-type: none !important;
   overflow-y: visible !important;
   height: auto !important;
-
 }
 
 .snap-section {
