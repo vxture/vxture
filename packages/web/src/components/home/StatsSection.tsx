@@ -8,13 +8,17 @@
  */
 
 // 引入 React 的 hooks
-import React from 'react';
-import { useRef, useEffect, useState } from "react";
-import { useScrollSnap } from '@/hooks/useScrollSnap';
-import Image from 'next/image';
+import { useScrollSnap } from "@/hooks/useScrollSnap";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 // 引入图标
-import { HiBuildingLibrary, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
+import {
+  HiBuildingLibrary,
+  HiMiniCube,
+  HiMiniUserGroup,
+  HiStar,
+} from "react-icons/hi2";
 
 export default function StatsSection() {
   // 监听当前 section 是否处于吸附状态
@@ -158,8 +162,15 @@ export default function StatsSection() {
     <section
       ref={sectionRef}
       id="stats-section"
-      className={`relative snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
+      className={`relative snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
     >
+      {/* 背景装饰圆形（z-0，放在内容容器后面，仅限section内定位） */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl"></div>
+      </div>
+
       {/* 内容容器（z-10） */}
       <div className="relative z-10 h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}
@@ -189,18 +200,17 @@ export default function StatsSection() {
 
                 <div
                   className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" // 关键：使用 -z-10 将其置于底层
-                  style={{ background: `linear-gradient(to right, ${stat.color})` }} // 使用行内样式设置渐变背景
+                  style={{
+                    background: `linear-gradient(to right, ${stat.color})`,
+                  }} // 使用行内样式设置渐变背景
                 >
                   <div className="h-full w-full rounded-2xl bg-transparent"></div>
                 </div>
 
                 <div className="relative z-10">
-
                   {/* 图标 */}
                   <div className="flex justify-center">
-                    <div
-                      className="w-24 h-24 flex items-center justify-center transition-transform duration-300"
-                    >
+                    <div className="w-24 h-24 flex items-center justify-center transition-transform duration-300">
                       {stat.icon}
                     </div>
                   </div>
@@ -227,7 +237,6 @@ export default function StatsSection() {
                 <div
                   className={`absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-r ${stat.color} rounded-full opacity-10 group-hover:opacity-40 transition-opacity duration-500`}
                 ></div>
-                
               </div>
             </div>
           ))}
@@ -243,10 +252,13 @@ export default function StatsSection() {
         {/* 客户logo展示区域，两行五列布局 */}
         <div className="my-8 grid grid-cols-5 gap-x-24 gap-y-8">
           {Array.from({ length: 10 }).map((_, idx) => {
-            const num = String(idx + 1).padStart(2, '0');
+            const num = String(idx + 1).padStart(2, "0");
             const src = `/images/costomlogo/costom-logo-${num}.png`;
             return (
-              <div key={num} className="flex items-center justify-center h-12 rounded-lg">
+              <div
+                key={num}
+                className="flex items-center justify-center h-12 rounded-lg"
+              >
                 <Image
                   src={src}
                   alt={`客户Logo${num}`}
@@ -254,10 +266,9 @@ export default function StatsSection() {
                   height={80}
                   className="w-full h-full object-fill rounded-lg"
                   onError={(e) => {
-                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.style.display = "none";
                     if (e.currentTarget.parentElement) {
-                      e.currentTarget.parentElement.innerHTML =
-                        `<span class='flex items-center justify-center w-full h-full bg-blue-200 text-gray-400 text-xs rounded-lg'>客户Logo${num}</span>`;
+                      e.currentTarget.parentElement.innerHTML = `<span class='flex items-center justify-center w-full h-full bg-blue-200 text-gray-400 text-xs rounded-lg'>客户Logo${num}</span>`;
                     }
                   }}
                   unoptimized
@@ -265,13 +276,7 @@ export default function StatsSection() {
               </div>
             );
           })}
-        </div>        
-      </div>
-      {/* 背景装饰圆形（z-0，放在内容容器后面） */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl"></div>
+        </div>
       </div>
     </section>
   );

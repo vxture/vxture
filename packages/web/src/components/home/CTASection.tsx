@@ -2,16 +2,16 @@
 
 /**
  * CTASection
- * 
+ *
  * 作者：Stone Smoker
  * 更新时间：2025-09-29
  * 代码说明：代码已美化，结构分组清晰，注释详尽，移除无效/冗余属性。
- * 
+ *
  */
 
 export default function CTASection() {
   return (
-    <section className="pt-40 pb-12 bg-gradient-to-b from-blue-50 to-blue-50">
+    <section className="relative pt-40 pb-12 bg-gradient-to-b from-blue-50 to-blue-50">
       {/* ===== 背景装饰层 ===== */}
       <div className="absolute inset-0 pointer-events-none select-none">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-50 via-white to-purple-50" />
@@ -54,8 +54,8 @@ export default function CTASection() {
       {/* ===== 主内容区 ===== */}
       <div className="relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* 主标题 */}
-        <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
-          <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent block lg:inline lg:ml-4">
+        <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-12">
+          <span className="inline-block bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent lg:inline">
             准备好释放数据潜力了吗？
           </span>
         </h2>
@@ -63,7 +63,7 @@ export default function CTASection() {
         {/* <p className="text-xl lg:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed"></p> */}
 
         {/* ===== 特色亮点区 ===== */}
-        <div className="grid md:grid-cols-5 gap-6 my-12">
+        <div className="grid md:grid-cols-5 gap-6 mb-6">
           {/* 左侧占位格 */}
           <div className="flex items-center justify-center p-4" />
           {/* 快速部署 */}
@@ -131,7 +131,7 @@ export default function CTASection() {
         </div>
 
         {/* ===== CTA 按钮区 ===== */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
           {/* 免费试用按钮 */}
           <button className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 hover:scale-105 hover:shadow-2xl min-w-[200px]">
             <span className="flex items-center justify-center space-x-2">
@@ -175,7 +175,7 @@ export default function CTASection() {
         </div>
 
         {/* ===== 联系方式区 ===== */}
-        <div className="py-8 bg-gradient-to-r from-blue-50 to-blue-50 rounded-2xl border border-gray-100">
+        <div className="mb-8 py-4 bg-gradient-to-r from-blue-50 to-blue-50 rounded-2xl border border-gray-100">
           <p className="text-gray-600 mb-4">我们的专家团队随时为您服务</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center text-sm">
             {/* 邮箱 */}

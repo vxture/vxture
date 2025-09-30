@@ -10,6 +10,7 @@ if (-not (Test-Path $webDir)) {
 
 # 2. 启动前端服务
 try {
+    Write-Host ""
     Write-Host "====================================="
     Write-Host "  Start Vxture Frontend Dev Env"
     Write-Host "====================================="
@@ -22,7 +23,7 @@ try {
         -WindowStyle Hidden `
         -PassThru `
         -ErrorAction Stop
-    
+
     # 记录PID
     $proc.Id | Out-File $pidFile -Encoding ascii -Force
 
@@ -35,6 +36,7 @@ try {
     Write-Host "  Startup process completed!"
     Write-Host "  You can safely close this window."
     Write-Host "====================================="
+    Write-Host ""
 }
 catch {
     # 失败提示

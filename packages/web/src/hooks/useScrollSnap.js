@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 export const useScrollSnap = (sectionRef) => {
   const [isSnapped, setIsSnapped] = useState(false);
   const observerRef = useRef(null);
   const isScrolling = useRef(false);
-  const lastScrollY = useRef(window.scrollY);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+    // 只在客户端执行
+    if (typeof window === "undefined" || !sectionRef.current) return;
 
     const handleScroll = () => {
       isScrolling.current = true;
@@ -16,7 +17,7 @@ export const useScrollSnap = (sectionRef) => {
       lastScrollY.current = window.scrollY;
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     // 使用entry的boundingClientRect替代重新获取
     const observer = new IntersectionObserver(
@@ -31,7 +32,7 @@ export const useScrollSnap = (sectionRef) => {
           if (rect.top > 10 && rect.top < window.innerHeight - 100) {
             window.scrollTo({
               top: window.scrollY + rect.top,
-              behavior: 'smooth'
+              behavior: "smooth",
             });
             setIsSnapped(true);
           }
@@ -39,7 +40,7 @@ export const useScrollSnap = (sectionRef) => {
           if (Math.abs(rect.top) > 10 && rect.top > -window.innerHeight + 100) {
             window.scrollTo({
               top: window.scrollY + rect.top,
-              behavior: 'smooth'
+              behavior: "smooth",
             });
             setIsSnapped(true);
           }
@@ -50,7 +51,7 @@ export const useScrollSnap = (sectionRef) => {
       {
         root: null,
         threshold: 0.1,
-        rootMargin: '-20px 0px'
+        rootMargin: "-20px 0px",
       }
     );
 
@@ -58,7 +59,7 @@ export const useScrollSnap = (sectionRef) => {
     observerRef.current = observer;
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
       observerRef.current?.disconnect();
       clearTimeout(window.scrollTimer);
     };

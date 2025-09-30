@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React from 'react';
-import { useRef, useEffect, useState } from "react";
-import { useScrollSnap } from '@/hooks/useScrollSnap';
+import { useScrollSnap } from "@/hooks/useScrollSnap";
+import { useRef, useState } from "react";
 
 import Image from "next/image";
 
-import { LuCalendarDays } from 'react-icons/lu';
+import { LuCalendarDays } from "react-icons/lu";
 
 export default function CaseSection() {
   const sectionRef = useRef(null);
@@ -47,15 +46,18 @@ export default function CaseSection() {
   const colorMap = {
     blue: {
       border: "hover:border-blue-400",
-      button: "bg-blue-100 text-blue-700 border-blue-200 group-hover:bg-blue-600 group-hover:text-white",
+      button:
+        "bg-blue-100 text-blue-700 border-blue-200 group-hover:bg-blue-600 group-hover:text-white",
     },
     cyan: {
       border: "hover:border-cyan-400",
-      button: "bg-cyan-100 text-cyan-700 border-cyan-200 group-hover:bg-blue-600 group-hover:text-white",
+      button:
+        "bg-cyan-100 text-cyan-700 border-cyan-200 group-hover:bg-blue-600 group-hover:text-white",
     },
     purple: {
       border: "hover:border-purple-400",
-      button: "bg-purple-100 text-purple-700 border-purple-200 group-hover:bg-blue-600 group-hover:text-white",
+      button:
+        "bg-purple-100 text-purple-700 border-purple-200 group-hover:bg-blue-600 group-hover:text-white",
     },
   };
   const [isHovered, setIsHovered] = useState(false);
@@ -63,9 +65,9 @@ export default function CaseSection() {
   return (
     <section
       ref={sectionRef}
-      className={`snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
+      className={`snap-section pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
     >
-      <div className="h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section title */}
         <div className="flex items-center justify-between mb-16">
           {/* Section title and subtitle */}
@@ -81,8 +83,10 @@ export default function CaseSection() {
         {/* Case grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {cases.map((item) => {
-            const borderClass = colorMap[item.color as keyof typeof colorMap].border;
-            const buttonClass = colorMap[item.color as keyof typeof colorMap].button;
+            const borderClass =
+              colorMap[item.color as keyof typeof colorMap].border;
+            const buttonClass =
+              colorMap[item.color as keyof typeof colorMap].button;
             return (
               <div
                 key={item.title}
@@ -103,61 +107,76 @@ export default function CaseSection() {
 
                 {/* Content area */}
                 <div className="p-6 space-y-4">
-                    {/* Title */}
-                    <h3 className="text-2xl font-bold text-blue-800 text-left">{item.title}</h3>
-                    {/* Description */}
-                    <p className="text-gray-600 leading-relaxed text-left">{item.description}</p>
-                    {/* Highlights tags */}
-                    <div className="flex flex-wrap gap-2 justify-start">
-                      {item.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 bg-blue-50 text-blue-500 text-sm font-semibold rounded-full border border-blue-50"
-                        >
-                          {tag}
-                        </span>
-                      ))}
+                  {/* Title */}
+                  <h3 className="text-2xl font-bold text-blue-800 text-left">
+                    {item.title}
+                  </h3>
+                  {/* Description */}
+                  <p className="text-gray-600 leading-relaxed text-left">
+                    {item.description}
+                  </p>
+                  {/* Highlights tags */}
+                  <div className="flex flex-wrap gap-2 justify-start">
+                    {item.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-blue-50 text-blue-500 text-sm font-semibold rounded-full border border-blue-50"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  {/* Learn more button */}
+
+                  <div className="pt-4 flex items-center justify-between">
+                    {/* 左下角年份 */}
+                    <div className="flex items-center text-gray-500 text-xs font-semibold">
+                      <LuCalendarDays className="mr-1 w-5 h-5" />
+                      {item.year}
                     </div>
-                    {/* Learn more button */}
-                    
-                    <div className="pt-4 flex items-center justify-between">
-                      {/* 左下角年份 */}
-                      <div className="flex items-center text-gray-500 text-xs font-semibold">
-                        <LuCalendarDays className="mr-1 w-5 h-5" />
-                        {item.year}
-                      </div>
-                      {/* 居中按钮 */}
-                      <div className="flex-1 flex justify-end">
-                        <button
-                          className="inline-flex items-center text-sm font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none"
+                    {/* 居中按钮 */}
+                    <div className="flex-1 flex justify-end">
+                      <button className="inline-flex items-center text-sm font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none">
+                        查看详情
+                        <svg
+                          className="ml-2 w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          查看详情
-                          <svg
-                            className="ml-2 w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M17 8l4 4m0 0l-4 4m4-4H3"
-                            />
-                          </svg>
-                        </button>
-                      </div>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                          />
+                        </svg>
+                      </button>
                     </div>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
         {/* Bottom decorative text */}
-        <div className="text-center mt-16">
-          <div className="inline-flex items-center space-x-2 text-gray-500">
+        <div className="text-center text-gray-400/40  animate-bounce mt-16">
+          <svg
+            className="w-6 h-6 mx-auto mb-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
+          </svg>
+          <div className="inline-flex items-center space-x-2 text-gray-400">
             <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300"></div>
-            <span className="text-sm font-medium">查看更多案例</span>
+            <span className="text-sm font-medium">更多案例</span>
             <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300"></div>
           </div>
         </div>
