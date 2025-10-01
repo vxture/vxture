@@ -8,7 +8,6 @@ import FeaturesSection from "@/components/home/FeaturesSection";
 import HeroSection from "@/components/home/HeroSection";
 import ProductSection from "@/components/home/ProductSection";
 import StatsSection from "@/components/home/StatsSection";
-import TestSection from "@/components/home/TestSection";
 
 export default function HomePage() {
   useEffect(() => {
@@ -20,7 +19,6 @@ export default function HomePage() {
 
   return (
     <>
-      <TestSection />
       <HeroSection /> {/* snap-section h-screen */}
       <FeaturesSection /> {/* snap-section h-screen */}
       <ProductSection /> {/* snap-section h-screen */}

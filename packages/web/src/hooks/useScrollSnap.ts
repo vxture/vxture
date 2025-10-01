@@ -37,6 +37,8 @@ export function useScrollSnap({
    * 获取所有目标元素，并按页面顺序排序
    * @returns 目标元素数组
    */
+  // 已移除未使用的 targets 状态
+
   const getTargets = useCallback((): HTMLElement[] => {
     const elements = document.querySelectorAll<HTMLElement>(targetSelector); // 获取所有匹配的元素
     return Array.from(elements).sort((a, b) => a.offsetTop - b.offsetTop); // 按 offsetTop 排序
