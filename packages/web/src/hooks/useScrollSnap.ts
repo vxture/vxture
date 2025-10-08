@@ -37,7 +37,7 @@ export function useScrollSnap({
    * 获取所有目标元素，并按页面顺序排序
    * @returns 目标元素数组
    */
-  // 已移除未使用的 targets 状态
+  const [targets, setTargets] = useState<HTMLElement[]>([]); // 明确初始化为空数组
 
   const getTargets = useCallback((): HTMLElement[] => {
     const elements = document.querySelectorAll<HTMLElement>(targetSelector); // 获取所有匹配的元素
@@ -66,9 +66,7 @@ export function useScrollSnap({
         const currentDistance = Math.abs(targetCenter - viewportCenter); // 当前目标与视口中心距离
 
         const nearestDistance = nearest
-          ? Math.abs(
-              nearest.offsetTop + nearest.offsetHeight / 2 - viewportCenter
-            ) // 最近目标与视口中心距离
+          ? Math.abs(nearest.offsetTop + nearest.offsetHeight / 2 - viewportCenter) // 最近目标与视口中心距离
           : Infinity;
 
         return currentDistance < nearestDistance ? target : nearest; // 返回更近的目标
@@ -88,7 +86,7 @@ export function useScrollSnap({
 
     window.scrollTo({
       top: targetPosition, // 滚动到目标顶部
-      behavior: "smooth", // 平滑滚动
+      behavior: 'smooth', // 平滑滚动
     });
 
     setActiveTarget(target); // 更新当前吸附目标
@@ -116,9 +114,7 @@ export function useScrollSnap({
       const targetBottom = targetTop + nearestTarget.offsetHeight; // 目标底部
 
       const distanceToTop = Math.abs(scrollY - targetTop); // 距离视口顶部
-      const distanceToBottom = Math.abs(
-        scrollY + viewportHeight - targetBottom
-      ); // 距离视口底部
+      const distanceToBottom = Math.abs(scrollY + viewportHeight - targetBottom); // 距离视口底部
       const minDistance = Math.min(distanceToTop, distanceToBottom); // 取最小距离
 
       if (minDistance < threshold) {
@@ -133,6 +129,12 @@ export function useScrollSnap({
   /**
    * 初始化和清理滚动事件监听
    */
+  // 元素查询逻辑
+  useEffect(() => {
+    const elements = document.querySelectorAll<HTMLElement>(targetSelector);
+    setTargets(Array.from(elements)); // 确保始终返回数组
+  }, [targetSelector]);
+
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true }); // 添加 window 滚动事件监听
 

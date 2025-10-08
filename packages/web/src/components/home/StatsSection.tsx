@@ -161,56 +161,54 @@ export default function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      id="stats-section"
-      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
+      id='stats-section'
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
     >
       {/* 背景装饰圆形（z-0，放在内容容器后面，仅限section内定位） */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl"></div>
+      <div className='absolute inset-0 z-0 pointer-events-none'>
+        <div className='absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl'></div>
+        <div className='absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl'></div>
+        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl'></div>
       </div>
 
       {/* 内容容器（z-10） */}
-      <div className="relative z-10 h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className='relative z-10 h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Section title */}
-        <div className="flex items-center justify-between mb-16">
+        <div className='flex items-center justify-between mb-16'>
           {/* Section title and subtitle */}
-          <div className="flex-1 text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-blue-800 mb-6">
-              服务的客户
-            </h2>
-            <p className="text-lg text-gray-400 max-w-4xl mx-auto">
+          <div className='flex-1 text-center'>
+            <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-6'>服务的客户</h2>
+            <p className='text-lg text-gray-400 max-w-4xl mx-auto'>
               用数字见证我们在数据智能领域的专业实力与客户信赖
             </p>
           </div>
         </div>
         {/* 统计卡片网格 */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8'>
           {stats.map((stat, index) => (
             <div
               key={stat.label}
               // 卡片动画：进入视口时 slide-in-from-bottom，未进入时透明
-              className={`relative group ${inView ? "animate-in slide-in-from-bottom-8 duration-700" : "opacity-0"}`}
+              className={`relative group ${inView ? 'animate-in slide-in-from-bottom-8 duration-700' : 'opacity-0'}`}
               style={{ animationDelay: `${index * 150}ms` }} // 瀑布式动画延迟
             >
               {/* 卡片主体 */}
-              <div className="relative pb-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 hover:scale-105 overflow-hidden">
+              <div className='relative pb-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 hover:scale-105 overflow-hidden'>
                 {/* 渐变边框效果，hover 时显现, 用伪元素实现渐变边框 */}
 
                 <div
-                  className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" // 关键：使用 -z-10 将其置于底层
+                  className='absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10' // 关键：使用 -z-10 将其置于底层
                   style={{
                     background: `linear-gradient(to right, ${stat.color})`,
                   }} // 使用行内样式设置渐变背景
                 >
-                  <div className="h-full w-full rounded-2xl bg-transparent"></div>
+                  <div className='h-full w-full rounded-2xl bg-transparent'></div>
                 </div>
 
-                <div className="relative z-10">
+                <div className='relative z-10'>
                   {/* 图标 */}
-                  <div className="flex justify-center">
-                    <div className="w-24 h-24 flex items-center justify-center transition-transform duration-300">
+                  <div className='flex justify-center'>
+                    <div className='w-24 h-24 flex items-center justify-center transition-transform duration-300'>
                       {stat.icon}
                     </div>
                   </div>
@@ -223,12 +221,12 @@ export default function StatsSection() {
                   </div>
 
                   {/* 标签 */}
-                  <h3 className="text-xl font-semibold text-gray-900 text-center mb-3">
+                  <h3 className='text-xl font-semibold text-gray-900 text-center mb-3'>
                     {stat.label}
                   </h3>
 
                   {/* 描述 */}
-                  <p className="text-gray-600 text-center text-base leading-relaxed">
+                  <p className='text-gray-600 text-center text-base leading-relaxed'>
                     {stat.description}
                   </p>
                 </div>
@@ -242,31 +240,28 @@ export default function StatsSection() {
           ))}
         </div>
         {/* 底部装饰文本，样式与 FeaturesSection 完全一致 */}
-        <div className="text-center my-16">
-          <div className="inline-flex items-center space-x-2 text-gray-500">
-            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300"></div>
-            <span className="text-sm font-medium">持续创新，共创数字未来</span>
-            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300"></div>
+        <div className='text-center my-16'>
+          <div className='inline-flex items-center space-x-2 text-gray-500'>
+            <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300'></div>
+            <span className='text-sm font-medium'>持续创新，共创数字未来</span>
+            <div className='w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300'></div>
           </div>
         </div>
         {/* 客户logo展示区域，两行五列布局 */}
-        <div className="my-8 grid grid-cols-5 gap-x-24 gap-y-8">
+        <div className='my-8 grid grid-cols-5 gap-x-24 gap-y-8'>
           {Array.from({ length: 10 }).map((_, idx) => {
-            const num = String(idx + 1).padStart(2, "0");
+            const num = String(idx + 1).padStart(2, '0');
             const src = `/images/costomlogo/costom-logo-${num}.png`;
             return (
-              <div
-                key={num}
-                className="flex items-center justify-center h-12 rounded-lg"
-              >
+              <div key={num} className='flex items-center justify-center h-12 rounded-lg'>
                 <Image
                   src={src}
                   alt={`客户Logo${num}`}
                   width={80}
                   height={80}
-                  className="w-full h-full object-fill rounded-lg"
+                  className='w-full h-full object-fill rounded-lg'
                   onError={(e) => {
-                    e.currentTarget.style.display = "none";
+                    e.currentTarget.style.display = 'none';
                     if (e.currentTarget.parentElement) {
                       e.currentTarget.parentElement.innerHTML = `<span class='flex items-center justify-center w-full h-full bg-blue-200 text-gray-400 text-xs rounded-lg'>客户Logo${num}</span>`;
                     }

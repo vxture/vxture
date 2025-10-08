@@ -1,4 +1,4 @@
-// packages/web/src/components/about/TestSection.tsx
+// packages/web/src/components/aboutus/TestSection.tsx
 
 'use client'; // 客户端组件声明，用于使用浏览器API如滚动事件
 
@@ -18,10 +18,9 @@ export default function ScrollSnapDemo({ sections }: ScrollSnapDemoProps) {
   const {
     activeTarget, // 当前活跃的section目标
     snapToTarget, // 吸附到指定目标的函数
-    debugInfo, // 新增：获取调试信息
     targets = [], // 所有可吸附的目标列表
   } = useScrollSnap({
-    targetSelector: '.section-snap', // 匹配section的类名，用于吸附
+    targetSelector: '.snap-section', // 匹配section的类名，用于吸附
     threshold: 150, // 吸附触发阈值（像素）
     checkOnMount: true, // 初始加载时检查位置
   });
@@ -34,28 +33,8 @@ export default function ScrollSnapDemo({ sections }: ScrollSnapDemoProps) {
   };
 
   return (
-    <div className='min-h-screen'>
-      {/* 右上角调试面板 */}
-      <div className='fixed top-4 right-4 bg-black text-white p-4 rounded shadow-lg z-50'>
-        <h3 className='text-sm font-bold'>Debug Info</h3>
-        <p>
-          Rect:{' '}
-          {debugInfo.rect
-            ? `top: ${debugInfo.rect.top.toFixed(
-                2
-              )}, left: ${debugInfo.rect.left.toFixed(
-                2
-              )}, width: ${debugInfo.rect.width.toFixed(
-                2
-              )}, height: ${debugInfo.rect.height.toFixed(2)}`
-            : 'null'}
-        </p>
-        <p>Targets Count: {debugInfo.targetsCount}</p>
-        <p>Scrolling: {debugInfo.isScrollingDirection}</p> {/* 修改字段名 */}
-        <p>Align To: {debugInfo.alignTo}</p>
-        <p>Active Target ID: {debugInfo.activeTargetId || 'null'}</p>
-      </div>
-
+    <div className='min-h-screen border-2 border-blue-600'>
+      {/* 容器：最小高度为屏幕高度，调试边线 */}
       {/* 顶部导航 - 随滚动变化状态 */}
       {/* 分屏吸附区块 - 基于外部配置渲染 */}
       <div className='pt-0 border-2 border-red-600'>

@@ -65,62 +65,52 @@ export default function CaseSection() {
   return (
     <section
       ref={sectionRef}
-      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? "shadow-lg shadow-black/10" : ""}`}
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
     >
-      <div className="relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className='relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Section title */}
-        <div className="flex items-center justify-between mb-16">
+        <div className='flex items-center justify-between mb-16'>
           {/* Section title and subtitle */}
-          <div className="flex-1 text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold text-blue-800 mb-6">
-              最佳实践
-            </h2>
-            <p className="text-lg text-gray-400 max-w-4xl mx-auto">
-              为客户业务赋能的最佳应用场景
-            </p>
+          <div className='flex-1 text-center'>
+            <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-6'>最佳实践</h2>
+            <p className='text-lg text-gray-400 max-w-4xl mx-auto'>为客户业务赋能的最佳应用场景</p>
           </div>
         </div>
         {/* Case grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
           {cases.map((item) => {
-            const borderClass =
-              colorMap[item.color as keyof typeof colorMap].border;
-            const buttonClass =
-              colorMap[item.color as keyof typeof colorMap].button;
+            const borderClass = colorMap[item.color as keyof typeof colorMap].border;
+            const buttonClass = colorMap[item.color as keyof typeof colorMap].button;
             return (
               <div
                 key={item.title}
-                className="group relative bg-white hover:bg-blue-50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500 overflow-hidden"
+                className='group relative bg-white hover:bg-blue-50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500 overflow-hidden'
               >
                 {/* Image area with 16:9 aspect ratio */}
-                <div className="relative w-full aspect-[16/9]">
+                <div className='relative w-full aspect-[16/9]'>
                   <Image
                     src={item.image}
-                    alt={item.title + "案例图片"}
+                    alt={item.title + '案例图片'}
                     fill
-                    className="object-cover rounded-t-2xl"
-                    sizes="(max-width: 768px) 100vw, 400px"
+                    className='object-cover rounded-t-2xl'
+                    sizes='(max-width: 768px) 100vw, 400px'
                     priority
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-200/80 via-blue-100/80 to-transparent group-hover:opacity-40 rounded-t-2xl pointer-events-none"></div>
+                  <div className='absolute inset-0 bg-gradient-to-t from-blue-200/80 via-blue-100/80 to-transparent group-hover:opacity-40 rounded-t-2xl pointer-events-none'></div>
                 </div>
 
                 {/* Content area */}
-                <div className="p-6 space-y-4">
+                <div className='p-6 space-y-4'>
                   {/* Title */}
-                  <h3 className="text-2xl font-bold text-blue-800 text-left">
-                    {item.title}
-                  </h3>
+                  <h3 className='text-2xl font-bold text-blue-800 text-left'>{item.title}</h3>
                   {/* Description */}
-                  <p className="text-gray-600 leading-relaxed text-left">
-                    {item.description}
-                  </p>
+                  <p className='text-gray-600 leading-relaxed text-left'>{item.description}</p>
                   {/* Highlights tags */}
-                  <div className="flex flex-wrap gap-2 justify-start">
+                  <div className='flex flex-wrap gap-2 justify-start'>
                     {item.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-3 py-1 bg-blue-50 text-blue-500 text-sm font-semibold rounded-full border border-blue-50"
+                        className='px-3 py-1 bg-blue-50 text-blue-500 text-sm font-semibold rounded-full border border-blue-50'
                       >
                         {tag}
                       </span>
@@ -128,27 +118,27 @@ export default function CaseSection() {
                   </div>
                   {/* Learn more button */}
 
-                  <div className="pt-4 flex items-center justify-between">
+                  <div className='pt-4 flex items-center justify-between'>
                     {/* 左下角年份 */}
-                    <div className="flex items-center text-gray-500 text-xs font-semibold">
-                      <LuCalendarDays className="mr-1 w-5 h-5" />
+                    <div className='flex items-center text-gray-500 text-xs font-semibold'>
+                      <LuCalendarDays className='mr-1 w-5 h-5' />
                       {item.year}
                     </div>
                     {/* 居中按钮 */}
-                    <div className="flex-1 flex justify-end">
-                      <button className="inline-flex items-center text-sm font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none">
+                    <div className='flex-1 flex justify-end'>
+                      <button className='inline-flex items-center text-sm font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none'>
                         查看详情
                         <svg
-                          className="ml-2 w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                          className='ml-2 w-4 h-4'
+                          fill='none'
+                          stroke='currentColor'
+                          viewBox='0 0 24 24'
                         >
                           <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+                            strokeLinecap='round'
+                            strokeLinejoin='round'
                             strokeWidth={2}
-                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                            d='M17 8l4 4m0 0l-4 4m4-4H3'
                           />
                         </svg>
                       </button>
@@ -160,24 +150,24 @@ export default function CaseSection() {
           })}
         </div>
         {/* Bottom decorative text */}
-        <div className="text-center text-gray-400/40  animate-bounce mt-16">
+        <div className='text-center text-gray-400/40  animate-bounce mt-16'>
           <svg
-            className="w-6 h-6 mx-auto mb-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+            className='w-6 h-6 mx-auto mb-2'
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
           >
             <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap='round'
+              strokeLinejoin='round'
               strokeWidth={2}
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              d='M19 14l-7 7m0 0l-7-7m7 7V3'
             />
           </svg>
-          <div className="inline-flex items-center space-x-2 text-gray-400">
-            <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300"></div>
-            <span className="text-sm font-medium">更多案例</span>
-            <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300"></div>
+          <div className='inline-flex items-center space-x-2 text-gray-400'>
+            <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300'></div>
+            <span className='text-sm font-medium'>更多案例</span>
+            <div className='w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300'></div>
           </div>
         </div>
       </div>

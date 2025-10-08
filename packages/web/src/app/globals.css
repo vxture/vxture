@@ -1,70 +1,66 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind 基础样式导入 */
+@tailwind base; /* 引入 Tailwind 的基础样式 */
+@tailwind components; /* 引入 Tailwind 的组件样式 */
+@tailwind utilities; /* 引入 Tailwind 的工具类样式 */
 
-/* 全局样式重置 */
+/* 全局盒模型与边距重置 */
 *,
 *::before,
 *::after {
-  box-sizing: border-box;
+  box-sizing: border-box; /* 统一盒模型，包含 padding 和 border */
 }
 
 * {
-  margin: 0;
+  margin: 0; /* 清除所有元素默认外边距 */
 }
 
-html {
-  height: 100%;
-  scroll-snap-type: y proximity;
-  scroll-behavior: smooth; /* 平滑滚动 */
-  overflow: visible;
-}
-
+/* 滚动吸附容器设置（以 html 为滚动容器） */
+html,
 body {
-  height: auto;
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  line-height: 1.5;
-}
-
-main {
-  height: auto;
-}
-/* Start: 每个滚动区块的样式 */
-
-/* 修正CSS，确保只有容器设置滚动吸附 */
-.scroll-snap-container {
-  scroll-snap-type: none !important;
-  overflow-y: visible !important;
+  margin: 0;
+  padding: 0;
+  /* 关键：禁止设置overflow（默认visible即可） */
+  overflow: visible !important;
+  /* 禁止设置固定高度（如100vh），否则内容会被截断 */
   height: auto !important;
+  min-height: auto !important;
 }
 
+/* main 区域默认高度自动，适应内容 */
+main {
+
+}
+
+/* 吸附区块样式（用于分屏吸附） */
 .snap-section {
-  scroll-snap-align: start; /* 吸附到顶部 */
-  scroll-snap-stop: normal; /* 允许快速滚动跳过 */
-  min-height: 100vh; /* 确保至少占满一屏 */
-  width: 100%;
+  scroll-snap-align: start; /* 吸附到容器顶部 */
+  min-height: 100vh; /* 至少占满一屏高度 */
+  width: 100%; /* 区块宽度撑满容器 */
+}
+.snap-target {
+  margin: 0;
+  min-height: 100vh;
 }
 
-/* End: 每个滚动区块的样式 */
-
+/* 图片及媒体元素样式重置 */
 img,
 picture,
 video,
 canvas,
 svg {
-  display: block;
-  max-width: 100%;
+  display: block; /* 块级显示，避免底部空隙 */
+  max-width: 100%; /* 最大宽度不超过容器 */
 }
 
+/* 表单元素字体继承 */
 input,
 button,
 textarea,
 select {
-  font: inherit;
+  font: inherit; /* 继承父元素字体 */
 }
 
+/* 标题与段落自动换行 */
 p,
 h1,
 h2,
@@ -72,23 +68,26 @@ h3,
 h4,
 h5,
 h6 {
-  overflow-wrap: break-word;
+  overflow-wrap: break-word; /* 长单词自动换行 */
 }
 
+/* React 根节点隔离，避免样式污染 */
 #root,
 #__next {
-  isolation: isolate;
+  isolation: isolate; /* 开启样式隔离 */
 }
 
-/* 自定义样式 */
+/* Tailwind 容器工具类（用于页面内容居中和最大宽度） */
 .container {
-  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8; /* 居中、最大宽度、响应式内边距 */
 }
 
+/* 主按钮样式 */
 .btn-primary {
   @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors;
 }
 
+/* 次按钮样式 */
 .btn-secondary {
   @apply bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors;
 }
