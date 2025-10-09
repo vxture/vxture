@@ -1,121 +1,205 @@
-// hooks/useWindowScrollSnap.ts - 窗口滚动吸附钩子
-// 功能：实现页面元素的滚动吸附效果，提供目标检测和自动吸附功能
-// 使用场景：页面滚动时自动吸附到指定元素，提升用户体验
+/**
+ * useWindowScrollSnap.ts - 窗口滚动吸附钩子
+ *
+ * 功能：实现页面元素的滚动吸附效果，提供目标检测和自动吸附功能
+ * 用途：页面滚动时自动吸附到指定元素，提升用户体验
+ *
+ * 作者：vxture team
+ * 版权：Copyright (c) 2024 vxture
+ * 时间：2024-06-01
+ *
+ * 代码规范：严格遵循 TypeScript + React 组件最佳实践
+ * 性能优化：依赖 useCallback/useMemo，避免不必要的渲染和副作用
+ */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 
-// 配置接口：定义 hook 的输入参数
+// 输入参数类型定义
 interface WindowScrollSnapConfig {
-  debugFlag?: boolean;                                              // 是否启用调试模式
-  targetSelector: string;                                           // 目标元素选择器，用于匹配吸附元素
-  threshold: number;                                                // 吸附触发阈值（像素）
-  alignTo?: 'top' | 'center' | 'bottom' | 'auto';                   // 对齐方式，默认顶部
-  smooth?: boolean;                                                 // 是否启用平滑滚动
-  enabledDirections?: ('up' | 'down')[];                            // 允许吸附的方向
-  observerRoot?: HTMLElement;                                       // DOM 监听根容器
+  debugFlag: boolean; // 是否启用调试模式（必选）
+  targetSelector: string; // 目标元素选择器（必选）
+  targetAlignTo?: 'top' | 'center' | 'bottom' | 'auto'; // 对齐方式
+  snapThreshold?: number; // 吸附触发阈值
+  enabledDirections?: ('up' | 'down')[]; // 允许吸附的方向
+  observerRoot?: HTMLElement; // DOM 监听根容器
 }
 
-// 配置接口：定义 hook 的输出参数
+// 输出参数类型定义
 interface WindowScrollSnapReturn {
-  activeTarget: HTMLElement | null;                                 // 当前活跃吸附目标
-  snapToTarget: (target: HTMLElement) => void;                      // 手动吸附函数
-  snapdebugInfo: {                                                  // 调试信息对象
-    rect: DOMRect | null;                                           // 活跃目标的矩形信息
-    targetsCount: number;                                           // 目标元素总数
-    isScrollingDirection: 'up' | 'down' | 'no';                     // 滚动方向
-    alignTo: string;                                                // 对齐方式
-    activeTargetId: string | null;                                  // 活跃目标 ID
-    scrollY: number;                                                // 当前滚动位置 Y
-    threshold: number;                                              // 吸附触发阈值
-    scrollVelocity: number;                                         // 滚动速度
-  };
-  viewportRect: {                                                   // 视口矩形信息
-    width: number;                                                  // 视口宽度
-    height: number;                                                 // 视口高度
-    top: number;                                                    // 视口顶部相对文档顶部的偏移
-    bottom: number;                                                 // 视口底部相对文档顶部的偏移
-    scrollX: number;                                                // 水平滚动位置
-    scrollY: number;                                                // 垂直滚动位置
+  activeTarget: HTMLElement | null; // 当前活跃吸附目标
+  snapToTarget: (target: HTMLElement) => void; // 手动吸附函数
+  snapdebugInfo?: {
+    screenRect: DOMRect | null; // 视口区域的 DOMRect 对象
+    targetRect: DOMRect | null; // 当前活跃目标的矩形信息
+    targetsCount: number; // 目标元素总数
+    targetAlignTo: string; // 对齐方式
+    isScrollingDirection: 'up' | 'down' | 'no'; // 滚动方向
+    activeTargetId: string | null; // 活跃目标 ID
+    snapThreshold: number; // 吸附触发阈值
+    scrollVelocity: number; // 滚动速度
+    scrollX: number; // 水平滚动位置
+    scrollY: number; // 垂直滚动位置
   };
 }
 
-// 导出函数
+// 滚动方向类型
+type ScrollDirection = 'up' | 'down' | 'no';
+
+// 快速滚动阈值（像素）
+const FAST_SCROLL_THRESHOLD = 300;
+
+/**
+ * useWindowScrollSnap - 主 hook 实现
+ * @param config WindowScrollSnapConfig
+ * @returns WindowScrollSnapReturn
+ */
 export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrollSnapReturn {
-  // 解构配置参数，提供默认值
+  // 参数解构，提供默认值
   const {
-    debugFlag = false,                                                          // 默认关闭调试
-    targetSelector = '.snap-target',                                            // 默认选择器
-    threshold = 150,                                                            // 默认阈值
-    alignTo = 'top',                                                            // 默认对齐
-    smooth = true,                                                              // 默认平滑
-    enabledDirections = ['up', 'down'],                                         // 默认方向
-    observerRoot = typeof window !== 'undefined' ? document.body : null,        // 默认根容器
+    debugFlag,
+    targetSelector,
+    targetAlignTo = 'top',
+    snapThreshold = 150,
+    enabledDirections = ['up', 'down'],
+    observerRoot = null,
   } = config;
 
-  // 获取状态参数，实时状态值
-  const [activeTarget, setActiveTarget] = useState<HTMLElement | null>(null);   // 活跃目标状态
-  const [targets, setTargets] = useState<HTMLElement[]>([]);                                  // 目标元素列表
-  const isProgramScrollingRef = useRef(false);                                  // 程序滚动标记 ref
-  const lastScrollYRef = useRef(typeof window !== 'undefined' ? window.scrollY : 0);          // 上次滚动位置 ref
-  const handleWindowScrollRef = useRef<() => void>();                                         // 滚动处理函数 ref
+  // 当前活跃目标元素
+  const [activeTarget, setActiveTarget] = useState<HTMLElement | null>(null);
+  // 当前所有目标元素列表
+  const [targets, setTargets] = useState<HTMLElement[]>([]);
 
-  // 获取调试参数，初始默认值
-  const [snapdebugInfo, setsnapdebugInfo] = useState({
-    rect: null as DOMRect | null,                                               // 矩形信息
-    targetsCount: 0,                                                            // 目标数量
-    isScrollingDirection: 'no' as 'up' | 'down' | 'no',                         // 滚动方向
-    alignTo: alignTo,                                                           // 对齐方式
-    activeTargetId: null as string | null,                                      // 活跃 ID
-    scrollY: 0,                                                                 // 滚动 Y
-    threshold: threshold,                                                       // 吸附触发阈值
-    scrollVelocity: 0,                                                          // 滚动速度
+  // 滚动相关引用变量
+  const isProgramScrollingRef = useRef(false); // 标记是否为程序触发滚动
+  const lastScrollYRef = useRef(0); // 上一次滚动位置
+  const stateRef = useRef<{
+    targets: HTMLElement[];
+    activeTarget: HTMLElement | null;
+    isTargetInThreshold: (element: HTMLElement) => boolean;
+  }>({
+    targets: [],
+    activeTarget: null,
+    isTargetInThreshold: () => false,
   });
 
-  // 添加视口矩形信息状态，初始默认值
-  const [viewportRect, setViewportRect] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    height: typeof window !== 'undefined' ? window.innerHeight : 0,
-    top: typeof window !== 'undefined' ? window.scrollY : 0,
-    bottom: typeof window !== 'undefined' ? window.scrollY + window.innerHeight : 0,
-    scrollX: typeof window !== 'undefined' ? window.scrollX : 0,
-    scrollY: typeof window !== 'undefined' ? window.scrollY : 0,
-  });
+  // 调试信息状态（仅 debugFlag 为 true 时有效）
+  const [snapdebugInfo, setsnapdebugInfo] = useState<WindowScrollSnapReturn['snapdebugInfo']>(() =>
+    debugFlag
+      ? {
+          screenRect: null,
+          targetRect: null,
+          targetsCount: 0,
+          activeTargetId: null,
+          targetAlignTo,
+          snapThreshold,
+          isScrollingDirection: 'no',
+          scrollVelocity: 0,
+          scrollX: 0,
+          scrollY: 0,
+        }
+      : undefined
+  );
 
-  // 更新视口矩形信息参数，实时状态值
-  const updateViewportRect = useCallback(() => {
+  /**
+   * 更新调试信息的工具函数
+   * 只合并partialInfo，避免把依赖参数（如snapThreshold/targetAlignTo/enabledDirections）直接写进依赖，否则会导致无限循环
+   * @param partialInfo 需要更新的调试信息字段
+   */
+  const updateDebugInfo = useCallback(
+    (partialInfo: Partial<NonNullable<WindowScrollSnapReturn['snapdebugInfo']>>) => {
+      if (debugFlag) {
+        setsnapdebugInfo((prev) =>
+          prev
+            ? {
+                ...prev,
+                ...partialInfo,
+              }
+            : prev
+        );
+      }
+    },
+    [debugFlag]
+  );
+
+  /**
+   * 监听输入参数（如 snapThreshold、targetAlignTo 等）变化，并同步到调试面板
+   * 这部分代码确保参数变化时，snapdebugInfo 里的对应字段会被更新
+   */
+  useEffect(() => {
+    if (debugFlag) {
+      setsnapdebugInfo((prev) =>
+        prev
+          ? {
+              ...prev,
+              snapThreshold,
+              targetAlignTo,
+              // enabledDirections 可选，如需展示可加上
+            }
+          : prev
+      );
+    }
+  }, [snapThreshold, targetAlignTo, debugFlag]);
+
+  /**
+   * 采集并更新窗口尺寸和滚动信息，同时更新当前活跃目标的 targetRect
+   * 性能优化：只在依赖变化时更新，避免多余渲染
+   */
+  const updateScreenAndScrollInfo = useCallback(() => {
     if (typeof window === 'undefined') return;
 
-    setViewportRect({
-      width: window.innerWidth,
-      height: window.innerHeight,
-      top: window.scrollY,
-      bottom: window.scrollY + window.innerHeight,
+    // 用 scrollX/scrollY 作为 rect 的 x/y，兼容多屏和所有主流浏览器
+    const screenRect = new DOMRect(
+      window.scrollX,
+      window.scrollY,
+      window.innerWidth,
+      window.innerHeight
+    );
+
+    // 获取当前活跃目标的 rect
+    let targetRect: DOMRect | null = null;
+    if (activeTarget) {
+      targetRect = activeTarget.getBoundingClientRect();
+    }
+
+    updateDebugInfo({
+      screenRect,
+      targetRect,
       scrollX: window.scrollX,
       scrollY: window.scrollY,
     });
-  }, []);
+  }, [updateDebugInfo, activeTarget]);
 
-  // 在组件挂载和窗口大小变化时更新视口信息
+  /**
+   * 初始化视口监听，窗口尺寸变化时自动更新调试信息
+   */
   useEffect(() => {
-    updateViewportRect();
-    window.addEventListener('resize', updateViewportRect, { passive: true });
-    return () => window.removeEventListener('resize', updateViewportRect);
-  }, [updateViewportRect]);
+    updateScreenAndScrollInfo();
 
-  // 吸附执行函数
+    if (typeof window === 'undefined') return;
+
+    window.addEventListener('resize', updateScreenAndScrollInfo, { passive: true });
+    return () => window.removeEventListener('resize', updateScreenAndScrollInfo);
+  }, [updateScreenAndScrollInfo]);
+
+  /**
+   * 吸附到指定目标元素
+   * @param target 目标元素
+   */
   const snapToTarget = useCallback(
     (target: HTMLElement) => {
-      if (debugFlag) console.log('Snapping to', target.id);               // 只在 debug 模式下输出
+      if (debugFlag) console.log('Snapping to target:', target.id || 'unknown');
       if (typeof window === 'undefined' || !target) return;
 
-      isProgramScrollingRef.current = true;                                    // 设置程序滚动标记
-      const rect = target.getBoundingClientRect();                             // 获取目标矩形
-      const viewportHeight = window.innerHeight;                               // 获取视口高度
-      let scrollTop = window.scrollY;                                          // 当前滚动位置
+      isProgramScrollingRef.current = true;
+      const rect = target.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      let scrollTop = window.scrollY;
 
-      switch (alignTo) {                                                       // 根据对齐方式计算滚动位置
+      // 根据对齐方式计算滚动位置
+      switch (targetAlignTo) {
         case 'auto':
-          scrollTop += rect.height < viewportHeight ? rect.top + rect.height - viewportHeight : rect.top;
+          scrollTop +=
+            rect.height < viewportHeight ? rect.top + rect.height - viewportHeight : rect.top;
           break;
         case 'center':
           scrollTop += rect.top - (viewportHeight - rect.height) / 2;
@@ -123,207 +207,249 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
         case 'bottom':
           scrollTop += rect.top + rect.height - viewportHeight;
           break;
-        default:
+        default: // 'top'
           scrollTop += rect.top;
           break;
       }
 
-      const scrollOptions: ScrollToOptions = {                                 // 滚动选项
+      // 始终采用平滑滚动
+      window.scrollTo({
         top: scrollTop,
-        behavior: smooth ? 'smooth' as ScrollBehavior : 'auto' as ScrollBehavior,
+        behavior: 'smooth',
+      });
+
+      setActiveTarget(target);
+      updateDebugInfo({ activeTargetId: target.id });
+
+      // 滚动结束后更新目标矩形信息
+      const handleScrollEnd = () => {
+        const updatedRect = target.getBoundingClientRect();
+        updateDebugInfo({ targetRect: updatedRect });
+        isProgramScrollingRef.current = false;
+        window.removeEventListener('scrollend', handleScrollEnd);
       };
 
-      window.scrollTo(scrollOptions);                                          // 执行滚动
-      setActiveTarget(target);                                                 // 更新活跃目标
+      window.addEventListener('scrollend', handleScrollEnd);
 
-      // 滚动完成后更新 rect
-      setTimeout(() => {
-        const updatedRect = target.getBoundingClientRect();                    // 获取更新后矩形
-        if (debugFlag) {
-          setsnapdebugInfo((prev) => ({
-            ...prev,
-            rect: updatedRect,                                                 // 更新 rect
-            activeTargetId: target.id,
-            scrollY: scrollTop,
-          }));
-        }
-      }, smooth ? 1000 : 0);                                                   // 等待滚动完成
-
-      // 重置程序滚动标记
-      const resetTimer = smooth ? 1000 : 0;
-      setTimeout(() => isProgramScrollingRef.current = false, resetTimer);
+      // 兼容极端情况：立即处理
+      // （如果未来有特殊需求可扩展）
     },
-    [alignTo, smooth, debugFlag]
+    [targetAlignTo, debugFlag, updateDebugInfo]
   );
 
-  // 目标元素是否进入吸附范围
+  /**
+   * 判断目标元素是否进入吸附范围
+   * @param element 目标元素
+   */
   const isTargetInThreshold = useCallback(
     (element: HTMLElement): boolean => {
-      if (typeof window === 'undefined') return false;                         // 环境检查
-      const style = window.getComputedStyle(element);                          // 获取计算样式
-      if (style.display === 'none' || style.visibility === 'hidden') return false; // 过滤不可见元素
+      if (typeof window === 'undefined') return false;
 
-      const rect = element.getBoundingClientRect();                            // 获取矩形
-      if (rect.height <= 0) return false;                                      // 过滤无效高度
+      // 检查元素可见性
+      const style = window.getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden') return false;
 
-      const viewportHeight = window.innerHeight;                               // 视口高度
-      const isTopInThreshold = rect.top >= 0 && rect.top <= threshold;         // 顶部阈值
-      const isBottomInThreshold = rect.bottom <= viewportHeight && rect.bottom >= viewportHeight - threshold; // 底部阈值
-      const isFullyInView = rect.top >= 0 && rect.bottom <= viewportHeight;    // 完全可见
+      // 获取元素位置信息
+      const rect = element.getBoundingClientRect();
+      if (rect.height <= 0) return false;
 
-      return isTopInThreshold || isBottomInThreshold || isFullyInView;         // 返回判断结果
+      // 判断元素进入阈值范围
+      const viewportHeight = window.innerHeight;
+      const isTopNear = Math.abs(rect.top) <= snapThreshold;
+      const isBottomNear = Math.abs(rect.bottom - viewportHeight) <= snapThreshold;
+      const isFullyInView = rect.top >= 0 && rect.bottom <= viewportHeight;
+
+      // 返回吸附判断结果
+      return isTopNear || isBottomNear || isFullyInView;
     },
-    [threshold]
+    [snapThreshold]
   );
 
-  // 初始化目标元素 + 监听DOM变化
+  /**
+   * 同步状态到 ref，减少依赖项传递
+   */
   useEffect(() => {
-    // 环境检查
-    if (typeof window === 'undefined' || !observerRoot) return;
-
-    // 查询目标函数
-    const queryTargets = () => {
-      const foundTargets = Array.from(
-        document.querySelectorAll(targetSelector) as NodeListOf<HTMLElement>
-      )
-        .filter((el) => {                                             // 过滤不可见元素
-          const style = window.getComputedStyle(el);
-          return style.display !== 'none' && style.visibility !== 'hidden';
-        })
-        .sort((a, b) => a.offsetTop - b.offsetTop);                    // 按位置排序
-
-      setTargets(foundTargets);                                                 // 更新目标列表
-      if (debugFlag) {
-        setsnapdebugInfo((prev) => ({ ...prev, targetsCount: foundTargets.length })); // 更新调试信息
-      }
+    stateRef.current = {
+      targets,
+      activeTarget,
+      isTargetInThreshold,
     };
-    // 初始查询
+  }, [targets, activeTarget, isTargetInThreshold]);
+
+  /**
+   * 查询并更新目标元素列表
+   * 性能优化：只在依赖变化时执行
+   */
+  const queryTargets = useCallback(() => {
+    if (typeof window === 'undefined' || !targetSelector) return;
+
+    // 1. 查询所有匹配选择器的元素
+    const foundTargets = Array.from(document.querySelectorAll<HTMLElement>(targetSelector))
+      // 2. 过滤不可见元素
+      .filter((el) => {
+        const style = window.getComputedStyle(el);
+        return style.display !== 'none' && style.visibility !== 'hidden';
+      })
+      // 3. 按页面绝对位置排序
+      .sort((a, b) => {
+        const aTop = a.getBoundingClientRect().top + window.scrollY;
+        const bTop = b.getBoundingClientRect().top + window.scrollY;
+        return aTop - bTop;
+      });
+
+    // 4. 更新目标列表状态
+    setTargets(foundTargets);
+    updateDebugInfo({ targetsCount: foundTargets.length });
+  }, [targetSelector, updateDebugInfo]);
+
+  /**
+   * 监听 DOM 变化，自动更新目标元素列表
+   */
+  useEffect(() => {
+    if (typeof window === 'undefined' || !targetSelector) return;
+
+    const root = observerRoot || document.body;
     queryTargets();
-    const observer = new MutationObserver((mutations) => {                      // DOM 变化监听
-      if (mutations.some((m) => m.type === 'childList')) queryTargets();     // 子元素变化时重新查询
+
+    // 监听子元素和属性变化（如 class/style）
+    const observer = new MutationObserver((mutations) => {
+      if (
+        mutations.some(
+          (m) =>
+            m.type === 'childList' ||
+            (m.type === 'attributes' && ['style', 'class'].includes(m.attributeName || ''))
+        )
+      ) {
+        queryTargets();
+      }
     });
 
-    observer.observe(observerRoot, { childList: true, subtree: true });               // 开始监听
-    return () => observer.disconnect();                                         // 清理监听
-  }, [targetSelector, debugFlag, observerRoot]);
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['style', 'class'],
+    });
 
-  // 滚动监听逻辑
+    return () => observer.disconnect();
+  }, [targetSelector, observerRoot, queryTargets]);
+
+  /**
+   * 滚动监听逻辑，自动吸附目标
+   * 性能优化：requestAnimationFrame，避免高频触发
+   */
   useEffect(() => {
-    if (typeof window === 'undefined' || targets.length === 0) return;         // 环境检查
+    if (typeof window === 'undefined') return;
 
-    let isProcessing = false;                                                  // 处理标记
+    let isProcessing = false;
+
     const handleWindowScroll = () => {
-      if (debugFlag) console.log('Scroll event triggered');                              // 只在 debug 模式下输出
+      // 1. 避免重复处理和程序滚动触发
       if (isProgramScrollingRef.current || isProcessing) {
-        if (debugFlag) console.log('Skipped due to program scrolling or processing');    // 只在 debug 模式下输出
+        if (debugFlag) console.log('Skipped scroll processing');
         return;
       }
 
       isProcessing = true;
+
+      // 2. 使用requestAnimationFrame优化性能
       requestAnimationFrame(() => {
-        const currentScrollY = window.scrollY;                                 // 当前滚动 Y
-        const viewportHeight = window.innerHeight;                             // 视口高度
-        const isScrollingDirection: 'up' | 'down' | 'no' =                     // 计算滚动方向
-          currentScrollY > lastScrollYRef.current ? 'down' :
-          currentScrollY < lastScrollYRef.current ? 'up' : 'no';
-        const velocity = Math.abs(currentScrollY - lastScrollYRef.current);    // 计算速度
-
-        // 更新视口矩形信息
-        updateViewportRect();
-
-        if (debugFlag) console.log('Processing scroll, direction:', isScrollingDirection, 'velocity:', velocity); // 只在 debug 模式下输出
-
-        // 实时更新 rect（滚动过程中）
-        if (debugFlag && activeTarget) {
-          const currentRect = activeTarget.getBoundingClientRect();            // 获取当前 rect
-          setsnapdebugInfo((prev) => ({
-            ...prev,
-            rect: currentRect,                                                 // 更新 rect
-            isScrollingDirection,
-            scrollY: currentScrollY,
-            viewportHeight,
-            scrollVelocity: velocity,
-          }));
-        } else if (debugFlag) {
-          setsnapdebugInfo((prev) => ({
-            ...prev,
-            isScrollingDirection,
-            scrollY: currentScrollY,
-            viewportHeight,
-            scrollVelocity: velocity,
-          }));
+        const { targets, activeTarget, isTargetInThreshold } = stateRef.current;
+        if (targets.length === 0) {
+          isProcessing = false;
+          return;
         }
+        // 3. 计算滚动方向和速度
+        const currentScrollY = window.scrollY;
+        const direction: ScrollDirection =
+          currentScrollY > lastScrollYRef.current
+            ? 'down'
+            : currentScrollY < lastScrollYRef.current
+              ? 'up'
+              : 'no';
 
-        // 快速滚动时跳过
-        if (velocity > 300) {
-          lastScrollYRef.current = currentScrollY;                             // 更新上次 Y
+        const velocity = Math.abs(currentScrollY - lastScrollYRef.current);
+
+        // 4. 更新视口和调试信息
+        updateScreenAndScrollInfo();
+        updateDebugInfo({
+          isScrollingDirection: direction,
+          scrollVelocity: velocity,
+        });
+
+        // 5. 快速滚动时跳过吸附逻辑
+        if (velocity > FAST_SCROLL_THRESHOLD) {
+          lastScrollYRef.current = currentScrollY;
           isProcessing = false;
           return;
         }
 
-        // 检查方向是否允许
-        if (isScrollingDirection !== 'no' && !enabledDirections.includes(isScrollingDirection)) {
-          lastScrollYRef.current = currentScrollY;                             // 更新上次 Y
+        // 6. 检查方向是否在允许范围内
+        if (direction !== 'no' && !enabledDirections.includes(direction)) {
+          lastScrollYRef.current = currentScrollY;
           isProcessing = false;
           return;
         }
 
-        // 查找目标元素
+        // 7. 根据滚动方向查找符合条件的目标元素
         let targetToSnap: HTMLElement | undefined;
-        if (isScrollingDirection === 'down') {
-          const currentIndex = targets.findIndex((t) => t === activeTarget);
+        const currentIndex = targets.findIndex((t) => t === activeTarget);
+
+        if (direction === 'down') {
           const startIndex = currentIndex === -1 ? 0 : currentIndex + 1;
           for (let i = startIndex; i < targets.length; i++) {
             if (isTargetInThreshold(targets[i])) {
               targetToSnap = targets[i];
-              if (debugFlag) console.log('Target to snap:', targetToSnap.id); // 只在 debug 模式下输出
               break;
             }
           }
-        } else if (isScrollingDirection === 'up') {
-          const currentIndex = targets.findIndex((t) => t === activeTarget);
+        } else if (direction === 'up') {
           const startIndex = currentIndex === -1 ? targets.length - 1 : currentIndex - 1;
           for (let i = startIndex; i >= 0; i--) {
             if (isTargetInThreshold(targets[i])) {
               targetToSnap = targets[i];
-              if (debugFlag) console.log('Target to snap:', targetToSnap.id); // 只在 debug 模式下输出
               break;
             }
           }
         }
 
-        if (targetToSnap && targetToSnap !== activeTarget) {                   // 触发吸附
+        // 8. 执行吸附操作
+        if (targetToSnap && targetToSnap !== activeTarget) {
+          if (debugFlag) console.log('Found target to snap:', targetToSnap.id);
           snapToTarget(targetToSnap);
         }
 
-        lastScrollYRef.current = currentScrollY;                               // 更新上次 Y
-        isProcessing = false;                                                  // 重置处理
+        lastScrollYRef.current = currentScrollY;
+        isProcessing = false;
       });
     };
 
-    // 设置 ref
-    handleWindowScrollRef.current = handleWindowScroll;
+    // 初始化执行一次
+    handleWindowScroll();
 
-    handleWindowScroll();                                                      // 初始执行
-    window.addEventListener('scroll', handleWindowScroll, { passive: true });  // 添加监听
+    // 添加事件监听
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
 
-    // 清理函数：使用 ref 移除
+    // 清理函数
     return () => {
-      if (handleWindowScrollRef.current) {
-        window.removeEventListener('scroll', handleWindowScrollRef.current);
-      }
+      window.removeEventListener('scroll', handleWindowScroll);
     };
-  }, [targets, activeTarget, isTargetInThreshold, snapToTarget, enabledDirections, debugFlag, updateViewportRect]);
+  }, [debugFlag, enabledDirections, snapToTarget, updateScreenAndScrollInfo, updateDebugInfo]);
 
-  // 初始化活跃目标
+  /**
+   * 初始化活跃目标
+   */
   useEffect(() => {
-    if (targets.length > 0 && !activeTarget) {                                 // 条件检查
-      setActiveTarget(targets[0]);                                             // 设置初始活跃
-      if (debugFlag) {
-        setsnapdebugInfo((prev) => ({ ...prev, activeTargetId: targets[0].id })); // 更新调试
-      }
+    if (targets.length > 0 && !activeTarget) {
+      setActiveTarget(targets[0]);
+      updateDebugInfo({ activeTargetId: targets[0].id });
     }
-  }, [targets, activeTarget, debugFlag]);
+  }, [targets, activeTarget, updateDebugInfo]);
 
-  return { activeTarget, snapToTarget, snapdebugInfo, viewportRect };              // 返回结果，增加 viewportRect
+  // 返回接口
+  return {
+    activeTarget,
+    snapToTarget,
+    snapdebugInfo,
+  } as WindowScrollSnapReturn;
 }
