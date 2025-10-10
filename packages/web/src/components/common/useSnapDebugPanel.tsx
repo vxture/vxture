@@ -37,13 +37,14 @@ interface UseDebugPanelOptions {
     right?: string;
     bottom?: string;
     left?: string;
+    zIndex?: number | string; // 支持 zIndex
   };
   style?: React.CSSProperties; // 自定义样式
   className?: string; // 自定义类名
 }
 
 // 默认位置配置
-const DEFAULT_POSITION = { top: '4px', right: '4px' };
+const DEFAULT_POSITION = { top: '4px', right: '4px', zIndex: 9999 };
 
 /**
  * 工具函数：格式化 DOMRect 信息为字符串
@@ -74,7 +75,7 @@ export function useSnapDebugPanel(options: UseDebugPanelOptions): ReactElement {
   // 解构选项参数，提供默认值
   const { visible = true, snapdebugInfo = {}, position = {}, style, className } = options;
 
-  // 合并位置配置，避免重复渲染
+  // 合并位置配置
   const panelPosition = useMemo(
     () => ({
       ...DEFAULT_POSITION,
@@ -83,7 +84,7 @@ export function useSnapDebugPanel(options: UseDebugPanelOptions): ReactElement {
     [position]
   );
 
-  // 合并样式配置，避免重复渲染
+  // 合并样式配置
   const panelStyle = useMemo<React.CSSProperties>(
     () => ({
       position: 'fixed',
@@ -93,7 +94,6 @@ export function useSnapDebugPanel(options: UseDebugPanelOptions): ReactElement {
       color: '#ffffff',
       borderRadius: '6px',
       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
-      zIndex: 9999,
       whiteSpace: 'nowrap',
       width: 'auto',
       maxWidth: 'none',

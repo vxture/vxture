@@ -33,11 +33,6 @@ main {
 
 /* 吸附区块样式（用于分屏吸附） */
 .snap-section {
-  scroll-snap-align: start; /* 吸附到容器顶部 */
-  min-height: 100vh; /* 至少占满一屏高度 */
-  width: 100%; /* 区块宽度撑满容器 */
-}
-.snap-target {
   margin: 0;
   min-height: 100vh;
 }

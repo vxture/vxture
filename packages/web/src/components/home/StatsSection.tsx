@@ -23,7 +23,6 @@ import {
 export default function StatsSection() {
   // 监听当前 section 是否处于吸附状态
   const sectionRef = useRef(null);
-  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
 
   // 控制动画是否触发（进入视口时）
   const [inView, setInView] = useState(false);
@@ -32,35 +31,35 @@ export default function StatsSection() {
   const stats = [
     {
       number: 10,
-      suffix: "+",
-      label: "企业客户",
-      description: "服务政府、国央企等多个大客户",
-      icon: <HiBuildingLibrary className="w-16 h-16 text-blue-400" />,
-      color: "from-blue-400 to-cyan-400", // Tailwind 渐变色
+      suffix: '+',
+      label: '企业客户',
+      description: '服务政府、国央企等多个大客户',
+      icon: <HiBuildingLibrary className='w-16 h-16 text-blue-400' />,
+      color: 'from-blue-400 to-cyan-400', // Tailwind 渐变色
     },
     {
       number: 50,
-      suffix: "+",
-      label: "智能化项目",
-      description: "成功交付数据智能平台和应用",
-      icon: <HiMiniCube className="w-16 h-16 text-blue-400" />,
-      color: "from-blue-400 to-cyan-400",
+      suffix: '+',
+      label: '智能化项目',
+      description: '成功交付数据智能平台和应用',
+      icon: <HiMiniCube className='w-16 h-16 text-blue-400' />,
+      color: 'from-blue-400 to-cyan-400',
     },
     {
       number: 98.0,
-      suffix: "%",
-      label: "客户满意度",
-      description: "客户续约率持续保持行业领先",
-      icon: <HiStar className="w-16 h-16 text-blue-400" />,
-      color: "from-blue-400 to-cyan-400",
+      suffix: '%',
+      label: '客户满意度',
+      description: '客户续约率持续保持行业领先',
+      icon: <HiStar className='w-16 h-16 text-blue-400' />,
+      color: 'from-blue-400 to-cyan-400',
     },
     {
       number: 2000,
-      suffix: "+",
-      label: "业务用户",
-      description: "在线业务用户规模持续增长",
-      icon: <HiMiniUserGroup className="w-16 h-16 text-blue-400" />,
-      color: "from-blue-400 to-cyan-400",
+      suffix: '+',
+      label: '业务用户',
+      description: '在线业务用户规模持续增长',
+      icon: <HiMiniUserGroup className='w-16 h-16 text-blue-400' />,
+      color: 'from-blue-400 to-cyan-400',
     },
   ];
 
@@ -78,7 +77,7 @@ export default function StatsSection() {
       { threshold: 0.3 } // 30% 可见时触发
     );
 
-    const element = document.getElementById("stats-section");
+    const element = document.getElementById('stats-section');
     if (element) {
       observer.observe(element);
     }
@@ -141,17 +140,17 @@ export default function StatsSection() {
 
     // 格式化数字显示
     const formatNumber = (num: number) => {
-      if (suffix === "%") {
+      if (suffix === '%') {
         return num.toFixed(1); // 百分比保留一位小数
       }
-      if (suffix === "PB+") {
+      if (suffix === 'PB+') {
         return Math.floor(num); // PB+取整
       }
       return Math.floor(num); // 其他取整
     };
 
     return (
-      <span className="tabular-nums">
+      <span className='tabular-nums'>
         {formatNumber(displayValue)}
         {suffix}
       </span>
@@ -161,8 +160,9 @@ export default function StatsSection() {
   return (
     <section
       ref={sectionRef}
-      id='stats-section'
-      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
+      id='snapTarget-5'
+      aria-label='公司核心数据统计'
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white`}
     >
       {/* 背景装饰圆形（z-0，放在内容容器后面，仅限section内定位） */}
       <div className='absolute inset-0 z-0 pointer-events-none'>

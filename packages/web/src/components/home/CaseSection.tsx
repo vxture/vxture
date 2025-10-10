@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useScrollSnap } from "@/hooks/useScrollSnap";
 import { useRef, useState } from "react";
 
 import Image from "next/image";
@@ -10,54 +9,53 @@ import { LuCalendarDays } from "react-icons/lu";
 
 export default function CaseSection() {
   const sectionRef = useRef(null);
-  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
 
   const cases = [
     {
-      title: "地质灾害数据图谱",
+      title: '地质灾害数据图谱',
       description:
-        "构建数据智能平台，整合分散的静态基础数据和动态监测监管数据，实现深度关联分析与图形结合展示",
-      image: "/images/cases/case-intro-01.jpg",
-      tags: ["数据融合", "本体构建", "业务分析"],
-      year: "2024-03",
-      color: "blue",
+        '构建数据智能平台，整合分散的静态基础数据和动态监测监管数据，实现深度关联分析与图形结合展示',
+      image: '/images/cases/case-intro-01.jpg',
+      tags: ['数据融合', '本体构建', '业务分析'],
+      year: '2024-03',
+      color: 'blue',
     },
     {
-      title: "智能应急指挥平台",
+      title: '智能应急指挥平台',
       description:
-        "搭建智能决策指挥调度平台，整合跨领域数据资源，实现灾害预警、资源调度和应急决策的一体化支持",
-      image: "/images/cases/case-intro-02.jpg",
-      tags: ["智能决策", "应急管理", "数据整合"],
-      year: "2024-12",
-      color: "cyan",
+        '搭建智能决策指挥调度平台，整合跨领域数据资源，实现灾害预警、资源调度和应急决策的一体化支持',
+      image: '/images/cases/case-intro-02.jpg',
+      tags: ['智能决策', '应急管理', '数据整合'],
+      year: '2024-12',
+      color: 'cyan',
     },
     {
-      title: "公共安全情报分析",
+      title: '公共安全情报分析',
       description:
-        "通过深度应用大模型技术，实现了案件智能融合分析与实时研判决策，构建起精准高效的安全防控体系",
-      image: "/images/cases/case-intro-03.jpg",
-      tags: ["融合分析", "动态研判", "事件响应"],
-      year: "2025-06",
-      color: "purple",
+        '通过深度应用大模型技术，实现了案件智能融合分析与实时研判决策，构建起精准高效的安全防控体系',
+      image: '/images/cases/case-intro-03.jpg',
+      tags: ['融合分析', '动态研判', '事件响应'],
+      year: '2025-06',
+      color: 'purple',
     },
   ];
 
   // Button color mapping, same as FeaturesSection
   const colorMap = {
     blue: {
-      border: "hover:border-blue-400",
+      border: 'hover:border-blue-400',
       button:
-        "bg-blue-100 text-blue-700 border-blue-200 group-hover:bg-blue-600 group-hover:text-white",
+        'bg-blue-100 text-blue-700 border-blue-200 group-hover:bg-blue-600 group-hover:text-white',
     },
     cyan: {
-      border: "hover:border-cyan-400",
+      border: 'hover:border-cyan-400',
       button:
-        "bg-cyan-100 text-cyan-700 border-cyan-200 group-hover:bg-blue-600 group-hover:text-white",
+        'bg-cyan-100 text-cyan-700 border-cyan-200 group-hover:bg-blue-600 group-hover:text-white',
     },
     purple: {
-      border: "hover:border-purple-400",
+      border: 'hover:border-purple-400',
       button:
-        "bg-purple-100 text-purple-700 border-purple-200 group-hover:bg-blue-600 group-hover:text-white",
+        'bg-purple-100 text-purple-700 border-purple-200 group-hover:bg-blue-600 group-hover:text-white',
     },
   };
   const [isHovered, setIsHovered] = useState(false);
@@ -65,7 +63,8 @@ export default function CaseSection() {
   return (
     <section
       ref={sectionRef}
-      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
+      id='snapTarget-4'
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white `}
     >
       <div className='relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Section title */}

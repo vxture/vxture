@@ -42,6 +42,7 @@ export default function HeroSection() {
     // 页面主视觉区块，绝对定位撑满屏幕
     <section
       ref={sectionRef}
+      id='snap-section-1'
       className={`relative snap-section h-screen flex items-center justify-center overflow-hidden ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
     >
       {/* 背景视频与遮罩层 */}

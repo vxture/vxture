@@ -1,71 +1,50 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+'use client';
 
-import { useScrollSnap } from "@/hooks/useScrollSnap";
-import { useRef } from "react";
-
-import { GiPathDistance } from "react-icons/gi";
-import { PiGraphFill } from "react-icons/pi";
-import { SiCodeceptjs } from "react-icons/si";
+import { GiPathDistance } from 'react-icons/gi';
+import { PiGraphFill } from 'react-icons/pi';
+import { SiCodeceptjs } from 'react-icons/si';
 
 export default function FeaturesSection() {
-  const sectionRef = useRef(null);
-  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
-
   const features = [
     {
-      title: "数据图谱构建",
+      title: '数据图谱构建',
       description:
-        "多源数据融合，自动构建知识图谱，让海量数据形成智能化的关联网络，发现数据间的隐藏价值和深层关系。",
-      icon: <PiGraphFill className="w-10 h-10 text-blue-400" />,
-      highlights: ["多源数据融合", "知识图谱构建", "关联关系挖掘"],
-      color: "blue",
+        '多源数据融合，自动构建知识图谱，让海量数据形成智能化的关联网络，发现数据间的隐藏价值和深层关系。',
+      icon: <PiGraphFill className='w-10 h-10 text-blue-400' />,
+      highlights: ['多源数据融合', '知识图谱构建', '关联关系挖掘'],
+      color: 'blue',
     },
     {
-      title: "智能决策调度",
+      title: '智能决策调度',
       description:
-        "AI 驱动的资源优化与任务调度，通过机器学习算法实现智能化的资源分配，提升运营效率和决策质量。",
-      icon: <GiPathDistance className="w-10 h-10 text-blue-400" />,
-      highlights: ["AI 智能调度", "资源优化配置", "决策质量提升"],
-      color: "blue",
+        'AI 驱动的资源优化与任务调度，通过机器学习算法实现智能化的资源分配，提升运营效率和决策质量。',
+      icon: <GiPathDistance className='w-10 h-10 text-blue-400' />,
+      highlights: ['AI 智能调度', '资源优化配置', '决策质量提升'],
+      color: 'blue',
     },
     {
-      title: "孪生仿真推演",
+      title: '孪生仿真推演',
       description:
-        "数字孪生建模，预测未来趋势，通过高精度仿真模型模拟各种场景，为战略决策提供科学依据。",
-      icon: <SiCodeceptjs className="w-10 h-10 text-blue-400" />,
-      highlights: ["数字孪生建模", "场景仿真推演", "预测分析能力"],
-      color: "blue",
+        '数字孪生建模，预测未来趋势，通过高精度仿真模型模拟各种场景，为战略决策提供科学依据。',
+      icon: <SiCodeceptjs className='w-10 h-10 text-blue-400' />,
+      highlights: ['数字孪生建模', '场景仿真推演', '预测分析能力'],
+      color: 'blue',
     },
   ];
 
   const colorMap = {
     blue: {
-      border: "hover:border-blue-400",
+      border: 'hover:border-blue-400',
       button:
-        "bg-blue-50 text-gray-600 border-blue-200 group-hover:bg-blue-600 group-hover:text-white",
-    },
-    cyan: {
-      border: "hover:border-cyan-400",
-      button:
-        "bg-cyan-50 text-cyan-600 border-cyan-200 group-hover:bg-cyan-600 group-hover:text-white",
-    },
-    purple: {
-      border: "hover:border-purple-400",
-      button:
-        "bg-purple-50 text-purple-600 border-purple-200 group-hover:bg-purple-600 group-hover:text-white",
+        'bg-blue-50 text-gray-600 border-blue-200 group-hover:bg-blue-600 group-hover:text-white',
     },
   };
 
   return (
     <section
-      ref={sectionRef}
-      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
-      style={{
-        // 当吸附时，添加您想要的视觉反馈样式
-        boxShadow: isSnapped ? '0 0 20px rgba(0,0,0,0.1)' : 'none',
-        transition: 'box-shadow 0.3s ease',
-      }}
+      id='snapTarget-2'
+      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white`}
     >
       <div className='h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* Title area */}

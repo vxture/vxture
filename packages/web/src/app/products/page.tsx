@@ -16,51 +16,45 @@
 
 import { useWindowScrollSnap } from '../../hooks/useWindowScrollSnap'; // 滚动吸附 hook
 import { useSnapDebugPanel } from '../../components/common/useSnapDebugPanel'; // 调试面板 hook
+import { useSnapSectionChoice } from '../../components/common/useSnapSectionChoice'; // 吸附选择调试组件
 import ProductDetailPartOne from '../../components/products/ProductDetailPartOne'; // 内容组件
 
 export default function ProductsPage() {
   // 调用滚动吸附 hook，获取状态和方法
   const { activeTarget, snapToTarget, snapdebugInfo } = useWindowScrollSnap({
     debugFlag: true, // 启用调试模式
-    targetSelector: '.snap-target',
+    targetSelector: '.snap-section',
     targetAlignTo: 'top',
     snapThreshold: 280,
     enabledDirections: ['up', 'down'],
     observerRoot: undefined,
   });
 
-  // 获取调试面板组件（已适配新版接口）
-  const DebugPanel = useSnapDebugPanel({
+  // 获取吸附调试面板组件
+  const SnapDebugPanel = useSnapDebugPanel({
     snapdebugInfo,
-    position: { top: '16px', right: '16px' },
+    // 可选参数
+    position: { top: '4px', right: '4px', zIndex: 50 },
     visible: true,
   });
 
+  // 获取吸附选择调试组件
+  const SnapSectionChoice = useSnapSectionChoice({
+    sectionCount: 4,
+    targetIdPrefix: 'snap-section',
+    activeTarget,
+    snapToTarget,
+    // 可选：自定义位置
+    position: { top: '96px', left: '4px', zIndex: 50 },
+    visible: true,
+  });
   return (
     <div className='relative'>
-      {/* 调试面板：显示滚动信息 */}
-      {DebugPanel}
+      {/* 调试面板信息组件 */}
+      {SnapDebugPanel}
 
-      {/* 固定导航栏 */}
-      <nav className='fixed top-0 left-0 right-0 bg-white/30 backdrop-blur-md z-10 p-4'>
-        <div className='flex gap-4'>
-          {/* 性能优化：按钮渲染采用 map，避免重复代码 */}
-          {[1, 2, 3, 4].map((i) => (
-            <button
-              key={i}
-              onClick={() => {
-                const target = document.getElementById(`target-${i}`);
-                if (target) snapToTarget(target);
-              }}
-              className={`px-3 py-1 rounded ${
-                activeTarget?.id === `target-${i}` ? 'bg-blue-500 text-white' : 'bg-gray-200'
-              }`}
-            >
-              吸附到区域{i}
-            </button>
-          ))}
-        </div>
-      </nav>
+      {/* 吸附选择调试组件 */}
+      {SnapSectionChoice}
 
       {/* 内容组件 */}
       <ProductDetailPartOne />
