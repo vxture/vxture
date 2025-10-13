@@ -1,10 +1,11 @@
 import Footer from "../../components/layout/Footer";
 import Header from "../../components/layout/Header";
 import "../globals.css";
+import type { Metadata } from 'next';
 
-export const metadata = {
-  title: "vxture AI | 释放数据潜力",
-  description: "AI-based virtual nature exploration平台",
+export const metadata: Metadata = {
+  title: 'vxture AI | 释放数据潜力',
+  description: 'AI-based virtual nature exploration平台',
 };
 
 export default function RootLayout({

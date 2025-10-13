@@ -1,61 +1,119 @@
 /* Tailwind 基础样式导入 */
-@tailwind base; /* 引入 Tailwind 的基础样式 */
-@tailwind components; /* 引入 Tailwind 的组件样式 */
-@tailwind utilities; /* 引入 Tailwind 的工具类样式 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* 全局盒模型与边距重置 */
+/* 1. 基础重置样式（消除浏览器默认差异） */
 *,
 *::before,
 *::after {
-  box-sizing: border-box; /* 统一盒模型，包含 padding 和 border */
+  box-sizing: border-box;
 }
-
 * {
-  margin: 0; /* 清除所有元素默认外边距 */
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* 滚动吸附容器设置（以 html 为滚动容器） */
+/* 2. html/body 全局设置与滚动吸附容器 */
 html,
 body {
   margin: 0;
   padding: 0;
-  /* 关键：禁止设置overflow（默认visible即可） */
   overflow: visible !important;
-  /* 禁止设置固定高度（如100vh），否则内容会被截断 */
   height: auto !important;
   min-height: auto !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* main 区域默认高度自动，适应内容 */
 main {
-
+  /* 可根据需要添加样式 */
 }
 
-/* 吸附区块样式（用于分屏吸附） */
+/* 3. 主题 CSS 变量（与 ThemeContext 同步） */
+:root[data-theme="light"] {
+  --color-page-bg: #ffffff;
+  --color-card-bg: #f9fafb;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-border: #e5e7eb;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+}
+:root[data-theme="dark"] {
+  --color-page-bg: #111827;
+  --color-card-bg: #1f2937;
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-border: #374151;
+  --color-primary: #60a5fa;
+  --color-primary-hover: #3b82f6;
+}
+
+/* 4. 全局类名（可直接在组件中使用） */
+.container {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.btn,
+.btn-primary {
+  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.btn:hover,
+.btn-primary:hover {
+  background-color: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  @apply bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors;
+}
+
+.card {
+  background-color: var(--color-card-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* 5. 吸附区块样式（用于分屏吸附） */
 .snap-section {
   margin: 0;
   min-height: 100vh;
 }
 
-/* 图片及媒体元素样式重置 */
+/* 6. 图片及媒体元素样式重置 */
 img,
 picture,
 video,
 canvas,
 svg {
-  display: block; /* 块级显示，避免底部空隙 */
-  max-width: 100%; /* 最大宽度不超过容器 */
+  display: block;
+  max-width: 100%;
 }
 
-/* 表单元素字体继承 */
+/* 7. 表单元素字体继承 */
 input,
 button,
 textarea,
 select {
-  font: inherit; /* 继承父元素字体 */
+  font: inherit;
 }
 
-/* 标题与段落自动换行 */
+/* 8. 标题与段落自动换行 */
 p,
 h1,
 h2,
@@ -63,26 +121,11 @@ h3,
 h4,
 h5,
 h6 {
-  overflow-wrap: break-word; /* 长单词自动换行 */
+  overflow-wrap: break-word;
 }
 
-/* React 根节点隔离，避免样式污染 */
+/* 9. React 根节点隔离，避免样式污染 */
 #root,
 #__next {
-  isolation: isolate; /* 开启样式隔离 */
-}
-
-/* Tailwind 容器工具类（用于页面内容居中和最大宽度） */
-.container {
-  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8; /* 居中、最大宽度、响应式内边距 */
-}
-
-/* 主按钮样式 */
-.btn-primary {
-  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors;
-}
-
-/* 次按钮样式 */
-.btn-secondary {
-  @apply bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors;
+  isolation: isolate;
 }

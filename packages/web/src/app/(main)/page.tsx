@@ -35,17 +35,17 @@ export default function HomePage() {
   // 获取吸附调试面板组件
   const SnapDebugPanel = useSnapDebugPanel({
     snapdebugInfo,
-    position: { top: '4px', right: '4px', zIndex: 50 },
+    position: { top: '96px', right: '4px', zIndex: 50 },
     visible: true,
   });
 
   // 获取吸附选择调试组件
+  const targetIdPrefix = 'snapTarget';
   const SnapSectionChoice = useSnapSectionChoice({
     sectionCount: 6,
-    targetIdPrefix: 'snapTarget',
+    targetIdPrefix,
     activeTarget,
     snapToTarget,
-    // 可选参数
     position: { top: '96px', left: '4px', zIndex: 50 },
     visible: true,
   });
@@ -57,9 +57,9 @@ export default function HomePage() {
       {/* 吸附选择调试组件 */}
       {SnapSectionChoice}
       {/* 内容组件 */}
-      <FeaturesSection />
-      <ProductSection />
-      <CaseSection />
+      <FeaturesSection id={`${targetIdPrefix}-2`} />
+      <ProductSection id={`${targetIdPrefix}-3`} />
+      <CaseSection id={`${targetIdPrefix}-4`} />
     </div>
   );
 }
