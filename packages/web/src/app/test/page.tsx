@@ -4,7 +4,7 @@ import { useThemeStore } from '@/stores/themeStore';
 import { useI18nStore } from '@/stores/i18nStore';
 import { useNotificationStore } from '@/stores/notificationStore';
 import Link from 'next/link';
-import { SunIcon, MoonIcon, GlobeIcon, CheckIcon } from '@heroicons/react/24/outline';
+import { SunIcon, MoonIcon, GlobeAltIcon, CheckIcon } from '@heroicons/react/24/outline';
 
 export default function ThemeTestPage() {
   // 从Theme Store获取状态和方法
@@ -17,6 +17,8 @@ export default function ThemeTestPage() {
   // 主题切换按钮点击事件（带通知反馈）
   const handleToggleTheme = () => {
     toggleTheme();
+    // 修正：theme 状态是异步的，这里 addNotification 应该根据切换后的 theme 判断
+    // 方案1：直接用切换前的 theme 反向提示
     addNotification(theme === 'light' ? t('common.themeDark') : t('common.themeLight'), 'success');
   };
 
@@ -51,7 +53,7 @@ export default function ThemeTestPage() {
         {/* 语言切换区 */}
         <section className='mb-10 p-6 border rounded-lg'>
           <h2 className='text-2xl font-bold mb-4'>
-            <GlobeIcon className='w-6 h-6 inline mr-2' />
+            <GlobeAltIcon className='w-6 h-6 inline mr-2' />
             多语言测试
           </h2>
           <div className='flex gap-4'>

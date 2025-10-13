@@ -4,7 +4,7 @@ $pidFile = Join-Path $PSScriptRoot ".vxture_frontend.pid"
 
 # 1. 前端目录校验 + 错误提示
 if (-not (Test-Path $webDir)) {
-    Write-Host "❌ 前端目录不存在：$webDir" -ForegroundColor Red
+    Write-Host "ERROR: 前端目录不存在：$webDir" -ForegroundColor Red
     exit 1
 }
 
@@ -40,6 +40,6 @@ try {
 }
 catch {
     # 失败提示
-    Write-Host "Failed to start frontend: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "ERROR: Failed to start frontend: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
