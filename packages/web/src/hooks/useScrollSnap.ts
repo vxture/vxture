@@ -37,7 +37,7 @@ export function useScrollSnap({
    * 获取所有目标元素，并按页面顺序排序
    * @returns 目标元素数组
    */
-  const [targets, setTargets] = useState<HTMLElement[]>([]); // 明确初始化为空数组
+  // 使用 ref 存储 targets，避免重复渲染；不需要额外的 state 导致未使用警告
 
   const getTargets = useCallback((): HTMLElement[] => {
     const elements = document.querySelectorAll<HTMLElement>(targetSelector); // 获取所有匹配的元素
@@ -132,11 +132,11 @@ export function useScrollSnap({
   // 元素查询逻辑
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>(targetSelector);
-    setTargets(Array.from(elements)); // 确保始终返回数组
+    targetsRef.current = Array.from(elements); // 确保始终返回数组
   }, [targetSelector]);
 
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true }); // 添加 window 滚动事件监听
+    window.addEventListener('scroll', handleScroll, { passive: true }); // 添加 window 滚动事件监听
 
     if (checkOnMount) {
       // 挂载时是否检查
@@ -144,7 +144,7 @@ export function useScrollSnap({
     }
 
     return () => {
-      window.removeEventListener("scroll", handleScroll); // 卸载时移除事件监听
+      window.removeEventListener('scroll', handleScroll); // 卸载时移除事件监听
     };
   }, [handleScroll, checkOnMount]);
 

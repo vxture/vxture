@@ -8,7 +8,6 @@ import {
   MoonIcon,
   GlobeAltIcon,
   CheckIcon,
-  XMarkIcon,
   ArrowLeftIcon,
 } from '@heroicons/react/24/outline';
 

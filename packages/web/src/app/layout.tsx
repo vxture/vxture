@@ -3,7 +3,7 @@
  *
  * 功能：
  *  - 提供站点全局 html/head/body 模板（SEO、meta、预连接等）。
- *  - 在服务器端读取 cookies/headers 来初始化主题与语言，减少首屏闪烁（FOUC）。
+ *  - 在服务器端读取 cookies/headers 来初始化主题与语言，减少首屏闪烁。
  *  - 将客户端需要的 DOM/浏览器交互逻辑委托给 ClientSyncAgg（客户端组件）。
  *
  * 设计原则：

@@ -180,7 +180,8 @@ const FeatureCard = memo(function FeatureCard({
 interface FeaturesSectionProps {
   id: string;
   theme?: SectionTheme;
-  data: FeaturesSectionData;
+  // data 可选：若未传入则使用库内的默认数据 featuresSectionData
+  data?: FeaturesSectionData;
 }
 const FeaturesSection = memo(function FeaturesSection({
   id,

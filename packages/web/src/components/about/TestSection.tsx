@@ -1,96 +1,46 @@
 // packages/web/src/components/about/TestSection.tsx
 
-'use client'; // 客户端组件声明，用于使用浏览器API如滚动事件
+'use client'; // 客户端组件声明，用于使用浏览器 API
 
 import { useScrollSnap } from '@/hooks/useScrollSnap'; // 导入自定义滚动吸附钩子
 
-// 接收外部传入的section配置类型
+// 接收外部传入的 section 配置类型
 interface ScrollSnapDemoProps {
   sections: {
-    id: string; // section的唯一标识
-    title: string; // section的标题
+    id: string; // section 的唯一标识
+    title: string; // section 的标题
     backgroundColor?: string; // 可选的背景颜色
   }[];
 }
 
 export default function ScrollSnapDemo({ sections }: ScrollSnapDemoProps) {
-  // 使用滚动吸附钩子，获取当前活跃目标、吸附函数和目标列表
-  const {
-    activeTarget, // 当前活跃的section目标
-    snapToTarget, // 吸附到指定目标的函数
-    debugInfo, // 新增：获取调试信息
-    targets = [], // 所有可吸附的目标列表
-  } = useScrollSnap({
-    targetSelector: '.section-snap', // 匹配section的类名，用于吸附
-    threshold: 150, // 吸附触发阈值（像素）
-    checkOnMount: true, // 初始加载时检查位置
+  // 触发 hook 以安装滚动监听器，但不显式解构返回值以避免未使用变量警告
+  useScrollSnap({
+    targetSelector: '.section-snap',
+    threshold: 150,
+    checkOnMount: true,
   });
-
-  // 滚动到指定section的函数
-  const scrollToSection = (index: number) => {
-    if (targets && targets.length > 0 && targets[index]) {
-      snapToTarget(targets[index]); // 调用吸附函数
-    }
-  };
 
   return (
     <div className='min-h-screen'>
-      {/* 右上角调试面板 */}
-      <div className='fixed top-4 right-4 bg-black text-white p-4 rounded shadow-lg z-50'>
-        <h3 className='text-sm font-bold'>Debug Info</h3>
-        <p>
-          Rect:{' '}
-          {debugInfo.rect
-            ? `top: ${debugInfo.rect.top.toFixed(
-                2
-              )}, left: ${debugInfo.rect.left.toFixed(
-                2
-              )}, width: ${debugInfo.rect.width.toFixed(
-                2
-              )}, height: ${debugInfo.rect.height.toFixed(2)}`
-            : 'null'}
-        </p>
-        <p>Targets Count: {debugInfo.targetsCount}</p>
-        <p>Scrolling: {debugInfo.isScrollingDirection}</p> {/* 修改字段名 */}
-        <p>Align To: {debugInfo.alignTo}</p>
-        <p>Active Target ID: {debugInfo.activeTargetId || 'null'}</p>
-      </div>
-
-      {/* 顶部导航 - 随滚动变化状态 */}
-      {/* 分屏吸附区块 - 基于外部配置渲染 */}
       <div className='pt-0 border-2 border-red-600'>
-        {' '}
-        {/* 内容区域，上边距避免导航遮挡，调试边线 */}
-        {sections.map(
-          (
-            section,
-            index // 遍历sections，生成section元素
-          ) => (
-            <section
-              key={section.id} // 唯一键
-              id={section.id} // HTML id，用于锚点
-              className='snap-section min-h-screen flex items-center justify-center p-8 border-2 border-red-600 transition-all' // 吸附类名、最小高度、居中布局、调试边框
-              style={{
-                backgroundColor:
-                  section.backgroundColor || (index % 2 === 0 ? '#e0f2fe' : '#f1f5f9'), // 背景颜色，交替或自定义
-              }}
-            >
-              <div className='w-full max-w-3xl text-center border-2 border-red-600'>
-                {' '}
-                {/* 内容容器，居中对齐，调试边线 */}
-                <h2 className='text-3xl md:text-4xl font-bold mb-6 text-blue-700 border-2 border-red-600'>
-                  {section.title}
-                </h2>{' '}
-                {/* 标题，调试边线 */}
-                <p className='text-gray-600 text-lg border-2 border-red-600'>
-                  {' '}
-                  {/* 描述文本，调试边线 */}
-                  这是{section.title.toLowerCase()}的内容区域，可以根据需求自定义填充。
-                </p>
-              </div>
-            </section>
-          )
-        )}
+        {sections.map((section, index) => (
+          <section
+            key={section.id}
+            id={section.id}
+            className='snap-section min-h-screen flex items-center justify-center p-8 border-2 border-red-600 transition-all'
+            style={{
+              backgroundColor: section.backgroundColor || (index % 2 === 0 ? '#e0f2fe' : '#f1f5f9'),
+            }}
+          >
+            <div className='w-full max-w-3xl text-center border-2 border-red-600'>
+              <h2 className='text-3xl md:text-4xl font-bold mb-6 text-blue-700'>{section.title}</h2>
+              <p className='text-gray-600 text-lg'>
+                这是{section.title.toLowerCase()}的内容区，可根据需求自定义填充。
+              </p>
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   );

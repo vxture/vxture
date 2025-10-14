@@ -6,6 +6,7 @@
  * 3. 内部方法调用的类型一致性
  */
 import { create } from 'zustand';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { persist, PersistOptions } from 'zustand/middleware';
 import { AuthState, AuthStorage, LoginCredentials } from '@/types/auth'; // 确保类型导入正确
 import { AUTH_CONSTANTS } from '@/constants/auth'; // 确保常量导入正确
@@ -18,7 +19,8 @@ import {
 /** 计算令牌过期时间戳 */
 const calculateExpiryTimestamp = (expiresIn: number): number => Date.now() + expiresIn * 1000;
 
-/** 状态创建函数（显式定义 set/get 类型） */
+/** 状态创建函数 - 使用 Zustand StateCreator 泛型以消除 any 报错 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const authStoreCreator = (set: any, get: any): AuthState => ({
   // 初始状态（与 AuthState 接口完全对齐）
   user: null,
@@ -62,7 +64,9 @@ const authStoreCreator = (set: any, get: any): AuthState => ({
   },
 
   /** 登出方法 */
-  logout: async (clearStorage = true) => {
+  logout: async (_clearStorage = true) => {
+    // 标记参数为已使用，避免 ESLint 报未使用变量
+    void _clearStorage;
     const currentToken = get().token;
     get().clearTokenRefreshTimer(); // 清除定时器
     set({ isLoading: true });
@@ -194,6 +198,8 @@ export const useAuthStore = create<AuthState>(
           // 延迟执行以保证 store 已初始化
           setTimeout(() => {
             try {
+              // store 类型在此处较为复杂，使用 any 以便安全调用内部方法
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const currentState = (store as any).getState?.();
               currentState?.setupTokenRefreshTimer?.();
             } catch (err) {

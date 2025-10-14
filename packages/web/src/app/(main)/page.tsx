@@ -9,12 +9,8 @@ import { useSnapDebugPanel } from '../../components/common/useSnapDebugPanel'; /
 import { useSnapSectionChoice } from '../../components/common/useSnapSectionChoice'; // 新增：吸附选择调试组件
 
 import CaseSection from '@/components/home/CaseSection';
-import CTASection from '@/components/home/CTASection';
 import FeaturesSection from '@/components/home/FeaturesSection';
-import HeroSection from '@/components/home/HeroSection';
 import ProductSection from '@/components/home/ProductSection';
-import StatsSection from '@/components/home/StatsSection';
-import ProductDetailPartOne from '@/components/products/ProductDetailPartOne';
 
 export default function HomePage() {
   // 组件挂载时重置滚动位置到顶部

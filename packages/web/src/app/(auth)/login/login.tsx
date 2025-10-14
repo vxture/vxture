@@ -25,15 +25,17 @@ export default function LoginPage() {
     }
 
     setLoading(true);
-    try {
-      await login(email, password);
-      addNotification('登录成功', 'success');
-      router.push('/'); // 登录成功后跳转到首页
-    } catch (error) {
-      addNotification('登录失败，请检查账号密码', 'error');
-    } finally {
-      setLoading(false);
-    }
+      try {
+        // authStore.login 接受一个 LoginCredentials 对象
+        await login({ email, password });
+        addNotification('登录成功', 'success');
+        router.push('/'); // 登录成功后跳转到首页
+      } catch {
+        // 不绑定错误变量，避免 ESLint 的未使用变量规则触发
+        addNotification('登录失败，请检查账号密码', 'error');
+      } finally {
+        setLoading(false);
+      }
   };
 
   return (

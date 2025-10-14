@@ -1,9 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useThemeStore } from '@/stores/themeStore';
 import { useI18nStore } from '@/stores/i18nStore';
 import { useNotificationStore } from '@/stores/notificationStore';
-import Link from 'next/link';
 import { SunIcon, MoonIcon, GlobeAltIcon, CheckIcon } from '@heroicons/react/24/outline';
 
 export default function ThemeTestPage() {
@@ -75,8 +75,11 @@ export default function ThemeTestPage() {
         {/* 通知测试按钮 */}
         <button
           onClick={() => addNotification('这是一条成功通知', 'success')}
-          className='px-4 py-2 bg-green-500 text-white rounded'
+          className='px-4 py-2 bg-green-500 text-white rounded inline-flex items-center'
+          aria-label={t('common.submit')}
         >
+          {/* 使用 CheckIcon 提示成功语义，aria-hidden 保持可访问性 */}
+          <CheckIcon className='w-5 h-5 mr-2' aria-hidden='true' />
           {t('common.submit')}
         </button>
       </div>
