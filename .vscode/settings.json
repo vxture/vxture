@@ -72,5 +72,6 @@
   // Git核心功能
   "git.enableSmartCommit": true,
   "git.autofetch": true,
-  "gitlens.codeLens.enabled": true
+  "gitlens.codeLens.enabled": true,
+  "cSpell.words": ["partialize", "uuidv"]
 }

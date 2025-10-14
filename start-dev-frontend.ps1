@@ -20,7 +20,7 @@ try {
     # 后台启动服务并获取PID
     $proc = Start-Process "cmd.exe" "/c pnpm dev" `
         -WorkingDirectory $webDir `
-        -WindowStyle Hidden `
+        -WindowStyle Normal `
         -PassThru `
         -ErrorAction Stop
 
