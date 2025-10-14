@@ -1,124 +1,108 @@
 /**
- * themeStore.ts - 全局主题状态管理（light/dark 等）
+ * themeStore.ts
  *
- * 核心功能：
- *   1. 管理当前主题（theme），支持 light/dark 及扩展主题
- *   2. setTheme 支持幂等安全切换，toggleTheme 支持一键切换
- *   3. 状态持久化到 localStorage，刷新后自动恢复
- *   4. 全局配置集中，便于多组件复用和统一维护
+ * 功能：
+ * - 统一管理所有主题相关全局状态，便于集中维护
+ * - 提供主题切换、持久化、可扩展多主题等能力
  *
- * 设计理念：
- *   - 类型安全，便于扩展主题类型
- *   - 兼容 TailwindCSS、Next.js 等主流前端框架
- *   - 推荐在应用根布局初始化，保证全局一致性
+ * 用途：
+ * - 供 UI 组件消费，实现主题切换与主题一致性
+ * - 结构与 authStore.ts、i18nStore.ts 保持一致，便于团队协作
  *
- * 作者：vxture team
- * 版权：Copyright (c) 2024 vxture
- * 最后更新：2024-10-14
+ * 依赖/调用关系：
+ * - Zustand + persist 实现状态与本地存储同步
+ * - 被 src/components/layout/Header.tsx、Footer.tsx 等消费
+ * - 类型全部引用 theme.types.ts
+ *
+ * 设计规范：
+ * - 只存放状态与方法，不包含 UI 逻辑
+ * - 命名、结构、注释与 authStore/i18nStore 保持一致
+ *
+ * @file themeStore.ts
+ * @desc 主题相关全局状态管理，统一支持主题切换、持久化等
+ * @author vxture team
+ * @created 2024-10-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, Zustand
+ * @see src/types/theme.types.ts 主题类型定义
+ * @see src/constants/themeConfig.ts 主题常量配置
+ * @tags theme, store
+ * @example
+ *   const { theme, toggleTheme } = useThemeStore();
+ *   toggleTheme(); // 切换主题
+ * @remarks
+ *   仅持久化 theme 字段，业务逻辑请移至组件/服务层。
+ * @todo
+ *   支持系统主题自动切换与多主题扩展
  */
 
+// ============================================================================
+// 依赖导入区
+// ============================================================================
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { THEME_CONSTANTS } from '@/constants/themeConfig';
+import type { ThemeConfig, ThemeState } from '@/types/theme.types';
 
-// ==============================================================================
-// 类型定义区域 - 全局统一主题类型，供 ClientSyncAgg 等组件导入复用
-// ==============================================================================
-
+// ============================================================================
+// Store 创建区 - useThemeStore 实现（Zustand + persist）
+// - 仅持久化 theme 字段，支持多主题扩展，避免大数据写入 localStorage
+// ============================================================================
 /**
- * 主题枚举类型
- * 限制合法主题值，避免传入无效值导致 DOM 状态异常
- * 扩展说明：如需支持「跟随系统」（如 "system"）或自定义主题（如 "sepia"），
- * 可在此处添加类型（例：'light' | 'dark' | 'system'），并同步修改 toggleTheme 逻辑
- */
-export type Theme = 'light' | 'dark' | string;
-
-/**
- * 主题状态管理接口
- * 定义「状态字段」与「操作方法」的类型约束，确保类型安全
- */
-interface ThemeState {
-  /** 当前激活的主题（默认：light） */
-  theme: Theme;
-  /**
-   * 直接设置主题
-   * @param theme - 目标主题（需为 Theme 类型的合法值）
-   * @特性 幂等性：若传入主题与当前主题一致，或值无效，则不执行状态更新
-   */
-  setTheme: (theme: Theme) => void;
-  /**
-   * 切换主题（仅在 light/dark 之间切换）
-   * @注意 若扩展主题类型（如添加 system），需修改此方法的判断逻辑
-   */
-  toggleTheme: () => void;
-}
-
-// ==============================================================================
-// 全局配置常量 - 统一管理主题相关配置，供 ClientSyncAgg 组件导入使用
-// 核心作用：避免配置在多文件中重复定义，修改时仅需改一处
-// ==============================================================================
-
-// 移除本地 THEME_CONFIG，改为导入
-import { THEME_CONFIG } from '@/constants/themeConfig';
-
-// ==============================================================================
-// 主题状态管理核心 - 基于 Zustand 实现，支持持久化、类型安全
-// ==============================================================================
-
-/**
- * 全局主题状态 Hook（供所有组件使用）
- *
- * 核心特性：
- * 1. 持久化：通过 persist 中间件将主题状态存储到 localStorage，刷新页面后自动恢复
- * 2. 幂等操作：setTheme 方法避免无效状态更新，减少组件重渲染
- * 3. 配置统一：依赖 THEME_CONFIG，与 ClientSyncAgg 组件共享配置，避免冲突
- * 4. 可扩展：预留主题类型扩展入口（如支持 system 主题）
- *
- * 使用示例：
- * const { theme, setTheme, toggleTheme } = useThemeStore();
- * setTheme('dark'); // 切换到深色模式
- * toggleTheme(); // 在 light/dark 间切换
+ * useThemeStore
+ * - 全局主题状态管理 Store
+ * - 提供主题切换、持久化、暗色模式等能力
+ * @returns ThemeState
  */
 export const useThemeStore = create<ThemeState>()(
-  // persist 中间件：处理主题状态持久化
   persist(
-    // 状态初始化与方法定义
     (set, get) => ({
-      // 初始主题：使用全局配置的默认值，确保与 ClientSyncAgg 初始化逻辑一致
-      theme: THEME_CONFIG.defaultTheme,
-
-      // 直接设置主题（幂等实现）
+      /** 当前主题名（如 'light' | 'dark'） */
+      theme: THEME_CONSTANTS.DEFAULT_THEME,
+      /** 可用主题列表（如 light/dark/自定义） */
+      availableThemes: THEME_CONSTANTS.AVAILABLE_THEMES as ThemeConfig[],
+      /** 是否为暗色模式 */
+      isDarkMode: THEME_CONSTANTS.DEFAULT_THEME === THEME_CONSTANTS.DARK_CLASS,
+      /**
+       * 设置主题（支持任意已注册主题）
+       * @param theme 主题名
+       */
       setTheme: (theme) => {
         if (typeof theme !== 'string') return;
         const next = theme.trim();
         if (!next) return;
         const currentTheme = get().theme;
         if (currentTheme !== next) {
-          set({ theme: next });
+          set({
+            theme: next,
+            isDarkMode: next === THEME_CONSTANTS.DARK_CLASS,
+          });
         }
       },
-
-      // 切换主题（仅支持 light ↔ dark，扩展主题需修改此逻辑）
+      /**
+       * 切换主题（明暗互换）
+       * @returns void
+       */
       toggleTheme: () => {
-        set((state) => ({
-          theme: state.theme === 'light' ? 'dark' : 'light',
-        }));
+        set((state) => {
+          const next =
+            state.theme === THEME_CONSTANTS.DARK_CLASS
+              ? THEME_CONSTANTS.DEFAULT_THEME
+              : THEME_CONSTANTS.DARK_CLASS;
+          return {
+            theme: next,
+            isDarkMode: next === THEME_CONSTANTS.DARK_CLASS,
+          };
+        });
       },
     }),
-
-    // persist 配置项（与全局配置对齐）
     {
-      /** 存储键名：必须与 THEME_CONFIG.storageKey 一致，避免 ClientSyncAgg 读取不到 */
-      name: THEME_CONFIG.storageKey,
-      /**
-       * 部分持久化：仅存储 theme 字段
-       * 原因：操作方法（setTheme/toggleTheme）无需持久化，仅状态需要
-       */
+      name: THEME_CONSTANTS.STORAGE_KEY,
       partialize: (state) => ({ theme: state.theme }),
-      /**
-       * 可选：自定义存储引擎（默认 localStorage）
-       * 若需改用 sessionStorage，可添加：
-       * storage: sessionStorage
-       */
     }
   )
 );

@@ -1,13 +1,41 @@
-"use client";
-
 /**
- * CTASection
+ * CTASection.tsx
  *
- * 作者：Stone Smoker
- * 更新时间：2025-09-29
- * 代码说明：代码已美化，结构分组清晰，注释详尽，移除无效/冗余属性。
+ * 功能：
+ * - 首页底部 Call To Action（号召性用语）区块，吸引用户转化
+ * - 支持多层装饰、渐变背景、响应式布局
  *
+ * 用途：
+ * - 作为首页收尾，提升品牌形象与转化率
+ * - 结构与其它 Section 组件保持一致，便于团队协作
+ *
+ * 依赖/调用关系：
+ * - 依赖 TailwindCSS、Next.js
+ * - 被 app/(main)/page.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Section 组件保持一致
+ *
+ * @file CTASection.tsx
+ * @desc 首页底部号召性用语区块，装饰丰富，响应式
+ * @author Stone Smoker
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS
+ * @tags home, cta, section, component
+ * @example
+ *   <CTASection />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态内容与动画效果
  */
+'use client';
 
 export default function CTASection() {
   return (

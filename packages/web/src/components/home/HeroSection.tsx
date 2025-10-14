@@ -1,5 +1,43 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
+/**
+ * HeroSection.tsx
+ *
+ * 功能：
+ * - 首页主视觉区块，展示品牌形象与核心价值
+ * - 支持背景视频、吸附滚动、响应式布局
+ *
+ * 用途：
+ * - 作为首页首屏，提升品牌感知与用户吸引力
+ * - 结构与其它 Section 组件保持一致，便于团队协作
+ *
+ * 依赖/调用关系：
+ * - 依赖 TailwindCSS、Next.js、useScrollSnap
+ * - 被 app/(main)/page.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Section 组件保持一致
+ *
+ * @file HeroSection.tsx
+ * @desc 首页主视觉区块，支持视频与吸附滚动
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS, Next.js
+ * @tags home, hero, section, component
+ * @example
+ *   <HeroSection />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态内容与动画效果
+ */
 "use client"; // 声明为客户端组件
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { useScrollSnap } from "@/hooks/useScrollSnap";
 import Image from "next/image";

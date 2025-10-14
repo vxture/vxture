@@ -1,15 +1,39 @@
 /**
- * ProductSection.tsx - 首页产品与服务区块
+ * ProductSection.tsx
  *
- * 功能：产品轮播区块，支持左右切换，吸附滚动，section id 由参数传入
- * 用途：展示企业核心产品与服务，提升品牌形象与转化率
+ * 功能：
+ * - 首页产品与服务区块，支持产品轮播、吸附滚动、响应式布局
+ * - 支持左右切换、动态配色、卡片动画
  *
- * 作者：vxture team
- * 版权：Copyright (c) 2024 vxture
- * 时间：2024-06-01
+ * 用途：
+ * - 作为首页核心产品与服务展示区，提升品牌形象与转化率
+ * - 结构与其它 Section 组件保持一致，便于团队协作
  *
- * 代码规范：严格遵循 TypeScript + React 组件最佳实践，注释风格统一，className 顺序一致
- * 性能优化：主组件与卡片组件均采用 React.memo，避免不必要的渲染
+ * 依赖/调用关系：
+ * - 依赖 TailwindCSS、Next.js、react-icons
+ * - 被 app/(main)/page.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Section 组件保持一致
+ *
+ * @file ProductSection.tsx
+ * @desc 首页产品与服务区块，支持轮播与吸附滚动
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS, react-icons
+ * @tags home, product, section, component
+ * @example
+ *   <ProductSection />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态内容与动画效果
  */
 
 'use client';

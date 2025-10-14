@@ -1,7 +1,40 @@
-// components/products/ProductDetailPartOne.tsx - 产品详情组件
-// 功能：渲染多个 section，每个 section 都是滚动吸附目标，用于演示分屏滚动效果
-// 每个 section 高度为屏幕高度，带有 'snap-section' 类，支持临近吸附
-
+/**
+ * ProductDetailPartOne.tsx
+ *
+ * 功能：
+ * - 产品详情分屏滚动区块，渲染多个吸附 section
+ * - 支持吸附滚动、响应式布局、分屏内容演示
+ *
+ * 用途：
+ * - 作为产品详情页分屏演示区块，便于团队协作与扩展
+ * - 结构与其它 Section 组件保持一致
+ *
+ * 依赖/调用关系：
+ * - 依赖 TailwindCSS、Next.js
+ * - 被 app/products/page.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Section 组件保持一致
+ *
+ * @file ProductDetailPartOne.tsx
+ * @desc 产品详情分屏滚动区块，支持吸附滚动与分屏内容
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS
+ * @tags products, detail, section, snap, component
+ * @example
+ *   <ProductDetailPartOne />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态内容与动画效果
+ */
 'use client'; // 客户端组件声明，允许使用浏览器 API
 
 export default function ProductDetailPartOne() {

@@ -1,24 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
-
 /**
- * StatsSection 组件
- * 展示公司核心数据统计，带有动画和卡片交互效果
- * 标题、副标题、底部装饰文字样式与 FeaturesSection 完全一致
+ * StatsSection.tsx
+ *
+ * 功能：
+ * - 首页核心数据统计区块，展示企业关键指标与动画效果
+ * - 支持吸附滚动、卡片动画、响应式布局
+ *
+ * 用途：
+ * - 作为首页核心数据展示区，提升品牌信任与专业形象
+ * - 结构与其它 Section 组件保持一致，便于团队协作
+ *
+ * 依赖/调用关系：
+ * - 依赖 TailwindCSS、Next.js、react-icons
+ * - 被 app/(main)/page.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Section 组件保持一致
+ *
+ * @file StatsSection.tsx
+ * @desc 首页核心数据统计区块，动画丰富，响应式
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS, react-icons
+ * @tags home, stats, section, component
+ * @example
+ *   <StatsSection />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态数据与动画效果
  */
+'use client';
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 // 引入 React 的 hooks
-import { useScrollSnap } from "@/hooks/useScrollSnap";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useScrollSnap } from '@/hooks/useScrollSnap';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
 
 // 引入图标
-import {
-  HiBuildingLibrary,
-  HiMiniCube,
-  HiMiniUserGroup,
-  HiStar,
-} from "react-icons/hi2";
+import { HiBuildingLibrary, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
 
 export default function StatsSection() {
   // 监听当前 section 是否处于吸附状态

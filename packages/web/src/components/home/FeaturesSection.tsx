@@ -1,18 +1,78 @@
 /**
- * FeaturesSection.tsx - 首页核心能力区块
+ * FeaturesSection.tsx
  *
- * 功能：展示特色核心能力（数量自定义），支持吸附滚动与外部 id 传入
- * 用途：展示企业/平台核心能力，提升品牌专业形象与信任度
+ * 功能：
+ * - 首页核心能力区块，展示企业/平台特色能力
+ * - 支持吸附滚动、外部数据驱动、响应式布局
  *
- * 作者：vxture team
- * 版权：Copyright (c) 2024 vxture
- * 时间：2024-06-01
+ * 用途：
+ * - 作为首页核心能力展示区，提升品牌专业形象与信任度
+ * - 结构与其它 Section 组件保持一致，便于团队协作
  *
- * 代码规范：TypeScript + React 组件最佳实践，所有颜色样式均通过 colorMap 统一管理，className 顺序统一
- * 性能优化：主组件与卡片组件均采用 React.memo，所有展示内容均外部数据驱动，便于扩展为数据库/接口获取
- * 主题扩展：所有颜色相关 className 已提取至 colorMap，便于主题切换和维护
+ * 依赖/调用关系：
+ * - 依赖 TailwindCSS、Next.js、react-icons
+ * - 被 app/(main)/page.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Section 组件保持一致
+ *
+ * @file FeaturesSection.tsx
+ * @desc 首页核心能力区块，支持吸附滚动与数据驱动
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS, react-icons
+ * @tags home, features, section, component
+ * @example
+ *   <FeaturesSection />
+ * @remarks
+ * - 仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态内容与动画效果
  */
-
+'use client';
+/**
+ * FeaturesSection.tsx
+ *
+ * 功能：
+ * - 首页核心能力区块，展示企业/平台特色能力
+ * - 支持吸附滚动、外部数据驱动、响应式布局
+ *
+ * 用途：
+ * - 作为首页核心能力展示区，提升品牌专业形象与信任度
+ * - 结构与其它 Section 组件保持一致，便于团队协作
+ *
+ * 依赖/调用关系：
+ * - 依赖 TailwindCSS、Next.js、react-icons
+ * - 被 app/(main)/page.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Section 组件保持一致
+ *
+ * @file FeaturesSection.tsx
+ * @desc 首页核心能力区块，支持吸附滚动与数据驱动
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS, react-icons
+ * @tags home, features, section, component
+ * @example
+ *   <FeaturesSection />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态内容与动画效果
+ */
 'use client';
 
 import { memo } from 'react';
@@ -28,7 +88,6 @@ interface FeatureContext {
   id: string;
   title: string;
   subtitle: string;
-  description: string;
   iconFeature: React.ReactNode;
   highlightsFeature: string[];
   moreButtonFeature: string;
@@ -58,6 +117,30 @@ const featuresSectionData: FeaturesSectionData = {
   moreButtonSection: '了解更多section',
   bottomTextSection: '数据驱动，智能决策',
   colorSection: BasicColorMap,
+
+  /**
+ * FeaturesSection.tsx
+ *
+
+
+ * @file FeaturesSection.tsx
+ * @desc 首页核心能力区块，支持吸附滚动与数据驱动
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, TailwindCSS, react-icons
+ * @tags home, features, section, component
+ * @example
+ *   <FeaturesSection />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多动态内容与动画效果
+ */
   features: [
     {
       id: 'feature-1',

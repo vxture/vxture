@@ -1,16 +1,56 @@
+/**
+ * Header.tsx
+ *
+ * 功能：
+ * - 网站全局顶部导航栏，包含 Logo、导航菜单、主题切换、语言切换等
+ *
+ * 用途：
+ * - 作为所有页面的主导航栏，提升品牌一致性与用户体验
+ *
+ * 依赖/调用关系：
+ * - 依赖 React、react-icons、全局 window 变量
+ * - 被 app/layout.tsx 直接引用
+ *
+ * 设计规范：
+ * - 只负责 UI 展示与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它 Layout 组件保持一致
+ *
+ * @file Header.tsx
+ * @desc 网站全局顶部导航栏，支持主题/语言切换
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React, react-icons
+ * @see Footer.tsx
+ * @tags header, layout, navigation, component
+ * @example
+ *   <Header />
+ * @remarks
+ *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
+ * @todo
+ *   支持更多自定义导航项与动画效果
+ */
 /* eslint-disable @next/next/no-img-element */
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import { FiSun, FiMoon } from 'react-icons/fi';
 
-// 扩展 window 类型声明
+// ============ 全局类型扩展 ============
 declare global {
   interface Window {
     __VXTURE_THEME__?: 'light' | 'dark';
   }
 }
 
+/**
+ * Header 组件
+ * @returns {JSX.Element} 网站全局顶部导航栏
+ */
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -21,11 +61,11 @@ export default function Header() {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
+  // 监听滚动，动态切换导航栏样式
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

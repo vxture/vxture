@@ -1,15 +1,39 @@
 /**
- * useSnapDebugPanel.tsx - 滚动吸附调试面板
+ * useSnapDebugPanel.tsx
  *
- * 功能：提供可复用的调试面板组件，显示滚动吸附相关的实时调试信息
- * 用途：开发时在页面右上角展示 rect、滚动方向、速度等，便于调试和性能分析
+ * 功能：
+ * - 统一提供可复用的滚动吸附调试面板，显示实时调试信息
+ * - 支持自定义位置、样式、动态调试数据展示
  *
- * 作者：vxture team
- * 版权：Copyright (c) 2024 vxture
- * 时间：2024-06-01
+ * 用途：
+ * - 开发时在页面右上角展示 rect、滚动方向、速度等，便于调试和性能分析
+ * - 可集成到任意页面或调试工具中
  *
- * 代码规范：严格遵循 TypeScript + React 组件最佳实践
- * 性能优化：避免不必要的渲染，样式合并 useMemo，属性默认值合并
+ * 依赖/调用关系：
+ * - 依赖 React
+ * - 被页面调试工具、吸附相关组件调用
+ *
+ * 设计规范：
+ * - 只负责调试面板 UI 与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它通用组件保持一致
+ *
+ * @file useSnapDebugPanel.tsx
+ * @desc 滚动吸附调试面板通用组件，支持实时调试信息展示
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React
+ * @tags snap, debug, panel, component
+ * @example
+ *   <useSnapDebugPanel snapdebugInfo={...} />
+ * @remarks
+ *   仅负责调试面板 UI，调试数据请通过 props 传入。
+ * @todo
+ *   支持更多吸附调试指标与自定义展示
  */
 
 import React, { ReactElement, useMemo } from 'react';

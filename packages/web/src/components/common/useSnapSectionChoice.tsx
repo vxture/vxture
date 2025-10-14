@@ -1,14 +1,39 @@
 /**
- * useSnapSectionChoice.tsx - 吸附调试选择面板
+ * useSnapSectionChoice.tsx
  *
- * 功能：提供可复用的吸附目标选择面板，便于调试页面吸附功能
- * 用途：开发时在页面右上角展示纵向按钮，快速跳转到各 section/target
+ * 功能：
+ * - 统一提供可复用的吸附目标选择面板，便于调试页面吸附功能
+ * - 支持自定义位置、动态 section 数量、吸附跳转等
  *
- * 作者：vxture team
- * 版权：Copyright (c) 2024 vxture
- * 时间：2024-06-01
+ * 用途：
+ * - 开发时在页面右上角展示纵向按钮，快速跳转到各 section/target
+ * - 可集成到任意页面或调试工具中
  *
- * 代码规范：严格遵循 TypeScript + React 组件最佳实践
+ * 依赖/调用关系：
+ * - 依赖 React
+ * - 被页面调试工具、吸附相关组件调用
+ *
+ * 设计规范：
+ * - 只负责吸附选择面板 UI 与交互，不包含业务逻辑
+ * - 命名、结构、注释与其它通用组件保持一致
+ *
+ * @file useSnapSectionChoice.tsx
+ * @desc 吸附调试选择面板通用组件，支持动态 section 跳转
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2025-10-15
+ * @modifiedBy stonesmoker
+ * @copyright Copyright (c) 2024-2025 vxture
+ * @license MIT
+ * @version 1.0.0
+ * @dependencies React
+ * @tags snap, debug, section, component
+ * @example
+ *   <useSnapSectionChoice sectionCount={5} targetIdPrefix="section-" ... />
+ * @remarks
+ *   仅负责吸附选择面板 UI，吸附逻辑请通过 props 传入。
+ * @todo
+ *   支持吸附目标分组与自定义样式
  */
 
 import React from 'react';
