@@ -88,6 +88,7 @@ interface FeatureContext {
   id: string;
   title: string;
   subtitle: string;
+  description?: string;
   iconFeature: React.ReactNode;
   highlightsFeature: string[];
   moreButtonFeature: string;

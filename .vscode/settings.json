@@ -74,7 +74,7 @@
   "git.enableSmartCommit": true,
   "git.autofetch": true,
   "gitlens.codeLens.enabled": true,
-  "cSpell.words": ["partialize", "uuidv"],
+  "cSpell.words": ["libpq", "partialize", "pwsh", "uuidv"],
 
   // 新增配置
   "editor.codeActionsOnSave": {

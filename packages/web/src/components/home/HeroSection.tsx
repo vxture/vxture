@@ -44,8 +44,9 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 export default function HeroSection() {
-  const sectionRef = useRef(null);
-  const isSnapped = useScrollSnap(sectionRef); // 监听当前section是否处于吸附状态
+  const sectionRef = useRef<HTMLElement | null>(null);
+  // 将 ref 传入 useScrollSnap，Hook 支持接收 Ref 对象或配置对象
+  const isSnapped = useScrollSnap(sectionRef);
 
   // 视频加载状态：false 表示未加载完成，true 表示加载完成
   const [videoLoaded, setVideoLoaded] = useState(false);

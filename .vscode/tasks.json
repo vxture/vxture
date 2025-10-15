@@ -2,60 +2,40 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "启动开发服务器",
-      "type": "npm",
-      "script": "dev",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "label": "pnpm: 启动前端 (web)",
+      "type": "shell",
+      "command": "pnpm --filter web run dev",
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
     },
     {
-      "label": "格式化代码",
-      "type": "npm",
-      "script": "format",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "silent",
-        "panel": "shared"
-      }
+      "label": "pnpm: 启动后端 (api)",
+      "type": "shell",
+      "command": "pnpm --filter api run dev",
+      "presentation": { "reveal": "always", "panel": "shared" },
+      "problemMatcher": []
     },
     {
-      "label": "检查类型",
-      "type": "npm",
-      "script": "type-check",
-      "problemMatcher": "$tsc",
-      "presentation": {
-        "reveal": "silent",
-        "panel": "shared"
-      },
-      "group": "test"
+      "label": "pnpm: 安装依赖 (root)",
+      "type": "shell",
+      "command": "pnpm install",
+      "presentation": { "reveal": "silent", "panel": "shared" },
+      "problemMatcher": []
     },
     {
-      "label": "检查代码规范",
-      "type": "npm",
-      "script": "lint",
-      "problemMatcher": "$eslint-stylish",
-      "presentation": {
-        "reveal": "silent",
-        "panel": "shared"
-      },
-      "group": "test"
+      "label": "TypeScript: 检查 (web)",
+      "type": "shell",
+      "command": "pnpm --filter web run type-check",
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
     },
     {
-      "label": "构建生产版本",
-      "type": "npm",
-      "script": "build",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
+      "label": "Format: 全库",
+      "type": "shell",
+      "command": "pnpm run format",
+      "presentation": { "reveal": "silent" },
+      "problemMatcher": []
     }
   ]
 }

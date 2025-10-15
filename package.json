@@ -15,8 +15,8 @@
   "license": "MIT",
   "packageManager": "pnpm@8.15.0",
   "engines": {
-    "node": ">=18.17.0",
-    "pnpm": ">=8.15.0"
+    "node": ">=18 <23",
+    "pnpm": ">=8"
   },
   "scripts": {
     "// === 开发环境 ===": "",
@@ -105,5 +105,9 @@
     "uuid": "^13.0.0",
     "zustand": "^5.0.8",
     "zustand-persist": "^0.4.0"
+  },
+  "volta": {
+    "node": "18.18.0",
+    "pnpm": "8.0.0"
   }
 }

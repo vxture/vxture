@@ -249,7 +249,6 @@ pip install -r requirements.txt
 
 建议团队在 PR 模板或贡献指南中声明使用的管理工具与 Node/Python 精确版本，以便 CI 和开发机器一致。
 
-
 ## 💡 开发约定
 
 ### 组件开发模式

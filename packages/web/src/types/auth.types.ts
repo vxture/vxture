@@ -58,7 +58,7 @@ export interface UserInfo {
   email: string;
   permissions: string[];
   lastLogin?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 

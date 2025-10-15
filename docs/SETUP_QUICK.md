@@ -35,8 +35,7 @@ git clone https://github.com/your-org/vxture.git
 cd vxture
 ```
 
-1. 安装 Node 与 pnpm（推荐 Volta）：
-
+1. 安装 Node 与 pnpm（推荐 Volta）:
 
    Windows (PowerShell/pwsh):
 
@@ -61,7 +60,7 @@ pnpm install
 ```
 
 1. Python 虚拟环境与依赖：
-
+1. Python 虚拟环境与依赖:
 
    Windows:
 

@@ -2,6 +2,39 @@ name: CI
 
 on:
   push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: '8'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: TypeScript: full repo type-check
+        run: pnpm -w -r type-check
+
+      - name: Lint: all packages
+        run: pnpm -w -r lint
+name: CI
+
+on:
+  push:
     branches: [main]
   pull_request:
     branches: [main]

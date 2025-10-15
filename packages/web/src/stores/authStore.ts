@@ -49,6 +49,7 @@
 import { create } from 'zustand';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { persist } from 'zustand/middleware';
+import { makePersistOptions } from './persistHelper';
 import { AuthState, LoginCredentials, LoginResponse, UserInfo } from '@/types/auth.types';
 import { AUTH_CONSTANTS } from '@/constants/authConfig';
 import {
@@ -56,7 +57,6 @@ import {
   logout as logoutApi,
   refreshToken as refreshTokenApi,
 } from '@/services/authService';
-
 
 // ============================================================================
 // 工具函数 - 令牌过期时间戳计算
@@ -67,7 +67,6 @@ import {
  * @returns 到期时间戳（毫秒）
  */
 const calculateExpiryTimestamp = (expiresIn: number): number => Date.now() + expiresIn * 1000;
-
 
 // ============================================================================
 // Store 创建 - 使用 Zustand + persist 中间件
@@ -229,30 +228,17 @@ const authStoreCreator = (set: any, get: any): AuthState => ({
   },
 });
 
-
 // ============================================================================
 // Store 导出 - 带持久化的 Auth Store
 // ============================================================================
 export const useAuthStore = create(
-  persist(authStoreCreator, {
-    name: AUTH_CONSTANTS.STORAGE_KEY,
-    partialize: (state: AuthState) => ({
+  persist(
+    authStoreCreator,
+    makePersistOptions<AuthState>(AUTH_CONSTANTS.STORAGE_KEY, (state) => ({
       token: state.token,
       refreshToken: state.refreshToken,
       tokenExpiry: state.tokenExpiry,
       user: state.user,
-    }),
-    onRehydrateStorage: (store) => (rehydratedState: any) => {
-      if (rehydratedState && rehydratedState.token) {
-        setTimeout(() => {
-          try {
-            const currentState = (store as any).getState?.();
-            currentState?.setupTokenRefreshTimer?.();
-          } catch (err) {
-            console.error('rehydration setup error:', err);
-          }
-        }, 0);
-      }
-    },
-  })
+    }))
+  )
 );

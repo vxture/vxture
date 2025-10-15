@@ -38,11 +38,11 @@
  *   支持更多主题色彩与动画扩展
  */
 
-import { useTheme } from '../../contexts/ThemeContext';
+import { useGlobal } from '@/contexts/GlobalContext';
 import { FiSun, FiMoon } from 'react-icons/fi';
 
 const useThemeToggleButton = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useGlobal();
 
   return (
     <button

@@ -25,11 +25,30 @@ interface ScrollSnapOptions {
  *   snapToTarget: 手动吸附到指定目标
  * }
  */
-export function useScrollSnap({
-  targetSelector, // 目标元素选择器
-  threshold = 100, // 默认吸附距离阈值
-  checkOnMount = false, // 默认挂载时不检查
-}: ScrollSnapOptions) {
+// 兼容重载：接受 either ScrollSnapOptions 或 React RefObject<HTMLElement>
+type RefLike = { current: HTMLElement | null };
+export function useScrollSnap(optionsOrRef: ScrollSnapOptions | RefLike) {
+  // 规范化参数，若传入 ref，则使用该元素的 id 或其 class 作为 targetSelector
+  let targetSelector: string;
+  let threshold = 100;
+  let checkOnMount = false;
+
+  if ((optionsOrRef as RefLike).current !== undefined) {
+    const ref = (optionsOrRef as RefLike).current;
+    // 若 ref 存在并有 id，则用 id 作为选择器；否则使用其第一个 class
+    if (ref) {
+      if (ref.id) targetSelector = `#${ref.id}`;
+      else if (ref.className) targetSelector = `.${ref.className.split(' ')[0]}`;
+      else targetSelector = '.snap-section';
+    } else {
+      targetSelector = '.snap-section';
+    }
+  } else {
+    const opts = optionsOrRef as ScrollSnapOptions;
+    targetSelector = opts.targetSelector;
+    threshold = opts.threshold ?? 100;
+    checkOnMount = opts.checkOnMount ?? false;
+  }
   const isProcessing = useRef(false); // 节流标志，避免滚动事件频繁触发
   const targetsRef = useRef<HTMLElement[]>([]); // 所有目标元素的引用
 
