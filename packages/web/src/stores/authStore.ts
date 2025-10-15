@@ -49,7 +49,7 @@
 import { create } from 'zustand';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { persist } from 'zustand/middleware';
-import { makePersistOptions } from './persistHelper';
+import { makeAuthPersistOptions } from './persistOptions/authPersist';
 import { AuthState, LoginCredentials, LoginResponse, UserInfo } from '@/types/auth.types';
 import { AUTH_CONSTANTS } from '@/constants/authConfig';
 import {
@@ -234,11 +234,7 @@ const authStoreCreator = (set: any, get: any): AuthState => ({
 export const useAuthStore = create(
   persist(
     authStoreCreator,
-    makePersistOptions<AuthState>(AUTH_CONSTANTS.STORAGE_KEY, (state) => ({
-      token: state.token,
-      refreshToken: state.refreshToken,
-      tokenExpiry: state.tokenExpiry,
-      user: state.user,
-    }))
+    // 使用 store-specific persist options，以支持 version/migrate/onRehydrate
+    makeAuthPersistOptions()
   )
 );

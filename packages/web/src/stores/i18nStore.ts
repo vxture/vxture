@@ -47,6 +47,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { I18N_CONSTANTS } from '@/constants/i18nConfig';
+import { makeI18nPersistOptions } from './persistOptions/i18nPersist';
 import type { LocaleType, I18nConfig, I18nState, I18nResource } from '@/types/i18n.types';
 
 // ============================================================================
@@ -114,9 +115,6 @@ export const useI18nStore = create<I18nState>()(
         set({ locale });
       },
     }),
-    {
-      name: I18N_CONSTANTS.STORAGE_KEY,
-      partialize: (state) => ({ locale: state.locale }),
-    }
+    makeI18nPersistOptions()
   )
 );

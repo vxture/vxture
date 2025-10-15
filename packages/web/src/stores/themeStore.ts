@@ -46,6 +46,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { THEME_CONSTANTS } from '@/constants/themeConfig';
+import { makeThemePersistOptions } from './persistOptions/themePersist';
 import type { ThemeConfig, ThemeState } from '@/types/theme.types';
 
 // ============================================================================
@@ -100,9 +101,7 @@ export const useThemeStore = create<ThemeState>()(
         });
       },
     }),
-    {
-      name: THEME_CONSTANTS.STORAGE_KEY,
-      partialize: (state) => ({ theme: state.theme }),
-    }
+    // 使用 store-specific persist options，方便将来做 migrate/side-effects
+    makeThemePersistOptions()
   )
 );
