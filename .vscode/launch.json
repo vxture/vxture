@@ -2,40 +2,37 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Next.js: Edge Browser",
-      "type": "edge",
-      "request": "launch",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}",
-      "sourceMapPathOverrides": {
-        "webpack://_N_E/*": "${webRoot}/*"
-      }
+      "name": "Attach to Next.js (Node)",
+      "type": "pwa-node",
+      "request": "attach",
+      "port": 9229,
+      "restart": true,
+      "localRoot": "${workspaceFolder}/packages/web",
+      "remoteRoot": null,
+      "skipFiles": ["<node_internals>/**"]
     },
     {
-      "name": "Next.js: Node (pnpm)",
-      "type": "node",
+      "name": "Launch Next.js (dev)",
+      "type": "pwa-node",
       "request": "launch",
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev"],
-      "env": {
-        "NODE_OPTIONS": "--inspect"
-      },
-      "console": "integratedTerminal"
+      "program": "${workspaceFolder}/packages/web/node_modules/next/dist/bin/next",
+      "args": ["dev"],
+      "cwd": "${workspaceFolder}/packages/web",
+      "console": "integratedTerminal",
+      "runtimeArgs": ["--inspect=9229"],
+      // 在启动前先运行工作区任务：pnpm: 启动前端 (web)
+      "preLaunchTask": "pnpm: 启动前端 (web)"
     },
     {
-      "name": "FastAPI: Code Runner",
+      "name": "Python: FastAPI (uvicorn) - Run",
       "type": "python",
       "request": "launch",
-      "program": "${workspaceFolder}/packages/api/app/main.py",
+      "program": "${workspaceFolder}/packages/api/.venv/Scripts/uvicorn.exe",
+      "args": ["app.main:app", "--reload", "--port", "8000"],
       "console": "integratedTerminal",
-      "env": {},
-      "justMyCode": true
-    }
-  ],
-  "compounds": [
-    {
-      "name": "Next.js: Fullstack (Edge)",
-      "configurations": ["Next.js: Node (pnpm)", "Next.js: Edge Browser"]
+      "cwd": "${workspaceFolder}/packages/api",
+      // 可选：先运行后端 dev 任务（若你希望按 F5 启动后端可开启）
+      "preLaunchTask": "pnpm: 启动后端 (api)"
     }
   ]
 }
