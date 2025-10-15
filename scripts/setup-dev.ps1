@@ -45,12 +45,29 @@ function Install-NodeAndPnpm {
         volta install node@$nodeVersion
         volta install pnpm
     } else {
-        Write-Warning "Volta 不可用，尝试全局安装 pnpm（需要管理员权限）"
-        npm install -g pnpm
+        Write-Warning "Volta 不可用，尝试全局安装 pnpm（可能需要管理员权限）"
+        $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+        if ($isAdmin) {
+            Write-Host "以管理员权限安装 pnpm..."
+            npm install -g pnpm
+        } else {
+            Write-Host "当前非管理员，尝试以提升权限运行 npm 安装（将弹出 UAC 提示）"
+            try {
+          Start-Process -FilePath "npm" -ArgumentList "install","-g","pnpm" -Verb RunAs -Wait
+            } catch {
+          Write-Warning "无法以管理员权限执行安装。请以管理员身份运行 PowerShell 然后手动执行：npm install -g pnpm"
+            }
+        }
+
+        if (Get-Command pnpm -ErrorAction SilentlyContinue) {
+            Write-Host "pnpm 已安装：$(pnpm --version)"
+        } else {
+            Write-Warning "pnpm 安装未成功。可考虑手动安装或使用 Volta：https://volta.sh/"
+        }
     }
 }
 
-function Setup-PythonVenv {
+function Install-PythonVenv {
     $venvPath = Join-Path $PSScriptRoot '..' '.venv'
     $venvScripts = Join-Path $venvPath 'Scripts'
     if (-Not (Test-Path $venvPath)) {
@@ -80,7 +97,7 @@ if (-not $SkipPackages) {
     pnpm install
 }
 
-Setup-PythonVenv
+Install-PythonVenv
 
 if (-not $SkipExtensions) {
     $extScript = Join-Path $PSScriptRoot 'install-vscode-extensions.ps1'
