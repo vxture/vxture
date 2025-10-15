@@ -1,3 +1,37 @@
+name: pwsh-lint
+
+on:
+  push:
+    paths:
+      - '**/*.ps1'
+      - 'scripts/**'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - '**/*.ps1'
+      - 'scripts/**'
+      - '.github/workflows/**'
+
+jobs:
+  ps-script-analyzer:
+    name: PSScriptAnalyzer lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PowerShell
+        uses: PowerShell/PowerShell@v4
+
+      - name: Show pwsh version
+        run: pwsh -Command "$PSVersionTable"
+
+      - name: Install PSScriptAnalyzer
+        run: pwsh -Command "Install-Module -Name PSScriptAnalyzer -Scope CurrentUser -Force -AllowClobber"
+
+      - name: Run PSScriptAnalyzer
+        run: |
+          pwsh -NoProfile -Command "`n$paths = @('scripts/**/*.ps1', '.github/workflows/**/*.ps1', 'packages/**/scripts/**/*.ps1');`n$errors = @();`nforeach ($p in $paths) { $files = Get-ChildItem -Path $p -ErrorAction SilentlyContinue -File -Recurse; foreach ($f in $files) { Write-Host 'Analyzing:' $f.FullName; $result = Invoke-ScriptAnalyzer -Path $f.FullName -Severity Error,Warning -Recurse -EnableExitCode; if ($result) { $errors += $result } } }`nif ($errors.Count -gt 0) { Write-Host 'PSScriptAnalyzer found issues'; $errors | Format-Table -AutoSize; exit 1 } else { Write-Host 'PSScriptAnalyzer: no issues found' }"
 name: PowerShell Lint
 
 on:
