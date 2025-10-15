@@ -19,13 +19,18 @@ param(
 
 Write-Host "== vxture: 初始化开发环境脚本 (Windows) =="
 
-function Ensure-Volta {
+function Install-Volta {
     if (Get-Command volta -ErrorAction SilentlyContinue) {
         Write-Host "Volta 已存在：$(volta --version)"
         return
     }
     Write-Host "检测到未安装 Volta，正在安装..."
-    iwr https://get.volta.sh -UseBasicParsing | iex
+    $script = Invoke-WebRequest -Uri 'https://get.volta.sh' -UseBasicParsing
+    if ($null -ne $script -and $null -ne $script.Content) {
+        Invoke-Expression $script.Content
+    } else {
+        Write-Warning "无法下载 Volta 安装脚本，请手动访问 https://volta.sh/ 安装"
+    }
     if (Get-Command volta -ErrorAction SilentlyContinue) {
         Write-Host "Volta 安装成功：$(volta --version)"
     } else {
@@ -33,7 +38,7 @@ function Ensure-Volta {
     }
 }
 
-function Ensure-NodePnpm {
+function Install-NodeAndPnpm {
     param($nodeVersion = '18')
     if (Get-Command volta -ErrorAction SilentlyContinue) {
         Write-Host "通过 Volta 安装 Node 和 pnpm"
@@ -45,7 +50,7 @@ function Ensure-NodePnpm {
     }
 }
 
-function Ensure-PythonVenv {
+function Setup-PythonVenv {
     $venvPath = Join-Path $PSScriptRoot '..' '.venv'
     $venvScripts = Join-Path $venvPath 'Scripts'
     if (-Not (Test-Path $venvPath)) {
@@ -67,15 +72,15 @@ function Ensure-PythonVenv {
 Push-Location $PSScriptRoot
 Set-Location (Resolve-Path ..)
 
-Ensure-Volta
-Ensure-NodePnpm -nodeVersion '18'
+Install-Volta
+Install-NodeAndPnpm -nodeVersion '18'
 
 if (-not $SkipPackages) {
     Write-Host "运行 pnpm install..."
     pnpm install
 }
 
-Ensure-PythonVenv
+Setup-PythonVenv
 
 if (-not $SkipExtensions) {
     $extScript = Join-Path $PSScriptRoot 'install-vscode-extensions.ps1'
