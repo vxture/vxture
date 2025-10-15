@@ -13,11 +13,6 @@
   ],
   "author": "vxture team",
   "license": "MIT",
-  "packageManager": "pnpm@8.15.0",
-  "engines": {
-    "node": ">=18 <23",
-    "pnpm": ">=8"
-  },
   "scripts": {
     "// === 开发环境 ===": "",
     "dev": "pnpm --filter web dev",
@@ -59,28 +54,28 @@
     "prepush": "pnpm health && pnpm test"
   },
   "devDependencies": {
-    "@types/node": "^20.10.0",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
+    "@types/node": "^24.7.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
     "@types/react-router-dom": "^5.3.3",
-    "@typescript-eslint/eslint-plugin": "^8.44.0",
-    "@typescript-eslint/parser": "^8.46.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
     "@vitejs/plugin-react": "^5.0.4",
     "autoprefixer": "^10.4.21",
-    "concurrently": "^8.2.0",
-    "eslint": "^8.0.0",
+    "concurrently": "^9.2.1",
+    "eslint": "^9.37.0",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "husky": "^8.0.0",
-    "lint-staged": "^15.2.0",
-    "next": "^15.5.4",
+    "eslint-plugin-react-hooks": "^7.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.4",
+    "next": "^15.5.5",
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
-    "rimraf": "^5.0.0",
-    "tailwindcss": "^3.4.17",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^4.1.14",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.9.2",
-    "vite": "^7.1.9"
+    "typescript": "^5.9.3",
+    "vite": "^7.1.10"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
@@ -91,11 +86,6 @@
       "prettier --write"
     ]
   },
-  "pnpm": {
-    "overrides": {
-      "@types/node": "$@types/node"
-    }
-  },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@phosphor-icons/react": "^2.1.10",
@@ -105,9 +95,5 @@
     "uuid": "^13.0.0",
     "zustand": "^5.0.8",
     "zustand-persist": "^0.4.0"
-  },
-  "volta": {
-    "node": "18.18.0",
-    "pnpm": "8.0.0"
   }
 }

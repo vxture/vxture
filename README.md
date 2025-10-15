@@ -12,7 +12,7 @@
 
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org/)
-[![PNPM](https://img.shields.io/badge/PNPM-8.15%2B-orange.svg)](https://pnpm.io/)
+[![PNPM](https://img.shields.io/badge/PNPM-10%2B-orange.svg)](https://pnpm.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## 🎯 功能特性
@@ -29,7 +29,7 @@
 ### 前端 (`packages/web`)
 
 ```text
-Next.js 15 + App Router + TypeScript
+Next.js 15 + App Router + React 19 + TypeScript 5.9
 ├── TailwindCSS - 样式系统和响应式设计
 ├── TanStack Query - 服务器状态管理
 ├── Zod - 运行时类型验证
@@ -61,9 +61,9 @@ PNPM Workspace - Monorepo 包管理
 
 ### 环境要求
 
-- **Node.js** 18.17.0+
+- **Node.js** 18+
 - **Python** 3.11+
-- **PNPM** 8.15.0+
+- **PNPM** 10+
 - **PostgreSQL** 13+ (可选，开发环境可用 SQLite)
 - **Redis** 6+ (可选，开发环境可禁用)
 

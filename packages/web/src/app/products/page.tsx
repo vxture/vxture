@@ -51,7 +51,7 @@ export default function ProductsPage() {
   return (
     <div className='relative'>
       {/* 调试面板信息组件 */}
-      {SnapDebugPanel}
+      {SnapDebugPanel as unknown as React.ReactNode}
 
       {/* 吸附选择调试组件 */}
       {SnapSectionChoice}

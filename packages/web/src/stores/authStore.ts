@@ -47,7 +47,7 @@
 // 依赖导入
 // ============================================================================
 import { create } from 'zustand';
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { makeAuthPersistOptions } from './persistOptions/authPersist';
 import { AuthState, LoginCredentials, LoginResponse, UserInfo } from '@/types/auth.types';
@@ -72,8 +72,7 @@ const calculateExpiryTimestamp = (expiresIn: number): number => Date.now() + exp
 // Store 创建 - 使用 Zustand + persist 中间件
 // - 仅持久化必要字段，token/refreshToken 建议加密存储
 // ============================================================================
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const authStoreCreator = (set: any, get: any): AuthState => ({
+const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
   /** 设置 token/refreshToken/过期时间 */
   setToken: (token: string, refreshToken: string, tokenExpiry: number) => {
     set({ token, refreshToken, tokenExpiry });

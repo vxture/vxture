@@ -164,7 +164,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         {/* 全局副作用 client 组件，确保只挂载一份 */}
         <ThemeSync />
         <I18nSync />
-        <ClientSyncAgg />
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+        {(ClientSyncAgg as unknown as any) && <ClientSyncAgg />}
         <Notifications />
         {children}
       </body>
