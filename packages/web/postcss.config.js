@@ -1,8 +1,8 @@
 module.exports = {
+  // Provide plugin package names as keys so Next's loader can resolve them lazily.
+  // Empty objects mean "use default options".
   plugins: {
-    // Map 'tailwindcss' key to the compatibility adapter function so Next/webpack
-    // recognises the plugin and executes it correctly during build.
-    tailwindcss: require('@tailwindcss/postcss')(),
+    '@tailwindcss/postcss': {},
     autoprefixer: {},
   },
 };

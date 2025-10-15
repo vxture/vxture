@@ -1,0 +1,6 @@
+/* Tailwind core directives: generate utilities first so custom components can @apply them */
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+/* You can add project-wide Tailwind layer overrides here in future. */

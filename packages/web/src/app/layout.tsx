@@ -41,6 +41,7 @@
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import '../styles/main.css';
 import './globals.css';
 import { cookies, headers } from 'next/headers';
 // import type { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/cookies'; // 已移除，避免类型错误
