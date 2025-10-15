@@ -78,7 +78,7 @@
 
   // 新增配置
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": true
   },
   "eslint.packageManager": "pnpm",
   // 保留或覆盖 Python 解释器路径（如果没有使用虚拟环境，可删除此项）
