@@ -1,4 +1,24 @@
 {
+  // 推荐扩展：团队成员在首次打开该 repo 时会看到推荐安装提示
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "eamodio.gitlens",
+    "bradlc.vscode-tailwindcss",
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-azuretools.vscode-docker",
+    "dsznajder.es7-react-js-snippets",
+    "christian-kohler.path-intellisense",
+    "mikestead.dotenv",
+    "meganrogge.template-string-converter",
+    "davidanson.vscode-markdownlint"
+  ],
+  "unwantedRecommendations": [
+    // 列出可能与团队不兼容或个人偏好的扩展ID以避免被推荐
+  ]
+}
+{
   "recommendations": [
     // 代码质量和格式化
     "dbaeumer.vscode-eslint",
@@ -31,6 +51,15 @@
     "clinyong.vscode-css-modules",
     "mikestead.dotenv",
     "meganrogge.template-string-converter",
-    "vivaxy.vscode-conventional-commits"
+    "vivaxy.vscode-conventional-commits",
+
+    // Python开发
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+
+    // GitHub集成
+    "github.vscode-pull-request-github"
+
+    // 添加你项目里常用的扩展
   ]
 }
