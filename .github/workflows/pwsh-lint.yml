@@ -11,23 +11,33 @@ on:
 
 jobs:
   ps-lint:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup PowerShell
-        uses: actions/setup-powershell@v2
+        uses: PowerShell/setup-powershell@v2
+        with:
+          # pin a major PWsh version for reproducibility; change if you need a specific minor
+          pwsh-version: '7'
+
       - name: Install PSScriptAnalyzer
         shell: pwsh
         run: |
-          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
-      - name: Run PSScriptAnalyzer
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser -AllowClobber
+
+      - name: Run PSScriptAnalyzer lint
         shell: pwsh
         run: |
-          $errors = $false
-          $results = Invoke-ScriptAnalyzer -Path scripts -Recurse -Severity Error,Warning
-          if ($results) {
+          Write-Host "Running PSScriptAnalyzer against ./scripts"
+          $results = Invoke-ScriptAnalyzer -Path scripts -Recurse -Severity Warning,Error
+          if ($null -ne $results -and $results.Count -gt 0) {
             Write-Host "PSScriptAnalyzer found issues:"
             $results | Format-Table -AutoSize
-            $errors = $true
+            exit 1
+          } else {
+            Write-Host "PSScriptAnalyzer: no issues found."
           }
-          if ($errors) { exit 1 }
