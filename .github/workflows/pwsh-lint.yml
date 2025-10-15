@@ -1,0 +1,33 @@
+name: PowerShell Lint
+
+on:
+  push:
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/**'
+  pull_request:
+    paths:
+      - 'scripts/**'
+
+jobs:
+  ps-lint:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PowerShell
+        uses: actions/setup-powershell@v2
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          $errors = $false
+          $results = Invoke-ScriptAnalyzer -Path scripts -Recurse -Severity Error,Warning
+          if ($results) {
+            Write-Host "PSScriptAnalyzer found issues:"
+            $results | Format-Table -AutoSize
+            $errors = $true
+          }
+          if ($errors) { exit 1 }
