@@ -18,11 +18,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PowerShell
-        uses: PowerShell/setup-powershell@v2
-        with:
-          # pin a major PWsh version for reproducibility; change if you need a specific minor
-          pwsh-version: '7'
+      - name: Setup PowerShell on Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https software-properties-common
+          wget -q https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb
+          sudo dpkg -i packages-microsoft-prod.deb
+          sudo apt-get update
+          sudo apt-get install -y powershell
+
+      - name: Setup PowerShell on macOS
+        if: runner.os == 'macOS'
+        run: |
+          brew install --cask powershell
+
+      - name: Ensure PowerShell on Windows
+        if: runner.os == 'Windows'
+        # windows-latest 通常已包含 pwsh；仅做版本输出为证明
+        shell: pwsh
+        run: |
+          pwsh -v
 
       - name: Install PSScriptAnalyzer
         shell: pwsh
@@ -41,3 +57,5 @@ jobs:
           } else {
             Write-Host "PSScriptAnalyzer: no issues found."
           }
+
+      # platform setup moved earlier to avoid depending on Marketplace action
