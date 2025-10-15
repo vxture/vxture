@@ -212,6 +212,38 @@ JWT_ALGORITHM=HS256
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
 
+### 运行时管理（推荐）
+
+为保证团队机器之间的一致性，推荐使用运行时版本管理工具来锁定 Node 与 Python 版本：
+
+- Node / pnpm: 推荐使用 Volta（跨平台、轻量且对 pnpm 支持良好）。示例：
+
+```powershell
+# 安装 Volta (Windows PowerShell)
+iwr https://get.volta.sh -UseBasicParsing | iex
+# 安装指定 Node 版本与 pnpm
+volta install node@18
+volta install pnpm
+```
+
+- 也可使用 nvm（Linux / macOS）或 asdf，根据团队偏好选择一致的工具。
+
+- Python: 使用虚拟环境（venv）或 pip-tools（pip-compile）管理依赖：
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+项目仓库包含辅助脚本：
+
+- `scripts/setup-dev.ps1` — Windows 一键初始化（会安装 Volta、Node、pnpm、创建 Python venv 并安装依赖、调用扩展安装脚本）
+- `scripts/setup-dev.sh`  — Unix-like 系统的对应脚本
+
+建议团队在 PR 模板或贡献指南中声明使用的管理工具与 Node/Python 精确版本，以便 CI 和开发机器一致。
+
+
 ## 💡 开发约定
 
 ### 组件开发模式
