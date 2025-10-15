@@ -3,6 +3,12 @@
 > 现代化企业官网平台 - Next.js 15 + FastAPI + PostgreSQL
 
 基于 PNPM Monorepo 架构的全栈 Web 平台，专注于企业官网展示和用户账户系统。
+<!-- Quick badges: setup / contribute / runtimes / devcontainer -->
+![setup-ready](https://img.shields.io/badge/setup-ready-brightgreen)
+![contribs-welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen)
+![node](https://img.shields.io/badge/node-18.x-green)
+![python](https://img.shields.io/badge/python-3.11-blue)
+![devcontainer](https://img.shields.io/badge/devcontainer-enabled-blue)
 
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org/)
@@ -279,7 +285,7 @@ export default function InteractiveButton() {
 ```scss
 .hero-animation {
   @apply transition-all duration-500;
-  
+
   &:hover {
     transform: translateY(-4px) scale(1.02);
   }
@@ -298,7 +304,7 @@ function UserProfile() {
     queryKey: ['user', 'profile'],
     queryFn: () => fetch('/api/user/profile').then(res => res.json())
   })
-  
+
   // ...
 }
 ```
