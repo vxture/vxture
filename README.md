@@ -4,11 +4,11 @@
 
 基于 PNPM Monorepo 架构的全栈 Web 平台，专注于企业官网展示和用户账户系统。
 <!-- Quick badges: setup / contribute / runtimes / devcontainer -->
-![setup-ready](https://img.shields.io/badge/setup-ready-brightgreen)
-![contribs-welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen)
-![node](https://img.shields.io/badge/node-18.x-green)
-![python](https://img.shields.io/badge/python-3.11-blue)
-![devcontainer](https://img.shields.io/badge/devcontainer-enabled-blue)
+[![setup-ready](https://img.shields.io/badge/setup-ready-brightgreen)](docs/SETUP_QUICK.md)
+[![contribs-welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen)](docs/SETUP_QUICK.md#contributing)
+[![node](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
+[![python](https://img.shields.io/badge/python-3.11-blue)](https://python.org/)
+[![devcontainer](https://img.shields.io/badge/devcontainer-enabled-blue)](.devcontainer/)
 
 [![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org/)
