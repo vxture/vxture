@@ -53,11 +53,25 @@ main {
 
 /* 4. 全局类名（可直接在组件中使用） */
 .container {
-  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  /* Avoid applying responsive utilities directly inside @apply (not supported in newer Tailwind).
+     Use base utilities here and apply responsive adjustments via @screen blocks below. */
+  @apply mx-auto max-w-7xl px-4;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+
+@screen sm {
+  .container {
+    @apply px-6;
+  }
+}
+
+@screen lg {
+  .container {
+    @apply px-8;
+  }
 }
 
 .btn,
