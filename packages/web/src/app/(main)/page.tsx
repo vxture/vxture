@@ -86,13 +86,25 @@ export default function HomePage() {
   return (
     <div className='relative'>
       {/* 调试面板信息组件 */}
-      {SnapDebugPanel}
+      {SnapDebugPanel as unknown as React.ReactNode}
       {/* 吸附选择调试组件 */}
-      {SnapSectionChoice}
-      {/* 内容组件 */}
-      <FeaturesSection id={`${targetIdPrefix}-2`} />
-      <ProductSection id={`${targetIdPrefix}-3`} />
-      <CaseSection id={`${targetIdPrefix}-4`} />
+      {SnapSectionChoice as unknown as React.ReactNode}
+      {/* 内容组件 (cast components to any to avoid cross-type conflicts) */}
+      {(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const Features = FeaturesSection as unknown as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const Product = ProductSection as unknown as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const Case = CaseSection as unknown as any;
+        return (
+          <>
+            <Features id={`${targetIdPrefix}-2`} />
+            <Product id={`${targetIdPrefix}-3`} />
+            <Case id={`${targetIdPrefix}-4`} />
+          </>
+        );
+      })()}
     </div>
   );
 }

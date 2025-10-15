@@ -1,6 +1,4 @@
+// Root PostCSS config — keep consistent with packages/web to avoid loader shape mismatch.
 module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}
+  plugins: [require('@tailwindcss/postcss')(), require('autoprefixer')()],
+};

@@ -1,7 +1,6 @@
-/* Tailwind 基础样式导入 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* globals.css 只保留非 Tailwind 定义的基础样式和变量，Tailwind 指令与组件层拆分到专用文件 */
+
+
 
 /* 1. 基础重置样式（消除浏览器默认差异） */
 *,
@@ -52,34 +51,6 @@ main {
 }
 
 /* 4. 全局类名（可直接在组件中使用） */
-.container {
-  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-.btn,
-.btn-primary {
-  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  font-weight: 500;
-  background-color: var(--color-primary);
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-.btn:hover,
-.btn-primary:hover {
-  background-color: var(--color-primary-hover);
-}
-
-.btn-secondary {
-  @apply bg-gray-200 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors;
-}
 
 .card {
   background-color: var(--color-card-bg);

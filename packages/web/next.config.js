@@ -4,11 +4,12 @@ const nextConfig = {
   typedRoutes: true,
 
   // 输出配置
-  output: "standalone",
+  // 使用环境变量控制 standalone 输出，便于在 CI 中启用而在本地保持兼容。
+  output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
 
   // 环境变量配置
   env: {
-    CUSTOM_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
+    CUSTOM_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
   },
 
   // 重定向配置
@@ -20,8 +21,8 @@ const nextConfig = {
 
   // 图片优化配置
   images: {
-    domains: ["localhost"],
-    formats: ["image/webp", "image/avif"],
+    domains: ['localhost'],
+    formats: ['image/webp', 'image/avif'],
   },
 
   // Webpack 配置
@@ -32,13 +33,13 @@ const nextConfig = {
 
   // 开发指示器配置
   devIndicators: {
-    position: "bottom-right",
+    position: 'bottom-right',
   },
 
   // 编译器配置
   compiler: {
     // 移除 console.log (生产环境)
-    removeConsole: process.env.NODE_ENV === "production",
+    removeConsole: process.env.NODE_ENV === 'production',
   },
 };
 

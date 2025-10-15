@@ -64,7 +64,7 @@
   },
 
   // 终端基础配置
-  "terminal.integrated.fontFamily": "JetBrains Mono",
+  "terminal.integrated.fontFamily": "monospace",
   "terminal.integrated.fontSize": 14,
   "terminal.integrated.env.windows": {
     "CHCP": "65001" // 强制UTF-8编码
@@ -78,7 +78,7 @@
 
   // 新增配置
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "eslint.packageManager": "pnpm",
   // 保留或覆盖 Python 解释器路径（如果没有使用虚拟环境，可删除此项）

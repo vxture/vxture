@@ -17,7 +17,7 @@ vxture/
 
 ### Frontend Stack (`packages/web`)
 
-- **Framework:** Next.js 15 (App Router) + React 18 + TypeScript
+-- **Framework:** Next.js 15 (App Router) + React 19 + TypeScript 5.9
 - **Styling:** TailwindCSS
 - **State Management:** TanStack Query
 - **Data Validation:** Zod
@@ -78,4 +78,4 @@ pnpm type-check   # TypeScript check
 
 ---
 
-**Version:** v1.0 Simplified | **Last updated:** Sep 21, 2025
+**Version:** v1.0 Simplified | **Last updated:** Oct 15, 2025
