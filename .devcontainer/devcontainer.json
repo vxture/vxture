@@ -1,0 +1,32 @@
+{
+  "name": "vxture Dev Container",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    }
+  },
+  "forwardPorts": [3000, 8000],
+  "postCreateCommand": "pnpm install || true",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "eamodio.gitlens",
+        "bradlc.vscode-tailwindcss",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "dsznajder.es7-react-js-snippets",
+        "christian-kohler.path-intellisense",
+        "mikestead.dotenv",
+        "meganrogge.template-string-converter",
+        "davidanson.vscode-markdownlint"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "workspaceFolder": "/workspace",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+}
