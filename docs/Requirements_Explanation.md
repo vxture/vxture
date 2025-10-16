@@ -106,7 +106,7 @@ Install all backend dependencies in a virtual environment:
 
 ```bash
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\Activate.ps1
+source .venv/bin/activate  # On Windows: use dot-source in PowerShell: '.\.venv\Scripts\Activate.ps1'
 pip install -r requirements.txt
 ```
 

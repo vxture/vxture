@@ -6,11 +6,11 @@
 <!-- Quick badges: setup / contribute / runtimes / devcontainer -->
 [![setup-ready](https://img.shields.io/badge/setup-ready-brightgreen)](docs/SETUP_QUICK.md)
 [![contribs-welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen)](docs/SETUP_QUICK.md#contributing)
-[![node](https://img.shields.io/badge/node-18.x-green)](https://nodejs.org/)
+[![node](https://img.shields.io/badge/node-LTS-green)](https://nodejs.org/)
 [![python](https://img.shields.io/badge/python-3.11-blue)](https://python.org/)
 [![devcontainer](https://img.shields.io/badge/devcontainer-enabled-blue)](.devcontainer/)
 
-[![Node.js](https://img.shields.io/badge/Node.js-18%2B-green.svg)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-LTS-green.svg)](https://nodejs.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org/)
 [![PNPM](https://img.shields.io/badge/PNPM-10%2B-orange.svg)](https://pnpm.io/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -61,7 +61,7 @@ PNPM Workspace - Monorepo 包管理
 
 ### 环境要求
 
-- **Node.js** 18+
+- **Node.js** LTS
 - **Python** 3.11+
 - **PNPM** 10+
 - **PostgreSQL** 13+ (可选，开发环境可用 SQLite)
@@ -97,7 +97,7 @@ cd packages/api
 
 # 创建 Python 虚拟环境
 python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+. '.\.venv\Scripts\Activate.ps1'  # dot-source to activate the venv in the current session
 
 # 安装 Python 依赖
 pip install -r requirements.txt
@@ -107,6 +107,15 @@ alembic upgrade head
 
 # 启动后端服务
 python start_dev.py
+```
+
+注意：在脚本或后台启动（如 CI、Start-Process 等）中，不要依赖激活。更稳妥的做法是直接调用虚拟环境中的 python：
+
+```powershell
+# 直接调用 venv 中的 python（适用于脚本/后台进程）
+$venvPython = Join-Path (Convert-Path ..) '.venv\Scripts\python.exe'
+& $venvPython start_dev.py
+```
 ```
 
 ## 📂 项目结构
@@ -228,7 +237,7 @@ JWT_ACCESS_TOKEN_EXPIRE_MINUTES=30
 # 安装 Volta (Windows PowerShell)
 iwr https://get.volta.sh -UseBasicParsing | iex
 # 安装指定 Node 版本与 pnpm
-volta install node@18
+volta install node
 volta install pnpm
 ```
 

@@ -17,8 +17,8 @@
 ###############################################################################
 
 # 基础镜像：Microsoft 提供的 devcontainer Node 模板
-# 选择带有 Node 18 的镜像，包含常用开发工具，方便直接在容器中进行 Node/TypeScript 开发
-FROM mcr.microsoft.com/devcontainers/javascript-node:0-18
+# 选择带有 Node LTS 的镜像，包含常用开发工具，方便直接在容器中进行 Node/TypeScript 开发
+FROM mcr.microsoft.com/devcontainers/javascript-node:0-lts
 
 ###############################################################################
 # 系统依赖安装区块

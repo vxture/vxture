@@ -74,11 +74,25 @@
   "git.enableSmartCommit": true,
   "git.autofetch": true,
   "gitlens.codeLens.enabled": true,
-  "cSpell.words": ["libpq", "partialize", "pwsh", "uuidv"],
+  "cSpell.words": [
+    "bradlc",
+    "davidanson",
+    "dbaeumer",
+    "dsznajder",
+    "eamodio",
+    "esbenp",
+    "kohler",
+    "libpq",
+    "meganrogge",
+    "partialize",
+    "pwsh",
+    "pylance",
+    "uuidv"
+  ],
 
   // 新增配置
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
   },
   "eslint.packageManager": "pnpm",
   // 保留或覆盖 Python 解释器路径（如果没有使用虚拟环境，可删除此项）
