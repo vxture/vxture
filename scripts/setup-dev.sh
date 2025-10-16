@@ -21,8 +21,8 @@ else
   export PATH="$HOME/.volta/bin:$PATH"
 fi
 
-echo "确保 Node (18) 与 pnpm 已通过 Volta 安装"
-volta install node@18 || true
+echo "确保 Node (LTS) 与 pnpm 已通过 Volta 安装"
+volta install node || true
 volta install pnpm || true
 
 cd "$REPO_ROOT"

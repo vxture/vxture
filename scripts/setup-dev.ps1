@@ -9,7 +9,7 @@ setup-dev.ps1
 
 主要步骤（顺序执行）：
     1. 安装 / 验证 Volta（可选，优先推荐）
-    2. 使用 Volta 安装 Node@18 与 pnpm（或在无 Volta 时尝试全局安装 pnpm）
+    2. 使用 Volta 安装 Node (LTS) 与 pnpm（或在无 Volta 时尝试全局安装 pnpm）
     3. 运行 `pnpm install` 安装前端依赖（可通过 -SkipPackages 跳过）
     4. 创建 Python 虚拟环境 `.venv` 并安装 `requirements.txt`
     5. 可选：调用 `scripts/install-vscode-extensions.ps1` 批量安装 VS Code 扩展
@@ -97,13 +97,13 @@ function Install-NodeAndPnpm {
     Install-NodeAndPnpm
 
     功能：安装 Node.js（通过 Volta）并确保 pnpm 可用。
-    参数：$nodeVersion - 要安装的 Node 主要版本（默认 '18'）。
+    参数：$nodeVersion - 要安装的 Node 主要版本（默认为 LTS）。
     行为：
       - 若 Volta 可用：使用 volta 安装指定的 node 版本与 pnpm（推荐）。
       - 若 Volta 不可用：尝试全局安装 pnpm（可能需管理员权限）。
     #>
 
-    param($nodeVersion = '18')
+    param($nodeVersion = '')
 
     if (Get-Command volta -ErrorAction SilentlyContinue) {
         Write-Host "通过 Volta 安装 Node 和 pnpm"
@@ -188,7 +188,7 @@ Set-Location (Resolve-Path ..)
 Install-Volta
 
 # --- 确保 Node 与 pnpm 可用 ---
-Install-NodeAndPnpm -nodeVersion '18'
+Install-NodeAndPnpm -nodeVersion $nodeVersion
 
 # --- 可选：安装前端依赖（可通过 -SkipPackages 跳过） ---
 if (-not $SkipPackages) {

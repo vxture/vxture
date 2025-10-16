@@ -1,6 +1,6 @@
 {
   "name": "vxture Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/javascript-node:0-18",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:0-lts",
   "features": {
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.11"

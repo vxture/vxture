@@ -22,7 +22,7 @@ cd vxture
 ./scripts/setup-dev.sh
 ```
 
-说明：脚本会尝试安装 Volta、Node@18、pnpm、创建 Python venv 并安装 `requirements.txt`，还会可选安装 VS Code 扩展。
+说明：脚本会尝试安装 Volta、Node (LTS)、pnpm、创建 Python venv 并安装 `requirements.txt`，还会可选安装 VS Code 扩展。
 
 ---
 
@@ -41,7 +41,7 @@ cd vxture
 
    ```powershell
    iwr https://get.volta.sh -UseBasicParsing | iex
-   volta install node@18
+   volta install node
    volta install pnpm
    ```
 
@@ -49,7 +49,7 @@ cd vxture
 
    ```bash
    curl https://get.volta.sh | bash
-   volta install node@18
+   volta install node
    volta install pnpm
    ```
 
@@ -66,7 +66,7 @@ pnpm install
 
    ```powershell
    python -m venv .venv
-   .\.venv\Scripts\Activate.ps1
+   . '.\.venv\Scripts\Activate.ps1'  # use dot-source to activate in the current PowerShell session
    pip install -r requirements.txt
    ```
 

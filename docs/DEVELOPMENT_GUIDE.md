@@ -7,7 +7,7 @@ This guide provides step-by-step instructions for setting up, developing, and ma
 
 ### System Requirements
 
-- Node.js 18+
+- Node.js LTS
 - Python 3.11+
 - PNPM 8.15.0+
 - PostgreSQL (production)
@@ -28,10 +28,6 @@ pnpm install
 
 # Start dev servers
 pnpm dev         # Frontend (http://localhost:3000)
-pnpm dev:api     # Backend (http://localhost:8000)
-```
-
-## 📂 Project Structure
 
 ```text
 vxture/
@@ -56,7 +52,7 @@ vxture/
 ├── pnpm-workspace.yaml      # PNPM workspace config
 └── package.json             # Root project config
 ```
-
+'.\.venv\Scripts\Activate.ps1'  # dot-source to activate the virtual environment in this PowerShell session
 ## 🛠️ Development Commands
 
 ### Root Commands
