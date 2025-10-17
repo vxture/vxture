@@ -1,0 +1,18 @@
+/* tabs.variants.css - 选项卡风格与尺寸（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  /* 风格 */
+  .tabs-underline .tab { @apply border-b-2 border-transparent; }
+  .tabs-underline .tab.tab-active { border-color: var(--color-primary); color: var(--color-primary); }
+
+  .tabs-pill .tab { @apply rounded-full px-3 py-1.5; }
+  .tabs-pill .tab.tab-active { background-color: var(--color-primary); color: #fff; }
+
+  .tabs-enclosed .tab { @apply rounded-t-md px-3 py-2 border border-b-0; border-color: var(--color-border); }
+  .tabs-enclosed .tab.tab-active { border-color: var(--color-primary); color: var(--color-primary); }
+
+  /* 尺寸 */
+  .tabs-sm .tab { @apply text-xs px-2 py-1; }
+  .tabs-md .tab { @apply text-sm px-3 py-2; }
+  .tabs-lg .tab { @apply text-base px-4 py-2.5; }
+}

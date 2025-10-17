@@ -1,0 +1,8 @@
+/* accordion.css - 手风琴（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .accordion { @apply divide-y; border: 1px solid var(--color-border); background-color: var(--color-card-bg); }
+  .accordion-item { @apply p-4; }
+  .accordion-header { @apply flex items-center justify-between cursor-pointer; }
+  .accordion-content { @apply pt-2 text-theme-primary; }
+}

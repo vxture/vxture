@@ -1,0 +1,8 @@
+/* breadcrumb.css - 面包屑（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .breadcrumb { @apply flex items-center gap-2 text-sm; color: var(--color-text-secondary); }
+  .breadcrumb a { color: var(--color-primary); }
+  .breadcrumb a:hover { color: var(--color-primary-hover); }
+  .breadcrumb-sep { @apply text-theme-secondary; }
+}

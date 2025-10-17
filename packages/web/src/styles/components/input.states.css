@@ -1,0 +1,15 @@
+/* input.states.css - 输入类状态（@layer components） */
+@layer components {
+@reference "tailwindcss/utilities";
+  .form-input.is-error,
+  .select.is-error,
+  .textarea.is-error { @apply border-red-500 ring-2 ring-red-200; }
+
+  .form-input.is-success,
+  .select.is-success,
+  .textarea.is-success { @apply border-green-500 ring-2 ring-green-200; }
+
+  .form-input:disabled,
+  .select:disabled,
+  .textarea:disabled { @apply opacity-60 cursor-not-allowed; }
+}

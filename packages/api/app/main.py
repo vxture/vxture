@@ -1,11 +1,8 @@
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List, Dict, Any, Optional
-from pydantic import BaseModel
-import os
-import json
 import uvicorn
 import logging
+import os
 from dotenv import load_dotenv
 
 # Platform backend entry point.
@@ -32,6 +29,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 根路径
+@app.get("/")
+async def root():
+    return {"message": "Vxture Platform API", "version": "0.1.0", "status": "running"}
 
 # 健康检查
 @app.get("/health")

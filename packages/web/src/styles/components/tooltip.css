@@ -1,0 +1,7 @@
+/* tooltip.css - 提示气泡（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .tooltip { @apply relative inline-block; }
+  .tooltip-content { @apply absolute z-50 hidden whitespace-nowrap rounded-md px-2 py-1 text-xs shadow-lg; color: var(--color-text-primary); background-color: var(--color-card-bg); border: 1px solid var(--color-border); }
+  .tooltip:hover .tooltip-content { @apply block; }
+}

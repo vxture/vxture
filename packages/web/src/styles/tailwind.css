@@ -1,6 +1,79 @@
-/* Tailwind core directives: generate utilities first so custom components can @apply them */
-@tailwind base;
-@tailwind utilities;
-@tailwind components;
+/* tailwind.css - Tailwind 主入口文件 */
 
-/* You can add project-wide Tailwind layer overrides here in future. */
+/* Tailwind 基础指令 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 导入组件层 */
+@import './components.css';
+
+/* 自定义工具类 - 直接定义，无需单独文件 */
+@layer utilities {
+  /* CSS 变量映射工具类 */
+  .bg-color-page-bg {
+    background-color: var(--color-page-bg);
+  }
+
+  .bg-color-card-bg {
+    background-color: var(--color-card-bg);
+  }
+
+  .text-text-primary {
+    color: var(--color-text-primary);
+  }
+
+  .text-text-secondary {
+    color: var(--color-text-secondary);
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .text-primary-hover:hover {
+    color: var(--color-primary-hover);
+  }
+
+  .border-color-border {
+    border-color: var(--color-border);
+  }
+
+  .accent-primary {
+    accent-color: var(--color-primary);
+  }
+}
+
+/* 基础元素扩展 - 直接定义，无需单独文件 */
+@layer base {
+  body {
+    background-color: var(--color-page-bg);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  input,
+  textarea,
+  select {
+    background-color: var(--color-page-bg);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+    transition: border-color 0.2s ease;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  a {
+    color: var(--color-primary);
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-primary-hover);
+  }
+}

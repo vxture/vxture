@@ -1,0 +1,6 @@
+/* select.css - 下拉选择（@layer components） */
+@layer components {
+@reference "tailwindcss/utilities";
+  .select { @apply rounded-md px-3 py-2 border; border-color: var(--color-border); color: var(--color-text-primary); background-color: var(--color-page-bg); }
+  .select:focus { @apply outline-none ring-2 ring-blue-300 border-blue-400; }
+}

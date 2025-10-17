@@ -1,0 +1,7 @@
+/* accordion.variants.css - 手风琴变体（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .accordion-flush { @apply divide-y-0 border-0; }
+  .accordion-bordered { @apply border; border-color: var(--color-border); }
+  .accordion-item-active .accordion-header { color: var(--color-primary); }
+}

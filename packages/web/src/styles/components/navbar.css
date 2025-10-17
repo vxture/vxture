@@ -1,0 +1,8 @@
+/* navbar.css - 导航栏组件（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .navbar { @apply w-full flex items-center justify-between px-4 py-3; background-color: var(--color-page-bg); border-bottom: 1px solid var(--color-border); }
+  .navbar-brand { @apply text-lg font-semibold text-theme-primary; }
+  .navbar-actions { @apply flex items-center gap-3; }
+  .navbar-link { @apply text-sm text-theme-secondary hover:underline; }
+}

@@ -1,8 +1,12 @@
+// Tailwind CSS v4 requires the new PostCSS plugin package
+// See: https://tailwindcss.com/docs/installation/postcss
 module.exports = {
-  // Provide plugin package names as keys so Next's loader can resolve them lazily.
-  // Empty objects mean "use default options".
-  plugins: {
-    '@tailwindcss/postcss': {},
-    autoprefixer: {},
-  },
+  plugins: [
+    require('postcss-import')(), // 关键：处理 CSS 中的 @import 语句（必须放在最前面）
+    require('@tailwindcss/postcss')(),
+    require('autoprefixer')(),
+    // Note: Next.js already handles CSS minification in production.
+    // If you want extra processing, add cssnano here (ensure it's installed):
+    // ...(process.env.NODE_ENV === 'production' ? [require('cssnano')({ preset: 'default' })] : []),
+  ],
 };

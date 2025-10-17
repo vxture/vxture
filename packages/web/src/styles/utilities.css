@@ -1,0 +1,16 @@
+/* utilities.css - 工具层聚合器（保持 @layer 顺序） */
+@import "./utilities/theme-utils.css";
+@import "./utilities/scroll.css";
+@import "./utilities/safe-area.css";
+@import "./utilities/layout.css";
+@import "./utilities/truncate.css";
+@import "./utilities/animations.css";
+@import "./utilities/effects.css";
+@import "./utilities/compat.css";
+@import "./utilities/colormap.css";
+
+/* 可在此继续 import 其他工具文件，如：
+   @import "./utilities/scroll.css";
+   @import "./utilities/animations.css";
+   @import "./utilities/safe-area.css";
+*/

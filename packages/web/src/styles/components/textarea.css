@@ -1,0 +1,6 @@
+/* textarea.css - 多行文本（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .textarea { @apply rounded-md px-3 py-2 border; border-color: var(--color-border); color: var(--color-text-primary); background-color: var(--color-page-bg); }
+  .textarea:focus { @apply outline-none ring-2 ring-blue-300 border-blue-400; }
+}

@@ -1,0 +1,6 @@
+/* badge.sizes.css - 徽章尺寸（@layer components） */
+@layer components {
+  .badge-sm { @apply text-xs px-1.5 py-0.5; }
+  .badge-md { @apply text-xs px-2 py-0.5; }
+  .badge-lg { @apply text-sm px-2.5 py-1; }
+}

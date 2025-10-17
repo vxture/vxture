@@ -1,0 +1,9 @@
+/* pagination.variants.css - 分页模式与尺寸（@layer components） */
+@layer components {
+@reference "tailwindcss/utilities";
+  .pagination-simple .page-btn { @apply px-2 py-1 text-sm; }
+  .pagination-full .page-btn { @apply px-3 py-1.5 text-sm; }
+  .pagination-sm .page-btn { @apply px-2 py-1 text-xs; }
+  .pagination-md .page-btn { @apply px-3 py-1.5 text-sm; }
+  .pagination-lg .page-btn { @apply px-4 py-2 text-base; }
+}

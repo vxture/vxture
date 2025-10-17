@@ -1,0 +1,9 @@
+/* button.icon.css - 图标按钮（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .btn-icon { @apply inline-flex items-center justify-center rounded-md; background-color: var(--color-primary); color: #fff; }
+  .btn-icon:hover { background-color: var(--color-primary-hover); }
+  .btn-icon-sm { @apply btn-icon h-8 w-8; }
+  .btn-icon-md { @apply btn-icon h-10 w-10; }
+  .btn-icon-lg { @apply btn-icon h-12 w-12; }
+}

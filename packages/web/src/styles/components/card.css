@@ -1,0 +1,9 @@
+/* card.css - 卡片组件样式（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .card {
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-border);
+    @apply rounded-lg p-6 shadow-sm transition-all duration-200 ease-in-out;
+  }
+}

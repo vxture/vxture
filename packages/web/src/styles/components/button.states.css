@@ -1,0 +1,12 @@
+/* button.states.css - 按钮状态（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .btn:disabled,
+  .btn.is-disabled { @apply opacity-50 cursor-not-allowed; }
+
+  .btn.is-loading { @apply relative text-transparent; }
+  .btn.is-loading::after {
+    content: "";
+    @apply absolute inset-0 mx-auto my-auto h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent;
+  }
+}

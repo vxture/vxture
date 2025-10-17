@@ -1,0 +1,15 @@
+/* input.sizes.css - 输入类尺寸（@layer components） */
+@layer components {
+@reference "tailwindcss/utilities";
+  .form-input-sm { @apply px-2 py-1.5 text-sm; }
+  .form-input-md { @apply px-3 py-2 text-sm; }
+  .form-input-lg { @apply px-4 py-2.5 text-base; }
+
+  .select-sm { @apply px-2 py-1.5 text-sm; }
+  .select-md { @apply px-3 py-2 text-sm; }
+  .select-lg { @apply px-4 py-2.5 text-base; }
+
+  .textarea-sm { @apply px-2 py-1.5 text-sm; }
+  .textarea-md { @apply px-3 py-2 text-sm; }
+  .textarea-lg { @apply px-4 py-2.5 text-base; }
+}

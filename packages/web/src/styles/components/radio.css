@@ -1,0 +1,6 @@
+/* radio.css - 单选框（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .radio { @apply h-4 w-4 rounded-full border; border-color: var(--color-border); background-color: var(--color-page-bg); }
+  .radio:checked { background-color: var(--color-primary); border-color: var(--color-primary); }
+}

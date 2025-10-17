@@ -1,0 +1,8 @@
+/* switch.css - 开关（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .switch { @apply inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors; background-color: color-mix(in oklab, var(--color-card-bg) 70%, var(--color-page-bg)); border: 1px solid var(--color-border); }
+  .switch-thumb { @apply inline-block h-5 w-5 transform rounded-full bg-white transition; }
+  .switch.on { background-color: var(--color-primary); border-color: var(--color-primary); }
+  .switch.on .switch-thumb { @apply translate-x-5; }
+}

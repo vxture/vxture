@@ -1,0 +1,9 @@
+/* dropdown.variants.css - 下拉菜单对齐与尺寸（@layer components） */
+@layer components {
+  .dropdown-left .dropdown-menu { @apply left-0; }
+  .dropdown-right .dropdown-menu { @apply right-0; }
+
+  .dropdown-sm .dropdown-menu { @apply min-w-40 p-1; }
+  .dropdown-md .dropdown-menu { @apply min-w-48 p-2; }
+  .dropdown-lg .dropdown-menu { @apply min-w-56 p-3; }
+}

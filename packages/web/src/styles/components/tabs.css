@@ -1,0 +1,8 @@
+/* tabs.css - 选项卡组件（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .tabs { @apply flex gap-4 border-b; border-color: var(--color-border); }
+  .tab { @apply -mb-px px-3 py-2 text-sm text-theme-secondary border-b-2 border-transparent; }
+  .tab:hover { @apply text-theme-primary; }
+  .tab-active { color: var(--color-primary); border-color: var(--color-primary); }
+}

@@ -1,0 +1,7 @@
+/* link.css - 链接样式（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .link { color: var(--color-primary); @apply transition-colors duration-200; }
+  .link:hover { color: var(--color-primary-hover); }
+  .link-muted { color: var(--color-text-secondary); }
+}

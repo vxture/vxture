@@ -1,0 +1,13 @@
+/* modal.variants.css - 模态框尺寸与行为（@layer components） */
+@layer components {
+@reference "tailwindcss/utilities";
+  /* 尺寸：设置内容最大宽度 */
+  .modal-sm .modal-content { @apply max-w-sm; }
+  .modal-md .modal-content { @apply max-w-md; }
+  .modal-lg .modal-content { @apply max-w-lg; }
+  .modal-xl .modal-content { @apply max-w-2xl; }
+
+  /* 行为 */
+  .modal-scrollable .modal-content { @apply max-h-[80vh] overflow-auto; }
+  .modal-top { @apply items-start; }
+}

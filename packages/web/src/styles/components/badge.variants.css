@@ -1,0 +1,8 @@
+/* badge.variants.css - 徽章风格与语义（@layer components） */
+@layer components {
+  .badge-solid { background-color: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  .badge-soft { background-color: color-mix(in oklab, var(--color-card-bg) 80%, var(--color-page-bg)); color: var(--color-text-primary); border-color: var(--color-border); }
+  .badge-outline { background-color: transparent; color: var(--color-text-primary); border-color: var(--color-border); }
+
+  /* 中性/副色可按需扩展具体色板，默认走变量体系 */
+}

@@ -1,0 +1,14 @@
+/* compat.css - 历史兼容工具类（@layer utilities） */
+@layer utilities {
+  .bg-color-page-bg { background-color: var(--color-page-bg); }
+  .bg-color-card-bg { background-color: var(--color-card-bg); }
+  .bg-color-primary { background-color: var(--color-primary); }
+  .text-color-text-primary { color: var(--color-text-primary); }
+  .text-color-text-secondary { color: var(--color-text-secondary); }
+  .text-text-primary { color: var(--color-text-primary); }
+  .text-text-secondary { color: var(--color-text-secondary); }
+  .text-primary { color: var(--color-primary); }
+  .text-primary-hover:hover { color: var(--color-primary-hover); }
+  .border-color-border { border-color: var(--color-border); }
+  .accent-primary { accent-color: var(--color-primary); }
+}

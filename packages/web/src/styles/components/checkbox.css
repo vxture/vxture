@@ -1,0 +1,6 @@
+/* checkbox.css - 复选框（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .checkbox { @apply h-4 w-4 rounded border; border-color: var(--color-border); background-color: var(--color-page-bg); }
+  .checkbox:checked { background-color: var(--color-primary); border-color: var(--color-primary); }
+}

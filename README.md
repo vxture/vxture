@@ -3,12 +3,11 @@
 > 现代化企业官网平台 - Next.js 15 + FastAPI + PostgreSQL
 
 基于 PNPM Monorepo 架构的全栈 Web 平台，专注于企业官网展示和用户账户系统。
-<!-- Quick badges: setup / contribute / runtimes / devcontainer -->
+<!-- Quick badges: setup / contribute / runtimes -->
 [![setup-ready](https://img.shields.io/badge/setup-ready-brightgreen)](docs/SETUP_QUICK.md)
 [![contribs-welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen)](docs/SETUP_QUICK.md#contributing)
 [![node](https://img.shields.io/badge/node-LTS-green)](https://nodejs.org/)
 [![python](https://img.shields.io/badge/python-3.11-blue)](https://python.org/)
-[![devcontainer](https://img.shields.io/badge/devcontainer-enabled-blue)](.devcontainer/)
 
 [![Node.js](https://img.shields.io/badge/Node.js-LTS-green.svg)](https://nodejs.org/)
 [![Python](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://python.org/)
@@ -29,41 +28,84 @@
 ### 前端 (`packages/web`)
 
 ```text
-Next.js 15 + App Router + React 19 + TypeScript 5.9
-├── TailwindCSS - 样式系统和响应式设计
-├── TanStack Query - 服务器状态管理
-├── Zod - 运行时类型验证
-└── ESLint + Prettier - 代码质量工具
+Next.js 15.5.6 + App Router + React 19.2 + TypeScript 5.9.3
+├── 🎨 样式系统
+│   ├── TailwindCSS 4.1.14 - 原子化样式系统
+│   ├── SCSS/Sass 1.93.2 - 复杂样式和动画
+│   └── PostCSS 8.5.6 - CSS 后处理
+├── 🧠 状态管理
+│   ├── Zustand 5.0.8 - 轻量级状态管理
+│   ├── TanStack Query 5.90.5 - 服务器状态管理
+│   └── React Context - 全局状态共享
+├── 🔧 开发工具
+│   ├── TypeScript 5.9.3 - 类型安全
+│   ├── ESLint 9.37.0 + Prettier 3.6.2 - 代码规范
+│   ├── Stylelint 16.25.0 - 样式规范
+│   └── Husky 9.1.7 + lint-staged 16.2.4 - Git 工作流
+├── 🎯 工具库
+│   ├── Zod 4.1.12 - 运行时类型验证
+│   ├── 多图标库 - Heroicons 2.2.0, Phosphor 2.1.10, Tabler 3.35.0, React Icons 5.5.0
+│   └── TailwindCSS Animate 1.0.7 - CSS 动画
 ```
 
 ### 后端 (`packages/api`)
 
 ```text
-FastAPI + Uvicorn + Python 3.11+
-├── PostgreSQL - 主数据库
-├── Redis - 缓存和会话存储
-├── JWT + OAuth2 - 身份认证
-├── Pydantic - 数据验证
-└── Alembic - 数据库迁移
+FastAPI 0.119.0 + Uvicorn 0.37.0 + Python 3.13.7
+├── 🗄️ 数据层
+│   ├── PostgreSQL 13+ - 主数据库
+│   ├── Redis 5.2.1+ - 缓存和会话存储
+│   ├── Alembic 1.17.0+ - 数据库迁移
+│   └── Psycopg 3.2.3+ - PostgreSQL 适配器
+├── 🔐 安全认证
+│   ├── JWT + OAuth2 - 身份认证
+│   ├── Python-JOSE - JWT 处理
+│   ├── Passlib 1.7.4+ + Bcrypt 5.0.0+ - 密码加密
+│   └── Python-multipart - 文件上传
+├── 🔧 核心依赖
+│   ├── Pydantic 2.12.3+ - 数据验证和设置
+│   ├── Pydantic-settings 2.11.0+ - 配置管理
+│   ├── Python-dotenv - 环境变量管理
+│   ├── HTTPx - HTTP 客户端
+│   ├── Aiofiles 25.1.0+ - 异步文件操作
+│   └── Uvicorn[standard] 0.37.0+ - ASGI 服务器
+├── 🧪 测试工具
+│   ├── Pytest 8.3.4+ - 测试框架
+│   └── Pytest-asyncio 0.25.0+ - 异步测试
 ```
 
 ### 开发工具链
 
 ```text
-PNPM Workspace - Monorepo 包管理
-├── GitHub Actions - CI/CD 自动化
-├── Docker - 容器化部署
-├── cSpell - 拼写检查
-└── Husky + lint-staged - Git 工作流
+PNPM 10+ Workspace - Monorepo 包管理
+├── 📦 包管理
+│   ├── PNPM 10.17 - 高效包管理器
+│   ├── Monorepo - 统一代码仓库
+│   └── Workspace - 多包管理
+├── 🔧 构建工具
+│   ├── Next.js - 前端构建系统
+│   ├── Vite - 快速构建工具
+│   ├── PostCSS - CSS 处理
+│   └── TypeScript - 类型编译
+├── 🎯 代码质量
+│   ├── ESLint + Prettier - 代码规范
+│   ├── Stylelint - 样式规范
+│   ├── Husky - Git hooks
+│   ├── lint-staged - 提交前检查
+│   └── cSpell - 拼写检查
+├── 🔍 开发工具
+│   ├── TypeScript - 类型检查
+│   ├── Concurrently - 并发执行
+│   └── Rimraf - 清理工具
 ```
 
 ## 🚀 快速开始
 
 ### 环境要求
 
-- **Node.js** LTS
-- **Python** 3.11+
-- **PNPM** 10+
+- **Node.js** 22+ (当前: v22.19.0)
+- **Python** 3.13+ (当前: v3.13.7)
+- **PNPM** 10+ (当前: v10.17.0)
 - **PostgreSQL** 13+ (可选，开发环境可用 SQLite)
 - **Redis** 6+ (可选，开发环境可禁用)
 
@@ -280,7 +322,7 @@ export default function InteractiveButton() {
 
 ### 样式开发策略
 
-**🎨 TailwindCSS 优先**（90% 的样式需求）
+**🎨 TailwindCSS 优先**（主要样式方案）
 
 ```tsx
 <div className="bg-primary-500 text-white p-4 rounded-lg shadow-lg">
@@ -297,6 +339,19 @@ export default function InteractiveButton() {
   &:hover {
     transform: translateY(-4px) scale(1.02);
   }
+}
+```
+
+### 状态管理策略
+
+使用 Zustand 进行全局状态管理：
+
+```tsx
+import { useThemeStore } from '@/stores/themeStore'
+
+function ThemeToggle() {
+  const { theme, toggleTheme } = useThemeStore()
+  return <button onClick={toggleTheme}>{theme}</button>
 }
 ```
 

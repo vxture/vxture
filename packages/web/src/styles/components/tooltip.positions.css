@@ -1,0 +1,8 @@
+/* tooltip.positions.css - 提示气泡位置（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .tooltip-top .tooltip-content { @apply bottom-full left-1/2 -translate-x-1/2 mb-2; }
+  .tooltip-bottom .tooltip-content { @apply top-full left-1/2 -translate-x-1/2 mt-2; }
+  .tooltip-left .tooltip-content { @apply right-full top-1/2 -translate-y-1/2 mr-2; }
+  .tooltip-right .tooltip-content { @apply left-full top-1/2 -translate-y-1/2 ml-2; }
+}

@@ -1,0 +1,16 @@
+/* alert.variants.css - 提示条语义与风格（@layer components） */
+@layer components {
+@reference "tailwindcss/utilities";
+  /* 语义 */
+  .alert-info { @apply border-sky-400; }
+  .alert-success { @apply border-green-500; }
+  .alert-warning { @apply border-yellow-500; }
+  .alert-danger { @apply border-red-500; }
+
+  /* 风格 */
+  .alert-soft { background-color: color-mix(in oklab, var(--color-card-bg) 85%, var(--color-page-bg)); }
+  .alert-solid { background-color: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+  /* 带图标布局 */
+  .alert-with-icon { @apply pl-3; }
+}

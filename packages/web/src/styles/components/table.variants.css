@@ -1,0 +1,8 @@
+/* table.variants.css - 表格风格（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .table-hover tbody tr:hover { background-color: color-mix(in oklab, var(--color-card-bg) 80%, var(--color-page-bg)); }
+  .table-bordered th, .table-bordered td { @apply border; border-color: var(--color-border); }
+  .table-compact th, .table-compact td { @apply py-1.5; }
+  .table-sticky-header thead th { @apply sticky top-0 z-10; background-color: var(--color-card-bg); }
+}

@@ -1,0 +1,20 @@
+@reference "tailwindcss/utilities";
+/* forms.css - 表单基础样式（@layer base） */
+@layer base {
+  input, textarea, select {
+    background-color: var(--color-page-bg);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    @apply rounded-md px-3 py-2 transition-colors duration-200;
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: var(--color-text-secondary);
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.15);
+  }
+}

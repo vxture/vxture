@@ -1,0 +1,8 @@
+/* alert.css - 提示条组件（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .alert { background-color: var(--color-card-bg); border: 1px solid var(--color-border); @apply rounded-md p-4 flex gap-3 items-start; }
+  .alert-title { @apply font-semibold text-theme-primary; }
+  .alert-desc { @apply text-sm text-theme-secondary; }
+  .alert-primary { border-color: var(--color-primary); }
+}

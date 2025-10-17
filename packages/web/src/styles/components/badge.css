@@ -1,0 +1,6 @@
+/* badge.css - 徽章组件（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .badge { @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium; border: 1px solid var(--color-border); background-color: var(--color-card-bg); color: var(--color-text-primary); }
+  .badge-primary { background-color: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+}

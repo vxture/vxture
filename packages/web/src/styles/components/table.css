@@ -1,0 +1,8 @@
+/* table.css - 表格组件（@layer components） */
+@layer components {
+@reference "tailwindcss/utilities";
+  .table { @apply w-full border-collapse; }
+  .table th, .table td { @apply px-4 py-2 text-left; border-bottom: 1px solid var(--color-border); }
+  .table thead th { background-color: var(--color-card-bg); @apply font-semibold; }
+  .table-striped tbody tr:nth-child(odd) { background-color: color-mix(in oklab, var(--color-card-bg) 85%, var(--color-page-bg)); }
+}

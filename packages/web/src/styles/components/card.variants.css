@@ -1,0 +1,14 @@
+/* card.variants.css - 卡片变体（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .card-plain { @apply card; }
+  .card-outline { @apply card border; }
+  .card-elevated { @apply card shadow-theme-md; }
+  .card-elevated-lg { @apply card shadow-theme-lg; }
+  .card-hover { @apply transition-transform; }
+  .card-hover:hover { @apply -translate-y-0.5 shadow-theme-md; }
+
+  .card-header { @apply mb-3 flex items-center justify-between; }
+  .card-body { @apply text-theme-primary; }
+  .card-footer { @apply mt-4 flex items-center justify-end gap-3; }
+}

@@ -1,102 +1,21 @@
-/* globals.css 只保留非 Tailwind 定义的基础样式和变量，Tailwind 指令与组件层拆分到专用文件 */
+/* globals.css - 作为唯一入口，聚合 Tailwind v4 与自定义层 */
 
+/* Tailwind v4 核心导入（包含 preflight 与 utilities） */
+@import "tailwindcss";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
+/* 主题基础与色板映射（优先导入，供后续层使用） */
+@import "../styles/themes/theme-base.css";
+@import "../styles/themes/colormap/light.css";
+@import "../styles/themes/colormap/dark.css";
 
-/* 1. 基础重置样式（消除浏览器默认差异） */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-* {
-  margin: 0;
-  padding: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-}
+/* 基础层（Reset/排版/表单） */
+@import "../styles/base/reset.css";
+@import "../styles/base/typography.css";
+@import "../styles/base/forms.css";
 
-/* 2. html/body 全局设置与滚动吸附容器 */
-html,
-body {
-  margin: 0;
-  padding: 0;
-  overflow: visible !important;
-  height: auto !important;
-  min-height: auto !important;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* main 区域默认高度自动，适应内容 */
-main {
-  /* 可根据需要添加样式 */
-}
-
-/* 3. 主题 CSS 变量（与 ThemeContext 同步） */
-:root[data-theme="light"] {
-  --color-page-bg: #ffffff;
-  --color-card-bg: #f9fafb;
-  --color-text-primary: #111827;
-  --color-text-secondary: #4b5563;
-  --color-border: #e5e7eb;
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-}
-:root[data-theme="dark"] {
-  --color-page-bg: #111827;
-  --color-card-bg: #1f2937;
-  --color-text-primary: #f9fafb;
-  --color-text-secondary: #d1d5db;
-  --color-border: #374151;
-  --color-primary: #60a5fa;
-  --color-primary-hover: #3b82f6;
-}
-
-/* 4. 全局类名（可直接在组件中使用） */
-
-.card {
-  background-color: var(--color-card-bg);
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-/* 5. 吸附区块样式（用于分屏吸附） */
-.snap-section {
-  margin: 0;
-  min-height: 100vh;
-}
-
-/* 6. 图片及媒体元素样式重置 */
-img,
-picture,
-video,
-canvas,
-svg {
-  display: block;
-  max-width: 100%;
-}
-
-/* 7. 表单元素字体继承 */
-input,
-button,
-textarea,
-select {
-  font: inherit;
-}
-
-/* 8. 标题与段落自动换行 */
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  overflow-wrap: break-word;
-}
-
-/* 9. React 根节点隔离，避免样式污染 */
-#root,
-#__next {
-  isolation: isolate;
-}
+/* 组件与工具层（聚合器，内部再细分） */
+@import "../styles/components.css";
+@import "../styles/utilities.css";

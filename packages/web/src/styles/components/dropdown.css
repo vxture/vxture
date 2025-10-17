@@ -1,0 +1,7 @@
+/* dropdown.css - 下拉菜单（@layer components） */
+@reference "tailwindcss/utilities";
+@layer components {
+  .dropdown { @apply relative inline-block; }
+  .dropdown-menu { @apply absolute z-50 hidden mt-2 min-w-40 rounded-md border bg-white p-2 shadow-lg; background-color: var(--color-card-bg); border-color: var(--color-border); }
+  .dropdown.open .dropdown-menu { @apply block; }
+}
