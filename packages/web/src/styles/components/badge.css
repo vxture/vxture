@@ -1,6 +1,101 @@
-/* badge.css - 徽章组件（@layer components） */
+/**
+ * 徽章组件样式 (Badge Component)
+ *
+ * 功能说明：提供小型的标识和状态指示组件，用于突出显示重要信息
+ * 支持多种语义类型和主题适配的标签样式
+ *
+ * 组件类型：
+ * - .badge: 基础徽章样式，默认中性颜色
+ * - .badge-primary: 主要徽章，使用品牌主色
+ * - .badge-success: 成功状态徽章，绿色系
+ * - .badge-warning: 警告状态徽章，黄色系
+ * - .badge-danger: 危险状态徽章，红色系
+ * - .badge-info: 信息状态徽章，蓝色系
+ *
+ * 使用场景：
+ * - 数量指示器（消息数量、购物车商品数）
+ * - 状态标识（在线状态、审核状态）
+ * - 分类标签（文章分类、产品标签）
+ * - 版本标记（新功能提示、Beta标识）
+ * - 等级显示（用户等级、VIP标识）
+ *
+ * 视觉特性：
+ * - 圆角矩形设计，现代简洁
+ * - 紧凑的内边距适合小文本
+ * - 12px字体大小确保可读性
+ * - 语义化颜色增强信息传达
+ *
+ * 交互特性：
+ * - 可作为点击元素的视觉反馈
+ * - 支持与按钮、链接组合使用
+ * - 可添加关闭功能（可移除标签）
+ * - 支持动态数量更新动画
+ *
+ * 技术实现：
+ * - inline-flex布局确保文本居中
+ * - 使用CSS变量支持主题切换
+ * - 语义化类名提升代码可读性
+ * - Tailwind工具类确保一致性
+ *
+ * 可访问性：
+ * - 适当的颜色对比度确保可读性
+ * - 支持屏幕阅读器的文本识别
+ * - 可添加aria-label提供额外描述
+ * - 颜色信息配合文字说明使用
+ *
+ * 响应式考虑：
+ * - 固定字体大小在各设备保持一致
+ * - 适当的最小点击区域
+ * - 移动端触摸友好的尺寸
+ *
+ * 扩展支持：
+ * - 可通过badge.sizes.css定义不同尺寸
+ * - 可通过badge.variants.css扩展更多风格
+ * - 支持图标和徽章的组合使用
+ *
+ * 维护说明：
+ * - 语义颜色应保持与系统其他组件一致
+ * - 字体大小需符合最小可读性标准
+ * - 定期检查颜色对比度符合无障碍要求
+ *
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
+
 @layer components {
-  .badge { @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium; border: 1px solid var(--color-border); background-color: var(--color-card-bg); color: var(--color-text-primary); }
-  .badge-primary { background-color: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+  /* 基础徽章样式 */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card-bg);
+    color: var(--color-text-primary);
+  }
+
+  /* 主要徽章 */
+  .badge-primary {
+    background-color: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+  }
+
+  /* 成功状态徽章 */
+  .badge-success {
+    @apply border-green-600 text-white bg-green-600;
+  }
+
+  /* 警告状态徽章 */
+  .badge-warning {
+    @apply border-amber-500 text-white bg-amber-500;
+  }
+
+  /* 危险状态徽章 */
+  .badge-danger {
+    @apply border-red-600 text-white bg-red-600;
+  }
+
+  /* 信息状态徽章 */
+  .badge-info {
+    @apply border-cyan-600 text-white bg-cyan-600;
+  }
 }

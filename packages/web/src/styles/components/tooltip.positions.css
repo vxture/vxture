@@ -1,8 +1,38 @@
-/* tooltip.positions.css - 提示气泡位置（@layer components） */
+/**
+ * 提示气泡位置变体样式 (Tooltip Position Variants)
+ * 
+ * 功能说明：定义提示气泡的四个方向显示位置，适应不同的界面空间需求
+ * 使用CSS变换实现精确的居中对齐
+ * 
+ * 位置变体：
+ * - .tooltip-top: 上方显示，气泡在触发元素上方居中
+ * - .tooltip-bottom: 下方显示，气泡在触发元素下方居中
+ * - .tooltip-left: 左侧显示，气泡在触发元素左侧垂直居中
+ * - .tooltip-right: 右侧显示，气泡在触发元素右侧垂直居中
+ * 
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
+
 @layer components {
-  .tooltip-top .tooltip-content { @apply bottom-full left-1/2 -translate-x-1/2 mb-2; }
-  .tooltip-bottom .tooltip-content { @apply top-full left-1/2 -translate-x-1/2 mt-2; }
-  .tooltip-left .tooltip-content { @apply right-full top-1/2 -translate-y-1/2 mr-2; }
-  .tooltip-right .tooltip-content { @apply left-full top-1/2 -translate-y-1/2 ml-2; }
+  /* 顶部提示气泡 */
+  .tooltip-top .tooltip-content { 
+    @apply bottom-full left-1/2 -translate-x-1/2 mb-2; 
+  }
+  
+  /* 底部提示气泡 */
+  .tooltip-bottom .tooltip-content { 
+    @apply top-full left-1/2 -translate-x-1/2 mt-2; 
+  }
+  
+  /* 左侧提示气泡 */
+  .tooltip-left .tooltip-content { 
+    @apply right-full top-1/2 -translate-y-1/2 mr-2; 
+  }
+  
+  /* 右侧提示气泡 */
+  .tooltip-right .tooltip-content { 
+    @apply left-full top-1/2 -translate-y-1/2 ml-2; 
+  }
 }

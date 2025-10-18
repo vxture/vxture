@@ -1,8 +1,61 @@
-/* accordion.css - 手风琴（@layer components） */
+/**
+ * 手风琴组件样式 (Accordion Component)
+ *
+ * 功能说明：可折叠的内容展示组件，支持多项内容的紧凑展示
+ * 用户可点击标题展开或收起对应的内容区域
+ *
+ * 组件结构：
+ * - .accordion: 手风琴容器，包含多个折叠项
+ * - .accordion-item: 单个折叠项容器
+ * - .accordion-header: 可点击的标题区域
+ * - .accordion-content: 可展开的内容区域
+ *
+ * 使用场景：
+ * - FAQ页面的问题展示
+ * - 产品功能的分类介绍
+ * - 设置面板的分组选项
+ * - 侧边栏的导航菜单
+ *
+ * 交互特性：
+ * - 点击标题切换内容显示状态
+ * - 支持键盘导航和焦点管理
+ * - 可配置单选或多选展开模式
+ *
+ * 样式特点：
+ * - 使用主题边框和背景色
+ * - 内置分割线提升视觉层次
+ * - 响应式布局适配各种屏幕
+ *
+ * 技术实现：
+ * - 基于Tailwind CSS工具类
+ * - 使用CSS变量支持主题切换
+ * - 语义化HTML结构增强可访问性
+ *
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
+
 @layer components {
-  .accordion { @apply divide-y; border: 1px solid var(--color-border); background-color: var(--color-card-bg); }
-  .accordion-item { @apply p-4; }
-  .accordion-header { @apply flex items-center justify-between cursor-pointer; }
-  .accordion-content { @apply pt-2 text-theme-primary; }
+  /* 手风琴容器 */
+  .accordion {
+    @apply divide-y;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-card-bg);
+  }
+
+  /* 单个折叠项 */
+  .accordion-item {
+    @apply p-4;
+  }
+
+  /* 可点击标题区域 */
+  .accordion-header {
+    @apply flex items-center justify-between cursor-pointer;
+  }
+
+  /* 内容展示区域 */
+  .accordion-content {
+    @apply pt-2 text-theme-primary;
+  }
 }

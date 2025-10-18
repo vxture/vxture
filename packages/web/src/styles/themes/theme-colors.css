@@ -1,0 +1,264 @@
+/* ===========================================================================
+   theme-colors.css - 主题颜色系统变量定义
+
+   功能：定义完整的主题颜色系统，支持动态主题切换
+   架构：基于CSS自定义属性的Material Design色彩系统
+   切换：通过data-theme属性实现亮色/暗色主题无缝切换
+   兼容：包含旧版变量的兼容性映射，确保平滑迁移
+
+   颜色系统架构：
+   ├── 基础颜色 (Primary Colors)    - 品牌主色调，用于关键UI元素
+   ├── 表面颜色 (Surface Colors)    - 背景和容器颜色
+   ├── 对比文本 (Contrast Text)     - 确保可访问性的文本颜色
+   └── 边框轮廓 (Border & Outline) - 分割线和焦点指示器
+
+   支持的主题：
+   - :root (默认回退)
+   - data-theme="light" (标准亮色主题)
+   - data-theme="dark" (标准暗色主题)
+   =========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   默认主题 (Default Theme)
+   说明：作为回退值，确保在主题未设置时有合理的默认样式
+   --------------------------------------------------------------------------- */
+:root {
+  /* 基础颜色系统 (Base Color System) */
+  --color-primary: #2563eb;
+  --color-secondary: #7c3aed;
+  --color-tertiary: #059669;
+  --color-quaternary: #dc2626;
+
+  /* 表面颜色系统 (Surface Color System) */
+  --color-surface: #f9fafb;
+  --color-background: #ffffff;
+
+  /* 对比文本颜色系统 (Contrast Text System) */
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-surface: #111827;
+  --color-on-background: #111827;
+
+  /* 边框和轮廓系统 (Border & Outline System) */
+  --color-border: #e5e7eb;
+  --color-outline: #6b7280;
+
+  /* 语义化颜色 (Semantic Colors) */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+
+  /* 兼容性变量 (Legacy Compatibility) */
+  --color-page-bg: var(--color-background);
+  --color-card-bg: var(--color-surface);
+  --color-primary-hover: #1d4ed8;
+}
+
+/* ---------------------------------------------------------------------------
+   亮色主题 (Light Theme)
+   说明：标准亮色主题变量定义
+   --------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  /* 基础颜色系统 (Base Color System) */
+  --color-primary: #2563eb;
+  --color-secondary: #7c3aed;
+  --color-tertiary: #059669;
+  --color-quaternary: #dc2626;
+
+  /* 表面颜色系统 (Surface Color System) */
+  --color-surface: #f9fafb;
+  --color-background: #ffffff;
+
+  /* 对比文本颜色系统 (Contrast Text System) */
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-surface: #111827;
+  --color-on-background: #111827;
+
+  /* 边框和轮廓系统 (Border & Outline System) */
+  --color-border: #e5e7eb;
+  --color-outline: #6b7280;
+
+  /* 语义化颜色 (Semantic Colors) */
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+
+  /* 兼容性变量 (Legacy Compatibility) */
+  --color-page-bg: var(--color-background);
+  --color-card-bg: var(--color-surface);
+  --color-primary-hover: #1d4ed8;
+}
+
+/* ---------------------------------------------------------------------------
+   暗色主题 (Dark Theme)
+   说明：标准暗色主题变量定义
+   --------------------------------------------------------------------------- */
+:root[data-theme="dark"] {
+  /* 基础颜色系统 (Base Color System) */
+  --color-primary: #60a5fa;
+  --color-secondary: #a78bfa;
+  --color-tertiary: #34d399;
+  --color-quaternary: #f87171;
+
+  /* 表面颜色系统 (Surface Color System) */
+  --color-surface: #1f2937;
+  --color-background: #111827;
+
+  /* 对比文本颜色系统 (Contrast Text System) */
+  --color-on-primary: #1e293b;
+  --color-on-secondary: #1e293b;
+  --color-on-surface: #f9fafb;
+  --color-on-background: #f9fafb;
+
+  /* 边框和轮廓系统 (Border & Outline System) */
+  --color-border: #374151;
+  --color-outline: #9ca3af;
+
+  /* 语义化颜色 (Semantic Colors) */
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+
+  /* 兼容性变量 (Legacy Compatibility) */
+  --color-page-bg: var(--color-background);
+  --color-card-bg: var(--color-surface);
+  --color-primary-hover: #3b82f6;
+}
+
+/* ---------------------------------------------------------------------------
+   扩展主题示例 (Extended Theme Examples)
+   说明：演示如何添加自定义主题变体，所有变量必须完整定义
+   --------------------------------------------------------------------------- */
+
+/* 品牌橙色主题 - 按需启用
+:root[data-theme="brand-orange"] {
+  --color-primary: #f97316;
+  --color-secondary: #8b5cf6;
+  --color-tertiary: #10b981;
+  --color-quaternary: #ef4444;
+
+  --color-surface: #fff7ed;
+  --color-background: #ffffff;
+
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-surface: #111827;
+  --color-on-background: #111827;
+
+  --color-border: #fed7aa;
+  --color-outline: #fb923c;
+
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+
+  --color-page-bg: var(--color-background);
+  --color-card-bg: var(--color-surface);
+  --color-primary-hover: #ea580c;
+}
+*/
+
+/* 高对比度主题 - 按需启用
+:root[data-theme="high-contrast"] {
+  --color-primary: #000000;
+  --color-secondary: #0066cc;
+  --color-tertiary: #009900;
+  --color-quaternary: #cc0000;
+
+  --color-surface: #ffffff;
+  --color-background: #ffffff;
+
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-surface: #000000;
+  --color-on-background: #000000;
+
+  --color-border: #000000;
+  --color-outline: #0066cc;
+
+  --color-text-primary: #000000;
+  --color-text-secondary: #333333;
+
+  --color-page-bg: var(--color-background);
+  --color-card-bg: var(--color-surface);
+  --color-primary-hover: #333333;
+}
+*/
+
+/* ---------------------------------------------------------------------------
+   主题系统使用指南 (Theme System Usage Guide)
+
+   🎨 变量命名规范 (Variable Naming Convention):
+
+   基础颜色系统 (Base Color System):
+   --color-primary      主品牌色，用于按钮、链接等关键交互元素
+   --color-secondary    辅助色，用于次级操作和装饰
+   --color-tertiary     第三色，常用于成功状态和积极反馈
+   --color-quaternary   第四色，常用于警告和错误状态
+
+   表面颜色系统 (Surface Color System):
+   --color-surface      卡片、面板等容器背景色
+   --color-background   页面主背景色
+
+   对比文本系统 (Contrast Text System):
+   --color-on-primary     在主色背景上显示的文本颜色
+   --color-on-secondary   在辅助色背景上显示的文本颜色
+   --color-on-surface     在表面色背景上显示的文本颜色
+   --color-on-background  在背景色上显示的文本颜色
+
+   边框轮廓系统 (Border & Outline System):
+   --color-border       常规边框、分割线颜色
+   --color-outline      焦点指示器、活跃状态轮廓色
+
+   🔧 主题切换实现 (Theme Switching Implementation):
+
+   JavaScript切换示例:
+   // 切换到暗色主题
+   document.documentElement.setAttribute('data-theme', 'dark');
+
+   // 切换到亮色主题
+   document.documentElement.setAttribute('data-theme', 'light');
+
+   // 移除属性使用默认主题
+   document.documentElement.removeAttribute('data-theme');
+
+   React Hook示例:
+   const useTheme = () => {
+     const [theme, setTheme] = useState('light');
+
+     useEffect(() => {
+       document.documentElement.setAttribute('data-theme', theme);
+     }, [theme]);
+
+     return { theme, setTheme };
+   };
+
+   🚀 扩展新主题 (Adding New Themes):
+
+   1. 定义完整的颜色变量集
+      - 必须包含所有基础变量，避免undefined值
+      - 确保对比度符合WCAG AA标准(4.5:1)
+
+   2. 测试颜色组合
+      - 验证文本在各种背景上的可读性
+      - 检查焦点状态和交互反馈的可见性
+
+   3. 更新配置文件
+      - 在themeConfig.ts中添加主题选项
+      - 为主题切换器添加新选项
+
+   4. 文档化主题特点
+      - 记录主题的适用场景和设计理念
+      - 提供预览截图和使用建议
+
+   ⚠️  注意事项 (Important Notes):
+
+   - 变量定义必须完整，避免在某些主题下出现undefined
+   - 确保所有主题的变量命名完全一致
+   - 考虑系统偏好设置 (prefers-color-scheme)
+   - 测试主题切换的性能影响
+   - 为主题切换添加过渡动画以提升用户体验
+
+   🔗 相关文件 (Related Files):
+   - ./theme-base.css          非颜色设计令牌 (间距、圆角、阴影)
+   - ./theme-shortcuts.css     主题快捷工具类
+   - ../themes.css             主题系统聚合器
+   - ../../constants/themeConfig.ts  主题配置和常量
+   --------------------------------------------------------------------------- */

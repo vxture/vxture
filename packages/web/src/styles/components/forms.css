@@ -1,10 +1,93 @@
+/**
+ * 表单组件样式 (Form Components)
+ *
+ * 功能说明：提供完整的表单元素样式体系，包括字段容器、标签、输入框等
+ * 支持统一的视觉风格和交互状态管理
+ *
+ * 组件结构：
+ * - .form-field: 表单字段容器，管理标签和输入框的布局
+ * - .form-label: 表单标签，提供字段说明
+ * - .form-input: 表单输入框，统一的输入控件样式
+ * - .form-help: 帮助文本，提供额外的使用指导
+ * - .form-error: 错误提示文本，显示验证错误信息
+ * - .input: 通用输入框类（兼容demo页面）
+ *
+ * 使用场景：
+ * - 用户注册和登录表单
+ * - 联系我们表单
+ * - 产品配置表单
+ * - 设置和偏好表单
+ * - 搜索输入框
+ *
+ * 交互特性：
+ * - 焦点状态的环形高亮效果
+ * - 平滑的颜色过渡动画
+ * - 清晰的错误状态提示
+ * - 一致的边框和圆角样式
+ *
+ * 可访问性：
+ * - 支持键盘导航
+ * - 提供清晰的焦点指示器
+ * - 错误信息与表单控件关联
+ * - 适当的颜色对比度
+ *
+ * 技术实现：
+ * - 基于Tailwind CSS工具类系统
+ * - 使用CSS变量支持主题切换
+ * - Flexbox布局确保响应式设计
+ * - CSS伪类管理交互状态
+ *
+ * 维护说明：
+ * - 颜色值应与设计系统保持同步
+ * - 焦点环颜色可根据品牌调整
+ * - 字体大小遵循排版比例
+ *
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
-/* forms.css - 表单组件样式（@layer components） */
+
 @layer components {
-  .form-field { @apply flex flex-col gap-1; }
-  .form-label { @apply text-sm font-medium text-theme-primary; }
-  .form-input { @apply px-3 py-2 rounded-md border border-theme bg-theme-page text-theme-primary transition-theme; }
-  .form-input:focus { @apply outline-none ring-2 ring-blue-300 border-blue-400; }
-  .form-help { @apply text-xs text-theme-secondary; }
-  .form-error { @apply text-xs text-red-500; }
+  /* 表单字段容器 */
+  .form-field {
+    @apply flex flex-col gap-1;
+  }
+
+  /* 表单标签 */
+  .form-label {
+    @apply text-sm font-medium text-theme-primary;
+  }
+
+  /* 表单输入框 */
+  .form-input {
+    @apply px-3 py-2 rounded-md border border-theme bg-theme-page text-theme-primary transition-theme;
+  }
+
+  /* 输入框焦点状态 */
+  .form-input:focus {
+    @apply outline-none ring-2 ring-blue-300 border-blue-400;
+  }
+
+  /* 帮助文本 */
+  .form-help {
+    @apply text-xs text-theme-secondary;
+  }
+
+  /* 错误提示文本 */
+  .form-error {
+    @apply text-xs text-red-500;
+  }
+
+  /* 通用输入框（兼容demo页面） */
+  .input {
+    @apply rounded-md px-3 py-2 border;
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+    background-color: var(--color-page-bg);
+  }
+
+  /* 通用输入框焦点状态 */
+  .input:focus {
+    @apply outline-none ring-2 ring-blue-300 border-blue-400;
+  }
 }

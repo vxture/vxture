@@ -1,6 +1,19 @@
+/* ===========================================================================
+   forms.css - 表单元素基础样式
+
+   说明：定义所有表单输入元素的基础样式和交互状态
+   用途：为 input、textarea、select 等表单元素提供统一的外观和行为
+   层级：@layer base
+   范围：影响所有原生 HTML 表单元素，不依赖类名
+   =========================================================================== */
+
 @reference "tailwindcss/utilities";
-/* forms.css - 表单基础样式（@layer base） */
+
 @layer base {
+  /* ---------------------------------------------------------------------------
+     表单输入元素基础样式 (Form Input Base Styles)
+     说明：为所有输入类型元素设置统一的外观
+     --------------------------------------------------------------------------- */
   input, textarea, select {
     background-color: var(--color-page-bg);
     color: var(--color-text-primary);
@@ -8,10 +21,18 @@
     @apply rounded-md px-3 py-2 transition-colors duration-200;
   }
 
+  /* ---------------------------------------------------------------------------
+     占位符文本样式 (Placeholder Text Styles)
+     说明：设置输入框占位符的颜色和外观
+     --------------------------------------------------------------------------- */
   input::placeholder, textarea::placeholder {
     color: var(--color-text-secondary);
   }
 
+  /* ---------------------------------------------------------------------------
+     表单元素焦点状态 (Form Element Focus States)
+     说明：定义用户聚焦输入框时的视觉反馈
+     --------------------------------------------------------------------------- */
   input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--color-primary);

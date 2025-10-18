@@ -1,8 +1,78 @@
-/* navbar.css - 导航栏组件（@layer components） */
+/**
+ * 导航栏组件样式 (Navbar Component)
+ *
+ * 功能说明：提供页面主要导航栏的样式定义，支持品牌标识和导航链接
+ * 包含响应式布局和主题适配的导航条组件
+ *
+ * 组件结构：
+ * - .navbar: 导航栏主容器，定义整体布局和背景
+ * - .navbar-brand: 品牌标识区域，通常放置Logo或网站名称
+ * - .navbar-actions: 导航操作区域，包含菜单链接和按钮
+ * - .navbar-link: 导航链接样式，提供一致的文本样式
+ *
+ * 使用场景：
+ * - 网站主导航栏
+ * - 应用程序顶部导航
+ * - 后台管理系统导航
+ * - 移动端折叠式导航菜单
+ *
+ * 布局特性：
+ * - 全宽度占据顶部空间
+ * - 左右两端对齐的分布式布局
+ * - 底部边框分离内容区域
+ * - 适当的内边距确保点击区域
+ *
+ * 视觉设计：
+ * - 与页面背景保持一致
+ * - 微妙的底部边框增强层次
+ * - 品牌区域的突出字体样式
+ * - 链接的悬停下划线效果
+ *
+ * 交互特性：
+ * - 链接悬停效果提升用户体验
+ * - 响应式设计适配不同屏幕
+ * - 支持键盘导航和焦点管理
+ *
+ * 技术实现：
+ * - Flexbox布局实现灵活对齐
+ * - CSS变量支持主题动态切换
+ * - Tailwind工具类确保一致性
+ *
+ * 可扩展性：
+ * - 支持通过navbar.variants.css定义不同风格
+ * - 可添加搜索框、用户头像等元素
+ * - 支持移动端汉堡菜单集成
+ *
+ * 维护说明：
+ * - 高度和内边距应与设计系统一致
+ * - 颜色值需要与主题变量同步
+ * - 移动端适配需要额外的响应式处理
+ *
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
+
 @layer components {
-  .navbar { @apply w-full flex items-center justify-between px-4 py-3; background-color: var(--color-page-bg); border-bottom: 1px solid var(--color-border); }
-  .navbar-brand { @apply text-lg font-semibold text-theme-primary; }
-  .navbar-actions { @apply flex items-center gap-3; }
-  .navbar-link { @apply text-sm text-theme-secondary hover:underline; }
+  /* 导航栏主容器 */
+  .navbar {
+    @apply w-full flex items-center justify-between px-4 py-3;
+    background-color: var(--color-page-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* 品牌标识区域 */
+  .navbar-brand {
+    @apply text-lg font-semibold text-theme-primary;
+  }
+
+  /* 导航操作区域 */
+  .navbar-actions {
+    @apply flex items-center gap-3;
+  }
+
+  /* 导航链接样式 */
+  .navbar-link {
+    @apply text-sm text-theme-secondary hover:underline;
+  }
 }

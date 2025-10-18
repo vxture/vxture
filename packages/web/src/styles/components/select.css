@@ -1,6 +1,75 @@
-/* select.css - 下拉选择（@layer components） */
-@layer components {
+/**
+ * 下拉选择组件样式 (Select Component)
+ *
+ * 功能说明：提供自定义样式的下拉选择控件，与其他表单元素保持视觉一致性
+ * 支持主题适配和清晰的焦点状态反馈
+ *
+ * 组件状态：
+ * - .select: 下拉选择基础样式，统一的边框和内边距
+ * - .select:focus: 焦点状态，蓝色环形高亮效果
+ *
+ * 使用场景：
+ * - 地区城市选择
+ * - 分类筛选下拉框
+ * - 语言切换选择器
+ * - 排序方式选择
+ * - 时间日期选择
+ *
+ * 视觉特性：
+ * - 与input控件相同的边框和圆角
+ * - 适当的内边距确保文本可读性
+ * - 焦点状态的蓝色环形提示
+ * - 主题色背景和文本颜色
+ *
+ * 交互体验：
+ * - 清晰的焦点状态指示
+ * - 支持键盘上下箭头导航
+ * - 鼠标点击展开选项列表
+ * - 选择后自动收起列表
+ *
+ * 技术实现：
+ * - 基于HTML select元素
+ * - 使用CSS变量实现主题适配
+ * - 与表单输入框保持一致的样式
+ * - 焦点环使用outline-none + ring组合
+ *
+ * 可访问性：
+ * - 保持原生select元素的语义
+ * - 支持屏幕阅读器的选项读取
+ * - 键盘导航完全支持
+ * - 适当的颜色对比度
+ *
+ * 浏览器差异：
+ * - 不同浏览器的下拉箭头样式可能不同
+ * - 移动端会显示原生选择器界面
+ * - 可通过appearance属性进一步自定义
+ *
+ * 扩展支持：
+ * - 可配合JavaScript库实现高级功能
+ * - 支持多选、搜索、分组等特性
+ * - 可与dropdown.css结合实现自定义下拉
+ *
+ * 维护说明：
+ * - 样式应与input.css保持同步
+ * - 焦点颜色可根据品牌调整
+ * - 考虑移动端的原生体验优化
+ *
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
-  .select { @apply rounded-md px-3 py-2 border; border-color: var(--color-border); color: var(--color-text-primary); background-color: var(--color-page-bg); }
-  .select:focus { @apply outline-none ring-2 ring-blue-300 border-blue-400; }
+
+@layer components {
+  /* 下拉选择基础样式 */
+  .select {
+    @apply rounded-md px-3 py-2 border;
+    border-color: var(--color-border);
+    color: var(--color-text-primary);
+    background-color: var(--color-page-bg);
+  }
+
+  /* 下拉选择焦点状态 */
+  .select:focus {
+    @apply outline-none ring-2 ring-blue-300 border-blue-400;
+  }
 }

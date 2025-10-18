@@ -1,15 +1,66 @@
-/* input.sizes.css - 输入类尺寸（@layer components） */
-@layer components {
+/**
+ * 表单输入组件尺寸变体样式 (Form Input Size Variants)
+ *
+ * 功能说明：为表单输入组件提供统一的尺寸体系，确保所有表单控件的一致性
+ * 包含输入框、下拉选择器和多行文本域的三种尺寸规格
+ *
+ * 尺寸规格：
+ * - sm: 小尺寸，适用于密集界面和次要表单
+ * - md: 中等尺寸，标准规格适合大多数表单场景
+ * - lg: 大尺寸，用于重要表单和宽松布局
+ *
+ * 组件覆盖：
+ * - .form-input-*: 表单输入框尺寸变体
+ * - .select-*: 下拉选择器尺寸变体
+ * - .textarea-*: 多行文本域尺寸变体
+ *
+ * 使用场景：
+ * - sm: 搜索框、筛选器、设置面板
+ * - md: 一般表单、注册登录表单
+ * - lg: 主要CTA表单、重要数据输入
+ *
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
-  .form-input-sm { @apply px-2 py-1.5 text-sm; }
-  .form-input-md { @apply px-3 py-2 text-sm; }
-  .form-input-lg { @apply px-4 py-2.5 text-base; }
 
-  .select-sm { @apply px-2 py-1.5 text-sm; }
-  .select-md { @apply px-3 py-2 text-sm; }
-  .select-lg { @apply px-4 py-2.5 text-base; }
+@layer components {
+  /* 表单输入框尺寸 */
+  .form-input-sm {
+    @apply px-2 py-1.5 text-sm;
+  }
 
-  .textarea-sm { @apply px-2 py-1.5 text-sm; }
-  .textarea-md { @apply px-3 py-2 text-sm; }
-  .textarea-lg { @apply px-4 py-2.5 text-base; }
+  .form-input-md {
+    @apply px-3 py-2 text-sm;
+  }
+
+  .form-input-lg {
+    @apply px-4 py-2.5 text-base;
+  }
+
+  /* 下拉选择器尺寸 */
+  .select-sm {
+    @apply px-2 py-1.5 text-sm;
+  }
+
+  .select-md {
+    @apply px-3 py-2 text-sm;
+  }
+
+  .select-lg {
+    @apply px-4 py-2.5 text-base;
+  }
+
+  /* 多行文本域尺寸 */
+  .textarea-sm {
+    @apply px-2 py-1.5 text-sm;
+  }
+
+  .textarea-md {
+    @apply px-3 py-2 text-sm;
+  }
+
+  .textarea-lg {
+    @apply px-4 py-2.5 text-base;
+  }
 }

@@ -1,7 +1,79 @@
-/* link.css - 链接样式（@layer components） */
+/**
+ * 链接组件样式 (Link Component)
+ *
+ * 功能说明：提供统一的链接样式，确保全站链接的视觉一致性和交互体验
+ * 包含不同类型的链接变体和状态管理
+ *
+ * 组件类型：
+ * - .link: 基础链接样式，使用主题色和悬停效果
+ * - .link:hover: 链接悬停状态，深色主题色反馈
+ * - .link-muted: 静音链接，低对比度的次要链接
+ *
+ * 使用场景：
+ * - 文章内容的外部链接
+ * - 导航菜单的链接项目
+ * - 面包屑导航链接
+ * - 页脚的辅助链接
+ * - 表格中的操作链接
+ *
+ * 设计特性：
+ * - 主题色确保品牌一致性
+ * - 平滑的颜色过渡动画
+ * - 清晰的悬停状态反馈
+ * - 适当的颜色对比度
+ *
+ * 交互体验：
+ * - 200ms平滑颜色过渡
+ * - 悬停时颜色加深提供反馈
+ * - 支持键盘焦点状态
+ * - 可配合下划线等装饰
+ *
+ * 可访问性：
+ * - 符合WCAG颜色对比度标准
+ * - 支持屏幕阅读器识别
+ * - 键盘导航完全兼容
+ * - 焦点状态清晰可见
+ *
+ * 技术实现：
+ * - CSS变量支持主题动态切换
+ * - transition确保平滑状态变化
+ * - 语义化类名增强可读性
+ * - 可与其他组件组合使用
+ *
+ * 链接类型：
+ * - 标准链接：用于一般导航和跳转
+ * - 静音链接：用于辅助信息和次要操作
+ * - 可扩展更多语义类型（成功、警告等）
+ *
+ * SEO优化：
+ * - 保持原生链接的语义结构
+ * - 支持搜索引擎的链接识别
+ * - 不影响链接的可索引性
+ *
+ * 维护说明：
+ * - 颜色值应与主题系统保持同步
+ * - 过渡时长需与整体动画规范一致
+ * - 定期检查颜色对比度的无障碍标准
+ *
+ * 层级：components
+ */
+
 @reference "tailwindcss/utilities";
+
 @layer components {
-  .link { color: var(--color-primary); @apply transition-colors duration-200; }
-  .link:hover { color: var(--color-primary-hover); }
-  .link-muted { color: var(--color-text-secondary); }
+  /* 基础链接样式 */
+  .link {
+    color: var(--color-primary);
+    @apply transition-colors duration-200;
+  }
+
+  /* 链接悬停状态 */
+  .link:hover {
+    color: var(--color-primary-hover);
+  }
+
+  /* 静音链接样式 */
+  .link-muted {
+    color: var(--color-text-secondary);
+  }
 }

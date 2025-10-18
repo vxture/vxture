@@ -1,9 +1,162 @@
-/* button.icon.css - 图标按钮（@layer components） */
-@reference "tailwindcss/utilities";
+/**
+ * 图标按钮组件样式 (Icon Button Component)
+ *
+ * 功能说明：提供专门用于图标的方形按钮组件，适合操作图标和功能按钮
+ * 支持多种尺寸规格，确保图标按钮的一致性和可用性
+ *
+ * 组件尺寸：
+ * - .btn-icon: 基础图标按钮样式，正方形设计
+ * - .btn-icon-sm: 小尺寸图标按钮 (32x32px)
+ * - .btn-icon-md: 中等尺寸图标按钮 (40x40px)
+ * - .btn-icon-lg: 大尺寸图标按钮 (48x48px)
+ *
+ * 使用场景：
+ * - 工具栏操作按钮（编辑、删除、设置）
+ * - 社交媒体分享按钮
+ * - 播放控制按钮（播放、暂停、下一首）
+ * - 导航控制按钮（返回、前进、菜单）
+ * - 表单操作按钮（搜索、清除、提交）
+ *
+ * 设计特性：
+ * - 正方形设计确保图标居中对齐
+ * - 圆角设计符合现代UI趋势
+ * - 固定尺寸便于布局规划
+ * - 主题色背景保持视觉一致性
+ *
+ * 交互体验：
+ * - 悬停状态提供清晰反馈
+ * - 适当的点击区域确保可用性
+ * - 支持键盘焦点导航
+ * - 可配合tooltip显示功能说明
+ *
+ * 技术实现：
+ * - Flexbox布局确保图标完美居中
+ * - 固定宽高比例避免变形
+ * - CSS变量支持主题动态切换
+ * - 继承基础按钮的交互特性
+ *
+ * 图标适配：
+ * - 支持SVG图标的完美缩放
+ * - 兼容图标字体（Font Awesome等）
+ * - 建议图标尺寸为按钮尺寸的60-70%
+ * - 确保图标在各尺寸下清晰可辨
+ *
+ * 可访问性：
+ * - 提供aria-label描述按钮功能
+ * - 确保最小44x44px的触摸目标
+ * - 支持高对比度模式
+ * - 键盘导航完全兼容
+ *
+ * 响应式考虑：
+ * - 移动端优先使用中等或大尺寸
+ * - 确保触摸设备的操作友好性
+ * - 平板设备的合适间距设计
+ *
+ * 维护说明：
+ * - 尺寸规格应与设计系统保持一致
+ * - 颜色值需与主题系统同步更新
+ * - 定期检查各尺寸的图标清晰度
+ *
+ * 层级：components
+ */
+
 @layer components {
-  .btn-icon { @apply inline-flex items-center justify-center rounded-md; background-color: var(--color-primary); color: #fff; }
-  .btn-icon:hover { background-color: var(--color-primary-hover); }
-  .btn-icon-sm { @apply btn-icon h-8 w-8; }
-  .btn-icon-md { @apply btn-icon h-10 w-10; }
-  .btn-icon-lg { @apply btn-icon h-12 w-12; }
+  /* 基础图标按钮 */
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border: 0;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+
+  /* 图标按钮悬停状态 */
+  .btn-icon:hover {
+    background-color: var(--color-primary-hover);
+    opacity: 0.9;
+    transform: translateY(-0.125rem);
+  }
+
+  .btn-icon:active {
+    transform: translateY(0);
+  }
+
+  /* 小尺寸图标按钮 */
+  .btn-icon-sm {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    height: 2rem;
+    width: 2rem;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border: 0;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-icon-sm:hover {
+    background-color: var(--color-primary-hover);
+    opacity: 0.9;
+    transform: translateY(-0.125rem);
+  }
+
+  .btn-icon-sm:active {
+    transform: translateY(0);
+  }
+
+  /* 中等尺寸图标按钮 */
+  .btn-icon-md {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    height: 2.5rem;
+    width: 2.5rem;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border: 0;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-icon-md:hover {
+    background-color: var(--color-primary-hover);
+    opacity: 0.9;
+    transform: translateY(-0.125rem);
+  }
+
+  .btn-icon-md:active {
+    transform: translateY(0);
+  }
+
+  /* 大尺寸图标按钮 */
+  .btn-icon-lg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.375rem;
+    height: 3rem;
+    width: 3rem;
+    background-color: var(--color-primary);
+    color: var(--color-on-primary);
+    border: 0;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-icon-lg:hover {
+    background-color: var(--color-primary-hover);
+    opacity: 0.9;
+    transform: translateY(-0.125rem);
+  }
+
+  .btn-icon-lg:active {
+    transform: translateY(0);
+  }
 }

@@ -1,14 +1,100 @@
-/* button.variants.css - 按钮变体（@layer components） */
+/**
+ * 按钮组件变体样式 (Button Component Variants)
+ *
+ * 功能说明：扩展基础按钮组件，提供多种视觉风格和语义类型
+ * 包含轮廓、幽灵、链接和语义化按钮变体
+ *
+ * 风格变体：
+ * - .btn-outline: 轮廓按钮，透明背景配主题色边框
+ * - .btn-ghost: 幽灵按钮，完全透明的极简风格
+ * - .btn-link: 链接按钮，文本链接样式的按钮
+ *
+ * 语义变体：
+ * - .btn-success: 成功操作按钮，绿色系
+ * - .btn-danger: 危险操作按钮，红色系
+ * - .btn-warning: 警告操作按钮，黄色系
+ * - .btn-info: 信息操作按钮，蓝色系
+ *
+ * 使用场景：
+ * - outline: 次要操作、取消按钮
+ * - ghost: 极简界面、不干扰的操作
+ * - link: 表单中的辅助操作、内嵌操作
+ * - semantic: 明确的操作语义（保存、删除、警告等）
+ *
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
 @layer components {
   /* 轮廓按钮 */
-  .btn-outline { background: transparent; color: var(--color-primary); border: 1px solid var(--color-primary); }
-  .btn-outline:hover { background-color: color-mix(in oklab, var(--color-primary) 10%, transparent); }
+  .btn-outline {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+  }
+
+  .btn-outline:hover {
+    background-color: color-mix(in oklab, var(--color-primary) 10%, transparent);
+  }
 
   /* 幽灵按钮 */
-  .btn-ghost { background: transparent; color: var(--color-text-primary); border: 1px solid transparent; }
-  .btn-ghost:hover { background-color: color-mix(in oklab, var(--color-card-bg) 70%, var(--color-page-bg)); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-text-primary);
+    border: 1px solid transparent;
+  }
+
+  .btn-ghost:hover {
+    background-color: color-mix(in oklab, var(--color-card-bg) 70%, var(--color-page-bg));
+  }
 
   /* 链接按钮 */
-  .btn-link { background: transparent; color: var(--color-primary); border: none; text-decoration: underline; padding: 0; }
-  .btn-link:hover { color: var(--color-primary-hover); }
+  .btn-link {
+    background: transparent;
+    color: var(--color-primary);
+    border: none;
+    text-decoration: underline;
+    padding: 0;
+  }
+
+  .btn-link:hover {
+    color: var(--color-primary-hover);
+  }
+
+  /* 成功语义按钮 */
+  .btn-success {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-white bg-green-600;
+  }
+
+  .btn-success:hover {
+    @apply bg-green-700;
+  }
+
+  /* 危险语义按钮 */
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-white bg-red-600;
+  }
+
+  .btn-danger:hover {
+    @apply bg-red-700;
+  }
+
+  /* 警告语义按钮 */
+  .btn-warning {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-white bg-amber-500;
+  }
+
+  .btn-warning:hover {
+    @apply bg-amber-600;
+  }
+
+  /* 信息语义按钮 */
+  .btn-info {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-md text-white bg-cyan-600;
+  }
+
+  .btn-info:hover {
+    @apply bg-cyan-700;
+  }
 }

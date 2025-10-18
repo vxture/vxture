@@ -1,6 +1,7 @@
 import React from 'react';
+import { Metadata } from 'next';
 
-export const metadata = { title: 'Styles Demo 2' };
+export const metadata: Metadata = { title: 'Styles Demo 2' };
 
 type BlockProps = { title: string; children?: React.ReactNode };
 const Block: React.FC<BlockProps> = ({ title, children }) => (

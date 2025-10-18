@@ -1,0 +1,15 @@
+/*
+ * Tailwind Dark Mode Force Generation
+ * 强制Tailwind生成dark模式的所有类
+ */
+
+/* 强制生成常用的dark模式类 */
+.force-dark-generation {
+  /* 这些类永远不会被使用，仅用于强制Tailwind生成对应的dark:类 */
+  @apply bg-white dark:bg-gray-900;
+  @apply text-gray-900 dark:text-white;
+  @apply bg-gray-50 dark:bg-gray-800;
+  @apply text-gray-600 dark:text-gray-300;
+  @apply border-gray-200 dark:border-gray-700;
+  @apply bg-red-500 dark:bg-green-500;
+}

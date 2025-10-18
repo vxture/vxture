@@ -1,7 +1,62 @@
-/* safe-area.css - 安全区工具类（@layer utilities） */
+/**
+ * 安全区域工具类 (Safe Area Utilities)
+ *
+ * 功能说明：处理移动设备的安全区域边距，适配刘海屏、圆角屏幕等特殊形状
+ * 使用CSS环境变量自动适配不同设备的安全区域
+ *
+ * 使用场景：
+ * - .safe-top: 顶部安全区域内边距，避免被状态栏遮挡
+ * - .safe-bottom: 底部安全区域内边距，避免被Home指示器遮挡
+ * - .safe-left: 左侧安全区域内边距，适配横屏模式
+ * - .safe-right: 右侧安全区域内边距，适配横屏模式
+ *
+ * 适用设备：
+ * - iPhone X及以上型号（刘海屏、灵动岛）
+ * - Android设备的打孔屏、瀑布屏
+ * - 横屏模式下的安全区域处理
+ *
+ * 技术实现：
+ * - 使用CSS env()函数获取系统安全区域值
+ * - 自动适配，无需手动计算
+ * - 兼容不支持安全区域的设备（fallback为0）
+ *
+ * 最佳实践：
+ * - 全屏应用的根容器建议使用
+ * - 固定定位元素需要特别关注
+ * - 可与viewport-fit=cover配合使用
+ *
+ * 浏览器支持：
+ * - iOS Safari 11.0+
+ * - Chrome for Android 69+
+ * - 不支持的浏览器会忽略env()值
+ *
+ * 维护说明：
+ * - 测试时需要在真实设备上验证效果
+ * - 关注新设备的安全区域变化
+ *
+ * 层级：utilities
+ */
+
+@reference "tailwindcss/utilities";
+
 @layer utilities {
-  .safe-top { padding-top: env(safe-area-inset-top); }
-  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
-  .safe-left { padding-left: env(safe-area-inset-left); }
-  .safe-right { padding-right: env(safe-area-inset-right); }
+  /* 顶部安全区域 */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* 底部安全区域 */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* 左侧安全区域 */
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  /* 右侧安全区域 */
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
 }
