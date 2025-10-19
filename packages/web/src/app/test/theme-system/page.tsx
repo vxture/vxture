@@ -12,6 +12,7 @@
  * 目的：展示完整的主题系统功能和工具类使用
  */
 
+import React from 'react';
 import Link from 'next/link';
 import { useThemeStore } from '@/stores/themeStore';
 import { SunIcon, MoonIcon, ArrowLeftIcon, SwatchIcon } from '@heroicons/react/24/outline';
@@ -19,7 +20,25 @@ import { SunIcon, MoonIcon, ArrowLeftIcon, SwatchIcon } from '@heroicons/react/2
 export default function ThemeSystemPage() {
   const { theme, setTheme } = useThemeStore();
 
+  // 初始化主题到 DOM
+  React.useEffect(() => {
+    console.log('🎨 [Debug] Theme System 页面主题同步:', { theme });
+
+    if (typeof window !== 'undefined') {
+      const html = document.documentElement;
+      html.classList.remove('light', 'dark');
+      html.classList.add(theme);
+      html.setAttribute('data-theme', theme);
+
+      console.log('✅ [Debug] Theme System DOM 更新完成:', {
+        classList: Array.from(html.classList),
+        dataTheme: html.getAttribute('data-theme')
+      });
+    }
+  }, [theme]);
+
   const toggleTheme = () => {
+    console.log('🎨 [Debug] Theme System 切换主题:', { from: theme, to: theme === 'light' ? 'dark' : 'light' });
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
