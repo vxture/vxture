@@ -4,7 +4,6 @@
 用于设置项目开发/运行所需的本地环境与目录
 """
 
-import os
 import sys
 import shutil
 import logging
@@ -161,7 +160,9 @@ def verify_setup():
 
     # 测试导入主要模块
     try:
-        import fastapi
+        import importlib.util
+        if importlib.util.find_spec("fastapi") is None:
+            raise ImportError("fastapi not found")
     except ImportError as e:
         logger.error(f"导入核心模块失败: {e}")
         return False

@@ -1,0 +1,60 @@
+/**
+ * 模态框组件变体样式 (Modal Component Variants)
+ * 
+ * 功能说明：扩展基础模态框组件，提供不同尺寸规格和行为变体
+ * 包含尺寸调整和特殊显示行为的完整选项
+ * 
+ * 尺寸变体：
+ * - .modal-sm: 小模态框，适用于简单确认对话框
+ * - .modal-md: 中等模态框，适用于一般表单和内容
+ * - .modal-lg: 大模态框，适用于复杂内容和详情展示
+ * - .modal-xl: 超大模态框，适用于图片预览和复杂界面
+ * 
+ * 行为变体：
+ * - .modal-scrollable: 可滚动模态框，内容超出时显示滚动条
+ * - .modal-top: 顶部对齐模态框，从页面顶部开始显示
+ * 
+ * 使用场景：
+ * - sm: 删除确认、简单提示
+ * - md: 编辑表单、设置对话框
+ * - lg: 详情展示、复杂表单
+ * - xl: 图片预览、数据详情
+ * - scrollable: 长内容、列表展示
+ * - top: 移动端友好、向下展开
+ * 
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 小模态框 */
+  .modal-sm .modal-content { 
+    @apply max-w-sm; 
+  }
+  
+  /* 中等模态框 */
+  .modal-md .modal-content { 
+    @apply max-w-md; 
+  }
+  
+  /* 大模态框 */
+  .modal-lg .modal-content { 
+    @apply max-w-lg; 
+  }
+  
+  /* 超大模态框 */
+  .modal-xl .modal-content { 
+    @apply max-w-2xl; 
+  }
+
+  /* 可滚动模态框 */
+  .modal-scrollable .modal-content {
+    @apply max-h-[80vh] overflow-auto;
+  }
+
+  /* 顶部对齐模态框 */
+  .modal-top {
+    @apply items-start;
+  }
+}

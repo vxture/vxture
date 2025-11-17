@@ -1,0 +1,94 @@
+/**
+ * 开关组件样式 (Switch Component)
+ *
+ * 功能说明：提供现代化的开关切换组件，用于二元状态的可视化控制
+ * 支持平滑的状态切换动画和主题适配
+ *
+ * 组件结构：
+ * - .switch: 开关容器，椭圆形的轨道背景
+ * - .switch-thumb: 开关滑块，可移动的圆形指示器
+ * - .switch.on: 激活状态，切换到开启位置
+ * - .switch.on .switch-thumb: 滑块移动到右侧位置
+ *
+ * 使用场景：
+ * - 功能开关设置（通知、深色模式）
+ * - 用户偏好配置
+ * - 权限控制开关
+ * - 实时状态切换
+ * - 表单中的布尔值输入
+ *
+ * 交互特性：
+ * - 点击整个开关区域进行切换
+ * - 平滑的滑动动画提升体验
+ * - 颜色变化提供清晰的状态反馈
+ * - 支持键盘空格键操作
+ *
+ * 视觉设计：
+ * - 椭圆形轨道符合开关的隐喻
+ * - 圆形滑块在轨道内移动
+ * - 关闭状态使用中性色调
+ * - 开启状态使用主题色突出显示
+ *
+ * 技术实现：
+ * - Flexbox布局确保滑块垂直居中
+ * - CSS transform实现位置移动动画
+ * - transition提供平滑的状态过渡
+ * - color-mix()函数创建柔和的背景色
+ *
+ * 动画效果：
+ * - 滑块位置的transform动画
+ * - 背景色的平滑过渡
+ * - 边框颜色的同步变化
+ * - 统一的动画时长确保体验一致
+ *
+ * 可访问性：
+ * - 支持键盘Tab导航和空格切换
+ * - 提供清晰的焦点状态指示
+ * - 适当的颜色对比度确保可识别
+ * - 可配合aria-label描述功能
+ *
+ * JavaScript集成：
+ * - 需要JavaScript控制.on类的切换
+ * - 可绑定change事件监听状态变化
+ * - 支持编程式的状态设置
+ * - 可与表单数据双向绑定
+ *
+ * 移动端适配：
+ * - 足够大的点击区域确保易用性
+ * - 触摸反馈与桌面端保持一致
+ * - 滑动手势的自然交互体验
+ *
+ * 维护说明：
+ * - 尺寸比例需保持协调美观
+ * - 动画时长应与设计系统统一
+ * - 颜色值需与主题系统同步
+ *
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 开关容器轨道 */
+  .switch {
+    @apply inline-flex h-6 w-11 items-center rounded-full cursor-pointer transition-colors;
+    background-color: color-mix(in oklab, var(--color-card-bg) 70%, var(--color-page-bg));
+    border: 1px solid var(--color-border);
+  }
+
+  /* 开关滑块 */
+  .switch-thumb {
+    @apply inline-block h-5 w-5 transform rounded-full bg-white transition;
+  }
+
+  /* 开关激活状态 */
+  .switch.on {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+
+  /* 激活状态下的滑块位置 */
+  .switch.on .switch-thumb {
+    @apply translate-x-5;
+  }
+}

@@ -1,0 +1,41 @@
+/**
+ * 提示气泡组件样式 (Tooltip Component)
+ * 
+ * 功能说明：提供悬停式提示信息组件，用于显示额外的说明和帮助文本
+ * 支持轻量级的信息提示和用户引导
+ * 
+ * 组件结构：
+ * - .tooltip: 提示气泡容器，相对定位的触发区域
+ * - .tooltip-content: 提示内容，绝对定位的浮动文本
+ * - .tooltip:hover: 悬停激活，显示提示内容
+ * 
+ * 使用场景：
+ * - 图标按钮的功能说明
+ * - 表单字段的填写提示
+ * - 复杂操作的使用指导
+ * - 状态信息的详细说明
+ * 
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 提示气泡容器 */
+  .tooltip { 
+    @apply relative inline-block; 
+  }
+  
+  /* 提示内容 */
+  .tooltip-content { 
+    @apply absolute z-50 hidden whitespace-nowrap rounded-md px-2 py-1 text-xs shadow-lg; 
+    color: var(--color-text-primary); 
+    background-color: var(--color-card-bg); 
+    border: 1px solid var(--color-border); 
+  }
+  
+  /* 悬停显示提示 */
+  .tooltip:hover .tooltip-content { 
+    @apply block; 
+  }
+}

@@ -1,0 +1,48 @@
+/**
+ * 表格组件变体样式 (Table Component Variants)
+ *
+ * 功能说明：扩展基础表格组件，提供多种交互效果和视觉风格变体
+ * 包含悬停效果、边框样式、紧凑模式和粘性表头
+ *
+ * 变体类型：
+ * - .table-hover: 悬停效果表格，行悬停时高亮显示
+ * - .table-bordered: 边框表格，所有单元格显示边框
+ * - .table-compact: 紧凑表格，减少单元格内边距
+ * - .table-sticky-header: 粘性表头，滚动时表头固定
+ *
+ * 使用场景：
+ * - hover: 可点击行、交互式数据表格
+ * - bordered: 复杂数据、需要清晰分割的表格
+ * - compact: 数据密集、空间受限的界面
+ * - sticky-header: 长表格、数据报表
+ *
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 悬停效果表格 */
+  .table-hover tbody tr:hover {
+    background-color: color-mix(in oklab, var(--color-card-bg) 80%, var(--color-page-bg));
+  }
+
+  /* 边框表格 */
+  .table-bordered th,
+  .table-bordered td {
+    @apply border;
+    border-color: var(--color-border);
+  }
+
+  /* 紧凑表格 */
+  .table-compact th,
+  .table-compact td {
+    @apply py-1.5;
+  }
+
+  /* 粘性表头 */
+  .table-sticky-header thead th {
+    @apply sticky top-0 z-10;
+    background-color: var(--color-card-bg);
+  }
+}

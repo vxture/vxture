@@ -1,0 +1,95 @@
+/**
+ * 提示条组件变体样式 (Alert Component Variants)
+ *
+ * 功能说明：扩展基础提示条组件，提供语义化类型和多种视觉风格变体
+ * 包含信息、成功、警告、错误等语义变体，以及不同的视觉呈现风格
+ *
+ * 语义变体类型：
+ * - .alert-info: 信息提示，使用蓝色系表示一般信息
+ * - .alert-success: 成功提示，使用绿色系表示操作成功
+ * - .alert-warning: 警告提示，使用黄色系表示注意事项
+ * - .alert-danger: 错误提示，使用红色系表示错误或危险
+ *
+ * 风格变体类型：
+ * - .alert-soft: 柔和风格，淡化背景色增强阅读舒适度
+ * - .alert-solid: 实心风格，强烈对比突出重要信息
+ *
+ * 布局变体类型：
+ * - .alert-with-icon: 带图标布局，为左侧图标预留空间
+ *
+ * 使用场景：
+ * - info: 操作提示、帮助说明、一般通知
+ * - success: 保存成功、提交完成、操作确认
+ * - warning: 数据风险、权限提醒、注意事项
+ * - danger: 删除警告、错误信息、严重问题
+ *
+ * 设计原则：
+ * - 语义化颜色遵循通用认知习惯
+ * - 颜色选择确保充分的视觉区分度
+ * - 支持无障碍访问的颜色对比度
+ * - 与整体设计系统保持和谐统一
+ *
+ * 技术实现：
+ * - 基于Tailwind CSS预设颜色系统
+ * - 使用color-mix()函数实现柔和效果
+ * - 语义化类名增强代码可读性
+ * - 可组合使用多个变体类
+ *
+ * 组合使用示例：
+ * - .alert.alert-success: 基础成功提示
+ * - .alert.alert-warning.alert-soft: 柔和警告提示
+ * - .alert.alert-danger.alert-with-icon: 带图标错误提示
+ *
+ * 可访问性考虑：
+ * - 颜色传达信息的同时提供文字说明
+ * - 充分的颜色对比度支持视觉障碍用户
+ * - 语义化HTML结构增强屏幕阅读器体验
+ *
+ * 维护说明：
+ * - 颜色值可根据品牌规范调整
+ * - 新增语义类型需要考虑通用性
+ * - 定期检查颜色对比度的无障碍标准
+ *
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 语义变体 - 信息类型 */
+  .alert-info {
+    @apply border-sky-400;
+  }
+
+  /* 语义变体 - 成功类型 */
+  .alert-success {
+    @apply border-green-500;
+  }
+
+  /* 语义变体 - 警告类型 */
+  .alert-warning {
+    @apply border-yellow-500;
+  }
+
+  /* 语义变体 - 错误类型 */
+  .alert-danger {
+    @apply border-red-500;
+  }
+
+  /* 风格变体 - 柔和风格 */
+  .alert-soft {
+    background-color: color-mix(in oklab, var(--color-card-bg) 85%, var(--color-page-bg));
+  }
+
+  /* 风格变体 - 实心风格 */
+  .alert-solid {
+    background-color: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+  }
+
+  /* 布局变体 - 带图标布局 */
+  .alert-with-icon {
+    @apply pl-3;
+  }
+}

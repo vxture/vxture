@@ -81,6 +81,7 @@
     "dsznajder",
     "eamodio",
     "esbenp",
+    "Fira",
     "kohler",
     "libpq",
     "meganrogge",
@@ -94,7 +95,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "eslint.packageManager": "pnpm",
   // 保留或覆盖 Python 解释器路径（如果没有使用虚拟环境，可删除此项）
   "python.pythonPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   // 推荐：为 JSON/YAML 提供更严格的 validation（不强制启用）

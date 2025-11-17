@@ -1,0 +1,50 @@
+/**
+ * 滚动行为工具类 (Scroll Behavior Utilities)
+ *
+ * 功能说明：控制页面和元素的滚动行为，提升用户交互体验
+ * 包含平滑滚动和默认滚动行为的控制工具类
+ *
+ * 使用场景：
+ * - .scroll-smooth: 启用平滑滚动，适用于锚点跳转和编程式滚动
+ * - .scroll-auto: 默认滚动行为，禁用平滑效果
+ *
+ * 技术细节：
+ * - scroll-behavior属性控制滚动动画
+ * - 影响scrollTo()、scrollIntoView()等API的行为
+ * - 也影响锚点链接的跳转效果
+ *
+ * 应用场景：
+ * - 单页应用的导航跳转
+ * - 页面内锚点链接
+ * - 长表单的分段滚动
+ * - 目录导航系统
+ *
+ * 浏览器支持：
+ * - 现代浏览器广泛支持
+ * - 不支持的浏览器会回退到默认行为
+ *
+ * 性能考虑：
+ * - 平滑滚动可能影响低端设备性能
+ * - 建议在用户偏好设置中提供开关选项
+ * - 遵循prefers-reduced-motion媒体查询
+ *
+ * 维护说明：
+ * - 通常应用于html或body元素
+ * - 可结合JavaScript滚动API使用
+ *
+ * 层级：utilities
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer utilities {
+  /* 平滑滚动行为 */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+
+  /* 默认滚动行为 */
+  .scroll-auto {
+    scroll-behavior: auto;
+  }
+}

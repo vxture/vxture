@@ -78,6 +78,17 @@ export const useThemeStore = create<ThemeState>()(
         if (!next) return;
         const currentTheme = get().theme;
         if (currentTheme !== next) {
+          // 同步主题到 DOM
+          if (typeof window !== 'undefined') {
+            const html = document.documentElement;
+            // 移除旧主题类
+            html.classList.remove('light', 'dark');
+            // 添加新主题类
+            html.classList.add(next);
+            // 设置 data-theme 属性
+            html.setAttribute('data-theme', next);
+          }
+
           set({
             theme: next,
             isDarkMode: next === THEME_CONSTANTS.DARK_CLASS,
@@ -94,6 +105,18 @@ export const useThemeStore = create<ThemeState>()(
             state.theme === THEME_CONSTANTS.DARK_CLASS
               ? THEME_CONSTANTS.DEFAULT_THEME
               : THEME_CONSTANTS.DARK_CLASS;
+
+          // 同步主题到 DOM
+          if (typeof window !== 'undefined') {
+            const html = document.documentElement;
+            // 移除旧主题类
+            html.classList.remove('light', 'dark');
+            // 添加新主题类
+            html.classList.add(next);
+            // 设置 data-theme 属性
+            html.setAttribute('data-theme', next);
+          }
+
           return {
             theme: next,
             isDarkMode: next === THEME_CONSTANTS.DARK_CLASS,

@@ -1,357 +1,577 @@
 /**
- * page.tsx
+ * 测试页面导航中心 - Component Test Navigation Center
  *
- * 功能：
- * - 主题与多语言切换测试页面，演示全局状态管理与通知功能
- * - 支持主题切换、语言切换、通知提示等交互
+ * 功能概述：
+ * - 整合所有测试页面的导航入口，按Phase组织
+ * - 替换原有的426行复杂测试页面，提供更清晰的组织结构
+ * - 集成主题切换、多语言、通知系统等成熟功能
  *
- * 用途：
- * - 作为测试页面，验证主题、国际化、通知等全局功能
- * - 结构与其它页面组件保持一致，便于团队协作
+ * 架构设计：
+ * - 使用 Zustand Store 进行状态管理（themeStore, i18nStore, notificationStore）
+ * - 多语言配置通过 navigationContent 对象管理
+ * - Phase 组织结构，每个Phase最多3个组件，便于调试
+ * - 响应式设计，支持深色/浅色主题切换
  *
- * 依赖/调用关系：
- * - 依赖 useThemeStore、useI18nStore、useNotificationStore
- * - 被 app/test/layout.tsx 自动包裹
+ * 调试要点：
+ * - 主题切换：检查 HTML class 和 data-theme 属性是否正确应用
+ * - 多语言：验证 locale 状态变化和内容切换
+ * - 通知系统：确认切换操作时通知是否正确显示
+ * - Phase导航：验证路由跳转和页面状态
  *
- * 设计规范：
- * - 只负责页面内容与交互，不包含业务逻辑
- * - 命名、结构、注释与其它页面组件保持一致
- *
- * @file app/test/page.tsx
- * @desc 主题与多语言切换测试页面，演示全局状态与通知
- * @author vxture team
- * @created 2024-06-01
- * @lastModified 2025-10-15
- * @modifiedBy stonesmoker
- * @copyright Copyright (c) 2024-2025 vxture
- * @license MIT
- * @version 1.0.0
- * @dependencies React, Zustand, heroicons
- * @tags test, theme, i18n, notification, page
- * @example
- *   // 由 Next.js 自动路由，无需手动引入
- * @remarks
- *   仅负责页面内容与交互，业务逻辑请移至组件/服务层。
- * @todo
- *   支持更多全局状态与交互测试
+ * @version 2.1.0 - 添加详细调试注释
+ * @created 2025-10-18
+ * @updated 2025-10-19
+ * @dependencies useThemeStore, useI18nStore, useNotificationStore
  */
+
 'use client';
 
-
+import React from 'react';
 import Link from 'next/link';
-import { useThemeStore } from '@/stores/themeStore';
-import { useI18nStore } from '@/stores/i18nStore';
-import { useNotificationStore } from '@/stores/notificationStore';
-import React, { useState, useEffect } from 'react';
 import {
   SunIcon,
   MoonIcon,
-  GlobeAltIcon,
-  CheckIcon,
-  ArrowLeftIcon,
+  HomeIcon,
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ClockIcon,
+  BookOpenIcon,
+  BeakerIcon,
+  SwatchIcon,
+  CubeIcon,
+  PuzzlePieceIcon,
+  CommandLineIcon,
 } from '@heroicons/react/24/outline';
 
-// 丰富内容：多语言内容映射（page2 迁移）
-const testContent = {
+import { useThemeStore } from '@/stores/themeStore';
+import { useI18nStore } from '@/stores/i18nStore';
+import { useNotificationStore } from '@/stores/notificationStore';
+
+// ==============================================================================
+// 多语言内容配置 - Multi-language Content Configuration
+// ==============================================================================
+
+/**
+ * 多语言内容配置对象
+ *
+ * 调试要点：
+ * - 确保所有语言版本的key保持一致
+ * - 验证 locale 状态变化时内容是否正确切换
+ * - 检查 TypeScript 类型匹配问题
+ * - 注意属性名命名规范（如 completionRate vs completion）
+ */
+const navigationContent = {
   'zh-CN': {
-    pageTitle: '主题与多语言测试',
-    pageDescription: '此页面用于测试全局主题切换和多语言功能',
-    themeSectionTitle: '主题测试',
-    currentTheme: '当前主题',
-    toggleThemeBtn: '切换主题',
-    languageSectionTitle: '多语言测试',
-    currentLanguage: '当前语言',
-    textExample: '这是一段测试文本，用于展示多语言切换效果。',
-    buttonExample: '测试按钮',
-    cardTitle: '测试卡片',
-    cardContent: '这个卡片组件会根据主题自动调整样式',
-    formSectionTitle: '表单元素测试',
-    inputPlaceholder: '请输入测试内容',
-    checkboxLabel: '同意测试条款',
-    radioOption1: '选项一',
-    radioOption2: '选项二',
-    backToHome: '返回首页',
-    features: [
-      '主题切换会更新所有元素的颜色',
-      '多语言支持中英文切换',
-      '状态会保存在本地存储中',
-      '刷新页面后保持用户偏好设置',
+    pageTitle: '组件测试中心',
+    pageDescription: '按Phase组织的测试页面导航，每个Phase最多3个组件',
+    progressOverview: '测试进度概览',
+    completedPhases: '已完成阶段',
+    totalPhases: '总阶段数',
+    completionRate: '完成进度',
+    completion: '完成进度', // 修复：添加 completion 属性以匹配使用
+    overallProgress: '整体进度',
+    testPhases: '测试阶段',
+    viewTest: '查看测试',
+    comingSoon: '即将开放',
+    usageGuide: '使用说明',
+    usageItems: [
+      '每个Phase最多包含3个相关组件，便于集中测试和调试',
+      '已完成的Phase可以直接访问测试页面',
+      '组件系统采用渐进式恢复策略，确保每个组件都经过充分验证',
+      '主题系统页面展示CSS变量体系和工具类使用方法',
     ],
+    home: '首页',
   },
   'en-US': {
-    pageTitle: 'Theme & Language Test',
-    pageDescription:
-      'This page is for testing global theme switching and multi-language functionality',
-    themeSectionTitle: 'Theme Test',
-    currentTheme: 'Current Theme',
-    toggleThemeBtn: 'Toggle Theme',
-    languageSectionTitle: 'Language Test',
-    currentLanguage: 'Current Language',
-    textExample: 'This is a test text to demonstrate language switching.',
-    buttonExample: 'Test Button',
-    cardTitle: 'Test Card',
-    cardContent: 'This card component automatically adjusts styles based on the theme',
-    formSectionTitle: 'Form Elements Test',
-    inputPlaceholder: 'Please enter test content',
-    checkboxLabel: 'Agree to test terms',
-    radioOption1: 'Option 1',
-    radioOption2: 'Option 2',
-    backToHome: 'Back to Home',
-    features: [
-      'Theme switching updates colors for all elements',
-      'Multi-language supports Chinese and English',
-      'State is saved in local storage',
-      'User preferences persist after page refresh',
+    pageTitle: 'Component Test Center',
+    pageDescription: 'Phase-organized test page navigation with max 3 components per phase',
+    progressOverview: 'Test Progress Overview',
+    completedPhases: 'Completed Phases',
+    totalPhases: 'Total Phases',
+    completionRate: 'Completion Rate',
+    completion: 'Completion Rate', // 修复：添加 completion 属性以匹配使用
+    overallProgress: 'Overall Progress',
+    testPhases: 'Test Phases',
+    viewTest: 'View Test',
+    comingSoon: 'Coming Soon',
+    usageGuide: 'Usage Guide',
+    usageItems: [
+      'Each Phase contains max 3 related components for focused testing and debugging',
+      'Completed Phases can be accessed directly for testing',
+      'Component system uses progressive recovery strategy to ensure thorough validation',
+      'Theme system page demonstrates CSS variables and utility class usage',
     ],
+    home: 'Home',
   },
 };
 
+// ==============================================================================
+// 测试Phase配置 - Test Phase Configuration
+// ==============================================================================
 
-export default function ThemeTestPage() {
-  // 全局状态
+/**
+ * Phase 接口定义
+ *
+ * 调试要点：
+ * - status 状态必须准确反映实际完成情况
+ * - path 路径必须与实际文件结构匹配
+ * - components 数组控制每个Phase的组件数量（最多3个）
+ * - icon 图标组件必须正确导入
+ */
+interface TestPhase {
+  id: string;
+  title: string;
+  description: string;
+  path: string;
+  status: 'completed' | 'in-progress' | 'pending';
+  components: string[];
+  icon: React.ReactNode;
+}
+
+const testPhases: TestPhase[] = [
+  {
+    id: 'theme-system',
+    title: '主题系统',
+    description: 'CSS变量、工具类、语义映射完整展示',
+    path: '/test/theme-system',
+    status: 'completed',
+    components: ['CSS Variables', 'Utilities', 'Semantics'],
+    icon: <SwatchIcon className='w-6 h-6' />,
+  },
+  {
+    id: 'phase1',
+    title: 'Phase 1: 基础组件',
+    description: '按钮、卡片组件与主题系统基础测试',
+    path: '/test/phase1',
+    status: 'completed',
+    components: ['Button', 'Card', 'Theme'],
+    icon: <CubeIcon className='w-6 h-6' />,
+  },
+  {
+    id: 'phase2',
+    title: 'Phase 2: 表单组件',
+    description: '徽章、表单、输入组件测试',
+    path: '/test/phase2',
+    status: 'in-progress',
+    components: ['Badge', 'Forms', 'Input'],
+    icon: <PuzzlePieceIcon className='w-6 h-6' />,
+  },
+  {
+    id: 'phase3',
+    title: 'Phase 3: 导航组件',
+    description: '导航、菜单、面包屑组件测试',
+    path: '/test/phase3',
+    status: 'pending',
+    components: ['Navigation', 'Menu', 'Breadcrumb'],
+    icon: <CommandLineIcon className='w-6 h-6' />,
+  },
+  {
+    id: 'phase4',
+    title: 'Phase 4: 交互组件',
+    description: '弹窗、提示、下拉组件测试',
+    path: '/test/phase4',
+    status: 'pending',
+    components: ['Modal', 'Tooltip', 'Dropdown'],
+    icon: <BeakerIcon className='w-6 h-6' />,
+  },
+  {
+    id: 'phase5',
+    title: 'Phase 5: 数据组件',
+    description: '表格、列表、分页组件测试',
+    path: '/test/phase5',
+    status: 'pending',
+    components: ['Table', 'List', 'Pagination'],
+    icon: <BookOpenIcon className='w-6 h-6' />,
+  },
+];
+
+// ==============================================================================
+// 状态图标组件
+// ==============================================================================
+
+const StatusIcon: React.FC<{ status: TestPhase['status'] }> = ({ status }) => {
+  switch (status) {
+    case 'completed':
+      return <CheckCircleIcon className='w-5 h-5 text-green-500' />;
+    case 'in-progress':
+      return <ExclamationCircleIcon className='w-5 h-5 text-yellow-500' />;
+    case 'pending':
+      return <ClockIcon className='w-5 h-5 text-gray-400' />;
+    default:
+      return null;
+  }
+};
+
+const StatusBadge: React.FC<{ status: TestPhase['status'] }> = ({ status }) => {
+  const baseClasses = 'px-2 py-1 text-xs font-medium rounded-full';
+
+  switch (status) {
+    case 'completed':
+      return <span className={`${baseClasses} bg-green-100 text-green-700`}>已完成</span>;
+    case 'in-progress':
+      return <span className={`${baseClasses} bg-yellow-100 text-yellow-700`}>进行中</span>;
+    case 'pending':
+      return <span className={`${baseClasses} bg-gray-100 text-gray-600`}>待开始</span>;
+    default:
+      return null;
+  }
+};
+
+// ==============================================================================
+// 主组件 - Main Component
+// ==============================================================================
+
+const TestNavigationPage: React.FC = () => {
+  // ============================================================================
+  // 状态管理 - State Management
+  // ============================================================================
+
+  /**
+   * 主题状态管理
+   * 调试要点：检查 theme 值是否为 'light' 或 'dark'
+   */
   const { theme, toggleTheme } = useThemeStore();
+
+  /**
+   * 多语言状态管理
+   * 调试要点：检查 locale 值是否为 'zh-CN' 或 'en-US'
+   */
   const { locale, setLocale, t } = useI18nStore();
+
+  /**
+   * 通知系统状态管理
+   * 调试要点：确认 addNotification 函数是否正常工作
+   */
   const { addNotification } = useNotificationStore();
 
-  // 丰富内容区状态
-  const [inputValue, setInputValue] = useState('');
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('option1');
-  const [mounted, setMounted] = useState(false);
-  // 主题/语言显示
-  const ThemeIcon = theme === 'light' ? MoonIcon : SunIcon;
-  const themeDisplayName = theme === 'light' ? '浅色模式' : '深色模式';
-  const themeEnglishName = theme === 'light' ? 'Light Mode' : 'Dark Mode';
-  // 当前内容
-  const content = testContent[locale as keyof typeof testContent] || testContent['zh-CN'];
+  // ============================================================================
+  // 计算逻辑 - Calculation Logic
+  // ============================================================================
 
-  useEffect(() => { setMounted(true); }, []);
+  /**
+   * Phase 进度计算
+   * 调试要点：检查 completedCount 和 progressPercentage 计算是否正确
+   */
+  const completedCount = testPhases.filter((phase) => phase.status === 'completed').length;
+  const totalCount = testPhases.length;
+  const progressPercentage = Math.round((completedCount / totalCount) * 100);
 
-  // 主题切换按钮点击事件（带通知反馈）
+  console.log('🔍 [Debug] 进度计算:', { completedCount, totalCount, progressPercentage });
+
+  /**
+   * 当前语言内容获取
+   * 调试要点：确保 content 对象包含所有必需的属性
+   */
+  const content =
+    navigationContent[locale as keyof typeof navigationContent] || navigationContent['zh-CN'];
+
+  console.log('🌐 [Debug] 当前语言内容:', { locale, contentKeys: Object.keys(content) });
+
+  // ============================================================================
+  // 副作用 - Side Effects
+  // ============================================================================
+
+  /**
+   * 主题初始化和同步到 DOM
+   * 调试要点：
+   * - 检查 HTML 元素的 class 属性是否包含正确的主题类
+   * - 验证 data-theme 属性是否正确设置
+   * - 确保 CSS 样式能够正确响应主题变化
+   */
+  React.useEffect(() => {
+    console.log('🎨 [Debug] 主题同步到DOM:', { theme });
+
+    if (typeof window !== 'undefined') {
+      const html = document.documentElement;
+
+      // 移除旧主题类
+      html.classList.remove('light', 'dark');
+      console.log('🧹 [Debug] 已移除旧主题类');
+
+      // 添加当前主题类
+      html.classList.add(theme);
+      console.log('✅ [Debug] 已添加新主题类:', theme);
+
+      // 设置 data-theme 属性
+      html.setAttribute('data-theme', theme);
+      console.log('📝 [Debug] 已设置 data-theme 属性:', theme);
+
+      // 验证结果
+      console.log('🔍 [Debug] HTML 元素状态:', {
+        classList: Array.from(html.classList),
+        dataTheme: html.getAttribute('data-theme'),
+      });
+    }
+  }, [theme]);
+
+  // ============================================================================
+  // 事件处理器 - Event Handlers
+  // ============================================================================
+
+  /**
+   * 主题切换处理器
+   * 调试要点：
+   * - 检查 toggleTheme() 是否正确改变 theme 状态
+   * - 验证通知消息是否正确显示
+   * - 确认 DOM 同步是否在 useEffect 中正确触发
+   */
   const handleToggleTheme = () => {
+    const previousTheme = theme;
+    console.log('🎨 [Debug] 开始切换主题:', { from: previousTheme });
+
     toggleTheme();
-    addNotification(theme === 'light' ? t('common.themeDark') : t('common.themeLight'), 'success');
+
+    const notificationMessage = theme === 'light' ? '已切换到深色主题' : '已切换到浅色主题';
+    addNotification(notificationMessage, 'success');
+
+    console.log('✅ [Debug] 主题切换完成:', {
+      previousTheme,
+      expectedTheme: theme === 'light' ? 'dark' : 'light',
+      notificationMessage,
+    });
   };
 
-  // 语言切换按钮点击事件（带通知反馈）
+  /**
+   * 语言切换处理器
+   * 调试要点：
+   * - 检查 setLocale() 是否正确改变 locale 状态
+   * - 验证内容是否根据新语言正确更新
+   * - 确认通知消息使用正确的语言显示
+   */
   const handleSetLocale = (targetLocale: string) => {
+    console.log('🌐 [Debug] 开始切换语言:', { from: locale, to: targetLocale });
+
     if (locale !== targetLocale) {
       setLocale(targetLocale);
-      addNotification(
-        targetLocale === 'zh-CN' ? '已切换为简体中文' : 'Switched to English',
-        'success'
-      );
+
+      const notificationMessage =
+        targetLocale === 'zh-CN' ? '已切换为简体中文' : 'Switched to English';
+      addNotification(notificationMessage, 'success');
+
+      console.log('✅ [Debug] 语言切换完成:', {
+        newLocale: targetLocale,
+        notificationMessage,
+        contentUpdated: navigationContent[targetLocale as keyof typeof navigationContent]
+          ? '是'
+          : '否',
+      });
+    } else {
+      console.log('ℹ️ [Debug] 语言无需切换，已经是目标语言:', targetLocale);
     }
   };
 
+  // ============================================================================
+  // 渲染组件 - Render Component
+  // ============================================================================
+
+  console.log('🎯 [Debug] 组件渲染开始:', {
+    theme,
+    locale,
+    completedCount,
+    totalCount,
+    progressPercentage,
+    contentLoaded: !!content,
+  });
+
   return (
-    <div className='min-h-screen flex flex-col'>
-      {/* 导航栏 */}
-      <header className='border-b border-color-border py-4'>
-        <div className='container flex justify-between items-center'>
-          <Link
-            href="/"
-            className="flex items-center text-primary hover:text-primary-hover transition-colors"
-          >
-            <ArrowLeftIcon className="w-5 h-5 mr-2" />
-            <span>{content.backToHome}</span>
-          </Link>
-          <div className='flex items-center gap-4'>
-            {/* 主题指示器 */}
-            <div className='flex items-center gap-2'>
-              <ThemeIcon className='w-5 h-5' />
-              {mounted && (
-                <span className='hidden sm:inline'>
-                  {locale === 'zh-CN' ? themeDisplayName : themeEnglishName}
-                </span>
-              )}
+    <div className='min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300'>
+      {/* ========================================================================
+          顶部导航栏 - Top Navigation Header
+          调试要点：
+          - 检查背景色是否根据主题正确变化
+          - 验证语言切换按钮状态和交互
+          - 确认主题切换按钮图标和功能正常
+          ======================================================================== */}
+      <header className='bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700'>
+        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex items-center justify-between h-16'>
+            <div className='flex items-center space-x-4'>
+              <Link
+                href='/'
+                className='flex items-center space-x-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors'
+              >
+                <HomeIcon className='w-5 h-5' />
+                <span>{content.home}</span>
+              </Link>
+              <div className='h-6 w-px bg-gray-300 dark:bg-gray-600'></div>
+              <h1 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                {content.pageTitle}
+              </h1>
             </div>
-            {/* 语言指示器 */}
-            <div className='flex items-center gap-2'>
-              <GlobeAltIcon className='w-5 h-5' />
-              {mounted && <span className='hidden sm:inline'>{locale}</span>}
+
+            <div className='flex items-center space-x-4'>
+              {/* 语言切换 */}
+              <div className='flex items-center space-x-2'>
+                <button
+                  onClick={() => handleSetLocale('zh-CN')}
+                  className={`px-2 py-1 text-xs rounded transition-colors ${
+                    locale === 'zh-CN'
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  }`}
+                >
+                  中文
+                </button>
+                <button
+                  onClick={() => handleSetLocale('en-US')}
+                  className={`px-2 py-1 text-xs rounded transition-colors ${
+                    locale === 'en-US'
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                  }`}
+                >
+                  EN
+                </button>
+              </div>
+
+              {/* 主题切换 */}
+              <button
+                onClick={handleToggleTheme}
+                className='p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors'
+                title={theme === 'light' ? '切换到深色模式' : '切换到浅色模式'}
+              >
+                {theme === 'light' ? (
+                  <MoonIcon className='w-5 h-5' />
+                ) : (
+                  <SunIcon className='w-5 h-5' />
+                )}
+              </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* 主要内容区 */}
-      <main className='flex-1 container py-8'>
-        {/* 页面标题 */}
-        <div className='mb-12 text-center'>
-          <h1 className='text-3xl md:text-4xl font-bold mb-4 text-text-primary'>
-            {content.pageTitle}
-          </h1>
-          <p className='text-text-secondary max-w-2xl mx-auto'>{content.pageDescription}</p>
-        </div>
-
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mb-12'>
-          {/* 主题测试区域 */}
-          <section className='card'>
-            <h2 className='text-2xl font-semibold mb-6 flex items-center text-text-primary'>
-              <ThemeIcon className='w-6 h-6 mr-2' />
-              {content.themeSectionTitle}
+      {/* ========================================================================
+          主要内容区域 - Main Content Area
+          ======================================================================== */}
+      <main className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+        {/* ====================================================================
+            进度概览统计卡片 - Progress Overview Statistics Card
+            调试要点：
+            - 验证进度计算的准确性
+            - 检查多语言文本显示是否正确
+            - 确认深色模式下卡片样式正常
+            ==================================================================== */}
+        <div className='mb-8'>
+          <div className='bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6'>
+            <h2 className='text-xl font-semibold text-gray-900 dark:text-white mb-4'>
+              {content.progressOverview}
             </h2>
-            <div className='space-y-6'>
-              <div className='p-4 bg-color-card-bg rounded-lg border border-color-border'>
-                <p className='text-text-secondary mb-2'>{content.currentTheme}:</p>
-                <p className='text-xl font-medium text-text-primary'>
-                  {locale === 'zh-CN' ? themeDisplayName : themeEnglishName}
-                </p>
-              </div>
-              <button
-                onClick={handleToggleTheme}
-                className='btn flex items-center justify-center gap-2 w-full'
-              >
-                <ThemeIcon className='w-5 h-5' />
-                {content.toggleThemeBtn}
-              </button>
-              <div className='p-4 bg-color-card-bg rounded-lg border border-color-border'>
-                <h3 className='font-medium mb-2 text-text-primary'>主题特性:</h3>
-                <ul className='space-y-2 text-text-secondary'>
-                  {content.features.map((feature: string, index: number) => (
-                    <li key={index} className='flex items-start'>
-                      <CheckIcon className='w-5 h-5 mr-2 text-primary shrink-0 mt-0.5' />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </section>
 
-          {/* 多语言测试区域 */}
-          <section className='card'>
-            <h2 className='text-2xl font-semibold mb-6 flex items-center text-text-primary'>
-              <GlobeAltIcon className='w-6 h-6 mr-2' />
-              {content.languageSectionTitle}
-            </h2>
-            <div className='space-y-6'>
-              <div className='p-4 bg-color-card-bg rounded-lg border border-color-border'>
-                <p className='text-text-secondary mb-2'>{content.currentLanguage}:</p>
-                <p className='text-xl font-medium text-text-primary'>
-                  {locale === 'zh-CN' ? '简体中文' : 'English'}
-                </p>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+              <div className='text-center'>
+                <div className='text-3xl font-bold text-blue-600 dark:text-blue-400'>
+                  {completedCount}
+                </div>
+                <div className='text-sm text-gray-600 dark:text-gray-300'>
+                  {content.completedPhases}
+                </div>
               </div>
-              <div className='flex gap-4'>
-                <button
-                  onClick={() => handleSetLocale('zh-CN')}
-                  className={`btn flex-1 ${locale === 'zh-CN' ? 'opacity-100' : 'opacity-70'}`}
-                >
-                  简体中文
-                </button>
-                <button
-                  onClick={() => handleSetLocale('en-US')}
-                  className={`btn flex-1 ${locale === 'en-US' ? 'opacity-100' : 'opacity-70'}`}
-                >
-                  English
-                </button>
-              </div>
-              <div className='p-4 bg-color-card-bg rounded-lg border border-color-border'>
-                <p className='text-text-primary'>{content.textExample}</p>
-              </div>
-            </div>
-          </section>
-        </div>
 
-        {/* 元素样式测试区域 */}
-        <section className='card mb-12'>
-          <h2 className='text-2xl font-semibold mb-6 text-text-primary'>
-            {content.formSectionTitle}
-          </h2>
-          <div className='space-y-6'>
-            <div>
-              <label className='block text-text-secondary mb-2'>{content.inputPlaceholder}</label>
-              <input
-                type='text'
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder={content.inputPlaceholder}
-                className='w-full p-2 border border-color-border rounded-md bg-color-page-bg text-text-primary'
-              />
-            </div>
-            <div className='flex items-center'>
-              <input
-                type='checkbox'
-                id='terms'
-                checked={agreeTerms}
-                onChange={(e) => setAgreeTerms(e.target.checked)}
-                className='mr-2 accent-primary'
-              />
-              <label htmlFor='terms' className='text-text-secondary'>
-                {content.checkboxLabel}
-              </label>
-            </div>
-            <div>
-              <div className='flex items-center mb-2'>
-                <input
-                  type='radio'
-                  id='option1'
-                  name='options'
-                  value='option1'
-                  checked={selectedOption === 'option1'}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                  className='mr-2 accent-primary'
-                />
-                <label htmlFor='option1' className='text-text-secondary mr-6'>
-                  {content.radioOption1}
-                </label>
-                <input
-                  type='radio'
-                  id='option2'
-                  name='options'
-                  value='option2'
-                  checked={selectedOption === 'option2'}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                  className='mr-2 accent-primary'
-                />
-                <label htmlFor='option2' className='text-text-secondary'>
-                  {content.radioOption2}
-                </label>
+              <div className='text-center'>
+                <div className='text-3xl font-bold text-gray-900 dark:text-white'>{totalCount}</div>
+                <div className='text-sm text-gray-600 dark:text-gray-300'>
+                  {content.totalPhases}
+                </div>
+              </div>
+
+              <div className='text-center'>
+                <div className='text-3xl font-bold text-green-600 dark:text-green-400'>
+                  {progressPercentage}%
+                </div>
+                <div className='text-sm text-gray-600 dark:text-gray-300'>{content.completion}</div>
               </div>
             </div>
-            <button className='btn'>{content.buttonExample}</button>
-          </div>
-        </section>
 
-        {/* 卡片组件测试 */}
-        <section className='card'>
-          <div className='flex flex-col items-center text-center p-8'>
-            <h3 className='text-xl font-semibold mb-4 text-text-primary'>{content.cardTitle}</h3>
-            <p className='text-text-secondary max-w-md mb-6'>{content.cardContent}</p>
-            <div className='flex gap-2'>
-              <div className='w-3 h-3 rounded-full bg-color-text-primary'></div>
-              <div className='w-3 h-3 rounded-full bg-color-text-secondary'></div>
-              <div className='w-3 h-3 rounded-full bg-color-border'></div>
-              <div className='w-3 h-3 rounded-full bg-color-primary'></div>
+            {/* 进度条 */}
+            <div className='mt-6'>
+              <div className='flex justify-between text-sm text-gray-600 dark:text-gray-300 mb-2'>
+                <span>{content.overallProgress}</span>
+                <span>{progressPercentage}%</span>
+              </div>
+              <div className='w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2'>
+                <div
+                  className='bg-blue-600 h-2 rounded-full transition-all duration-500'
+                  style={{ width: `${progressPercentage}%` }}
+                ></div>
+              </div>
             </div>
           </div>
-        </section>
+        </div>
 
-        {/* 通知测试按钮（保留原功能） */}
-        <div className='mt-8 flex justify-center'>
-          {mounted && (
-            <button
-              onClick={() => addNotification('这是一条成功通知', 'success')}
-              className='px-4 py-2 bg-green-500 text-white rounded inline-flex items-center'
-              aria-label={t('common.submit')}
+        {/* 测试阶段列表 */}
+        <div className='space-y-4'>
+          <h2 className='text-xl font-semibold text-gray-900 dark:text-white mb-4'>测试阶段</h2>
+
+          {testPhases.map((phase) => (
+            <div
+              key={phase.id}
+              className='bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow'
             >
-              <CheckIcon className='w-5 h-5 mr-2' aria-hidden='true' />
-              {t('common.submit')}
-            </button>
-          )}
+              <div className='p-6'>
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center space-x-4 flex-1'>
+                    <div className='flex-shrink-0'>{phase.icon}</div>
+
+                    <div className='flex-1'>
+                      <div className='flex items-center space-x-3 mb-2'>
+                        <h3 className='text-lg font-medium text-gray-900 dark:text-white'>
+                          {phase.title}
+                        </h3>
+                        <StatusBadge status={phase.status} />
+                        <StatusIcon status={phase.status} />
+                      </div>
+
+                      <p className='text-gray-600 dark:text-gray-300'>{phase.description}</p>
+
+                      <div className='mt-2 flex flex-wrap gap-2'>
+                        {phase.components.map((component) => (
+                          <span
+                            key={component}
+                            className='px-2 py-1 text-xs bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300 rounded'
+                          >
+                            {component}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='flex items-center space-x-3'>
+                    {phase.status === 'completed' && (
+                      <Link
+                        href={{ pathname: phase.path }}
+                        className='inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors'
+                      >
+                        查看测试
+                      </Link>
+                    )}
+
+                    {phase.status === 'pending' && (
+                      <span className='px-4 py-2 text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-md'>
+                        即将开放
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* 说明文档 */}
+        <div className='mt-12 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6'>
+          <h3 className='text-lg font-medium text-blue-900 dark:text-blue-100 mb-3'>使用说明</h3>
+          <div className='text-blue-800 dark:text-blue-200 space-y-2 text-sm'>
+            <p>• 每个Phase最多包含3个相关组件，便于集中测试和调试</p>
+            <p>• 已完成的Phase可以直接访问测试页面</p>
+            <p>• 组件系统采用渐进式恢复策略，确保每个组件都经过充分验证</p>
+            <p>• 主题系统页面展示CSS变量体系和工具类使用方法</p>
+          </div>
         </div>
       </main>
-
-      {/* 页脚 */}
-      <footer className='border-t border-color-border py-6 mt-12'>
-        <div className='container text-center text-text-secondary text-sm'>
-          <p>主题与多语言测试页面 © {new Date().getFullYear()}</p>
-          <p className='mt-1'>
-            当前主题: {theme} | 当前语言: {locale}
-          </p>
-        </div>
-      </footer>
     </div>
   );
-}
+};
+
+export default TestNavigationPage;

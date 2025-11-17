@@ -1,0 +1,45 @@
+/* ===========================================================================
+   animations.css - 动画工具类与关键帧定义
+
+   说明：定义常用的动画效果和对应的关键帧
+   用途：为界面元素提供流畅的进入和过渡动画
+   层级：@layer utilities
+   性能：使用 transform 和 opacity 确保硬件加速
+   =========================================================================== */
+
+@layer utilities {
+  /* ---------------------------------------------------------------------------
+     基础动画工具类 (Basic Animation Utilities)
+     说明：常用的淡入淡出和滑动动画
+     --------------------------------------------------------------------------- */
+  .animate-fade-in {
+    animation: fade-in 0.3s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   关键帧定义 (Keyframe Definitions)
+   说明：动画的具体实现，优化性能使用 transform 和 opacity
+   --------------------------------------------------------------------------- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(1rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slide-down {
+  from { transform: translateY(-1rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

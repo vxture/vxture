@@ -1,0 +1,133 @@
+/* ===========================================================================
+   typography.css - 排版与语义元素基础样式
+
+   说明：定义所有文本和语义元素的基础排版样式
+   用途：为页面内容提供一致的排版层次和可读性
+   层级：@layer base
+   范围：影响所有原生 HTML 语义元素，支持主题切换
+   =========================================================================== */
+
+@layer base {
+  /* ---------------------------------------------------------------------------
+     页面基础样式 (Page Base Styles)
+     说明：设置页面整体的背景色和文本颜色，支持主题切换
+     --------------------------------------------------------------------------- */
+  body {
+    background-color: var(--color-page-bg);
+    color: var(--color-text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* ---------------------------------------------------------------------------
+     链接样式 (Link Styles)
+     说明：定义链接的默认外观和交互状态
+     --------------------------------------------------------------------------- */
+  a {
+    color: var(--color-primary);
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--color-primary-hover);
+  }
+
+  /* ---------------------------------------------------------------------------
+     标题层次样式 (Heading Hierarchy)
+     说明：建立清晰的标题层次结构和视觉权重
+     --------------------------------------------------------------------------- */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  h1 { font-size: 2.25rem; }      /* 36px */
+  h2 { font-size: 1.875rem; }     /* 30px */
+  h3 { font-size: 1.5rem; }       /* 24px */
+  h4 { font-size: 1.25rem; }      /* 20px */
+  h5 { font-size: 1.125rem; }     /* 18px */
+  h6 { font-size: 1rem; }         /* 16px */
+
+  /* ---------------------------------------------------------------------------
+     文本与列表样式 (Text & List Styles)
+     说明：定义段落、列表等内容元素的排版
+     --------------------------------------------------------------------------- */
+  p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  ul, ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  li {
+    margin-bottom: 0.25rem;
+  }
+
+  /* ---------------------------------------------------------------------------
+     代码块样式 (Code Block Styles)
+     说明：为内联代码和代码块提供清晰的视觉区分
+     --------------------------------------------------------------------------- */
+  code {
+    background-color: var(--color-card-bg);
+    color: var(--color-text-primary);
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    font-family: 'Fira Code', 'Courier New', monospace;
+    font-size: 0.875rem;
+  }
+
+  pre {
+    background-color: var(--color-card-bg);
+    color: var(--color-text-primary);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+  }
+
+  /* ---------------------------------------------------------------------------
+     表格样式 (Table Styles)
+     说明：为数据表格提供清晰的结构和可读性
+     --------------------------------------------------------------------------- */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  th {
+    background-color: var(--color-card-bg);
+    font-weight: 600;
+  }
+
+  /* ---------------------------------------------------------------------------
+     装饰性元素样式 (Decorative Element Styles)
+     说明：分割线和引用块的视觉样式
+     --------------------------------------------------------------------------- */
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 2rem 0;
+  }
+
+  blockquote {
+    border-left: 4px solid var(--color-primary);
+    padding-left: 1rem;
+    margin: 1rem 0;
+    font-style: italic;
+    color: var(--color-text-secondary);
+  }
+}

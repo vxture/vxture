@@ -1,0 +1,40 @@
+/**
+ * 导航栏组件变体样式 (Navbar Component Variants)
+ * 
+ * 功能说明：扩展基础导航栏组件，提供不同的定位方式和视觉效果
+ * 支持粘性定位、透明效果和滚动响应的导航栏变体
+ * 
+ * 变体类型：
+ * - .navbar-sticky: 粘性导航栏，滚动时固定在顶部
+ * - .navbar-transparent: 透明导航栏，无背景色和边框
+ * - .navbar-on-scroll: 滚动状态导航栏，显示背景和阴影
+ * 
+ * 使用场景：
+ * - sticky: 长页面导航、始终可访问的菜单
+ * - transparent: 着陆页、全屏背景上的导航
+ * - on-scroll: 滚动时激活的导航栏样式
+ * 
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 粘性导航栏 */
+  .navbar-sticky { 
+    @apply sticky top-0 z-40; 
+  }
+  
+  /* 透明导航栏 */
+  .navbar-transparent { 
+    background-color: transparent; 
+    border-color: transparent; 
+  }
+  
+  /* 滚动状态导航栏 */
+  .navbar-on-scroll { 
+    background-color: var(--color-card-bg); 
+    border-bottom: 1px solid var(--color-border); 
+    @apply shadow-theme; 
+  }
+}

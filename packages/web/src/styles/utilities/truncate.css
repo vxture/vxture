@@ -1,0 +1,35 @@
+/* ===========================================================================
+   truncate.css - 文本截断工具类
+
+   说明：定义多行文本截断的工具类
+   用途：为长文本内容提供优雅的截断和省略号显示
+   层级：@layer utilities
+   兼容性：使用 -webkit-line-clamp 属性，支持现代浏览器
+   =========================================================================== */
+
+@layer utilities {
+  /* ---------------------------------------------------------------------------
+     多行文本截断 (Multi-line Text Truncation)
+     说明：基于行数的文本截断，超出部分显示省略号
+     --------------------------------------------------------------------------- */
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .truncate-4 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

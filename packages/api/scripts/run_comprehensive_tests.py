@@ -6,7 +6,6 @@
 
 import os
 import sys
-import json
 import argparse
 import logging
 import importlib.util
@@ -103,7 +102,9 @@ def check_backend():
     logger.info("检查后端API")
     try:
         # 尝试导入fastapi
-        import fastapi
+        import importlib.util
+        if importlib.util.find_spec("fastapi") is None:
+            raise ImportError("fastapi not found")
 
         # 检查是否有运行中的后端进程
         # 此处简化处理，实际应该检查特定端口

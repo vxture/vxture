@@ -1,0 +1,84 @@
+/**
+ * 视觉效果工具类 (Visual Effects Utilities)
+ *
+ * 功能说明：提供各种视觉效果和交互状态的工具类
+ * 包括焦点状态、悬停效果、阴影系统、玻璃拟态和渐变背景
+ *
+ * 使用场景：
+ * - .focus-theme: 统一的焦点状态样式，提升可访问性
+ * - .hover-*: 交互悬停效果，增强用户体验
+ * - .shadow-theme-*: 分级阴影系统，营造层次感
+ * - .glass: 玻璃拟态效果，用于现代UI设计
+ * - .gradient-*: 主题渐变背景，增强视觉吸引力
+ *
+ * 技术实现：
+ * - 使用CSS变换和过渡动画
+ * - 基于主题CSS变量系统
+ * - 支持现代浏览器的backdrop-filter属性
+ *
+ * 依赖关系：
+ * - 依赖主题变量 (--color-primary, --color-card-bg等)
+ * - 兼容Tailwind CSS工具类系统
+ *
+ * 维护说明：
+ * - 动画参数可根据设计需求调整
+ * - 阴影值遵循Material Design规范
+ * - 渐变方向和色彩搭配需与主题保持一致
+ *
+ * 层级：utilities
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer utilities {
+  /* 焦点状态管理 */
+  .focus-theme {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .focus-theme:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* 悬停交互效果 */
+  .hover-lift:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+  }
+
+  /* 主题阴影系统 */
+  .shadow-theme {
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px 0 rgb(0 0 0 / 0.06);
+  }
+
+  .shadow-theme-md {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+  }
+
+  .shadow-theme-lg {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+  }
+
+  /* 玻璃拟态效果 */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* 渐变背景效果 */
+  .gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  }
+
+  .gradient-card {
+    background: linear-gradient(135deg, var(--color-card-bg), var(--color-page-bg));
+  }
+}

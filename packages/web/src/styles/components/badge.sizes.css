@@ -1,0 +1,30 @@
+/**
+ * 徽章尺寸变体样式 (Badge Size Variants)
+ *
+ * 功能说明：定义徽章组件的标准尺寸规格，提供三种尺寸选项
+ * 适配不同使用场景和视觉层次需求
+ *
+ * 尺寸规格：
+ * - .badge-sm: 小徽章，用于密集界面和次要标识
+ * - .badge-md: 中等徽章，标准尺寸适合多数场景
+ * - .badge-lg: 大徽章，用于突出显示和重要标识
+ *
+ * 层级：components
+ */
+
+@layer components {
+  /* 小徽章 */
+  .badge-sm {
+    @apply text-xs px-1.5 py-0.5;
+  }
+
+  /* 中等徽章（默认） */
+  .badge-md {
+    @apply text-xs px-2 py-0.5;
+  }
+
+  /* 大徽章 */
+  .badge-lg {
+    @apply text-sm px-2.5 py-1;
+  }
+}

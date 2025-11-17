@@ -1,0 +1,72 @@
+/**
+ * 卡片组件变体样式 (Card Component Variants)
+ *
+ * 功能说明：扩展基础卡片组件，提供多种视觉风格和结构化布局选项
+ * 包含阴影变体、交互效果和卡片结构元素
+ *
+ * 风格变体：
+ * - .card-plain: 简洁变体，继承基础卡片样式
+ * - .card-outline: 边框变体，突出显示边界
+ * - .card-elevated: 中等阴影变体，营造浮起效果
+ * - .card-elevated-lg: 大阴影变体，强烈的层次感
+ * - .card-hover: 悬停交互变体，鼠标悬停时上浮
+ *
+ * 结构元素：
+ * - .card-header: 卡片头部，通常包含标题和操作按钮
+ * - .card-body: 卡片主体内容区域
+ * - .card-footer: 卡片底部，通常包含操作按钮
+ *
+ * 使用场景：
+ * - plain: 内嵌式信息展示，融入页面背景
+ * - outline: 独立信息卡片，明确的边界分隔
+ * - elevated: 重要内容突出显示
+ * - hover: 可点击的交互式卡片
+ *
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 简洁卡片变体 */
+  .card-plain {
+    @apply card;
+  }
+
+  /* 边框卡片变体 */
+  .card-outline {
+    @apply card border;
+  }
+
+  /* 中等阴影卡片变体 */
+  .card-elevated {
+    @apply card shadow-theme-md;
+  }
+
+  /* 大阴影卡片变体 */
+  .card-elevated-lg {
+    @apply card shadow-theme-lg;
+  }
+
+  /* 悬停交互卡片 */
+  .card-hover {
+    @apply transition-transform;
+  }
+
+  .card-hover:hover {
+    @apply -translate-y-0.5 shadow-theme-md;
+  }
+
+  /* 卡片结构元素 */
+  .card-header {
+    @apply mb-3 flex items-center justify-between;
+  }
+
+  .card-body {
+    @apply text-theme-primary;
+  }
+
+  .card-footer {
+    @apply mt-4 flex items-center justify-end gap-3;
+  }
+}

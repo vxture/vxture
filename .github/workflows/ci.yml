@@ -1,70 +1,68 @@
-name: CI  # 仅一个顶级名称
+name: CI
 
-# 触发条件：main分支的push和PR
+# Trigger: push or PR to main
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
-    name: "Full Build (Frontend + Backend)"
+    name: Build and checks (frontend + optional backend)
     runs-on: ubuntu-latest
     steps:
-      # 1. 拉取代码
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. 配置Node.js环境（前端）
-      - name: Setup Node.js (LTS)
+      - name: Setup Node (LTS)
         uses: actions/setup-node@v4
         with:
           node-version: 'lts'
 
-      # 3. 配置pnpm（统一用官方action，版本稳定）
-      - name: Setup pnpm (v8)
-        uses: pnpm/action-setup@v3
-        with:
-          version: '8'
+      - name: Install pnpm (via corepack)
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
 
-      # 4. 安装前端依赖
-      - name: Install frontend dependencies
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5. 前端代码检查
-      - name: Frontend Type-Check (full repo)
+      - name: Workspace type-check
         run: pnpm -w -r type-check
-      - name: Frontend Lint (code style)
+
+      - name: Run lint
         run: pnpm -w -r lint
 
-      # 6. 可选：后端Python测试（先判断目录是否存在，避免报错）
-      - name: Setup Python 3.13 (backend)
+      - name: 'Frontend: type-check (web)'
+        run: pnpm --filter web type-check
+
+      - name: (Optional) Setup Python for backend checks
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13'
+          python-version: '3.11'
 
-      - name: Install backend dependencies (if backend exists)
+      - name: (Optional) Install backend deps
         run: |
-          if [ -d "packages/api" ]; then
+          if [ -d packages/api ]; then
             cd packages/api
             python -m venv .venv
             . .venv/bin/activate
-            pip install -r requirements.txt || true  # 安装失败不中断流程
+            pip install -r requirements.txt || true
           else
-            echo "No backend directory found, skipping backend dependency installation."
+            echo "no backend"
           fi
 
-      - name: Run backend tests (if backend exists)
+      - name: (Optional) Run backend tests
         run: |
-          if [ -d "packages/api" ]; then
+          if [ -d packages/api ]; then
             cd packages/api
             . .venv/bin/activate
             if [ -f pytest.ini ] || ls tests 1> /dev/null 2>&1; then
-              pytest -q || true  # 测试失败不中断（可根据需求去掉|| true）
+              pytest -q || true
             else
-              echo "No backend tests found, skip."
+              echo "No backend tests found"
             fi
           else
-            echo "No backend directory found, skipping backend tests."
+            echo "no backend"
           fi

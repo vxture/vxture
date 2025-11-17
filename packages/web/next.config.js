@@ -21,7 +21,20 @@ const nextConfig = {
 
   // 图片优化配置
   images: {
-    domains: ['localhost'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
   },
 

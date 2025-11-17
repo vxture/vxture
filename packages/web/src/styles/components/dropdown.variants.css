@@ -1,0 +1,44 @@
+/**
+ * 下拉菜单组件变体样式 (Dropdown Component Variants)
+ *
+ * 功能说明：扩展基础下拉菜单组件，提供不同的对齐方式和尺寸规格
+ * 支持左右对齐和三种尺寸变体
+ *
+ * 对齐变体：
+ * - .dropdown-left: 左对齐，菜单左边缘与触发器左边缘对齐
+ * - .dropdown-right: 右对齐，菜单右边缘与触发器右边缘对齐
+ *
+ * 尺寸变体：
+ * - .dropdown-sm: 小尺寸菜单，紧凑的内边距和宽度
+ * - .dropdown-md: 中等尺寸菜单，标准的布局规格
+ * - .dropdown-lg: 大尺寸菜单，宽松的布局和更大宽度
+ *
+ * 层级：components
+ */
+
+@layer components {
+  /* 左对齐下拉菜单 */
+  .dropdown-left .dropdown-menu {
+    @apply left-0;
+  }
+
+  /* 右对齐下拉菜单 */
+  .dropdown-right .dropdown-menu {
+    @apply right-0;
+  }
+
+  /* 小尺寸下拉菜单 */
+  .dropdown-sm .dropdown-menu {
+    @apply min-w-40 p-1;
+  }
+
+  /* 中等尺寸下拉菜单 */
+  .dropdown-md .dropdown-menu {
+    @apply min-w-48 p-2;
+  }
+
+  /* 大尺寸下拉菜单 */
+  .dropdown-lg .dropdown-menu {
+    @apply min-w-56 p-3;
+  }
+}

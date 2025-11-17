@@ -1,0 +1,57 @@
+/**
+ * 按钮尺寸变体样式 (Button Size Variants)
+ *
+ * 功能说明：定义按钮组件的标准尺寸规格，提供从超小到超大的五种尺寸选项
+ * 通过调整内边距、字体大小和圆角半径实现视觉层次差异
+ *
+ * 尺寸规格：
+ * - .btn-xs: 超小按钮，用于密集界面和辅助操作
+ * - .btn-sm: 小按钮，适用于次要操作和紧凑布局
+ * - .btn-md: 中等按钮，标准尺寸适合大多数场景
+ * - .btn-lg: 大按钮，用于重要操作和宽松布局
+ * - .btn-xl: 超大按钮，用于强调操作和着陆页CTA
+ *
+ * 使用场景：
+ * - xs: 表格操作按钮、标签管理、密集工具栏
+ * - sm: 表单辅助按钮、卡片操作、侧边栏功能
+ * - md: 一般表单提交、常规页面操作（默认推荐）
+ * - lg: 主要CTA按钮、重要确认操作
+ * - xl: 着陆页行动召唤、重要营销按钮
+ *
+ * 设计原则：
+ * - 内边距递增确保点击区域逐步扩大
+ * - 字体大小递增提升文本可读性
+ * - 圆角半径递增保持视觉协调性
+ * - 符合44px最小触摸目标建议（lg及以上）
+ *
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 超小按钮 */
+  .btn-xs {
+    @apply px-2 py-1 text-xs rounded;
+  }
+
+  /* 小按钮 */
+  .btn-sm {
+    @apply px-3 py-1.5 text-sm rounded-md;
+  }
+
+  /* 中等按钮（默认） */
+  .btn-md {
+    @apply px-4 py-2 text-sm rounded-md;
+  }
+
+  /* 大按钮 */
+  .btn-lg {
+    @apply px-5 py-2.5 text-base rounded-lg;
+  }
+
+  /* 超大按钮 */
+  .btn-xl {
+    @apply px-6 py-3 text-lg rounded-lg;
+  }
+}

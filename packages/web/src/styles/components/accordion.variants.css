@@ -1,0 +1,68 @@
+/**
+ * 手风琴组件变体样式 (Accordion Component Variants)
+ *
+ * 功能说明：提供手风琴组件的不同视觉变体和状态样式
+ * 扩展基础手风琴组件，支持多种设计需求和交互状态
+ *
+ * 组件变体：
+ * - .accordion-flush: 无边框变体，适用于干净简洁的布局
+ * - .accordion-bordered: 完整边框变体，增强视觉分离效果
+ * - .accordion-item-active: 激活状态，突出显示当前展开项
+ *
+ * 使用场景：
+ * - .accordion-flush: 嵌入式FAQ、侧边栏导航折叠
+ * - .accordion-bordered: 独立的信息展示卡片
+ * - .accordion-item-active: 提供视觉反馈的交互状态
+ *
+ * 视觉差异：
+ * - flush变体：移除所有边框和分割线，融入背景
+ * - bordered变体：添加完整边框，独立的卡片效果
+ * - active状态：使用主题色突出显示活跃项目
+ *
+ * 技术实现：
+ * - 基于Tailwind CSS工具类快速构建
+ * - 使用CSS变量确保主题一致性
+ * - 继承基础accordion.css的核心样式
+ *
+ * 组合使用：
+ * - 与accordion.css基础样式配合使用
+ * - 可以动态切换不同变体类名
+ * - 支持JavaScript控制active状态
+ *
+ * 状态管理：
+ * - .accordion-item-active需要JavaScript配合
+ * - 建议在展开项的容器上添加此类
+ * - 可配合动画效果增强用户体验
+ *
+ * 设计系统：
+ * - flush变体适合内容密集型布局
+ * - bordered变体适合卡片式设计
+ * - active状态增强交互反馈
+ *
+ * 维护说明：
+ * - 边框颜色需与主题系统保持同步
+ * - active状态颜色应使用品牌主色
+ * - 变体选择应基于具体的设计需求
+ *
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 无边框变体 - 干净简洁的样式 */
+  .accordion-flush {
+    @apply divide-y-0 border-0;
+  }
+
+  /* 完整边框变体 - 独立卡片效果 */
+  .accordion-bordered {
+    @apply border;
+    border-color: var(--color-border);
+  }
+
+  /* 激活状态 - 突出显示当前项 */
+  .accordion-item-active .accordion-header {
+    color: var(--color-primary);
+  }
+}

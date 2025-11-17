@@ -148,3 +148,29 @@ htmlcov/
 *.pem
 *.key
 *.crt
+
+# -----------------------------
+# Additional project-specific ignores (added by analysis)
+# These are local/runtime or editor files that should not be committed.
+# Remove from tracked files with: git rm --cached <path>
+
+# PID / runtime files
+*.pid
+.vxture_frontend.pid
+
+# Local virtual environments (ensure any venvs under packages are ignored)
+**/.venv/
+**/venv/
+
+# Editor temp / backups
+.vscode/*.bak
+.vscode/*.local
+.vscode/settings.json.bak
+
+# Log files
+*.log
+
+# Optional cache / local-only files
+.cache/
+
+# End of additional ignores

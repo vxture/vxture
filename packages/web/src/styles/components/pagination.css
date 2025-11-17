@@ -1,0 +1,49 @@
+/**
+ * 分页组件样式 (Pagination Component)
+ * 
+ * 功能说明：提供数据分页导航组件，支持页码跳转和当前页标识
+ * 包含分页容器和页码按钮的完整样式体系
+ * 
+ * 组件结构：
+ * - .pagination: 分页容器，水平排列页码按钮
+ * - .page-btn: 页码按钮，可点击的页面导航项
+ * - .page-btn:hover: 按钮悬停状态，提供交互反馈
+ * - .page-btn.active: 当前页按钮，突出显示当前位置
+ * 
+ * 使用场景：
+ * - 数据表格的页面导航
+ * - 文章列表的分页显示
+ * - 搜索结果的页面切换
+ * - 产品列表的分页浏览
+ * 
+ * 层级：components
+ */
+
+@reference "tailwindcss/utilities";
+
+@layer components {
+  /* 分页容器 */
+  .pagination { 
+    @apply flex items-center gap-2; 
+  }
+  
+  /* 页码按钮 */
+  .page-btn { 
+    @apply inline-flex items-center justify-center rounded-md px-3 py-1.5 text-sm; 
+    background-color: var(--color-card-bg); 
+    border: 1px solid var(--color-border); 
+    color: var(--color-text-primary); 
+  }
+  
+  /* 页码按钮悬停状态 */
+  .page-btn:hover { 
+    background-color: color-mix(in oklab, var(--color-card-bg) 80%, var(--color-page-bg)); 
+  }
+  
+  /* 当前页按钮 */
+  .page-btn.active { 
+    background-color: var(--color-primary); 
+    color: #fff; 
+    border-color: var(--color-primary); 
+  }
+}
