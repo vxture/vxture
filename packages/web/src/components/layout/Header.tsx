@@ -37,8 +37,8 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useEffect, useState } from 'react';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { useEffect, useState, useRef } from 'react';
+import { FiSun, FiMoon, FiGlobe } from 'react-icons/fi';
 
 // ============ 全局类型扩展 ============
 declare global {
@@ -54,6 +54,9 @@ declare global {
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [language, setLanguage] = useState<'zh-CN' | 'en-US'>('zh-CN');
+  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
+  const languageMenuRef = useRef<HTMLDivElement>(null);
 
   // 主题切换，写入全局变量（window.__VXTURE_THEME__）
   useEffect(() => {
@@ -69,6 +72,26 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // 点击外部关闭语言菜单
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
+        setIsLanguageMenuOpen(false);
+      }
+    };
+    if (isLanguageMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isLanguageMenuOpen]);
+
+  // 处理语言切换
+  const handleLanguageChange = (lang: 'zh-CN' | 'en-US') => {
+    setLanguage(lang);
+    setIsLanguageMenuOpen(false);
+    // 可在此添加更新 i18n 的逻辑
+  };
 
   return (
     <header
@@ -121,16 +144,41 @@ export default function Header() {
               <span className='sr-only'>切换主题</span>
               {theme === 'light' ? <FiSun className='w-5 h-5' /> : <FiMoon className='w-5 h-5' />}
             </button>
-            {/* Language Switcher */}
-            <select
-              className='px-2 py-1 rounded border border-gray-200 bg-white text-gray-700 text-sm focus:outline-none'
-              defaultValue='zh-CN'
-              style={{ minWidth: 80 }}
-              title='语言切换'
-            >
-              <option value='zh-CN'>zh-CN</option>
-              <option value='en-US'>en-US</option>
-            </select>
+
+            {/* Language Switcher (icon + dropdown menu) */}
+            <div ref={languageMenuRef} className='relative'>
+              <button
+                className='w-8 h-8 flex items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors'
+                title='切换语言'
+                onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
+              >
+                <span className='sr-only'>切换语言</span>
+                <FiGlobe className='w-5 h-5' />
+              </button>
+
+              {/* Dropdown menu */}
+              {isLanguageMenuOpen && (
+                <div className='absolute right-0 mt-2 w-28 bg-white border border-gray-200 rounded-lg shadow-lg z-10'>
+                  {[
+                    { code: 'zh-CN', label: '中文-简体' },
+                    { code: 'zh-TW', label: '中文-繁體' },
+                    { code: 'en-US', label: 'English' },
+                  ].map((lang) => (
+                    <button
+                      key={lang.code}
+                      onClick={() => handleLanguageChange(lang.code as 'zh-CN' | 'en-US')}
+                      className={`w-full px-4 py-2 text-left text-sm transition-colors ${
+                        language === lang.code
+                          ? 'bg-cyan-50 text-cyan-600 font-medium'
+                          : 'text-gray-700 hover:bg-gray-50'
+                      } ${lang.code === 'zh-CN' ? 'rounded-t-lg border-b' : 'rounded-b-lg'}`}
+                    >
+                      {lang.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
             {/* CTA Buttons */}
             <button
               className={`px-4 py-2 rounded-lg transition-all duration-300 ${

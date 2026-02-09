@@ -44,11 +44,13 @@ ehthumbs.db
 Thumbs.db
 
 # IDE and editor files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/settings.json.template
+!.vscode/*.template
 
 # Logs
 logs/
@@ -134,16 +136,7 @@ htmlcov/
 
 # Turborepo
 .turbo/
-
-# Editor directories and files
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-*.sublime-project
-*.sublime-workspace
-
+# Editor directories and files (handled above)
 # Local development certificates
 *.pem
 *.key
