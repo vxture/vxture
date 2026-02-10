@@ -1,0 +1,19 @@
+{
+  "key": "hero",
+  "enabled": true,
+  "title": "Unlock Your Data's",
+  "titleHighlight": "Infinite Potential",
+  "description": "Building data-driven intelligent decision-making platforms for complex government and enterprise business scenarios",
+  "theme": "brand",
+  "intent": "cta",
+  "variant": "highlight",
+  "cta": {
+    "label": "Begin Your Data Intelligence Journey",
+    "href": "/products"
+  },
+  "media": {
+    "type": "video",
+    "videoUrl": "/videos/banner-hero-01.mp4",
+    "posterImage": "/images/banner-hero-poster-01.png"
+  }
+}

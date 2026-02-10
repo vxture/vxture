@@ -1,0 +1,72 @@
+{
+  "key": "solutions",
+  "enabled": true,
+  "title": "Product Solutions",
+  "subtitle": "Intelligent product solutions for complex business scenarios",
+  "items": [
+    {
+      "id": "solution-intro-01",
+      "slug": "data-integration-platform",
+      "title": "Data Integration Platform",
+      "subtitle": "Unified Data Ingestion and Processing",
+      "description": "Supports multiple data source ingestion including structured, semi-structured, and unstructured data, providing real-time data cleansing, transformation, and standardization to build a unified data foundation.",
+      "intent": "solution",
+      "theme": "primary",
+      "variant": "grid",
+      "tags": ["Data Fusion", "Data Governance", "Data Platform"],
+      "cover": {
+        "url": "/images/products/product-intro-01.jpg",
+        "alt": "Data Integration Platform"
+      },
+      "capabilities": ["data-graph-building", "multi-source-data-fusion"]
+    },
+    {
+      "id": "solution-intro-02",
+      "slug": "knowledge-graph-engine",
+      "title": "Knowledge Graph Engine",
+      "subtitle": "Building Intelligent Relationship Networks",
+      "description": "Based on knowledge graph and semantic modeling technology, automatically construct entity-relationship networks, uncover hidden relationships in data, supporting advanced analytics and intelligent reasoning for complex business.",
+      "intent": "solution",
+      "theme": "brand",
+      "variant": "grid",
+      "tags": ["Knowledge Graph", "Semantic Analysis", "Intelligent Reasoning"],
+      "cover": {
+        "url": "/images/products/product-intro-02.jpg",
+        "alt": "Knowledge Graph Engine"
+      },
+      "capabilities": ["data-graph-building", "ontology-modeling", "fusion-analysis"]
+    },
+    {
+      "id": "solution-intro-03",
+      "slug": "intelligent-dispatch-system",
+      "title": "Intelligent Dispatch System",
+      "subtitle": "AI-driven Resource Optimization and Command Dispatch",
+      "description": "Through AI algorithms and rule engines, achieve intelligent resource allocation, task coordination, and dynamic scheduling, widely applied in emergency management, command dispatch, and complex operational scenarios.",
+      "intent": "solution",
+      "theme": "info",
+      "variant": "grid",
+      "tags": ["Intelligent Dispatch", "Emergency Command", "Resource Optimization"],
+      "cover": {
+        "url": "/images/products/product-intro-03.jpg",
+        "alt": "Intelligent Dispatch System"
+      },
+      "capabilities": ["intelligent-decision-dispatch", "real-time-assessment", "incident-response"]
+    },
+    {
+      "id": "solution-intro-04",
+      "slug": "digital-twin-simulation-platform",
+      "title": "Digital Twin Simulation Platform",
+      "subtitle": "Digital Twin and Predictive Analytics",
+      "description": "Build high-fidelity digital twin models, through multi-scenario simulation and predictive analytics, providing scientific evidence for planning, risk assessment, and strategic decision-making.",
+      "intent": "solution",
+      "theme": "success",
+      "variant": "grid",
+      "tags": ["Digital Twin", "Simulation", "Predictive Analytics"],
+      "cover": {
+        "url": "/images/products/product-intro-04.jpg",
+        "alt": "Digital Twin Simulation Platform"
+      },
+      "capabilities": ["digital-twin-simulation", "scenario-simulation", "predictive-analysis"]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "key": "cases",
+  "enabled": true,
+  "title": "最佳实践",
+  "subtitle": "为客户业务赋能的最佳应用场景",
+  "items": [
+    {
+      "id": "case-intro-01",
+      "slug": "geo-disaster-graph",
+      "title": "地质灾害数据图谱",
+      "description": "构建数据智能平台，整合分散的静态基础数据和动态监测监管数据，实现深度关联分析与图形结合展示",
+      "intent": "case",
+      "theme": "success",
+      "variant": "card",
+      "tags": ["数据融合", "本体构建", "业务分析"],
+      "cover": {
+        "url": "/images/cases/case-intro-01.jpg",
+        "alt": "地质灾害数据图谱"
+      },
+      "publishedAt": "2024-03-01"
+    },
+    {
+      "id": "case-intro-02",
+      "slug": "intelligent-emergency",
+      "title": "智能应急指挥平台",
+      "description": "搭建智能决策指挥调度平台，整合跨领域数据资源，实现灾害预警、资源调度和应急决策的一体化支持",
+      "intent": "case",
+      "theme": "success",
+      "variant": "card",
+      "tags": ["智能决策", "应急管理", "数据整合"],
+      "cover": {
+        "url": "/images/cases/case-intro-02.jpg",
+        "alt": "智能应急指挥平台"
+      },
+      "publishedAt": "2024-12-01"
+    },
+    {
+      "id": "case-intro-03",
+      "slug": "public-safety-analysis",
+      "title": "公共安全情报分析",
+      "description": "通过深度应用大模型技术，实现案件智能融合分析与实时研判决策，构建精准高效的安全防控体系",
+      "intent": "case",
+      "theme": "success",
+      "variant": "card",
+      "tags": ["融合分析", "动态研判", "事件响应"],
+      "cover": {
+        "url": "/images/cases/case-intro-03.jpg",
+        "alt": "公共安全情报分析"
+      },
+      "publishedAt": "2025-06-01"
+    }
+  ]
+}

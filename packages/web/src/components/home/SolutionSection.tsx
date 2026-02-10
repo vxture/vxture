@@ -1,12 +1,12 @@
 /**
- * ProductSection.tsx
+ * SolutionSection.tsx
  *
  * 功能：
- * - 首页产品与服务区块，支持产品轮播、吸附滚动、响应式布局
+ * - 首页解决方案区块，支持方案轮播、吸附滚动、响应式布局
  * - 支持左右切换、动态配色、卡片动画
  *
  * 用途：
- * - 作为首页核心产品与服务展示区，提升品牌形象与转化率
+ * - 作为首页核心解决方案展示区，提升品牌形象与转化率
  * - 结构与其它 Section 组件保持一致，便于团队协作
  *
  * 依赖/调用关系：
@@ -17,8 +17,8 @@
  * - 只负责 UI 展示与交互，不包含业务逻辑
  * - 命名、结构、注释与其它 Section 组件保持一致
  *
- * @file ProductSection.tsx
- * @desc 首页产品与服务区块，支持轮播与吸附滚动
+ * @file SolutionSection.tsx
+ * @desc 首页解决方案区块，支持轮播与吸附滚动
  * @author vxture team
  * @created 2024-06-01
  * @lastModified 2025-10-15
@@ -27,9 +27,9 @@
  * @license MIT
  * @version 1.0.0
  * @dependencies React, TailwindCSS, react-icons
- * @tags home, product, section, component
+ * @tags home, solution, section, component
  * @example
- *   <ProductSection />
+ *   <SolutionSection />
  * @remarks
  *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
  * @todo
@@ -42,9 +42,9 @@ import { useState, memo } from 'react';
 import Image from 'next/image';
 import { PiCaretLeftBold, PiCaretRightBold } from 'react-icons/pi';
 
-// 产品卡片组件（性能优化：React.memo）
-interface ProductCardProps {
-  product: {
+// 解决方案卡片组件（性能优化：React.memo）
+interface SolutionCardProps {
+  solution: {
     title: string;
     subtitle: string;
     description: string;
@@ -64,13 +64,13 @@ interface ProductCardProps {
   next: () => void;
 }
 
-const ProductCard = memo(function ProductCard({
-  product,
+const SolutionCard = memo(function SolutionCard({
+  solution,
   idx,
   colors,
   prev,
   next,
-}: ProductCardProps) {
+}: SolutionCardProps) {
   return (
     <div className={`w-full transition-all duration-500 ${colors.border} ${colors.bg}`}>
       <div className='grid grid-cols-1 lg:grid-cols-[38%_62%] h-full rounded-2xl shadow-lg overflow-hidden'>
@@ -92,19 +92,19 @@ const ProductCard = memo(function ProductCard({
               </span>
               {/* 标题内容 */}
               <div className='relative z-10 flex-1 flex flex-col items-start pl-16'>
-                <h3 className='text-2xl font-bold text-blue-800 text-left'>{product.title}</h3>
-                <p className='text-base text-gray-600 mt-1 text-left'>{product.subtitle}</p>
+                <h3 className='text-2xl font-bold text-blue-800 text-left'>{solution.title}</h3>
+                <p className='text-base text-gray-600 mt-1 text-left'>{solution.subtitle}</p>
               </div>
             </div>
-            {/* 产品描述 */}
+            {/* 方案描述 */}
             <div className='items-center justify-left'>
-              <p className='text-lg text-gray-600 leading-relaxed'>{product.description}</p>
+              <p className='text-lg text-gray-600 leading-relaxed'>{solution.description}</p>
             </div>
             {/* 特色功能 */}
             <div className='items-center justify-left my-4'>
               <h4 className='text-xl font-semibold text-gray-800'>特色功能</h4>
               <div className='grid grid-cols-2 gap-4 justify-items-left my-4'>
-                {product.features.map((feature) => (
+                {solution.features.map((feature) => (
                   <div key={feature} className='flex items-center justify-start space-x-2'>
                     <div
                       className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
@@ -150,7 +150,7 @@ const ProductCard = memo(function ProductCard({
         <div className='bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200'>
           <div className='relative flex items-center justify-start bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 px-40 py-10'>
             <div className='relative w-full h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300'>
-              {/* 产品主图层（响应式自适应） */}
+              {/* 方案主图层（响应式自适应） */}
               <div className='relative w-full pointer-events-none select-none'>
                 <div
                   className='absolute flex items-center justify-center'
@@ -163,8 +163,8 @@ const ProductCard = memo(function ProductCard({
                 >
                   <div className='w-full h-full overflow-hidden z-10'>
                     <Image
-                      src={product.image}
-                      alt={product.title}
+                      src={solution.image}
+                      alt={solution.title}
                       width={1}
                       height={1}
                       sizes='100vw'
@@ -212,12 +212,12 @@ const ProductCard = memo(function ProductCard({
   );
 });
 
-// 产品与服务区块主组件
-interface ProductSectionProps {
+// 解决方案区块主组件
+interface SolutionSectionProps {
   id: string;
 }
 
-const products = [
+const solutions = [
   {
     title: '数据融合平台',
     subtitle: '统一数据接入与处理',
@@ -286,10 +286,10 @@ const colorMap = {
   },
 };
 
-const ProductSection = memo(function ProductSection({ id }: ProductSectionProps) {
+const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionProps) {
   // 轮播当前索引
   const [current, setCurrent] = useState<number>(0);
-  const total = products.length;
+  const total = solutions.length;
 
   // 轮播切换
   const prev = () => setCurrent((prev) => (prev - 1 + total) % total);
@@ -304,21 +304,21 @@ const ProductSection = memo(function ProductSection({ id }: ProductSectionProps)
         {/* 标题区 */}
         <div className='flex items-center justify-between mb-16'>
           <div className='flex-1 text-center'>
-            <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-6'>产品与服务</h2>
+            <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-6'>解决方案</h2>
             <p className='text-lg text-gray-400 max-w-4xl mx-auto'>
               覆盖数据本体构建、融合分析决策、智能指挥调度、场景推演仿真的全业务流程
             </p>
           </div>
         </div>
-        {/* 产品轮播区块 */}
+        {/* 方案轮播区块 */}
         <div className='w-full flex justify-center'>
-          {products.map((product, idx) => {
+          {solutions.map((solution, idx) => {
             if (idx !== current) return null;
-            const colors = colorMap[product.color as keyof typeof colorMap];
+            const colors = colorMap[solution.color as keyof typeof colorMap];
             return (
-              <ProductCard
-                key={product.title}
-                product={product}
+              <SolutionCard
+                key={solution.title}
+                solution={solution}
                 idx={idx}
                 colors={colors}
                 prev={prev}
@@ -332,4 +332,4 @@ const ProductSection = memo(function ProductSection({ id }: ProductSectionProps)
   );
 });
 
-export default ProductSection;
+export default SolutionSection;

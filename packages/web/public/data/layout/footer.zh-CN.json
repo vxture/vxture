@@ -1,0 +1,97 @@
+{
+  "key": "footer",
+  "enabled": true,
+  "brand": {
+    "text": "vxture.ai",
+    "email": "contact@vxture.com",
+    "phone": "400-888-0000"
+  },
+  "social": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "href": "https://github.com/vxture",
+      "ariaLabel": "GitHub"
+    },
+    {
+      "name": "WeChat",
+      "icon": "wechat",
+      "href": "#",
+      "ariaLabel": "微信公众号"
+    }
+  ],
+  "sections": [
+    {
+      "title": "产品服务",
+      "links": [
+        {
+          "label": "产品矩阵",
+          "href": "/products"
+        },
+        {
+          "label": "应用中心",
+          "href": "/applications"
+        },
+        {
+          "label": "帮助文档",
+          "href": "/docs"
+        }
+      ]
+    },
+    {
+      "title": "解决方案",
+      "links": [
+        {
+          "label": "数据融合",
+          "href": "/solutions/data-integration"
+        },
+        {
+          "label": "知识图谱",
+          "href": "/solutions/knowledge-graph"
+        },
+        {
+          "label": "智能决策",
+          "href": "/solutions/intelligent-decision"
+        }
+      ]
+    },
+    {
+      "title": "关于我们",
+      "links": [
+        {
+          "label": "公司简介",
+          "href": "/about"
+        },
+        {
+          "label": "新闻中心",
+          "href": "/news"
+        },
+        {
+          "label": "加入我们",
+          "href": "/careers"
+        }
+      ]
+    },
+    {
+      "title": "法律",
+      "links": [
+        {
+          "label": "隐私政策",
+          "href": "/privacy"
+        },
+        {
+          "label": "服务条款",
+          "href": "/terms"
+        },
+        {
+          "label": "备案号",
+          "href": "https://beian.miit.gov.cn"
+        }
+      ]
+    }
+  ],
+  "copyright": {
+    "text": "版权所有 © 2024-2025 vxture.ai",
+    "year": 2025
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "key": "features",
+  "enabled": true,
+  "title": "核心能力",
+  "subtitle": "专注为政府和大型企事业单位，提供数据驱动的智能决策业务重构和升级",
+  "icon": "chart",
+    "label": "了解更多",
+    "href": "/features"
+  },
+  "items": [
+    {
+      "id": "feature-intro-01",
+      "slug": "data-knowledge-graph",
+      "title": "数据图谱构建",
+      "subtitle": "多源数据融合与知识图谱",
+      "description": "海量数据的智能化关联网络，发现数据间的隐藏价值和深层关系。",
+      "icon": "graph",
+      "intent": "simulation",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": ["多源数据融合", "知识图谱构建", "关联关系挖掘"]
+    },
+    {
+      "id": "feature-intro-02",
+      "slug": "intelligent-decision-dispatch",
+      "title": "智能决策调度",
+      "subtitle": "AI 驱动的资源优化",
+      "icon": "code",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": ["AI 智能调度", "资源优化配置", "决策质量提升"]
+    },
+    {
+      "id": "feature-intro-03",
+      "slug": "digital-twin-simulation",
+      "title": "孪生仿真推演",
+      "subtitle": "数字孪生与场景仿真",
+      "description": "通过高精度仿真模型模拟各种场景，为战略决策提供科学依据。",
+      "icon": "code",
+      "intent": "simulation",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": ["数字孪生建模", "场景仿真推演", "预测分析能力"]
+    }
+  ]
+}

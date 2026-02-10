@@ -1,0 +1,72 @@
+{
+  "key": "solutions",
+  "enabled": true,
+  "title": "产品方案",
+  "subtitle": "面向复杂业务场景的智能化产品方案组合",
+  "items": [
+    {
+      "id": "solution-intro-01",
+      "slug": "data-integration-platform",
+      "title": "数据融合平台",
+      "subtitle": "统一数据接入与处理",
+      "description": "支持多种数据源接入，包括结构化、半结构化和非结构化数据，提供实时数据清洗、转换和标准化服务，构建统一的数据底座。",
+      "intent": "solution",
+      "theme": "primary",
+      "variant": "grid",
+      "tags": ["数据融合", "数据治理", "数据中台"],
+      "cover": {
+        "url": "/images/products/product-intro-01.jpg",
+        "alt": "数据融合平台"
+      },
+      "capabilities": ["data-graph-building", "multi-source-data-fusion"]
+    },
+    {
+      "id": "solution-intro-02",
+      "slug": "knowledge-graph-engine",
+      "title": "知识图谱引擎",
+      "subtitle": "构建智能关联网络",
+      "description": "基于知识图谱与语义建模技术，自动构建实体关系网络，挖掘数据间潜在关联，支撑复杂业务的深度分析与智能推理。",
+      "intent": "solution",
+      "theme": "brand",
+      "variant": "grid",
+      "tags": ["知识图谱", "语义分析", "智能推理"],
+      "cover": {
+        "url": "/images/products/product-intro-02.jpg",
+        "alt": "知识图谱引擎"
+      },
+      "capabilities": ["data-graph-building", "ontology-modeling", "fusion-analysis"]
+    },
+    {
+      "id": "solution-intro-03",
+      "slug": "intelligent-dispatch-system",
+      "title": "智能调度系统",
+      "subtitle": "AI 驱动的资源优化与指挥调度",
+      "description": "通过 AI 算法与规则引擎，实现资源的智能分配、任务协同与动态调度，广泛应用于应急管理、指挥调度与复杂运营场景。",
+      "intent": "solution",
+      "theme": "info",
+      "variant": "grid",
+      "tags": ["智能调度", "应急指挥", "资源优化"],
+      "cover": {
+        "url": "/images/products/product-intro-03.jpg",
+        "alt": "智能调度系统"
+      },
+      "capabilities": ["intelligent-decision-dispatch", "real-time-assessment", "incident-response"]
+    },
+    {
+      "id": "solution-intro-04",
+      "slug": "digital-twin-simulation-platform",
+      "title": "孪生仿真推演平台",
+      "subtitle": "数字孪生与预测分析",
+      "description": "构建高精度数字孪生模型，通过多场景仿真推演与预测分析，为规划论证、风险评估和战略决策提供科学依据。",
+      "intent": "solution",
+      "theme": "success",
+      "variant": "grid",
+      "tags": ["数字孪生", "仿真推演", "预测分析"],
+      "cover": {
+        "url": "/images/products/product-intro-04.jpg",
+        "alt": "孪生仿真推演平台"
+      },
+      "capabilities": ["digital-twin-simulation", "scenario-simulation", "predictive-analysis"]
+    }
+  ]
+}

@@ -43,11 +43,13 @@ import { useEffect } from 'react';
 import { resetWindowScrollTop } from '../../utils/scroll';
 import { useWindowScrollSnap } from '../../hooks/useWindowScrollSnap'; // 滚动吸附 hook
 import { useSnapDebugPanel } from '../../components/common/useSnapDebugPanel'; // 调试面板 hook
-import { useSnapSectionChoice } from '../../components/common/useSnapSectionChoice'; // 新增：吸附选择调试组件
+import { useSnapSectionChoice } from '../../components/common/useSnapSectionChoice'; // 吸附选择调试组件
 
-import CaseSection from '@/components/home/CaseSection';
+import HeroSection from '@/components/home/HeroSection';
 import FeaturesSection from '@/components/home/FeaturesSection';
-import ProductSection from '@/components/home/ProductSection';
+import SolutionSection from '@/components/home/SolutionSection';
+import CaseSection from '@/components/home/CaseSection';
+import CTASection from '@/components/home/CTASection';
 
 export default function HomePage() {
   // 组件挂载时重置滚动位置到顶部
@@ -75,7 +77,7 @@ export default function HomePage() {
   // 获取吸附选择调试组件
   const targetIdPrefix = 'snapTarget';
   const SnapSectionChoice = useSnapSectionChoice({
-    sectionCount: 6,
+    sectionCount: 5,
     targetIdPrefix,
     activeTarget,
     snapToTarget,
@@ -92,16 +94,22 @@ export default function HomePage() {
       {/* 内容组件 (cast components to any to avoid cross-type conflicts) */}
       {(() => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const Hero = HeroSection as unknown as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const Features = FeaturesSection as unknown as any;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const Product = ProductSection as unknown as any;
+        const Solution = SolutionSection as unknown as any;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const Case = CaseSection as unknown as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const CTA = CTASection as unknown as any;
         return (
           <>
+            <Hero id={`${targetIdPrefix}-1`} />
             <Features id={`${targetIdPrefix}-2`} />
-            <Product id={`${targetIdPrefix}-3`} />
+            <Solution id={`${targetIdPrefix}-3`} />
             <Case id={`${targetIdPrefix}-4`} />
+            <CTA id={`${targetIdPrefix}-5`} />
           </>
         );
       })()}

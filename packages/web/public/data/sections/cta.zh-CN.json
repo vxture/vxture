@@ -1,0 +1,51 @@
+{
+  "key": "cta",
+  "enabled": true,
+  "title": "准备好构建真正的数据智能体系了吗？",
+  "subtitle": "从数据融合到智能决策，从概念验证到规模化落地，我们与您并肩推进每一步。",
+  "features": [
+    {
+      "name": "方案级快速落地",
+      "description": "面向政企复杂业务场景，提供可实施、可演进的整体解决方案",
+      "icon": "layers",
+      "theme": "primary"
+    },
+    {
+      "name": "专家团队深度参与",
+      "description": "数据、AI、业务多领域专家协同，保障方案可用、好用、可持续",
+      "icon": "users",
+      "theme": "brand"
+    },
+    {
+      "name": "持续演进与创新",
+      "description": "围绕数据资产与业务目标，持续迭代模型、能力与应用场景",
+      "icon": "refresh",
+      "theme": "success"
+    }
+  ],
+  "actions": [
+    {
+      "label": "预约方案咨询",
+      "href": "/contact",
+      "variant": "primary",
+      "icon": "calendar"
+    },
+    {
+      "label": "了解 RuinsAgent",
+      "href": "/ruins-agent",
+      "variant": "secondary",
+      "icon": "bot"
+    }
+  ],
+  "contact": {
+    "description": "与我们的专家团队直接沟通，获取针对您业务场景的专业建议",
+    "email": {
+      "icon": "mail",
+      "value": "experts@vxture.com"
+    },
+    "phone": {
+      "icon": "phone",
+      "value": "029-12345678"
+    }
+  }
+}

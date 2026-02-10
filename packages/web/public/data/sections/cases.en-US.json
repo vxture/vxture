@@ -1,0 +1,53 @@
+{
+  "key": "cases",
+  "enabled": true,
+  "title": "Best Practices",
+  "subtitle": "Optimal application scenarios for empowering customer business",
+  "items": [
+    {
+      "id": "case-intro-01",
+      "slug": "geo-disaster-graph",
+      "title": "Geological Disaster Data Graph",
+      "description": "Building an intelligent data platform that integrates distributed static baseline data and dynamic monitoring data, achieving deep correlation analysis and visual graph display.",
+      "intent": "case",
+      "theme": "success",
+      "variant": "card",
+      "tags": ["Data Fusion", "Ontology Modeling", "Business Analytics"],
+      "cover": {
+        "url": "/images/cases/case-intro-01.jpg",
+        "alt": "Geological Disaster Data Graph"
+      },
+      "publishedAt": "2024-03-01"
+    },
+    {
+      "id": "case-intro-02",
+      "slug": "intelligent-emergency",
+      "title": "Intelligent Emergency Command Platform",
+      "description": "Building an intelligent decision-making command and dispatch platform that integrates cross-domain data resources, achieving integrated support for disaster early warning, resource dispatch, and emergency decision-making.",
+      "intent": "case",
+      "theme": "success",
+      "variant": "card",
+      "tags": ["Intelligent Decision-Making", "Emergency Management", "Data Integration"],
+      "cover": {
+        "url": "/images/cases/case-intro-02.jpg",
+        "alt": "Intelligent Emergency Command Platform"
+      },
+      "publishedAt": "2024-12-01"
+    },
+    {
+      "id": "case-intro-03",
+      "slug": "public-safety-analysis",
+      "title": "Public Safety Intelligence Analysis",
+      "description": "Through deep application of large model technology, achieving intelligent case fusion analysis and real-time research decision-making, building a precise and efficient safety prevention system.",
+      "intent": "case",
+      "theme": "success",
+      "variant": "card",
+      "tags": ["Fusion Analysis", "Dynamic Assessment", "Event Response"],
+      "cover": {
+        "url": "/images/cases/case-intro-03.jpg",
+        "alt": "Public Safety Intelligence Analysis"
+      },
+      "publishedAt": "2025-06-01"
+    }
+  ]
+}

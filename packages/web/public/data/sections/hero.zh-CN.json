@@ -1,0 +1,19 @@
+{
+  "key": "hero",
+  "enabled": true,
+  "title": "释放数据的",
+  "titleHighlight": "无限潜力",
+  "description": "面向政企复杂业务场景，构建数据驱动的智能决策平台",
+  "theme": "brand",
+  "intent": "cta",
+  "variant": "highlight",
+  "cta": {
+    "label": "开启数据智能之旅",
+    "href": "/products"
+  },
+  "media": {
+    "type": "video",
+    "videoUrl": "/videos/banner-hero-01.mp4",
+    "posterImage": "/images/banner-hero-poster-01.png"
+  }
+}
