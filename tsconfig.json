@@ -1,31 +1,4 @@
 {
   "files": [],
-  "references": [
-    // domain-core
-    { "path": "packages/@vxture/core" },
-    { "path": "packages/@vxture/api-client" },
-    { "path": "packages/@vxture/theme" },
-    { "path": "packages/@vxture/i18n" },
-    { "path": "packages/@vxture/database" },
-    { "path": "packages/@vxture/auth" },
-    { "path": "packages/@vxture/shared-types" },
-
-    // domain-design
-    { "path": "packages/@vxture/design-tokens" },
-    { "path": "packages/@vxture/design-theme-styles" },
-    { "path": "packages/@vxture/design-components" },
-    { "path": "packages/@vxture/design-icons" },
-    { "path": "packages/@vxture/design-layouts" },
-    { "path": "packages/@vxture/design-patterns" },
-
-    // domain-business
-    { "path": "packages/@vxture/business-sdk" },
-    { "path": "packages/@vxture/marketplace" },
-
-    // domain-application
-    { "path": "packages/@vxture/portal" },
-    { "path": "packages/@vxture/operator-workbench" },
-    { "path": "packages/@vxture/studio-workbench" },
-    { "path": "packages/@vxture/tenant-workbench" }
-  ]
+  "references": [{ "path": "packages/web" }, { "path": "packages/api" }]
 }
