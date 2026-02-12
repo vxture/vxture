@@ -1,6 +1,6 @@
 import type { PersistOptions } from 'zustand/middleware';
 import type { AuthState } from '@/types/auth.types';
-import { AUTH_CONSTANTS } from '@/constants/authConfig';
+import { AUTH_CONSTANTS } from '@/shared/constants/authConfig';
 
 /**
  * makeAuthPersistOptions

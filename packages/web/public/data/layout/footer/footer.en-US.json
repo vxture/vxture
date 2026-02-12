@@ -1,0 +1,97 @@
+{
+  "key": "footer",
+  "enabled": true,
+  "brand": {
+    "text": "vxture.ai",
+    "email": "contact@vxture.com",
+    "phone": "+86 400-888-0000"
+  },
+  "social": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "href": "https://github.com/vxture",
+      "ariaLabel": "GitHub"
+    },
+    {
+      "name": "WeChat",
+      "icon": "wechat",
+      "href": "#",
+      "ariaLabel": "WeChat Official Account"
+    }
+  ],
+  "sections": [
+    {
+      "title": "Products",
+      "links": [
+        {
+          "label": "Product Matrix",
+          "href": "/products"
+        },
+        {
+          "label": "App Center",
+          "href": "/applications"
+        },
+        {
+          "label": "Documentation",
+          "href": "/docs"
+        }
+      ]
+    },
+    {
+      "title": "Solutions",
+      "links": [
+        {
+          "label": "Data Integration",
+          "href": "/solutions/data-integration"
+        },
+        {
+          "label": "Knowledge Graph",
+          "href": "/solutions/knowledge-graph"
+        },
+        {
+          "label": "Intelligent Decision",
+          "href": "/solutions/intelligent-decision"
+        }
+      ]
+    },
+    {
+      "title": "About",
+      "links": [
+        {
+          "label": "Company",
+          "href": "/about"
+        },
+        {
+          "label": "News",
+          "href": "/news"
+        },
+        {
+          "label": "Careers",
+          "href": "/careers"
+        }
+      ]
+    },
+    {
+      "title": "Legal",
+      "links": [
+        {
+          "label": "Privacy Policy",
+          "href": "/privacy"
+        },
+        {
+          "label": "Terms of Service",
+          "href": "/terms"
+        },
+        {
+          "label": "ICP Filing",
+          "href": "https://beian.miit.gov.cn"
+        }
+      ]
+    }
+  ],
+  "copyright": {
+    "text": "Copyright © 2024-2025 vxture.ai",
+    "year": 2025
+  }
+}

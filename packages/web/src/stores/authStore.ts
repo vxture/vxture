@@ -51,12 +51,12 @@ import type { StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { makeAuthPersistOptions } from './persistOptions/authPersist';
 import { AuthState, LoginCredentials, LoginResponse, UserInfo } from '@/types/auth.types';
-import { AUTH_CONSTANTS } from '@/constants/authConfig';
+import { AUTH_CONSTANTS } from '@/shared/constants/authConfig';
 import {
   login as loginApi,
   logout as logoutApi,
   refreshToken as refreshTokenApi,
-} from '@/services/authService';
+} from '@/infrastructure/adapters/auth/authService';
 
 // ============================================================================
 // 工具函数 - 令牌过期时间戳计算

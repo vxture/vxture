@@ -40,7 +40,7 @@
 
 'use client';
 
-import ScrollSnapDemo from '@/components/aboutus/TestSection';
+import ScrollSnapDemo from '@/Presentation/components/aboutus/TestSection';
 
 interface SectionConfig {
   id: string;

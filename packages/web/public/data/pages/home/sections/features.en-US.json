@@ -1,0 +1,57 @@
+{
+  "key": "features",
+  "enabled": true,
+  "title": "Core Capabilities",
+  "subtitle": "Empowering governments and large enterprises with data-driven intelligent decision-making and business transformation",
+  "icon": "chart",
+  "cta": {
+    "label": "Learn More",
+    "href": "/features"
+  },
+  "items": [
+    {
+      "id": "feature-intro-01",
+      "slug": "data-knowledge-graph",
+      "title": "Data Knowledge Graph Construction",
+      "subtitle": "Multi-source Data Fusion and Knowledge Graphs",
+      "description": "Intelligent integration networks for massive datasets, discovering hidden value and deep relationships between data.",
+      "icon": "graph",
+      "intent": "simulation",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": [
+        "Multi-source Data Integration",
+        "Knowledge Graph Construction",
+        "Relationship Discovery"
+      ]
+    },
+    {
+      "id": "feature-intro-02",
+      "slug": "intelligent-decision-dispatch",
+      "title": "Intelligent Decision Dispatch",
+      "subtitle": "AI-driven Resource Optimization",
+      "description": "Through AI algorithms and rule engines, achieve intelligent resource allocation, task coordination, and dynamic scheduling.",
+      "icon": "code",
+      "intent": "solution",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": [
+        "AI Intelligent Dispatch",
+        "Resource Optimization",
+        "Enhanced Decision Quality"
+      ]
+    },
+    {
+      "id": "feature-intro-03",
+      "slug": "digital-twin-simulation",
+      "title": "Digital Twin Simulation",
+      "subtitle": "Digital Twins and Scenario Simulation",
+      "description": "Through high-fidelity simulation models to simulate various scenarios, providing scientific evidence for strategic decision-making.",
+      "icon": "code",
+      "intent": "simulation",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": ["Digital Twin Modeling", "Scenario Simulation", "Predictive Analytics"]
+    }
+  ]
+}

@@ -61,8 +61,9 @@ import { cookies, headers } from 'next/headers';
 // 组件导入
 // ------------------------------------------------------------------------------
 
-import Notifications from '@/components/common/Notifications';
-import ClientSyncAgg from '@/components/common/ClientSyncAgg';
+import Notifications from '@/Presentation/components/common/Notifications';
+import ClientSyncAgg from '@/Presentation/components/common/ClientSyncAgg';
+import QueryProvider from '@/Presentation/components/common/QueryProvider';
 
 // ------------------------------------------------------------------------------
 // 字体配置
@@ -233,19 +234,24 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className={inter.className}>
         {/* =============================================================================
-            全局客户端组件 - 状态同步 & 通知系统
+            全局 Provider - React Query
             ============================================================================== */}
+        <QueryProvider>
+          {/* =============================================================================
+              全局客户端组件 - 状态同步 & 通知系统
+              ============================================================================== */}
 
-        {/* 客户端聚合同步组件 - 处理主题、语言等全局副作用 */}
-        <ClientSyncAgg />
+          {/* 客户端聚合同步组件 - 处理主题、语言等全局副作用 */}
+          <ClientSyncAgg />
 
-        {/* 全局通知系统 */}
-        <Notifications />
+          {/* 全局通知系统 */}
+          <Notifications />
 
-        {/* =============================================================================
-            页面内容区域
-            ============================================================================== */}
-        {children}
+          {/* =============================================================================
+              页面内容区域
+              ============================================================================== */}
+          {children}
+        </QueryProvider>
       </body>
     </html>
   );

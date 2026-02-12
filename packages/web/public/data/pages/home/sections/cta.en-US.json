@@ -1,0 +1,51 @@
+{
+  "key": "cta",
+  "enabled": true,
+  "title": "Ready to Build a True Data Intelligence System?",
+  "subtitle": "From data integration to intelligent decision-making, from proof of concept to scaled deployment, we partner with you at every step.",
+  "features": [
+    {
+      "name": "Solution-Level Fast Deployment",
+      "description": "For complex government and enterprise business scenarios, providing implementable and evolvable comprehensive solutions",
+      "icon": "layers",
+      "theme": "primary"
+    },
+    {
+      "name": "Deep Expert Team Involvement",
+      "description": "Cross-functional expertise in data, AI, and business, ensuring solutions are usable, user-friendly, and sustainable",
+      "icon": "users",
+      "theme": "brand"
+    },
+    {
+      "name": "Continuous Evolution and Innovation",
+      "description": "Continuously iterate models, capabilities, and application scenarios around data assets and business objectives",
+      "icon": "refresh",
+      "theme": "success"
+    }
+  ],
+  "actions": [
+    {
+      "label": "Schedule Solution Consultation",
+      "href": "/contact",
+      "variant": "primary",
+      "icon": "calendar"
+    },
+    {
+      "label": "Learn About RuinsAgent",
+      "href": "/ruins-agent",
+      "variant": "secondary",
+      "icon": "bot"
+    }
+  ],
+  "contact": {
+    "description": "Communicate directly with our expert team to get professional advice tailored to your business scenario",
+    "email": {
+      "icon": "mail",
+      "value": "experts@vxture.com"
+    },
+    "phone": {
+      "icon": "phone",
+      "value": "+86 29-12345678"
+    }
+  }
+}

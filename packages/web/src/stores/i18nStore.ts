@@ -42,7 +42,7 @@
  */
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { I18N_CONSTANTS } from '@/constants/i18nConfig';
+import { I18N_CONSTANTS } from '@/shared/constants/i18nConfig';
 import { makeI18nPersistOptions } from './persistOptions/i18nPersist';
 import type { LocaleType, I18nConfig, I18nState, I18nResource } from '@/types/i18n.types';
 

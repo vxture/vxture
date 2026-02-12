@@ -45,7 +45,7 @@
 // ============================================================================
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { THEME_CONSTANTS } from '@/constants/themeConfig';
+import { THEME_CONSTANTS } from '@/shared/constants/themeConfig';
 import { makeThemePersistOptions } from './persistOptions/themePersist';
 import type { ThemeConfig, ThemeState } from '@/types/theme.types';
 
