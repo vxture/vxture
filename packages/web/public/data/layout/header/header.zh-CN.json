@@ -22,29 +22,29 @@
     },
     {
       "label": "关于我们",
-      "href": "/about"
+      "href": "/company"
     }
   ],
   "actions": [
     {
-      "label": "联系我们",
-      "href": "/contact",
+      "label": "注册",
+      "href": "/signup",
       "variant": "secondary"
     },
     {
-      "label": "开始体验",
-      "href": "/signup",
+      "label": "登录",
+      "href": "/login",
       "variant": "primary"
     }
   ],
   "language": {
     "enabled": true,
     "icon": "globe",
-    "title": "切换语言",
+    "title": "语言",
     "options": [
       {
         "code": "zh-CN",
-        "label": "简体中文"
+        "label": "中文"
       },
       {
         "code": "en-US",

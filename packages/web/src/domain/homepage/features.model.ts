@@ -22,12 +22,12 @@ import type { ValidationResult } from '../shared/types';
  * Feature 项接口
  */
 export interface FeatureItem extends ContentItem {
-  readonly subtitle: string;
   readonly icon: string;
   readonly intent?: string;
   readonly theme: string;
   readonly variant: string;
   readonly highlights: string[];
+  readonly cta: { label: string; href: string };
 }
 
 /**
@@ -38,7 +38,7 @@ export interface FeaturesContent extends ContentEntity {
   readonly title: string;
   readonly subtitle: string;
   readonly icon: string;
-  readonly cta: { label: string; href: string };
+  readonly tagline: string;
   readonly items: FeatureItem[];
 }
 

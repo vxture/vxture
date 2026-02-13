@@ -13,13 +13,16 @@ interface FeatureItemRaw {
   id: string;
   slug: string;
   title: string;
-  subtitle: string;
   description?: string;
   icon: string;
   intent?: string;
   theme: string;
   variant: string;
   highlights: string[];
+  cta: {
+    label: string;
+    href: string;
+  };
 }
 
 interface FeaturesContentRaw {
@@ -28,10 +31,7 @@ interface FeaturesContentRaw {
   title: string;
   subtitle: string;
   icon: string;
-  cta: {
-    label: string;
-    href: string;
-  };
+  tagline: string;
   items: FeatureItemRaw[];
 }
 
@@ -40,13 +40,16 @@ export const FeaturesMapper = {
     id: raw.id,
     slug: raw.slug,
     title: raw.title,
-    subtitle: raw.subtitle,
     description: raw.description || '',
     icon: raw.icon,
     intent: raw.intent,
     theme: raw.theme,
     variant: raw.variant,
     highlights: raw.highlights,
+    cta: {
+      label: raw.cta.label,
+      href: raw.cta.href,
+    },
   }),
 
   toDomain: (raw: FeaturesContentRaw): FeaturesContent => ({
@@ -55,10 +58,7 @@ export const FeaturesMapper = {
     title: raw.title,
     subtitle: raw.subtitle,
     icon: raw.icon,
-    cta: {
-      label: raw.cta.label,
-      href: raw.cta.href,
-    },
+    tagline: raw.tagline,
     items: raw.items.map(FeaturesMapper.mapFeatureItem),
   }),
 
@@ -68,21 +68,21 @@ export const FeaturesMapper = {
     title: domain.title,
     subtitle: domain.subtitle,
     icon: domain.icon,
-    cta: {
-      label: domain.cta.label,
-      href: domain.cta.href,
-    },
+    tagline: domain.tagline,
     items: domain.items.map(item => ({
       id: item.id,
       slug: item.slug,
       title: item.title,
-      subtitle: item.subtitle,
       description: item.description,
       icon: item.icon,
       intent: item.intent,
       theme: item.theme,
       variant: item.variant,
       highlights: item.highlights,
+      cta: {
+        label: item.cta.label,
+        href: item.cta.href,
+      },
     })),
   }),
 };

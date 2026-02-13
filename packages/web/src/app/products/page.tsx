@@ -14,10 +14,10 @@
 
 'use client'; // 客户端组件，允许使用浏览器 API
 
-import { useWindowScrollSnap } from '../../hooks/useWindowScrollSnap'; // 滚动吸附 hook
-import { useSnapDebugPanel } from '../../components/common/useSnapDebugPanel'; // 调试面板 hook
-import { useSnapSectionChoice } from '../../components/common/useSnapSectionChoice'; // 吸附选择调试组件
-import ProductDetailPartOne from '../../components/products/ProductDetailPartOne'; // 内容组件
+import { useWindowScrollSnap } from '@/application/hooks/useWindowScrollSnap'; // 滚动吸附 hook
+import { useSnapDebugPanel } from '@/presentation/components/common/useSnapDebugPanel'; // 调试面板 hook
+import { useSnapSectionChoice } from '@/presentation/components/common/useSnapSectionChoice'; // 吸附选择调试组件
+import ProductDetailPartOne from '@/presentation/components/products/ProductDetailPartOne'; // 内容组件
 
 export default function ProductsPage() {
   // 调用滚动吸附 hook，获取状态和方法

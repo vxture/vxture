@@ -22,7 +22,9 @@ import type { ValidationResult } from '../shared/types';
  * 品牌信息接口
  */
 export interface BrandInfo {
+  readonly logo?: string;
   readonly text: string;
+  readonly description?: string;
   readonly email: string;
   readonly phone: string;
 }
@@ -69,6 +71,7 @@ export interface FooterContent extends ContentEntity {
   readonly brand: BrandInfo;
   readonly social: SocialLink[];
   readonly sections: FooterSection[];
+  readonly legal: FooterLink[]; // 法律链接（底部横向展示）
   readonly copyright: Copyright;
 }
 
@@ -139,7 +142,7 @@ export const FooterSectionHelpers = {
    * 根据标签查找链接
    */
   findLinkByLabel: (section: FooterSection, label: string): FooterLink | undefined => {
-    return section.links.find(link => link.label === label);
+    return section.links.find((link) => link.label === label);
   },
 };
 
@@ -188,14 +191,14 @@ export const FooterHelpers = {
    * 根据名称查找社交链接
    */
   findSocialByName: (footer: FooterContent, name: string): SocialLink | undefined => {
-    return footer.social.find(link => link.name.toLowerCase() === name.toLowerCase());
+    return footer.social.find((link) => link.name.toLowerCase() === name.toLowerCase());
   },
 
   /**
    * 根据标题查找区块
    */
   findSectionByTitle: (footer: FooterContent, title: string): FooterSection | undefined => {
-    return footer.sections.find(section => section.title === title);
+    return footer.sections.find((section) => section.title === title);
   },
 
   /**

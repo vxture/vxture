@@ -7,7 +7,7 @@
  * @category Mappers
  */
 
-import type { HeroContent, CTA } from '@/domain/homepage/hero.model';
+import type { HeroContent, CTA, ScrollIndicator } from '@/domain/homepage/hero.model';
 import type { Media } from '@/domain/shared/types';
 
 interface HeroContentRaw {
@@ -29,6 +29,10 @@ interface HeroContentRaw {
     videoUrl?: string;
     posterImage?: string;
     alt?: string;
+  };
+  scrollIndicator?: {
+    enabled: boolean;
+    text?: string;
   };
 }
 
@@ -52,6 +56,17 @@ export const HeroMapper = {
     alt: raw.alt,
   }),
 
+  mapScrollIndicator: (raw?: {
+    enabled: boolean;
+    text?: string;
+  }): ScrollIndicator | undefined => {
+    if (!raw) return undefined;
+    return {
+      enabled: raw.enabled,
+      text: raw.text,
+    };
+  },
+
   toDomain: (raw: HeroContentRaw): HeroContent => ({
     key: 'hero',
     enabled: raw.enabled,
@@ -63,6 +78,7 @@ export const HeroMapper = {
     variant: raw.variant,
     cta: HeroMapper.mapCTA(raw.cta),
     media: HeroMapper.mapMedia(raw.media),
+    scrollIndicator: HeroMapper.mapScrollIndicator(raw.scrollIndicator),
   }),
 
   fromDomain: (domain: HeroContent): HeroContentRaw => ({
@@ -85,5 +101,11 @@ export const HeroMapper = {
       posterImage: domain.media.posterImage,
       alt: domain.media.alt,
     },
+    scrollIndicator: domain.scrollIndicator
+      ? {
+          enabled: domain.scrollIndicator.enabled,
+          text: domain.scrollIndicator.text,
+        }
+      : undefined,
   }),
 };

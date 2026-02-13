@@ -36,9 +36,9 @@
  * @todo 支持更多副作用组件聚合
  */
 'use client';
-import ThemeSync from '@/Presentation/components/common/ThemeSync';
-import I18nSync from '@/Presentation/components/common/I18nSync';
-import AuthSync from '@/Presentation/components/common/AuthSync';
+import ThemeSync from '@/presentation/components/common/ThemeSync';
+import I18nSync from '@/presentation/components/common/I18nSync';
+import AuthSync from '@/presentation/components/common/AuthSync';
 import type { ReactNode } from 'react';
 
 export default function ClientSyncAgg(): ReactNode {

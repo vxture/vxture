@@ -15,5 +15,9 @@
     "type": "video",
     "videoUrl": "/videos/banner-hero-01.mp4",
     "posterImage": "/images/banner-hero-poster-01.png"
+  },
+  "scrollIndicator": {
+    "enabled": true,
+    "text": "向下滚动"
   }
 }

@@ -27,13 +27,11 @@
  * @version 1.0.0
  * @dependencies React, Next.js
  * @tags layout, main
- * @example
- *   // 由 Next.js 自动路由，无需手动引入
  * @remarks
  *   仅负责布局，业务逻辑请移至页面/组件层。
  */
-import Footer from '@/Presentation/components/layout/Footer';
-import Header from '@/Presentation/components/layout/Header';
+import Footer from '@/presentation/components/layout/Footer';
+import Header from '@/presentation/components/layout/Header';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (

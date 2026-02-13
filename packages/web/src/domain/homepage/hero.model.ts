@@ -27,6 +27,14 @@ export interface CTA {
 }
 
 /**
+ * 滚动指示器接口
+ */
+export interface ScrollIndicator {
+  readonly enabled: boolean;
+  readonly text?: string;
+}
+
+/**
  * Hero 内容接口
  */
 export interface HeroContent extends ContentEntity {
@@ -39,6 +47,7 @@ export interface HeroContent extends ContentEntity {
   readonly variant: string;
   readonly cta: CTA;
   readonly media: Media;
+  readonly scrollIndicator?: ScrollIndicator;
 }
 
 // ============================================================================

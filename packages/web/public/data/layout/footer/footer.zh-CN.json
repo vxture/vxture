@@ -2,7 +2,9 @@
   "key": "footer",
   "enabled": true,
   "brand": {
+    "logo": "/icons/favicon.ico",
     "text": "vxture.ai",
+    "description": "基于AI的虚拟自然探索平台",
     "email": "contact@vxture.com",
     "phone": "400-888-0000"
   },
@@ -71,23 +73,20 @@
           "href": "/careers"
         }
       ]
+    }
+  ],
+  "legal": [
+    {
+      "label": "隐私政策",
+      "href": "/privacy"
     },
     {
-      "title": "法律",
-      "links": [
-        {
-          "label": "隐私政策",
-          "href": "/privacy"
-        },
-        {
-          "label": "服务条款",
-          "href": "/terms"
-        },
-        {
-          "label": "备案号",
-          "href": "https://beian.miit.gov.cn"
-        }
-      ]
+      "label": "服务条款",
+      "href": "/terms"
+    },
+    {
+      "label": "备案号：京ICP备05052689号-2",
+      "href": "https://beian.miit.gov.cn"
     }
   ],
   "copyright": {

@@ -20,7 +20,9 @@ interface FooterContentRaw {
   key: 'footer';
   enabled: boolean;
   brand: {
+    logo?: string;
     text: string;
+    description?: string;
     email: string;
     phone: string;
   };
@@ -37,6 +39,10 @@ interface FooterContentRaw {
       href: string;
     }>;
   }>;
+  legal: Array<{
+    label: string;
+    href: string;
+  }>;
   copyright: {
     text: string;
     year: number;
@@ -44,8 +50,10 @@ interface FooterContentRaw {
 }
 
 export const FooterMapper = {
-  mapBrandInfo: (raw: { text: string; email: string; phone: string }): BrandInfo => ({
+  mapBrandInfo: (raw: { logo?: string; text: string; description?: string; email: string; phone: string }): BrandInfo => ({
+    logo: raw.logo,
     text: raw.text,
+    description: raw.description,
     email: raw.email,
     phone: raw.phone,
   }),
@@ -86,6 +94,7 @@ export const FooterMapper = {
     brand: FooterMapper.mapBrandInfo(raw.brand),
     social: raw.social.map(FooterMapper.mapSocialLink),
     sections: raw.sections.map(FooterMapper.mapFooterSection),
+    legal: raw.legal.map(FooterMapper.mapFooterLink),
     copyright: FooterMapper.mapCopyright(raw.copyright),
   }),
 
@@ -93,7 +102,9 @@ export const FooterMapper = {
     key: 'footer',
     enabled: domain.enabled,
     brand: {
+      logo: domain.brand.logo,
       text: domain.brand.text,
+      description: domain.brand.description,
       email: domain.brand.email,
       phone: domain.brand.phone,
     },
@@ -109,6 +120,10 @@ export const FooterMapper = {
         label: link.label,
         href: link.href,
       })),
+    })),
+    legal: domain.legal.map((link) => ({
+      label: link.label,
+      href: link.href,
     })),
     copyright: {
       text: domain.copyright.text,

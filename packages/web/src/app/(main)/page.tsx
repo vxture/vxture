@@ -1,19 +1,19 @@
 /**
- * page.tsx - 首页主内容区（重构版）
+ * page.tsx - 首页主内容区
  *
  * Presentation Layer - Page
  *
  * 职责：
- * - 渲染首页所有区块
- * - 使用重构后的组件
+ * - 渲染首页核心区块
+ * - Header 和 Footer 在 (main)/layout.tsx 中
  *
  * @layer Presentation
  * @category Pages
  */
 'use client';
 
-import HeroSection from '@/Presentation/components/home/HeroSection';
-import FeaturesSection from '@/Presentation/components/home/FeaturesSection';
+import HeroSection from '@/presentation/components/home/HeroSection';
+import FeaturesSection from '@/presentation/components/home/FeaturesSection';
 
 export default function HomePage() {
   return (
@@ -24,7 +24,7 @@ export default function HomePage() {
       {/* Features 区块 */}
       <FeaturesSection id='features' theme='light' />
 
-      {/* 其他区块待重构 */}
+      {/* 暂时注释其他区块 */}
       {/* <SolutionSection id='solutions' /> */}
       {/* <CaseSection id='cases' /> */}
       {/* <CTASection id='cta' /> */}

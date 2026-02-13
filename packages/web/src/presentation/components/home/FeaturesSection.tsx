@@ -16,29 +16,29 @@
 import { memo } from 'react';
 import { useFeatures } from '@/application/hooks/homepage';
 import { HiArrowLongRight } from 'react-icons/hi2';
+import { FaMedal } from 'react-icons/fa';
 import { BasicColorMap, SectionTheme } from '@/shared/theme/colorMap';
+import { renderIcon } from '@/shared/utils/iconMapper';
 
 // 单个能力卡片组件
 interface FeatureCardProps {
   feature: {
+    id: string;
+    slug: string;
     title: string;
     description: string;
-    icon?: string;
-    tags?: string[];
+    icon: string;
+    highlights: string[];
+    cta: { label: string; href: string };
   };
   theme?: SectionTheme;
-  sectionIcon: React.ReactNode;
-  moreButtonSection: string;
 }
 
 const FeatureCard = memo(function FeatureCard({
   feature,
   theme = 'light',
-  sectionIcon,
-  moreButtonSection,
 }: FeatureCardProps) {
   const colorsCards = BasicColorMap[theme].primary;
-  const colorsSection = BasicColorMap[theme].primary;
 
   return (
     <div
@@ -49,21 +49,19 @@ const FeatureCard = memo(function FeatureCard({
       <div className={`absolute bottom-0 left-0 w-full h-1 ${colorsCards.borderDecorative}`} />
 
       {/* 右上角图标 */}
-      <span
-        className={`absolute top-4 right-4 flex items-center justify-center w-8 h-8 transition-colors duration-300 ${colorsSection.iconMain}`}
-      >
-        <div className='w-6 h-6 transition-colors duration-300'>{sectionIcon}</div>
-      </span>
+      <div className='absolute top-4 right-4 flex items-center justify-center w-8 h-8'>
+        <FaMedal className='w-5 h-5 text-blue-500' />
+      </div>
 
       {/* 卡片内容区 */}
-      <div className='relative flex flex-col flex-1 p-8 space-y-6 z-10'>
+      <div className='relative flex flex-col flex-1 p-8 space-y-8 z-10'>
         {/* 主图标 */}
         {feature.icon && (
           <div className='flex justify-center'>
             <div
-              className={`w-20 h-20 ${colorsCards.iconMain} rounded-2xl flex items-center justify-center transition-transform duration-300 border`}
+              className={`w-24 h-24 ${colorsCards.iconMain} rounded-2xl flex items-center justify-center transition-transform duration-300 border-0`}
             >
-              <span className='text-4xl'>{feature.icon}</span>
+              {renderIcon(feature.icon, 'w-16 h-16')}
             </div>
           </div>
         )}
@@ -74,19 +72,19 @@ const FeatureCard = memo(function FeatureCard({
         </h3>
 
         {/* 描述 */}
-        <p className={`leading-relaxed text-center ${colorsCards.textDesc}`}>
+        <p className={`leading-relaxed text-center text-base ${colorsCards.textDesc}`}>
           {feature.description}
         </p>
 
         {/* 高亮标签 */}
-        {feature.tags && feature.tags.length > 0 && (
-          <div className='flex flex-wrap gap-2 justify-center'>
-            {feature.tags.map((tag) => (
+        {feature.highlights && feature.highlights.length > 0 && (
+          <div className='flex flex-wrap gap-3 justify-center'>
+            {feature.highlights.map((highlight) => (
               <span
-                key={tag}
+                key={highlight}
                 className={`px-3 py-1 text-sm font-semibold rounded-full border ${colorsCards.tagBg} ${colorsCards.tagText}`}
               >
-                {tag}
+                {highlight}
               </span>
             ))}
           </div>
@@ -95,12 +93,13 @@ const FeatureCard = memo(function FeatureCard({
         {/* 了解更多按钮 */}
         <div className='flex flex-1 items-end'>
           <div className='w-full text-center'>
-            <button
-              className={`inline-flex items-center px-6 py-2 rounded-lg transition-all duration-300 border ${colorsCards.bgButton} ${colorsCards.textButton} ${colorsCards.bgButtonHover} ${colorsCards.borderButton}`}
+            <a
+              href={feature.cta.href}
+              className={`inline-flex items-center px-4 py-1.5 text-sm rounded-md transition-all duration-300 ${colorsCards.textSub} hover:${colorsCards.textMain} opacity-70 hover:opacity-100`}
             >
-              <span>{moreButtonSection}</span>
-              <HiArrowLongRight className='ml-2 w-4 h-4 transition-colors' />
-            </button>
+              <span>{feature.cta.label}</span>
+              <HiArrowLongRight className='ml-1.5 w-3.5 h-3.5 transition-all' />
+            </a>
           </div>
         </div>
       </div>
@@ -126,11 +125,9 @@ const FeaturesSection = memo(function FeaturesSection({
   // 加载状态
   if (isLoading) {
     return (
-      <section id={id} className={`relative snap-section pt-32 ${colors.bgSection}`}>
-        <div className='h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='text-center py-32'>
-            <div className={`text-xl ${colors.textMain}`}>加载中...</div>
-          </div>
+      <section id={id} className={`relative snap-section min-h-screen flex items-center justify-center ${colors.bgSection}`}>
+        <div className='text-center'>
+          <div className={`text-xl ${colors.textMain}`}>加载中...</div>
         </div>
       </section>
     );
@@ -139,11 +136,9 @@ const FeaturesSection = memo(function FeaturesSection({
   // 错误状态
   if (error || !featuresData) {
     return (
-      <section id={id} className={`relative snap-section pt-32 ${colors.bgSection}`}>
-        <div className='h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='text-center py-32'>
-            <div className={`text-xl ${colors.textMain}`}>加载失败</div>
-          </div>
+      <section id={id} className={`relative snap-section min-h-screen flex items-center justify-center ${colors.bgSection}`}>
+        <div className='text-center'>
+          <div className={`text-xl ${colors.textMain}`}>加载失败</div>
         </div>
       </section>
     );
@@ -154,43 +149,40 @@ const FeaturesSection = memo(function FeaturesSection({
     return null;
   }
 
-  const { title, subtitle, description, items } = featuresData;
+  const { title, subtitle, tagline, items } = featuresData;
 
   return (
-    <section id={id} className={`relative snap-section pt-32 ${colors.bgSection}`}>
-      <div className='h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <section id={id} className={`relative snap-section min-h-screen flex items-center py-32 ${colors.bgSection}`}>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
         {/* 标题区 */}
         <div className='text-center mb-16'>
           <h2 className={`text-3xl lg:text-4xl font-bold mb-6 ${colors.textMain}`}>{title}</h2>
           {subtitle && (
             <p className={`text-lg max-w-4xl mx-auto ${colors.textSub}`}>{subtitle}</p>
           )}
-          {description && (
-            <p className={`text-md max-w-4xl mx-auto mt-4 ${colors.textDesc}`}>{description}</p>
-          )}
         </div>
 
         {/* 能力卡片网格 */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16'>
           {items.map((feature) => (
             <FeatureCard
-              key={feature.title}
+              key={feature.id}
               feature={feature}
               theme={theme}
-              sectionIcon={<span>🏆</span>}
-              moreButtonSection='了解更多'
             />
           ))}
         </div>
 
-        {/* 底部装饰文本 */}
-        <div className='text-center my-16'>
-          <div className='inline-flex items-center space-x-2'>
-            <div className={`w-8 h-[1px] ${colors.dividerRight}`}></div>
-            <span className={`text-sm font-medium ${colors.textSub}`}>数据驱动，智能决策</span>
-            <div className={`w-8 h-[1px] ${colors.dividerLeft}`}></div>
+        {/* 底部标语 */}
+        {tagline && (
+          <div className='text-center'>
+            <div className='inline-flex items-center space-x-2'>
+              <div className={`w-8 h-[1px] ${colors.dividerRight}`}></div>
+              <span className={`text-sm font-medium ${colors.textSub}`}>{tagline}</span>
+              <div className={`w-8 h-[1px] ${colors.dividerLeft}`}></div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

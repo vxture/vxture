@@ -2,7 +2,9 @@
   "key": "footer",
   "enabled": true,
   "brand": {
+    "logo": "/icons/favicon.ico",
     "text": "vxture.ai",
+    "description": "AI-powered Virtual Nature Exploration Platform",
     "email": "contact@vxture.com",
     "phone": "+86 400-888-0000"
   },
@@ -71,23 +73,20 @@
           "href": "/careers"
         }
       ]
+    }
+  ],
+  "legal": [
+    {
+      "label": "Privacy Policy",
+      "href": "/privacy"
     },
     {
-      "title": "Legal",
-      "links": [
-        {
-          "label": "Privacy Policy",
-          "href": "/privacy"
-        },
-        {
-          "label": "Terms of Service",
-          "href": "/terms"
-        },
-        {
-          "label": "ICP Filing",
-          "href": "https://beian.miit.gov.cn"
-        }
-      ]
+      "label": "Terms of Service",
+      "href": "/terms"
+    },
+    {
+      "label": "ICP Filing: Jing ICP No. 05052689-2",
+      "href": "https://beian.miit.gov.cn"
     }
   ],
   "copyright": {
