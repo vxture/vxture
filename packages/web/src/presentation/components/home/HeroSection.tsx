@@ -13,14 +13,12 @@
  */
 'use client';
 
-import { useScrollSnap } from '@/application/hooks/useScrollSnap';
 import { useHero } from '@/application/hooks/homepage';
 import { useEffect, useRef, useState } from 'react';
 import { FiArrowDown } from 'react-icons/fi';
 
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const isSnapped = useScrollSnap(sectionRef);
 
   // 使用新的 Application Layer Hook 获取数据
   const { data: hero, isLoading, error } = useHero();
@@ -78,7 +76,7 @@ export default function HeroSection() {
       <section
         ref={sectionRef}
         id='snap-section-1'
-        className='relative snap-section h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'
+        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'
       >
         <div className='text-white text-xl'>加载中...</div>
       </section>
@@ -91,7 +89,7 @@ export default function HeroSection() {
       <section
         ref={sectionRef}
         id='snap-section-1'
-        className='relative snap-section h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'
+        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'
       >
         <div className='text-white text-xl'>加载失败</div>
       </section>
@@ -107,7 +105,7 @@ export default function HeroSection() {
     <section
       ref={sectionRef}
       id='snap-section-1'
-      className={`relative snap-section h-screen flex items-center justify-center overflow-hidden ${isSnapped ? 'shadow-lg shadow-black/10' : ''}`}
+      className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden'
     >
       {/* 背景媒体层 */}
       <div className='absolute inset-0 w-full h-full z-0'>

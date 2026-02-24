@@ -39,7 +39,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 // 引入 React 的 hooks
-import { useScrollSnap } from '@/application/hooks/useScrollSnap';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 

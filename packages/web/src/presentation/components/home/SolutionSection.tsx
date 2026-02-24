@@ -1,56 +1,42 @@
 /**
- * SolutionSection.tsx
+ * SolutionSection.tsx - 首页解决方案区块（重构版）
  *
- * 功能：
- * - 首页解决方案区块，支持方案轮播、吸附滚动、响应式布局
- * - 支持左右切换、动态配色、卡片动画
+ * Presentation Layer - Component
  *
- * 用途：
- * - 作为首页核心解决方案展示区，提升品牌形象与转化率
- * - 结构与其它 Section 组件保持一致，便于团队协作
+ * 职责：
+ * - 展示首页 Solutions 区块 UI
+ * - 使用 Application Layer 的 useSolutions Hook 获取数据
+ * - 支持吸附滚动、响应式布局、方案轮播
  *
- * 依赖/调用关系：
- * - 依赖 TailwindCSS、Next.js、react-icons
- * - 被 app/(main)/page.tsx 直接引用
- *
- * 设计规范：
- * - 只负责 UI 展示与交互，不包含业务逻辑
- * - 命名、结构、注释与其它 Section 组件保持一致
- *
- * @file SolutionSection.tsx
- * @desc 首页解决方案区块，支持轮播与吸附滚动
- * @author vxture team
- * @created 2024-06-01
- * @lastModified 2025-10-15
- * @modifiedBy stonesmoker
- * @copyright Copyright (c) 2024-2025 vxture
- * @license MIT
- * @version 1.0.0
- * @dependencies React, TailwindCSS, react-icons
- * @tags home, solution, section, component
- * @example
- *   <SolutionSection />
- * @remarks
- *   仅负责 UI 展示，业务逻辑请移至上层页面/服务。
- * @todo
- *   支持更多动态内容与动画效果
+ * @layer Presentation
+ * @category Components - Home
  */
-
 'use client';
 
-import { useState, memo } from 'react';
+import { useState, memo, useMemo } from 'react';
 import Image from 'next/image';
 import { PiCaretLeftBold, PiCaretRightBold } from 'react-icons/pi';
+import { useSolutions } from '@/application/hooks/homepage';
+import { useLocale } from '@/application/hooks/shared/useLocale';
 
 // 解决方案卡片组件（性能优化：React.memo）
 interface SolutionCardProps {
   solution: {
+    id: string;
+    slug: string;
     title: string;
     subtitle: string;
     description: string;
-    features: string[];
-    image: string;
-    color: string;
+    tags: string[];
+    cover: {
+      url: string;
+      alt: string;
+    };
+    theme: string;
+    cta?: {
+      label: string;
+      href: string;
+    };
   };
   idx: number;
   colors: {
@@ -60,6 +46,12 @@ interface SolutionCardProps {
     text: string;
     button: string;
   };
+  uiTexts: {
+    learnMore: string;
+    prev: string;
+    next: string;
+    featuresTitle: string;
+  };
   prev: () => void;
   next: () => void;
 }
@@ -68,6 +60,7 @@ const SolutionCard = memo(function SolutionCard({
   solution,
   idx,
   colors,
+  uiTexts,
   prev,
   next,
 }: SolutionCardProps) {
@@ -100,27 +93,28 @@ const SolutionCard = memo(function SolutionCard({
             <div className='items-center justify-left'>
               <p className='text-lg text-gray-600 leading-relaxed'>{solution.description}</p>
             </div>
-            {/* 特色功能 */}
+            {/* 特色标签 */}
             <div className='items-center justify-left my-4'>
-              <h4 className='text-xl font-semibold text-gray-800'>特色功能</h4>
+              <h4 className='text-xl font-semibold text-gray-800'>{uiTexts.featuresTitle}</h4>
               <div className='grid grid-cols-2 gap-4 justify-items-left my-4'>
-                {solution.features.map((feature) => (
-                  <div key={feature} className='flex items-center justify-start space-x-2'>
+                {solution.tags.map((tag) => (
+                  <div key={tag} className='flex items-center justify-start space-x-2'>
                     <div
                       className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
                     ></div>
-                    <span className='text-lg text-gray-600'>{feature}</span>
+                    <span className='text-lg text-gray-600'>{tag}</span>
                   </div>
                 ))}
               </div>
             </div>
             {/* 了解更多与导航按钮 */}
             <div className='flex justify-between items-center my-4'>
-              <button
-                className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max`}
+              <a
+                href={solution.cta?.href || `/solutions/${solution.slug}`}
+                className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max hover:opacity-90`}
               >
-                了解更多
-              </button>
+                {solution.cta?.label || uiTexts.learnMore}
+              </a>
               <div className='flex justify-normal'>
                 <div className='flex gap-8'>
                   {/* 上一项 */}
@@ -130,7 +124,7 @@ const SolutionCard = memo(function SolutionCard({
                     className='flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
                   >
                     <PiCaretLeftBold className='w-5 h-5 text-gray-700' />
-                    <span className='text-gray-400 font-medium'>Prev</span>
+                    <span className='text-gray-400 font-medium'>{uiTexts.prev}</span>
                   </button>
                   {/* 下一项 */}
                   <button
@@ -138,7 +132,7 @@ const SolutionCard = memo(function SolutionCard({
                     onClick={next}
                     className='flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
                   >
-                    <span className='text-gray-400 font-medium'>Next</span>
+                    <span className='text-gray-400 font-medium'>{uiTexts.next}</span>
                     <PiCaretRightBold className='w-5 h-5 text-gray-700' />
                   </button>
                 </div>
@@ -163,8 +157,8 @@ const SolutionCard = memo(function SolutionCard({
                 >
                   <div className='w-full h-full overflow-hidden z-10'>
                     <Image
-                      src={solution.image}
-                      alt={solution.title}
+                      src={solution.cover.url}
+                      alt={solution.cover.alt}
                       width={1}
                       height={1}
                       sizes='100vw'
@@ -217,67 +211,30 @@ interface SolutionSectionProps {
   id: string;
 }
 
-const solutions = [
-  {
-    title: '数据融合平台',
-    subtitle: '统一数据接入与处理',
-    description:
-      '支持多种数据源接入，包括结构化、半结构化和非结构化数据，提供实时数据清洗、转换和标准化服务。',
-    features: ['多源数据接入', '实时数据处理', '数据质量管控', '数据标准转换'],
-    image: '/images/products/product-intro-01.jpg',
-    color: 'blue',
-  },
-  {
-    title: '知识图谱引擎',
-    subtitle: '构建智能关联网络',
-    description:
-      '基于深度学习算法自动构建实体关系图谱，挖掘数据间的潜在关联，形成可查询的知识网络。',
-    features: ['实体识别', '关系抽取', '图谱构建', '语义查询'],
-    image: '/images/products/product-intro-02.jpg',
-    color: 'purple',
-  },
-  {
-    title: '智能调度系统',
-    subtitle: 'AI驱动的资源优化',
-    description: '运用先进的优化算法和机器学习技术，实现资源的智能分配和任务的最优调度。',
-    features: ['智能调度', '资源优化', '负载均衡', '性能监控'],
-    image: '/images/products/product-intro-03.jpg',
-    color: 'cyan',
-  },
-  {
-    title: '仿真建模工具',
-    subtitle: '数字孪生与预测分析',
-    description: '提供高精度的数字孪生建模能力，支持多场景仿真推演，预测未来发展趋势。',
-    features: ['数字孪生', '场景仿真', '趋势预测', '风险评估'],
-    image: '/images/products/product-intro-04.jpg',
-    color: 'green',
-  },
-];
-
-// 颜色映射表
+// 主题颜色映射表
 const colorMap = {
-  blue: {
+  primary: {
     gradient: 'from-blue-500 to-cyan-500',
     bg: 'bg-blue-50',
     border: 'border-blue-200',
     text: 'text-blue-600',
     button: 'bg-blue-500 hover:bg-blue-600',
   },
-  purple: {
+  brand: {
     gradient: 'from-purple-500 to-blue-500',
     bg: 'bg-purple-50',
     border: 'border-purple-200',
     text: 'text-purple-600',
     button: 'bg-purple-500 hover:bg-purple-600',
   },
-  cyan: {
+  info: {
     gradient: 'from-cyan-500 to-green-500',
     bg: 'bg-cyan-50',
     border: 'border-cyan-200',
     text: 'text-cyan-600',
     button: 'bg-cyan-500 hover:bg-cyan-600',
   },
-  green: {
+  success: {
     gradient: 'from-green-500 to-emerald-500',
     bg: 'bg-green-50',
     border: 'border-green-200',
@@ -287,9 +244,54 @@ const colorMap = {
 };
 
 const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionProps) {
+  // 获取当前语言
+  const { locale } = useLocale();
+
+  // 获取 Solutions 数据
+  const { data: solutionsData, isLoading } = useSolutions();
+
   // 轮播当前索引
   const [current, setCurrent] = useState<number>(0);
+
+  // 根据语言设置默认 UI 文本
+  const defaultUiTexts = useMemo(() => {
+    if (locale === 'en-US') {
+      return {
+        learnMore: 'Learn More',
+        prev: 'Previous',
+        next: 'Next',
+        featuresTitle: 'Key Features',
+      };
+    }
+    return {
+      learnMore: '了解更多',
+      prev: '上一个',
+      next: '下一个',
+      featuresTitle: '核心特性',
+    };
+  }, [locale]);
+
+  // 如果数据未加载，显示加载状态
+  if (isLoading || !solutionsData) {
+    return (
+      <section
+        id={id}
+        className='relative snap-section min-h-screen flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
+      >
+        <div className='max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex items-center justify-center h-full'>
+            <p className='text-gray-400'>加载中...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const solutions = solutionsData.items;
   const total = solutions.length;
+
+  // UI 文本（优先使用 JSON 数据，否则使用根据语言的默认值）
+  const uiTexts = solutionsData.ui || defaultUiTexts;
 
   // 轮播切换
   const prev = () => setCurrent((prev) => (prev - 1 + total) % total);
@@ -297,30 +299,29 @@ const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionPro
 
   return (
     <section
-      id={id}
-      className='relative snap-section h-screen pt-28 bg-gradient-to-b from-blue-50 to-blue-50'
+      id='snap-section-3'
+      className='relative snap-section min-h-screen flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
     >
-      <div className='max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20'>
         {/* 标题区 */}
-        <div className='flex items-center justify-between mb-16'>
-          <div className='flex-1 text-center'>
-            <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-6'>解决方案</h2>
-            <p className='text-lg text-gray-400 max-w-4xl mx-auto'>
-              覆盖数据本体构建、融合分析决策、智能指挥调度、场景推演仿真的全业务流程
-            </p>
-          </div>
+        <div className='text-center mb-16'>
+          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>
+            {solutionsData.title}
+          </h2>
+          <p className='text-lg text-gray-400 max-w-4xl mx-auto mb-16'>{solutionsData.subtitle}</p>
         </div>
         {/* 方案轮播区块 */}
         <div className='w-full flex justify-center'>
           {solutions.map((solution, idx) => {
             if (idx !== current) return null;
-            const colors = colorMap[solution.color as keyof typeof colorMap];
+            const colors = colorMap[solution.theme as keyof typeof colorMap] || colorMap.primary;
             return (
               <SolutionCard
-                key={solution.title}
+                key={solution.id}
                 solution={solution}
                 idx={idx}
                 colors={colors}
+                uiTexts={uiTexts}
                 prev={prev}
                 next={next}
               />

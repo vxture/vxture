@@ -152,13 +152,13 @@ const FeaturesSection = memo(function FeaturesSection({
   const { title, subtitle, tagline, items } = featuresData;
 
   return (
-    <section id={id} className={`relative snap-section min-h-screen flex items-center py-32 ${colors.bgSection}`}>
-      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
+    <section id='snap-section-2' className={`relative snap-section min-h-screen flex flex-col justify-center ${colors.bgSection}`}>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20'>
         {/* 标题区 */}
         <div className='text-center mb-16'>
-          <h2 className={`text-3xl lg:text-4xl font-bold mb-6 ${colors.textMain}`}>{title}</h2>
+          <h2 className={`text-3xl lg:text-4xl font-bold mb-4 ${colors.textMain}`}>{title}</h2>
           {subtitle && (
-            <p className={`text-lg max-w-4xl mx-auto ${colors.textSub}`}>{subtitle}</p>
+            <p className={`text-lg max-w-4xl mx-auto mb-16 ${colors.textSub}`}>{subtitle}</p>
           )}
         </div>
 

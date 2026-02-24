@@ -3,6 +3,10 @@
   "enabled": true,
   "title": "Best Practices",
   "subtitle": "Optimal application scenarios for empowering customer business",
+  "ui": {
+    "viewDetails": "View Details",
+    "moreText": "More Cases"
+  },
   "items": [
     {
       "id": "case-intro-01",
@@ -16,6 +20,10 @@
       "cover": {
         "url": "/images/cases/case-intro-01.jpg",
         "alt": "Geological Disaster Data Graph"
+      },
+      "cta": {
+        "label": "View Details",
+        "href": "/cases/geo-disaster-graph"
       },
       "publishedAt": "2024-03-01"
     },
@@ -32,6 +40,10 @@
         "url": "/images/cases/case-intro-02.jpg",
         "alt": "Intelligent Emergency Command Platform"
       },
+      "cta": {
+        "label": "View Details",
+        "href": "/cases/intelligent-emergency"
+      },
       "publishedAt": "2024-12-01"
     },
     {
@@ -46,6 +58,10 @@
       "cover": {
         "url": "/images/cases/case-intro-03.jpg",
         "alt": "Public Safety Intelligence Analysis"
+      },
+      "cta": {
+        "label": "View Details",
+        "href": "/cases/public-safety-analysis"
       },
       "publishedAt": "2025-06-01"
     }

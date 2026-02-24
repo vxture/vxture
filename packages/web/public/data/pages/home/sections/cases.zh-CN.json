@@ -3,6 +3,10 @@
   "enabled": true,
   "title": "最佳实践",
   "subtitle": "为客户业务赋能的最佳应用场景",
+  "ui": {
+    "viewDetails": "查看详情",
+    "moreText": "更多案例"
+  },
   "items": [
     {
       "id": "case-intro-01",
@@ -16,6 +20,10 @@
       "cover": {
         "url": "/images/cases/case-intro-01.jpg",
         "alt": "地质灾害数据图谱"
+      },
+      "cta": {
+        "label": "查看详情",
+        "href": "/cases/geo-disaster-graph"
       },
       "publishedAt": "2024-03-01"
     },
@@ -32,6 +40,10 @@
         "url": "/images/cases/case-intro-02.jpg",
         "alt": "智能应急指挥平台"
       },
+      "cta": {
+        "label": "查看详情",
+        "href": "/cases/intelligent-emergency"
+      },
       "publishedAt": "2024-12-01"
     },
     {
@@ -46,6 +58,10 @@
       "cover": {
         "url": "/images/cases/case-intro-03.jpg",
         "alt": "公共安全情报分析"
+      },
+      "cta": {
+        "label": "查看详情",
+        "href": "/cases/public-safety-analysis"
       },
       "publishedAt": "2025-06-01"
     }

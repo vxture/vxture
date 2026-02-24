@@ -9,7 +9,7 @@
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import { useLocale } from '../shared/useLocale';
-import { useCases } from '@/application/usecases';
+import { useCases as useCasesService } from '@/application/usecases';
 import type { CasesContent } from '@/domain/homepage/cases.model';
 
 /**
@@ -43,13 +43,13 @@ export interface UseCasesOptions
  * }
  * ```
  */
-export const useContentCases = (options?: UseCasesOptions) => {
+export const useCases = (options?: UseCasesOptions) => {
   const { locale: currentLocale } = useLocale();
   const locale = options?.locale ?? currentLocale;
 
   return useQuery<CasesContent, Error>({
     queryKey: ['cases', locale],
-    queryFn: () => useCases.getCases.execute(locale),
+    queryFn: () => useCasesService.getCases.execute(locale),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: 2,

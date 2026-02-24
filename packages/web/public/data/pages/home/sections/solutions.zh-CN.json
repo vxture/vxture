@@ -3,6 +3,12 @@
   "enabled": true,
   "title": "产品方案",
   "subtitle": "面向复杂业务场景的智能化产品方案组合",
+  "ui": {
+    "learnMore": "了解更多",
+    "prev": "上一个",
+    "next": "下一个",
+    "featuresTitle": "核心特性"
+  },
   "items": [
     {
       "id": "solution-intro-01",
@@ -17,6 +23,10 @@
       "cover": {
         "url": "/images/products/product-intro-01.jpg",
         "alt": "数据融合平台"
+      },
+      "cta": {
+        "label": "了解更多",
+        "href": "/solutions/data-integration-platform"
       },
       "capabilities": ["data-graph-building", "multi-source-data-fusion"]
     },
@@ -34,6 +44,10 @@
         "url": "/images/products/product-intro-02.jpg",
         "alt": "知识图谱引擎"
       },
+      "cta": {
+        "label": "了解更多",
+        "href": "/solutions/knowledge-graph-engine"
+      },
       "capabilities": ["data-graph-building", "ontology-modeling", "fusion-analysis"]
     },
     {
@@ -50,6 +64,10 @@
         "url": "/images/products/product-intro-03.jpg",
         "alt": "智能调度系统"
       },
+      "cta": {
+        "label": "了解更多",
+        "href": "/solutions/intelligent-dispatch-system"
+      },
       "capabilities": ["intelligent-decision-dispatch", "real-time-assessment", "incident-response"]
     },
     {
@@ -65,6 +83,10 @@
       "cover": {
         "url": "/images/products/product-intro-04.jpg",
         "alt": "孪生仿真推演平台"
+      },
+      "cta": {
+        "label": "了解更多",
+        "href": "/solutions/digital-twin-simulation-platform"
       },
       "capabilities": ["digital-twin-simulation", "scenario-simulation", "predictive-analysis"]
     }

@@ -28,6 +28,10 @@ export interface SolutionItem extends ContentItem {
   readonly variant: string;
   readonly tags: string[];
   readonly cover: Cover;
+  readonly cta?: {
+    readonly label: string;
+    readonly href: string;
+  };
   readonly capabilities: string[];
 }
 
@@ -38,6 +42,12 @@ export interface SolutionsContent extends ContentEntity {
   readonly key: 'solutions';
   readonly title: string;
   readonly subtitle: string;
+  readonly ui?: {
+    readonly learnMore: string;
+    readonly prev: string;
+    readonly next: string;
+    readonly featuresTitle: string;
+  };
   readonly items: SolutionItem[];
 }
 
