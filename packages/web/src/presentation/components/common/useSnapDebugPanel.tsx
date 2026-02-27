@@ -71,13 +71,18 @@ interface UseDebugPanelOptions {
 const DEFAULT_POSITION = { top: '4px', right: '4px', zIndex: 9999 };
 
 /**
- * 工具函数：格式化 DOMRect 信息为字符串
+ * 工具函数：格式化 DOMRect 信息为对象
  * @param rect DOMRect 对象
- * @returns 格式化字符串
+ * @returns 格式化对象或 null
  */
-const formatRect = (rect: DOMRect | null | undefined): string => {
-  if (!rect) return 'null';
-  return `top: ${rect.top.toFixed(2)}, left: ${rect.left.toFixed(2)}, width: ${rect.width.toFixed(2)}, height: ${rect.height.toFixed(2)}`;
+const formatRect = (rect: DOMRect | null | undefined): { top: string; left: string; width: string; height: string } | null => {
+  if (!rect) return null;
+  return {
+    top: rect.top.toFixed(2),
+    left: rect.left.toFixed(2),
+    width: rect.width.toFixed(2),
+    height: rect.height.toFixed(2),
+  };
 };
 
 /**
@@ -118,12 +123,12 @@ export function useSnapDebugPanel(options: UseDebugPanelOptions): ReactElement {
       color: '#ffffff',
       borderRadius: '6px',
       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.3)',
-      whiteSpace: 'nowrap',
-      width: 'auto',
-      maxWidth: 'none',
+      whiteSpace: 'normal',
+      width: '280px',
+      maxWidth: '280px',
       maxHeight: 'auto',
       overflowY: 'auto',
-      fontSize: '14px',
+      fontSize: '12px',
       ...style,
     }),
     [panelPosition, style]
@@ -138,9 +143,37 @@ export function useSnapDebugPanel(options: UseDebugPanelOptions): ReactElement {
   return (
     <div style={panelStyle} className={className}>
       <h3 className='mb-2 border-b border-gray-300 pb-1'>滚动吸附调试信息</h3>
-      <div className='space-y-1'>
-        <p>ScreenRect: {formatRect(snapdebugInfo.screenRect)}</p>
-        <p>TargetRect: {formatRect(snapdebugInfo.targetRect)}</p>
+      <div className='space-y-2'>
+        <div>
+          <p className='font-semibold text-gray-300'>ScreenRect:</p>
+          {(() => {
+            const rect = formatRect(snapdebugInfo.screenRect);
+            if (!rect) return <p className='ml-2 text-gray-400'>null</p>;
+            return (
+              <div className='ml-2 space-y-0.5'>
+                <p>top: {rect.top}</p>
+                <p>left: {rect.left}</p>
+                <p>width: {rect.width}</p>
+                <p>height: {rect.height}</p>
+              </div>
+            );
+          })()}
+        </div>
+        <div>
+          <p className='font-semibold text-gray-300'>TargetRect:</p>
+          {(() => {
+            const rect = formatRect(snapdebugInfo.targetRect);
+            if (!rect) return <p className='ml-2 text-gray-400'>null</p>;
+            return (
+              <div className='ml-2 space-y-0.5'>
+                <p>top: {rect.top}</p>
+                <p>left: {rect.left}</p>
+                <p>width: {rect.width}</p>
+                <p>height: {rect.height}</p>
+              </div>
+            );
+          })()}
+        </div>
       </div>
       <div className='my-2 h-px bg-gray-300'></div>
       <div className='space-y-1'>

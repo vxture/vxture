@@ -153,41 +153,37 @@ export default function CaseSection({ id }: CaseSectionProps) {
   return (
     <section
       id='snap-section-4'
-      className='relative snap-section min-h-screen flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
+      className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
     >
-      <div className='relative max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20'>
-        {/* 标题区 */}
-        <div className='text-center mb-16'>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
+        {/* 1. 标题区 - 靠上对齐 */}
+        <div className='text-center pt-28'>
           <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{casesData.title}</h2>
-          <p className='text-lg text-gray-400 max-w-4xl mx-auto mb-16'>{casesData.subtitle}</p>
+          <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{casesData.subtitle}</p>
         </div>
-        {/* 案例卡片网格 */}
-        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {cases.map((item) => (
-            <CaseCard key={item.id} item={item} uiTexts={uiTexts} />
-          ))}
-        </div>
-        {/* 底部装饰文本 */}
-        <div className='text-center text-gray-400/40 animate-bounce mt-16'>
-          <svg
-            className='w-6 h-6 mx-auto mb-2'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M19 14l-7 7m0 0l-7-7m7 7V3'
-            />
-          </svg>
-          <div className='inline-flex items-center space-x-2 text-gray-400'>
-            <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300'></div>
-            <span className='text-sm font-medium'>{uiTexts.moreText}</span>
-            <div className='w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300'></div>
+
+        {/* 2. 内容区 - 上下居中 */}
+        <div className='flex-1 flex items-center justify-center'>
+          <div className='w-full py-8'>
+            {/* 案例卡片网格 */}
+            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+              {cases.map((item) => (
+                <CaseCard key={item.id} item={item} uiTexts={uiTexts} />
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* 3. 底部区 - 靠下对齐 */}
+        {casesData.tagline && (
+          <div className='text-center pb-20'>
+            <div className='inline-flex items-center space-x-2'>
+              <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-200'></div>
+              <span className='text-sm font-medium text-blue-500'>{casesData.tagline}</span>
+              <div className='w-8 h-[1px] bg-gradient-to-l from-transparent to-blue-200'></div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

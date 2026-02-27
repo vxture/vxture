@@ -3,6 +3,8 @@
   "enabled": true,
   "title": "Best Practices",
   "subtitle": "Optimal application scenarios for empowering customer business",
+  "icon": "chart",
+  "tagline": "More Cases, View Details",
   "ui": {
     "viewDetails": "View Details",
     "moreText": "More Cases"

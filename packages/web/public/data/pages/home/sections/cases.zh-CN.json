@@ -3,6 +3,8 @@
   "enabled": true,
   "title": "最佳实践",
   "subtitle": "为客户业务赋能的最佳应用场景",
+  "icon": "chart",
+  "tagline": "更多案例，敬请查看",
   "ui": {
     "viewDetails": "查看详情",
     "moreText": "更多案例"

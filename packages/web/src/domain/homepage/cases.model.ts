@@ -37,6 +37,11 @@ export interface CasesContent extends ContentEntity {
   readonly key: 'cases';
   readonly title: string;
   readonly subtitle: string;
+  readonly tagline: string;
+  readonly ui?: {
+    readonly viewDetails: string;
+    readonly moreText: string;
+  };
   readonly items: CaseItem[];
 }
 

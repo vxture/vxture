@@ -39,9 +39,9 @@ export default function CTASection({ id }: CTASectionProps) {
     return (
       <section
         id={id}
-        className='relative snap-section pt-40 pb-12 bg-gradient-to-b from-blue-50 to-blue-50'
+        className='relative snap-section min-h-[65vh] flex flex-col justify-center bg-gradient-to-b from-blue-50 to-blue-50'
       >
-        <div className='relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
+        <div className='relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center'>
           <p className='text-gray-400'>加载中...</p>
         </div>
       </section>
@@ -50,16 +50,10 @@ export default function CTASection({ id }: CTASectionProps) {
   return (
     <section
       id='snap-section-5'
-      className='relative snap-section pt-40 pb-12 bg-gradient-to-b from-blue-50 to-white'
+      className='relative snap-section min-h-[65vh] flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
     >
-      {/* ===== 简化的背景装饰层 ===== */}
-      <div className='absolute inset-0 pointer-events-none select-none'>
-        <div className='absolute top-20 left-20 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl' />
-        <div className='absolute bottom-20 right-20 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl' />
-      </div>
-
       {/* ===== 主内容区 ===== */}
-      <div className='relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center'>
+      <div className='relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center'>
         {/* 主标题 */}
         <h2 className='text-4xl lg:text-5xl font-bold text-gray-900 mb-6'>
           <span className='inline-block bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent'>

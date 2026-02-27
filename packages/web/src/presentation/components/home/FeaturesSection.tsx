@@ -152,30 +152,34 @@ const FeaturesSection = memo(function FeaturesSection({
   const { title, subtitle, tagline, items } = featuresData;
 
   return (
-    <section id='snap-section-2' className={`relative snap-section min-h-screen flex flex-col justify-center ${colors.bgSection}`}>
-      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20'>
-        {/* 标题区 */}
-        <div className='text-center mb-16'>
-          <h2 className={`text-3xl lg:text-4xl font-bold mb-4 ${colors.textMain}`}>{title}</h2>
+    <section id='snap-section-2' className={`relative snap-section min-h-screen flex flex-col ${colors.bgSection}`}>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
+        {/* 1. 标题区 - 靠上对齐 */}
+        <div className='text-center pt-28'>
+          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{title}</h2>
           {subtitle && (
-            <p className={`text-lg max-w-4xl mx-auto mb-16 ${colors.textSub}`}>{subtitle}</p>
+            <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>
           )}
         </div>
 
-        {/* 能力卡片网格 */}
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16'>
-          {items.map((feature) => (
-            <FeatureCard
-              key={feature.id}
-              feature={feature}
-              theme={theme}
-            />
-          ))}
+        {/* 2. 内容区 - 上下居中 */}
+        <div className='flex-1 flex items-center justify-center'>
+          <div className='w-full'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8'>
+              {items.map((feature) => (
+                <FeatureCard
+                  key={feature.id}
+                  feature={feature}
+                  theme={theme}
+                />
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* 底部标语 */}
+        {/* 3. 底部区 - 靠下对齐 */}
         {tagline && (
-          <div className='text-center'>
+          <div className='text-center pb-20'>
             <div className='inline-flex items-center space-x-2'>
               <div className={`w-8 h-[1px] ${colors.dividerRight}`}></div>
               <span className={`text-sm font-medium ${colors.textSub}`}>{tagline}</span>

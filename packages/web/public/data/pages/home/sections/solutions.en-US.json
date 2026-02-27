@@ -3,6 +3,8 @@
   "enabled": true,
   "title": "Product Solutions",
   "subtitle": "Intelligent product solutions for complex business scenarios",
+  "icon": "chart",
+  "tagline": "Intelligence-Driven, Business-Empowered",
   "ui": {
     "learnMore": "Learn More",
     "prev": "Previous",

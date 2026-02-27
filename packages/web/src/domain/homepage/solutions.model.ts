@@ -42,6 +42,7 @@ export interface SolutionsContent extends ContentEntity {
   readonly key: 'solutions';
   readonly title: string;
   readonly subtitle: string;
+  readonly tagline: string;
   readonly ui?: {
     readonly learnMore: string;
     readonly prev: string;
@@ -50,7 +51,6 @@ export interface SolutionsContent extends ContentEntity {
   };
   readonly items: SolutionItem[];
 }
-
 // ============================================================================
 // 纯函数辅助
 // ============================================================================
