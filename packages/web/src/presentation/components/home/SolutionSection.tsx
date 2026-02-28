@@ -287,6 +287,7 @@ const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionPro
     );
   }
 
+  const { title, subtitle, tagline, items } = solutionsData;
   const solutions = solutionsData.items;
   const total = solutions.length;
 
@@ -300,23 +301,21 @@ const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionPro
   return (
     <section
       id='snap-section-3'
-      className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white border-2 border-red-500'
+      className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
     >
-      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen border-2 border-red-500'>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 1. 标题区 - 靠上对齐 */}
-        <div className='text-center pt-28 border-2 border-red-500'>
-          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>
-            {solutionsData.title}
-          </h2>
-          <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{solutionsData.subtitle}</p>
+        <div className='text-center pt-28'>
+          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{title}</h2>
+          <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>
         </div>
 
         {/* 2. 内容区 - 上下居中 */}
-        <div className='flex items-center justify-center py-8 border-2 border-red-500'>
+        <div className='flex flex-1 items-center justify-center py-8'>
           <div className='w-full'>
             {/* 方案轮播区块 */}
             <div className='w-full flex justify-center'>
-              {solutions.map((solution, idx) => {
+              {items.map((solution, idx) => {
                 if (idx !== current) return null;
                 const colors = colorMap[solution.theme as keyof typeof colorMap] || colorMap.primary;
                 return (
@@ -336,12 +335,12 @@ const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionPro
         </div>
 
         {/* 3. 底部区 - 靠下对齐 */}
-        {solutionsData.tagline && (
-          <div className='text-center pb-20 border-2 border-red-500'>
+        {tagline && (
+          <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-200'></div>
-              <span className='text-sm font-medium text-blue-500'>{solutionsData.tagline}</span>
-              <div className='w-8 h-[1px] bg-gradient-to-l from-transparent to-blue-200'></div>
+              <div className='w-8 h-[2px] bg-gradient-to-r from-transparent to-blue-200'></div>
+              <span className='text-sm font-medium text-blue-500'>{tagline}</span>
+              <div className='w-8 h-[2px] bg-gradient-to-l from-transparent to-blue-200'></div>
             </div>
           </div>
         )}

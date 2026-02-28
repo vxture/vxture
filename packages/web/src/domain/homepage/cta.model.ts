@@ -22,6 +22,7 @@ import type { ValidationResult } from '../shared/types';
  * CTA 特性项接口
  */
 export interface CTAFeature {
+  readonly id: string;
   readonly name: string;
   readonly description: string;
   readonly icon: string;
@@ -62,6 +63,7 @@ export interface CTAContent extends ContentEntity {
   readonly key: 'cta';
   readonly title: string;
   readonly subtitle: string;
+  readonly backToTop: string;
   readonly features: CTAFeature[];
   readonly actions: CTAAction[];
   readonly contact: CTAContact;

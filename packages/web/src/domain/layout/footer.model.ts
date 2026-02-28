@@ -23,10 +23,31 @@ import type { ValidationResult } from '../shared/types';
  */
 export interface BrandInfo {
   readonly logo?: string;
-  readonly text: string;
+  readonly name: string;
+  readonly shortname: string;
+  readonly website: string;
   readonly description?: string;
-  readonly email: string;
-  readonly phone: string;
+  readonly foundedYear?: string;
+  readonly address?: string;
+  readonly timezone?: string;
+}
+
+/**
+ * 联系方式接口
+ */
+export interface ContactInfo {
+  readonly sales: {
+    readonly phone: string;
+    readonly email: string;
+  };
+  readonly service: {
+    readonly phone: string;
+    readonly email: string;
+  };
+  readonly chat?: {
+    readonly link: string;
+    readonly enabled: boolean;
+  };
 }
 
 /**
@@ -51,16 +72,30 @@ export interface FooterLink {
  * Footer 区块接口
  */
 export interface FooterSection {
+  readonly id: string;
   readonly title: string;
   readonly links: FooterLink[];
+}
+
+/**
+ * 备案信息接口
+ */
+export interface FilingInfo {
+  readonly label: string;
+  readonly text: string;
+  readonly link: string;
 }
 
 /**
  * 版权信息接口
  */
 export interface Copyright {
+  readonly label: string;
   readonly text: string;
-  readonly year: number;
+  readonly startYear: number;
+  readonly endYear: number;
+  readonly companyName: string;
+  readonly allRightsReserved: boolean;
 }
 
 /**
@@ -69,9 +104,12 @@ export interface Copyright {
 export interface FooterContent extends ContentEntity {
   readonly key: 'footer';
   readonly brand: BrandInfo;
+  readonly contact: ContactInfo;
   readonly social: SocialLink[];
   readonly sections: FooterSection[];
-  readonly legal: FooterLink[]; // 法律链接（底部横向展示）
+  readonly legal: FooterLink[];
+  readonly icp: FilingInfo;
+  readonly publicSecurity: FilingInfo;
   readonly copyright: Copyright;
 }
 
@@ -88,18 +126,10 @@ export const BrandInfoHelpers = {
    */
   validate: (brand: BrandInfo): ValidationResult => {
     const errors: string[] = [];
-    if (!brand.text?.trim()) errors.push('Brand text is required');
-    if (!brand.email || !BrandInfoHelpers.isValidEmail(brand.email)) {
-      errors.push('Valid brand email is required');
-    }
+    if (!brand.name?.trim()) errors.push('Brand name is required');
+    if (!brand.shortname?.trim()) errors.push('Brand shortname is required');
+    if (!brand.website?.trim()) errors.push('Brand website is required');
     return { valid: errors.length === 0, errors };
-  },
-
-  /**
-   * 简单的邮箱验证
-   */
-  isValidEmail: (email: string): boolean => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   },
 };
 
@@ -155,14 +185,11 @@ export const CopyrightHelpers = {
    */
   isValidYear: (copyright: Copyright): boolean => {
     const currentYear = new Date().getFullYear();
-    return copyright.year >= 2020 && copyright.year <= currentYear;
-  },
-
-  /**
-   * 获取格式化的版权文本
-   */
-  getFormattedText: (copyright: Copyright): string => {
-    return `${copyright.text} ${copyright.year}`;
+    return (
+      copyright.startYear >= 2020 &&
+      copyright.startYear <= copyright.endYear &&
+      copyright.endYear <= currentYear
+    );
   },
 };
 
@@ -215,7 +242,7 @@ export const FooterHelpers = {
 
     // 验证版权年份
     if (!CopyrightHelpers.isValidYear(footer.copyright)) {
-      errors.push(`Invalid copyright year: ${footer.copyright.year}`);
+      errors.push(`Invalid copyright year range: ${footer.copyright.startYear}-${footer.copyright.endYear}`);
     }
 
     return { valid: errors.length === 0, errors };

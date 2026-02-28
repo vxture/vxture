@@ -20,7 +20,9 @@ interface CTAContentRaw {
   enabled: boolean;
   title: string;
   subtitle: string;
+  backToTop: string;
   features: Array<{
+    id: string;
     name: string;
     description: string;
     icon: string;
@@ -47,11 +49,13 @@ interface CTAContentRaw {
 
 export const CTAMapper = {
   mapFeature: (raw: {
+    id: string;
     name: string;
     description: string;
     icon: string;
     theme: string;
   }): CTAFeature => ({
+    id: raw.id,
     name: raw.name,
     description: raw.description,
     icon: raw.icon,
@@ -90,6 +94,7 @@ export const CTAMapper = {
     enabled: raw.enabled,
     title: raw.title,
     subtitle: raw.subtitle,
+    backToTop: raw.backToTop,
     features: raw.features.map(CTAMapper.mapFeature),
     actions: raw.actions.map(CTAMapper.mapAction),
     contact: CTAMapper.mapContact(raw.contact),
@@ -100,7 +105,9 @@ export const CTAMapper = {
     enabled: domain.enabled,
     title: domain.title,
     subtitle: domain.subtitle,
+    backToTop: domain.backToTop,
     features: domain.features.map(f => ({
+      id: f.id,
       name: f.name,
       description: f.description,
       icon: f.icon,

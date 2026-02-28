@@ -2,11 +2,19 @@
   "key": "footer",
   "enabled": true,
   "brand": {
+    "name": "Virtual Nature Studio",
+    "shortname": "vxture",
     "logo": "/icons/favicon.ico",
-    "text": "vxture.ai",
-    "description": "基于AI的虚拟自然探索平台",
-    "email": "contact@vxture.com",
-    "phone": "400-888-0000"
+    "website": "vxture.ai",
+    "description": "人工智能自然探索工作室",
+    "foundedYear": "2024",
+    "address": "陕西省西安市高新区科技路100号",
+    "timezone": "GMT+8"
+  },
+  "contact": {
+    "sales": { "phone": "400-888-2345", "email": "sales@vxture.com" },
+    "service": { "phone": "400-888-6789", "email": "support@vxture.com" },
+    "chat": { "link": "/livechat", "enabled": true }
   },
   "social": [
     {
@@ -14,6 +22,12 @@
       "icon": "github",
       "href": "https://github.com/vxture",
       "ariaLabel": "GitHub"
+    },
+    {
+      "name": "LinkedIn",
+      "icon": "linkedin",
+      "href": "https://linkedin.com/company/vxture",
+      "ariaLabel": "LinkedIn"
     },
     {
       "name": "WeChat",
@@ -24,73 +38,57 @@
   ],
   "sections": [
     {
-      "title": "产品服务",
+      "id": "products-services",
+      "title": "产品中心",
       "links": [
-        {
-          "label": "产品矩阵",
-          "href": "/products"
-        },
-        {
-          "label": "应用中心",
-          "href": "/applications"
-        },
-        {
-          "label": "帮助文档",
-          "href": "/docs"
-        }
+        { "label": "应用中心", "href": "/applications" },
+        { "label": "产品矩阵", "href": "/products" },
+        { "label": "解决方案", "href": "/solutions" },
+        { "label": "案例展示", "href": "/cases" }
       ]
     },
     {
-      "title": "解决方案",
+      "id": "resources-support",
+      "title": "服务支持",
       "links": [
-        {
-          "label": "数字战场",
-          "href": "/solutions/virtual-battlefield"
-        },
-        {
-          "label": "应急管理",
-          "href": "/solutions/emergency-management"
-        },
-        {
-          "label": "知识服务",
-          "href": "/solutions/intelligent-decision"
-        }
+        { "label": "帮助文档", "href": "/docs" },
+        { "label": "常见问题", "href": "/faq" },
+        { "label": "技术支持", "href": "/support" },
+        { "label": "行业洞察", "href": "/insights" }
       ]
     },
     {
+      "id": "about-us",
       "title": "关于我们",
       "links": [
-        {
-          "label": "公司简介",
-          "href": "/about"
-        },
-        {
-          "label": "新闻中心",
-          "href": "/news"
-        },
-        {
-          "label": "加入我们",
-          "href": "/careers"
-        }
+        { "label": "公司简介", "href": "/about" },
+        { "label": "资质证书", "href": "/certifications" },
+        { "label": "加入我们", "href": "/careers" },
+        { "label": "联系我们", "href": "/contact" }
       ]
     }
   ],
   "legal": [
-    {
-      "label": "隐私政策",
-      "href": "/privacy"
-    },
-    {
-      "label": "服务条款",
-      "href": "/terms"
-    },
-    {
-      "label": "备案号：京ICP备05052689号-2",
-      "href": "https://beian.miit.gov.cn"
-    }
+    { "label": "隐私政策", "href": "/privacy" },
+    { "label": "服务条款", "href": "/terms" },
+    { "label": "Cookie Policy", "href": "/cookie-policy" }
   ],
+  "icp": {
+    "label": "备案号",
+    "text": "陕ICP备2025076448号",
+    "link": "https://beian.miit.gov.cn"
+  },
+  "publicSecurity": {
+    "label": "公安备案",
+    "text": "公网安备610000000000号",
+    "link": "https://beian.miit.gov.cn"
+  },
   "copyright": {
-    "text": "版权所有 © 2024-2026 vxture.ai",
-    "year": 2026
+    "label": "copyright",
+    "text": "© 2024-2026 vxture.ai. All rights reserved.",
+    "startYear": 2024,
+    "endYear": 2026,
+    "companyName": "vxture.ai",
+    "allRightsReserved": true
   }
 }

@@ -9,6 +9,10 @@
   },
   "nav": [
     {
+      "label": "AppCenter",
+      "href": "/applications"
+    },
+    {
       "label": "Products",
       "href": "/products"
     },

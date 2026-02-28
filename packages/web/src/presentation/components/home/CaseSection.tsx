@@ -147,7 +147,8 @@ export default function CaseSection({ id }: CaseSectionProps) {
     );
   }
 
-  const cases = casesData.items;
+
+  const { title, subtitle, tagline, items } = casesData;
   const uiTexts = casesData.ui || defaultUiTexts;
 
   return (
@@ -155,32 +156,36 @@ export default function CaseSection({ id }: CaseSectionProps) {
       id='snap-section-4'
       className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
     >
-      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen border-2 border-red-500'>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 1. 标题区 - 靠上对齐 */}
-        <div className='text-center pt-28 border-2 border-red-500'>
-          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{casesData.title}</h2>
-          <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{casesData.subtitle}</p>
+        <div className='text-center pt-28'>
+          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{title}</h2>
+          <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>
         </div>
 
         {/* 2. 内容区 - 上下居中 */}
-        <div className='flex items-center justify-center py-8 border-2 border-red-500'>
+        <div className='flex-1 flex items-center justify-center'>
           <div className='w-full'>
             {/* 案例卡片网格 */}
-            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              {cases.map((item) => (
-                <CaseCard key={item.id} item={item} uiTexts={uiTexts} />
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8'>
+              {items.map((item) => (
+                <CaseCard
+                  key={item.id}
+                  item={item}
+                  uiTexts={uiTexts}
+                />
               ))}
             </div>
           </div>
         </div>
 
         {/* 3. 底部区 - 靠下对齐 */}
-        {casesData.tagline && (
-          <div className='text-center pb-20 border-2 border-red-500'>
+        {tagline && (
+          <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-200'></div>
-              <span className='text-sm font-medium text-blue-500'>{casesData.tagline}</span>
-              <div className='w-8 h-[1px] bg-gradient-to-l from-transparent to-blue-200'></div>
+              <div className='w-8 h-[2px] bg-gradient-to-r from-transparent to-blue-200'></div>
+              <span className='text-sm font-medium text-blue-500'>{tagline}</span>
+              <div className='w-8 h-[2px] bg-gradient-to-l from-transparent to-blue-200'></div>
             </div>
           </div>
         )}

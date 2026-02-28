@@ -2,21 +2,25 @@
   "key": "cta",
   "enabled": true,
   "title": "准备好迈进业务智能化了吗？",
-  "subtitle": "从数据本体到智能化决策，从概念验证到实用性落地，我们与您并肩推进每一步",
+  "subtitle": "从概念验证到实用落地，我们与您并肩推进每一步",
+  "backToTop": "回到顶部",
   "features": [
     {
+      "id": "features-cta-01",
       "name": "方案级快速落地",
       "description": "面向政企复杂业务场景，提供可实施、可演进的整体解决方案",
       "icon": "layers",
       "theme": "primary"
     },
     {
+      "id": "features-cta-02",
       "name": "专家团队深度参与",
       "description": "数据、AI、业务多领域专家协同，保障方案可用、好用、可持续",
       "icon": "users",
       "theme": "primary"
     },
     {
+      "id": "features-cta-03",
       "name": "持续演进与创新",
       "description": "围绕数据资产与业务目标，持续迭代模型、能力与应用场景",
       "icon": "refresh",
