@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tasklist)",
+      "Bash(npx pnpm dev)",
+      "Bash(netstat:*)",
+      "Bash(powershell:*)",
+      "Bash(pnpm dev:*)"
+    ]
+  }
+}

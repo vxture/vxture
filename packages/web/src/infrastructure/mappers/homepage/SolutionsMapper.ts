@@ -32,6 +32,13 @@ interface SolutionsContentRaw {
   enabled: boolean;
   title: string;
   subtitle: string;
+  tagline: string;
+  ui?: {
+    learnMore: string;
+    prev: string;
+    next: string;
+    featuresTitle: string;
+  };
   items: SolutionItemRaw[];
 }
 
@@ -60,6 +67,8 @@ export const SolutionsMapper = {
     enabled: raw.enabled,
     title: raw.title,
     subtitle: raw.subtitle,
+    tagline: raw.tagline,
+    ui: raw.ui,
     items: raw.items.map(SolutionsMapper.mapSolutionItem),
   }),
 
@@ -68,6 +77,8 @@ export const SolutionsMapper = {
     enabled: domain.enabled,
     title: domain.title,
     subtitle: domain.subtitle,
+    tagline: domain.tagline,
+    ui: domain.ui,
     items: domain.items.map(item => ({
       id: item.id,
       slug: item.slug,

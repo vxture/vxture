@@ -68,13 +68,13 @@ const SolutionCard = memo(function SolutionCard({
     <div className={`w-full transition-all duration-500 ${colors.border} ${colors.bg}`}>
       <div className='grid grid-cols-1 lg:grid-cols-[38%_62%] h-full rounded-2xl shadow-lg overflow-hidden'>
         {/* 左侧文本内容 */}
-        <div className='relative flex h-full items-center justify-start px-16'>
-          <div className='relative w-full h-full flex flex-col gap-4 justify-items-start'>
+        <div className='relative flex h-full items-center justify-start px-12 py-4'>
+          <div className='relative w-full h-full flex flex-col gap-3 justify-items-start'>
             {/* 标题与副标题 */}
-            <div className='relative flex items-center h-24 min-h-[96px]'>
+            <div className='relative flex items-center h-20 min-h-[80px]'>
               {/* 背景数字 */}
               <span
-                className='absolute left-0 top-1/2 -translate-y-1/2 text-[64px] font-semibold text-blue-400 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
+                className='absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-blue-400 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
                 aria-hidden='true'
                 style={{
                   letterSpacing: '-0.05em',
@@ -84,56 +84,56 @@ const SolutionCard = memo(function SolutionCard({
                 {idx + 1}
               </span>
               {/* 标题内容 */}
-              <div className='relative z-10 flex-1 flex flex-col items-start pl-16'>
-                <h3 className='text-2xl font-bold text-blue-800 text-left'>{solution.title}</h3>
-                <p className='text-base text-gray-600 mt-1 text-left'>{solution.subtitle}</p>
+              <div className='relative z-10 flex-1 flex flex-col items-start pl-12'>
+                <h3 className='text-xl font-bold text-blue-800 text-left'>{solution.title}</h3>
+                <p className='text-sm text-gray-600 mt-1 text-left'>{solution.subtitle}</p>
               </div>
             </div>
             {/* 方案描述 */}
             <div className='items-center justify-left'>
-              <p className='text-lg text-gray-600 leading-relaxed'>{solution.description}</p>
+              <p className='text-base text-gray-600 leading-relaxed'>{solution.description}</p>
             </div>
             {/* 特色标签 */}
-            <div className='items-center justify-left my-4'>
-              <h4 className='text-xl font-semibold text-gray-800'>{uiTexts.featuresTitle}</h4>
-              <div className='grid grid-cols-2 gap-4 justify-items-left my-4'>
+            <div className='items-center justify-left my-2'>
+              <h4 className='text-lg font-semibold text-gray-800'>{uiTexts.featuresTitle}</h4>
+              <div className='grid grid-cols-2 gap-3 justify-items-left my-2'>
                 {solution.tags.map((tag) => (
                   <div key={tag} className='flex items-center justify-start space-x-2'>
                     <div
                       className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
                     ></div>
-                    <span className='text-lg text-gray-600'>{tag}</span>
+                    <span className='text-base text-gray-600'>{tag}</span>
                   </div>
                 ))}
               </div>
             </div>
             {/* 了解更多与导航按钮 */}
-            <div className='flex justify-between items-center my-4'>
+            <div className='flex justify-between items-center mt-2'>
               <a
                 href={solution.cta?.href || `/solutions/${solution.slug}`}
-                className={`inline-flex items-center px-6 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max hover:opacity-90`}
+                className={`inline-flex items-center px-5 py-1.5 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max hover:opacity-90 text-sm`}
               >
                 {solution.cta?.label || uiTexts.learnMore}
               </a>
               <div className='flex justify-normal'>
-                <div className='flex gap-8'>
+                <div className='flex gap-6'>
                   {/* 上一项 */}
                   <button
                     aria-label='Previous'
                     onClick={prev}
-                    className='flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
+                    className='flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
                   >
-                    <PiCaretLeftBold className='w-5 h-5 text-gray-700' />
-                    <span className='text-gray-400 font-medium'>{uiTexts.prev}</span>
+                    <PiCaretLeftBold className='w-4 h-4 text-gray-700' />
+                    <span className='text-gray-400 font-medium text-sm'>{uiTexts.prev}</span>
                   </button>
                   {/* 下一项 */}
                   <button
                     aria-label='Next'
                     onClick={next}
-                    className='flex items-center gap-2 px-4 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
+                    className='flex items-center gap-2 px-3 py-1.5 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
                   >
-                    <span className='text-gray-400 font-medium'>{uiTexts.next}</span>
-                    <PiCaretRightBold className='w-5 h-5 text-gray-700' />
+                    <span className='text-gray-400 font-medium text-sm'>{uiTexts.next}</span>
+                    <PiCaretRightBold className='w-4 h-4 text-gray-700' />
                   </button>
                 </div>
               </div>
@@ -142,8 +142,8 @@ const SolutionCard = memo(function SolutionCard({
         </div>
         {/* 右侧图片内容 */}
         <div className='bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200'>
-          <div className='relative flex items-center justify-start bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 px-40 py-10'>
-            <div className='relative w-full h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300'>
+          <div className='relative flex items-center justify-center bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 px-24 py-6'>
+            <div className='relative w-full max-w-lg h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300'>
               {/* 方案主图层（响应式自适应） */}
               <div className='relative w-full pointer-events-none select-none'>
                 <div
@@ -300,11 +300,11 @@ const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionPro
   return (
     <section
       id='snap-section-3'
-      className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
+      className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white border-2 border-red-500'
     >
-      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen border-2 border-red-500'>
         {/* 1. 标题区 - 靠上对齐 */}
-        <div className='text-center pt-28'>
+        <div className='text-center pt-28 border-2 border-red-500'>
           <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>
             {solutionsData.title}
           </h2>
@@ -312,8 +312,8 @@ const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionPro
         </div>
 
         {/* 2. 内容区 - 上下居中 */}
-        <div className='flex-1 flex items-center justify-center'>
-          <div className='w-full py-8'>
+        <div className='flex items-center justify-center py-8 border-2 border-red-500'>
+          <div className='w-full'>
             {/* 方案轮播区块 */}
             <div className='w-full flex justify-center'>
               {solutions.map((solution, idx) => {
@@ -337,7 +337,7 @@ const SolutionSection = memo(function SolutionSection({ id }: SolutionSectionPro
 
         {/* 3. 底部区 - 靠下对齐 */}
         {solutionsData.tagline && (
-          <div className='text-center pb-20'>
+          <div className='text-center pb-20 border-2 border-red-500'>
             <div className='inline-flex items-center space-x-2'>
               <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-200'></div>
               <span className='text-sm font-medium text-blue-500'>{solutionsData.tagline}</span>

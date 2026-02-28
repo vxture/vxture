@@ -65,31 +65,31 @@ const CaseCard = memo(function CaseCard({ item, uiTexts }: CaseCardProps) {
         <div className='absolute inset-0 bg-gradient-to-t from-blue-200/80 via-blue-100/80 to-transparent group-hover:opacity-40 rounded-t-2xl pointer-events-none'></div>
       </div>
       {/* 内容区 */}
-      <div className='p-6 space-y-4'>
-        <h3 className='text-2xl font-bold text-blue-800 text-left'>{item.title}</h3>
-        <p className='text-gray-600 leading-relaxed text-left'>{item.description}</p>
-        <div className='flex flex-wrap gap-2 justify-start'>
+      <div className='p-4 space-y-3'>
+        <h3 className='text-xl font-bold text-blue-800 text-left'>{item.title}</h3>
+        <p className='text-gray-600 leading-relaxed text-left text-sm'>{item.description}</p>
+        <div className='flex flex-wrap gap-1.5 justify-start'>
           {item.tags.map((tag) => (
             <span
               key={tag}
-              className='px-3 py-1 bg-blue-50 text-blue-500 text-sm font-semibold rounded-full border border-blue-50'
+              className='px-2.5 py-0.5 bg-blue-50 text-blue-500 text-xs font-semibold rounded-full border border-blue-50'
             >
               {tag}
             </span>
           ))}
         </div>
-        <div className='pt-4 flex items-center justify-between'>
+        <div className='pt-2 flex items-center justify-between'>
           <div className='flex items-center text-gray-500 text-xs font-semibold'>
-            <LuCalendarDays className='mr-1 w-5 h-5' />
+            <LuCalendarDays className='mr-1 w-4 h-4' />
             {formattedDate}
           </div>
           <div className='flex-1 flex justify-end'>
             <Link
               href={item.cta?.href || `/cases/${item.slug}`}
-              className='inline-flex items-center text-sm font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none hover:text-blue-600'
+              className='inline-flex items-center text-xs font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none hover:text-blue-600'
             >
               {item.cta?.label || uiTexts.viewDetails}
-              <svg className='ml-2 w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+              <svg className='ml-1.5 w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -155,18 +155,18 @@ export default function CaseSection({ id }: CaseSectionProps) {
       id='snap-section-4'
       className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
     >
-      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
+      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen border-2 border-red-500'>
         {/* 1. 标题区 - 靠上对齐 */}
-        <div className='text-center pt-28'>
+        <div className='text-center pt-28 border-2 border-red-500'>
           <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{casesData.title}</h2>
           <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{casesData.subtitle}</p>
         </div>
 
         {/* 2. 内容区 - 上下居中 */}
-        <div className='flex-1 flex items-center justify-center'>
-          <div className='w-full py-8'>
+        <div className='flex items-center justify-center py-8 border-2 border-red-500'>
+          <div className='w-full'>
             {/* 案例卡片网格 */}
-            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
               {cases.map((item) => (
                 <CaseCard key={item.id} item={item} uiTexts={uiTexts} />
               ))}
@@ -176,7 +176,7 @@ export default function CaseSection({ id }: CaseSectionProps) {
 
         {/* 3. 底部区 - 靠下对齐 */}
         {casesData.tagline && (
-          <div className='text-center pb-20'>
+          <div className='text-center pb-20 border-2 border-red-500'>
             <div className='inline-flex items-center space-x-2'>
               <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-blue-200'></div>
               <span className='text-sm font-medium text-blue-500'>{casesData.tagline}</span>

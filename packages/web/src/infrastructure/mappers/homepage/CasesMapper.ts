@@ -38,6 +38,11 @@ interface CasesContentRaw {
   enabled: boolean;
   title: string;
   subtitle: string;
+  tagline: string;
+  ui?: {
+    viewDetails: string;
+    moreText: string;
+  };
   items: CaseItemRaw[];
 }
 
@@ -82,6 +87,8 @@ export const CasesMapper = {
       enabled: raw.enabled,
       title: raw.title,
       subtitle: raw.subtitle,
+      tagline: raw.tagline,
+      ui: raw.ui,
       items: raw.items.map(CasesMapper.mapCaseItem),
     };
   },
@@ -95,6 +102,8 @@ export const CasesMapper = {
       enabled: domain.enabled,
       title: domain.title,
       subtitle: domain.subtitle,
+      tagline: domain.tagline,
+      ui: domain.ui,
       items: domain.items.map(item => ({
         id: item.id,
         slug: item.slug,
