@@ -176,7 +176,7 @@ export default function Footer() {
 
             return (
               <div
-                className="fixed bg-white p-2 rounded-lg shadow-lg z-50"
+                className="fixed bg-white/30 p-2 rounded-lg shadow-lg z-50"
                 style={{
                   left: rect.right,
                   top: rect.top,
@@ -188,11 +188,11 @@ export default function Footer() {
                     wechatData?.href ||
                     "/images/footer/WeChatOfficialAccounts.png"
                   }
-                  alt="微信公众号二维码"
-                  className="w-auto h-48 object-contain"
+                  alt={wechatData?.ariaLabel || "微信公众号二维码"}
+                  className="w-auto max-w-none h-48 object-contain"
                 />
                 <div className="mt-1 text-center text-xs text-gray-600">
-                  微信公众号
+                  {wechatData?.ariaLabel || "微信公众号"}
                 </div>
               </div>
             );

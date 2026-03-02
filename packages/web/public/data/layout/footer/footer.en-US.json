@@ -2,7 +2,7 @@
   "key": "footer",
   "enabled": true,
   "brand": {
-    "name": "Vxture Studio .ai",
+    "name": "Vxture Studio",
     "shortname": "vxture",
     "logo": "/icons/favicon.ico",
     "website": "vxture.ai",
@@ -20,13 +20,13 @@
     {
       "name": "GitHub",
       "icon": "github",
-      "href": "https://github.com/vxture",
+      "href": "https://github.com/stonesmoker/vxture",
       "ariaLabel": "GitHub"
     },
     {
       "name": "LinkedIn",
       "icon": "linkedin",
-      "href": "https://linkedin.com/company/vxture",
+      "href": "https://linkedin.com/company/stonesmoker",
       "ariaLabel": "LinkedIn"
     },
     {
