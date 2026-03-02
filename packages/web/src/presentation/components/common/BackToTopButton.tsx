@@ -59,14 +59,18 @@ export default function BackToTopButton({
     transition-all duration-300
   `;
 
-  /** 交互样式 */
+  /** 基础样式（交互样式)  */
   const interactiveClass = `
-    hover:from-blue-50 hover:to-cyan-50
+    hover:from-blue-100 hover:to-cyan-100
     hover:text-blue-500
     hover:shadow-md
     hover:-translate-y-0.5
     active:translate-y-0
     active:shadow-sm
+    focus:outline-none
+    focus-visible:ring-2
+    focus-visible:ring-blue-100
+    focus-visible:ring-offset-2
   `;
 
   return (
