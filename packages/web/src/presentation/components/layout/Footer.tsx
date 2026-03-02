@@ -184,15 +184,12 @@ export default function Footer() {
                 }}
               >
                 <img
-                  src={
-                    wechatData?.href ||
-                    "/images/footer/WeChatOfficialAccounts.png"
-                  }
-                  alt={wechatData?.ariaLabel || "微信公众号二维码"}
+                  src={wechatData.href}
+                  alt={wechatData.ariaLabel}
                   className="w-auto max-w-none h-48 object-contain"
                 />
                 <div className="mt-1 text-center text-xs text-gray-600">
-                  {wechatData?.ariaLabel || "微信公众号"}
+                  {wechatData.ariaLabel}
                 </div>
               </div>
             );

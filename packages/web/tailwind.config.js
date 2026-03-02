@@ -142,6 +142,7 @@ module.exports = {
         'slide-down': 'slide-down 0.3s ease-out',
         'bounce-gentle': 'bounce-gentle 2s infinite',
         'pulse-gentle': 'pulse-gentle 2s infinite',
+        'float': 'float 2.5s ease-in-out infinite',
       },
       keyframes: {
         'fade-in': {
@@ -163,6 +164,10 @@ module.exports = {
         'pulse-gentle': {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.8' },
+        },
+        'float': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         },
       },
       backdropBlur: {

@@ -36,8 +36,8 @@ cp .env.local.template .env.local
 .\start-dev.ps1
 
 # 或分别启动前后端
-pnpm dev      # 前端: http://localhost:3000
-pnpm dev:api  # 后端: http://localhost:8000
+pnpm dev      # 前端: http://localhost:3000 (严格使用此端口)
+pnpm dev:api  # 后端: http://localhost:8000 (严格使用此端口)
 ```
 
 ## 🏗️ Architecture
@@ -84,10 +84,10 @@ packages/api/
 ### Important Notes
 
 1. **Build in Development**: Unless necessary, do not build in the development environment. Use `pnpm dev` for development and `pnpm build` only for production.
-2. **Port Management**: Always use ports 3000 (frontend) and 8000 (backend). If ports are occupied, clean them first using the port conflict resolution commands below.
-3. **UI Confirmation**: If you need to confirm any UI display issues, please ask me instead of testing yourself to avoid getting stuck in a loop.
-4. **Backend Status**: Currently, we are focusing on frontend development. The backend is not yet fully finalized and does not need to be processed temporarily.
-5. **Git Operations**: Git operations (such as commit, push) require my confirmation.
+2. **Port Management**: 严格使用端口 3000（前端）和 8000（后端）。如果端口被占用，请先使用下面的端口冲突解决命令清理。**绝对禁止使用其他端口**。
+3. **UI Confirmation**: 如果需要确认任何 UI 显示问题，请直接询问我，而不是使用 Puppeteer 或其他工具自行测试，以避免陷入循环。
+4. **Backend Status**: 目前我们专注于前端开发。后端尚未完全确定，暂时不需要处理。
+5. **Git Operations**: Git 操作（如 commit、push）需要我的确认。
 
 ### Frontend Commands
 

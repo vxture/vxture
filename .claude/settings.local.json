@@ -49,7 +49,16 @@
       "Bash(git add packages/web/src/presentation/components/layout/Footer.tsx)",
       "Bash(git add .claude/settings.local.json)",
       "Bash(git commit -m \"feat: 微信图标不需要点击链接\")",
-      "Bash(git commit -m \"chore: 更新 .claude/settings.local.json 文件\")"
+      "Bash(git commit -m \"chore: 更新 .claude/settings.local.json 文件\")",
+      "Bash(npm run test)",
+      "Bash(npm run dev -- -p 3003)",
+      "Bash(pkill -f \"node.*3003\")",
+      "Bash(powershell -Command \"$p = netstat -ano | findstr :3003 | findstr LISTENING | ForEach-Object { $_-split '' '' | Where-Object { $_} | Select-Object -Last 1 }; if \\($p\\) { taskkill /F /PID $p }\")",
+      "Bash(powershell -Command \"$pids = netstat -ano | findstr :3003 | findstr LISTENING | ForEach-Object { $_-split '' '' | Where-Object { $_} | Select-Object -Last 1 }; if \\($pids\\) { $pids | ForEach-Object { taskkill /F /PID $_} }\")",
+      "Bash(start http://localhost:3003)",
+      "Bash(powershell -Command \"$pids = netstat -ano | findstr :3001 | findstr LISTENING | ForEach-Object { $_-split '' '' | Where-Object { $_} | Select-Object -Last 1 }; if \\($pids\\) { foreach \\($pid in $pids\\) { taskkill /F /PID $pid } }\")",
+      "Bash(powershell -Command \"& { $pids = \\(netstat -ano | findstr :3001 | findstr LISTENING\\) -split '' '' | Where-Object { $_}; if \\($pids\\) { $pids | ForEach-Object { taskkill /F /PID $_} } }\")",
+      "Bash(powershell -Command \"taskkill /F /IM node.exe\")"
     ]
   },
   "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",

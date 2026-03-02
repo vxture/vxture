@@ -18,11 +18,11 @@ import { FiChevronUp } from 'react-icons/fi';
 interface BackToTopProps {
   /** 按钮文本，默认值为 "回到顶部" */
   text?: string;
-  /** 按钮位置类名，默认值为 "absolute right-16 bottom-20" */
+  /** 按钮位置类名，默认值为 "fixed right-6 bottom-6" */
   positionClass?: string;
   /** 额外的样式类名 */
   className?: string;
-  /** 动画类名，默认值为 "animate-bounce" */
+  /** 动画类名，默认值为 "animate-float" */
   animationClass?: string;
   /** 图标尺寸，默认值为 "w-6 h-6" */
   iconSize?: string;
@@ -36,11 +36,11 @@ interface BackToTopProps {
 
 export default function BackToTopButton({
   text = '回到顶部',
-  positionClass = 'absolute right-16 bottom-20',
+  positionClass = 'fixed right-6 bottom-6',
   className = '',
-  animationClass = 'animate-bounce',
+  animationClass = 'animate-float',
   iconSize = 'w-6 h-6',
-  textSize = 'text-xs',
+  textSize = 'text-sm',
   ariaLabel,
   snapToTarget,
 }: BackToTopProps) {
@@ -61,15 +61,15 @@ export default function BackToTopButton({
   };
 
   return (
-    <div className={`${positionClass} z-20`}>
+    <div className={`${positionClass} z-40`}>
       <button
         type='button'
-        className={`flex flex-col items-center px-3 py-2 rounded-full bg-white/0 hover:bg-gray-100 transition ${animationClass} ${className}`}
+        className={`flex flex-col items-center px-4 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg hover:shadow-xl hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1 ${animationClass} ${className}`}
         onClick={handleClick}
         aria-label={ariaLabel || text}
       >
-        <FiChevronUp className={`${iconSize} text-gray-400 mb-1`} />
-        <span className={`${textSize} text-gray-400`}>{text}</span>
+        <FiChevronUp className={`${iconSize} mb-1`} />
+        <span className={`${textSize} font-medium`}>{text}</span>
       </button>
     </div>
   );

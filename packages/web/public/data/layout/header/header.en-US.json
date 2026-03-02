@@ -55,5 +55,20 @@
         "label": "English"
       }
     ]
+  },
+  "theme": {
+    "enabled": true,
+    "icon": "sun",
+    "title": "Toggle Theme",
+    "options": [
+      {
+        "code": "light",
+        "label": "Light"
+      },
+      {
+        "code": "dark",
+        "label": "Dark"
+      }
+    ]
   }
 }

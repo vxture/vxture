@@ -14,6 +14,7 @@ import type {
   Action,
   LanguageConfig,
   LanguageOption,
+  ThemeConfig,
 } from '@/domain/layout/header.model';
 
 interface HeaderContentRaw {
@@ -41,6 +42,15 @@ interface HeaderContentRaw {
     title: string;
     options: Array<{
       code: string;
+      label: string;
+    }>;
+  };
+  theme: {
+    enabled: boolean;
+    icon: string;
+    title: string;
+    options: Array<{
+      code: 'light' | 'dark';
       label: string;
     }>;
   };
@@ -81,6 +91,18 @@ export const HeaderMapper = {
     label: raw.label,
   }),
 
+  mapThemeConfig: (raw: {
+    enabled: boolean;
+    icon: string;
+    title: string;
+    options: Array<{ code: 'light' | 'dark'; label: string }>;
+  }): ThemeConfig => ({
+    enabled: raw.enabled,
+    icon: raw.icon,
+    title: raw.title,
+    options: raw.options,
+  }),
+
   mapLanguageConfig: (raw: {
     enabled: boolean;
     icon: string;
@@ -100,6 +122,7 @@ export const HeaderMapper = {
     nav: raw.nav.map(HeaderMapper.mapNavItem),
     actions: raw.actions.map(HeaderMapper.mapAction),
     language: HeaderMapper.mapLanguageConfig(raw.language),
+    theme: HeaderMapper.mapThemeConfig(raw.theme),
   }),
 
   fromDomain: (domain: HeaderContent): HeaderContentRaw => ({
@@ -126,6 +149,15 @@ export const HeaderMapper = {
       icon: domain.language.icon,
       title: domain.language.title,
       options: domain.language.options.map(opt => ({
+        code: opt.code,
+        label: opt.label,
+      })),
+    },
+    theme: {
+      enabled: domain.theme.enabled,
+      icon: domain.theme.icon,
+      title: domain.theme.title,
+      options: domain.theme.options.map(opt => ({
         code: opt.code,
         label: opt.label,
       })),

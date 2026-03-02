@@ -73,6 +73,7 @@ export interface HeaderContent extends ContentEntity {
   readonly nav: NavItem[];
   readonly actions: Action[];
   readonly language: LanguageConfig;
+  readonly theme: ThemeConfig;
 }
 
 // ============================================================================
@@ -135,6 +136,42 @@ export const LanguageOptionHelpers = {
    */
   isCurrent: (option: LanguageOption, currentLocale: string): boolean => {
     return option.code === currentLocale;
+  },
+};
+
+/**
+ * 主题配置接口
+ */
+export interface ThemeConfig {
+  readonly enabled: boolean;
+  readonly icon: string;
+  readonly title: string;
+  readonly options: { code: 'light' | 'dark'; label: string }[];
+}
+
+/**
+ * 主题配置辅助函数
+ */
+export const ThemeConfigHelpers = {
+  /**
+   * 获取当前主题选项
+   */
+  getCurrentOption: (config: ThemeConfig, theme: string): { code: 'light' | 'dark'; label: string } | undefined => {
+    return config.options.find(opt => opt.code === theme);
+  },
+
+  /**
+   * 获取可用主题数量
+   */
+  getThemeCount: (config: ThemeConfig): number => {
+    return config.options.length;
+  },
+
+  /**
+   * 检查是否支持主题切换
+   */
+  isThemeSwitchEnabled: (config: ThemeConfig): boolean => {
+    return config.enabled && config.options.length > 1;
   },
 };
 

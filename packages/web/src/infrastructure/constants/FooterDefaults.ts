@@ -23,7 +23,14 @@ export const FALLBACK_FOOTER: FooterContent = {
     service: { phone: '400-888-6789', email: 'support@vxture.com' },
     chat: { link: '/livechat', enabled: true },
   },
-  social: [],
+  social: [
+    {
+      name: "WeChat",
+      icon: "wechat",
+      href: "/images/footer/WeChatOfficialAccounts.png",
+      ariaLabel: "微信公众号"
+    }
+  ],
   sections: [],
   legal: [],
   icp: {

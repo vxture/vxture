@@ -55,5 +55,20 @@
         "label": "English"
       }
     ]
+  },
+  "theme": {
+    "enabled": true,
+    "icon": "sun",
+    "title": "切换主题",
+    "options": [
+      {
+        "code": "light",
+        "label": "浅色"
+      },
+      {
+        "code": "dark",
+        "label": "深色"
+      }
+    ]
   }
 }
