@@ -47,7 +47,9 @@
       "Bash(pnpm start)",
       "Bash(npx prettier --write packages/web/src/presentation/components/layout/Footer.tsx)",
       "Bash(git add packages/web/src/presentation/components/layout/Footer.tsx)",
-      "Bash(git add .claude/settings.local.json)"
+      "Bash(git add .claude/settings.local.json)",
+      "Bash(git commit -m \"feat: 微信图标不需要点击链接\")",
+      "Bash(git commit -m \"chore: 更新 .claude/settings.local.json 文件\")"
     ]
   },
   "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",
