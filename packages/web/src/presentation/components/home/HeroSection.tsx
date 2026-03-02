@@ -183,7 +183,7 @@ export default function HeroSection() {
             {hero.titleHighlight && (
               <>
                 {' '}
-                <span className='inline-block bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent'>
+                <span className='inline-block bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent'>
                   {hero.titleHighlight}
                 </span>
               </>
@@ -192,7 +192,7 @@ export default function HeroSection() {
 
           {/* 描述 */}
           {hero.description && (
-            <p className='text-xl text-slate-600 mb-12 max-w-2xl mx-auto'>{hero.description}</p>
+            <p className='text-xl text-slate-800 mb-12 max-w-2xl mx-auto'>{hero.description}</p>
           )}
 
           {/* CTA 按钮 */}

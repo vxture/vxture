@@ -6,7 +6,7 @@
  * - 支持自定义位置、动态 section 数量、吸附跳转等
  *
  * 用途：
- * - 开发时在页面右上角展示纵向按钮，快速跳转到各 section/target
+ * - 开发时在页面左上角展示纵向按钮，快速跳转到各 section/target
  * - 可集成到任意页面或调试工具中
  *
  * 依赖/调用关系：
@@ -21,15 +21,15 @@
  * @desc 吸附调试选择面板通用组件，支持动态 section 跳转
  * @author vxture team
  * @created 2024-06-01
- * @lastModified 2025-10-15
+ * @lastModified 2026-03-03
  * @modifiedBy stonesmoker
- * @copyright Copyright (c) 2024-2025 vxture
+ * @copyright Copyright (c) 2024-2026 vxture
  * @license MIT
- * @version 1.0.0
+ * @version 1.0.1
  * @dependencies React
  * @tags snap, debug, section, component
  * @example
- *   <useSnapSectionChoice sectionCount={5} targetIdPrefix="section-" ... />
+ *   <useSnapSectionChoice sectionCount={5} targetIdPrefix="snap-section" ... />
  * @remarks
  *   仅负责吸附选择面板 UI，吸附逻辑请通过 props 传入。
  * @todo
@@ -38,23 +38,30 @@
 
 import React from 'react';
 
+// 选项接口：配置吸附选择面板的行为
 interface UseSnapSectionChoiceProps {
   sectionCount: number; // section/target 数量
-  targetIdPrefix: string; //  section/target 目标元素 id 前缀
-  activeTarget: HTMLElement | null;
-  snapToTarget: (target: HTMLElement) => void;
-  position?: {
+  targetIdPrefix: string; // section/target 目标元素 id 前缀
+  activeTarget: HTMLElement | null; // 当前活跃目标
+  snapToTarget: (target: HTMLElement) => void; // 吸附到目标的方法
+  position?: { // 自定义位置配置
     top?: string;
     right?: string;
     bottom?: string;
     left?: string;
-    zIndex?: number | string;
+    zIndex?: number | string; // z-index 层级
   };
-  visible?: boolean;
+  visible?: boolean; // 是否显示面板（可选），默认 true
 }
 
-const DEFAULT_POSITION = { top: '4px', left: '4px', zIndex: 10 };
+// 默认位置配置
+const DEFAULT_POSITION = { top: '4px', left: '4px', zIndex: 9999 };
 
+/**
+ * useSnapSectionChoice - 吸附选择调试面板 Hook
+ * @param props UseSnapSectionChoiceProps
+ * @returns ReactElement
+ */
 export function useSnapSectionChoice(props: UseSnapSectionChoiceProps): React.ReactElement {
   const {
     sectionCount,
@@ -68,20 +75,19 @@ export function useSnapSectionChoice(props: UseSnapSectionChoiceProps): React.Re
   // 合并位置配置
   const panelPosition = { ...DEFAULT_POSITION, ...position };
 
+  // 性能优化：面板不可见时直接返回空片段，避免渲染
   if (!visible) return <></>;
 
+  // 渲染吸附选择面板
   return (
     <div
       className='fixed flex flex-col gap-2 w-auto bg-black/40 text-white p-4 rounded shadow-lg'
       style={{
-        top: panelPosition.top,
-        right: panelPosition.right,
-        bottom: panelPosition.bottom,
-        left: panelPosition.left,
-        zIndex: panelPosition.zIndex,
+        ...panelPosition,
+        fontSize: '12px',
       }}
     >
-      <h3 className='text-sm font-bold mb-2'>吸附选择</h3>
+      <h3 className='text-sm font-bold mb-2'>Sections</h3>
       {Array.from({ length: sectionCount }).map((_, i) => {
         const idx = i + 1;
         const targetId = `${targetIdPrefix}-${idx}`;
@@ -99,7 +105,7 @@ export function useSnapSectionChoice(props: UseSnapSectionChoiceProps): React.Re
             }`}
             style={{ minWidth: 80 }}
           >
-            吸附{idx}
+            Section-{idx}
           </button>
         );
       })}

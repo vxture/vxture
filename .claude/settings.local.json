@@ -58,7 +58,22 @@
       "Bash(start http://localhost:3003)",
       "Bash(powershell -Command \"$pids = netstat -ano | findstr :3001 | findstr LISTENING | ForEach-Object { $_-split '' '' | Where-Object { $_} | Select-Object -Last 1 }; if \\($pids\\) { foreach \\($pid in $pids\\) { taskkill /F /PID $pid } }\")",
       "Bash(powershell -Command \"& { $pids = \\(netstat -ano | findstr :3001 | findstr LISTENING\\) -split '' '' | Where-Object { $_}; if \\($pids\\) { $pids | ForEach-Object { taskkill /F /PID $_} } }\")",
-      "Bash(powershell -Command \"taskkill /F /IM node.exe\")"
+      "Bash(powershell -Command \"taskkill /F /IM node.exe\")",
+      "Bash(netstat -ano)",
+      "Bash(findstr :3001)",
+      "Bash(taskkill /PID 4328 /F)",
+      "Bash(taskkill -PID 4328 -F)",
+      "Bash(npm run start -- -p 3001)",
+      "Bash(taskkill /PID 20796 /F)",
+      "Bash(findstr :3000)",
+      "Bash(taskkill -PID 20796 -F)",
+      "Bash(curl -v http://localhost:3000/data/layout/header/header.zh-CN.json)",
+      "Bash(start http://localhost:3000)",
+      "Bash(curl -s http://localhost:3000/data/pages/home/sections/hero.zh-CN.json)",
+      "Bash(curl -s \"http://localhost:3004\")",
+      "Bash(Select-Object -ExpandProperty OwningProcess)",
+      "Bash(powershell -Command 'Get-NetTCPConnection -ErrorAction SilentlyContinue | Where-Object { $_.LocalPort -like \"\"300*\"\" } | Select-Object -ExpandProperty OwningProcess | ForEach-Object { try { Stop-Process -Id $_ -Force } catch { } }')",
+      "Bash(pnpm list)"
     ]
   },
   "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",
