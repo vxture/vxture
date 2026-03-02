@@ -81,6 +81,12 @@ packages/api/
 
 ## 🛠️ Development Commands
 
+### Important Notes
+
+1. **Package Manager**: This project uses PNPM, not NPM. All commands should use `pnpm` instead of `npm`.
+2. **Build in Development**: Unless necessary, do not build in the development environment. Use `pnpm dev` for development and `pnpm build` only for production.
+3. **Port Management**: Always use ports 3000 (frontend) and 8000 (backend). If ports are occupied, clean them first using the port conflict resolution commands below.
+
 ### Frontend Commands
 
 ```powershell
