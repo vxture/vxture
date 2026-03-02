@@ -16,43 +16,31 @@
 import { FiChevronUp } from 'react-icons/fi';
 
 interface BackToTopProps {
-  /** 按钮文本 */
   text?: string;
-  /** 按钮位置类名 */
   positionClass?: string;
-  /** 额外的样式类名 */
   className?: string;
-  /** 动画类名 */
   animationClass?: string;
-  /** 图标尺寸 */
   iconSize?: string;
-  /** 文本尺寸 */
-  textSize?: string;
-  /** 无障碍访问标签 */
   ariaLabel?: string;
-  /** 滚动吸附函数，用于与 useWindowScrollSnap 钩子协作 */
   snapToTarget?: (target: HTMLElement) => void;
 }
 
 export default function BackToTopButton({
-  text = '回到顶部',
-  positionClass = 'fixed right-16 bottom-20',
+  text = 'Top',
+  positionClass = 'absolute right-16 bottom-20',
   className = '',
-  animationClass = 'animate-bounce hover:animate-none',
-  iconSize = 'w-6 h-6',
-  textSize = 'text-xs',
+  animationClass = 'animate-bounce',
+  iconSize = 'w-5 h-5',
   ariaLabel,
   snapToTarget,
 }: BackToTopProps) {
   const handleClick = () => {
     if (snapToTarget) {
-      // 如果有滚动吸附函数，找到第一个 section 并吸附到它
       const firstSection = document.querySelector('.snap-section');
       if (firstSection) {
         snapToTarget(firstSection as HTMLElement);
       }
     } else {
-      // 没有滚动吸附函数时，直接滚动到顶部
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
@@ -60,15 +48,41 @@ export default function BackToTopButton({
     }
   };
 
+  /** 基础样式（默认状态） */
+  const baseButtonClass = `
+    flex items-center justify-center
+    w-12 h-12 rounded-full
+    bg-gradient-to-br from-white to-gray-100
+    text-gray-500
+    shadow-sm
+    backdrop-blur-sm
+    transition-all duration-300
+  `;
+
+  /** 交互样式 */
+  const interactiveClass = `
+    hover:from-blue-50 hover:to-cyan-50
+    hover:text-blue-500
+    hover:shadow-md
+    hover:-translate-y-0.5
+    active:translate-y-0
+    active:shadow-sm
+  `;
+
   return (
     <div className={`${positionClass} z-40`}>
       <button
         type='button'
-        className={`flex items-center justify-center w-12 h-12 rounded-full bg-gray-200/70 hover:bg-gradient-to-r hover:from-cyan-500 hover:to-blue-600 text-gray-600 hover:text-white shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 ${animationClass} ${className}`}
         onClick={handleClick}
         aria-label={ariaLabel || text}
+        className={`
+          ${baseButtonClass}
+          ${interactiveClass}
+          ${animationClass}
+          ${className}
+        `}
       >
-        <FiChevronUp className={`${iconSize}`} />
+        <FiChevronUp className={iconSize} />
       </button>
     </div>
   );
