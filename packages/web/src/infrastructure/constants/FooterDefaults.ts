@@ -37,7 +37,7 @@ export const FALLBACK_FOOTER: FooterContent = {
     link: 'https://beian.mps.gov.cn',
   },
   copyright: {
-    label: '版权',
+    label: 'copyright',
     text: `© ${new Date().getFullYear()} vxture.ai. All rights reserved.`,
     startYear: new Date().getFullYear(),
     endYear: new Date().getFullYear(),
