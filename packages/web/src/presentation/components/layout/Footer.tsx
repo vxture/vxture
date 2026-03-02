@@ -15,44 +15,19 @@
 
 import { useFooter } from '@/application/hooks/layout';
 import { normalizeFooterData } from '@/infrastructure/constants/FooterHelpers';
-import { FiMail, FiPhone, FiX } from 'react-icons/fi';
+import { FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import { SiGithub, SiWechat, SiLinkedin } from 'react-icons/si';
-import { useState, useRef } from 'react';
 
 export default function Footer() {
   // 1️⃣ 获取 Footer 数据
   const { data: footerData, error } = useFooter();
 
-  // 2️⃣ 二维码相关状态（必须在条件判断前定义）
-  const [qrCodeVisible, setQrCodeVisible] = useState(false);
-  const [qrCodePosition, setQrCodePosition] = useState({ x: 0, y: 0 });
-  const qrCodeRef = useRef<HTMLDivElement>(null);
-
   // 3️⃣ 数据规范化：保证前端渲染安全完整
   const displayData = normalizeFooterData(error || !footerData ? undefined : footerData);
+  console.log('Footer data:', displayData);
 
   // 4️⃣ 如果 Footer 被禁用，不渲染
   if (!displayData.enabled) return null;
-
-  // 5️⃣ 处理微信图标点击事件
-  const handleWechatClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault(); // 阻止默认跳转行为
-    setQrCodePosition({ x: e.clientX, y: e.clientY });
-    setQrCodeVisible(true);
-  };
-
-  // 6️⃣ 处理关闭按钮点击事件
-  const handleCloseClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setQrCodeVisible(false);
-  };
-
-  // 7️⃣ 处理点击二维码外部区域
-  const handleOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (qrCodeRef.current && !qrCodeRef.current.contains(e.target as Node)) {
-      setQrCodeVisible(false);
-    }
-  };
 
   // 4️⃣ 渲染 Footer UI
   return (
@@ -65,12 +40,15 @@ export default function Footer() {
             {/* 品牌标识 */}
             <div className='flex items-center space-x-3 mb-3'>
               <span className='text-2xl font-bold text-gray-700'>
-                {displayData.brand.shortname}
+                {displayData.brand.name}
               </span>
             </div>
-            {/* 品牌描述 */}
-            {displayData.brand.description && (
-              <p className='text-sm text-gray-600 mb-4'>{displayData.brand.description}</p>
+            {/* 地址信息 */}
+            {displayData.brand.address && (
+              <div className='flex items-center space-x-1 text-sm text-gray-600 mb-4'>
+                <FiMapPin className='w-4 h-4' />
+                <span>{displayData.brand.address}</span>
+              </div>
             )}
             {/* 联系方式 */}
             <div className='flex flex-col gap-4 text-sm text-gray-600 mb-4'>
@@ -117,60 +95,35 @@ export default function Footer() {
             {displayData.social?.length > 0 && (
               <div className='flex space-x-4 mt-2'>
                 {displayData.social.map((social) => (
-                  <a
-                    key={social.name}
-                    href={social.icon === 'wechat' ? '#' : social.href}
-                    aria-label={social.ariaLabel}
-                    className='text-gray-600 hover:text-blue-600 transition-colors'
-                    target={social.icon === 'wechat' ? undefined : '_blank'}
-                    rel={social.icon === 'wechat' ? undefined : 'noopener noreferrer'}
-                    onClick={social.icon === 'wechat' ? handleWechatClick : undefined}
-                  >
-                    {social.icon === 'github' && <SiGithub className='w-5 h-5' />}
-                    {social.icon === 'linkedin' && <SiLinkedin className='w-5 h-5' />}
-                    {social.icon === 'wechat' && <SiWechat className='w-5 h-5' />}
-                  </a>
-                ))}
-              </div>
-            )}
-
-            {/* 微信二维码 */}
-            {qrCodeVisible && (
-              <div
-                className='fixed inset-0 bg-black/50 z-50 qr-code-container'
-                onClick={handleOutsideClick}
-              >
-                <div
-                  ref={qrCodeRef}
-                  className='relative bg-white p-4 rounded-lg shadow-2xl'
-                  style={{
-                    position: 'fixed',
-                    left: qrCodePosition.x,
-                    top: qrCodePosition.y,
-                    transform: 'translate(0, -100%)',
-                  }}
-                >
-                  {/* 关闭按钮 */}
-                  <button
-                    onClick={handleCloseClick}
-                    className='absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors'
-                    aria-label='关闭二维码'
-                  >
-                    <FiX className='w-4 h-4' />
-                  </button>
-
-                  {/* 二维码图片 */}
-                  <img
-                    src='/images/footer/WeChatOfficialAccounts.png'
-                    alt='微信公众号二维码'
-                    className='w-64 h-64'
-                  />
-
-                  {/* 二维码说明 */}
-                  <div className='mt-2 text-center text-sm text-gray-600'>
-                    扫描二维码关注微信公众号
+                  <div key={social.name} className='relative group'>
+                    <a
+                      href={social.icon === 'wechat' ? '#' : social.href}
+                      aria-label={social.ariaLabel}
+                      className='text-gray-600 hover:text-blue-600 transition-colors'
+                      target={social.icon === 'wechat' ? undefined : '_blank'}
+                      rel={social.icon === 'wechat' ? undefined : 'noopener noreferrer'}
+                    >
+                      {social.icon === 'github' && <SiGithub className='w-5 h-5' />}
+                      {social.icon === 'linkedin' && <SiLinkedin className='w-5 h-5' />}
+                      {social.icon === 'wechat' && <SiWechat className='w-5 h-5' />}
+                    </a>
+                    {/* 微信二维码 */}
+                    {social.icon === 'wechat' && (
+                      <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50'>
+                        <div className='bg-white p-2 rounded-lg shadow-lg'>
+                          <img
+                            src='/images/footer/WeChatOfficialAccounts.png'
+                            alt='微信公众号二维码'
+                            className='w-32 h-32'
+                          />
+                          <div className='mt-1 text-center text-xs text-gray-600'>
+                            扫描二维码关注微信公众号
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </div>
+                ))}
               </div>
             )}
           </div>

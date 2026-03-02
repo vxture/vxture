@@ -9,7 +9,7 @@ export const FALLBACK_FOOTER: FooterContent = {
   key: 'footer',
   enabled: true,
   brand: {
-    name: 'Virtual Nature Studio',
+    name: 'Vxture Studio',
     shortname: 'vxture',
     logo: '/icons/favicon.ico',
     website: 'vxture.ai',
@@ -19,8 +19,8 @@ export const FALLBACK_FOOTER: FooterContent = {
     timezone: 'GMT+8',
   },
   contact: {
-    sales: { phone: '400-888-1111', email: 'sales@vxture.com' },
-    service: { phone: '400-888-2222', email: 'support@vxture.com' },
+    sales: { phone: '400-888-2345', email: 'sales@vxture.com' },
+    service: { phone: '400-888-6789', email: 'support@vxture.com' },
     chat: { link: '/livechat', enabled: true },
   },
   social: [],

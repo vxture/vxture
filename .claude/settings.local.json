@@ -26,7 +26,21 @@
       "Bash(powershell -Command \"$response = Invoke-WebRequest -Uri ''http://localhost:3000'' -UseBasicParsing -TimeoutSec 10; Write-Host ''HTTP Status Code: '' $response.StatusCode; Write-Host ''Response Length: '' $response.Content.Length '' bytes''\")",
       "Bash(powershell -Command \"$response = Invoke-WebRequest -Uri ''http://localhost:3000'' -UseBasicParsing -TimeoutSec 10; Write-Host ''HTTP Status Code:'' $response.StatusCode; Write-Host ''Response Length:'' $response.Content.Length ''bytes''\")",
       "Bash(curl -s http://localhost:3000)",
-      "Bash(npm run lint -- --fix)"
+      "Bash(npm run lint -- --fix)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -L -I http://localhost:3001)",
+      "Bash(curl -I http://localhost:3001/images/footer/WeChatOfficialAccounts.png)",
+      "Bash(curl -s http://localhost:3002)",
+      "Bash(npm run start)",
+      "Bash(npm run start -- -p 3003)",
+      "Bash(curl -s http://localhost:3003)",
+      "Bash(npm run start -- -p 3004)",
+      "Bash(start http://localhost:3004)",
+      "Bash(ls -la 'src/app/\\(main\\)')",
+      "Bash(node debug.js)",
+      "Bash(node checkSocialLinks.js)",
+      "Bash(node checkWeChatQrCode.js)",
+      "Bash(npm run start -- -p 3005)"
     ]
   },
   "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",

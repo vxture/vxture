@@ -2,7 +2,7 @@
   "key": "footer",
   "enabled": true,
   "brand": {
-    "name": "Virtual Nature Studio",
+    "name": "Vxture Studio .ai",
     "shortname": "vxture",
     "logo": "/icons/favicon.ico",
     "website": "vxture.ai",
@@ -69,9 +69,11 @@
     }
   ],
   "legal": [
-    { "label": "Privacy Policy", "href": "/privacy" },
-    { "label": "Terms of Service", "href": "/terms" },
-    { "label": "Cookie Policy", "href": "/cookie-policy" }
+    { "label": "Terms of Service", "href": "/terms-service" },
+    { "label": "Privacy Policy", "href": "/privacy-policy" },
+    { "label": "Copyright Policy", "href": "/copyright-policy" },
+    { "label": "Brand Policy", "href": "/brand-policy" },
+    { "label": "Cookie Policy", "href": "/cookies-policy" }
   ],
   "icp": {
     "label": "ICP Filing",

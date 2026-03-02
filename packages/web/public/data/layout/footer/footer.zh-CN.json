@@ -2,7 +2,7 @@
   "key": "footer",
   "enabled": true,
   "brand": {
-    "name": "Virtual Nature Studio",
+    "name": "Vxture Studio",
     "shortname": "vxture",
     "logo": "/icons/favicon.ico",
     "website": "vxture.ai",
@@ -69,9 +69,11 @@
     }
   ],
   "legal": [
-    { "label": "隐私政策", "href": "/privacy" },
-    { "label": "服务条款", "href": "/terms" },
-    { "label": "Cookie Policy", "href": "/cookie-policy" }
+    { "label": "服务条款", "href": "/terms-service" },
+    { "label": "隐私政策", "href": "/privacy-policy" },
+    { "label": "版权政策", "href": "/copyright-policy" },
+    { "label": "品牌政策", "href": "/brand-policy" },
+    { "label": "Cookie 使用政策", "href": "/cookies-policy" }
   ],
   "icp": {
     "label": "备案号",
