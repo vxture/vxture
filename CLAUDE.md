@@ -83,9 +83,11 @@ packages/api/
 
 ### Important Notes
 
-1. **Package Manager**: This project uses PNPM, not NPM. All commands should use `pnpm` instead of `npm`.
-2. **Build in Development**: Unless necessary, do not build in the development environment. Use `pnpm dev` for development and `pnpm build` only for production.
-3. **Port Management**: Always use ports 3000 (frontend) and 8000 (backend). If ports are occupied, clean them first using the port conflict resolution commands below.
+1. **Build in Development**: Unless necessary, do not build in the development environment. Use `pnpm dev` for development and `pnpm build` only for production.
+2. **Port Management**: Always use ports 3000 (frontend) and 8000 (backend). If ports are occupied, clean them first using the port conflict resolution commands below.
+3. **UI Confirmation**: If you need to confirm any UI display issues, please ask me instead of testing yourself to avoid getting stuck in a loop.
+4. **Backend Status**: Currently, we are focusing on frontend development. The backend is not yet fully finalized and does not need to be processed temporarily.
+5. **Git Operations**: Git operations (such as commit, push) require my confirmation.
 
 ### Frontend Commands
 
