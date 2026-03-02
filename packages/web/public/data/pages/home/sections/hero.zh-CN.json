@@ -3,7 +3,7 @@
   "enabled": true,
   "title": "释放数据的",
   "titleHighlight": "无限潜力",
-  "description": "面向政企复杂业务场景，构建人工智能业务平台",
+  "description": "面向政企复杂业务场景，构建数据驱动的业务智能体系",
   "theme": "brand",
   "intent": "cta",
   "variant": "highlight",
@@ -13,8 +13,8 @@
   },
   "media": {
     "type": "video",
-    "videoUrl": "/videos/banner-hero-01.mp4",
-    "posterImage": "/images/banner-hero-poster-01.png"
+    "videoUrl": "/videos/herosection/banner-hero-01.mp4",
+    "posterImage": "/images/herosection/banner-hero-poster-light-01.png"
   },
   "scrollIndicator": {
     "enabled": true,

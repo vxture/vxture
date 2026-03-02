@@ -2,9 +2,9 @@
   "key": "solutions",
   "enabled": true,
   "title": "Product Solutions",
-  "subtitle": "Intelligent product solutions for complex business scenarios",
+  "subtitle": "Deep into business scenarios, providing product and service combinations",
   "icon": "chart",
-  "tagline": "Intelligence-Driven, Business-Empowered",
+  "tagline": "Platform Power, Scene Fusion",
   "ui": {
     "learnMore": "Learn More",
     "prev": "Previous",
@@ -15,16 +15,16 @@
     {
       "id": "solution-intro-01",
       "slug": "data-integration-platform",
-      "title": "Data Integration Platform",
-      "subtitle": "Unified Data Ingestion and Processing",
-      "description": "Supports multiple data source ingestion including structured, semi-structured, and unstructured data, providing real-time data cleansing, transformation, and standardization to build a unified data foundation.",
+      "title": "Unified Data Intelligence Platform",
+      "subtitle": "Data ontology construction, discovering hidden value and deep relationships",
+      "description": "For government and enterprise digital scenarios, breaking data silos to build a secure, standard, shareable, and evolvable enterprise intelligent data foundation.",
       "intent": "solution",
       "theme": "primary",
       "variant": "grid",
-      "tags": ["Data Fusion", "Data Governance", "Data Platform"],
+      "tags": ["Data Fusion", "Data Governance", "Data Ontology"],
       "cover": {
-        "url": "/images/products/product-intro-01.jpg",
-        "alt": "Data Integration Platform"
+        "url": "/images/productssection/product-intro-01.jpg",
+        "alt": "Unified Data Intelligence Platform"
       },
       "cta": {
         "label": "Learn More",
@@ -36,14 +36,14 @@
       "id": "solution-intro-02",
       "slug": "knowledge-graph-engine",
       "title": "Knowledge Graph Engine",
-      "subtitle": "Building Intelligent Relationship Networks",
-      "description": "Based on knowledge graph and semantic modeling technology, automatically construct entity-relationship networks, uncover hidden relationships in data, supporting advanced analytics and intelligent reasoning for complex business.",
+      "subtitle": "Building intelligent business relationship networks for deep decisions",
+      "description": "Based on knowledge graph and semantic modeling, constructing entity relationship networks, mining hidden data connections, supporting complex business analysis and intelligent reasoning.",
       "intent": "solution",
       "theme": "brand",
       "variant": "grid",
-      "tags": ["Knowledge Graph", "Semantic Analysis", "Intelligent Reasoning"],
+      "tags": ["Knowledge Graph", "Entity Relationships", "Intelligent Reasoning"],
       "cover": {
-        "url": "/images/products/product-intro-02.jpg",
+        "url": "/images/productssection/product-intro-02.jpg",
         "alt": "Knowledge Graph Engine"
       },
       "cta": {
@@ -55,16 +55,16 @@
     {
       "id": "solution-intro-03",
       "slug": "intelligent-dispatch-system",
-      "title": "Intelligent Dispatch System",
-      "subtitle": "AI-driven Resource Optimization and Command Dispatch",
-      "description": "Through AI algorithms and rule engines, achieve intelligent resource allocation, task coordination, and dynamic scheduling, widely applied in emergency management, command dispatch, and complex operational scenarios.",
+      "title": "Intelligent Dispatch Engine",
+      "subtitle": "Data-driven intelligent decisions for unified command and dispatch",
+      "description": "Based on data and knowledge capabilities, achieving optimized resource allocation and dynamic scheduling, supporting emergency management and real-time command in complex scenarios.",
       "intent": "solution",
       "theme": "info",
       "variant": "grid",
       "tags": ["Intelligent Dispatch", "Emergency Command", "Resource Optimization"],
       "cover": {
-        "url": "/images/products/product-intro-03.jpg",
-        "alt": "Intelligent Dispatch System"
+        "url": "/images/productssection/product-intro-03.jpg",
+        "alt": "Intelligent Dispatch Engine"
       },
       "cta": {
         "label": "Learn More",
@@ -76,14 +76,14 @@
       "id": "solution-intro-04",
       "slug": "digital-twin-simulation-platform",
       "title": "Digital Twin Simulation Platform",
-      "subtitle": "Digital Twin and Predictive Analytics",
-      "description": "Build high-fidelity digital twin models, through multi-scenario simulation and predictive analytics, providing scientific evidence for planning, risk assessment, and strategic decision-making.",
+      "subtitle": "Digital twin technology and model reasoning for full-scenario analysis and forward-looking decisions",
+      "description": "Building high-fidelity digital twin models, supporting multi-scenario simulation and risk prediction, providing scientific support for planning research, emergency drills, and forward-looking decisions.",
       "intent": "solution",
       "theme": "success",
       "variant": "grid",
-      "tags": ["Digital Twin", "Simulation", "Predictive Analytics"],
+      "tags": ["Virtual-Real Mapping", "Simulation", "Forward-looking Decisions"],
       "cover": {
-        "url": "/images/products/product-intro-04.jpg",
+        "url": "/images/productssection/product-intro-04.jpg",
         "alt": "Digital Twin Simulation Platform"
       },
       "cta": {

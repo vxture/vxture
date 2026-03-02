@@ -2,7 +2,7 @@
   "key": "solutions",
   "enabled": true,
   "title": "产品方案",
-  "subtitle": "面向复杂业务场景的智能化产品方案组合",
+  "subtitle": "深入业务场景，提供产品与服务组合，共创并落地创新业务",
   "icon": "chart",
   "tagline": "平台能力，场景融合",
   "ui": {
@@ -15,16 +15,16 @@
     {
       "id": "solution-intro-01",
       "slug": "data-integration-platform",
-      "title": "数据融合平台",
-      "subtitle": "统一数据接入与处理",
-      "description": "支持多种数据源接入，包括结构化、半结构化和非结构化数据，提供实时数据清洗、转换和标准化服务，构建统一的数据底座。",
+      "title": "全域数智平台",
+      "subtitle": "数据本体构建，发现数据的隐藏价值和深层关系",
+      "description": "面向政府与企业数字化场景，打通数据壁垒，构建安全、标准、可共享、可演进的企业级智能数据底座。",
       "intent": "solution",
       "theme": "primary",
       "variant": "grid",
-      "tags": ["数据融合", "数据治理", "数据中台"],
+      "tags": ["数据融合", "数据治理", "数据本体"],
       "cover": {
-        "url": "/images/products/product-intro-01.jpg",
-        "alt": "数据融合平台"
+        "url": "/images/productssection/product-intro-01.jpg",
+        "alt": "全域数智平台"
       },
       "cta": {
         "label": "了解更多",
@@ -36,14 +36,14 @@
       "id": "solution-intro-02",
       "slug": "knowledge-graph-engine",
       "title": "知识图谱引擎",
-      "subtitle": "构建智能关联网络",
-      "description": "基于知识图谱与语义建模技术，自动构建实体关系网络，挖掘数据间潜在关联，支撑复杂业务的深度分析与智能推理。",
+      "subtitle": "构建业务智能关联网络，驱动深度决策",
+      "description": "基于知识图谱与语义建模技术，构建实体关系网络，挖掘数据潜在关联，支撑复杂业务分析与智能推理。",
       "intent": "solution",
       "theme": "brand",
       "variant": "grid",
-      "tags": ["知识图谱", "语义分析", "智能推理"],
+      "tags": ["知识图谱", "实体关系", "智能推理"],
       "cover": {
-        "url": "/images/products/product-intro-02.jpg",
+        "url": "/images/productssection/product-intro-02.jpg",
         "alt": "知识图谱引擎"
       },
       "cta": {
@@ -55,16 +55,16 @@
     {
       "id": "solution-intro-03",
       "slug": "intelligent-dispatch-system",
-      "title": "智能调度系统",
-      "subtitle": "AI 驱动的资源优化与指挥调度",
-      "description": "通过 AI 算法与规则引擎，实现资源的智能分配、任务协同与动态调度，广泛应用于应急管理、指挥调度与复杂运营场景。",
+      "title": "智能调度引擎",
+      "subtitle": "数据驱动智能决策，实现一体化指挥调度",
+      "description": "基于数据与知识能力，实现资源优化配置与动态调度，支撑应急管理与复杂场景下的实时指挥和协同决策。",
       "intent": "solution",
       "theme": "info",
       "variant": "grid",
       "tags": ["智能调度", "应急指挥", "资源优化"],
       "cover": {
-        "url": "/images/products/product-intro-03.jpg",
-        "alt": "智能调度系统"
+        "url": "/images/productssection/product-intro-03.jpg",
+        "alt": "智能调度引擎"
       },
       "cta": {
         "label": "了解更多",
@@ -75,16 +75,16 @@
     {
       "id": "solution-intro-04",
       "slug": "digital-twin-simulation-platform",
-      "title": "孪生仿真推演平台",
-      "subtitle": "数字孪生与预测分析",
-      "description": "构建高精度数字孪生模型，通过多场景仿真推演与预测分析，为规划论证、风险评估和战略决策提供科学依据。",
+      "title": "数字孪生仿真推演平台",
+      "subtitle": "基于数字孪生技术和模型推理，实现全场景分析研判与前瞻决策",
+      "description": "构建高精度数字孪生模型，支持多场景模拟推演与风险预判，为规划研判、应急演练与前瞻决策提供科学支撑。",
       "intent": "solution",
       "theme": "success",
       "variant": "grid",
-      "tags": ["数字孪生", "仿真推演", "预测分析"],
+      "tags": ["虚实映射", "仿真推演", "前瞻决策"],
       "cover": {
-        "url": "/images/products/product-intro-04.jpg",
-        "alt": "孪生仿真推演平台"
+        "url": "/images/productssection/product-intro-04.jpg",
+        "alt": "数字孪生仿真推演平台"
       },
       "cta": {
         "label": "了解更多",

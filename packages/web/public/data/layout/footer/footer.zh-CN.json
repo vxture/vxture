@@ -80,8 +80,8 @@
   },
   "publicSecurity": {
     "label": "公安备案",
-    "text": "公网安备610000000000号",
-    "link": "https://beian.miit.gov.cn"
+    "text": "陕公网安备610000000000号",
+    "link": "https://beian.mps.gov.cn"
   },
   "copyright": {
     "label": "copyright",

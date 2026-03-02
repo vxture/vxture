@@ -2,24 +2,20 @@
   "key": "features",
   "enabled": true,
   "title": "Core Capabilities",
-  "subtitle": "Empowering governments and large enterprises with data-driven intelligent decision-making and business transformation",
+  "subtitle": "Providing data intelligence support systems for governments and enterprises",
   "icon": "chart",
-  "tagline": "Intelligence-Driven, Business-Empowered",
+  "tagline": "Data-Driven, Business-Empowered",
   "items": [
     {
       "id": "feature-intro-01",
       "slug": "data-knowledge-graph",
-      "title": "Data Knowledge Graph Construction",
-      "description": "Intelligent integration networks for massive datasets, discovering hidden value and deep relationships between data.",
+      "title": "Data Graph Construction",
+      "description": "Data ontology construction, discovering hidden value and deep relationships",
       "icon": "graph",
       "intent": "simulation",
       "theme": "primary",
       "variant": "card",
-      "highlights": [
-        "Multi-source Data Integration",
-        "Knowledge Graph Construction",
-        "Relationship Discovery"
-      ],
+      "highlights": ["Data Integration", "Graph Construction", "Relationship Mining"],
       "cta": {
         "label": "Learn More",
         "href": "/features/data-knowledge-graph"
@@ -29,16 +25,12 @@
       "id": "feature-intro-02",
       "slug": "intelligent-decision-dispatch",
       "title": "Intelligent Decision Dispatch",
-      "description": "Through AI algorithms and rule engines, achieve intelligent resource allocation, task coordination, and dynamic scheduling.",
+      "description": "Spatio-temporal model engine for real-time intelligent scheduling and planning",
       "icon": "sparkles",
       "intent": "solution",
       "theme": "primary",
       "variant": "card",
-      "highlights": [
-        "AI Intelligent Dispatch",
-        "Resource Optimization",
-        "Enhanced Decision Quality"
-      ],
+      "highlights": ["Intelligent Dispatch", "Resource Allocation", "Dynamic Planning"],
       "cta": {
         "label": "Learn More",
         "href": "/features/intelligent-decision-dispatch"
@@ -48,12 +40,12 @@
       "id": "feature-intro-03",
       "slug": "digital-twin-simulation",
       "title": "Digital Twin Simulation",
-      "description": "Through high-fidelity simulation models to simulate various scenarios, providing scientific evidence for strategic decision-making.",
+      "description": "Complex scenario simulation with simulation and predictive analysis for decisions",
       "icon": "cube",
       "intent": "simulation",
       "theme": "primary",
       "variant": "card",
-      "highlights": ["Digital Twin Modeling", "Scenario Simulation", "Predictive Analytics"],
+      "highlights": ["Digital Twin", "Simulation & Deduction", "Intelligent Decisions"],
       "cta": {
         "label": "Learn More",
         "href": "/features/digital-twin-simulation"

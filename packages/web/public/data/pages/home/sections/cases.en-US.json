@@ -2,7 +2,7 @@
   "key": "cases",
   "enabled": true,
   "title": "Best Practices",
-  "subtitle": "Optimal application scenarios for empowering customer business",
+  "subtitle": "Real-world cases showing digital transformation results",
   "icon": "chart",
   "tagline": "More Cases, View Details",
   "ui": {
@@ -13,59 +13,62 @@
     {
       "id": "case-intro-01",
       "slug": "geo-disaster-graph",
-      "title": "Geological Disaster Data Graph",
-      "description": "Building an intelligent data platform that integrates distributed static baseline data and dynamic monitoring data, achieving deep correlation analysis and visual graph display.",
+      "title": "Geological Disaster Management Platform",
+      "description": "Integrating 3D reality and geological monitoring data for geological disaster correlation analysis and intelligent monitoring",
       "intent": "case",
       "theme": "success",
       "variant": "card",
       "tags": ["Data Fusion", "Ontology Modeling", "Business Analytics"],
       "cover": {
-        "url": "/images/cases/case-intro-01.jpg",
-        "alt": "Geological Disaster Data Graph"
+        "url": "/images/casessection/case-intro-01.jpg",
+        "alt": "Geological Disaster Management Platform"
       },
       "cta": {
         "label": "View Details",
         "href": "/cases/geo-disaster-graph"
       },
-      "publishedAt": "2024-03-01"
+      "publishedAt": "2024-03-01",
+      "customer": "Provincial Department of Natural Resources"
     },
     {
       "id": "case-intro-02",
       "slug": "intelligent-emergency",
       "title": "Intelligent Emergency Command Platform",
-      "description": "Building an intelligent decision-making command and dispatch platform that integrates cross-domain data resources, achieving integrated support for disaster early warning, resource dispatch, and emergency decision-making.",
+      "description": "Integrating cross-domain data for optimized emergency resource allocation and integrated decision support",
       "intent": "case",
       "theme": "success",
       "variant": "card",
-      "tags": ["Intelligent Decision-Making", "Emergency Management", "Data Integration"],
+      "tags": ["Data Integration", "Intelligent Judgment", "Emergency Management"],
       "cover": {
-        "url": "/images/cases/case-intro-02.jpg",
-        "alt": "Intelligent Emergency Command Platform"
+        "url": "/images/casessection/case-intro-02.jpg",
+        "alt": "Emergency Command Platform"
       },
       "cta": {
         "label": "View Details",
         "href": "/cases/intelligent-emergency"
       },
-      "publishedAt": "2024-12-01"
+      "publishedAt": "2024-12-01",
+      "customer": "Provincial Emergency Department"
     },
     {
       "id": "case-intro-03",
       "slug": "public-safety-analysis",
       "title": "Public Safety Intelligence Analysis",
-      "description": "Through deep application of large model technology, achieving intelligent case fusion analysis and real-time research decision-making, building a precise and efficient safety prevention system.",
+      "description": "AI-powered case research and decision-making, building a precise and efficient safety prevention system",
       "intent": "case",
       "theme": "success",
       "variant": "card",
       "tags": ["Fusion Analysis", "Dynamic Assessment", "Event Response"],
       "cover": {
-        "url": "/images/cases/case-intro-03.jpg",
+        "url": "/images/casessection/case-intro-03.jpg",
         "alt": "Public Safety Intelligence Analysis"
       },
       "cta": {
         "label": "View Details",
         "href": "/cases/public-safety-analysis"
       },
-      "publishedAt": "2025-06-01"
+      "publishedAt": "2025-06-01",
+      "customer": "Municipal Public Security Bureau"
     }
   ]
 }

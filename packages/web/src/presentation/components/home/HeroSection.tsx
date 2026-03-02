@@ -76,9 +76,9 @@ export default function HeroSection() {
       <section
         ref={sectionRef}
         id='snap-section-1'
-        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'
+        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'
       >
-        <div className='text-white text-xl'>加载中...</div>
+        <div className='text-slate-600 text-xl'>加载中...</div>
       </section>
     );
   }
@@ -89,9 +89,9 @@ export default function HeroSection() {
       <section
         ref={sectionRef}
         id='snap-section-1'
-        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'
+        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'
       >
-        <div className='text-white text-xl'>加载失败</div>
+        <div className='text-slate-600 text-xl'>加载失败</div>
       </section>
     );
   }
@@ -138,9 +138,9 @@ export default function HeroSection() {
               <source src={hero.media.videoUrl} type='video/mp4' />
             </video>
 
-            {/* 视频遮罩 */}
+            {/* 视频遮罩 - 浅色背景用较淡的遮罩 */}
             <div
-              className={`absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-900/60 to-slate-900/60 transition-opacity duration-1000 ${
+              className={`absolute inset-0 bg-gradient-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 transition-opacity duration-1000 ${
                 videoLoaded && !videoError ? 'opacity-70' : 'opacity-0'
               }`}
             ></div>
@@ -155,7 +155,7 @@ export default function HeroSection() {
               alt={hero.media.alt || '背景图片'}
               className='absolute inset-0 w-full h-full object-cover'
             />
-            <div className='absolute inset-0 bg-gradient-to-b from-slate-900/60 via-blue-900/60 to-slate-900/60'></div>
+            <div className='absolute inset-0 bg-gradient-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10'></div>
           </>
         )}
 
@@ -164,9 +164,9 @@ export default function HeroSection() {
           (hero.media.type === 'video' && !hero.media.videoUrl) ||
           (hero.media.type === 'image' && !hero.media.url) ||
           (hero.media.type === 'video' && videoError)) && (
-          <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'>
+          <div className='absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'>
             <div className='absolute inset-0'>
-              <div className='absolute top-8 right-0 w-64 h-64 bg-blue-200/40 rounded-full blur-3xl animate-pulse' />
+              <div className='absolute top-8 right-0 w-64 h-64 bg-blue-200/30 rounded-full blur-3xl animate-pulse' />
             </div>
           </div>
         )}
@@ -177,13 +177,13 @@ export default function HeroSection() {
         <div className='max-w-5xl px-4 sm:px-6 lg:px-8 py-32 text-center'>
           {/* 主标题 + 高亮部分 */}
           <h1 className='text-5xl lg:text-7xl font-bold py-8 leading-tight'>
-            <span className='inline-block bg-gradient-to-r from-white/80 to-white bg-clip-text text-transparent'>
+            <span className='inline-block bg-gradient-to-r from-slate-800 to-slate-900 bg-clip-text text-transparent'>
               {hero.title}
             </span>
             {hero.titleHighlight && (
               <>
                 {' '}
-                <span className='inline-block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent'>
+                <span className='inline-block bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent'>
                   {hero.titleHighlight}
                 </span>
               </>
@@ -192,7 +192,7 @@ export default function HeroSection() {
 
           {/* 描述 */}
           {hero.description && (
-            <p className='text-xl text-white/70 mb-12 max-w-2xl mx-auto'>{hero.description}</p>
+            <p className='text-xl text-slate-600 mb-12 max-w-2xl mx-auto'>{hero.description}</p>
           )}
 
           {/* CTA 按钮 */}
@@ -200,7 +200,7 @@ export default function HeroSection() {
             <div className='flex justify-center'>
               <a
                 href={hero.cta.href}
-                className='px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 shadow-2xl hover:scale-105 bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700 hover:shadow-cyan-500/25'
+                className='px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 shadow-2xl hover:scale-105 bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 hover:shadow-blue-500/25'
               >
                 {hero.cta.label}
               </a>
@@ -212,7 +212,7 @@ export default function HeroSection() {
       {/* 底部滚动提示 */}
       {hero.scrollIndicator?.enabled && (
         <div className='absolute w-full flex justify-center bottom-8 pointer-events-auto z-10'>
-          <div className='text-white/60 animate-bounce px-4 py-2 rounded-xl'>
+          <div className='text-slate-500 animate-bounce px-4 py-2 rounded-xl'>
             <FiArrowDown className='w-6 h-6 mx-auto mb-2' />
             {hero.scrollIndicator.text && <p className='text-sm'>{hero.scrollIndicator.text}</p>}
           </div>

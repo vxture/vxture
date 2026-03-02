@@ -172,7 +172,7 @@ const SolutionCard = memo(function SolutionCard({
                 {/* 装饰边框层（响应式自适应） */}
                 <div className='relative w-full z-20'>
                   <Image
-                    src='/images/products/monitor-frame.png'
+                    src='/images/productssection/monitor-frame.png'
                     alt='Monitor Frame'
                     width={1}
                     height={1}
@@ -187,7 +187,7 @@ const SolutionCard = memo(function SolutionCard({
               {/* 底座装饰层（响应式自适应） */}
               <div className='relative w-full pointer-events-none select-none mt-1'>
                 <Image
-                  src='/images/products/monitor-base.png'
+                  src='/images/productssection/monitor-base.png'
                   alt='Monitor Base'
                   width={1}
                   height={1}

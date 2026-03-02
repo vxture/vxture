@@ -3,18 +3,18 @@
   "enabled": true,
   "title": "Unlock Your Data's",
   "titleHighlight": "Infinite Potential",
-  "description": "Building intelligent platforms for complex government and enterprise business scenarios",
+  "description": "Empower complex government & enterprise scenarios with data-driven intelligence",
   "theme": "brand",
   "intent": "cta",
   "variant": "highlight",
   "cta": {
-    "label": "Begin Your Bissiness Intelligence Journey",
+    "label": "Start Your Journey",
     "href": "/products"
   },
   "media": {
     "type": "video",
-    "videoUrl": "/videos/banner-hero-01.mp4",
-    "posterImage": "/images/banner-hero-poster-01.png"
+    "videoUrl": "/videos/herosection/banner-hero-01.mp4",
+    "posterImage": "/images/herosection/banner-hero-poster-light-01.png"
   },
   "scrollIndicator": {
     "enabled": true,

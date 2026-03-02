@@ -1,48 +1,48 @@
 {
   "key": "cta",
   "enabled": true,
-  "title": "Ready to Advance Your Business Intelligence?",
-  "subtitle": "From data ontology to intelligent decision-making, from proof of concept to practical deployment, we partner with you at every step",
+  "title": "Ready to Unlock Your Data Potential?",
+  "subtitle": "From design to production, we partner with you every step",
   "backToTop": "Back to Top",
   "features": [
     {
       "id": "features-cta-01",
-      "name": "Solution-Level Fast Deployment",
-      "description": "For complex government and enterprise business scenarios, providing implementable and evolvable comprehensive solutions",
+      "name": "Rapid Solution Deployment",
+      "description": "Deep business scenario analysis, providing industry-grade solutions",
       "icon": "layers",
       "theme": "primary"
     },
     {
       "id": "features-cta-02",
-      "name": "Deep Expert Team Involvement",
-      "description": "Cross-functional expertise in data, AI, and business, ensuring solutions are usable, user-friendly, and sustainable",
+      "name": "AI Collaboration",
+      "description": "AI agents deeply involved throughout, improving deployment efficiency and outcomes",
       "icon": "users",
       "theme": "primary"
     },
     {
       "id": "features-cta-03",
-      "name": "Continuous Evolution and Innovation",
-      "description": "Continuously iterate models, capabilities, and application scenarios around data assets and business objectives",
+      "name": "Continuous Evolution",
+      "description": "Continuous iteration around business goals for tech and business upgrades",
       "icon": "refresh",
       "theme": "primary"
     }
   ],
   "actions": [
     {
-      "label": "Schedule Solution Consultation",
+      "label": "Book Consultation",
       "href": "/contact",
       "variant": "primary",
       "icon": "calendar"
     },
     {
-      "label": "Learn About RuinsAgent",
+      "label": "AI Agent Live Chat",
       "href": "/ruins-agent",
       "variant": "secondary",
       "icon": "bot"
     }
   ],
   "contact": {
-    "description": "Communicate directly with our expert team to get professional advice tailored to your business scenario",
+    "description": "Connect directly with our expert team for professional advice tailored to your business",
     "email": {
       "icon": "mail",
       "value": "experts@vxture.com"

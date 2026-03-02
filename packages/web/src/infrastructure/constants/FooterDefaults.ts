@@ -26,8 +26,16 @@ export const FALLBACK_FOOTER: FooterContent = {
   social: [],
   sections: [],
   legal: [],
-  icp: { label: '备案号', text: '00000000', link: 'https://beian.miit.gov.cn' },
-  publicSecurity: { label: '公安备案', text: '00000000', link: 'https://beian.miit.gov.cn' },
+  icp: {
+    label: '备案号',
+    text: '00000000',
+    link: 'https://beian.miit.gov.cn',
+  },
+  publicSecurity: {
+    label: '公安备案',
+    text: '00000000',
+    link: 'https://beian.mps.gov.cn',
+  },
   copyright: {
     label: '版权',
     text: `© ${new Date().getFullYear()} vxture.ai. All rights reserved.`,
