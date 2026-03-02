@@ -170,6 +170,9 @@ export default function Footer() {
           wechatIconRef.current &&
           (() => {
             const rect = wechatIconRef.current.getBoundingClientRect();
+            const wechatData = displayData.social.find(
+              (social) => social.icon === "wechat",
+            );
 
             return (
               <div
@@ -181,7 +184,10 @@ export default function Footer() {
                 }}
               >
                 <img
-                  src="/images/footer/WeChatOfficialAccounts.png"
+                  src={
+                    wechatData?.href ||
+                    "/images/footer/WeChatOfficialAccounts.png"
+                  }
                   alt="微信公众号二维码"
                   className="w-auto h-48 object-contain"
                 />
