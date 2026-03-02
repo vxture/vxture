@@ -34,9 +34,9 @@ import { createContentNotFoundError } from '@/domain/shared/exceptions';
  */
 export class HomepageRepository implements IHomepageRepository {
   private readonly adapter: JsonAdapter;
-  private readonly cache: CacheManager<any>;
+  private readonly cache: CacheManager<unknown>;
 
-  constructor(adapter: JsonAdapter, cache: CacheManager<any>) {
+  constructor(adapter: JsonAdapter, cache: CacheManager<unknown>) {
     this.adapter = adapter;
     this.cache = cache;
   }
@@ -152,14 +152,14 @@ export class HomepageRepository implements IHomepageRepository {
   private async fetchContent<T>(
     key: string,
     locale: string,
-    mapper: (raw: any) => T
+    mapper: (raw: unknown) => T
   ): Promise<T> {
     const cacheKey = `${key}:${locale}`;
 
     // 检查缓存
     const cached = this.cache.get(cacheKey);
     if (cached) {
-      return cached;
+      return cached as T;
     }
 
     try {
@@ -173,7 +173,7 @@ export class HomepageRepository implements IHomepageRepository {
       this.cache.set(cacheKey, domain);
 
       return domain;
-    } catch (error) {
+    } catch (_) {
       throw createContentNotFoundError(key, locale);
     }
   }
@@ -184,7 +184,7 @@ export class HomepageRepository implements IHomepageRepository {
  */
 export const createHomepageRepository = (
   adapter: JsonAdapter,
-  cache: CacheManager<any>
+  cache: CacheManager<unknown>
 ): HomepageRepository => {
   return new HomepageRepository(adapter, cache);
 };

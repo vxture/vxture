@@ -167,7 +167,7 @@ export const generateArticleSchema = (caseItem: CaseItem, organizationName: stri
     '@type': 'Article',
     headline: caseItem.title,
     description: caseItem.description,
-    image: caseItem.cover.image,
+    image: caseItem.cover.url,
     datePublished: caseItem.publishedAt,
     author: {
       '@type': 'Organization',
@@ -179,7 +179,7 @@ export const generateArticleSchema = (caseItem: CaseItem, organizationName: stri
 /**
  * 将结构化数据转换为 JSON-LD script 标签
  */
-export const structuredDataToScript = (schema: any): string => {
+export const structuredDataToScript = (schema: object): string => {
   return `<script type="application/ld+json">
 ${JSON.stringify(schema, null, 2)}
 </script>`;

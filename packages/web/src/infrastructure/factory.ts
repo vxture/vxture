@@ -39,7 +39,7 @@ export interface InfrastructureContainer {
   jsonAdapter: JsonAdapter;
 
   // Cache
-  cacheManager: CacheManager<any>;
+  cacheManager: CacheManager<unknown>;
 
   // Repositories
   homepageRepository: HomepageRepository;

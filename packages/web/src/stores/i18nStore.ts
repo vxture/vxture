@@ -44,7 +44,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { I18N_CONSTANTS } from '@/shared/constants/i18nConfig';
 import { makeI18nPersistOptions } from './persistOptions/i18nPersist';
-import type { LocaleType, I18nConfig, I18nState, I18nResource } from '@/types/i18n.types';
+import type { LocaleType, I18nConfig, I18nState, I18nResource } from '@/shared/types/i18n.types';
 
 // ============================================================================
 // 类型定义 - 明确暴露给调用方的类型契约

@@ -11,19 +11,19 @@
  * 内容未找到错误接口
  */
 export interface ContentNotFoundError extends Error {
-  readonly name: 'ContentNotFoundError';
-  readonly key: string;
-  readonly locale: string;
+  name: 'ContentNotFoundError';
+  key: string;
+  locale: string;
 }
 
 /**
  * 创建内容未找到错误
  */
 export const createContentNotFoundError = (key: string, locale: string): ContentNotFoundError => {
-  const error = new Error(`Content not found: ${key}.${locale}`) as ContentNotFoundError;
+  const error = new Error(`Content not found: ${key}.${locale}`) as unknown as ContentNotFoundError;
   error.name = 'ContentNotFoundError';
-  (error as any).key = key;
-  (error as any).locale = locale;
+  error.key = key;
+  error.locale = locale;
   return error;
 };
 

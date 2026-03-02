@@ -71,13 +71,12 @@ export const generateMetadataFromHero = (
   return {
     title: hero.title,
     description: hero.description,
-    keywords: hero.keywords,
     openGraph: {
       title: hero.title,
       description: hero.description,
       type: 'website',
       url: siteUrl,
-      image: hero.backgroundImage,
+      image: hero.media.type === 'image' ? hero.media.url : undefined,
       locale: locale,
       siteName: siteName,
     },
@@ -85,7 +84,7 @@ export const generateMetadataFromHero = (
       card: 'summary_large_image',
       title: hero.title,
       description: hero.description,
-      image: hero.backgroundImage,
+      image: hero.media.type === 'image' ? hero.media.url : undefined,
       site: twitterSite,
     },
     canonical: siteUrl,
@@ -148,8 +147,7 @@ export const generateCaseMetadata = (
   description: string,
   image: string,
   locale: string,
-  slug: string,
-  publishedAt: string
+  slug: string
 ): PageMetadata => {
   return {
     title: `${title} - Vxture Cases`,

@@ -18,6 +18,7 @@ import type { CasesContent } from '@/domain/homepage/cases.model';
 import { JsonAdapter } from '../../adapters/json/JsonAdapter';
 import { CacheManager } from '../../cache/CacheManager';
 import { CasesMapper } from '../../mappers/homepage/CasesMapper';
+import type { CasesContentRaw } from '../../mappers/homepage/CasesMapper';
 import { createContentNotFoundError } from '@/domain/shared/exceptions';
 
 /**
@@ -49,13 +50,13 @@ export class CasesRepository implements ICasesRepository {
       const raw = await this.adapter.fetch('cases', locale);
 
       // 映射为领域模型
-      const domain = CasesMapper.toDomain(raw as any);
+      const domain = CasesMapper.toDomain(raw as CasesContentRaw);
 
       // 缓存结果
       this.cache.set(cacheKey, domain);
 
       return domain;
-    } catch (error) {
+    } catch (_) {
       throw createContentNotFoundError('cases', locale);
     }
   }

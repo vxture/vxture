@@ -47,7 +47,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { THEME_CONSTANTS } from '@/shared/constants/themeConfig';
 import { makeThemePersistOptions } from './persistOptions/themePersist';
-import type { ThemeConfig, ThemeState } from '@/types/theme.types';
+import type { ThemeConfig, ThemeState } from '@/shared/types/theme.types';
 
 // ============================================================================
 // Store 创建区 - useThemeStore 实现（Zustand + persist）

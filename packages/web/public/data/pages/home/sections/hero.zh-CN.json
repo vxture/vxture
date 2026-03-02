@@ -3,12 +3,12 @@
   "enabled": true,
   "title": "释放数据的",
   "titleHighlight": "无限潜力",
-  "description": "面向政企复杂业务场景，构建数据驱动的智能决策平台",
+  "description": "面向政企复杂业务场景，构建人工智能业务平台",
   "theme": "brand",
   "intent": "cta",
   "variant": "highlight",
   "cta": {
-    "label": "开启数据智能之旅",
+    "label": "开启探索之旅",
     "href": "/products"
   },
   "media": {

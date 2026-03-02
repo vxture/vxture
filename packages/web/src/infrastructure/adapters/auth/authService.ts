@@ -40,7 +40,7 @@
  *   支持更多认证相关 API 封装
  */
 
-import type { LoginCredentials, LoginResponse } from '@/types/auth.types';
+import type { LoginCredentials, LoginResponse } from '@/shared/types/auth.types';
 import { AUTH_CONSTANTS } from '@/shared/constants/authConfig';
 
 // ============================================================================

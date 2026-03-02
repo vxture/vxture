@@ -27,11 +27,11 @@ import type { ValidationResult } from '../shared/types';
  * Homepage 聚合根接口
  */
 export interface HomepageAggregate {
-  readonly hero: HeroContent;
-  readonly features: FeaturesContent;
-  readonly solutions: SolutionsContent;
-  readonly cases: CasesContent;
-  readonly cta: CTAContent;
+  hero?: HeroContent;
+  features?: FeaturesContent;
+  solutions?: SolutionsContent;
+  cases?: CasesContent;
+  cta?: CTAContent;
 }
 
 /**

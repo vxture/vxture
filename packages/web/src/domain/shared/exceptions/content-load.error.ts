@@ -11,10 +11,10 @@
  * 内容加载错误接口
  */
 export interface ContentLoadError extends Error {
-  readonly name: 'ContentLoadError';
-  readonly key: string;
-  readonly locale: string;
-  readonly cause?: Error;
+  name: 'ContentLoadError';
+  key: string;
+  locale: string;
+  cause?: Error;
 }
 
 /**
@@ -26,11 +26,11 @@ export const createContentLoadError = (
   cause?: Error
 ): ContentLoadError => {
   const message = `Failed to load content: ${key}.${locale}${cause ? ` - ${cause.message}` : ''}`;
-  const error = new Error(message) as ContentLoadError;
+  const error = new Error(message) as unknown as ContentLoadError;
   error.name = 'ContentLoadError';
-  (error as any).key = key;
-  (error as any).locale = locale;
-  (error as any).cause = cause;
+  error.key = key;
+  error.locale = locale;
+  error.cause = cause;
   return error;
 };
 

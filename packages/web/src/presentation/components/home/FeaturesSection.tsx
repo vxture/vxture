@@ -16,7 +16,7 @@
 import { memo } from 'react';
 import { useFeatures } from '@/application/hooks/homepage';
 import { HiArrowLongRight } from 'react-icons/hi2';
-import { FaMedal } from 'react-icons/fa';
+import { FaMedal } from 'react-icons/fa6';
 import { BasicColorMap, SectionTheme } from '@/shared/theme/colorMap';
 import { renderIcon } from '@/shared/utils/iconMapper';
 

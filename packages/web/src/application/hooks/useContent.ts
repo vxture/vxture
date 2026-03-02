@@ -10,9 +10,9 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { contentClient } from '@/clients/contentClient';
+import { contentClient } from '@/infrastructure/clients/contentClient';
 import { useLocale } from './useLocale';
-import type { ContentKey, ContentTypeMap } from '@/types/content.types';
+import type { ContentKey, ContentTypeMap } from '@/shared/types/content.types';
 
 interface UseContentOptions {
   retry?: number; // 默认重试次数

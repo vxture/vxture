@@ -16,13 +16,15 @@
 import Link from 'next/link';
 import type { Route } from 'next';
 import { useCTA } from '@/application/hooks/homepage';
-import { FiMail, FiPhone, FiMessageCircle, FiArrowRight, FiChevronUp } from 'react-icons/fi';
+import { FiMail, FiPhone, FiMessageCircle, FiArrowRight } from 'react-icons/fi';
+import BackToTopButton from '@/presentation/components/common/BackToTopButton';
 
 interface CTASectionProps {
   id: string;
+  snapToTarget?: (target: HTMLElement) => void;
 }
 
-export default function CTASection({ id }: CTASectionProps) {
+export default function CTASection({ id, snapToTarget }: CTASectionProps) {
   // 获取 CTA 数据
   const { data: ctaData, isLoading } = useCTA();
 
@@ -123,17 +125,11 @@ export default function CTASection({ id }: CTASectionProps) {
       </div>
 
       {/* 回到顶部按钮 */}
-      <div className='absolute right-16 bottom-20 z-20'>
-        <button
-          type='button'
-          className='flex flex-col items-center px-3 py-2 rounded-full bg-white/0 hover:bg-gray-100 transition animate-bounce'
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          aria-label={ctaData.backToTop}
-        >
-          <FiChevronUp className='w-6 h-6 text-gray-400 mb-1' />
-          <span className='text-xs text-gray-400'>{ctaData.backToTop}</span>
-        </button>
-      </div>
+      <BackToTopButton
+        text={ctaData.backToTop}
+        ariaLabel={ctaData.backToTop}
+        snapToTarget={snapToTarget}
+      />
     </section>
   );
 }

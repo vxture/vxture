@@ -1,5 +1,5 @@
 import type { PersistOptions } from 'zustand/middleware';
-import type { ThemeState } from '@/types/theme.types';
+import type { ThemeState } from '@/shared/types/theme.types';
 import { THEME_CONSTANTS } from '@/shared/constants/themeConfig';
 
 /**

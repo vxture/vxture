@@ -12,7 +12,7 @@
  * 性能优化：依赖 useCallback/useMemo，避免不必要的渲染和副作用
  */
 
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 // 输入参数类型定义
 interface WindowScrollSnapConfig {
@@ -291,18 +291,27 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       } else {
         // 降级方案：使用 scroll 事件 + 防抖检测滚动结束
         let scrollTimer: ReturnType<typeof setTimeout> | undefined;
-        let timeoutTimer: ReturnType<typeof setTimeout> | undefined;
+        let timeoutTimer: ReturnType<typeof setTimeout>;
+        timeoutTimer = setTimeout(() => {
+          if (scrollTimer) clearTimeout(scrollTimer);
+          window.removeEventListener('scroll', fallbackScrollEnd);
+          if (isProgramScrollingRef.current) {
+            if (debugFlag) console.log('Fallback: Force reset isProgramScrolling after timeout');
+            isProgramScrollingRef.current = false;
+            scrollEndCleanupRef.current = null;
+          }
+        }, 2000);
 
         const fallbackScrollEnd = () => {
           if (scrollTimer) clearTimeout(scrollTimer);
           scrollTimer = setTimeout(() => {
             handleScrollEnd();
-            window.removeEventListener('scroll', fallbackScrollEnd);
+            (window as Window).removeEventListener('scroll', fallbackScrollEnd);
             if (timeoutTimer) clearTimeout(timeoutTimer);
           }, 150); // 滚动停止 150ms 后认为滚动结束
         };
 
-        window.addEventListener('scroll', fallbackScrollEnd, { passive: true });
+        (window as Window).addEventListener('scroll', fallbackScrollEnd, { passive: true });
 
         // 安全措施：最多等待 2 秒，防止永远不触发
         timeoutTimer = setTimeout(() => {

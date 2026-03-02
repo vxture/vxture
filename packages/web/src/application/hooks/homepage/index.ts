@@ -9,5 +9,5 @@ export * from './useHomepage';
 export * from './useHero';
 export * from './useFeatures';
 export * from './useSolutions';
-export * from './useCases';
+export * from './useCasesData';
 export * from './useCTA';

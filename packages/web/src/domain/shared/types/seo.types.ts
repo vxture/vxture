@@ -30,5 +30,5 @@ export type StructuredDataType = 'Article' | 'Organization' | 'WebSite' | 'Bread
 export interface StructuredData {
   '@context': 'https://schema.org';
   '@type': StructuredDataType;
-  [key: string]: any;
+  [key: string]: unknown;
 }

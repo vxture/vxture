@@ -70,7 +70,7 @@ export default function HomePage() {
       <CaseSection id='cases' />
 
       {/* CTA 区块 */}
-      <CTASection id='cta' />
+      <CTASection id='cta' snapToTarget={snapToTarget} />
     </div>
   );
 }

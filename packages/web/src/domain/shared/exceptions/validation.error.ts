@@ -11,19 +11,19 @@
  * 验证错误接口
  */
 export interface ValidationError extends Error {
-  readonly name: 'ValidationError';
-  readonly key: string;
-  readonly errors: string[];
+  name: 'ValidationError';
+  key: string;
+  errors: string[];
 }
 
 /**
  * 创建验证错误
  */
 export const createValidationError = (key: string, errors: string[]): ValidationError => {
-  const error = new Error(`Validation failed for ${key}: ${errors.join(', ')}`) as ValidationError;
+  const error = new Error(`Validation failed for ${key}: ${errors.join(', ')}`) as unknown as ValidationError;
   error.name = 'ValidationError';
-  (error as any).key = key;
-  (error as any).errors = errors;
+  error.key = key;
+  error.errors = errors;
   return error;
 };
 

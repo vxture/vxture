@@ -1,11 +1,36 @@
 {
   "permissions": {
     "allow": [
-      "Bash(tasklist)",
-      "Bash(npx pnpm dev)",
-      "Bash(netstat:*)",
-      "Bash(powershell:*)",
-      "Bash(pnpm dev:*)"
+      "Bash(pnpm install)",
+      "Bash(pnpm dev)",
+      "Bash(npm install)",
+      "Bash(npm config set registry https://registry.npmmirror.com)",
+      "Bash(curl -I http://localhost:3000)",
+      "Bash(npm uninstall react-icons)",
+      "Bash(npm install react-icons@latest)",
+      "Bash(xargs grep -l \"cta\")",
+      "Bash(node -e \":*)",
+      "Bash(npm run build)",
+      "Bash(npm ls next)",
+      "Bash(npm run lint)",
+      "Bash(ls -la .eslint*)",
+      "Bash(xargs grep -l \"import Link\")",
+      "Bash(npm run dev)",
+      "Bash(timeout 5 curl -s http://localhost:3000)",
+      "Bash(timeout 5 curl -s http://localhost:3003)",
+      "Bash(powershell -Command \"$p = netstat -ano | findstr :3003 | findstr LISTENING | ForEach-Object { $_Split\\('' ''\\)[-1] }; if \\($p\\) { taskkill /F /PID $p }\")",
+      "Bash(pkill -f \"node.*next\")",
+      "Bash(powershell -Command \"$processes = Get-Process node -ErrorAction SilentlyContinue; if \\($processes\\) { $processes | Stop-Process -Force }\")",
+      "Bash(powershell -Command \"$processes = Get-Process node -ErrorAction SilentlyContinue; if \\($processes.Count -gt 0\\) { $processes | Stop-Process -Force }\")",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(powershell -Command \"$response = Invoke-WebRequest -Uri ''http://localhost:3000'' -UseBasicParsing -TimeoutSec 10; Write-Host ''HTTP Status Code: '' $response.StatusCode; Write-Host ''Response Length: '' $response.Content.Length '' bytes''\")",
+      "Bash(powershell -Command \"$response = Invoke-WebRequest -Uri ''http://localhost:3000'' -UseBasicParsing -TimeoutSec 10; Write-Host ''HTTP Status Code:'' $response.StatusCode; Write-Host ''Response Length:'' $response.Content.Length ''bytes''\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(npm run lint -- --fix)"
     ]
-  }
+  },
+  "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",
+  "ANTHROPIC_API_KEY": "66d237a9-157e-4fc8-896a-9effdfcf73ca",
+  "ANTHROPIC_MODEL": "doubao-seed-2-0-pro-260215",
+  "claudeCode.hideOnboarding": true
 }

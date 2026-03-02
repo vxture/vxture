@@ -43,19 +43,15 @@
  *   - 添加内容分析工具
  */
 
-import { contentClient } from '@/clients/contentClient';
+import { contentClient } from '@/infrastructure/clients/contentClient';
 import type {
   ContentKey,
   ContentTypeMap,
   AnyContent,
-  HeroContent,
   FeaturesContent,
   SolutionsContent,
   CasesContent,
-  CTAContent,
-  HeaderContent,
-  FooterContent,
-} from '@/types/content.types';
+} from '@/shared/types/content.types';
 
 // ============================================================================
 // 类型定义

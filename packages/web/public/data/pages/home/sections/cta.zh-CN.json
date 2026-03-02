@@ -1,27 +1,27 @@
 {
   "key": "cta",
   "enabled": true,
-  "title": "准备好迈进业务智能化了吗？",
-  "subtitle": "从概念验证到实用落地，我们与您并肩推进每一步",
+  "title": "准备释放您的数据潜力了吗？",
+  "subtitle": "从概念验证到实战落地，我们与您并肩推进每一步",
   "backToTop": "回到顶部",
   "features": [
     {
       "id": "features-cta-01",
-      "name": "方案级快速落地",
+      "name": "方案快速落地",
       "description": "面向政企复杂业务场景，提供可实施、可演进的整体解决方案",
       "icon": "layers",
       "theme": "primary"
     },
     {
       "id": "features-cta-02",
-      "name": "专家团队深度参与",
+      "name": "人工智能协同",
       "description": "数据、AI、业务多领域专家协同，保障方案可用、好用、可持续",
       "icon": "users",
       "theme": "primary"
     },
     {
       "id": "features-cta-03",
-      "name": "持续演进与创新",
+      "name": "持续演进创新",
       "description": "围绕数据资产与业务目标，持续迭代模型、能力与应用场景",
       "icon": "refresh",
       "theme": "primary"
@@ -29,20 +29,20 @@
   ],
   "actions": [
     {
-      "label": "预约方案咨询",
+      "label": "预约咨询",
       "href": "/contact",
       "variant": "primary",
       "icon": "calendar"
     },
     {
-      "label": "了解 RuinsAgent",
+      "label": "在线沟通",
       "href": "/ruins-agent",
       "variant": "secondary",
       "icon": "bot"
     }
   ],
   "contact": {
-    "description": "与我们的专家团队直接沟通，获取针对您业务场景的专业建议",
+    "description": "随时与我们的专家团队直接沟通，获取针对您业务场景的专业建议",
     "email": {
       "icon": "mail",
       "value": "experts@vxture.com"

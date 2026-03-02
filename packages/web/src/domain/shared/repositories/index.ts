@@ -5,4 +5,4 @@
  * @category Shared - Repositories
  */
 
-export { IRepository, IContentRepository } from './base.repository';
+export type { IRepository, IContentRepository } from './base.repository';

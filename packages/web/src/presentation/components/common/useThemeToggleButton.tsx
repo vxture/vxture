@@ -38,7 +38,7 @@
  *   支持更多主题色彩与动画扩展
  */
 
-import { useGlobal } from '@/contexts/GlobalContext';
+import { useGlobal } from '@/shared/contexts/GlobalContext';
 import { FiSun, FiMoon } from 'react-icons/fi';
 
 const useThemeToggleButton = () => {

@@ -1,4 +1,4 @@
-import { iconMap } from './iconMap';
+import { iconMap } from './IconMap';
 import type { IconToken } from '@/shared/constants/icon.tokens';
 
 type IconProps = {

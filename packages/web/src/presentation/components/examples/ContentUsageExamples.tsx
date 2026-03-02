@@ -8,7 +8,7 @@
 
 import { useContent } from '@/application/hooks/useContent';
 import { contentService } from '@/infrastructure/adapters/content/contentService';
-import type { HeroContent, FeaturesContent, SolutionsContent } from '@/types/content.types';
+import type { FeaturesContent } from '@/shared/types/content.types';
 
 // ============================================================================
 // 示例 1: 基础使用（自动类型推断）
@@ -97,6 +97,8 @@ export function SolutionsSection() {
       <div className='solutions-grid'>
         {data.items.map((item) => (
           <div key={item.id} className='solution-card'>
+            {/* 使用 Next.js Image 组件优化图片加载 */}
+            {/* <Image src={item.cover.url} alt={item.cover.alt} width={400} height={300} /> */}
             <img src={item.cover.url} alt={item.cover.alt} />
             <h3>{item.title}</h3>
             <p>{item.subtitle}</p>
@@ -186,7 +188,7 @@ export async function ServerSideHero({ locale }: { locale: string }) {
 
 export function SearchableSolutions() {
   const [searchQuery, setSearchQuery] = React.useState('');
-  const [selectedTags, setSelectedTags] = React.useState<string[]>([]);
+  const [selectedTags] = React.useState<string[]>([]);
 
   const { data, isLoading } = useContent('solutions');
 

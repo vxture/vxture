@@ -33,7 +33,7 @@ interface CaseItemRaw {
   publishedAt: string;
 }
 
-interface CasesContentRaw {
+export interface CasesContentRaw {
   key: 'cases';
   enabled: boolean;
   title: string;

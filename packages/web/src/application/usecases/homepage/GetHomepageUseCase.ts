@@ -15,7 +15,6 @@
 import type { IHomepageRepository } from '@/domain/homepage/homepage.repository';
 import type { HomepageAggregate } from '@/domain/homepage/homepage.aggregate';
 import { HomepageHelpers } from '@/domain/homepage/homepage.aggregate';
-import { createContentNotFoundError } from '@/domain/shared/exceptions/content-not-found.error';
 
 /**
  * 获取首页数据用例

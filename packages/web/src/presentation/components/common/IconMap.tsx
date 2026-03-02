@@ -25,7 +25,7 @@ import {
 
 import type { IconToken } from '@/shared/constants/icon.tokens';
 
-export const iconMap: Record<IconToken, React.ComponentType<any>> = {
+export const iconMap: Record<IconToken, React.ComponentType<{ size?: number; className?: string }>> = {
   /* 数据 / 分析 */
   data: Database,
   chart: BarChart3,

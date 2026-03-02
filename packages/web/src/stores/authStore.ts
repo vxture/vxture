@@ -50,7 +50,7 @@ import { create } from 'zustand';
 import type { StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { makeAuthPersistOptions } from './persistOptions/authPersist';
-import { AuthState, LoginCredentials, LoginResponse, UserInfo } from '@/types/auth.types';
+import { AuthState, LoginCredentials, LoginResponse, UserInfo } from '@/shared/types/auth.types';
 import { AUTH_CONSTANTS } from '@/shared/constants/authConfig';
 import {
   login as loginApi,

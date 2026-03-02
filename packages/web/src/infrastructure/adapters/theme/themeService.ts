@@ -40,7 +40,7 @@
  *   支持更多主题相关 API 封装
  */
 
-import type { ThemeConfig } from '@/types/theme.types';
+import type { ThemeConfig } from '@/shared/types/theme.types';
 
 
 // ============================================================================

@@ -319,6 +319,7 @@ export interface CaseItem {
   tags: string[];
   cover: Cover;
   publishedAt: string;
+  cta?: CTA;
 }
 
 /**

@@ -39,7 +39,7 @@
  *   支持更多多语言相关 API 封装
  */
 
-import type { LocaleType, I18nResource } from '@/types/i18n.types';
+import type { LocaleType, I18nResource } from '@/shared/types/i18n.types';
 
 
 // ============================================================================

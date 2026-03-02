@@ -23,9 +23,9 @@ export type ValidationRule<T> = (value: T) => ValidationResult;
 /**
  * 字段验证器
  */
-export interface FieldValidator<T = any> {
+export interface FieldValidator<T = unknown> {
   field: keyof T;
-  rules: ValidationRule<any>[];
+  rules: ValidationRule<unknown>[];
 }
 
 /**

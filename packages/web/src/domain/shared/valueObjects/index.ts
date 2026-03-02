@@ -5,7 +5,7 @@
  * @category Shared - Value Objects
  */
 
-export { Locale } from './locale';
-export { Slug } from './slug';
-export { Email } from './email';
-export { Theme } from './theme';
+export type { Locale } from './locale';
+export type { Slug } from './slug';
+export type { Email } from './email';
+export type { Theme } from './theme';

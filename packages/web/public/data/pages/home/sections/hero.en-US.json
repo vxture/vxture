@@ -3,12 +3,12 @@
   "enabled": true,
   "title": "Unlock Your Data's",
   "titleHighlight": "Infinite Potential",
-  "description": "Building data-driven intelligent decision-making platforms for complex government and enterprise business scenarios",
+  "description": "Building intelligent platforms for complex government and enterprise business scenarios",
   "theme": "brand",
   "intent": "cta",
   "variant": "highlight",
   "cta": {
-    "label": "Begin Your Data Intelligence Journey",
+    "label": "Begin Your Bissiness Intelligence Journey",
     "href": "/products"
   },
   "media": {

@@ -1,5 +1,5 @@
 /**
- * useCases.ts - Cases 区块数据 Hook
+ * useCasesData.ts - Cases 区块数据 Hook
  *
  * Application Layer - Hook
  *
@@ -9,11 +9,11 @@
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import { useLocale } from '../shared/useLocale';
-import { useCases as useCasesService } from '@/application/usecases';
+import { useCases as useCasesDataService } from '@/application/usecases';
 import type { CasesContent } from '@/domain/homepage/cases.model';
 
 /**
- * useCases Hook 配置选项
+ * useCasesData Hook 配置选项
  */
 export interface UseCasesOptions
   extends Omit<UseQueryOptions<CasesContent, Error>, 'queryKey' | 'queryFn'> {
@@ -26,7 +26,7 @@ export interface UseCasesOptions
  * @example
  * ```tsx
  * function CasesSection() {
- *   const { data: cases, isLoading } = useCases();
+ *   const { data: cases, isLoading } = useCasesData();
  *
  *   if (isLoading) return <Skeleton />;
  *
@@ -43,13 +43,13 @@ export interface UseCasesOptions
  * }
  * ```
  */
-export const useCases = (options?: UseCasesOptions) => {
+export const useCasesData = (options?: UseCasesOptions) => {
   const { locale: currentLocale } = useLocale();
   const locale = options?.locale ?? currentLocale;
 
   return useQuery<CasesContent, Error>({
     queryKey: ['cases', locale],
-    queryFn: () => useCasesService.getCases.execute(locale),
+    queryFn: () => useCasesDataService.getCases.execute(locale),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     retry: 2,

@@ -1,5 +1,5 @@
 import type { PersistOptions } from 'zustand/middleware';
-import type { I18nState } from '@/types/i18n.types';
+import type { I18nState } from '@/shared/types/i18n.types';
 import { I18N_CONSTANTS } from '@/shared/constants/i18nConfig';
 
 /**

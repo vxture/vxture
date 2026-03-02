@@ -16,9 +16,10 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import type { Route } from 'next';
 import { LuCalendarDays } from 'react-icons/lu';
 import { memo, useMemo } from 'react';
-import { useCases } from '@/application/hooks/homepage';
+import { useCasesData } from '@/application/hooks/homepage';
 import { useLocale } from '@/application/hooks/shared/useLocale';
 
 // 单个案例卡片组件（性能优化：React.memo）
@@ -85,7 +86,7 @@ const CaseCard = memo(function CaseCard({ item, uiTexts }: CaseCardProps) {
           </div>
           <div className='flex-1 flex justify-end'>
             <Link
-              href={item.cta?.href || `/cases/${item.slug}`}
+              href={(item.cta?.href || `/cases/${item.slug}`) as Route}
               className='inline-flex items-center text-xs font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none hover:text-blue-600'
             >
               {item.cta?.label || uiTexts.viewDetails}
@@ -115,7 +116,7 @@ export default function CaseSection({ id }: CaseSectionProps) {
   const { locale } = useLocale();
 
   // 获取 Cases 数据
-  const { data: casesData, isLoading } = useCases();
+  const { data: casesData, isLoading } = useCasesData();
 
   // 根据语言设置默认 UI 文本
   const defaultUiTexts = useMemo(() => {

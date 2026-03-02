@@ -44,7 +44,7 @@ export const LayoutHelpers = {
       if (!layout.header.logo) {
         errors.push('Header logo is required');
       }
-      if (!layout.header.navigation || layout.header.navigation.length === 0) {
+      if (!layout.header.nav || layout.header.nav.length === 0) {
         errors.push('Header navigation is required');
       }
     }
@@ -78,7 +78,7 @@ export const LayoutHelpers = {
    * 获取所有导航链接
    */
   getAllNavigationLinks: (layout: LayoutAggregate): Array<{ label: string; href: string }> => {
-    const headerLinks = layout.header.navigation.map((item) => ({
+    const headerLinks = layout.header.nav.map((item) => ({
       label: item.label,
       href: item.href,
     }));

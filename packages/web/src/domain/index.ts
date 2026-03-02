@@ -15,8 +15,8 @@
 // 值对象
 export * from './shared/valueObjects';
 
-// 实体
-export * from './shared/entities';
+// 实体（暂时未实现）
+// export * from './shared/entities';
 
 // 类型
 export * from './shared/types';
@@ -39,7 +39,7 @@ export * from './layout/layout.repository';
 // Homepage - 首页领域
 // ============================================================================
 
-export * from './homepage/hero.model';
+// export * from './homepage/hero.model';
 export * from './homepage/features.model';
 export * from './homepage/solutions.model';
 export * from './homepage/cases.model';

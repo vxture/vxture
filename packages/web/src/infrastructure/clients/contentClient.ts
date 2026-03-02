@@ -9,7 +9,7 @@
  */
 
 import { jsonAdapter } from './adapters/jsonAdapter';
-import type { ContentKey, ContentTypeMap } from '@/types/content.types';
+import type { ContentKey, ContentTypeMap } from '@/shared/types/content.types';
 
 interface CacheEntry {
   data: unknown;
