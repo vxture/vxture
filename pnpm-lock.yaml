@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      react-icons:
+        specifier: ^5.5.0
+        version: 5.5.0(react@19.2.0)
     devDependencies:
       '@types/node':
         specifier: ^24.8.1
@@ -43,6 +47,18 @@ importers:
         version: 5.9.3
 
   packages/api: {}
+
+  packages/design-system:
+    dependencies:
+      react:
+        specifier: ^19.0.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.0(react@19.2.0)
+      react-icons:
+        specifier: ^5.4.0
+        version: 5.5.0(react@19.2.0)
 
   packages/web:
     dependencies:

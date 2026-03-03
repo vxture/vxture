@@ -75,5 +75,7 @@
       "prettier --write"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "react-icons": "^5.5.0"
+  }
 }

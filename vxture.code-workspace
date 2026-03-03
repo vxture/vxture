@@ -1,63 +1,68 @@
 {
-	"folders": [
-		{
-			"name": "vxture-root",
-			"path": "."
-		},
-		{
-			"name": "web",
-			"path": "packages/web"
-		},
-		{
-			"name": "api",
-			"path": "packages/api"
-		}
-	],
-	"settings": {
-		"typescript.locale": "zh-CN",
-		"emmet.includeLanguages": {
-			"javascript": "javascriptreact",
-			"typescript": "typescriptreact"
-		},
-		"terminal.integrated.fontFamily": "monospace",
-		"terminal.integrated.fontSize": 14,
-		"json.validate.enable": true,
-		"search.exclude": {
-			"**/node_modules": true,
-			"**/.next": true,
-			"**/.venv": true,
-			"**/__pycache__": true,
-			"**/*.pyc": true
-		},
-		"files.exclude": {
-			"**/.next": true,
-			"**/.venv": true,
-			"**/__pycache__": true,
-			"**/*.pyc": true
-		}
-	},
-	"extensions": {
-		"recommendations": [
-			// 前端开发（您已安装）
-			"dbaeumer.vscode-eslint",
-			"esbenp.prettier-vscode",
-			"bradlc.vscode-tailwindcss",
+  "folders": [
+    {
+      "name": "vxture-root",
+      "path": ".",
+    },
+    {
+      "name": "web",
+      "path": "packages/web",
+    },
+    {
+      "name": "api",
+      "path": "packages/api",
+    },
+    {
+      "name": "design-system",
+      "path": "packages/design-system",
+    },
+  ],
+  "settings": {
+    "typescript.locale": "zh-CN",
+    "emmet.includeLanguages": {
+      "javascript": "javascriptreact",
+      "typescript": "typescriptreact",
+    },
+    "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.fontSize": 14,
+    "json.validate.enable": true,
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/.next": true,
+      "**/.venv": true,
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+    },
+    "files.exclude": {
+      "**/.next": true,
+      "**/.venv": true,
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+    },
+    "cSpell.words": ["Qube"],
+  },
+  "extensions": {
+    "recommendations": [
+      // 前端开发（您已安装）
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
 
-			// 后端开发（需要补充）
-			"ms-python.python",
-			"ms-python.vscode-pylance",
-			"rangav.vscode-thunder-client",
+      // 后端开发（需要补充）
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "rangav.vscode-thunder-client",
 
-			// 您已安装的增强功能扩展
-			"github.copilot-chat",
-			"sonarsource.sonarlint-vscode",
-			"stylelint.vscode-stylelint",
-			"usernamehw.errorlens",
+      // 您已安装的增强功能扩展
+      "github.copilot-chat",
+      "sonarsource.sonarlint-vscode",
+      "stylelint.vscode-stylelint",
+      "usernamehw.errorlens",
 
-			// 其他有用的扩展
-			"christian-kohler.path-intellisense",
-			"eamodio.gitlens",
-			"streetsidesoftware.code-spell-checker"
-		]
-	}
+      // 其他有用的扩展
+      "christian-kohler.path-intellisense",
+      "eamodio.gitlens",
+      "streetsidesoftware.code-spell-checker",
+    ],
+  },
 }
