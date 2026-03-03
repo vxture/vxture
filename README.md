@@ -1,8 +1,8 @@
-# Vxture 平台
+# Vxture 智能云服务平台
 
-> 现代化企业官网平台 - Next.js 15 + FastAPI + PostgreSQL
+> 人工智能业务的云服务平台 - 提供智能体服务
 
-基于 PNPM Monorepo 架构的全栈 Web 平台，专注于企业官网展示和用户账户系统。
+基于 PNPM Monorepo 架构的全栈云服务平台，专注于人工智能业务的服务提供和管理。
 <!-- Quick badges: setup / contribute / runtimes -->
 [![setup-ready](https://img.shields.io/badge/setup-ready-brightgreen)](docs/SETUP_QUICK.md)
 [![contribs-welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen)](docs/SETUP_QUICK.md#contributing)
@@ -22,6 +22,10 @@
 - **💳 订阅授权**: 应用授权和业务订阅管理
 - **🚀 高性能**: 服务端渲染 + 客户端优化
 - **🔒 安全可靠**: JWT 认证 + OAuth2 + 数据加密
+- **🤖 智能体服务**: 提供人工智能业务的核心服务
+- **📊 数据分析**: 实时数据分析和可视化
+- **📞 工单系统**: 客户支持和工单管理
+
 
 ## 🏗️ 技术架构
 

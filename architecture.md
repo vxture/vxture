@@ -1,37 +1,74 @@
-# Architecture Overview
+# 整体技术架构
 
-> **Project Type**: Enterprise Official Website
-> **Architecture Style**: Lightweight Four-Layer Architecture
-> **Version**: 2.0 (Finalized 2026-02-13)
+## 项目定位
 
----
+Vxture 是一个人工智能业务的云服务平台，提供智能体服务，包含以下核心系统：
 
-## 1. Architectural Principles
+1. **企业官网 (web)** - 当前主要开发的前端应用
+2. **运营管理平台** - 提供账号、订阅、工单等运营功能
+3. **租户管理平台** - 提供租户管理功能
+4. **业务应用平台** - 单独项目，提供具体业务功能
+5. **公共 API** - 统一的接口服务
 
-This project follows a **lightweight four-layer architecture** to ensure:
+## 架构设计理念
 
-- **Clear separation of concerns**: Each layer has a single, well-defined responsibility
-- **Controlled dependency direction**: Dependencies flow in one direction only
-- **Long-term maintainability**: Easy to understand, modify, and extend
-- **Evolvability without over-engineering**: Appropriate complexity for an enterprise website
+### 核心原则
 
-### What This Architecture Is
+1. **分层架构**：清晰的层次划分，各层职责明确
+2. **依赖倒置**：高层模块不依赖低层模块，都依赖抽象
+3. **单一职责**：每个模块只负责一个功能领域
+4. **可扩展性**：支持未来业务和技术的发展
+5. **可维护性**：代码结构清晰，易于理解和修改
 
-✅ **Content-driven enterprise website architecture**
-✅ Lightweight implementation of Clean Architecture principles
-✅ Optimized for official website scenarios (content management, SEO, i18n)
-✅ Balanced between maintainability and simplicity
+## 系统架构图
 
-### What This Architecture Is NOT
+```
+Vxture 智能云服务平台
+┌─────────────────────────────────────────────────────────────┐
+│                     用户层 (User Layer)                     │
+├─────────────────────────────────────────────────────────────┤
+│  企业官网 (web)  │  运营管理平台  │  租户管理平台  │  业务应用平台  │
+├─────────────────────────────────────────────────────────────┤
+│                     接口层 (API Layer)                      │
+├─────────────────────────────────────────────────────────────┤
+│              公共 API 网关 (API Gateway)                     │
+├─────────────────────────────────────────────────────────────┤
+│                  业务逻辑层 (Business Layer)                  │
+├─────────────────────────────────────────────────────────────┤
+│  用户管理  │  订阅管理  │  工单管理  │  智能体服务  │  数据分析  │
+├─────────────────────────────────────────────────────────────┤
+│                     数据层 (Data Layer)                      │
+├─────────────────────────────────────────────────────────────┤
+│  关系型数据库  │  NoSQL 数据库  │  文件存储  │  缓存  │  消息队列  │
+└─────────────────────────────────────────────────────────────┘
+```
 
-❌ **Not a SaaS platform architecture**
-❌ Not over-engineered with unnecessary abstractions
-❌ Not designed for complex business workflows
-❌ Not a microservices architecture
+## 前端架构 (packages/web)
 
----
+### 技术栈
 
-## 2. Top-Level Structure
+```
+Next.js 15.5.6 + App Router + React 19.2 + TypeScript 5.9.3
+├── 🎨 样式系统
+│   ├── TailwindCSS 4.1.14 - 原子化样式系统
+│   ├── SCSS/Sass 1.93.2 - 复杂样式和动画
+│   └── PostCSS 8.5.6 - CSS 后处理
+├── 🧠 状态管理
+│   ├── Zustand 5.0.8 - 轻量级状态管理
+│   ├── TanStack Query 5.90.5 - 服务器状态管理
+│   └── React Context - 全局状态共享
+├── 🔧 开发工具
+│   ├── TypeScript 5.9.3 - 类型安全
+│   ├── ESLint 9.37.0 + Prettier 3.6.2 - 代码规范
+│   ├── Stylelint 16.25.0 - 样式规范
+│   └── Husky 9.1.7 + lint-staged 16.2.4 - Git 工作流
+├── 🎯 工具库
+│   ├── Zod 4.1.12 - 运行时类型验证
+│   ├── 多图标库 - Heroicons 2.2.0, Phosphor 2.1.10, Tabler 3.35.0, React Icons 5.5.0
+│   └── TailwindCSS Animate 1.0.7 - CSS 动画
+```
+
+### 架构层次 (Clean Architecture)
 
 ```
 packages/web/src/
@@ -45,684 +82,305 @@ packages/web/src/
 └── shared/                 # Shared Utilities (Types, Constants, Utils)
 ```
 
-### Directory Tree
+### 各层职责
 
-```
-src/
-├── app/                           # Next.js App Router
-│   ├── (auth)/                    # Auth routes group
-│   ├── (main)/                    # Main routes group
-│   │   ├── layout.tsx             # Main layout (with Header/Footer)
-│   │   └── page.tsx               # Homepage
-│   ├── about/                     # About page
-│   ├── products/                  # Products page
-│   ├── layout.tsx                 # Root layout (SSR)
-│   └── globals.css                # Global styles
-│
-├── presentation/                  # UI Components
-│   ├── components/
-│   │   ├── home/                  # Homepage sections
-│   │   ├── layout/                # Layout components (Header, Footer)
-│   │   ├── about/                 # About page components
-│   │   ├── products/              # Products page components
-│   │   └── common/                # Shared UI components
-│   └── styles/                    # Component styles
-│
-├── application/                   # Use Cases & Hooks
-│   ├── hooks/                     # React Hooks
-│   │   ├── homepage/              # Homepage hooks
-│   │   ├── layout/                # Layout hooks
-│   │   └── shared/                # Shared hooks
-│   ├── usecases/                  # Use Cases
-│   └── seo/                       # SEO logic
-│
-├── domain/                        # Domain Models
-│   ├── homepage/                  # Homepage entities
-│   │   ├── hero.model.ts
-│   │   ├── features.model.ts
-│   │   ├── homepage.aggregate.ts
-│   │   └── homepage.repository.ts # Repository interface
-│   ├── layout/                    # Layout entities
-│   └── shared/                    # Domain shared
-│       ├── exceptions/            # Domain exceptions
-│       ├── repositories/          # Base repositories
-│       └── types/                 # Domain types
-│
-├── infrastructure/                # Data Sources
-│   ├── adapters/                  # External service adapters
-│   │   ├── json/                  # JSON data adapter
-│   │   ├── content/               # Content service
-│   │   ├── i18n/                  # i18n service
-│   │   └── theme/                 # Theme service
-│   ├── repositories/              # Repository implementations
-│   ├── mappers/                   # DTO ↔ Domain mappers
-│   ├── clients/                   # HTTP clients
-│   └── cache/                     # Cache management
-│
-├── stores/                        # Client State (Zustand)
-│   ├── themeStore.ts              # Theme state
-│   ├── i18nStore.ts               # i18n state
-│   ├── authStore.ts               # Auth state
-│   └── notificationStore.ts       # Notification state
-│
-└── shared/                        # Shared Utilities
-    ├── types/                     # Shared types
-    ├── constants/                 # Constants
-    ├── utils/                     # Utility functions
-    ├── theme/                     # Theme config
-    └── contexts/                  # React contexts
-```
+#### 1. app/ - 框架壳层
 
----
+**职责：**
+- 路由定义 (`page.tsx`)
+- 布局定义 (`layout.tsx`)
+- 全局提供者挂载 (`QueryProvider`, `ThemeProvider`)
+- 元数据绑定 (SEO metadata)
+- 服务器/客户端边界控制 (`'use client'`, `'use server'`)
 
-## 3. Layer Responsibilities
+**规则：**
+- 禁止包含业务逻辑
+- 禁止直接访问基础设施
+- 禁止实现数据获取逻辑
+- 只从 `presentation/` 层导入
 
----
+#### 2. presentation/ - UI 层
 
-### 3.1 app/ — Framework Shell Layer
+**职责：**
+- 页面组件 (HomePage, AboutPage)
+- 区块组件 (HeroSection, FeaturesSection)
+- 布局组件 (Header, Footer)
+- UI 交互逻辑 (事件处理、表单验证)
+- 纯渲染逻辑
 
-**Purpose:**
-Holds framework-level runtime structure. Acts as the entry point for Next.js App Router.
-
-**Responsibilities:**
-
-- ✅ Route definitions (`page.tsx`)
-- ✅ Layout definitions (`layout.tsx`)
-- ✅ Global provider mounting (`QueryProvider`, `ThemeProvider`)
-- ✅ Metadata binding (SEO metadata)
-- ✅ Server/client boundary control (`'use client'`, `'use server'`)
-
-**Rules:**
-
-- ❌ Must NOT contain business logic
-- ❌ Must NOT access infrastructure directly
-- ❌ Must NOT implement data fetching logic
-- ✅ Only imports from `presentation/` layer
-
-**Example:**
-
-```tsx
-// app/(main)/page.tsx
-import HomePage from '@/presentation/pages/HomePage';
-
-export default function Page() {
-  return <HomePage />;
-}
-```
-
-This layer acts only as the **runtime entry shell**.
-
----
-
-### 3.2 presentation/ — UI Layer
-
-**Purpose:**
-Responsible for rendering the user interface.
-
-**Responsibilities:**
-
-- ✅ Page components (HomePage, AboutPage)
-- ✅ Section components (HeroSection, FeaturesSection)
-- ✅ Layout components (Header, Footer)
-- ✅ UI interaction logic (event handlers, form validation)
-- ✅ Pure rendering logic
-
-**Can depend on:**
-
+**依赖：**
 - `application/` (hooks, use cases)
 - `shared/` (types, constants, utils)
 - `stores/` (global state)
 
-**Must NOT:**
+**禁止：**
+- 直接访问 `infrastructure/`
+- 直接访问 `domain/`
+- 直接执行数据获取 (使用 `application/` 层的 hooks)
+- 包含业务编排逻辑
 
-- ❌ Access `infrastructure/` directly
-- ❌ Access `domain/` directly
-- ❌ Perform direct data fetching (use hooks from `application/`)
-- ❌ Contain business orchestration logic
+#### 3. application/ - 应用层
 
-**Example:**
+**职责：**
+- 用例实现 (GetHomepageContent, GetLayoutContent)
+- 应用钩子 (useHomepage, useHeader)
+- 数据组合 (合并多个领域实体)
+- 数据转换 (DTO → ViewModel)
+- 环境逻辑 (客户端/服务器数据获取)
+- SEO 组装 (元数据生成)
+- 多源协调 (JSON 回退 → API)
 
-```tsx
-// presentation/components/home/HeroSection.tsx
-'use client';
-import { useHero } from '@/application/hooks/homepage/useHero';
-
-export default function HeroSection() {
-  const { hero, isLoading } = useHero();
-
-  if (isLoading) return <div>Loading...</div>;
-  return <section>{hero.title}</section>;
-}
-```
-
-This layer **renders data** but does not decide **how data is obtained**.
-
----
-
-### 3.3 application/ — Use Case Layer
-
-**Purpose:**
-Coordinates page-level data and business orchestration.
-
-**Responsibilities:**
-
-- ✅ Use cases (GetHomepageContent, GetLayoutContent)
-- ✅ Application hooks (useHomepage, useHeader)
-- ✅ Data composition (combining multiple domain entities)
-- ✅ Data transformation (DTO → ViewModel)
-- ✅ Environment logic (client/server data fetching)
-- ✅ SEO assembly (metadata generation)
-- ✅ Multi-source coordination (JSON fallback → API)
-
-**Can depend on:**
-
+**依赖：**
 - `domain/` (models, repository interfaces)
 - `infrastructure/` (repository implementations, adapters)
 - `shared/` (types, constants, utils)
 
-**Must NOT:**
+**禁止：**
+- 包含 UI 组件
+- 渲染 JSX
+- 依赖 `presentation/` 层
+- 依赖 `app/` 层
 
-- ❌ Contain UI components
-- ❌ Render JSX
-- ❌ Depend on `presentation/` layer
-- ❌ Depend on `app/` layer
+#### 4. domain/ - 领域层
 
-**Example:**
+**职责：**
+- 模型定义 (entities, value objects)
+- 类型定义 (domain-specific types)
+- 聚合根 (业务实体组合)
+- 仓库契约 (接口定义，无实现)
+- 领域规则 (验证、业务逻辑)
+- 领域异常 (ContentLoadError, ContentNotFoundError)
 
-```ts
-// application/hooks/homepage/useHero.ts
-import { useQuery } from '@tanstack/react-query';
-import { homepageRepository } from '@/infrastructure/repositories/homepage';
-import { useI18nStore } from '@/stores/i18nStore';
+**特点：**
+- 纯 TypeScript 逻辑
+- 无框架代码 (React, Next.js)
+- 无 `fetch`，无 HTTP 调用
+- 无 UI 代码
+- 无外部 SDK 依赖
 
-export function useHero() {
-  const locale = useI18nStore(s => s.locale);
+#### 5. infrastructure/ - 基础设施层
 
-  return useQuery({
-    queryKey: ['hero', locale],
-    queryFn: () => homepageRepository.getHero(locale),
-  });
-}
-```
+**职责：**
+- JSON 适配器 (读取 `public/data/`)
+- API 客户端 (HTTP 请求)
+- CMS 连接器 (未来: Strapi, Contentful)
+- 仓库实现 (实现 `domain/` 接口)
+- 第三方 SDK 包装器 (分析、跟踪)
+- 缓存实现 (React Query, 自定义缓存)
+- 映射器 (DTO ↔ Domain Model 转换)
 
-This layer **decides what data a page needs**.
+**依赖：**
+- `domain/` (实现仓库接口)
+- `shared/` (types, constants, utils)
 
----
+**禁止：**
+- 依赖 `application/`
+- 依赖 `presentation/`
+- 依赖 `app/`
+- 包含业务逻辑 (只包含技术实现)
 
-### 3.4 domain/ — Domain Layer
+#### 6. stores/ - 客户端状态层
 
-**Purpose:**
-Defines the shape and meaning of business data.
+**职责：**
+- UI 状态管理 (主题、语言、模态框可见性)
+- 客户端同步状态 (主题同步、i18n 同步)
+- 临时状态 (通知、吐司)
+- 用户偏好 (持久化到 localStorage)
 
-**Responsibilities:**
+**规则：**
+- 禁止包含领域逻辑
+- 禁止数据持久化职责 (使用 `infrastructure/` 进行 API 调用)
+- 只包含 UI 相关状态
+- 使用 Zustand 进行状态管理
 
-- ✅ Models (entities, value objects)
-- ✅ Types (domain-specific types)
-- ✅ Aggregates (business entity compositions)
-- ✅ Repository contracts (interfaces only, no implementations)
-- ✅ Domain rules (validation, business logic)
-- ✅ Domain exceptions (ContentLoadError, ContentNotFoundError)
+#### 7. shared/ - 共享工具层
 
-**Characteristics:**
+**职责：**
+- 常量定义 (i18nConfig, themeConfig)
+- 工具函数 (纯函数: `formatDate`, `debounce`)
+- 共享类型 (跨层 TypeScript 类型)
+- 上下文定义 (React Context 模板)
+- 主题定义 (颜色映射、字体配置)
 
-- ✅ Pure TypeScript logic
-- ❌ No framework code (React, Next.js)
-- ❌ No `fetch`, no HTTP calls
-- ❌ No UI code
-- ❌ No external SDK dependencies
+**规则：**
+- 禁止包含业务逻辑
+- 禁止包含用例逻辑
+- 禁止包含基础设施逻辑
+- 只包含纯函数
+- 无其他层依赖
 
-**Example:**
+## 后端架构 (packages/api)
 
-```ts
-// domain/homepage/hero.model.ts
-export interface HeroModel {
-  id: string;
-  title: string;
-  description: string;
-  cta: {
-    text: string;
-    link: string;
-  };
-}
-
-// domain/homepage/homepage.repository.ts
-export interface HomepageRepository {
-  getHero(locale: string): Promise<HeroModel>;
-  getFeatures(locale: string): Promise<FeaturesModel>;
-}
-```
-
-This layer **defines what the system is**, not **how it works**.
-
----
-
-### 3.5 infrastructure/ — Infrastructure Layer
-
-**Purpose:**
-Provides concrete data sources and external integrations.
-
-**Responsibilities:**
-
-- ✅ JSON adapters (read from `public/data/`)
-- ✅ API clients (HTTP requests)
-- ✅ CMS connectors (future: Strapi, Contentful)
-- ✅ Repository implementations (implement `domain/` interfaces)
-- ✅ Third-party SDK wrappers (analytics, tracking)
-- ✅ Cache implementations (React Query, custom cache)
-- ✅ Mappers (DTO ↔ Domain Model conversion)
-
-**Can depend on:**
-
-- `domain/` (implements repository interfaces)
-
-**Must NOT:**
-
-- ❌ Depend on `application/`
-- ❌ Depend on `presentation/`
-- ❌ Depend on `app/`
-- ❌ Contain business logic (only technical implementations)
-
-**Example:**
-
-```ts
-// infrastructure/repositories/homepage/HomepageRepository.ts
-import { HomepageRepository } from '@/domain/homepage/homepage.repository';
-import { JsonAdapter } from '@/infrastructure/adapters/json/JsonAdapter';
-import { HeroMapper } from '@/infrastructure/mappers/homepage/HeroMapper';
-
-export class HomepageRepositoryImpl implements HomepageRepository {
-  async getHero(locale: string) {
-    const dto = await JsonAdapter.load(`/data/pages/home/sections/hero.${locale}.json`);
-    return HeroMapper.toDomain(dto);
-  }
-}
-
-export const homepageRepository = new HomepageRepositoryImpl();
-```
-
-This layer answers: **where does the data come from?**
-
----
-
-### 3.6 stores/ — Client State Layer
-
-**Purpose:**
-Manages client-side global state (UI state, not business data).
-
-**Responsibilities:**
-
-- ✅ UI state (theme, locale, modal visibility)
-- ✅ Client synchronization state (theme sync, i18n sync)
-- ✅ Transient state (notifications, toasts)
-- ✅ User preferences (persisted to localStorage)
-
-**Rules:**
-
-- ❌ No domain logic
-- ❌ No data persistence responsibility (use `infrastructure/` for API calls)
-- ✅ Only UI-related state
-- ✅ Use Zustand for state management
-
-**Example:**
-
-```ts
-// stores/themeStore.ts
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-
-interface ThemeState {
-  theme: 'light' | 'dark' | 'system';
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
-}
-
-export const useThemeStore = create<ThemeState>()(
-  persist(
-    (set) => ({
-      theme: 'system',
-      setTheme: (theme) => set({ theme }),
-    }),
-    { name: 'theme-storage' }
-  )
-);
-```
-
-This layer manages **client-side UI state only**.
-
----
-
-### 3.7 shared/ — Shared Utilities Layer
-
-**Purpose:**
-Holds cross-layer reusable utilities (no business logic).
-
-**Responsibilities:**
-
-- ✅ Constants (i18nConfig, themeConfig)
-- ✅ Utility functions (pure functions: `formatDate`, `debounce`)
-- ✅ Shared types (cross-layer TypeScript types)
-- ✅ Context definitions (React Context boilerplate)
-- ✅ Theme definitions (color maps, font configs)
-
-**Rules:**
-
-- ❌ No business logic
-- ❌ No use case logic
-- ❌ No infrastructure logic
-- ✅ Pure functions only
-- ✅ No dependencies on other layers
-
-**Example:**
-
-```ts
-// shared/constants/i18nConfig.ts
-export const SUPPORTED_LOCALES = ['zh-CN', 'en-US'] as const;
-export const DEFAULT_LOCALE = 'zh-CN';
-
-// shared/utils/scroll.ts
-export function scrollToSection(id: string) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-}
-```
-
-This layer provides **pure utilities** with **no dependencies upward**.
-
----
-
-## 4. Dependency Direction (Strict Rule)
-
-### Allowed Dependencies
+### 技术栈
 
 ```
-app → presentation → application → domain
-                                    ↑
-                          infrastructure
-                                    ↑
-stores → shared                     │
-                                    │
-shared ────────────────────────────┘
+FastAPI 0.119.0 + Uvicorn 0.37.0 + Python 3.13.7
+├── 🗄️ 数据层
+│   ├── PostgreSQL 13+ - 主数据库
+│   ├── Redis 5.2.1+ - 缓存和会话存储
+│   ├── Alembic 1.17.0+ - 数据库迁移
+│   └── Psycopg 3.2.3+ - PostgreSQL 适配器
+├── 🔐 安全认证
+│   ├── JWT + OAuth2 - 身份认证
+│   ├── Python-JOSE - JWT 处理
+│   ├── Passlib 1.7.4+ + Bcrypt 5.0.0+ - 密码加密
+│   └── Python-multipart - 文件上传
+├── 🔧 核心依赖
+│   ├── Pydantic 2.12.3+ - 数据验证和设置
+│   ├── Pydantic-settings 2.11.0+ - 配置管理
+│   ├── Python-dotenv - 环境变量管理
+│   ├── HTTPx - HTTP 客户端
+│   ├── Aiofiles 25.1.0+ - 异步文件操作
+│   └── Uvicorn[standard] 0.37.0+ - ASGI 服务器
+├── 🧪 测试工具
+│   ├── Pytest 8.3.4+ - 测试框架
+│   └── Pytest-asyncio 0.25.0+ - 异步测试
 ```
 
-### Dependency Flow Explanation
-
-1. **app/** imports from **presentation/**
-2. **presentation/** imports from **application/**, **stores/**, **shared/**
-3. **application/** imports from **domain/**, **infrastructure/**, **shared/**
-4. **domain/** imports from **shared/** only (no other dependencies)
-5. **infrastructure/** imports from **domain/**, **shared/**
-6. **stores/** imports from **shared/** only
-7. **shared/** has **no dependencies** on any layer
-
----
-
-## 5. Forbidden Dependencies
-
-The following are **strictly prohibited**:
-
-| Forbidden | Reason |
-|-----------|--------|
-| `domain → application` | Domain must not depend on use cases |
-| `domain → presentation` | Domain must not depend on UI |
-| `domain → infrastructure` | Domain defines interfaces, infrastructure implements them |
-| `presentation → infrastructure` | UI must use application hooks, not direct data access |
-| `presentation → domain` | UI must use application hooks, not direct domain models |
-| `infrastructure → presentation` | Infrastructure must not depend on UI |
-| `infrastructure → application` | Infrastructure must not depend on use cases |
-| `application → presentation` | Use cases must not depend on UI |
-| `app → domain` | App router must not directly access domain |
-| `app → infrastructure` | App router must not directly access infrastructure |
-| `stores → domain` | Stores must not contain business logic |
-| `stores → application` | Stores must not depend on use cases |
-| `shared → any layer` | Shared must remain pure and dependency-free |
-
----
-
-## 6. Data Flow Example
-
-### Complete Data Flow: Homepage Hero Section
+### 架构层次
 
 ```
-1. User visits homepage
-   ↓
-2. [app/(main)/page.tsx] renders <HomePage />
-   ↓
-3. [presentation/pages/HomePage.tsx] renders <HeroSection />
-   ↓
-4. [presentation/components/home/HeroSection.tsx] calls useHero()
-   ↓
-5. [application/hooks/homepage/useHero.ts] calls homepageRepository.getHero()
-   ↓
-6. [infrastructure/repositories/homepage/HomepageRepository.ts] calls JsonAdapter
-   ↓
-7. [infrastructure/adapters/json/JsonAdapter.ts] reads public/data/pages/home/sections/hero.zh-CN.json
-   ↓
-8. [infrastructure/mappers/homepage/HeroMapper.ts] converts JSON DTO → HeroModel
-   ↓
-9. [application/hooks/homepage/useHero.ts] returns HeroModel
-   ↓
-10. [presentation/components/home/HeroSection.tsx] renders HeroModel
+packages/api/
+├── app/
+│   ├── main.py          # FastAPI 应用入口
+│   ├── models/          # 数据模型
+│   ├── routes/          # API 路由
+│   └── core/            # 核心配置
+├── start_dev.py         # 开发服务器启动
+└── requirements.txt     # Python 依赖
 ```
 
----
+### 各层职责
 
-## 7. Design Philosophy
+#### 1. routes/ - 路由层
 
-This architecture aims to:
+**职责：**
+- API 端点定义
+- 请求参数验证
+- 响应格式化
+- 异常处理
 
-1. **Keep structure stable**: Changes to UI don't affect domain logic
-2. **Avoid premature SaaS-level abstraction**: No over-engineering for future scenarios
-3. **Prevent architectural sprawl**: Each layer has clear boundaries
-4. **Maintain clarity for a content-focused website**: Optimized for official website needs
+**特点：**
+- 与前端交互的入口点
+- 数据转换和验证
+- 错误处理和响应格式化
 
-### When Adding New Functionality
+#### 2. models/ - 数据模型层
 
-Always ask these three questions:
+**职责：**
+- 数据库模型定义
+- 数据验证模型
+- 业务实体定义
 
-1. **Which layer does it belong to?**
-   - UI logic → `presentation/`
-   - Business orchestration → `application/`
-   - Business rules → `domain/`
-   - Data access → `infrastructure/`
-   - UI state → `stores/`
-   - Pure utilities → `shared/`
+**特点：**
+- 使用 SQLAlchemy ORM
+- 支持异步操作
+- 与数据库表结构对应
 
-2. **Does it violate dependency direction?**
-   - Check the dependency flow diagram
-   - Ensure no forbidden dependencies
+#### 3. core/ - 核心配置层
 
-3. **Is it business logic or rendering logic?**
-   - Business logic → `domain/` or `application/`
-   - Rendering logic → `presentation/`
+**职责：**
+- 应用配置
+- 安全配置
+- 数据库配置
+- 依赖注入
 
----
+**特点：**
+- 集中管理应用配置
+- 支持多环境配置
+- 提供依赖注入容器
 
-## 8. Content Data Management
+## 部署架构
 
-### Data Source: JSON Files
-
-```
-public/data/
-├── layout/
-│   ├── header/
-│   │   ├── header.zh-CN.json
-│   │   └── header.en-US.json
-│   └── footer/
-│       ├── footer.zh-CN.json
-│       └── footer.en-US.json
-└── pages/
-    └── home/
-        └── sections/
-            ├── hero.zh-CN.json
-            ├── hero.en-US.json
-            ├── features.zh-CN.json
-            ├── features.en-US.json
-            ├── solutions.zh-CN.json
-            ├── solutions.en-US.json
-            ├── cases.zh-CN.json
-            ├── cases.en-US.json
-            ├── cta.zh-CN.json
-            └── cta.en-US.json
-```
-
-### Migration Path (Future)
+### 开发环境
 
 ```
-Phase 1 (Current): Static JSON files
-Phase 2 (Future):  API with JSON fallback
-Phase 3 (Future):  Headless CMS (Strapi/Contentful)
+本地开发环境
+├── 前端 (localhost:3000) - Next.js 开发服务器
+├── 后端 (localhost:8000) - FastAPI 开发服务器
+├── 数据库 - PostgreSQL/Redis (可选)
+└── 工具链 - PNPM, Python 虚拟环境
 ```
 
-The architecture supports this migration without changing `domain/` or `application/` layers.
+### 生产环境
 
----
-
-## 9. Architecture Benefits
-
-1. **Separation of Concerns**: Each layer has a single responsibility
-2. **Testability**: Domain layer is pure TypeScript, easy to unit test
-3. **Flexibility**: Can swap data sources without changing business logic
-4. **Maintainability**: Clear boundaries make code easy to understand and modify
-5. **Scalability**: Easy to add new features by extending existing layers
-
----
-
-## 10. Common Pitfalls to Avoid
-
-### ❌ Anti-Pattern 1: Direct Infrastructure Access in Presentation
-
-```tsx
-// ❌ BAD: presentation/components/home/HeroSection.tsx
-import { JsonAdapter } from '@/infrastructure/adapters/json/JsonAdapter';
-
-export default function HeroSection() {
-  const [hero, setHero] = useState(null);
-
-  useEffect(() => {
-    JsonAdapter.load('/data/hero.json').then(setHero);
-  }, []);
-
-  return <div>{hero?.title}</div>;
-}
+```
+生产部署架构
+┌─────────────────────────────────────────────────────────────┐
+│                     负载均衡器 (Load Balancer)                │
+├─────────────────────────────────────────────────────────────┤
+│  前端 (CDN + 静态资源)  │  后端 API 服务器集群  │  定时任务服务  │
+├─────────────────────────────────────────────────────────────┤
+│                     数据存储层 (Data Storage)                  │
+├─────────────────────────────────────────────────────────────┤
+│  PostgreSQL 主从集群  │  Redis 缓存集群  │  文件存储 (OSS)  │
+├─────────────────────────────────────────────────────────────┤
+│                     监控和日志 (Monitoring)                   │
+├─────────────────────────────────────────────────────────────┤
+│  应用性能监控  │  系统监控  │  日志管理  │  错误跟踪  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-```tsx
-// ✅ GOOD: Use application hook
-import { useHero } from '@/application/hooks/homepage/useHero';
+## 安全架构
 
-export default function HeroSection() {
-  const { hero, isLoading } = useHero();
+### 认证与授权
 
-  if (isLoading) return <div>Loading...</div>;
-  return <div>{hero.title}</div>;
-}
-```
+1. **JWT 认证**：用于 API 访问控制
+2. **OAuth2**：支持第三方登录
+3. **RBAC 权限模型**：基于角色的访问控制
+4. **API 密钥管理**：用于服务间通信
 
-### ❌ Anti-Pattern 2: Business Logic in Presentation
+### 数据安全
 
-```tsx
-// ❌ BAD: presentation/components/home/FeaturesSection.tsx
-export default function FeaturesSection() {
-  const [features, setFeatures] = useState([]);
+1. **数据加密**：传输加密 (HTTPS)，存储加密
+2. **输入验证**：严格的参数验证和过滤
+3. **防止 SQL 注入**：使用参数化查询
+4. **防止 XSS 攻击**：输出转义和内容安全策略
 
-  // Business logic in UI component
-  const filteredFeatures = features.filter(f => f.status === 'active');
+## 架构优势
 
-  return <div>{filteredFeatures.map(...)}</div>;
-}
-```
+### 1. 可扩展性
 
-```tsx
-// ✅ GOOD: Business logic in application/domain
-// application/hooks/homepage/useFeatures.ts
-export function useFeatures() {
-  const { data } = useQuery({
-    queryKey: ['features'],
-    queryFn: () => homepageRepository.getActiveFeatures(), // Business logic in repository
-  });
-  return { features: data };
-}
-```
+- 模块化架构支持功能扩展
+- 分层设计降低耦合度
+- 清晰的接口定义便于组件替换
 
-### ❌ Anti-Pattern 3: Domain Depending on Infrastructure
+### 2. 可维护性
 
-```ts
-// ❌ BAD: domain/homepage/hero.model.ts
-import { JsonAdapter } from '@/infrastructure/adapters/json/JsonAdapter';
+- 各层职责明确，代码结构清晰
+- 单一职责原则提高代码可读性
+- 依赖注入简化测试和维护
 
-export class HeroModel {
-  async load() {
-    return JsonAdapter.load('/data/hero.json'); // Domain depending on infrastructure
-  }
-}
-```
+### 3. 性能优化
 
-```ts
-// ✅ GOOD: Domain defines interface, infrastructure implements
-// domain/homepage/homepage.repository.ts
-export interface HomepageRepository {
-  getHero(locale: string): Promise<HeroModel>;
-}
+- 前端静态资源优化和缓存
+- 后端异步处理和数据库优化
+- CDN 加速和负载均衡
 
-// infrastructure/repositories/homepage/HomepageRepository.ts
-export class HomepageRepositoryImpl implements HomepageRepository {
-  async getHero(locale: string) {
-    return JsonAdapter.load(`/data/hero.${locale}.json`);
-  }
-}
-```
+### 4. 开发效率
 
----
+- 统一的技术栈和开发流程
+- 代码复用和组件库
+- 自动化测试和部署流程
 
-## 11. Quick Reference
+## 未来架构规划
 
-### Layer Checklist
+### 1. 微服务化
 
-| Layer | Can Import From | Cannot Import From | Purpose |
-|-------|-----------------|-------------------|---------|
-| **app/** | presentation | domain, infrastructure, application | Route definitions |
-| **presentation/** | application, stores, shared | domain, infrastructure | UI rendering |
-| **application/** | domain, infrastructure, shared | presentation, app | Business orchestration |
-| **domain/** | shared | all other layers | Business models |
-| **infrastructure/** | domain, shared | application, presentation, app | Data sources |
-| **stores/** | shared | all other layers | Client state |
-| **shared/** | none | all layers | Pure utilities |
+将各业务功能拆分为独立的微服务，提高系统的可扩展性和容错性。
 
-### File Naming Conventions
+### 2. 事件驱动架构
 
-| Layer | File Pattern | Example |
-|-------|-------------|---------|
-| **domain/** | `*.model.ts`, `*.aggregate.ts`, `*.repository.ts` | `hero.model.ts`, `homepage.aggregate.ts` |
-| **infrastructure/** | `*Repository.ts`, `*Adapter.ts`, `*Mapper.ts` | `HomepageRepository.ts`, `JsonAdapter.ts` |
-| **application/** | `use*.ts`, `Get*.ts` | `useHero.ts`, `GetHomepageContent.ts` |
-| **presentation/** | `*.tsx` | `HeroSection.tsx`, `Header.tsx` |
-| **stores/** | `*Store.ts` | `themeStore.ts`, `i18nStore.ts` |
-| **shared/** | `*.ts`, `*.types.ts`, `*.config.ts` | `scroll.ts`, `content.types.ts` |
+引入消息队列，实现异步处理和系统解耦。
 
----
+### 3. 容器化部署
 
-## 12. Version History
+使用 Docker 和 Kubernetes 实现自动化部署和资源管理。
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0 | 2024-06-01 | Initial architecture definition |
-| 2.0 | 2026-02-13 | Finalized version with detailed guidelines, data flow examples, and anti-patterns |
+### 4. 人工智能集成
 
----
+集成机器学习和自然语言处理技术，提供更智能的服务。
 
-## 13. Related Documentation
+## 总结
 
-- [Directory Structure Reference](./packages/web/ARCHITECTURE_STRUCTURE.md) - Detailed directory tree and examples
-- [Domain Layer Documentation](./packages/web/src/domain/README.md) - Domain models and repository interfaces
-- [Infrastructure Layer Documentation](./packages/web/src/infrastructure/README.md) - Adapters and repository implementations
-- [Application Layer Documentation](./packages/web/src/application/README.md) - Hooks and use cases
-
----
-
-**Architecture Version**: 2.0 (Finalized)
-**Project Type**: Enterprise Official Website
-**Complexity Target**: Lightweight & Maintainable
-**Last Updated**: 2026-02-13
-**Maintainer**: vxture team
-
----
-
-End of Document
+Vxture 平台的架构设计遵循了现代软件架构的最佳实践，结合了分层架构、依赖倒置和单一职责原则。这种设计确保了系统的可扩展性、可维护性和性能优化，为未来业务和技术的发展奠定了基础。

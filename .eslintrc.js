@@ -1,10 +1,36 @@
 module.exports = {
+  root: true,
   extends: [
     'eslint:recommended',
-    'plugin:@typescript-eslint/recommended', // TS项目必加
+    'plugin:@typescript-eslint/recommended',
   ],
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+  plugins: ['@typescript-eslint'],
   rules: {
-    // 关键：保留注释前的空格
     'no-trailing-spaces': ['error', { ignoreComments: true }],
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+  },
+  overrides: [
+    {
+      files: ['**/*.tsx'],
+      extends: [
+        'plugin:react/recommended',
+        'plugin:react/jsx-runtime',
+      ],
+      settings: {
+        react: {
+          version: 'detect',
+        },
+      },
+    },
+  ],
+  env: {
+    node: true,
+    browser: true,
+    es2020: true,
   },
 };

@@ -9,19 +9,24 @@
     "lint": "next lint",
     "lint:style": "stylelint \"src/**/*.scss\" --fix",
     "lint:ts": "eslint --fix 'src/**/*.{ts,tsx}'",
-    "lint:all": "npm run lint && npm run lint:style && npm run type-check",
+    "lint:all": "pnpm run lint && pnpm run lint:style && pnpm run type-check",
     "format": "prettier --write '**/*.{js,ts,tsx,json,md,scss}'",
     "format:check": "prettier --check '**/*.{js,ts,tsx,json,md,scss}'",
     "type-check": "tsc --noEmit",
-    "check": "npm run lint:all && npm run format:check",
-    "fix": "npm run lint:all && npm run format"
+    "check": "pnpm run lint:all && pnpm run format:check",
+    "fix": "pnpm run lint:all && pnpm run format"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.5",
+    "@headlessui/react": "^2.2.9",
+    "@heroicons/react": "^2.2.0",
     "lucide-react": "^0.563.0",
     "next": "^15.5.6",
     "puppeteer": "^24.37.5",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-icons": "^5.5.0",
+    "uuid": "^9.0.1",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"
   },
