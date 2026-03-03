@@ -75,7 +75,8 @@
       "Bash(powershell -Command 'Get-NetTCPConnection -ErrorAction SilentlyContinue | Where-Object { $_.LocalPort -like \"\"300*\"\" } | Select-Object -ExpandProperty OwningProcess | ForEach-Object { try { Stop-Process -Id $_ -Force } catch { } }')",
       "Bash(pnpm list)",
       "Bash(pnpm lint)",
-      "Bash(pnpm type-check)"
+      "Bash(pnpm type-check)",
+      "Bash(timeout 10 bash -c 'tail -20 /tmp/claude/d--MyWebSite-vxture/tasks/b6twyz8r8.output 2>/dev/null')"
     ]
   },
   "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",

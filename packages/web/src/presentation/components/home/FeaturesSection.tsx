@@ -72,7 +72,7 @@ const FeatureCard = memo(function FeatureCard({ feature, theme = 'light' }: Feat
 
   return (
     <div
-      className={`group relative flex flex-col ${colorsCards.bgCard} rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105`}
+      className={`group relative flex flex-col ${colorsCards.bgCard} rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 h-full`}
     >
       {/* 顶部与底部装饰条 */}
       <div className={`absolute top-0 left-0 w-full h-1 ${colorsCards.borderDecorative}`} />

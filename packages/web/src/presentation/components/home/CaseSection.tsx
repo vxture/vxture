@@ -82,7 +82,7 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
 
   return (
     <div
-      className={`group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 will-change-transform flex flex-col h-full`}
+      className={`group relative flex flex-col rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 h-full`}
     >
       {/* 图片区域，16:9 比例 */}
       <div className='relative w-full aspect-[16/9] flex-shrink-0'>
