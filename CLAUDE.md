@@ -1,496 +1,203 @@
-# CLAUDE.md
+# CLAUDE.md - Project Guidelines for Claude Code
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Claude Code 项目开发规范与协作指南
 
-## 📦 Project Overview
+## 1. Project Overview
 
-Vxture 是一个基于 PNPM Monorepo 架构的人工智能业务云服务平台，提供智能体服务，包含：
+### 项目概述
 
-- **前端** (`packages/web`): Next.js 15 + App Router + React 19 + TypeScript 5.9 + TailwindCSS 4
-- **后端** (`packages/api`): FastAPI 0.119 + Python 3.13 + PostgreSQL + Redis
-- **智能体服务**: 提供人工智能业务的核心服务
+项目名称：Vxture 智能云服务平台
+项目描述：基于 PNPM Monorepo 架构的人工智能业务云服务平台，提供智能体服务
+项目状态：全新开发，持续规划与迭代
 
-## 🚀 Quick Start
+### 核心技术栈
 
-### Environment Requirements
+- 前端：Next.js 15 + React 19 + TypeScript 5.9 + TailwindCSS 4 + Zustand
+- 后端：FastAPI 0.119 + Python 3.13 + PostgreSQL + Redis
+- 构建：PNPM 10+ Monorepo
+- 运行环境：Node.js 22+，Python 3.13+
 
-- Node.js 22+
-- Python 3.13+
-- PNPM 10+
-- PostgreSQL 13+ (optional for development)
-- Redis 6+ (optional for development)
+### 核心业务模块
 
-### Startup Commands
+- 企业官网
+- 运营平台
+- 租户平台
+- 账户系统
+- 权限管理
+- 订阅授权
+- 工单系统
+- 系统监测
+- 智能体服务
+- 大模型接入
 
-```powershell
-# 克隆仓库
-git clone https://github.com/stonesmoker/vxture.git
-cd vxture
+### 重点功能模块
 
-# 安装依赖
-pnpm install
+- 支持多语言（i18n）
+- 支持多主题
+- 消息显示
 
-# 配置环境变量
-cp .env.local.template .env.local
+## 2. Role & Responsibilities
 
-# 启动完整开发环境（推荐）
-.\start-dev.ps1
+你是本项目专职开发助手，严格遵循以下职责与约束：
 
-# 或分别启动前后端
-pnpm dev      # 前端: http://localhost:3000 (严格使用此端口)
-pnpm dev:api  # 后端: http://localhost:8000 (严格使用此端口)
-```
+### 负责工作
 
-## 🏗️ Architecture
+- 高质量代码编写、重构、性能优化
+- Bug 修复、问题排查、日志优化
+- 业务逻辑实现、接口对接、组件开发
+- 代码注释、模块说明、开发文档完善
+- 完全遵守本文件所有规范
 
-### System Architecture
+### 严格禁止行为
 
-Vxture 智能云服务平台采用分层架构模式：
-
-```text
-Vxture 智能云服务平台
-┌─────────────────────────────────────────────────────────────┐
-│                     用户层 (User Layer)                     │
-├─────────────────────────────────────────────────────────────┤
-│  企业官网 (web)  │  运营管理平台  │  租户管理平台  │  业务应用平台  │
-├─────────────────────────────────────────────────────────────┤
-│                     接口层 (API Layer)                      │
-├─────────────────────────────────────────────────────────────┤
-│              公共 API 网关 (API Gateway)                     │
-├─────────────────────────────────────────────────────────────┤
-│                  业务逻辑层 (Business Layer)                  │
-├─────────────────────────────────────────────────────────────┤
-│  用户管理  │  订阅管理  │  工单管理  │  智能体服务  │  数据分析  │
-├─────────────────────────────────────────────────────────────┤
-│                     数据层 (Data Layer)                      │
-├─────────────────────────────────────────────────────────────┤
-│  关系型数据库  │  NoSQL 数据库  │  文件存储  │  缓存  │  消息队列  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Frontend Architecture (packages/web)
-
-采用 **Clean Architecture (整洁架构)** 模式，分为 7 层：
-
-1. **框架壳层** (`src/app/`) - App Router 页面和布局
-   - 路由定义和布局管理
-   - 全局提供者挂载
-   - 元数据绑定和 SEO 优化
-   - 服务器/客户端边界控制
-
-2. **展示层** (`src/presentation/`) - UI 组件和页面渲染
-   - 页面组件 (HomePage, AboutPage)
-   - 区块组件 (HeroSection, FeaturesSection)
-   - 布局组件 (Header, Footer)
-   - 纯渲染逻辑，无业务逻辑
-
-3. **应用层** (`src/application/`) - 应用业务逻辑
-   - 用例实现 (GetHomepageContent, GetLayoutContent)
-   - 应用钩子 (useHomepage, useHeader)
-   - 数据组合和转换 (DTO → ViewModel)
-   - 环境逻辑和 SEO 组装
-
-4. **领域层** (`src/domain/`) - 核心业务逻辑
-   - 实体 (entities) 和值对象 (value objects) 定义
-   - 仓库契约 (接口定义，无实现)
-   - 领域规则和验证逻辑
-   - 领域异常处理
-
-5. **基础设施层** (`src/infrastructure/`) - 外部系统访问
-   - JSON 适配器 (读取 `public/data/`)
-   - API 客户端 (HTTP 请求)
-   - CMS 连接器 (未来: Strapi, Contentful)
-   - 仓库实现和第三方 SDK 包装器
-
-6. **客户端状态层** (`src/stores/`) - 状态管理
-   - Zustand 状态管理
-   - UI 状态管理 (主题、语言、模态框可见性)
-   - 客户端同步状态和用户偏好
-
-7. **共享工具层** (`src/shared/`) - 公用工具和常量
-   - 常量定义 (i18nConfig, themeConfig)
-   - 工具函数 (formatDate, debounce)
-   - 共享类型和上下文定义
-   - 主题定义和颜色映射
-
-### Backend Architecture (packages/api)
-
-FastAPI 应用结构：
-
-```text
-packages/api/
-├── app/
-│   ├── main.py          # FastAPI 应用入口
-│   ├── models/          # 数据模型
-│   ├── routes/          # API 路由
-│   └── core/            # 核心配置
-├── start_dev.py         # 开发服务器启动
-└── requirements.txt     # Python 依赖
-```
-
-## 🛠️ Development Commands
+- 禁止擅自修改开发环境配置、构建脚本、配置文件
+- 禁止擅自新增/升级/删除依赖包
+- 禁止超出任务范围扩展功能、修改无关代码
+- 禁止生成不符合规范、无法直接运行的代码
+- 禁止省略关键注释、类型定义、业务说明
+- 禁止跨架构分层调用、破坏项目结构
+- 任何不确定的逻辑必须提问，禁止猜测实现
 
 ### Important Notes
 
-1. **Build in Development**: Unless necessary, do not build in the development environment. Use `pnpm dev` for development and `pnpm build` only for production.
-2. **Port Management**: 严格使用端口 3000（前端）和 8000（后端）。如果端口被占用，请先使用下面的端口冲突解决命令清理。**绝对禁止使用其他端口**。
-3. **UI Confirmation**: 如果需要确认任何 UI 显示问题，请直接询问我，而不是使用 Puppeteer 或其他工具自行测试，以避免陷入循环。
-4. **Backend Status**: 目前我们专注于前端开发。后端尚未完全确定，暂时不需要处理。
-5. **Git Operations**: Git 操作（如 commit、push）需要我的确认。
-
-### Frontend Commands
+- 固定端口：前端 3000，后端 8000，端口使用前必须先检查和清理
+- 优先复用现有工具、组件、函数，不重复造轮子
+- 代码风格必须与项目完全统一
+- 有疑问必须提问，严禁猜测业务逻辑，严禁反复测试，最多自行测试三次
+- 输出代码必须可直接运行、可直接提交
+- 严格遵守分层架构，禁止跨层调用
+- 提交代码前必须执行 lint、type-check 检查
+- 所有业务模块必须保持高内聚、低耦合
+
+## 3. Coding Standards
+
+### 通用规范
+
+- 严格遵循项目 [CODE_STYLE.md](CODE_STYLE.md) 代码风格
+- 代码必须通过 lint、type-check 检查
+- 所有模块必须保持单一职责
+- 所有icon来自react-icons库
+
+### 前端规范 (Next.js + React + TS)
 
-```powershell
-pnpm dev          # 启动前端开发服务器 (http://localhost:3000)
-pnpm build        # 构建前端生产版本
-pnpm preview      # 预览生产构建
-pnpm lint         # 检查前端代码规范
-pnpm lint:fix     # 自动修复前端代码问题
-pnpm type-check   # TypeScript 类型检查
-```
+- 缩进：2 空格
+- 文件命名：kebab-case（例：user-login-form.tsx）
+- 组件命名：PascalCase（例：UserLoginForm.tsx）
+- 必须使用 TypeScript，禁止使用 any 类型
+- 状态管理统一使用 Zustand
+- 样式仅使用 TailwindCSS 4
+- 页面统一存放于 app/ 目录（App Router）
 
-### Backend Commands
+### 后端规范 (FastAPI + Python)
+
+- 遵循 PEP8 规范
+- 缩进：4 空格
+- 函数与接口必须编写 docstring 注释
+- 数据模型、请求/响应体必须明确定义
+- 异常统一处理，日志标准化
 
-```powershell
-pnpm dev:api      # 启动后端 API 服务器 (http://localhost:8000)
-pnpm build:api    # 构建后端应用
-pnpm lint:api     # 检查后端代码规范
-pnpm test:api     # 运行后端测试
-```
+## 4. Project Structure
 
-### Full Stack Commands
+本项目采用清晰分层架构，严禁随意修改目录结构。
 
-```powershell
-pnpm start        # 同时启动前后端
-pnpm build:all    # 构建所有包
-pnpm lint         # 检查所有包的代码规范
-pnpm test         # 运行所有测试
-```
+### 目录说明
 
-### Database Commands
+vxture/
+├── packages/web/public/ # 静态数据（*.json）
+├── packages/web/src/ # 前端主项目（Next.js）
+│ ├── app/ # App Router 路由页面
+│ ├── presentation/ # 视图层：组件、页面、UI 渲染
+│ ├── application/ # 应用层：业务逻辑、用例
+│ ├── domain/ # 领域层：核心业务模型与规则
+│ ├── infrastructure/ # 基础设施层：API、存储、外部服务
+│ ├── stores/ # Zustand 全局状态
+│ └── shared/ # 共享工具、常量、类型
+├── packages/api/ # 后端服务（FastAPI）
+│ ├── app/
+│ │ ├── main.py # 应用入口
+│ │ ├── models/ # 数据模型
+│ │ ├── routes/ # API 路由
+│ │ └── core/ # 核心配置、中间件
+│ ├── start_dev.py # 开发启动脚本
+│ └── requirements.txt # 依赖声明
+├── docs/ # 项目文档
+└── 自动生成目录（禁止修改）
+node_modules/、dist/、build/、.git/
 
-```powershell
-pnpm db:migrate   # 执行数据库迁移
-pnpm db:reset     # 重置数据库
-pnpm db:seed      # 填充测试数据
-```
+### 架构分层原则（必须遵守）
 
-### Maintenance Commands
+- presentation → application → domain ← infrastructure
+- 禁止跨层调用，禁止领域层依赖外部服务。
 
-```powershell
-pnpm clean        # 清理构建文件
-pnpm clean:cache  # 清理缓存和依赖
-pnpm reset        # 完全重置项目
-pnpm health       # 环境健康检查
-```
+## 5. Git & Commit Rules
 
-## 🎨 Development Conventions
+### Commit 格式
 
-### Component Development
+#### 描述要求
 
-- **服务器组件**: 默认模式，用于静态内容和 SEO
-- **客户端组件**: 需要交互的组件，文件顶部声明 `'use client'`
+添加type: 简要描述（英文/中文均可，保持简洁）
 
-```tsx
-// 客户端组件示例
-'use client'
+#### 类型说明
 
-import { useState } from 'react'
+- feat：新功能
+- fix：修复问题
+- refactor：重构（不影响功能）
+- docs：文档更新
+- style：格式调整（不改变逻辑）
+- test：测试用例
+- chore：构建/工具/依赖相关
 
-export default function InteractiveButton() {
-  const [count, setCount] = useState(0)
-  // ...
-}
-```
+#### 提交要求
 
-### Styling Strategy
+- 一个提交只包含一个功能或修复
+- 提交前必须通过代码检查
+- 描述清晰，便于回溯
 
-**TailwindCSS 优先**（主要样式方案）
+## 6. Testing Requirements
 
-```tsx
-<div className="bg-primary-500 text-white p-4 rounded-lg shadow-lg">
-  <h1 className="text-2xl font-bold mb-2">标题</h1>
-</div>
-```
+- 必须编写单元测试
+- 测试文件统一放在 tests/ 目录
+- 测试命令
+  - 前端：pnpm test:web
+  - 后端：pnpm test:api
+- 代码覆盖率要求 > 80%
+- 核心业务逻辑必须覆盖测试用例
 
-**SCSS 补充**（复杂动画和主题）
+## 7. Development Commands
 
-```scss
-.hero-animation {
-  @apply transition-all duration-500;
+### 开发服务
 
-  &:hover {
-    transform: translateY(-4px) scale(1.02);
-  }
-}
-```
+pnpm dev # 前端开发环境（端口 3000）
+pnpm dev:api # 后端开发环境（端口 8000）
+pnpm start # 同时启动前后端
 
-### State Management
+### 构建
 
-使用 Zustand 进行全局状态管理：
+pnpm build # 前端构建
+pnpm build:api # 后端构建
+pnpm build:all # 全项目构建
 
-```tsx
-import { useThemeStore } from '@/stores/themeStore'
+### 代码质量
 
-function ThemeToggle() {
-  const { theme, toggleTheme } = useThemeStore()
-  return <button onClick={toggleTheme}>{theme}</button>
-}
-```
-
-### API Communication
+pnpm lint # 代码检查
+pnpm lint:fix # 自动修复
+pnpm type-check # TS 类型检查
 
-使用 TanStack Query 管理服务器状态：
+### 测试
 
-```tsx
-import { useQuery } from '@tanstack/react-query'
+pnpm test # 运行全部测试
+pnpm test:web # 前端测试
+pnpm test:api # 后端测试
+pnpm test:coverage # 测试覆盖率
 
-function UserProfile() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['user', 'profile'],
-    queryFn: () => fetch('/api/user/profile').then(res => res.json())
-  })
+### 数据库
 
-  // ...
-}
-```
+pnpm db:migrate # 数据库迁移
+pnpm db:reset # 重置数据库
+pnpm db:seed # 初始化测试数据
 
-## 📊 Data Management
+### 维护
 
-### Content System
-
-使用 contentClient 统一获取内容：
-
-```tsx
-import { useContent } from '@/hooks/useContent'
-
-function HeroSection() {
-  const { data: heroData, isLoading } = useContent('hero')
-
-  if (isLoading) return <div>Loading...</div>
-
-  return (
-    <section>
-      <h1>{heroData.title}</h1>
-      <p>{heroData.description}</p>
-    </section>
-  )
-}
-```
-
-### i18n System
-
-翻译文件结构：
-
-```text
-src/locales/
-├── zh-CN/
-│   └── common.json
-└── en-US/
-    └── common.json
-```
-
-使用方式：
-
-```tsx
-import { useLocale } from '@/hooks'
-import { useTranslation } from '@/services/i18nService'
-
-function Header() {
-  const { locale } = useLocale()
-  const { t } = useTranslation()
-
-  return (
-    <header>
-      <span>{t('header.title')}</span>
-    </header>
-  )
-}
-```
-
-### 智能体服务
-
-智能体服务是平台的核心功能，提供人工智能业务能力：
-
-```tsx
-import { useQuery } from '@tanstack/react-query'
-
-function IntelligentAgentService() {
-  const { data: agents, isLoading } = useQuery({
-    queryKey: ['intelligent-agents'],
-    queryFn: () => fetch('/api/agents').then(res => res.json())
-  })
-
-  if (isLoading) return <div>Loading agents...</div>
-
-  return (
-    <div>
-      <h2>智能体服务</h2>
-      <ul>
-        {agents.map(agent => (
-          <li key={agent.id}>{agent.name}</li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-```
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-#### Frontend Build Error
-
-```powershell
-# 清理缓存重新安装
-pnpm clean
-pnpm reset
-pnpm dev
-```
-
-#### Port Conflict
-
-```powershell
-# 停止所有开发进程
-.\stop-dev.ps1
-
-# 或手动检查端口
-netstat -ano | findstr :3000
-netstat -ano | findstr :8000
-```
-
-#### Backend Startup Failure
-
-```powershell
-# 检查 Python 环境
-python --version
-pip list
-
-# 重新创建虚拟环境
-cd packages/api
-rm -rf .venv
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
-
-## 🚀 Key Features
-
-### 核心功能特性
-
-- **🏢 企业官网**: 响应式设计，SEO 优化，现代化 UI/UX
-- **👤 账户系统**: 用户注册、登录、个人中心管理
-- **🔐 权限管理**: 基于角色的访问控制 (RBAC)
-- **💳 订阅授权**: 应用授权和业务订阅管理
-- **🚀 高性能**: 服务端渲染 + 客户端优化
-- **🔒 安全可靠**: JWT 认证 + OAuth2 + 数据加密
-- **🤖 智能体服务**: 提供人工智能业务的核心服务
-- **📊 数据分析**: 实时数据分析和可视化
-- **📞 工单系统**: 客户支持和工单管理
-
-## 🔒 Security Architecture
-
-### 认证与授权
-
-1. **JWT 认证**: 用于 API 访问控制
-2. **OAuth2**: 支持第三方登录
-3. **RBAC 权限模型**: 基于角色的访问控制
-4. **API 密钥管理**: 用于服务间通信
-
-### 数据安全
-
-1. **数据加密**: 传输加密 (HTTPS)，存储加密
-2. **输入验证**: 严格的参数验证和过滤
-3. **防止 SQL 注入**: 使用参数化查询
-4. **防止 XSS 攻击**: 输出转义和内容安全策略
-
-## 📈 Deployment Architecture
-
-### Development Environment
-
-```text
-本地开发环境
-├── 前端 (localhost:3000) - Next.js 开发服务器
-├── 后端 (localhost:8000) - FastAPI 开发服务器
-├── 数据库 - PostgreSQL/Redis (可选)
-└── 工具链 - PNPM, Python 虚拟环境
-```
-
-### Production Environment
-
-```text
-生产部署架构
-┌─────────────────────────────────────────────────────────────┐
-│                     负载均衡器 (Load Balancer)                │
-├─────────────────────────────────────────────────────────────┤
-│  前端 (CDN + 静态资源)  │  后端 API 服务器集群  │  定时任务服务  │
-├─────────────────────────────────────────────────────────────┤
-│                     数据存储层 (Data Storage)                  │
-├─────────────────────────────────────────────────────────────┤
-│  PostgreSQL 主从集群  │  Redis 缓存集群  │  文件存储 (OSS)  │
-├─────────────────────────────────────────────────────────────┤
-│                     监控和日志 (Monitoring)                   │
-├─────────────────────────────────────────────────────────────┤
-│  应用性能监控  │  系统监控  │  日志管理  │  错误跟踪  │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Deployment Commands
-
-```powershell
-# 生产构建
-pnpm build:all
-
-# 预览生产版本
-pnpm preview
-
-# 开发环境
-pnpm dev:full
-```
-
-## 🏆 Architecture Advantages
-
-### 可扩展性
-
-- 模块化架构支持功能扩展
-- 分层设计降低耦合度
-- 清晰的接口定义便于组件替换
-
-### 可维护性
-
-- 各层职责明确，代码结构清晰
-- 单一职责原则提高代码可读性
-- 依赖注入简化测试和维护
-
-### 性能优化
-
-- 前端静态资源优化和缓存
-- 后端异步处理和数据库优化
-- CDN 加速和负载均衡
-
-## 🌟 Future Planning
-
-### 1. 微服务化
-
-将各业务功能拆分为独立的微服务，提高系统的可扩展性和容错性。
-
-### 2. 事件驱动架构
-
-引入消息队列，实现异步处理和系统解耦。
-
-### 3. 容器化部署
-
-使用 Docker 和 Kubernetes 实现自动化部署和资源管理。
-
-### 4. 人工智能集成
-
-集成机器学习和自然语言处理技术，提供更智能的服务。
-
-## 📚 References
-
-- [Next.js Documentation](https://nextjs.org/docs)
-- [React Documentation](https://react.dev/)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [TailwindCSS Documentation](https://tailwindcss.com/docs)
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
+pnpm clean # 清理构建文件
+pnpm reset # 完全重置项目
+pnpm health # 项目健康检查
