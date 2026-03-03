@@ -9,8 +9,8 @@
   },
   "nav": [
     {
-      "label": "应用中心",
-      "href": "/applications"
+      "label": "应用广场",
+      "href": "/appcenter"
     },
     {
       "label": "产品服务",

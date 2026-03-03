@@ -1,5 +1,5 @@
 /**
- * useThemeToggleButton.tsx
+ * ThemeToggleButton.tsx
  *
  * 功能：
  * - 统一提供全局主题（light/dark）切换按钮，自动根据当前主题显示太阳/月亮图标
@@ -18,7 +18,7 @@
  * - 只负责主题切换按钮 UI 与交互，不包含业务逻辑
  * - 命名、结构、注释与其它通用组件保持一致
  *
- * @file useThemeToggleButton.tsx
+ * @file ThemeToggleButton.tsx
  * @desc 全局主题切换按钮通用组件，自动适配明暗模式
  * @author vxture team
  * @created 2024-06-01
@@ -31,7 +31,7 @@
  * @see ../../contexts/ThemeContext
  * @tags theme, toggle, button, component
  * @example
- *   <useThemeToggleButton />
+ *   <ThemeToggleButton />
  * @remarks
  *   仅负责主题切换按钮 UI，主题状态请通过 ThemeContext 管理。
  * @todo
@@ -41,7 +41,7 @@
 import { useGlobal } from '@/shared/contexts/GlobalContext';
 import { FiSun, FiMoon } from 'react-icons/fi';
 
-const useThemeToggleButton = () => {
+const ThemeToggleButton = () => {
   const { theme, toggleTheme } = useGlobal();
 
   return (
@@ -59,4 +59,4 @@ const useThemeToggleButton = () => {
   );
 };
 
-export default useThemeToggleButton;
+export default ThemeToggleButton;

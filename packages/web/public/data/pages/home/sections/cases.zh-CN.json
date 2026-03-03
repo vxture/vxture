@@ -1,13 +1,12 @@
 {
   "key": "cases",
   "enabled": true,
+  "icon": "chart",
   "title": "最佳实践",
   "subtitle": "真实落地案例，聚焦行业标杆实践",
-  "icon": "chart",
   "tagline": "最佳实践，行业标杆",
   "ui": {
-    "viewDetails": "查看详情",
-    "moreText": "更多案例"
+    "viewDetails": "查看详情"
   },
   "items": [
     {
@@ -24,7 +23,6 @@
         "alt": "地质灾害管理平台"
       },
       "cta": {
-        "label": "查看详情",
         "href": "/cases/geo-disaster-graph"
       },
       "publishedAt": "2024-03-01",
@@ -44,7 +42,6 @@
         "alt": "应急指挥调度平台"
       },
       "cta": {
-        "label": "查看详情",
         "href": "/cases/intelligent-emergency"
       },
       "publishedAt": "2024-12-01",
@@ -64,7 +61,6 @@
         "alt": "公共安全情报分析"
       },
       "cta": {
-        "label": "查看详情",
         "href": "/cases/public-safety-analysis"
       },
       "publishedAt": "2025-06-01",

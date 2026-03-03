@@ -41,7 +41,7 @@
       "id": "products-services",
       "title": "产品中心",
       "links": [
-        { "label": "应用中心", "href": "/applications" },
+        { "label": "应用广场", "href": "/appcenter" },
         { "label": "产品矩阵", "href": "/products" },
         { "label": "解决方案", "href": "/solutions" },
         { "label": "案例展示", "href": "/cases" }

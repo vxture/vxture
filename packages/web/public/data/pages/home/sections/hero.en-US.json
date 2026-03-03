@@ -1,12 +1,12 @@
 {
   "key": "hero",
   "enabled": true,
-  "title": "Unlock Your Data's",
-  "titleHighlight": "Infinite Potential",
-  "description": "Empower complex government & enterprise scenarios with data-driven intelligence",
   "theme": "brand",
   "intent": "cta",
   "variant": "highlight",
+  "title": "Unlock Your Data's",
+  "titleHighlight": "Infinite Potential",
+  "description": "Empower complex government & enterprise scenarios with data-driven intelligence",
   "cta": {
     "label": "Start Your Journey",
     "href": "/products"

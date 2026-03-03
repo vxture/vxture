@@ -28,11 +28,12 @@ export interface SolutionItem extends ContentItem {
   readonly variant: string;
   readonly tags: string[];
   readonly cover: Cover;
-  readonly cta?: {
-    readonly label: string;
+  readonly cta: {
     readonly href: string;
   };
   readonly capabilities: string[];
+  readonly icon: string;
+  readonly bgImage?: Cover;
 }
 
 /**
@@ -43,11 +44,11 @@ export interface SolutionsContent extends ContentEntity {
   readonly title: string;
   readonly subtitle: string;
   readonly tagline: string;
-  readonly ui?: {
-    readonly learnMore: string;
+  readonly featuresTitle: string;
+  readonly ui: {
+    readonly viewDetails: string;
     readonly prev: string;
     readonly next: string;
-    readonly featuresTitle: string;
   };
   readonly items: SolutionItem[];
 }
@@ -137,8 +138,35 @@ export const SolutionsHelpers = {
       errors.push('Solutions title is required');
     }
 
+    if (!solutions.featuresTitle?.trim()) {
+      errors.push('Solutions featuresTitle is required');
+    }
+
+    if (!solutions.ui?.viewDetails?.trim()) {
+      errors.push('Solutions ui.viewDetails is required');
+    }
+
+    if (!solutions.ui?.prev?.trim()) {
+      errors.push('Solutions ui.prev is required');
+    }
+
+    if (!solutions.ui?.next?.trim()) {
+      errors.push('Solutions ui.next is required');
+    }
+
     if (!solutions.items || solutions.items.length === 0) {
       errors.push('Solutions must have at least one item');
+    } else {
+      solutions.items.forEach((item, index) => {
+        if (!item.icon?.trim()) {
+          errors.push(`Solution item ${index} (${item.id}) icon is required`);
+        }
+        if (!item.cta) {
+          errors.push(`Solution item ${index} (${item.id}) must have cta`);
+        } else if (!item.cta.href?.trim()) {
+          errors.push(`Solution item ${index} (${item.id}) cta.href is required`);
+        }
+      });
     }
 
     return { valid: errors.length === 0, errors };

@@ -1,20 +1,21 @@
 {
   "key": "solutions",
   "enabled": true,
+  "icon": "chart",
   "title": "产品方案",
   "subtitle": "深入业务场景，提供产品与服务组合，共创并落地创新业务",
-  "icon": "chart",
   "tagline": "场景驱动，能力落地",
+  "featuresTitle": "核心特性",
   "ui": {
-    "learnMore": "了解更多",
+    "viewDetails": "申请试用",
     "prev": "上一个",
-    "next": "下一个",
-    "featuresTitle": "核心特性"
+    "next": "下一个"
   },
   "items": [
     {
       "id": "solution-intro-01",
       "slug": "data-integration-platform",
+      "icon": "data",
       "title": "全域数智平台",
       "subtitle": "数据本体构建，发现数据的隐藏价值和深层关系",
       "description": "面向政府与企业数字化场景，打通数据壁垒，构建安全、标准、可共享、可演进的企业级智能数据底座。",
@@ -22,19 +23,23 @@
       "theme": "primary",
       "variant": "grid",
       "tags": ["数据融合", "数据治理", "数据本体"],
+      "capabilities": ["data-graph-building", "multi-source-data-fusion"],
       "cover": {
         "url": "/images/productssection/product-intro-01.jpg",
         "alt": "全域数智平台"
       },
-      "cta": {
-        "label": "了解更多",
-        "href": "/solutions/data-integration-platform"
+      "bgImage": {
+        "url": "/images/solutionssection/bg-01.jpg",
+        "alt": "全域数智平台背景"
       },
-      "capabilities": ["data-graph-building", "multi-source-data-fusion"]
+      "cta": {
+        "href": "/solutions/data-integration-platform"
+      }
     },
     {
       "id": "solution-intro-02",
       "slug": "knowledge-graph-engine",
+      "icon": "graph",
       "title": "知识图谱引擎",
       "subtitle": "构建业务智能关联网络，驱动深度决策",
       "description": "基于知识图谱与语义建模技术，构建实体关系网络，挖掘数据潜在关联，支撑复杂业务分析与智能推理。",
@@ -42,19 +47,23 @@
       "theme": "brand",
       "variant": "grid",
       "tags": ["知识图谱", "实体关系", "智能推理"],
+      "capabilities": ["data-graph-building", "ontology-modeling", "fusion-analysis"],
       "cover": {
         "url": "/images/productssection/product-intro-02.jpg",
         "alt": "知识图谱引擎"
       },
-      "cta": {
-        "label": "了解更多",
-        "href": "/solutions/knowledge-graph-engine"
+      "bgImage": {
+        "url": "/images/solutionssection/bg-02.jpg",
+        "alt": "知识图谱引擎背景"
       },
-      "capabilities": ["data-graph-building", "ontology-modeling", "fusion-analysis"]
+      "cta": {
+        "href": "/solutions/knowledge-graph-engine"
+      }
     },
     {
       "id": "solution-intro-03",
       "slug": "intelligent-dispatch-system",
+      "icon": "dispatch",
       "title": "智能调度引擎",
       "subtitle": "数据驱动智能决策，实现一体化指挥调度",
       "description": "基于数据与知识能力，实现资源优化配置与动态调度，支撑应急管理与复杂场景下的实时指挥和协同决策。",
@@ -62,19 +71,27 @@
       "theme": "info",
       "variant": "grid",
       "tags": ["智能调度", "应急指挥", "资源优化"],
+      "capabilities": [
+        "intelligent-decision-dispatch",
+        "real-time-assessment",
+        "incident-response"
+      ],
       "cover": {
         "url": "/images/productssection/product-intro-03.jpg",
         "alt": "智能调度引擎"
       },
-      "cta": {
-        "label": "了解更多",
-        "href": "/solutions/intelligent-dispatch-system"
+      "bgImage": {
+        "url": "/images/solutionssection/bg-03.jpg",
+        "alt": "智能调度引擎背景"
       },
-      "capabilities": ["intelligent-decision-dispatch", "real-time-assessment", "incident-response"]
+      "cta": {
+        "href": "/solutions/intelligent-dispatch-system"
+      }
     },
     {
       "id": "solution-intro-04",
       "slug": "digital-twin-simulation-platform",
+      "icon": "twin",
       "title": "数字孪生仿真推演平台",
       "subtitle": "基于数字孪生技术和模型推理，实现全场景分析研判与前瞻决策",
       "description": "构建高精度数字孪生模型，支持多场景模拟推演与风险预判，为规划研判、应急演练与前瞻决策提供科学支撑。",
@@ -82,15 +99,18 @@
       "theme": "success",
       "variant": "grid",
       "tags": ["虚实映射", "仿真推演", "前瞻决策"],
+      "capabilities": ["digital-twin-simulation", "scenario-simulation", "predictive-analysis"],
       "cover": {
         "url": "/images/productssection/product-intro-04.jpg",
         "alt": "数字孪生仿真推演平台"
       },
-      "cta": {
-        "label": "了解更多",
-        "href": "/solutions/digital-twin-simulation-platform"
+      "bgImage": {
+        "url": "/images/solutionssection/bg-04.jpg",
+        "alt": "数字孪生仿真推演平台背景"
       },
-      "capabilities": ["digital-twin-simulation", "scenario-simulation", "predictive-analysis"]
+      "cta": {
+        "href": "/solutions/digital-twin-simulation-platform"
+      }
     }
   ]
 }

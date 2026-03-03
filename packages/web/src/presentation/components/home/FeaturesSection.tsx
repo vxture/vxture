@@ -1,12 +1,15 @@
 /**
  * FeaturesSection.tsx - 首页核心能力区块（重构版）
  *
- * Presentation Layer - Component
+ * 功能：展示首页 Features 区块 UI，使用 Application Layer 的 useFeatures Hook 获取数据，
+ *      支持吸附滚动、响应式布局、主题切换
  *
- * 职责：
- * - 展示首页 Features 区块 UI
- * - 使用 Application Layer 的 useFeatures Hook 获取数据
- * - 支持吸附滚动、响应式布局、主题切换
+ * @author Stone Smoker
+ * @created 2024-06-01
+ * @lastModified 2026-03-03
+ * @version 2.0.0
+ * @copyright Copyright (c) 2024-2026 Vxture Team
+ * @license MIT
  *
  * @layer Presentation
  * @category Components - Home
@@ -20,25 +23,52 @@ import { FaMedal } from 'react-icons/fa6';
 import { BasicColorMap, SectionTheme } from '@/shared/theme/colorMap';
 import { renderIcon } from '@/shared/utils/iconMapper';
 
-// 单个能力卡片组件
+// ============================================================================
+// 类型定义
+// ============================================================================
+
+/**
+ * 单个能力卡片 Props
+ */
 interface FeatureCardProps {
-  feature: {
-    id: string;
-    slug: string;
-    title: string;
-    description: string;
-    icon: string;
-    highlights: string[];
-    cta: { label: string; href: string };
+  readonly feature: {
+    readonly id: string;
+    readonly slug: string;
+    readonly title: string;
+    readonly description: string;
+    readonly icon: string;
+    readonly highlights: readonly string[];
+    readonly cta: { readonly label: string; readonly href: string };
   };
-  theme?: SectionTheme;
+  readonly theme?: SectionTheme;
 }
 
-const FeatureCard = memo(function FeatureCard({
-  feature,
-  theme = 'light',
-}: FeatureCardProps) {
+/**
+ * 能力区块主组件 Props
+ */
+interface FeaturesSectionProps {
+  readonly id: string;
+  readonly name?: string;
+  readonly theme?: SectionTheme;
+}
+
+// ============================================================================
+// 子组件定义
+// ============================================================================
+
+/**
+ * 单个能力卡片组件
+ */
+const FeatureCard = memo(function FeatureCard({ feature, theme = 'light' }: FeatureCardProps) {
+  // ==========================================================================
+  // 计算属性
+  // ==========================================================================
+
   const colorsCards = BasicColorMap[theme].primary;
+
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
 
   return (
     <div
@@ -107,25 +137,43 @@ const FeatureCard = memo(function FeatureCard({
   );
 });
 
-// 能力区块主组件
-interface FeaturesSectionProps {
-  id: string;
-  theme?: SectionTheme;
-}
+// ============================================================================
+// 主组件实现
+// ============================================================================
 
+/**
+ * 能力区块主组件
+ */
 const FeaturesSection = memo(function FeaturesSection({
   id,
+  name = 'Features',
   theme = 'light',
 }: FeaturesSectionProps) {
+  // ==========================================================================
+  // Hooks 调用
+  // ==========================================================================
+
   // 使用新的 Application Layer Hook 获取数据
   const { data: featuresData, isLoading, error } = useFeatures();
 
+  // ==========================================================================
+  // 计算属性
+  // ==========================================================================
+
   const colors = BasicColorMap[theme].primary;
+
+  // ==========================================================================
+  // 早期返回
+  // ==========================================================================
 
   // 加载状态
   if (isLoading) {
     return (
-      <section id={id} className={`relative snap-section min-h-screen flex items-center justify-center ${colors.bgSection}`}>
+      <section
+        id={id}
+        data-name={name}
+        className={`relative snap-section min-h-screen flex items-center justify-center ${colors.bgSection}`}
+      >
         <div className='text-center'>
           <div className={`text-xl ${colors.textMain}`}>加载中...</div>
         </div>
@@ -136,7 +184,11 @@ const FeaturesSection = memo(function FeaturesSection({
   // 错误状态
   if (error || !featuresData) {
     return (
-      <section id={id} className={`relative snap-section min-h-screen flex items-center justify-center ${colors.bgSection}`}>
+      <section
+        id={id}
+        data-name={name}
+        className={`relative snap-section min-h-screen flex items-center justify-center ${colors.bgSection}`}
+      >
         <div className='text-center'>
           <div className={`text-xl ${colors.textMain}`}>加载失败</div>
         </div>
@@ -149,17 +201,23 @@ const FeaturesSection = memo(function FeaturesSection({
     return null;
   }
 
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
+
   const { title, subtitle, tagline, items } = featuresData;
 
   return (
-    <section id='snap-section-2' className={`relative snap-section min-h-screen flex flex-col ${colors.bgSection}`}>
+    <section
+      id={id}
+      data-name={name}
+      className={`relative snap-section min-h-screen flex flex-col ${colors.bgSection}`}
+    >
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 1. 标题区 - 靠上对齐 */}
         <div className='text-center pt-28'>
           <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{title}</h2>
-          {subtitle && (
-            <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>
-          )}
+          {subtitle && <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>}
         </div>
 
         {/* 2. 内容区 - 上下居中 */}
@@ -167,11 +225,7 @@ const FeaturesSection = memo(function FeaturesSection({
           <div className='w-full'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8'>
               {items.map((feature) => (
-                <FeatureCard
-                  key={feature.id}
-                  feature={feature}
-                  theme={theme}
-                />
+                <FeatureCard key={feature.id} feature={feature} theme={theme} />
               ))}
             </div>
           </div>

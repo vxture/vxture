@@ -2,27 +2,54 @@
  * products/page.tsx - 产品页面
  *
  * 功能：演示窗口滚动吸附效果，包含导航、调试面板和内容组件
- * 用途：测试 useWindowScrollSnap hook 和 useSnapDebugPanel 调试面板
+ * 用途：测试 useWindowScrollSnap hook 和 SnapDebugPanel 调试面板
  *
- * 作者：vxture team
- * 版权：Copyright (c) 2024 vxture
- * 时间：2024-06-01
+ * @author vxture team
+ * @created 2024-06-01
+ * @lastModified 2026-03-03
+ * @version 1.0.0
+ * @copyright Copyright (c) 2024-2026 Vxture Team
+ * @license MIT
  *
- * 代码规范：严格遵循 TypeScript + React 组件最佳实践
- * 性能优化：避免不必要的渲染，导航按钮渲染采用 map，调试面板 useMemo
+ * @layer Presentation
+ * @category Pages
  */
 
-'use client'; // 客户端组件，允许使用浏览器 API
+'use client';
 
-import { useWindowScrollSnap } from '@/application/hooks/useWindowScrollSnap'; // 滚动吸附 hook
-import { useSnapDebugPanel } from '@/presentation/components/common/useSnapDebugPanel'; // 调试面板 hook
-import { useSnapSectionChoice } from '@/presentation/components/common/useSnapSectionChoice'; // 吸附选择调试组件
-import ProductDetailPartOne from '@/presentation/components/products/ProductDetailPartOne'; // 内容组件
+// ============================================================================
+// 导入
+// ============================================================================
+
+import { useWindowScrollSnap } from '@/application/hooks/useWindowScrollSnap';
+import SnapDebugPanel from '@/presentation/components/panels/SnapDebugPanel';
+import SnapChoicePanel from '@/presentation/components/panels/SnapChoicePanel';
+import ProductDetailPartOne from '@/presentation/components/products/ProductDetailPartOne';
+
+// ============================================================================
+// 常量定义
+// ============================================================================
+
+/** 产品页面区块总数 */
+const SECTION_COUNT = 4;
+/** 目标 ID 前缀 */
+const TARGET_ID_PREFIX = 'snap-section';
+/** 调试面板位置 */
+const DEBUG_PANEL_POSITION = { top: '4px', right: '4px', zIndex: 50 } as const;
+/** 选择面板位置 */
+const CHOICE_PANEL_POSITION = { top: '96px', left: '4px', zIndex: 50 } as const;
+
+// ============================================================================
+// 组件实现
+// ============================================================================
 
 export default function ProductsPage() {
-  // 调用滚动吸附 hook，获取状态和方法
+  // ==========================================================================
+  // Hook 调用
+  // ==========================================================================
+
   const { activeTarget, snapToTarget, snapdebugInfo } = useWindowScrollSnap({
-    debugFlag: true, // 启用调试模式
+    debugFlag: true,
     targetSelector: '.snap-section',
     targetAlignTo: 'top',
     snapThreshold: 280,
@@ -30,31 +57,28 @@ export default function ProductsPage() {
     observerRoot: undefined,
   });
 
-  // 获取吸附调试面板组件
-  const SnapDebugPanel = useSnapDebugPanel({
-    snapdebugInfo,
-    // 可选参数
-    position: { top: '4px', right: '4px', zIndex: 50 },
-    visible: true,
-  });
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
 
-  // 获取吸附选择调试组件
-  const SnapSectionChoice = useSnapSectionChoice({
-    sectionCount: 4,
-    targetIdPrefix: 'snap-section',
-    activeTarget,
-    snapToTarget,
-    // 可选：自定义位置
-    position: { top: '96px', left: '4px', zIndex: 50 },
-    visible: true,
-  });
   return (
     <div className='relative'>
       {/* 调试面板信息组件 */}
-      {SnapDebugPanel as unknown as React.ReactNode}
+      <SnapDebugPanel
+        snapdebugInfo={snapdebugInfo}
+        position={DEBUG_PANEL_POSITION}
+        visible={true}
+      />
 
       {/* 吸附选择调试组件 */}
-      {SnapSectionChoice}
+      <SnapChoicePanel
+        sectionCount={SECTION_COUNT}
+        targetIdPrefix={TARGET_ID_PREFIX}
+        activeTarget={activeTarget}
+        snapToTarget={snapToTarget}
+        position={CHOICE_PANEL_POSITION}
+        visible={true}
+      />
 
       {/* 内容组件 */}
       <ProductDetailPartOne />

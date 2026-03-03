@@ -1,13 +1,12 @@
 {
   "key": "cases",
   "enabled": true,
+  "icon": "chart",
   "title": "Best Practices",
   "subtitle": "Real-world cases showing digital transformation results",
-  "icon": "chart",
   "tagline": "Best Practices, Industry Benchmarks",
   "ui": {
-    "viewDetails": "View Details",
-    "moreText": "More Cases"
+    "viewDetails": "View Details"
   },
   "items": [
     {
@@ -24,7 +23,6 @@
         "alt": "Geological Disaster Management Platform"
       },
       "cta": {
-        "label": "View Details",
         "href": "/cases/geo-disaster-graph"
       },
       "publishedAt": "2024-03-01",
@@ -44,7 +42,6 @@
         "alt": "Emergency Command Platform"
       },
       "cta": {
-        "label": "View Details",
         "href": "/cases/intelligent-emergency"
       },
       "publishedAt": "2024-12-01",
@@ -64,7 +61,6 @@
         "alt": "Public Safety Intelligence Analysis"
       },
       "cta": {
-        "label": "View Details",
         "href": "/cases/public-safety-analysis"
       },
       "publishedAt": "2025-06-01",

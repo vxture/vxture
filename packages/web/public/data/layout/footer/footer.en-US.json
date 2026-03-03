@@ -41,7 +41,7 @@
       "id": "products-services",
       "title": "Products",
       "links": [
-        { "label": "App Center", "href": "/applications" },
+        { "label": "App Center", "href": "/appcenter" },
         { "label": "Product Matrix", "href": "/products" },
         { "label": "Solutions", "href": "/solutions" },
         { "label": "Case Studies", "href": "/cases" }

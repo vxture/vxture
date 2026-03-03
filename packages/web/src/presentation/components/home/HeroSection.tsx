@@ -1,12 +1,14 @@
 /**
- * HeroSection.tsx - 首页主视觉区块（重构版）
+ * HeroSection.tsx - 首页主视觉区块
  *
- * Presentation Layer - Component
+ * 功能：展示首页 Hero 区块 UI，支持视频背景、吸附滚动、响应式布局
  *
- * 职责：
- * - 展示首页 Hero 区块 UI
- * - 使用 Application Layer 的 useHero Hook 获取数据
- * - 支持视频背景、吸附滚动、响应式布局
+ * @author Stone Smoker
+ * @created 2024-06-01
+ * @lastModified 2026-03-03
+ * @version 2.0.0
+ * @copyright Copyright (c) 2024-2026 Vxture Team
+ * @license MIT
  *
  * @layer Presentation
  * @category Components - Home
@@ -14,14 +16,66 @@
 'use client';
 
 import { useHero } from '@/application/hooks/homepage';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { FiArrowDown } from 'react-icons/fi';
 
-export default function HeroSection() {
+// ============================================================================
+// 类型定义
+// ============================================================================
+
+/**
+ * Props 接口
+ */
+interface HeroSectionProps {
+  readonly id: string;
+  readonly name?: string;
+}
+
+// ============================================================================
+// 组件实现
+// ============================================================================
+
+/**
+ * 首页主视觉区块
+ */
+export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
+  // ==========================================================================
+  // 状态初始化
+  // ==========================================================================
+
   const sectionRef = useRef<HTMLElement | null>(null);
+
+  // 视频状态管理
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // ==========================================================================
+  // Hooks 调用
+  // ==========================================================================
 
   // 使用新的 Application Layer Hook 获取数据
   const { data: hero, isLoading, error } = useHero();
+
+  // ==========================================================================
+  // 事件处理
+  // ==========================================================================
+
+  const handleVideoLoaded = useCallback(() => {
+    console.log('Video loaded successfully');
+    setVideoLoaded(true);
+  }, []);
+
+  const handleVideoError = useCallback((e: Event) => {
+    console.error('Video loading error:', e);
+    console.error('Video element:', videoRef.current);
+    console.error('Video src:', videoRef.current?.src);
+    setVideoError(true);
+  }, []);
+
+  // ==========================================================================
+  // Effects
+  // ==========================================================================
 
   // 调试：打印 hero 数据
   useEffect(() => {
@@ -32,11 +86,6 @@ export default function HeroSection() {
       console.log('Poster Image:', hero.media?.posterImage);
     }
   }, [hero]);
-
-  // 视频状态管理
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [videoError, setVideoError] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   // 监听视频加载
   useEffect(() => {
@@ -49,33 +98,27 @@ export default function HeroSection() {
       return;
     }
 
-    const handleLoadedData = () => {
-      console.log('Video loaded successfully');
-      setVideoLoaded(true);
-    };
-    const handleError = (e: Event) => {
-      console.error('Video loading error:', e);
-      console.error('Video element:', video);
-      console.error('Video src:', video.src);
-      setVideoError(true);
-    };
-
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('error', handleError);
+    video.addEventListener('loadeddata', handleVideoLoaded);
+    video.addEventListener('error', handleVideoError);
     video.load();
 
     return () => {
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('error', handleError);
+      video.removeEventListener('loadeddata', handleVideoLoaded);
+      video.removeEventListener('error', handleVideoError);
     };
-  }, [hero?.media.type]);
+  }, [hero?.media.type, handleVideoLoaded, handleVideoError]);
+
+  // ==========================================================================
+  // 早期返回
+  // ==========================================================================
 
   // 加载状态
   if (isLoading) {
     return (
       <section
         ref={sectionRef}
-        id='snap-section-1'
+        id={id}
+        data-name={name}
         className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'
       >
         <div className='text-slate-600 text-xl'>加载中...</div>
@@ -88,7 +131,8 @@ export default function HeroSection() {
     return (
       <section
         ref={sectionRef}
-        id='snap-section-1'
+        id={id}
+        data-name={name}
         className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'
       >
         <div className='text-slate-600 text-xl'>加载失败</div>
@@ -101,10 +145,15 @@ export default function HeroSection() {
     return null;
   }
 
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
+
   return (
     <section
       ref={sectionRef}
-      id='snap-section-1'
+      id={id}
+      data-name={name}
       className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden'
     >
       {/* 背景媒体层 */}

@@ -63,7 +63,6 @@ export interface CTAContent extends ContentEntity {
   readonly key: 'cta';
   readonly title: string;
   readonly subtitle: string;
-  readonly backToTop: string;
   readonly features: CTAFeature[];
   readonly actions: CTAAction[];
   readonly contact: CTAContact;

@@ -28,6 +28,9 @@ export interface CaseItem extends ContentItem {
   readonly tags: string[];
   readonly cover: Cover;
   readonly publishedAt: string;
+  readonly cta: {
+    readonly href: string;
+  };
 }
 
 /**
@@ -38,9 +41,8 @@ export interface CasesContent extends ContentEntity {
   readonly title: string;
   readonly subtitle: string;
   readonly tagline: string;
-  readonly ui?: {
+  readonly ui: {
     readonly viewDetails: string;
-    readonly moreText: string;
   };
   readonly items: CaseItem[];
 }
@@ -157,8 +159,20 @@ export const CasesHelpers = {
       errors.push('Cases title is required');
     }
 
+    if (!cases.ui?.viewDetails?.trim()) {
+      errors.push('Cases ui.viewDetails is required');
+    }
+
     if (!cases.items || cases.items.length === 0) {
       errors.push('Cases must have at least one item');
+    } else {
+      cases.items.forEach((item, index) => {
+        if (!item.cta) {
+          errors.push(`Case item ${index} (${item.id}) must have cta`);
+        } else if (!item.cta.href?.trim()) {
+          errors.push(`Case item ${index} (${item.id}) cta.href is required`);
+        }
+      });
     }
 
     return {

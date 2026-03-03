@@ -1,12 +1,15 @@
 /**
  * CTASection.tsx - 首页行动号召区块（重构版）
  *
- * Presentation Layer - Component
+ * 功能：展示首页 CTA 区块 UI，使用 Application Layer 的 useCTA Hook 获取数据，
+ *      支持装饰背景、响应式布局、行动按钮
  *
- * 职责：
- * - 展示首页 CTA 区块 UI
- * - 使用 Application Layer 的 useCTA Hook 获取数据
- * - 支持装饰背景、响应式布局、行动按钮
+ * @author Stone Smoker
+ * @created 2024-06-01
+ * @lastModified 2026-03-03
+ * @version 2.0.0
+ * @copyright Copyright (c) 2024-2026 Vxture Team
+ * @license MIT
  *
  * @layer Presentation
  * @category Components - Home
@@ -17,22 +20,44 @@ import Link from 'next/link';
 import type { Route } from 'next';
 import { useCTA } from '@/application/hooks/homepage';
 import { FiMail, FiPhone, FiMessageCircle, FiArrowRight } from 'react-icons/fi';
-import BackToTopButton from '@/presentation/components/common/BackToTopButton';
 
+// ============================================================================
+// 类型定义
+// ============================================================================
+
+/**
+ * CTA 区块 Props
+ */
 interface CTASectionProps {
-  id: string;
-  snapToTarget?: (target: HTMLElement) => void;
+  readonly id: string;
+  readonly name?: string;
 }
 
-export default function CTASection({ id, snapToTarget }: CTASectionProps) {
-  // 获取 CTA 数据
-  const { data: ctaData, isLoading } = useCTA();
+// ============================================================================
+// 主组件实现
+// ============================================================================
 
-  // 如果数据未加载，显示加载状态
-  if (isLoading || !ctaData) {
+/**
+ * 首页行动号召区块
+ */
+export default function CTASection({ id, name = 'CTA' }: CTASectionProps) {
+  // ==========================================================================
+  // Hooks 调用
+  // ==========================================================================
+
+  // 获取 CTA 数据
+  const { data: ctaData, isLoading, error } = useCTA();
+
+  // ==========================================================================
+  // 早期返回
+  // ==========================================================================
+
+  // 加载状态
+  if (isLoading) {
     return (
       <section
         id={id}
+        data-name={name}
         className='relative snap-section min-h-[65vh] flex flex-col justify-center bg-gradient-to-b from-blue-50 to-blue-50'
       >
         <div className='relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center'>
@@ -41,9 +66,35 @@ export default function CTASection({ id, snapToTarget }: CTASectionProps) {
       </section>
     );
   }
+
+  // 错误状态
+  if (error || !ctaData) {
+    return (
+      <section
+        id={id}
+        data-name={name}
+        className='relative snap-section min-h-[65vh] flex flex-col justify-center bg-gradient-to-b from-blue-50 to-blue-50'
+      >
+        <div className='relative max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center'>
+          <p className='text-gray-400'>加载失败</p>
+        </div>
+      </section>
+    );
+  }
+
+  // 如果内容被禁用，不渲染
+  if (!ctaData.enabled) {
+    return null;
+  }
+
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
+
   return (
     <section
-      id='snap-section-5'
+      id={id}
+      data-name={name}
       className='relative snap-section min-h-[65vh] flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
     >
       {/* ===== 主内容区 ===== */}
@@ -52,7 +103,7 @@ export default function CTASection({ id, snapToTarget }: CTASectionProps) {
         <div className='w-full text-center'>
           {/* 主标题 */}
           <h2 className='text-4xl lg:text-5xl font-bold pt-20 pb-6'>
-          <span className='text-blue-600'>{ctaData.title}</span>
+            <span className='text-blue-600'>{ctaData.title}</span>
           </h2>
           {/* 副标题 */}
           {ctaData.subtitle && (
@@ -73,9 +124,7 @@ export default function CTASection({ id, snapToTarget }: CTASectionProps) {
             }`;
             const buttonContent = (
               <span className='flex items-center justify-center space-x-2'>
-                {action.variant === 'secondary' && (
-                  <FiMessageCircle className='w-5 h-5' />
-                )}
+                {action.variant === 'secondary' && <FiMessageCircle className='w-5 h-5' />}
                 <span>{action.label}</span>
                 {action.variant === 'primary' && (
                   <FiArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform duration-300' />
@@ -88,8 +137,8 @@ export default function CTASection({ id, snapToTarget }: CTASectionProps) {
                 <a
                   key={action.label}
                   href={action.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target='_blank'
+                  rel='noopener noreferrer'
                   className={buttonClass}
                 >
                   {buttonContent}
@@ -97,11 +146,7 @@ export default function CTASection({ id, snapToTarget }: CTASectionProps) {
               );
             }
             return (
-              <Link
-                key={action.label}
-                href={action.href as Route}
-                className={buttonClass}
-              >
+              <Link key={action.label} href={action.href as Route} className={buttonClass}>
                 {buttonContent}
               </Link>
             );
@@ -123,13 +168,6 @@ export default function CTASection({ id, snapToTarget }: CTASectionProps) {
           </div>
         </div>
       </div>
-
-      {/* 回到顶部按钮 */}
-      <BackToTopButton
-        text={ctaData.backToTop}
-        ariaLabel={ctaData.backToTop}
-        snapToTarget={snapToTarget}
-      />
     </section>
   );
 }

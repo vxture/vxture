@@ -24,7 +24,15 @@ interface SolutionItemRaw {
     url: string;
     alt: string;
   };
+  cta: {
+    href: string;
+  };
   capabilities: string[];
+  icon: string;
+  bgImage?: {
+    url: string;
+    alt: string;
+  };
 }
 
 interface SolutionsContentRaw {
@@ -33,11 +41,11 @@ interface SolutionsContentRaw {
   title: string;
   subtitle: string;
   tagline: string;
-  ui?: {
-    learnMore: string;
+  featuresTitle: string;
+  ui: {
+    viewDetails: string;
     prev: string;
     next: string;
-    featuresTitle: string;
   };
   items: SolutionItemRaw[];
 }
@@ -59,7 +67,10 @@ export const SolutionsMapper = {
     variant: raw.variant,
     tags: raw.tags,
     cover: SolutionsMapper.mapCover(raw.cover),
+    cta: raw.cta,
     capabilities: raw.capabilities,
+    icon: raw.icon,
+    bgImage: raw.bgImage ? SolutionsMapper.mapCover(raw.bgImage) : undefined,
   }),
 
   toDomain: (raw: SolutionsContentRaw): SolutionsContent => ({
@@ -68,6 +79,7 @@ export const SolutionsMapper = {
     title: raw.title,
     subtitle: raw.subtitle,
     tagline: raw.tagline,
+    featuresTitle: raw.featuresTitle,
     ui: raw.ui,
     items: raw.items.map(SolutionsMapper.mapSolutionItem),
   }),
@@ -78,6 +90,7 @@ export const SolutionsMapper = {
     title: domain.title,
     subtitle: domain.subtitle,
     tagline: domain.tagline,
+    featuresTitle: domain.featuresTitle,
     ui: domain.ui,
     items: domain.items.map(item => ({
       id: item.id,
@@ -93,7 +106,13 @@ export const SolutionsMapper = {
         url: item.cover.url,
         alt: item.cover.alt,
       },
+      cta: item.cta,
       capabilities: item.capabilities,
+      icon: item.icon,
+      bgImage: item.bgImage ? {
+        url: item.bgImage.url,
+        alt: item.bgImage.alt,
+      } : undefined,
     })),
   }),
 };

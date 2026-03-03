@@ -31,6 +31,9 @@ interface CaseItemRaw {
     alt: string;
   };
   publishedAt: string;
+  cta: {
+    href: string;
+  };
 }
 
 export interface CasesContentRaw {
@@ -39,9 +42,8 @@ export interface CasesContentRaw {
   title: string;
   subtitle: string;
   tagline: string;
-  ui?: {
+  ui: {
     viewDetails: string;
-    moreText: string;
   };
   items: CaseItemRaw[];
 }
@@ -65,6 +67,7 @@ export const CasesMapper = {
       tags: raw.tags,
       cover: CasesMapper.mapCover(raw.cover),
       publishedAt: raw.publishedAt,
+      cta: raw.cta,
     };
   },
 
@@ -118,6 +121,7 @@ export const CasesMapper = {
           alt: item.cover.alt,
         },
         publishedAt: item.publishedAt,
+        cta: item.cta,
       })),
     };
   },

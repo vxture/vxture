@@ -1,17 +1,17 @@
 {
   "key": "features",
   "enabled": true,
+  "icon": "chart",
   "title": "核心能力",
   "subtitle": "为政府和大型企事业单位，提供数据智能支撑体系，驱动决策业务场景智能化",
-  "icon": "chart",
   "tagline": "数据驱动，业务赋能",
   "items": [
     {
       "id": "feature-intro-01",
       "slug": "data-knowledge-graph",
+      "icon": "graph",
       "title": "数据图谱构建",
       "description": "数据本体构建，发现数据的隐藏价值和深层关系",
-      "icon": "graph",
       "intent": "simulation",
       "theme": "primary",
       "variant": "card",
@@ -24,9 +24,9 @@
     {
       "id": "feature-intro-02",
       "slug": "intelligent-decision-dispatch",
+      "icon": "sparkles",
       "title": "智能决策调度",
       "description": "时空模型引擎，实时性资源智能调度与动态规划",
-      "icon": "sparkles",
       "intent": "solution",
       "theme": "primary",
       "variant": "card",
@@ -39,9 +39,9 @@
     {
       "id": "feature-intro-03",
       "slug": "digital-twin-simulation",
+      "icon": "cube",
       "title": "孪生仿真推演",
       "description": "复杂场景模拟，为决策提供仿真推演和预测分析",
-      "icon": "cube",
       "intent": "simulation",
       "theme": "primary",
       "variant": "card",

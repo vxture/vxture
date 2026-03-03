@@ -1,12 +1,15 @@
 /**
  * CaseSection.tsx - 首页最佳实践区块（重构版）
  *
- * Presentation Layer - Component
+ * 功能：展示首页 Cases 区块 UI，使用 Application Layer 的 useCases Hook 获取数据，
+ *      支持吸附滚动、响应式布局、案例卡片展示
  *
- * 职责：
- * - 展示首页 Cases 区块 UI
- * - 使用 Application Layer 的 useCases Hook 获取数据
- * - 支持吸附滚动、响应式布局、案例卡片展示
+ * @author Stone Smoker
+ * @created 2024-06-01
+ * @lastModified 2026-03-03
+ * @version 2.0.0
+ * @copyright Copyright (c) 2024-2026 Vxture Team
+ * @license MIT
  *
  * @layer Presentation
  * @category Components - Home
@@ -20,41 +23,69 @@ import type { Route } from 'next';
 import { LuCalendarDays } from 'react-icons/lu';
 import { memo, useMemo } from 'react';
 import { useCasesData } from '@/application/hooks/homepage';
-import { useLocale } from '@/application/hooks/shared/useLocale';
 
-// 单个案例卡片组件（性能优化：React.memo）
+// ============================================================================
+// 类型定义
+// ============================================================================
+
+/**
+ * 单个案例卡片 Props
+ */
 interface CaseCardProps {
-  item: {
-    id: string;
-    slug: string;
-    title: string;
-    description: string;
-    tags: string[];
-    cover: {
-      url: string;
-      alt: string;
+  readonly item: {
+    readonly id: string;
+    readonly slug: string;
+    readonly title: string;
+    readonly description: string;
+    readonly tags: readonly string[];
+    readonly cover: {
+      readonly url: string;
+      readonly alt: string;
     };
-    publishedAt: string;
-    cta?: {
-      label: string;
-      href: string;
+    readonly publishedAt: string;
+    readonly cta: {
+      readonly href: string;
     };
   };
-  uiTexts: {
-    viewDetails: string;
-  };
+  readonly viewDetailsLabel: string;
 }
 
-const CaseCard = memo(function CaseCard({ item, uiTexts }: CaseCardProps) {
+/**
+ * 案例区块主组件 Props
+ */
+interface CaseSectionProps {
+  readonly id: string;
+  readonly name?: string;
+}
+
+// ============================================================================
+// 子组件定义
+// ============================================================================
+
+/**
+ * 单个案例卡片组件（性能优化：React.memo）
+ */
+const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProps) {
+  // ==========================================================================
+  // 计算属性
+  // ==========================================================================
+
   // 格式化日期为 YYYY/MM
-  const date = new Date(item.publishedAt);
-  const formattedDate = `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+  const formattedDate = useMemo(() => {
+    const date = new Date(item.publishedAt);
+    return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+  }, [item.publishedAt]);
+
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
+
   return (
     <div
-      className={`group relative bg-white hover:bg-blue-50 rounded-2xl shadow-lg hover:shadow-2xl hover:scale-105 transition-all duration-500 overflow-hidden hover:border-blue-400`}
+      className={`group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 will-change-transform flex flex-col h-full`}
     >
       {/* 图片区域，16:9 比例 */}
-      <div className='relative w-full aspect-[16/9]'>
+      <div className='relative w-full aspect-[16/9] flex-shrink-0'>
         <Image
           src={item.cover.url}
           alt={item.cover.alt}
@@ -63,34 +94,40 @@ const CaseCard = memo(function CaseCard({ item, uiTexts }: CaseCardProps) {
           sizes='(max-width: 768px) 100vw, 400px'
           priority
         />
-        <div className='absolute inset-0 bg-gradient-to-t from-blue-200/80 via-blue-100/80 to-transparent group-hover:opacity-40 rounded-t-2xl pointer-events-none'></div>
       </div>
       {/* 内容区 */}
-      <div className='p-4 space-y-3'>
-        <h3 className='text-xl font-bold text-blue-800 text-left'>{item.title}</h3>
-        <p className='text-gray-600 leading-relaxed text-left text-sm'>{item.description}</p>
-        <div className='flex flex-wrap gap-1.5 justify-start'>
-          {item.tags.map((tag) => (
-            <span
-              key={tag}
-              className='px-2.5 py-0.5 bg-blue-50 text-blue-500 text-xs font-semibold rounded-full border border-blue-50'
-            >
-              {tag}
-            </span>
-          ))}
+      <div className='p-4 flex flex-col flex-grow'>
+        <div className='space-y-4 flex-grow'>
+          <h3 className='text-xl font-bold text-blue-800 text-left'>{item.title}</h3>
+          <p className='text-sm text-gray-600 leading-relaxed text-left'>{item.description}</p>
+          <div className='flex flex-wrap gap-2 justify-start'>
+            {item.tags.map((tag) => (
+              <span
+                key={tag}
+                className='px-3 py-1 bg-blue-50 text-blue-500 text-xs font-semibold rounded-full border border-blue-50'
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-        <div className='pt-2 flex items-center justify-between'>
-          <div className='flex items-center text-gray-500 text-xs font-semibold'>
-            <LuCalendarDays className='mr-1 w-4 h-4' />
+        <div className='mt-6 pt-3 border-t border-gray-100 flex items-center justify-between'>
+          <div className='flex items-center text-gray-500 text-sm font-semibold'>
+            <LuCalendarDays className='mr-1.5 w-4.5 h-4.5' />
             {formattedDate}
           </div>
           <div className='flex-1 flex justify-end'>
             <Link
-              href={(item.cta?.href || `/cases/${item.slug}`) as Route}
-              className='inline-flex items-center text-xs font-semibold text-gray-500 rounded-lg transition-all duration-300 ml-auto bg-transparent border-none shadow-none hover:text-blue-600'
+              href={item.cta.href as Route}
+              className='inline-flex items-center px-3 py-1 text-sm font-semibold text-gray-500 rounded-md transition-all duration-300 bg-transparent border-none shadow-none opacity-70 hover:opacity-100 group-hover:text-blue-800'
             >
-              {item.cta?.label || uiTexts.viewDetails}
-              <svg className='ml-1.5 w-3.5 h-3.5' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+              {viewDetailsLabel}
+              <svg
+                className='ml-1.5 w-4 h-4 transition-all'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
@@ -106,37 +143,31 @@ const CaseCard = memo(function CaseCard({ item, uiTexts }: CaseCardProps) {
   );
 });
 
-// 首页最佳实践区块
-interface CaseSectionProps {
-  id: string;
-}
+// ============================================================================
+// 主组件实现
+// ============================================================================
 
-export default function CaseSection({ id }: CaseSectionProps) {
-  // 获取当前语言
-  const { locale } = useLocale();
+/**
+ * 首页最佳实践区块
+ */
+export default function CaseSection({ id, name = 'Cases' }: CaseSectionProps) {
+  // ==========================================================================
+  // Hooks 调用
+  // ==========================================================================
 
   // 获取 Cases 数据
-  const { data: casesData, isLoading } = useCasesData();
+  const { data: casesData, isLoading, error } = useCasesData();
 
-  // 根据语言设置默认 UI 文本
-  const defaultUiTexts = useMemo(() => {
-    if (locale === 'en-US') {
-      return {
-        viewDetails: 'View Details',
-        moreText: 'More Cases',
-      };
-    }
-    return {
-      viewDetails: '查看详情',
-      moreText: '更多案例',
-    };
-  }, [locale]);
+  // ==========================================================================
+  // 早期返回
+  // ==========================================================================
 
-  // 如果数据未加载，显示加载状态
-  if (isLoading || !casesData) {
+  // 加载状态
+  if (isLoading) {
     return (
       <section
         id={id}
+        data-name={name}
         className='relative snap-section min-h-screen flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
       >
         <div className='relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -148,13 +179,39 @@ export default function CaseSection({ id }: CaseSectionProps) {
     );
   }
 
+  // 错误状态
+  if (error || !casesData) {
+    return (
+      <section
+        id={id}
+        data-name={name}
+        className='relative snap-section min-h-screen flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
+      >
+        <div className='relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
+          <div className='flex items-center justify-center h-full'>
+            <p className='text-gray-400'>加载失败</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
-  const { title, subtitle, tagline, items } = casesData;
-  const uiTexts = casesData.ui || defaultUiTexts;
+  // 如果内容被禁用，不渲染
+  if (!casesData.enabled) {
+    return null;
+  }
+
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
+
+  const { title, subtitle, tagline, items, ui } = casesData;
+  const viewDetailsLabel = ui.viewDetails;
 
   return (
     <section
-      id='snap-section-4'
+      id={id}
+      data-name={name}
       className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
     >
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
@@ -170,11 +227,7 @@ export default function CaseSection({ id }: CaseSectionProps) {
             {/* 案例卡片网格 */}
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8'>
               {items.map((item) => (
-                <CaseCard
-                  key={item.id}
-                  item={item}
-                  uiTexts={uiTexts}
-                />
+                <CaseCard key={item.id} item={item} viewDetailsLabel={viewDetailsLabel} />
               ))}
             </div>
           </div>

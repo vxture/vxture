@@ -1,76 +1,110 @@
 /**
  * page.tsx - 首页主内容区
  *
- * Presentation Layer - Page
+ * 功能：渲染首页核心区块，包括 Hero、Features、Solutions、Cases、CTA
  *
- * 职责：
- * - 渲染首页核心区块
- * - Header 和 Footer 在 (main)/layout.tsx 中
+ * @author Stone Smoker
+ * @created 2024-06-01
+ * @lastModified 2026-03-03
+ * @version 2.0.0
+ * @copyright Copyright (c) 2024-2026 Vxture Team
+ * @license MIT
  *
  * @layer Presentation
  * @category Pages
  */
 'use client';
 
+// ============================================================================
+// 导入
+// ============================================================================
+
 import HeroSection from '@/presentation/components/home/HeroSection';
 import FeaturesSection from '@/presentation/components/home/FeaturesSection';
 import SolutionSection from '@/presentation/components/home/SolutionSection';
 import CaseSection from '@/presentation/components/home/CaseSection';
 import CTASection from '@/presentation/components/home/CTASection';
+import ScrollToButton from '@/presentation/components/widgets/ScrollToButton';
+import SnapDebugPanel from '@/presentation/components/panels/SnapDebugPanel';
+import SnapChoicePanel from '@/presentation/components/panels/SnapChoicePanel';
 import { useWindowScrollSnap } from '@/application/hooks/useWindowScrollSnap';
-// import { useSnapDebugPanel } from '@/presentation/components/common/useSnapDebugPanel';
-import { useSnapSectionChoice } from '@/presentation/components/common/useSnapSectionChoice';
+
+// ============================================================================
+// 常量定义
+// ============================================================================
+
+/** 区块信息列表 */
+const SECTIONS = [
+  { id: 'section-01', name: 'Hero' },
+  { id: 'section-02', name: 'Features' },
+  { id: 'section-03', name: 'Solutions' },
+  { id: 'section-04', name: 'Cases' },
+  { id: 'section-05', name: 'CTA' },
+] as const;
+/** 调试面板位置 */
+const DEBUG_PANEL_POSITION = { top: '80px', right: '20px', zIndex: 50 } as const;
+/** 选择面板位置 */
+const CHOICE_PANEL_POSITION = { top: '80px', left: '20px', zIndex: 50 } as const;
+/** 是否开发环境 */
+const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+
+// ============================================================================
+// 组件实现
+// ============================================================================
 
 export default function HomePage() {
-  // 调用滚动吸附 hook，获取状态和方法
-  const { activeTarget, snapToTarget } = useWindowScrollSnap({
-    debugFlag: process.env.NODE_ENV === 'development', // 开发环境启用调试，生产环境关闭
+  // ==========================================================================
+  // Hook 调用
+  // ==========================================================================
+
+  const { activeTarget, snapToTarget, snapdebugInfo } = useWindowScrollSnap({
+    debugFlag: IS_DEVELOPMENT,
     targetSelector: '.snap-section',
     targetAlignTo: 'top',
-    snapThreshold: 280, // 初始值，实际使用响应式阈值（视口高度的25%，150-400px）
+    snapThreshold: 280,
     enabledDirections: ['up', 'down'],
     observerRoot: undefined,
   });
 
-  // 获取吸附调试面板组件（仅开发环境显示）
-  // const SnapDebugPanel = useSnapDebugPanel({
-  //   snapdebugInfo,
-  //   position: { top: '80px', right: '20px', zIndex: 50 },
-  //   visible: process.env.NODE_ENV === 'development',
-  // });
-
-  // 获取吸附选择调试组件（仅开发环境显示）
-  const SnapSectionChoice = useSnapSectionChoice({
-    sectionCount: 5, // Hero + Features + Solutions + Cases + CTA = 5个section
-    targetIdPrefix: 'snap-section',
-    activeTarget,
-    snapToTarget,
-    position: { top: '80px', left: '20px', zIndex: 50 },
-    visible: process.env.NODE_ENV === 'development',
-  });
+  // ==========================================================================
+  // 渲染
+  // ==========================================================================
 
   return (
     <div className='relative'>
       {/* 调试面板信息组件 */}
-      {/* {SnapDebugPanel as unknown as React.ReactNode} */}
+      <SnapDebugPanel
+        snapdebugInfo={snapdebugInfo}
+        position={DEBUG_PANEL_POSITION}
+        visible={IS_DEVELOPMENT}
+      />
 
       {/* 吸附选择调试组件 */}
-      {SnapSectionChoice}
+      <SnapChoicePanel
+        sections={SECTIONS}
+        activeTarget={activeTarget}
+        snapToTarget={snapToTarget}
+        position={CHOICE_PANEL_POSITION}
+        visible={IS_DEVELOPMENT}
+      />
 
       {/* Hero 区块 */}
-      <HeroSection />
+      <HeroSection id='section-01' />
 
       {/* Features 区块 */}
-      <FeaturesSection id='features' theme='light' />
+      <FeaturesSection id='section-02' theme='light' />
 
       {/* Solutions 区块 */}
-      <SolutionSection id='solutions' />
+      <SolutionSection id='section-03' />
 
       {/* Cases 区块 */}
-      <CaseSection id='cases' />
+      <CaseSection id='section-04' />
 
       {/* CTA 区块 */}
-      <CTASection id='cta' snapToTarget={snapToTarget} />
+      <CTASection id='section-05' />
+
+      {/* 滚动到顶部按钮 */}
+      <ScrollToButton snapToTarget={snapToTarget} />
     </div>
   );
 }

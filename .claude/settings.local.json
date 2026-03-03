@@ -73,7 +73,9 @@
       "Bash(curl -s \"http://localhost:3004\")",
       "Bash(Select-Object -ExpandProperty OwningProcess)",
       "Bash(powershell -Command 'Get-NetTCPConnection -ErrorAction SilentlyContinue | Where-Object { $_.LocalPort -like \"\"300*\"\" } | Select-Object -ExpandProperty OwningProcess | ForEach-Object { try { Stop-Process -Id $_ -Force } catch { } }')",
-      "Bash(pnpm list)"
+      "Bash(pnpm list)",
+      "Bash(pnpm lint)",
+      "Bash(pnpm type-check)"
     ]
   },
   "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",
