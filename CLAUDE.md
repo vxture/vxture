@@ -76,7 +76,7 @@ Claude Code 项目开发规范与协作指南
 - 严格遵循项目 [CODE_STYLE.md](CODE_STYLE.md) 代码风格
 - 代码必须通过 lint、type-check 检查
 - 所有模块必须保持单一职责
-- 所有icon来自react-icons库
+- 所有图标必须通过 @vxture/design-system 的 `<Icon>` 组件使用，禁止直接使用外部图标库
 
 ### 前端规范 (Next.js + React + TS)
 

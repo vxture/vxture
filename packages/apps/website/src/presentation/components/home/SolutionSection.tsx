@@ -18,7 +18,7 @@
 
 import { useState, memo, useCallback } from 'react';
 import Image from 'next/image';
-import { PiCaretLeftBold, PiCaretRightBold } from 'react-icons/pi';
+import { Icon } from '@vxture/design-system';
 import { useSolutions } from '@/application/hooks/homepage';
 import { normalizeSolutionsData } from '@/infrastructure/constants/HomepageHelpers';
 import { debugLog } from '@vxture/shared-utils';
@@ -209,7 +209,7 @@ const SolutionCard = memo(function SolutionCard({
                     onClick={prev}
                     className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
                   >
-                    <PiCaretLeftBold className='w-4 h-4 text-gray-400' />
+                    <Icon name='caret-left-bold' className='w-4 h-4 text-gray-400' />
                     <span className='text-gray-400 font-medium text-sm'>{uiTexts.prev}</span>
                   </button>
                   {/* 下一项 */}
@@ -219,7 +219,7 @@ const SolutionCard = memo(function SolutionCard({
                     className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
                   >
                     <span className='text-gray-400 font-medium text-sm'>{uiTexts.next}</span>
-                    <PiCaretRightBold className='w-4 h-4 text-gray-400' />
+                    <Icon name='caret-right-bold' className='w-4 h-4 text-gray-400' />
                   </button>
                 </div>
               </div>

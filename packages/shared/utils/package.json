@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@vxture/shared-types": "workspace:*",
-    "@vxture/shared-constants": "workspace:*"
+    "@vxture/shared-constants": "workspace:*",
+    "@vxture/design-system": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

@@ -20,7 +20,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Route } from 'next';
-import { LuCalendarDays } from 'react-icons/lu';
+import { Icon } from '@vxture/design-system';
 import { memo, useMemo } from 'react';
 import { useCasesData } from '@/application/hooks/homepage';
 import { normalizeCasesData } from '@/infrastructure/constants/HomepageHelpers';
@@ -115,7 +115,7 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
         </div>
         <div className='mt-6 pt-3 border-t border-gray-100 flex items-center justify-between'>
           <div className='flex items-center text-gray-500 text-sm font-semibold'>
-            <LuCalendarDays className='mr-1.5 w-4.5 h-4.5' />
+            <Icon name='calendar-days' className='mr-1.5 w-4.5 h-4.5' />
             {formattedDate}
           </div>
           <div className='flex-1 flex justify-end'>

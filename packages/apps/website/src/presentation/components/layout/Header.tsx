@@ -18,7 +18,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useHeader } from '@/application/hooks/layout';
 import { useLocale } from '@/application/hooks/shared';
-import { FiSun, FiMoon, FiGlobe } from 'react-icons/fi';
+import { Icon } from '@vxture/design-system';
 import { normalizeHeaderData } from '@/infrastructure/constants/HeaderHelpers';
 
 // 全局类型扩展
@@ -157,9 +157,9 @@ export default function Header() {
             >
               <span className='sr-only'>{header.theme.title}</span>
               {theme === 'light' ? (
-                <FiSun className={`w-5 h-5 ${isScrolled ? 'text-gray-700' : 'text-yellow-400'}`} />
+                <Icon name="sun" className={`w-5 h-5 ${isScrolled ? 'text-gray-700' : 'text-yellow-400'}`} />
               ) : (
-                <FiMoon className={`w-5 h-5 ${isScrolled ? 'text-gray-700' : 'text-blue-300'}`} />
+                <Icon name="moon" className={`w-5 h-5 ${isScrolled ? 'text-gray-700' : 'text-blue-300'}`} />
               )}
             </button>
 
@@ -172,7 +172,8 @@ export default function Header() {
                   onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
                 >
                   <span className='sr-only'>{header.language.title || '切换语言'}</span>
-                  <FiGlobe
+                  <Icon
+                    name="globe"
                     className={`w-5 h-5 ${isScrolled ? 'text-gray-700' : 'text-cyan-400'}`}
                   />
                 </button>

@@ -296,20 +296,18 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     debugFlag: boolean
   ): (() => void) => {
     let scrollTimer: ReturnType<typeof setTimeout> | undefined;
-    let timeoutTimer: ReturnType<typeof setTimeout>;
 
     const fallbackScrollEnd = () => {
       if (scrollTimer) clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => {
         handleScrollEnd();
         win.removeEventListener('scroll', fallbackScrollEnd);
-        if (timeoutTimer) clearTimeout(timeoutTimer);
       }, 150);
     };
 
     win.addEventListener('scroll', fallbackScrollEnd, { passive: true });
 
-    timeoutTimer = setTimeout(() => {
+    const timeoutTimer = setTimeout(() => {
       if (scrollTimer) clearTimeout(scrollTimer);
       win.removeEventListener('scroll', fallbackScrollEnd);
       if (isProgramScrollingRef.current && debugFlag) {

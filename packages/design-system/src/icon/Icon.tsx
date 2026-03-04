@@ -1,59 +1,54 @@
 'use client';
-import { IconBaseProps } from 'react-icons';
 
-import {
-  TbUser,
-  TbSettings,
-  TbHome,
-  TbBell,
-  TbPlus,
-  TbX,
-  TbCheck,
-  TbChevronRight,
-  TbChevronLeft,
-  TbSearch,
-  TbEdit,
-  TbTrash,
-} from 'react-icons/tb';
+import { iconMap } from './iconMap';
+import { getIconName, isValidIconName } from './iconNameMapper';
+import type { IconName } from './tokens';
 
-export type IconName =
-  | 'user'
-  | 'settings'
-  | 'home'
-  | 'bell'
-  | 'plus'
-  | 'x'
-  | 'check'
-  | 'chevron-right'
-  | 'chevron-left'
-  | 'search'
-  | 'edit'
-  | 'trash';
+type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
-export interface IconProps extends IconBaseProps {
-  readonly name: IconName;
-  readonly size?: number | string;
+interface IconProps {
+  readonly name: string;
+  readonly size?: 'sm' | 'md' | 'lg' | 'xl' | number;
+  readonly weight?: IconWeight;
   readonly className?: string;
+  readonly fallback?: IconName;
 }
 
-const ICON_MAP = {
-  user: TbUser,
-  settings: TbSettings,
-  home: TbHome,
-  bell: TbBell,
-  plus: TbPlus,
-  x: TbX,
-  check: TbCheck,
-  'chevron-right': TbChevronRight,
-  'chevron-left': TbChevronLeft,
-  search: TbSearch,
-  edit: TbEdit,
-  trash: TbTrash,
-} as const;
+const sizeMap: Record<string, number> = {
+  sm: 16,
+  md: 20,
+  lg: 24,
+  xl: 32,
+};
 
-export const Icon = ({ name, size = 20, className = '', ...props }: IconProps) => {
-  const IconComp = ICON_MAP[name];
-  if (!IconComp) return null;
+export const Icon = ({
+  name,
+  size = 'md',
+  weight = 'regular',
+  className = '',
+  fallback = 'cube',
+}: IconProps) => {
+  // 标准化图标名称
+  const normalizedName = getIconName(name);
 
-  return <IconComp size={size} className={`inline-flex shrink-0 ${className}`} {...props} />;
+  // 查找图标组件
+  let Component = iconMap[normalizedName];
+
+  // 如果找不到，使用 fallback
+  if (!Component) {
+    Component = iconMap[fallback];
+    // 如果 fallback 也找不到，返回 null
+    if (!Component) return null;
+  }
+
+  const resolvedSize = typeof size === 'number' ? size : sizeMap[size] ?? 20;
+
+  return (
+    <Component
+      weight={weight}
+      size={resolvedSize}
+      className={`inline-flex shrink-0 ${className}`}
+      aria-hidden
+    />
+  );
 };

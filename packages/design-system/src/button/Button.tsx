@@ -1,6 +1,7 @@
 'use client';
 import { ComponentProps } from '../types/common';
-import { Icon, IconName } from '../icon/Icon';
+import { Icon } from '../icon/Icon';
+import type { IconName } from '../icon/tokens';
 import { colors } from '../theme/colors';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'success' | 'outline';

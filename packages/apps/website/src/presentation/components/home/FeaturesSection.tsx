@@ -20,8 +20,7 @@ import { memo } from 'react';
 import { useFeatures } from '@/application/hooks/homepage';
 import { normalizeFeaturesData } from '@/infrastructure/constants/HomepageHelpers';
 import { debugLog } from '@vxture/shared-utils';
-import { HiArrowLongRight } from 'react-icons/hi2';
-import { FaMedal } from 'react-icons/fa6';
+import { Icon } from '@vxture/design-system';
 import { BasicColorMap, SectionTheme } from '@/shared/theme/colorMap';
 import { renderIcon } from '@/shared/utils/iconMapper';
 
@@ -82,7 +81,7 @@ const FeatureCard = memo(function FeatureCard({ feature, theme = 'light' }: Feat
 
       {/* 右上角图标 */}
       <div className='absolute top-4 right-4 flex items-center justify-center w-8 h-8'>
-        <FaMedal className='w-5 h-5 text-blue-500' />
+        <Icon name='medal' className='w-5 h-5 text-blue-500' />
       </div>
 
       {/* 卡片内容区 */}
@@ -130,7 +129,7 @@ const FeatureCard = memo(function FeatureCard({ feature, theme = 'light' }: Feat
               className={`inline-flex items-center px-4 py-1.5 text-sm rounded-md transition-all duration-300 ${colorsCards.textSub} hover:${colorsCards.textMain} opacity-70 hover:opacity-100`}
             >
               <span>{feature.cta.label}</span>
-              <HiArrowLongRight className='ml-1.5 w-3.5 h-3.5 transition-all' />
+              <Icon name='arrow-long-right' className='ml-1.5 w-3.5 h-3.5 transition-all' />
             </a>
           </div>
         </div>

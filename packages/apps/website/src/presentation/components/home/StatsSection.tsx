@@ -10,7 +10,7 @@
  * - 结构与其它 Section 组件保持一致，便于团队协作
  *
  * 依赖/调用关系：
- * - 依赖 TailwindCSS、Next.js、react-icons
+ * - 依赖 TailwindCSS、Next.js、@vxture/design-system
  * - 被 app/(main)/page.tsx 直接引用
  *
  * 设计规范：
@@ -26,7 +26,7 @@
  * @copyright Copyright (c) 2024-2025 vxture
  * @license MIT
  * @version 1.0.0
- * @dependencies React, TailwindCSS, react-icons
+ * @dependencies React, TailwindCSS, @vxture/design-system
  * @tags home, stats, section, component
  * @example
  *   <StatsSection />
@@ -43,7 +43,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 // 引入图标
-import { HiBuildingLibrary, HiMiniCube, HiMiniUserGroup, HiStar } from 'react-icons/hi2';
+import { Icon } from '@vxture/design-system';
 
 export default function StatsSection() {
   // 监听当前 section 是否处于吸附状态
@@ -59,7 +59,7 @@ export default function StatsSection() {
       suffix: '+',
       label: '企业客户',
       description: '服务政府、国央企等多个大客户',
-      icon: <HiBuildingLibrary className='w-16 h-16 text-blue-400' />,
+      icon: <Icon name="building-library" className="w-16 h-16 text-blue-400" />,
       color: 'from-blue-400 to-cyan-400', // Tailwind 渐变色
     },
     {
@@ -67,7 +67,7 @@ export default function StatsSection() {
       suffix: '+',
       label: '智能化项目',
       description: '成功交付数据智能平台和应用',
-      icon: <HiMiniCube className='w-16 h-16 text-blue-400' />,
+      icon: <Icon name="cube" className="w-16 h-16 text-blue-400" />,
       color: 'from-blue-400 to-cyan-400',
     },
     {
@@ -75,7 +75,7 @@ export default function StatsSection() {
       suffix: '%',
       label: '客户满意度',
       description: '客户续约率持续保持行业领先',
-      icon: <HiStar className='w-16 h-16 text-blue-400' />,
+      icon: <Icon name="star" className="w-16 h-16 text-blue-400" />,
       color: 'from-blue-400 to-cyan-400',
     },
     {
@@ -83,7 +83,7 @@ export default function StatsSection() {
       suffix: '+',
       label: '业务用户',
       description: '在线业务用户规模持续增长',
-      icon: <HiMiniUserGroup className='w-16 h-16 text-blue-400' />,
+      icon: <Icon name="user-group" className="w-16 h-16 text-blue-400" />,
       color: 'from-blue-400 to-cyan-400',
     },
   ];

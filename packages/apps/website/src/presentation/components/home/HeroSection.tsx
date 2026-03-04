@@ -19,7 +19,7 @@ import { useHero } from '@/application/hooks/homepage';
 import { normalizeHeroData } from '@/infrastructure/constants/HomepageHelpers';
 import { debugLog, debugError } from '@vxture/shared-utils';
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { FiArrowDown } from 'react-icons/fi';
+import { Icon } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义
@@ -272,7 +272,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       {hero.scrollIndicator?.enabled && (
         <div className='absolute w-full flex justify-center bottom-8 pointer-events-auto z-10'>
           <div className='text-slate-500 animate-bounce px-4 py-2 rounded-xl'>
-            <FiArrowDown className='w-6 h-6 mx-auto mb-2' />
+            <Icon name='arrow-down' className='w-6 h-6 mx-auto mb-2' />
             {hero.scrollIndicator.text && <p className='text-sm'>{hero.scrollIndicator.text}</p>}
           </div>
         </div>

@@ -11,7 +11,7 @@
  *
  * 依赖/调用关系：
  * - 依赖 ThemeContext 提供主题状态与切换方法
- * - 依赖 react-icons/fi 图标库
+ * - 依赖 @vxture/design-system 提供的 Icon 组件
  * - 被全局布局、导航等组件调用
  *
  * 设计规范：
@@ -27,7 +27,7 @@
  * @copyright Copyright (c) 2024-2025 vxture
  * @license MIT
  * @version 1.0.0
- * @dependencies React, react-icons
+ * @dependencies React, @vxture/design-system
  * @see ../../contexts/ThemeContext
  * @tags theme, toggle, button, component
  * @example
@@ -39,7 +39,7 @@
  */
 
 import { useGlobal } from '@/shared/contexts/GlobalContext';
-import { FiSun, FiMoon } from 'react-icons/fi';
+import { Icon } from '@vxture/design-system';
 
 const ThemeToggleButton = () => {
   const { theme, toggleTheme } = useGlobal();
@@ -51,9 +51,9 @@ const ThemeToggleButton = () => {
       className='p-2 rounded-full bg-gray-200 dark:bg-gray-800 transition-colors'
     >
       {theme === 'light' ? (
-        <FiMoon className='w-5 h-5 text-gray-800' />
+        <Icon name='moon' className='w-5 h-5 text-gray-800' />
       ) : (
-        <FiSun className='w-5 h-5 text-yellow-400' />
+        <Icon name='sun' className='w-5 h-5 text-yellow-400' />
       )}
     </button>
   );

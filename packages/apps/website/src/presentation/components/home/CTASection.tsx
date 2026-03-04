@@ -21,7 +21,7 @@ import type { Route } from 'next';
 import { useCTA } from '@/application/hooks/homepage';
 import { normalizeCTAData } from '@/infrastructure/constants/HomepageHelpers';
 import { debugLog } from '@vxture/shared-utils';
-import { FiMail, FiPhone, FiMessageCircle, FiArrowRight } from 'react-icons/fi';
+import { Icon } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义
@@ -121,10 +121,10 @@ export default function CTASection({ id, name = 'CTA' }: CTASectionProps) {
             }`;
             const buttonContent = (
               <span className='flex items-center justify-center space-x-2'>
-                {action.variant === 'secondary' && <FiMessageCircle className='w-5 h-5' />}
+                {action.variant === 'secondary' && <Icon name='chat-circle' className='w-5 h-5' />}
                 <span>{action.label}</span>
                 {action.variant === 'primary' && (
-                  <FiArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform duration-300' />
+                  <Icon name='arrow-right' className='w-5 h-5 group-hover:translate-x-1 transition-transform duration-300' />
                 )}
               </span>
             );
@@ -157,13 +157,13 @@ export default function CTASection({ id, name = 'CTA' }: CTASectionProps) {
             <div className='flex flex-col sm:flex-row gap-6 justify-center items-center text-sm'>
               {displayData.contact.email && (
                 <div className='flex items-center space-x-2 text-gray-700'>
-                  <FiMail className='w-4 h-4 text-blue-500' />
+                  <Icon name='mail' className='w-4 h-4 text-blue-500' />
                   <span>{displayData.contact.email.value}</span>
                 </div>
               )}
               {displayData.contact.phone && (
                 <div className='flex items-center space-x-2 text-gray-700'>
-                  <FiPhone className='w-4 h-4 text-green-500' />
+                  <Icon name='phone' className='w-4 h-4 text-green-500' />
                   <span>{displayData.contact.phone.value}</span>
                 </div>
               )}

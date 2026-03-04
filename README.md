@@ -3,7 +3,9 @@
 > 人工智能业务的云服务平台 - 提供智能体服务
 
 基于 PNPM Monorepo 架构的全栈云服务平台，专注于人工智能业务的服务提供和管理。
+
 <!-- Quick badges: setup / contribute / runtimes -->
+
 [![setup-ready](https://img.shields.io/badge/setup-ready-brightgreen)](docs/SETUP_QUICK.md)
 [![contribs-welcome](https://img.shields.io/badge/Contributions-welcome-brightgreen)](docs/SETUP_QUICK.md#contributing)
 [![node](https://img.shields.io/badge/node-LTS-green)](https://nodejs.org/)
@@ -26,7 +28,6 @@
 - **📊 数据分析**: 实时数据分析和可视化
 - **📞 工单系统**: 客户支持和工单管理
 
-
 ## 🏗️ 技术架构
 
 ### 前端 (`packages/web`)
@@ -48,7 +49,6 @@ Next.js 15.5.6 + App Router + React 19.2 + TypeScript 5.9.3
 │   └── Husky 9.1.7 + lint-staged 16.2.4 - Git 工作流
 ├── 🎯 工具库
 │   ├── Zod 4.1.12 - 运行时类型验证
-│   ├── 多图标库 - Heroicons 2.2.0, Phosphor 2.1.10, Tabler 3.35.0, React Icons 5.5.0
 │   └── TailwindCSS Animate 1.0.7 - CSS 动画
 ```
 
@@ -162,7 +162,8 @@ python start_dev.py
 $venvPython = Join-Path (Convert-Path ..) '.venv\Scripts\python.exe'
 & $venvPython start_dev.py
 ```
-```
+
+````
 
 ## 📂 项目结构
 
@@ -198,7 +199,7 @@ vxture/
 ├── package.json                # Monorepo 根配置
 ├── pnpm-workspace.yaml         # PNPM 工作区配置
 └── cspell.json                 # 拼写检查配置
-```
+````
 
 ## 🛠️ 开发工作流
 
@@ -300,7 +301,7 @@ pip install -r requirements.txt
 项目仓库包含辅助脚本：
 
 - `scripts/setup-dev.ps1` — Windows 一键初始化（会安装 Volta、Node、pnpm、创建 Python venv 并安装依赖、调用扩展安装脚本）
-- `scripts/setup-dev.sh`  — Unix-like 系统的对应脚本
+- `scripts/setup-dev.sh` — Unix-like 系统的对应脚本
 
 建议团队在 PR 模板或贡献指南中声明使用的管理工具与 Node/Python 精确版本，以便 CI 和开发机器一致。
 
@@ -314,12 +315,12 @@ pip install -r requirements.txt
 
 ```tsx
 // 客户端组件示例
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 
 export default function InteractiveButton() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
   // ...
 }
 ```
@@ -329,8 +330,8 @@ export default function InteractiveButton() {
 **🎨 TailwindCSS 优先**（主要样式方案）
 
 ```tsx
-<div className="bg-primary-500 text-white p-4 rounded-lg shadow-lg">
-  <h1 className="text-2xl font-bold mb-2">标题</h1>
+<div className='bg-primary-500 text-white p-4 rounded-lg shadow-lg'>
+  <h1 className='text-2xl font-bold mb-2'>标题</h1>
 </div>
 ```
 
@@ -351,11 +352,11 @@ export default function InteractiveButton() {
 使用 Zustand 进行全局状态管理：
 
 ```tsx
-import { useThemeStore } from '@/stores/themeStore'
+import { useThemeStore } from '@/stores/themeStore';
 
 function ThemeToggle() {
-  const { theme, toggleTheme } = useThemeStore()
-  return <button onClick={toggleTheme}>{theme}</button>
+  const { theme, toggleTheme } = useThemeStore();
+  return <button onClick={toggleTheme}>{theme}</button>;
 }
 ```
 
@@ -364,13 +365,13 @@ function ThemeToggle() {
 使用 TanStack Query 管理服务器状态：
 
 ```tsx
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query';
 
 function UserProfile() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['user', 'profile'],
-    queryFn: () => fetch('/api/user/profile').then(res => res.json())
-  })
+    queryFn: () => fetch('/api/user/profile').then((res) => res.json()),
+  });
 
   // ...
 }

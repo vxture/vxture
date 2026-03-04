@@ -132,7 +132,7 @@ shared/types/
 
 | 包名 | 说明 | 依赖 |
 |------|------|------|
-| `@vxture/design-system` | 基础设计系统 | React、react-icons |
+| `@vxture/design-system` | 基础设计系统 | React、@phosphor-icons/react |
 | `@vxture/components` | 业务组件库 | design-system、shared-types |
 | `@vxture/composables` | React Hooks 库 | zustand、react-query |
 

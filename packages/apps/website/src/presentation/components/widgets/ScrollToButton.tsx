@@ -16,7 +16,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { FiChevronUp } from 'react-icons/fi';
+import { Icon } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义
@@ -172,7 +172,7 @@ export default function ScrollToButton({
           ${className}
         `}
       >
-        <FiChevronUp className={iconSize} />
+        <Icon name="chevron-up" className={iconSize} />
       </button>
     </div>
   );

@@ -30,10 +30,6 @@ import ProductDetailPartOne from '@/presentation/components/products/ProductDeta
 // 常量定义
 // ============================================================================
 
-/** 产品页面区块总数 */
-const SECTION_COUNT = 4;
-/** 目标 ID 前缀 */
-const TARGET_ID_PREFIX = 'snap-section';
 /** 调试面板位置 */
 const DEBUG_PANEL_POSITION = { top: '4px', right: '4px', zIndex: 50 } as const;
 /** 选择面板位置 */
@@ -72,8 +68,6 @@ export default function ProductsPage() {
 
       {/* 吸附选择调试组件 */}
       <SnapChoicePanel
-        sectionCount={SECTION_COUNT}
-        targetIdPrefix={TARGET_ID_PREFIX}
         activeTarget={activeTarget}
         snapToTarget={snapToTarget}
         position={CHOICE_PANEL_POSITION}

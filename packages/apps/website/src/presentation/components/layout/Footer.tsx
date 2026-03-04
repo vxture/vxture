@@ -16,8 +16,7 @@
 import { useFooter } from "@/application/hooks/layout";
 import { normalizeFooterData } from "@/infrastructure/constants/FooterHelpers";
 import { debugLog } from "@vxture/shared-utils";
-import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
-import { SiGithub, SiWechat, SiLinkedin } from "react-icons/si";
+import { Icon } from "@vxture/design-system";
 import { useState, useRef } from "react";
 
 export default function Footer() {
@@ -62,7 +61,7 @@ export default function Footer() {
             {/* 地址信息 */}
             {displayData.brand.address && (
               <div className="flex items-center space-x-1 text-sm text-gray-600 mb-4">
-                <FiMapPin className="w-4 h-4" />
+                <Icon name="map-pin" className="w-4 h-4" />
                 <span>{displayData.brand.address}</span>
               </div>
             )}
@@ -72,7 +71,7 @@ export default function Footer() {
               <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
                 {displayData.contact.sales?.phone && (
                   <span className="flex items-center space-x-1 min-w-[120px]">
-                    <FiPhone className="w-4 h-4" />
+                    <Icon name="phone" className="w-4 h-4" />
                     <span>{displayData.contact.sales.phone}</span>
                   </span>
                 )}
@@ -81,7 +80,7 @@ export default function Footer() {
                     href={`mailto:${displayData.contact.sales.email}`}
                     className="flex items-center space-x-1 min-w-[140px] hover:text-blue-600 transition-colors"
                   >
-                    <FiMail className="w-4 h-4" />
+                    <Icon name="mail" className="w-4 h-4" />
                     <span>{displayData.contact.sales.email}</span>
                   </a>
                 )}
@@ -91,7 +90,7 @@ export default function Footer() {
               <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
                 {displayData.contact.service?.phone && (
                   <span className="flex items-center space-x-1 min-w-[120px]">
-                    <FiPhone className="w-4 h-4" />
+                    <Icon name="phone" className="w-4 h-4" />
                     <span>{displayData.contact.service.phone}</span>
                   </span>
                 )}
@@ -100,7 +99,7 @@ export default function Footer() {
                     href={`mailto:${displayData.contact.service.email}`}
                     className="flex items-center space-x-1 min-w-[140px] hover:text-blue-600 transition-colors"
                   >
-                    <FiMail className="w-4 h-4" />
+                    <Icon name="mail" className="w-4 h-4" />
                     <span>{displayData.contact.service.email}</span>
                   </a>
                 )}
@@ -120,7 +119,7 @@ export default function Footer() {
                         onMouseLeave={() => setQrCodeVisible(false)}
                         ref={setWechatIconRef}
                       >
-                        <SiWechat className="w-5 h-5" />
+                        <Icon name="wechat" className="w-5 h-5" />
                       </button>
                     ) : (
                       <a
@@ -131,10 +130,10 @@ export default function Footer() {
                         rel="noopener noreferrer"
                       >
                         {social.icon === "github" && (
-                          <SiGithub className="w-5 h-5" />
+                          <Icon name="github" className="w-5 h-5" />
                         )}
                         {social.icon === "linkedin" && (
-                          <SiLinkedin className="w-5 h-5" />
+                          <Icon name="linkedin" className="w-5 h-5" />
                         )}
                       </a>
                     )}

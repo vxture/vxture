@@ -64,7 +64,6 @@ Next.js 15.5.6 + App Router + React 19.2 + TypeScript 5.9.3
 │   └── Husky 9.1.7 + lint-staged 16.2.4 - Git 工作流
 ├── 🎯 工具库
 │   ├── Zod 4.1.12 - 运行时类型验证
-│   ├── 多图标库 - Heroicons 2.2.0, Phosphor 2.1.10, Tabler 3.35.0, React Icons 5.5.0
 │   └── TailwindCSS Animate 1.0.7 - CSS 动画
 ```
 

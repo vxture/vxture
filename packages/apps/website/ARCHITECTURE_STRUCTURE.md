@@ -512,7 +512,6 @@ packages/web/
     │   │   ├── i18nConfig.ts            # 国际化配置
     │   │   ├── themeConfig.ts           # 主题配置
     │   │   ├── authConfig.ts            # 认证配置
-    │   │   └── icon.tokens.ts           # 图标配置
     │   │
     │   ├── utils/                       # 工具函数
     │   │   └── scroll.ts                # 滚动工具
