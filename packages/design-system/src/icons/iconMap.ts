@@ -1,3 +1,14 @@
+/**
+ * iconMap.ts
+ * @package @vxture/design-system
+ *
+ * 图标注册中心。
+ * 唯一直接 import @phosphor-icons/react 的文件。
+ * 业务层和其他模块不得直接引用 Phosphor，统一通过此文件访问。
+ *
+ * 新增图标：在对应分类下添加一行即可，IconName 类型自动更新。
+ */
+
 import {
   // 通用交互 - navigation
   HouseIcon,
@@ -76,9 +87,11 @@ import {
   // 额外需要的图标
   CaretLeftIcon as CaretLeftBoldIcon,
   CaretRightIcon as CaretRightBoldIcon,
-} from '@phosphor-icons/react';
 
-import type { IconName } from './iconTokens';
+  // 系统保留
+  QuestionIcon,
+
+} from '@phosphor-icons/react';
 
 /**
  * Phosphor 图标组件映射
@@ -86,7 +99,7 @@ import type { IconName } from './iconTokens';
  * 这是设计系统中唯一直接依赖 Phosphor Icons 的地方
  * 所有图标都通过这个映射表进行统一管理
  */
-export const iconMap: Record<IconName, React.ElementType> = {
+export const iconMap = {
   // 通用交互 - navigation
   home: HouseIcon,
   'arrow-left': ArrowLeftIcon,
@@ -171,4 +184,9 @@ export const iconMap: Record<IconName, React.ElementType> = {
   'paperplane-tilt': PaperPlaneTiltIcon,
   'caret-left-bold': CaretLeftBoldIcon,
   'caret-right-bold': CaretRightBoldIcon,
-};
+
+  // 系统保留勿删
+  // name 无匹配时的最终兜底，永远保留
+  'placeholder':   QuestionIcon,
+
+} satisfies Record<string, React.ElementType>;

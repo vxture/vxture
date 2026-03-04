@@ -8,7 +8,7 @@
  * @category Icons
  */
 
-import type { IconName } from './iconTokens';
+import type { IconName } from '../icons/icon.types';
 
 /**
  * 图标名称映射表
@@ -54,45 +54,4 @@ export function getIconName(iconName: string): IconName {
 
   // 如果没有映射，直接返回原始名称（作为安全的 fallback）
   return normalizedName as IconName;
-}
-
-/**
- * 验证图标名称是否有效
- * @param iconName - 图标名称
- * @returns 是否有效
- */
-export function isValidIconName(iconName: string): boolean {
-  const validIconNames = new Set<IconName>([
-    // 通用交互
-    'home', 'arrow-left', 'arrow-right', 'arrow-up', 'arrow-down',
-    'arrow-long-right', 'chevron-left', 'chevron-right', 'chevron-up', 'chevron-down',
-    'search', 'settings', 'edit', 'delete', 'add', 'plus', 'x', 'check', 'trash', 'cog',
-    'success', 'error', 'warning', 'info',
-
-    // 云服务/智能体专属
-    'agent', 'workflow', 'trigger', 'database', 'cloud', 'server', 'cube',
-    'building-library', 'chart', 'chart-bar', 'table', 'code', 'api', 'graph',
-    'lightbulb', 'sparkles', 'shield-check',
-
-    // 用户/组织
-    'user', 'user-group', 'users', 'medal', 'star',
-
-    // 通讯/联系
-    'mail', 'phone', 'wechat', 'github', 'linkedin', 'chat-circle', 'paperplane-tilt',
-
-    // 时间/日历
-    'calendar', 'calendar-days', 'clock',
-
-    // 地图/位置
-    'map-pin', 'map-marker',
-
-    // 主题/显示
-    'sun', 'moon', 'globe',
-
-    // 额外需要的图标
-    'caret-left-bold', 'caret-right-bold',
-  ]);
-
-  const normalizedName = iconName.toLowerCase().trim();
-  return validIconNames.has(normalizedName as IconName);
 }
