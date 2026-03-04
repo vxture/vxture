@@ -61,7 +61,7 @@ Write-Host "检查前端服务端口 (3000)..." -ForegroundColor Cyan
 if (Test-Port 3000) {
     Write-Host "发现占用 3000 端口的进程，正在终止..." -ForegroundColor Yellow
     Stop-ProcessByPort 3000
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 1
 
     if (Test-Port 3000) {
         Write-Host "警告: 无法完全终止占用 3000 端口的进程" -ForegroundColor Yellow
@@ -77,7 +77,7 @@ Write-Host "`n检查后端服务端口 (8000)..." -ForegroundColor Cyan
 if (Test-Port 8000) {
     Write-Host "发现占用 8000 端口的进程，正在终止..." -ForegroundColor Yellow
     Stop-ProcessByPort 8000
-    Start-Sleep -Seconds 2
+    Start-Sleep -Seconds 1
 
     if (Test-Port 8000) {
         Write-Host "警告: 无法完全终止占用 8000 端口的进程" -ForegroundColor Yellow
@@ -86,24 +86,6 @@ if (Test-Port 8000) {
     }
 } else {
     Write-Host "后端服务未运行" -ForegroundColor Gray
-}
-
-# 检查并终止 Node.js 进程
-Write-Host "`n检查 Node.js 进程..." -ForegroundColor Cyan
-$nodeProcesses = Get-Process -Name "node" -ErrorAction SilentlyContinue
-if ($nodeProcesses) {
-    Write-Host "发现 Node.js 进程，正在终止..." -ForegroundColor Yellow
-    foreach ($process in $nodeProcesses) {
-        try {
-            Write-Host "终止进程: $($process.ProcessName) (PID: $($process.Id))" -ForegroundColor Yellow
-            Stop-Process -Id $process.Id -Force
-        } catch {
-            Write-Host "无法终止进程 PID: $($process.Id)" -ForegroundColor Red
-        }
-    }
-    Start-Sleep -Seconds 1
-} else {
-    Write-Host "未发现 Node.js 进程" -ForegroundColor Gray
 }
 
 Write-Host "`n==========================================" -ForegroundColor Red

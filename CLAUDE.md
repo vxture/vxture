@@ -103,8 +103,8 @@ Claude Code 项目开发规范与协作指南
 ### 目录说明
 
 vxture/
-├── packages/web/public/ # 静态数据（*.json）
-├── packages/web/src/ # 前端主项目（Next.js）
+├── packages/apps/website/public/ # 静态数据（*.json）
+├── packages/apps/website/src/ # 前端主项目（Next.js）
 │ ├── app/ # App Router 路由页面
 │ ├── presentation/ # 视图层：组件、页面、UI 渲染
 │ ├── application/ # 应用层：业务逻辑、用例

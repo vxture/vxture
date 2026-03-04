@@ -2,26 +2,38 @@
   "folders": [
     {
       "name": "vxture-root",
-      "path": ".",
+      "path": "."
     },
     {
-      "name": "web",
-      "path": "packages/web",
+      "name": "website",
+      "path": "packages/apps/website"
     },
     {
       "name": "api",
-      "path": "packages/api",
+      "path": "packages/api"
     },
     {
       "name": "design-system",
-      "path": "packages/design-system",
+      "path": "packages/design-system"
     },
+    {
+      "name": "shared-types",
+      "path": "packages/shared/types"
+    },
+    {
+      "name": "shared-constants",
+      "path": "packages/shared/constants"
+    },
+    {
+      "name": "shared-utils",
+      "path": "packages/shared/utils"
+    }
   ],
   "settings": {
     "typescript.locale": "zh-CN",
     "emmet.includeLanguages": {
       "javascript": "javascriptreact",
-      "typescript": "typescriptreact",
+      "typescript": "typescriptreact"
     },
     "terminal.integrated.fontFamily": "monospace",
     "terminal.integrated.fontSize": 14,
@@ -31,38 +43,37 @@
       "**/.next": true,
       "**/.venv": true,
       "**/__pycache__": true,
-      "**/*.pyc": true,
+      "**/*.pyc": true
     },
     "files.exclude": {
       "**/.next": true,
       "**/.venv": true,
       "**/__pycache__": true,
-      "**/*.pyc": true,
-    },
-    "cSpell.words": ["Qube"],
+      "**/*.pyc": true
+    }
   },
   "extensions": {
     "recommendations": [
-      // 前端开发（您已安装）
-      "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode",
+      "anthropic.claude-code",
       "bradlc.vscode-tailwindcss",
-
-      // 后端开发（需要补充）
+      "christian-kohler.path-intellisense",
+      "dbaeumer.vscode-eslint",
+      "dsznajder.es7-react-js-snippets",
+      "eamodio.gitlens",
+      "esbenp.prettier-vscode",
+      "github.copilot-chat",
+      "github.vscode-pull-request-github",
+      "mikestead.dotenv",
       "ms-python.python",
       "ms-python.vscode-pylance",
-      "rangav.vscode-thunder-client",
-
-      // 您已安装的增强功能扩展
-      "github.copilot-chat",
+      "ms-vscode.vscode-typescript-next",
+      "pkief.material-icon-theme",
+      "pulkitgangwar.nextjs-snippets",
       "sonarsource.sonarlint-vscode",
-      "stylelint.vscode-stylelint",
-      "usernamehw.errorlens",
-
-      // 其他有用的扩展
-      "christian-kohler.path-intellisense",
-      "eamodio.gitlens",
       "streetsidesoftware.code-spell-checker",
-    ],
-  },
+      "usernamehw.errorlens",
+      "wix.vscode-import-cost",
+      "yoavbls.pretty-ts-errors"
+    ]
+  }
 }

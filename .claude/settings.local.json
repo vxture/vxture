@@ -79,11 +79,10 @@
       "Bash(timeout 10 bash -c 'tail -20 /tmp/claude/d--MyWebSite-vxture/tasks/b6twyz8r8.output 2>/dev/null')",
       "Bash(pnpm list --depth 0)",
       "Bash(depcheck)",
-      "Bash(grep -v \"//\")"
+      "Bash(grep -v \"//\")",
+      "Bash(rsync -a --exclude node_modules packages/web/ packages/apps/website/)",
+      "Bash(pnpm --filter @vxture/website lint)",
+      "Bash(pnpm --filter @vxture/website type-check)"
     ]
-  },
-  "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",
-  "ANTHROPIC_API_KEY": "66d237a9-157e-4fc8-896a-9effdfcf73ca",
-  "ANTHROPIC_MODEL": "doubao-seed-2-0-pro-260215",
-  "claudeCode.hideOnboarding": true
+  }
 }

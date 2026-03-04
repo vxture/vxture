@@ -1,0 +1,19 @@
+{
+  "name": "@vxture/shared-constants",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "echo \"No lint yet\"",
+    "lint:fix": "echo \"No lint:fix yet\""
+  },
+  "dependencies": {
+    "@vxture/shared-types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

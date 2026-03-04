@@ -15,19 +15,19 @@
   "license": "MIT",
   "scripts": {
     "// === 开发环境 ===": "",
-    "dev": "pnpm --filter web dev",
+    "dev": "pnpm --filter website dev",
     "dev:api": "pnpm --filter api dev",
-    "dev:full": "concurrently \"pnpm dev\" \"pnpm dev:api\" --names \"web,api\" --prefix-colors \"cyan,yellow\"",
+    "dev:full": "concurrently \"pnpm dev\" \"pnpm dev:api\" --names \"website,api\" --prefix-colors \"cyan,yellow\"",
     "start": "pnpm dev:full",
     "// === 构建和部署 ===": "",
-    "build": "pnpm --filter web build",
+    "build": "pnpm --filter website build",
     "build:api": "pnpm --filter api build",
     "build:all": "pnpm --parallel build",
-    "preview": "pnpm --filter web preview",
+    "preview": "pnpm --filter website preview",
     "// === 代码质量 ===": "",
     "lint": "pnpm --recursive lint",
     "lint:fix": "pnpm --recursive lint:fix",
-    "type-check": "pnpm --filter web type-check",
+    "type-check": "pnpm --filter website type-check",
     "type-check:all": "pnpm --recursive type-check",
     "format": "prettier --write \"**/*.{js,ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{js,ts,tsx,json,md}\"",
@@ -49,21 +49,23 @@
     "db:reset": "pnpm --filter api db:reset",
     "db:seed": "pnpm --filter api db:seed",
     "// === 部署相关 ===": "",
-    "prepare": "husky install",
+    "prepare": "husky || true",
     "precommit": "pnpm lint:fix && pnpm type-check",
     "prepush": "pnpm health && pnpm test"
   },
+  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^24.8.1",
+    "@types/node": "^25.3.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
     "concurrently": "^9.2.1",
-    "eslint": "^9.37.0",
+    "eslint": "^9.39.3",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.4",
     "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
     "typescript": "^5.9.3"
   },
   "lint-staged": {
@@ -74,8 +76,5 @@
     "*.{json,md}": [
       "prettier --write"
     ]
-  },
-  "dependencies": {
-    "react-icons": "^5.5.0"
   }
 }

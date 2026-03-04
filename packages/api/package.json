@@ -1,5 +1,5 @@
 {
-  "name": "api",
+  "name": "@vxture/api",
   "version": "0.1.0",
   "private": true,
   "description": "FastAPI backend for vxture platform",
@@ -7,9 +7,18 @@
     "dev": "python start_dev.py",
     "dev:direct": ".venv/Scripts/python.exe -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000",
     "start": "python start_server.py",
-    "test": "pytest",
+    "build": "echo \"No build step for Python API\"",
+    "clean": "echo \"Cleaning Python artifacts...\" && rm -rf .pytest_cache __pycache__",
     "lint": "ruff check .",
-    "format": "ruff format ."
+    "lint:fix": "ruff check . --fix",
+    "format": "ruff format .",
+    "type-check": "echo \"No type-check step configured\"",
+    "test": "pytest",
+    "test:watch": "echo \"No test:watch configured\"",
+    "test:coverage": "echo \"No test:coverage configured\"",
+    "db:migrate": "echo \"db:migrate not implemented yet\"",
+    "db:reset": "echo \"db:reset not implemented yet\"",
+    "db:seed": "echo \"db:seed not implemented yet\""
   },
   "engines": {
     "python": ">=3.11"
