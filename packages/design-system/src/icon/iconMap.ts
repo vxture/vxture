@@ -78,7 +78,7 @@ import {
   CaretRightIcon as CaretRightBoldIcon,
 } from '@phosphor-icons/react';
 
-import type { IconName } from './tokens';
+import type { IconName } from './iconTokens';
 
 /**
  * Phosphor 图标组件映射

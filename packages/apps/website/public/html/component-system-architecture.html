@@ -907,6 +907,68 @@
       </div>
     </div>
 
+    <!-- Props -->
+    <div class="panel-card">
+      <div class="panel-header">组件参数</div>
+      <div class="panel-body" style="padding:0">
+        <table class="props-table">
+          <thead>
+            <tr>
+              <th>Prop</th>
+              <th>Type</th>
+              <th>说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>variant</td><td>ButtonVariant</td><td>视觉变体，默认 primary</td></tr>
+            <tr><td>size</td><td>ButtonSize</td><td>尺寸规格，默认 md</td></tr>
+            <tr><td>loading</td><td>boolean</td><td>加载态，自动禁用并显示 spinner</td></tr>
+            <tr><td>leftIcon</td><td>IconName</td><td>左侧图标，来自 icon 系统</td></tr>
+            <tr><td>rightIcon</td><td>IconName</td><td>右侧图标</td></tr>
+            <tr><td>fullWidth</td><td>boolean</td><td>宽度撑满父容器</td></tr>
+            <tr><td>asChild</td><td>boolean</td><td>多态渲染，如渲染为 &lt;a&gt;</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Deps -->
+    <div class="panel-card">
+      <div class="panel-header">依赖关系</div>
+      <div class="panel-body">
+        <div class="dep-row">
+          <span class="dep-from">AgentToolbar</span>
+          <span class="dep-arr">→</span>
+          <span class="dep-to">Button.tsx</span>
+          <span class="dep-note">唯一入口</span>
+        </div>
+        <div class="dep-row">
+          <span class="dep-from">Button.tsx</span>
+          <span class="dep-arr">→</span>
+          <span class="dep-to">buttonStyles.ts</span>
+          <span class="dep-note">样式计算</span>
+        </div>
+        <div class="dep-row">
+          <span class="dep-from">Button.tsx</span>
+          <span class="dep-arr">→</span>
+          <span class="dep-to">Icon.tsx</span>
+          <span class="dep-note">图标插槽</span>
+        </div>
+        <div class="dep-row">
+          <span class="dep-from">Button.tsx</span>
+          <span class="dep-arr">→</span>
+          <span class="dep-to">shadcn/ui</span>
+          <span class="dep-note">源码在 repo</span>
+        </div>
+        <div class="dep-row">
+          <span class="dep-from">index.ts</span>
+          <span class="dep-arr">→</span>
+          <span class="dep-to">全部导出</span>
+          <span class="dep-note">API 边界</span>
+        </div>
+      </div>
+    </div>
+
     <!-- Component Registry -->
     <div class="panel-card">
       <div class="panel-header collapsible" onclick="toggleCollapse('comp-registry', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;">
@@ -981,69 +1043,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Props -->
-    <div class="panel-card">
-      <div class="panel-header">Button Props</div>
-      <div class="panel-body" style="padding:0">
-        <table class="props-table">
-          <thead>
-            <tr>
-              <th>Prop</th>
-              <th>Type</th>
-              <th>说明</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>variant</td><td>ButtonVariant</td><td>视觉变体，默认 primary</td></tr>
-            <tr><td>size</td><td>ButtonSize</td><td>尺寸规格，默认 md</td></tr>
-            <tr><td>loading</td><td>boolean</td><td>加载态，自动禁用并显示 spinner</td></tr>
-            <tr><td>leftIcon</td><td>IconName</td><td>左侧图标，来自 icon 系统</td></tr>
-            <tr><td>rightIcon</td><td>IconName</td><td>右侧图标</td></tr>
-            <tr><td>fullWidth</td><td>boolean</td><td>宽度撑满父容器</td></tr>
-            <tr><td>asChild</td><td>boolean</td><td>多态渲染，如渲染为 &lt;a&gt;</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Deps -->
-    <div class="panel-card">
-      <div class="panel-header">依赖关系</div>
-      <div class="panel-body">
-        <div class="dep-row">
-          <span class="dep-from">AgentToolbar</span>
-          <span class="dep-arr">→</span>
-          <span class="dep-to">Button.tsx</span>
-          <span class="dep-note">唯一入口</span>
-        </div>
-        <div class="dep-row">
-          <span class="dep-from">Button.tsx</span>
-          <span class="dep-arr">→</span>
-          <span class="dep-to">buttonStyles.ts</span>
-          <span class="dep-note">样式计算</span>
-        </div>
-        <div class="dep-row">
-          <span class="dep-from">Button.tsx</span>
-          <span class="dep-arr">→</span>
-          <span class="dep-to">Icon.tsx</span>
-          <span class="dep-note">图标插槽</span>
-        </div>
-        <div class="dep-row">
-          <span class="dep-from">Button.tsx</span>
-          <span class="dep-arr">→</span>
-          <span class="dep-to">shadcn/ui</span>
-          <span class="dep-note">源码在 repo</span>
-        </div>
-        <div class="dep-row">
-          <span class="dep-from">index.ts</span>
-          <span class="dep-arr">→</span>
-          <span class="dep-to">全部导出</span>
-          <span class="dep-note">API 边界</span>
-        </div>
-      </div>
-    </div>
-
+    
   </div>
 </div>
 

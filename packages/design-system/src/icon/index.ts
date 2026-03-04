@@ -1,5 +1,5 @@
 export * from './Icon';
-export * from './tokens';
+export * from './iconTokens';
 export * from './iconMap';
 export * from './iconNameMapper';
-export type { IconName } from './tokens';
+export type { IconName } from './iconTokens';

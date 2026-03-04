@@ -8,7 +8,7 @@
  * @category Icons
  */
 
-import type { IconName } from './tokens';
+import type { IconName } from './iconTokens';
 
 /**
  * 图标名称映射表

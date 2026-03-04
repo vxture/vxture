@@ -569,6 +569,28 @@
       label.textContent = 'Dark';
     }
   }
+
+  const collapseState = {};
+  function toggleCollapse(id) {
+    const el = document.getElementById(id);
+    const chevron = document.getElementById(id + '-chevron');
+    const isOpen = collapseState[id];
+    if (isOpen) {
+      el.style.maxHeight = '0';
+      chevron.textContent = '▼ 展开';
+      collapseState[id] = false;
+    } else {
+      el.style.maxHeight = el.scrollHeight + 'px';
+      chevron.textContent = '▲ 收起';
+      collapseState[id] = true;
+    }
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[id$="-chevron"]').forEach(chevron => {
+      const id = chevron.id.replace('-chevron', '');
+      collapseState[id] = false;
+    });
+  });
 </script>
 
 <div class="header">
@@ -894,7 +916,7 @@
 
     <!-- Icon Registry -->
     <div class="panel-card">
-      <div class="panel-header collapsible" onclick="toggleCollapse('icon-registry', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;">
+      <div class="panel-header collapsible" onclick="toggleCollapse('icon-registry')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;">
         <span>图标清单 · Registry</span>
         <span class="chevron" id="icon-registry-chevron" style="font-size:11px;color:var(--text-dim);transition:transform 0.2s;">▼ 展开</span>
       </div>

@@ -2,7 +2,7 @@
 
 import { iconMap } from './iconMap';
 import { getIconName, isValidIconName } from './iconNameMapper';
-import type { IconName } from './tokens';
+import type { IconName } from './iconTokens';
 
 type IconWeight = 'thin' | 'light' | 'regular' | 'bold' | 'fill' | 'duotone';
 
