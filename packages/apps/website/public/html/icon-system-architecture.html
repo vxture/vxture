@@ -494,6 +494,23 @@
   }
 
   /* ── Deps card ── */
+  .panel-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .panel-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
   .deps-card {
     border: 1px solid var(--border);
     border-radius: 12px;
@@ -876,40 +893,86 @@
     </div>
 
     <!-- Icon Registry -->
-    <div class="fallback-card" style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)">
-      <div class="fallback-header" onclick="toggleCollapse('icon-registry')"
-        style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;padding:12px 16px;border-bottom:1px solid var(--border);font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim)">
+    <div class="panel-card">
+      <div class="panel-header collapsible" onclick="toggleCollapse('icon-registry', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;">
         <span>图标清单 · Registry</span>
-        <span id="icon-registry-chevron" style="font-size:11px;color:var(--text-dim);transition:transform 0.2s;font-weight:400;letter-spacing:0">▼ 展开</span>
+        <span class="chevron" id="icon-registry-chevron" style="font-size:11px;color:var(--text-dim);transition:transform 0.2s;">▼ 展开</span>
       </div>
       <div id="icon-registry" style="overflow:hidden;transition:max-height 0.3s ease;max-height:0">
-        <div style="display:flex;flex-direction:column;font-family:'Inter',system-ui,sans-serif">
+        <div style="display:flex;flex-direction:column">
 
-          <div style="padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border)">导航 · Navigation</div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">home</span><span style="font-size:12px;color:var(--text-dim)">首页</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">House</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">arrow-left</span><span style="font-size:12px;color:var(--text-dim)">返回</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">ArrowLeft</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">menu</span><span style="font-size:12px;color:var(--text-dim)">菜单</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">List</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">close</span><span style="font-size:12px;color:var(--text-dim)">关闭</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">X</span></div>
+          <div style="padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);">导航 · Navigation</div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">🏠</span>
+            <span class="dep-to">home</span>
+            <span class="dep-note">首页 · House</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">←</span>
+            <span class="dep-to" style="color:var(--text-mid)">arrow-left</span>
+            <span class="dep-note">返回 · ArrowLeft</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">☰</span>
+            <span class="dep-to" style="color:var(--text-mid)">menu</span>
+            <span class="dep-note">菜单 · List</span>
+          </div>
 
-          <div style="padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);border-top:1px solid var(--border)">操作 · Action</div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">search</span><span style="font-size:12px;color:var(--text-dim)">搜索</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">MagnifyingGlass</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">settings</span><span style="font-size:12px;color:var(--text-dim)">设置</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Gear</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">edit</span><span style="font-size:12px;color:var(--text-dim)">编辑</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">PencilSimple</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">delete</span><span style="font-size:12px;color:var(--text-dim)">删除</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Trash</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">add</span><span style="font-size:12px;color:var(--text-dim)">新增</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Plus</span></div>
+          <div style="padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);border-top:1px solid var(--border);margin-top:4px">操作 · Action</div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">🔍</span>
+            <span class="dep-to" style="color:var(--text-mid)">search</span>
+            <span class="dep-note">搜索 · MagnifyingGlass</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">⚙️</span>
+            <span class="dep-to" style="color:var(--text-mid)">settings</span>
+            <span class="dep-note">设置 · Gear</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">✏️</span>
+            <span class="dep-to" style="color:var(--text-mid)">edit</span>
+            <span class="dep-note">编辑 · PencilSimple</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">🗑️</span>
+            <span class="dep-to" style="color:var(--text-mid)">delete</span>
+            <span class="dep-note">删除 · Trash</span>
+          </div>
 
-          <div style="padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);border-top:1px solid var(--border)">云服务/智能体 · Platform</div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">agent</span><span style="font-size:12px;color:var(--text-dim)">智能体</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Robot</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">workflow</span><span style="font-size:12px;color:var(--text-dim)">工作流</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">GitBranch</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">trigger</span><span style="font-size:12px;color:var(--text-dim)">触发器</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Lightning</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">database</span><span style="font-size:12px;color:var(--text-dim)">数据库</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Database</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">cloud</span><span style="font-size:12px;color:var(--text-dim)">云服务</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Cloud</span></div>
+          <div style="padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);border-top:1px solid var(--border);margin-top:4px">平台 · Platform</div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">🤖</span>
+            <span class="dep-to" style="color:var(--text-mid)">agent</span>
+            <span class="dep-note">智能体 · Robot</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">⚡</span>
+            <span class="dep-to" style="color:var(--text-mid)">trigger</span>
+            <span class="dep-note">触发器 · Lightning</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">☁️</span>
+            <span class="dep-to" style="color:var(--text-mid)">cloud</span>
+            <span class="dep-note">云服务 · Cloud</span>
+          </div>
 
-          <div style="padding:7px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);border-top:1px solid var(--border)">状态 · Status</div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#1a7f37">success</span><span style="font-size:12px;color:var(--text-dim)">成功</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">CheckCircle</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#cf222e">error</span><span style="font-size:12px;color:var(--text-dim)">错误</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">XCircle</span></div>
-          <div class="dep-row" style="padding:6px 16px"><span style="min-width:80px;font-size:12px;font-weight:600;color:#9a6700">warning</span><span style="font-size:12px;color:var(--text-dim)">警告</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">Warning</span></div>
-          <div class="dep-row" style="padding:6px 16px;border-bottom:none"><span style="min-width:80px;font-size:12px;font-weight:600;color:#0969da">loading</span><span style="font-size:12px;color:var(--text-dim)">加载中</span><span style="margin-left:auto;font-size:11px;color:var(--text-dim)">CircleNotch</span></div>
+          <div style="padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-dim);border-bottom:1px solid var(--border);border-top:1px solid var(--border);margin-top:4px">状态 · Status</div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">✅</span>
+            <span class="dep-to" style="color:var(--accent3)">success</span>
+            <span class="dep-note">成功 · CheckCircle</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px">
+            <span style="font-size:13px">❌</span>
+            <span class="dep-to" style="color:var(--accent2)">error</span>
+            <span class="dep-note">错误 · XCircle</span>
+          </div>
+          <div class="dep-row" style="padding:7px 16px;border-bottom:none">
+            <span style="font-size:13px">⚠️</span>
+            <span class="dep-to" style="color:var(--accent4)">warning</span>
+            <span class="dep-note">警告 · Warning</span>
+          </div>
         </div>
       </div>
     </div>

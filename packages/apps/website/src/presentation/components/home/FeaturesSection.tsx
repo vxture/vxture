@@ -22,7 +22,6 @@ import { normalizeFeaturesData } from '@/infrastructure/constants/HomepageHelper
 import { debugLog } from '@vxture/shared-utils';
 import { Icon } from '@vxture/design-system';
 import { BasicColorMap, SectionTheme } from '@/shared/theme/colorMap';
-import { renderIcon } from '@/shared/utils/iconMapper';
 
 // ============================================================================
 // 类型定义
@@ -92,7 +91,7 @@ const FeatureCard = memo(function FeatureCard({ feature, theme = 'light' }: Feat
             <div
               className={`w-24 h-24 ${colorsCards.iconMain} rounded-2xl flex items-center justify-center transition-transform duration-300 border-0`}
             >
-              {renderIcon(feature.icon, 'w-16 h-16')}
+              <Icon name={feature.icon} className='w-16 h-16' />
             </div>
           </div>
         )}
