@@ -1,0 +1,44 @@
+:root {
+  /* Colors */
+  --vx-color-brand-50: #f5f8ff;
+  --vx-color-brand-100: #e6edff;
+  --vx-color-brand-200: #c7d6ff;
+  --vx-color-brand-300: #9fb7ff;
+  --vx-color-brand-400: #6f90ff;
+  --vx-color-brand-500: #3f6cff;
+  --vx-color-brand-600: #2f55e6;
+  --vx-color-brand-700: #2443b4;
+  --vx-color-brand-800: #1a3282;
+  --vx-color-brand-900: #101f52;
+
+  --vx-color-gray-50: #f9fafb;
+  --vx-color-gray-100: #f3f4f6;
+  --vx-color-gray-200: #e5e7eb;
+  --vx-color-gray-300: #d1d5db;
+  --vx-color-gray-400: #9ca3af;
+  --vx-color-gray-500: #6b7280;
+  --vx-color-gray-600: #4b5563;
+  --vx-color-gray-700: #374151;
+  --vx-color-gray-800: #1f2937;
+  --vx-color-gray-900: #111827;
+
+  /* Radius */
+  --vx-radius-sm: 4px;
+  --vx-radius-md: 6px;
+  --vx-radius-lg: 8px;
+  --vx-radius-xl: 12px;
+  --vx-radius-full: 9999px;
+
+  /* Spacing */
+  --vx-space-xs: 4px;
+  --vx-space-sm: 8px;
+  --vx-space-md: 12px;
+  --vx-space-lg: 16px;
+  --vx-space-xl: 24px;
+  --vx-space-2xl: 32px;
+
+  /* Shadow */
+  --vx-shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --vx-shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --vx-shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+}
