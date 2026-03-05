@@ -649,16 +649,38 @@
       </div>
       <div class="layer-body">
 
+        <!-- icon-dictionary.ts -->
+        <div class="file-card">
+          <div class="file-card-top">
+            <div class="file-icon">📖</div>
+            <div>
+              <div class="file-name">icon-dictionary.ts <span class="export-badge pub">public</span></div>
+              <div class="file-path">packages/design-system/src/icons/icon-dictionary.ts</div>
+            </div>
+          </div>
+          <div class="file-desc">语义化图标名称字典，定义所有可用图标的名称集合，是整个系统类型安全的唯一来源。</div>
+          <div class="fn-list">
+            <div class="fn-item">
+              <span class="fn-name">iconDictionary</span>
+              <span class="fn-desc">as const 数组：['home', 'arrow-left', 'chart', 'agent', ...] 共 60+ 图标名称</span>
+            </div>
+            <div class="fn-item">
+              <span class="fn-name">IconName</span>
+              <span class="fn-desc">从 iconDictionary 推导：(typeof iconDictionary)[number]</span>
+            </div>
+          </div>
+        </div>
+
         <!-- types.ts -->
         <div class="file-card">
           <div class="file-card-top">
             <div class="file-icon">🏷️</div>
             <div>
-              <div class="file-name">types.ts <span class="export-badge pub">public</span></div>
+              <div class="file-name">types.ts <span class="export-badge int">internal</span></div>
               <div class="file-path">packages/design-system/src/icons/types.ts</div>
             </div>
           </div>
-          <div class="file-desc">全局类型定义文件。定义图标系统对外暴露的所有 TypeScript 类型，是整个系统类型安全的基础。</div>
+          <div class="file-desc">仅包含类型定义文件，从 icon-dictionary 导入 IconName，不包含任何运行时代码。</div>
           <div class="fn-list">
             <div class="fn-item">
               <span class="fn-name">IconWeight</span>
@@ -672,35 +694,31 @@
               <span class="fn-name">IconProps</span>
               <span class="fn-desc">&lt;Icon&gt; 组件的 props interface，包含 name / size / weight / color / className / fallback</span>
             </div>
-            <div class="fn-item">
-              <span class="fn-name">IconName</span>
-              <span class="fn-desc">从 iconMap 的 key 自动推导，保证类型与实际注册图标始终同步</span>
-            </div>
           </div>
         </div>
 
-        <!-- iconMap.ts -->
+        <!-- icon-registry.ts -->
         <div class="file-card">
           <div class="file-card-top">
             <div class="file-icon">🗺️</div>
             <div>
-              <div class="file-name">iconMap.ts <span class="export-badge pub">public</span></div>
-              <div class="file-path">packages/design-system/src/icons/iconMap.ts</div>
+              <div class="file-name">icon-registry.ts <span class="export-badge int">internal</span></div>
+              <div class="file-path">packages/design-system/src/icons/icon-registry.ts</div>
             </div>
           </div>
           <div class="file-desc">
             <strong>图标注册中心</strong>，也是系统中<strong>唯一直接 import Phosphor</strong> 的文件。
-            维护语义化名称 → Phosphor 组件的映射表，新增图标只需在此处添加一行。
+            维护语义化名称 → Phosphor 组件的映射表，新增图标需同时更新 icon-dictionary.ts。
             按业务分类组织（导航 / 操作 / 数据 / 云服务 / 状态 / 用户 / 文件）。
           </div>
           <div class="fn-list">
             <div class="fn-item">
-              <span class="fn-name">iconMap</span>
-              <span class="fn-desc">const 对象：{ 'chart': ChartBar, 'agent': Robot, 'placeholder': Question, ... } 共 40+ 条目</span>
+              <span class="fn-name">iconRegistry</span>
+              <span class="fn-desc">const 对象：{ 'chart': ChartBar, 'agent': Robot, 'placeholder': Question, ... } 共 60+ 条目</span>
             </div>
             <div class="fn-item">
-              <span class="fn-name">IconName</span>
-              <span class="fn-desc">由 keyof typeof iconMap 自动推导，无需手动维护枚举</span>
+              <span class="fn-name">satisfies Record&lt;IconName, React.ComponentType&lt;any&gt;&gt;</span>
+              <span class="fn-desc">确保 registry 与 dictionary 严格一致，缺失或多余 key 都会 TS 报错</span>
             </div>
           </div>
         </div>
@@ -716,7 +734,7 @@
           </div>
           <div class="file-desc">
             <strong>唯一对外的渲染组件</strong>，业务层只需引用此组件。
-            负责尺寸映射、运行时校验、fallback降级，将 Phosphor 的实现细节完全封装在内部。
+            负责尺寸映射、表达式 fallback 降级，无运行时校验，永不抛出异常。
           </div>
           <div class="fn-list">
             <div class="fn-item">
@@ -724,12 +742,12 @@
               <span class="fn-desc">语义尺寸 → px 映射：{ xs:12, sm:16, md:20, lg:24, xl:32 }</span>
             </div>
             <div class="fn-item">
-              <span class="fn-name">isValidIconName()</span>
-              <span class="fn-desc">运行时类型守卫，检查传入 name 是否存在于 iconMap，用于动态数据场景兜底</span>
+              <span class="fn-name">Placeholder</span>
+              <span class="fn-desc">最终兜底占位组件，name 和 fallback 都无效时渲染</span>
             </div>
             <div class="fn-item">
               <span class="fn-name">Icon()</span>
-              <span class="fn-desc">主组件：解析 size → 查找 iconMap → 校验有效性 → 选 fallback → 渲染 Phosphor 组件</span>
+              <span class="fn-desc">主组件：解析 size → 表达式查找 iconRegistry → fallback → 渲染，无 if/else 分支</span>
             </div>
           </div>
         </div>
@@ -750,12 +768,8 @@
               <span class="fn-desc">渲染组件，业务层主要使用的入口</span>
             </div>
             <div class="fn-item">
-              <span class="fn-name">export iconMap</span>
-              <span class="fn-desc">映射表，供需要枚举所有图标的场景使用（如图标选择器 UI）</span>
-            </div>
-            <div class="fn-item">
               <span class="fn-name">export types</span>
-              <span class="fn-desc">IconName / IconProps / IconSize / IconWeight，供业务层做类型标注</span>
+              <span class="fn-desc">IconName / IconProps，供业务层做类型标注</span>
             </div>
           </div>
         </div>
@@ -788,8 +802,8 @@
           </div>
           <div class="file-desc">
             外部图标库，提供 1400+ SVG 图标 React 组件，支持 6种粗细变体。
-            <strong>仅被 iconMap.ts 直接引用</strong>，业务层完全不感知此库的存在。
-            未来替换图标库只需修改 iconMap.ts 一个文件。
+            <strong>仅被 icon-registry.ts 直接引用</strong>，业务层完全不感知此库的存在。
+            未来替换图标库只需修改 icon-registry.ts 一个文件。
           </div>
           <div class="fn-list">
             <div class="fn-item">
@@ -820,18 +834,18 @@
           <div class="flow-arrow-head"></div>
         </div>
 
-        <div class="flow-node ds-node">Icon.tsx<br><small style="opacity:0.7">解析 size · 校验 name</small></div>
+        <div class="flow-node ds-node">Icon.tsx<br><small style="opacity:0.7">解析 size · 表达式查找</small></div>
         <div class="flow-arrow">
           <div class="flow-arrow-line"></div>
-          <div class="flow-arrow-label">isValidIconName(name)</div>
+          <div class="flow-arrow-label">iconRegistry[name] ?? fallback ?? Placeholder</div>
           <div class="flow-arrow-line"></div>
           <div class="flow-arrow-head"></div>
         </div>
 
-        <div class="flow-node ds-node">iconMap.ts<br><small style="opacity:0.7">查找 Phosphor 组件</small></div>
+        <div class="flow-node ds-node">icon-registry.ts<br><small style="opacity:0.7">查找 Phosphor 组件</small></div>
         <div class="flow-arrow">
           <div class="flow-arrow-line"></div>
-          <div class="flow-arrow-label">iconMap["chart"] → ChartBar</div>
+          <div class="flow-arrow-label">iconRegistry["chart"] → ChartBar</div>
           <div class="flow-arrow-line"></div>
           <div class="flow-arrow-head"></div>
         </div>
@@ -861,7 +875,7 @@
 
         <div class="fb-step">
           <div class="fb-num warn">2</div>
-          <div class="fb-text"><strong>运行时（动态数据）</strong><br><code>isValidIconName()</code> 检测失败 → DEV 环境 <code>console.warn</code> 输出具体缺失名称</div>
+          <div class="fb-text"><strong>运行时（动态数据）</strong><br>若 name 不存在 → 使用表达式直接 fallback，无 <code>console.warn</code></div>
         </div>
 
         <div class="fb-step">
@@ -871,7 +885,7 @@
 
         <div class="fb-step">
           <div class="fb-num err">4</div>
-          <div class="fb-text"><strong>兜底保障</strong><br>fallback 也无效时 → 渲染 <code>"placeholder"</code>（? 图标），永不崩溃</div>
+          <div class="fb-text"><strong>兜底保障</strong><br>fallback 也无效时 → 渲染 <code>Placeholder</code> 占位组件，永不抛出异常</div>
         </div>
 
       </div>
@@ -890,7 +904,7 @@
         <div class="dep-row">
           <span class="dep-from">Icon.tsx</span>
           <span class="dep-arrow">→</span>
-          <span class="dep-to">iconMap.ts</span>
+          <span class="dep-to">icon-registry.ts</span>
           <span class="dep-note">查找组件</span>
         </div>
         <div class="dep-row">
@@ -900,10 +914,16 @@
           <span class="dep-note">类型引用</span>
         </div>
         <div class="dep-row">
-          <span class="dep-from">iconMap.ts</span>
+          <span class="dep-from">icon-registry.ts</span>
           <span class="dep-arrow">→</span>
           <span class="dep-to">Phosphor</span>
           <span class="dep-note">唯一外部依赖</span>
+        </div>
+        <div class="dep-row">
+          <span class="dep-from">icon-registry.ts</span>
+          <span class="dep-arrow">→</span>
+          <span class="dep-to">icon-dictionary.ts</span>
+          <span class="dep-note">类型约束</span>
         </div>
         <div class="dep-row">
           <span class="dep-from">index.ts</span>

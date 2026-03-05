@@ -3,152 +3,270 @@
 公用设计系统，适用于运营管理平台、业务服务系统、智能体服务平台。
 无业务逻辑，纯 UI 组件。
 
-## 架构概览
+---
 
-### 核心原则
-- 组件化：每个功能独立成组件
-- 原子化：从基础到复杂的层级结构
-- 一致性：统一的设计语言和规范
-- 可扩展性：支持主题定制和组件扩展
+## 一、架构原则
 
-### 技术选型
-- React 19 (Client Component)
-- TypeScript 5.9
-- TailwindCSS 4
-- Phosphor Icons (@phosphor-icons/react)
+### 1.1 核心原则
 
-## 目录结构
+* **高内聚 (High cohesion)** - 每个模块职责单一
+* **低耦合 (Low coupling)** - 模块间依赖最小化
+* **分层架构 (Layered architecture)** - 清晰的层级划分
+* **最小依赖 (Minimal dependencies)** - 仅引入必要的第三方库
+* **可替换外部库 (Replaceable external libraries)** - 外部依赖可替换
+
+### 1.2 四层逻辑架构
+
+| 层级 | 说明 |
+|------|------|
+| **Application Layer** | 消费应用（使用 Design System 的应用） |
+| **Component Layer** | DS 组件（Icon, Button 等） |
+| **Foundation Layer** | 基础层（tokens, styles, utilities） |
+| **External Layer** | 第三方集成（phosphor-react, next-themes 等） |
+
+### 1.3 依赖方向
+
+```
+Application → Design System → Shared
+Design System → Third-party libraries
+```
+
+### 1.4 Shared 包规则
+
+* Design System **可以** 从 @shared 导入
+* @shared **禁止** 依赖 Design System
+
+---
+
+## 二、技术选型
+
+### 2.1 核心技术栈
+
+* React 19 (Client Component)
+* TypeScript 5.9
+* TailwindCSS 4
+
+### 2.2 第三方库
+
+| 类别 | 库 | 说明 |
+|------|-----|------|
+| **Icons** | `@phosphor-icons/react` | 图标库 |
+| **Theme** | `next-themes` | 主题管理 |
+| **Components** | `shadcn/ui` | 组件思想 |
+| **Utilities** | `clsx` | 条件类名 |
+| | `tailwind-merge` | Tailwind 类名合并 |
+| **(可选)** | `class-variance-authority` | 变体系统（当前未使用） |
+
+---
+
+## 三、目录结构
 
 ```
 src/
-├── icon/              # 图标系统
-│   ├── Icon.tsx       # 主组件
-│   ├── iconMap.ts     # Phosphor 组件映射
-│   ├── tokens.ts      # 语义化 token 定义
-│   └── index.ts       # 导出文件
-├── button/            # 按钮组件
-│   ├── Button.tsx     # 主组件
-│   └── index.ts       # 导出文件
-├── layout/            # 布局组件
-│   └── Container.tsx
-├── theme/             # 主题配置
-│   └── colors.ts      # 颜色系统
-├── types/             # 类型定义
-│   └── common.ts
-└── index.ts           # 统一导出入口
+├── icons/                    # 图标系统
+│   ├── icon-dictionary.ts    # 图标白名单（数组形式）
+│   ├── icon-registry.ts      # 图标注册中心
+│   ├── Icon.tsx              # 图标组件
+│   ├── types.ts              # 图标类型定义
+│   └── index.ts              # 导出入口（逐个导出）
+├── components/               # 组件库
+│   └── button/               # Button 组件
+│       ├── Button.tsx        # Button 主组件
+│       ├── buttonStyles.ts   # Button 样式（简单对象映射）
+│       ├── types.ts          # Button 类型
+│       └── index.ts          # Button 导出
+├── theme/                    # 主题系统
+│   ├── ThemeProvider.tsx     # 主题提供者
+│   ├── useTheme.ts           # 主题 Hook
+│   ├── theme.types.ts        # 主题类型
+│   └── index.ts              # 主题导出
+├── tokens/                   # 设计 Tokens
+│   ├── colors.ts             # 颜色 Tokens
+│   ├── spacing.ts            # 间距 Tokens
+│   ├── radius.ts             # 圆角 Tokens
+│   ├── shadow.ts             # 阴影 Tokens
+│   ├── typography.ts         # 排版 Tokens
+│   └── index.ts              # Tokens 导出
+├── styles/                   # 全局样式
+│   ├── globals.css           # 全局样式
+│   ├── variables.css         # CSS 变量
+│   └── tailwind.css          # Tailwind 基础
+├── hooks/                    # 自定义 Hooks（内部使用，不导出）
+│   └── useBreakpoint.ts      # 断点 Hook
+├── utils/                    # 工具函数（内部使用，不导出）
+│   └── cn.ts                 # 类名合并工具
+└── index.ts                  # 统一导出入口
 ```
 
-## 核心组件架构
+---
 
-### 1. 图标组件 (Icon)
+## 四、核心模块架构
 
-**功能**：统一的图标渲染入口，封装 Phosphor Icons。
+### 4.1 图标系统 (Icons)
 
-**设计要点**：
-- 支持多种权重：thin/light/regular/bold/fill/duotone
-- 语义化命名，与业务解耦
-- 统一的 API 接口，简化使用
-- 类型安全，只能使用预定义的图标名称
-- 支持响应式大小 (sm/md/lg/xl) 或自定义数值
+**职责：**
+- 图标白名单管理（dictionary）
+- 图标实现注册（registry）
+- 图标组件入口（Icon）
+- 类型定义（types）
 
-**实现**：`src/icon/Icon.tsx`
+**设计特点（与规划差异）：**
 
-### 2. 图标 Token 系统
+| 项 | 规划 | 实际实现 | 决策理由 |
+|----|------|---------|---------|
+| icon-dictionary | 对象 `{ key: value }` | 数组 `['key']` | 更简洁，新增更方便 |
+| IconName 来源 | `keyof typeof obj` | `(typeof arr)[number]` | 配合数组形式 |
+| index.ts 导出 | `export *` | 逐个导出 | 更安全，API 更可控 |
+| types.ts 类型 | 3 个类型 | 6 个类型（含 IconWeight, IconSize） | 更实用，用户需要 |
 
-**功能**：定义语义化图标 token 系统
+**文件说明：**
 
-**设计原则**：
-- 图标仅表达「业务语义」，不表达样式或情绪
-- 内容层只能使用此处定义的 token
-- UI 层负责 token → 具体 icon 的转换
-- 严格的扩展规则：只允许添加可复用的 token
+- **icon-dictionary.ts** - 数组形式的图标白名单，带业务分组注释
+- **icon-registry.ts** - 唯一直接导入 @phosphor-icons/react 的文件
+- **Icon.tsx** - 使用 registry 渲染，空值合并操作符，无 if 校验
+- **types.ts** - 完整类型定义（IconName, IconProps, IconWeight, IconSize, IconSizeMap）
+- **index.ts** - 显式逐个导出，保证 API 稳定
 
-**分类**：
-- 通用交互：navigation, action, status
-- 云服务/智能体专属：platform, data
-- 用户/组织：user
-- 通讯/联系：communication
-- 时间/日历：time
-- 地图/位置：location
-- 主题/显示：theme
+---
 
-**实现**：`src/icon/tokens.ts`
+### 4.2 Token 系统 (Tokens)
 
-### 3. 图标映射系统
+**职责：** 定义视觉设计基础
 
-**功能**：将语义化名称映射到 Phosphor 图标组件
+**要求：**
+- tokens 必须是 readonly
+- tokens 只包含设计值
+- tokens 不包含逻辑
+- 通过 tokens/index.ts 统一导出
 
-**设计要点**：
-- 唯一直接依赖 Phosphor Icons 的地方
-- 统一管理图标映射关系
-- 支持扩展和维护
+**Token 类型：**
+- `colors.ts` - 颜色系统（brand, gray）
+- `spacing.ts` - 间距系统（xs, sm, md, lg, xl, 2xl）
+- `radius.ts` - 圆角系统（sm, md, lg, xl, full）
+- `shadow.ts` - 阴影系统（sm, md, lg）
+- `typography.ts` - 排版系统（fontFamily, fontSize, fontWeight）
 
-**实现**：`src/icon/iconMap.ts`
+---
 
-### 4. 按钮组件 (Button)
+### 4.3 样式系统 (Styles)
 
-**功能**：基础按钮组件，支持多种样式变体。
+**职责：**
+- CSS Reset
+- CSS Variables
+- 全局基础样式
+- Tailwind 基础配置
 
-**设计要点**：
-- 内置 5 种样式变体：primary/secondary/danger/success/outline
-- 支持图标配置
-- 响应式设计
-- 状态管理（disabled, loading）
+**文件：**
+- `globals.css` - 引入 variables.css 和 tailwind.css，全局重置
+- `variables.css` - CSS 变量定义（--vx-* 前缀）
+- `tailwind.css` - Tailwind 指令（@tailwind base, components, utilities）
 
-**实现**：`src/button/Button.tsx`
+---
 
-### 5. 布局组件 (Container)
+### 4.4 主题系统 (Theme)
 
-**功能**：基础布局容器组件。
+**职责：** 管理 light / dark / system 主题
 
-**实现**：`src/layout/Container.tsx`
+**实现：**
+- `ThemeProvider.tsx` - 封装 next-themes ThemeProvider
+- `useTheme.ts` - 重新导出 next-themes useTheme
+- `theme.types.ts` - Theme 类型定义
+- `index.ts` - 统一导出
 
-### 6. 主题系统
+---
 
-**功能**：统一的颜色系统管理。
+### 4.5 组件系统 (Components)
 
-**设计要点**：
-- 语义化颜色命名
-- 支持主题切换（深色/浅色）
-- 统一的配色方案
+**架构思想：**
+```
+DS Component
+    ↓
+shadcn/ui 思想
+    ↓
+Radix primitive（未来需要时接入）
+```
 
-**实现**：`src/theme/colors.ts`
+**当前阶段：** 不直接依赖 shadcn CLI 或 Radix，只实现 DS 层 API 与样式结构
 
-## 架构特点
+**Button 文件结构：**
+- `Button.tsx` - forwardRef，使用 cn 合并 class，默认 variant="primary"，默认 size="md"
+- `buttonStyles.ts` - buttonBase + buttonVariants 对象（不使用 CVA）
+- `types.ts` - ButtonVariant, ButtonSize, ButtonProps
+- `index.ts` - 统一导出
 
-### 1. 无业务逻辑
+**Button 变体：** primary / secondary / outline / ghost
+
+**Button 尺寸：** sm / md / lg
+
+---
+
+### 4.6 工具函数 (Utils)
+
+**cn() 工具：**
+- 组合 clsx 和 tailwind-merge
+- 解决 Tailwind 类名冲突
+- 条件类名支持
+
+---
+
+## 五、公共 API
+
+**统一入口：** `src/index.ts`
+
+**导出内容：**
+- icons
+- components
+- theme
+- tokens
+
+---
+
+## 六、代码质量规则
+
+* 完整 TypeScript 支持
+* 无循环依赖
+* 单个文件 < 200 行
+* 清晰的命名规范
+* Design System 内无业务逻辑
+* 所有模块必须有 index.ts 导出
+
+---
+
+## 七、架构特点
+
+### 7.1 无业务逻辑
 - 纯 UI 组件库
 - 不包含业务逻辑
 - 可独立于业务系统使用
 
-### 2. 原子化设计
-- 基础组件 (Atoms)：Icon, Button
-- 组合组件 (Molecules)：基于基础组件组合
-- 容器组件 (Organisms)：页面级组件
+### 7.2 分层架构
+- **Foundation Layer** - tokens, styles, utils
+- **Component Layer** - Icon, Button 等
+- 严格的依赖方向
 
-### 3. 严格的导出控制
-- 所有组件通过 `src/index.ts` 统一导出
-- 禁止直接导入内部文件
-- 确保 API 一致性
+### 7.3 可替换外部库
+- Icons: @phosphor-icons/react → 可替换
+- Theme: next-themes → 可替换
+- 通过 registry/dictionary 模式隔离
 
-### 4. TypeScript 支持
-- 完整的类型定义
-- 严格的类型检查
-- 类型安全的组件 API
+---
 
-## 使用规范
+## 八、使用规范
 
-### 组件导入
+### 8.1 组件导入
+
 ```typescript
 // 正确：统一入口导入
 import { Icon, Button } from '@vxture/design-system';
 
 // 错误：直接导入内部模块
-import { Icon } from '@vxture/design-system/src/icon/Icon';
+import { Icon } from '@vxture/design-system/src/icons/Icon';
 ```
 
-### 图标使用
-**严格禁止直接使用 Phosphor Icons**：
+### 8.2 图标使用
+
+**严格禁止直接使用 Phosphor Icons：**
+
 ```typescript
 // 正确
 <Icon name="user" size="lg" weight="bold" />
@@ -158,39 +276,31 @@ import { UserIcon } from '@phosphor-icons/react';
 <UserIcon size={24} />
 ```
 
-## 维护说明
+---
 
-### 添加新组件
-1. 在对应目录创建新组件文件
-2. 定义 TypeScript 类型
-3. 实现组件逻辑
-4. 在 `src/index.ts` 中导出
-5. 更新 README.md 文档
+## 九、维护说明
 
-### 添加新图标
-1. 在 `src/icon/tokens.ts` 中添加到对应的语义分类
-2. 在 `src/icon/iconMap.ts` 中添加映射关系
-3. 更新相关文档
+### 9.1 添加新组件
 
-### 更新主题
-修改 `src/theme/colors.ts` 文件。
+1. 在 `src/components/` 下创建组件目录
+2. 定义 TypeScript 类型（types.ts）
+3. 实现组件样式（buttonStyles.ts 模式）
+4. 实现组件逻辑（Button.tsx 模式）
+5. 在 `index.ts` 中导出
+6. 更新文档
 
-## 开发规范
+### 9.2 添加新图标
 
-### 文件命名
-- 组件名：PascalCase (UserLoginForm.tsx)
-- 目录名：kebab-case (user-login-form/)
-- 类型文件：*.ts
-- 组件文件：*.tsx
+1. 在 `src/icons/icon-dictionary.ts` 中添加到对应业务分组
+2. 在 `src/icons/icon-registry.ts` 中添加 import 和映射
+3. 确保两个文件分组一致
 
-### 编码规范
-- 使用 Client Component：`'use client'`
-- 严格类型定义，禁止使用 any
-- 保持组件单一职责
-- 使用 TailwindCSS 4 进行样式管理
+### 9.3 更新 Token
+
+修改 `src/tokens/` 对应文件。
 
 ---
 
 **最后更新：** 2026-03-05
 **维护者：** vxture team
-**文档版本：** 1.1.0
+**文档版本：** 2.0.0

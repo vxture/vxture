@@ -14,7 +14,8 @@
       "Bash(curl -I http://localhost:3000)",
       "Bash(curl -s http://localhost:3000)",
       "Bash(pnpm run type-check)",
-      "Bash(pnpm --filter design-system build)"
+      "Bash(pnpm --filter design-system build)",
+      "Bash(pnpm add clsx tailwind-merge)"
     ]
   }
 }

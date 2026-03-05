@@ -1,9 +1,28 @@
+/**
+ * Icon.tsx - 图标组件
+ * @package @vxture/design-system
+ *
+ * 功能：提供统一的图标渲染组件，支持尺寸、粗细、颜色等自定义配置
+ *
+ * @copyright Vxture Team
+ * @license MIT
+ * @layer Presentation
+ * @category Components - Common
+ */
+
 'use client';
 
-import { iconMap } from './iconMap';
-import type { IconProps, IconWeight } from './icon.types';
+import { iconRegistry } from './icon-registry';
+import type { IconProps, IconSize } from './types';
 
-const sizeMap = {
+// ============================================================================
+// 常量定义
+// ============================================================================
+
+/**
+ * 语义化尺寸到像素值的映射表
+ */
+const sizeMap: Record<IconSize, number> = {
   xs: 12,
   sm: 16,
   md: 20,
@@ -11,24 +30,60 @@ const sizeMap = {
   xl: 32,
 };
 
+/**
+ * 占位符组件 - 当图标名称不匹配时使用
+ */
+const Placeholder = () => <span style={{ width: 16, height: 16, display: 'inline-block' }} />;
+
+// ============================================================================
+// 组件实现
+// ============================================================================
+
+/**
+ * 图标组件
+ *
+ * 提供统一的图标渲染接口，通过名称从图标注册表中获取对应的图标组件
+ * 支持尺寸、粗细、颜色等自定义配置
+ *
+ * @param name - 图标名称（必填）
+ * @param size - 图标尺寸，默认 'md'
+ * @param weight - 图标粗细，默认 'regular'
+ * @param className - 自定义 CSS 类名
+ * @param fallback - 降级图标名称
+ * @param color - 图标颜色
+ * @param rest - 其他透传属性
+ * @example
+ * ```tsx
+ * <Icon name="home" size="lg" />
+ * <Icon name="settings" weight="fill" className="text-blue-500" />
+ * ```
+ */
 export const Icon = ({
   name,
   size = 'md',
   weight = 'regular',
   className = '',
-  fallback = 'placeholder',
-}: Omit<IconProps, 'name'> & { name: string }) => {
-  // 使用 iconMap 作为唯一 truth source，实现双 fallback 逻辑
-  const Component = iconMap[name as keyof typeof iconMap] ?? iconMap[fallback] ?? iconMap['placeholder'];
+  fallback,
+  color,
+  ...rest
+}: IconProps) => {
+  // 获取对应的图标组件，支持降级
+  const Component =
+    iconRegistry[name] ??
+    (fallback ? iconRegistry[fallback] : undefined) ??
+    Placeholder;
 
+  // 解析尺寸值
   const resolvedSize = typeof size === 'number' ? size : sizeMap[size] ?? 20;
 
   return (
     <Component
       weight={weight}
       size={resolvedSize}
+      color={color}
       className={`inline-flex shrink-0 ${className}`}
       aria-hidden
+      {...rest}
     />
   );
 };
