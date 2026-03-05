@@ -10,10 +10,10 @@
  * @category Components - Common
  */
 
-'use client';
+"use client";
 
-import { iconRegistry } from './icon-registry';
-import type { IconProps, IconSize } from './types';
+import { iconRegistry } from "./icon-registry";
+import type { IconProps, IconSize } from "./types";
 
 // ============================================================================
 // 常量定义
@@ -33,7 +33,9 @@ const sizeMap: Record<IconSize, number> = {
 /**
  * 占位符组件 - 当图标名称不匹配时使用
  */
-const Placeholder = () => <span style={{ width: 16, height: 16, display: 'inline-block' }} />;
+const Placeholder = () => (
+  <span style={{ width: 16, height: 16, display: "inline-block" }} />
+);
 
 // ============================================================================
 // 组件实现
@@ -60,9 +62,9 @@ const Placeholder = () => <span style={{ width: 16, height: 16, display: 'inline
  */
 export const Icon = ({
   name,
-  size = 'md',
-  weight = 'regular',
-  className = '',
+  size = "md",
+  weight = "regular",
+  className = "",
   fallback,
   color,
   ...rest
@@ -74,7 +76,7 @@ export const Icon = ({
     Placeholder;
 
   // 解析尺寸值
-  const resolvedSize = typeof size === 'number' ? size : sizeMap[size] ?? 20;
+  const resolvedSize = typeof size === "number" ? size : (sizeMap[size] ?? 20);
 
   return (
     <Component

@@ -8,10 +8,10 @@
  * @category Components - Navigation
  */
 
-import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
-import { cn } from '../../utils/cn';
-import { Icon } from '../../icons';
+import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
+import { cn } from "../../utils/cn";
+import { Icon } from "../../icons";
 
 export interface BreadcrumbProps extends React.HTMLAttributes<HTMLElement> {}
 
@@ -32,7 +32,7 @@ export interface BreadcrumbEllipsisProps extends React.HTMLAttributes<HTMLSpanEl
 const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
   function Breadcrumb({ ...props }, ref) {
     return <nav ref={ref} aria-label="breadcrumb" {...props} />;
-  }
+  },
 );
 
 const BreadcrumbList = React.forwardRef<HTMLOListElement, BreadcrumbListProps>(
@@ -41,13 +41,13 @@ const BreadcrumbList = React.forwardRef<HTMLOListElement, BreadcrumbListProps>(
       <ol
         ref={ref}
         className={cn(
-          'flex flex-wrap items-center gap-1.5 break-words text-sm text-gray-500 sm:gap-2.5',
-          className
+          "flex flex-wrap items-center gap-1.5 break-words text-sm text-gray-500 sm:gap-2.5",
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProps>(
@@ -55,24 +55,24 @@ const BreadcrumbItem = React.forwardRef<HTMLLIElement, BreadcrumbItemProps>(
     return (
       <li
         ref={ref}
-        className={cn('inline-flex items-center gap-1.5', className)}
+        className={cn("inline-flex items-center gap-1.5", className)}
         {...props}
       />
     );
-  }
+  },
 );
 
 const BreadcrumbLink = React.forwardRef<HTMLAnchorElement, BreadcrumbLinkProps>(
   function BreadcrumbLink({ asChild, className, ...props }, ref) {
-    const Comp = asChild ? Slot : 'a';
+    const Comp = asChild ? Slot : "a";
     return (
       <Comp
         ref={ref}
-        className={cn('transition-colors hover:text-gray-900', className)}
+        className={cn("transition-colors hover:text-gray-900", className)}
         {...props}
       />
     );
-  }
+  },
 );
 
 const BreadcrumbPage = React.forwardRef<HTMLSpanElement, BreadcrumbPageProps>(
@@ -83,53 +83,55 @@ const BreadcrumbPage = React.forwardRef<HTMLSpanElement, BreadcrumbPageProps>(
         role="link"
         aria-disabled="true"
         aria-current="page"
-        className={cn('font-normal text-gray-900', className)}
+        className={cn("font-normal text-gray-900", className)}
         {...props}
       />
     );
-  }
+  },
 );
 
-const BreadcrumbSeparator = React.forwardRef<HTMLSpanElement, BreadcrumbSeparatorProps>(
-  function BreadcrumbSeparator({ children, className, ...props }, ref) {
-    return (
-      <span
-        ref={ref}
-        role="presentation"
-        aria-hidden="true"
-        className={cn('[&>svg]:size-3.5', className)}
-        {...props}
-      >
-        {children ?? <Icon name="chevron-right" size={16} />}
-      </span>
-    );
-  }
-);
+const BreadcrumbSeparator = React.forwardRef<
+  HTMLSpanElement,
+  BreadcrumbSeparatorProps
+>(function BreadcrumbSeparator({ children, className, ...props }, ref) {
+  return (
+    <span
+      ref={ref}
+      role="presentation"
+      aria-hidden="true"
+      className={cn("[&>svg]:size-3.5", className)}
+      {...props}
+    >
+      {children ?? <Icon name="chevron-right" size={16} />}
+    </span>
+  );
+});
 
-const BreadcrumbEllipsis = React.forwardRef<HTMLSpanElement, BreadcrumbEllipsisProps>(
-  function BreadcrumbEllipsis({ className, ...props }, ref) {
-    return (
-      <span
-        ref={ref}
-        role="presentation"
-        aria-hidden="true"
-        className={cn('flex h-9 w-9 items-center justify-center', className)}
-        {...props}
-      >
-        <Icon name="placeholder" size={16} />
-        <span className="sr-only">More</span>
-      </span>
-    );
-  }
-);
+const BreadcrumbEllipsis = React.forwardRef<
+  HTMLSpanElement,
+  BreadcrumbEllipsisProps
+>(function BreadcrumbEllipsis({ className, ...props }, ref) {
+  return (
+    <span
+      ref={ref}
+      role="presentation"
+      aria-hidden="true"
+      className={cn("flex h-9 w-9 items-center justify-center", className)}
+      {...props}
+    >
+      <Icon name="placeholder" size={16} />
+      <span className="sr-only">More</span>
+    </span>
+  );
+});
 
-Breadcrumb.displayName = 'Breadcrumb';
-BreadcrumbList.displayName = 'BreadcrumbList';
-BreadcrumbItem.displayName = 'BreadcrumbItem';
-BreadcrumbLink.displayName = 'BreadcrumbLink';
-BreadcrumbPage.displayName = 'BreadcrumbPage';
-BreadcrumbSeparator.displayName = 'BreadcrumbSeparator';
-BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis';
+Breadcrumb.displayName = "Breadcrumb";
+BreadcrumbList.displayName = "BreadcrumbList";
+BreadcrumbItem.displayName = "BreadcrumbItem";
+BreadcrumbLink.displayName = "BreadcrumbLink";
+BreadcrumbPage.displayName = "BreadcrumbPage";
+BreadcrumbSeparator.displayName = "BreadcrumbSeparator";
+BreadcrumbEllipsis.displayName = "BreadcrumbEllipsis";
 
 export {
   Breadcrumb,

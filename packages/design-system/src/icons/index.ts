@@ -10,6 +10,6 @@
  * @category Index
  */
 
-export { Icon } from './Icon';
-export type { IconProps } from './types';
-export type { IconName } from './icon-dictionary';
+export { Icon } from "./Icon";
+export type { IconProps } from "./types";
+export type { IconName } from "./icon-dictionary";

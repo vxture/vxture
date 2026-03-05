@@ -10,7 +10,7 @@
  * @category Hooks
  */
 
-import * as React from 'react';
+import * as React from "react";
 
 /**
  * 断点名称类型
@@ -22,7 +22,7 @@ import * as React from 'react';
  * - xl: >= 1280px
  * - 2xl: >= 1536px
  */
-export type Breakpoint = 'base' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+export type Breakpoint = "base" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 /**
  * 断点配置（与 TailwindCSS 4 默认断点一致）
@@ -32,7 +32,7 @@ const breakpoints = {
   md: 768,
   lg: 1024,
   xl: 1280,
-  '2xl': 1536,
+  "2xl": 1536,
 } as const;
 
 /**
@@ -42,12 +42,12 @@ const breakpoints = {
  * @returns 断点名称
  */
 function getBreakpoint(width: number): Breakpoint {
-  if (width >= breakpoints['2xl']) return '2xl';
-  if (width >= breakpoints.xl) return 'xl';
-  if (width >= breakpoints.lg) return 'lg';
-  if (width >= breakpoints.md) return 'md';
-  if (width >= breakpoints.sm) return 'sm';
-  return 'base';
+  if (width >= breakpoints["2xl"]) return "2xl";
+  if (width >= breakpoints.xl) return "xl";
+  if (width >= breakpoints.lg) return "lg";
+  if (width >= breakpoints.md) return "md";
+  if (width >= breakpoints.sm) return "sm";
+  return "base";
 }
 
 /**
@@ -71,7 +71,8 @@ export interface UseBreakpointReturn {
 /**
  * 检查是否在浏览器环境
  */
-const hasWindow = typeof globalThis !== 'undefined' && globalThis.window !== undefined;
+const hasWindow =
+  typeof globalThis !== "undefined" && globalThis.window !== undefined;
 
 /**
  * 断点检测 Hook
@@ -96,7 +97,7 @@ const hasWindow = typeof globalThis !== 'undefined' && globalThis.window !== und
 export function useBreakpoint(): UseBreakpointReturn {
   // 初始化宽度，SSR 环境下返回 0
   const [width, setWidth] = React.useState<number>(
-    hasWindow ? globalThis.window.innerWidth : 0
+    hasWindow ? globalThis.window.innerWidth : 0,
   );
 
   React.useEffect(() => {
@@ -107,10 +108,10 @@ export function useBreakpoint(): UseBreakpointReturn {
     const handleResize = () => setWidth(globalThis.window.innerWidth);
 
     // 添加监听
-    globalThis.window.addEventListener('resize', handleResize);
+    globalThis.window.addEventListener("resize", handleResize);
 
     // 组件卸载时移除监听
-    return () => globalThis.window.removeEventListener('resize', handleResize);
+    return () => globalThis.window.removeEventListener("resize", handleResize);
   }, []);
 
   // 计算当前断点
@@ -122,6 +123,6 @@ export function useBreakpoint(): UseBreakpointReturn {
     isMd: width >= breakpoints.md,
     isLg: width >= breakpoints.lg,
     isXl: width >= breakpoints.xl,
-    is2xl: width >= breakpoints['2xl'],
+    is2xl: width >= breakpoints["2xl"],
   };
 }

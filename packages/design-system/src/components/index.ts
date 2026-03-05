@@ -2,10 +2,12 @@
  * components/index.ts - 组件导出入口
  * @package @vxture/design-system
  *
+ * 功能：统一导出所有 UI 组件，提供组件系统的入口
+ *
  * @copyright Vxture Team
  * @license MIT
  * @layer Shared
  * @category Index
  */
 
-export * from './ui';
+export * from "./ui";

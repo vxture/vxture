@@ -8,28 +8,33 @@
  * @category Components - Display
  */
 
-import * as React from 'react';
-import * as SeparatorPrimitive from '@radix-ui/react-separator';
-import { cn } from '../../utils/cn';
+import * as React from "react";
+import * as SeparatorPrimitive from "@radix-ui/react-separator";
+import { cn } from "../../utils/cn";
 
-export interface SeparatorProps extends React.ComponentPropsWithoutRef<typeof SeparatorPrimitive.Root> {}
+export interface SeparatorProps extends React.ComponentPropsWithoutRef<
+  typeof SeparatorPrimitive.Root
+> {}
 
 export const Separator = React.forwardRef<HTMLDivElement, SeparatorProps>(
-  function Separator({ className, orientation = 'horizontal', decorative = true, ...props }, ref) {
+  function Separator(
+    { className, orientation = "horizontal", decorative = true, ...props },
+    ref,
+  ) {
     return (
       <SeparatorPrimitive.Root
         ref={ref}
         decorative={decorative}
         orientation={orientation}
         className={cn(
-          'shrink-0 bg-gray-200',
-          orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]',
-          className
+          "shrink-0 bg-gray-200",
+          orientation === "horizontal" ? "h-[1px] w-full" : "h-full w-[1px]",
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 Separator.displayName = SeparatorPrimitive.Root.displayName;

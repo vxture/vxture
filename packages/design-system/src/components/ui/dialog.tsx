@@ -8,30 +8,46 @@
  * @category Components - Floating
  */
 
-import * as React from 'react';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { cn } from '../../utils/cn';
-import { Icon } from '../../icons';
+import * as React from "react";
+import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "../../utils/cn";
+import { Icon } from "../../icons";
 
-export interface DialogProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Root> {}
+export interface DialogProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Root
+> {}
 
-export interface DialogTriggerProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Trigger> {}
+export interface DialogTriggerProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Trigger
+> {}
 
-export interface DialogPortalProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Portal> {}
+export interface DialogPortalProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Portal
+> {}
 
-export interface DialogOverlayProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay> {}
+export interface DialogOverlayProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Overlay
+> {}
 
-export interface DialogContentProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> {}
+export interface DialogContentProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Content
+> {}
 
 export interface DialogHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export interface DialogTitleProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title> {}
+export interface DialogTitleProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Title
+> {}
 
-export interface DialogDescriptionProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description> {}
+export interface DialogDescriptionProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Description
+> {}
 
-export interface DialogCloseProps extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Close> {}
+export interface DialogCloseProps extends React.ComponentPropsWithoutRef<
+  typeof DialogPrimitive.Close
+> {}
 
 const Dialog = DialogPrimitive.Root;
 
@@ -47,13 +63,13 @@ const DialogOverlay = React.forwardRef<HTMLDivElement, DialogOverlayProps>(
       <DialogPrimitive.Overlay
         ref={ref}
         className={cn(
-          'fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
-          className
+          "fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
@@ -64,8 +80,8 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
         <DialogPrimitive.Content
           ref={ref}
           className={cn(
-            'fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-gray-200 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg',
-            className
+            "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-gray-200 bg-white p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+            className,
           )}
           {...props}
         >
@@ -77,14 +93,14 @@ const DialogContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
         </DialogPrimitive.Content>
       </DialogPortal>
     );
-  }
+  },
 );
 
 const DialogHeader = ({ className, ...props }: DialogHeaderProps) => (
   <div
     className={cn(
-      'flex flex-col space-y-1.5 text-center sm:text-left',
-      className
+      "flex flex-col space-y-1.5 text-center sm:text-left",
+      className,
     )}
     {...props}
   />
@@ -93,8 +109,8 @@ const DialogHeader = ({ className, ...props }: DialogHeaderProps) => (
 const DialogFooter = ({ className, ...props }: DialogFooterProps) => (
   <div
     className={cn(
-      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
-      className
+      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      className,
     )}
     {...props}
   />
@@ -106,31 +122,32 @@ const DialogTitle = React.forwardRef<HTMLHeadingElement, DialogTitleProps>(
       <DialogPrimitive.Title
         ref={ref}
         className={cn(
-          'text-lg font-semibold leading-none tracking-tight',
-          className
+          "text-lg font-semibold leading-none tracking-tight",
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
-const DialogDescription = React.forwardRef<HTMLParagraphElement, DialogDescriptionProps>(
-  function DialogDescription({ className, ...props }, ref) {
-    return (
-      <DialogPrimitive.Description
-        ref={ref}
-        className={cn('text-sm text-gray-500', className)}
-        {...props}
-      />
-    );
-  }
-);
+const DialogDescription = React.forwardRef<
+  HTMLParagraphElement,
+  DialogDescriptionProps
+>(function DialogDescription({ className, ...props }, ref) {
+  return (
+    <DialogPrimitive.Description
+      ref={ref}
+      className={cn("text-sm text-gray-500", className)}
+      {...props}
+    />
+  );
+});
 
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 DialogContent.displayName = DialogPrimitive.Content.displayName;
-DialogHeader.displayName = 'DialogHeader';
-DialogFooter.displayName = 'DialogFooter';
+DialogHeader.displayName = "DialogHeader";
+DialogFooter.displayName = "DialogFooter";
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 

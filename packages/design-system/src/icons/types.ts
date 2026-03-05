@@ -10,7 +10,7 @@
  * @category Types
  */
 
-import type { IconName as _IconName } from './icon-dictionary';
+import type { IconName as _IconName } from "./icon-dictionary";
 
 // ============================================================================
 // Phosphor 变体类型
@@ -27,12 +27,12 @@ import type { IconName as _IconName } from './icon-dictionary';
  * - duotone   双色，云服务/智能体状态展示
  */
 export type IconWeight =
-  | 'thin'
-  | 'light'
-  | 'regular'
-  | 'bold'
-  | 'fill'
-  | 'duotone';
+  | "thin"
+  | "light"
+  | "regular"
+  | "bold"
+  | "fill"
+  | "duotone";
 
 // ============================================================================
 // 尺寸类型
@@ -49,7 +49,7 @@ export type IconWeight =
  *
  * 也接受 number 直接传像素值，用于特殊场景
  */
-export type IconSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type IconSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 // ============================================================================
 // 组件 Props

@@ -8,26 +8,42 @@
  * @category Components - Form
  */
 
-import * as React from 'react';
-import * as SelectPrimitive from '@radix-ui/react-select';
-import { cn } from '../../utils/cn';
-import { Icon } from '../../icons';
+import * as React from "react";
+import * as SelectPrimitive from "@radix-ui/react-select";
+import { cn } from "../../utils/cn";
+import { Icon } from "../../icons";
 
-export interface SelectProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Root> {}
+export interface SelectProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Root
+> {}
 
-export interface SelectValueProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Value> {}
+export interface SelectValueProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Value
+> {}
 
-export interface SelectTriggerProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {}
+export interface SelectTriggerProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Trigger
+> {}
 
-export interface SelectContentProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content> {}
+export interface SelectContentProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Content
+> {}
 
-export interface SelectLabelProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label> {}
+export interface SelectLabelProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Label
+> {}
 
-export interface SelectItemProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> {}
+export interface SelectItemProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Item
+> {}
 
-export interface SelectSeparatorProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator> {}
+export interface SelectSeparatorProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Separator
+> {}
 
-export interface SelectGroupProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Group> {}
+export interface SelectGroupProps extends React.ComponentPropsWithoutRef<
+  typeof SelectPrimitive.Group
+> {}
 
 const Select = SelectPrimitive.Root;
 
@@ -39,8 +55,8 @@ const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
       <SelectPrimitive.Trigger
         ref={ref}
         className={cn(
-          'flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1',
-          className
+          "flex h-10 w-full items-center justify-between rounded-md border border-gray-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+          className,
         )}
         {...props}
       >
@@ -50,29 +66,32 @@ const SelectTrigger = React.forwardRef<HTMLButtonElement, SelectTriggerProps>(
         </SelectPrimitive.Icon>
       </SelectPrimitive.Trigger>
     );
-  }
+  },
 );
 
 const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
-  function SelectContent({ className, children, position = 'popper', ...props }, ref) {
+  function SelectContent(
+    { className, children, position = "popper", ...props },
+    ref,
+  ) {
     return (
       <SelectPrimitive.Portal>
         <SelectPrimitive.Content
           ref={ref}
           className={cn(
-            'relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 bg-white text-gray-950 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
-            position === 'popper' &&
-              'data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1',
-            className
+            "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border border-gray-200 bg-white text-gray-950 shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+            position === "popper" &&
+              "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
+            className,
           )}
           position={position}
           {...props}
         >
           <SelectPrimitive.Viewport
             className={cn(
-              'p-1',
-              position === 'popper' &&
-                'h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]'
+              "p-1",
+              position === "popper" &&
+                "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)]",
             )}
           >
             {children}
@@ -80,7 +99,7 @@ const SelectContent = React.forwardRef<HTMLDivElement, SelectContentProps>(
         </SelectPrimitive.Content>
       </SelectPrimitive.Portal>
     );
-  }
+  },
 );
 
 const SelectLabel = React.forwardRef<HTMLDivElement, SelectLabelProps>(
@@ -88,11 +107,11 @@ const SelectLabel = React.forwardRef<HTMLDivElement, SelectLabelProps>(
     return (
       <SelectPrimitive.Label
         ref={ref}
-        className={cn('py-1.5 pl-8 pr-2 text-sm font-semibold', className)}
+        className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)}
         {...props}
       />
     );
-  }
+  },
 );
 
 const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
@@ -101,8 +120,8 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
       <SelectPrimitive.Item
         ref={ref}
         className={cn(
-          'relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 focus:text-gray-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
-          className
+          "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none focus:bg-gray-100 focus:text-gray-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+          className,
         )}
         {...props}
       >
@@ -114,7 +133,7 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
       </SelectPrimitive.Item>
     );
-  }
+  },
 );
 
 const SelectSeparator = React.forwardRef<HTMLDivElement, SelectSeparatorProps>(
@@ -122,11 +141,11 @@ const SelectSeparator = React.forwardRef<HTMLDivElement, SelectSeparatorProps>(
     return (
       <SelectPrimitive.Separator
         ref={ref}
-        className={cn('-mx-1 my-1 h-px bg-gray-200', className)}
+        className={cn("-mx-1 my-1 h-px bg-gray-200", className)}
         {...props}
       />
     );
-  }
+  },
 );
 
 const SelectGroup = SelectPrimitive.Group;

@@ -17,4 +17,4 @@
  * - dark: 暗色主题
  * - system: 跟随系统主题
  */
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = "light" | "dark" | "system";

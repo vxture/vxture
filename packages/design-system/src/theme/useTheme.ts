@@ -10,4 +10,4 @@
  * @category Hooks
  */
 
-export { useTheme } from 'next-themes';
+export { useTheme } from "next-themes";

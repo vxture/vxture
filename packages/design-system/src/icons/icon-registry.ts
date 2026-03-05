@@ -117,10 +117,9 @@ import {
   // 系统保留（勿删）
   // ==========================================================================
   QuestionIcon,
+} from "@phosphor-icons/react";
 
-} from '@phosphor-icons/react';
-
-import type { IconName } from './icon-dictionary';
+import type { IconName } from "./icon-dictionary";
 
 // ============================================================================
 // 图标注册表
@@ -137,15 +136,15 @@ export const iconRegistry = {
   // 通用交互 - 导航
   // ==========================================================================
   home: HouseIcon,
-  'arrow-left': ArrowLeftIcon,
-  'arrow-right': ArrowRightIcon,
-  'arrow-up': ArrowUpIcon,
-  'arrow-down': ArrowDownIcon,
-  'arrow-long-right': ArrowLongRightIcon,
-  'chevron-left': CaretLeftIcon,
-  'chevron-right': CaretRightIcon,
-  'chevron-up': CaretUpIcon,
-  'chevron-down': CaretDownIcon,
+  "arrow-left": ArrowLeftIcon,
+  "arrow-right": ArrowRightIcon,
+  "arrow-up": ArrowUpIcon,
+  "arrow-down": ArrowDownIcon,
+  "arrow-long-right": ArrowLongRightIcon,
+  "chevron-left": CaretLeftIcon,
+  "chevron-right": CaretRightIcon,
+  "chevron-up": CaretUpIcon,
+  "chevron-down": CaretDownIcon,
 
   // ==========================================================================
   // 通用交互 - 操作
@@ -179,26 +178,26 @@ export const iconRegistry = {
   cloud: CloudIcon,
   server: EraserIcon,
   cube: CubeIcon,
-  'building-library': BuildingIcon,
+  "building-library": BuildingIcon,
 
   // ==========================================================================
   // 云服务/智能体 - 数据
   // ==========================================================================
   chart: ChartBarIcon,
-  'chart-bar': ChartBarIcon,
+  "chart-bar": ChartBarIcon,
   table: TableIcon,
   code: CodeIcon,
   api: PiIcon,
   graph: ArrowRightCurveIcon,
   lightbulb: LightbulbIcon,
   sparkles: SparkleIcon,
-  'shield-check': ShieldCheckIcon,
+  "shield-check": ShieldCheckIcon,
 
   // ==========================================================================
   // 用户/组织
   // ==========================================================================
   user: UserIcon,
-  'user-group': UsersIcon,
+  "user-group": UsersIcon,
   users: UsersIcon,
   medal: MedalIcon,
   star: StarIcon,
@@ -211,21 +210,21 @@ export const iconRegistry = {
   wechat: WechatLogoIcon,
   github: GithubLogoIcon,
   linkedin: LinkedinLogoIcon,
-  'chat-circle': ChatCircleIcon,
-  'paperplane-tilt': PaperPlaneTiltIcon,
+  "chat-circle": ChatCircleIcon,
+  "paperplane-tilt": PaperPlaneTiltIcon,
 
   // ==========================================================================
   // 时间/日历
   // ==========================================================================
   calendar: CalendarIcon,
-  'calendar-days': CalendarIcon,
+  "calendar-days": CalendarIcon,
   clock: ClockIcon,
 
   // ==========================================================================
   // 地图/位置
   // ==========================================================================
-  'map-pin': MapPinIcon,
-  'map-marker': MapPinIcon,
+  "map-pin": MapPinIcon,
+  "map-marker": MapPinIcon,
 
   // ==========================================================================
   // 主题/显示
@@ -237,12 +236,11 @@ export const iconRegistry = {
   // ==========================================================================
   // 其他
   // ==========================================================================
-  'caret-left-bold': CaretLeftBoldIcon,
-  'caret-right-bold': CaretRightBoldIcon,
+  "caret-left-bold": CaretLeftBoldIcon,
+  "caret-right-bold": CaretRightBoldIcon,
 
   // ==========================================================================
   // 系统保留（勿删）
   // ==========================================================================
   placeholder: QuestionIcon,
-
 } satisfies Record<IconName, React.ComponentType<any>>;

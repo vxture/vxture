@@ -20,9 +20,9 @@
 | 层级 | 说明 |
 |------|------|
 | **Application Layer** | 消费应用（使用 Design System 的应用） |
-| **Component Layer** | DS 组件（Icon, Button 等） |
+| **Component Layer** | DS 组件（Icon, Button, Card 等） |
 | **Foundation Layer** | 基础层（tokens, styles, utilities） |
-| **External Layer** | 第三方集成（phosphor-react, next-themes 等） |
+| **External Layer** | 第三方集成（@phosphor-icons/react, next-themes, @radix-ui/react-* 等） |
 
 ### 1.3 依赖方向
 
@@ -52,10 +52,10 @@ Design System → Third-party libraries
 |------|-----|------|
 | **Icons** | `@phosphor-icons/react` | 图标库 |
 | **Theme** | `next-themes` | 主题管理 |
-| **Components** | `shadcn/ui` | 组件思想 |
+| **Components** | `shadcn/ui 源码 + Radix UI 基础` | 组件库 |
 | **Utilities** | `clsx` | 条件类名 |
 | | `tailwind-merge` | Tailwind 类名合并 |
-| **(可选)** | `class-variance-authority` | 变体系统（当前未使用） |
+| **Animations** | `tailwindcss-animate` | 动画效果 |
 
 ---
 
@@ -70,28 +70,42 @@ src/
 │   ├── types.ts              # 图标类型定义
 │   └── index.ts              # 导出入口（逐个导出）
 ├── components/               # 组件库
-│   └── button/               # Button 组件
-│       ├── Button.tsx        # Button 主组件
-│       ├── buttonStyles.ts   # Button 样式（简单对象映射）
-│       ├── types.ts          # Button 类型
-│       └── index.ts          # Button 导出
+│   ├── index.ts              # 组件导出入口
+│   └── ui/                   # UI 组件（16个常用组件）
+│       ├── index.ts          # UI 组件导出入口
+│       ├── avatar.tsx        # Avatar 组件
+│       ├── badge.tsx         # Badge 组件
+│       ├── breadcrumb.tsx    # Breadcrumb 组件
+│       ├── button.tsx        # Button 组件
+│       ├── card.tsx          # Card 组件
+│       ├── checkbox.tsx      # Checkbox 组件
+│       ├── dialog.tsx        # Dialog 组件
+│       ├── dropdown-menu.tsx # Dropdown Menu 组件
+│       ├── input.tsx         # Input 组件
+│       ├── label.tsx         # Label 组件
+│       ├── popover.tsx       # Popover 组件
+│       ├── select.tsx        # Select 组件
+│       ├── separator.tsx     # Separator 组件
+│       ├── tabs.tsx          # Tabs 组件
+│       └── tooltip.tsx       # Tooltip 组件
 ├── theme/                    # 主题系统
+│   ├── index.ts              # 主题导出
 │   ├── ThemeProvider.tsx     # 主题提供者
 │   ├── useTheme.ts           # 主题 Hook
-│   ├── theme.types.ts        # 主题类型
-│   └── index.ts              # 主题导出
+│   └── theme.types.ts        # 主题类型
 ├── tokens/                   # 设计 Tokens
+│   ├── index.ts              # Tokens 导出
 │   ├── colors.ts             # 颜色 Tokens
 │   ├── spacing.ts            # 间距 Tokens
 │   ├── radius.ts             # 圆角 Tokens
 │   ├── shadow.ts             # 阴影 Tokens
-│   ├── typography.ts         # 排版 Tokens
-│   └── index.ts              # Tokens 导出
+│   └── typography.ts         # 排版 Tokens
 ├── styles/                   # 全局样式
 │   ├── globals.css           # 全局样式
 │   ├── variables.css         # CSS 变量
 │   └── tailwind.css          # Tailwind 基础
 ├── hooks/                    # 自定义 Hooks（内部使用，不导出）
+│   ├── index.ts              # Hooks 导出入口
 │   └── useBreakpoint.ts      # 断点 Hook
 ├── utils/                    # 工具函数（内部使用，不导出）
 │   └── cn.ts                 # 类名合并工具
@@ -109,15 +123,6 @@ src/
 - 图标实现注册（registry）
 - 图标组件入口（Icon）
 - 类型定义（types）
-
-**设计特点（与规划差异）：**
-
-| 项 | 规划 | 实际实现 | 决策理由 |
-|----|------|---------|---------|
-| icon-dictionary | 对象 `{ key: value }` | 数组 `['key']` | 更简洁，新增更方便 |
-| IconName 来源 | `keyof typeof obj` | `(typeof arr)[number]` | 配合数组形式 |
-| index.ts 导出 | `export *` | 逐个导出 | 更安全，API 更可控 |
-| types.ts 类型 | 3 个类型 | 6 个类型（含 IconWeight, IconSize） | 更实用，用户需要 |
 
 **文件说明：**
 
@@ -181,22 +186,36 @@ src/
 ```
 DS Component
     ↓
-shadcn/ui 思想
-    ↓
-Radix primitive（未来需要时接入）
+shadcn/ui 思想 + Radix UI 基础
 ```
 
-**当前阶段：** 不直接依赖 shadcn CLI 或 Radix，只实现 DS 层 API 与样式结构
+**当前阶段：** 使用 shadcn/ui 思想与 Radix UI 基础组件实现完整 UI 组件库
 
-**Button 文件结构：**
-- `Button.tsx` - forwardRef，使用 cn 合并 class，默认 variant="primary"，默认 size="md"
-- `buttonStyles.ts` - buttonBase + buttonVariants 对象（不使用 CVA）
-- `types.ts` - ButtonVariant, ButtonSize, ButtonProps
-- `index.ts` - 统一导出
+**组件文件结构：**
+- `Button.tsx` - forwardRef，使用 cn 合并 class，默认 variant="default"，默认 size="default"
+- `index.ts` - 统一导出组件和类型
 
-**Button 变体：** primary / secondary / outline / ghost
+**Button 变体：** default / destructive / outline / secondary / ghost / link
 
-**Button 尺寸：** sm / md / lg
+**Button 尺寸：** default / sm / lg / icon
+
+**当前组件库（16个 UI 组件）：**
+
+- `Avatar` - 用户头像组件
+- `Badge` - 徽章组件
+- `Breadcrumb` - 面包屑导航组件
+- `Button` - 按钮组件
+- `Card` - 卡片组件
+- `Checkbox` - 复选框组件
+- `Dialog` - 对话框组件
+- `DropdownMenu` - 下拉菜单组件
+- `Input` - 输入框组件
+- `Label` - 标签组件
+- `Popover` - 弹出框组件
+- `Select` - 选择器组件
+- `Separator` - 分隔线组件
+- `Tabs` - 标签页组件
+- `Tooltip` - 工具提示组件
 
 ---
 
@@ -206,6 +225,17 @@ Radix primitive（未来需要时接入）
 - 组合 clsx 和 tailwind-merge
 - 解决 Tailwind 类名冲突
 - 条件类名支持
+
+**文件：** `utils/cn.ts`
+
+---
+
+### 4.7 自定义 Hooks
+
+**useBreakpoint Hook：**
+- 断点检测 Hook
+- 支持响应式布局
+- 导出类型：Breakpoint, UseBreakpointReturn
 
 ---
 
@@ -241,12 +271,13 @@ Radix primitive（未来需要时接入）
 
 ### 7.2 分层架构
 - **Foundation Layer** - tokens, styles, utils
-- **Component Layer** - Icon, Button 等
+- **Component Layer** - Icon, Button, Card 等 16 个 UI 组件
 - 严格的依赖方向
 
 ### 7.3 可替换外部库
 - Icons: @phosphor-icons/react → 可替换
 - Theme: next-themes → 可替换
+- Components: @radix-ui/react-* → 可替换
 - 通过 registry/dictionary 模式隔离
 
 ---
@@ -282,12 +313,13 @@ import { UserIcon } from '@phosphor-icons/react';
 
 ### 9.1 添加新组件
 
-1. 在 `src/components/` 下创建组件目录
-2. 定义 TypeScript 类型（types.ts）
-3. 实现组件样式（buttonStyles.ts 模式）
-4. 实现组件逻辑（Button.tsx 模式）
-5. 在 `index.ts` 中导出
-6. 更新文档
+1. 在 `src/components/ui/` 下创建组件文件
+2. 定义 TypeScript 类型和接口
+3. 实现组件样式（使用 cn 工具）
+4. 实现组件逻辑（使用 Radix UI 基础组件）
+5. 在 `src/components/ui/index.ts` 中导出
+6. 在 `src/index.ts` 中导出
+7. 更新文档
 
 ### 9.2 添加新图标
 

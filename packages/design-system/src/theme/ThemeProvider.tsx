@@ -10,10 +10,10 @@
  * @category Components - Common
  */
 
-'use client';
+"use client";
 
-import { ThemeProvider as NextThemeProvider } from 'next-themes';
-import type { ReactNode } from 'react';
+import { ThemeProvider as NextThemeProvider } from "next-themes";
+import type { ReactNode } from "react";
 
 /**
  * ThemeProvider Props
@@ -39,11 +39,7 @@ type ThemeProviderProps = {
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
   return (
-    <NextThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-    >
+    <NextThemeProvider attribute="class" defaultTheme="system" enableSystem>
       {children}
     </NextThemeProvider>
   );

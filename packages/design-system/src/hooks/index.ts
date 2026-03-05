@@ -2,7 +2,7 @@
  * hooks/index.ts - Hooks 导出入口
  * @package @vxture/design-system
  *
- * 功能：统一导出所有自定义 Hooks
+ * 功能：统一导出所有自定义 Hooks，提供设计系统的业务逻辑封装
  *
  * @copyright Vxture Team
  * @license MIT
@@ -10,5 +10,5 @@
  * @category Index
  */
 
-export { useBreakpoint } from './useBreakpoint';
-export type { Breakpoint, UseBreakpointReturn } from './useBreakpoint';
+export { useBreakpoint } from "./useBreakpoint";
+export type { Breakpoint, UseBreakpointReturn } from "./useBreakpoint";
