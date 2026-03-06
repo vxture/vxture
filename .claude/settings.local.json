@@ -15,7 +15,28 @@
       "Bash(curl -s http://localhost:3000)",
       "Bash(pnpm run type-check)",
       "Bash(pnpm --filter design-system build)",
-      "Bash(pnpm add clsx tailwind-merge)"
+      "Bash(pnpm add clsx tailwind-merge)",
+      "Bash(mkdir -p backup)",
+      "Bash(cp -r shared src types constants utils node_modules backup/)",
+      "Bash(rm -rf shared/src/constants/src shared/src/types/src shared/src/utils/src)",
+      "Bash(rm -f shared/src/constants/package.json shared/src/types/package.json shared/src/utils/package.json)",
+      "Bash(rm -rf shared)",
+      "Bash(rm -rf node_modules)",
+      "Bash(pnpm --filter shared type-check)",
+      "Bash(mkdir -p shared)",
+      "Bash(mv src package.json tsconfig.json README.md shared/)",
+      "Bash(rm -rf backup)",
+      "Bash(xargs sed -i 's/@vxture\\\\/shared-utils/@vxture\\\\/shared/g; s/@vxture\\\\/shared-constants/@vxture\\\\/shared/g; s/@vxture\\\\/shared-types/@vxture\\\\/shared/g')",
+      "Bash(pnpm type-check:all)",
+      "Bash(pnpm build:all)",
+      "Bash(grep -r \"from ''@vxture/shared''\" --include=\"*.ts\" --include=\"*.tsx\" portals/website/)",
+      "Bash(pnpm build)",
+      "Bash(pnpm --recursive type-check)",
+      "Bash(pnpm --filter @vxture/core-api type-check)",
+      "Bash(pnpm --filter @vxture/core-config type-check)",
+      "Bash(pnpm --filter @vxture/core-locale type-check)",
+      "Bash(pnpm --filter @vxture/core-tenant type-check)",
+      "Bash(git add .)"
     ]
   }
 }

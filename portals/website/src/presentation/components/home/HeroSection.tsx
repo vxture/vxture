@@ -17,7 +17,7 @@
 
 import { useHero } from '@/application/hooks/homepage';
 import { normalizeHeroData } from '@/infrastructure/constants/HomepageHelpers';
-import { debugLog, debugError } from '@vxture/shared-utils';
+import { debugLog, debugError } from '@vxture/shared';
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Icon } from '@vxture/design-system';
 

@@ -19,7 +19,7 @@
 import { memo } from 'react';
 import { useFeatures } from '@/application/hooks/homepage';
 import { normalizeFeaturesData } from '@/infrastructure/constants/HomepageHelpers';
-import { debugLog } from '@vxture/shared-utils';
+import { debugLog } from '@vxture/shared';
 import { Icon } from '@vxture/design-system';
 import { BasicColorMap, SectionTheme } from '@/shared/theme/colorMap';
 

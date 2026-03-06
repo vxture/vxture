@@ -1,22 +1,39 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true,
-    "jsx": "preserve",
-    "jsxImportSource": "react",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    // Path aliases for monorepo packages
     "paths": {
       "@vxture/shared": ["./packages/shared/shared/src"],
-      "@vxture/design-system": ["./packages/design/design-system/src"]
+      "@vxture/shared/*": ["./packages/shared/shared/src/*"],
+      "@vxture/design-system": ["./packages/design/design-system/src"],
+      "@vxture/design-system/*": ["./packages/design/design-system/src/*"],
+      "@vxture/core-api": ["./packages/core/api/src"],
+      "@vxture/core-api/*": ["./packages/core/api/src/*"],
+      "@vxture/core-config": ["./packages/core/config/src"],
+      "@vxture/core-config/*": ["./packages/core/config/src/*"],
+      "@vxture/core-locale": ["./packages/core/locale/src"],
+      "@vxture/core-locale/*": ["./packages/core/locale/src/*"],
+      "@vxture/core-tenant": ["./packages/core/tenant/src"],
+      "@vxture/core-tenant/*": ["./packages/core/tenant/src/*"],
+      "@vxture/service-ticket": ["./packages/service/ticket/src"],
+      "@vxture/service-ticket/*": ["./packages/service/ticket/src/*"],
+      "@vxture/service-billing": ["./packages/service/billing/src"],
+      "@vxture/service-billing/*": ["./packages/service/billing/src/*"],
+      "@vxture/service-subscription": ["./packages/service/subscription/src"],
+      "@vxture/service-subscription/*": ["./packages/service/subscription/src/*"],
+      "@vxture/platform-sdk": ["./packages/platform/sdk/src"],
+      "@vxture/platform-sdk/*": ["./packages/platform/sdk/src/*"],
+      "@vxture/platform-client": ["./packages/platform/client/src"],
+      "@vxture/platform-client/*": ["./packages/platform/client/src/*"]
     }
   },
   "exclude": ["node_modules", "dist", "build"]

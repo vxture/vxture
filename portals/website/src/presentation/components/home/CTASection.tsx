@@ -20,7 +20,7 @@ import Link from 'next/link';
 import type { Route } from 'next';
 import { useCTA } from '@/application/hooks/homepage';
 import { normalizeCTAData } from '@/infrastructure/constants/HomepageHelpers';
-import { debugLog } from '@vxture/shared-utils';
+import { debugLog } from '@vxture/shared';
 import { Icon } from '@vxture/design-system';
 
 // ============================================================================

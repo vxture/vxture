@@ -22,9 +22,7 @@
     "fix": "pnpm run lint:all && pnpm run format"
   },
   "dependencies": {
-    "@vxture/shared-types": "workspace:*",
-    "@vxture/shared-constants": "workspace:*",
-    "@vxture/shared-utils": "workspace:*",
+    "@vxture/shared": "workspace:*",
     "@vxture/design-system": "workspace:*",
     "@tanstack/react-query": "^5.90.5",
     "@headlessui/react": "^2.2.9",

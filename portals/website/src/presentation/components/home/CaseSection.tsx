@@ -24,7 +24,7 @@ import { Icon } from '@vxture/design-system';
 import { memo, useMemo } from 'react';
 import { useCasesData } from '@/application/hooks/homepage';
 import { normalizeCasesData } from '@/infrastructure/constants/HomepageHelpers';
-import { debugLog } from '@vxture/shared-utils';
+import { debugLog } from '@vxture/shared';
 
 // ============================================================================
 // 类型定义

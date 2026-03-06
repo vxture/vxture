@@ -1,0 +1,49 @@
+{
+  "layers": [
+    {
+      "name": "shared",
+      "packages": ["@vxture/shared"],
+      "responsibilities": ["pure utilities", "TypeScript types", "global constants"],
+      "allowed_dependencies": ["third-party libs only"],
+      "forbidden_dependencies": ["core", "service", "UI"]
+    },
+    {
+      "name": "core",
+      "packages": [
+        "@vxture/core-api",
+        "@vxture/core-config",
+        "@vxture/core-locale",
+        "@vxture/core-tenant"
+      ],
+      "responsibilities": [
+        "platform infrastructure",
+        "configuration management",
+        "multi-tenant",
+        "i18n",
+        "API base"
+      ],
+      "allowed_dependencies": ["shared"],
+      "forbidden_dependencies": ["service", "UI"]
+    },
+    {
+      "name": "service",
+      "packages": [
+        "@vxture/service-ticket",
+        "@vxture/service-billing",
+        "@vxture/service-subscription"
+      ],
+      "responsibilities": ["domain logic", "business workflows", "service APIs"],
+      "allowed_dependencies": ["shared", "core"],
+      "forbidden_dependencies": ["other services", "UI"]
+    },
+    {
+      "name": "platform-sdk",
+      "packages": ["@vxture/platform-sdk", "@vxture/platform-client"],
+      "responsibilities": ["wrap Core & Service APIs", "client SDK", "type-safe interface"],
+      "allowed_dependencies": ["shared", "core", "service"],
+      "forbidden_dependencies": ["portal internal"]
+    }
+  ],
+  "dependency_direction": ["portal/business -> platform-sdk -> service -> core -> shared"],
+  "naming_convention": "@vxture/{group}-{package}"
+}

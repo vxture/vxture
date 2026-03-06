@@ -21,7 +21,7 @@ import Image from 'next/image';
 import { Icon } from '@vxture/design-system';
 import { useSolutions } from '@/application/hooks/homepage';
 import { normalizeSolutionsData } from '@/infrastructure/constants/HomepageHelpers';
-import { debugLog } from '@vxture/shared-utils';
+import { debugLog } from '@vxture/shared';
 
 // ============================================================================
 // 类型定义

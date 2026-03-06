@@ -1,0 +1,75 @@
+%% Vxture Monorepo Package Dependency Graph
+%% Generated for AI + Developer reference
+
+flowchart TD
+    %% Layers
+    subgraph SharedLayer["Shared Layer"]
+        SHARED["@vxture/shared"]
+    end
+
+    subgraph CoreLayer["Core Layer"]
+        CORE_API["@vxture/core-api"]
+        CORE_CONFIG["@vxture/core-config"]
+        CORE_LOCALE["@vxture/core-locale"]
+        CORE_TENANT["@vxture/core-tenant"]
+    end
+
+    subgraph ServiceLayer["Backend Services"]
+        SERVICE_TICKET["@vxture/service-ticket"]
+        SERVICE_BILLING["@vxture/service-billing"]
+        SERVICE_SUBSCRIPTION["@vxture/service-subscription"]
+    end
+
+    subgraph PlatformSDK["Platform SDK Layer"]
+        PLATFORM_SDK["@vxture/platform-sdk"]
+        PLATFORM_CLIENT["@vxture/platform-client"]
+    end
+
+    subgraph PortalBusiness["Portal / Business Apps"]
+        PORTAL["Portal / Business"]
+    end
+
+    %% Dependencies
+    CORE_API --> SHARED
+    CORE_CONFIG --> SHARED
+    CORE_LOCALE --> SHARED
+    CORE_TENANT --> SHARED
+
+    SERVICE_TICKET --> CORE_API
+    SERVICE_TICKET --> CORE_CONFIG
+    SERVICE_TICKET --> CORE_LOCALE
+    SERVICE_TICKET --> CORE_TENANT
+    SERVICE_TICKET --> SHARED
+
+    SERVICE_BILLING --> CORE_API
+    SERVICE_BILLING --> CORE_CONFIG
+    SERVICE_BILLING --> CORE_LOCALE
+    SERVICE_BILLING --> CORE_TENANT
+    SERVICE_BILLING --> SHARED
+
+    SERVICE_SUBSCRIPTION --> CORE_API
+    SERVICE_SUBSCRIPTION --> CORE_CONFIG
+    SERVICE_SUBSCRIPTION --> CORE_LOCALE
+    SERVICE_SUBSCRIPTION --> CORE_TENANT
+    SERVICE_SUBSCRIPTION --> SHARED
+
+    PLATFORM_SDK --> SERVICE_TICKET
+    PLATFORM_SDK --> SERVICE_BILLING
+    PLATFORM_SDK --> SERVICE_SUBSCRIPTION
+    PLATFORM_SDK --> CORE_API
+    PLATFORM_SDK --> CORE_CONFIG
+    PLATFORM_SDK --> CORE_LOCALE
+    PLATFORM_SDK --> CORE_TENANT
+    PLATFORM_SDK --> SHARED
+
+    PLATFORM_CLIENT --> SERVICE_TICKET
+    PLATFORM_CLIENT --> SERVICE_BILLING
+    PLATFORM_CLIENT --> SERVICE_SUBSCRIPTION
+    PLATFORM_CLIENT --> CORE_API
+    PLATFORM_CLIENT --> CORE_CONFIG
+    PLATFORM_CLIENT --> CORE_LOCALE
+    PLATFORM_CLIENT --> CORE_TENANT
+    PLATFORM_CLIENT --> SHARED
+
+    PORTAL --> PLATFORM_SDK
+    PORTAL --> PLATFORM_CLIENT

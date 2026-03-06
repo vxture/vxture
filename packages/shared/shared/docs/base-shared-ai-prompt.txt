@@ -1,0 +1,31 @@
+# Vxture AI Prompt:
+
+## Context
+- Target Package: @vxture/shared
+- Location: packages/shared/src
+- All TypeScript types, constants, and pure utility functions reside here
+- Shared layer MUST NOT include:
+  - UI components, hooks, pages
+  - Business logic
+  - Dependencies on core, service, or portal packages
+- Must follow architecture documentation:
+  - docs/architecture/shared-layer.md
+  - docs/architecture/package-boundaries.md
+  - docs/ai/claude-coding-comments.md
+  - docs/ai/claude-coding-rules.md
+  - docs/ai/claude-coding-style.md
+  - docs/architecture/package-graph.json
+  - docs/ai/ai-context.md
+
+## Tasks
+
+  - chat
+
+## Constraints
+
+- Only modify this one packages
+- Do **not** modify any other packages or files
+- Do **not** delete or move this prompt file or any docs
+- Respect boundaries in `package-boundaries.md` and `shared-layer.md`
+
+--- end of file ---

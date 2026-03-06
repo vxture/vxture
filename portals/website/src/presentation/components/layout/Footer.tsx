@@ -15,7 +15,7 @@
 
 import { useFooter } from "@/application/hooks/layout";
 import { normalizeFooterData } from "@/infrastructure/constants/FooterHelpers";
-import { debugLog } from "@vxture/shared-utils";
+import { debugLog } from "@vxture/shared";
 import { Icon } from "@vxture/design-system";
 import { useState, useRef } from "react";
 
