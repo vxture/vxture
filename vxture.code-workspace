@@ -5,28 +5,52 @@
       "path": "."
     },
     {
-      "name": "website",
-      "path": "packages/apps/website"
+      "name": "portals/website",
+      "path": "portals/website"
     },
     {
-      "name": "api",
-      "path": "packages/api"
+      "name": "portals/admin",
+      "path": "portals/admin"
     },
     {
-      "name": "design-system",
-      "path": "packages/design-system"
+      "name": "portals/tenant",
+      "path": "portals/tenant"
     },
     {
-      "name": "shared-types",
-      "path": "packages/shared/types"
+      "name": "business/ruinagent",
+      "path": "business/ruinagent"
     },
     {
-      "name": "shared-constants",
-      "path": "packages/shared/constants"
+      "name": "services/gateway",
+      "path": "services/gateway"
     },
     {
-      "name": "shared-utils",
-      "path": "packages/shared/utils"
+      "name": "services/auth",
+      "path": "services/auth"
+    },
+    {
+      "name": "services/billing",
+      "path": "services/billing"
+    },
+    {
+      "name": "services/workers",
+      "path": "services/workers"
+    },
+    {
+      "name": "packages/design-system",
+      "path": "packages/design/design-system"
+    },
+    {
+      "name": "packages/shared",
+      "path": "packages/shared/shared"
+    },
+    {
+      "name": "packages/core",
+      "path": "packages/core"
+    },
+    {
+      "name": "packages/platform",
+      "path": "packages/platform"
     }
   ],
   "settings": {

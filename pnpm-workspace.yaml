@@ -1,4 +1,6 @@
 packages:
-  - 'packages/*'
-  - 'packages/shared/*'
-  - 'packages/apps/*'
+  - 'portals/*'
+  - 'business/*'
+  - 'services/*'
+  - 'packages/*/*'
+  - 'tools/*'

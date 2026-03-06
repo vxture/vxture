@@ -1,28 +1,15 @@
 {
   "files": [],
   "references": [
-    { "path": "packages/web" },
-    { "path": "packages/api" },
-    { "path": "packages/design-system" }
-  ],
-  "compilerOptions": {
-    "ignoreDeprecations": "6.0",
-    "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "noEmit": true,
-    "jsx": "preserve",
-    "jsxImportSource": "react",
-    "esModuleInterop": true
-  },
-  "include": [],
-  "exclude": ["node_modules", "dist", "build"]
+    { "path": "portals/website" },
+    { "path": "portals/admin" },
+    { "path": "portals/tenant" },
+    { "path": "business/ruinagent" },
+    { "path": "services/gateway" },
+    { "path": "services/auth" },
+    { "path": "services/billing" },
+    { "path": "services/workers" },
+    { "path": "packages/design/design-system" },
+    { "path": "packages/shared/shared" }
+  ]
 }
