@@ -1,90 +1,98 @@
-# Vxture AI Prompt – Phase 3: Core Layer
+# Vxture AI Prompt: Phase 3 Core Layer
 
 ## Context
-- Target Packages: @vxture/core-* (all core packages)
-- Location: packages/core-*/src
-- Core layer packages provide **platform infrastructure**, including:
-  - API handling
-  - Tenant & locale management
-  - Authentication & authorization utilities
-  - Core services used by other layers (Shared, Service, Platform SDK)
-- Must follow architecture documentation:
+- Target Packages: @vxture/core-*
+- Location: packages/core-*
+- Core layer provides **platform infrastructure**, utilities, and services
+- Core MUST NOT include:
+  - Business logic
+  - UI components or hooks
+  - Page-specific logic
+  - Dependencies on Service, Portal, or Platform SDK packages
+- Must follow architecture and coding standards:
   - docs/architecture/core-layer.md
   - docs/architecture/package-boundaries.md
   - docs/architecture/package-graph.json
   - docs/ai/claude-coding-comments.md
   - docs/ai/claude-coding-rules.md
   - docs/ai/claude-coding-style.md
+  - docs/standards/vx-TsconfigConfig.md
   - docs/ai/ai-context.md
-- Dependencies allowed:
-  - `@vxture/shared`
-  - Only third-party libraries (npm)
-- Forbidden dependencies:
-  - services/*
-  - portals/UI packages
-  - Platform SDK packages
 
 ## Objective
+1. **Build/Refactor Core Packages**:
+   - core-api: centralized API infrastructure
+   - core-tenant: tenant context and multi-tenant utilities
+   - core-locale: locale and i18n tools
+   - core-auth: authentication and authorization helpers
+   - core-utils: general platform utilities
 
-1. **Refactor and implement core packages (`core-*`)**:
-   - Consolidate existing Core code into modular, reusable packages
-   - Ensure **layer correctness**:
-     - Core layer may depend on Shared and allowed third-party libs
-     - Must **not** depend on Service or Portal/UI packages
-   - Ensure TypeScript composite configuration works
-   - Maintain path aliases: `@vxture/core/*`
+2. **Maintain Layer Correctness**:
+   - Core can depend only on `@vxture/shared`
+   - Core must be framework-agnostic (Node.js + frontend)
+   - No React/Next.js/DOM-specific code
 
-2. **Enforce strict boundaries and modularity**:
-   - Each package should have clear responsibilities
-   - Avoid duplication of shared utilities or types (use `@vxture/shared`)
-   - Ensure API, tenant, locale, and auth utilities are properly typed and exported
+3. **Ensure High-Quality TypeScript**:
+   - Use composite configuration for buildable packages
+   - Strict typing enforced
+   - Maintain path aliases: `@vxture/core-*/*`
+   - Export all public symbols via `index.ts`
 
-3. **Follow Claude coding standards**:
-   - File headers with `@package`, `@layer`, `@category`, etc.
-   - Section comments for grouping related types and functions
+4. **Follow Claude Coding Style & Comments Standard**:
+   - File headers must include `@package`, `@layer`, `@category`
+   - Use section comments to group related functionality
    - Explain "why", not "what"
-   - Keep code consistent and maintainable
-   - Use descriptive TypeScript types, interfaces, and utility types
+   - Consistent annotation across all core packages
 
-4. **Provide example usage for dependent layers**:
-   - Service packages consuming Core APIs
-   - Platform SDK consuming Core utilities
-   - Show **import statements** and minimal usage examples
-
-5. **Export and index files**:
-   - Each core package must have `index.ts` exporting public API
-   - Ensure consistent naming and path alias usage
-
----
+5. **Provide Example Usage for Service and Platform SDK layers**:
+   - Demonstrate imports from core packages
+   - Illustrate combined usage of core-api, core-tenant, core-locale, core-auth, core-utils
 
 ## Constraints
-
-- Only modify `packages/core-*` source files and index/export files
-- Do **not** modify Shared, Service, Portal, or Platform SDK packages
-- Do **not** delete or move this prompt file or any docs
-- Maintain compatibility with existing `@vxture/shared` usage
-- Respect `package-boundaries.md` rules and Core layer architecture
-
----
+- Only modify `packages/core-*` packages
+- Do **not** touch shared, service, portal, or platform SDK packages
+- Do **not** delete or move prompt or documentation files
+- Respect architecture boundaries in `package-boundaries.md` and `core-layer.md`
+- Forbidden dependencies: service, portal, platform SDK
+- Keep Core reusable, composable, and framework-agnostic
 
 ## Output Requirements
-
-1. Full TypeScript code for refactored `core-*` packages
-2. Any new split packages if necessary
-3. Updated `index.ts` for each package
-4. Example imports and minimal usage for dependent layers
-5. Code must be **copy-paste ready** and fully compliant with Claude coding standards
-6. Include file headers and section comments for every file
-
----
+1. Full TypeScript implementation for all core packages:
+   - `core-api`
+   - `core-tenant`
+   - `core-locale`
+   - `core-auth`
+   - `core-utils`
+2. Centralized `index.ts` for each package exporting all public APIs
+3. Example import statements demonstrating usage in:
+   - Service layer
+   - Platform SDK layer
+   - Portal layer (if needed)
+4. All code **copy-paste ready**, fully compliant with Vxture Claude coding standards
+5. Composite tsconfig.json ready for buildable packages
 
 ## Notes
+- Treat this as **Phase 3: Core Layer Construction**
+- Merge any reusable types or utils from shared
+- Avoid duplication and enforce modularity
+- Ensure packages can be independently built, tested, and consumed
+- Adhere strictly to monorepo TS configuration standard
+- Comment headers example:
 
-- Treat this as **Phase 3 Core Layer refactor**
-- Preserve existing functionality where appropriate
-- Ensure all Core APIs are reusable, type-safe, and maintainable
-- Modularity and proper boundaries are more important than implementing business logic
-- Do not touch Shared or Service layers (⛔ forbidden)
-- Keep AI prompt file intact for audit and future reference
-
---- end of file ---
+```ts
+/**
+ * filename.ts - Short description
+ * @package @vxture/[package-name]
+ *
+ * Description: Detailed explanation of the file's functionality and responsibilities
+ *
+ * @author AI-Generated
+ * @date 2026-03-07
+ * @version 1.0
+ *
+ * @copyright Vxture Team
+ * @license MIT
+ *
+ * @layer Core
+ * @category Components - Common / Utilities / Services
+ */

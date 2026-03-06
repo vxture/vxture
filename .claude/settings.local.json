@@ -36,7 +36,9 @@
       "Bash(pnpm --filter @vxture/core-config type-check)",
       "Bash(pnpm --filter @vxture/core-locale type-check)",
       "Bash(pnpm --filter @vxture/core-tenant type-check)",
-      "Bash(git add .)"
+      "Bash(git add .)",
+      "Bash(git commit -m \"refactor: 重构项目架构和类型系统:*)",
+      "Bash(git push)"
     ]
   }
 }

@@ -1,213 +1,363 @@
-# Vxture Monorepo TypeScript Configuration Refactor Task
+# Vxture TypeScript Configuration Standard
 
-## Objective
+## 1. Purpose
 
-Refactor the TypeScript configuration across the **Vxture monorepo** to establish a **consistent, minimal, and scalable configuration standard** aligned with the current repository architecture.
+This document defines the **unified TypeScript configuration strategy** for the Vxture Monorepo.
 
-The refactor must follow the **principle of minimal necessary configuration**, avoid duplication, and ensure that all applications, services, and shared packages inherit from a unified base configuration.
+Goals:
 
-The repository structure is:
+- Ensure consistent TypeScript behavior across all packages
+- Improve type safety and maintainability
+- Standardize build output for libraries and applications
+- Provide a clear inheritance structure for tsconfig files
 
-```
+All packages **must follow this standard**.
+
+---
+
+# 2. Configuration Architecture
+
+Vxture uses a **three-level tsconfig architecture**.
+
+Root configuration provides **global rules**.
+Packages inherit configuration using **extends**.
+
+Structure:
+
 vxture/
-│
-├── portals/
-│   ├── website/
-│   ├── admin/
-│   └── tenant/
-│
-├── business/
-│   └── ruinagent/
-│
-├── services/
-│   ├── gateway/
-│   ├── auth/
-│   ├── billing/
-│   └── workers/
-│
-├── packages/
-│   ├── core/
-│   ├── design/
-│   │   └── design-system/
-│   ├── platform/
-│   └── shared/
-│       └── shared/
-│
-├── tools/
-├── scripts/
-└── docs/
-```
+├─ tsconfig.base.json
+├─ tsconfig.paths.json
+├─ portals/
+├─ business/
+├─ services/
+├─ packages/
 
----
+Configuration hierarchy:
 
-## Goals
-
-The TypeScript configuration refactor must achieve the following goals:
-
-### 1. Global Configuration Consistency
-
-All projects must inherit from a single root configuration:
-
-```
 tsconfig.base.json
-```
-
-This file defines the **global TypeScript standard** for the entire repository.
-
-It must include:
-
-- `target: ES2022`
-- `module: ESNext`
-- `moduleResolution: Bundler`
-- `strict: true`
-- shared compiler options
-- shared path aliases
-
-No project should redefine these settings unless strictly necessary.
+↓
+package tsconfig.json
+↓
+tsconfig.build.json (optional)
 
 ---
 
-### 2. Minimal Configuration per Project
+# 3. Root Configuration Files
 
-Each application, service, or package must contain only the **minimum required configuration**.
+## 3.1 tsconfig.base.json
 
-Typical per-project `tsconfig.json` should only include:
+Defines the **global TypeScript compiler rules**.
 
-- `extends`
-- `rootDir`
-- `outDir` (for libraries and services)
-- `noEmit` (for frontend apps)
+Responsibilities:
 
-Avoid redundant configuration across projects.
+- strict type rules
+- module resolution
+- JSX configuration
+- build compatibility
+- developer experience improvements
+
+Example:
+
+{
+"compilerOptions": {
+"target": "ES2022",
+"lib": ["DOM", "ES2022"],
+"module": "ESNext",
+"moduleResolution": "Bundler",
+
+```
+"strict": true,
+"noImplicitAny": true,
+"strictNullChecks": true,
+
+"skipLibCheck": true,
+"forceConsistentCasingInFileNames": true,
+
+"resolveJsonModule": true,
+"isolatedModules": true,
+
+"esModuleInterop": true,
+"allowSyntheticDefaultImports": true,
+
+"jsx": "react-jsx",
+
+"types": ["node"]
+```
+
+}
+}
 
 ---
 
-### 3. Clear Separation of Runtime Targets
+## 3.2 tsconfig.paths.json
 
-Different runtime environments require slightly different settings:
+Defines **monorepo path aliases**.
 
-#### Web Applications
+Purpose:
 
-Location:
+- simplify imports
+- avoid deep relative paths
+- improve refactoring
+
+Example:
+
+{
+"compilerOptions": {
+"baseUrl": ".",
+"paths": {
+"@vxture/core-utils": ["packages/core-utils/src"],
+"@vxture/core-env": ["packages/core-env/src"],
+"@vxture/core-config": ["packages/core-config/src"],
 
 ```
-portals/*
-business/*
+  "@vxture/design-system": ["packages/design-system/src"],
+  "@vxture/ui-kit": ["packages/ui-kit/src"]
+}
 ```
+
+}
+}
 
 Rules:
 
-- `noEmit: true`
-- compiled by framework bundlers (Next.js / Vite)
+- Every package must have a **path alias**
+- Aliases must follow the **@vxture/** namespace
+- Direct relative cross-package imports are **forbidden**
 
-#### Backend Services
+Correct:
 
-Location:
+import { env } from "@vxture/core-env"
 
-```
-services/*
-```
+Incorrect:
+
+import { env } from "../../../core-env/src"
+
+---
+
+# 4. Package tsconfig Standard
+
+Every package must include a **local tsconfig.json**.
+
+Responsibilities:
+
+- inherit global rules
+- define package root
+- control compilation scope
+
+Example:
+
+{
+"extends": "../../tsconfig.base.json",
+"compilerOptions": {
+"rootDir": "src",
+"outDir": "dist"
+},
+"include": ["src"],
+"exclude": ["node_modules", "dist"]
+}
 
 Rules:
 
-- Node.js runtime
-- `outDir: dist`
-- no DOM libraries
-
-#### Shared Libraries
-
-Location:
-
-```
-packages/*
-```
-
-Rules:
-
-- buildable packages
-- `composite: true`
-- `declaration: true`
-- `outDir: dist`
-
-These packages are consumed by both services and portals.
+- Source code must live in **src/**
+- Build output must be **dist/**
+- Do not override strict rules from base config
 
 ---
 
-### 4. Monorepo Import Stability
+# 5. Library Build Configuration
 
-Define path aliases in the root configuration to ensure consistent imports.
+Libraries may define an additional build configuration:
 
-Examples:
+tsconfig.build.json
 
-```
-@vxture/shared
-@vxture/core-*
-@vxture/platform-*
-@vxture/design-system
-```
+Example:
 
-These aliases must map to the correct source directories inside `packages`.
+{
+"extends": "./tsconfig.json",
+"compilerOptions": {
+"declaration": true,
+"declarationMap": true,
+"sourceMap": true,
+"emitDeclarationOnly": false
+}
+}
 
-This prevents deep relative imports and improves maintainability.
+Purpose:
 
----
-
-### 5. Support for Scalable Package Growth
-
-The configuration must support future expansion of the following groups:
-
-```
-packages/core/*
-packages/platform/*
-packages/design/*
-packages/shared/*
-```
-
-Adding new packages must require **minimal configuration effort**.
+- generate declaration files
+- support package publishing
+- improve IDE navigation
 
 ---
 
-### 6. Compatibility with Modern Tooling
+# 6. Application Configuration
 
-The configuration must be compatible with modern build tools such as:
+Applications (portals / admin / tenant) may include additional settings.
 
-- Next.js
+Example:
+
+{
+"extends": "../../tsconfig.base.json",
+"compilerOptions": {
+"noEmit": true
+},
+"include": ["src"]
+}
+
+Applications typically rely on **bundlers** for build:
+
 - Vite
-- Turbopack
-- Turborepo
-- pnpm workspaces
+- Next.js
+- Webpack
 
-For this reason the configuration must use:
-
-```
-moduleResolution: Bundler
-```
+Therefore TypeScript only performs **type checking**.
 
 ---
 
-### 7. Avoid Over-Engineering
+# 7. Strictness Policy
 
-The refactor must **not introduce unnecessary complexity**.
+Vxture enforces **strict TypeScript mode**.
 
-Avoid:
+Mandatory rules:
 
-- multiple base configs
-- unnecessary build configs
-- duplicated path mappings
-- redundant compiler options
+strict = true
+noImplicitAny = true
+strictNullChecks = true
 
-The goal is **clarity and long-term maintainability**, not excessive abstraction.
+These rules **must never be disabled**.
+
+If a package requires exceptions, use:
+
+// eslint-disable-next-line
+// @ts-ignore
+
+But such usage must be **documented**.
 
 ---
 
-## Expected Result
+# 8. Import Rules
 
-After the refactor:
+Recommended import order:
 
-- All projects inherit from **one global TypeScript standard**
-- Configuration duplication is removed
-- Imports across the monorepo are stable
-- The structure supports **long-term SaaS platform growth**
-- New packages or services can be added with minimal setup
+1. external libraries
+2. @vxture internal packages
+3. relative imports
 
-The result should be a **clean, maintainable TypeScript foundation** for the Vxture platform.
+Example:
+
+import React from "react"
+
+import { env } from "@vxture/core-env"
+import { config } from "@vxture/core-config"
+
+import { Button } from "../components/Button"
+
+---
+
+# 9. File Naming
+
+TypeScript file naming rules:
+
+Component files
+
+PascalCase
+
+Example:
+
+Button.tsx
+ModalDialog.tsx
+
+Utility files
+
+camelCase
+
+Example:
+
+formatDate.ts
+createLogger.ts
+
+Type files
+
+kebab-case + .types.ts
+
+Example:
+
+user.types.ts
+api.types.ts
+
+---
+
+# 10. Prohibited Practices
+
+The following practices are **not allowed**:
+
+Cross-package relative imports
+
+../../../core-utils/src
+
+Duplicated type definitions
+
+export type ID = string
+
+Using "any" without justification
+
+const data: any
+
+Disabling strict mode
+
+"strict": false
+
+---
+
+# 11. IDE Requirements
+
+Recommended developer tools:
+
+Editor
+
+Visual Studio Code
+
+Extensions
+
+ESLint
+TypeScript
+Prettier
+
+Developers should enable:
+
+TypeScript "strict mode hints"
+
+---
+
+# 12. CI Validation
+
+CI should run the following checks:
+
+pnpm typecheck
+
+pnpm lint
+
+pnpm build
+
+Type errors must **block merging**.
+
+---
+
+# 13. Summary
+
+Vxture TypeScript configuration ensures:
+
+- strict typing
+- consistent builds
+- scalable monorepo architecture
+- clean cross-package imports
+
+All contributors must follow this standard.
+
+Failure to follow the standard may cause:
+
+- type conflicts
+- build failures
+- architecture violations
+
+This document is part of the **Vxture Engineering Standards**.
