@@ -2,153 +2,148 @@
 
 ## Overview
 
-The Vxture design system provides consistent UI components across all portals.
+The Vxture design system provides **consistent UI components and visual language** across
+all portals and agent frontends.
 
-It follows a **token → system → components** architecture within a single package.
+It follows a **token → system → components** architecture within a single package,
+shared by both `portals/` and `agent-studio/`.
 
 ---
 
-## Package Structure
+# 1. Package
 
 ```
 @vxture/design-system
 ```
 
-This single package contains all design system functionality organized as internal modules.
+Location:
+
+```
+packages/design/design-system/
+```
+
+Single package containing all design system functionality organized as internal modules.
 
 ---
 
-## Internal Module Structure
+# 2. Internal Structure
 
 ```
-@vxture/design-system/
-├── src/
-│   ├── icons/                    # Icon system (Registry pattern)
-│   ├── components/ui/            # UI components (16 components)
-│   ├── theme/                    # Theme system (light/dark/system)
-│   ├── density/                  # Density system (compact/default/comfortable)
-│   ├── tokens/                   # Design tokens
-│   ├── styles/                   # Global styles
-│   ├── hooks/                    # Custom hooks (internal)
-│   ├── utils/                    # Utility functions (internal)
-│   └── index.ts                  # Unified export entry
+packages/design/design-system/
+├── package.json
+├── tsconfig.json
+└── src/
+    ├── tokens/           # Design tokens (colors, spacing, radius, shadow, typography)
+    ├── styles/           # Global styles and CSS variables
+    ├── theme/            # Theme system (light/dark/system) + DensityProvider
+    ├── density/          # Density system (compact/default/comfortable)
+    ├── icons/            # Icon system (Registry pattern)
+    ├── components/
+    │   └── ui/           # UI components
+    ├── hooks/            # Internal custom hooks
+    ├── utils/            # Internal utility functions
+    └── index.ts          # Unified export entry
 ```
 
 ---
 
-## tokens
+# 3. tokens/
 
-Contains raw design tokens.
-
-Examples:
+Raw design tokens. Implemented as TypeScript constants + CSS variables (`--vx-*` prefix).
 
 ```
-colors
-spacing
-radius
-shadow
-typography
+colors.ts
+spacing.ts
+radius.ts
+shadow.ts
+typography.ts
 ```
 
-Tokens are implemented as:
-
-```
-TypeScript constants + CSS variables
-```
-
-**Rules**: Tokens must be readonly, contain only design values, no logic.
+Rules: Tokens must be readonly, contain only design values, no logic.
 
 ---
 
-## styles
+# 4. styles/
 
 Global styles and CSS variables.
 
-Includes:
-
 ```
-globals.css           # Global reset
-variables.css         # CSS variables (--vx-* prefix)
-tailwind.css          # Tailwind directives
+globals.css      # Global reset
+variables.css    # CSS custom properties (--vx-* prefix)
+tailwind.css     # Tailwind directives
 ```
 
 ---
 
-## density
-
-UI density management system, supports three levels:
-
-| Level         | Scale  | Use Case                          |
-| ------------- | ------ | --------------------------------- |
-| `compact`     | 0.875x | Small screens, high-density data  |
-| `default`     | 1x     | Default, balanced display         |
-| `comfortable` | 1.125x | Comfortable reading, more spacing |
-
-**Affected**: spacing, component height, padding, typography scale
-**Persistence**: localStorage key `vx-density`
-
----
-
-## theme
+# 5. theme/
 
 Unified theme and density management.
 
-Includes:
-
 ```
-ThemeProvider.tsx     # Wraps next-themes, built-in DensityProvider
-useTheme.ts           # Export useTheme() hook
-theme.types.ts        # Theme type definitions
+ThemeProvider.tsx    # Wraps next-themes, includes DensityProvider
+useTheme.ts          # useTheme() hook
+theme.types.ts       # Theme type definitions
 ```
 
-**Context return value**:
+Context return value:
 
-```typescript
+```ts
 {
-  theme: "light" | "dark" | "system"
+  theme: 'light' | 'dark' | 'system'
   setTheme: (theme: Theme) => void
-  density: "compact" | "default" | "comfortable"
+  density: 'compact' | 'default' | 'comfortable'
   setDensity: (density: Density) => void
 }
 ```
 
 ---
 
-## icons
+# 6. density/
 
-Icon component library, using Registry pattern to isolate third-party dependencies.
+UI density management system. Supports three levels:
 
-Provides:
+| Level         | Scale  | Use case                          |
+| ------------- | ------ | --------------------------------- |
+| `compact`     | 0.875x | Small screens, high-density data  |
+| `default`     | 1x     | Default, balanced display         |
+| `comfortable` | 1.125x | Comfortable reading, more spacing |
 
-```
-icon-dictionary.ts    # Icon whitelist with business grouping
-icon-registry.ts      # Unique file importing @phosphor-icons/react
-Icon.tsx              # Icon component, uses registry
-types.ts              # Complete type definitions
-```
-
-**Business Groups**:
-
-- General Interaction - Navigation
-- General Interaction - Actions
-- General Interaction - Status
-- Cloud Service/Agent - Platform
-- Cloud Service/Agent - Data
-- User/Organization
-- Communication/Contact
-- Time/Calendar
-- Map/Location
-- Theme/Display
-
-**Usage Rule**: No direct use of Phosphor Icons, must use `<Icon name="user" />`
+Affects: spacing, component height, padding, typography scale.
+Persistence: `localStorage` key `vx-density`.
 
 ---
 
-## components/ui
+# 7. icons/
 
-Reusable UI components (16 components).
+Icon component library using Registry pattern to isolate Phosphor Icons dependency.
 
-Examples:
+```
+icon-dictionary.ts    # Icon whitelist with business grouping
+icon-registry.ts      # Single file importing @phosphor-icons/react
+Icon.tsx              # <Icon /> component — uses registry
+types.ts              # Complete icon type definitions
+```
+
+Business groups:
+
+- General Interaction — Navigation
+- General Interaction — Actions
+- General Interaction — Status
+- Cloud Service / Agent — Platform
+- Cloud Service / Agent — Data
+- User / Organization
+- Communication / Contact
+- Time / Calendar
+- Map / Location
+- Theme / Display
+
+Usage rule: Never import Phosphor Icons directly. Always use `<Icon name="user" />`.
+
+---
+
+# 8. components/ui/
+
+Reusable UI components (current: 16 components):
 
 ```
 Avatar, Badge, Breadcrumb, Button, Card, Checkbox,
@@ -156,68 +151,120 @@ Dialog, DropdownMenu, Input, Label, Popover, Select,
 Separator, Tabs, Tooltip
 ```
 
-Built using:
+Built with:
 
 ```
-React + TypeScript
-shadcn/ui ideas
+React 19 + TypeScript
 Radix UI primitives
-TailwindCSS
+TailwindCSS 4
+shadcn/ui patterns
 ```
 
-**Component Rules**:
+Component rules:
 
-- forwardRef
-- use cn() to merge classes
-- default variant="default", default size="default"
+- Use `forwardRef` for all components
+- Use `cn()` to merge class names
+- Default `variant="default"`, default `size="default"`
+- No direct Phosphor icon imports — use `<Icon />`
 
 ---
 
-## Usage
+# 9. Dependency Rules
 
-```typescript
-import { Button, Icon, ThemeProvider, useTheme, colors } from '@vxture/design-system';
+Allowed:
+
+```
+@vxture/shared
+```
+
+Forbidden:
+
+```
+@vxture/core-*
+@vxture/service-*
+@vxture/bff-*
+@vxture/ai-sdk
+@vxture/platform-*
+Portal or agent internals
 ```
 
 ---
 
-## AI Coding Rules
+# 10. Consumers
 
-AI must:
+`@vxture/design-system` is consumed by:
 
-- use existing UI components
-- avoid creating duplicate components
-- respect design tokens
-- import only from unified entry @vxture/design-system
-- never import from internal modules directly
+- `portals/*` — all platform portals
+- `agent-studio/*` — all agent frontends
+- `packages/platform/*` — optionally, for platform SDK UI components
 
----
-
-## Technical Stack
-
-| Category       | Technology                           |
-| -------------- | ------------------------------------ |
-| **Core**       | React 19 + TypeScript 5.9            |
-| **Styles**     | TailwindCSS 4                        |
-| **Icons**      | @phosphor-icons/react (via registry) |
-| **Theme**      | next-themes                          |
-| **Components** | shadcn/ui ideas + Radix UI           |
-| **Utilities**  | clsx, tailwind-merge                 |
-| **Animations** | tailwindcss-animate                  |
+It is **never imported by server-side code** (bff, services, agent-server, core).
 
 ---
 
-## Why Single Package?
+# 11. Usage
+
+```ts
+import {
+  Button,
+  Card,
+  Dialog,
+  Icon,
+  ThemeProvider,
+  useTheme,
+  colors,
+  spacing,
+} from '@vxture/design-system';
+```
+
+Never import from internal paths:
+
+```ts
+import { Button } from '@vxture/design-system/src/components/ui/button'; // ❌
+import { Button } from '@vxture/design-system'; // ✅
+```
+
+---
+
+# 12. Technical Stack
+
+| Category   | Technology                           |
+| ---------- | ------------------------------------ |
+| Core       | React 19 + TypeScript 5.9            |
+| Styles     | TailwindCSS 4                        |
+| Icons      | @phosphor-icons/react (via registry) |
+| Theme      | next-themes                          |
+| Components | Radix UI + shadcn/ui patterns        |
+| Utilities  | clsx, tailwind-merge                 |
+| Animations | tailwindcss-animate                  |
+
+---
+
+# 13. Why Single Package
 
 The design system remains a single package because:
 
-1. **Strong internal dependencies** - tokens → theme → components, cannot be used independently
-2. **Small current scale** - 16 UI components, 1 consumer
-3. **Low maintenance cost** - single package.json, single build config
-4. **Better DX** - one import entry for everything
-5. **Clear internal structure** - organized by subdirectories
+- Strong internal dependencies: tokens → theme → components cannot be used independently
+- Single import entry for all consumers — better DX
+- Low maintenance cost: single `package.json`, single build config
+- Clear internal structure organized by subdirectory
 
-Future splitting possible if: multiple independent consumers, component count > 50, team collaboration needs.
+Future splitting is appropriate if: multiple independent consumers emerge,
+component count exceeds 50, or separate team ownership becomes necessary.
+
+---
+
+# 14. AI Coding Rules
+
+AI must:
+
+- Use existing components — never create duplicate components
+- Respect design tokens — no hardcoded color or spacing values
+- Import only from `@vxture/design-system` — never from internal paths
+- Never add `@vxture/core-*`, `service-*`, or `ai-sdk` dependencies
+- Never use Phosphor icons directly — always use `<Icon name="..." />`
+- Follow component rules: `forwardRef`, `cn()`, default variants
+- No `any` types
 
 ---
 

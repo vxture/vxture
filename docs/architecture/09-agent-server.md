@@ -1,0 +1,230 @@
+# Vxture Agent Server Layer Architecture
+
+## Overview
+
+The **Agent Server Layer** contains **agent-private backend services**.
+
+Each agent in `agent-studio/` has a paired backend in `agent-server/`.
+Agent backends are independently owned, governed, and deployed by their product team.
+They are fast-moving by design — stability is not a requirement at this layer.
+
+The Agent Server Layer sits between the BFF Layer and the AI / Service / Core layers:
+
+```
+bff/agent{N}-bff
+       ↓
+agent-server/agent{N}
+       ↓
+@vxture/ai-sdk, @vxture/service-*, @vxture/core-*
+```
+
+---
+
+# 1. Location
+
+```
+agent-server/
+├── agent01/
+├── agent02/
+└── agent{N}/
+```
+
+Each directory is an independent backend application, not a shared package.
+Agent backends do not have `@vxture/*` package names.
+
+---
+
+# 2. Internal Structure
+
+```
+agent-server/{name}/
+├── package.json
+├── tsconfig.json
+└── src/
+    ├── routers/          # HTTP route handlers or tRPC procedures
+    ├── workflows/        # AI workflow definitions
+    ├── providers/        # AI model provider integrations
+    ├── storage/          # Agent-private data access
+    ├── services/         # Agent-private business logic
+    ├── types/            # Agent-private TypeScript types
+    └── index.ts          # Application entry point
+```
+
+---
+
+# 3. Responsibilities
+
+**Agent Server handles**:
+
+- AI model invocations via `@vxture/ai-sdk` (llm, rag, embedding, workflow modules)
+- Agent-private workflow orchestration and multi-step processing
+- Agent-private storage: read/write private data, public platform data, open network data
+- Consuming platform capabilities: auth, billing, subscription via `@vxture/service-*`
+- Exposing an internal API consumed exclusively by its paired BFF
+
+**Agent Server must not handle**:
+
+- UI rendering or frontend concerns
+- Cross-agent orchestration (each agent is independent)
+- Platform-wide shared logic (belongs in `services/`)
+- Direct communication with frontend (always via BFF)
+
+---
+
+# 4. Data Sources
+
+Agent backends can access multiple data source categories:
+
+| Category          | Description                       | Examples                                      |
+| ----------------- | --------------------------------- | --------------------------------------------- |
+| Private data      | Agent-owned persistent storage    | Agent-specific DB, vector store, file storage |
+| Platform data     | Shared platform data via services | User records, billing, subscription state     |
+| Open network data | External APIs and public data     | Web search, public datasets, third-party APIs |
+
+---
+
+# 5. AI Capabilities
+
+Agent backends consume `@vxture/ai-sdk` for all AI operations.
+Each module is imported independently — agents use only what they need.
+
+```ts
+import { llmClient } from '@vxture/ai-sdk/llm';
+import { createRagPipeline } from '@vxture/ai-sdk/rag';
+import { embed } from '@vxture/ai-sdk/embedding';
+import { defineWorkflow } from '@vxture/ai-sdk/workflow';
+```
+
+Supported model providers (via `@vxture/ai-sdk/llm`):
+
+- Doubao (豆包)
+- Claude (Anthropic)
+- Custom / private models
+
+Agent backends must not integrate model providers directly.
+All model calls go through `@vxture/ai-sdk`.
+
+---
+
+# 6. Dependency Rules
+
+Allowed:
+
+```
+@vxture/ai-sdk
+@vxture/service-*
+@vxture/core-*
+@vxture/shared
+Agent-private third-party libraries
+```
+
+Forbidden:
+
+```
+Other agent-server/*    (cross-agent imports — forbidden)
+@vxture/bff-*
+@vxture/design-system
+@vxture/platform-*
+Any frontend code
+```
+
+**Cross-agent sharing rule**: Agent backends must not import each other directly.
+
+- Shared AI capabilities → `@vxture/ai-sdk`
+- Shared domain logic → promote to `services/`
+
+---
+
+# 7. BFF Relationship
+
+Each agent backend is consumed exclusively by its paired BFF:
+
+```
+bff/agent{N}-bff  →  agent-server/agent{N}
+```
+
+The agent backend exposes an internal API (REST or tRPC).
+The BFF calls this API and aggregates it with other data sources
+(`@vxture/service-*`, `@vxture/core-*`) before responding to the frontend.
+
+The frontend (`agent-studio/{N}`) never communicates directly with the agent backend.
+All frontend ↔ backend communication goes through the BFF.
+
+---
+
+# 8. Promotion Lifecycle
+
+Agent-private logic follows a **promote-when-ready** lifecycle:
+
+```
+Stage 1 — Private
+  agent-server/{agent}/src/services/
+  Fast iteration. No stability requirements.
+  Used only by this agent.
+
+Stage 2 — Candidate
+  Logic proves useful across multiple agents or portals.
+  Team initiates extraction process.
+
+Stage 3 — Promoted
+  services/service-{name}/
+  Shared platform domain service.
+  Stability guarantees apply.
+  Consumed by any BFF.
+```
+
+Promotion criteria:
+
+- Used by 2+ agents or portals
+- Logic is stable and well-tested
+- Domain boundary is clearly defined
+- No agent-specific assumptions remain in the logic
+
+---
+
+# 9. Agent Independence
+
+Each agent backend is fully independent. Independence means:
+
+- **Separate deployment** — agents deploy on their own schedule
+- **Separate dependencies** — each agent manages its own `package.json`
+- **Separate storage** — agents do not share databases or file systems directly
+- **No cross-agent imports** — agents never import from each other's source
+- **Fault isolation** — one agent backend failure does not affect other agents or the platform
+
+---
+
+# 10. Platform Capabilities Consumed
+
+Agent backends consume platform capabilities through packages, not through the BFF:
+
+| Capability                | Package                        | Notes                             |
+| ------------------------- | ------------------------------ | --------------------------------- |
+| Authentication primitives | `@vxture/core-auth`            | Token validation, session helpers |
+| Tenant context            | `@vxture/core-tenant`          | Tenant ID resolution              |
+| Configuration             | `@vxture/core-config`          | Environment-aware config          |
+| API infrastructure        | `@vxture/core-api`             | HTTP client, interceptors         |
+| Billing                   | `@vxture/service-billing`      | Billing status, usage tracking    |
+| Subscription              | `@vxture/service-subscription` | Plan validation, feature gating   |
+| LLM / RAG / Embedding     | `@vxture/ai-sdk`               | All AI model operations           |
+| Workflow                  | `@vxture/ai-sdk/workflow`      | Multi-step orchestration          |
+
+---
+
+# 11. AI Coding Rules
+
+When AI tools generate code for `agent-server/*`:
+
+1. Never import from other `agent-server/*` directories
+2. All AI model calls go through `@vxture/ai-sdk` — never integrate providers directly
+3. Never import `@vxture/design-system`, `@vxture/platform-*`, or any frontend package
+4. Never expose routes that are called directly by `agent-studio/` — always via BFF
+5. Agent-private business logic stays in `src/services/` — promote to `services/` when reusable
+6. Storage access stays in `src/storage/` — no inline DB queries in route handlers
+7. All public entry points typed — no `any` types
+8. Use `@vxture/ai-sdk` modules selectively — import only what the agent needs
+9. Follow `packages/{group}/{name}/` convention for any extracted shared logic
+
+---
+
+End of document.

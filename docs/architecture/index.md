@@ -10,4 +10,5 @@
 06-shared-layer.md
 07-service-layer.md
 08-design-system.md
-09-typescript.md
+09-agent-server.md
+10-typescript.md

@@ -2,17 +2,19 @@
 
 ## Overview
 
-The **shared layer** provides reusable utilities, types, and constants used across the entire Vxture platform.
+The **Shared Layer** provides reusable utilities, types, and constants used across
+the entire Vxture platform — portals, agent-studio, agent-server, bff, services, and packages.
 
 It must remain:
 
-- lightweight
-- dependency-safe
-- framework-agnostic
+- Lightweight
+- Dependency-safe
+- Framework-agnostic
+- Domain-agnostic
 
 ---
 
-# Package
+# 1. Package
 
 ```
 @vxture/shared
@@ -21,129 +23,147 @@ It must remain:
 Location:
 
 ```
-packages/shared
+packages/shared/shared/
 ```
 
 ---
 
-# Internal Structure
+# 2. Internal Structure
 
 ```
-packages/shared
-└── src
-    ├── constants
-    ├── types
-    ├── utils
-    └── index.ts
+packages/shared/shared/
+├── package.json
+├── tsconfig.json
+└── src/
+    ├── constants/    # Global configuration constants
+    ├── types/        # Shared TypeScript types
+    ├── utils/        # Pure utility functions
+    └── index.ts      # Barrel export
 ```
 
 ---
 
-# constants
+# 3. constants/
 
-Contains global configuration constants.
+Global configuration constants. No runtime logic — configuration objects only.
 
 Examples:
 
 ```
-authConfig.ts
-i18nConfig.ts
-themeConfig.ts
+authConfig.ts       # Auth-related constants
+i18nConfig.ts       # Locale and language constants
+themeConfig.ts      # Theme-related constants
 ```
 
 Rules:
 
-- no runtime logic
-- only configuration objects
+- No runtime logic
+- No function calls
+- Configuration objects and string/number literals only
 
 ---
 
-# types
+# 4. types/
 
-Contains shared TypeScript types.
+Shared TypeScript type definitions. No runtime imports — type definitions only.
 
 Examples:
 
 ```
-auth.types.ts
-content.types.ts
-theme.types.ts
+auth.types.ts       # Shared auth-related types
+content.types.ts    # Shared content types
+theme.types.ts      # Theme and density types
+pagination.types.ts # Shared pagination types
 ```
 
 Rules:
 
-- no runtime imports
-- only type definitions
+- No runtime imports (`import type` only where needed)
+- No class definitions with logic
+- Pure type and interface definitions
 
 ---
 
-# utils
+# 5. utils/
 
-Reusable utility functions.
+Pure utility functions with no side effects and no framework dependencies.
 
 Examples:
 
 ```
-debug.ts
-scroll.ts
+debug.ts            # Debug and logging utilities
+format.ts           # String / number formatting helpers
+scroll.ts           # Scroll utilities
+date.ts             # Date manipulation helpers
 ```
 
 Rules:
 
-- pure functions
-- no side effects
-- no framework dependencies
+- Pure functions only
+- No side effects
+- No framework dependencies (no React, no Node.js APIs)
+- Must run in both browser and Node.js environments
 
 ---
 
-# Dependency Rules
+# 6. Dependency Rules
 
-Shared layer **must NOT depend on**:
-
-```
-React
-Next.js
-Node frameworks
-Database libraries
-```
+`@vxture/shared` must not depend on any internal package.
 
 Allowed:
 
 ```
-small utility libraries
+Lightweight third-party utility libraries
+```
+
+Forbidden:
+
+```
+@vxture/core-*
+@vxture/service-*
+@vxture/bff-*
+@vxture/ai-sdk
+@vxture/platform-*
+@vxture/design-system
+React, Next.js, Node.js frameworks
+Database libraries
 ```
 
 ---
 
-# Export Pattern
+# 7. Export Pattern
 
-Use barrel export.
+Single barrel export from `src/index.ts`:
 
-Example:
-
-```
-export * from "./constants"
-export * from "./types"
-export * from "./utils"
+```ts
+export * from './constants';
+export * from './types';
+export * from './utils';
 ```
 
 ---
 
-# Import Example
+# 8. Usage
 
-```
-import { debug } from "@vxture/shared"
+```ts
+import { debug } from '@vxture/shared';
+import type { AuthConfig } from '@vxture/shared';
+import { formatDate } from '@vxture/shared';
 ```
 
 ---
 
-# AI Coding Rules
+# 9. AI Coding Rules
 
 AI must:
 
-- keep shared package minimal
-- avoid adding heavy dependencies
-- place logic in the correct folder
+- Keep the shared package minimal — only genuinely cross-cutting concerns belong here
+- Never add domain logic, business rules, or service-specific code
+- Never add UI components or React-dependent code
+- Place new code in the correct subfolder: `constants/`, `types/`, or `utils/`
+- Avoid adding heavy third-party dependencies
+- Ensure all utilities work in both browser and Node.js environments
+- No `any` types
 
 ---
 

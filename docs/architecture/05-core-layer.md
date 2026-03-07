@@ -2,300 +2,140 @@
 
 ## Overview
 
-The **Core Layer** in the Vxture Monorepo is the **platform infrastructure layer**.
+The **Core Layer** is the **platform infrastructure layer** of the Vxture Monorepo.
 
-It provides reusable, framework-agnostic utilities and services that are **consumed by Service, Platform SDK, and Portal layers**, but **does not contain business logic or UI components**.
+It provides reusable, framework-agnostic utilities and services consumed by the Service Layer,
+BFF Layer, and Agent Server Layer. It does not contain business logic or UI components.
 
 The Core Layer ensures:
 
-- **Consistency** across multi-tenant applications
-- **Type safety** and modular architecture
-- **Centralized platform services** for authentication, locale, configuration, and API handling
+- Consistency across multi-tenant applications
+- Type safety and modular architecture
+- Centralized platform primitives for authentication, locale, configuration, and API handling
 
-Core packages represent **stable platform primitives** that higher layers rely on.
+Core packages are **stable platform primitives** that higher layers rely on.
 
 ---
 
-# Responsibilities
+# 1. Package Location
 
-The Core Layer is responsible for the following platform capabilities.
+All core packages follow the `packages/{group}/{name}/` convention:
 
-## 1. API Infrastructure
+```
+packages/core/
+├── api/        # @vxture/core-api
+├── auth/       # @vxture/core-auth
+├── config/     # @vxture/core-config
+├── locale/     # @vxture/core-locale
+├── tenant/     # @vxture/core-tenant
+└── utils/      # @vxture/core-utils
+```
 
-Provide standardized tools for API communication.
+---
 
-Responsibilities:
+# 2. Responsibilities
+
+## core-api — API Infrastructure
+
+Standardized tools for API communication.
 
 - Centralized API request handling
 - Standardized request/response types
-- Authentication token support
+- Authentication token injection
 - Request interceptors
 - Error normalization
 - Retry / timeout helpers
 
-This ensures **all services communicate with APIs consistently**.
+Ensures all layers communicate with APIs consistently.
 
----
+## core-auth — Authentication Primitives
 
-## 2. Tenant & Multi-Tenant Context
-
-Support multi-tenant platform architecture.
-
-Responsibilities:
-
-- Tenant ID resolution
-- Tenant context propagation
-- Tenant configuration lookup
-- Tenant-specific data isolation
-
-This allows services and portals to operate within **tenant-aware environments**.
-
----
-
-## 3. Locale & Internationalization
-
-Provide reusable internationalization utilities.
-
-Responsibilities:
-
-- Locale resolution
-- Translation helpers
-- Formatting utilities
-- Locale context propagation
-
-This ensures **consistent multilingual support across portals**.
-
----
-
-## 4. Authentication & Authorization
-
-Provide platform-level authentication utilities.
-
-Responsibilities:
+Platform-level authentication utilities.
 
 - Token validation
 - Session helpers
 - Role-based access utilities
 - Authorization helpers
 
-The Core Layer **does not implement business permissions**, only **platform primitives**.
+Core-auth provides **platform primitives only** — not business-level permissions.
+Business permission logic belongs in the Service Layer.
 
----
+## core-config — Configuration Management
 
-## 5. Core Utilities
+- Environment-aware configuration loading
+- Typed configuration access
+- Multi-environment support (dev, staging, production)
 
-Provide reusable platform utilities.
+## core-locale — Internationalization
 
-Examples:
+- Locale resolution
+- Translation helpers
+- Date / number / currency formatting
+- Locale context propagation
+
+Ensures consistent multilingual support across portals and agents.
+
+## core-tenant — Multi-Tenant Context
+
+- Tenant ID resolution
+- Tenant context propagation
+- Tenant configuration lookup
+- Tenant-specific data isolation
+
+Allows all layers to operate within tenant-aware environments.
+
+## core-utils — Platform Utilities
+
+General-purpose platform helpers:
 
 - Logging helpers
 - Environment utilities
 - Type guards
 - Generic helpers
 
-These utilities support both **server and frontend environments**.
+Supports both server and browser environments.
 
 ---
 
-# Core Package Structure
+# 3. Dependency Rules
 
-Core functionality is divided into focused packages.
-
-```
-packages/
-│
-├─ core-api/          # API infrastructure
-├─ core-tenant/       # Tenant context
-├─ core-locale/       # Locale and i18n
-├─ core-auth/         # Authentication helpers
-└─ core-utils/        # Platform utilities
-```
-
-Example structure:
+Core packages depend only on `@vxture/shared`.
 
 ```
-packages/core-api
-│
-├─ src/
-│   ├─ client/
-│   │   └─ api-client.ts
-│   │
-│   ├─ types/
-│   │   └─ api.types.ts
-│   │
-│   ├─ utils/
-│   │   └─ request.utils.ts
-│   │
-│   └─ index.ts
+core-* → @vxture/shared  ✅
+core-* → service-*       ❌
+core-* → bff-*           ❌
+core-* → ai-sdk          ❌
+core-* → design-system   ❌
+core-* → platform-*      ❌
+core-* → React / Next.js ❌
 ```
 
-Each package must follow **single-responsibility principles**.
+Core must remain **framework-agnostic** and runnable in both Node.js and browser.
 
 ---
 
-# Layer Dependency Rules
+# 4. Internal Package Structure
 
-Vxture follows a **strict layered architecture**.
-
-```
-Shared
-   ↑
-Core
-   ↑
-Services
-   ↑
-Portals
-```
-
-Dependency rules:
-
-| Layer    | Allowed Imports          |
-| -------- | ------------------------ |
-| Shared   | none                     |
-| Core     | Shared                   |
-| Services | Core + Shared            |
-| Portals  | Services + Core + Shared |
-
-Forbidden dependencies:
+Each core package follows this layout:
 
 ```
-core → services
-core → portals
-core → UI libraries
-core → framework-specific packages
-```
-
-The Core Layer must remain **independent and reusable**.
-
----
-
-# Core Layer Principles
-
-## 1. Shared Dependencies Only
-
-Core packages may depend only on:
-
-```
-@vxture/shared
-```
-
-Forbidden dependencies:
-
-```
-services/*
-portals/*
-UI frameworks
+packages/core/{name}/
+├── package.json
+├── tsconfig.json
+└── src/
+    ├── client/       # API clients (*.client.ts)
+    ├── context/      # Context utilities (*.context.ts)
+    ├── types/        # TypeScript definitions (*.types.ts)
+    ├── utils/        # Reusable helpers (*.utils.ts)
+    └── index.ts      # Single public export entry
 ```
 
 ---
 
-## 2. Framework Agnostic
+# 5. File Naming Convention
 
-Core must run in both environments:
-
-- Node.js
-- Browser
-
-Therefore Core **must not import**:
-
-```
-react
-next
-vue
-angular
-```
-
----
-
-## 3. Type Safety
-
-All Core APIs must be **fully typed**.
-
-Guidelines:
-
-- Strict TypeScript configuration
-- Public interfaces exported
-- No `any` types
-
----
-
-## 4. Modularity
-
-Each core package must have a **clear single responsibility**.
-
-Example:
-
-```
-core-api
-core-auth
-core-tenant
-```
-
-Avoid creating **large "misc" modules**.
-
----
-
-# Public Export Rules
-
-Each core package must expose **one public entry**:
-
-```
-src/index.ts
-```
-
-All public APIs must be exported from this file.
-
-Example:
-
-```ts
-export * from './client/api-client';
-export * from './types/api.types';
-```
-
-Consumers must import only from the package root:
-
-```ts
-import { apiClient } from '@vxture/core-api';
-```
-
-Forbidden import pattern:
-
-```
-@vxture/core-api/src/client/api-client
-```
-
-This rule protects **internal implementation details**.
-
----
-
-# File Structure Convention
-
-Recommended folder layout inside each package:
-
-```
-src/
-│
-├─ client/        # API clients
-├─ context/       # Context utilities
-├─ types/         # TypeScript definitions
-├─ utils/         # Reusable helpers
-│
-└─ index.ts
-```
-
-Benefits:
-
-- Predictable structure
-- Easier AI code generation
-- Improved maintainability
-
----
-
-# Naming Convention
-
-To maintain consistency across the monorepo:
-
-| Type             | Naming           |
+| Type             | Convention       |
 | ---------------- | ---------------- |
 | Type definitions | `*.types.ts`     |
 | Constants        | `*.constants.ts` |
@@ -303,77 +143,87 @@ To maintain consistency across the monorepo:
 | API clients      | `*.client.ts`    |
 | Context helpers  | `*.context.ts`   |
 
-Avoid generic filenames like:
-
-```
-helpers.ts
-utils.ts
-misc.ts
-```
-
-Prefer **domain-specific naming**.
+Avoid generic names like `helpers.ts`, `utils.ts`, `misc.ts`.
+Prefer domain-specific names like `tenant.utils.ts`, `auth.client.ts`.
 
 ---
 
-# Example Usage
+# 6. Public Export Rules
 
-Example usage across the platform:
+Each core package exposes **one public entry point**:
+
+```
+src/index.ts
+```
+
+All public APIs are exported from this file:
+
+```ts
+export * from './client/api-client';
+export * from './types/api.types';
+```
+
+Consumers import from the package root only:
+
+```ts
+import { apiClient } from '@vxture/core-api'; // ✅
+import { apiClient } from '@vxture/core-api/src/client/api-client'; // ❌
+```
+
+---
+
+# 7. Example Usage
 
 ```ts
 import { apiClient } from '@vxture/core-api';
-import { getTenantId } from '@vxture/core-tenant';
-import { translate } from '@vxture/core-locale';
 import { validateToken } from '@vxture/core-auth';
+import { getConfig } from '@vxture/core-config';
+import { translate } from '@vxture/core-locale';
+import { getTenantId } from '@vxture/core-tenant';
 import { log } from '@vxture/core-utils';
 
-// Fetch data for current tenant
 const tenantId = getTenantId();
-
 const response = await apiClient.get(`/users?tenant=${tenantId}`);
-
 log('Fetched users:', response);
 
-// Translate a label
 const label = translate('welcome_message');
 ```
 
 ---
 
-# AI Modification Rules
+# 8. Consumers
 
-When AI tools modify Core Layer code they must follow these rules.
+Core packages are consumed by:
 
-AI **must not**:
+| Consumer         | Example usage                            |
+| ---------------- | ---------------------------------------- |
+| `bff/*`          | Auth validation, tenant resolution       |
+| `agent-server/*` | Config access, tenant context, API calls |
+| `services/*`     | Shared infrastructure primitives         |
 
-```
-Add business logic
-Add UI components
-Add React or Next.js dependencies
-Change layer dependencies
-Move files across packages
-```
-
-AI **must**:
-
-```
-Respect package boundaries
-Export public APIs via index.ts
-Follow coding standards
-Preserve architecture integrity
-```
+Core packages are **not** consumed directly by frontend code (`portals/`, `agent-studio/`).
+Frontend layers access core capabilities through their BFF over HTTP.
 
 ---
 
-# Notes
+# 9. AI Modification Rules
 
-The Core Layer is **platform infrastructure only**.
+AI must not:
 
-It should remain:
+- Add business logic to core packages
+- Add UI components or React dependencies
+- Import from service, bff, ai-sdk, or platform packages
+- Change layer dependencies
+- Move files across packages without updating exports
 
-- Stable
-- Framework-agnostic
-- Highly reusable
+AI must:
 
-Business logic must reside in the **Service Layer**, not in Core.
+- Keep each package focused on a single responsibility
+- Export all public APIs via `src/index.ts`
+- Use domain-specific file naming conventions
+- Preserve framework-agnostic constraints
+- Follow strict TypeScript — no `any` types
 
-Core packages should remain **small, focused, and maintainable**.
+---
+
+End of document.
