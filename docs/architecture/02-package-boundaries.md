@@ -12,12 +12,13 @@ It is the authoritative guide for:
 
 ## 1. Layer Overview
 
-| Layer            | Packages     | Responsibilities                                        | Allowed Dependencies     | Forbidden Dependencies   |
-| ---------------- | ------------ | ------------------------------------------------------- | ------------------------ | ------------------------ |
-| Backend Services | `service-*`  | Domain logic, API, persistence                          | Shared Layer, Core Layer | Other services, UI layer |
-| Shared Layer     | `shared`     | Generic utilities, types, constants                     | Third-party libraries    | Core, Service, UI        |
-| Core Layer       | `core-*`     | Platform infrastructure: config, tenant, i18n, API base | Shared Layer             | Service, UI              |
-| Platform SDK     | `platform-*` | SDK wrappers for Core & Service                         | Shared, Core, Service    | Portal internal          |
+| Layer            | Packages             | Responsibilities                                        | Allowed Dependencies     | Forbidden Dependencies   |
+| ---------------- | -------------------- | ------------------------------------------------------- | ------------------------ | ------------------------ |
+| UI Layer         | `@vxture/design-system` | Design tokens, UI components, theme, icons, density    | Shared Layer             | Service, Core (except shared) |
+| Backend Services | `service-*`          | Domain logic, API, persistence                          | Shared Layer, Core Layer | Other services, UI layer |
+| Shared Layer     | `shared`               | Generic utilities, types, constants                     | Third-party libraries    | Core, Service, UI        |
+| Core Layer       | `core-*`              | Platform infrastructure: config, tenant, i18n, API base | Shared Layer             | Service, UI              |
+| Platform SDK     | `platform-*`          | SDK wrappers for Core & Service                         | Shared, Core, Service    | Portal internal          |
 
 ---
 
@@ -102,7 +103,36 @@ import { createTicket } from '@vxture/service-ticket';
 
 ---
 
-## 5. Platform SDK Layer (`@vxture/platform-*`)
+## 5. UI Layer (`@vxture/design-system`)
+
+**Responsibilities**:
+
+- Design tokens (colors, spacing, radius, shadow, typography)
+- UI components (Button, Card, Dialog, etc.)
+- Theme system (light/dark/system)
+- Icon library (with registry pattern)
+- Density system (compact/default/comfortable)
+- Global styles and CSS variables
+
+**Allowed dependencies**:
+
+- Shared Layer
+
+**Forbidden dependencies**:
+
+- Core packages (except @vxture/shared)
+- Service packages
+- Portal internal code
+
+**Usage**:
+
+```ts
+import { Button, Icon, ThemeProvider, useTheme } from '@vxture/design-system';
+```
+
+---
+
+## 6. Platform SDK Layer (`@vxture/platform-*`)
 
 **Responsibilities**:
 
@@ -136,6 +166,8 @@ import { ticketClient } from '@vxture/platform-sdk';
 Portal / Business
    ↓
 Platform SDK
+   ↓
+UI Layer (design-system)
    ↓
 Backend Services
    ↓

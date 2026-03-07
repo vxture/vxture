@@ -109,14 +109,15 @@ Examples:
 ```
 packages/
 ├ shared
-├ core-api
-├ core-config
-├ core-locale
-├ core-tenant
-├ design-tokens
-├ design-system
-├ ui-kit
-└ icons
+├ core/
+│  ├ api
+│  ├ auth
+│  ├ config
+│  ├ locale
+│  ├ tenant
+│  └ utils
+└ design/
+   └ design-system
 ```
 
 These packages provide **infrastructure and shared functionality**.
@@ -138,15 +139,14 @@ Example packages:
 @vxture/core-config
 @vxture/core-locale
 @vxture/core-tenant
+@vxture/core-auth
+@vxture/core-utils
 
 @vxture/service-ticket
 @vxture/service-billing
 @vxture/service-subscription
 
-@vxture/design-tokens
 @vxture/design-system
-@vxture/ui-kit
-@vxture/icons
 
 @vxture/shared
 ```
@@ -213,10 +213,7 @@ Design system packages.
 Examples:
 
 ```
-@vxture/design-tokens
 @vxture/design-system
-@vxture/ui-kit
-@vxture/icons
 ```
 
 Responsibilities:
@@ -225,6 +222,7 @@ Responsibilities:
 - UI components
 - theme system
 - icon library
+- density system
 
 ---
 
