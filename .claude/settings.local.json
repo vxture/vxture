@@ -19,7 +19,8 @@
       "Bash(ls -la services/*)",
       "Bash(mv services/gateway services/gateway-python-temp)",
       "Bash(mkdir -p services/service-ticket/src services/service-billing/src services/service-subscription/src)",
-      "Bash(git remote set-url origin https://github.com/vxture/vxture.git)"
+      "Bash(git remote set-url origin https://github.com/vxture/vxture.git)",
+      "Bash(git push origin main)"
     ]
   }
 }
