@@ -17,9 +17,9 @@ It ensures consistent, high-quality, and maintainable code generation.
 ## 2. Package Boundaries
 
 - Respect boundaries defined in:
-  - `docs/architecture/package-boundaries.md`
-  - `docs/architecture/shared-layer.md`
-  - `docs/architecture/package-graph.json`
+  - `docs/architecture/02-package-boundaries.md`
+  - `docs/architecture/06-shared-layer.md`
+  - `docs/architecture/03-package-graph.json`
 - Only include allowed types, constants, or utils for the current package.
 - Forbidden dependencies:
   - Core packages (`@vxture/core-*`)

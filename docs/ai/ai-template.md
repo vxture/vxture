@@ -1,78 +1,110 @@
-Read Vxture package boundaries and dependency graph from:
+# Vxture AI Full Audit Runner
 
-- docs/architecture/package-graph.json
-- docs/architecture/package-graph.mmd
+This document is the entry point for running a full AI compliance audit for the Vxture repository.
 
-When generating code:
+The AI must follow the steps defined here to execute all audit rules.
 
-- Respect all layer boundaries
-- Only import allowed dependencies
-- Shared layer must remain domain-agnostic
-- Services must remain isolated
-- Portal/business apps must call services via platform-sdk
+# Step 1 — Load Audit Configuration
 
-Task:
+Load the following configuration files:
 
----
+docs/ai-audit/ai-audit-scope.md
+docs/ai-audit/ai-issue-severity.md
+docs/ai-audit/ai-audit-report-template.md
 
-Read all docs under docs/ai/ and docs/architecture/
-Follow package boundaries from package-graph.json
-Follow coding style from claude-code-style.md
-Follow AI coding rules from ai-coding-rules.md
+These files define:
 
----
+- which packages must be audited
+- severity classification rules
+- report format
 
-我们之间不要过多废话，我自己不写代码，所以我没有要求的时候，你不要给我说怎么做。
-我进一步提出明确要求。希望理解我的诉求。
----- 下面时上次的 ai prompt ---
-Read all Vxture architecture docs under:
+# Step 2 — Load Architecture Documentation
 
-- docs/architecture/shared-layer.md
-- docs/architecture/package-boundaries.md
-- docs/architecture/package-graph.json
-- docs/ai/claude-code-style.md
-- docs/ai/ai-coding-rules.md
+The AI must follow repository architecture rules defined in:
 
-Task:
+docs/architecture/01-monorepo.md
+docs/architecture/05-core-layer.md
+docs/architecture/06-shared-layer.md
+docs/architecture/07-service-layer.md
+docs/architecture/02-package-boundaries.md
+docs/architecture/03-package-graph.json
+docs/architecture/09-typescript.md
 
-- Generate the Shared Layer package for Vxture Monorepo
-- Package name: @vxture/shared
-- Integrate previous constants, types, and utils
-- Keep pure utilities, TS types, and constants only
-- No business logic allowed
-- Respect allowed dependencies: only third-party libs
-- Forbidden dependencies: core, service, UI/Portal
-- Use TypeScript composite configuration, path alias: @vxture/shared/\*
-- Generate index.ts for unified exports
-- Provide example imports for Core, Service, Platform SDK layers
-- Follow Claude code style, TS best practices, modular clean code
+# Step 3 — Load AI Coding Standards
 
-Output:
+docs/ai/claude-coding-comments.md
+docs/ai/claude-coding-rules.md
+docs/ai/claude-coding-style.md
 
-- Full directory structure with files
-- TypeScript content for each file
-- Example usage import statements
-- Ensure AI code can be copy-paste directly into packages/shared/src
+# Step 4 — Load All AI Rule Prompts
 
-针对下面三条补充aiprompt，让ai更好的编码1.我们给ai传递的docs，应该已经约束了包的边界，为什么ai会超出，优化 ai prompt 2. 我们的定位时ai完成shared重构即可，但是ai 会build all，导致胡乱区修改其他包，优化3. 注释不统一，我提供一个注释规范，你让ai遵循。claude-code-comments.md 4. prompt提到了ai-coding-rules.md，但docs没有这个文档，有ai-context.md
+The AI must load and execute all rule prompts located in:
 
----
+docs/ai-rules-check/
 
-下面是我docs 的全部文档，请记住正确名称，不要搞错。
-d:\MyWebSite\vxture\docs\
+Rules include:
 
-├── ai/ # AI 相关文档
-│ ├── ai-context.md # AI 上下文说明
-│ ├── ai-template.md # AI 模板文档
-│ └── claude-code-style.md # Claude Code 风格指南
-├── standards/ # 空
-└── architecture/ # 架构设计文档
-├── monorepo.md # Monorepo 架构详细说明
-├── typescript.md # TypeScript 架构说明
-├── shared-layer.md # 共享层架构说明
-├── service-layer.md # 服务层架构说明
-├── design-system.md # 设计系统说明
-├── ai-coding-rules.md # AI 编码规则
-├── package-boundaries.md # 包边界说明
-├── package-graph.json # 包依赖图 JSON
-└── package-graph.mmd # 包依赖图 Mermaid 图表
+03-architecture-check.md
+09-code-style-check.md
+10-comments-check.md
+07-core-layer-check.md
+04-dependency-check.md
+02-folder-structure-check.md
+05-import-rules-check.md
+01-monorepo-check.md
+06-shared-layer-check.md
+08-tsconfig-check.md
+
+# Step 5 — Execute Rule Checks
+
+For each rule prompt:
+
+1. read the rule prompt
+2. execute the rule against repository files
+3. collect violations
+4. classify severity using ai-issue-severity.md
+
+# Step 6 — Respect Audit Scope
+
+Audit scope is defined in:
+
+docs/ai-audit/ai-audit-scope.md
+
+Rules:
+
+- only scan completed packages
+- ignore incomplete packages
+- ignore directories listed in ignore rules
+
+# Step 7 — Generate Audit Report
+
+The AI must generate a Markdown report using:
+
+docs/ai-audit/ai-audit-report-template.md
+
+File naming rule:
+
+ai-rules-audit-YYYY-MM-DD.md
+
+# Step 8 — Important Constraints
+
+This is a read-only audit.
+
+The AI must NOT:
+
+- modify code
+- refactor files
+- create packages
+- change folder structure
+- generate replacement code
+
+# Final Goal
+
+Ensure the Vxture repository complies with:
+
+- Vxture architecture rules
+- monorepo structure rules
+- dependency boundaries
+- TypeScript standards
+- coding style standards
+- comment standards

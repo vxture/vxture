@@ -1,0 +1,18 @@
+{
+  "name": "@vxture/service-ticket",
+  "version": "0.0.0",
+  "private": true,
+  "description": "工单管理服务 - 处理客户支持工单、故障报告、问题跟踪等功能",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo \"Build for service-ticket\"",
+    "dev": "echo \"Dev mode for service-ticket\"",
+    "test": "echo \"Test for service-ticket\""
+  },
+  "dependencies": {
+    "@vxture/shared": "workspace:*",
+    "@vxture/core-api": "workspace:*",
+    "@vxture/core-auth": "workspace:*"
+  }
+}
