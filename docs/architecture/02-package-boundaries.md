@@ -12,13 +12,13 @@ It is the authoritative guide for:
 
 ## 1. Layer Overview
 
-| Layer            | Packages             | Responsibilities                                        | Allowed Dependencies     | Forbidden Dependencies   |
-| ---------------- | -------------------- | ------------------------------------------------------- | ------------------------ | ------------------------ |
-| UI Layer         | `@vxture/design-system` | Design tokens, UI components, theme, icons, density    | Shared Layer             | Service, Core (except shared) |
-| Backend Services | `service-*`          | Domain logic, API, persistence                          | Shared Layer, Core Layer | Other services, UI layer |
-| Shared Layer     | `shared`               | Generic utilities, types, constants                     | Third-party libraries    | Core, Service, UI        |
-| Core Layer       | `core-*`              | Platform infrastructure: config, tenant, i18n, API base | Shared Layer             | Service, UI              |
-| Platform SDK     | `platform-*`          | SDK wrappers for Core & Service                         | Shared, Core, Service    | Portal internal          |
+| Layer            | Packages                | Responsibilities                                        | Allowed Dependencies     | Forbidden Dependencies        |
+| ---------------- | ----------------------- | ------------------------------------------------------- | ------------------------ | ----------------------------- |
+| UI Layer         | `@vxture/design-system` | Design tokens, UI components, theme, icons, density     | Shared Layer             | Service, Core (except shared) |
+| Backend Services | `service-*`             | Domain logic, API, persistence                          | Shared Layer, Core Layer | Other services, UI layer      |
+| Shared Layer     | `shared`                | Generic utilities, types, constants                     | Third-party libraries    | Core, Service, UI             |
+| Core Layer       | `core-*`                | Platform infrastructure: config, tenant, i18n, API base | Shared Layer             | Service, UI                   |
+| Platform SDK     | `platform-*`            | SDK wrappers for Core & Service                         | Shared, Core, Service    | Portal internal               |
 
 ---
 
@@ -185,23 +185,6 @@ Shared Layer
 
 - Package names follow: `@vxture/{group}-{package}`
 - Directory structure mirrors group logically:
-
-```
-packages/
-├ shared
-├ core/
-│  ├ api
-│  ├ config
-│  ├ locale
-│  └ tenant
-├ service/
-│  ├ ticket
-│  ├ billing
-│  └ subscription
-├ platform/
-│  ├ sdk
-│  └ client
-```
 
 ---
 

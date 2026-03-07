@@ -78,10 +78,10 @@ tailwind.css          # Tailwind directives
 
 UI density management system, supports three levels:
 
-| Level       | Scale | Use Case |
-|-------------|-------|----------|
-| `compact`   | 0.875x | Small screens, high-density data |
-| `default`   | 1x    | Default, balanced display |
+| Level         | Scale  | Use Case                          |
+| ------------- | ------ | --------------------------------- |
+| `compact`     | 0.875x | Small screens, high-density data  |
+| `default`     | 1x     | Default, balanced display         |
 | `comfortable` | 1.125x | Comfortable reading, more spacing |
 
 **Affected**: spacing, component height, padding, typography scale
@@ -102,6 +102,7 @@ theme.types.ts        # Theme type definitions
 ```
 
 **Context return value**:
+
 ```typescript
 {
   theme: "light" | "dark" | "system"
@@ -127,6 +128,7 @@ types.ts              # Complete type definitions
 ```
 
 **Business Groups**:
+
 - General Interaction - Navigation
 - General Interaction - Actions
 - General Interaction - Status
@@ -164,6 +166,7 @@ TailwindCSS
 ```
 
 **Component Rules**:
+
 - forwardRef
 - use cn() to merge classes
 - default variant="default", default size="default"
@@ -173,7 +176,7 @@ TailwindCSS
 ## Usage
 
 ```typescript
-import { Button, Icon, ThemeProvider, useTheme, colors } from "@vxture/design-system";
+import { Button, Icon, ThemeProvider, useTheme, colors } from '@vxture/design-system';
 ```
 
 ---
@@ -192,15 +195,15 @@ AI must:
 
 ## Technical Stack
 
-| Category | Technology |
-|----------|------------|
-| **Core** | React 19 + TypeScript 5.9 |
-| **Styles** | TailwindCSS 4 |
-| **Icons** | @phosphor-icons/react (via registry) |
-| **Theme** | next-themes |
-| **Components** | shadcn/ui ideas + Radix UI |
-| **Utilities** | clsx, tailwind-merge |
-| **Animations** | tailwindcss-animate |
+| Category       | Technology                           |
+| -------------- | ------------------------------------ |
+| **Core**       | React 19 + TypeScript 5.9            |
+| **Styles**     | TailwindCSS 4                        |
+| **Icons**      | @phosphor-icons/react (via registry) |
+| **Theme**      | next-themes                          |
+| **Components** | shadcn/ui ideas + Radix UI           |
+| **Utilities**  | clsx, tailwind-merge                 |
+| **Animations** | tailwindcss-animate                  |
 
 ---
 
