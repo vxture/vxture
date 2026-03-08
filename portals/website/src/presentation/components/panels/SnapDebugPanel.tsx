@@ -65,7 +65,7 @@ interface SnapDebugPanelProps {
 // ============================================================================
 
 /** 默认位置 */
-const DEFAULT_POSITION = { top: '4px', right: '4px', zIndex: 9999 };
+const DEFAULT_POSITION = { top: '80px', right: '20px', zIndex: 9999 };
 /** 默认可见性 */
 const DEFAULT_VISIBLE = true;
 

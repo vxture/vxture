@@ -40,16 +40,16 @@ function Stop-ProcessByPort {
 
         $uniqueProcessIds = $processIds | Sort-Object -Unique
 
-        foreach ($pid in $uniqueProcessIds) {
-            if ($pid -and $pid -ne "0") {
+        foreach ($procId in $uniqueProcessIds) {
+            if ($procId -and $procId -ne "0") {
                 try {
-                    $process = Get-Process -Id $pid -ErrorAction SilentlyContinue
+                    $process = Get-Process -Id $procId -ErrorAction SilentlyContinue
                     if ($process) {
-                        Write-Host "终止进程: $($process.ProcessName) (PID: $pid)" -ForegroundColor Yellow
-                        Stop-Process -Id $pid -Force
+                        Write-Host "终止进程: $($process.ProcessName) (PID: $procId)" -ForegroundColor Yellow
+                        Stop-Process -Id $procId -Force
                     }
                 } catch {
-                    Write-Host "无法终止进程 PID: $pid" -ForegroundColor Red
+                    Write-Host "无法终止进程 PID: $procId" -ForegroundColor Red
                 }
             }
         }

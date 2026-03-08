@@ -37,6 +37,16 @@ if (-not (Test-Path "node_modules")) {
 }
 Write-Host "依赖已安装" -ForegroundColor Green
 
+# 检查 Python 是否安装
+Write-Host "`n检查 Python 环境..." -ForegroundColor Cyan
+try {
+    $pythonVersion = python --version 2>&1
+    Write-Host "Python 版本: $pythonVersion" -ForegroundColor Green
+} catch {
+    Write-Host "错误: 未找到 Python，请先安装 Python 3.11+ 版本" -ForegroundColor Red
+    exit 1
+}
+
 # 检查并清理端口
 Write-Host "`n检查端口占用..." -ForegroundColor Cyan
 

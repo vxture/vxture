@@ -1,5 +1,11 @@
 {
   "permissions": {
-    "allow": []
+    "allow": [
+      "Bash(taskkill //F //PID 14596)",
+      "Bash(pnpm --filter @vxture/website dev)",
+      "Bash(taskkill //F //PID 21356)",
+      "Bash(powershell -ExecutionPolicy Bypass -Command \":*)",
+      "Bash(xargs grep -l \"agent-server\\\\|service-\\\\|core-\\\\|ai-sdk\\\\|bff-\")"
+    ]
   }
 }
