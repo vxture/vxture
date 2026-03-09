@@ -47,6 +47,66 @@ importers:
 
   business/ruinagent: {}
 
+  packages/core/api:
+    dependencies:
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/core/auth:
+    dependencies:
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/core/config:
+    dependencies:
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/core/locale:
+    dependencies:
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/core/tenant:
+    dependencies:
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/core/utils:
+    dependencies:
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
   packages/design/design-system:
     dependencies:
       '@phosphor-icons/react':
@@ -235,6 +295,44 @@ importers:
   services/billing: {}
 
   services/gateway: {}
+
+  services/gateway-python-temp: {}
+
+  services/service-billing:
+    dependencies:
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-utils':
+        specifier: workspace:*
+        version: link:../../packages/core/utils
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+
+  services/service-subscription:
+    dependencies:
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/service-billing':
+        specifier: workspace:*
+        version: link:../service-billing
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+
+  services/service-ticket:
+    dependencies:
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
 
   services/workers: {}
 

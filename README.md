@@ -1,5 +1,10 @@
 # Vxture 智能云服务平台
 
+**Version**: 0.1.0
+**Last Updated**: 2026-03-09
+**TypeScript**: 5.9.3
+**ECMAScript**: ES2023
+
 > 人工智能业务的云服务平台 - 提供智能体服务
 
 基于 PNPM Monorepo 架构的全栈云服务平台，专注于人工智能业务的服务提供和管理。

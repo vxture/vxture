@@ -1,5 +1,10 @@
 # Vxture TypeScript Architecture
 
+**Version**: 1.1.0
+**Last Updated**: 2026-03-09
+**TypeScript Version**: 5.9.3
+**ECMAScript Target**: ES2023
+
 ## Overview
 
 Vxture uses **strict TypeScript configuration** across all packages and applications
@@ -16,27 +21,22 @@ Goals:
 
 # 1. Configuration Architecture
 
-Vxture uses a **three-level tsconfig inheritance** structure:
+Vxture uses a **two-level tsconfig inheritance** structure:
 
 ```
-tsconfig.base.json          # Global compiler rules (root)
-tsconfig.paths.json         # Monorepo path aliases (root)
+tsconfig.base.json          # Global compiler rules + path aliases (root)
       ↓
 {package}/tsconfig.json     # Per-package local config
-      ↓
-{package}/tsconfig.build.json  # Library build config (optional)
 ```
 
 Root-level files:
 
 ```
 vxture/
-├── tsconfig.base.json
-├── tsconfig.paths.json
+├── tsconfig.base.json      # Global config (compiler options + paths)
+├── tsconfig.json           # Project references (solution-style)
 ├── portals/
-├── agent-studio/
-├── agent-server/
-├── bff/
+├── business/
 ├── services/
 └── packages/
 ```
@@ -50,57 +50,31 @@ Defines global TypeScript compiler rules inherited by all packages and applicati
 ```json
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["DOM", "ES2022"],
+    "target": "ES2023",
     "module": "ESNext",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
 
     "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "useDefineForClassFields": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
 
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-
-    "jsx": "react-jsx",
-    "types": ["node"]
+    "allowSyntheticDefaultImports": true
   }
 }
 ```
 
 ---
 
-# 3. tsconfig.paths.json
+# 3. Path Aliases Configuration
 
-Defines monorepo path aliases aligned with the `packages/{group}/{name}/` structure.
-
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@vxture/shared": ["packages/shared/shared/src"],
-      "@vxture/core-api": ["packages/core/api/src"],
-      "@vxture/core-auth": ["packages/core/auth/src"],
-      "@vxture/core-config": ["packages/core/config/src"],
-      "@vxture/core-locale": ["packages/core/locale/src"],
-      "@vxture/core-tenant": ["packages/core/tenant/src"],
-      "@vxture/core-utils": ["packages/core/utils/src"],
-      "@vxture/ai-sdk": ["packages/ai/ai-sdk/src"],
-      "@vxture/platform-amap": ["packages/platform/amap/src"],
-      "@vxture/platform-cesium": ["packages/platform/cesium/src"],
-      "@vxture/design-system": ["packages/design/design-system/src"]
-    }
-  }
-}
-```
+Path aliases are defined directly in `tsconfig.base.json`, aligned with the `packages/{group}/{name}/` structure.
 
 Rules:
 
@@ -178,7 +152,7 @@ Different layers have different runtime environments and require adjusted settin
 
 **Frontend packages** (`portals/`, `agent-studio/`, `design-system`, `platform-*`):
 
-- Include `"lib": ["DOM", "ES2022"]`
+- Include `"lib": ["DOM", "ES2023"]`
 - React types via `@types/react`
 - `"jsx": "react-jsx"`
 - `"noEmit": true` for applications

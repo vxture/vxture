@@ -1,5 +1,10 @@
 # Architecture Documentation Index
 
+**Version**: 1.0.0
+**Last Updated**: 2026-03-09
+**TypeScript**: 5.9.3
+**ECMAScript**: ES2023
+
 ## File Execution Order
 
 01-monorepo.md

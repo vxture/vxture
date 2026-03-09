@@ -1,5 +1,10 @@
 # Vxture Monorepo Architecture
 
+**Version**: 1.0.0
+**Last Updated**: 2026-03-09
+**TypeScript**: 5.9.3
+**ECMAScript**: ES2023
+
 This document defines the **monorepo architecture of the Vxture platform**.
 
 Vxture is designed as a **TypeScript-based enterprise SaaS platform** using a **pnpm workspace monorepo**.
