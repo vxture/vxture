@@ -7,9 +7,27 @@
 
 The **Service Layer** contains **shared platform domain services**.
 
+Domain directories represent bounded contexts in the platform's
+domain-driven architecture.
+
 These are stable, reusable domain modules consumed by the BFF Layer and Agent Server Layer.
 They represent business logic that has been **proven and promoted** from agent-server backends,
 or platform capabilities that are shared across multiple consumers from the start.
+
+Service directories are grouped by domain for organizational clarity,
+but package names remain flat.
+
+---
+
+```
+Example:
+
+Directory:
+services/commerce/billing
+
+Package name:
+@vxture/service-billing
+```
 
 ---
 
@@ -55,18 +73,20 @@ It does not appear in the package name. Consumers always import using `@vxture/s
 
 # 3. Current Domain Groups
 
-| Domain     | Directory            | Services                                            |
-| ---------- | -------------------- | --------------------------------------------------- |
-| `commerce` | `services/commerce/` | `@vxture/service-billing`, `service-subscription`   |
-| `support`  | `services/support/`  | `@vxture/service-ticket`                            |
+| Domain     | Directory            | Services                                          |
+| ---------- | -------------------- | ------------------------------------------------- |
+| `commerce` | `services/commerce/` | `@vxture/service-billing`, `service-subscription` |
+| `support`  | `services/support/`  | `@vxture/service-ticket`                          |
 
 **Adding a new service**:
+
 1. Identify the appropriate business domain
 2. Create `services/{domain}/{name}/`
 3. Set `"name": "@vxture/service-{name}"` in `package.json`
 4. No workspace config change needed — `services/*/*` already covers all domains
 
 **Adding a new domain**:
+
 1. Create `services/{new-domain}/` directory
 2. Add first service inside it
 3. No workspace config change needed

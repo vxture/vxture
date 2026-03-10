@@ -68,12 +68,16 @@ Both surfaces share the same platform infrastructure and are governed independen
                       ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  SERVICE LAYER                                                  │
-│                                                                 │
-│   @vxture/service-billing                                      │
-│   @vxture/service-subscription   Shared · Stable · Reusable   │
-│   @vxture/service-ticket                                       │
-│                                                                 │
-│   Promoted from agent-server when proven reusable              │
+|                                                                 |
+|   services/                                                     |
+|      commerce/                                                  |
+|       billing            (@vxture/service-billing)              |
+|        subscription       (@vxture/service-subscription)        |
+|                                                                 |
+|      support/                                                   |
+|        ticket             (@vxture/service-ticket)              |
+|                                                                 |
+│   Promoted from agent-server when proven reusable               │
 └──────────────────────────┬──────────────────────────────────────┘
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -194,7 +198,137 @@ What the BFF does not do:
 
 ---
 
-# 6. Package Architecture
+# 6. Agent Server Layer
+
+The **Agent Server Layer** contains the private backend services
+for individual AI agents.
+
+Each agent may have its own server responsible for handling
+agent-specific logic, model orchestration, data processing,
+and integrations that are unique to that agent.
+
+Agent servers live in the top-level `agent-server/` directory.
+
+```
+agent-server/
+  agent01/
+  agent02/
+  agent{N}/
+```
+
+Unlike platform services, agent servers are **not shared across
+the entire platform**. They are designed to evolve quickly and
+serve the needs of a specific agent product.
+
+---
+
+Agent servers are typically responsible for:
+
+- AI model orchestration
+- prompt pipelines
+- RAG pipelines
+- vector storage integration
+- agent-specific workflows
+
+They often depend on the shared **AI SDK** and may call
+platform services when needed.
+
+---
+
+The relationship between layers is typically:
+
+```
+Frontend
+   │
+   ▼
+BFF
+   │
+   ├──► Services
+   │
+   └──► Agent Server
+           │
+           ▼
+         Services
+           │
+           ▼
+           Core
+```
+
+Agent-specific capabilities may eventually be promoted
+into the **Service Layer** when they become reusable
+across multiple agents or applications.
+
+---
+
+# 7. Service Layer
+
+The **Service Layer** contains the platform's **shared domain capabilities**.
+
+Services implement reusable business logic that can be consumed by
+multiple applications across the platform, including BFFs, portals,
+and agent backends.
+
+While the **Core Layer** provides technical infrastructure
+(configuration, tenant resolution, API primitives),
+the **Service Layer** represents **business-level functionality**.
+
+Examples include billing, subscriptions, support tickets, and
+other domain services that are shared across the platform.
+
+---
+
+Services are organized by **business domain** and live in the
+top-level `services/` directory.
+
+```
+services/
+  commerce/
+    billing
+    subscription
+
+  support/
+    ticket
+```
+
+Each service is published internally using the naming convention:
+
+```
+@vxture/service-{name}
+```
+
+Examples:
+
+```
+@vxture/service-billing
+@vxture/service-subscription
+@vxture/service-ticket
+```
+
+---
+
+The Service Layer sits **between application layers and platform infrastructure**.
+
+Typical dependency flow:
+
+```
+Frontend
+   │
+   ▼
+BFF
+   │
+   ▼
+Services
+   │
+   ▼
+Core
+```
+
+Services depend only on **Core** and **Shared** packages and must remain
+independent from application-specific code.
+
+---
+
+# 8. Package Architecture
 
 All shared code lives in `packages/` under a consistent two-level structure:
 
@@ -207,7 +341,6 @@ packages/{group}/{name}/   →   @vxture/{group}-{name}
 | `shared`   | Cross-cutting utilities and types    | `@vxture/shared`                                                                   |
 | `core`     | Platform infrastructure primitives   | `core-api`, `core-auth`, `core-tenant`, `core-locale`, `core-config`, `core-utils` |
 | `ai`       | Shared AI capabilities (server-side) | `@vxture/ai-sdk` (llm, rag, embedding, workflow)                                   |
-| `service`  | Shared domain services               | `service-billing`, `service-subscription`, `service-ticket`                        |
 | `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`                                                 |
 | `design`   | UI design system                     | `@vxture/design-system`                                                            |
 
@@ -218,12 +351,11 @@ design-system  →  shared
 platform-*     →  shared
 core-*         →  shared
 ai-sdk         →  shared
-service-*      →  core-*  →  shared
 ```
 
 ---
 
-# 7. Dependency Rules — One Page Summary
+# 9. Dependency Rules — One Page Summary
 
 ```
 FRONTEND (portals/*, agent-studio/*)
@@ -266,7 +398,7 @@ SHARED
 
 ---
 
-# 8. Agent Lifecycle
+# 10. Agent Lifecycle
 
 Agent-server logic follows a **promote-when-ready** path toward the platform:
 
@@ -297,7 +429,7 @@ All agents can import the module independently
 
 ---
 
-# 9. Agent Deployment Modes
+# 11. Agent Deployment Modes
 
 Agent frontends support two deployment modes without changing their codebase:
 
@@ -310,7 +442,7 @@ Suitable for agents that are integral features of a portal experience.
 
 ---
 
-# 10. Infrastructure Decisions
+# 12. Infrastructure Decisions
 
 **Monorepo**: pnpm workspace. Unified dependency management, shared build tooling,
 cross-package TypeScript path aliases.
@@ -326,7 +458,7 @@ Path aliases aligned with `packages/{group}/{name}/` structure.
 
 ---
 
-# 11. Architecture Principles
+# 13. Architecture Principles
 
 **Separation of concerns** — each layer has one clear job. Business logic in services,
 infrastructure in core, AI in ai-sdk, UI in design-system.
@@ -348,23 +480,23 @@ are kept apart by design. Different governance, deployment cadence, and dependen
 
 ---
 
-# 12. Document Map
+# 14. Document Map
 
-| File                       | Contents                                                      |
-| -------------------------- | ------------------------------------------------------------- |
-| `00-overview.md`           | 本文档 — 平台架构总览                                          |
-| `01-monorepo.md`           | Monorepo 结构、工作区配置、各层目录规范                         |
-| `02-package-boundaries.md` | 各层依赖边界的权威参考                                          |
-| `03-package-graph.json`    | 机器可读包依赖图                                               |
-| `04-shared-layer.md`       | Shared 层架构                                                 |
-| `05-core-layer.md`         | Core 层架构与职责                                              |
-| `06-ai-sdk.md`             | AI SDK 模块架构                                               |
-| `07-service-layer.md`      | Service 层架构与晋升生命周期                                    |
-| `08-design-system.md`      | Design System 架构                                            |
-| `09-platform-sdk.md`       | Platform SDK 架构                                             |
-| `10-bff-layer.md`          | BFF 层架构                                                    |
-| `11-agent-server.md`       | Agent Server 层架构                                           |
-| `12-typescript.md`         | TypeScript 配置标准                                           |
+| File                       | Contents                                |
+| -------------------------- | --------------------------------------- |
+| `00-overview.md`           | 本文档 — 平台架构总览                   |
+| `01-monorepo.md`           | Monorepo 结构、工作区配置、各层目录规范 |
+| `02-package-boundaries.md` | 各层依赖边界的权威参考                  |
+| `03-package-graph.json`    | 机器可读包依赖图                        |
+| `04-shared-layer.md`       | Shared 层架构                           |
+| `05-core-layer.md`         | Core 层架构与职责                       |
+| `06-ai-sdk.md`             | AI SDK 模块架构                         |
+| `07-service-layer.md`      | Service 层架构与晋升生命周期            |
+| `08-design-system.md`      | Design System 架构                      |
+| `09-platform-sdk.md`       | Platform SDK 架构                       |
+| `10-bff-layer.md`          | BFF 层架构                              |
+| `11-agent-server.md`       | Agent Server 层架构                     |
+| `12-typescript.md`         | TypeScript 配置标准                     |
 
 ---
 

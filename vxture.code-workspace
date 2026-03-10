@@ -54,7 +54,7 @@
     },
   ],
   "settings": {
-    "typescript.locale": "zh-CN",
+    "#js/ts.locale": "zh-CN",
     "emmet.includeLanguages": {
       "javascript": "javascriptreact",
       "typescript": "typescriptreact",
@@ -75,6 +75,11 @@
       "**/__pycache__": true,
       "**/*.pyc": true,
     },
+    "search.useGlobalIgnoreFiles": true,
+    "claudeCode.autosave": true,
+    "claudeCode.respectGitIgnore": true,
+    "claudeCode.usePythonEnvironment": true,
+    "claudeCode.environmentVariables": [],
   },
   "extensions": {
     "recommendations": [

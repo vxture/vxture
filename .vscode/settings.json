@@ -30,11 +30,9 @@
 
   // 语言特定配置（只保留技术栈相关）
   "typescript.locale": "zh-CN",
-  "typescript.updateImportsOnFileMove.enabled": "always",
-  "typescript.preferences.quoteStyle": "single",
-  "typescript.suggest.autoImports": true,
-  "javascript.updateImportsOnFileMove.enabled": "always",
-  "javascript.preferences.quoteStyle": "single",
+  "#js/ts.updateImportsOnFileMove.enabled": "always",
+  "#js/ts.preferences.quoteStyle": "single",
+  "#js/ts.suggest.autoImports": true,
   "tailwindCSS.includeLanguages": {
     "typescript": "javascript",
     "typescriptreact": "javascript"
@@ -84,5 +82,6 @@
   "sonarlint.connectedMode.project": {
     "connectionId": "vx-6b309295f6500aba6b2a71a29ee27de77fa41583",
     "projectKey": "vxture_vxture"
-  }
+  },
+  "chat.mcp.serverSampling": {}
 }
