@@ -1,7 +1,7 @@
 # Vxture TypeScript Architecture
 
-**Version**: 1.1.0
-**Last Updated**: 2026-03-09
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
 **TypeScript Version**: 5.9.3
 **ECMAScript Target**: ES2023
 
@@ -36,7 +36,9 @@ vxture/
 ├── tsconfig.base.json      # Global config (compiler options + paths)
 ├── tsconfig.json           # Project references (solution-style)
 ├── portals/
-├── business/
+├── agent-studio/
+├── agent-server/
+├── bff/
 ├── services/
 └── packages/
 ```
@@ -74,17 +76,21 @@ Defines global TypeScript compiler rules inherited by all packages and applicati
 
 # 3. Path Aliases Configuration
 
-Path aliases are defined directly in `tsconfig.base.json`, aligned with the `packages/{group}/{name}/` structure.
+Path aliases are defined directly in `tsconfig.base.json`, aligned with the monorepo structure.
 
 Rules:
 
 - Every internal package must have a path alias
-- Aliases must follow `@vxture/{group}-{name}` naming
+- Aliases must follow `@vxture/{group}-{name}` naming for packages
+- Aliases must follow `@vxture/service-{name}` for services (no domain prefix)
 - Cross-package relative imports are **forbidden**
 
 ```ts
-import { debug } from '@vxture/shared'; // ✅
-import { debug } from '../../../shared/shared/src'; // ❌
+import { debug } from '@vxture/shared';                    // ✅
+import { debug } from '../../../shared/shared/src';        // ❌
+
+import { getBillingStatus } from '@vxture/service-billing'; // ✅
+import { getBillingStatus } from '../../services/commerce/billing/src'; // ❌
 ```
 
 ---
@@ -106,6 +112,23 @@ Every package and application must include a local `tsconfig.json`.
   "exclude": ["node_modules", "dist"]
 }
 ```
+
+**Services** (`services/{domain}/{name}/`):
+
+```json
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
+```
+
+Note: Services use three levels (`../../../`) because of the two-level domain structure
+`services/{domain}/{name}/`.
 
 **Applications** (`portals/`, `agent-studio/`, `bff/`, `agent-server/`):
 
@@ -142,7 +165,7 @@ Shared packages that are published or consumed as libraries define an additional
 ```
 
 Applies to: `packages/core/*`, `packages/ai/ai-sdk`, `packages/platform/*`,
-`packages/design/design-system`, `packages/shared/shared`.
+`packages/design/design-system`, `packages/shared/shared`, `services/*/*`.
 
 ---
 
@@ -190,7 +213,7 @@ export * from './utils/request.utils';
 Consumers always import from the package root:
 
 ```ts
-import { apiClient } from '@vxture/core-api'; // ✅
+import { apiClient } from '@vxture/core-api';        // ✅
 import { apiClient } from '@vxture/core-api/src/client'; // ❌
 ```
 
@@ -200,19 +223,19 @@ Source code must never import from `dist/`.
 
 # 8. File Naming Convention
 
-| Type             | Convention          | Example              |
-| ---------------- | ------------------- | -------------------- |
-| React components | PascalCase `.tsx`   | `Button.tsx`         |
-| React hooks      | camelCase `use*.ts` | `useTheme.ts`        |
-| Type definitions | `*.types.ts`        | `user.types.ts`      |
-| Constants        | `*.constants.ts`    | `auth.constants.ts`  |
-| Utilities        | `*.utils.ts`        | `format.utils.ts`    |
-| API clients      | `*.client.ts`       | `api.client.ts`      |
-| Context helpers  | `*.context.ts`      | `tenant.context.ts`  |
-| Service logic    | `*.service.ts`      | `billing.service.ts` |
-| Repository logic | `*.repository.ts`   | `user.repository.ts` |
-| Router modules   | `*.router.ts`       | `order.router.ts`    |
-| Middleware       | `*.middleware.ts`   | `auth.middleware.ts` |
+| Type             | Convention          | Example               |
+| ---------------- | ------------------- | --------------------- |
+| React components | PascalCase `.tsx`   | `Button.tsx`          |
+| React hooks      | camelCase `use*.ts` | `useTheme.ts`         |
+| Type definitions | `*.types.ts`        | `user.types.ts`       |
+| Constants        | `*.constants.ts`    | `auth.constants.ts`   |
+| Utilities        | `*.utils.ts`        | `format.utils.ts`     |
+| API clients      | `*.client.ts`       | `api.client.ts`       |
+| Context helpers  | `*.context.ts`      | `tenant.context.ts`   |
+| Service logic    | `*.service.ts`      | `billing.service.ts`  |
+| Repository logic | `*.repository.ts`   | `user.repository.ts`  |
+| Router modules   | `*.router.ts`       | `order.router.ts`     |
+| Middleware       | `*.middleware.ts`   | `auth.middleware.ts`  |
 
 Avoid generic names: `helpers.ts`, `utils.ts`, `misc.ts`.
 Use domain-specific names instead.
@@ -262,8 +285,8 @@ const data: any           // ❌ use unknown and narrow
 Cross-package relative imports:
 
 ```ts
-import { x } from '../../../packages/core/api/src'; // ❌
-import { x } from '@vxture/core-api'; // ✅
+import { x } from '../../../packages/core/api/src';  // ❌
+import { x } from '@vxture/core-api';                 // ✅
 ```
 
 Duplicated type definitions across packages:
@@ -280,7 +303,7 @@ export type ID = string;
 AI generated code must:
 
 1. Always extend `tsconfig.base.json` — never define compiler options from scratch
-2. Use three-level path for packages: `"extends": "../../../tsconfig.base.json"`
+2. Use three-level path for packages and services: `"extends": "../../../tsconfig.base.json"`
 3. Use two-level path for applications: `"extends": "../../tsconfig.base.json"`
 4. Never use `any` — use `unknown` and narrow types explicitly
 5. Never disable strict rules — document with a comment if `@ts-ignore` is absolutely required
@@ -288,7 +311,8 @@ AI generated code must:
 7. Use `@vxture/*` workspace aliases for all cross-package imports — no relative cross-package paths
 8. Never import from `dist/`
 9. Use `import type` for type-only imports
-10. Follow file naming conventions — PascalCase components, camelCase hooks, kebab-case type files
+10. Follow file naming conventions — PascalCase components, camelCase hooks, domain-specific names for everything else
+11. Service imports always use `@vxture/service-{name}` — never reference the domain path
 
 ---
 

@@ -1,5 +1,8 @@
 # Vxture Shared Layer Architecture
 
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
+
 ## Overview
 
 The **Shared Layer** provides reusable utilities, types, and constants used across
@@ -25,6 +28,9 @@ Location:
 ```
 packages/shared/shared/
 ```
+
+Note: The two-level path (`shared/shared`) follows the uniform `packages/{group}/{name}/` convention
+applied consistently across all package groups.
 
 ---
 

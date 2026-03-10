@@ -1,7 +1,7 @@
 # Vxture Design System Architecture
 
-**Version**: 1.0.0
-**Last Updated**: 2026-03-09
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -226,7 +226,7 @@ Never import from internal paths:
 
 ```ts
 import { Button } from '@vxture/design-system/src/components/ui/button'; // ❌
-import { Button } from '@vxture/design-system'; // ✅
+import { Button } from '@vxture/design-system';                           // ✅
 ```
 
 ---

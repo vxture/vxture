@@ -1,5 +1,8 @@
 # Vxture AI Coding Style
 
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
+
 This document defines how AI should generate code for the Vxture project.
 
 ---
@@ -53,13 +56,13 @@ Prefer **named exports**.
 
 Correct:
 
-```
+```ts
 export function createUser() {}
 ```
 
 Avoid:
 
-```
+```ts
 export default function createUser() {}
 ```
 
@@ -71,7 +74,7 @@ Always enable strict typing.
 
 Example:
 
-```
+```ts
 type User = {
   id: string
   name: string
@@ -92,7 +95,7 @@ Functions should:
 
 Example:
 
-```
+```ts
 function formatDate(date: Date): string
 ```
 
@@ -100,13 +103,13 @@ function formatDate(date: Date): string
 
 # Comments
 
-Use clear comments when necessary.
+Use clear comments when necessary. All comments written in **Chinese**.
 
 Example:
 
-```
+```ts
 /**
- * Format a date into ISO string
+ * 将日期格式化为 ISO 字符串
  */
 ```
 
@@ -116,19 +119,25 @@ Avoid unnecessary comments.
 
 # Dependency Rules
 
-AI must respect package dependency boundaries.
+AI must respect package dependency boundaries defined in `02-package-boundaries.md`.
 
 Allowed:
 
 ```
-portal → services
-service → core
-service → shared
+portal      → bff (HTTP only)
+bff         → service-*, core-*, agent-server/*
+agent-server → ai-sdk, service-*, core-*
+service-*   → core-*, shared
+core-*      → shared
 ```
 
 Not allowed:
 
 ```
-service → portal
-service → service
+frontend    → service-*, core-*, ai-sdk (server-side packages)
+service-*   → other service-*
+bff-*       → other bff-*
 ```
+
+When importing services, always use `@vxture/service-{name}`.
+The domain directory path (`services/commerce/billing/`) is never referenced in imports.

@@ -1,7 +1,7 @@
 # Vxture Platform Architecture Overview
 
-**Version**: 1.0.0
-**Last Updated**: 2026-03-09
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -38,9 +38,9 @@ Both surfaces share the same platform infrastructure and are governed independen
 │                                                                 │
 │   portals/              agent-studio/                          │
 │   (platform UI)         (agent product UI)                     │
-│   website               agent01/web                            │
-│   admin                 agent02/web          Frontend only      │
-│   tenant                agent{N}/web                           │
+│   website               agent01/                               │
+│   admin                 agent02/               Frontend only   │
+│   tenant                agent{N}/                              │
 └──────────────┬──────────────────┬───────────────────────────────┘
                │ HTTP              │ HTTP
                ▼                  ▼
@@ -69,9 +69,9 @@ Both surfaces share the same platform infrastructure and are governed independen
 ┌─────────────────────────────────────────────────────────────────┐
 │  SERVICE LAYER                                                  │
 │                                                                 │
+│   @vxture/service-billing                                      │
+│   @vxture/service-subscription   Shared · Stable · Reusable   │
 │   @vxture/service-ticket                                       │
-│   @vxture/service-billing        Shared · Stable · Reusable   │
-│   @vxture/service-subscription                                 │
 │                                                                 │
 │   Promoted from agent-server when proven reusable              │
 └──────────────────────────┬──────────────────────────────────────┘
@@ -123,7 +123,7 @@ agent-server/*
 | Agent Web     | `agent-studio/*`      | Agent product UI          | Fast            |
 | Agent Server  | `agent-server/*`      | Agent-private backend     | Fast            |
 | BFF           | `bff/*`               | Frontend ↔ backend bridge | Medium          |
-| Services      | `services/*`          | Shared domain logic       | Slow            |
+| Services      | `services/*/*`        | Shared domain logic       | Slow            |
 | Core          | `packages/core/*`     | Platform infrastructure   | Very slow       |
 | AI SDK        | `packages/ai/ai-sdk`  | Shared AI capabilities    | Medium          |
 | Platform SDK  | `packages/platform/*` | 3rd-party SDK wrappers    | Low             |
@@ -276,7 +276,7 @@ agent-server/{agent}/          Fast, private, experimental
         │  (proven reusable across 2+ agents or portals,
         │   stable, domain boundary clearly defined)
         ▼
-services/service-{name}/       Shared, stable, platform-owned
+services/{domain}/{name}/      Shared, stable, platform-owned
         │
         ▼
 Consumed by any BFF            Available to all portals and agents
@@ -320,8 +320,8 @@ BFF handles per-consumer authentication and routing. Introduce an API Gateway
 (Kong, APISIX) when centralized rate limiting, K8s traffic management,
 or external API exposure is required.
 
-**TypeScript**: Strict mode enforced across all packages. Three-level tsconfig inheritance
-(`tsconfig.base.json` → `tsconfig.paths.json` → per-package `tsconfig.json`).
+**TypeScript**: Strict mode enforced across all packages. Two-level tsconfig inheritance
+(`tsconfig.base.json` → per-package `tsconfig.json`).
 Path aliases aligned with `packages/{group}/{name}/` structure.
 
 ---
@@ -350,18 +350,21 @@ are kept apart by design. Different governance, deployment cadence, and dependen
 
 # 12. Document Map
 
-| File                       | Contents                                            |
-| -------------------------- | --------------------------------------------------- |
-| `00-overview.md`           | This document — full platform architecture overview |
-| `01-monorepo.md`           | Repository structure, layers, workspace config      |
-| `02-package-boundaries.md` | Per-layer dependency rules and constraints          |
-| `03-package-graph.json`    | Machine-readable package graph                      |
-| `05-core-layer.md`         | Core package architecture and responsibilities      |
-| `06-shared-layer.md`       | Shared layer architecture                           |
-| `07-service-layer.md`      | Service layer architecture and promotion lifecycle  |
-| `08-design-system.md`      | Design system architecture                          |
-| `09-agent-server.md`       | Agent server layer architecture                     |
-| `10-typescript.md`         | TypeScript configuration and engineering standards  |
+| File                       | Contents                                                      |
+| -------------------------- | ------------------------------------------------------------- |
+| `00-overview.md`           | 本文档 — 平台架构总览                                          |
+| `01-monorepo.md`           | Monorepo 结构、工作区配置、各层目录规范                         |
+| `02-package-boundaries.md` | 各层依赖边界的权威参考                                          |
+| `03-package-graph.json`    | 机器可读包依赖图                                               |
+| `04-shared-layer.md`       | Shared 层架构                                                 |
+| `05-core-layer.md`         | Core 层架构与职责                                              |
+| `06-ai-sdk.md`             | AI SDK 模块架构                                               |
+| `07-service-layer.md`      | Service 层架构与晋升生命周期                                    |
+| `08-design-system.md`      | Design System 架构                                            |
+| `09-platform-sdk.md`       | Platform SDK 架构                                             |
+| `10-bff-layer.md`          | BFF 层架构                                                    |
+| `11-agent-server.md`       | Agent Server 层架构                                           |
+| `12-typescript.md`         | TypeScript 配置标准                                           |
 
 ---
 

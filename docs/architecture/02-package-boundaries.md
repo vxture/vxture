@@ -1,10 +1,13 @@
 # Vxture Package Boundaries
 
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
+
 This document defines the **package boundaries and responsibilities** for the Vxture Monorepo.
 
 It is the authoritative guide for:
 
-- AI-assisted coding (Claude / ChatGPT / Copilot)
+- AI-assisted coding (Claude / Copilot)
 - Developer onboarding
 - Package architecture consistency
 
@@ -14,15 +17,15 @@ It is the authoritative guide for:
 
 | Layer         | Location                  | Responsibilities                                                | Allowed Dependencies                           | Forbidden Dependencies                                  |
 | ------------- | ------------------------- | --------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
-| Portal Web    | `portals/*`               | Platform management UI — stable, ops-facing                     | BFF (HTTP), design-system, platform-\*, shared | service-_, core-_, ai-sdk, bff-\* (as packages)         |
-| Agent Web     | `agent-studio/*`          | Agent product UI — fast-changing, customer-facing               | BFF (HTTP), design-system, platform-\*, shared | service-_, core-_, ai-sdk, bff-\* (as packages)         |
-| Agent Backend | `agent-server/*`          | Agent-private backend: models, storage, workflows               | ai-sdk, service-_, core-_, shared              | design-system, platform-_, bff-_, other agent-server/\* |
-| BFF           | `bff/*` / `@vxture/bff-*` | Auth, tenant resolution, aggregation, response shaping          | agent-server/_, service-_, core-\*, shared     | design-system, platform-_, ai-sdk, other bff-_          |
-| Service       | `@vxture/service-*`       | Shared platform domain logic (promoted from agent-server)       | core-\*, shared                                | other service-_, UI, bff-_, platform-\*, ai-sdk         |
-| Core          | `@vxture/core-*`          | Platform infrastructure: config, tenant, i18n, auth, API base   | shared                                         | service-_, UI, bff-_, platform-\*, ai-sdk               |
-| AI SDK        | `@vxture/ai-sdk`          | Shared AI capabilities: llm, rag, embedding, workflow (modules) | shared (+ core-\* TBD)                         | service-_, UI, bff-_, platform-\*                       |
-| Platform SDK  | `@vxture/platform-*`      | Third-party client SDK wrappers — browser-only                  | shared, design-system (optional)               | core-_, service-_, ai-sdk, bff-\*                       |
-| Design System | `@vxture/design-system`   | Design tokens, UI components, theme, icons, density             | shared                                         | core-_, service-_, ai-sdk, bff-_, platform-_            |
+| Portal Web    | `portals/*`               | Platform management UI — stable, ops-facing                     | BFF (HTTP), design-system, platform-\*, shared | service-\*, core-\*, ai-sdk, bff-\* (as packages)       |
+| Agent Web     | `agent-studio/*`          | Agent product UI — fast-changing, customer-facing               | BFF (HTTP), design-system, platform-\*, shared | service-\*, core-\*, ai-sdk, bff-\* (as packages)       |
+| Agent Backend | `agent-server/*`          | Agent-private backend: models, storage, workflows               | ai-sdk, service-\*, core-\*, shared            | design-system, platform-\*, bff-\*, other agent-server/\* |
+| BFF           | `bff/*` / `@vxture/bff-*` | Auth, tenant resolution, aggregation, response shaping          | agent-server/\*, service-\*, core-\*, shared   | design-system, platform-\*, ai-sdk, other bff-\*        |
+| Service       | `@vxture/service-*`       | Shared platform domain logic (promoted from agent-server)       | core-\*, shared                                | other service-\*, UI, bff-\*, platform-\*, ai-sdk        |
+| Core          | `@vxture/core-*`          | Platform infrastructure: config, tenant, i18n, auth, API base   | shared                                         | service-\*, UI, bff-\*, platform-\*, ai-sdk              |
+| AI SDK        | `@vxture/ai-sdk`          | Shared AI capabilities: llm, rag, embedding, workflow (modules) | shared                                         | service-\*, UI, bff-\*, platform-\*                      |
+| Platform SDK  | `@vxture/platform-*`      | Third-party client SDK wrappers — browser-only                  | shared, design-system (optional)               | core-\*, service-\*, ai-sdk, bff-\*                      |
+| Design System | `@vxture/design-system`   | Design tokens, UI components, theme, icons, density             | shared                                         | core-\*, service-\*, ai-sdk, bff-\*, platform-\*         |
 | Shared        | `@vxture/shared`          | Generic utilities, TypeScript types, constants                  | Third-party libraries only                     | All internal packages                                   |
 
 ---
@@ -68,7 +71,7 @@ import { debug } from '@vxture/shared';
 
 **Allowed dependencies**: `@vxture/shared` only.
 
-**Forbidden dependencies**: service-_, bff-_, ai-sdk, design-system, platform-\*, any UI framework.
+**Forbidden dependencies**: service-\*, bff-\*, ai-sdk, design-system, platform-\*, any UI framework.
 
 **Constraint**: Must be **framework-agnostic** — runnable in both Node.js and browser.
 
@@ -101,9 +104,9 @@ Each module is independently importable — agents import only the capabilities 
 New AI capabilities are added as modules inside this package, not as new packages,
 unless a capability requires independent versioning or deployment.
 
-**Allowed dependencies**: `@vxture/shared`. Dependency on `@vxture/core-*` to be confirmed.
+**Allowed dependencies**: `@vxture/shared`.
 
-**Forbidden dependencies**: service-_, bff-_, design-system, platform-\*.
+**Forbidden dependencies**: service-\*, bff-\*, design-system, platform-\*.
 
 **Constraint**: Server-side only. Must not be imported in any frontend code.
 
@@ -112,8 +115,8 @@ Agent backends never share logic by importing each other directly.
 
 ```ts
 // Inside agent-server/* only
-import { llmClient } from '@vxture/ai-sdk'; // full import
-import { llmClient } from '@vxture/ai-sdk/llm'; // module import
+import { llmClient } from '@vxture/ai-sdk';           // full import
+import { llmClient } from '@vxture/ai-sdk/llm';       // module import
 import { createRagPipeline } from '@vxture/ai-sdk/rag';
 import { embed } from '@vxture/ai-sdk/embedding';
 import { defineWorkflow } from '@vxture/ai-sdk/workflow';
@@ -123,15 +126,23 @@ import { defineWorkflow } from '@vxture/ai-sdk/workflow';
 
 ## 5. Service Layer (`@vxture/service-*`)
 
-**Location**: `services/{name}/`
+**Location**: `services/{domain}/{name}/`
 
-**Packages**:
+**Directory structure**: Services are grouped by business domain inside `services/`.
+The domain directory is for organization and team ownership — it does not appear in the package name.
+
+**Current domains and packages**:
 
 ```
-@vxture/service-ticket
-@vxture/service-billing
-@vxture/service-subscription
+services/
+├── commerce/
+│   ├── billing/        → @vxture/service-billing
+│   └── subscription/   → @vxture/service-subscription
+└── support/
+    └── ticket/         → @vxture/service-ticket
 ```
+
+**Package naming**: Always `@vxture/service-{name}`. Never `@vxture/commerce-billing` or similar.
 
 **Responsibilities**: shared platform business logic, domain rules, service APIs.
 
@@ -140,14 +151,16 @@ across multiple agents or portals is extracted and promoted to this layer.
 
 **Allowed dependencies**: `@vxture/core-*`, `@vxture/shared`.
 
-**Forbidden dependencies**: other service-_, bff-_, ai-sdk, design-system, platform-\*, any frontend code.
+**Forbidden dependencies**: other service-\*, bff-\*, ai-sdk, design-system, platform-\*, any frontend code.
 
 **Constraint**: Services must remain **isolated from each other**.
+Cross-domain orchestration belongs in the BFF aggregator layer.
 
 ```ts
 // Inside BFF or agent-server only — never in frontend code
 import { createTicket } from '@vxture/service-ticket';
 import { getSubscription } from '@vxture/service-subscription';
+import { getBillingStatus } from '@vxture/service-billing';
 ```
 
 ---
@@ -194,7 +207,7 @@ must not crash other routers or the BFF process.
 **Allowed dependencies**: `agent-server/*` (internal service calls), `@vxture/service-*`,
 `@vxture/core-*`, `@vxture/shared`.
 
-**Forbidden dependencies**: other bff-_, design-system, platform-_, ai-sdk, React, browser APIs.
+**Forbidden dependencies**: other bff-\*, design-system, platform-\*, ai-sdk, React, browser APIs.
 
 **Critical constraint**: BFF is **server-side only**. Frontend code never imports BFF packages.
 All communication is over **HTTP (REST or tRPC)** exclusively.
@@ -216,7 +229,7 @@ Agent-private backend services. Not shared packages — each agent owns its back
 
 **Allowed dependencies**: `@vxture/ai-sdk`, `@vxture/service-*`, `@vxture/core-*`, `@vxture/shared`.
 
-**Forbidden dependencies**: other `agent-server/*` directories, bff-_, design-system, platform-_.
+**Forbidden dependencies**: other `agent-server/*` directories, bff-\*, design-system, platform-\*.
 
 **Cross-agent sharing rules**:
 
@@ -227,7 +240,7 @@ Agent-private backend services. Not shared packages — each agent owns its back
 **Lifecycle**:
 
 ```
-agent-server/{agent}/  →  (proven reusable)  →  services/service-{name}/
+agent-server/{agent}/  →  (proven reusable)  →  services/{domain}/{name}/
 ```
 
 ---
@@ -248,8 +261,8 @@ Agent product frontend. Pure frontend — no backend logic. Governed independent
 **Allowed dependencies**: `@vxture/design-system`, `@vxture/platform-*`, `@vxture/shared`,
 own BFF over **HTTP only**.
 
-**Forbidden dependencies**: service-_, core-_, ai-sdk, bff-_ (as packages),
-`agent-server/_`, other agent-studio directories, portal internals.
+**Forbidden dependencies**: service-\*, core-\*, ai-sdk, bff-\* (as packages),
+`agent-server/*`, other agent-studio directories, portal internals.
 
 ---
 
@@ -270,10 +283,9 @@ coordinate system utilities (GCJ-02 ↔ WGS-84), version isolation.
 
 **Allowed dependencies**: `@vxture/shared`, `@vxture/design-system` (optional).
 
-**Forbidden dependencies**: core-_, service-_, ai-sdk, bff-_, other platform-_.
+**Forbidden dependencies**: core-\*, service-\*, ai-sdk, bff-\*, other platform-\*.
 
 **Critical constraint**: Browser-only. Must not be imported in any server environment.
-Backend data must be fetched by the frontend and passed as props.
 
 ```ts
 import { useAmap, AmapContainer } from '@vxture/platform-amap';
@@ -291,7 +303,7 @@ icon library (registry pattern), density system (compact/default/comfortable), g
 
 **Allowed dependencies**: `@vxture/shared`.
 
-**Forbidden dependencies**: core-_, service-_, ai-sdk, bff-_, platform-_, portal or agent internals.
+**Forbidden dependencies**: core-\*, service-\*, ai-sdk, bff-\*, platform-\*, portal or agent internals.
 
 ```ts
 import { Button, Icon, ThemeProvider, useTheme } from '@vxture/design-system';
@@ -333,15 +345,15 @@ portals/* and agent-studio/* (frontend only)
 
 ## 12. Naming Convention
 
-| Group      | Location                         | Package name                                                        |
-| ---------- | -------------------------------- | ------------------------------------------------------------------- |
-| `shared`   | `packages/shared/shared/`        | `@vxture/shared`                                                    |
-| `core`     | `packages/core/{name}/`          | `@vxture/core-api`, `core-auth`, `core-tenant`, `core-config`       |
-| `ai`       | `packages/ai/ai-sdk/`            | `@vxture/ai-sdk`                                                    |
-| `service`  | `services/{name}/`               | `@vxture/service-ticket`, `service-billing`, `service-subscription` |
-| `bff`      | `bff/{name}-bff/`                | `@vxture/bff-website`, `bff-admin`, `bff-tenant`, `bff-agent{N}`    |
-| `platform` | `packages/platform/{name}/`      | `@vxture/platform-amap`, `platform-cesium`, `platform-{name}`       |
-| `design`   | `packages/design/design-system/` | `@vxture/design-system`                                             |
+| Group      | Location                         | Package name                                                                      |
+| ---------- | -------------------------------- | --------------------------------------------------------------------------------- |
+| `shared`   | `packages/shared/shared/`        | `@vxture/shared`                                                                  |
+| `core`     | `packages/core/{name}/`          | `@vxture/core-api`, `core-auth`, `core-tenant`, `core-config`                     |
+| `ai`       | `packages/ai/ai-sdk/`            | `@vxture/ai-sdk`                                                                  |
+| `service`  | `services/{domain}/{name}/`      | `@vxture/service-billing`, `service-subscription`, `service-ticket`               |
+| `bff`      | `bff/{name}-bff/`                | `@vxture/bff-website`, `bff-admin`, `bff-tenant`, `bff-agent{N}`                  |
+| `platform` | `packages/platform/{name}/`      | `@vxture/platform-amap`, `platform-cesium`, `platform-{name}`                     |
+| `design`   | `packages/design/design-system/` | `@vxture/design-system`                                                           |
 
 ---
 
@@ -356,13 +368,15 @@ portals/* and agent-studio/* (frontend only)
 7. `@vxture/ai-sdk` is server-side only — import llm/rag/embedding/workflow modules as needed
 8. Agent backends share AI logic via `@vxture/ai-sdk` — never by importing other agent-server directories
 9. Agent backends share domain logic by promoting to `services/` — never by cross-agent imports
-10. Platform SDK is browser-only — no core-_, service-_, or ai-sdk imports
+10. Platform SDK is browser-only — no core-\*, service-\*, or ai-sdk imports
 11. Services must remain isolated — no cross-service imports
 12. BFF domain expansion means adding a router module — not creating a new BFF package
 13. Core must remain framework-agnostic — no React, no Next.js, no browser-only APIs
 14. Shared must remain domain-agnostic — pure utilities, types, constants only
 15. All packages export via `src/index.ts` — no deep internal path imports
 16. No `any` types — respect strict TypeScript configuration throughout
+17. New services always go into `services/{domain}/{name}/` — identify the correct domain first
+18. Service package names are always `@vxture/service-{name}` — domain prefix is directory-only
 
 ---
 

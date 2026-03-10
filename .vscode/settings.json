@@ -80,5 +80,9 @@
   // 推荐：为 JSON/YAML 提供更严格的 validation（不强制启用）
   "json.validate.enable": true,
   "yaml.validate": true,
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "vx-6b309295f6500aba6b2a71a29ee27de77fa41583",
+    "projectKey": "vxture_vxture"
+  }
 }

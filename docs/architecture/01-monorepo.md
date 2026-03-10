@@ -1,7 +1,7 @@
 # Vxture Monorepo Architecture
 
-**Version**: 1.0.0
-**Last Updated**: 2026-03-09
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -23,38 +23,64 @@ The architecture focuses on:
 
 ```
 vxture/
-├── portals/          # Platform frontend applications (stable, ops-facing)
-├── agent-studio/     # Agent frontend applications (fast-changing, customer-facing)
-├── agent-server/     # Agent backend services (fast-changing, private per agent)
+├── portals/                    # Platform frontend applications (stable, ops-facing)
+│   ├── website/
+│   ├── admin/
+│   └── tenant/
 │
-├── bff/              # Backend For Frontend — all BFFs in one place
-├── services/         # Shared platform domain services (stable, promoted from agent-server)
+├── agent-studio/               # Agent frontend applications (fast-changing, customer-facing)
+│   ├── agent01/
+│   ├── agent02/
+│   └── agent{N}/
 │
-├── packages/         # Shared platform packages
+├── agent-server/               # Agent backend services (fast-changing, private per agent)
+│   ├── agent01/
+│   ├── agent02/
+│   └── agent{N}/
+│
+├── bff/                        # Backend For Frontend — all BFFs in one place
+│   ├── website-bff/
+│   ├── admin-bff/
+│   ├── tenant-bff/
+│   ├── agent01-bff/
+│   └── agent{N}-bff/
+│
+├── services/                   # Shared platform domain services (stable, promoted from agent-server)
+│   ├── commerce/               # Commerce domain
+│   │   ├── billing/            # @vxture/service-billing
+│   │   └── subscription/       # @vxture/service-subscription
+│   └── support/                # Support domain
+│       └── ticket/             # @vxture/service-ticket
+│
+├── packages/                   # Shared platform packages
 │   ├── shared/
-│   │   └── shared/
+│   │   └── shared/             # @vxture/shared
 │   ├── core/
-│   │   ├── api/
-│   │   ├── auth/
-│   │   ├── config/
-│   │   ├── locale/
-│   │   ├── tenant/
-│   │   └── utils/
+│   │   ├── api/                # @vxture/core-api
+│   │   ├── auth/               # @vxture/core-auth
+│   │   ├── config/             # @vxture/core-config
+│   │   ├── locale/             # @vxture/core-locale
+│   │   ├── tenant/             # @vxture/core-tenant
+│   │   └── utils/              # @vxture/core-utils
 │   ├── ai/
-│   │   └── ai-sdk/
+│   │   └── ai-sdk/             # @vxture/ai-sdk
 │   ├── platform/
-│   │   ├── amap/
-│   │   ├── cesium/
-│   │   └── {name}/
+│   │   ├── amap/               # @vxture/platform-amap
+│   │   ├── cesium/             # @vxture/platform-cesium
+│   │   └── {name}/             # @vxture/platform-{name}
 │   └── design/
-│       └── design-system/
+│       └── design-system/      # @vxture/design-system
 │
-├── docs/             # Architecture & development documentation
-└── package.json
+├── docs/                       # Architecture & development documentation
+├── pnpm-workspace.yaml
+└── tsconfig.base.json
 ```
 
-All packages follow a consistent two-level structure: `packages/{group}/{name}/`.
+All shared packages follow a consistent two-level structure: `packages/{group}/{name}/`.
 This ensures uniform organization and clear room for future expansion within each group.
+
+`services/` uses a two-level domain structure: `services/{domain}/{name}/`.
+Package names remain `@vxture/service-{name}` — the domain directory is for organization only.
 
 `portals/` and `agent-studio/` are co-located to reflect their shared nature as frontend
 business applications with different governance cadence.
@@ -109,9 +135,9 @@ Stable, robust, and slow-changing. They form the operational backbone of the pla
 
 ```
 portals/
-├── website           # Public marketing site
-├── admin             # Platform operations portal (for platform operators)
-└── tenant            # Tenant management portal (for tenant admins)
+├── website/          # Public marketing site
+├── admin/            # Platform operations portal (for platform operators)
+└── tenant/           # Tenant management portal (for tenant admins)
 ```
 
 All portals, including `website`, have a dedicated BFF for server-side concerns
@@ -177,14 +203,14 @@ Each agent backend:
 - Contains agent-private logic: AI model invocations, storage, workflow orchestration
 - Accesses data sources: private data, public platform data, open network data
 - Calls `@vxture/ai-sdk` for shared AI capabilities (llm, rag, embedding, workflow)
-- Calls `@vxture/service-*` for platform capabilities (auth, billing, subscription)
+- Calls `@vxture/service-*` for platform capabilities (billing, subscription, ticket)
 - Is consumed by its paired BFF (`bff/agent{N}-bff`) — never directly by the frontend
 
 **Platform capabilities consumed by agent backends**:
 
 ```
-Authentication & session     → @vxture/core-auth        (via BFF)
-Tenant context               → @vxture/core-tenant       (via BFF)
+Authentication & session     → @vxture/core-auth
+Tenant context               → @vxture/core-tenant
 Billing & subscription       → @vxture/service-billing, @vxture/service-subscription
 LLM / RAG / embedding        → @vxture/ai-sdk (llm, rag, embedding modules)
 Workflow orchestration       → @vxture/ai-sdk (workflow module)
@@ -199,9 +225,9 @@ Workflow orchestration       → @vxture/ai-sdk (workflow module)
 **Lifecycle — agent-server promotes to services/**:
 
 ```
-Stage 1  agent-server/{agent}/    Agent-private, fast iteration
+Stage 1  agent-server/{agent}/              Agent-private, fast iteration
           ↓ proven reusable across multiple agents
-Stage 2  services/service-{name}/ Promoted to shared platform domain service
+Stage 2  services/{domain}/{name}/          Promoted to shared platform domain service
 ```
 
 ---
@@ -267,10 +293,25 @@ The `services` directory contains **shared platform domain services**.
 
 ```
 services/
-├── ticket/
-├── billing/
-└── subscription/
+├── commerce/               # Commerce domain
+│   ├── billing/            # @vxture/service-billing
+│   └── subscription/       # @vxture/service-subscription
+└── support/                # Support domain
+    └── ticket/             # @vxture/service-ticket
 ```
+
+**Directory structure**: Two-level domain grouping `services/{domain}/{name}/`.
+This organizes services by business domain while keeping package names flat and stable.
+
+**Package naming**: Package names follow `@vxture/service-{name}` — the domain prefix
+appears only in the directory path, not in the package name.
+Consumers (`bff/*`, `agent-server/*`) import using `@vxture/service-{name}` as always.
+
+**Adding a new service**:
+1. Identify the business domain (e.g. `commerce`, `support`, `identity`)
+2. Create `services/{domain}/{name}/`
+3. Name the package `@vxture/service-{name}`
+4. Register in `pnpm-workspace.yaml` — already covered by `services/*/*`
 
 Stable and reusable. Shared across portals and agents via BFF.
 
@@ -345,9 +386,9 @@ Examples:
 
 @vxture/ai-sdk
 
-@vxture/service-ticket
 @vxture/service-billing
 @vxture/service-subscription
+@vxture/service-ticket
 
 @vxture/bff-website
 @vxture/bff-admin
@@ -386,7 +427,8 @@ Platform infrastructure. Framework-agnostic. Depends on `shared` only.
 
 Single SDK package with internal modules for each AI capability.
 Primarily consumed by `agent-server/*`. Each module is independently importable.
-Dependency scope to be confirmed; depends on `shared` at minimum.
+New AI capabilities are added as modules inside `ai-sdk`, not as new top-level packages,
+unless a capability requires independent versioning or deployment.
 
 ```
 @vxture/ai-sdk
@@ -395,10 +437,12 @@ Dependency scope to be confirmed; depends on `shared` at minimum.
 
 ## service
 
-Shared platform domain services. Promoted from `agent-server/` when proven reusable.
+Shared platform domain services. Organized by business domain in the directory tree.
+Package names remain `@vxture/service-{name}` regardless of domain grouping.
 
 ```
-@vxture/service-ticket, service-billing, service-subscription
+commerce domain:  @vxture/service-billing, service-subscription
+support domain:   @vxture/service-ticket
 ```
 
 ## bff
@@ -472,7 +516,7 @@ bff/*                   → agent-server/*, service-*, core-*, shared
 
 service-*               → core-*, shared
 core-*                  → shared
-ai-sdk                  → shared (+ core-* TBD)
+ai-sdk                  → shared
 platform-*              → shared, design-system (optional)
 design-system           → shared
 ```
@@ -503,8 +547,9 @@ Stage 1 — Prototype
 Stage 2 — Proven & Reusable
   Logic identified as needed by multiple agents or portals.
   Extracted and promoted to:
-  services/service-{name}/
+  services/{domain}/{name}/
   Shared platform domain service with stability guarantees.
+  Package name: @vxture/service-{name}
 
 Stage 3 — Platform Capability
   Consumed by any agent or portal via its BFF.
@@ -555,7 +600,7 @@ packages:
   - agent-studio/*
   - agent-server/*
   - bff/*
-  - services/*
+  - services/*/*
   - packages/shared/shared
   - packages/core/*
   - packages/ai/ai-sdk
@@ -563,12 +608,16 @@ packages:
   - packages/design/design-system
 ```
 
+Note: `services/*/*` covers the two-level domain structure `services/{domain}/{name}/`.
+
 ---
 
 # 16. TypeScript Configuration
 
 All packages extend the root base configuration `tsconfig.base.json`.
 Each package includes its own `tsconfig.json` extending the base.
+
+See `12-typescript.md` for full TypeScript configuration details.
 
 ---
 
@@ -585,13 +634,15 @@ When AI tools generate code for this repository:
 7. `@vxture/ai-sdk` is server-side only — import llm/rag/embedding/workflow modules from it as needed
 8. Agent backends share AI logic via `@vxture/ai-sdk` — never by importing other agent-server directories
 9. Agent backends share domain logic by promoting to `services/` — never by cross-agent imports
-10. Platform SDK is browser-only — no core-_, service-_, or ai-sdk imports
+10. Platform SDK is browser-only — no core-\*, service-\*, or ai-sdk imports
 11. Services must remain isolated — no cross-service imports
 12. BFF domain expansion means adding a router module — not creating a new BFF package
 13. Core must remain framework-agnostic — no React, no Next.js, no browser-only APIs
 14. Shared must remain domain-agnostic — pure utilities, types, constants only
 15. All packages export via `src/index.ts` — no deep internal path imports
 16. No `any` types — respect strict TypeScript configuration throughout
+17. New services go into `services/{domain}/{name}/` — identify the correct domain before creating
+18. Service package names are always `@vxture/service-{name}` — the domain is directory-only
 
 ---
 
@@ -606,6 +657,7 @@ When AI tools generate code for this repository:
 - Proven-before-shared — agent logic promoted to platform services only when ready
 - Flexible agent deployment — standalone or embedded in portal
 - Strong TypeScript type safety throughout
+- Service domain organization — services grouped by business domain for navigability and team ownership
 
 ---
 

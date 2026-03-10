@@ -1,5 +1,8 @@
 # Vxture Core Layer Architecture
 
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
+
 ## Overview
 
 The **Core Layer** is the **platform infrastructure layer** of the Vxture Monorepo.
@@ -166,8 +169,8 @@ export * from './types/api.types';
 Consumers import from the package root only:
 
 ```ts
-import { apiClient } from '@vxture/core-api'; // ✅
-import { apiClient } from '@vxture/core-api/src/client/api-client'; // ❌
+import { apiClient } from '@vxture/core-api';                        // ✅
+import { apiClient } from '@vxture/core-api/src/client/api-client';  // ❌
 ```
 
 ---

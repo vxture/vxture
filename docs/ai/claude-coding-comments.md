@@ -1,5 +1,8 @@
 # Vxture AI Coding Comment Guidelines
 
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
+
 This document defines the **code commenting standards** for the Vxture Monorepo.
 It is intended for developers and AI tools to ensure readability, maintainability, and consistent style.
 

@@ -1,5 +1,8 @@
 # Vxture Agent Server Layer Architecture
 
+**Version**: 1.2.0
+**Last Updated**: 2026-03-10
+
 ## Overview
 
 The **Agent Server Layer** contains **agent-private backend services**.
@@ -59,7 +62,7 @@ agent-server/{name}/
 - AI model invocations via `@vxture/ai-sdk` (llm, rag, embedding, workflow modules)
 - Agent-private workflow orchestration and multi-step processing
 - Agent-private storage: read/write private data, public platform data, open network data
-- Consuming platform capabilities: auth, billing, subscription via `@vxture/service-*`
+- Consuming platform capabilities: billing, subscription via `@vxture/service-*`
 - Exposing an internal API consumed exclusively by its paired BFF
 
 **Agent Server must not handle**:
@@ -131,7 +134,7 @@ Any frontend code
 **Cross-agent sharing rule**: Agent backends must not import each other directly.
 
 - Shared AI capabilities → `@vxture/ai-sdk`
-- Shared domain logic → promote to `services/`
+- Shared domain logic → promote to `services/{domain}/{name}/`
 
 ---
 
@@ -164,10 +167,12 @@ Stage 1 — Private
 
 Stage 2 — Candidate
   Logic proves useful across multiple agents or portals.
+  Team identifies the correct business domain.
   Team initiates extraction process.
 
 Stage 3 — Promoted
-  services/service-{name}/
+  services/{domain}/{name}/
+  Package name: @vxture/service-{name}
   Shared platform domain service.
   Stability guarantees apply.
   Consumed by any BFF.
@@ -179,6 +184,7 @@ Promotion criteria:
 - Logic is stable and well-tested
 - Domain boundary is clearly defined
 - No agent-specific assumptions remain in the logic
+- Correct business domain has been identified (`commerce`, `support`, etc.)
 
 ---
 
@@ -219,11 +225,11 @@ When AI tools generate code for `agent-server/*`:
 2. All AI model calls go through `@vxture/ai-sdk` — never integrate providers directly
 3. Never import `@vxture/design-system`, `@vxture/platform-*`, or any frontend package
 4. Never expose routes that are called directly by `agent-studio/` — always via BFF
-5. Agent-private business logic stays in `src/services/` — promote to `services/` when reusable
+5. Agent-private business logic stays in `src/services/` — promote to `services/{domain}/{name}/` when reusable
 6. Storage access stays in `src/storage/` — no inline DB queries in route handlers
 7. All public entry points typed — no `any` types
 8. Use `@vxture/ai-sdk` modules selectively — import only what the agent needs
-9. Follow `packages/{group}/{name}/` convention for any extracted shared logic
+9. When promoting logic, identify the correct business domain before creating the service directory
 
 ---
 
