@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@vxture/bff-agent-template/*": ["./src/*"],
+      "@vxture/agent-server-agent-template/*": ["../agent-server/agent-template/src/*"],
+      "@vxture/shared/*": ["../packages/shared/shared/src/*"],
+      "@vxture/core-api/*": ["../packages/core/api/src/*"],
+      "@vxture/core-auth/*": ["../packages/core/auth/src/*"],
+      "@vxture/core-config/*": ["../packages/core/config/src/*"],
+      "@vxture/core-locale/*": ["../packages/core/locale/src/*"],
+      "@vxture/core-tenant/*": ["../packages/core/tenant/src/*"],
+      "@vxture/core-utils/*": ["../packages/core/utils/src/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

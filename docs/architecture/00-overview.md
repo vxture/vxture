@@ -456,6 +456,12 @@ or external API exposure is required.
 (`tsconfig.base.json` → per-package `tsconfig.json`).
 Path aliases aligned with `packages/{group}/{name}/` structure.
 
+**Type Imports/Exports**:
+- Always use `import type` for type-only imports
+- Always use `export type` for type-only exports in index files
+- Never use `export *` for type-only files; explicitly list exports
+- Value exports (functions, constants, classes) use regular `export`
+
 ---
 
 # 13. Architecture Principles

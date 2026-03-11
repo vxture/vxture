@@ -5,6 +5,6 @@
  * @description Global constants used across the Vxture platform
  */
 
-export * from './authConfig';
-export * from './i18nConfig';
-export * from './themeConfig';
+export * from './auth.constants';
+export * from './i18n.constants';
+export * from './theme.constants';

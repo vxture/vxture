@@ -1,0 +1,24 @@
+{
+  "name": "@vxture/ai-sdk",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "description": "Vxture AI SDK - LLM / RAG / Embedding / Workflow",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "echo \"No lint yet\"",
+    "lint:fix": "echo \"No lint:fix yet\"",
+    "build": "echo \"No build yet\""
+  },
+  "dependencies": {
+    "@vxture/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

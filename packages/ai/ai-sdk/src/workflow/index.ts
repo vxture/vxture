@@ -1,0 +1,19 @@
+/**
+ * workflow/index.ts - Workflow 模块入口
+ * @package @vxture/ai-sdk
+ *
+ * Description: 多步骤工作流编排模块
+ *
+ * @author AI-Generated
+ * @date 2026-03-11 11:20:00
+ * @version 1.0
+ *
+ * @copyright Vxture Team
+ * @license MIT
+ *
+ * @layer Infrastructure
+ * @category AI - Workflow
+ */
+
+// 导出类型
+export * from './types';

@@ -37,7 +37,7 @@ Vxture 是基于 **pnpm workspace monorepo** 的企业 SaaS 平台，TypeScript 
 | `agent-studio/*`      | `Presentation`           | Fast      |
 | `bff/*`               | `Application`            | Medium    |
 | `agent-server/*`      | `Application` / `Domain` | Fast      |
-| `services/service-*`  | `Domain`                 | Slow      |
+| `services/*/*`        | `Domain`                 | Slow      |
 | `packages/core/*`     | `Infrastructure`         | Very Slow |
 | `packages/ai/ai-sdk`  | `Infrastructure`         | Medium    |
 | `packages/platform/*` | `Infrastructure`         | Low       |
@@ -54,13 +54,17 @@ portals/* / agent-studio/*
         │
         ├──────────────────┐
         ▼                  ▼
-  agent-server/*      service-*
+  agent-server/*      services/*/*
         │                  │
-        └────────┬─────────┘
-                 ▼
-             core-*
-                 ▼
-             shared
+        ├──────────┬───────┘
+        │          ▼
+        │      @vxture/ai-sdk
+        │          │
+        └──────┬───┘
+               ▼
+         packages/core/*
+               ▼
+         packages/shared
 ```
 
 完整规则见 `docs/architecture/02-package-boundaries.md`。
@@ -116,7 +120,7 @@ portals/* / agent-studio/*
 | ------------------ | ----------- | --------------------------------- |
 | `packages/shared/` | `CLAUDE.md` | 零业务逻辑，纯工具 / 类型 / 常量  |
 | `packages/core/`   | `CLAUDE.md` | 极低变更，平台基础设施原语        |
-| `services/`        | `CLAUDE.md` | promote-when-ready，跨 agent 共享 |
+| `services/*/*`     | `CLAUDE.md` | promote-when-ready，跨 agent 共享 |
 | `bff/`             | `CLAUDE.md` | 只做聚合 + 鉴权，无业务逻辑       |
 | `portals/`         | `CLAUDE.md` | 平台管理 UI，CRUD 向，慢迭代      |
 | `agent-studio/`    | `CLAUDE.md` | Agent 前端，AI 交互向，快迭代     |
@@ -141,4 +145,4 @@ portals/* / agent-studio/*
 
 ---
 
-_版本：1.0.0 | 2026-03-10_
+_版本：1.2.0 | 2026-03-11_

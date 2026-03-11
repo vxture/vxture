@@ -45,7 +45,173 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  business/ruinagent: {}
+  agent-server/agent-template:
+    dependencies:
+      '@vxture/ai-sdk':
+        specifier: workspace:*
+        version: link:../../packages/ai/ai-sdk
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-config':
+        specifier: workspace:*
+        version: link:../../packages/core/config
+      '@vxture/core-tenant':
+        specifier: workspace:*
+        version: link:../../packages/core/tenant
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  agent-server/ruinagent:
+    dependencies:
+      '@vxture/ai-sdk':
+        specifier: workspace:*
+        version: link:../../packages/ai/ai-sdk
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-tenant':
+        specifier: workspace:*
+        version: link:../../packages/core/tenant
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  agent-studio/agent-template:
+    dependencies:
+      '@vxture/design-system':
+        specifier: workspace:*
+        version: link:../../packages/design/design-system
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  bff/admin-bff:
+    dependencies:
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-tenant':
+        specifier: workspace:*
+        version: link:../../packages/core/tenant
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  bff/agent-template-bff:
+    dependencies:
+      '@vxture/agent-server-agent01':
+        specifier: workspace:*
+        version: link:../../agent-server/agent-template
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-tenant':
+        specifier: workspace:*
+        version: link:../../packages/core/tenant
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  bff/ruinagent-bff:
+    dependencies:
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-tenant':
+        specifier: workspace:*
+        version: link:../../packages/core/tenant
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  bff/tenant-bff:
+    dependencies:
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-tenant':
+        specifier: workspace:*
+        version: link:../../packages/core/tenant
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  bff/website-bff:
+    dependencies:
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-tenant':
+        specifier: workspace:*
+        version: link:../../packages/core/tenant
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  packages/ai/ai-sdk:
+    dependencies:
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../shared/shared
+    devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
 
   packages/core/api:
     dependencies:
@@ -290,51 +456,40 @@ importers:
         specifier: ^4.0.0
         version: 4.2.1
 
-  services/auth: {}
-
-  services/billing: {}
-
-  services/gateway: {}
-
-  services/gateway-python-temp: {}
-
-  services/service-billing:
+  services/commerce/billing:
     dependencies:
       '@vxture/core-api':
         specifier: workspace:*
-        version: link:../../packages/core/api
+        version: link:../../../packages/core/api
       '@vxture/core-utils':
         specifier: workspace:*
-        version: link:../../packages/core/utils
+        version: link:../../../packages/core/utils
       '@vxture/shared':
         specifier: workspace:*
-        version: link:../../packages/shared/shared
+        version: link:../../../packages/shared/shared
 
-  services/service-subscription:
+  services/commerce/subscription:
     dependencies:
       '@vxture/core-api':
         specifier: workspace:*
-        version: link:../../packages/core/api
-      '@vxture/service-billing':
-        specifier: workspace:*
-        version: link:../service-billing
+        version: link:../../../packages/core/api
       '@vxture/shared':
         specifier: workspace:*
-        version: link:../../packages/shared/shared
+        version: link:../../../packages/shared/shared
 
-  services/service-ticket:
+  services/support/ticket:
     dependencies:
       '@vxture/core-api':
         specifier: workspace:*
-        version: link:../../packages/core/api
+        version: link:../../../packages/core/api
       '@vxture/core-auth':
         specifier: workspace:*
-        version: link:../../packages/core/auth
+        version: link:../../../packages/core/auth
       '@vxture/shared':
         specifier: workspace:*
-        version: link:../../packages/shared/shared
+        version: link:../../../packages/shared/shared
 
-  services/workers: {}
+  services/support/workers: {}
 
 packages:
 

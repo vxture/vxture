@@ -1,7 +1,7 @@
 # Architecture Documentation Index
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.3.0
+**Last Updated**: 2026-03-11
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -34,6 +34,7 @@
 | 文件 | 内容 |
 | ---- | ---- |
 | `12-typescript.md` | TypeScript 配置标准与工程规范 |
+| `13-tech-stack.md` | 技术栈选型 — 当前基准版本与升级路径 |
 
 ## Coding 规范
 
@@ -43,7 +44,18 @@
 | `claude-coding-rules.md` | AI 编码行为规则 |
 | `claude-coding-style.md` | 代码风格规范 |
 
+## Agent 实例
+
+| 实例 | 前端 | 后端 | BFF |
+| ---- | ---- | ---- | --- |
+| ruinagent | agent-studio/ruinagent | agent-server/ruinagent | bff/ruinagent-bff |
+
 ## Changelog
+
+### v1.3.0 — 2026-03-11
+
+- 新增 `13-tech-stack.md`：技术栈选型文档，含当前基准版本与升级路径
+- 补充 Agent 实例索引表（ruinagent）
 
 ### v1.2.0 — 2026-03-10
 
