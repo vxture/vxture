@@ -2,11 +2,11 @@
  * components/ui/index.ts - UI 组件导出入口
  * @package @vxture/design-system
  *
- * 功能：导出所有基础 UI 组件（15个），统一管理组件集合
+ * 功能：导出所有基础 UI 组件（16个），统一管理组件集合
  *
  * @copyright Vxture Team
  * @license MIT
- * @layer Shared
+ * @layer Presentation
  * @category Index
  */
 
@@ -25,3 +25,4 @@ export * from "./dialog";
 export * from "./tabs";
 export * from "./dropdown-menu";
 export * from "./breadcrumb";
+export * from "./switch";

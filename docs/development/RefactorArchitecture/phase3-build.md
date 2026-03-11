@@ -1,9 +1,5 @@
 # Phase 3 AI Prompt — Agent Server 层规范化
 
-> 直接将以下内容发送给执行 Claude。
-
----
-
 你是 Vxture Monorepo 的重构执行专家。现在执行 Phase 3：Agent Server 层规范化。
 
 ## 目标
@@ -16,16 +12,16 @@
 
 ### 允许使用
 
-| 用途 | 选型 |
-|------|------|
-| 框架 | NestJS（Module / Injectable / Controller） |
-| ORM | Prisma |
-| DTO 校验 | class-validator + class-transformer |
-| AI 调用 | `@vxture/ai-sdk`（统一接口，禁止直接集成 provider） |
-| 队列 | BullMQ（基础功能） |
-| 向量 | pgvector（通过 Prisma） |
-| 文件存储 | 云 OSS S3 兼容接口 |
-| 工具 | `@vxture/shared` / `@vxture/core-*` |
+| 用途     | 选型                                                |
+| -------- | --------------------------------------------------- |
+| 框架     | NestJS（Module / Injectable / Controller）          |
+| ORM      | Prisma                                              |
+| DTO 校验 | class-validator + class-transformer                 |
+| AI 调用  | `@vxture/ai-sdk`（统一接口，禁止直接集成 provider） |
+| 队列     | BullMQ（基础功能）                                  |
+| 向量     | pgvector（通过 Prisma）                             |
+| 文件存储 | 云 OSS S3 兼容接口                                  |
+| 工具     | `@vxture/shared` / `@vxture/core-*`                 |
 
 ### 严格禁止
 
@@ -55,14 +51,14 @@ src/
 
 ### 2. 文件命名
 
-| 类型 | 规范 |
-|------|------|
-| 路由 | `*.router.ts` |
-| 工作流 | `*.workflow.ts` |
+| 类型          | 规范            |
+| ------------- | --------------- |
+| 路由          | `*.router.ts`   |
+| 工作流        | `*.workflow.ts` |
 | Provider 配置 | `*.provider.ts` |
-| 数据访问 | `*.storage.ts` |
-| 业务逻辑 | `*.service.ts` |
-| 类型定义 | `*.types.ts` |
+| 数据访问      | `*.storage.ts`  |
+| 业务逻辑      | `*.service.ts`  |
+| 类型定义      | `*.types.ts`    |
 
 ### 3. 文件头注释（每个文件必须）
 
@@ -91,39 +87,44 @@ src/
 ### 4. 分层职责规范
 
 **routers/**
+
 - 只处理请求路由和响应格式化
 - 调用 services/，不含业务逻辑
 - 每个 router 独立捕获处理自己的错误
 
 **workflows/**
+
 - 使用 `@vxture/ai-sdk/workflow`（当前阶段用简单串行调用）
 - 工作流定义与执行逻辑分离
 - 不直接调用 LLM provider
 
 **providers/**
+
 - 通过 `@vxture/ai-sdk/llm` 配置 model provider
 - 封装 provider 初始化，不在业务代码中硬编码
 
 **storage/**
+
 - 封装所有 Prisma 操作和 pgvector 查询
 - 返回 agent 领域类型，不返回 Prisma 原始类型
 - route handler 和 service 禁止内联 DB 查询
 
 **services/**
+
 - agent 私有业务逻辑
 - 调用 storage/ 获取数据，调用 @vxture/ai-sdk 处理 AI 任务
-- 可消费 @vxture/service-* 平台能力
+- 可消费 @vxture/service-\* 平台能力
 
 ### 5. AI 调用规范
 
 ```typescript
 // ✅ 正确
-import { llmClient } from '@vxture/ai-sdk/llm'
-import { embed } from '@vxture/ai-sdk/embedding'
+import { llmClient } from '@vxture/ai-sdk/llm';
+import { embed } from '@vxture/ai-sdk/embedding';
 
 // ❌ 禁止
-import Anthropic from '@anthropic-ai/sdk'
-import { Doubao } from 'doubao-sdk'
+import Anthropic from '@anthropic-ai/sdk';
+import { Doubao } from 'doubao-sdk';
 ```
 
 ### 6. 队列使用规范（BullMQ）
@@ -144,12 +145,12 @@ import { Doubao } from 'doubao-sdk'
 
 ```typescript
 // 认证原语
-import { verifyToken } from '@vxture/core-auth'
+import { verifyToken } from '@vxture/core-auth';
 // 租户上下文
-import { getTenantContext } from '@vxture/core-tenant'
+import { getTenantContext } from '@vxture/core-tenant';
 // 平台服务（通过包名，不通过域路径）
-import { BillingService } from '@vxture/service-billing'
-import { SubscriptionService } from '@vxture/service-subscription'
+import { BillingService } from '@vxture/service-billing';
+import { SubscriptionService } from '@vxture/service-subscription';
 ```
 
 ---

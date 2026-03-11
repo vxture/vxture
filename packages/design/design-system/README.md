@@ -169,11 +169,14 @@ import { Icon } from '@vxture/design-system';
 import { Button } from '@vxture/design-system';
 
 <Button>点击我</Button>
-<Button variant="primary">主要按钮</Button>
+<Button variant="destructive">删除按钮</Button>
 <Button variant="outline">轮廓按钮</Button>
+<Button variant="secondary">次要按钮</Button>
 <Button variant="ghost">幽灵按钮</Button>
+<Button variant="link">链接按钮</Button>
 <Button size="sm">小按钮</Button>
 <Button size="lg">大按钮</Button>
+<Button size="icon">图标按钮</Button>
 <Button disabled>禁用</Button>
 
 <Button>
@@ -249,6 +252,7 @@ setDensity('comfortable');  // 舒适模式 (1.125x)
 | **Popover** | 弹出框 |
 | **Select** | 选择器 |
 | **Separator** | 分隔线 |
+| **Switch** | 开关 |
 | **Tabs** | 标签页 |
 | **Tooltip** | 工具提示 |
 
@@ -323,6 +327,19 @@ const { isMobile, isTablet, isDesktop } = useBreakpoint();
 
 ---
 
-**版本：2.2.0**
+## 🏗 架构说明
+
+设计系统采用 **next-themes** 作为主题切换的核心库，实现了：
+
+- **主题切换**：light/dark/system 三种主题模式
+- **密度系统**：compact/default/comfortable 三个密度级别
+- **CSS 变量**：统一的 `--vx-*` 变量命名规范
+- **持久化**：主题和密度设置持久化到 localStorage
+
+设计系统是跨层通用的 UI 基础设施，所有前端应用（portals/agent-studio）都应使用此系统。
+
+---
+
+**版本：2.3.0**
 **维护者：vxture team**
-**最后更新：2026-03-06**
+**最后更新：2026-03-12**

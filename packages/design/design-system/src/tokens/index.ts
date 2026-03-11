@@ -6,7 +6,7 @@
  *
  * @copyright Vxture Team
  * @license MIT
- * @layer Domain
+ * @layer Presentation
  * @category Tokens
  */
 

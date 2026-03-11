@@ -17,7 +17,13 @@
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
     "@vxture/core-auth": "workspace:*",
-    "@vxture/core-tenant": "workspace:*"
+    "@vxture/core-tenant": "workspace:*",
+    "@vxture/core-config": "workspace:*",
+    "@vxture/service-billing": "workspace:*",
+    "@vxture/service-subscription": "workspace:*",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "bullmq": "^5.10.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

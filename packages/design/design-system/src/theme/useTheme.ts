@@ -6,7 +6,7 @@
  *
  * @copyright Vxture Team
  * @license MIT
- * @layer Application
+ * @layer Presentation
  * @category Hooks
  */
 

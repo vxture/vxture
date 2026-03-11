@@ -5,7 +5,10 @@
       "Bash(pnpm --filter @vxture/website dev)",
       "Bash(taskkill //F //PID 21356)",
       "Bash(powershell -ExecutionPolicy Bypass -Command \":*)",
-      "Bash(xargs grep -l \"agent-server\\\\|service-\\\\|core-\\\\|ai-sdk\\\\|bff-\")"
+      "Bash(xargs grep -l \"agent-server\\\\|service-\\\\|core-\\\\|ai-sdk\\\\|bff-\")",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm run:*)",
+      "Bash(pnpm install:*)"
     ]
   }
 }
