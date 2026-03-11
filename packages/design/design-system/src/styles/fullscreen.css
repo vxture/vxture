@@ -1,0 +1,62 @@
+/**
+ * fullscreen.css - 全屏系统样式
+ * @package @vxture/design-system
+ *
+ * 功能：定义全屏系统的 CSS 样式
+ *
+ * @copyright Vxture Team
+ * @license MIT
+ * @layer Presentation
+ * @category Styles
+ */
+
+.vx-fullscreen-active {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  width: 100vw;
+  height: 100vh;
+  background: var(--vx-color-background);
+  overflow: hidden;
+}
+
+.vx-fullscreen-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.vx-fullscreen-active .vx-fullscreen-container {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* 全屏状态下隐藏滚动条 */
+.vx-fullscreen-active::-webkit-scrollbar {
+  display: none;
+}
+
+.vx-fullscreen-active {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* 原生全屏状态 */
+:fullscreen {
+  background: var(--vx-color-background);
+}
+
+/* Safari 全屏样式 */
+:-webkit-full-screen {
+  background: var(--vx-color-background);
+}
+
+/* 全屏切换动画 */
+.vx-fullscreen-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.vx-fullscreen-active.vx-fullscreen-exiting {
+  opacity: 0;
+}

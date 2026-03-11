@@ -1,5 +1,6 @@
 @import "./variables.css";
 @import "./tailwind.css";
+@import "./fullscreen.css";
 
 *,
 *::before,
