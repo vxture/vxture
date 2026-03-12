@@ -6,4 +6,4 @@
  */
 
 export * from './debug.utils';
-export * from './scroll.utils';
+export * from './locale.utils';

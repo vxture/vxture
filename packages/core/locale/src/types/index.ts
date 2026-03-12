@@ -5,7 +5,7 @@
  * Description: Locale types barrel export
  *
  * @author AI-Generated
- * @date 2026-03-11
+ * @date 2026-03-13
  * @version 1.0
  *
  * @copyright Vxture Team
@@ -13,14 +13,10 @@
  *
  * @layer Infrastructure
  * @category Types - Locale
+ *
+ * @remarks
+ * - 只导出 core-locale 包特有类型
+ * - Locale 类型从 @vxture/shared 引入，不重复定义
  */
 
 export * from './locale.types';
-export type {
-  LocaleConfig,
-  TranslationDictionary,
-  TranslateOptions,
-  FormatOptions,
-  NumberFormatOptions,
-  DateFormatOptions,
-} from './locale.types';

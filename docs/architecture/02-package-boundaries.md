@@ -17,8 +17,8 @@ It is the authoritative guide for:
 
 | Layer         | Location                  | Responsibilities                                                | Allowed Dependencies                           | Forbidden Dependencies                                  |
 | ------------- | ------------------------- | --------------------------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
-| Portal Web    | `portals/*`               | Platform management UI — stable, ops-facing                     | BFF (HTTP), design-system, platform-\*, shared | service-\*, core-\*, ai-sdk, bff-\* (as packages)       |
-| Agent Web     | `agent-studio/*`          | Agent product UI — fast-changing, customer-facing               | BFF (HTTP), design-system, platform-\*, shared | service-\*, core-\*, ai-sdk, bff-\* (as packages)       |
+| Portal Web    | `portals/*`               | Platform management UI — stable, ops-facing                     | BFF (HTTP), design-system, platform-\*, shared, core-locale | service-\*, core-api, core-auth, core-config, core-tenant, core-utils, ai-sdk, bff-\* (as packages) |
+| Agent Web     | `agent-studio/*`          | Agent product UI — fast-changing, customer-facing               | BFF (HTTP), design-system, platform-\*, shared, core-locale | service-\*, core-api, core-auth, core-config, core-tenant, core-utils, ai-sdk, bff-\* (as packages) |
 | Agent Backend | `agent-server/*`          | Agent-private backend: models, storage, workflows               | ai-sdk, service-\*, core-\*, shared            | design-system, platform-\*, bff-\*, other agent-server/\* |
 | BFF           | `bff/*` / `@vxture/bff-*` | Auth, tenant resolution, aggregation, response shaping          | agent-server/\*, service-\*, core-\*, shared   | design-system, platform-\*, ai-sdk, other bff-\*        |
 | Service       | `@vxture/service-*`       | Shared platform domain logic (promoted from agent-server)       | core-\*, shared                                | other service-\*, UI, bff-\*, platform-\*, ai-sdk        |
@@ -27,6 +27,26 @@ It is the authoritative guide for:
 | Platform SDK  | `@vxture/platform-*`      | Third-party client SDK wrappers — browser-only                  | shared, design-system (optional)               | core-\*, service-\*, ai-sdk, bff-\*                      |
 | Design System | `@vxture/design-system`   | Design tokens, UI components, theme, icons, density             | shared                                         | core-\*, service-\*, ai-sdk, bff-\*, platform-\*         |
 | Shared        | `@vxture/shared`          | Generic utilities, TypeScript types, constants                  | Third-party libraries only                     | All internal packages                                   |
+
+---
+
+## 1.1 Frontend 层特殊说明：core-locale 例外规则
+
+Frontend 层（`portals/*` 和 `agent-studio/*`）**仅允许直接引用** `@vxture/core-locale`，其他 core-* 包仍然禁止。
+
+**理由**：
+- `@vxture/core-locale` 提供纯工具函数（formatDate、formatNumber 等）
+- 无副作用、无状态管理、无安全敏感内容
+- 性能敏感（简单操作通过 HTTP 调用得不偿失）
+- 符合行业最佳实践（大多数公司不会为纯工具设置 HTTP 边界）
+
+**判断标准**（什么样的 core 包可以例外）：
+- ✅ 纯工具函数，无副作用
+- ✅ 无状态管理
+- ✅ 无安全敏感内容
+- ✅ 无业务逻辑
+- ✅ 性能敏感（简单操作）
+- ✅ 框架无关（可在浏览器运行）
 
 ---
 
@@ -362,7 +382,7 @@ portals/* and agent-studio/* (frontend only)
 1. `portals/` and `agent-studio/` are parallel frontend layers — neither depends on the other
 2. `agent-studio/` is frontend only — backend logic belongs in `agent-server/`
 3. `agent-server/` and `services/` are both backend but serve different purposes — agent-server is private and fast-changing, services are shared and stable
-4. No frontend code imports service, core, or ai-sdk — all backend calls go through BFF over HTTP
+4. No frontend code imports service, core-api, core-auth, core-config, core-tenant, core-utils, or ai-sdk — all backend calls go through BFF over HTTP. Frontend may import core-locale directly for formatting purposes
 5. No frontend code imports BFF packages or agent-server code — HTTP only, no package imports
 6. BFF is server-side only — no React, no browser APIs, no design-system, no platform-\*, no ai-sdk
 7. `@vxture/ai-sdk` is server-side only — import llm/rag/embedding/workflow modules as needed

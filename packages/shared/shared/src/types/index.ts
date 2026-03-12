@@ -9,7 +9,7 @@
 export type { UserInfo, LoginCredentials, LoginResponse, AuthState } from './auth.types';
 
 // I18n Types
-export type { LocaleType, I18nConfig, I18nResource, I18nState } from './i18n.types';
+export type { LocaleType, I18nConfig, I18nResource, I18nState } from './locale.types';
 
 // Theme Types
 export type { ThemeType, ThemeConfig, ThemeState } from './theme.types';

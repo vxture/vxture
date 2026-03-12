@@ -1,13 +1,13 @@
 /**
- * i18n.types.ts - Internationalization (i18n) Type Definitions
+ * locale.types.ts - Locale Type Definitions
  * @package @vxture/shared
  *
- * Description: Shared internationalization-related types including LocaleType,
+ * Description: Shared locale-related types including LocaleType,
  * I18nConfig, I18nResource, and I18nState. Used across Core and Portal
  * layers for multi-language support.
  *
  * @author AI-Generated
- * @date 2026-03-07
+ * @date 2026-03-13
  * @version 1.0
  *
  * @copyright Vxture Team
@@ -37,18 +37,38 @@
 // i18n Types
 // ============================================================================
 
-/**
- * Supported locale type
- * @description Constrains all valid locale strings
- */
-export type LocaleType = 'zh-CN' | 'en-US' | string;
+import type { Locale } from '../constants/locale.constants';
 
 /**
- * Single language configuration
+ * Supported locale type
+ * @description 已废弃，请直接使用 Locale 类型
+ * @deprecated 请使用从 @vxture/shared 导入的 Locale 类型
+ */
+export type LocaleType = Locale;
+
+/**
+ * Detailed language configuration
+ * @description Describes a single language's complete configuration
+ */
+export interface LanguageConfig {
+  locale: string;
+  displayName: string;
+  nativeName: string;
+  icon: string;
+  direction: 'ltr' | 'rtl';
+  region: string;
+  language: string;
+  fallbackLocale: Locale;
+  dateFormat: string;
+  timeFormat: string;
+}
+
+/**
+ * Single language configuration (simplified version)
  * @description Describes a single language's locale, display name, and optional icon
  */
 export interface I18nConfig {
-  locale: LocaleType;
+  locale: Locale;
   displayName: string;
   icon?: string;
 }
@@ -64,7 +84,7 @@ export type I18nResource = Record<string, string>;
  * @description Global i18n state for Zustand store usage
  */
 export interface I18nState {
-  locale: LocaleType;
+  locale: Locale;
   availableLocales: I18nConfig[];
 
   /**
@@ -78,5 +98,5 @@ export interface I18nState {
    * Set current locale
    * @param locale - Locale identifier
    */
-  setLocale: (locale: LocaleType) => void;
+  setLocale: (locale: Locale) => void;
 }

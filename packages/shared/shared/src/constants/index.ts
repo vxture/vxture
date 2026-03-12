@@ -6,5 +6,5 @@
  */
 
 export * from './auth.constants';
-export * from './i18n.constants';
+export * from './locale.constants';
 export * from './theme.constants';

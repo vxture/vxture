@@ -5,7 +5,7 @@
  * Description: 本地化工具函数的统一导出文件
  *
  * @author AI-Generated
- * @date 2026-03-11
+ * @date 2026-03-12
  * @version 1.0
  *
  * @copyright Vxture Team
@@ -15,4 +15,4 @@
  * @category Utils - Locale
  */
 
-// TODO: 将来需要迁移的工具函数放这里
+export * from './locale.utils';

@@ -45,7 +45,9 @@
       "@vxture/platform-amap": ["./packages/platform/amap/src"],
       "@vxture/platform-amap/*": ["./packages/platform/amap/src/*"],
       "@vxture/platform-cesium": ["./packages/platform/cesium/src"],
-      "@vxture/platform-cesium/*": ["./packages/platform/cesium/src/*"]
+      "@vxture/platform-cesium/*": ["./packages/platform/cesium/src/*"],
+      "@vxture/platform-browser": ["./packages/platform/browser/src"],
+      "@vxture/platform-browser/*": ["./packages/platform/browser/src/*"]
     }
   },
   "exclude": ["node_modules", "dist", "build"]

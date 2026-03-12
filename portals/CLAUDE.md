@@ -22,17 +22,30 @@ portals/tenant    租户管理后台（管理用户、订阅、设置）
 
 ## 依赖约束
 
+### 核心原则
+
+Frontend 只允许依赖**纯显示、无安全风险**的包：
+
 ```
 portals/*
+  ✅ → @vxture/design-system（组件、theme、tokens）
+  ✅ → @vxture/platform-*（地图、3D 等 SDK，可选）
+  ✅ → @vxture/shared（基础工具）
+  ✅ → @vxture/core-locale（i18n 格式化工具，唯一允许的 core 包）
   ✅ → BFF（HTTP only，禁止包引用）
-  ✅ → @vxture/design-system
-  ✅ → @vxture/platform-*（amap、cesium 等）
-  ✅ → @vxture/shared
   ❌ → @vxture/service-*（绕过 BFF 直连禁止）
-  ❌ → @vxture/core-*
+  ❌ → @vxture/core-api, core-auth, core-config, core-tenant, core-utils（其他 core 包禁止）
   ❌ → @vxture/ai-sdk
   ❌ → agent-server/*
 ```
+
+### core-locale 例外说明
+
+`@vxture/core-locale` 是唯一允许 frontend 直接引用的 core 包，原因：
+- 提供纯工具函数（formatDate、formatNumber、formatCurrency）
+- 无副作用、无状态管理、无安全敏感内容
+- 性能敏感（简单操作通过 HTTP 调用得不偿失）
+- 符合行业最佳实践
 
 ---
 

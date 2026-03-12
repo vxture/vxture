@@ -1,45 +1,44 @@
 /**
- * index.ts - Vxture Core Localization/i18n Package
+ * index.ts - Vxture Core Locale Package
  * @package @vxture/core-locale
  *
- * Description: Platform localization and i18n package for Vxture, providing
- * locale management, translation utilities, and date/time formatting.
+ * Description: 服务端 locale 解析与内容本地化工具。
+ * 职责：服务端 locale 解析与内容本地化，框架无关，运行于 Node.js 环境。
  *
  * @author AI-Generated
- * @date 2026-03-11
+ * @date 2026-03-13
  * @version 1.0
  *
  * @copyright Vxture Team
  * @license MIT
  *
  * @layer Infrastructure
- * @category Services - Locale
+ * @category Core
+ *
+ * @remarks
+ * - 仅提供服务端能力（bff、services、agent-server）
+ * - 前端代码禁止直接引用此包，应从 @vxture/shared 引入格式化工具
+ * - 重新导出 @vxture/shared 的 Locale 类型，方便使用方
+ *
+ * @example
+ * ```ts
+ * // 服务端使用
+ * import { resolveLocale, localizeContent, type Locale } from '@vxture/core-locale';
+ *
+ * const locale = resolveLocale(request);
+ * const content = localizeContent({ zh: '你好', en: 'Hello' }, locale);
+ * ```
  */
 
-// ============================================
-// Locale Types
-// ============================================
+// ============================================================================
+// Re-exports from @vxture/shared
+// ============================================================================
 
-export type {
-  LocaleConfig,
-  TranslationDictionary,
-  TranslateOptions,
-  FormatOptions,
-  NumberFormatOptions,
-  DateFormatOptions,
-} from './types';
+// 重新导出 Locale 类型，方便使用方
+export type { Locale } from '@vxture/shared';
 
-// ============================================
-// Locale Client
-// ============================================
+// ============================================================================
+// Service-side Locale Utils
+// ============================================================================
 
-export * from './client';
-export { LocaleManager, LocaleDetector } from './client';
-export { getLocaleManager } from './client';
-
-// ============================================
-// Locale Utils
-// ============================================
-
-// TODO: 将来需要迁移的工具函数放这里
-
+export { resolveLocale, localizeContent } from './utils/locale.utils';

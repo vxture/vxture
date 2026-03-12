@@ -48,7 +48,7 @@ export * from './utils';
 /**
  * @example
  * // Core Layer imports
- * import { I18N_CONSTANTS, type LocaleType } from '@vxture/shared';
+ * import { LOCALE_CONSTANTS, type LocaleType } from '@vxture/shared';
  *
  * // Service Layer imports
  * import { AUTH_CONSTANTS, type AuthState, debugLog } from '@vxture/shared';

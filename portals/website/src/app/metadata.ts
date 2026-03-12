@@ -7,7 +7,7 @@
  */
 
 import type { Metadata } from 'next';
-import type { Locale } from '@/infrastructure/runtime/serverContext';
+import type { Locale } from '@vxture/shared';
 
 export function buildMetadata(locale: Locale): Metadata {
   const titles = {

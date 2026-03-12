@@ -2,79 +2,49 @@
  * locale.types.ts - 本地化类型定义
  * @package @vxture/core-locale
  *
- * Description: Core locale types and constants
+ * Description: 服务端 locale 解析与内容本地化相关的类型定义。
+ * 职责：服务端 locale 解析与内容本地化，框架无关，运行于 Node.js 环境。
  *
  * @author AI-Generated
- * @date 2026-03-11
+ * @date 2026-03-13
  * @version 1.0
  *
  * @copyright Vxture Team
  * @license MIT
  *
  * @layer Infrastructure
- * @category Types - Locale
+ * @category Types
+ *
+ * @remarks
+ * - 类型定义保持精简
+ * - Locale 类型从 @vxture/shared 引入，不重复定义
+ * - 此文件只包含 core-locale 包特有类型
  */
 
-// ============================================================================
-// Locale Types
-// ============================================================================
+// 注意：Locale 类型从 @vxture/shared 引入，不重复定义
 
-export interface LocaleConfig {
-  currentLocale: string;
-  availableLocales: string[];
-  fallbackLocale: string;
-  enablePluralization?: boolean;
-  enableDateTimeFormatting?: boolean;
-  enableNumberFormatting?: boolean;
+/**
+ * 服务端内容本地化配置
+ * @description 用于配置服务端内容本地化的行为
+ */
+export interface LocalizationOptions {
+  /** 是否启用严格模式（缺少翻译时抛出错误） */
+  strict?: boolean;
+  /** 默认回退语言 */
+  fallbackLocale?: string;
+  /** 是否记录翻译缺失日志 */
+  logMissing?: boolean;
 }
 
-export interface TranslationDictionary {
-  [key: string]: string | TranslationDictionary;
+/**
+ * 请求解析选项
+ * @description 用于配置请求解析语言的行为
+ */
+export interface ResolveLocaleOptions {
+  /** 是否忽略 Cookie */
+  ignoreCookie?: boolean;
+  /** 是否忽略 Accept-Language 头 */
+  ignoreAcceptLanguage?: boolean;
+  /** 是否使用备用的默认语言 */
+  fallbackLocale?: string;
 }
-
-export interface TranslateOptions {
-  defaultValue?: string;
-  variables?: Record<string, string | number | null | undefined>;
-  count?: number;
-  pluralForms?: string[];
-}
-
-export interface NumberFormatOptions {
-  style?: 'decimal' | 'currency' | 'percent' | 'unit';
-  currency?: string;
-  unit?: string;
-  options?: Intl.NumberFormatOptions;
-}
-
-export interface FormatOptions {
-  style?: 'decimal' | 'currency' | 'percent';
-  currency?: string;
-  minimumFractionDigits?: number;
-  maximumFractionDigits?: number;
-}
-
-export interface DateFormatOptions {
-  dateStyle?: 'full' | 'long' | 'medium' | 'short';
-  timeStyle?: 'full' | 'long' | 'medium' | 'short';
-  weekday?: 'narrow' | 'short' | 'long';
-  year?: 'numeric' | '2-digit';
-  month?: 'numeric' | '2-digit' | 'narrow' | 'short' | 'long';
-  day?: 'numeric' | '2-digit';
-  hour?: 'numeric' | '2-digit';
-  minute?: 'numeric' | '2-digit';
-  second?: 'numeric' | '2-digit';
-  options?: Intl.DateTimeFormatOptions;
-}
-
-// ============================================================================
-// Default Configuration
-// ============================================================================
-
-export const DEFAULT_LOCALE_CONFIG: LocaleConfig = {
-  currentLocale: 'en-US',
-  availableLocales: ['en-US', 'zh-CN', 'ja-JP'],
-  fallbackLocale: 'en-US',
-  enablePluralization: true,
-  enableDateTimeFormatting: true,
-  enableNumberFormatting: true,
-};

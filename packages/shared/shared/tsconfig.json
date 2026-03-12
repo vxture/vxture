@@ -5,10 +5,7 @@
     "declaration": true,
     "emitDeclarationOnly": true,
     "rootDir": "./src",
-    "outDir": "./dist",
-    "paths": {
-      "@vxture/shared/*": ["./src/*"]
-    }
+    "outDir": "./dist"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "backup"]
