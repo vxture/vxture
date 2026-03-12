@@ -17,3 +17,5 @@ export { useMediaQuery } from "./useMediaQuery";
 export { useMounted } from "./useMounted";
 export { useControllableState } from "./useControllableState";
 export type { UseControllableStateProps } from "./useControllableState";
+
+export { useFullscreen } from "./useFullscreen";
