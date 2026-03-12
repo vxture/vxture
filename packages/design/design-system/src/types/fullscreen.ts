@@ -37,6 +37,21 @@ export interface FullscreenContainerProps {
   children: React.ReactNode;
 }
 
+export interface FullscreenContainerRef {
+  /**
+   * 进入全屏
+   */
+  enter: () => void;
+  /**
+   * 退出全屏
+   */
+  exit: () => void;
+  /**
+   * 切换全屏
+   */
+  toggle: () => void;
+}
+
 export interface FullscreenToggleProps {
   targetId: string;
   mode?: FullscreenMode;

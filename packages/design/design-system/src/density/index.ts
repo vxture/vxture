@@ -11,4 +11,4 @@
  */
 
 export * from "./density.types";
-export * from "./density.config";
+export * from "./densityConfig";

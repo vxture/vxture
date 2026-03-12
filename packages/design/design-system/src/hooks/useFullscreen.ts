@@ -10,7 +10,7 @@
  * @category Hooks
  */
 
-import { useFullscreenContext } from "../components/layout/fullscreen/FullscreenProvider";
+import { useFullscreenContext } from "../components/layout/fullscreen/Provider";
 import { FullscreenMode } from "../types/fullscreen";
 
 export function useFullscreen() {

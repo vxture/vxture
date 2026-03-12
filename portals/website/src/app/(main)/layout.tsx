@@ -30,8 +30,7 @@
  * @remarks
  *   仅负责布局，业务逻辑请移至页面/组件层。
  */
-import Footer from '@/presentation/components/layout/Footer';
-import Header from '@/presentation/components/layout/Header';
+import { Footer, Header } from '@/components/layout';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -14,9 +14,8 @@ import './globals.css';
 import { resolveServerContext } from '@/infrastructure/runtime/serverContext';
 import { buildMetadata } from './metadata';
 
-import QueryProvider from '@/presentation/providers/QueryProvider';
-import ClientSyncAgg from '@/presentation/providers/ClientSyncAgg';
-import Notifications from '@/presentation/components/common/Notifications';
+import Notifications from '@/components/common/Notifications';
+import { GlobalProvider } from '@/shared/contexts/GlobalContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,11 +30,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={locale} data-theme={theme} className={theme === 'dark' ? 'dark' : ''}>
       <body className={inter.className}>
-        <QueryProvider>
-          <ClientSyncAgg />
+        <GlobalProvider>
           <Notifications />
           {children}
-        </QueryProvider>
+        </GlobalProvider>
       </body>
     </html>
   );

@@ -36,16 +36,11 @@ export * from "./density";
 export * from "./tokens";
 
 // ============================================================================
-// Fullscreen
-// ============================================================================
-export * from "./components/layout/fullscreen";
-
-// ============================================================================
 // Layers
 // ============================================================================
-export * from "./layers/zIndex";
+export * from "./layers";
 
 // ============================================================================
 // Types
 // ============================================================================
-export type { FullscreenMode, FullscreenState, FullscreenContextValue, FullscreenProviderProps, FullscreenContainerProps, FullscreenToggleProps, FullscreenPortalProps } from "./types/fullscreen";
+export * from "./types";

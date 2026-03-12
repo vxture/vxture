@@ -12,3 +12,8 @@
 
 export { useBreakpoint } from "./useBreakpoint";
 export type { Breakpoint, UseBreakpointReturn } from "./useBreakpoint";
+
+export { useMediaQuery } from "./useMediaQuery";
+export { useMounted } from "./useMounted";
+export { useControllableState } from "./useControllableState";
+export type { UseControllableStateProps } from "./useControllableState";

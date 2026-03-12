@@ -1,4 +1,3 @@
-
 /**
  * page.tsx
  *
@@ -11,7 +10,7 @@
  * - 结构与其它页面组件保持一致，便于团队协作
  *
  * 依赖/调用关系：
- * - 依赖 @/components/aboutus/TestSection 进行分屏滚动展示
+ * - 依赖 @/components/about/TestSection 进行分屏滚动展示
  * - 被 app/about/layout.tsx 自动包裹
  *
  * 设计规范：
@@ -22,13 +21,13 @@
  * @desc 关于我们页面，分屏展示团队、使命、联系等信息
  * @author vxture team
  * @created 2024-06-01
- * @lastModified 2025-10-15
- * @modifiedBy stonesmoker
- * @copyright Copyright (c) 2024-2025 vxture
+ * @lastModified 2026-03-04
+ * @modifiedBy vxture team
+ * @copyright Copyright (c) 2024-2026 vxture
  * @license MIT
  * @version 1.0.0
  * @dependencies React
- * @see @/components/aboutus/TestSection
+ * @see @/components/about/TestSection
  * @tags about, page, section
  * @example
  *   // 由 Next.js 自动路由，无需手动引入
@@ -40,7 +39,7 @@
 
 'use client';
 
-import ScrollSnapDemo from '@/presentation/components/aboutus/TestSection';
+import ScrollSnapDemo from '@/components/about/TestSection';
 
 interface SectionConfig {
   id: string;

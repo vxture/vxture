@@ -10,8 +10,8 @@
  * @category Exports
  */
 
-export * from "./FullscreenProvider";
-export * from "./FullscreenContainer";
-export * from "./FullscreenPortal";
-export * from "./FullscreenToggle";
+export * from "./Provider";
+export * from "./Container";
+export * from "./Portal";
+export * from "./Toggle";
 export * from "../../../hooks/useFullscreen";

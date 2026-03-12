@@ -19,15 +19,10 @@
 // 导入
 // ============================================================================
 
-import HeroSection from '@/presentation/components/home/HeroSection';
-import FeaturesSection from '@/presentation/components/home/FeaturesSection';
-import SolutionSection from '@/presentation/components/home/SolutionSection';
-import CaseSection from '@/presentation/components/home/CaseSection';
-import CTASection from '@/presentation/components/home/CTASection';
-import ScrollToButton from '@/presentation/components/widgets/ScrollToButton';
-import SnapDebugPanel from '@/presentation/components/panels/SnapDebugPanel';
-import SnapChoicePanel from '@/presentation/components/panels/SnapChoicePanel';
-import { useWindowScrollSnap } from '@/application/hooks/useWindowScrollSnap';
+import { HeroSection, FeaturesSection, SolutionSection, CaseSection, CTASection } from '@/components/home';
+import { ScrollToButton } from '@/components/common';
+import { SnapDebugPanel, SnapChoicePanel } from '@/components/panels';
+import { useWindowScrollSnap } from '@/hooks';
 
 // ============================================================================
 // 常量定义

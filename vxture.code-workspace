@@ -2,43 +2,43 @@
   "folders": [
     {
       "name": "vxture-root",
-      "path": "."
+      "path": ".",
     },
     {
       "name": "portals/website",
-      "path": "portals/website"
+      "path": "portals/website",
     },
     {
       "name": "portals/admin",
-      "path": "portals/admin"
+      "path": "portals/admin",
     },
     {
       "name": "portals/tenant",
-      "path": "portals/tenant"
+      "path": "portals/tenant",
     },
     {
       "name": "agent-studio",
-      "path": "agent-studio"
+      "path": "agent-studio",
     },
     {
       "name": "agent-server",
-      "path": "agent-server"
+      "path": "agent-server",
     },
     {
       "name": "bff",
-      "path": "bff"
+      "path": "bff",
     },
     {
       "name": "services/commerce/billing",
-      "path": "services/commerce/billing"
+      "path": "services/commerce/billing",
     },
     {
       "name": "services/commerce/subscription",
-      "path": "services/commerce/subscription"
+      "path": "services/commerce/subscription",
     },
     {
       "name": "services/support/ticket",
-      "path": "services/support/ticket"
+      "path": "services/support/ticket",
     },
     {
       "name": "packages/design-system",

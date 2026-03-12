@@ -12,8 +12,8 @@
 
 "use client";
 
-import { iconRegistry } from "./icon-registry";
-import type { IconProps, IconSize } from "./types";
+import { iconRegistry } from "./iconRegistry";
+import type { IconProps, IconSize } from "./icon.types";
 
 // ============================================================================
 // 常量定义

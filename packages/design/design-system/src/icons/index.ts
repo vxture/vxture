@@ -11,5 +11,5 @@
  */
 
 export { Icon } from "./Icon";
-export type { IconProps } from "./types";
-export type { IconName } from "./icon-dictionary";
+export type { IconProps } from "./icon.types";
+export type { IconName } from "./iconDictionary";

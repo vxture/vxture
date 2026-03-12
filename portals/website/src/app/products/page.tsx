@@ -21,10 +21,9 @@
 // 导入
 // ============================================================================
 
-import { useWindowScrollSnap } from '@/application/hooks/useWindowScrollSnap';
-import SnapDebugPanel from '@/presentation/components/panels/SnapDebugPanel';
-import SnapChoicePanel from '@/presentation/components/panels/SnapChoicePanel';
-import ProductDetailPartOne from '@/presentation/components/products/ProductDetailPartOne';
+import { useWindowScrollSnap } from '@/hooks';
+import { SnapDebugPanel, SnapChoicePanel } from '@/components/panels';
+import { ProductDetailPartOne } from '@/components/products';
 
 // ============================================================================
 // 常量定义

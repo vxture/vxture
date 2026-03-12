@@ -1,4 +1,8 @@
 # Website 包重构计划
+**文档版本**: 2.0
+**修订日期**: 2026-03-12
+**修订人**: Stone Smoker
+**联系方式**: yanhaoguo@gmail.com
 
 ## 项目概述
 
@@ -62,41 +66,22 @@ src/
 
 ---
 
-### 1.3 不在 Frontend 内容的迁移计划
+### 1.3 内容迁移计划与决策
 
-#### Application 层迁移
-- **`application/usecases/`**: 领域逻辑 → 迁移到 `services/content/` 或 `bff/website-bff/`
-- **`application/hooks/`**: 业务逻辑 Hooks → 迁移到 `bff/website-bff/` 或删除
-- **内容管理系统**: 复杂架构 → 简化为 BFF 层的简单 API
-
-#### Domain 层迁移
-- **`domain/entities/`**: 实体类型 → 迁移到 `@vxture/shared` 或 BFF 层类型
-- **`domain/repositories/`**: 数据仓库 → 迁移到 `services/content/`
-
-#### Infrastructure 层迁移
-- **`infrastructure/adapters/`**: 数据源适配器 → 迁移到 `bff/website-bff/`
-- **`infrastructure/clients/`**: API 客户端 → 迁移到 `bff/website-bff/`
+#### 迁移路径决策
+| 原目录 | 内容类型 | 迁移目标 | 推荐方案 |
+|--------|----------|----------|----------|
+| `application/usecases/` | 领域逻辑 | `services/content/` 或 `bff/website-bff/` | `services/content/` |
+| `application/hooks/` | 业务逻辑 Hooks | `bff/website-bff/` 或删除 | 删除 |
+| 内容管理系统 | 复杂架构 | BFF 层简单 API | 简化为简单 API |
+| `domain/entities/` | 实体类型 | `@vxture/shared` 或 BFF 层类型 | `@vxture/shared` |
+| `domain/repositories/` | 数据仓库 | `services/content/` | `services/content/` |
+| `infrastructure/adapters/` | 数据源适配器 | `bff/website-bff/` | `bff/website-bff/` |
+| `infrastructure/clients/` | API 客户端 | `bff/website-bff/` | `bff/website-bff/` |
 
 ---
 
-### 1.4 迁移路径的选择确认项
-
-#### Application 层迁移决策
-- **`application/usecases/`**: 领域逻辑 → 迁移到 `services/content/`（推荐）
-- **`application/hooks/`**: 业务逻辑 Hooks → 删除（推荐）
-- **内容管理系统**: 复杂架构 → 简化为 BFF 层简单 API（推荐）
-
-#### Domain 层迁移决策
-- **`domain/entities/`**: 实体类型 → 迁移到 `@vxture/shared`（推荐）
-- **`domain/repositories/`**: 数据仓库 → 迁移到 `services/content/`（推荐）
-
-#### Infrastructure 层迁移决策
-- **`infrastructure/adapters/`**: 数据源适配器 → 迁移到 `bff/website-bff/`（推荐）
-- **`infrastructure/clients/`**: API 客户端 → 迁移到 `bff/website-bff/`（推荐）
-
----
-
-### 1.5 具体功能模块重构计划
+### 1.4 具体功能模块重构计划
 
 #### 1.4.1 Theme System（主题含密度系统）
 **当前状态**: 使用 `@vxture/design-system` 的 ThemeProvider
@@ -322,7 +307,7 @@ export async function getPageContent(page: string, locale: string) {
 
 ---
 
-## 9. react-i18next 国际化实现方案
+## 5. react-i18next 国际化实现方案
 
 ### 9.1 技术选型说明
 
@@ -580,16 +565,16 @@ function HomePage() {
 
 ---
 
-## 10. 页面重构计划
+## 6. 页面重构计划
 
-### 10.1 首页重构
+### 6.1 首页重构
 - **Hero 区域**: 使用设计系统组件
 - **Features**: 简化布局，使用 Grid 组件
 - **Solutions**: 卡片布局，简化交互
 - **Cases**: 案例展示，使用图片 + 文字
 - **CTA**: 简化的 Call to Action 区域
 
-### 10.2 其他页面重构
+### 6.2 其他页面重构
 - **About 页面**: 重构为简单的文本 + 图片布局
 - **Products 页面**: 使用设计系统的卡片组件
 - **Test 页面**: 保留用于测试，但简化内容
@@ -598,7 +583,7 @@ function HomePage() {
 
 ---
 
-## 11. 组件重构计划
+## 7. 组件重构计划
 
 ### 11.1 基础组件重构
 所有组件使用 `@vxture/design-system` 组件替换自定义实现：
@@ -762,9 +747,9 @@ function Page() {
 
 ---
 
-## 12. 状态管理重构
+## 8. 状态管理重构
 
-### 12.1 Zustand 状态结构优化
+### 8.1 Zustand 状态结构优化
 **重构前**: 复杂的多模块状态
 **重构后**: 简化的扁平状态结构
 
@@ -799,7 +784,7 @@ export const useGlobalStore = create<GlobalState & GlobalActions>((set) => ({
 }));
 ```
 
-### 12.2 Scroll Snap 状态管理
+### 8.2 Scroll Snap 状态管理
 ```typescript
 // src/stores/useScrollSnapStore.ts
 import { create } from 'zustand';
@@ -837,9 +822,9 @@ export const useScrollSnapStore = create<ScrollSnapState & ScrollSnapActions>((s
 
 ---
 
-## 14. API 层重构
+## 9. API 层重构
 
-### 14.1 API 客户端重构
+### 9.1 API 客户端重构
 ```typescript
 // src/api/client.ts
 import axios from 'axios';
@@ -885,7 +870,7 @@ apiClient.interceptors.response.use(
 );
 ```
 
-### 14.2 内容 API
+### 9.2 内容 API
 ```typescript
 // src/api/content.ts
 import { apiClient } from './client';
@@ -927,7 +912,7 @@ export async function updateContent(data: Partial<ContentItem>): Promise<Content
 }
 ```
 
-### 14.3 认证 API
+### 9.3 认证 API
 ```typescript
 // src/api/auth.ts
 import { apiClient } from './client';
@@ -973,26 +958,26 @@ export async function getProfile(): Promise<User> {
 
 ---
 
-## 13. 质量保证计划
+## 10. 质量保证计划
 
-### 13.1 代码质量检查
+### 10.1 代码质量检查
 - 执行 `npm run check` (lint + format + type-check)
 - 确保所有 TypeScript 错误都已修复
 - 执行 `npm run build` 检查构建成功
 
-### 13.2 性能优化
+### 10.2 性能优化
 - 使用 Vercel Analytics 检查页面加载时间
 - 优化图片加载（使用 Next.js Image 组件）
 - 实现组件懒加载
 
-### 13.3 SEO 优化
+### 10.3 SEO 优化
 - 检查 Meta 标签生成
 - 验证结构化数据
 - 检查页面可访问性
 
 ---
 
-## 12. 风险评估与应对
+## 11. 风险评估与应对
 
 ### 12.1 技术风险
 - **Next.js 15 稳定性**: 确保所有功能正常
@@ -1011,9 +996,9 @@ export async function getProfile(): Promise<User> {
 
 ---
 
-## 13. 开发工具与工作流
+## 12. 开发工具与工作流
 
-### 13.1 开发环境配置
+### 12.1 开发环境配置
 ```bash
 # 安装依赖
 pnpm install
@@ -1034,14 +1019,14 @@ pnpm format
 pnpm check
 ```
 
-### 13.2 Git 工作流
+### 12.2 Git 工作流
 1. 创建 feature 分支
 2. 提交代码（遵循 Conventional Commits）
 3. 打开 Pull Request
 4. 代码审查
 5. 合并到 main 分支
 
-### 13.3 Conventional Commits
+### 12.3 Conventional Commits
 ```
 feat: 新增功能
 fix: 修复 Bug
@@ -1053,9 +1038,9 @@ test: 测试相关
 
 ---
 
-## 15. 质量保证与验证
+## 13. 质量保证与验证
 
-### 15.1 架构合规性检查清单
+### 13.1 架构合规性检查清单
 - [ ] 目录结构符合 Portals 架构规范
 - [ ] 代码分层符合 Presentation 层职责
 - [ ] 依赖关系符合架构边界约束
@@ -1063,7 +1048,7 @@ test: 测试相关
 - [ ] 无 domain/infrastructure 层残留
 - [ ] 无业务逻辑在 Frontend
 
-### 15.2 功能完整性检查清单
+### 13.2 功能完整性检查清单
 - [ ] 所有页面功能正常
 - [ ] 响应式设计工作正常
 - [ ] SEO 功能正常
@@ -1075,7 +1060,7 @@ test: 测试相关
 - [ ] Auth 认证系统正常
 - [ ] Scroll Snap 滚动功能正常
 
-### 15.3 代码质量检查清单
+### 13.3 代码质量检查清单
 - [ ] TypeScript 严格模式无错误
 - [ ] 组件文件不超过 150 行
 - [ ] ESLint 和 Prettier 检查通过
@@ -1083,7 +1068,7 @@ test: 测试相关
 - [ ] 所有 public API 有 JSDoc 注释
 - [ ] 无 `any` 类型使用
 
-### 15.4 性能检查清单
+### 13.4 性能检查清单
 - [ ] 首次加载时间 < 2s
 - [ ] Lighthouse 分数 > 90
 - [ ] 图片懒加载实现
@@ -1093,15 +1078,15 @@ test: 测试相关
 
 ---
 
-## 16. 验收标准
+## 14. 验收标准
 
-### 16.1 架构合规性
+### 14.1 架构合规性
 - ✅ 目录结构符合 Portals 架构规范
 - ✅ 代码分层符合 Presentation 层职责
 - ✅ 依赖关系符合架构边界约束
 - ✅ 组件使用设计系统原语
 
-### 16.2 功能完整性
+### 14.2 功能完整性
 - ✅ 所有页面功能正常
 - ✅ 响应式设计工作正常
 - ✅ SEO 功能正常
@@ -1114,7 +1099,7 @@ test: 测试相关
 - ✅ Scroll Snap 滚动功能正常工作
 - ✅ SnapChoicePanel 和 SnapDebugPanel 可复用
 
-### 16.3 代码质量
+### 14.3 代码质量
 - ✅ TypeScript 严格模式无错误
 - ✅ 组件文件不超过 150 行
 - ✅ ESLint 和 Prettier 检查通过
@@ -1123,7 +1108,7 @@ test: 测试相关
 
 ---
 
-## 17. 后续维护计划
+## 15. 后续维护计划
 
 ### 17.1 持续改进
 - 定期检查和更新依赖
@@ -1137,14 +1122,14 @@ test: 测试相关
 
 ---
 
-## 18. 批准与执行
+## 16. 批准与执行
 
-### 18.1 需要确认的问题
+### 16.1 需要确认的问题
 - 是否同意当前的重构计划？
 - 是否有其他需要包含的功能或页面？
 - 是否有特定的技术要求或约束？
 
-### 18.2 执行流程
+### 16.2 执行流程
 1. 确认重构计划
 2. 建立任务管理（使用 GitHub Issues 或项目管理工具）
 3. 分阶段执行重构
@@ -1153,7 +1138,7 @@ test: 测试相关
 
 ---
 
-**重构负责人**: [Your Name]
+**重构负责人**: Stone Smoker
 **技术审阅**: [Reviewer Name]
-**预计开始日期**: [Start Date]
-**预计完成日期**: [End Date]
+**预计开始日期**: 2026-03-12
+**预计完成日期**: 2026-04-08
