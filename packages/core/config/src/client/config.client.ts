@@ -23,11 +23,9 @@ import type {
   ConfigEvent,
   ConfigListener,
   ConfigValidationResult,
-  ConfigValidationError,
-  ConfigValidationWarning,
+
+
 } from '../types';
-import { configureDebug } from "@vxture/shared";
-import { configureDebug } from "@vxture/shared";
 
 // ============================================================================
 // Memory Config Source
@@ -543,7 +541,7 @@ export class ConfigManager {
     }
 
     if (typeof value === 'string') {
-      const lowerValue = value.toLowerCase();
+      const lowerValue = (value as string).toLowerCase();
       return lowerValue === 'true' || lowerValue === '1' || lowerValue === 'yes';
     }
 

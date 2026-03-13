@@ -3,19 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "description": "Vxture core configuration package",
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "echo \"No lint yet\"",
     "lint:fix": "echo \"No lint:fix yet\"",
-    "build": "echo \"No build yet\""
+    "build": "tsup",
+    "clean": "rimraf dist"
   },
   "dependencies": {
     "@vxture/shared": "workspace:*"
   },
   "devDependencies": {
+    "rimraf": "^6.1.3",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
   "engines": {

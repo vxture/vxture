@@ -73,8 +73,9 @@ export const DEFAULT_TENANT_CONFIG: TenantConfig = {
 };
 
 export const DEFAULT_TENANT_CONTEXT: TenantContext = {
-  id: 'default',
-  name: 'Default Tenant',
+  config: DEFAULT_TENANT_CONFIG,
+  isolationKey: 'default',
+  initialized: false,
 };
 
 export const DEFAULT_RESOLVER_OPTIONS: TenantResolverOptions = {

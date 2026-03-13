@@ -27,13 +27,11 @@ export type {
   FunctionType,
   DeepPartial,
   DeepReadonly,
-  LogLevel,
   LogRecord,
   LoggerConfig,
   ErrorMetadata,
-} from './types';
+} from './types/utils.types';
 export {
-  LogLevel,
   VxtureError,
   ValidationError,
   NotFoundError,
@@ -41,13 +39,4 @@ export {
   ForbiddenError,
   InternalServerError,
   DEFAULT_LOGGER_CONFIG,
-} from './types';
-
-// ============================================
-// Core Platform Utilities
-// ============================================
-
-// 注意：core-utils 应该只包含平台级工具（日志、错误处理基础）
-// 其他通用工具应该放在 @vxture/shared
-
-export * from './utils';
+} from './types/utils.types';

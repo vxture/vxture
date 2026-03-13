@@ -17,7 +17,7 @@
  *
  * @remarks
  * - request 类型为标准 Web API 的 Request，不绑定 NestJS 或 Express 的特定类型
- * - Locale 类型从 @vxture/shared 引入，不重复定义
+ * - Locale 类型从本地常量定义，与 @vxture/shared 保持同步
  * - 此函数仅在服务端调用（bff、services、agent-server）
  * - 禁止在前端代码中调用此函数
  *
@@ -35,8 +35,8 @@
  * ```
  */
 
-import type { Locale } from '@vxture/shared';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
+import type { Locale } from '../constants/locale.constants';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '../constants/locale.constants';
 
 // ============================================================================
 // Service-side Locale Resolution

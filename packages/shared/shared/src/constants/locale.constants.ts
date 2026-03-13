@@ -16,11 +16,11 @@
  *   SUPPORTED_LOCALES,
  *   type Locale,
  *   DEFAULT_LOCALE,
- *   I18N_CONSTANTS
+ *   LOCALE_CONSTANTS
  * } from '@vxture/shared';
  *
  * const locale: Locale = 'zh';
- * const storageKey = I18N_CONSTANTS.STORAGE_KEY;
+ * const storageKey = LOCALE_CONSTANTS.STORAGE_KEY;
  * ```
  */
 
@@ -54,7 +54,7 @@ export const DEFAULT_LOCALE: Locale = 'zh';
  * i18n 系统配置常量
  * @description 国际化系统的配置项
  */
-export const I18N_CONSTANTS = {
+export const LOCALE_CONSTANTS = {
   /** localStorage key */
   STORAGE_KEY: 'locale-storage',
 
