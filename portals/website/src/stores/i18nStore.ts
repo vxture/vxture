@@ -29,7 +29,7 @@
  * @version 1.0.0
  * @dependencies React, Zustand
  * @see src/types/i18n.types.ts 国际化类型定义
- * @see src/constants/i18nConfig.ts 国际化常量配置
+ * @see src/constants/LocaleConfig.ts 国际化常量配置
  * @tags i18n, store
  * @example
  *   const { locale, setLocale, t } = useI18nStore();
@@ -42,9 +42,9 @@
  */
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { I18N_CONSTANTS } from '@/shared/constants/i18nConfig';
+import { I18N_CONSTANTS } from '@/shared/constants/LocaleConfig';
 import { makeI18nPersistOptions } from './persistOptions/i18nPersist';
-import type { LocaleType, I18nConfig, I18nState, I18nResource } from '@/shared/types/i18n.types';
+import type { LocaleType, LocaleConfig, LocaleState, TranslationResource } from '@/shared/types/i18n.types';
 
 // ============================================================================
 // 类型定义 - 明确暴露给调用方的类型契约
@@ -52,7 +52,7 @@ import type { LocaleType, I18nConfig, I18nState, I18nResource } from '@/shared/t
 // - 为避免将大量翻译写入 localStorage，本项目只持久化 locale，translations 由内存管理
 // ============================================================================
 
-const translations: Record<LocaleType, I18nResource> = {
+const translations: Record<LocaleType, TranslationResource> = {
   'zh-CN': {
     'common.backToHome': '返回首页',
     'common.submit': '提交',
@@ -77,15 +77,15 @@ const translations: Record<LocaleType, I18nResource> = {
  * useI18nStore
  * - 全局多语言状态管理 Store
  * - 提供语言切换、翻译文本获取、持久化等能力
- * @returns I18nState
+ * @returns LocaleState
  */
-export const useI18nStore = create<I18nState>()(
+export const useI18nStore = create<LocaleState>()(
   persist(
     (set, get) => ({
       /** 当前语言（如 'zh-CN' | 'en-US'） */
       locale: I18N_CONSTANTS.DEFAULT_LOCALE,
       /** 可用语言列表 */
-      availableLocales: I18N_CONSTANTS.AVAILABLE_LOCALES as I18nConfig[],
+      availableLocales: I18N_CONSTANTS.AVAILABLE_LOCALES as LocaleConfig[],
       /**
        * 翻译函数
        * @param key 翻译 key

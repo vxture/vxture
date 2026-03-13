@@ -24,7 +24,9 @@ It is intended for developers and AI tools to ensure readability, maintainabilit
 
 ## 2. File Header Comment
 
-All core files should start with a standardized header:
+Core files support two header styles:
+
+### Full Style (Recommended for complex files)
 
 ```typescript
 /**
@@ -42,6 +44,16 @@ All core files should start with a standardized header:
  *
  * @layer Presentation | Application | Domain | Infrastructure | Shared
  * @category Components - Common
+ */
+```
+
+### Simple Style (For small, focused files)
+
+```typescript
+/**
+ * filename.ts - Very Short description
+ * @package @vxture/[package-name]
+ * @description Detailed explanation of the file's functionality and responsibilities
  */
 ```
 

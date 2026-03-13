@@ -10,11 +10,14 @@
  * @category Types
  */
 
+import type { Theme } from '@vxture/shared';
+
 /**
- * 主题类型
- *
- * - light: 亮色主题
- * - dark: 暗色主题
- * - system: 跟随系统主题
+ * 单个主题的展示配置，用于主题切换列表渲染
+ * isDark 由消费方按需计算，不在此冗余存储
  */
-export type Theme = "light" | "dark" | "system";
+export interface ThemeConfig {
+  theme: Theme;
+  displayName: string;
+  icon?: string;
+}

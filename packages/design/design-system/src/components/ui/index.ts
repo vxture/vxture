@@ -11,6 +11,7 @@
  */
 
 export * from "./button";
+export type * from "./button.types";
 export * from "./badge";
 export * from "./avatar";
 export * from "./card";

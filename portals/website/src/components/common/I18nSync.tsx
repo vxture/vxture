@@ -31,7 +31,7 @@
  * @version 1.0.0
  * @dependencies React, Zustand
  * @see src/stores/i18nStore.ts 国际化状态管理
- * @see src/constants/i18nConfig.ts 国际化常量配置
+ * @see src/constants/LocaleConfig.ts 国际化常量配置
  * @tags i18n, global-sync
  * @example <I18nSync />
  * @remarks 推荐在 src/app/layout.tsx 根组件中挂载，确保全局副作用统一生效。
@@ -41,7 +41,7 @@
 'use client';
 import { useEffect } from 'react';
 import { useI18nStore } from '@/stores/i18nStore';
-import { I18N_CONSTANTS } from '@/shared/constants/i18nConfig';
+import { I18N_CONSTANTS } from '@/shared/constants/LocaleConfig';
 
 export default function I18nSync() {
   const { locale } = useI18nStore();

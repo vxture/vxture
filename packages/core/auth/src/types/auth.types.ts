@@ -6,7 +6,7 @@
  *
  * @author AI-Generated
  * @date 2026-03-11
- * @version 1.0
+ * @version 1.1
  *
  * @copyright Vxture Team
  * @license MIT
@@ -14,6 +14,28 @@
  * @layer Infrastructure
  * @category Types - Auth
  */
+
+import type { UserInfo, TokenData } from '@vxture/shared';
+
+// ============================================================================
+// Login API Types
+// ============================================================================
+
+/**
+ * 登录凭据，BFF 接收前端请求时使用
+ */
+export interface LoginCredentials {
+  email?: string;
+  phone?: string;
+  password: string;
+}
+
+/**
+ * 登录响应结构，BFF 返回给前端
+ */
+export interface LoginResponse extends TokenData {
+  user: UserInfo;
+}
 
 // ============================================================================
 // User Information

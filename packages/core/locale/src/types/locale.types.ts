@@ -7,7 +7,7 @@
  *
  * @author AI-Generated
  * @date 2026-03-13
- * @version 1.0
+ * @version 1.1
  *
  * @copyright Vxture Team
  * @license MIT
@@ -21,7 +21,28 @@
  * - 此文件只包含 core-locale 包特有类型
  */
 
-// 注意：Locale 类型从 @vxture/shared 引入，不重复定义
+import type { Locale } from '@vxture/shared';
+
+/**
+ * 单个语言的完整配置，供 core-locale 内部及基础设施层使用
+ */
+export interface LanguageConfig {
+  locale: Locale;
+  displayName: string;
+  nativeName: string;
+  icon: string;
+  direction: 'ltr' | 'rtl';
+  region: string;
+  language: string;
+  fallbackLocale: Locale;
+  dateFormat: string;
+  timeFormat: string;
+}
+
+/**
+ * 翻译资源的键值结构
+ */
+export type TranslationResource = Record<string, string>;
 
 /**
  * 服务端内容本地化配置

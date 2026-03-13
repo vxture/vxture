@@ -438,7 +438,7 @@ export function I18nProvider({ children }: I18nProviderProps) {
  * @category i18n
  */
 
-import type { I18nResource } from '@vxture/shared';
+import type { TranslationResource } from '@vxture/shared';
 
 // 导入翻译文件类型（通过 i18next-resources-for-ts 生成）
 import type common from '../../../public/locales/zh-CN/common.json';
@@ -552,7 +552,7 @@ function HomePage() {
 #### 与 @vxture/shared 集成
 
 - ✅ 继续使用 `@vxture/shared` 的 `I18N_CONSTANTS`（默认语言、可用语言列表等）
-- ✅ 继续使用 `@vxture/shared` 的 `LocaleType` 和 `I18nConfig` 类型
+- ✅ 继续使用 `@vxture/shared` 的 `LocaleType` 和 `LocaleConfig` 类型
 - ❌ 不再使用 `@vxture/shared` 的任何 i18n 运行时代码
 - ❌ 不再使用自定义的 `useLocale` Hook
 

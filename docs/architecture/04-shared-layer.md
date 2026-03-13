@@ -57,7 +57,7 @@ Examples:
 
 ```
 authConfig.ts       # Auth-related constants
-i18nConfig.ts       # Locale and language constants
+LocaleConfig.ts       # Locale and language constants
 themeConfig.ts      # Theme-related constants
 ```
 

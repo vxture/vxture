@@ -51,6 +51,8 @@ export type {
   AuthConfig,
   PermissionCheckOptions,
   RoleCheckOptions,
+  LoginCredentials,
+  LoginResponse,
 } from './types';
 export { DEFAULT_AUTH_CONFIG } from './types';
 

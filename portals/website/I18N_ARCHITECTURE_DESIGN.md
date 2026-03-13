@@ -126,7 +126,7 @@ export class LocaleDetector {
 | `stores/i18nStore.ts` | Zustand store，管理 locale 和翻译 | ✅ 存在 |
 | `hooks/useLocale.ts` | 包装 i18nStore 的 Hook | ✅ 存在 |
 | `hooks/useLocaleOld.ts` | 旧版实现（暗示迁移中） | ⚠️ 待清理 |
-| `shared/constants/i18nConfig.ts` | 常量配置 | ✅ 存在 |
+| `shared/constants/LocaleConfig.ts` | 常量配置 | ✅ 存在 |
 | `shared/types/i18n.types.ts` | 类型定义 | ✅ 存在 |
 | `public/data/**/*.json` | 翻译资源（zh-CN, en-US） | ✅ 存在 |
 
@@ -325,7 +325,7 @@ packages/core/locale/
 | useLocale | `portals/website/src/hooks/useLocale.ts` | i18n Hook |
 | useLocaleOld | `portals/website/src/hooks/useLocaleOld.ts` | 旧版实现（待清理） |
 | 翻译资源 | `portals/website/public/data/**/*.json` | zh-CN, en-US 翻译 |
-| i18n 常量 | `portals/website/src/shared/constants/i18nConfig.ts` | 配置常量 |
+| i18n 常量 | `portals/website/src/shared/constants/LocaleConfig.ts` | 配置常量 |
 
 ---
 
