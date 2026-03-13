@@ -1,75 +1,27 @@
 /**
- * theme.types.ts - Theme Type Definitions
+ * theme.types.ts - Shared theme types
  * @package @vxture/shared
- *
- * Description: Shared theme-related types including ThemeType, ThemeConfig,
- * and ThemeState. Used across Core and Portal layers for theme management
- * and dark mode support.
- *
- * @author AI-Generated
- * @date 2026-03-07
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Shared
- * @category Types
- *
- * @remarks
- * - No React/Next.js dependencies
- * - Framework-agnostic types
+ * @description Pure structural types for theme and dark/light mode, shared across all layers. Contains only structural types without runtime behavior.
+ */
+
+// =============================================================================
+// Shared Theme Types
+// =============================================================================
+
+/**
+ * 全平台三档主题类型
+ * - light：亮色
+ * - dark：暗色
+ * - system：跟随操作系统
+ */
+export type Theme = 'light' | 'dark' | 'system';
+
+/**
+ * 扩展主题类型，支持自定义主题标识符（如租户品牌主题）
+ * 保留字面量提示，同时允许任意字符串值
  *
  * @example
- * ```ts
- * import { type ThemeType, type ThemeConfig } from '@vxture/shared';
- *
- * const theme: ThemeType = 'dark';
- * const config: ThemeConfig = {
- *   name: 'light',
- *   displayName: '浅色',
- *   isDark: false
- * };
- * ```
+ * const t: ThemeValue = 'light';         // ✅ 有字面量提示
+ * const t: ThemeValue = 'tenant-blue';   // ✅ 自定义主题
  */
-
-// ============================================================================
-// Theme Types
-// ============================================================================
-
-/**
- * Theme type
- * @description Valid theme variations (can be extended for new themes)
- */
-export type ThemeType = 'light' | 'dark' | string;
-
-/**
- * Theme configuration type
- * @description Describes a single theme's properties
- */
-export interface ThemeConfig {
-  name: ThemeType;
-  displayName: string;
-  isDark: boolean;
-}
-
-/**
- * Theme global state type
- * @description Global theme state for Zustand store usage
- */
-export interface ThemeState {
-  theme: ThemeType;
-  availableThemes: ThemeConfig[];
-  isDarkMode: boolean;
-
-  /**
-   * Set theme
-   * @param theme - Theme name
-   */
-  setTheme: (theme: ThemeType) => void;
-
-  /**
-   * Toggle theme (light/dark)
-   */
-  toggleTheme: () => void;
-}
+export type ThemeValue = Theme | (string & {});

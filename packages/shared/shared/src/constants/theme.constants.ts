@@ -1,32 +1,7 @@
 /**
- * themeConfig.ts - Theme Constants
+ * theme.constants.ts - Theme constants
  * @package @vxture/shared
- *
- * Description: Global theme constants including storage keys, default theme,
- * available themes, and DOM attribute configuration. Used across Core and
- * Portal layers for consistent theme management and dark mode support.
- *
- * @author AI-Generated
- * @date 2026-03-07
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Shared
- * @category Constants
- *
- * @remarks
- * - No runtime logic
- * - Only configuration objects
- *
- * @example
- * ```ts
- * import { THEME_CONSTANTS } from '@vxture/shared';
- *
- * const defaultTheme = THEME_CONSTANTS.DEFAULT_THEME;
- * const availableThemes = THEME_CONSTANTS.AVAILABLE_THEMES;
- * ```
+ * @description Global configuration constants for theme management, shared across all layers. Contains theme storage keys, HTML attributes, and available theme definitions.
  */
 
 /**

@@ -70,24 +70,13 @@ src/
 
 ## 文件头模板
 
-**所有文件必须包含完整文件头：**
+**所有文件必须使用 Simple Style 文件头：**
 
 ```typescript
 /**
- * filename.ts - 简短描述
+ * filename.ts - Very Short description
  * @package @vxture/shared
- *
- * Description: 详细说明
- *
- * @author AI-Generated
- * @date YYYY-MM-DD
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Shared
- * @category Utils | Types | Constants
+ * @description Detailed explanation of the file's functionality and responsibilities
  */
 ```
 
@@ -131,25 +120,28 @@ export * from './constants/xxx.constants'
 
 | 文件 | 内容 | 注意事项 |
 |------|------|---------|
-| `debug.utils.ts` | 调试工具（开发环境） | 生产环境无副作用 |
-| `locale.utils.ts` | 格式化工具 | 基于 Intl API，纯函数 |
+| `debug.utils.ts` | 调试工具（开发环境） | 自动环境检测，生产环境无副作用 |
+| `format.utils.ts` | 格式化工具（货币、日期、数字） | 基于 Intl API，纯函数 |
 
 ### 类型定义
 
 | 文件 | 内容 |
 |------|------|
-| `auth.types.ts` | 认证相关类型 |
-| `locale.types.ts` | 语言相关类型 |
-| `theme.types.ts` | 主题相关类型 |
-| `content.types.ts` | 内容数据类型 |
+| `auth.types.ts` | 认证相关类型（UserInfo、TokenData） |
+| `locale.types.ts` | 语言相关类型（Locale、LocaleConfig） |
+| `theme.types.ts` | 主题相关类型（Theme、ThemeValue） |
+| `api.types.ts` | 标准 API 响应类型（ApiResponse、ApiSuccessResponse、ApiErrorResponse） |
+| `ui.types.ts` | UI 语义化类型（SemanticColor） |
+| `common.types.ts` | 通用类型（Link、Action） |
 
 ### 常量配置
 
 | 文件 | 内容 |
 |------|------|
-| `auth.constants.ts` | 认证常量 |
-| `locale.constants.ts` | 语言常量（统一） |
-| `theme.constants.ts` | 主题常量 |
+| `auth.constants.ts` | 认证常量（AUTH_CONSTANTS） |
+| `locale.constants.ts` | 语言常量（SUPPORTED_LOCALES、DEFAULT_LOCALE、LOCALE_INTL_MAP、LOCALE_DEFAULT_CURRENCY） |
+| `theme.constants.ts` | 主题常量（THEME_CONSTANTS） |
+| `ui.constants.ts` | UI 常量（SEMANTIC_COLORS） |
 
 ---
 
@@ -161,6 +153,6 @@ export * from './constants/xxx.constants'
 - [ ] 不使用浏览器或 Node.js 专用 API
 - [ ] 保持纯函数、无副作用
 - [ ] 更新相应的 index.ts 导出
-- [ ] 新增文件包含完整文件头
+- [ ] 新增文件包含 Simple Style 文件头
 - [ ] 所有导出函数有 JSDoc
 - [ ] 没有使用 `any` 类型

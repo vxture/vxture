@@ -7,8 +7,8 @@
 
 @vxture/shared 是 Vxture 平台的**核心共享基础库**，提供以下能力：
 - **纯工具函数**（格式化、验证、调试）
-- **通用类型定义**（认证、主题、内容、语言）
-- **全局常量配置**（认证、主题、语言）
+- **通用类型定义**（认证、主题、语言、API 响应、UI 语义化）
+- **全局常量配置**（认证、主题、语言、UI）
 - **无依赖**：不依赖任何内部包或框架，运行于任何环境
 
 ## 安装和导入
@@ -21,13 +21,15 @@ pnpm add @vxture/shared
 import {
   // 类型
   type UserInfo,
-  type AuthState,
-  type ThemeType,
+  type TokenData,
+  type Theme,
   type Locale,
+  type ApiResponse,
 
   // 常量
   AUTH_CONSTANTS,
   THEME_CONSTANTS,
+  SEMANTIC_COLORS,
 
   // 语言相关（统一）
   SUPPORTED_LOCALES,
@@ -35,7 +37,8 @@ import {
 
   // 工具函数
   debugLog,
-  configureDebug,
+  debugWarn,
+  debugError,
   formatCurrency,
   formatDate,
   formatNumber,
@@ -66,6 +69,7 @@ const isSupported = SUPPORTED_LOCALES.includes(locale);
 // 格式化货币
 formatCurrency(100, 'zh'); // '¥100.00'
 formatCurrency(100, 'en'); // '$100.00'
+formatCurrency(100, 'zh', 'USD'); // '$100.00'
 
 // 格式化日期
 formatDate(new Date(), 'zh'); // '2026/3/13'
@@ -84,19 +88,17 @@ formatNumber(1000.5, 'en'); // '1,000.5'
 interface UserInfo {
   id: string;
   name: string;
-  email: string;
+  email?: string;
+  phone?: string;
   permissions: string[];
   lastLogin?: number;
-  [key: string]: unknown;
 }
 
-// 认证状态
-interface AuthState {
-  user: UserInfo | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
+// Token 数据结构
+interface TokenData {
+  token: string;
+  refreshToken: string;
+  expiresIn: number;
 }
 ```
 
@@ -121,7 +123,14 @@ AUTH_CONSTANTS.PERMISSIONS.EDIT; // 'edit'
 #### 主题类型
 ```typescript
 // 有效主题类型
-type ThemeType = 'light' | 'dark' | string;
+type Theme = 'light' | 'dark' | 'system';
+
+// 扩展主题类型（支持自定义主题）
+type ThemeValue = Theme | (string & {});
+
+// 使用示例
+const defaultTheme: Theme = 'light'; // ✅
+const customTheme: ThemeValue = 'tenant-blue'; // ✅
 ```
 
 #### 主题常量
@@ -146,67 +155,56 @@ THEME_CONSTANTS.THEME_ATTRIBUTE; // 'data-theme'
 
 #### 使用方式
 ```typescript
-// 配置调试（应用初始化时）
-configureDebug({ isDevelopment: true });
-
-// 输出日志（仅开发环境）
+// 自动检测开发环境，无需手动配置
 debugLog('应用已初始化');
 debugWarn('使用了已废弃的 API');
 debugError('严重错误');
-
-// 获取当前配置
-getDebugConfig();
 ```
 
-## 兼容性说明
+### 5. API 响应类型
 
-### 关于 scroll 工具
-
-scroll 工具已**迁移到 @vxture/platform-browser 包**，但保留了向后兼容性：
-
+#### 标准响应类型
 ```typescript
-// 旧代码（会有废弃警告）
-import { resetWindowScrollTop } from '@vxture/shared';
+// 成功响应
+interface ApiSuccessResponse<T> {
+  success: true;
+  data: T;
+  timestamp: number;
+}
 
-// 新代码（推荐）
-import { resetWindowScrollTop } from '@vxture/platform-browser';
+// 错误响应
+interface ApiErrorResponse {
+  success: false;
+  error: {
+    code: string;
+    message: string;
+  };
+  timestamp: number;
+}
+
+// 联合类型
+type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
+
+// 使用示例
+const response: ApiResponse<UserInfo> = {
+  success: true,
+  data: { id: '1', name: '用户' },
+  timestamp: Date.now()
+};
 ```
 
-## 使用场景示例
+### 6. UI 语义化系统
 
-### 在服务端使用
+#### 语义色彩
 ```typescript
-import { SUPPORTED_LOCALES, type Locale, formatNumber } from '@vxture/shared';
+// 支持的语义色彩
+console.log(SEMANTIC_COLORS); // ['primary', 'secondary', 'brand', 'info', 'success', 'warning', 'danger']
 
-export function formatPrice(amount: number, currency: string, locale: Locale) {
-  const formattedNumber = formatNumber(amount, locale);
-  return `${formattedNumber} ${currency}`;
-}
+// 语义色彩类型
+type SemanticColor = 'primary' | 'secondary' | 'brand' | 'info' | 'success' | 'warning' | 'danger';
 
-export function isValidLocale(lang: string): lang is Locale {
-  return SUPPORTED_LOCALES.includes(lang as Locale);
-}
-```
-
-### 在前端使用
-```typescript
-import { configureDebug, debugLog, DEFAULT_LOCALE } from '@vxture/shared';
-
-// 初始化时配置
-configureDebug({ isDevelopment: process.env.NODE_ENV === 'development' });
-
-// 语言切换
-function switchLanguage(locale: string) {
-  if (SUPPORTED_LOCALES.includes(locale)) {
-    localStorage.setItem('locale', locale);
-    debugLog('语言已切换到:', locale);
-  }
-}
-
-// 获取用户偏好语言
-function getUserLocale(): string {
-  return localStorage.getItem('locale') || DEFAULT_LOCALE;
-}
+// 使用示例
+const buttonColor: SemanticColor = 'primary';
 ```
 
 ## 脚本命令
@@ -234,3 +232,29 @@ pnpm lint
 - Prisma / axios / dotenv
 - 浏览器专用 API（window、document、localStorage）
 - Node.js 专用 API（fs、path、http）
+
+## 使用场景示例
+
+### 在服务端使用
+```typescript
+import { SUPPORTED_LOCALES, type Locale, formatNumber } from '@vxture/shared';
+
+export function formatPrice(amount: number, currency: string, locale: Locale) {
+  const formattedNumber = formatNumber(amount, locale);
+  return `${formattedNumber} ${currency}`;
+}
+
+export function isValidLocale(lang: string): lang is Locale {
+  return SUPPORTED_LOCALES.includes(lang as Locale);
+}
+```
+
+### 在前端使用
+```typescript
+import { debugLog, DEFAULT_LOCALE } from '@vxture/shared';
+
+// 获取用户偏好语言
+function getUserLocale(): string {
+  return localStorage.getItem('locale') || DEFAULT_LOCALE;
+}
+```

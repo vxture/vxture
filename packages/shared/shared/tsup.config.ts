@@ -1,15 +1,7 @@
 /**
- * tsup.config.ts - tsup 打包配置
+ * tsup.config.ts - Shared package build configuration
  * @package @vxture/shared
- *
- * Description: @vxture/shared 包的 tsup 打包配置
- *
- * @author AI-Generated
- * @date 2026-03-13
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
+ * @description tsup bundler configuration for @vxture/shared package.
  */
 
 import { defineConfig } from 'tsup';
@@ -25,7 +17,12 @@ export default defineConfig({
   outDir: 'dist',
 
   // 生成类型声明文件
-  dts: true,
+  dts: {
+    entry: 'src/index.ts',
+    compilerOptions: {
+      composite: false,
+    },
+  },
 
   // 生成 source map
   sourcemap: true,
@@ -51,4 +48,9 @@ export default defineConfig({
 
   // 保持输出的目录结构
   keepNames: true,
+
+  // 定义全局变量来处理 CJS 中的 import.meta
+  define: {
+    'import.meta.env': '{}',
+  },
 });
