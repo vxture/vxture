@@ -5,5 +5,4 @@
  *   本地化工具函数统一导出
  */
 
-export * from './locale.utils';
-export * from './locale-parser.utils';
+export { resolveLocale, localizeContent } from './locale.utils';

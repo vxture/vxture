@@ -7,26 +7,12 @@
 
 import type { Locale } from '@vxture/shared';
 
-/**
- * 单个语言的完整配置，供 core-locale 内部及基础设施层使用
- */
-export interface LanguageConfig {
-  locale: Locale;
-  displayName: string;
-  nativeName: string;
-  icon: string;
-  direction: 'ltr' | 'rtl';
-  region: string;
-  language: string;
-  fallbackLocale: Locale;
-  dateFormat: string;
-  timeFormat: string;
+export interface LocaleRequest {
+  headers: {
+    get(name: string): string | null | undefined;
+  };
+  cookies?: Record<string, string>;
 }
-
-/**
- * 翻译资源的键值结构
- */
-export type TranslationResource = Record<string, string>;
 
 /**
  * 服务端内容本地化配置
@@ -51,5 +37,5 @@ export interface ResolveLocaleOptions {
   /** 是否忽略 Accept-Language 头 */
   ignoreAcceptLanguage?: boolean;
   /** 是否使用备用的默认语言 */
-  fallbackLocale?: string;
+  fallback?: Locale;
 }

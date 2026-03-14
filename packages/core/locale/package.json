@@ -1,6 +1,6 @@
 {
   "name": "@vxture/core-locale",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Vxture platform — core localization/i18n infrastructure",
   "license": "MIT",
   "private": true,

@@ -6,12 +6,12 @@
  */
 
 // ============================================================================
-// Re-exports from local constants
+// Re-exports from @vxture/shared
 // ============================================================================
 
-// 导出本地定义的 Locale 类型，与 @vxture/shared 同步
-export type { Locale } from './constants';
-export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from './constants';
+// 导出 shared 包定义的 Locale 类型和常量
+export type { Locale } from '@vxture/shared';
+export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
 
 // ============================================================================
 // Service-side Locale Utils

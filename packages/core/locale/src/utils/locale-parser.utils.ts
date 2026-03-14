@@ -5,8 +5,8 @@
  *   语言解析工具函数
  */
 
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
 import type { Locale } from '@vxture/shared';
+import { SUPPORTED_LOCALES } from '@vxture/shared';
 
 // ============================================================================
 // Accept-Language 解析
@@ -86,9 +86,3 @@ export function parseCookieValue(cookieHeader: string, key: string): string | un
 
   return entry?.split('=')[1];
 }
-
-// ============================================================================
-// 默认导出
-// ============================================================================
-
-export { DEFAULT_LOCALE };

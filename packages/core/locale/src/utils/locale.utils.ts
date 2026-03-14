@@ -5,60 +5,47 @@
  *   服务端 locale 解析与内容本地化工具
  */
 
-import type { Locale } from '../constants/locale.constants';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '../constants/locale.constants';
+import type { Locale } from '@vxture/shared';
+import { DEFAULT_LOCALE } from '@vxture/shared';
+import type { LocaleRequest } from '../types';
+import { isSupportedLocale, normalizeLocale, parseCookieValue } from './locale-parser.utils';
 
-// ============================================================================
-// Service-side Locale Resolution
-// ============================================================================
+export function resolveLocale(request: LocaleRequest): Locale {
+  // 1. 已解析的 cookie 对象（Express/NestJS cookie-parser 提供）
+  if (request.cookies) {
+    const raw = request.cookies['NEXT_LOCALE'];
+    if (raw && isSupportedLocale(raw)) return raw as Locale;
+  }
 
-/**
- * 从请求解析语言
- * @param request 标准 Web API 的 Request 对象
- * @returns 解析出的语言
- *
- * 实现逻辑（按优先级顺序）：
- * 1. 读取请求 Cookie 中的 NEXT_LOCALE 字段
- * 2. 解析 Accept-Language Header，匹配 SUPPORTED_LOCALES
- * 3. 查询租户级语言配置（如果租户有独立语言设置）
- * 4. 回退到 DEFAULT_LOCALE
- */
-export function resolveLocale(request: Request): Locale {
-  // 1. 读取请求 Cookie 中的 NEXT_LOCALE 字段
-  const cookieHeader = request.headers.get('Cookie');
+  // 2. 原始 Cookie header 字符串兜底
+  const cookieHeader = request.headers.get('cookie') ?? request.headers.get('Cookie');
   if (cookieHeader) {
-    const nextLocale = cookieHeader
-      .split(';')
-      .find((c) => c.trim().startsWith('NEXT_LOCALE='))
-      ?.split('=')[1];
-
-    if (nextLocale && isValidSupportedLocale(nextLocale)) {
-      return nextLocale as Locale;
+    const raw = parseCookieValue(cookieHeader, 'NEXT_LOCALE');
+    if (raw) {
+      const normalized = normalizeLocale(raw);
+      if (normalized) return normalized;
     }
   }
 
-  // 2. 解析 Accept-Language Header，匹配 SUPPORTED_LOCALES
-  const acceptLanguage = request.headers.get('Accept-Language');
+  // 3. Accept-Language header
+  const acceptLanguage =
+    request.headers.get('accept-language') ??
+    request.headers.get('Accept-Language');
   if (acceptLanguage) {
-    const locales = acceptLanguage
+    const candidates = acceptLanguage
       .split(',')
       .flatMap((l) => {
         const part = l.split(';').at(0)?.trim();
         return part && part.length > 0 ? [part] : [];
       });
 
-    for (const locale of locales) {
-      const normalizedLocale = normalizeLocale(locale);
-      if (isValidSupportedLocale(normalizedLocale)) {
-        return normalizedLocale as Locale;
-      }
+    for (const candidate of candidates) {
+      const normalized = normalizeLocale(candidate);
+      if (normalized) return normalized;
     }
   }
 
-  // 3. 查询租户级语言配置（如果租户有独立语言设置）
-  // 注意：这里暂时未实现，后续可以扩展
-
-  // 4. 回退到 DEFAULT_LOCALE
+  // 4. 回退
   return DEFAULT_LOCALE;
 }
 
@@ -99,35 +86,3 @@ export function localizeContent(
   return '';
 }
 
-// ============================================================================
-// Helper Functions
-// ============================================================================
-
-/**
- * 检查语言是否在支持列表中
- */
-function isValidSupportedLocale(locale: string): locale is Locale {
-  return (SUPPORTED_LOCALES as readonly string[]).includes(locale);
-}
-
-/**
- * 标准化语言字符串
- */
-function normalizeLocale(locale: string): string {
-  const normalized = locale.trim().toLowerCase();
-
-  // 处理常见的语言格式变体
-  const variations: Record<string, string> = {
-    'zh': 'zh',
-    'zh-cn': 'zh',
-    'zh-hans': 'zh',
-    'chinese': 'zh',
-
-    'en': 'en',
-    'en-us': 'en',
-    'en-gb': 'en',
-    'english': 'en',
-  };
-
-  return variations[normalized] || locale;
-}
