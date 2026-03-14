@@ -72,8 +72,10 @@ export function resolveLocale(request: Request): Locale {
   if (acceptLanguage) {
     const locales = acceptLanguage
       .split(',')
-      .map((l) => l.split(';')[0].trim())
-      .filter((l) => l.length > 0);
+      .flatMap((l) => {
+        const part = l.split(';').at(0)?.trim();
+        return part && part.length > 0 ? [part] : [];
+      });
 
     for (const locale of locales) {
       const normalizedLocale = normalizeLocale(locale);

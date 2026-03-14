@@ -3,12 +3,13 @@ import { defineConfig } from 'tsup';
 export default defineConfig({
   entry: ['src/index.ts'],
   format: ['esm', 'cjs'],
-  outDir: 'dist',
+  outExtension({ format }) {
+    return { js: format === 'esm' ? '.mjs' : '.cjs' };
+  },
   dts: true,
   sourcemap: true,
   clean: true,
-  minify: false,
-  splitting: false,
   target: 'es2023',
   keepNames: true,
+  treeshake: true,
 });
