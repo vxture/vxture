@@ -25,82 +25,33 @@
 
 ```
 src/
-├── client/       # *.client.ts  — fetch 封装、请求拦截
+├── client/       # *.client.ts  — 基于 @nestjs/axios 封装，提供类型安全的 HTTP 方法
+├── module/       # *.module.ts  — 全局 HTTP 模块，注册 VxHttpClient 供所有模块使用
 ├── types/        # *.types.ts   — 请求 / 响应类型
-├── utils/        # *.utils.ts   — retry、timeout、错误处理工具
+├── utils/        # *.utils.ts   — retry、timeout、错误处理等纯函数工具
 └── index.ts      # 单一公共出口
 ```
 
 ---
 
+## 技术选型
+
+- HTTP 客户端：@nestjs/axios（服务端专用，与 NestJS DI 集成）
+- 运行环境：Node.js only（bff、services、agent-server）
+
 ## 允许的依赖
 
-- `@vxture/shared`
-- 原生 `fetch`（禁止 axios）
+- @vxture/shared
+- @vxture/core-utils（VxtureError 错误类）
+- @nestjs/common、@nestjs/core、@nestjs/axios（peerDependencies）
+- axios（peerDependency）
+- form-data（文件上传）
 
 ## 禁止的依赖
 
-- `axios`（Node/Browser 行为不一致）
-- NestJS / Next.js / React
-- Prisma / ioredis / BullMQ
-- `@vxture/service-*` / `bff-*` / `ai-sdk` / `design-system` / `platform-*`
-- `fs` / `path` 等 Node.js 专用模块
-- `window` / `document` 等浏览器专用 API
-
----
-
-## 文件命名
-
-| 类型 | 规范 |
-|------|------|
-| HTTP 客户端 | `*.client.ts` |
-| 类型定义 | `*.types.ts` |
-| 工具函数 | `*.utils.ts` |
-
----
-
-## 文件头模板
-
-```typescript
-/**
- * filename.ts - 简短描述
- * @package @vxture/core-api
- *
- * Description: 详细说明
- *
- * @author AI-Generated
- * @date YYYY-MM-DD
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Client | Types | Utils
- */
-```
-
----
-
-## 核心设计约束
-
-- HTTP 客户端基于原生 `fetch` 封装，不暴露 fetch 实现细节给消费方
-- 错误统一转化为标准 `ApiError` 类型，不抛出原始 fetch 异常
-- token 注入通过参数 / 回调注入，不硬编码任何 auth 逻辑
-- retry / timeout 为可选配置项
-
----
-
-## Barrel Export 规则
-
-```typescript
-// src/index.ts
-export { createApiClient } from './client/api.client'
-export type { ApiRequestConfig, ApiResponse, ApiError } from './types/api.types'
-export { withRetry, withTimeout } from './utils/retry.utils'
-```
-
----
+- 浏览器 API（fetch、localStorage、window）
+- @vxture/service-*、bff-*、ai-sdk、design-system、platform-*
+- 业务逻辑
 
 ## TypeScript
 
