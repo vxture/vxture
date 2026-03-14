@@ -1,6 +1,6 @@
 {
   "name": "@vxture/shared",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Vxture shared utilities, types, and constants",
   "license": "MIT",
   "private": true,

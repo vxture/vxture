@@ -1,22 +1,12 @@
 /**
- * vxture-error.ts - 基础错误类和 HTTP 语义错误子类
+ * common.error.ts - 基础错误类和 HTTP 语义错误子类
  * @package @vxture/shared
  * @description
  *   基础错误类和 HTTP 语义错误子类，支持错误元数据和 toJSON 序列化
  *   无外部依赖，纯共享工具类
  */
 
-// ============================================================================
-// Error Metadata 接口
-// ============================================================================
-
-export interface ErrorMetadata {
-  code?: string;
-  status?: number;
-  details?: unknown;
-  timestamp?: Date;
-  requestId?: string;
-}
+import type { ErrorMetadata } from '../types/error.types';
 
 // ============================================================================
 // 基础错误类

@@ -5,10 +5,6 @@
  *   错误类和错误类型的统一导出入口
  */
 
-// 导出类型
-export type { ErrorMetadata } from './vxture-error';
-
-// 导出值
 export {
   VxtureError,
   ValidationError,
@@ -18,4 +14,4 @@ export {
   ConflictError,
   InternalServerError,
   isVxtureError,
-} from './vxture-error';
+} from './common.error';

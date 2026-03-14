@@ -1,13 +1,8 @@
 /**
  * object.utils.ts - object相关工具
  * @package @vxture/shared
- * @layer Shared
- * @category Utils
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
  * @description
- *   文件功能描述
+ *   深度合并、深度克隆等对象操作工具函数
  */
 
 // ============================================================================
