@@ -1,10 +1,8 @@
 /**
  * roles.decorator.ts - 标记路由所需角色
  * @package @vxture/core-auth
- *
- * @example
- * @Roles('admin')
- * @Roles('admin', 'operator')
+ * @description
+ *   标记路由所需角色，配合 RolesGuard 使用
  */
 
 import { SetMetadata } from '@nestjs/common';

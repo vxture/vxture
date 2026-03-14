@@ -1,9 +1,8 @@
 /**
  * auth.types.ts - 服务端认证类型定义
  * @package @vxture/core-auth
- *
- * 只包含服务端 JWT、OAuth、权限相关类型。
- * 无任何浏览器 API（localStorage、sessionStorage 等）。
+ * @description
+ *   平台级认证相关类型定义：JWT 载荷、AuthUser、OAuth Provider 接口、角色枚举等。
  */
 
 // ============================================================================
@@ -17,6 +16,14 @@ export const OAuthProviderType = {
   FEISHU:    'feishu',     // 飞书
   WECHAT:    'wechat',     // 微信
 } as const;
+
+export const PlatformRole = {
+  ADMIN:         'admin',
+  TENANT_ADMIN:  'tenant_admin',
+  MEMBER:        'member',
+} as const;
+
+export type PlatformRole = typeof PlatformRole[keyof typeof PlatformRole];
 
 export type OAuthProviderType = typeof OAuthProviderType[keyof typeof OAuthProviderType];
 

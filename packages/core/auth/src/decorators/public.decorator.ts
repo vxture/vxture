@@ -1,11 +1,8 @@
 /**
- * public.decorator.ts - 标记路由为公开（跳过 JWT 验证）
+ * public.decorator.ts - 标记路由为公开
  * @package @vxture/core-auth
- *
- * @example
- * @Public()
- * @Post('login')
- * login(@Body() dto: LoginDto) { ... }
+ * @description
+ *   标记路由为公开，跳过 JWT 验证
  */
 
 import { SetMetadata } from '@nestjs/common';

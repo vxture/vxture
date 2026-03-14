@@ -1,9 +1,8 @@
 /**
  * provider.utils.ts - OAuth provider 工具函数
  * @package @vxture/core-auth
- *
- * 供各 BFF 的 provider 实现使用的通用工具。
- * 不包含任何具体 provider 的 SDK 调用。
+ * @description
+ *   OAuth provider 验证、用户信息标准化构建、JTI 生成等工具函数。
  */
 
 import { OAuthProviderType } from '../types/auth.types';

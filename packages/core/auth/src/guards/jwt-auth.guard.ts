@@ -1,23 +1,8 @@
 /**
- * jwt-auth.guard.ts - JWT 认证 Guard
+ * jwt-auth.guard.ts - JWT 认证守卫
  * @package @vxture/core-auth
- *
- * 验证请求携带的 access token，验证通过后将 AuthUser 挂载到 request.user。
- * 各 BFF 直接使用或继承此 Guard。
- *
- * @example
- * // 直接使用
- * @UseGuards(JwtAuthGuard)
- * @Get('profile')
- * getProfile(@CurrentUser() user: AuthUser) { ... }
- *
- * // 继承扩展（如需额外逻辑）
- * @Injectable()
- * export class AdminJwtGuard extends JwtAuthGuard {
- *   canActivate(context: ExecutionContext) {
- *     return super.canActivate(context);
- *   }
- * }
+ * @description
+ *   验证请求携带的 access token，验证通过后将 AuthUser 挂载到 request.user
  */
 
 import {

@@ -1,15 +1,8 @@
 /**
- * roles.guard.ts - 角色权限 Guard
+ * roles.guard.ts - 角色权限守卫
  * @package @vxture/core-auth
- *
- * 配合 @Roles() 装饰器使用，验证 request.user.role 是否满足要求。
- * 必须在 JwtAuthGuard 之后执行（request.user 已挂载）。
- *
- * @example
- * @UseGuards(JwtAuthGuard, RolesGuard)
- * @Roles('admin', 'operator')
- * @Get('dashboard')
- * getDashboard() { ... }
+ * @description
+ *   配合 @Roles() 装饰器使用，验证用户角色是否满足要求
  */
 
 import {

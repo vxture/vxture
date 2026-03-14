@@ -1,3 +1,10 @@
+/**
+ * index.ts - 认证类型导出
+ * @package @vxture/core-auth
+ * @description
+ *   认证相关类型统一导出
+ */
+
 export {
   OAuthProviderType,
 } from './auth.types';
@@ -11,4 +18,5 @@ export type {
   OAuthProvider,
   AuthTokenPair,
   PermissionCheckOptions,
+  PlatformRole
 } from './auth.types';

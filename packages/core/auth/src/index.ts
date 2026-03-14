@@ -1,9 +1,12 @@
-// ============================================================================
-// @vxture/core-auth — 公共导出入口
-// ============================================================================
+/**
+ * index.ts - core-auth 包入口
+ * @package @vxture/core-auth
+ * @description
+ *   认证 token 管理与 session 基础设施
+ */
 
 // Types
-export { OAuthProviderType }  from './types';
+export { OAuthProviderType, PlatformRole } from './types';
 export type {
   JwtAccessPayload,
   JwtRefreshPayload,

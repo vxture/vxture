@@ -1,9 +1,9 @@
 /**
  * jwt.client.ts - JWT 签发与验证
  * @package @vxture/core-auth
- *
- * 封装 @nestjs/jwt，提供类型安全的 JWT 操作。
- * 依赖 VxConfigService 注入 JWT 配置，不硬编码任何密钥。
+ * @description
+ *   封装 @nestjs/jwt，提供类型安全的 JWT 操作。
+ *   依赖 VxConfigService 注入 JWT 配置，不硬编码任何密钥。
  */
 
 import { Injectable } from '@nestjs/common';

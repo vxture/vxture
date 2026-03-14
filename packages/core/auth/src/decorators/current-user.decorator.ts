@@ -1,18 +1,8 @@
 /**
  * current-user.decorator.ts - 从请求上下文提取当前用户
  * @package @vxture/core-auth
- *
- * @example
- * @Get('profile')
- * getProfile(@CurrentUser() user: AuthUser) {
- *   return user;
- * }
- *
- * // 只取部分字段
- * @Get('me')
- * getMe(@CurrentUser('userId') userId: string) {
- *   return userId;
- * }
+ * @description
+ *   从请求上下文提取当前用户信息
  */
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';

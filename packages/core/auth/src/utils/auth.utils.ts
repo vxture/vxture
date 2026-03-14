@@ -1,9 +1,8 @@
 /**
  * auth.utils.ts - token 提取与解析工具
  * @package @vxture/core-auth
- *
- * 纯函数，无副作用，无框架依赖。
- * 供 Guard、middleware、BFF router 使用。
+ * @description
+ *   Bearer token 从 header 提取、JWT 过期时间检查等工具函数。
  */
 
 // ============================================================================
