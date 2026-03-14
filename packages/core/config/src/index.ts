@@ -1,53 +1,22 @@
 /**
- * index.ts - Vxture Core Configuration Package
+ * index.ts - @vxture/core-config
  * @package @vxture/core-config
- *
- * Description: Platform configuration management for Vxture, providing
- * environment-based config, config validation, and config merging.
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Services - Configuration
+ * @description Environment-aware typed configuration (zod + NestJS)
  */
 
 // ============================================
-// Configuration Types
+// Schemas & Types
 // ============================================
 
-export type {
-  ConfigSource,
-  ConfigOptions,
-  ValidationSchema,
-  ConfigValue,
-  ConfigValidationResult,
-  ConfigValidationError,
-  ConfigValidationWarning,
-  ConfigEventType,
-  ConfigEvent,
-  ConfigListener,
-} from './types';
+export * from './schemas';
+export type { VxConfig } from './types/config.types';
+export { CONFIG_TOKEN } from './types/config.types';
 
 // ============================================
-// Configuration Client
+// Module & Service
 // ============================================
 
-export * from './client';
-export {
-  ConfigManager,
-  MemoryConfigSource,
-  EnvConfigSource,
-  ObjectConfigSource,
-} from './client';
-export { getConfigManager, createConfigManager } from './client';
+export { VxConfigModule } from './module';
+export type { VxConfigModuleOptions } from './module';
 
-// ============================================
-// Configuration Utils
-// ============================================
-
-// TODO: 将来需要迁移的工具函数放这里
+export { VxConfigService } from './service';
