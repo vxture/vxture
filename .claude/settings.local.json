@@ -12,7 +12,10 @@
       "Bash(pnpm build:*)",
       "Bash(pnpm --filter @vxture/core-locale build)",
       "Bash(pnpm --filter @vxture/shared build)",
-      "Bash(\"d:/MyWebSite/vxture/packages/shared/shared/src/types/index.ts\":*)"
+      "Bash(\"d:/MyWebSite/vxture/packages/shared/shared/src/types/index.ts\":*)",
+      "Bash(npm run:*)",
+      "Bash(pnpm type-check:*)",
+      "Bash(node update-file-headers.js)"
     ]
   }
 }

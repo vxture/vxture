@@ -1,25 +1,24 @@
 # @vxture/core-config — 配置管理基础设施
 
 > **面向开发人员/AI 的使用文档**
-> 本文档详细说明如何使用 @vxture/core-config 包的功能和方法。
 > 如需了解开发该包的约束和规范，请查看 `CLAUDE.md`。
 
 ---
 
-## 🌟 包概述
+## 概述
 
-环境感知配置加载与类型化访问。支持多环境（dev / staging / production）。
+把 `process.env` 解析成强类型的配置对象，通过 NestJS DI 注入给消费方。
 
 **核心特性：**
-- 多环境配置支持
-- 类型化配置访问
-- 配置验证
-- 配置源抽象
-- 类型安全的 API 设计
+- 基于 Zod 的类型安全验证
+- NestJS 动态模块集成
+- 域级按需加载
+- Fail-fast 启动验证
+- 支持开发/测试/生产多环境
 
 ---
 
-## 📦 安装
+## 安装
 
 ```bash
 pnpm add @vxture/core-config
@@ -27,350 +26,210 @@ pnpm add @vxture/core-config
 
 ---
 
-## 🚀 使用示例
+## 快速开始
 
-### 基础使用
+### 1. 在 AppModule 中注册
 
 ```typescript
-import { getConfigManager, type ConfigManager, type EnvConfigSource } from '@vxture/core-config';
+import { Module } from '@nestjs/common';
+import { VxConfigModule } from '@vxture/core-config';
 
-// 创建配置管理器
-const configManager = getConfigManager({
-  sources: [
-    new EnvConfigSource(),
+@Module({
+  imports: [
+    // BFF / Service（不需要 AI 配置）
+    VxConfigModule.register({
+      domains: ['app', 'database', 'redis', 'auth'],
+    }),
+    // Agent Server（需要 AI 配置）
+    VxConfigModule.register({
+      domains: ['app', 'database', 'redis', 'auth', 'ai'],
+    }),
   ],
-});
-
-// 获取配置值
-const apiUrl = configManager.get<string>('API_URL');
-const port = configManager.get<number>('PORT', 3000);
-
-// 获取必需配置
-try {
-  const databaseUrl = configManager.getRequired<string>('DATABASE_URL');
-} catch (error) {
-  console.error('必需配置缺失');
-}
-
-// 检查配置是否存在
-const hasFeature = configManager.has('FEATURE_FLAG');
+})
+export class AppModule {}
 ```
 
-### 多环境配置
+### 2. 在 Service 中使用
 
 ```typescript
-import { createConfigManager, type ConfigSource, type ObjectConfigSource } from '@vxture/core-config';
+import { Injectable } from '@nestjs/common';
+import { VxConfigService } from '@vxture/core-config';
 
-// 环境配置
-const devConfig = {
-  API_URL: 'http://localhost:3000',
-  DEBUG: true,
-};
+@Injectable()
+export class MyService {
+  constructor(private readonly config: VxConfigService) {}
 
-const prodConfig = {
-  API_URL: 'https://api.example.com',
-  DEBUG: false,
-};
+  doSomething() {
+    // 全类型推导，IDE 自动补全
+    const { DB_HOST, DB_PORT } = this.config.database;
+    const { JWT_SECRET } = this.config.auth;
+    const { PORT, NODE_ENV } = this.config.app;
 
-// 根据环境选择配置
-const env = process.env.NODE_ENV || 'development';
-const config = env === 'production' ? prodConfig : devConfig;
-
-// 创建配置管理器
-const configManager = createConfigManager({
-  sources: [
-    new ObjectConfigSource(config),
-    new EnvConfigSource(),
-  ],
-});
-```
-
-### 配置验证
-
-```typescript
-import { type ValidationSchema, type ConfigValidationResult } from '@vxture/core-config';
-
-// 定义验证 schema
-const schema: ValidationSchema = {
-  API_URL: {
-    type: 'string',
-    required: true,
-    validate: (value) => {
-      try {
-        new URL(value);
-        return true;
-      } catch {
-        return false;
-      }
-    },
-  },
-  PORT: {
-    type: 'number',
-    required: false,
-    default: 3000,
-    validate: (value) => value > 0 && value < 65536,
-  },
-};
-
-// 验证配置
-const result: ConfigValidationResult = configManager.validate(schema);
-
-if (!result.valid) {
-  console.error('配置验证失败:', result.errors);
-  console.warn('配置警告:', result.warnings);
-}
-```
-
----
-
-## 📚 API 参考
-
-### ConfigManager
-
-```typescript
-/**
- * 配置管理器
- */
-export class ConfigManager {
-  /**
-   * 获取配置值
-   * @param key - 配置键
-   * @param defaultValue - 默认值
-   * @returns 配置值
-   */
-  get<T>(key: string, defaultValue?: T): T | undefined
-
-  /**
-   * 获取必需配置值
-   * @param key - 配置键
-   * @returns 配置值
-   * @throws 配置缺失时抛出错误
-   */
-  getRequired<T>(key: string): T
-
-  /**
-   * 检查配置是否存在
-   * @param key - 配置键
-   * @returns 是否存在
-   */
-  has(key: string): boolean
-
-  /**
-   * 设置配置值
-   * @param key - 配置键
-   * @param value - 配置值
-   */
-  set<T>(key: string, value: T): void
-
-  /**
-   * 获取所有配置
-   * @returns 配置对象
-   */
-  getAll(): Record<string, unknown>
-
-  /**
-   * 验证配置
-   * @param schema - 验证 schema
-   * @returns 验证结果
-   */
-  validate(schema: ValidationSchema): ConfigValidationResult
-
-  /**
-   * 监听配置变化
-   * @param listener - 监听器
-   * @returns 取消监听函数
-   */
-  onConfigChange(listener: ConfigListener): () => void
-}
-```
-
-### 配置源
-
-```typescript
-/**
- * 环境变量配置源
- */
-export class EnvConfigSource implements ConfigSource {
-  constructor(options?: { prefix?: string })
-  get(key: string): unknown
-  has(key: string): boolean
-  getAll(): Record<string, unknown>
-}
-
-/**
- * 对象配置源
- */
-export class ObjectConfigSource implements ConfigSource {
-  constructor(config: Record<string, unknown>)
-  get(key: string): unknown
-  has(key: string): boolean
-  getAll(): Record<string, unknown>
-}
-
-/**
- * 内存配置源
- */
-export class MemoryConfigSource implements ConfigSource {
-  constructor()
-  get(key: string): unknown
-  set(key: string, value: unknown): void
-  has(key: string): boolean
-  getAll(): Record<string, unknown>
-}
-```
-
-### 工厂函数
-
-```typescript
-/**
- * 获取配置管理器
- * @param options - 配置选项
- * @returns ConfigManager 实例
- */
-export function getConfigManager(options?: ConfigOptions): ConfigManager
-
-/**
- * 创建配置管理器
- * @param options - 配置选项
- * @returns ConfigManager 实例
- */
-export function createConfigManager(options?: ConfigOptions): ConfigManager
-```
-
-### 类型定义
-
-```typescript
-/**
- * 配置源接口
- */
-export interface ConfigSource {
-  get(key: string): unknown
-  has(key: string): boolean
-  getAll(): Record<string, unknown>
-}
-
-/**
- * 配置选项
- */
-export interface ConfigOptions {
-  sources?: ConfigSource[]
-  validationSchema?: ValidationSchema
-}
-
-/**
- * 验证 schema
- */
-export interface ValidationSchema {
-  [key: string]: {
-    type: 'string' | 'number' | 'boolean' | 'object' | 'array'
-    required?: boolean
-    default?: unknown
-    validate?: (value: unknown) => boolean | string
+    if (this.config.isProduction) {
+      // 生产环境专用逻辑
+    }
   }
 }
-
-/**
- * 验证结果
- */
-export interface ConfigValidationResult {
-  valid: boolean
-  errors: ConfigValidationError[]
-  warnings: ConfigValidationWarning[]
-}
-
-/**
- * 验证错误
- */
-export interface ConfigValidationError {
-  key: string
-  message: string
-}
-
-/**
- * 验证警告
- */
-export interface ConfigValidationWarning {
-  key: string
-  message: string
-}
-
-/**
- * 配置监听器
- */
-export type ConfigListener = (event: ConfigEvent) => void
-
-/**
- * 配置事件
- */
-export interface ConfigEvent {
-  type: ConfigEventType
-  key?: string
-  value?: unknown
-}
-
-/**
- * 配置事件类型
- */
-export type ConfigEventType = 'set' | 'change'
 ```
 
 ---
 
-## 🛠 开发注意事项
+## 配置域
 
-### .env 文件
+| 域 | 消费方 | 内容 |
+|----|--------|------|
+| `app` | 所有 | NODE_ENV、PORT、LOG_LEVEL、APP_NAME |
+| `database` | BFF / services / agent-server | PostgreSQL 连接配置 |
+| `redis` | BFF / services / agent-server | Redis 连接配置 |
+| `auth` | BFF / agent-server | JWT、bcrypt 配置 |
+| `ai` | agent-server | 豆包、Claude、自定义模型配置 |
 
-本包不负责加载 `.env` 文件，由上层应用负责：
+---
+
+## API 参考
+
+### VxConfigModule
 
 ```typescript
-// ✅ 正确 - 只读取 process.env
-const databaseUrl = configManager.get<string>('DATABASE_URL');
+import { VxConfigModule } from '@vxture/core-config';
 
-// ❌ 错误 - 不加载 .env 文件
-require('dotenv').config(); // 应该在上层应用中
+VxConfigModule.register({
+  // 需要加载的配置域
+  domains: ['app', 'database', 'redis', 'auth'],
+  // strict: true (默认) — 缺少必填 env 直接 process.exit(1)
+  // strict: false — 仅用于测试场景
+});
 ```
 
-### 导入路径
-
-消费方只从 `@vxture/core-config` 导入，禁止深路径导入：
+### VxConfigService
 
 ```typescript
-// ✅ 正确
-import { ConfigManager, getConfigManager } from '@vxture/core-config';
+import { VxConfigService } from '@vxture/core-config';
 
-// ❌ 错误
-import { ConfigManager } from '@vxture/core-config/src/client/config.client';
+@Injectable()
+export class MyService {
+  constructor(private readonly config: VxConfigService) {}
+
+  // Getters（全类型）
+  get app(): AppConfig
+  get database(): DatabaseConfig
+  get redis(): RedisConfig
+  get auth(): AuthConfig
+  get ai(): AiConfig  // 仅 agent-server
+
+  // 环境判断
+  get isProduction(): boolean
+  get isDevelopment(): boolean
+  get isTest(): boolean
+}
+```
+
+### 直接注入单个域
+
+```typescript
+import { Inject, Injectable } from '@nestjs/common';
+import { CONFIG_TOKEN } from '@vxture/core-config';
+import type { DatabaseConfig } from '@vxture/core-config';
+
+@Injectable()
+export class DatabaseProvider {
+  constructor(
+    @Inject(CONFIG_TOKEN.DATABASE)
+    private readonly dbConfig: DatabaseConfig,
+  ) {}
+}
 ```
 
 ---
 
-## 📁 目录结构
+## 测试中 Mock 配置
+
+```typescript
+import { Test } from '@nestjs/testing';
+import { CONFIG_TOKEN } from '@vxture/core-config';
+
+const mockDb = {
+  DB_HOST: 'localhost',
+  DB_PORT: 5432,
+  DB_NAME: 'test_db',
+  DB_USER: 'test',
+  DB_PASSWORD: 'test',
+  DB_POOL_MAX: 5,
+  DB_SSL: 'disable',
+};
+
+const module = await Test.createTestingModule({
+  providers: [
+    YourService,
+    { provide: CONFIG_TOKEN.DATABASE, useValue: mockDb },
+  ],
+}).compile();
+```
+
+---
+
+## 环境变量示例
+
+```bash
+# App
+NODE_ENV=development
+PORT=3000
+LOG_LEVEL=info
+APP_NAME=vxture
+
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/db
+# 或分项配置
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=vxture
+DB_USER=postgres
+DB_PASSWORD=secret
+DB_POOL_MAX=10
+DB_SSL=prefer
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_DB=0
+REDIS_TTL=3600
+REDIS_KEY_PREFIX=vx:
+
+# Auth
+JWT_SECRET=your-super-secret-key-at-least-32-chars
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+JWT_BLACKLIST_STORAGE=redis
+BCRYPT_ROUNDS=12
+
+# AI（仅 agent-server）
+DOUBAO_API_KEY=your-doubao-api-key
+DOUBAO_API_URL=https://ark.cn-beijing.volces.com/api/v3
+DOUBAO_DEFAULT_MODEL=doubao-pro-32k
+ANTHROPIC_API_KEY=your-anthropic-api-key
+ANTHROPIC_DEFAULT_MODEL=claude-sonnet-4-20250514
+AI_REQUEST_TIMEOUT_MS=60000
+AI_MAX_RETRIES=2
+```
+
+---
+
+## 目录结构
 
 ```
 packages/core/config/
 ├── src/
-│   ├── client/       # 配置客户端实现
-│   ├── types/        # 类型定义
-│   └── index.ts      # 单一公共出口
-├── README.md         # 使用文档（本文档）
+│   ├── module/       # NestJS 动态模块
+│   ├── schemas/      # Zod schemas（app、database、redis、auth、ai）
+│   ├── service/      # VxConfigService
+│   ├── types/        # VxConfig、CONFIG_TOKEN
+│   └── index.ts      # 公共入口
 ├── CLAUDE.md         # AI 编码指南
-└── package.json      # 包配置
+└── README.md         # 使用文档（本文档）
 ```
 
 ---
 
-## 🔄 向后兼容性
+## 新增配置域
 
-包保持向后兼容性，所有废弃 API 会标记 `@deprecated` 注释。
-
----
-
-## 📝 更新日志
-
-### v1.0.0
-- 初始版本
-- 实现 ConfigManager 类
-- 实现配置源抽象
-- 实现配置验证
-- 添加类型定义
-- 完善文档和规范
+参见 `CLAUDE.md` 中的「新增配置域（标准流程）」。

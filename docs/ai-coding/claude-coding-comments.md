@@ -32,18 +32,12 @@ Core files support two header styles:
 /**
  * filename.ts - Short description
  * @package @vxture/[package-name]
- *
- * Description: Detailed explanation of the file's functionality and responsibilities
+ * @description
+ *   Detailed explanation of the file's functionality and responsibilities
  *
  * @author ${USER}           // AI-generated files: use "AI-Generated"
  * @date ${DATE} ${TIME}
- * @version 1.0
- *
  * @copyright Vxture Team
- * @license MIT
- *
- * @layer Presentation | Application | Domain | Infrastructure | Shared
- * @category Components - Common
  */
 ```
 
@@ -53,7 +47,8 @@ Core files support two header styles:
 /**
  * filename.ts - Very Short description
  * @package @vxture/[package-name]
- * @description Detailed explanation of the file's functionality and responsibilities
+ * @description
+ *   Detailed explanation of the file's functionality and responsibilities
  */
 ```
 
