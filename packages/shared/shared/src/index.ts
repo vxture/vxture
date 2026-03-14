@@ -10,7 +10,9 @@
 
 // Type Exports
 export type * from './types';
+export type * from './errors';
 
 // Value Exports
 export * from './constants';
 export * from './utils';
+export * from './errors';
