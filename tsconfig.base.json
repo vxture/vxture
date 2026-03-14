@@ -30,10 +30,8 @@
       "@vxture/core-config/*": ["./packages/core/config/dist/*"],
       "@vxture/core-locale": ["./packages/core/locale/dist/index.d.ts"],
       "@vxture/core-locale/*": ["./packages/core/locale/dist/*"],
-
-      "@vxture/core-tenant": ["./packages/core/tenant/src"],
-      "@vxture/core-tenant/*": ["./packages/core/tenant/src/*"],
-
+      "@vxture/core-tenant": ["./packages/core/tenant/dist/index.d.ts"],
+      "@vxture/core-tenant/*": ["./packages/core/tenant/dist/*"],
       "@vxture/core-auth": ["./packages/core/auth/dist/index.d.ts"],
       "@vxture/core-auth/*": ["./packages/core/auth/dist/*"],
       "@vxture/core-utils": ["./packages/core/utils/dist/index.d.ts"],
