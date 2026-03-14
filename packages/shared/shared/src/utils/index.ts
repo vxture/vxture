@@ -6,3 +6,4 @@
 
 export * from './debug.utils';
 export * from './format.utils';
+export * from './object.utils';

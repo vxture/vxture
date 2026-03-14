@@ -15,8 +15,8 @@ import { ZodError } from 'zod';
 
 import { appSchema, databaseSchema, redisSchema, authSchema, aiSchema } from '../schemas';
 
-import { CONFIG_TOKEN } from '../types/config.types';
-import type { ConfigLoadResult, ConfigValidationError } from '../types/config.types';
+import { CONFIG_TOKEN } from '../types';
+import type { ConfigLoadResult, ConfigValidationError } from '../types';
 
 // ============================================================================
 // 域定义表 — 新增域只需在这里追加一行

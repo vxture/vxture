@@ -4,11 +4,13 @@
  * @description Core config types and constants
  */
 
-import type { AppConfig } from '../schemas/app.schema';
-import type { AuthConfig } from '../schemas/auth.schema';
-import type { DatabaseConfig } from '../schemas/database.schema';
-import type { RedisConfig } from '../schemas/redis.schema';
-import type { AiConfig } from '../schemas/ai.schema';
+import type { 
+  AppConfig,
+  AuthConfig,
+  DatabaseConfig,
+  RedisConfig,
+  AiConfig,
+} from '../schemas';
 
 // ============================================================================
 // Configuration Types

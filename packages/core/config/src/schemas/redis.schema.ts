@@ -1,13 +1,7 @@
 /**
- * redis.schema.ts - redisundefined
+ * redis.schema.ts - Redis配置schema
  * @package @vxture/core-config
- * @layer Infrastructure
- * @category Schemas
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
- * @description
- *   文件功能描述
+ * @description Zod schema for Redis configuration
  */
 
 import { z } from 'zod';

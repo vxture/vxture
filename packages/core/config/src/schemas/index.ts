@@ -1,13 +1,7 @@
 /**
- * index.ts - index
+ * index.ts - schemas导出
  * @package @vxture/core-config
- * @layer Infrastructure
- * @category Schemas
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
- * @description
- *   文件功能描述
+ * @description Config schemas barrel export
  */
 
 export type { AppConfig, AppEnv } from './app.schema';

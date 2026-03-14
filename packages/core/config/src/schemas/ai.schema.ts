@@ -1,13 +1,7 @@
 /**
- * ai.schema.ts - aiundefined
+ * ai.schema.ts - AI 配置schema
  * @package @vxture/core-config
- * @layer Infrastructure
- * @category Schemas
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
- * @description
- *   文件功能描述
+ * @description Zod schema for AI (LLM provider) configuration
  */
 
 import { z } from 'zod';

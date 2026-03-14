@@ -1,18 +1,7 @@
 /**
- * utils/index.ts - 配置工具导出
+ * index.ts - 工具导出
  * @package @vxture/core-config
- *
- * Description: 配置工具函数的统一导出文件
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Utils - Config
+ * @description Config utils barrel export
  */
 
-// TODO: 将来需要迁移的工具函数放这里
+export * from './object.utils';
