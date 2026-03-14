@@ -55,78 +55,10 @@ export interface LoggerConfig {
 }
 
 // ============================================================================
-// Error Types
+// Error Types (从 @vxture/shared 重新导出)
 // ============================================================================
 
-export interface ErrorMetadata {
-  code?: string;
-  status?: number;
-  details?: any;
-  timestamp?: Date;
-  requestId?: string;
-}
-
-export class VxtureError extends Error {
-  public readonly code?: string;
-  public readonly status?: number;
-  public readonly details?: any;
-  public readonly timestamp: Date;
-  public readonly requestId?: string;
-
-  constructor(
-    message: string,
-    metadata: ErrorMetadata = {}
-  ) {
-    super(message);
-    this.name = 'VxtureError';
-    this.code = metadata.code;
-    this.status = metadata.status;
-    this.details = metadata.details;
-    this.timestamp = new Date();
-    this.requestId = metadata.requestId;
-    
-    // V8 专有 API，需要类型断言
-    const ErrorWithCapture = Error as typeof Error & {
-      captureStackTrace?: (target: object, constructor: unknown) => void;
-    };
-    ErrorWithCapture.captureStackTrace?.(this, new.target);
-  }
-}
-
-export class ValidationError extends VxtureError {
-  constructor(message: string, metadata: ErrorMetadata = {}) {
-    super(message, { ...metadata, status: 400, code: 'VALIDATION_ERROR' });
-    this.name = 'ValidationError';
-  }
-}
-
-export class NotFoundError extends VxtureError {
-  constructor(message: string = 'Resource not found', metadata: ErrorMetadata = {}) {
-    super(message, { ...metadata, status: 404, code: 'NOT_FOUND' });
-    this.name = 'NotFoundError';
-  }
-}
-
-export class UnauthorizedError extends VxtureError {
-  constructor(message: string = 'Unauthorized', metadata: ErrorMetadata = {}) {
-    super(message, { ...metadata, status: 401, code: 'UNAUTHORIZED' });
-    this.name = 'UnauthorizedError';
-  }
-}
-
-export class ForbiddenError extends VxtureError {
-  constructor(message: string = 'Forbidden', metadata: ErrorMetadata = {}) {
-    super(message, { ...metadata, status: 403, code: 'FORBIDDEN' });
-    this.name = 'ForbiddenError';
-  }
-}
-
-export class InternalServerError extends VxtureError {
-  constructor(message: string = 'Internal server error', metadata: ErrorMetadata = {}) {
-    super(message, { ...metadata, status: 500, code: 'INTERNAL_ERROR' });
-    this.name = 'InternalServerError';
-  }
-}
+export type { ErrorMetadata } from '@vxture/shared';
 
 // ============================================================================
 // Default Configuration
