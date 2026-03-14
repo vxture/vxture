@@ -15,8 +15,16 @@ shortname@Vx.y.yyMMdd.nn
 - `yyMMdd`: 日期（年月日）
 - `nn`: 序号（当日第几次发布，01、02...）
 
+## 提交规范
+### Commit Message 格式
+```
+[shortname@Vx.y.yyMMdd.nn] 提交描述
+```
+
+**示例**：`[core-tenant@V1.0.0.260314.01] 修复租户解析逻辑bug`
+
 ## 发布流程
 1. 修改代码
-2. 提交变更
+2. 提交变更（使用符合格式的 commit message）
 3. 创建符合格式的 tag
 4. 推送 tag 到远程仓库
