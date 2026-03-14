@@ -5,4 +5,4 @@
  *   Config utils barrel export
  */
 
-export * from './object.utils';
+export { deepMerge, deepClone, isPlainObject } from './object.utils';

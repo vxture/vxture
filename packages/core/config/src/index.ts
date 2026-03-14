@@ -35,8 +35,8 @@ export { CONFIG_TOKEN } from './types';
 // Module & Service
 // ============================================
 
-export { VxConfigModule } from './module';
 export type { VxConfigModuleOptions } from './module';
+export { VxConfigModule } from './module';
 
 export { VxConfigService } from './service';
 
