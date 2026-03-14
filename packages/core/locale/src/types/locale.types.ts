@@ -1,24 +1,8 @@
 /**
- * locale.types.ts - 本地化类型定义
+ * locale.types.ts - 本地化类型
  * @package @vxture/core-locale
- *
- * Description: 服务端 locale 解析与内容本地化相关的类型定义。
- * 职责：服务端 locale 解析与内容本地化，框架无关，运行于 Node.js 环境。
- *
- * @author AI-Generated
- * @date 2026-03-13
- * @version 1.1
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Types
- *
- * @remarks
- * - 类型定义保持精简
- * - Locale 类型从 @vxture/shared 引入，不重复定义
- * - 此文件只包含 core-locale 包特有类型
+ * @description
+ *   本地化类型定义
  */
 
 import type { Locale } from '@vxture/shared';

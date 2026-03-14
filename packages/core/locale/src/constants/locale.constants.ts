@@ -1,9 +1,8 @@
 /**
- * locale.constants.ts - core-locale 语言常量
+ * locale.constants.ts - 语言常量
  * @package @vxture/core-locale
- *
- * Description: core-locale 包的语言常量定义。
- * 为了避免路径映射导入问题，这些常量复制自 @vxture/shared。
+ * @description
+ *   语言常量定义（与 @vxture/shared 保持同步）
  */
 
 // ============================================================================
