@@ -20,12 +20,8 @@
     "paths": {
       "@vxture/shared": ["./packages/shared/shared/dist/index.d.ts"],
       "@vxture/shared/*": ["./packages/shared/shared/dist/*"],
-
-      "@vxture/design-system": ["./packages/design/design-system/src"],
-      "@vxture/design-system/*": ["./packages/design/design-system/src/*"],
-      "@vxture/core-api": ["./packages/core/api/src"],
-      "@vxture/core-api/*": ["./packages/core/api/src/*"],
-
+      "@vxture/core-api": ["./packages/core/api/dist/index.d.ts"],
+      "@vxture/core-api/*": ["./packages/core/api/dist/*"],
       "@vxture/core-config": ["./packages/core/config/dist/index.d.ts"],
       "@vxture/core-config/*": ["./packages/core/config/dist/*"],
       "@vxture/core-locale": ["./packages/core/locale/dist/index.d.ts"],
@@ -36,6 +32,9 @@
       "@vxture/core-auth/*": ["./packages/core/auth/dist/*"],
       "@vxture/core-utils": ["./packages/core/utils/dist/index.d.ts"],
       "@vxture/core-utils/*": ["./packages/core/utils/dist/*"],
+
+      "@vxture/design-system": ["./packages/design/design-system/src"],
+      "@vxture/design-system/*": ["./packages/design/design-system/src/*"],
 
       "@vxture/ai-sdk": ["./packages/ai/ai-sdk/src"],
       "@vxture/ai-sdk/*": ["./packages/ai/ai-sdk/src/*"],

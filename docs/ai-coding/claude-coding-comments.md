@@ -17,7 +17,7 @@ It is intended for developers and AI tools to ensure readability, maintainabilit
 
 > **Project-wide constraints:**
 >
-> - Comment language: **Chinese** (internal standard; identifiers remain in English).
+> - Comment language: **English** (internal standard; identifiers remain in English).
 > - Every core file must declare a `@package` tag in its file header — see Section 2.
 
 ---
@@ -52,31 +52,15 @@ Core files support two header styles:
  */
 ```
 
-| Field       | Description                                                                     |
-| ----------- | ------------------------------------------------------------------------------- |
-| `@package`  | Package name, format: `@vxture/[package-name]`                                  |
-| `@layer`    | Architecture layer — see Section 3. Must match the file's actual responsibility |
-| `@category` | Functional category, e.g. `Components - Common` / `Hooks` / `Utils`             |
-| `@author`   | Use `${USER}`; AI-generated files use `AI-Generated`                            |
-| `@version`  | Start at `1.0`; increment on major refactors                                    |
+| Field      | Description                                                                    |
+| ---------- | ------------------------------------------------------------------------------ |
+| `@package` | Package name, format: `@vxture/[package-name]`                                 |
+| `@author`  | Use `${USER}`; AI-generated files use `AI-Generated`                           |
+| `@version` | Start at `1.0.0`.`${DATE}`; increment on major refactors `${DATE}` as `yyMMdd` |
 
 ---
 
-## 3. Layer (@layer) Values
-
-> **Selection rule: choose based on the file's primary responsibility. If a file spans multiple layers, split it into separate files.**
-
-| Layer            | Responsibility                                         | Examples                                            |
-| ---------------- | ------------------------------------------------------ | --------------------------------------------------- |
-| `Presentation`   | UI components, pages, visual display                   | Portals, React components, layout containers        |
-| `Application`    | Application logic, service orchestration, Hooks        | Data-fetching Hooks, workflow coordination          |
-| `Domain`         | Core business logic, type definitions, domain rules    | Business models, domain services, type system       |
-| `Infrastructure` | External services, APIs, storage, platform integration | API clients, database access, caching services      |
-| `Shared`         | Cross-layer utilities, constants, common types         | Validation functions, theme constants, shared types |
-
----
-
-## 4. Section Comments
+## 3. Section Comments
 
 Use section separators to organize code in files longer than 80 lines:
 
@@ -98,7 +82,7 @@ Common section names: `Types` / `Constants` / `Helpers` / `Components` / `Hooks 
 
 ---
 
-## 5. Interface / Type Comments
+## 4. Interface / Type Comments
 
 ```typescript
 /**
@@ -112,7 +96,7 @@ interface ExampleProps {
 
 ---
 
-## 6. Function Comments
+## 5. Function Comments
 
 ```typescript
 /**
@@ -131,7 +115,7 @@ export function functionName(param: Type): ReturnType {
 
 ---
 
-## 7. Enum Comments
+## 6. Enum Comments
 
 ```typescript
 /**
@@ -145,33 +129,10 @@ export enum EExample {
 
 ---
 
-## 8. Python Backend Docstring
-
-```python
-def function_name(param: str) -> Optional[ReturnType]:
-    """
-    Function description
-
-    Args:
-        param: Description of the parameter
-
-    Returns:
-        Description of the return value
-
-    Raises:
-        ErrorType: When and why this error is raised
-    """
-    # Implementation...
-```
-
----
-
-## 9. AI Usage Notes
+## 7. AI Usage Notes
 
 ### Mandatory
 
-- All new files must include a complete file header — `@package`, `@layer`, `@category` are required.
-- `@layer` must reflect the file's actual architectural role — do not guess or default.
 - Set `@author` to `AI-Generated` and `@date` to the actual generation date.
 - All exported functions require JSDoc with `@param` and `@returns`; add `@throws` when exceptions exist.
 - Files longer than 80 lines must use section comments.
@@ -182,15 +143,3 @@ def function_name(param: str) -> Optional[ReturnType]:
 - Do not generate comments that merely restate the code (e.g. `// loop`, `// define variable`).
 - Do not omit `@throws` when a function has known exception paths.
 - Do not use a `@layer` value that does not match the file's actual position in the Monorepo.
-
-### Self-Check Checklist
-
-Before completing any file, verify:
-
-- [ ] File header contains `@package` / `@layer` / `@category` / `@author` / `@date`
-- [ ] `@layer` matches the file's actual role in the Monorepo
-- [ ] All exported functions have `@param` / `@returns`
-- [ ] Functions with `throw` statements have `@throws`
-- [ ] Files over 80 lines have section separators
-- [ ] All comments are written in Chinese
-- [ ] No trivial or redundant comments
