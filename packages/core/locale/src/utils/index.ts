@@ -6,3 +6,4 @@
  */
 
 export { resolveLocale, localizeContent } from './locale.utils';
+export { parseAcceptLanguage, parseCookieValue } from './locale-parser.utils';

@@ -13,6 +13,9 @@
 export type { Locale } from '@vxture/shared';
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
 
+
+export type { LocaleRequest } from './types';
+
 // ============================================================================
 // Service-side Locale Utils
 // ============================================================================

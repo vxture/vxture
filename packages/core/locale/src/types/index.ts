@@ -5,4 +5,4 @@
  *   本地化类型统一导出
  */
 
-export type { LocaleRequest } from './locale.types';
+export type { LocaleRequest, LocalizationOptions, ResolveLocaleOptions } from './locale.types';
