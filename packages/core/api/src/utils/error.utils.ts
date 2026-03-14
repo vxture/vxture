@@ -14,7 +14,7 @@ import {
   NotFoundError,
   ConflictError,
   InternalServerError,
-} from '@vxture/core-utils';
+} from '@vxture/shared';
 
 import type { ApiErrorBody } from '../types/api.types';
 

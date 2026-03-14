@@ -18,10 +18,9 @@
     "build": "tsup",
     "dev": "tsup --watch"
   },
- 
+
   "dependencies": {
     "@vxture/shared":     "workspace:*",
-    "@vxture/core-utils": "workspace:*",
     "form-data":          "^4.0.0"
   },
 
@@ -44,7 +43,7 @@
     "tsup":               "^8.5.1",
     "typescript":         "^5.9.3"
   },
-  
+
   "engines": {
     "node":               ">=22.0.0"
   }
