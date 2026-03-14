@@ -1,56 +1,15 @@
-/**
- * tsup.config.ts - Shared package build configuration
- * @package @vxture/shared
- * @description tsup bundler configuration for @vxture/shared package.
- */
-
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  // 入口文件
   entry: ['src/index.ts'],
-
-  // 输出格式：ES Module 和 CommonJS
   format: ['esm', 'cjs'],
-
-  // 输出目录
-  outDir: 'dist',
-
-  // 生成类型声明文件
-  dts: {
-    entry: 'src/index.ts',
-    compilerOptions: {
-      composite: false,
-    },
+  outExtension({ format }) {
+    return { js: format === 'esm' ? '.mjs' : '.cjs' };
   },
-
-  // 生成 source map
+  dts: true,
   sourcemap: true,
-
-  // 清除输出目录
   clean: true,
-
-  // 最小化输出
-  minify: false,
-
-  // 分包（可选，按需启用）
-  splitting: false,
-
-  // 使用 swc 加速编译（需要安装 @swc/core）
-  // 暂时不使用，保持简单
-  // loader: { '.ts': 'tsx' },
-
-  // 外部依赖（不打包到输出中）
-  external: [],
-
-  // 平台目标
   target: 'es2023',
-
-  // 保持输出的目录结构
   keepNames: true,
-
-  // 定义全局变量来处理 CJS 中的 import.meta
-  define: {
-    'import.meta.env': '{}',
-  },
+  treeshake: true,
 });

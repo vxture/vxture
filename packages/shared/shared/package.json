@@ -1,17 +1,22 @@
 {
   "name": "@vxture/shared",
   "version": "1.0.0",
+  "description": "Vxture shared utilities, types, and constants",
+  "license": "MIT",
   "private": true,
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "description": "Vxture shared utilities, types, and constants",
+  "exports": {
+    ".": {
+      "types":   "./dist/index.d.ts",
+      "import":  "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "echo \"No lint yet\"",
-    "lint:fix": "echo \"No lint:fix yet\"",
     "build": "tsup",
-    "clean": "rimraf dist"
+    "dev": "tsup --watch"
   },
   "devDependencies": {
     "tsup": "^8.5.1",
