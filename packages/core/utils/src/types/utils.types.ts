@@ -53,14 +53,15 @@ export interface LogRecord {
   level: LogLevel;
   message: string;
   timestamp: Date;
-  metadata?: Record<string, any>;
+  context?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface LoggerConfig {
   level?: LogLevel;
   enableTimestamp?: boolean;
   enableColors?: boolean;
-  metadata?: Record<string, any>;
+  context?: string;
 }
 
 // ============================================================================
@@ -91,12 +92,14 @@ export class VxtureError extends Error {
     this.code = metadata.code;
     this.status = metadata.status;
     this.details = metadata.details;
-    this.timestamp = metadata.timestamp || new Date();
+    this.timestamp = new Date();
     this.requestId = metadata.requestId;
-
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, VxtureError);
-    }
+    
+    // V8 专有 API，需要类型断言
+    const ErrorWithCapture = Error as typeof Error & {
+      captureStackTrace?: (target: object, constructor: unknown) => void;
+    };
+    ErrorWithCapture.captureStackTrace?.(this, new.target);
   }
 }
 

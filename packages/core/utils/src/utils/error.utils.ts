@@ -32,10 +32,11 @@ export class VxtureError extends Error {
     this.timestamp = new Date();
     this.requestId = metadata.requestId;
 
-    // 保留正确的 stack trace（V8 专属）
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, new.target);
-    }
+    // V8 专有 API，需要类型断言
+    const ErrorWithCapture = Error as typeof Error & {
+      captureStackTrace?: (target: object, constructor: unknown) => void;
+    };
+    ErrorWithCapture.captureStackTrace?.(this, new.target);
   }
 
   toJSON(): Record<string, unknown> {
