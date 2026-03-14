@@ -1,6 +1,6 @@
 {
   "name": "@vxture/bff-website",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "main": "src/index.ts",
@@ -16,6 +16,7 @@
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
     "@vxture/core-auth": "workspace:*",
+    "@vxture/core-locale": "workspace:*",
     "@vxture/core-tenant": "workspace:*"
   },
   "devDependencies": {
