@@ -1,13 +1,8 @@
 /**
- * locale-parser.utils.ts - locale-parser相关工具
+ * locale-parser.utils.ts - 语言解析工具
  * @package @vxture/core-locale
- * @layer Infrastructure
- * @category Utils
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
  * @description
- *   文件功能描述
+ *   语言解析工具函数
  */
 
 import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';

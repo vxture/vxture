@@ -1,38 +1,8 @@
 /**
- * locale.utils.ts - 服务端 locale 解析与内容本地化工具
+ * locale.utils.ts - locale 工具
  * @package @vxture/core-locale
- *
- * Description: 服务端 locale 解析与内容本地化工具。
- * 职责：服务端 locale 解析与内容本地化，框架无关，运行于 Node.js 环境。
- *
- * @author AI-Generated
- * @date 2026-03-13
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Utils
- *
- * @remarks
- * - request 类型为标准 Web API 的 Request，不绑定 NestJS 或 Express 的特定类型
- * - Locale 类型从本地常量定义，与 @vxture/shared 保持同步
- * - 此函数仅在服务端调用（bff、services、agent-server）
- * - 禁止在前端代码中调用此函数
- *
- * @example
- * ```ts
- * // bff/_ 或 agent-server/_ 或 services/* 内部
- * import { resolveLocale, localizeContent } from '@vxture/core-locale';
- *
- * const locale = resolveLocale(request);
- *
- * const description = localizeContent(
- *   { zh: '专业版订阅', en: 'Pro Subscription' },
- *   locale
- * );
- * ```
+ * @description
+ *   服务端 locale 解析与内容本地化工具
  */
 
 import type { Locale } from '../constants/locale.constants';
