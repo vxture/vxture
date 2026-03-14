@@ -1,49 +1,49 @@
 /**
- * env.utils.ts - env相关工具
+ * env.utils.ts - Environment utilities
  * @package @vxture/core-utils
  * @description
- *   环境判断工具，包括 Node.js 环境检测、浏览器环境检测和 NODE_ENV 判断
+ *   Environment detection utilities including Node.js environment detection, browser environment detection and NODE_ENV detection
  */
 
 // ============================================================================
-// 环境判断
+// Environment Checks
 // ============================================================================
 
-/** 当前 NODE_ENV 值，未设置时默认 'development' */
+/** Current NODE_ENV value, defaults to 'development' if not set */
 export function getNodeEnv(): string {
   return process.env['NODE_ENV'] ?? 'development';
 }
 
-/** 是否为生产环境 */
+/** Is production environment */
 export function isProduction(): boolean {
   return getNodeEnv() === 'production';
 }
 
-/** 是否为开发环境 */
+/** Is development environment */
 export function isDevelopment(): boolean {
   return getNodeEnv() === 'development';
 }
 
-/** 是否为测试环境 */
+/** Is test environment */
 export function isTest(): boolean {
   return getNodeEnv() === 'test';
 }
 
-/** 是否为 staging 环境 */
+/** Is staging environment */
 export function isStaging(): boolean {
   return getNodeEnv() === 'staging';
 }
 
 // ============================================================================
-// 进程判断
+// Process Checks
 // ============================================================================
 
-/** 是否运行在 Node.js 环境 */
+/** Is running in Node.js environment */
 export function isNode(): boolean {
   return typeof process !== 'undefined' && process.versions?.node !== undefined;
 }
 
-/** 是否运行在浏览器环境 */
+/** Is running in browser environment */
 export function isBrowser(): boolean {
   return typeof window !== 'undefined' && typeof document !== 'undefined';
 }

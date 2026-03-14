@@ -1,12 +1,12 @@
 /**
- * type-guards.utils.ts - type-guards相关工具
+ * type-guards.utils.ts - Type guard utilities
  * @package @vxture/core-utils
  * @description
- *   类型守卫工具集，包括基础类型、对象、数组、字符串内容等类型守卫
+ *   Collection of type guard functions including basic types, objects, arrays, and string content checks
  */
 
 // ============================================================================
-// 基础类型守卫
+// Basic Type Guards
 // ============================================================================
 
 export function isString(value: unknown): value is string {
@@ -30,7 +30,7 @@ export function isSymbol(value: unknown): value is symbol {
 }
 
 // ============================================================================
-// null / undefined 守卫
+// null / undefined Guards
 // ============================================================================
 
 export function isDefined<T>(value: T | undefined): value is T {
@@ -46,7 +46,7 @@ export function isPresent<T>(value: T | null | undefined): value is T {
 }
 
 // ============================================================================
-// 对象 / 数组守卫
+// Object / Array Guards
 // ============================================================================
 
 export function isObject(value: unknown): value is Record<string, unknown> {
@@ -66,15 +66,15 @@ export function isEmptyArray(value: unknown): value is [] {
 }
 
 // ============================================================================
-// 字符串内容守卫
+// String Content Guards
 // ============================================================================
 
-/** 非空字符串（排除空白） */
+/** Non-empty string (excludes whitespace) */
 export function isNonEmptyString(value: unknown): value is string {
   return isString(value) && value.trim().length > 0;
 }
 
-/** 有效的 URL 字符串 */
+/** Valid URL string */
 export function isValidUrl(value: unknown): value is string {
   if (!isString(value)) return false;
   try {
@@ -85,7 +85,7 @@ export function isValidUrl(value: unknown): value is string {
   }
 }
 
-/** 有效的 UUID v4 */
+/** Valid UUID v4 */
 export function isUuid(value: unknown): value is string {
   if (!isString(value)) return false;
   return /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);

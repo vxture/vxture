@@ -1,15 +1,15 @@
 /**
- * logger.utils.ts - logger相关工具
+ * logger.utils.ts - Logger utilities
  * @package @vxture/core-utils
  * @description
- *   结构化日志工具，支持多级别日志、context 绑定和跨平台输出
+ *   Structured logging utility with multi-level logging, context binding and cross-platform output
  */
 
 import { LogLevel } from '../types/utils.types';
 import type { LogRecord, LoggerConfig } from '../types/utils.types';
 
 // ============================================================================
-// 日志级别优先级
+// Log Level Priority
 // ============================================================================
 
 const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
@@ -21,7 +21,7 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
 };
 
 // ============================================================================
-// 颜色（仅 Node.js 终端）
+// Colors (Node.js terminal only)
 // ============================================================================
 
 const COLORS: Record<LogLevel, string> = {
@@ -69,7 +69,7 @@ export class VxLogger {
     this.write(LogLevel.FATAL, message, metadata);
   }
 
-  /** 创建带固定 context 的子 logger */
+  /** Create child logger with fixed context */
   child(context: string): VxLogger {
     return new VxLogger({ ...this.config, context });
   }
@@ -129,7 +129,7 @@ export class VxLogger {
 }
 
 // ============================================================================
-// 默认全局 logger 实例
+// Default global logger instance
 // ============================================================================
 
 export const logger = new VxLogger();

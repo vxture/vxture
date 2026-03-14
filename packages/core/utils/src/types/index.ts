@@ -1,11 +1,10 @@
 /**
- * types/index.ts - 工具类型导出
+ * index.ts - Core utils type exports
  * @package @vxture/core-utils
  * @description
- *   Utils types barrel export
+ *   Unified export file for core utils types
  */
 
-export * from './utils.types';
 export type {
   Maybe,
   Nullable,
@@ -14,8 +13,11 @@ export type {
   FunctionType,
   DeepPartial,
   DeepReadonly,
-  LogLevel,
   LogRecord,
   LoggerConfig,
-  ErrorMetadata,
+} from './utils.types';
+
+export {
+  LogLevel,
+  DEFAULT_LOGGER_CONFIG,
 } from './utils.types';

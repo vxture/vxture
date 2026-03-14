@@ -1,5 +1,5 @@
 /**
- * utils.types.ts - 工具类型定义
+ * utils.types.ts - Utility type definitions
  * @package @vxture/core-utils
  * @description
  *   Core utilities types and constants
@@ -31,13 +31,15 @@ export type DeepReadonly<T> = {
 // Log Types
 // ============================================================================
 
-export enum LogLevel {
-  DEBUG = 'debug',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error',
-  FATAL = 'fatal',
-}
+export const LogLevel = {
+  DEBUG: 'debug',
+  INFO: 'info',
+  WARN: 'warn',
+  ERROR: 'error',
+  FATAL: 'fatal',
+} as const;
+
+export type LogLevel = typeof LogLevel[keyof typeof LogLevel];
 
 export interface LogRecord {
   level: LogLevel;
@@ -53,12 +55,6 @@ export interface LoggerConfig {
   enableColors?: boolean;
   context?: string;
 }
-
-// ============================================================================
-// Error Types (从 @vxture/shared 重新导出)
-// ============================================================================
-
-export type { ErrorMetadata } from '@vxture/shared';
 
 // ============================================================================
 // Default Configuration

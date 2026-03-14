@@ -19,7 +19,6 @@ export type {
   DeepReadonly,
   LogRecord,
   LoggerConfig,
-  ErrorMetadata,
 } from './types/utils.types';
 export {
   LogLevel,
@@ -55,12 +54,4 @@ export {
   isNonEmptyString,
   isValidUrl,
   isUuid,
-  VxtureError,
-  ValidationError,
-  UnauthorizedError,
-  ForbiddenError,
-  NotFoundError,
-  ConflictError,
-  InternalServerError,
-  isVxtureError,
 } from './utils';
