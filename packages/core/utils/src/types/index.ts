@@ -1,18 +1,8 @@
 /**
- * index.ts - 工具类型导出
+ * types/index.ts - 工具类型导出
  * @package @vxture/core-utils
- *
- * Description: Utils types barrel export
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Types - Utils
+ * @description
+ *   Utils types barrel export
  */
 
 export * from './utils.types';

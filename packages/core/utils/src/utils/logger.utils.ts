@@ -1,13 +1,8 @@
 /**
  * logger.utils.ts - logger相关工具
  * @package @vxture/core-utils
- * @layer Infrastructure
- * @category Utils
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
  * @description
- *   文件功能描述
+ *   结构化日志工具，支持多级别日志、context 绑定和跨平台输出
  */
 
 import { LogLevel } from '../types/utils.types';
@@ -47,7 +42,7 @@ export class VxLogger {
 
   constructor(config: LoggerConfig = {}) {
     this.config = {
-      level:           config.level           ?? LogLevel.INFO,
+      level:           config.level            ?? LogLevel.INFO,
       enableTimestamp: config.enableTimestamp  ?? true,
       enableColors:    config.enableColors     ?? true,
       context:         config.context          ?? '',

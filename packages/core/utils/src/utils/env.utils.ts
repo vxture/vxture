@@ -1,13 +1,8 @@
 /**
  * env.utils.ts - env相关工具
  * @package @vxture/core-utils
- * @layer Infrastructure
- * @category Utils
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
  * @description
- *   文件功能描述
+ *   环境判断工具，包括 Node.js 环境检测、浏览器环境检测和 NODE_ENV 判断
  */
 
 // ============================================================================

@@ -1,13 +1,8 @@
 /**
  * type-guards.utils.ts - type-guards相关工具
  * @package @vxture/core-utils
- * @layer Infrastructure
- * @category Utils
- * @author AI-Generated
- * @date 2026-03-14
- * @copyright Vxture Team
  * @description
- *   文件功能描述
+ *   类型守卫工具集，包括基础类型、对象、数组、字符串内容等类型守卫
  */
 
 // ============================================================================

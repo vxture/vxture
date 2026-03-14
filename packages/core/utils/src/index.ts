@@ -1,18 +1,8 @@
 /**
  * index.ts - Vxture Core Utilities Package
  * @package @vxture/core-utils
- *
- * Description: Platform-level utilities for Vxture, including logging and error handling.
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Services - Utils
+ * @description
+ *   Platform-level utilities for Vxture, including logging and error handling.
  */
 
 // ============================================
@@ -32,11 +22,45 @@ export type {
   ErrorMetadata,
 } from './types/utils.types';
 export {
-  VxtureError,
-  ValidationError,
-  NotFoundError,
-  UnauthorizedError,
-  ForbiddenError,
-  InternalServerError,
+  LogLevel,
   DEFAULT_LOGGER_CONFIG,
 } from './types/utils.types';
+
+// ============================================
+// Utils Functions & Classes
+// ============================================
+
+export {
+  getNodeEnv,
+  isProduction,
+  isDevelopment,
+  isTest,
+  isStaging,
+  isNode,
+  isBrowser,
+  VxLogger,
+  logger,
+  isString,
+  isNumber,
+  isBoolean,
+  isFunction,
+  isSymbol,
+  isDefined,
+  isNotNull,
+  isPresent,
+  isObject,
+  isArray,
+  isEmptyObject,
+  isEmptyArray,
+  isNonEmptyString,
+  isValidUrl,
+  isUuid,
+  VxtureError,
+  ValidationError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  ConflictError,
+  InternalServerError,
+  isVxtureError,
+} from './utils';

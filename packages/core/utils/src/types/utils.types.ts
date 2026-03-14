@@ -1,18 +1,8 @@
 /**
  * utils.types.ts - 工具类型定义
  * @package @vxture/core-utils
- *
- * Description: Core utilities types and constants
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Types - Utils
+ * @description
+ *   Core utilities types and constants
  */
 
 // ============================================================================
