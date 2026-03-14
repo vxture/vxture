@@ -62,7 +62,9 @@ export class VxJwtClient {
     secret: string,
     expiresIn: string,
   ): string {
-    return this.jwtService.sign(payload, { secret, expiresIn });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const options: any = { secret, expiresIn };
+    return this.jwtService.sign(payload as unknown as object, options);
   }
 
   /**

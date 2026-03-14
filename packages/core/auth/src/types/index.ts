@@ -7,6 +7,7 @@
 
 export {
   OAuthProviderType,
+  PlatformRole,
 } from './auth.types';
 
 export type {
@@ -18,5 +19,5 @@ export type {
   OAuthProvider,
   AuthTokenPair,
   PermissionCheckOptions,
-  PlatformRole
+  PlatformRole as PlatformRoleType
 } from './auth.types';
