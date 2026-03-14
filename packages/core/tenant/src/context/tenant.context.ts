@@ -1,3 +1,10 @@
+/**
+ * tenant.context.ts - 租户上下文存取工具
+ * @package @vxture/core-tenant
+ * @description
+ *   提供请求作用域的租户上下文存取能力
+ */
+
 import { Inject, Injectable, Scope } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import type { Request } from 'express';

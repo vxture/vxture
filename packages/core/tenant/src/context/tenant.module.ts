@@ -1,3 +1,10 @@
+/**
+ * tenant.module.ts - NestJS 模块定义
+ * @package @vxture/core-tenant
+ * @description
+ *   租户模块的 NestJS 动态模块实现
+ */
+
 import {
   DynamicModule,
   Global,

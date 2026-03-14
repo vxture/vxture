@@ -1,3 +1,10 @@
+/**
+ * tenant.middleware.ts - 租户解析中间件
+ * @package @vxture/core-tenant
+ * @description
+ *   从请求中解析租户信息的 NestJS 中间件
+ */
+
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
 

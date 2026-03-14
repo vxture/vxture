@@ -1,9 +1,8 @@
 /**
- * tenant.utils.ts - 租户解析与隔离工具函数
+ * tenant.utils.ts - 租户解析工具函数
  * @package @vxture/core-tenant
- *
- * 纯函数，无副作用，无框架依赖。
- * 供 middleware、guard、BFF router 使用。
+ * @description
+ *   提供租户 ID 解析和子域名提取等工具函数
  */
 
 import { TenantResolveSource } from '../types/tenant.types';
