@@ -82,7 +82,7 @@ export class MyService {
 | `database` | BFF / services / agent-server | PostgreSQL 连接配置 |
 | `redis` | BFF / services / agent-server | Redis 连接配置 |
 | `auth` | BFF / agent-server | JWT、bcrypt 配置 |
-| `ai` | agent-server | 豆包、Claude、自定义模型配置 |
+| `ai` | agent-server | 豆包、Claude、ChatGPT、通义千问、自定义模型配置 |
 
 ---
 
@@ -208,6 +208,12 @@ DOUBAO_API_URL=https://ark.cn-beijing.volces.com/api/v3
 DOUBAO_DEFAULT_MODEL=doubao-pro-32k
 ANTHROPIC_API_KEY=your-anthropic-api-key
 ANTHROPIC_DEFAULT_MODEL=claude-sonnet-4-20250514
+OPENAI_API_KEY=your-openai-api-key
+OPENAI_DEFAULT_MODEL=gpt-4o
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+QWEN_API_KEY=your-qwen-api-key
+QWEN_DEFAULT_MODEL=qwen-plus
+QWEN_EMBEDDING_MODEL=text-embedding-v2
 AI_REQUEST_TIMEOUT_MS=60000
 AI_MAX_RETRIES=2
 ```

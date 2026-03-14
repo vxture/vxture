@@ -53,6 +53,46 @@ const claudeSchema = z.object({
 });
 
 // ----------------------------------------------------------------------------
+// ChatGPT (OpenAI)
+// ----------------------------------------------------------------------------
+const chatgptSchema = z.object({
+  /** OpenAI API Key */
+  OPENAI_API_KEY: z.string().min(1),
+
+  /** OpenAI API Base URL，私有化部署时可覆盖 */
+  OPENAI_API_URL: z
+    .string()
+    .url()
+    .default('https://api.openai.com/v1'),
+
+  /** 默认模型 */
+  OPENAI_DEFAULT_MODEL: z.string().default('gpt-4o'),
+
+  /** Embedding 模型 */
+  OPENAI_EMBEDDING_MODEL: z.string().default('text-embedding-3-small'),
+});
+
+// ----------------------------------------------------------------------------
+// Qwen (字节跳动 通义千问)
+// ----------------------------------------------------------------------------
+const qwenSchema = z.object({
+  /** 通义千问 API Key */
+  QWEN_API_KEY: z.string().min(1),
+
+  /** 通义千问 API Base URL，私有化部署时可覆盖 */
+  QWEN_API_URL: z
+    .string()
+    .url()
+    .default('https://dashscope.aliyuncs.com/compatible-mode'),
+
+  /** 默认模型 */
+  QWEN_DEFAULT_MODEL: z.string().default('qwen-plus'),
+
+  /** Embedding 模型 */
+  QWEN_EMBEDDING_MODEL: z.string().default('text-embedding-v2'),
+});
+
+// ----------------------------------------------------------------------------
 // 自定义 / 私有模型 endpoint（OpenAI 兼容接口）
 // ----------------------------------------------------------------------------
 const customModelSchema = z.object({
@@ -85,6 +125,8 @@ const aiGlobalSchema = z.object({
 // ----------------------------------------------------------------------------
 export const aiSchema = doubaoSchema
   .merge(claudeSchema)
+  .merge(chatgptSchema)
+  .merge(qwenSchema)
   .merge(customModelSchema)
   .merge(aiGlobalSchema);
 
@@ -93,4 +135,6 @@ export type AiConfig = z.infer<typeof aiSchema>;
 // 单独导出子类型，供 ai-sdk 各模块按需使用
 export type DoubaoConfig = z.infer<typeof doubaoSchema>;
 export type ClaudeConfig = z.infer<typeof claudeSchema>;
+export type ChatgptConfig = z.infer<typeof chatgptSchema>;
+export type QwenConfig = z.infer<typeof qwenSchema>;
 export type CustomModelConfig = z.infer<typeof customModelSchema>;

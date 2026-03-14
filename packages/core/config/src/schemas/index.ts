@@ -16,5 +16,5 @@ export { redisSchema } from './redis.schema';
 export type { AuthConfig } from './auth.schema';
 export { authSchema } from './auth.schema';
 
-export type { AiConfig, DoubaoConfig, ClaudeConfig, CustomModelConfig } from './ai.schema';
+export type { AiConfig, DoubaoConfig, ClaudeConfig, ChatgptConfig, QwenConfig, CustomModelConfig } from './ai.schema';
 export { aiSchema } from './ai.schema';

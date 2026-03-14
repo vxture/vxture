@@ -1,6 +1,6 @@
 {
   "name": "@vxture/core-config",
-  "version": "1.0.0",
+  "version": "1.0.260314",
   "description": "Vxture platform — environment-aware typed configuration (zod + NestJS)",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -11,7 +11,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
-
     }
   },
   "files": ["dist"],
