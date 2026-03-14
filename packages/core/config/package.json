@@ -1,24 +1,22 @@
 {
   "name": "@vxture/core-config",
-  "version": "1.0.260314",
+  "version": "1.0.0",
   "description": "Vxture platform — environment-aware typed configuration (zod + NestJS)",
   "license": "MIT",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "private": true,
+  "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "types":   "./dist/index.d.ts",
+      "import":  "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
   "files": ["dist"],
   "scripts": {
+    "type-check": "tsc --noEmit",
     "build": "tsup",
-    "build:types": "tsc -p tsconfig.build.json",
-    "dev": "tsup --watch",
-    "typecheck": "tsc --noEmit"
+    "dev": "tsup --watch"
   },
   "peerDependencies": {
     "@nestjs/common": "^11.0.0",
@@ -31,7 +29,10 @@
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "reflect-metadata": "^0.2.0",
-    "tsup": "^8.0.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
