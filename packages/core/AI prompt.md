@@ -7,13 +7,14 @@
  */
 
 
-遵循 docs\standards\Vxture-git-workflow-Specification.md
+遵循 docs\standards\Vxture-Git-Workflow-Specification.md
 仅对 core-auth 执行：git status, add, commit, and push.
 其他包的变更仅执行：git status, add, don't commit, don't push
 
 
 严格按照：core-config 包的三个配置文件 package.json, tsconfig.json, tsup.config.ts
-严格修订：core-tenant 包的三个对应文件，要求内容高度一致，除了依赖按需调整。
+严格修订：core-api 包的三个对应文件，要求内容高度一致，除了依赖按需调整。
+完成三个文件修订即可停止，严禁执行其他工作
 
 
 严格按照以下模式，给scr/* 的源文件修正文件头注释，不要使用脚本，会导致代码出错
@@ -23,15 +24,3 @@
  * @description
  *   语言常量统一导出
  */
-
-
-
- tenant
- P3: 修正
- P7: 修正
- P5: 修正
- P6: 修正
- P8: 修正
- P9: 修正
- P12: 修正
- P1、2、10、11、13忽略
