@@ -1,7 +1,8 @@
 /**
  * app.schema.ts - 应用配置schema
  * @package @vxture/core-config
- * @description Zod schema for application configuration
+ * @description
+ *   Zod schema for application configuration
  */
 
 import { z } from 'zod';

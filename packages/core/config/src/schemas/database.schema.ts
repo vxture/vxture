@@ -1,7 +1,8 @@
 /**
  * database.schema.ts - 数据库配置schema
  * @package @vxture/core-config
- * @description Zod schema for database (PostgreSQL) configuration
+ * @description
+ *   Zod schema for database (PostgreSQL) configuration
  */
 
 import { z } from 'zod';

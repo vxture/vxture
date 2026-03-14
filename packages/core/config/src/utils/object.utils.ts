@@ -1,7 +1,8 @@
 /**
  * object.utils.ts - 对象工具
  * @package @vxture/core-config
- * @description Object utility functions (deepMerge, deepClone, isPlainObject)
+ * @description
+ *   Object utility functions (deepMerge, deepClone, isPlainObject)
  */
 
 // ============================================================================

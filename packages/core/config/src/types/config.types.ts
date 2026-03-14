@@ -1,7 +1,8 @@
 /**
  * config.types.ts - 配置类型定义
  * @package @vxture/core-config
- * @description Core config types and constants
+ * @description
+ *   Core config types and constants
  */
 
 import type { 

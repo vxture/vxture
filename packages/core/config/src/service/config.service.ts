@@ -1,7 +1,8 @@
 /**
  * config.service.ts - 配置服务
  * @package @vxture/core-config
- * @description NestJS injectable service for typed config access
+ * @description
+ *   NestJS injectable service for typed config access
  */
 
 import { Inject, Injectable, Optional } from '@nestjs/common';

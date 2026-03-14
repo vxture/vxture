@@ -1,7 +1,8 @@
 /**
  * redis.schema.ts - Redis配置schema
  * @package @vxture/core-config
- * @description Zod schema for Redis configuration
+ * @description
+ *   Zod schema for Redis configuration
  */
 
 import { z } from 'zod';

@@ -19,12 +19,11 @@
     - `src/module/index.ts`
     - `src/service/config.service.ts`
     - `src/service/index.ts`
-    - `src/utils/object.utils.ts`（注意：新增 utils 目录）
+    - `src/utils/object.utils.ts`
     - `src/utils/index.ts`
     - `src/index.ts`
     - `package.json`
     - `tsconfig.json`
-    - `tsconfig.build.json`
     - `tsup.config.ts`
     - `CLAUDE.md`
     - `CHECKALL.md`（本文档）
@@ -72,7 +71,6 @@
 - src/index.ts
 - package.json
 - tsconfig.json
-- tsconfig.build.json
 - tsup.config.ts
 - CLAUDE.md
 

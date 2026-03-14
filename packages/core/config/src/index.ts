@@ -1,7 +1,8 @@
 /**
  * index.ts - 公共导出入口
  * @package @vxture/core-config
- * @description Environment-aware typed configuration (zod + NestJS)
+ * @description
+ *   Environment-aware typed configuration (zod + NestJS)
  */
 
 // ============================================

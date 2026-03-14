@@ -1,7 +1,8 @@
 /**
  * ai.schema.ts - AI 配置schema
  * @package @vxture/core-config
- * @description Zod schema for AI (LLM provider) configuration
+ * @description
+ *   Zod schema for AI (LLM provider) configuration
  */
 
 import { z } from 'zod';

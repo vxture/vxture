@@ -1,7 +1,8 @@
 /**
  * auth.schema.ts - 认证配置schema
  * @package @vxture/core-config
- * @description Zod schema for authentication (JWT) configuration
+ * @description
+ *   Zod schema for authentication (JWT) configuration
  */
 
 import { z } from 'zod';
