@@ -1,86 +1,74 @@
 /**
- * tenant.types.ts - 租户类型定义
+ * tenant.types.ts - 服务端租户类型定义
  * @package @vxture/core-tenant
  *
- * Description: Core tenant types and constants
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Types - Tenant
+ * 只包含服务端租户解析与上下文传递所需的类型。
+ * 租户业务数据（套餐、用户数等）属于 service 层，不在此处定义。
  */
 
 // ============================================================================
-// Tenant Types
+// 租户基础信息
+// — 从请求解析出的租户标识，不含业务数据
 // ============================================================================
 
-export interface TenantConfig {
+/**
+ * 租户基础信息
+ * 由 TenantMiddleware 解析后挂载到 request.tenant
+ */
+export interface TenantInfo {
+  /** 租户唯一 ID */
   id: string;
-  name: string;
-  domain?: string;
-  subdomain?: string;
-  logo?: string;
-  primaryColor?: string;
-  features?: Record<string, boolean>;
-  config?: Record<string, any>;
+  /** 解析来源，用于调试和日志 */
+  resolvedFrom: TenantResolveSource;
 }
 
-export interface TenantContext {
-  config: TenantConfig;
-  isolationKey: string;
-  initialized: boolean;
-}
+/**
+ * 租户 ID 解析来源
+ */
+export const TenantResolveSource = {
+  /** x-tenant-id header */
+  HEADER:    'header',
+  /** 子域名，如 acme.vxture.com */
+  SUBDOMAIN: 'subdomain',
+  /** JWT payload 中的 tenantId */
+  JWT:       'jwt',
+  /** 回退默认值 */
+  FALLBACK:  'fallback',
+} as const;
 
-export interface TenantStorage {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
-  clear(): void;
-}
+export type TenantResolveSource = typeof TenantResolveSource[keyof typeof TenantResolveSource];
 
-export interface TenantService {
-  loadConfig(id: string): Promise<TenantConfig>;
-  loadConfigByDomain(domain: string): Promise<TenantConfig | undefined>;
-  loadConfigBySubdomain(subdomain: string): Promise<TenantConfig | undefined>;
-}
+// ============================================================================
+// 请求扩展接口
+// — 供 middleware 和 guard 使用，不依赖具体框架的 Request 类型
+// ============================================================================
 
-export interface TenantResolverOptions {
-  useDomain?: boolean;
-  useSubdomain?: boolean;
-  useCookie?: boolean;
-  useQueryParam?: boolean;
-}
-
-export interface TenantResolverResult {
-  id: string;
-  resolver: string;
-  domain?: string;
-  subdomain?: string;
+/**
+ * 扩展了租户信息的请求接口
+ * Express/NestJS req 满足此接口
+ */
+export interface TenantRequest {
+  headers: Record<string, string | string[] | undefined>;
+  /** middleware 解析后挂载，未解析时为 undefined */
+  tenant?: TenantInfo;
+  /** core-auth JwtAuthGuard 挂载的用户信息，含 tenantId */
+  user?: { tenantId?: string; [key: string]: unknown };
 }
 
 // ============================================================================
-// Default Configuration
+// 解析选项
 // ============================================================================
 
-export const DEFAULT_TENANT_CONFIG: TenantConfig = {
-  id: 'default',
-  name: 'Default Tenant',
-};
+export interface TenantResolveOptions {
+  /**
+   * 平台根域名，用于从子域名提取 tenantId
+   * 例如：'vxture.com' → 'acme.vxture.com' 解析出 'acme'
+   */
+  rootDomain?: string;
 
-export const DEFAULT_TENANT_CONTEXT: TenantContext = {
-  config: DEFAULT_TENANT_CONFIG,
-  isolationKey: 'default',
-  initialized: false,
-};
-
-export const DEFAULT_RESOLVER_OPTIONS: TenantResolverOptions = {
-  useDomain: true,
-  useSubdomain: true,
-  useCookie: false,
-  useQueryParam: false,
-};
+  /**
+   * 解析失败时的回退 tenantId
+   * 不设置时解析失败会抛出异常
+   */
+  fallbackTenantId?: string;
+}

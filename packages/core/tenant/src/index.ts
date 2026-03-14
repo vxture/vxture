@@ -1,55 +1,25 @@
-/**
- * index.ts - Vxture Core Multi-Tenant Support Package
- * @package @vxture/core-tenant
- *
- * Description: Multi-tenant support for Vxture platform, providing tenant
- * context management, tenant isolation, and tenant configuration utilities.
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Services - Tenant
- */
+// ============================================================================
+// @vxture/core-tenant — 公共导出入口
+// ============================================================================
 
-// ============================================
-// Tenant Types
-// ============================================
-
+// Types
+export { TenantResolveSource } from './types';
 export type {
-  TenantConfig,
-  TenantContext,
-  TenantResolverOptions,
-  TenantResolverResult,
-  TenantStorage,
-  TenantService,
-} from './types';
-export {
-  DEFAULT_TENANT_CONFIG,
-  DEFAULT_TENANT_CONTEXT,
-  DEFAULT_RESOLVER_OPTIONS,
+  TenantInfo,
+  TenantRequest,
+  TenantResolveOptions,
 } from './types';
 
-// ============================================
-// Tenant Context
-// ============================================
+// NestJS Module & Context Provider
+export { TenantModule, TenantContext, TENANT_OPTIONS } from './context';
 
-export * from './context';
+// Middleware
+export { TenantMiddleware } from './middleware';
+
+// Utils
 export {
-  TenantManager,
-  TenantDetector,
-  TenantIsolation,
-  TenantStorageImpl,
-  InMemoryTenantService,
-} from './context';
-export { getTenantManager } from './context';
-
-// ============================================
-// Tenant Utils
-// ============================================
-
-// TODO: 将来需要迁移的工具函数放这里
+  resolveTenantId,
+  extractSubdomain,
+  tenantKey,
+  extractFromTenantKey,
+} from './utils';
