@@ -12,4 +12,9 @@ export default defineConfig({
   target: 'es2023',
   keepNames: true,
   treeshake: true,
+  // 显式启用 swc 处理装饰器元数据
+  experimentalDts: false,
+  esbuildOptions(options) {
+    options.keepNames = true;
+  },
 });

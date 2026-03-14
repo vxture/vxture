@@ -3,7 +3,6 @@
     "target": "ES2023",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "types": ["node"],
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
@@ -15,25 +14,31 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
 
     // Path aliases for monorepo packages
     "paths": {
-      "@vxture/shared": ["./packages/shared/shared/src"],
-      "@vxture/shared/*": ["./packages/shared/shared/src/*"],
+      "@vxture/shared": ["./packages/shared/shared/dist/index.d.ts"],
+      "@vxture/shared/*": ["./packages/shared/shared/dist/*"],
+
       "@vxture/design-system": ["./packages/design/design-system/src"],
       "@vxture/design-system/*": ["./packages/design/design-system/src/*"],
       "@vxture/core-api": ["./packages/core/api/src"],
       "@vxture/core-api/*": ["./packages/core/api/src/*"],
-      "@vxture/core-config": ["./packages/core/config/src"],
-      "@vxture/core-config/*": ["./packages/core/config/src/*"],
-      "@vxture/core-locale": ["./packages/core/locale/src"],
-      "@vxture/core-locale/*": ["./packages/core/locale/src/*"],
+
+      "@vxture/core-config": ["./packages/core/config/dist/index.d.ts"],
+      "@vxture/core-config/*": ["./packages/core/config/dist/*"],
+      "@vxture/core-locale": ["./packages/core/locale/dist/index.d.ts"],
+      "@vxture/core-locale/*": ["./packages/core/locale/dist/*"],
+
       "@vxture/core-tenant": ["./packages/core/tenant/src"],
       "@vxture/core-tenant/*": ["./packages/core/tenant/src/*"],
       "@vxture/core-auth": ["./packages/core/auth/src"],
       "@vxture/core-auth/*": ["./packages/core/auth/src/*"],
-      "@vxture/core-utils": ["./packages/core/utils/src"],
-      "@vxture/core-utils/*": ["./packages/core/utils/src/*"],
+
+      "@vxture/core-utils": ["./packages/core/utils/dist/index.d.ts"],
+      "@vxture/core-utils/*": ["./packages/core/utils/dist/*"],
+
       "@vxture/ai-sdk": ["./packages/ai/ai-sdk/src"],
       "@vxture/ai-sdk/*": ["./packages/ai/ai-sdk/src/*"],
       "@vxture/service-ticket": ["./services/support/ticket/src"],
@@ -50,5 +55,6 @@
       "@vxture/platform-browser/*": ["./packages/platform/browser/src/*"]
     }
   },
+  "include": [],
   "exclude": ["node_modules", "dist", "build"]
 }

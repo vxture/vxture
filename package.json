@@ -58,8 +58,8 @@
     "precommit": "pnpm lint:fix && pnpm type-check",
     "prepush": "pnpm health && pnpm test"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@swc/core": "^1.15.18",
     "@types/node": "^25.3.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -81,5 +81,9 @@
     "*.{json,md}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.16",
+    "@nestjs/jwt": "^11.0.2"
   }
 }
