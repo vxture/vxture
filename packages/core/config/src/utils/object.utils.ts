@@ -3,6 +3,9 @@
  * @package @vxture/core-config
  * @description
  *   Object utility functions (deepMerge, deepClone, isPlainObject)
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================

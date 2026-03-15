@@ -3,6 +3,9 @@
  * @package @vxture/core-config
  * @description
  *   NestJS injectable service for typed config access
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { Inject, Injectable, Optional } from '@nestjs/common';

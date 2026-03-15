@@ -1,7 +1,6 @@
 /**
  * index.ts - Schemas barrel export
  * @package @vxture/core-config
- * @description Config schemas barrel export
  */
 
 export type { AppConfig, AppEnv } from './app.schema';

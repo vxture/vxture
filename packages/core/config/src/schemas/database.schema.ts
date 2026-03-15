@@ -3,6 +3,9 @@
  * @package @vxture/core-config
  * @description
  *   Zod schema for database (PostgreSQL) configuration
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { z } from 'zod';

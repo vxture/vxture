@@ -3,6 +3,9 @@
  * @package @vxture/core-config
  * @description
  *   NestJS configuration module responsible for loading and parsing environment variables
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { DynamicModule, Global, Logger, Module } from '@nestjs/common';
