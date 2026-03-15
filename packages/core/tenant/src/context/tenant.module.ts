@@ -3,6 +3,9 @@
  * @package @vxture/core-tenant
  * @description
  *   租户模块的 NestJS 动态模块实现
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import {

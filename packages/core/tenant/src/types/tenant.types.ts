@@ -3,6 +3,9 @@
  * @package @vxture/core-tenant
  * @description
  *   租户相关类型定义
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================

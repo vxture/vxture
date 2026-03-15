@@ -3,6 +3,9 @@
  * @package @vxture/core-tenant
  * @description
  *   提供租户 ID 解析和子域名提取等工具函数
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { TenantResolveSource } from '../types/tenant.types';

@@ -3,6 +3,9 @@
  * @package @vxture/core-tenant
  * @description
  *   提供请求作用域的租户上下文存取能力
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { Inject, Injectable, Scope } from '@nestjs/common';

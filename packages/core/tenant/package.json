@@ -1,6 +1,6 @@
 {
   "name": "@vxture/core-tenant",
-  "version": "1.0.0",
+  "version": "1.2.2",
   "description": "Vxture platform — multi-tenant context management and tenant resolution",
   "license": "MIT",
   "private": true,

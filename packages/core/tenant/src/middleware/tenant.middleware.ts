@@ -3,6 +3,9 @@
  * @package @vxture/core-tenant
  * @description
  *   从请求中解析租户信息的 NestJS 中间件
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
