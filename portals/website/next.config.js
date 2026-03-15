@@ -1,5 +1,7 @@
-/** @type {import('next').NextConfig} */
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
+/** @type {import('next').NextConfig} */
 
 import createNextIntlPlugin from 'next-intl/plugin';
 
@@ -7,11 +9,12 @@ const withNextIntl = createNextIntlPlugin(
   './src/lib/i18n/request.ts'
 );
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const nextConfig = {
   // 类型化路由配置
-  experimental: {
-    typedRoutes: true,
-  },
+  typedRoutes: true,
 
   // 输出配置
   // 使用环境变量控制 standalone 输出，便于在 CI 中启用而在本地保持兼容。
@@ -50,7 +53,16 @@ const nextConfig = {
 
   // Webpack 配置
   webpack: (config) => {
-    // 自定义 webpack 配置
+    // 解析内部包路径
+    config.resolve.alias['@vxture/shared'] = join(__dirname, '../../packages/shared/shared/src');
+    config.resolve.alias['@vxture/core-api'] = join(__dirname, '../../packages/core/api/src');
+    config.resolve.alias['@vxture/core-config'] = join(__dirname, '../../packages/core/config/src');
+    config.resolve.alias['@vxture/core-locale'] = join(__dirname, '../../packages/core/locale/src');
+    config.resolve.alias['@vxture/core-tenant'] = join(__dirname, '../../packages/core/tenant/src');
+    config.resolve.alias['@vxture/core-auth'] = join(__dirname, '../../packages/core/auth/src');
+    config.resolve.alias['@vxture/core-utils'] = join(__dirname, '../../packages/core/utils/src');
+    config.resolve.alias['@vxture/design-system'] = join(__dirname, '../../packages/design/design-system/src');
+
     return config;
   },
 
