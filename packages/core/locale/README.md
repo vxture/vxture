@@ -1,78 +1,109 @@
 # @vxture/core-locale
 
-服务端语言解析和内容本地化工具。
+Server-side locale resolution and content localization toolkit.
 
-## 安装
+## Installation
 
 ```bash
 pnpm add @vxture/core-locale
 ```
 
-## 快速开始
+## Quick Start
 
 ```typescript
 import { resolveLocale, localizeContent } from "@vxture/core-locale";
 
-// 从请求解析语言
+// Resolve locale from request
 const locale = resolveLocale(request);
 
-// 本地化内容
+// Localize content
 const title = localizeContent({ zh: "专业版", en: "Pro" }, locale);
 ```
 
 ## API
 
-### resolveLocale(request, options)
+### resolveLocale(request)
 
-从 HTTP 请求中解析语言。
+Resolves locale from HTTP request.
 
-**参数：**
-- `request`: LocaleRequest（框架无关的请求接口）
-- `options`: ResolveLocaleOptions（可选配置）
+**Priority order:**
+1. Cookie (NEXT_LOCALE)
+2. Accept-Language header
+3. DEFAULT_LOCALE
 
-**返回：** Locale
+**Parameters:**
+- `request`: LocaleRequest (framework-agnostic request interface)
 
-### localizeContent(content, locale, options)
+**Returns:** Locale
 
-从多语言对象中取对应语言的字符串。
+### localizeContent(content, locale)
 
-**参数：**
-- `content`: LocalizedContent（多语言对象）
-- `locale`: Locale（目标语言）
-- `options`: LocalizationOptions（可选配置）
+Retrieves string for corresponding language from multi-language object.
 
-**返回：** string
+**Fallback strategy:**
+1. Returns content[locale]
+2. Falls back to content[DEFAULT_LOCALE] if target language doesn't exist
+3. Returns empty string if DEFAULT_LOCALE also doesn't exist
 
-## 导出
+**Parameters:**
+- `content`: Partial<Record<Locale, string>> (multi-language content object)
+- `locale`: Locale (target language)
+
+**Returns:** string
+
+### parseAcceptLanguage(header)
+
+Parses Accept-Language header string, returns language list sorted by q value.
+
+**Parameters:**
+- `header`: string (Accept-Language header value)
+
+**Returns:** string[]
+
+### parseCookieValue(cookieHeader, key)
+
+Extracts value for specified key from raw Cookie header string.
+
+**Parameters:**
+- `cookieHeader`: string (raw Cookie header)
+- `key`: string (cookie key to extract)
+
+**Returns:** string | undefined
+
+### normalizeLocale(raw)
+
+Normalizes various language string formats to platform-supported Locale.
+
+**Supported input formats:**
+- 'zh' / 'zh-CN' / 'zh-Hans' / 'zh-TW' → 'zh'
+- 'en' / 'en-US' / 'en-GB' → 'en'
+- Other unknown languages → undefined
+
+**Parameters:**
+- `raw`: string (raw language string)
+
+**Returns:** Locale | undefined
+
+### isSupportedLocale(value)
+
+Type guard to check if a string is a supported Locale.
+
+**Parameters:**
+- `value`: string
+
+**Returns:** value is Locale
+
+## Exports
 
 ```typescript
-// 从 @vxture/shared 重新导出
+// Re-exports from @vxture/shared
 export type { Locale } from "@vxture/shared";
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@vxture/shared";
 
-// core-locale 特有类型
-export type {
-  LocaleRequest,
-  LocalizedContent,
-  ResolveLocaleOptions,
-  LocalizationOptions,
-} from "./types";
+// core-locale specific types
+export type { LocaleRequest, ResolveLocaleOptions, LocalizationOptions } from "./types";
 
-// core-locale 工具函数
-export {
-  resolveLocale,
-  localizeContent,
-  parseAcceptLanguage,
-  normalizeLocale,
-  parseCookieValue,
-  isSupportedLocale,
-} from "./utils";
-```
-
-## 脚本
-
-```bash
-pnpm type-check   # 类型检查
-pnpm build        # 构建
-pnpm clean        # 清理构建产物
+// core-locale utility functions
+export { resolveLocale, localizeContent } from "./utils";
+export { parseAcceptLanguage, parseCookieValue, normalizeLocale, isSupportedLocale } from "./utils";
 ```
