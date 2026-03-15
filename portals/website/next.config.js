@@ -1,7 +1,17 @@
 /** @type {import('next').NextConfig} */
+
+
+import createNextIntlPlugin from 'next-intl/plugin';
+
+const withNextIntl = createNextIntlPlugin(
+  './src/lib/i18n/request.ts'
+);
+
 const nextConfig = {
   // 类型化路由配置
-  typedRoutes: true,
+  experimental: {
+    typedRoutes: true,
+  },
 
   // 输出配置
   // 使用环境变量控制 standalone 输出，便于在 CI 中启用而在本地保持兼容。
@@ -56,4 +66,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default withNextIntl(nextConfig);

@@ -1,0 +1,22 @@
+{
+  "title": "About Us",
+  "description": "Vxture is committed to helping enterprises build data-driven business intelligence systems",
+  "mission": "Make data easy to use",
+  "vision": "Become the world's leading data intelligence platform",
+  "values": [
+    "Customer First",
+    "Innovation",
+    "Integrity",
+    "Teamwork"
+  ],
+  "team": {
+    "title": "Our Team",
+    "description": "Experts from different fields"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "email": "contact@vxture.ai",
+    "phone": "400-123-4567",
+    "address": "Chaoyang District, Beijing"
+  }
+}

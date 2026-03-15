@@ -6,8 +6,8 @@
  */
 
 import { useState, useEffect } from 'react';
-import { MOCK_HEADER_DATA, MOCK_FOOTER_DATA } from '@/data/layout.mock';
-import type { HeaderData, FooterData } from '@/types/layout';
+import { FALLBACK_HEADER_DATA, FALLBACK_FOOTER_DATA } from '@/fallback/layout.fallback';
+import type { HeaderData, FooterData } from '@/types/layout.types';
 
 // ============================================================================
 // useHeader Hook
@@ -42,7 +42,7 @@ export function useHeader(): UseHeaderReturn {
         setIsLoading(true);
         // 模拟网络延迟
         await new Promise(resolve => setTimeout(resolve, 300));
-        setData(MOCK_HEADER_DATA);
+        setData(FALLBACK_HEADER_DATA);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to fetch header data'));
@@ -91,7 +91,7 @@ export function useFooter(): UseFooterReturn {
         setIsLoading(true);
         // 模拟网络延迟
         await new Promise(resolve => setTimeout(resolve, 300));
-        setData(MOCK_FOOTER_DATA);
+        setData(FALLBACK_FOOTER_DATA);
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Failed to fetch footer data'));

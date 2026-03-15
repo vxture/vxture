@@ -1,6 +1,6 @@
 import type { PersistOptions } from 'zustand/middleware';
-import type { ThemeState } from '@/shared/types/theme.types';
-import { THEME_CONSTANTS } from '@/shared/constants/themeConfig';
+import type { ThemeState } from '@/types/theme.types';
+import { THEME_CONSTANTS } from '@vxture/shared';
 
 /**
  * makeThemePersistOptions
@@ -25,7 +25,6 @@ export function makeThemePersistOptions(): PersistOptions<ThemeState> {
             // 可以在此处同步到 DOM 或执行副作用
             void s;
           } catch (err) {
-            // eslint-disable-next-line no-console
             console.error('theme rehydration error:', err);
           }
         }, 0);

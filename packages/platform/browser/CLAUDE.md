@@ -37,7 +37,7 @@ src/
 
 ## 禁止的依赖
 
-- `i18next` / `react-i18next`
+- `i18next` / `next-intl`
 - NestJS / Next.js / React
 - `@vxture/service-*` / `bff-*` / `ai-sdk`
 - 其他 core 包

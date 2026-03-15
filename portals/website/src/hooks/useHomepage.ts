@@ -12,21 +12,100 @@ import {
   CasesData,
   CTAData,
   SolutionsData,
-} from '@/types/homepage';
+} from '@/types/homepage.types';
 import {
-  MOCK_HERO_DATA,
-  MOCK_FEATURES_DATA,
-  MOCK_CASES_DATA,
-  MOCK_CTA_DATA,
-  MOCK_SOLUTIONS_DATA,
-} from '@/data/homepage.mock';
-import {
-  normalizeHeroData,
-  normalizeFeaturesData,
-  normalizeCasesData,
-  normalizeCTAData,
-  normalizeSolutionsData,
-} from '@/utils/homepageHelpers';
+  FALLBACK_HERO_DATA,
+  FALLBACK_FEATURES_DATA,
+  FALLBACK_CASES_DATA,
+  FALLBACK_CTA_DATA,
+  FALLBACK_SOLUTIONS_DATA,
+} from '@/fallback/homepage.fallback';
+
+// ============================================================================
+// 数据规范化函数
+// ============================================================================
+
+/**
+ * 规范化 Hero 数据
+ */
+function normalizeHeroData(data?: Partial<HeroData>): HeroData {
+  return {
+    enabled: data?.enabled ?? true,
+    title: data?.title ?? '智能平台',
+    titleHighlight: data?.titleHighlight,
+    description: data?.description,
+    media: {
+      type: data?.media?.type ?? 'none',
+      videoUrl: data?.media?.videoUrl,
+      posterImage: data?.media?.posterImage,
+      url: data?.media?.url,
+      alt: data?.media?.alt,
+    },
+    cta: data?.cta,
+    scrollIndicator: data?.scrollIndicator,
+  };
+}
+
+/**
+ * 规范化 Features 数据
+ */
+function normalizeFeaturesData(data?: Partial<FeaturesData>): FeaturesData {
+  return {
+    enabled: data?.enabled ?? true,
+    title: data?.title ?? '核心功能',
+    subtitle: data?.subtitle,
+    tagline: data?.tagline,
+    items: data?.items ?? [],
+  };
+}
+
+/**
+ * 规范化 Cases 数据
+ */
+function normalizeCasesData(data?: Partial<CasesData>): CasesData {
+  return {
+    enabled: data?.enabled ?? true,
+    title: data?.title ?? '成功案例',
+    subtitle: data?.subtitle,
+    tagline: data?.tagline,
+    items: data?.items ?? [],
+    ui: {
+      viewDetails: data?.ui?.viewDetails ?? '查看详情',
+    },
+  };
+}
+
+/**
+ * 规范化 CTA 数据
+ */
+function normalizeCTAData(data?: Partial<CTAData>): CTAData {
+  return {
+    enabled: data?.enabled ?? true,
+    title: data?.title ?? '准备好开始了吗？',
+    subtitle: data?.subtitle,
+    actions: data?.actions ?? [],
+    contact: data?.contact,
+  };
+}
+
+/**
+ * 规范化 Solutions 数据
+ */
+function normalizeSolutionsData(data?: Partial<SolutionsData>): SolutionsData {
+  return {
+    enabled: data?.enabled ?? true,
+    title: data?.title ?? '解决方案',
+    subtitle: data?.subtitle,
+    tagline: data?.tagline,
+    items: data?.items ?? [],
+    ui: {
+      viewDetails: data?.ui?.viewDetails ?? '查看详情',
+      prev: data?.ui?.prev ?? '上一项',
+      next: data?.ui?.next ?? '下一项',
+    },
+    featuresTitle: data?.featuresTitle ?? '核心功能',
+  };
+}
 
 // ============================================================================
 // Hero 数据 Hook
@@ -38,7 +117,7 @@ export function useHero(): {
   error: Error | null;
   refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<HeroData>(MOCK_HERO_DATA);
+  const [data, setData] = useState<HeroData>(FALLBACK_HERO_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -47,12 +126,8 @@ export function useHero(): {
     setError(null);
     try {
       // 这里可以替换为实际的 API 调用
-      // const response = await getContent('hero', locale);
-      // const normalized = normalizeHeroData(response);
-
-      // 暂时使用模拟数据
       await new Promise((resolve) => setTimeout(resolve, 500));
-      const normalized = normalizeHeroData(MOCK_HERO_DATA);
+      const normalized = normalizeHeroData(FALLBACK_HERO_DATA);
       setData(normalized);
     } catch (err) {
       const error =
@@ -81,7 +156,7 @@ export function useFeatures(): {
   error: Error | null;
   refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<FeaturesData>(MOCK_FEATURES_DATA);
+  const [data, setData] = useState<FeaturesData>(FALLBACK_FEATURES_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -91,7 +166,7 @@ export function useFeatures(): {
     try {
       // 这里可以替换为实际的 API 调用
       await new Promise((resolve) => setTimeout(resolve, 600));
-      const normalized = normalizeFeaturesData(MOCK_FEATURES_DATA);
+      const normalized = normalizeFeaturesData(FALLBACK_FEATURES_DATA);
       setData(normalized);
     } catch (err) {
       const error =
@@ -120,7 +195,7 @@ export function useCasesData(): {
   error: Error | null;
   refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<CasesData>(MOCK_CASES_DATA);
+  const [data, setData] = useState<CasesData>(FALLBACK_CASES_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -130,7 +205,7 @@ export function useCasesData(): {
     try {
       // 这里可以替换为实际的 API 调用
       await new Promise((resolve) => setTimeout(resolve, 700));
-      const normalized = normalizeCasesData(MOCK_CASES_DATA);
+      const normalized = normalizeCasesData(FALLBACK_CASES_DATA);
       setData(normalized);
     } catch (err) {
       const error =
@@ -159,7 +234,7 @@ export function useCTA(): {
   error: Error | null;
   refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<CTAData>(MOCK_CTA_DATA);
+  const [data, setData] = useState<CTAData>(FALLBACK_CTA_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -169,7 +244,7 @@ export function useCTA(): {
     try {
       // 这里可以替换为实际的 API 调用
       await new Promise((resolve) => setTimeout(resolve, 800));
-      const normalized = normalizeCTAData(MOCK_CTA_DATA);
+      const normalized = normalizeCTAData(FALLBACK_CTA_DATA);
       setData(normalized);
     } catch (err) {
       const error =
@@ -198,7 +273,7 @@ export function useSolutions(): {
   error: Error | null;
   refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<SolutionsData>(MOCK_SOLUTIONS_DATA);
+  const [data, setData] = useState<SolutionsData>(FALLBACK_SOLUTIONS_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -208,7 +283,7 @@ export function useSolutions(): {
     try {
       // 这里可以替换为实际的 API 调用
       await new Promise((resolve) => setTimeout(resolve, 400));
-      const normalized = normalizeSolutionsData(MOCK_SOLUTIONS_DATA);
+      const normalized = normalizeSolutionsData(FALLBACK_SOLUTIONS_DATA);
       setData(normalized);
     } catch (err) {
       const error =

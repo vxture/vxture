@@ -11,13 +11,13 @@ import type { Locale } from '@vxture/shared';
 
 export function buildMetadata(locale: Locale): Metadata {
   const titles = {
-    'zh-CN': 'vxture AI | 释放数据潜力',
-    'en-US': 'vxture AI | Unleash Data Potential',
+    zh: 'vxture AI | 释放数据潜力',
+    en: 'vxture AI | Unleash Data Potential',
   };
 
   const descriptions = {
-    'zh-CN': '基于AI的虚拟自然探索平台',
-    'en-US': 'AI-based virtual nature exploration platform',
+    zh: '基于AI的虚拟自然探索平台',
+    en: 'AI-based virtual nature exploration platform',
   };
 
   return {
@@ -31,7 +31,7 @@ export function buildMetadata(locale: Locale): Metadata {
     description: descriptions[locale],
 
     keywords:
-      locale === 'zh-CN'
+      locale === 'zh'
         ? ['AI', '数据', '智能', '决策', '虚拟', '平台', 'vxture']
         : ['AI', 'data', 'intelligence', 'decision', 'virtual', 'platform', 'vxture'],
 

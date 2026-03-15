@@ -6,7 +6,6 @@
  */
 
 export { useWindowScrollSnap } from './useWindowScrollSnap';
-export { useLocale } from './useLocale';
 export {
   useHero,
   useFeatures,

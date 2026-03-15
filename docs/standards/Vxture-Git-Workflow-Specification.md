@@ -25,7 +25,7 @@ shortname@Vx.y.yyMMdd.nn
 [shortname@Vx.y.yyMMdd.nn] 提交描述
 ```
 
-**示例**：`[core-tenant@V1.0.0.260314.01] 修复租户解析逻辑bug`
+**示例**：`[core-tenant@V1.0.0] 修复：租户解析逻辑bug`
 
 ## 发布流程
 

@@ -5,8 +5,7 @@
  * @category Components
  */
 
-export * from './common';
-export * from './home';
+export * from './marketing';
 export * from './layout';
-export * from './panels';
-export * from './products';
+export * from './auth';
+export * from './ui';

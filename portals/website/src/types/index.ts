@@ -5,8 +5,11 @@
  * @category Types
  */
 
-export * from './common';
-export * from './components';
-export * from './api';
-export * from './homepage';
-export * from './layout';
+export * from './common.types';
+export * from './components.types';
+export * from './api.types';
+export * from './homepage.types';
+export * from './layout.types';
+export * from './auth.types';
+export * from './theme.types';
+export * from './i18n.types';

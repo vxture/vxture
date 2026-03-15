@@ -73,8 +73,8 @@ src/
 ### 翻译文本
 
 ```typescript
-// ✅ 使用 react-i18next
-import { useTranslation } from 'react-i18next';
+// ✅ 使用 next-intl
+import { useTranslation } from 'next-intl';
 
 function MyComponent() {
   const { t } = useTranslation();
@@ -113,21 +113,5 @@ const number = formatNumber(1000);
 
 ## 文件头模板
 
-```typescript
-/**
- * filename.ts - 简短描述
- * @package @vxture/website
- *
- * Description: 详细说明
- *
- * @author AI-Generated
- * @date YYYY-MM-DD
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Presentation
- * @category Components | Hooks | Stores | API | Types
- */
-```
+参见：docs\ai-coding\claude-coding-comments.md
+

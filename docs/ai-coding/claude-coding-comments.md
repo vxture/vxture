@@ -37,7 +37,6 @@ Core files support two header styles:
  *
  * @author ${USER}           // AI-generated files: use "AI-Generated"
  * @date ${DATE} ${TIME}
- * @copyright Vxture Team
  */
 ```
 
@@ -47,16 +46,8 @@ Core files support two header styles:
 /**
  * filename.ts - Very Short description
  * @package @vxture/[package-name]
- * @description
- *   Detailed explanation of the file's functionality and responsibilities
  */
 ```
-
-| Field      | Description                                                                    |
-| ---------- | ------------------------------------------------------------------------------ |
-| `@package` | Package name, format: `@vxture/[package-name]`                                 |
-| `@author`  | Use `${USER}`; AI-generated files use `AI-Generated`                           |
-| `@version` | Start at `1.0.0`.`${DATE}`; increment on major refactors `${DATE}` as `yyMMdd` |
 
 ---
 

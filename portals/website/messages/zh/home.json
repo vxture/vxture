@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "释放数据的无限潜力",
+    "subtitle": "面向政企复杂业务场景，构建数据驱动的业务智能体系",
+    "cta": "开启探索之旅"
+  },
+  "features": {
+    "title": "核心功能",
+    "description": "强大的功能，简单的体验",
+    "items": [
+      {
+        "title": "智能分析",
+        "description": "AI 驱动的数据洞察与可视化"
+      },
+      {
+        "title": "安全可靠",
+        "description": "企业级安全标准，数据加密传输"
+      },
+      {
+        "title": "易于集成",
+        "description": "开放 API，快速接入现有系统"
+      }
+    ]
+  },
+  "solutions": {
+    "title": "解决方案",
+    "description": "为不同行业提供定制化方案"
+  },
+  "cases": {
+    "title": "成功案例",
+    "description": "看看我们的客户如何成功"
+  },
+  "cta": {
+    "title": "准备好开始了吗？",
+    "description": "立即注册，免费试用",
+    "button": "立即注册"
+  }
+}

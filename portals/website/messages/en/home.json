@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Unleash the Infinite Potential of Data",
+    "subtitle": "Building data-driven business intelligence systems for complex government and enterprise scenarios",
+    "cta": "Start Your Journey"
+  },
+  "features": {
+    "title": "Core Features",
+    "description": "Powerful features, simple experience",
+    "items": [
+      {
+        "title": "Intelligent Analysis",
+        "description": "AI-driven data insights and visualization"
+      },
+      {
+        "title": "Secure and Reliable",
+        "description": "Enterprise-grade security standards with encrypted data transmission"
+      },
+      {
+        "title": "Easy Integration",
+        "description": "Open APIs for quick integration with existing systems"
+      }
+    ]
+  },
+  "solutions": {
+    "title": "Solutions",
+    "description": "Customized solutions for different industries"
+  },
+  "cases": {
+    "title": "Success Stories",
+    "description": "See how our customers succeed"
+  },
+  "cta": {
+    "title": "Ready to Get Started?",
+    "description": "Sign up now for a free trial",
+    "button": "Sign Up Now"
+  }
+}

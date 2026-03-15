@@ -1,0 +1,22 @@
+{
+  "title": "关于我们",
+  "description": "Vxture 致力于帮助企业构建数据驱动的业务智能体系",
+  "mission": "让数据变得简单易用",
+  "vision": "成为全球领先的数据智能平台",
+  "values": [
+    "客户第一",
+    "创新进取",
+    "诚信正直",
+    "团队协作"
+  ],
+  "team": {
+    "title": "我们的团队",
+    "description": "来自不同领域的专家"
+  },
+  "contact": {
+    "title": "联系我们",
+    "email": "contact@vxture.ai",
+    "phone": "400-123-4567",
+    "address": "北京市朝阳区"
+  }
+}

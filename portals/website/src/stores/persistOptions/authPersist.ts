@@ -6,17 +6,14 @@
  */
 
 import type { PersistOptions } from 'zustand/middleware';
-import { AuthState } from '@/shared/types/auth.types';
-import { AUTH_CONSTANTS } from '@/shared/constants/authConfig';
+import type { AuthState } from '@/types/auth.types';
+import { AUTH_CONSTANTS } from '@/constants/auth.constants';
 
 export const makeAuthPersistOptions = (): PersistOptions<AuthState> => ({
   name: AUTH_CONSTANTS.PERSIST_KEY,
-  partialize: (state) => ({
+  partialize: (state: AuthState) => ({
     user: state.user,
-    token: state.token,
-    refreshToken: state.refreshToken,
-    tokenExpiry: state.tokenExpiry,
     isAuthenticated: state.isAuthenticated,
-  }),
+  }) as unknown as AuthState,
   skipHydration: true,
 });

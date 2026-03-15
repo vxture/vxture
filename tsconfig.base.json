@@ -32,9 +32,8 @@
       "@vxture/core-auth/*": ["./packages/core/auth/dist/*"],
       "@vxture/core-utils": ["./packages/core/utils/dist/index.d.ts"],
       "@vxture/core-utils/*": ["./packages/core/utils/dist/*"],
-
-      "@vxture/design-system": ["./packages/design/design-system/src"],
-      "@vxture/design-system/*": ["./packages/design/design-system/src/*"],
+      "@vxture/design-system": ["./packages/design/design-system/dist/index.d.ts"],
+      "@vxture/design-system/*": ["./packages/design/design-system/dist/*"],
 
       "@vxture/ai-sdk": ["./packages/ai/ai-sdk/src"],
       "@vxture/ai-sdk/*": ["./packages/ai/ai-sdk/src/*"],

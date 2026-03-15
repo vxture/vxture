@@ -65,6 +65,9 @@ type ScrollDirection = 'up' | 'down' | 'no';
 /** 快速滚动阈值（像素） */
 const FAST_SCROLL_THRESHOLD = 300;
 
+/** 安全判断：是否有 window 对象（模块级别常量，避免 React Hook 依赖警告） */
+const hasWindow = globalThis?.window !== undefined;
+
 // ============================================================================
 // Hook 实现
 // ============================================================================
@@ -76,9 +79,6 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
   // ==========================================================================
   // 状态初始化
   // ==========================================================================
-
-  /** 安全判断：是否有 window 对象 */
-  const hasWindow = globalThis?.window !== undefined;
 
   /** 参数解构，提供默认值 */
   const {
@@ -405,6 +405,7 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       (globalThis.window as Window).addEventListener('resize', updateThreshold, { passive: true });
       return () => (globalThis.window as Window).removeEventListener('resize', updateThreshold);
     }
+    return;
   }, [calculateThreshold, debugFlag]);
 
   /**
@@ -521,14 +522,15 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       targets: HTMLElement[],
       currentIndex: number,
       isTargetInThreshold: (el: HTMLElement) => boolean
-    ): HTMLElement | undefined => {
+    ): HTMLElement | null => {
       const startIndex = currentIndex === -1 ? 0 : currentIndex + 1;
       for (let i = startIndex; i < targets.length; i++) {
-        if (isTargetInThreshold(targets[i])) {
-          return targets[i];
+        const target = targets[i];
+        if (target && isTargetInThreshold(target)) {
+          return target;
         }
       }
-      return undefined;
+      return null;
     };
 
     // 向上查找目标
@@ -536,14 +538,15 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       targets: HTMLElement[],
       currentIndex: number,
       isTargetInThreshold: (el: HTMLElement) => boolean
-    ): HTMLElement | undefined => {
+    ): HTMLElement | null => {
       const startIndex = currentIndex === -1 ? targets.length - 1 : currentIndex - 1;
       for (let i = startIndex; i >= 0; i--) {
-        if (isTargetInThreshold(targets[i])) {
-          return targets[i];
+        const target = targets[i];
+        if (target && isTargetInThreshold(target)) {
+          return target;
         }
       }
-      return undefined;
+      return null;
     };
 
     // 查找要吸附的目标
@@ -552,15 +555,15 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       targets: HTMLElement[],
       activeTarget: HTMLElement | null,
       isTargetInThreshold: (el: HTMLElement) => boolean
-    ): HTMLElement | undefined => {
-      const currentIndex = targets.indexOf(activeTarget);
+    ): HTMLElement | null => {
+      const currentIndex = activeTarget ? targets.indexOf(activeTarget) : -1;
       if (direction === 'down') {
         return findTargetDown(targets, currentIndex, isTargetInThreshold);
       }
       if (direction === 'up') {
         return findTargetUp(targets, currentIndex, isTargetInThreshold);
       }
-      return undefined;
+      return null;
     };
 
     // 检查是否应该跳过吸附
@@ -703,9 +706,12 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       if (targetIndex === -1) return;
       if (targetIndex === currentIndex) return;
 
+      const targetElement = targets[targetIndex];
+      if (!targetElement) return;
+
       e.preventDefault();
       if (debugFlag) console.log(getDebugMessage(e.key));
-      snapToTarget(targets[targetIndex]);
+      snapToTarget(targetElement);
     };
 
     (globalThis.window as Window).addEventListener('keydown', handleKeyDown);
@@ -720,13 +726,16 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
    */
   useEffect(() => {
     if (targets.length > 0 && !activeTarget) {
+      const firstTarget = targets[0];
+      if (!firstTarget) return;
+
       const getName = (el: HTMLElement): string | null => {
         return el.dataset.name ?? null;
       };
-      setActiveTarget(targets[0]);
+      setActiveTarget(firstTarget);
       updateDebugInfo({
-        activeTargetId: targets[0].id,
-        activeTargetName: getName(targets[0])
+        activeTargetId: firstTarget.id,
+        activeTargetName: getName(firstTarget)
       });
     }
   }, [targets, activeTarget, updateDebugInfo]);

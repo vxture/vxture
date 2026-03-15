@@ -1,11 +1,11 @@
 {
   "name": "@vxture/bff-website",
-  "version": "1.0.1",
+  "version": "1.2.2",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
-  "description": "Website Portal BFF",
+  "main": "src/main.ts",
+  "types": "src/main.ts",
+  "description": "Vxture platform — website BFF (Backend For Frontend)",
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "echo \"No lint yet\"",
@@ -13,11 +13,23 @@
     "build": "echo \"No build yet\""
   },
   "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/swagger": "^11.0.0",
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
     "@vxture/core-auth": "workspace:*",
+    "@vxture/core-config": "workspace:*",
     "@vxture/core-locale": "workspace:*",
-    "@vxture/core-tenant": "workspace:*"
+    "@vxture/core-tenant": "workspace:*",
+    "@vxture/core-utils": "workspace:*",
+    "cookie-parser": "^1.4.7",
+    "ioredis": "^5.0.0",
+    "class-validator": "^0.14.0",
+    "class-transformer": "^0.5.0",
+    "reflect-metadata": "^0.2.0"
   },
   "devDependencies": {
     "typescript": "^5.9.3"

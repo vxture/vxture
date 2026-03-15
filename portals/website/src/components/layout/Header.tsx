@@ -12,28 +12,25 @@
  * @layer Presentation
  * @category Components - Layout
  */
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useHeader } from '@/hooks/useLayout';
-import { useLocale } from '@/hooks/useLocale';
-import { useThemeStore } from '@/stores/themeStore';
-import { Icon } from '@vxture/design-system';
-import { normalizeHeaderData } from '@/utils/layoutHelpers';
+import { useThemeStore } from '@/stores/theme.store';
+import { normalizeHeaderData } from './layoutHelpers';
+import Image from 'next/image';
+import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
+import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 
 /**
  * Header 组件
  */
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
-  const languageMenuRef = useRef<HTMLDivElement>(null);
 
   // 使用新架构的 Hooks 获取数据
   const { data: headerData, isLoading, error } = useHeader();
-  const { locale, setLocale } = useLocale();
-  const { theme, isDarkMode, toggleTheme } = useThemeStore();
+  const { isDarkMode } = useThemeStore();
 
   // 数据规范化：保证前端渲染安全完整
   const header = normalizeHeaderData(error || !headerData ? undefined : headerData);
@@ -46,25 +43,6 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // 点击外部关闭语言菜单
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (languageMenuRef.current && !languageMenuRef.current.contains(event.target as Node)) {
-        setIsLanguageMenuOpen(false);
-      }
-    };
-    if (isLanguageMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isLanguageMenuOpen]);
-
-  // 处理语言切换
-  const handleLanguageChange = (langCode: string) => {
-    setLocale(langCode);
-    setIsLanguageMenuOpen(false);
-  };
 
   // 加载状态
   if (isLoading) {
@@ -103,10 +81,12 @@ export default function Header() {
           <div className='flex-shrink-0 flex items-center space-x-2'>
             {header.logo && (
               <>
-                <img
+                <Image
                   src={header.logo.image}
                   alt={header.logo.alt}
-                  className='w-6 h-6 object-contain'
+                  width={24}
+                  height={24}
+                  className='object-contain'
                 />
                 <h1
                   className={`text-2xl font-bold transition-colors duration-300 ${
@@ -141,57 +121,17 @@ export default function Header() {
           {/* Theme Switcher + Language Switcher + CTA Buttons */}
           <div className='flex space-x-4 items-center'>
             {/* Theme Switcher */}
-            <button
-              className='w-8 h-8 flex items-center justify-center transition-colors'
-              title={header.theme.title}
-              onClick={toggleTheme}
-            >
-              <span className='sr-only'>{header.theme.title}</span>
-              {isDarkMode ? (
-                <Icon name="sun" className={`w-5 h-5 ${isScrolled ? (isDarkMode ? 'text-yellow-400' : 'text-gray-700') : 'text-yellow-400'}`} />
-              ) : (
-                <Icon name="moon" className={`w-5 h-5 ${isScrolled ? (isDarkMode ? 'text-blue-300' : 'text-gray-700') : 'text-blue-300'}`} />
-              )}
-            </button>
+            <ThemeSwitcher
+              size='medium'
+              className={isScrolled ? (isDarkMode ? 'text-yellow-400' : 'text-gray-700') : 'text-yellow-400'}
+            />
 
             {/* Language Switcher */}
             {header.language && header.language.enabled && (
-              <div ref={languageMenuRef} className='relative'>
-                <button
-                  className='w-8 h-8 flex items-center justify-center transition-colors'
-                  title={header.language.title || '切换语言'}
-                  onClick={() => setIsLanguageMenuOpen(!isLanguageMenuOpen)}
-                >
-                  <span className='sr-only'>{header.language.title || '切换语言'}</span>
-                  <Icon
-                    name="globe"
-                    className={`w-5 h-5 ${isScrolled ? (isDarkMode ? 'text-cyan-400' : 'text-gray-700') : 'text-cyan-400'}`}
-                  />
-                </button>
-
-                {/* Language Dropdown Menu */}
-                {isLanguageMenuOpen && (
-                  <div className={`absolute right-0 mt-2 w-32 border rounded-lg shadow-lg z-10 ${
-                    isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
-                  }`}>
-                    {header.language.options.map((lang, index) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => handleLanguageChange(lang.code)}
-                        className={`w-full px-4 py-2 text-left text-sm transition-colors ${
-                          locale === lang.code
-                            ? 'bg-cyan-50 text-cyan-600 font-medium'
-                            : isDarkMode ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50'
-                        } ${index === 0 ? 'rounded-t-lg' : ''} ${
-                          index === header.language.options.length - 1 ? 'rounded-b-lg' : ''
-                        }`}
-                      >
-                        {lang.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <LocaleSwitcher
+                size='medium'
+                className={isScrolled ? (isDarkMode ? 'text-cyan-400' : 'text-gray-700') : 'text-cyan-400'}
+              />
             )}
 
             {/* CTA Buttons - 固定宽度 */}

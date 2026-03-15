@@ -14,11 +14,12 @@
 "use client";
 
 import { useFooter } from "@/hooks/useLayout";
-import { normalizeFooterData } from "@/utils/layoutHelpers";
+import { normalizeFooterData } from "./layoutHelpers";
 import { debugLog } from "@vxture/shared";
 import { Icon } from "@vxture/design-system";
 import { useState, useRef } from "react";
-import { useThemeStore } from "@/stores/themeStore";
+import Image from 'next/image';
+import { useThemeStore } from "@/stores/theme.store";
 
 export default function Footer() {
   const { isDarkMode } = useThemeStore();
@@ -185,6 +186,8 @@ export default function Footer() {
               (social) => social.icon === "wechat",
             );
 
+            if (!wechatData) return null;
+
             return (
               <div
                 className={`fixed p-2 rounded-lg shadow-lg z-50 ${
@@ -196,9 +199,11 @@ export default function Footer() {
                   transform: "translateY(-100%)",
                 }}
               >
-                <img
+                <Image
                   src={wechatData.href}
                   alt={wechatData.ariaLabel}
+                  width={200}
+                  height={200}
                   className="w-auto max-w-none h-48 object-contain"
                 />
                 <div className="mt-1 text-center text-xs text-gray-600">

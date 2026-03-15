@@ -15,7 +15,19 @@
       "Bash(\"d:/MyWebSite/vxture/packages/shared/shared/src/types/index.ts\":*)",
       "Bash(npm run:*)",
       "Bash(pnpm type-check:*)",
-      "Bash(node update-file-headers.js)"
+      "Bash(node update-file-headers.js)",
+      "Bash(mv src/app/\\\\\\(auth\\\\\\)/* src/app/[locale]/\\\\\\(auth\\\\\\)/)",
+      "Bash(rmdir src/app/\\\\\\(auth\\\\\\))",
+      "Bash(mv src/app/\\\\\\(main\\\\\\) src/app/[locale]/\\\\\\(marketing\\\\\\)/)",
+      "Bash(mv src/app/about src/app/[locale]/\\\\\\(marketing\\\\\\)/)",
+      "Bash(mv src/app/products src/app/[locale]/\\\\\\(marketing\\\\\\)/)",
+      "Bash(pnpm --filter @vxture/website type-check)",
+      "Bash(pnpm --filter @vxture/website run build)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm --filter @vxture/website run type-check)",
+      "Bash(pnpm --filter @vxture/website build)",
+      "Bash(curl -s -L -I \"http://localhost:3000/\")"
     ]
   }
 }

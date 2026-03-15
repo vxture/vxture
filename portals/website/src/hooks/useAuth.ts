@@ -1,0 +1,34 @@
+/**
+ * useAuth.ts - 认证操作 Hook
+ * @package @vxture/website
+ * @layer Presentation
+ * @category Hooks
+ *
+ * 职责：调用 BFF auth 接口，完成后更新 authStore 状态
+ *
+ * @file useAuth.ts
+ * @desc 认证操作 Hook，调用 BFF 接口并管理 authStore 状态
+ * @author AI-Generated
+ * @date 2026-03-15
+ * @version 1.0
+ * @copyright Vxture Team
+ * @license MIT
+ */
+
+import { useAuthStore } from '@/stores/auth.store';
+
+export function useAuth() {
+  const { login: loginStore, logout: logoutStore, isLoading, error } = useAuthStore();
+
+  const login = async (email: string, password: string) => {
+    // TODO: Call BFF API
+    await loginStore(email, password);
+  };
+
+  const logout = async () => {
+    // TODO: Call BFF API
+    await logoutStore();
+  };
+
+  return { login, logout, isLoading, error };
+}
