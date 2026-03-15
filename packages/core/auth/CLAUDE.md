@@ -58,32 +58,9 @@ src/
 
 ---
 
-## 文件头模板
-
-```typescript
-/**
- * filename.ts - 简短描述
- * @package @vxture/core-auth
- *
- * Description: 详细说明
- *
- * @author AI-Generated
- * @date YYYY-MM-DD
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Client | Types | Utils
- */
-```
-
----
-
 ## 核心设计约束
 
-- JWT 操作只用 `jsonwebtoken`，不封装 Passport 策略
+- JWT
 - token 验证返回标准 `TokenPayload` 类型，不返回原始 decoded 对象
 - 角色类型只定义平台级角色枚举（`PlatformRole`），业务角色在 service 层定义
 - 不持久化任何状态（无 Redis、无 DB）

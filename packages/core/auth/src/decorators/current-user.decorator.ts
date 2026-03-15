@@ -3,6 +3,9 @@
  * @package @vxture/core-auth
  * @description
  *   Extracts current user information from request context
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
