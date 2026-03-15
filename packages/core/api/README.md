@@ -1,26 +1,28 @@
-# @vxture/core-api — HTTP 客户端基础设施
+# @vxture/core-api — NestJS HTTP Client Infrastructure
 
-> **面向开发人员/AI 的使用文档**
-> 本文档详细说明如何使用 @vxture/core-api 包的功能和方法。
-> 如需了解开发该包的约束和规范，请查看 `CLAUDE.md`。
-
----
-
-## 🌟 包概述
-
-统一 HTTP 请求基础设施：请求封装、拦截器、错误标准化、retry / timeout。
-供 BFF、Service、Agent Server 层使用。必须双端可运行（Node.js + 浏览器）。
-
-**核心特性：**
-- 基于原生 fetch 封装，双端兼容
-- 请求/响应拦截器机制
-- 统一错误标准化
-- 支持 retry 和 timeout 配置
-- 类型安全的 API 设计
+> **Usage documentation for developers/AI**
+> This document details how to use the features and methods of the @vxture/core-api package.
+> For development constraints and specifications, please see `CLAUDE.md`.
 
 ---
 
-## 📦 安装
+## 🌟 Package Overview
+
+Unified HTTP request infrastructure: request encapsulation, interceptors, error standardization, retry/timeout.
+Used by BFF, Service, and Agent Server layers. **Node.js only** (due to NestJS integration).
+
+**Core Features:**
+- Based on @nestjs/axios with NestJS DI integration
+- Type-safe HTTP methods
+- Automatic retry on 429 and 5xx errors
+- Error normalization to VxtureError subclasses
+- File upload/download support
+- Context-aware requests (automatic token/tenantId injection)
+- Response unwrapping with ApiResponse format
+
+---
+
+## 📦 Installation
 
 ```bash
 pnpm add @vxture/core-api
@@ -28,233 +30,302 @@ pnpm add @vxture/core-api
 
 ---
 
-## 🚀 使用示例
+## 🚀 Usage Example
 
-### 基础使用
+### 1. Register VxHttpModule
+
+First, register the module in your NestJS AppModule:
 
 ```typescript
-import { getApiClient, type ApiResponse, type ApiError } from '@vxture/core-api';
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { VxHttpModule } from '@vxture/core-api';
 
-// 创建 API 客户端
-const client = getApiClient({
-  baseUrl: '/api',
-  timeout: 10000,
+@Module({
+  imports: [
+    VxHttpModule.register({
+      baseURL: 'http://agent-server:3000',
+      timeout: 30000,       // 30 seconds
+      retries: 2,           // retry 2 times on failures
+      headers: {
+        'x-api-version': 'v1',
+      },
+    }),
+  ],
+})
+export class AppModule {}
+```
+
+### 2. Inject and Use VxHttpClient
+
+```typescript
+// user.service.ts
+import { Injectable } from '@nestjs/common';
+import { VxHttpClient } from '@vxture/core-api';
+import type { ApiResponse, User } from '../types';
+
+@Injectable()
+export class UserService {
+  constructor(private readonly httpClient: VxHttpClient) {}
+
+  async getUsers(): Promise<User[]> {
+    return this.httpClient.get<User[]>('/users');
+  }
+
+  async createUser(userData: Partial<User>): Promise<User> {
+    return this.httpClient.post<User>('/users', userData);
+  }
+
+  async uploadAvatar(fileBuffer: Buffer, filename: string): Promise<string> {
+    return this.httpClient.upload<string>(
+      '/users/avatar',
+      fileBuffer,
+      filename,
+      {
+        headers: {
+          'content-type': 'image/jpeg',
+        },
+      }
+    );
+  }
+}
+```
+
+### 3. Context-Aware Requests (BFF Usage)
+
+For BFF applications that need to pass through authentication and tenant context:
+
+```typescript
+// user.router.ts
+import { Controller, Get, Headers } from '@nestjs/common';
+import { VxHttpClient } from '@vxture/core-api';
+import type { RequestContext } from '@vxture/core-api';
+
+@Controller('users')
+export class UserController {
+  constructor(private readonly httpClient: VxHttpClient) {}
+
+  @Get()
+  async getUsers(
+    @Headers('authorization') token: string,
+    @Headers('x-tenant-id') tenantId: string,
+  ) {
+    const context: RequestContext = {
+      accessToken: token.replace('Bearer ', ''),
+      tenantId,
+    };
+
+    return this.httpClient.getWithContext<ApiResponse<User[]>>(
+      '/api/users',
+      context
+    );
+  }
+}
+```
+
+### 4. File Download
+
+```typescript
+async downloadReport(): Promise<Buffer> {
+  const buffer = await this.httpClient.download('/reports/monthly');
+  return buffer;
+}
+```
+
+---
+
+## 📚 API Reference
+
+### VxHttpClient Methods
+
+#### Standard HTTP Methods
+```typescript
+// GET request
+async get<T>(path: string, options?: RequestOptions): Promise<T>
+
+// POST request
+async post<T>(path: string, data?: unknown, options?: RequestOptions): Promise<T>
+
+// PUT request
+async put<T>(path: string, data?: unknown, options?: RequestOptions): Promise<T>
+
+// PATCH request
+async patch<T>(path: string, data?: unknown, options?: RequestOptions): Promise<T>
+
+// DELETE request
+async delete<T>(path: string, options?: RequestOptions): Promise<T>
+```
+
+#### File Operations
+```typescript
+// File upload
+async upload<T>(
+  path: string,
+  file: Buffer | NodeJS.ReadableStream,
+  filename: string,
+  options?: UploadOptions
+): Promise<T>
+
+// File download
+async download(path: string, options?: RequestOptions): Promise<Buffer>
+```
+
+#### Context-Aware Methods
+```typescript
+// GET with context
+async getWithContext<T>(
+  path: string,
+  context: RequestContext,
+  options?: RequestOptions
+): Promise<T>
+
+// POST with context
+async postWithContext<T>(
+  path: string,
+  data: unknown,
+  context: RequestContext,
+  options?: RequestOptions
+): Promise<T>
+```
+
+#### Raw Response Access
+```typescript
+// Return full AxiosResponse without unwrapping
+async rawRequest<T = unknown>(
+  method: string,
+  path: string,
+  data?: unknown,
+  options?: RequestOptions
+): Promise<AxiosResponse<T>>
+```
+
+### Configuration Types
+
+```typescript
+// Request options
+interface RequestOptions {
+  baseURL?: string
+  headers?: Record<string, string>
+  timeout?: number
+  retries?: number
+  raw?: boolean              // return full response if true
+  responseType?: 'json' | 'arraybuffer' | 'stream' | 'blob'
+}
+
+// Upload options
+interface UploadOptions extends RequestOptions {
+  onProgress?: (percent: number) => void
+}
+
+// Request context
+interface RequestContext {
+  accessToken?: string       // automatically added to Authorization header
+  tenantId?: string          // automatically added to x-tenant-id header
+  requestId?: string         // automatically added to x-request-id header
+}
+
+// HTTP module options
+interface VxHttpModuleOptions {
+  baseURL?: string
+  timeout?: number
+  retries?: number
+  headers?: Record<string, string>
+}
+```
+
+---
+
+## 🛠 Response Helpers
+
+The `@vxture/core-api` package provides utilities for building standard API responses:
+
+```typescript
+import { ok, fail, buildPageResult, safePageQuery } from '@vxture/core-api';
+
+// Success response
+return ok({ id: 1, name: 'John Doe' });
+// Returns: { success: true, data: {...}, code: 'OK', timestamp: '2026-03-15T10:30:00Z' }
+
+// Failure response
+return fail('NOT_FOUND', 'User with id=123 not found');
+// Returns: { success: false, data: null, code: 'NOT_FOUND', message: 'User not found', ... }
+
+// Pagination
+const users = await prisma.user.findMany({
+  skip: (page - 1) * pageSize,
+  take: pageSize,
 });
 
-// 发送 GET 请求
-const response = await client.get<User>('/users/123');
-console.log(response.data);
-
-// 发送 POST 请求
-const created = await client.post<User>('/users', { name: 'John Doe' });
-
-// 错误处理
-try {
-  await client.get('/protected');
-} catch (error) {
-  const apiError = error as ApiError;
-  console.error(apiError.message, apiError.statusCode);
-}
-```
-
-### 拦截器
-
-```typescript
-import { getInterceptorManager, type RequestInterceptor, type ResponseInterceptor } from '@vxture/core-api';
-
-const interceptorManager = getInterceptorManager();
-
-// 添加请求拦截器
-const requestInterceptor: RequestInterceptor = async (config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers = config.headers || {};
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-};
-
-interceptorManager.addRequestInterceptor(requestInterceptor);
-
-// 添加响应拦截器
-const responseInterceptor: ResponseInterceptor = async (response) => {
-  if (response.status === 401) {
-    // 处理未授权
-  }
-  return response;
-};
-
-interceptorManager.addResponseInterceptor(responseInterceptor);
+return ok(buildPageResult(users, total, { page, pageSize }));
 ```
 
 ---
 
-## 📚 API 参考
-
-### ApiClient
-
-```typescript
-/**
- * API 客户端类
- */
-export class ApiClient {
-  /**
-   * 发送 GET 请求
-   * @param url - 请求 URL
-   * @param config - 请求配置
-   * @returns Promise<ApiResponse<T>>
-   */
-  async get<T>(url: string, config?: ApiConfig): Promise<ApiResponse<T>>
-
-  /**
-   * 发送 POST 请求
-   * @param url - 请求 URL
-   * @param data - 请求数据
-   * @param config - 请求配置
-   * @returns Promise<ApiResponse<T>>
-   */
-  async post<T>(url: string, data?: unknown, config?: ApiConfig): Promise<ApiResponse<T>>
-
-  /**
-   * 发送 PUT 请求
-   * @param url - 请求 URL
-   * @param data - 请求数据
-   * @param config - 请求配置
-   * @returns Promise<ApiResponse<T>>
-   */
-  async put<T>(url: string, data?: unknown, config?: ApiConfig): Promise<ApiResponse<T>>
-
-  /**
-   * 发送 DELETE 请求
-   * @param url - 请求 URL
-   * @param config - 请求配置
-   * @returns Promise<ApiResponse<T>>
-   */
-  async delete<T>(url: string, config?: ApiConfig): Promise<ApiResponse<T>>
-}
-```
-
-### 工厂函数
-
-```typescript
-/**
- * 获取 API 客户端实例
- * @param config - API 配置
- * @returns ApiClient 实例
- */
-export function getApiClient(config?: ApiConfig): ApiClient
-
-/**
- * 获取拦截器管理器
- * @returns ApiInterceptorManager 实例
- */
-export function getInterceptorManager(): ApiInterceptorManager
-```
-
-### 类型定义
-
-```typescript
-/**
- * API 配置
- */
-export interface ApiConfig {
-  baseUrl?: string
-  timeout?: number
-  headers?: Record<string, string>
-  retry?: {
-    maxRetries: number
-    retryDelay: number
-  }
-}
-
-/**
- * API 响应
- */
-export interface ApiResponse<T> {
-  data: T
-  status: number
-  statusText: string
-  headers: Record<string, string>
-}
-
-/**
- * API 错误
- */
-export class ApiError extends Error {
-  statusCode: number
-  response?: ApiResponse<unknown>
-  code?: string
-}
-
-/**
- * 分页响应
- */
-export interface PaginatedResponse<T> {
-  items: T[]
-  total: number
-  page: number
-  pageSize: number
-  totalPages: number
-}
-```
-
----
-
-## 🛠 开发注意事项
-
-### 双端兼容
-
-所有代码必须同时兼容浏览器和 Node.js 环境：
-
-```typescript
-// ✅ 正确 - 使用原生 fetch
-const response = await fetch(url, options);
-
-// ❌ 错误 - 使用 Node.js 专用 API
-const response = await http.request(url, options);
-```
-
-### 导入路径
-
-消费方只从 `@vxture/core-api` 导入，禁止深路径导入：
-
-```typescript
-// ✅ 正确
-import { ApiClient, getApiClient } from '@vxture/core-api';
-
-// ❌ 错误
-import { ApiClient } from '@vxture/core-api/src/client/api.client';
-```
-
----
-
-## 📁 目录结构
+## 📁 Directory Structure
 
 ```
 packages/core/api/
 ├── src/
-│   ├── client/       # API 客户端实现
-│   ├── types/        # 类型定义
-│   └── index.ts      # 单一公共出口
-├── README.md         # 使用文档（本文档）
-├── CLAUDE.md         # AI 编码指南
-└── package.json      # 包配置
+│   ├── client/              # VxHttpClient implementation
+│   │   ├── http.client.ts
+│   │   └── index.ts
+│   ├── module/              # VxHttpModule for NestJS DI
+│   │   ├── http.module.ts
+│   │   └── index.ts
+│   ├── types/               # Type definitions
+│   │   ├── api.types.ts
+│   │   └── index.ts
+│   ├── utils/               # Helper functions
+│   │   ├── error.utils.ts   # HTTP status → VxtureError mapping
+│   │   ├── response.utils.ts # Response builders
+│   │   └── index.ts
+│   └── index.ts             # Single public export
+├── README.md                # Usage documentation (this file)
+├── CLAUDE.md                # AI coding guidelines
+└── package.json             # Package configuration
 ```
 
 ---
 
-## 🔄 向后兼容性
+## 🔄 Error Handling
 
-包保持向后兼容性，所有废弃 API 会标记 `@deprecated` 注释。
+All HTTP errors are automatically normalized to `@vxture/shared` VxtureError subclasses:
+
+```typescript
+import { NotFoundError, ValidationError } from '@vxture/shared';
+
+try {
+  await client.get('/nonexistent');
+} catch (error) {
+  if (error instanceof NotFoundError) {
+    // Handle 404
+  } else if (error instanceof ValidationError) {
+    // Handle 400
+  }
+}
+```
 
 ---
 
-## 📝 更新日志
+## 📝 Update Log
+
+### v1.2.2
+- Update all file comments to English
+- Standardize package version
+- Fix TypeScript definitions
+
+### v1.2.0
+- Add context-aware request methods
+- File upload/download support
+- Improve error normalization
+
+### v1.1.0
+- Add raw request access
+- Enhance retry logic
+- Add response type support
 
 ### v1.0.0
-- 初始版本
-- 实现 ApiClient 类
-- 实现请求/响应拦截器
-- 实现错误标准化
-- 添加类型定义
-- 完善文档和规范
+- Initial version
+- Basic HTTP methods
+- Error normalization
+- Retry and timeout

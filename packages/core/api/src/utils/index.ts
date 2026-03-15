@@ -1,3 +1,8 @@
+/**
+ * index.ts - Utility exports
+ * @package @vxture/core-api
+ */
+
 export {
   normalizeHttpError,
   isRetryableError,

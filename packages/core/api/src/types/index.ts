@@ -1,3 +1,8 @@
+/**
+ * index.ts - Types exports
+ * @package @vxture/core-api
+ */
+
 export type {
   ApiResponse,
   PageQuery,

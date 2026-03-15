@@ -1,18 +1,21 @@
 /**
- * response.utils.ts - 响应处理工具
+ * response.utils.ts - Response Handling Utilities
  * @package @vxture/core-api
+ * @description
+ *   Pure function utilities for response unwrapping and pagination building.
  *
- * 响应解包和分页构建的纯函数工具。
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import type { ApiResponse, PageResult, PageQuery } from '../types/api.types';
 
 // ============================================================================
-// 响应构建（BFF 用于构建标准响应）
+// Response Builders (For BFF to build standard responses)
 // ============================================================================
 
 /**
- * 构建成功响应
+ * Builds a success response
  *
  * @example
  * return ok(billingData);
@@ -29,7 +32,7 @@ export function ok<T>(data: T, requestId?: string): ApiResponse<T> {
 }
 
 /**
- * 构建失败响应
+ * Builds a failure response
  *
  * @example
  * return fail('NOT_FOUND', 'User not found');
@@ -50,11 +53,11 @@ export function fail(
 }
 
 // ============================================================================
-// 分页工具
+// Pagination Utilities
 // ============================================================================
 
 /**
- * 构建分页结果
+ * Builds pagination result
  *
  * @example
  * const result = buildPageResult(users, total, { page: 1, pageSize: 20 });
@@ -78,7 +81,7 @@ export function buildPageResult<T>(
 }
 
 /**
- * 计算分页的 offset（用于 Prisma skip）
+ * Calculates pagination offset (used for Prisma skip)
  *
  * @example
  * const skip = pageToOffset({ page: 2, pageSize: 20 }); // → 20
@@ -88,8 +91,8 @@ export function pageToOffset(query: PageQuery): number {
 }
 
 /**
- * 验证分页参数，返回安全的分页参数
- * 防止 page=0 或 pageSize 过大
+ * Validates pagination parameters and returns safe pagination parameters
+ * Prevents page=0 or pageSize being too large
  */
 export function safePageQuery(query: Partial<PageQuery>): PageQuery {
   return {

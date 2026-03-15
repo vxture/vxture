@@ -1,22 +1,12 @@
 /**
- * http.client.ts - VxHttpClient HTTP 客户端
+ * http.client.ts - VxHttpClient HTTP Client
  * @package @vxture/core-api
+ * @description
+ *   HTTP client wrapper based on @nestjs/axios, providing type-safe HTTP methods.
+ *   Injected via NestJS DI without using global singleton.
  *
- * 基于 @nestjs/axios 封装，提供类型安全的 HTTP 方法。
- * 通过 NestJS DI 注入，不使用全局单例。
- *
- * @example
- * // 在 BFF router 中注入使用
- * @Injectable()
- * export class BillingRouter {
- *   constructor(private readonly http: VxHttpClient) {}
- *
- *   async getInvoices(tenantId: string, token: string) {
- *     return this.http.get<Invoice[]>('/invoices', {
- *       headers: { authorization: `Bearer ${token}`, 'x-tenant-id': tenantId },
- *     });
- *   }
- * }
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { Injectable, Logger, Inject } from '@nestjs/common';
@@ -44,7 +34,7 @@ export class VxHttpClient {
   ) {}
 
   // --------------------------------------------------------------------------
-  // 标准 HTTP 方法
+  // Standard HTTP Methods
   // --------------------------------------------------------------------------
 
   async get<T>(path: string, options?: RequestOptions): Promise<T> {
@@ -68,11 +58,11 @@ export class VxHttpClient {
   }
 
   // --------------------------------------------------------------------------
-  // 文件上传
+  // File Upload
   // --------------------------------------------------------------------------
 
   /**
-   * multipart/form-data 文件上传
+   * Upload file using multipart/form-data
    *
    * @example
    * const result = await this.http.upload<{ url: string }>(
@@ -101,7 +91,7 @@ export class VxHttpClient {
   }
 
   /**
-   * 文件下载，返回 Buffer
+   * Download file and return Buffer
    *
    * @example
    * const buffer = await this.http.download('/files/report.pdf', token);
@@ -115,14 +105,14 @@ export class VxHttpClient {
   }
 
   // --------------------------------------------------------------------------
-  // 上下文感知请求（自动注入 token 和 tenantId）
+  // Context-Aware Request (Automatically inject token and tenantId)
   // --------------------------------------------------------------------------
 
   /**
-   * 携带请求上下文的 GET，自动注入 Authorization 和 x-tenant-id
+   * GET request with request context, automatically injects Authorization and x-tenant-id
    *
    * @example
-   * // 在 BFF 中透传前端的 token 和租户信息
+   * // In BFF, pass through front-end token and tenant info
    * return this.http.getWithContext<Invoice[]>('/invoices', {
    *   accessToken: user.token,
    *   tenantId:    tenant.id,
@@ -146,12 +136,12 @@ export class VxHttpClient {
   }
 
   // --------------------------------------------------------------------------
-  // 原始响应访问（第三方 API，不强制解包）
+  // Raw Response Access (For third-party API without forced unwrapping)
   // --------------------------------------------------------------------------
 
   /**
-   * 返回完整的 axios 响应，不做任何处理
-   * 用于第三方 API 响应格式各异的场景
+   * Returns full axios response without any processing
+   * Used for scenarios with various third-party API response formats
    */
   async rawRequest<T = unknown>(
     method:  string,
@@ -170,7 +160,7 @@ export class VxHttpClient {
   }
 
   // --------------------------------------------------------------------------
-  // 内部核心方法
+  // Internal Core Methods
   // --------------------------------------------------------------------------
 
   private async request<T>(
@@ -180,7 +170,7 @@ export class VxHttpClient {
     options?: RequestOptions,
   ): Promise<T> {
     const response = await this.rawRequest<T>(method, path, data, options);
-    // raw: true 时返回完整响应体，false 时只返回 data
+    // raw: true returns full response, false returns only data
     return (options?.raw ? response : response.data) as T;
   }
 
@@ -286,7 +276,7 @@ export class VxHttpClient {
 }
 
 // ============================================================================
-// 内部工具
+// Internal Utilities
 // ============================================================================
 
 function sleep(ms: number): Promise<void> {

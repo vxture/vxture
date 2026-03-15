@@ -1,15 +1,20 @@
 /**
- * api.types.ts - API 类型定义
+ * api.types.ts - API Type Definitions
  * @package @vxture/core-api
+ * @description
+ *   Type definitions for API responses, request configuration, and contexts.
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================
-// 标准响应类型
+// Standard Response Types
 // ============================================================================
 
 /**
- * 统一 API 响应包装
- * BFF 返回给前端的所有响应都遵循此结构
+ * Unified API response wrapper
+ * All responses from BFF to frontend follow this structure
  */
 export interface ApiResponse<T = unknown> {
   success:   boolean;
@@ -21,8 +26,8 @@ export interface ApiResponse<T = unknown> {
 }
 
 /**
- * 分页查询参数
- * BFF router 接收前端的分页请求
+ * Pagination query parameters
+ * Received by BFF router for frontend pagination requests
  */
 export interface PageQuery {
   page:       number;
@@ -32,7 +37,7 @@ export interface PageQuery {
 }
 
 /**
- * 分页结果
+ * Pagination result
  */
 export interface PageResult<T = unknown> {
   items:       T[];
@@ -45,7 +50,7 @@ export interface PageResult<T = unknown> {
 }
 
 /**
- * 标准错误响应体
+ * Standard error response body
  */
 export interface ApiErrorBody {
   code:       string;
@@ -55,49 +60,49 @@ export interface ApiErrorBody {
 }
 
 // ============================================================================
-// HTTP 客户端配置
+// HTTP Client Configuration
 // ============================================================================
 
 /**
- * VxHttpClient 单次请求配置
- * 覆盖全局配置或提供额外选项
+ * VxHttpClient single request configuration
+ * Overrides global configuration or provides additional options
  */
 export interface RequestOptions {
-  /** 覆盖全局 baseURL，用于第三方 API 调用 */
+  /** Overrides global baseURL for third-party API calls */
   baseURL?:  string;
-  /** 额外的请求 headers，与全局 headers 合并 */
+  /** Additional request headers merged with global headers */
   headers?:  Record<string, string>;
-  /** 超时时间（毫秒），覆盖全局配置 */
+  /** Timeout in milliseconds, overrides global config */
   timeout?:  number;
-  /** 重试次数，覆盖全局配置 */
+  /** Number of retries, overrides global config */
   retries?:  number;
-  /** 是否跳过自动响应解包，直接返回原始 axios 响应 */
+  /** Skip automatic response unwrapping, return raw axios response */
   raw?:      boolean;
-  /** 响应类型，用于文件下载 */
+  /** Response type for file download */
   responseType?: 'json' | 'arraybuffer' | 'stream' | 'blob';
 }
 
 /**
- * 文件上传选项
+ * File upload options
  */
 export interface UploadOptions extends RequestOptions {
-  /** 上传进度回调 */
+  /** Upload progress callback */
   onProgress?: (percent: number) => void;
 }
 
 // ============================================================================
-// 拦截器上下文
-// — 供各 BFF 构建上下文感知的 header 注入
+// Interceptor Context
+// — For BFF to build context-aware header injection
 // ============================================================================
 
 /**
- * 请求上下文，包含需要透传的信息
+ * Request context containing information to be passed through
  */
 export interface RequestContext {
-  /** Bearer token，自动注入 Authorization header */
+  /** Bearer token automatically injected into Authorization header */
   accessToken?: string;
-  /** 租户 ID，自动注入 x-tenant-id header */
+  /** Tenant ID automatically injected into x-tenant-id header */
   tenantId?:    string;
-  /** 请求 ID，用于链路追踪 */
+  /** Request ID for distributed tracing */
   requestId?:   string;
 }

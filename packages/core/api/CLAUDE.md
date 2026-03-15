@@ -37,12 +37,11 @@ src/
 ## 技术选型
 
 - HTTP 客户端：@nestjs/axios（服务端专用，与 NestJS DI 集成）
-- 运行环境：Node.js only（bff、services、agent-server）
+- 运行环境：Node.js only（同样一致：bff、services、agent-server）
 
 ## 允许的依赖
 
 - @vxture/shared
-- @vxture/core-utils（VxtureError 错误类）
 - @nestjs/common、@nestjs/core、@nestjs/axios（peerDependencies）
 - axios（peerDependency）
 - form-data（文件上传）

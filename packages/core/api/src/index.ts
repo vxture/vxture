@@ -1,6 +1,9 @@
-// ============================================================================
-// @vxture/core-api — 公共导出入口
-// ============================================================================
+/**
+ * index.ts - @vxture/core-api public export entry
+ * @package @vxture/core-api
+ * @description
+ *   Single public export entry for @vxture/core-api.
+ */
 
 // Types
 export type {

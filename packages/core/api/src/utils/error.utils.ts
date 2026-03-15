@@ -1,9 +1,12 @@
 /**
- * error.utils.ts - HTTP 错误归一化
+ * error.utils.ts - HTTP Error Normalization
  * @package @vxture/core-api
+ * @description
+ *   Maps axios errors and HTTP status codes to VxtureError subclasses.
+ *   Consumers only need to handle VxtureError without worrying about underlying HTTP details.
  *
- * 将 axios 错误和 HTTP 状态码映射为 VxtureError 子类。
- * 消费方只需处理 VxtureError，不需要关心底层 HTTP 细节。
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import {
@@ -19,14 +22,14 @@ import {
 import type { ApiErrorBody } from '../types/api.types';
 
 // ============================================================================
-// HTTP status → VxtureError
+// HTTP Status → VxtureError
 // ============================================================================
 
 /**
- * 将 HTTP 状态码和错误信息转换为对应的 VxtureError 子类
+ * Converts HTTP status code and error information to corresponding VxtureError subclass
  *
  * @example
- * // 在 axios 响应拦截器中使用
+ * // Use in axios response interceptor
  * if (error.response) {
  *   throw normalizeHttpError(error.response.status, error.response.data);
  * }
@@ -57,17 +60,17 @@ export function normalizeHttpError(
 }
 
 /**
- * 判断是否应该重试（网络错误或 5xx）
+ * Determines if a request should be retried (network error or 5xx)
  */
 export function isRetryableError(status?: number, isNetworkError = false): boolean {
   if (isNetworkError) return true;
   if (!status) return false;
-  // 429 Too Many Requests 和 5xx 可以重试，4xx 客户端错误不重试
+  // 429 Too Many Requests and 5xx can be retried; 4xx client errors are not retried
   return status === 429 || status >= 500;
 }
 
 // ============================================================================
-// 内部工具
+// Internal Utilities
 // ============================================================================
 
 function defaultMessageForStatus(status: number): string {

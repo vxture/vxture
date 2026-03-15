@@ -1,22 +1,11 @@
 /**
  * http.module.ts - VxHttpModule
  * @package @vxture/core-api
+ * @description
+ *   Global HTTP module that registers VxHttpClient for all modules to use.
  *
- * 全局 HTTP 模块，注册 VxHttpClient 供所有模块使用。
- *
- * @example
- * // 在 BFF 的 AppModule 中注册：
- * VxHttpModule.register({
- *   baseURL: 'http://agent01-server:3001',
- *   timeout: 30_000,
- *   retries: 2,
- * })
- *
- * // 在 agent-server 中调用第三方 API：
- * VxHttpModule.register({
- *   timeout: 60_000,
- *   retries: 1,
- * })
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { DynamicModule, Global, Module } from '@nestjs/common';
