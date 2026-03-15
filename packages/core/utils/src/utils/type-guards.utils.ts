@@ -3,6 +3,9 @@
  * @package @vxture/core-utils
  * @description
  *   Collection of type guard functions including basic types, objects, arrays, and string content checks
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================

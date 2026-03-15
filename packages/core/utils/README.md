@@ -1,20 +1,20 @@
-# @vxture/core-utils — 平台级工具集
+# @vxture/core-utils — Platform-level Utilities
 
-> 面向开发人员的使用文档。开发规范见 `CLAUDE.md`。
-
----
-
-## 概述
-
-平台级通用工具：日志、环境判断、类型守卫、错误类。
-
-与 `@vxture/shared` 的区别：
-- **shared**：纯通用工具，无平台意识
-- **core-utils**：有平台意识的工具（结构化日志、环境判断）
+> Usage documentation for developers. Development specifications can be found in `CLAUDE.md`.
 
 ---
 
-## 安装
+## Overview
+
+Platform-level general utilities: logging, environment detection, type guards, and utility types.
+
+Difference from `@vxture/shared`:
+- **shared**: Pure general utilities, platform-agnostic
+- **core-utils**: Platform-aware utilities (structured logging, environment detection)
+
+---
+
+## Installation
 
 ```bash
 pnpm add @vxture/core-utils
@@ -22,26 +22,33 @@ pnpm add @vxture/core-utils
 
 ---
 
-## 快速使用
+## Quick Start
 
-### 日志工具
+### Logging Utilities
 
 ```typescript
-import { VxLogger, logger, LogLevel } from '@vxture/core-utils';
+import { VxLogger, logger, LogLevel, DEFAULT_LOGGER_CONFIG } from '@vxture/core-utils';
 
-// 使用默认 logger
+// Use default logger
 logger.info('Hello', { user: '123' });
 
-// 创建自定义 logger
-const customLogger = new VxLogger({ level: LogLevel.DEBUG, context: 'MyApp' });
+// Create custom logger
+const customLogger = new VxLogger({
+  level: LogLevel.DEBUG,
+  context: 'MyApp',
+  enableTimestamp: true,
+  enableColors: true,
+});
 customLogger.debug('Debug message');
 
-// 子 logger
+// Child logger with fixed context
 const childLogger = customLogger.child('SubModule');
 childLogger.warn('Warning');
+childLogger.error('Error occurred');
+childLogger.fatal('Fatal error');
 ```
 
-### 环境判断
+### Environment Detection
 
 ```typescript
 import {
@@ -60,18 +67,22 @@ console.log(isNode()); // true/false
 console.log(isBrowser()); // true/false
 ```
 
-### 类型守卫
+### Type Guards
 
 ```typescript
 import {
   isString,
   isNumber,
   isBoolean,
+  isFunction,
+  isSymbol,
   isObject,
   isArray,
   isDefined,
   isNotNull,
   isPresent,
+  isEmptyObject,
+  isEmptyArray,
   isNonEmptyString,
   isValidUrl,
   isUuid,
@@ -85,32 +96,14 @@ function processValue(value: unknown) {
     return value * 2;
   }
   if (isPresent(value)) {
-    // value 既不是 null 也不是 undefined
+    // value is neither null nor undefined
   }
-}
-```
-
-### 错误类
-
-```typescript
-import {
-  VxtureError,
-  ValidationError,
-  NotFoundError,
-  UnauthorizedError,
-  ForbiddenError,
-  ConflictError,
-  InternalServerError,
-  isVxtureError,
-} from '@vxture/core-utils';
-
-// 使用预定义错误
-throw new NotFoundError('User not found');
-throw new ValidationError('Invalid email');
-
-// 检查错误类型
-if (isVxtureError(err)) {
-  console.log(err.code, err.status);
+  if (isValidUrl(value)) {
+    // value is a valid URL string
+  }
+  if (isUuid(value)) {
+    // value is a valid UUID v4
+  }
 }
 ```
 
@@ -118,80 +111,74 @@ if (isVxtureError(err)) {
 
 ## API
 
-### 日志
+### Logging
 
-| 导出 | 类型 | 说明 |
-|------|------|------|
-| `VxLogger` | Class | 日志类 |
-| `logger` | Instance | 默认 logger 实例 |
-| `LogLevel` | Const | 日志级别枚举 |
+| Export | Type | Description |
+|--------|------|-------------|
+| `VxLogger` | Class | Logger class with context binding |
+| `logger` | Instance | Default logger instance |
+| `LogLevel` | Const | Log level enum (DEBUG, INFO, WARN, ERROR, FATAL) |
+| `DEFAULT_LOGGER_CONFIG` | Const | Default logger configuration |
 
-### 环境
+### VxLogger Methods
 
-| 导出 | 类型 | 说明 |
-|------|------|------|
-| `getNodeEnv()` | Function | 获取 NODE_ENV |
-| `isProduction()` | Function | 是否生产环境 |
-| `isDevelopment()` | Function | 是否开发环境 |
-| `isTest()` | Function | 是否测试环境 |
-| `isStaging()` | Function | 是否 staging 环境 |
-| `isNode()` | Function | 是否 Node.js 环境 |
-| `isBrowser()` | Function | 是否浏览器环境 |
+| Method | Description |
+|--------|-------------|
+| `debug(message, metadata?)` | Debug level log |
+| `info(message, metadata?)` | Info level log |
+| `warn(message, metadata?)` | Warn level log |
+| `error(message, metadata?)` | Error level log |
+| `fatal(message, metadata?)` | Fatal level log |
+| `child(context)` | Create child logger with fixed context |
 
-### 类型守卫
+### Environment
 
-| 分类 | 导出 |
-|------|------|
-| 基础类型 | `isString`, `isNumber`, `isBoolean`, `isFunction`, `isSymbol` |
+| Export | Type | Description |
+|--------|------|-------------|
+| `getNodeEnv()` | Function | Get NODE_ENV value |
+| `isProduction()` | Function | Is production environment |
+| `isDevelopment()` | Function | Is development environment |
+| `isTest()` | Function | Is test environment |
+| `isStaging()` | Function | Is staging environment |
+| `isNode()` | Function | Is Node.js environment |
+| `isBrowser()` | Function | Is browser environment |
+
+### Type Guards
+
+| Category | Exports |
+|----------|---------|
+| Basic types | `isString`, `isNumber`, `isBoolean`, `isFunction`, `isSymbol` |
 | null/undefined | `isDefined`, `isNotNull`, `isPresent` |
-| 对象/数组 | `isObject`, `isArray`, `isEmptyObject`, `isEmptyArray` |
-| 字符串内容 | `isNonEmptyString`, `isValidUrl`, `isUuid` |
+| Object/Array | `isObject`, `isArray`, `isEmptyObject`, `isEmptyArray` |
+| String content | `isNonEmptyString`, `isValidUrl`, `isUuid` |
 
-### 错误类
+### Utility Types
 
-| 导出 | HTTP 状态 | 说明 |
-|------|-----------|------|
-| `VxtureError` | - | 基类 |
-| `ValidationError` | 400 | 验证错误 |
-| `UnauthorizedError` | 401 | 未授权 |
-| `ForbiddenError` | 403 | 禁止访问 |
-| `NotFoundError` | 404 | 未找到 |
-| `ConflictError` | 409 | 冲突 |
-| `InternalServerError` | 500 | 服务器错误 |
-| `isVxtureError()` | - | 类型守卫 |
-
-### 类型
-
-| 导出 | 说明 |
-|------|------|
+| Export | Description |
+|--------|-------------|
 | `Maybe<T>` | `T \| null \| undefined` |
 | `Nullable<T>` | `T \| null` |
 | `Optional<T>` | `T \| undefined` |
-| `Class<T>` | 构造函数类型 |
-| `FunctionType` | 任意函数类型 |
-| `DeepPartial<T>` | 深度可选 |
-| `DeepReadonly<T>` | 深度只读 |
-| `Awaited<T>` | Promise 值类型 |
-| `RequiredKeys<T, K>` | 指定 key 变为必填 |
-| `PartialKeys<T, K>` | 指定 key 变为可选 |
-| `LogRecord` | 日志记录类型 |
-| `LoggerConfig` | Logger 配置类型 |
-| `ErrorMetadata` | 错误元数据类型 |
+| `Class<T>` | Constructor type |
+| `FunctionType` | Any function type |
+| `DeepPartial<T>` | Deep partial |
+| `DeepReadonly<T>` | Deep readonly |
+| `LogRecord` | Log record type |
+| `LoggerConfig` | Logger configuration type |
 
 ---
 
-## 目录结构
+## Directory Structure
 
 ```
 src/
 ├── utils/
-│   ├── error.utils.ts          # 错误类
-│   ├── logger.utils.ts         # 日志工具
-│   ├── env.utils.ts            # 环境判断
-│   ├── type-guards.utils.ts    # 类型守卫
+│   ├── logger.utils.ts         # Logging utilities
+│   ├── env.utils.ts            # Environment detection
+│   ├── type-guards.utils.ts    # Type guards
 │   └── index.ts
 ├── types/
-│   ├── utils.types.ts          # 工具类型
+│   ├── utils.types.ts          # Utility types
 │   └── index.ts
-└── index.ts                    # 统一出口
+└── index.ts                    # Unified export
 ```

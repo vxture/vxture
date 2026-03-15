@@ -1,8 +1,6 @@
 /**
  * index.ts - Core utils type exports
  * @package @vxture/core-utils
- * @description
- *   Unified export file for core utils types
  */
 
 export type {

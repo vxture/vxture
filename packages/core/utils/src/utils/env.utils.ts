@@ -3,6 +3,9 @@
  * @package @vxture/core-utils
  * @description
  *   Environment detection utilities including Node.js environment detection, browser environment detection and NODE_ENV detection
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================

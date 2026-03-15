@@ -3,6 +3,9 @@
  * @package @vxture/core-utils
  * @description
  *   Structured logging utility with multi-level logging, context binding and cross-platform output
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { LogLevel } from '../types/utils.types';

@@ -3,6 +3,9 @@
  * @package @vxture/core-utils
  * @description
  *   Core utilities types and constants
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================
