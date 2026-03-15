@@ -1,26 +1,28 @@
-# @vxture/core-auth — 认证基础设施
+# @vxture/core-auth — Authentication Infrastructure
 
-> **面向开发人员/AI 的使用文档**
-> 本文档详细说明如何使用 @vxture/core-auth 包的功能和方法。
-> 如需了解开发该包的约束和规范，请查看 `CLAUDE.md`。
-
----
-
-## 🌟 包概述
-
-平台级认证原语：JWT token 验证、session 工具、角色权限基础类型。
-只提供平台基础设施，不包含任何业务级权限逻辑（业务权限属于 Service 层）。
-
-**核心特性：**
-- JWT token 验证和解析
-- Session 管理工具
-- 角色权限基础类型
-- 本地存储和会话存储支持
-- 类型安全的 API 设计
+> **Usage documentation for developers/AI**
+> This document details how to use the features and methods of the @vxture/core-auth package.
+> For development constraints and specifications, please see `CLAUDE.md`.
 
 ---
 
-## 📦 安装
+## 🌟 Package Overview
+
+Platform-level authentication primitives: JWT token validation, session utilities, role and permission base types.
+Provides only platform infrastructure, no business-level permission logic (business permissions belong to Service layer).
+
+**Core Features:**
+- JWT token signing and verification via @nestjs/jwt
+- JWT authentication guard and role guard for NestJS
+- NestJS decorators (@Public, @Roles, @CurrentUser)
+- Bearer token extraction utilities
+- Permission and role checking utilities
+- OAuth provider interfaces and utilities
+- Type-safe API design
+
+---
+
+## 📦 Installation
 
 ```bash
 pnpm add @vxture/core-auth
@@ -28,330 +30,465 @@ pnpm add @vxture/core-auth
 
 ---
 
-## 🚀 使用示例
+## 🚀 Usage Examples
 
-### 基础使用
+### 1. Register JWT Module
+
+First, register JwtModule in your NestJS AppModule:
 
 ```typescript
-import { getAuthManager, type User, type AuthToken } from '@vxture/core-auth';
+// app.module.ts
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 
-// 获取认证管理器
-const authManager = getAuthManager();
-
-// 登录
-const user: User = {
-  id: '123',
-  email: 'user@example.com',
-  name: 'John Doe',
-  role: 'admin',
-};
-const token: AuthToken = {
-  accessToken: 'abc123',
-  refreshToken: 'def456',
-  expiresAt: Date.now() + 3600000,
-};
-
-authManager.login(user, token);
-
-// 获取当前用户
-const currentUser = authManager.getCurrentUser();
-console.log(currentUser?.name);
-
-// 检查是否已认证
-const isAuthenticated = authManager.isAuthenticated();
-
-// 获取 access token
-const accessToken = authManager.getAccessToken();
-
-// 刷新 token
-const newToken = await authManager.refreshToken();
-
-// 登出
-authManager.logout();
+@Module({
+  imports: [
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET,
+        signOptions: { expiresIn: '1h' },
+      }),
+    }),
+  ],
+})
+export class AppModule {}
 ```
 
-### 权限检查
+### 2. Use Guards and Decorators
 
 ```typescript
-import { getPermissionManager, type PermissionCheckOptions } from '@vxture/core-auth';
+// user.controller.ts
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import {
+  Public,
+  Roles,
+  CurrentUser,
+  JwtAuthGuard,
+  RolesGuard,
+} from '@vxture/core-auth';
+import type { AuthUser, PlatformRole } from '@vxture/core-auth';
 
-const permissionManager = getPermissionManager();
+@Controller('users')
+@UseGuards(JwtAuthGuard, RolesGuard)
+export class UserController {
 
-// 检查角色
-const hasAdminRole = permissionManager.hasRole('admin');
-const hasAnyRole = permissionManager.hasAnyRole(['admin', 'editor']);
+  @Get('profile')
+  getProfile(@CurrentUser() user: AuthUser) {
+    return user;
+  }
 
-// 检查权限
-const options: PermissionCheckOptions = {
-  requireAll: true,
-};
-const hasPermission = permissionManager.hasPermission(['read', 'write'], options);
-```
+  @Get('profile/:field')
+  getProfileField(
+    @CurrentUser('email') email: string,
+    @CurrentUser('userId') userId: string,
+  ) {
+    return { email, userId };
+  }
 
-### Token 解析
+  @Get('admin')
+  @Roles(PlatformRole.ADMIN)
+  getAdminOnly() {
+    return { message: 'Admin only' };
+  }
 
-```typescript
-import { extractBearerToken, verifyToken } from '@vxture/core-auth';
+  @Get('tenant-admin')
+  @Roles(PlatformRole.TENANT_ADMIN, PlatformRole.ADMIN)
+  getTenantAdminOnly() {
+    return { message: 'Tenant admin or admin' };
+  }
 
-// 从请求头提取 Bearer token
-const authHeader = 'Bearer abc123';
-const token = extractBearerToken(authHeader);
-
-// 验证 JWT token
-try {
-  const payload = await verifyToken(token, 'secret');
-  console.log(payload.userId);
-} catch (error) {
-  console.error('Token 验证失败');
+  @Get('public')
+  @Public()
+  getPublic() {
+    return { message: 'Public endpoint' };
+  }
 }
+```
+
+### 3. Use VxJwtClient
+
+```typescript
+// auth.service.ts
+import { Injectable } from '@nestjs/common';
+import { VxJwtClient } from '@vxture/core-auth';
+import type { JwtAccessPayload, JwtRefreshPayload } from '@vxture/core-auth';
+
+@Injectable()
+export class AuthService {
+  constructor(private readonly jwtClient: VxJwtClient) {}
+
+  async login(user: any) {
+    const accessPayload: Omit<JwtAccessPayload, 'iat' | 'exp'> = {
+      sub: user.id,
+      tenantId: user.tenantId,
+      email: user.email,
+      role: user.role,
+      permissions: user.permissions,
+      provider: 'password',
+    };
+
+    const accessToken = this.jwtClient.signAccessToken(accessPayload);
+    const refreshToken = this.jwtClient.signRefreshToken(
+      { sub: user.id, tenantId: user.tenantId, jti: 'unique-id' },
+      process.env.JWT_REFRESH_SECRET,
+      '7d'
+    );
+
+    return { accessToken, refreshToken };
+  }
+
+  verifyAccessToken(token: string) {
+    return this.jwtClient.verifyAccessToken(token);
+  }
+
+  decodeAccessToken(token: string) {
+    return this.jwtClient.decodeAccessToken(token);
+  }
+}
+```
+
+### 4. Use Utility Functions
+
+```typescript
+import {
+  extractBearerToken,
+  extractBearerTokenFromHeaders,
+  isTokenExpired,
+  getTokenRemainingMs,
+  hasPermission,
+  hasRole,
+  isAdmin,
+  isTenantAdmin,
+  isValidProvider,
+  buildOAuthProfile,
+  generateJti,
+} from '@vxture/core-auth';
+import type { AuthUser } from '@vxture/core-auth';
+
+// Extract Bearer token
+const token = extractBearerToken('Bearer eyJhbGci...');
+
+// Extract from headers object
+const headers = { authorization: 'Bearer eyJhbGci...' };
+const tokenFromHeaders = extractBearerTokenFromHeaders(headers);
+
+// Check token expiry
+const expired = isTokenExpired(token);
+const remainingMs = getTokenRemainingMs(token);
+
+// Check permissions
+const user: AuthUser = {
+  userId: '123',
+  tenantId: '456',
+  email: 'user@example.com',
+  role: 'admin',
+  permissions: ['read', 'write'],
+  provider: 'password',
+};
+
+const canRead = hasPermission(user, 'read');
+const canReadWrite = hasPermission(user, ['read', 'write'], { mode: 'all' });
+const hasAdminRole = hasRole(user, 'admin');
+const isUserAdmin = isAdmin(user);
+const isUserTenantAdmin = isTenantAdmin(user);
+
+// OAuth utilities
+const valid = isValidProvider('dingtalk');
+const oauthProfile = buildOAuthProfile({
+  providerId: 'user123',
+  provider: 'dingtalk',
+  name: 'John Doe',
+  email: 'john@example.com',
+  raw: { ... },
+});
+const jti = generateJti('user123');
 ```
 
 ---
 
-## 📚 API 参考
+## 📚 API Reference
 
-### AuthManager
+### Guards
+
+#### JwtAuthGuard
+NestJS guard that validates JWT access token from request.
+- Skips verification for routes marked with @Public()
+- Attaches AuthUser to request.user after verification
+
+#### RolesGuard
+NestJS guard that checks user roles.
+- Works with @Roles() decorator
+- Requires JwtAuthGuard to run first
+
+### Decorators
+
+#### @Public()
+Marks a route as public, skipping JWT verification.
+
+#### @Roles(...roles: string[])
+Marks required roles for a route.
+```typescript
+@Roles('admin', 'tenant_admin')
+```
+
+#### @CurrentUser(field?: keyof AuthUser)
+Extracts current user from request.
+```typescript
+@CurrentUser() user: AuthUser
+@CurrentUser('email') email: string
+```
+
+### VxJwtClient
 
 ```typescript
-/**
- * 认证管理器
- */
-export class AuthManager {
-  /**
-   * 登录
-   * @param user - 用户信息
-   * @param token - 认证令牌
-   */
-  login(user: User, token: AuthToken): void
+@Injectable()
+export class VxJwtClient {
+  constructor(private readonly jwtService: JwtService) {}
 
   /**
-   * 登出
+   * Signs access token
+   * @param payload Access token payload without iat/exp
    */
-  logout(): void
+  signAccessToken(payload: Omit<JwtAccessPayload, 'iat' | 'exp'>): string
 
   /**
-   * 获取当前用户
-   * @returns 用户信息或 null
+   * Verifies and decodes access token
+   * @throws JsonWebTokenError / TokenExpiredError
    */
-  getCurrentUser(): User | null
+  verifyAccessToken(token: string): JwtAccessPayload
 
   /**
-   * 检查是否已认证
-   * @returns 是否已认证
+   * Decodes without verifying signature (for logging, debugging)
    */
-  isAuthenticated(): boolean
+  decodeAccessToken(token: string): JwtAccessPayload | null
 
   /**
-   * 获取 access token
-   * @returns access token 或 null
+   * Signs refresh token (using separate secret)
    */
-  getAccessToken(): string | null
+  signRefreshToken(
+    payload: Omit<JwtRefreshPayload, 'iat' | 'exp'>,
+    secret: string,
+    expiresIn: string
+  ): string
 
   /**
-   * 获取 refresh token
-   * @returns refresh token 或 null
+   * Verifies refresh token
    */
-  getRefreshToken(): string | null
+  verifyRefreshToken(token: string, secret: string): JwtRefreshPayload
 
   /**
-   * 刷新 token
-   * @returns 新的认证令牌
+   * Signs both access token and refresh token at once
    */
-  refreshToken(): Promise<AuthToken>
-
-  /**
-   * 检查 token 是否过期
-   * @returns 是否已过期
-   */
-  isTokenExpired(): boolean
+  signTokenPair(params: {
+    accessPayload: Omit<JwtAccessPayload, 'iat' | 'exp'>
+    refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'>
+    refreshSecret: string
+    refreshExpires: string
+    accessExpiresIn: number
+  }): AuthTokenPair
 }
 ```
 
-### PermissionManager
+### Utility Functions
 
 ```typescript
-/**
- * 权限管理器
- */
-export class PermissionManager {
-  /**
-   * 检查角色
-   * @param role - 角色
-   * @returns 是否拥有该角色
-   */
-  hasRole(role: string): boolean
+// Token extraction
+export function extractBearerToken(
+  authHeader: string | null | undefined
+): string | undefined
 
-  /**
-   * 检查是否拥有任一角色
-   * @param roles - 角色列表
-   * @returns 是否拥有任一角色
-   */
-  hasAnyRole(roles: string[]): boolean
+export function extractBearerTokenFromHeaders(
+  headers: Record<string, string | string[] | undefined> | { get(name: string): string | null }
+): string | undefined
 
-  /**
-   * 检查权限
-   * @param permissions - 权限列表
-   * @param options - 检查选项
-   * @returns 是否拥有权限
-   */
-  hasPermission(permissions: string[], options?: PermissionCheckOptions): boolean
-}
-```
+// Token utilities
+export function isTokenExpired(token: string): boolean
+export function getTokenRemainingMs(token: string): number
 
-### 工厂函数
+// Permission and role check
+export function hasPermission(
+  user: AuthUser,
+  required: string | string[],
+  options?: PermissionCheckOptions
+): boolean
 
-```typescript
-/**
- * 获取认证管理器
- * @param config - 认证配置
- * @returns AuthManager 实例
- */
-export function getAuthManager(config?: AuthConfig): AuthManager
+export function hasRole(
+  user: AuthUser,
+  required: string | string[],
+  options?: PermissionCheckOptions
+): boolean
 
-/**
- * 获取权限管理器
- * @returns PermissionManager 实例
- */
-export function getPermissionManager(): PermissionManager
-```
+export function isAdmin(user: AuthUser): boolean
+export function isTenantAdmin(user: AuthUser): boolean
 
-### 工具函数
-
-```typescript
-/**
- * 从 Authorization header 提取 Bearer token
- * @param authHeader - Authorization header
- * @returns token 或 null
- */
-export function extractBearerToken(authHeader: string): string | null
-
-/**
- * 验证 JWT token
- * @param token - JWT token
- * @param secret - 密钥
- * @returns token payload
- */
-export function verifyToken(token: string, secret: string): Promise<TokenPayload>
-
-/**
- * 签名 JWT token
- * @param payload - token payload
- * @param secret - 密钥
- * @param expiresIn - 过期时间
- * @returns JWT token
- */
-export function signToken(payload: TokenPayload, secret: string, expiresIn: string): string
-```
-
-### 类型定义
-
-```typescript
-/**
- * 用户信息
- */
-export interface User {
-  id: string
-  email: string
+// OAuth utilities
+export function isValidProvider(value: string): value is OAuthProviderType
+export function buildOAuthProfile(params: {
+  providerId: string
+  provider: OAuthProviderType
   name: string
+  email?: string
+  avatar?: string
+  raw: Record<string, unknown>
+}): OAuthUserProfile
+
+export function generateJti(userId: string): string
+```
+
+### Types
+
+```typescript
+// Enums (as const)
+export const OAuthProviderType = {
+  PASSWORD: 'password',
+  DINGTALK: 'dingtalk',
+  FEISHU: 'feishu',
+  WECHAT: 'wechat',
+} as const
+
+export const PlatformRole = {
+  ADMIN: 'admin',
+  TENANT_ADMIN: 'tenant_admin',
+  MEMBER: 'member',
+} as const
+
+// JWT Payloads
+export interface JwtAccessPayload {
+  sub: string                    // userId
+  tenantId: string
+  email: string
   role: string
   permissions?: string[]
+  provider: OAuthProviderType
+  iat?: number
+  exp?: number
 }
 
-/**
- * 认证令牌
- */
-export interface AuthToken {
-  accessToken: string
-  refreshToken: string
-  expiresAt: number
+export interface JwtRefreshPayload {
+  sub: string
+  tenantId: string
+  jti: string                  // JWT ID for blacklist
+  iat?: number
+  exp?: number
 }
 
-/**
- * Token payload
- */
-export interface TokenPayload {
+// Auth User
+export interface AuthUser {
   userId: string
+  tenantId: string
   email: string
   role: string
-  iat: number
-  exp: number
+  permissions: string[]
+  provider: OAuthProviderType
 }
 
-/**
- * 认证配置
- */
-export interface AuthConfig {
-  storageType?: 'localStorage' | 'sessionStorage'
-  tokenKey?: string
-  userKey?: string
+// OAuth Types
+export interface OAuthTokens {
+  accessToken: string
+  refreshToken?: string
+  expiresIn: number
+  scope?: string
 }
 
-/**
- * 权限检查选项
- */
+export interface OAuthUserProfile {
+  providerId: string
+  provider: OAuthProviderType
+  email?: string
+  name: string
+  avatar?: string
+  raw: Record<string, unknown>
+}
+
+export interface OAuthProvider {
+  readonly name: OAuthProviderType
+  exchangeCode(code: string, redirectUri: string): Promise<OAuthTokens>
+  getUserInfo(accessToken: string): Promise<OAuthUserProfile>
+}
+
+// Token Pair
+export interface AuthTokenPair {
+  accessToken: string
+  refreshToken: string
+  expiresIn: number          // seconds
+}
+
+// Options
 export interface PermissionCheckOptions {
-  requireAll?: boolean
+  mode?: 'all' | 'any'       // default: 'any'
 }
 ```
 
 ---
 
-## 🛠 开发注意事项
+## 🛠 Development Notes
 
-### 业务权限逻辑
+### Business Permission Logic
 
-本包只提供平台级认证基础设施，不包含任何业务级权限逻辑：
+This package only provides platform-level authentication infrastructure, no business-level permission logic:
 
 ```typescript
-// ✅ 正确 - 平台级角色检查
-const isAdmin = permissionManager.hasRole('admin');
+// ✅ Correct - Platform-level role check
+const isAdmin = hasRole(user, PlatformRole.ADMIN);
 
-// ❌ 错误 - 业务权限逻辑
-const canPurchase = permissionManager.hasPermission('purchase'); // 应该在 service 层实现
+// ❌ Incorrect - Business permission logic
+const canPurchase = hasPermission(user, 'purchase'); // Should be implemented in service layer
 ```
 
-### 导入路径
+### Import Paths
 
-消费方只从 `@vxture/core-auth` 导入，禁止深路径导入：
+Consumers should only import from `@vxture/core-auth`, deep path imports are forbidden:
 
 ```typescript
-// ✅ 正确
-import { AuthManager, getAuthManager } from '@vxture/core-auth';
+// ✅ Correct
+import { JwtAuthGuard, RolesGuard, VxJwtClient } from '@vxture/core-auth';
 
-// ❌ 错误
-import { AuthManager } from '@vxture/core-auth/src/client/auth.client';
+// ❌ Incorrect
+import { JwtAuthGuard } from '@vxture/core-auth/src/guards/jwt-auth.guard';
 ```
 
 ---
 
-## 📁 目录结构
+## 📁 Directory Structure
 
 ```
 packages/core/auth/
 ├── src/
-│   ├── client/       # 认证客户端实现
-│   ├── types/        # 类型定义
-│   ├── utils/        # 工具函数
-│   └── index.ts      # 单一公共出口
-├── README.md         # 使用文档（本文档）
-├── CLAUDE.md         # AI 编码指南
-└── package.json      # 包配置
+│   ├── client/       # VxJwtClient implementation
+│   ├── decorators/   # NestJS decorators (@Public, @Roles, @CurrentUser)
+│   ├── guards/       # NestJS guards (JwtAuthGuard, RolesGuard)
+│   ├── types/        # Type definitions
+│   ├── utils/        # Utility functions
+│   └── index.ts      # Single public export
+├── README.md         # Usage documentation (this file)
+├── CLAUDE.md         # AI coding guidelines
+└── package.json      # Package configuration
 ```
 
 ---
 
-## 🔄 向后兼容性
+## 🔄 Backward Compatibility
 
-包保持向后兼容性，所有废弃 API 会标记 `@deprecated` 注释。
+Package maintains backward compatibility, all deprecated APIs will be marked with `@deprecated` comments.
 
 ---
 
-## 📝 更新日志
+## 📝 Changelog
+
+### v1.2.2
+- Update all comments to English
+- Standardize package structure
+
+### v1.2.0
+- Add OAuth provider interfaces and utilities
+- Add permission check utilities
+- Add JTI generation for refresh token blacklist
+
+### v1.1.0
+- Add NestJS guards and decorators
+- Add VxJwtClient with @nestjs/jwt integration
+- Add token extraction utilities
 
 ### v1.0.0
-- 初始版本
-- 实现 AuthManager 类
-- 实现 PermissionManager 类
-- 实现 JWT token 工具
-- 添加类型定义
-- 完善文档和规范
+- Initial version
+- Basic type definitions
+- Platform role enum
