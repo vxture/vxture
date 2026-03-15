@@ -1,8 +1,8 @@
 /**
- * current-user.decorator.ts - 从请求上下文提取当前用户
+ * current-user.decorator.ts - Extract current user from request context
  * @package @vxture/core-auth
  * @description
- *   从请求上下文提取当前用户信息
+ *   Extracts current user information from request context
  */
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';

@@ -1,6 +1,6 @@
 {
   "name": "@vxture/core-auth",
-  "version": "1.0.0",
+  "version": "1.2.2",
   "description": "Vxture platform — authentication primitives, JWT, OAuth, Guards",
   "license": "MIT",
   "private": true,

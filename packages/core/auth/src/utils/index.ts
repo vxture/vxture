@@ -1,8 +1,6 @@
 /**
- * index.ts - 认证工具导出
+ * index.ts - Auth utility exports
  * @package @vxture/core-auth
- * @description
- *   认证相关工具函数统一导出
  */
 
 export {

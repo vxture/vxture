@@ -1,16 +1,19 @@
 /**
- * auth.utils.ts - token 提取与解析工具
+ * auth.utils.ts - token extraction and parsing utilities
  * @package @vxture/core-auth
  * @description
- *   Bearer token 从 header 提取、JWT 过期时间检查等工具函数。
+ *   Bearer token extraction from header, JWT expiry checking, and other utility functions.
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================
-// Bearer Token 提取
+// Bearer Token Extraction
 // ============================================================================
 
 /**
- * 从 Authorization header 提取 Bearer token
+ * Extracts Bearer token from Authorization header
  *
  * @example
  * extractBearerToken('Bearer eyJhbGci...')  // → 'eyJhbGci...'
@@ -25,8 +28,8 @@ export function extractBearerToken(authHeader: string | null | undefined): strin
 }
 
 /**
- * 从请求 headers 对象中提取 Bearer token
- * 兼容 Express req.headers 和 Web API Headers
+ * Extracts Bearer token from request headers object
+ * Compatible with Express req.headers and Web API Headers
  *
  * @example
  * extractBearerTokenFromHeaders({ authorization: 'Bearer eyJ...' })
@@ -37,10 +40,10 @@ export function extractBearerTokenFromHeaders(
   let authHeader: string | null | undefined;
 
   if (typeof (headers as { get?: unknown }).get === 'function') {
-    // Web API Headers / 标准 get() 接口
+    // Web API Headers / standard get() interface
     authHeader = (headers as { get(name: string): string | null }).get('authorization');
   } else {
-    // Express req.headers（对象形式）
+    // Express req.headers (object form)
     const raw = (headers as Record<string, string | string[] | undefined>)['authorization'];
     authHeader = Array.isArray(raw) ? raw[0] : raw;
   }
@@ -49,12 +52,12 @@ export function extractBearerTokenFromHeaders(
 }
 
 // ============================================================================
-// Token 内容工具
+// Token Content Utilities
 // ============================================================================
 
 /**
- * 判断 JWT 是否已过期（不验证签名，仅检查 exp 字段）
- * 用于快速过滤明显过期的 token，正式验证仍需 jwtService.verify()
+ * Checks if JWT has expired (without verifying signature, only checks exp field)
+ * Used for quick filtering of obviously expired tokens, formal verification still requires jwtService.verify()
  */
 export function isTokenExpired(token: string): boolean {
   try {
@@ -69,8 +72,8 @@ export function isTokenExpired(token: string): boolean {
 }
 
 /**
- * 获取 token 剩余有效时间（毫秒）
- * 返回负数表示已过期
+ * Gets token remaining valid time (milliseconds)
+ * Returns negative number if expired
  */
 export function getTokenRemainingMs(token: string): number {
   try {

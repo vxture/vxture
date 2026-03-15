@@ -1,8 +1,11 @@
 /**
- * jwt-auth.guard.ts - JWT 认证守卫
+ * jwt-auth.guard.ts - JWT authentication guard
  * @package @vxture/core-auth
  * @description
- *   验证请求携带的 access token，验证通过后将 AuthUser 挂载到 request.user
+ *   Verifies access token from request, attaches AuthUser to request.user after verification
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15 
  */
 
 import {
@@ -26,7 +29,7 @@ export class JwtAuthGuard implements CanActivate {
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    // 检查是否标记为 @Public()，跳过验证
+    // Check if marked as @Public(), skip verification
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -47,7 +50,7 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const payload = this.jwtService.verify<JwtAccessPayload>(token);
 
-      // 将标准化的 AuthUser 挂载到 request.user
+      // Attach standardized AuthUser to request.user
       request.user = {
         userId:      payload.sub,
         tenantId:    payload.tenantId,

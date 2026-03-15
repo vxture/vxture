@@ -1,8 +1,6 @@
 /**
- * index.ts - 认证类型导出
+ * index.ts - Auth type exports
  * @package @vxture/core-auth
- * @description
- *   认证相关类型统一导出
  */
 
 export {

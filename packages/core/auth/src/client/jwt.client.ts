@@ -1,9 +1,12 @@
 /**
- * jwt.client.ts - JWT 签发与验证
+ * jwt.client.ts - JWT signing and verification
  * @package @vxture/core-auth
  * @description
- *   封装 @nestjs/jwt，提供类型安全的 JWT 操作。
- *   依赖 VxConfigService 注入 JWT 配置，不硬编码任何密钥。
+ *   Encapsulates @nestjs/jwt to provide type-safe JWT operations.
+ *   Depends on VxConfigService for JWT configuration, no hardcoded keys.
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { Injectable } from '@nestjs/common';
@@ -24,24 +27,24 @@ export class VxJwtClient {
   // --------------------------------------------------------------------------
 
   /**
-   * 签发 access token
+   * Signs access token
    */
   signAccessToken(payload: Omit<JwtAccessPayload, 'iat' | 'exp'>): string {
     return this.jwtService.sign(payload);
-    // 过期时间由 JwtModule.registerAsync options.signOptions.expiresIn 控制
-    // 在各 BFF / agent-server 的 AppModule 里配置
+    // Expiry time is controlled by JwtModule.registerAsync options.signOptions.expiresIn
+    // Configure in each BFF / agent-server's AppModule
   }
 
   /**
-   * 验证并解码 access token
-   * token 无效或过期时抛出 JsonWebTokenError / TokenExpiredError
+   * Verifies and decodes access token
+   * Throws JsonWebTokenError / TokenExpiredError if token is invalid or expired
    */
   verifyAccessToken(token: string): JwtAccessPayload {
     return this.jwtService.verify<JwtAccessPayload>(token);
   }
 
   /**
-   * 仅解码不验证签名（用于日志、调试）
+   * Decodes without verifying signature (for logging, debugging)
    */
   decodeAccessToken(token: string): JwtAccessPayload | null {
     return this.jwtService.decode<JwtAccessPayload>(token);
@@ -52,10 +55,10 @@ export class VxJwtClient {
   // --------------------------------------------------------------------------
 
   /**
-   * 签发 refresh token（使用独立 secret）
-   * @param payload   refresh token 载荷
-   * @param secret    refresh token 专用 secret（与 access token 不同）
-   * @param expiresIn 有效期，如 '7d'
+   * Signs refresh token (using separate secret)
+   * @param payload   refresh token payload
+   * @param secret    refresh token specific secret (different from access token)
+   * @param expiresIn expiry duration, e.g. '7d'
    */
   signRefreshToken(
     payload: Omit<JwtRefreshPayload, 'iat' | 'exp'>,
@@ -68,24 +71,24 @@ export class VxJwtClient {
   }
 
   /**
-   * 验证 refresh token
+   * Verifies refresh token
    */
   verifyRefreshToken(token: string, secret: string): JwtRefreshPayload {
     return this.jwtService.verify<JwtRefreshPayload>(token, { secret });
   }
 
   // --------------------------------------------------------------------------
-  // Token Pair（登录成功后一次性签发 access + refresh）
+  // Token Pair (sign access + refresh together after login)
   // --------------------------------------------------------------------------
 
   /**
-   * 同时签发 access token 和 refresh token
+   * Signs both access token and refresh token at once
    *
-   * @param accessPayload  access token 载荷
-   * @param refreshPayload refresh token 载荷（含 jti）
-   * @param refreshSecret  refresh token 专用 secret
-   * @param refreshExpires refresh token 有效期（如 '7d'）
-   * @param accessExpiresIn access token 有效期（秒，用于返回给前端）
+   * @param accessPayload  access token payload
+   * @param refreshPayload refresh token payload (with jti)
+   * @param refreshSecret  refresh token specific secret
+   * @param refreshExpires refresh token expiry (e.g. '7d')
+   * @param accessExpiresIn access token expiry (seconds, for frontend)
    */
   signTokenPair(params: {
     accessPayload:   Omit<JwtAccessPayload,  'iat' | 'exp'>;

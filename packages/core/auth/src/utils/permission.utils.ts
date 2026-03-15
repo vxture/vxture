@@ -1,15 +1,18 @@
 /**
- * permission.utils.ts - 权限与角色检查工具
+ * permission.utils.ts - Permission and role checking utilities
  * @package @vxture/core-auth
  * @description
- *   权限检查、角色验证、管理员判断等工具函数。
+ *   Permission checking, role validation, admin judgment, and other utility functions.
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import type { AuthUser, PermissionCheckOptions } from '../types';
 import { PlatformRole } from '../types';
 
 // ============================================================================
-// 权限检查
+// Permission Check
 // ============================================================================
 
 export function hasPermission(
@@ -27,7 +30,7 @@ export function hasPermission(
 }
 
 // ============================================================================
-// 角色检查
+// Role Check
 // ============================================================================
 
 export function hasRole(

@@ -1,8 +1,11 @@
 /**
- * roles.decorator.ts - 标记路由所需角色
+ * roles.decorator.ts - Mark required roles for route
  * @package @vxture/core-auth
  * @description
- *   标记路由所需角色，配合 RolesGuard 使用
+ *   Marks required roles for a route, used with RolesGuard
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { SetMetadata } from '@nestjs/common';

@@ -1,35 +1,38 @@
 /**
- * provider.utils.ts - OAuth provider 工具函数
+ * provider.utils.ts - OAuth provider utility functions
  * @package @vxture/core-auth
  * @description
- *   OAuth provider 验证、用户信息标准化构建、JTI 生成等工具函数。
+ *   OAuth provider validation, user info standardization, JTI generation, and other utility functions.
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import { OAuthProviderType } from '../types/auth.types';
 import type { OAuthUserProfile } from '../types/auth.types';
 
 // ============================================================================
-// Provider 验证
+// Provider Validation
 // ============================================================================
 
 /**
- * 判断字符串是否为合法的 OAuthProviderType
+ * Checks if a string is a valid OAuthProviderType
  */
 export function isValidProvider(value: string): value is OAuthProviderType {
   return Object.values(OAuthProviderType).includes(value as OAuthProviderType);
 }
 
 // ============================================================================
-// OAuthUserProfile 标准化工具
-// — 供各 provider 实现内部使用，统一输出格式
+// OAuthUserProfile Standardization Tool
+// — Used internally by each provider implementation, unifies output format
 // ============================================================================
 
 /**
- * 构建标准化的 OAuthUserProfile
- * 确保必填字段存在，raw 字段完整保留
+ * Builds standardized OAuthUserProfile
+ * Ensures required fields exist, raw field is fully preserved
  *
  * @example
- * // 在 DingtalkProvider.getUserInfo() 内部
+ * // In DingtalkProvider.getUserInfo()
  * return buildOAuthProfile({
  *   providerId: data.userid,
  *   provider:   OAuthProviderType.DINGTALK,
@@ -58,13 +61,13 @@ export function buildOAuthProfile(params: {
 }
 
 // ============================================================================
-// JTI 生成（Refresh Token 唯一 ID，用于 Redis 黑名单）
+// JTI Generation (Refresh Token unique ID for Redis blacklist)
 // ============================================================================
 
 /**
- * 生成 refresh token 的 jti（JWT ID）
- * 格式：{userId}:{timestamp}:{random}
- * 供 Redis key 存储和黑名单比对使用
+ * Generates jti (JWT ID) for refresh token
+ * Format: {userId}:{timestamp}:{random}
+ * Used for Redis key storage and blacklist comparison
  */
 export function generateJti(userId: string): string {
   const random = Math.random().toString(36).slice(2, 10);

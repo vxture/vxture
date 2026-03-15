@@ -1,8 +1,8 @@
 /**
- * public.decorator.ts - 标记路由为公开
+ * public.decorator.ts - Mark route as public
  * @package @vxture/core-auth
  * @description
- *   标记路由为公开，跳过 JWT 验证
+ *   Marks a route as public, skipping JWT verification
  */
 
 import { SetMetadata } from '@nestjs/common';

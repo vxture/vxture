@@ -1,8 +1,6 @@
 /**
- * index.ts - 认证装饰器导出
+ * index.ts - Auth decorator exports
  * @package @vxture/core-auth
- * @description
- *   认证相关装饰器统一导出
  */
 
 export { Public, IS_PUBLIC_KEY }   from './public.decorator';

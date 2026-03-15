@@ -1,8 +1,8 @@
 /**
- * index.ts - core-auth 包入口
+ * index.ts - @vxture/core-auth package entry
  * @package @vxture/core-auth
  * @description
- *   认证 token 管理与 session 基础设施
+ *   Authentication token management and session infrastructure
  */
 
 // Types

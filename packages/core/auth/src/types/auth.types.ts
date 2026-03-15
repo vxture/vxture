@@ -1,20 +1,23 @@
 /**
- * auth.types.ts - 服务端认证类型定义
+ * auth.types.ts - Server-side auth type definitions
  * @package @vxture/core-auth
  * @description
- *   平台级认证相关类型定义：JWT 载荷、AuthUser、OAuth Provider 接口、角色枚举等。
+ *   Platform-level authentication related types: JWT payloads, AuthUser, OAuth Provider interfaces, role enums, etc.
+ * 
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 // ============================================================================
-// OAuth Provider 枚举
-// — 新增 provider 只需在此追加，接口约束自动生效
+// OAuth Provider Enum
+// — Add new providers by appending here, interface constraints take effect automatically
 // ============================================================================
 
 export const OAuthProviderType = {
-  PASSWORD:  'password',   // 账号密码
-  DINGTALK:  'dingtalk',   // 钉钉
-  FEISHU:    'feishu',     // 飞书
-  WECHAT:    'wechat',     // 微信
+  PASSWORD:  'password',   // Password authentication
+  DINGTALK:  'dingtalk',   // DingTalk
+  FEISHU:    'feishu',     // Feishu
+  WECHAT:    'wechat',     // WeChat
 } as const;
 
 export const PlatformRole = {
@@ -29,46 +32,46 @@ export type OAuthProviderType = typeof OAuthProviderType[keyof typeof OAuthProvi
 
 // ============================================================================
 // JWT Payload
-// — 签发 access token 时写入的载荷，验证后可直接使用
+// — Payload written when issuing access token, can be used directly after verification
 // ============================================================================
 
 /**
- * Access Token 载荷
- * sub = userId，符合 JWT 标准
+ * Access Token Payload
+ * sub = userId, follows JWT standard
  */
 export interface JwtAccessPayload {
-  /** 用户 ID */
+  /** User ID */
   sub:        string;
-  /** 租户 ID */
+  /** Tenant ID */
   tenantId:   string;
-  /** 用户邮箱 */
+  /** User email */
   email:      string;
-  /** 用户角色（单角色模型） */
+  /** User role (single role model) */
   role:       string;
-  /** 权限列表（可选，减少 token 体积时不写入，由服务端查询） */
+  /** Permission list (optional, omitted to reduce token size, queried by server) */
   permissions?: string[];
-  /** 登录方式 */
+  /** Login method */
   provider:   OAuthProviderType;
-  /** 标准 JWT 字段 */
+  /** Standard JWT fields */
   iat?: number;
   exp?: number;
 }
 
 /**
- * Refresh Token 载荷（最小化，不包含业务数据）
+ * Refresh Token Payload (minimized, no business data)
  */
 export interface JwtRefreshPayload {
   sub:       string;
   tenantId:  string;
-  /** refresh token 唯一 ID，用于 Redis 黑名单比对 */
+  /** Refresh token unique ID, used for Redis blacklist comparison */
   jti:       string;
   iat?: number;
   exp?: number;
 }
 
 // ============================================================================
-// 认证用户上下文
-// — Guard 验证通过后挂载到 request.user，供 controller/router 使用
+// Auth User Context
+// — Guard attaches to request.user after verification, used by controller/router
 // ============================================================================
 
 export interface AuthUser {
@@ -81,12 +84,12 @@ export interface AuthUser {
 }
 
 // ============================================================================
-// OAuth Provider 抽象接口
-// — 钉钉、飞书、微信各自实现此接口，core-auth 不依赖具体 SDK
-// — 具体实现放在各 BFF 或 agent-server 中
+// OAuth Provider Abstract Interface
+// — DingTalk, Feishu, WeChat each implement this interface, core-auth doesn't depend on specific SDKs
+// — Concrete implementations go in each BFF or agent-server
 // ============================================================================
 
-/** OAuth 授权码换取的 token 结果 */
+/** OAuth authorization code exchanged for token result */
 export interface OAuthTokens {
   accessToken:   string;
   refreshToken?: string;
@@ -94,22 +97,22 @@ export interface OAuthTokens {
   scope?:        string;
 }
 
-/** OAuth 获取到的用户基本信息（各 provider 标准化后的结构） */
+/** OAuth obtained user basic info (standardized structure across providers) */
 export interface OAuthUserProfile {
-  /** provider 侧的用户唯一 ID */
+  /** Provider side user unique ID */
   providerId:    string;
   provider:      OAuthProviderType;
   email?:        string;
   name:          string;
   avatar?:       string;
-  /** provider 返回的原始数据，供上层按需使用 */
+  /** Raw data returned by provider, used by upper layers as needed */
   raw:           Record<string, unknown>;
 }
 
 /**
- * OAuth Provider 统一接口
+ * OAuth Provider Unified Interface
  *
- * 实现示例（放在 bff/admin-bff/src/auth/dingtalk.provider.ts）：
+ * Implementation example (in bff/admin-bff/src/auth/dingtalk.provider.ts):
  * ```ts
  * export class DingtalkProvider implements OAuthProvider {
  *   readonly name = OAuthProviderType.DINGTALK;
@@ -122,36 +125,36 @@ export interface OAuthProvider {
   readonly name: OAuthProviderType;
 
   /**
-   * 用授权码换取 OAuth access token
-   * @param code    前端回调带来的授权码
-   * @param redirectUri  与授权请求一致的回调地址
+   * Exchange authorization code for OAuth access token
+   * @param code    Authorization code from front-end callback
+   * @param redirectUri  Redirect URI consistent with authorization request
    */
   exchangeCode(code: string, redirectUri: string): Promise<OAuthTokens>;
 
   /**
-   * 用 OAuth access token 获取用户信息
-   * 返回标准化的 OAuthUserProfile，屏蔽各 provider API 差异
+   * Get user information using OAuth access token
+   * Returns standardized OAuthUserProfile, masking provider API differences
    */
   getUserInfo(accessToken: string): Promise<OAuthUserProfile>;
 }
 
 // ============================================================================
-// Token 对
-// — 登录成功后返回给 BFF，BFF 再返回给前端
+// Token Pair
+// — Returned to BFF after successful login, BFF returns to frontend
 // ============================================================================
 
 export interface AuthTokenPair {
   accessToken:   string;
   refreshToken:  string;
-  /** access token 有效期（秒） */
+  /** Access token expiry (seconds) */
   expiresIn:     number;
 }
 
 // ============================================================================
-// 权限检查选项
+// Permission Check Options
 // ============================================================================
 
 export interface PermissionCheckOptions {
-  /** 'all' = AND，'any' = OR，默认 'any' */
+  /** 'all' = AND, 'any' = OR, default 'any' */
   mode?: 'all' | 'any';
 }

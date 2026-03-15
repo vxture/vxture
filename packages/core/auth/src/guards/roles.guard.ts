@@ -1,8 +1,11 @@
 /**
- * roles.guard.ts - 角色权限守卫
+ * roles.guard.ts - Role authorization guard
  * @package @vxture/core-auth
  * @description
- *   配合 @Roles() 装饰器使用，验证用户角色是否满足要求
+ *   Works with @Roles() decorator to verify user roles
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import {
@@ -27,7 +30,7 @@ export class RolesGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    // 未设置 @Roles() 装饰器，放行
+    // If @Roles() decorator not set, allow access
     if (!requiredRoles || requiredRoles.length === 0) return true;
 
     const request = context.switchToHttp().getRequest<{ user?: AuthUser }>();
