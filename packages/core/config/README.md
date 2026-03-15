@@ -1,24 +1,24 @@
-# @vxture/core-config — 配置管理基础设施
+# @vxture/core-config — Configuration Management Infrastructure
 
-> **面向开发人员/AI 的使用文档**
-> 如需了解开发该包的约束和规范，请查看 `CLAUDE.md`。
-
----
-
-## 概述
-
-把 `process.env` 解析成强类型的配置对象，通过 NestJS DI 注入给消费方。
-
-**核心特性：**
-- 基于 Zod 的类型安全验证
-- NestJS 动态模块集成
-- 域级按需加载
-- Fail-fast 启动验证
-- 支持开发/测试/生产多环境
+> **Usage documentation for developers/AI**
+> For development constraints and specifications, see `CLAUDE.md`.
 
 ---
 
-## 安装
+## Overview
+
+Parses `process.env` into strongly typed configuration objects, injected via NestJS DI to consumers.
+
+**Core Features:**
+- Type-safe validation based on Zod
+- NestJS dynamic module integration
+- Domain-level on-demand loading
+- Fail-fast startup validation
+- Supports development/test/production multi-environment
+
+---
+
+## Installation
 
 ```bash
 pnpm add @vxture/core-config
@@ -26,9 +26,9 @@ pnpm add @vxture/core-config
 
 ---
 
-## 快速开始
+## Quick Start
 
-### 1. 在 AppModule 中注册
+### 1. Register in AppModule
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -36,11 +36,11 @@ import { VxConfigModule } from '@vxture/core-config';
 
 @Module({
   imports: [
-    // BFF / Service（不需要 AI 配置）
+    // BFF / Service (no AI config needed)
     VxConfigModule.register({
       domains: ['app', 'database', 'redis', 'auth'],
     }),
-    // Agent Server（需要 AI 配置）
+    // Agent Server (needs AI config)
     VxConfigModule.register({
       domains: ['app', 'database', 'redis', 'auth', 'ai'],
     }),
@@ -49,7 +49,7 @@ import { VxConfigModule } from '@vxture/core-config';
 export class AppModule {}
 ```
 
-### 2. 在 Service 中使用
+### 2. Use in Service
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -60,13 +60,13 @@ export class MyService {
   constructor(private readonly config: VxConfigService) {}
 
   doSomething() {
-    // 全类型推导，IDE 自动补全
+    // Full type inference, IDE auto-complete
     const { DB_HOST, DB_PORT } = this.config.database;
     const { JWT_SECRET } = this.config.auth;
     const { PORT, NODE_ENV } = this.config.app;
 
     if (this.config.isProduction) {
-      // 生产环境专用逻辑
+      // Production-specific logic
     }
   }
 }
@@ -74,19 +74,19 @@ export class MyService {
 
 ---
 
-## 配置域
+## Configuration Domains
 
-| 域 | 消费方 | 内容 |
-|----|--------|------|
-| `app` | 所有 | NODE_ENV、PORT、LOG_LEVEL、APP_NAME |
-| `database` | BFF / services / agent-server | PostgreSQL 连接配置 |
-| `redis` | BFF / services / agent-server | Redis 连接配置 |
-| `auth` | BFF / agent-server | JWT、bcrypt 配置 |
-| `ai` | agent-server | 豆包、Claude、ChatGPT、通义千问、自定义模型配置 |
+| Domain | Consumer | Content |
+|--------|----------|---------|
+| `app` | All | NODE_ENV, PORT, LOG_LEVEL, APP_NAME |
+| `database` | BFF / services / agent-server | PostgreSQL connection config |
+| `redis` | BFF / services / agent-server | Redis connection config |
+| `auth` | BFF / agent-server | JWT, bcrypt config |
+| `ai` | agent-server | Doubao, Claude, ChatGPT, Qwen, custom model config |
 
 ---
 
-## API 参考
+## API Reference
 
 ### VxConfigModule
 
@@ -94,10 +94,10 @@ export class MyService {
 import { VxConfigModule } from '@vxture/core-config';
 
 VxConfigModule.register({
-  // 需要加载的配置域
+  // Configuration domains to load
   domains: ['app', 'database', 'redis', 'auth'],
-  // strict: true (默认) — 缺少必填 env 直接 process.exit(1)
-  // strict: false — 仅用于测试场景
+  // strict: true (default) — missing required env directly process.exit(1)
+  // strict: false — only for testing scenarios
 });
 ```
 
@@ -110,21 +110,21 @@ import { VxConfigService } from '@vxture/core-config';
 export class MyService {
   constructor(private readonly config: VxConfigService) {}
 
-  // Getters（全类型）
+  // Getters (full type)
   get app(): AppConfig
   get database(): DatabaseConfig
   get redis(): RedisConfig
   get auth(): AuthConfig
-  get ai(): AiConfig  // 仅 agent-server
+  get ai(): AiConfig  // agent-server only
 
-  // 环境判断
+  // Environment checks
   get isProduction(): boolean
   get isDevelopment(): boolean
   get isTest(): boolean
 }
 ```
 
-### 直接注入单个域
+### Direct Injection of Single Domain
 
 ```typescript
 import { Inject, Injectable } from '@nestjs/common';
@@ -142,7 +142,7 @@ export class DatabaseProvider {
 
 ---
 
-## 测试中 Mock 配置
+## Mock Configuration in Tests
 
 ```typescript
 import { Test } from '@nestjs/testing';
@@ -168,7 +168,7 @@ const module = await Test.createTestingModule({
 
 ---
 
-## 环境变量示例
+## Environment Variables Example
 
 ```bash
 # App
@@ -179,7 +179,7 @@ APP_NAME=vxture
 
 # Database
 DATABASE_URL=postgresql://user:pass@localhost:5432/db
-# 或分项配置
+# Or individual config
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=vxture
@@ -202,7 +202,7 @@ JWT_REFRESH_EXPIRES_IN=7d
 JWT_BLACKLIST_STORAGE=redis
 BCRYPT_ROUNDS=12
 
-# AI（仅 agent-server）
+# AI (agent-server only)
 DOUBAO_API_KEY=your-doubao-api-key
 DOUBAO_API_URL=https://ark.cn-beijing.volces.com/api/v3
 DOUBAO_DEFAULT_MODEL=doubao-pro-32k
@@ -220,22 +220,23 @@ AI_MAX_RETRIES=2
 
 ---
 
-## 目录结构
+## Directory Structure
 
 ```
 packages/core/config/
 ├── src/
-│   ├── module/       # NestJS 动态模块
-│   ├── schemas/      # Zod schemas（app、database、redis、auth、ai）
+│   ├── module/       # NestJS dynamic module
+│   ├── schemas/      # Zod schemas (app, database, redis, auth, ai)
 │   ├── service/      # VxConfigService
-│   ├── types/        # VxConfig、CONFIG_TOKEN
-│   └── index.ts      # 公共入口
-├── CLAUDE.md         # AI 编码指南
-└── README.md         # 使用文档（本文档）
+│   ├── types/        # VxConfig, CONFIG_TOKEN
+│   ├── utils/        # Object utilities (deepMerge, deepClone, isPlainObject)
+│   └── index.ts      # Public entry point
+├── CLAUDE.md         # AI coding guidelines
+└── README.md         # Usage documentation (this file)
 ```
 
 ---
 
-## 新增配置域
+## Adding New Configuration Domains
 
-参见 `CLAUDE.md` 中的「新增配置域（标准流程）」。
+See "Adding New Configuration Domains (Standard Process)" in `CLAUDE.md`.

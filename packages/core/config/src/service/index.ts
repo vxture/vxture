@@ -1,8 +1,7 @@
 /**
- * service/index.ts - 服务导出
+ * index.ts - Service barrel export
  * @package @vxture/core-config
- * @description
- *   Config service exports
+ * @description Config service exports
  */
 
 export { VxConfigService } from './config.service';

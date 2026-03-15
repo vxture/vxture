@@ -1,8 +1,7 @@
 /**
- * types/index.ts - 配置类型导出
+ * index.ts - Types barrel export
  * @package @vxture/core-config
- * @description
- *   Config types barrel export
+ * @description Config types barrel export
  */
 
 export type { VxConfig, ConfigLoadResult, ConfigValidationError } from './config.types';

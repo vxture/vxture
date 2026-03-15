@@ -1,8 +1,8 @@
 /**
- * config.module.ts - 配置模块
+ * config.module.ts - Configuration module
  * @package @vxture/core-config
  * @description
- *   NestJS 配置模块，负责加载和解析环境变量
+ *   NestJS configuration module responsible for loading and parsing environment variables
  */
 
 import { DynamicModule, Global, Logger, Module } from '@nestjs/common';
@@ -14,7 +14,7 @@ import { CONFIG_TOKEN } from '../types';
 import type { ConfigLoadResult, ConfigValidationError } from '../types';
 
 // ============================================================================
-// 域定义表 — 新增域只需在这里追加一行
+// Domain Definition Table — Add new domains here
 // ============================================================================
 
 const CONFIG_DOMAINS = [
@@ -26,22 +26,22 @@ const CONFIG_DOMAINS = [
 ] as const;
 
 // ============================================================================
-// 域注册选项
+// Domain Registration Options
 // ============================================================================
 
 export interface VxConfigModuleOptions {
   /**
-   * 需要加载的配置域
-   * - 默认：['app', 'database', 'redis', 'auth']
-   * - agent-server 额外加：'ai'
-   * - 未注册的域不会被 parse，也不能被注入
+   * Configuration domains to load
+   * - Default: ['app', 'database', 'redis', 'auth']
+   * - agent-server adds: 'ai'
+   * - Unregistered domains won't be parsed or injectable
    */
   domains?: Array<'app' | 'database' | 'redis' | 'auth' | 'ai'>;
 
   /**
-   * 是否在缺少必填变量时抛出异常退出进程
-   * - 默认：true（fail-fast，不带错配置运行）
-   * - 设为 false 仅用于测试或 CI lint 场景
+   * Whether to throw and exit process on missing required variables
+   * - Default: true (fail-fast, don't run with invalid config)
+   * - Set to false only for testing or CI linting scenarios
    */
   strict?: boolean;
 }
@@ -56,13 +56,13 @@ export class VxConfigModule {
   private static readonly logger = new Logger('VxConfigModule');
 
   /**
-   * 在 AppModule 的 imports 中调用：
+   * Call in AppModule imports:
    *
    * ```ts
-   * // BFF / service（不需要 AI 配置）
+   * // BFF / service (no AI config needed)
    * VxConfigModule.register({ domains: ['app', 'database', 'redis', 'auth'] })
    *
-   * // agent-server（需要 AI 配置）
+   * // agent-server (needs AI config)
    * VxConfigModule.register({ domains: ['app', 'database', 'redis', 'auth', 'ai'] })
    * ```
    */

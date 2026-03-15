@@ -1,5 +1,5 @@
 /**
- * object.utils.ts - 对象工具
+ * object.utils.ts - Object utilities
  * @package @vxture/core-config
  * @description
  *   Object utility functions (deepMerge, deepClone, isPlainObject)
@@ -10,12 +10,12 @@
 // ============================================================================
 
 /**
- * 深度合并两个对象，source 优先级高于 target。
+ * Deep merge two objects, source properties have higher precedence than target.
  *
- * 规则：
- * - 普通对象递归合并
- * - 数组直接替换（不追加）
- * - 返回新对象，不修改原始入参
+ * Rules:
+ * - Plain objects are merged recursively
+ * - Arrays are replaced directly (not appended)
+ * - Returns new object, original inputs are not modified
  *
  * @example
  * deepMerge({ a: 1, b: { c: 2 } }, { b: { d: 3 } })
@@ -48,10 +48,10 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
 // ============================================================================
 
 /**
- * 深度克隆对象。
+ * Deep clone an object.
  *
- * 支持：Date、Array、普通对象、原始类型。
- * 不支持：Map、Set、循环引用（超出当前平台需求范围）。
+ * Supports: Date, Array, plain objects, primitive types.
+ * Does not support: Map, Set, circular references (outside current platform needs).
  *
  * @example
  * const clone = deepClone({ a: { b: 1 }, c: [1, 2] });
@@ -75,7 +75,7 @@ export function deepClone<T>(obj: T): T {
 // ============================================================================
 
 /**
- * 判断值是否为普通对象（非 null、非数组、非 Date、非 class 实例）。
+ * Check if a value is a plain object (not null, not array, not Date, not class instance).
  *
  * @example
  * isPlainObject({})          // true

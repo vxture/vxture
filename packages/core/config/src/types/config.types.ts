@@ -1,5 +1,5 @@
 /**
- * config.types.ts - 配置类型定义
+ * config.types.ts - Configuration type definitions
  * @package @vxture/core-config
  * @description
  *   Core config types and constants

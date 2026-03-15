@@ -1,5 +1,5 @@
 /**
- * database.schema.ts - 数据库配置schema
+ * database.schema.ts - Database configuration schema
  * @package @vxture/core-config
  * @description
  *   Zod schema for database (PostgreSQL) configuration
@@ -12,7 +12,7 @@ import { z } from 'zod';
 // ============================================================================
 
 export const databaseSchema = z.object({
-  /** Prisma DATABASE_URL，优先级最高 */
+  /** Prisma DATABASE_URL, highest priority */
   DATABASE_URL: z
     .string()
     .url()
@@ -20,8 +20,8 @@ export const databaseSchema = z.object({
     .optional(),
 
   /**
-   * 分项连接参数 — 当 DATABASE_URL 未提供时使用
-   * 通常在 K8s Secret 挂载场景下分项注入更安全
+   * Individual connection parameters — used when DATABASE_URL is not provided
+   * Usually safer for separate injection in K8s Secret mounting scenarios
    */
   DB_HOST: z.string().min(1).default('localhost'),
   DB_PORT: z.coerce.number().int().min(1).max(65535).default(5432),
@@ -29,10 +29,10 @@ export const databaseSchema = z.object({
   DB_USER: z.string().min(1).default('postgres'),
   DB_PASSWORD: z.string().min(1),
 
-  /** 连接池最大连接数 */
+  /** Connection pool maximum connections */
   DB_POOL_MAX: z.coerce.number().int().min(1).max(100).default(10),
 
-  /** SSL 模式：生产环境应为 require */
+  /** SSL mode: should be require in production */
   DB_SSL: z.enum(['disable', 'allow', 'prefer', 'require']).default('prefer'),
 });
 

@@ -1,5 +1,5 @@
 /**
- * config.service.ts - 配置服务
+ * config.service.ts - Configuration service
  * @package @vxture/core-config
  * @description
  *   NestJS injectable service for typed config access
@@ -13,9 +13,9 @@ import { CONFIG_TOKEN } from '../types';
 // ============================================================================
 // VxConfigService
 //
-// 消费方注入 VxConfigService 后通过强类型 getter 访问配置。
-// 未注册的域（如 agent-server 没有注册 ai 域）调用对应 getter 会
-// 在运行时抛出明确错误，而不是返回 undefined。
+// After injection, consumers access config through strongly typed getters.
+// Calling getters for unregistered domains (e.g., ai domain not registered in agent-server)
+// will throw clear errors at runtime instead of returning undefined.
 // ============================================================================
 
 @Injectable()
@@ -48,23 +48,23 @@ export class VxConfigService {
     return this._auth;
   }
 
-  /** 仅 agent-server 注册了 ai 域时可用 */
+  /** Available only when ai domain is registered (agent-server only) */
   get ai(): AiConfig {
     this.assertLoaded(this._ai, 'ai');
     return this._ai;
   }
 
-  /** 当前是否为生产环境 */
+  /** Whether current environment is production */
   get isProduction(): boolean {
     return this._app?.NODE_ENV === 'production';
   }
 
-  /** 当前是否为开发环境 */
+  /** Whether current environment is development */
   get isDevelopment(): boolean {
     return this._app?.NODE_ENV === 'development';
   }
 
-  /** 当前是否为测试环境 */
+  /** Whether current environment is test */
   get isTest(): boolean {
     return this._app?.NODE_ENV === 'test';
   }

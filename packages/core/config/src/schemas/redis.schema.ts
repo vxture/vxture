@@ -1,5 +1,5 @@
 /**
- * redis.schema.ts - Redis配置schema
+ * redis.schema.ts - Redis configuration schema
  * @package @vxture/core-config
  * @description
  *   Zod schema for Redis configuration
@@ -12,19 +12,19 @@ import { z } from 'zod';
 // ============================================================================
 
 export const redisSchema = z.object({
-  /** Redis 连接 URL，优先级最高 */
+  /** Redis connection URL, highest priority */
   REDIS_URL: z.string().url().startsWith('redis').optional(),
 
-  /** 分项连接参数 */
+  /** Individual connection parameters */
   REDIS_HOST: z.string().min(1).default('localhost'),
   REDIS_PORT: z.coerce.number().int().min(1).max(65535).default(6379),
   REDIS_PASSWORD: z.string().optional(),
   REDIS_DB: z.coerce.number().int().min(0).max(15).default(0),
 
-  /** 默认 TTL（秒），用于缓存键 */
+  /** Default TTL (seconds), used for cache keys */
   REDIS_TTL: z.coerce.number().int().min(1).default(3600),
 
-  /** Key 前缀，多租户或多应用共享同一 Redis 时隔离用 */
+  /** Key prefix, for isolation when multiple tenants/apps share the same Redis */
   REDIS_KEY_PREFIX: z.string().default('vx:'),
 });
 

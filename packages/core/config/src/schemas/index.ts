@@ -1,5 +1,5 @@
 /**
- * index.ts - schemas导出
+ * index.ts - Schemas barrel export
  * @package @vxture/core-config
  * @description Config schemas barrel export
  */

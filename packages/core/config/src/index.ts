@@ -1,5 +1,5 @@
 /**
- * index.ts - 公共导出入口
+ * index.ts - Public export entry
  * @package @vxture/core-config
  * @description
  *   Environment-aware typed configuration (zod + NestJS)
@@ -9,8 +9,8 @@
 // Schemas & Types
 // ============================================
 
-// Schema 导出（明确列出，便于维护）
-export { 
+// Schema exports (explicit listing for maintainability)
+export {
     appSchema,
     AppEnvEnum,
     databaseSchema,
@@ -19,7 +19,7 @@ export {
     aiSchema,
 } from './schemas';
 
-// Type 导出（明确列出，便于维护）
+// Type exports (explicit listing for maintainability)
 export type {
     AppConfig,
     AppEnv,

@@ -1,6 +1,6 @@
 {
   "name": "@vxture/core-config",
-  "version": "1.0.1",
+  "version": "1.2.2",
   "description": "Vxture platform — environment-aware typed configuration (zod + NestJS)",
   "license": "MIT",
   "private": true,
@@ -18,13 +18,16 @@
     "build": "tsup",
     "dev": "tsup --watch"
   },
+
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+
   "peerDependencies": {
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0"
   },
-  "dependencies": {
-    "zod": "^3.24.0"
-  },
+
   "devDependencies": {
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
@@ -32,6 +35,7 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
+  
   "engines": {
     "node": ">=22.0.0"
   }

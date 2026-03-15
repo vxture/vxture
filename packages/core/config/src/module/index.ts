@@ -1,8 +1,7 @@
 /**
- * module/index.ts - 模块导出
+ * index.ts - Module barrel export
  * @package @vxture/core-config
- * @description
- *   Config module exports
+ * @description Config module exports
  */
 
 export { VxConfigModule } from './config.module';
