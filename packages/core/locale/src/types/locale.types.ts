@@ -3,6 +3,9 @@
  * @package @vxture/core-locale
  * @description
  *   Localization type definitions
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import type { Locale } from '@vxture/shared';

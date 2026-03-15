@@ -3,6 +3,9 @@
  * @package @vxture/core-locale
  * @description
  *   Language parsing utility functions
+ *
+ * @author AI-Generated
+ * @date 2026-03-15
  */
 
 import type { Locale } from '@vxture/shared';

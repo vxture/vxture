@@ -31,6 +31,7 @@
 
 ```
 src/
+├── constants/    # Extension point reserved
 ├── utils/        # locale.utils.ts, locale-parser.utils.ts
 ├── types/        # locale.types.ts
 └── index.ts      # 单一公共出口（重新导出 shared 的类型和常量）
