@@ -1,19 +1,19 @@
 /**
- * locale-parser.utils.ts - 语言解析工具
+ * locale-parser.utils.ts - Language parsing utilities
  * @package @vxture/core-locale
  * @description
- *   语言解析工具函数
+ *   Language parsing utility functions
  */
 
 import type { Locale } from '@vxture/shared';
 import { SUPPORTED_LOCALES } from '@vxture/shared';
 
 // ============================================================================
-// Accept-Language 解析
+// Accept-Language parsing
 // ============================================================================
 
 /**
- * 解析 Accept-Language header 字符串，返回按 q 值排序的语言列表
+ * Parses Accept-Language header string, returns language list sorted by q value
  *
  * @example
  * parseAcceptLanguage('zh-CN,zh;q=0.9,en;q=0.8')
@@ -35,24 +35,24 @@ export function parseAcceptLanguage(header: string): string[] {
 }
 
 // ============================================================================
-// 语言标准化
+// Language normalization
 // ============================================================================
 
 /**
- * 将各种格式的语言字符串标准化为平台支持的 Locale
+ * Normalizes various language string formats to platform-supported Locale
  *
- * 支持的输入格式：
+ * Supported input formats:
  * - 'zh' / 'zh-CN' / 'zh-Hans' / 'zh-TW'  → 'zh'
  * - 'en' / 'en-US' / 'en-GB'               → 'en'
- * - 其他未知语言                            → undefined
+ * - Other unknown languages                → undefined
  */
 export function normalizeLocale(raw: string): Locale | undefined {
   const lower = raw.trim().toLowerCase();
 
-  // 精确匹配：直接命中支持列表
+  // Exact match: directly hit supported list
   if (isSupportedLocale(lower)) return lower as Locale;
 
-  // 前缀匹配：取语言主标签（BCP 47 格式 "zh-CN" → "zh"）
+  // Prefix match: take language primary tag (BCP 47 format "zh-CN" → "zh")
   const primary = lower.split('-')[0];
   if (primary && isSupportedLocale(primary)) return primary as Locale;
 
@@ -60,7 +60,7 @@ export function normalizeLocale(raw: string): Locale | undefined {
 }
 
 // ============================================================================
-// 类型守卫
+// Type guard
 // ============================================================================
 
 export function isSupportedLocale(value: string): value is Locale {
@@ -68,11 +68,11 @@ export function isSupportedLocale(value: string): value is Locale {
 }
 
 // ============================================================================
-// Cookie 解析
+// Cookie parsing
 // ============================================================================
 
 /**
- * 从原始 Cookie header 字符串中提取指定 key 的值
+ * Extracts value for specified key from raw Cookie header string
  *
  * @example
  * parseCookieValue('NEXT_LOCALE=en; session=abc123', 'NEXT_LOCALE')

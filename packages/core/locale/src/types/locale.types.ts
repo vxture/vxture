@@ -1,8 +1,8 @@
 /**
- * locale.types.ts - 本地化类型
+ * locale.types.ts - Localization types
  * @package @vxture/core-locale
  * @description
- *   本地化类型定义
+ *   Localization type definitions
  */
 
 import type { Locale } from '@vxture/shared';
@@ -15,27 +15,27 @@ export interface LocaleRequest {
 }
 
 /**
- * 服务端内容本地化配置
- * @description 用于配置服务端内容本地化的行为
+ * Server-side content localization configuration
+ * @description Configures server-side content localization behavior
  */
 export interface LocalizationOptions {
-  /** 是否启用严格模式（缺少翻译时抛出错误） */
+  /** Whether to enable strict mode (throw error when missing translation) */
   strict?: boolean;
-  /** 默认回退语言 */
+  /** Default fallback language */
   fallbackLocale?: string;
-  /** 是否记录翻译缺失日志 */
+  /** Whether to log missing translations */
   logMissing?: boolean;
 }
 
 /**
- * 请求解析选项
- * @description 用于配置请求解析语言的行为
+ * Request resolution options
+ * @description Configures request language resolution behavior
  */
 export interface ResolveLocaleOptions {
-  /** 是否忽略 Cookie */
+  /** Whether to ignore Cookie */
   ignoreCookie?: boolean;
-  /** 是否忽略 Accept-Language 头 */
+  /** Whether to ignore Accept-Language header */
   ignoreAcceptLanguage?: boolean;
-  /** 是否使用备用的默认语言 */
+  /** Whether to use an alternative default language */
   fallback?: Locale;
 }

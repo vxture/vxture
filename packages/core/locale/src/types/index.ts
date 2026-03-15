@@ -1,8 +1,8 @@
 /**
- * index.ts - 本地化类型导出
+ * index.ts - Localization types barrel export
  * @package @vxture/core-locale
  * @description
- *   本地化类型统一导出
+ *   Localization types unified export
  */
 
 export type { LocaleRequest, LocalizationOptions, ResolveLocaleOptions } from './locale.types';

@@ -1,15 +1,15 @@
 /**
- * index.ts - core-locale 包入口
+ * index.ts - core-locale package entry
  * @package @vxture/core-locale
  * @description
- *   服务端 locale 解析与内容本地化工具包，框架无关，运行于 Node.js 环境
+ *   Server-side locale resolution and content localization toolkit, framework-agnostic, runs in Node.js environment
  */
 
 // ============================================================================
 // Re-exports from @vxture/shared
 // ============================================================================
 
-// 导出 shared 包定义的 Locale 类型和常量
+// Export Locale type and constants defined in shared package
 export type { Locale } from '@vxture/shared';
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
 

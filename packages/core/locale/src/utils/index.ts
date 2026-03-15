@@ -1,8 +1,8 @@
 /**
- * index.ts - 本地化工具导出
+ * index.ts - Localization utils barrel export
  * @package @vxture/core-locale
  * @description
- *   本地化工具函数统一导出
+ *   Localization utility functions unified export
  */
 
 export { resolveLocale, localizeContent } from './locale.utils';
