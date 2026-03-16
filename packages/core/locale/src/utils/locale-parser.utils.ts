@@ -5,7 +5,7 @@
  *   Language parsing utility functions
  *
  * @author AI-Generated
- * @date 2026-03-15
+ * @date 2026-03-16
  */
 
 import type { Locale } from '@vxture/shared';
@@ -45,8 +45,8 @@ export function parseAcceptLanguage(header: string): string[] {
  * Normalizes various language string formats to platform-supported Locale
  *
  * Supported input formats:
- * - 'zh' / 'zh-CN' / 'zh-Hans' / 'zh-TW'  → 'zh'
- * - 'en' / 'en-US' / 'en-GB'               → 'en'
+ * - 'zh' / 'zh-CN' / 'zh-Hans' / 'zh-TW'  → 'zh-CN'
+ * - 'en' / 'en-US' / 'en-GB'               → 'en-US'
  * - Other unknown languages                → undefined
  */
 export function normalizeLocale(raw: string): Locale | undefined {
@@ -55,9 +55,10 @@ export function normalizeLocale(raw: string): Locale | undefined {
   // Exact match: directly hit supported list
   if (isSupportedLocale(lower)) return lower as Locale;
 
-  // Prefix match: take language primary tag (BCP 47 format "zh-CN" → "zh")
+  // Prefix match: map language primary tag to default region
   const primary = lower.split('-')[0];
-  if (primary && isSupportedLocale(primary)) return primary as Locale;
+  if (primary === 'zh') return 'zh-CN';
+  if (primary === 'en') return 'en-US';
 
   return undefined;
 }
