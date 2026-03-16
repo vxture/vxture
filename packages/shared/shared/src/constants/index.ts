@@ -11,7 +11,7 @@ export {  AUTH_CONSTANTS } from './auth.constants';
 export {
   SUPPORTED_LOCALES,
   DEFAULT_LOCALE,
-  LOCALE_INTL_MAP,
+  LOCALE_CONFIGS,
   LOCALE_DEFAULT_CURRENCY,
   LOCALE_CONSTANTS,
 } from './locale.constants';

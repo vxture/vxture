@@ -1,18 +1,20 @@
 {
   "name": "@vxture/shared",
-  "version": "1.1.0",
+  "version": "1.2.2",
   "description": "Vxture shared utilities, types, and constants",
   "license": "MIT",
   "private": true,
   "type": "module",
   "exports": {
     ".": {
-      "types":   "./dist/index.d.ts",
-      "import":  "./dist/index.mjs",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "type-check": "tsc --noEmit",
     "build": "tsup",

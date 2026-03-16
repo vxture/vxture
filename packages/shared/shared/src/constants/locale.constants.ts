@@ -1,7 +1,7 @@
 /**
  * locale.constants.ts - Shared locale constants
  * @package @vxture/shared
- * @description Global configuration constants for language and localization, shared across all layers. Contains supported locales, default locale, and locale-to-BCP47 mappings.
+ * @description Global configuration constants for language and localization, shared across all layers. Contains supported locales, default locale, and complete language configurations.
  */
 
 import type { Locale } from '../types/locale.types';
@@ -12,31 +12,50 @@ import type { Locale } from '../types/locale.types';
 
 /**
  * 全平台支持的语言列表
- * @description 这是全平台唯一的语言定义
+ * @description 这是全平台唯一的语言定义 - 使用完整的 BCP47 标签
  */
-export const SUPPORTED_LOCALES = ['zh', 'en'] as const;
-
+export const SUPPORTED_LOCALES = ['zh-CN', 'en-US'] as const;
 
 /**
  * 默认语言
  * @description 全平台统一的默认语言
  */
-export const DEFAULT_LOCALE: Locale = 'zh';
+export const DEFAULT_LOCALE: Locale = 'zh-CN';
 
 // =============================================================================
-// 语言映射常量
+// 语言配置常量
 // =============================================================================
 
-/** Locale 语言标签的映射 */
-export const LOCALE_INTL_MAP: Record<Locale, string> = {
-  'zh': 'zh-CN',
-  'en': 'en-US',
+/**
+ * 语言配置对象，包含完整的语言信息
+ * @description 提供语言的显示名称、本地名称、国旗等信息
+ */
+export const LOCALE_CONFIGS: Record<Locale, {
+  locale: Locale;
+  displayName: string;
+  nativeName: string;
+  flag?: string;
+}> = {
+  'zh-CN': {
+    locale: 'zh-CN',
+    displayName: '简体中文',
+    nativeName: '简体中文',
+    flag: '🇨🇳'
+  },
+  'en-US': {
+    locale: 'en-US',
+    displayName: 'English (US)',
+    nativeName: 'English (US)',
+    flag: '🇺🇸'
+  }
 } as const;
 
-/** Locale 的默认货币，调用方未指定货币时使用 */
+/**
+ * Locale 的默认货币，调用方未指定货币时使用
+ */
 export const LOCALE_DEFAULT_CURRENCY: Record<Locale, string> = {
-  'zh': 'CNY',
-  'en': 'USD',
+  'zh-CN': 'CNY',
+  'en-US': 'USD',
 } as const;
 
 // =============================================================================

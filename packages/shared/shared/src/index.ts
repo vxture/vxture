@@ -39,7 +39,7 @@ export {
   // Locale constants
   SUPPORTED_LOCALES,
   DEFAULT_LOCALE,
-  LOCALE_INTL_MAP,
+  LOCALE_CONFIGS,
   LOCALE_DEFAULT_CURRENCY,
   LOCALE_CONSTANTS,
   // Theme constants

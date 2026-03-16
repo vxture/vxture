@@ -5,12 +5,12 @@
  */
 
 import type { Locale } from '../types/locale.types';
-import { LOCALE_INTL_MAP, LOCALE_DEFAULT_CURRENCY } from '../constants/locale.constants';
+import { LOCALE_DEFAULT_CURRENCY } from '../constants/locale.constants';
 
 /**
  * 格式化货币
  * @param amount 金额
- * @param locale 语言
+ * @param locale 语言（完整 BCP47 标签）
  * @param currency 货币代码（可选，默认按 locale 推断）
  */
 export function formatCurrency(
@@ -20,7 +20,7 @@ export function formatCurrency(
 ): string {
   try {
     const resolvedCurrency = currency ?? LOCALE_DEFAULT_CURRENCY[locale];
-    return new Intl.NumberFormat(LOCALE_INTL_MAP[locale], {
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: resolvedCurrency,
     }).format(amount);
@@ -32,11 +32,11 @@ export function formatCurrency(
 /**
  * 格式化日期
  * @param date 日期对象
- * @param locale 语言
+ * @param locale 语言（完整 BCP47 标签）
  */
 export function formatDate(date: Date, locale: Locale): string {
   try {
-    return new Intl.DateTimeFormat(LOCALE_INTL_MAP[locale]).format(date);
+    return new Intl.DateTimeFormat(locale).format(date);
   } catch {
     return date.toISOString();
   }
@@ -45,12 +45,21 @@ export function formatDate(date: Date, locale: Locale): string {
 /**
  * 格式化数字
  * @param value 数字
- * @param locale 语言
+ * @param locale 语言（完整 BCP47 标签）
  */
 export function formatNumber(value: number, locale: Locale): string {
   try {
-    return new Intl.NumberFormat(LOCALE_INTL_MAP[locale]).format(value);
+    return new Intl.NumberFormat(locale).format(value);
   } catch {
     return String(value);
   }
+}
+
+/**
+ * 获取 HTML lang 属性值
+ * @param locale 语言（完整 BCP47 标签）
+ * @returns 用于 HTML lang 属性的字符串
+ */
+export function getHtmlLang(locale: Locale): string {
+  return locale;
 }
