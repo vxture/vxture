@@ -30,7 +30,7 @@ import { useWindowScrollSnap } from '@/hooks';
 
 /** 区块信息列表 */
 const SECTIONS = [
-  { id: 'section-01', name: 'Hero111' },
+  { id: 'section-01', name: 'Hero' },
   { id: 'section-02', name: 'Features' },
   { id: 'section-03', name: 'Solutions' },
   { id: 'section-04', name: 'Cases' },

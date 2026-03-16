@@ -7,9 +7,9 @@
  */
 
 import type { Metadata } from 'next';
-import type { Locale } from '@vxture/shared';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
 
-export function buildMetadata(locale: Locale): Metadata {
+export function buildMetadata(locale: string): Metadata {
   const titles = {
     'zh-CN': 'vxture AI | 释放数据潜力',
     'en-US': 'vxture AI | Unleash Data Potential',
@@ -20,18 +20,23 @@ export function buildMetadata(locale: Locale): Metadata {
     'en-US': 'AI-based virtual nature exploration platform',
   };
 
+  // 确保 locale 是有效的
+  const validLocale = (SUPPORTED_LOCALES as readonly string[]).includes(locale)
+    ? locale as 'zh-CN' | 'en-US'
+    : DEFAULT_LOCALE as 'zh-CN' | 'en-US';
+
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
 
     title: {
-      default: titles[locale],
-      template: `%s | ${titles[locale]}`,
+      default: titles[validLocale] as string,
+      template: `%s | ${titles[validLocale] as string}`,
     },
 
-    description: descriptions[locale],
+    description: descriptions[validLocale] as string,
 
     keywords:
-      locale === 'zh-CN'
+      validLocale === 'zh-CN'
         ? ['AI', '数据', '智能', '决策', '虚拟', '平台', 'vxture']
         : ['AI', 'data', 'intelligence', 'decision', 'virtual', 'platform', 'vxture'],
 
@@ -45,15 +50,15 @@ export function buildMetadata(locale: Locale): Metadata {
     openGraph: {
       type: 'website',
       url: 'https://vxture.com',
-      title: titles[locale],
-      description: descriptions[locale],
+      title: titles[validLocale],
+      description: descriptions[validLocale],
       images: ['/icons/favicon.ico'],
     },
 
     twitter: {
       card: 'summary_large_image',
-      title: titles[locale],
-      description: descriptions[locale],
+      title: titles[validLocale],
+      description: descriptions[validLocale],
       images: ['/icons/favicon.ico'],
     },
 

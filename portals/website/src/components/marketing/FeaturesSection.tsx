@@ -16,9 +16,10 @@
 'use client';
 
 import { memo } from 'react';
-import { useFeatures } from '@/hooks';
+import { useTranslations } from 'next-intl';
 import { debugLog } from '@vxture/shared';
 import { Icon } from '@vxture/design-system';
+import { FEATURES_DATA } from '@/data/home/home.features.data';
 
 // ============================================================================
 // 类型定义
@@ -78,11 +79,9 @@ interface FeatureCardProps {
   readonly feature: {
     readonly id: string;
     readonly slug: string;
-    readonly title: string;
-    readonly description: string;
     readonly icon?: string;
     readonly highlights: readonly string[];
-    readonly cta: { readonly label: string; readonly href: string };
+    readonly cta: { readonly href: string };
   };
   readonly theme?: SectionTheme;
 }
@@ -107,6 +106,8 @@ const FeatureCard = memo(function FeatureCard({
   feature,
   theme = 'light',
 }: FeatureCardProps) {
+  const t = useTranslations('home.features');
+
   // ==========================================================================
   // 计算属性
   // ==========================================================================
@@ -156,23 +157,23 @@ const FeatureCard = memo(function FeatureCard({
 
         {/* 标题 */}
         <h3 className={`text-2xl font-bold text-center ${colorsCards.textMain}`}>
-          {feature.title}
+          {t(`items.${feature.id}.title`)}
         </h3>
 
         {/* 描述 */}
         <p className={`leading-relaxed text-center text-base ${colorsCards.textDesc}`}>
-          {feature.description}
+          {t(`items.${feature.id}.description`)}
         </p>
 
         {/* 高亮标签 */}
         {feature.highlights && feature.highlights.length > 0 && (
           <div className='flex flex-wrap gap-3 justify-center'>
-            {feature.highlights.map((highlight) => (
+            {feature.highlights.map((highlightKey, index) => (
               <span
-                key={highlight}
+                key={highlightKey}
                 className={`px-3 py-1 text-sm font-semibold rounded-full border ${colorsCards.tagBg} ${colorsCards.tagText}`}
               >
-                {highlight}
+                {t(`items.${feature.id}.highlights.${index}`)}
               </span>
             ))}
           </div>
@@ -185,7 +186,7 @@ const FeatureCard = memo(function FeatureCard({
               href={feature.cta.href}
               className={`inline-flex items-center px-4 py-1.5 text-sm rounded-md transition-all duration-300 ${colorsCards.textSub} hover:${colorsCards.textMain} opacity-70 hover:opacity-100`}
             >
-              <span>{feature.cta.label}</span>
+              <span>{t(`items.${feature.id}.cta.label`)}</span>
               <Icon name='arrow-long-right' className='ml-1.5 w-3.5 h-3.5 transition-all' />
             </a>
           </div>
@@ -207,16 +208,10 @@ const FeaturesSection = memo(function FeaturesSection({
   name = 'Features',
   theme = 'light',
 }: FeaturesSectionProps) {
-  // ==========================================================================
-  // Hooks 调用
-  // ==========================================================================
+  const t = useTranslations('home.features');
 
-  const { data: displayData, isLoading, error } = useFeatures();
-
-  // 调试日志（方案 A：直接在组件里，生产环境自动禁用）
-  debugLog('Features data:', displayData);
-  debugLog('Features error:', error);
-  debugLog('Features isLoading:', isLoading);
+  // 调试日志
+  debugLog('Features data:', FEATURES_DATA);
 
   // ==========================================================================
   // 计算属性
@@ -238,31 +233,14 @@ const FeaturesSection = memo(function FeaturesSection({
   // 早期返回
   // ==========================================================================
 
-  // 加载状态
-  if (isLoading) {
-    return (
-      <section
-        id={id}
-        data-name={name}
-        className={`relative snap-section min-h-screen flex items-center justify-center ${colors.bgSection}`}
-      >
-        <div className='text-center'>
-          <div className={`text-xl ${colors.textMain}`}>加载中...</div>
-        </div>
-      </section>
-    );
-  }
-
   // 如果内容被禁用，不渲染
-  if (!displayData.enabled) {
+  if (!FEATURES_DATA.enabled) {
     return null;
   }
 
   // ==========================================================================
   // 渲染
   // ==========================================================================
-
-  const { title, subtitle, tagline, items } = displayData;
 
   return (
     <section
@@ -273,15 +251,15 @@ const FeaturesSection = memo(function FeaturesSection({
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 1. 标题区 - 靠上对齐 */}
         <div className='text-center pt-28'>
-          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{title}</h2>
-          {subtitle && <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>}
+          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{t('title')}</h2>
+          {t('subtitle') && <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{t('subtitle')}</p>}
         </div>
 
         {/* 2. 内容区 - 上下居中 */}
         <div className='flex-1 flex items-center justify-center'>
           <div className='w-full'>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8'>
-              {items.map((feature) => (
+              {FEATURES_DATA.items.map((feature) => (
                 <FeatureCard key={feature.id} feature={feature} theme={theme} />
               ))}
             </div>
@@ -289,12 +267,12 @@ const FeaturesSection = memo(function FeaturesSection({
         </div>
 
         {/* 3. 底部区 - 靠下对齐 */}
-        {tagline && (
+        {t('tagline') && (
           <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-[2px] bg-gradient-to-r from-transparent to-blue-200'></div>
-              <span className='text-sm font-medium text-blue-500'>{tagline}</span>
-              <div className='w-8 h-[2px] bg-gradient-to-l from-transparent to-blue-200'></div>
+              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-blue-200'></div>
+              <span className='text-sm font-medium text-blue-500'>{t('tagline')}</span>
+              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-blue-200'></div>
             </div>
           </div>
         )}

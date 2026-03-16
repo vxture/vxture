@@ -1,0 +1,70 @@
+/**
+ * Hero 结构数据 - 不包含翻译文本，只定义结构
+ * @package @vxture/website
+ * @layer Presentation
+ * @category Data - Home
+ */
+
+/**
+ * Hero CTA 配置
+ */
+export interface HeroCta {
+  href: string;
+}
+
+/**
+ * Hero 媒体配置
+ */
+export interface HeroMedia {
+  type: string;
+  videoUrl?: string;
+  posterImage?: string;
+  url?: string;
+}
+
+/**
+ * Hero 滚动指示器配置
+ */
+export interface HeroScrollIndicator {
+  enabled: boolean;
+}
+
+/**
+ * Hero 完整数据结构
+ */
+export interface HeroData {
+  enabled: boolean;
+  theme: string;
+  intent: string;
+  variant: string;
+  titleKey: string;
+  titleHighlightKey: string;
+  descriptionKey: string;
+  cta: HeroCta;
+  media: HeroMedia;
+  scrollIndicator: HeroScrollIndicator;
+}
+
+/**
+ * Hero 结构数据 - 使用 labelKey 映射翻译
+ */
+export const HERO_DATA: HeroData = {
+  enabled: true,
+  theme: "brand",
+  intent: "cta",
+  variant: "highlight",
+  titleKey: "home.hero.title",
+  titleHighlightKey: "home.hero.titleHighlight",
+  descriptionKey: "home.hero.description",
+  cta: {
+    href: "/products"
+  },
+  media: {
+    type: "video",
+    videoUrl: "/videos/herosection/banner-hero-01.mp4",
+    posterImage: "/images/herosection/banner-hero-poster-light-01.png"
+  },
+  scrollIndicator: {
+    enabled: true
+  }
+};

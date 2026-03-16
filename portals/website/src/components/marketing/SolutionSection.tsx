@@ -18,8 +18,9 @@
 import { useState, memo, useCallback } from 'react';
 import Image from 'next/image';
 import { Icon } from '@vxture/design-system';
-import { useSolutions } from '@/hooks';
+import { useTranslations } from 'next-intl';
 import { debugLog } from '@vxture/shared';
+import { SOLUTIONS_DATA, type SolutionItem } from '@/data/home/home.solutions.data';
 
 // ============================================================================
 // 类型定义
@@ -29,22 +30,7 @@ import { debugLog } from '@vxture/shared';
  * 解决方案卡片 Props
  */
 interface SolutionCardProps {
-  readonly solution: {
-    readonly id: string;
-    readonly slug: string;
-    readonly title: string;
-    readonly subtitle: string;
-    readonly description: string;
-    readonly tags: readonly string[];
-    readonly cover: {
-      readonly url: string;
-      readonly alt: string;
-    };
-    readonly theme: string;
-    readonly cta: {
-      readonly href: string;
-    };
-  };
+  readonly solution: SolutionItem;
   readonly idx: number;
   readonly colors: {
     readonly gradient: string;
@@ -138,6 +124,7 @@ const SolutionCard = memo(function SolutionCard({
   prev,
   next,
 }: SolutionCardProps) {
+  const t = useTranslations('home.solutions');
   // ==========================================================================
   // 渲染
   // ==========================================================================
@@ -149,7 +136,7 @@ const SolutionCard = memo(function SolutionCard({
         <div className='relative flex h-full items-center justify-start px-4 py-4'>
           <div className='relative w-full h-full flex flex-col gap-4 justify-items-start'>
             {/* 标题与副标题 */}
-            <div className='relative flex items-center h-20 min-h-[80px]'>
+            <div className='relative flex items-center h-20 min-h-20'>
               {/* 背景数字 */}
               <span
                 className='absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-blue-400 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
@@ -163,25 +150,27 @@ const SolutionCard = memo(function SolutionCard({
               </span>
               {/* 标题内容 */}
               <div className='relative z-10 flex-1 flex flex-col items-start py-6 pl-12'>
-                <h3 className='text-xl font-bold text-blue-800 text-left'>{solution.title}</h3>
-                <p className='text-sm text-gray-600 mt-1 text-left'>{solution.subtitle}</p>
+                <h3 className='text-xl font-bold text-blue-800 text-left'>{t(`items.${solution.id}.title`)}</h3>
+                <p className='text-sm text-gray-600 mt-1 text-left'>{t(`items.${solution.id}.subtitle`)}</p>
               </div>
             </div>
             {/* 方案描述 */}
             <div className='items-center justify-left ml-12'>
-              <p className='text-base text-gray-600 leading-relaxed'>{solution.description}</p>
+              <p className='text-base text-gray-600 leading-relaxed'>{t(`items.${solution.id}.description`)}</p>
             </div>
             {/* 特色标签 */}
             <div className='items-center justify-left mt-4 ml-12'>
               <h4 className='text-lg font-semibold text-gray-800'>{featuresTitle}</h4>
               <div className='grid grid-cols-2 gap-3 justify-items-left my-2'>
-                {solution.tags.map((tag) => (
-                  <div key={tag} className='flex items-center justify-start space-x-2'>
-                    <div
-                      className={`w-2 h-2 rounded-full bg-gradient-to-r ${colors.gradient}`}
-                    ></div>
-                    <span className='text-base text-gray-600'>{tag}</span>
-                  </div>
+                {[t(`items.${solution.id}.tags.0`), t(`items.${solution.id}.tags.1`), t(`items.${solution.id}.tags.2`)].map((tag, tagIdx) => (
+                  tag && (
+                    <div key={tagIdx} className='flex items-center justify-start space-x-2'>
+                      <div
+                        className={`w-2 h-2 rounded-full bg-linear-to-r ${colors.gradient}`}
+                      ></div>
+                      <span className='text-base text-gray-600'>{tag}</span>
+                    </div>
+                  )
                 ))}
               </div>
             </div>
@@ -225,8 +214,8 @@ const SolutionCard = memo(function SolutionCard({
           </div>
         </div>
         {/* 右侧图片内容 */}
-        <div className='bg-gradient-to-r from-blue-100 via-blue-100 to-blue-200'>
-          <div className='relative flex items-center justify-center bg-gradient-to-r from-blue-100 via-blue-50 to-blue-100 px-38 '>
+        <div className='bg-linear-to-r from-blue-100 via-blue-100 to-blue-200'>
+          <div className='relative flex items-center justify-center bg-linear-to-r from-blue-100 via-blue-50 to-blue-100 px-38 '>
             <div className='relative w-full max-w-2xl h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300 py-6'>
               {/* 方案主图层（响应式自适应） */}
               <div className='relative w-full pointer-events-none select-none'>
@@ -242,7 +231,7 @@ const SolutionCard = memo(function SolutionCard({
                   <div className='w-full h-full overflow-hidden z-10'>
                     <Image
                       src={solution.cover.url}
-                      alt={solution.cover.alt}
+                      alt={t(`items.${solution.id}.cover.alt`)}
                       width={1}
                       height={1}
                       sizes='100vw'
@@ -284,20 +273,17 @@ const SolutionSection = memo(function SolutionSection({
   // Hooks 调用
   // ==========================================================================
 
-  // 获取 Solutions 数据
-  const { data: displayData, isLoading, error } = useSolutions();
+  const t = useTranslations('home.solutions');
 
-  // 调试日志（方案 A：直接在组件里，生产环境自动禁用）
-  debugLog('Solutions data:', displayData);
-  debugLog('Solutions error:', error);
-  debugLog('Solutions isLoading:', isLoading);
+  // 调试日志
+  debugLog('Solutions data:', SOLUTIONS_DATA);
 
   // ==========================================================================
   // 事件处理
   // ==========================================================================
 
   // 轮播切换
-  const total = displayData.items.length;
+  const total = SOLUTIONS_DATA.items.length;
 
   const prev = useCallback(() => {
     setCurrent((prev) => (prev - 1 + total) % total);
@@ -311,25 +297,8 @@ const SolutionSection = memo(function SolutionSection({
   // 早期返回
   // ==========================================================================
 
-  // 加载状态
-  if (isLoading) {
-    return (
-      <section
-        id={id}
-        data-name={name}
-        className='relative snap-section min-h-screen flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
-      >
-        <div className='max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-center h-full'>
-            <p className='text-gray-400'>加载中...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   // 如果内容被禁用，不渲染
-  if (!displayData.enabled) {
+  if (!SOLUTIONS_DATA.enabled) {
     return null;
   }
 
@@ -337,14 +306,22 @@ const SolutionSection = memo(function SolutionSection({
   // 渲染
   // ==========================================================================
 
-  const { title, subtitle, tagline, items, ui, featuresTitle } = displayData;
-  const uiTexts = ui;
+  const { items } = SOLUTIONS_DATA;
+  const title = t(SOLUTIONS_DATA.titleKey);
+  const subtitle = t(SOLUTIONS_DATA.subtitleKey);
+  const tagline = t(SOLUTIONS_DATA.taglineKey);
+  const featuresTitle = t(SOLUTIONS_DATA.featuresTitleKey);
+  const uiTexts = {
+    viewDetails: t(SOLUTIONS_DATA.ui.viewDetailsKey),
+    prev: t(SOLUTIONS_DATA.ui.prevKey),
+    next: t(SOLUTIONS_DATA.ui.nextKey),
+  };
 
   return (
     <section
       id={id}
       data-name={name}
-      className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
+      className='relative snap-section min-h-screen flex flex-col bg-linear-to-b from-blue-50 to-white'
     >
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 1. 标题区 - 靠上对齐 */}
@@ -371,7 +348,7 @@ const SolutionSection = memo(function SolutionSection({
                       }
                     `}
                   >
-                    {solution.title}
+                    {t(`items.${solution.id}.title`)}
                   </button>
                 ))}
               </div>
@@ -410,9 +387,9 @@ const SolutionSection = memo(function SolutionSection({
         {tagline && (
           <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-[2px] bg-gradient-to-r from-transparent to-blue-200'></div>
+              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-blue-200'></div>
               <span className='text-sm font-medium text-blue-500'>{tagline}</span>
-              <div className='w-8 h-[2px] bg-gradient-to-l from-transparent to-blue-200'></div>
+              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-blue-200'></div>
             </div>
           </div>
         )}

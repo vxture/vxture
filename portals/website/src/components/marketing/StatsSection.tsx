@@ -186,13 +186,13 @@ export default function StatsSection() {
       ref={sectionRef}
       id='snapTarget-5'
       aria-label='公司核心数据统计'
-      className={`relative snap-section h-screen pt-28 bg-gradient-to-b from-slate-50 to-white`}
+      className={`relative snap-section h-screen pt-28 bg-linear-to-b from-slate-50 to-white`}
     >
       {/* 背景装饰圆形（z-0，放在内容容器后面，仅限section内定位） */}
       <div className='absolute inset-0 z-0 pointer-events-none'>
         <div className='absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl'></div>
         <div className='absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl'></div>
-        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl'></div>
+        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-linear-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl'></div>
       </div>
 
       {/* 内容容器（z-10） */}
@@ -239,7 +239,7 @@ export default function StatsSection() {
 
                   {/* 动画数字 */}
                   <div
-                    className={`text-4xl lg:text-5xl font-bold text-center mb-3 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}
+                    className={`text-4xl lg:text-5xl font-bold text-center mb-3 bg-linear-to-r ${stat.color} bg-clip-text text-transparent`}
                   >
                     <AnimatedNumber value={stat.number} suffix={stat.suffix} />
                   </div>
@@ -257,7 +257,7 @@ export default function StatsSection() {
 
                 {/* 装饰圆形，hover 时增强透明度 */}
                 <div
-                  className={`absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-r ${stat.color} rounded-full opacity-10 group-hover:opacity-40 transition-opacity duration-500`}
+                  className={`absolute -top-2 -right-2 w-20 h-20 bg-linear-to-r ${stat.color} rounded-full opacity-10 group-hover:opacity-40 transition-opacity duration-500`}
                 ></div>
               </div>
             </div>
@@ -266,9 +266,9 @@ export default function StatsSection() {
         {/* 底部装饰文本，样式与 FeaturesSection 完全一致 */}
         <div className='text-center my-16'>
           <div className='inline-flex items-center space-x-2 text-gray-500'>
-            <div className='w-8 h-[1px] bg-gradient-to-r from-transparent to-gray-300'></div>
+            <div className='w-8 h-px bg-linear-to-r from-transparent to-gray-300'></div>
             <span className='text-sm font-medium'>持续创新，共创数字未来</span>
-            <div className='w-8 h-[1px] bg-gradient-to-l from-transparent to-gray-300'></div>
+            <div className='w-8 h-px bg-linear-to-l from-transparent to-gray-300'></div>
           </div>
         </div>
         {/* 客户logo展示区域，两行五列布局 */}

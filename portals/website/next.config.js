@@ -13,6 +13,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const nextConfig = {
+
+  // 生产环境启用 SWC 压缩，提升构建性能和运行效率。
+  //
+  
+
   // 类型化路由配置
   typedRoutes: true,
 

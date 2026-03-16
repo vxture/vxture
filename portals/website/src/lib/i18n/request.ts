@@ -11,12 +11,25 @@ import { routing } from './routing';
 export default getRequestConfig(async ({ locale }) => {
   const resolvedLocale = locale ?? 'zh-CN';
 
-  // 只加载最小化的通用翻译，其他页面翻译在页面级别按需加载
-  const Messages = (await import(`@/../messages/${resolvedLocale}.json`)).default;
+  // 直接静态导入所有必要的翻译文件
+  const rootMessages = (await import(`@/../messages/${resolvedLocale}.json`)).default;
+  const commonMessages = (await import(`@/../messages/${resolvedLocale}/common.json`)).default;
+  const headerMessages = (await import(`@/../messages/${resolvedLocale}/layout/header.json`)).default;
+  const footerMessages = (await import(`@/../messages/${resolvedLocale}/layout/footer.json`)).default;
+
+  // 构建正确的嵌套结构
+  const messages: Record<string, any> = {
+    ...rootMessages,
+    ...commonMessages,
+    layout: {
+      header: headerMessages,
+      footer: footerMessages
+    }
+  };
 
   return {
     locale: resolvedLocale,
-    messages: Messages,
+    messages,
     routing
   };
 });

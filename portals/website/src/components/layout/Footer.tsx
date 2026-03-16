@@ -5,35 +5,28 @@
  *
  * 职责：
  * - 展示网站全局底部栏 UI
- * - 使用 Application Layer 的 useFooter Hook 获取数据
- * - 数据缺失或报错时自动使用 Fallback + normalizeFooterData
+ * - 使用 src/data/footer.data.ts 获取结构数据
+ * - 使用 next-intl 进行翻译
  *
  * @layer Presentation
  * @category Components - Layout
  */
 "use client";
 
-import { useFooter } from "@/hooks/useLayout";
-import { normalizeFooterData } from "./layoutHelpers";
+import { useState, useRef } from "react";
+import { useTranslations } from 'next-intl';
+import { useThemeStore } from "@/stores/theme.store";
 import { debugLog } from "@vxture/shared";
 import { Icon } from "@vxture/design-system";
-import { useState, useRef } from "react";
 import Image from 'next/image';
-import { useThemeStore } from "@/stores/theme.store";
+import { FOOTER_DATA } from "@/data/layout/footer.data";
 
 export default function Footer() {
   const { isDarkMode } = useThemeStore();
+  const t = useTranslations('layout.footer');
 
-  // 获取 Footer 数据
-  const { data: footerData, error } = useFooter();
-
-  // 数据规范化：保证前端渲染安全完整
-  const displayData = normalizeFooterData(
-    error || !footerData ? undefined : footerData,
-  );
-
-  // 调试日志（方案 A：直接在组件里，生产环境自动禁用）
-  debugLog("Footer data:", displayData);
+  // 调试日志
+  debugLog("Footer data:", FOOTER_DATA);
 
   // 微信二维码显示状态
   const [qrCodeVisible, setQrCodeVisible] = useState(false);
@@ -45,10 +38,10 @@ export default function Footer() {
     wechatIconRef.current = el;
   };
 
-  // 4️⃣ 如果 Footer 被禁用，不渲染
-  if (!displayData.enabled) return null;
+  // 如果 Footer 被禁用，不渲染
+  if (!FOOTER_DATA.enabled) return null;
 
-  // 4️⃣ 渲染 Footer UI
+  // 渲染 Footer UI
   return (
     <footer className={`flex flex-col min-h-[35vh] w-full ${
       isDarkMode ? 'text-gray-200 bg-gray-900' : 'text-slate-800 bg-slate-100'
@@ -57,69 +50,63 @@ export default function Footer() {
         {/* 主要内容区域：品牌 + 联系 + 社交 / 链接区 */}
         <div className="flex flex-1 flex-col md:flex-row gap-8">
           {/* 左侧：品牌信息 + 联系方式 + 社交 */}
-          <div className="flex flex-col basis-[30%] min-w-[200px]">
+          <div className="flex flex-col basis-[30%] min-w-50">
             {/* 品牌标识 */}
             <div className="flex items-center space-x-3 mb-3">
               <span className="text-2xl font-bold text-gray-700">
-                {displayData.brand.name}
+                {t(FOOTER_DATA.brand.nameKey)}
               </span>
             </div>
             {/* 地址信息 */}
-            {displayData.brand.address && (
-              <div className="flex items-center space-x-1 text-sm text-gray-600 mb-4">
-                <Icon name="map-pin" className="w-4 h-4" />
-                <span>{displayData.brand.address}</span>
-              </div>
-            )}
+            <div className="flex items-center space-x-1 text-sm text-gray-600 mb-4">
+              <Icon name="map-pin" className="w-4 h-4" />
+              <span>{t(FOOTER_DATA.brand.addressKey)}</span>
+            </div>
             {/* 联系方式 */}
             <div className="flex flex-col gap-4 text-sm text-gray-600 mb-4">
-              {/* Sales */}
-              <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
-                {displayData.contact.sales?.phone && (
-                  <span className="flex items-center space-x-1 min-w-[120px]">
-                    <Icon name="phone" className="w-4 h-4" />
-                    <span>{displayData.contact.sales.phone}</span>
-                  </span>
-                )}
-                {displayData.contact.sales?.email && (
-                  <a
-                    href={`mailto:${displayData.contact.sales.email}`}
-                    className="flex items-center space-x-1 min-w-[140px] hover:text-blue-600 transition-colors"
-                  >
-                    <Icon name="mail" className="w-4 h-4" />
-                    <span>{displayData.contact.sales.email}</span>
-                  </a>
-                )}
-              </div>
+              {/* Contact Phone */}
+              {FOOTER_DATA.contact.contact_phone && (
+                <div className="flex items-center space-x-1">
+                  <Icon name="phone" className="w-4 h-4" />
+                  <span>{FOOTER_DATA.contact.contact_phone}</span>
+                </div>
+              )}
 
-              {/* Service */}
-              <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
-                {displayData.contact.service?.phone && (
-                  <span className="flex items-center space-x-1 min-w-[120px]">
-                    <Icon name="phone" className="w-4 h-4" />
-                    <span>{displayData.contact.service.phone}</span>
-                  </span>
-                )}
-                {displayData.contact.service?.email && (
+              {/* Service Email */}
+              {FOOTER_DATA.contact.service_email && (
+                <div className="flex items-center space-x-1">
+                  <Icon name="mail" className="w-4 h-4" />
                   <a
-                    href={`mailto:${displayData.contact.service.email}`}
-                    className="flex items-center space-x-1 min-w-[140px] hover:text-blue-600 transition-colors"
+                    href={`mailto:${FOOTER_DATA.contact.service_email}`}
+                    className="hover:text-blue-600 transition-colors"
                   >
-                    <Icon name="mail" className="w-4 h-4" />
-                    <span>{displayData.contact.service.email}</span>
+                    {FOOTER_DATA.contact.service_email}
                   </a>
-                )}
-              </div>
+                </div>
+              )}
+
+              {/* Partner Email */}
+              {FOOTER_DATA.contact.partner_email && (
+                <div className="flex items-center space-x-1">
+                  <Icon name="mail" className="w-4 h-4" />
+                  <a
+                    href={`mailto:${FOOTER_DATA.contact.partner_email}`}
+                    className="hover:text-blue-600 transition-colors"
+                  >
+                    {FOOTER_DATA.contact.partner_email}
+                  </a>
+                </div>
+              )}
             </div>
 
             {/* 社交链接 */}
-            {displayData.social?.length > 0 && (
+            {FOOTER_DATA.social?.length > 0 && (
               <div className="flex space-x-4 mt-2">
-                {displayData.social.map((social) => (
+                {FOOTER_DATA.social.map((social) => (
                   <div key={social.name} className="relative group">
                     {social.icon === "wechat" ? (
                       <button
-                        aria-label={social.ariaLabel}
+                        aria-label={t(social.ariaLabelKey)}
                         className="text-gray-600 hover:text-blue-600 transition-colors"
                         onMouseEnter={() => setQrCodeVisible(true)}
                         onMouseLeave={() => setQrCodeVisible(false)}
@@ -130,7 +117,7 @@ export default function Footer() {
                     ) : (
                       <a
                         href={social.href}
-                        aria-label={social.ariaLabel}
+                        aria-label={t(social.ariaLabelKey)}
                         className="text-gray-600 hover:text-blue-600 transition-colors"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -151,23 +138,23 @@ export default function Footer() {
 
           {/* 右侧：链接区（分区块展示） */}
           <div className="flex flex-1 flex-col md:flex-row basis-[70%] gap-8 justify-between">
-            {displayData.sections.map((section) => (
+            {FOOTER_DATA.sections.map((section) => (
               <div key={section.id} className="flex-1">
                 <h3 className={`text-lg font-semibold mb-4 ${
                   isDarkMode ? 'text-white' : 'text-gray-700'
                 }`}>
-                  {section.title}
+                  {t(section.titleKey)}
                 </h3>
                 <ul className="space-y-2">
                   {section.links.map((link) => (
-                    <li key={link.label}>
+                    <li key={link.href}>
                       <a
                         href={link.href}
                         className={`text-sm hover:text-blue-600 transition-colors duration-300 ${
                           isDarkMode ? 'text-gray-400' : 'text-gray-600'
                         }`}
                       >
-                        {link.label}
+                        {t(link.labelKey)}
                       </a>
                     </li>
                   ))}
@@ -182,7 +169,7 @@ export default function Footer() {
           wechatIconRef.current &&
           (() => {
             const rect = wechatIconRef.current.getBoundingClientRect();
-            const wechatData = displayData.social.find(
+            const wechatData = FOOTER_DATA.social.find(
               (social) => social.icon === "wechat",
             );
 
@@ -201,13 +188,13 @@ export default function Footer() {
               >
                 <Image
                   src={wechatData.href}
-                  alt={wechatData.ariaLabel}
+                  alt={t(wechatData.ariaLabelKey)}
                   width={200}
                   height={200}
                   className="w-auto max-w-none h-48 object-contain"
                 />
                 <div className="mt-1 text-center text-xs text-gray-600">
-                  {wechatData.ariaLabel}
+                  {t(wechatData.ariaLabelKey)}
                 </div>
               </div>
             );
@@ -218,14 +205,14 @@ export default function Footer() {
           {/* 底部信息：版权 + 法律 + 备案 */}
           <div className="flex w-full justify-between items-center py-4 text-sm text-gray-600 flex-wrap gap-2">
             {/* 左侧：版权 */}
-            <p className="whitespace-nowrap">{displayData.copyright.text}</p>
+            <p className="whitespace-nowrap">{t(FOOTER_DATA.copyright.textKey)}</p>
 
             {/* 右侧：法律链接 + 备案信息 */}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 justify-end">
-              {displayData.legal?.length > 0 &&
-                displayData.legal.map((link) => (
+              {FOOTER_DATA.legal?.length > 0 &&
+                FOOTER_DATA.legal.map((link) => (
                   <a
-                    key={link.label}
+                    key={link.href}
                     href={link.href}
                     className="hover:text-blue-600 transition-colors whitespace-nowrap"
                     target={link.href.startsWith("http") ? "_blank" : undefined}
@@ -235,27 +222,27 @@ export default function Footer() {
                         : undefined
                     }
                   >
-                    {link.label}
+                    {t(link.labelKey)}
                   </a>
                 ))}
-              {displayData.icp?.text && (
+              {t(FOOTER_DATA.icp.textKey) && (
                 <a
-                  href={displayData.icp.link}
+                  href={FOOTER_DATA.icp.link}
                   className="hover:text-blue-600 transition-colors whitespace-nowrap"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {displayData.icp.text}
+                  {t(FOOTER_DATA.icp.textKey)}
                 </a>
               )}
-              {displayData.publicSecurity?.text && (
+              {t(FOOTER_DATA.publicSecurity.textKey) && (
                 <a
-                  href={displayData.publicSecurity.link}
+                  href={FOOTER_DATA.publicSecurity.link}
                   className="hover:text-blue-600 transition-colors whitespace-nowrap"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {displayData.publicSecurity.text}
+                  {t(FOOTER_DATA.publicSecurity.textKey)}
                 </a>
               )}
             </div>

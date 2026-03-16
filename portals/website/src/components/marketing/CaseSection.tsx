@@ -1,28 +1,27 @@
 /**
  * CaseSection.tsx - 首页最佳实践区块（重构版）
  *
- * 功能：展示首页 Cases 区块 UI，使用 Application Layer 的 useCases Hook 获取数据，
- *      支持吸附滚动、响应式布局、案例卡片展示
+ * 功能：展示首页 Cases 区块 UI，使用 data + messages 分离架构
  *
- * @author Stone Smoker
+ * @author vxture team
  * @created 2024-06-01
- * @lastModified 2026-03-03
- * @version 2.0.0
+ * @lastModified 2026-03-04
+ * @version 2.1.0
  * @copyright Copyright (c) 2024-2026 Vxture Team
  * @license MIT
  *
  * @layer Presentation
  * @category Components - Home
  */
-
 'use client';
 
 import Image from 'next/image';
 import { Link } from '@/lib/i18n/navigation';
-import { Icon } from '@vxture/design-system';
 import { memo, useMemo } from 'react';
-import { useCasesData } from '@/hooks';
+import { useTranslations } from 'next-intl';
 import { debugLog } from '@vxture/shared';
+import { HOME_CASES_DATA } from '@/data/home/home.cases.data';
+import { CASES_DATA } from '@/data/cases/cases.data';
 
 // ============================================================================
 // 类型定义
@@ -35,17 +34,9 @@ interface CaseCardProps {
   readonly item: {
     readonly id: string;
     readonly slug: string;
-    readonly title: string;
-    readonly description: string;
-    readonly tags: readonly string[];
-    readonly cover: {
-      readonly url: string;
-      readonly alt: string;
-    };
+    readonly coverUrl: string;
     readonly publishedAt: string;
-    readonly cta: {
-      readonly href: string;
-    };
+    readonly href: string;
   };
   readonly viewDetailsLabel: string;
 }
@@ -76,6 +67,12 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
     return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(2, '0')}`;
   }, [item.publishedAt]);
 
+  // 从 CASES_DATA 中获取完整案例信息
+  const fullCase = CASES_DATA.items.find((c) => c.id === item.id);
+  const title = fullCase?.title || '案例';
+  const description = fullCase?.description || '';
+  const tags = fullCase?.tags || [];
+
   // ==========================================================================
   // 渲染
   // ==========================================================================
@@ -85,10 +82,10 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
       className={`group relative flex flex-col rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 h-full`}
     >
       {/* 图片区域，16:9 比例 */}
-      <div className='relative w-full aspect-[16/9] flex-shrink-0'>
+      <div className='relative w-full aspect-video shrink-0'>
         <Image
-          src={item.cover.url}
-          alt={item.cover.alt}
+          src={item.coverUrl}
+          alt={title}
           fill
           className='object-cover rounded-t-2xl'
           sizes='(max-width: 768px) 100vw, 400px'
@@ -96,47 +93,34 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
         />
       </div>
       {/* 内容区 */}
-      <div className='p-4 flex flex-col flex-grow'>
-        <div className='space-y-4 flex-grow'>
-          <h3 className='text-xl font-bold text-blue-800 text-left'>{item.title}</h3>
-          <p className='text-sm text-gray-600 leading-relaxed text-left'>{item.description}</p>
-          <div className='flex flex-wrap gap-2 justify-start'>
-            {item.tags.map((tag) => (
+      <div className='p-4 flex flex-col grow'>
+        {/* 标题 */}
+        <h3 className='text-xl font-semibold mb-2 text-gray-800 group-hover:text-blue-600 transition-colors'>
+          {title}
+        </h3>
+        {/* 描述 */}
+        <p className='text-gray-600 mb-4 line-clamp-3'>
+          {description}
+        </p>
+        {/* 标签 */}
+        {tags.length > 0 && (
+          <div className='flex flex-wrap gap-2 mb-4'>
+            {tags.slice(0, 3).map((tag: string, index: number) => (
               <span
-                key={tag}
-                className='px-3 py-1 bg-blue-50 text-blue-500 text-xs font-semibold rounded-full border border-blue-50'
+                key={index}
+                className='px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full'
               >
                 {tag}
               </span>
             ))}
           </div>
-        </div>
-        <div className='mt-6 pt-3 border-t border-gray-100 flex items-center justify-between'>
-          <div className='flex items-center text-gray-500 text-sm font-semibold'>
-            <Icon name='calendar-days' className='mr-1.5 w-4.5 h-4.5' />
-            {formattedDate}
-          </div>
-          <div className='flex-1 flex justify-end'>
-            <Link
-              href={item.cta.href}
-              className='inline-flex items-center px-3 py-1 text-sm font-semibold text-gray-500 rounded-md transition-all duration-300 bg-transparent border-none shadow-none opacity-70 hover:opacity-100 group-hover:text-blue-800'
-            >
-              {viewDetailsLabel}
-              <svg
-                className='ml-1.5 w-4 h-4 transition-all'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M17 8l4 4m0 0l-4 4m4-4H3'
-                />
-              </svg>
-            </Link>
-          </div>
+        )}
+        {/* 底部信息 */}
+        <div className='mt-auto flex items-center justify-between text-sm text-gray-500'>
+          <span>{formattedDate}</span>
+          <Link href={item.href} className='text-blue-600 hover:text-blue-700 font-medium'>
+            {viewDetailsLabel}
+          </Link>
         </div>
       </div>
     </div>
@@ -148,44 +132,20 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
 // ============================================================================
 
 /**
- * 首页最佳实践区块
+ * 案例区块主组件
  */
 export default function CaseSection({ id, name = 'Cases' }: CaseSectionProps) {
-  // ==========================================================================
-  // Hooks 调用
-  // ==========================================================================
-
-  // 获取 Cases 数据
-  const { data: displayData, isLoading, error } = useCasesData();
+  const t = useTranslations('home.cases');
 
   // 调试日志（方案 A：直接在组件里，生产环境自动禁用）
-  debugLog('Cases data:', displayData);
-  debugLog('Cases error:', error);
-  debugLog('Cases isLoading:', isLoading);
+  debugLog('Home cases data:', HOME_CASES_DATA);
 
   // ==========================================================================
   // 早期返回
   // ==========================================================================
 
-  // 加载状态
-  if (isLoading) {
-    return (
-      <section
-        id={id}
-        data-name={name}
-        className='relative snap-section min-h-screen flex flex-col justify-center bg-gradient-to-b from-blue-50 to-white'
-      >
-        <div className='relative h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-center h-full'>
-            <p className='text-gray-400'>加载中...</p>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   // 如果内容被禁用，不渲染
-  if (!displayData.enabled) {
+  if (!HOME_CASES_DATA.enabled) {
     return null;
   }
 
@@ -193,41 +153,47 @@ export default function CaseSection({ id, name = 'Cases' }: CaseSectionProps) {
   // 渲染
   // ==========================================================================
 
-  const { title, subtitle, tagline, items, ui } = displayData;
-  const viewDetailsLabel = ui.viewDetails;
-
   return (
     <section
       id={id}
       data-name={name}
-      className='relative snap-section min-h-screen flex flex-col bg-gradient-to-b from-blue-50 to-white'
+      className='relative snap-section min-h-screen flex flex-col bg-linear-to-b from-gray-50 to-white'
     >
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 1. 标题区 - 靠上对齐 */}
         <div className='text-center pt-28'>
-          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{title}</h2>
-          <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>
+          <h2 className='text-3xl lg:text-4xl font-bold text-gray-800 mb-4'>
+            {t(HOME_CASES_DATA.titleKey)}
+          </h2>
+          <p className='text-lg text-gray-600 max-w-4xl mx-auto mb-8'>
+            {t(HOME_CASES_DATA.subtitleKey)}
+          </p>
         </div>
 
         {/* 2. 内容区 - 上下居中 */}
-        <div className='flex-1 flex items-center justify-center'>
+        <div className='flex flex-1 items-center justify-center py-8'>
           <div className='w-full'>
-            {/* 案例卡片网格 */}
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 py-8'>
-              {items.map((item) => (
-                <CaseCard key={item.id} item={item} viewDetailsLabel={viewDetailsLabel} />
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+              {HOME_CASES_DATA.items.map((item) => (
+                <CaseCard
+                  key={item.id}
+                  item={item}
+                  viewDetailsLabel={t(HOME_CASES_DATA.ui.viewDetailsKey)}
+                />
               ))}
             </div>
           </div>
         </div>
 
         {/* 3. 底部区 - 靠下对齐 */}
-        {tagline && (
+        {HOME_CASES_DATA.taglineKey && (
           <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-[2px] bg-gradient-to-r from-transparent to-blue-200'></div>
-              <span className='text-sm font-medium text-blue-500'>{tagline}</span>
-              <div className='w-8 h-[2px] bg-gradient-to-l from-transparent to-blue-200'></div>
+              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-blue-200'></div>
+              <span className='text-sm font-medium text-blue-500'>
+                {t(HOME_CASES_DATA.taglineKey)}
+              </span>
+              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-blue-200'></div>
             </div>
           </div>
         )}

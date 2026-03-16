@@ -16,10 +16,11 @@
 'use client';
 
 import { useRef, useState, useCallback, useEffect } from 'react';
-import { useHero } from '@/hooks';
+import { useTranslations } from 'next-intl';
 import { debugLog, debugError } from '@vxture/shared';
 import { Icon } from '@vxture/design-system';
 import Image from 'next/image';
+import { HERO_DATA } from '@/data/home/home.hero.data';
 
 // ============================================================================
 // 类型定义
@@ -56,20 +57,13 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
   // Hooks 调用
   // ==========================================================================
 
-  const { data: hero, isLoading, error } = useHero();
+  const t = useTranslations('home.hero');
 
   // ==========================================================================
   // 调试日志（方案 A：直接在组件里，生产环境自动禁用）
   // ==========================================================================
 
-  debugLog('Hero data:', hero);
-  debugLog('Hero error:', error);
-  debugLog('Hero isLoading:', isLoading);
-  if (hero) {
-    debugLog('Hero - Media type:', hero.media?.type);
-    debugLog('Hero - Video URL:', hero.media?.videoUrl);
-    debugLog('Hero - Poster Image:', hero.media?.posterImage);
-  }
+  debugLog('Hero data:', HERO_DATA);
 
   // ==========================================================================
   // 事件处理
@@ -94,10 +88,10 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
   // 监听视频加载
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || hero?.media.type !== 'video') {
+    if (!video || HERO_DATA.media.type !== 'video') {
       debugLog('Video ref or media type check failed:', {
         hasVideo: !!video,
-        mediaType: hero?.media.type,
+        mediaType: HERO_DATA.media.type,
       });
       return;
     }
@@ -110,42 +104,14 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       video.removeEventListener('loadeddata', handleVideoLoaded);
       video.removeEventListener('error', handleVideoError);
     };
-  }, [hero?.media.type, handleVideoLoaded, handleVideoError]);
+  }, [HERO_DATA.media.type, handleVideoLoaded, handleVideoError]);
 
   // ==========================================================================
   // 早期返回
   // ==========================================================================
 
-  // 加载状态
-  if (isLoading) {
-    return (
-      <section
-        ref={sectionRef}
-        id={id}
-        data-name={name}
-        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'
-      >
-        <div className='text-slate-600 text-xl'>加载中...</div>
-      </section>
-    );
-  }
-
-  // 错误状态
-  if (error || !hero) {
-    return (
-      <section
-        ref={sectionRef}
-        id={id}
-        data-name={name}
-        className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'
-      >
-        <div className='text-slate-600 text-xl'>加载失败</div>
-      </section>
-    );
-  }
-
   // 如果内容被禁用，不渲染
-  if (!hero.enabled) {
+  if (!HERO_DATA.enabled) {
     return null;
   }
 
@@ -163,13 +129,13 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       {/* 背景媒体层 */}
       <div className='absolute inset-0 w-full h-full z-0'>
         {/* 视频背景 */}
-        {hero.media.type === 'video' && hero.media.videoUrl && (
+        {HERO_DATA.media.type === 'video' && HERO_DATA.media.videoUrl && (
           <>
             {/* 视频封面 */}
-            {hero.media.posterImage && (
+            {HERO_DATA.media.posterImage && (
               <Image
-                src={hero.media.posterImage}
-                alt={hero.media.alt || '视频封面'}
+                src={HERO_DATA.media.posterImage}
+                alt={t('title') || '视频封面'}
                 fill
                 className={`object-cover transition-opacity duration-1000 ${
                   !videoLoaded && !videoError ? 'opacity-100' : 'opacity-0'
@@ -189,12 +155,12 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
               playsInline
               preload='auto'
             >
-              <source src={hero.media.videoUrl} type='video/mp4' />
+              <source src={HERO_DATA.media.videoUrl} type='video/mp4' />
             </video>
 
             {/* 视频遮罩 - 浅色背景用较淡的遮罩 */}
             <div
-              className={`absolute inset-0 bg-gradient-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 transition-opacity duration-1000 ${
+              className={`absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 transition-opacity duration-1000 ${
                 videoLoaded && !videoError ? 'opacity-70' : 'opacity-0'
               }`}
             ></div>
@@ -202,24 +168,24 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
         )}
 
         {/* 图片背景 */}
-        {hero.media.type === 'image' && hero.media.url && (
+        {HERO_DATA.media.type === 'image' && HERO_DATA.media.url && (
           <>
             <Image
-              src={hero.media.url}
-              alt={hero.media.alt || '背景图片'}
+              src={HERO_DATA.media.url}
+              alt={t('title') || '背景图片'}
               fill
               className='object-cover'
             />
-            <div className='absolute inset-0 bg-gradient-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10'></div>
+            <div className='absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10'></div>
           </>
         )}
 
         {/* 备用背景 - 仅在没有媒体或媒体加载失败时显示 */}
-        {(!hero.media.type ||
-          (hero.media.type === 'video' && !hero.media.videoUrl) ||
-          (hero.media.type === 'image' && !hero.media.url) ||
-          (hero.media.type === 'video' && videoError)) && (
-          <div className='absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100'>
+        {(!HERO_DATA.media.type ||
+          (HERO_DATA.media.type === 'video' && !HERO_DATA.media.videoUrl) ||
+          (HERO_DATA.media.type === 'image' && !HERO_DATA.media.url) ||
+          (HERO_DATA.media.type === 'video' && videoError)) && (
+          <div className='absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50 to-slate-100'>
             <div className='absolute inset-0'>
               <div className='absolute top-8 right-0 w-64 h-64 bg-blue-200/30 rounded-full blur-3xl animate-pulse' />
             </div>
@@ -232,32 +198,32 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
         <div className='max-w-5xl px-4 sm:px-6 lg:px-8 py-32 text-center'>
           {/* 主标题 + 高亮部分 */}
           <h1 className='text-5xl lg:text-7xl font-bold py-8 leading-tight'>
-            <span className='inline-block bg-gradient-to-r from-slate-800 to-slate-900 bg-clip-text text-transparent'>
-              {hero.title}
+            <span className='inline-block bg-linear-to-r from-slate-800 to-slate-900 bg-clip-text text-transparent'>
+              {t('title')}
             </span>
-            {hero.titleHighlight && (
+            {t('titleHighlight') && (
               <>
                 {' '}
-                <span className='inline-block bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent'>
-                  {hero.titleHighlight}
+                <span className='inline-block bg-linear-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent'>
+                  {t('titleHighlight')}
                 </span>
               </>
             )}
           </h1>
 
           {/* 描述 */}
-          {hero.description && (
-            <p className='text-xl text-slate-800 mb-12 max-w-2xl mx-auto'>{hero.description}</p>
+          {t('description') && (
+            <p className='text-xl text-slate-800 mb-12 max-w-2xl mx-auto'>{t('description')}</p>
           )}
 
           {/* CTA 按钮 */}
-          {hero.cta && (
+          {HERO_DATA.cta && (
             <div className='flex justify-center'>
               <a
-                href={hero.cta.href}
-                className='px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 shadow-2xl hover:scale-105 bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 hover:shadow-blue-500/25'
+                href={HERO_DATA.cta.href}
+                className='px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 shadow-2xl hover:scale-105 bg-linear-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 hover:shadow-blue-500/25'
               >
-                {hero.cta.label}
+                {t('cta.label')}
               </a>
             </div>
           )}
@@ -265,11 +231,11 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       </div>
 
       {/* 底部滚动提示 */}
-      {hero.scrollIndicator?.enabled && (
+      {HERO_DATA.scrollIndicator?.enabled && (
         <div className='absolute w-full flex justify-center bottom-8 pointer-events-auto z-10'>
           <div className='text-slate-500 animate-bounce px-4 py-2 rounded-xl'>
             <Icon name='arrow-down' className='w-6 h-6 mx-auto mb-2' />
-            {hero.scrollIndicator.text && <p className='text-sm'>{hero.scrollIndicator.text}</p>}
+            {t('scrollIndicator.text') && <p className='text-sm'>{t('scrollIndicator.text')}</p>}
           </div>
         </div>
       )}
