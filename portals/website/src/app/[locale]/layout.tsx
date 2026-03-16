@@ -27,7 +27,7 @@ type Props = {
 };
 
 export default async function LocaleLayout({ children, params }: Props) {
-  const { locale } = params;
+  const { locale } = await params;
 
   // 确保 locale 是有效的
   if (!routing.locales.includes(locale)) {

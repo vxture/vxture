@@ -1,0 +1,4 @@
+{
+  "products": "./products/products.json",
+  "pricing": "./products/pricing.json"
+}

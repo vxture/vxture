@@ -59,7 +59,7 @@ export interface SnapChoicePanelProps {
 // ============================================================================
 
 /** 默认位置 */
-const DEFAULT_POSITION = { op: '80px', left: '20px', zIndex: 9999 };
+const DEFAULT_POSITION = { top: '80px', left: '20px', zIndex: 9999 };
 /** 默认可见性 */
 const DEFAULT_VISIBLE = true;
 /** 默认目标选择器 */

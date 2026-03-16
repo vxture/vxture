@@ -5,16 +5,34 @@
  * @category Hooks
  */
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
+import { useLocale } from 'next-intl';
 import { FALLBACK_HEADER_DATA, FALLBACK_FOOTER_DATA } from '@/fallback/layout.fallback';
 import type { HeaderData, FooterData } from '@/types/layout.types';
+
+// 导入翻译文件
+import zhCNHeader from '@/../messages/zh-CN/layout/header.json';
+import zhCNFooter from '@/../messages/zh-CN/layout/footer.json';
+import enUSHeader from '@/../messages/en-US/layout/header.json';
+import enUSFooter from '@/../messages/en-US/layout/footer.json';
+
+// 翻译数据映射
+const headerTranslations: Record<string, HeaderData> = {
+  'zh-CN': zhCNHeader as HeaderData,
+  'en-US': enUSHeader as HeaderData
+};
+
+const footerTranslations: Record<string, FooterData> = {
+  'zh-CN': zhCNFooter as FooterData,
+  'en-US': enUSFooter as FooterData
+};
 
 // ============================================================================
 // useHeader Hook
 // ============================================================================
 
 export interface UseHeaderReturn {
-  data: HeaderData | null;
+  data: HeaderData;
   isLoading: boolean;
   error: Error | null;
 }
@@ -31,31 +49,23 @@ export interface UseHeaderReturn {
  * ```
  */
 export function useHeader(): UseHeaderReturn {
-  const [data, setData] = useState<HeaderData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const locale = useLocale();
 
-  useEffect(() => {
-    // 模拟 API 请求
-    const fetchHeaderData = async () => {
-      try {
-        setIsLoading(true);
-        // 模拟网络延迟
-        await new Promise(resolve => setTimeout(resolve, 300));
-        setData(FALLBACK_HEADER_DATA);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch header data'));
-        setData(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const data = useMemo(() => {
+    console.log('[useHeader] Locale:', locale);
+    console.log('[useHeader] Available translations:', Object.keys(headerTranslations));
 
-    void fetchHeaderData();
-  }, []);
+    const headerData = headerTranslations[locale] || headerTranslations['en-US'] || FALLBACK_HEADER_DATA;
+    console.log('[useHeader] Using data:', headerData);
 
-  return { data, isLoading, error };
+    return headerData;
+  }, [locale]);
+
+  return {
+    data,
+    isLoading: false,
+    error: null
+  };
 }
 
 // ============================================================================
@@ -63,7 +73,7 @@ export function useHeader(): UseHeaderReturn {
 // ============================================================================
 
 export interface UseFooterReturn {
-  data: FooterData | null;
+  data: FooterData;
   isLoading: boolean;
   error: Error | null;
 }
@@ -80,29 +90,21 @@ export interface UseFooterReturn {
  * ```
  */
 export function useFooter(): UseFooterReturn {
-  const [data, setData] = useState<FooterData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const locale = useLocale();
 
-  useEffect(() => {
-    // 模拟 API 请求
-    const fetchFooterData = async () => {
-      try {
-        setIsLoading(true);
-        // 模拟网络延迟
-        await new Promise(resolve => setTimeout(resolve, 300));
-        setData(FALLBACK_FOOTER_DATA);
-        setError(null);
-      } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to fetch footer data'));
-        setData(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const data = useMemo(() => {
+    console.log('[useFooter] Locale:', locale);
+    console.log('[useFooter] Available translations:', Object.keys(footerTranslations));
 
-    void fetchFooterData();
-  }, []);
+    const footerData = footerTranslations[locale] || footerTranslations['en-US'] || FALLBACK_FOOTER_DATA;
+    console.log('[useFooter] Using data:', footerData);
 
-  return { data, isLoading, error };
+    return footerData;
+  }, [locale]);
+
+  return {
+    data,
+    isLoading: false,
+    error: null
+  };
 }

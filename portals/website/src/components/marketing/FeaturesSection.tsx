@@ -80,7 +80,7 @@ interface FeatureCardProps {
     readonly slug: string;
     readonly title: string;
     readonly description: string;
-    readonly icon: string;
+    readonly icon?: string;
     readonly highlights: readonly string[];
     readonly cta: { readonly label: string; readonly href: string };
   };

@@ -15,7 +15,7 @@
  * @file LocaleSwitcher.tsx
  * @desc 语言切换组件，支持多语言选择
  * @author AI-Generated
- * @created 2026-03-15
+ * @created 2026-03-16
  * @copyright Copyright (c) 2024-2025 vxture
  * @license MIT
  * @version 1.0.0
@@ -32,7 +32,7 @@ import { useRouter, usePathname } from '@/lib/i18n/navigation';
 import { useThemeStore } from '@/stores/theme.store';
 import { Icon } from '@vxture/design-system';
 import type { Locale } from '@vxture/shared';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE, LOCALE_CONFIGS } from '@vxture/shared';
 
 // ============================================================================
 // 类型定义区
@@ -88,7 +88,7 @@ export default function LocaleSwitcher({
   // 语言选项
   const localeOptions: LocaleOption[] = SUPPORTED_LOCALES.map((loc) => ({
     code: loc,
-    label: loc === 'zh' ? '中文' : 'English',
+    label: LOCALE_CONFIGS[loc].nativeName,
   }));
 
   // 点击外部关闭菜单

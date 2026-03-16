@@ -1,0 +1,55 @@
+{
+  "key": "features",
+  "enabled": true,
+  "icon": "chart",
+  "title": "核心能力",
+  "subtitle": "为政府和大型企事业单位，提供数据智能支撑体系，驱动决策业务场景智能化",
+  "tagline": "数据驱动，业务赋能",
+  "items": [
+    {
+      "id": "feature-intro-01",
+      "slug": "data-knowledge-graph",
+      "icon": "graph",
+      "title": "数据图谱构建",
+      "description": "数据本体构建，发现数据的隐藏价值和深层关系",
+      "intent": "simulation",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": ["数据融合", "图谱构建", "关联挖掘"],
+      "cta": {
+        "label": "了解更多",
+        "href": "/features/data-knowledge-graph"
+      }
+    },
+    {
+      "id": "feature-intro-02",
+      "slug": "intelligent-decision-dispatch",
+      "icon": "sparkles",
+      "title": "智能决策调度",
+      "description": "时空模型引擎，实时性资源智能调度与动态规划",
+      "intent": "solution",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": ["智能调度", "资源配置", "动态规划"],
+      "cta": {
+        "label": "了解更多",
+        "href": "/features/intelligent-decision-dispatch"
+      }
+    },
+    {
+      "id": "feature-intro-03",
+      "slug": "digital-twin-simulation",
+      "icon": "cube",
+      "title": "孪生仿真推演",
+      "description": "复杂场景模拟，为决策提供仿真推演和预测分析",
+      "intent": "simulation",
+      "theme": "primary",
+      "variant": "card",
+      "highlights": ["数字孪生", "仿真推演", "智能决策"],
+      "cta": {
+        "label": "了解更多",
+        "href": "/features/digital-twin-simulation"
+      }
+    }
+  ]
+}

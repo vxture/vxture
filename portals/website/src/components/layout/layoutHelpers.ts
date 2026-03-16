@@ -25,14 +25,15 @@ export function normalizeHeaderData(data?: Partial<HeaderData> | null): HeaderDa
     return FALLBACK_HEADER_DATA;
   }
 
-  // 合并备用数据，确保所有字段都存在
+  // 合并备用数据，确保所有字段都存在，同时保留原始数据的所有字段
   return {
-    enabled: data.enabled ?? FALLBACK_HEADER_DATA.enabled,
+    ...FALLBACK_HEADER_DATA,
+    ...data,
     logo: data.logo ?? FALLBACK_HEADER_DATA.logo,
-    nav: data.nav ?? FALLBACK_HEADER_DATA.nav,
-    theme: data.theme ?? FALLBACK_HEADER_DATA.theme,
+    theme: data.theme
+      ? { ...FALLBACK_HEADER_DATA.theme, ...data.theme }
+      : FALLBACK_HEADER_DATA.theme,
     language: data.language ?? FALLBACK_HEADER_DATA.language,
-    actions: data.actions ?? FALLBACK_HEADER_DATA.actions,
   };
 }
 
@@ -53,22 +54,17 @@ export function normalizeFooterData(data?: Partial<FooterData> | null): FooterDa
     return FALLBACK_FOOTER_DATA;
   }
 
-  // 合并备用数据，确保所有字段都存在
+  // 合并备用数据，确保所有字段都存在，同时保留原始数据的所有字段
   return {
-    enabled: data.enabled ?? FALLBACK_FOOTER_DATA.enabled,
+    ...FALLBACK_FOOTER_DATA,
+    ...data,
     brand: {
-      name: data.brand?.name ?? FALLBACK_FOOTER_DATA.brand.name,
-      address: data.brand?.address ?? FALLBACK_FOOTER_DATA.brand.address,
+      ...FALLBACK_FOOTER_DATA.brand,
+      ...data.brand,
     },
     contact: {
-      sales: data.contact?.sales ?? FALLBACK_FOOTER_DATA.contact.sales,
-      service: data.contact?.service ?? FALLBACK_FOOTER_DATA.contact.service,
+      ...FALLBACK_FOOTER_DATA.contact,
+      ...data.contact,
     },
-    social: data.social ?? FALLBACK_FOOTER_DATA.social,
-    sections: data.sections ?? FALLBACK_FOOTER_DATA.sections,
-    copyright: data.copyright ?? FALLBACK_FOOTER_DATA.copyright,
-    legal: data.legal ?? FALLBACK_FOOTER_DATA.legal,
-    icp: data.icp ?? FALLBACK_FOOTER_DATA.icp,
-    publicSecurity: data.publicSecurity ?? FALLBACK_FOOTER_DATA.publicSecurity,
   };
 }

@@ -30,16 +30,19 @@ import { useWindowScrollSnap } from '@/hooks';
 
 /** 区块信息列表 */
 const SECTIONS = [
-  { id: 'section-01', name: 'Hero' },
+  { id: 'section-01', name: 'Hero111' },
   { id: 'section-02', name: 'Features' },
   { id: 'section-03', name: 'Solutions' },
   { id: 'section-04', name: 'Cases' },
   { id: 'section-05', name: 'CTA' },
 ] as const;
+
 /** 调试面板位置 */
 const DEBUG_PANEL_POSITION = { top: '80px', right: '20px', zIndex: 50 } as const;
+
 /** 选择面板位置 */
 const CHOICE_PANEL_POSITION = { top: '80px', left: '20px', zIndex: 50 } as const;
+
 /** 是否开发环境 */
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
@@ -67,6 +70,7 @@ export default function HomePage() {
 
   return (
     <div className='relative'>
+      
       {/* 调试面板信息组件 */}
       <SnapDebugPanel
         snapdebugInfo={snapdebugInfo}
@@ -84,19 +88,19 @@ export default function HomePage() {
       />
 
       {/* Hero 区块 */}
-      <HeroSection id='section-01' />
+      <HeroSection id={SECTIONS[0].id} name={SECTIONS[0].name} />
 
       {/* Features 区块 */}
-      <FeaturesSection id='section-02' theme='light' />
+      <FeaturesSection id={SECTIONS[1].id} name={SECTIONS[1].name} />
 
       {/* Solutions 区块 */}
-      <SolutionSection id='section-03' />
+      <SolutionSection id={SECTIONS[2].id} name={SECTIONS[2].name} />
 
       {/* Cases 区块 */}
-      <CaseSection id='section-04' />
+      <CaseSection id={SECTIONS[3].id} name={SECTIONS[3].name} />
 
       {/* CTA 区块 */}
-      <CTASection id='section-05' />
+      <CTASection id={SECTIONS[4].id} name={SECTIONS[4].name} />
 
       {/* 滚动到顶部按钮 */}
       <ScrollToButton snapToTarget={snapToTarget} />

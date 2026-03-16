@@ -28,14 +28,25 @@ import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // 使用新架构的 Hooks 获取数据
+  // ----------------------------------------------------------------------------
+  // 数据获取
+  // ----------------------------------------------------------------------------
+
+  // 1. 获取数据： 使用新架构的 Hooks
   const { data: headerData, isLoading, error } = useHeader();
   const { isDarkMode } = useThemeStore();
 
-  // 数据规范化：保证前端渲染安全完整
+  // 调试数据
+  console.log('[Header Component] Raw data:', headerData);
+  console.log('[Header Component] Error:', error);
+
+  // 2. 数据规范化：保证前端渲染安全完整
   const header = normalizeHeaderData(error || !headerData ? undefined : headerData);
 
-  // 监听滚动
+  // 调试规范化后的数据
+  console.log('[Header Component] Normalized data:', header);
+
+  // 3. 监听滚动
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -44,7 +55,12 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // 加载状态
+
+  // ----------------------------------------------------------------------------
+  // 渲染加载
+  // ----------------------------------------------------------------------------
+
+  // 4. 加载状态
   if (isLoading) {
     return (
       <header
@@ -52,21 +68,21 @@ export default function Header() {
           isScrolled ? 'bg-white/25 backdrop-blur-md shadow-lg' : 'bg-transparent'
         }`}
       >
-        <div className='max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8'>
+        <div className='max-w-7xl xl:max-w-screen-2xl 2xl:max-w-400 mx-auto px-4 sm:px-6 lg:px-8'>
           <div className='flex justify-between items-center h-16'>
-            <div className='text-white'>加载中...</div>
+            <div className='text-white'>Loading...</div>
           </div>
         </div>
       </header>
     );
   }
 
-  // 如果内容被禁用，不渲染
+  // 5. 禁止渲染：如果内容被禁用，不渲染
   if (!header.enabled) {
     return null;
   }
 
-  // 正常渲染（使用 JSON 数据）
+  // 6. 正常渲染（使用 JSON 数据）
   return (
     <header
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
@@ -75,10 +91,10 @@ export default function Header() {
           : 'bg-transparent'
       }`}
     >
-      <div className='max-w-7xl xl:max-w-screen-2xl 2xl:max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8'>
+      <div className='max-w-7xl xl:max-w-screen-2xl 2xl:max-w-400 mx-auto px-4 sm:px-6 lg:px-8'>
         <div className='flex justify-between items-center h-16'>
           {/* Logo */}
-          <div className='flex-shrink-0 flex items-center space-x-2'>
+          <div className='shrink-0 flex items-center space-x-2'>
             {header.logo && (
               <>
                 <Image
@@ -150,7 +166,7 @@ export default function Header() {
                                 : 'text-gray-900 font-semibold hover:text-gray-900'
                               : 'text-white/90 hover:text-white'
                           }`
-                        : 'w-28 px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
+                        : 'w-28 px-6 py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
                     }
                   >
                     {action.label}

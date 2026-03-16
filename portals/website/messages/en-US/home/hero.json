@@ -1,0 +1,23 @@
+{
+  "key": "hero",
+  "enabled": true,
+  "theme": "brand",
+  "intent": "cta",
+  "variant": "highlight",
+  "title": "Unlock Your Data's",
+  "titleHighlight": "Infinite Potential",
+  "description": "Empower complex government & enterprise scenarios with data-driven intelligence",
+  "cta": {
+    "label": "Start Your Journey",
+    "href": "/products"
+  },
+  "media": {
+    "type": "video",
+    "videoUrl": "/videos/herosection/banner-hero-01.mp4",
+    "posterImage": "/images/herosection/banner-hero-poster-light-01.png"
+  },
+  "scrollIndicator": {
+    "enabled": true,
+    "text": "Scroll Down"
+  }
+}

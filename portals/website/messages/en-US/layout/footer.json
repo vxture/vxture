@@ -1,0 +1,96 @@
+{
+  "key": "footer",
+  "enabled": true,
+  "brand": {
+    "name": "Vxture Studio",
+    "shortname": "vxture",
+    "logo": "/icons/favicon.ico",
+    "website": "vxture.ai",
+    "description": "AI-powered Virtual Nature Exploration Studio",
+    "foundedYear": "2024",
+    "address": "100 Keji Road, High-tech Zone, Xi'an, Shaanxi, China",
+    "timezone": "GMT+8"
+  },
+  "contact": {
+    "sales": { "phone": "+86 400-888-2345", "email": "sales@vxture.com" },
+    "service": { "phone": "+86 400-888-6789", "email": "support@vxture.com" },
+    "chat": { "link": "/livechat", "enabled": true }
+  },
+  "social": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "href": "https://github.com/stonesmoker/vxture",
+      "ariaLabel": "GitHub"
+    },
+    {
+      "name": "LinkedIn",
+      "icon": "linkedin",
+      "href": "https://linkedin.com/company/stonesmoker",
+      "ariaLabel": "LinkedIn"
+    },
+    {
+      "name": "WeChat",
+      "icon": "wechat",
+      "href": "/images/footer/WeChatOfficialAccounts.png",
+      "ariaLabel": "WeChat Official Account"
+    }
+  ],
+  "sections": [
+    {
+      "id": "products-services",
+      "title": "Products",
+      "links": [
+        { "label": "App Center", "href": "/appcenter" },
+        { "label": "Product Matrix", "href": "/products" },
+        { "label": "Solutions", "href": "/solutions" },
+        { "label": "Case Studies", "href": "/cases" }
+      ]
+    },
+    {
+      "id": "resources-support",
+      "title": "Support",
+      "links": [
+        { "label": "Documentation", "href": "/docs" },
+        { "label": "FAQ", "href": "/faq" },
+        { "label": "Technical Support", "href": "/support" },
+        { "label": "Industry Insights", "href": "/insights" }
+      ]
+    },
+    {
+      "id": "about-us",
+      "title": "About Us",
+      "links": [
+        { "label": "Company", "href": "/about" },
+        { "label": "Certifications", "href": "/certifications" },
+        { "label": "Careers", "href": "/careers" },
+        { "label": "Contact", "href": "/contact" }
+      ]
+    }
+  ],
+  "legal": [
+    { "label": "Terms of Service", "href": "/terms-service" },
+    { "label": "Privacy Policy", "href": "/privacy-policy" },
+    { "label": "Copyright Policy", "href": "/copyright-policy" },
+    { "label": "Brand Policy", "href": "/brand-policy" },
+    { "label": "Cookie Policy", "href": "/cookies-policy" }
+  ],
+  "icp": {
+    "label": "ICP Filing",
+    "text": "ICP No. 2025076448",
+    "link": "https://beian.miit.gov.cn"
+  },
+  "publicSecurity": {
+    "label": "PSB Filing",
+    "text": "Security No. 610000000000",
+    "link": "https://beian.mps.gov.cn"
+  },
+  "copyright": {
+    "label": "copyright",
+    "text": "© 2024-2026 vxture.ai. All rights reserved.",
+    "startYear": 2024,
+    "endYear": 2026,
+    "companyName": "vxture.ai",
+    "allRightsReserved": true
+  }
+}

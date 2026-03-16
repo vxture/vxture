@@ -25,13 +25,13 @@ import {
 
 export const FALLBACK_HERO_DATA: HeroData = {
   enabled: true,
-  title: '智能平台',
-  titleHighlight: '重新定义体验',
-  description: '为企业提供全方位的智能解决方案，提升运营效率，创造卓越用户体验',
+  title: '平台',
+  titleHighlight: '体验',
+  description: '提供智能解决方案，创造卓越用户体验',
   media: {
     type: 'image',
-    url: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?q=80&w=2000&auto=format&fit=crop',
-    alt: '智能平台背景',
+    url: 'https://images.unsplash.com/photo-1619498560614-9bbfab571365?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    alt: '平台背景',
   },
   cta: {
     label: '立即开始',

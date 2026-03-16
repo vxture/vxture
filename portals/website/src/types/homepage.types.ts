@@ -28,6 +28,7 @@ export interface HeroScrollIndicator {
 }
 
 export interface HeroData {
+  readonly key?: string;
   readonly enabled: boolean;
   readonly title: string;
   readonly titleHighlight?: string;
@@ -44,15 +45,20 @@ export interface HeroData {
 export interface FeatureItem {
   readonly id: string;
   readonly slug: string;
+  readonly icon?: string;
+  readonly intent?: string;
+  readonly theme?: string;
+  readonly variant?: string;
   readonly title: string;
   readonly description: string;
-  readonly icon: string;
   readonly highlights: readonly string[];
   readonly cta: { readonly label: string; readonly href: string };
 }
 
 export interface FeaturesData {
+  readonly key?: string;
   readonly enabled: boolean;
+  readonly icon?: string;
   readonly title: string;
   readonly subtitle?: string;
   readonly tagline?: string;
@@ -66,6 +72,9 @@ export interface FeaturesData {
 export interface CaseItem {
   readonly id: string;
   readonly slug: string;
+  readonly intent?: string;
+  readonly theme?: string;
+  readonly variant?: string;
   readonly title: string;
   readonly description: string;
   readonly tags: readonly string[];
@@ -73,6 +82,7 @@ export interface CaseItem {
     readonly url: string;
     readonly alt: string;
   };
+  readonly customer?: string;
   readonly publishedAt: string;
   readonly cta: {
     readonly href: string;
@@ -84,7 +94,9 @@ export interface CasesUI {
 }
 
 export interface CasesData {
+  readonly key?: string;
   readonly enabled: boolean;
+  readonly icon?: string;
   readonly title: string;
   readonly subtitle?: string;
   readonly tagline?: string;
@@ -100,18 +112,35 @@ export interface CTAAction {
   readonly label: string;
   readonly href: string;
   readonly variant: 'primary' | 'secondary';
+  readonly icon?: string;
+}
+
+export interface CTAFeature {
+  readonly id: string;
+  readonly icon?: string;
+  readonly name: string;
+  readonly description: string;
+  readonly theme?: string;
 }
 
 export interface CTAContact {
   readonly description: string;
-  readonly email?: { readonly value: string };
-  readonly phone?: { readonly value: string };
+  readonly email?: {
+    readonly icon?: string;
+    readonly value: string;
+  };
+  readonly phone?: {
+    readonly icon?: string;
+    readonly value: string;
+  };
 }
 
 export interface CTAData {
+  readonly key?: string;
   readonly enabled: boolean;
   readonly title: string;
   readonly subtitle?: string;
+  readonly features?: readonly CTAFeature[];
   readonly actions: readonly CTAAction[];
   readonly contact?: CTAContact;
 }
@@ -123,30 +152,40 @@ export interface CTAData {
 export interface SolutionItem {
   readonly id: string;
   readonly slug: string;
+  readonly icon?: string;
+  readonly intent?: string;
+  readonly theme?: string;
+  readonly variant?: string;
   readonly title: string;
   readonly subtitle: string;
   readonly description: string;
   readonly tags: readonly string[];
+  readonly capabilities?: readonly string[];
   readonly cover: {
     readonly url: string;
     readonly alt: string;
   };
-  readonly theme: string;
+  readonly bgImage?: {
+    readonly url: string;
+    readonly alt: string;
+  };
   readonly cta: {
     readonly href: string;
   };
 }
 
 export interface SolutionsData {
+  readonly key?: string;
   readonly enabled: boolean;
+  readonly icon?: string;
   readonly title: string;
   readonly subtitle?: string;
   readonly tagline?: string;
+  readonly featuresTitle?: string;
   readonly items: readonly SolutionItem[];
   readonly ui: {
     readonly viewDetails: string;
     readonly prev: string;
     readonly next: string;
   };
-  readonly featuresTitle: string;
 }

@@ -10,7 +10,7 @@
 ## 按包提交
 
 遵循: docs\standards\Vxture-Git-Workflow-Specification.md
-权限：仅对 @vxture/core-utils 操作，须严格遵循至任务结束，禁止越界操作
+权限：仅对 @vxture/shared 操作，须严格遵循至任务结束，禁止越界操作
 任务：
 
 1. update version ->1.2.2

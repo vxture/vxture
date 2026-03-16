@@ -5,7 +5,8 @@
  * @category Hooks
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useMemo } from 'react';
+import { useLocale } from 'next-intl';
 import {
   HeroData,
   FeaturesData,
@@ -21,6 +22,46 @@ import {
   FALLBACK_SOLUTIONS_DATA,
 } from '@/fallback/homepage.fallback';
 
+// 导入翻译文件 - zh-CN
+import zhCNHero from '@/../messages/zh-CN/home/hero.json';
+import zhCNFeatures from '@/../messages/zh-CN/home/features.json';
+import zhCNCases from '@/../messages/zh-CN/home/cases.json';
+import zhCNCTA from '@/../messages/zh-CN/home/cta.json';
+import zhCNSolutions from '@/../messages/zh-CN/home/solutions.json';
+
+// 导入翻译文件 - en-US
+import enUSHero from '@/../messages/en-US/home/hero.json';
+import enUSFeatures from '@/../messages/en-US/home/features.json';
+import enUSCases from '@/../messages/en-US/home/cases.json';
+import enUSCTA from '@/../messages/en-US/home/cta.json';
+import enUSSolutions from '@/../messages/en-US/home/solutions.json';
+
+// 翻译数据映射
+const heroTranslations: Record<string, HeroData> = {
+  'zh-CN': zhCNHero as HeroData,
+  'en-US': enUSHero as HeroData
+};
+
+const featuresTranslations: Record<string, FeaturesData> = {
+  'zh-CN': zhCNFeatures as FeaturesData,
+  'en-US': enUSFeatures as FeaturesData
+};
+
+const casesTranslations: Record<string, CasesData> = {
+  'zh-CN': zhCNCases as CasesData,
+  'en-US': enUSCases as CasesData
+};
+
+const ctaTranslations: Record<string, CTAData> = {
+  'zh-CN': zhCNCTA as CTAData,
+  'en-US': enUSCTA as CTAData
+};
+
+const solutionsTranslations: Record<string, SolutionsData> = {
+  'zh-CN': zhCNSolutions as SolutionsData,
+  'en-US': enUSSolutions as SolutionsData
+};
+
 // ============================================================================
 // 数据规范化函数
 // ============================================================================
@@ -29,20 +70,19 @@ import {
  * 规范化 Hero 数据
  */
 function normalizeHeroData(data?: Partial<HeroData>): HeroData {
+  if (!data) return FALLBACK_HERO_DATA;
   return {
-    enabled: data?.enabled ?? true,
-    title: data?.title ?? '智能平台',
-    titleHighlight: data?.titleHighlight,
-    description: data?.description,
-    media: {
-      type: data?.media?.type ?? 'none',
-      videoUrl: data?.media?.videoUrl,
-      posterImage: data?.media?.posterImage,
-      url: data?.media?.url,
-      alt: data?.media?.alt,
-    },
-    cta: data?.cta,
-    scrollIndicator: data?.scrollIndicator,
+    ...FALLBACK_HERO_DATA,
+    ...data,
+    media: data?.media
+      ? { ...FALLBACK_HERO_DATA.media, ...data.media }
+      : FALLBACK_HERO_DATA.media,
+    cta: data?.cta
+      ? { ...FALLBACK_HERO_DATA.cta, ...data.cta }
+      : FALLBACK_HERO_DATA.cta,
+    scrollIndicator: data?.scrollIndicator
+      ? { ...FALLBACK_HERO_DATA.scrollIndicator, ...data.scrollIndicator }
+      : FALLBACK_HERO_DATA.scrollIndicator,
   };
 }
 
@@ -50,12 +90,10 @@ function normalizeHeroData(data?: Partial<HeroData>): HeroData {
  * 规范化 Features 数据
  */
 function normalizeFeaturesData(data?: Partial<FeaturesData>): FeaturesData {
+  if (!data) return FALLBACK_FEATURES_DATA;
   return {
-    enabled: data?.enabled ?? true,
-    title: data?.title ?? '核心功能',
-    subtitle: data?.subtitle,
-    tagline: data?.tagline,
-    items: data?.items ?? [],
+    ...FALLBACK_FEATURES_DATA,
+    ...data,
   };
 }
 
@@ -63,15 +101,13 @@ function normalizeFeaturesData(data?: Partial<FeaturesData>): FeaturesData {
  * 规范化 Cases 数据
  */
 function normalizeCasesData(data?: Partial<CasesData>): CasesData {
+  if (!data) return FALLBACK_CASES_DATA;
   return {
-    enabled: data?.enabled ?? true,
-    title: data?.title ?? '成功案例',
-    subtitle: data?.subtitle,
-    tagline: data?.tagline,
-    items: data?.items ?? [],
-    ui: {
-      viewDetails: data?.ui?.viewDetails ?? '查看详情',
-    },
+    ...FALLBACK_CASES_DATA,
+    ...data,
+    ui: data?.ui
+      ? { ...FALLBACK_CASES_DATA.ui, ...data.ui }
+      : FALLBACK_CASES_DATA.ui,
   };
 }
 
@@ -79,12 +115,10 @@ function normalizeCasesData(data?: Partial<CasesData>): CasesData {
  * 规范化 CTA 数据
  */
 function normalizeCTAData(data?: Partial<CTAData>): CTAData {
+  if (!data) return FALLBACK_CTA_DATA;
   return {
-    enabled: data?.enabled ?? true,
-    title: data?.title ?? '准备好开始了吗？',
-    subtitle: data?.subtitle,
-    actions: data?.actions ?? [],
-    contact: data?.contact,
+    ...FALLBACK_CTA_DATA,
+    ...data,
   };
 }
 
@@ -92,18 +126,13 @@ function normalizeCTAData(data?: Partial<CTAData>): CTAData {
  * 规范化 Solutions 数据
  */
 function normalizeSolutionsData(data?: Partial<SolutionsData>): SolutionsData {
+  if (!data) return FALLBACK_SOLUTIONS_DATA;
   return {
-    enabled: data?.enabled ?? true,
-    title: data?.title ?? '解决方案',
-    subtitle: data?.subtitle,
-    tagline: data?.tagline,
-    items: data?.items ?? [],
-    ui: {
-      viewDetails: data?.ui?.viewDetails ?? '查看详情',
-      prev: data?.ui?.prev ?? '上一项',
-      next: data?.ui?.next ?? '下一项',
-    },
-    featuresTitle: data?.featuresTitle ?? '核心功能',
+    ...FALLBACK_SOLUTIONS_DATA,
+    ...data,
+    ui: data?.ui
+      ? { ...FALLBACK_SOLUTIONS_DATA.ui, ...data.ui }
+      : FALLBACK_SOLUTIONS_DATA.ui,
   };
 }
 
@@ -115,35 +144,15 @@ export function useHero(): {
   data: HeroData;
   isLoading: boolean;
   error: Error | null;
-  refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<HeroData>(FALLBACK_HERO_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const locale = useLocale();
 
-  const refetch = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // 这里可以替换为实际的 API 调用
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const normalized = normalizeHeroData(FALLBACK_HERO_DATA);
-      setData(normalized);
-    } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error('Failed to fetch hero data');
-      setError(error);
-      setData(normalizeHeroData());
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const data = useMemo(() => {
+    const heroData = heroTranslations[locale] || heroTranslations['en-US'];
+    return normalizeHeroData(heroData);
+  }, [locale]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  return { data, isLoading, error, refetch };
+  return { data, isLoading: false, error: null };
 }
 
 // ============================================================================
@@ -154,35 +163,15 @@ export function useFeatures(): {
   data: FeaturesData;
   isLoading: boolean;
   error: Error | null;
-  refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<FeaturesData>(FALLBACK_FEATURES_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const locale = useLocale();
 
-  const refetch = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // 这里可以替换为实际的 API 调用
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      const normalized = normalizeFeaturesData(FALLBACK_FEATURES_DATA);
-      setData(normalized);
-    } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error('Failed to fetch features data');
-      setError(error);
-      setData(normalizeFeaturesData());
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const data = useMemo(() => {
+    const featuresData = featuresTranslations[locale] || featuresTranslations['en-US'];
+    return normalizeFeaturesData(featuresData);
+  }, [locale]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  return { data, isLoading, error, refetch };
+  return { data, isLoading: false, error: null };
 }
 
 // ============================================================================
@@ -193,35 +182,15 @@ export function useCasesData(): {
   data: CasesData;
   isLoading: boolean;
   error: Error | null;
-  refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<CasesData>(FALLBACK_CASES_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const locale = useLocale();
 
-  const refetch = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // 这里可以替换为实际的 API 调用
-      await new Promise((resolve) => setTimeout(resolve, 700));
-      const normalized = normalizeCasesData(FALLBACK_CASES_DATA);
-      setData(normalized);
-    } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error('Failed to fetch cases data');
-      setError(error);
-      setData(normalizeCasesData());
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const data = useMemo(() => {
+    const casesData = casesTranslations[locale] || casesTranslations['en-US'];
+    return normalizeCasesData(casesData);
+  }, [locale]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  return { data, isLoading, error, refetch };
+  return { data, isLoading: false, error: null };
 }
 
 // ============================================================================
@@ -232,35 +201,15 @@ export function useCTA(): {
   data: CTAData;
   isLoading: boolean;
   error: Error | null;
-  refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<CTAData>(FALLBACK_CTA_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const locale = useLocale();
 
-  const refetch = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // 这里可以替换为实际的 API 调用
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      const normalized = normalizeCTAData(FALLBACK_CTA_DATA);
-      setData(normalized);
-    } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error('Failed to fetch CTA data');
-      setError(error);
-      setData(normalizeCTAData());
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const data = useMemo(() => {
+    const ctaData = ctaTranslations[locale] || ctaTranslations['en-US'];
+    return normalizeCTAData(ctaData);
+  }, [locale]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  return { data, isLoading, error, refetch };
+  return { data, isLoading: false, error: null };
 }
 
 // ============================================================================
@@ -271,35 +220,15 @@ export function useSolutions(): {
   data: SolutionsData;
   isLoading: boolean;
   error: Error | null;
-  refetch: () => Promise<void>;
 } {
-  const [data, setData] = useState<SolutionsData>(FALLBACK_SOLUTIONS_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const locale = useLocale();
 
-  const refetch = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      // 这里可以替换为实际的 API 调用
-      await new Promise((resolve) => setTimeout(resolve, 400));
-      const normalized = normalizeSolutionsData(FALLBACK_SOLUTIONS_DATA);
-      setData(normalized);
-    } catch (err) {
-      const error =
-        err instanceof Error ? err : new Error('Failed to fetch solutions data');
-      setError(error);
-      setData(normalizeSolutionsData());
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const data = useMemo(() => {
+    const solutionsData = solutionsTranslations[locale] || solutionsTranslations['en-US'];
+    return normalizeSolutionsData(solutionsData);
+  }, [locale]);
 
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
-
-  return { data, isLoading, error, refetch };
+  return { data, isLoading: false, error: null };
 }
 
 // ============================================================================

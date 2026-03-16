@@ -1,0 +1,96 @@
+{
+  "key": "footer",
+  "enabled": true,
+  "brand": {
+    "name": "Vxture Studio",
+    "shortname": "vxture",
+    "logo": "/icons/favicon.ico",
+    "website": "vxture.ai",
+    "description": "人工智能自然探索工作室",
+    "foundedYear": "2024",
+    "address": "陕西省西安市高新区科技路100号",
+    "timezone": "GMT+8"
+  },
+  "contact": {
+    "sales": { "phone": "400-888-2345", "email": "sales@vxture.com" },
+    "service": { "phone": "400-888-6789", "email": "support@vxture.com" },
+    "chat": { "link": "/livechat", "enabled": true }
+  },
+  "social": [
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "href": "https://github.com/stonesmoker/vxture",
+      "ariaLabel": "GitHub"
+    },
+    {
+      "name": "LinkedIn",
+      "icon": "linkedin",
+      "href": "https://linkedin.com/company/stonesmoker",
+      "ariaLabel": "LinkedIn"
+    },
+    {
+      "name": "WeChat",
+      "icon": "wechat",
+      "href": "/images/footer/WeChatOfficialAccounts.png",
+      "ariaLabel": "微信公众号"
+    }
+  ],
+  "sections": [
+    {
+      "id": "products-services",
+      "title": "产品中心",
+      "links": [
+        { "label": "应用广场", "href": "/appcenter" },
+        { "label": "产品矩阵", "href": "/products" },
+        { "label": "解决方案", "href": "/solutions" },
+        { "label": "案例展示", "href": "/cases" }
+      ]
+    },
+    {
+      "id": "resources-support",
+      "title": "服务支持",
+      "links": [
+        { "label": "帮助文档", "href": "/docs" },
+        { "label": "常见问题", "href": "/faq" },
+        { "label": "技术支持", "href": "/support" },
+        { "label": "行业洞察", "href": "/insights" }
+      ]
+    },
+    {
+      "id": "about-us",
+      "title": "关于我们",
+      "links": [
+        { "label": "公司简介", "href": "/about" },
+        { "label": "资质证书", "href": "/certifications" },
+        { "label": "加入我们", "href": "/careers" },
+        { "label": "联系我们", "href": "/contact" }
+      ]
+    }
+  ],
+  "legal": [
+    { "label": "服务条款", "href": "/terms-service" },
+    { "label": "隐私政策", "href": "/privacy-policy" },
+    { "label": "版权政策", "href": "/copyright-policy" },
+    { "label": "品牌政策", "href": "/brand-policy" },
+    { "label": "Cookie 使用政策", "href": "/cookies-policy" }
+  ],
+  "icp": {
+    "label": "备案号",
+    "text": "陕ICP备2025076448号",
+    "link": "https://beian.miit.gov.cn"
+  },
+  "publicSecurity": {
+    "label": "公安备案",
+    "text": "陕公网安备610000000000号",
+    "link": "https://beian.mps.gov.cn"
+  },
+  "copyright": {
+    "label": "copyright",
+    "text": "© 2024-2026 vxture.ai. All rights reserved.",
+    "startYear": 2024,
+    "endYear": 2026,
+    "companyName": "vxture.ai",
+    "allRightsReserved": true
+  }
+}

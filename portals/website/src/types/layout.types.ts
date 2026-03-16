@@ -13,6 +13,7 @@ export interface HeaderLogo {
   readonly image: string;
   readonly alt: string;
   readonly text: string;
+  readonly href?: string;
 }
 
 export interface HeaderNavItem {
@@ -20,8 +21,16 @@ export interface HeaderNavItem {
   readonly label: string;
 }
 
+export interface HeaderThemeOption {
+  readonly code: string;
+  readonly label: string;
+}
+
 export interface HeaderTheme {
   readonly title: string;
+  readonly enabled?: boolean;
+  readonly icon?: string;
+  readonly options?: readonly HeaderThemeOption[];
 }
 
 export interface HeaderLanguageOption {
@@ -32,6 +41,7 @@ export interface HeaderLanguageOption {
 export interface HeaderLanguage {
   readonly enabled: boolean;
   readonly title: string;
+  readonly icon?: string;
   readonly options: readonly HeaderLanguageOption[];
 }
 
@@ -42,6 +52,7 @@ export interface HeaderAction {
 }
 
 export interface HeaderData {
+  readonly key?: string;
   readonly enabled: boolean;
   readonly logo: HeaderLogo | null;
   readonly nav: readonly HeaderNavItem[];
@@ -56,7 +67,13 @@ export interface HeaderData {
 
 export interface FooterBrand {
   readonly name: string;
+  readonly shortname?: string;
+  readonly logo?: string;
+  readonly website?: string;
+  readonly description?: string;
+  readonly foundedYear?: string;
   readonly address?: string;
+  readonly timezone?: string;
 }
 
 export interface FooterContactItem {
@@ -67,6 +84,10 @@ export interface FooterContactItem {
 export interface FooterContact {
   readonly sales?: FooterContactItem;
   readonly service?: FooterContactItem;
+  readonly chat?: {
+    readonly link?: string;
+    readonly enabled?: boolean;
+  };
 }
 
 export interface FooterSocial {
@@ -89,14 +110,21 @@ export interface FooterSection {
 
 export interface FooterCopyright {
   readonly text: string;
+  readonly label?: string;
+  readonly startYear?: number;
+  readonly endYear?: number;
+  readonly companyName?: string;
+  readonly allRightsReserved?: boolean;
 }
 
 export interface FooterICP {
   readonly text: string;
   readonly link: string;
+  readonly label?: string;
 }
 
 export interface FooterData {
+  readonly key?: string;
   readonly enabled: boolean;
   readonly brand: FooterBrand;
   readonly contact: FooterContact;
