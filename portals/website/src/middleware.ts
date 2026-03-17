@@ -27,7 +27,10 @@ export function middleware(request: NextRequest) {
   }
 
   // 交给 next-intl 处理语言前缀路由
-  return intlMiddleware(request);
+  // 写入 pathname 供 getRequestConfig 按需加载翻译
+  const response = intlMiddleware(request);
+  response.headers.set('x-pathname', request.nextUrl.pathname);
+  return response;
 }
 
 export const config = {
