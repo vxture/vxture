@@ -11,15 +11,17 @@
  *
  * 依赖/调用关系：
  * - 使用 useLocale 获取和设置语言状态
+ * - 使用 useTheme from @vxture/design-system 获取主题状态
  *
  * @file LocaleSwitcher.tsx
  * @desc 语言切换组件，支持多语言选择
  * @author AI-Generated
  * @created 2026-03-16
+ * @date 2026-03-18
  * @copyright Copyright (c) 2024-2025 vxture
  * @license MIT
- * @version 1.0.0
- * @dependencies React, useLocale, Icon
+ * @version 2.0.0
+ * @dependencies React, useLocale, useTheme, Icon
  * @category Components - UI
  * @layer Presentation
  */
@@ -29,8 +31,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocale as useNextIntlLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/lib/i18n/navigation';
-import { useThemeStore } from '@/stores/theme.store';
-import { Icon } from '@vxture/design-system';
+import { useTheme, Icon } from '@vxture/design-system';
 import type { Locale } from '@vxture/shared';
 import { SUPPORTED_LOCALES, DEFAULT_LOCALE, LOCALE_CONFIGS } from '@vxture/shared';
 
@@ -70,7 +71,8 @@ export default function LocaleSwitcher({
     router.push(pathname, { locale: newLocale });
   };
 
-  const { isDarkMode } = useThemeStore();
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
 
   // 尺寸配置
   const sizeClasses = {

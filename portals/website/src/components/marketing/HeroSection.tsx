@@ -5,8 +5,8 @@
  *
  * @author vxture team
  * @created 2024-06-01
- * @lastModified 2026-03-04
- * @version 2.1.0
+ * @lastModified 2026-03-18
+ * @version 2.2.0
  * @copyright Copyright (c) 2024-2026 Vxture Team
  * @license MIT
  *
@@ -18,8 +18,9 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { debugLog, debugError } from '@vxture/shared';
-import { Icon } from '@vxture/design-system';
+import { useTheme, Icon } from '@vxture/design-system';
 import Image from 'next/image';
+
 import { HERO_DATA } from '@/data/home/home.hero.data';
 
 // ============================================================================
@@ -58,6 +59,13 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
   // ==========================================================================
 
   const t = useTranslations('home.hero');
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
+
+  // 根据主题选择封面图：暗色模式优先使用 posterImageDark，回退到 posterImage
+  const activePosterImage = isDarkMode
+    ? (HERO_DATA.media.posterImageDark ?? HERO_DATA.media.posterImage)
+    : HERO_DATA.media.posterImage;
 
   // ==========================================================================
   // 调试日志（方案 A：直接在组件里，生产环境自动禁用）
@@ -124,17 +132,17 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       ref={sectionRef}
       id={id}
       data-name={name}
-      className='relative snap-section min-h-screen flex items-center justify-center overflow-hidden'
+      className='snap-section relative min-h-screen flex items-center justify-center overflow-hidden'
     >
       {/* 背景媒体层 */}
       <div className='absolute inset-0 w-full h-full z-0'>
         {/* 视频背景 */}
         {HERO_DATA.media.type === 'video' && HERO_DATA.media.videoUrl && (
           <>
-            {/* 视频封面 */}
-            {HERO_DATA.media.posterImage && (
+            {/* 视频封面 - 根据主题切换亮/暗封面图 */}
+            {activePosterImage && (
               <Image
-                src={HERO_DATA.media.posterImage}
+                src={activePosterImage}
                 alt={t('title') || '视频封面'}
                 fill
                 className={`object-cover transition-opacity duration-1000 ${
@@ -198,13 +206,13 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
         <div className='max-w-5xl px-4 sm:px-6 lg:px-8 py-32 text-center'>
           {/* 主标题 + 高亮部分 */}
           <h1 className='text-5xl lg:text-7xl font-bold py-8 leading-tight'>
-            <span className='inline-block bg-linear-to-r from-slate-800 to-slate-900 bg-clip-text text-transparent'>
+            <span className='inline-block bg-linear-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent'>
               {t('title')}
             </span>
             {t('titleHighlight') && (
               <>
                 {' '}
-                <span className='inline-block bg-linear-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent'>
+                <span className='inline-block bg-linear-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent'>
                   {t('titleHighlight')}
                 </span>
               </>
@@ -232,10 +240,12 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
 
       {/* 底部滚动提示 */}
       {HERO_DATA.scrollIndicator?.enabled && (
-        <div className='absolute w-full flex justify-center bottom-8 pointer-events-auto z-10'>
-          <div className='text-slate-500 animate-bounce px-4 py-2 rounded-xl'>
-            <Icon name='arrow-down' className='w-6 h-6 mx-auto mb-2' />
-            {t('scrollIndicator.text') && <p className='text-sm'>{t('scrollIndicator.text')}</p>}
+        <div className='absolute bottom-8 flex justify-center items-center z-10 pointer-events-auto'>
+          <div className='text-slate-500 animate-bounce px-4 py-2 flex flex-col items-center'>
+            <Icon name='arrow-down' className='w-6 h-6' />
+            {t('scrollIndicator.text') && (
+              <p className='text-sm text-center'>{t('scrollIndicator.text')}</p>
+            )}
           </div>
         </div>
       )}

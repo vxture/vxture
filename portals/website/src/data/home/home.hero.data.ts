@@ -18,7 +18,10 @@ export interface HeroCta {
 export interface HeroMedia {
   type: string;
   videoUrl?: string;
+  /** 亮色模式封面图 */
   posterImage?: string;
+  /** 暗色模式封面图（可选，未配置时回退到 posterImage） */
+  posterImageDark?: string;
   url?: string;
 }
 
@@ -53,16 +56,17 @@ export const HERO_DATA: HeroData = {
   theme: "brand",
   intent: "cta",
   variant: "highlight",
-  titleKey: "home.hero.title",
-  titleHighlightKey: "home.hero.titleHighlight",
-  descriptionKey: "home.hero.description",
+  titleKey: "title",
+  titleHighlightKey: "titleHighlight",
+  descriptionKey: "description",
   cta: {
     href: "/products"
   },
   media: {
     type: "video",
     videoUrl: "/videos/herosection/banner-hero-01.mp4",
-    posterImage: "/images/herosection/banner-hero-poster-light-01.png"
+    posterImage: "/images/herosection/banner-hero-poster-light-01.png",
+    posterImageDark: "/images/herosection/banner-hero-poster-dark-01.png"
   },
   scrollIndicator: {
     enabled: true

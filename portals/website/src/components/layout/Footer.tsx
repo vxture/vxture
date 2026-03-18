@@ -10,19 +10,21 @@
  *
  * @layer Presentation
  * @category Components - Layout
+ * @author AI-Generated
+ * @date 2026-03-18
  */
 "use client";
 
 import { useState, useRef } from "react";
 import { useTranslations } from 'next-intl';
-import { useThemeStore } from "@/stores/theme.store";
+import { useTheme, Icon } from "@vxture/design-system";
 import { debugLog } from "@vxture/shared";
-import { Icon } from "@vxture/design-system";
 import Image from 'next/image';
 import { FOOTER_DATA } from "@/data/layout/footer.data";
 
 export default function Footer() {
-  const { isDarkMode } = useThemeStore();
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
   const t = useTranslations('layout.footer');
 
   // 调试日志
@@ -48,92 +50,51 @@ export default function Footer() {
     }`}>
       <div className="flex flex-1 flex-col w-full max-w-7xl xl:max-w-screen-2xl mx-auto pt-8 px-4 sm:px-6 lg:px-8">
         {/* 主要内容区域：品牌 + 联系 + 社交 / 链接区 */}
-        <div className="flex flex-1 flex-col md:flex-row gap-8">
-          {/* 左侧：品牌信息 + 联系方式 + 社交 */}
+        <div className="flex flex-1 flex-col md:flex-row gap-8 items-start">
+          {/* 左侧：品牌信息 + 联系方式 */}
           <div className="flex flex-col basis-[30%] min-w-50">
             {/* 品牌标识 */}
-            <div className="flex items-center space-x-3 mb-3">
-              <span className="text-2xl font-bold text-gray-700">
-                {t(FOOTER_DATA.brand.nameKey)}
-              </span>
-            </div>
-            {/* 地址信息 */}
-            <div className="flex items-center space-x-1 text-sm text-gray-600 mb-4">
-              <Icon name="map-pin" className="w-4 h-4" />
-              <span>{t(FOOTER_DATA.brand.addressKey)}</span>
-            </div>
-            {/* 联系方式 */}
-            <div className="flex flex-col gap-4 text-sm text-gray-600 mb-4">
+            <span className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-700'}`}>
+              {t(FOOTER_DATA.brand.nameKey)}
+            </span>
+
+            <ul className="space-y-2 text-sm text-gray-600 leading-6">
+              {/* 地址信息 */}
+              {FOOTER_DATA.brand.addressKey && (
+                <li className="flex items-center space-x-1">
+                  <Icon name="map-pin" className="w-4 h-4 shrink-0" />
+                  <span>{t(FOOTER_DATA.brand.addressKey)}</span>
+                </li>
+              )}
+
               {/* Contact Phone */}
               {FOOTER_DATA.contact.contact_phone && (
-                <div className="flex items-center space-x-1">
-                  <Icon name="phone" className="w-4 h-4" />
+                <li className="flex items-center space-x-1">
+                  <Icon name="phone" className="w-4 h-4 shrink-0" />
                   <span>{FOOTER_DATA.contact.contact_phone}</span>
-                </div>
+                </li>
               )}
 
               {/* Service Email */}
               {FOOTER_DATA.contact.service_email && (
-                <div className="flex items-center space-x-1">
-                  <Icon name="mail" className="w-4 h-4" />
-                  <a
-                    href={`mailto:${FOOTER_DATA.contact.service_email}`}
-                    className="hover:text-blue-600 transition-colors"
-                  >
+                <li className="flex items-center space-x-1">
+                  <Icon name="mail" className="w-4 h-4 shrink-0" />
+                  <a href={`mailto:${FOOTER_DATA.contact.service_email}`} className="hover:text-blue-600 transition-colors">
                     {FOOTER_DATA.contact.service_email}
                   </a>
-                </div>
+                </li>
               )}
 
               {/* Partner Email */}
               {FOOTER_DATA.contact.partner_email && (
-                <div className="flex items-center space-x-1">
-                  <Icon name="mail" className="w-4 h-4" />
-                  <a
-                    href={`mailto:${FOOTER_DATA.contact.partner_email}`}
-                    className="hover:text-blue-600 transition-colors"
-                  >
+                <li className="flex items-center space-x-1">
+                  <Icon name="mail" className="w-4 h-4 shrink-0" />
+                  <a href={`mailto:${FOOTER_DATA.contact.partner_email}`} className="hover:text-blue-600 transition-colors">
                     {FOOTER_DATA.contact.partner_email}
                   </a>
-                </div>
+                </li>
               )}
-            </div>
-
-            {/* 社交链接 */}
-            {FOOTER_DATA.social?.length > 0 && (
-              <div className="flex space-x-4 mt-2">
-                {FOOTER_DATA.social.map((social) => (
-                  <div key={social.name} className="relative group">
-                    {social.icon === "wechat" ? (
-                      <button
-                        aria-label={t(social.ariaLabelKey)}
-                        className="text-gray-600 hover:text-blue-600 transition-colors"
-                        onMouseEnter={() => setQrCodeVisible(true)}
-                        onMouseLeave={() => setQrCodeVisible(false)}
-                        ref={setWechatIconRef}
-                      >
-                        <Icon name="wechat" className="w-5 h-5" />
-                      </button>
-                    ) : (
-                      <a
-                        href={social.href}
-                        aria-label={t(social.ariaLabelKey)}
-                        className="text-gray-600 hover:text-blue-600 transition-colors"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {social.icon === "github" && (
-                          <Icon name="github" className="w-5 h-5" />
-                        )}
-                        {social.icon === "linkedin" && (
-                          <Icon name="linkedin" className="w-5 h-5" />
-                        )}
-                      </a>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
+            </ul>
           </div>
 
           {/* 右侧：链接区（分区块展示） */}
@@ -162,6 +123,44 @@ export default function Footer() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* 社交链接 */}
+        <div className="flex items-center py-4">
+          {FOOTER_DATA.social?.length > 0 && (
+            <div className="flex space-x-4">
+              {FOOTER_DATA.social.map((social) => (
+                <div key={social.name} className="relative group">
+                  {social.icon === "wechat" ? (
+                    <button
+                      aria-label={t(social.ariaLabelKey)}
+                      className="text-gray-600 hover:text-blue-600 transition-colors"
+                      onMouseEnter={() => setQrCodeVisible(true)}
+                      onMouseLeave={() => setQrCodeVisible(false)}
+                      ref={setWechatIconRef}
+                    >
+                      <Icon name="wechat" className="w-5 h-5" />
+                    </button>
+                  ) : (
+                    <a
+                      href={social.href}
+                      aria-label={t(social.ariaLabelKey)}
+                      className="text-gray-600 hover:text-blue-600 transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {social.icon === "github" && (
+                        <Icon name="github" className="w-5 h-5" />
+                      )}
+                      {social.icon === "linkedin" && (
+                        <Icon name="linkedin" className="w-5 h-5" />
+                      )}
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 微信二维码 */}

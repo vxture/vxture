@@ -57,11 +57,11 @@ export interface HomeCasesData {
  */
 export const HOME_CASES_DATA: HomeCasesData = {
   enabled: true,
-  titleKey: "home.cases.title",
-  subtitleKey: "home.cases.subtitle",
-  taglineKey: "home.cases.tagline",
+  titleKey: "title",
+  subtitleKey: "subtitle",
+  taglineKey: "tagline",
   ui: {
-    viewDetailsKey: "home.cases.ui.viewDetails"
+    viewDetailsKey: "ui.viewDetails"
   },
   items: [
     {

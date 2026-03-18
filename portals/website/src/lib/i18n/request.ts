@@ -144,12 +144,16 @@ function setNested(
   let cur = obj;
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i];
+    if (!part) continue;
     if (typeof cur[part] !== 'object' || cur[part] === null) {
       cur[part] = {};
     }
     cur = cur[part] as Record<string, unknown>;
   }
-  cur[parts[parts.length - 1]] = value;
+  const lastPart = parts[parts.length - 1];
+  if (lastPart) {
+    cur[lastPart] = value;
+  }
 }
 
 // ── getRequestConfig 主体 ─────────────────────────────────────────────────────

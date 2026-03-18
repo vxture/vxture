@@ -1,37 +1,51 @@
 {
-  "brand.name": "Vxture Studio",
-  "brand.description": "人工智能自然探索工作室",
-  "brand.address": "陕西省西安市高新区科技路100号",
-  "social.github": "GitHub",
-  "social.linkedin": "LinkedIn",
-  "social.wechat": "微信公众号",
-
-  "sections.products": "产品中心",
-  "sections.products.appcenter": "应用广场",
-  "sections.products.products": "产品矩阵",
-  "sections.products.solutions": "解决方案",
-  "sections.products.cases": "案例展示",
-  
-  "sections.support": "服务支持",
-  "sections.support.docs": "帮助文档",
-  "sections.support.faq": "常见问题",
-  "sections.support.technology": "技术支持",
-  "sections.support.insights": "行业洞察",
-  
-  "sections.company": "关于我们",
-  "sections.company.introduction": "公司简介",
-  "sections.company.certifications": "资质证书",
-  "sections.company.careers": "加入我们",
-  "sections.company.contact": "联系我们",
-  
-  "legal.terms": "服务条款",
-  "legal.privacy": "隐私政策",
-  "legal.copyright": "版权政策",
-  "legal.brand": "品牌政策",
-  "legal.cookies": "Cookie 使用政策",
-  
-  "copyright.text": "© 2026 vxture.ai. All rights reserved.",
-  
-  "icp.text": "陕ICP备2025076448号",
-  "publicSecurity.text": "陕公网安备610000000000号"
+  "brand": {
+    "name": "Vxture Studio",
+    "description": "人工智能自然探索工作室",
+    "address": "陕西省西安市高新区科技路100号"
+  },
+  "social": {
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "wechat": "微信公众号"
+  },
+  "sections": {
+    "products": {
+      "title": "产品中心",
+      "appcenter": "应用广场",
+      "products": "产品矩阵",
+      "solutions": "解决方案",
+      "cases": "案例展示"
+    },
+    "support": {
+      "title": "服务支持",
+      "docs": "帮助文档",
+      "faq": "常见问题",
+      "technology": "技术支持",
+      "insights": "行业洞察"
+    },
+    "company": {
+      "title": "关于我们",
+      "introduction": "公司简介",
+      "certifications": "资质证书",
+      "careers": "加入我们",
+      "contact": "联系我们"
+    }
+  },
+  "legal": {
+    "terms": "服务条款",
+    "privacy": "隐私政策",
+    "copyright": "版权政策",
+    "brand": "品牌政策",
+    "cookies": "Cookie 使用政策"
+  },
+  "copyright": {
+    "text": "© 2026 vxture.ai. All rights reserved."
+  },
+  "icp": {
+    "text": "陕ICP备2025076448号"
+  },
+  "publicSecurity": {
+    "text": "陕公网安备610000000000号"
+  }
 }

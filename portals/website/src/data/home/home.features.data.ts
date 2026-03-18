@@ -18,7 +18,8 @@ export interface FeatureCta {
 export interface FeatureItem {
   id: string;
   slug: string;
-  icon: string;
+  /** icon 名称从翻译文件（features.json items.*.icon）读取，data 层不再硬编码 */
+  icon?: string;
   intent: string;
   theme: string;
   variant: string;
@@ -44,18 +45,17 @@ export interface FeaturesData {
 export const FEATURES_DATA: FeaturesData = {
   enabled: true,
   icon: "chart",
-  titleKey: "home.features.title",
-  subtitleKey: "home.features.subtitle",
-  taglineKey: "home.features.tagline",
+  titleKey: "title",
+  subtitleKey: "subtitle",
+  taglineKey: "tagline",
   items: [
     {
       id: "feature-intro-01",
       slug: "data-knowledge-graph",
-      icon: "graph",
       intent: "simulation",
       theme: "primary",
       variant: "card",
-      highlights: ["home.features.items.feature-intro-01.highlights.0", "home.features.items.feature-intro-01.highlights.1", "home.features.items.feature-intro-01.highlights.2"],
+      highlights: ["items.feature-intro-01.highlights.0", "items.feature-intro-01.highlights.1", "items.feature-intro-01.highlights.2"],
       cta: {
         href: "/features/data-knowledge-graph"
       }
@@ -63,11 +63,10 @@ export const FEATURES_DATA: FeaturesData = {
     {
       id: "feature-intro-02",
       slug: "intelligent-decision-dispatch",
-      icon: "sparkles",
       intent: "solution",
       theme: "primary",
       variant: "card",
-      highlights: ["home.features.items.feature-intro-02.highlights.0", "home.features.items.feature-intro-02.highlights.1", "home.features.items.feature-intro-02.highlights.2"],
+      highlights: ["items.feature-intro-02.highlights.0", "items.feature-intro-02.highlights.1", "items.feature-intro-02.highlights.2"],
       cta: {
         href: "/features/intelligent-decision-dispatch"
       }
@@ -75,11 +74,10 @@ export const FEATURES_DATA: FeaturesData = {
     {
       id: "feature-intro-03",
       slug: "digital-twin-simulation",
-      icon: "cube",
       intent: "simulation",
       theme: "primary",
       variant: "card",
-      highlights: ["home.features.items.feature-intro-03.highlights.0", "home.features.items.feature-intro-03.highlights.1", "home.features.items.feature-intro-03.highlights.2"],
+      highlights: ["items.feature-intro-03.highlights.0", "items.feature-intro-03.highlights.1", "items.feature-intro-03.highlights.2"],
       cta: {
         href: "/features/digital-twin-simulation"
       }

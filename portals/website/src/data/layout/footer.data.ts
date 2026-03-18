@@ -135,7 +135,7 @@ export const FOOTER_DATA: FooterData = {
   sections: [
     {
       id: 'products-services',
-      titleKey: 'sections.products',
+      titleKey: 'sections.products.title',
       links: [
         { href: '/appcenter', labelKey: 'sections.products.appcenter' },
         { href: '/products', labelKey: 'sections.products.products' },
@@ -145,7 +145,7 @@ export const FOOTER_DATA: FooterData = {
     },
     {
       id: 'resources-support',
-      titleKey: 'sections.support',
+      titleKey: 'sections.support.title',
       links: [
         { href: '/docs', labelKey: 'sections.support.docs' },
         { href: '/faq', labelKey: 'sections.support.faq' },
@@ -155,7 +155,7 @@ export const FOOTER_DATA: FooterData = {
     },
     {
       id: 'about-us',
-      titleKey: 'sections.company',
+      titleKey: 'sections.company.title',
       links: [
         { href: '/about', labelKey: 'sections.company.introduction' },
         { href: '/certifications', labelKey: 'sections.company.certifications' },

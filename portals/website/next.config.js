@@ -16,7 +16,7 @@ const nextConfig = {
 
   // 生产环境启用 SWC 压缩，提升构建性能和运行效率。
   //
-  
+
 
   // 类型化路由配置
   typedRoutes: true,
@@ -56,7 +56,7 @@ const nextConfig = {
     formats: ['image/webp', 'image/avif'],
   },
 
-  // Webpack 配置
+  // Webpack 配置（生产构建 / 非 Turbopack 开发模式使用此配置）
   webpack: (config) => {
     // 解析内部包路径
     config.resolve.alias['@vxture/shared'] = join(__dirname, '../../packages/shared/shared/src');
@@ -66,7 +66,9 @@ const nextConfig = {
     config.resolve.alias['@vxture/core-tenant'] = join(__dirname, '../../packages/core/tenant/src');
     config.resolve.alias['@vxture/core-auth'] = join(__dirname, '../../packages/core/auth/src');
     config.resolve.alias['@vxture/core-utils'] = join(__dirname, '../../packages/core/utils/src');
-    config.resolve.alias['@vxture/design-system'] = join(__dirname, '../../packages/design/design-system/src');
+    // design-system 通过 package.json exports 自动解析到 dist/index.mjs，
+    // 无需手动 alias（Turbopack 和 webpack 均读取 exports 字段）
+    config.resolve.alias['@vxture/design-system'] = join(__dirname, '../../packages/design/design-system');
 
     return config;
   },

@@ -83,7 +83,6 @@
     "claudeCode.autosave": true,
     "claudeCode.respectGitIgnore": true,
     "claudeCode.usePythonEnvironment": true,
-    "claudeCode.environmentVariables": [],
   },
   "extensions": {
     "recommendations": [

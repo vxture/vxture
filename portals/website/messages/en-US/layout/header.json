@@ -1,21 +1,27 @@
 {
-  "logo.text": "vxture.ai",
-  "logo.alt": "logo",
-
-  "nav.appcenter": "AppCenter",
-  "nav.products": "Products",
-  "nav.solutions": "Solutions",
-  "nav.cases": "Cases",
-  "nav.about": "Company",
-
-  "actions.signup": "Signup",
-  "actions.login": "Login",
-
-  "language.title": "Language",
-  "language.zh-CN": "简体中文",
-  "language.en-US": "English",
-  
-  "theme.title": "Toggle Theme",
-  "theme.light": "Light",
-  "theme.dark": "Dark"
+  "logo": {
+    "text": "vxture.ai",
+    "alt": "logo"
+  },
+  "nav": {
+    "appcenter": "AppCenter",
+    "products": "Products",
+    "solutions": "Solutions",
+    "cases": "Cases",
+    "about": "Company"
+  },
+  "actions": {
+    "signup": "Signup",
+    "login": "Login"
+  },
+  "language": {
+    "title": "Language",
+    "zh-CN": "简体中文",
+    "en-US": "English"
+  },
+  "theme": {
+    "title": "Toggle Theme",
+    "light": "Light",
+    "dark": "Dark"
+  }
 }

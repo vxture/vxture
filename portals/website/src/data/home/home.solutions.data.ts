@@ -71,14 +71,14 @@ export interface SolutionsData {
 export const SOLUTIONS_DATA: SolutionsData = {
   enabled: true,
   icon: "chart",
-  titleKey: "home.solutions.title",
-  subtitleKey: "home.solutions.subtitle",
-  taglineKey: "home.solutions.tagline",
-  featuresTitleKey: "home.solutions.featuresTitle",
+  titleKey: "title",
+  subtitleKey: "subtitle",
+  taglineKey: "tagline",
+  featuresTitleKey: "featuresTitle",
   ui: {
-    viewDetailsKey: "home.solutions.ui.viewDetails",
-    prevKey: "home.solutions.ui.prev",
-    nextKey: "home.solutions.ui.next"
+    viewDetailsKey: "ui.viewDetails",
+    prevKey: "ui.prev",
+    nextKey: "ui.next"
   },
   items: [
     {

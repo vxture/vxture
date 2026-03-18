@@ -1,3 +1,74 @@
 {
-  "cases": "./cases"
+  "title": "Best Practices",
+  "subtitle": "Real-world cases showing digital transformation results",
+  "tagline": "Best Practices, Industry Benchmarks",
+  "ui": {
+    "viewDetails": "View Details",
+    "prev": "Prev",
+    "next": "Next",
+    "filterBy": "Filter by",
+    "search": "Search cases...",
+    "noResults": "No matching cases found",
+    "clearFilters": "Clear Filters",
+    "overview": "Project Overview",
+    "highlights": "Key Highlights"
+  },
+  "filters": {
+    "all": "All"
+  },
+  "categories": {
+    "geo": "Geological Hazards",
+    "public": "Public Safety",
+    "emergency": "Emergency Management"
+  },
+  "items": {
+    "case-intro-01": {
+      "title": "Geological Disaster Management Platform",
+      "subtitle": "Knowledge Graph-based Geological Disaster Monitoring & Early Warning System",
+      "description": "This system integrates multi-source meteorological, geographical, and seismic data, building complex disaster correlation models through knowledge graph technology to achieve real-time monitoring, risk assessment, and intelligent early warning of natural disasters.",
+      "tags": ["Data Fusion", "Ontology Modeling", "Business Analytics"],
+      "cover": { "alt": "Geological Disaster Management Platform" },
+      "customer": "Provincial Department of Natural Resources"
+    },
+    "case-intro-02": {
+      "title": "Intelligent Emergency Command Platform",
+      "subtitle": "AI-based Emergency Command Decision Support System",
+      "description": "This system uses artificial intelligence technology to automate and intelligentize the emergency command process. By analyzing, predicting, and evaluating emergencies, it provides scientific decision support for commanders, including pre-plan management, resource scheduling, and visualization modules.",
+      "tags": ["Emergency Management", "Data Integration", "Intelligent Decision"],
+      "cover": { "alt": "Intelligent Emergency Command Platform" },
+      "customer": "Provincial Emergency Department"
+    },
+    "case-intro-03": {
+      "title": "Public Safety Intelligence Analysis",
+      "subtitle": "Big Data-based Public Safety Risk Analysis Platform",
+      "description": "This platform integrates data from public security, transportation, fire protection, and other departments, building a public safety risk assessment model through big data analysis technology to monitor urban security situations in real time and provide early warning and disposal recommendations.",
+      "tags": ["Fusion Analysis", "Dynamic Assessment", "Event Response"],
+      "cover": { "alt": "Public Safety Intelligence Analysis" },
+      "customer": "Municipal Public Security Bureau"
+    },
+    "case-intro-04": {
+      "title": "Ecological Environment Monitoring System",
+      "subtitle": "IoT-based Ecological Environment Monitoring and Management Platform",
+      "description": "This system deploys IoT sensing devices to collect air, water, and soil environmental data in real time. Using big data analysis and AI technology, it achieves monitoring, early warning, and management of environmental quality, supporting data visualization, trend analysis, and anomaly detection.",
+      "tags": ["Environmental Protection", "IoT", "Data Analysis"],
+      "cover": { "alt": "Ecological Environment Monitoring System" },
+      "customer": "Provincial Ecology and Environment Department"
+    },
+    "case-intro-05": {
+      "title": "Transportation System Simulation Platform",
+      "subtitle": "Digital Twin-based Transportation System Simulation and Optimization",
+      "description": "This platform uses digital twin technology to build a virtual model of the urban transportation system. By simulating traffic flow, optimizing traffic signals, and predicting congestion, it achieves intelligent management of the transportation system.",
+      "tags": ["Traffic Management", "Digital Twin", "Simulation Optimization"],
+      "cover": { "alt": "Transportation System Simulation Platform" },
+      "customer": "Municipal Transportation Bureau"
+    },
+    "case-intro-06": {
+      "title": "Smart Healthcare Solution",
+      "subtitle": "AI-based Smart Healthcare Service Platform",
+      "description": "This platform integrates hospital information systems, electronic medical records, and medical device data resources. Through AI technology, it achieves intelligent diagnosis, health management, and telemedicine, improving medical service efficiency and reducing costs.",
+      "tags": ["Smart Healthcare", "Artificial Intelligence", "Health Management"],
+      "cover": { "alt": "Smart Healthcare Solution" },
+      "customer": "Municipal Health Commission"
+    }
+  }
 }

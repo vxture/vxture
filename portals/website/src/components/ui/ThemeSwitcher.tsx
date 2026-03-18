@@ -3,31 +3,31 @@
  *
  * 功能：
  * - 主题切换按钮组件，支持亮色/暗色模式
- * - 内置动画效果，自动记忆用户主题偏好
+ * - 内置动画效果，自动记忆用户主题偏好（由 next-themes 通过 localStorage 自动处理）
  *
  * 用途：
  * - 全局主题切换入口
  * - 可独立使用或嵌入导航栏
  *
  * 依赖/调用关系：
- * - 使用 useThemeStore 获取和设置主题状态
+ * - 使用 useTheme from @vxture/design-system 获取和设置主题状态
  *
  * @file ThemeSwitcher.tsx
  * @desc 主题切换组件，支持亮色/暗色模式
  * @author AI-Generated
  * @created 2026-03-15
+ * @date 2026-03-18
  * @copyright Copyright (c) 2024-2025 vxture
  * @license MIT
- * @version 1.0.0
- * @dependencies React, useThemeStore, Icon
+ * @version 2.0.0
+ * @dependencies React, useTheme, Icon
  * @category Components - UI
  * @layer Presentation
  */
 
 'use client';
 
-import { useThemeStore } from '@/stores/theme.store';
-import { Icon } from '@vxture/design-system';
+import { useTheme, Icon } from '@vxture/design-system';
 
 // ============================================================================
 // 组件实现区
@@ -42,7 +42,9 @@ export default function ThemeSwitcher({
   size?: 'small' | 'medium' | 'large';
   showLabel?: boolean;
 }) {
-  const { isDarkMode, toggleTheme } = useThemeStore();
+  const { theme, setTheme } = useTheme();
+  const isDarkMode = theme === 'dark';
+  const toggleTheme = () => setTheme(isDarkMode ? 'light' : 'dark');
 
   // 尺寸配置
   const sizeClasses = {
@@ -71,28 +73,20 @@ export default function ThemeSwitcher({
         <>
           <Icon
             name="sun"
-            className={`${iconSizes[size]} ${
-              isDarkMode ? 'text-yellow-400' : 'text-gray-700'
-            }`}
+            className={`${iconSizes[size]} text-yellow-400`}
           />
           {showLabel && (
-            <span className='ml-2 text-sm font-medium'>
-              亮色
-            </span>
+            <span className='ml-2 text-sm font-medium'>亮色</span>
           )}
         </>
       ) : (
         <>
           <Icon
             name="moon"
-            className={`${iconSizes[size]} ${
-              isDarkMode ? 'text-blue-300' : 'text-gray-700'
-            }`}
+            className={`${iconSizes[size]} text-gray-700`}
           />
           {showLabel && (
-            <span className='ml-2 text-sm font-medium'>
-              暗色
-            </span>
+            <span className='ml-2 text-sm font-medium'>暗色</span>
           )}
         </>
       )}

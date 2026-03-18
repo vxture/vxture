@@ -10,17 +10,18 @@
  * - 过滤器、设置面板等辅助内容
  *
  * 依赖/调用关系：
- * - 使用 useThemeStore 获取主题状态
+ * - 使用 useTheme from @vxture/design-system 获取主题状态
  * - 可被 Header.tsx 或页面组件调用
  *
  * @file Sidebar.tsx
  * @desc 响应式侧边栏组件，支持动画、主题适配
  * @author AI-Generated
  * @created 2026-03-15
+ * @date 2026-03-18
  * @copyright Copyright (c) 2024-2025 vxture
  * @license MIT
- * @version 1.0.0
- * @dependencies React, useThemeStore
+ * @version 2.0.0
+ * @dependencies React, useTheme
  * @category Components - Layout
  * @layer Presentation
  */
@@ -28,7 +29,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { useThemeStore } from '@/stores/theme.store';
+import { useTheme } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义区
@@ -64,7 +65,8 @@ export default function Sidebar({
   className = '',
   showOverlay = true,
 }: SidebarProps) {
-  const { isDarkMode } = useThemeStore();
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // 点击外部关闭

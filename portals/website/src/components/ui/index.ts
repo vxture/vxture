@@ -7,13 +7,13 @@
 
 export { default as LocaleSwitcher } from './LocaleSwitcher';
 export { default as ThemeSwitcher } from './ThemeSwitcher';
+export { default as FullscreenSwitcher } from './FullscreenSwitcher';
+export { default as DensitySwitcher } from './DensitySwitcher';
 export { default as PriceDisplay } from './PriceDisplay';
 export type { PriceDisplayProps } from './PriceDisplay';
 
-// 通知和主题组件
+// 通知组件
 export { default as Notifications } from './Notifications';
-export { default as ThemeSync } from './ThemeSync';
-export { default as ThemeToggleButton } from './ThemeToggleButton';
 
 // 滚动组件
 export { default as ScrollToButton } from './ScrollToButton';

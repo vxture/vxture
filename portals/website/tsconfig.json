@@ -3,11 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "jsx": "preserve",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2023"
-    ],
+    "lib": [ "DOM", "DOM.Iterable", "ES2023" ],
     "plugins": [
       {
         "name": "next"
@@ -28,8 +24,5 @@
     "src",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules",
-    ".next"
-  ]
+  "exclude": [ "node_modules", ".next" ]
 }

@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const p=require\\(''./node_modules/next-intl/package.json''\\); console.log\\(p.version\\)\")",
+      "Bash(ls:*)",
+      "Bash(node:*)",
+      "Bash(grep -r x-pathname D:/MyWebSite/vxture/portals/website/.next/server/ --include=*.js -l)",
+      "mcp__ide__getDiagnostics",
+      "Bash(/dev/null ls:*)",
+      "Bash(ls \"D:/MyWebSite/vxture/portals/website/src/stores/persistOptions/\" cat \"D:/MyWebSite/vxture/portals/website/src/app/[locale]/\\(marketing\\)/\\(main\\)/layout.tsx\")",
+      "Bash(head -20 cat \"D:/MyWebSite/vxture/portals/website/src/app/[locale]/\\(marketing\\)/about/layout.tsx\")",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\stores\\\\theme.store.ts\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\stores\\\\persistOptions\\\\themePersist.ts\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\components\\\\ui\\\\ThemeSync.tsx\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\components\\\\ui\\\\ThemeToggleButton.tsx\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\types\\\\theme.types.ts\" -Force)",
+      "Bash(find /d/MyWebSite/vxture -name index.d.ts -path *phosphor-icons*)",
+      "Bash(pnpm build:*)",
+      "Bash(powershell.exe -Command \"\n\\\\$lines = netstat -ano | findstr ':3000 '\nforeach \\(\\\\$line in \\\\$lines -split '\\\\`n'\\) {\n    \\\\$line = \\\\$line.Trim\\(\\)\n    if \\(\\\\$line\\) { Write-Host \\\\$line }\n}\n\" 2>&1)",
+      "Bash(find /d/MyWebSite/vxture -path */node_modules/@phosphor-icons/react -maxdepth 8 -type d)",
+      "Bash(PPATH=\"/d/MyWebSite/vxture/node_modules/.pnpm/@phosphor-icons+react@2.1.1_f82f3efdc691e80aeda4efd48283baa6/node_modules/@phosphor-icons/react\" ls \"$PPATH\")",
+      "Bash(PPATH=\"/d/MyWebSite/vxture/node_modules/.pnpm/@phosphor-icons+react@2.1.1_f82f3efdc691e80aeda4efd48283baa6/node_modules/@phosphor-icons/react/dist\" ls \"$PPATH\")",
+      "Bash(PPATH=/d/MyWebSite/vxture/node_modules/.pnpm/@phosphor-icons+react@2.1.1_f82f3efdc691e80aeda4efd48283baa6/node_modules/@phosphor-icons/react/dist grep -o Icon[A-Za-z]*b $PPATH/index.d.ts)",
+      "Bash(PPATH=\"/d/MyWebSite/vxture/node_modules/.pnpm/@phosphor-icons+react@2.1.1_f82f3efdc691e80aeda4efd48283baa6/node_modules/@phosphor-icons/react/dist\" grep -o \"[A-Za-z]*Icon\" \"$PPATH/index.d.ts\")",
+      "Bash(PPATH=\"/d/MyWebSite/vxture/node_modules/.pnpm/@phosphor-icons+react@2.1.1_f82f3efdc691e80aeda4efd48283baa6/node_modules/@phosphor-icons/react/dist\")",
+      "Read(//d/MyWebSite/vxture/portals/website/$PPATH/**)",
+      "Bash(PPATH=\"/d/MyWebSite/vxture/node_modules/.pnpm/@phosphor-icons+react@2.1.1_f82f3efdc691e80aeda4efd48283baa6/node_modules/@phosphor-icons/react/dist\" ls \"$PPATH/csr/\")",
+      "Bash(pnpm type-check:*)",
+      "Bash(grep -c '\"\"use client\"\"' /d/MyWebSite/vxture/packages/design/design-system/src/theme/ThemeProvider.tsx)",
+      "Bash(grep -c '\"\"use client\"\"' /d/MyWebSite/vxture/packages/design/design-system/src/icons/Icon.tsx)",
+      "Bash(grep -n '\"\"use client\"\"' /d/MyWebSite/vxture/packages/design/design-system/src/theme/ThemeProvider.tsx)",
+      "Bash(grep -n '\"\"use client\"\"' /d/MyWebSite/vxture/packages/design/design-system/src/icons/Icon.tsx)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}

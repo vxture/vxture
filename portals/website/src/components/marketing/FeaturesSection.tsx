@@ -79,7 +79,6 @@ interface FeatureCardProps {
   readonly feature: {
     readonly id: string;
     readonly slug: string;
-    readonly icon?: string;
     readonly highlights: readonly string[];
     readonly cta: { readonly href: string };
   };
@@ -143,17 +142,15 @@ const FeatureCard = memo(function FeatureCard({
 
       {/* 卡片内容区 */}
       <div className='relative flex flex-col flex-1 p-8 space-y-8 z-10'>
-        {/* 主图标 */}
-        {feature.icon && (
-          <div className='flex justify-center'>
-            <div
-              className={`w-24 h-24 ${colorsCards.iconMain} rounded-2xl flex items-center justify-center transition-transform duration-300 border-0`}
-            >
-              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              <Icon name={feature.icon as any} fallback='placeholder' className='w-16 h-16' />
-            </div>
+        {/* 主图标：从翻译文件读取 icon name，不在 registry 中则 fallback 到 placeholder（QuestionIcon） */}
+        <div className='flex justify-center'>
+          <div
+            className={`w-24 h-24 ${colorsCards.iconMain} rounded-2xl flex items-center justify-center transition-transform duration-300 border-0`}
+          >
+            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            <Icon name={t(`items.${feature.id}.icon`) as any} fallback='placeholder' className='w-16 h-16' />
           </div>
-        )}
+        </div>
 
         {/* 标题 */}
         <h3 className={`text-2xl font-bold text-center ${colorsCards.textMain}`}>

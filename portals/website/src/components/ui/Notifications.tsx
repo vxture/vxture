@@ -90,7 +90,7 @@ export default function Notifications() {
               className='text-gray-500 hover:text-gray-700'
               aria-label='关闭通知'
             >
-              <Icon name='delete' className='w-4 h-4' />
+              <Icon name='trash' className='w-4 h-4' />
             </button>
           </div>
         </div>

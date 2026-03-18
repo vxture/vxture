@@ -10,15 +10,19 @@
  *
  * @layer Presentation
  * @category Components - Layout
+ * @author AI-Generated
+ * @date 2026-03-18
  */
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useThemeStore } from '@/stores/theme.store';
+import { useTheme } from '@vxture/design-system';
 import Image from 'next/image';
 import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
+import FullscreenSwitcher from '@/components/ui/FullscreenSwitcher';
+import DensitySwitcher from '@/components/ui/DensitySwitcher';
 import { HEADER_DATA } from '@/data/layout/header.data';
 
 /**
@@ -27,7 +31,8 @@ import { HEADER_DATA } from '@/data/layout/header.data';
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const t = useTranslations('layout.header');
-  const { isDarkMode } = useThemeStore();
+  const { theme } = useTheme();
+  const isDarkMode = theme === 'dark';
 
   // ----------------------------------------------------------------------------
   // 监听滚动
@@ -54,7 +59,7 @@ export default function Header() {
     <header
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? `${isDarkMode ? 'bg-gray-900/90' : 'bg-white/90'} backdrop-blur-md shadow-lg`
+          ? `${isDarkMode ? 'bg-gray-900/80' : 'bg-white/50'} backdrop-blur-md shadow-lg`
           : 'bg-transparent'
       }`}
     >
@@ -73,7 +78,7 @@ export default function Header() {
               className={`text-2xl font-bold transition-colors duration-300 ${
                 isScrolled
                   ? isDarkMode ? 'text-white' : 'text-gray-900'
-                  : 'text-white'
+                  : isDarkMode ? 'text-white' : 'text-slate-800'
               }`}
             >
               {t(HEADER_DATA.logo.labelKey)}
@@ -86,10 +91,10 @@ export default function Header() {
               <a
                 key={item.href}
                 href={item.href}
-                className={`transition-colors duration-300 hover:text-cyan-400 ${
+                className={`transition-colors duration-300 hover:text-cyan-500 ${
                   isScrolled
                     ? isDarkMode ? 'text-gray-200 font-medium' : 'text-gray-900 font-medium'
-                    : 'text-white/90'
+                    : isDarkMode ? 'text-white/90' : 'text-slate-800 font-medium'
                 }`}
               >
                 {t(item.labelKey)}
@@ -97,21 +102,58 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Theme Switcher + Language Switcher + CTA Buttons */}
+          {/* 工具栏：主题 / 语言 / 全屏(pseudo) / 全屏(native) / 密度 / CTA */}
           <div className='flex space-x-4 items-center'>
-            {/* Theme Switcher */}
+
+            {/* 主题切换 */}
             <ThemeSwitcher
               size='medium'
-              className={isScrolled ? (isDarkMode ? 'text-yellow-400' : 'text-gray-700') : 'text-yellow-400'}
+              className={isScrolled
+                ? isDarkMode ? 'text-yellow-400' : 'text-gray-700'
+                : isDarkMode ? 'text-yellow-400' : 'text-slate-600'
+              }
             />
 
-            {/* Language Switcher */}
+            {/* 语言切换 */}
             {HEADER_DATA.language.enabled && (
               <LocaleSwitcher
                 size='medium'
-                className={isScrolled ? (isDarkMode ? 'text-cyan-400' : 'text-gray-700') : 'text-cyan-400'}
+                className={isScrolled
+                  ? isDarkMode ? 'text-cyan-400' : 'text-gray-700'
+                  : isDarkMode ? 'text-cyan-400' : 'text-slate-600'
+                }
               />
             )}
+
+            {/* 全屏切换 — pseudo 模式（工作区全屏，CSS 模拟） */}
+            <FullscreenSwitcher
+              mode='pseudo'
+              size='medium'
+              className={isScrolled
+                ? isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                : isDarkMode ? 'text-white/80' : 'text-slate-600'
+              }
+            />
+
+            {/* 全屏切换 — native 模式（调用浏览器原生全屏 API） */}
+            <FullscreenSwitcher
+              targetId='page-root-native'
+              mode='native'
+              size='medium'
+              className={isScrolled
+                ? isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                : isDarkMode ? 'text-white/80' : 'text-slate-600'
+              }
+            />
+
+            {/* 密度切换：compact / default / comfortable 循环 */}
+            <DensitySwitcher
+              size='medium'
+              className={isScrolled
+                ? isDarkMode ? 'text-gray-200' : 'text-gray-700'
+                : isDarkMode ? 'text-white/80' : 'text-slate-600'
+              }
+            />
 
             {/* CTA Buttons - 固定宽度 */}
             {HEADER_DATA.actions.length > 0 && (
@@ -127,7 +169,9 @@ export default function Header() {
                               ? isDarkMode
                                 ? 'text-gray-200 font-semibold hover:text-white'
                                 : 'text-gray-900 font-semibold hover:text-gray-900'
-                              : 'text-white/90 hover:text-white'
+                              : isDarkMode
+                                ? 'text-white/90 hover:text-white'
+                                : 'text-slate-800 font-semibold hover:text-slate-900'
                           }`
                         : 'w-28 px-6 py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
                     }

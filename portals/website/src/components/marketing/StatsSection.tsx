@@ -82,7 +82,7 @@ export default function StatsSection() {
       suffix: '+',
       label: '业务用户',
       description: '在线业务用户规模持续增长',
-      icon: <Icon name="user-group" className="w-16 h-16 text-blue-400" />,
+      icon: <Icon name="users" className="w-16 h-16 text-blue-400" />,
       color: 'from-blue-400 to-cyan-400',
     },
   ];

@@ -54,8 +54,8 @@ export interface CtaData {
  */
 export const CTA_DATA: CtaData = {
   enabled: true,
-  titleKey: "home.cta.title",
-  subtitleKey: "home.cta.subtitle",
+  titleKey: "title",
+  subtitleKey: "subtitle",
   features: [
     {
       id: "features-cta-01",
