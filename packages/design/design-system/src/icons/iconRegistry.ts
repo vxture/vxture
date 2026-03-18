@@ -4,7 +4,7 @@
  *
  * 功能：图标注册中心，唯一直接 import @phosphor-icons/react 的文件
  *       业务层和其他模块不得直接引用 Phosphor，统一通过此文件访问
- *       新增图标：在此文件和 icon-dictionary.ts 中同时添加
+ *       新增图标：在此文件和 iconDictionary.ts 中同时添加
  *
  * @copyright Vxture Team
  * @license MIT
@@ -21,7 +21,6 @@ import {
   ArrowRightIcon,
   ArrowUpIcon,
   ArrowDownIcon,
-  ArrowRightIcon as ArrowLongRightIcon,
   CaretLeftIcon,
   CaretRightIcon,
   CaretUpIcon,
@@ -37,7 +36,6 @@ import {
   PlusIcon,
   XIcon,
   CheckIcon,
-  TrashIcon as Trash2Icon,
 
   // ==========================================================================
   // 通用交互 - 状态
@@ -65,7 +63,7 @@ import {
   TableIcon,
   CodeIcon,
   PiIcon,
-  ArrowRightIcon as ArrowRightCurveIcon,
+  GitForkIcon,      // graph：有向图/节点图，语义更准确
   LightbulbIcon,
   SparkleIcon,
   ShieldCheckIcon,
@@ -106,8 +104,11 @@ import {
   SunIcon,
   MoonIcon,
   GlobeIcon,
-  ArrowsOutSimpleIcon,
-  ArrowsInSimpleIcon,
+  ArrowsOutSimpleIcon,  // maximize：原生全屏展开
+  ArrowsInSimpleIcon,   // minimize：原生全屏收起
+  CornersOutIcon,       // corners-out：伪全屏展开
+  CornersInIcon,        // corners-in：伪全屏收起
+  RowsIcon,
 
   // ==========================================================================
   // 其他
@@ -130,117 +131,113 @@ import type { IconName } from "./iconDictionary";
 /**
  * Phosphor 图标组件映射
  *
- * 这是设计系统中唯一直接依赖 Phosphor Icons 的地方
- * 所有图标都通过这个映射表进行统一管理
+ * 这是设计系统中唯一直接依赖 Phosphor Icons 的地方。
+ * 每个语义 key 对应唯一的图标组件，无同义重复 key。
  */
 export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   // ==========================================================================
   // 通用交互 - 导航
   // ==========================================================================
-  home: HouseIcon,
-  "arrow-left": ArrowLeftIcon,
-  "arrow-right": ArrowRightIcon,
-  "arrow-up": ArrowUpIcon,
-  "arrow-down": ArrowDownIcon,
-  "arrow-long-right": ArrowLongRightIcon,
-  "chevron-left": CaretLeftIcon,
-  "chevron-right": CaretRightIcon,
-  "chevron-up": CaretUpIcon,
-  "chevron-down": CaretDownIcon,
+  home:               HouseIcon,
+  "arrow-left":       ArrowLeftIcon,
+  "arrow-right":      ArrowRightIcon,
+  "arrow-up":         ArrowUpIcon,
+  "arrow-down":       ArrowDownIcon,
+  "arrow-long-right": ArrowRightIcon,
+  "chevron-left":     CaretLeftIcon,
+  "chevron-right":    CaretRightIcon,
+  "chevron-up":       CaretUpIcon,
+  "chevron-down":     CaretDownIcon,
 
   // ==========================================================================
   // 通用交互 - 操作
   // ==========================================================================
-  search: MagnifyingGlassIcon,
-  settings: GearIcon,
-  edit: PencilIcon,
-  delete: TrashIcon,
-  add: PlusIcon,
-  plus: PlusIcon,
-  x: XIcon,
-  check: CheckIcon,
-  trash: Trash2Icon,
-  cog: GearIcon,
+  search:    MagnifyingGlassIcon,
+  settings:  GearIcon,
+  edit:      PencilIcon,
+  trash:     TrashIcon,
+  plus:      PlusIcon,
+  x:         XIcon,
+  check:     CheckIcon,
 
   // ==========================================================================
   // 通用交互 - 状态
   // ==========================================================================
   success: CheckCircleIcon,
-  error: XCircleIcon,
+  error:   XCircleIcon,
   warning: WarningCircleIcon,
-  info: InfoIcon,
+  info:    InfoIcon,
 
   // ==========================================================================
   // 云服务/智能体 - 平台
   // ==========================================================================
-  agent: RobotIcon,
-  workflow: TimerIcon,
-  trigger: TimerIcon,
-  database: DatabaseIcon,
-  cloud: CloudIcon,
-  server: EraserIcon,
-  cube: CubeIcon,
+  agent:              RobotIcon,
+  workflow:           TimerIcon,
+  trigger:            TimerIcon,
+  database:           DatabaseIcon,
+  cloud:              CloudIcon,
+  server:             EraserIcon,    // TODO: 待替换为更合适的服务器图标
+  cube:               CubeIcon,
   "building-library": BuildingIcon,
 
   // ==========================================================================
   // 云服务/智能体 - 数据
   // ==========================================================================
-  chart: ChartBarIcon,
-  "chart-bar": ChartBarIcon,
-  table: TableIcon,
-  code: CodeIcon,
-  api: PiIcon,
-  graph: ArrowRightCurveIcon,
-  lightbulb: LightbulbIcon,
-  sparkles: SparkleIcon,
+  "chart-bar":    ChartBarIcon,
+  table:          TableIcon,
+  code:           CodeIcon,
+  api:            PiIcon,
+  graph:          GitForkIcon,
+  lightbulb:      LightbulbIcon,
+  sparkles:       SparkleIcon,
   "shield-check": ShieldCheckIcon,
 
   // ==========================================================================
   // 用户/组织
   // ==========================================================================
-  user: UserIcon,
-  "user-group": UsersIcon,
+  user:  UserIcon,
   users: UsersIcon,
   medal: MedalIcon,
-  star: StarIcon,
+  star:  StarIcon,
 
   // ==========================================================================
   // 通讯/联系
   // ==========================================================================
-  mail: EnvelopeIcon,
-  phone: PhoneIcon,
-  wechat: WechatLogoIcon,
-  github: GithubLogoIcon,
-  linkedin: LinkedinLogoIcon,
-  "chat-circle": ChatCircleIcon,
+  mail:              EnvelopeIcon,
+  phone:             PhoneIcon,
+  wechat:            WechatLogoIcon,
+  github:            GithubLogoIcon,
+  linkedin:          LinkedinLogoIcon,
+  "chat-circle":     ChatCircleIcon,
   "paperplane-tilt": PaperPlaneTiltIcon,
 
   // ==========================================================================
   // 时间/日历
   // ==========================================================================
   calendar: CalendarIcon,
-  "calendar-days": CalendarIcon,
-  clock: ClockIcon,
+  clock:    ClockIcon,
 
   // ==========================================================================
   // 地图/位置
   // ==========================================================================
   "map-pin": MapPinIcon,
-  "map-marker": MapPinIcon,
 
   // ==========================================================================
   // 主题/显示
   // ==========================================================================
-  sun: SunIcon,
-  moon: MoonIcon,
-  globe: GlobeIcon,
-  maximize: ArrowsOutSimpleIcon,
-  minimize: ArrowsInSimpleIcon,
+  sun:          SunIcon,
+  moon:         MoonIcon,
+  globe:        GlobeIcon,
+  maximize:     ArrowsOutSimpleIcon,
+  minimize:     ArrowsInSimpleIcon,
+  "corners-out": CornersOutIcon,
+  "corners-in":  CornersInIcon,
+  rows:          RowsIcon,
 
   // ==========================================================================
   // 其他
   // ==========================================================================
-  "caret-left-bold": CaretLeftBoldIcon,
+  "caret-left-bold":  CaretLeftBoldIcon,
   "caret-right-bold": CaretRightBoldIcon,
 
   // ==========================================================================

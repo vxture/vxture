@@ -10,15 +10,7 @@
  * @category Styles
  */
 
-.vx-fullscreen-active {
-  position: fixed;
-  inset: 0;
-  z-index: 1400;
-  width: 100vw;
-  height: 100vh;
-  background: var(--vx-color-background);
-  overflow: hidden;
-}
+/* ─── 全屏容器基础样式 ──────────────────────────────────────────────────────── */
 
 .vx-fullscreen-container {
   width: 100%;
@@ -27,36 +19,44 @@
   flex-direction: column;
 }
 
+/* ─── Pseudo 全屏激活状态 ────────────────────────────────────────────────────── */
+
+.vx-fullscreen-active {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  width: 100vw;
+  height: 100vh;
+  background: var(--vx-color-background);
+  overflow: hidden;
+  /* 隐藏滚动条 */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  /* 进入/退出过渡 */
+  transition: opacity 0.3s ease-in-out;
+}
+
+.vx-fullscreen-active::-webkit-scrollbar {
+  display: none;
+}
+
 .vx-fullscreen-active .vx-fullscreen-container {
   width: 100vw;
   height: 100vh;
 }
 
-/* 全屏状态下隐藏滚动条 */
-.vx-fullscreen-active::-webkit-scrollbar {
-  display: none;
+/* ─── 退出过渡状态 ───────────────────────────────────────────────────────────── */
+
+.vx-fullscreen-active.vx-fullscreen-exiting {
+  opacity: 0;
 }
 
-.vx-fullscreen-active {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+/* ─── 原生全屏（Fullscreen API）样式 ────────────────────────────────────────── */
 
-/* 原生全屏状态 */
 :fullscreen {
   background: var(--vx-color-background);
 }
 
-/* Safari 全屏样式 */
 :-webkit-full-screen {
   background: var(--vx-color-background);
-}
-
-/* 全屏切换动画 */
-.vx-fullscreen-active {
-  transition: opacity 0.3s ease-in-out;
-}
-
-.vx-fullscreen-active.vx-fullscreen-exiting {
-  opacity: 0;
 }

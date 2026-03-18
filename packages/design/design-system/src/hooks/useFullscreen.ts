@@ -2,7 +2,8 @@
  * useFullscreen.ts - 全屏系统 Hook
  * @package @vxture/design-system
  *
- * 功能：提供访问全屏系统状态和操作的 Hook
+ * 功能：提供访问全屏系统状态和操作的简化 Hook
+ *       isNativeSupported 直接从 context 读取，不重复实现
  *
  * @copyright Vxture Team
  * @license MIT
@@ -11,46 +12,34 @@
  */
 
 import { useFullscreenContext } from "../components/layout/fullscreen/Provider";
-import { FullscreenMode } from "../types/fullscreen";
+import type { FullscreenMode } from "../types/fullscreen";
 
 export function useFullscreen() {
   const context = useFullscreenContext();
 
   /**
-   * 简化版：进入全屏
+   * 进入全屏（简化签名）
    */
   const enter = (id: string, element: HTMLElement, mode?: FullscreenMode) => {
     context.enterFullscreen(id, element, mode);
   };
 
   /**
-   * 简化版：退出全屏
+   * 退出全屏（简化签名）
    */
   const exit = () => {
     context.exitFullscreen();
   };
 
   /**
-   * 简化版：切换全屏
+   * 切换全屏（简化签名）
    */
   const toggle = (id: string, element: HTMLElement, mode?: FullscreenMode) => {
     context.toggleFullscreen(id, element, mode);
   };
 
   /**
-   * 检查是否支持原生全屏
-   */
-  const isNativeSupported = (): boolean => {
-    return !!(
-      document.documentElement.requestFullscreen ||
-      (document.documentElement as any).webkitRequestFullscreen ||
-      (document.documentElement as any).mozRequestFullScreen ||
-      (document.documentElement as any).msRequestFullscreen
-    );
-  };
-
-  /**
-   * 检查是否是特定目标的全屏状态
+   * 检查特定目标是否处于全屏状态
    */
   const isTargetFullscreen = (id: string): boolean => {
     return context.isFullscreen && context.targetId === id;
@@ -61,7 +50,6 @@ export function useFullscreen() {
     enter,
     exit,
     toggle,
-    isNativeSupported,
-    isTargetFullscreen
+    isTargetFullscreen,
   };
 }

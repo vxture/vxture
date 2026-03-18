@@ -11,6 +11,6 @@
  * @category Index
  */
 
+// ThemeProvider 同时导出 ThemeProvider、useTheme、ThemeProviderProps
 export * from "./ThemeProvider";
-export * from "./useTheme";
 export * from "./theme.types";

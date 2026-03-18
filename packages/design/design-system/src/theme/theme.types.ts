@@ -3,6 +3,7 @@
  * @package @vxture/design-system
  *
  * 功能：定义主题系统的类型
+ *       Theme 类型在此本地定义，避免 rootDir 跨包引用导致 tsc 报错
  *
  * @copyright Vxture Team
  * @license MIT
@@ -10,7 +11,13 @@
  * @category Types
  */
 
-import type { Theme } from '@vxture/shared';
+/**
+ * 主题模式（与 @vxture/shared 的 Theme 类型保持一致）
+ * - light：亮色
+ * - dark：暗色
+ * - system：跟随操作系统
+ */
+type Theme = "light" | "dark" | "system";
 
 /**
  * 单个主题的展示配置，用于主题切换列表渲染
