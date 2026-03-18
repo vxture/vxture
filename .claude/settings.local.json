@@ -1,47 +1,8 @@
+// d:\MyWebSite\vxture\.claude\settings.local.json
 {
-  "permissions": {
-    "allow": [
-      "Bash(taskkill //F //PID 14596)",
-      "Bash(pnpm --filter @vxture/website dev)",
-      "Bash(taskkill //F //PID 21356)",
-      "Bash(powershell -ExecutionPolicy Bypass -Command \":*)",
-      "Bash(xargs grep -l \"agent-server\\\\|service-\\\\|core-\\\\|ai-sdk\\\\|bff-\")",
-      "Bash(npx tsc:*)",
-      "Bash(pnpm run:*)",
-      "Bash(pnpm install:*)",
-      "Bash(pnpm build:*)",
-      "Bash(pnpm --filter @vxture/core-locale build)",
-      "Bash(pnpm --filter @vxture/shared build)",
-      "Bash(\"d:/MyWebSite/vxture/packages/shared/shared/src/types/index.ts\":*)",
-      "Bash(npm run:*)",
-      "Bash(pnpm type-check:*)",
-      "Bash(node update-file-headers.js)",
-      "Bash(mv src/app/\\\\\\(auth\\\\\\)/* src/app/[locale]/\\\\\\(auth\\\\\\)/)",
-      "Bash(rmdir src/app/\\\\\\(auth\\\\\\))",
-      "Bash(mv src/app/\\\\\\(main\\\\\\) src/app/[locale]/\\\\\\(marketing\\\\\\)/)",
-      "Bash(mv src/app/about src/app/[locale]/\\\\\\(marketing\\\\\\)/)",
-      "Bash(mv src/app/products src/app/[locale]/\\\\\\(marketing\\\\\\)/)",
-      "Bash(pnpm --filter @vxture/website type-check)",
-      "Bash(pnpm --filter @vxture/website run build)",
-      "Bash(pnpm add:*)",
-      "Bash(pnpm list:*)",
-      "Bash(pnpm --filter @vxture/website run type-check)",
-      "Bash(pnpm --filter @vxture/website build)",
-      "Bash(curl -s -L -I \"http://localhost:3000/\")",
-      "Bash(Remove-Item -Path \"d:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\fallback\\\\layout.fallback.ts\" -Force)",
-      "Bash(Remove-Item -Path \"d:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\types\\\\layout.types.ts\" -Force)",
-      "Bash(Remove-Item -Path \"d:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\components\\\\layout\\\\layoutHelpers.ts\" -Force)",
-      "Bash(netstat -ano)",
-      "Bash(findstr :3000)",
-      "Bash(pkill -f \"node.*3000\")",
-      "Bash(taskkill /PID 34132 /F)",
-      "Bash(powershell -Command \"$process = \\(Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | Select-Object -First 1\\); if \\($process\\) { taskkill /PID $process /F }\")",
-      "Bash(powershell -Command \"$process = \\(Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess | Select-Object -First 1\\); if \\($null -ne $process\\) { taskkill /PID $process /F }\")",
-      "Bash(npx kill-port:*)",
-      "Bash(pnpm dev:*)",
-      "Bash(taskkill /F /PID 14196)",
-      "Bash(taskkill -F -PID 14196)",
-      "Bash(curl -s http://localhost:3000/zh-CN)"
-    ]
-  }
+  "ANTHROPIC_AUTH_TOKEN": "sk-gQGnrRYM8BOAtrFOtmqbCwNuEE8guEPLpo74E9usjjekz4kt",
+  "ANTHROPIC_BASE_URL": "http://ai-api.e-tudou.com:9200/v1",
+  "ANTHROPIC_MODEL": "claude-3-5-sonnet-20241022",
+  "timeout": 120,
+  "verify_ssl": false
 }
