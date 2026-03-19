@@ -100,8 +100,7 @@ export default function FullscreenSwitcher({
   const handleToggle = () => {
     const target = document.documentElement;
     containerRef.current = target;
-    const options: FullscreenOptions = { mode, ...(lockScroll !== undefined && { lockScroll }) };
-    toggle(targetId, target, options);
+    toggle(targetId, target, mode);
   };
 
   return (

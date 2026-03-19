@@ -61,7 +61,7 @@ export default function Header() {
     <header
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/50 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
+          ? 'bg-blue-50/80 dark:bg-slate-800/80 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -79,8 +79,8 @@ export default function Header() {
             <h1
               className={`text-2xl font-bold transition-colors duration-300 ${
                 isScrolled
-                  ? 'text-gray-900 dark:text-white'
-                  : 'text-white'
+                  ? 'text-blue-700 dark:text-white'
+                  : 'text-blue-700'
               }`}
             >
               {t(HEADER_DATA.logo.labelKey)}
@@ -95,8 +95,8 @@ export default function Header() {
                 href={item.href}
                 className={`transition-colors duration-300 hover:text-cyan-500 ${
                   isScrolled
-                    ? 'text-gray-900 dark:text-gray-200 font-medium'
-                    : 'text-white/90'
+                    ? 'text-blue-700 dark:text-slate-200 font-medium'
+                    : 'text-blue-700/80'
                 }`}
               >
                 {t(item.labelKey)}
@@ -110,14 +110,14 @@ export default function Header() {
             {/* 主题切换 */}
             <ThemeSwitcher
               size='medium'
-              className={isScrolled ? 'text-gray-700 dark:text-yellow-400' : 'text-slate-600 dark:text-yellow-400'}
+              className={isScrolled ? 'text-blue-600 dark:text-yellow-400' : 'text-white/80 dark:text-yellow-400'}
             />
 
             {/* 语言切换 */}
             {HEADER_DATA.language.enabled && (
               <LocaleSwitcher
                 size='medium'
-                className={isScrolled ? 'text-gray-700 dark:text-cyan-400' : 'text-slate-600 dark:text-cyan-400'}
+                className={isScrolled ? 'text-blue-600 dark:text-cyan-400' : 'text-white/80 dark:text-cyan-400'}
               />
             )}
 
@@ -125,7 +125,7 @@ export default function Header() {
             <FullscreenSwitcher
               mode='pseudo'
               size='medium'
-              className={isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white/80'}
+              className={isScrolled ? 'text-blue-600 dark:text-slate-200' : 'text-white/80'}
             />
 
             {/* 全屏切换 — native 模式（调用浏览器原生全屏 API） */}
@@ -133,13 +133,13 @@ export default function Header() {
               targetId='page-root-native'
               mode='native'
               size='medium'
-              className={isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white/80'}
+              className={isScrolled ? 'text-blue-600 dark:text-slate-200' : 'text-white/80'}
             />
 
             {/* 密度切换：compact / default / comfortable 循环 */}
             <DensitySwitcher
               size='medium'
-              className={isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white/80'}
+              className={isScrolled ? 'text-blue-600 dark:text-slate-200' : 'text-white/80'}
             />
 
             {/* CTA Buttons - 固定宽度 */}
@@ -153,8 +153,8 @@ export default function Header() {
                       action.variant === 'secondary'
                         ? `w-20 px-4 py-2 rounded-lg transition-all duration-300 text-center ${
                             isScrolled
-                              ? 'text-gray-900 dark:text-gray-200 font-semibold hover:text-gray-900 dark:hover:text-white'
-                              : 'text-white/90 hover:text-white'
+                              ? 'text-blue-700 dark:text-slate-200 font-semibold hover:text-blue-500 dark:hover:text-white'
+                              : 'text-blue-700/90 hover:text-white'
                           }`
                         : 'w-28 px-6 py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
                     }
