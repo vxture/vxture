@@ -17,7 +17,6 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { useTheme } from '@vxture/design-system';
 import Image from 'next/image';
 import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
@@ -27,12 +26,15 @@ import { HEADER_DATA } from '@/data/layout/header.data';
 
 /**
  * Header 组件
+ *
+ * 主题颜色说明：
+ * - Header 背景透明时文字用白色（视频/图片背景上可读）
+ * - 滚动后毛玻璃背景出现时，用 dark: 变体切换深色/浅色文字
+ * - 不使用 useTheme() 做 className 拼接，避免 SSR hydration mismatch
  */
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const t = useTranslations('layout.header');
-  const { theme } = useTheme();
-  const isDarkMode = theme === 'dark';
 
   // ----------------------------------------------------------------------------
   // 监听滚动
@@ -59,7 +61,7 @@ export default function Header() {
     <header
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? `${isDarkMode ? 'bg-gray-900/80' : 'bg-white/50'} backdrop-blur-md shadow-lg`
+          ? 'bg-white/50 dark:bg-gray-900/80 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -77,8 +79,8 @@ export default function Header() {
             <h1
               className={`text-2xl font-bold transition-colors duration-300 ${
                 isScrolled
-                  ? isDarkMode ? 'text-white' : 'text-gray-900'
-                  : isDarkMode ? 'text-white' : 'text-slate-800'
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-white'
               }`}
             >
               {t(HEADER_DATA.logo.labelKey)}
@@ -93,8 +95,8 @@ export default function Header() {
                 href={item.href}
                 className={`transition-colors duration-300 hover:text-cyan-500 ${
                   isScrolled
-                    ? isDarkMode ? 'text-gray-200 font-medium' : 'text-gray-900 font-medium'
-                    : isDarkMode ? 'text-white/90' : 'text-slate-800 font-medium'
+                    ? 'text-gray-900 dark:text-gray-200 font-medium'
+                    : 'text-white/90'
                 }`}
               >
                 {t(item.labelKey)}
@@ -108,20 +110,14 @@ export default function Header() {
             {/* 主题切换 */}
             <ThemeSwitcher
               size='medium'
-              className={isScrolled
-                ? isDarkMode ? 'text-yellow-400' : 'text-gray-700'
-                : isDarkMode ? 'text-yellow-400' : 'text-slate-600'
-              }
+              className={isScrolled ? 'text-gray-700 dark:text-yellow-400' : 'text-slate-600 dark:text-yellow-400'}
             />
 
             {/* 语言切换 */}
             {HEADER_DATA.language.enabled && (
               <LocaleSwitcher
                 size='medium'
-                className={isScrolled
-                  ? isDarkMode ? 'text-cyan-400' : 'text-gray-700'
-                  : isDarkMode ? 'text-cyan-400' : 'text-slate-600'
-                }
+                className={isScrolled ? 'text-gray-700 dark:text-cyan-400' : 'text-slate-600 dark:text-cyan-400'}
               />
             )}
 
@@ -129,10 +125,7 @@ export default function Header() {
             <FullscreenSwitcher
               mode='pseudo'
               size='medium'
-              className={isScrolled
-                ? isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                : isDarkMode ? 'text-white/80' : 'text-slate-600'
-              }
+              className={isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white/80'}
             />
 
             {/* 全屏切换 — native 模式（调用浏览器原生全屏 API） */}
@@ -140,19 +133,13 @@ export default function Header() {
               targetId='page-root-native'
               mode='native'
               size='medium'
-              className={isScrolled
-                ? isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                : isDarkMode ? 'text-white/80' : 'text-slate-600'
-              }
+              className={isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white/80'}
             />
 
             {/* 密度切换：compact / default / comfortable 循环 */}
             <DensitySwitcher
               size='medium'
-              className={isScrolled
-                ? isDarkMode ? 'text-gray-200' : 'text-gray-700'
-                : isDarkMode ? 'text-white/80' : 'text-slate-600'
-              }
+              className={isScrolled ? 'text-gray-700 dark:text-gray-200' : 'text-white/80'}
             />
 
             {/* CTA Buttons - 固定宽度 */}
@@ -166,12 +153,8 @@ export default function Header() {
                       action.variant === 'secondary'
                         ? `w-20 px-4 py-2 rounded-lg transition-all duration-300 text-center ${
                             isScrolled
-                              ? isDarkMode
-                                ? 'text-gray-200 font-semibold hover:text-white'
-                                : 'text-gray-900 font-semibold hover:text-gray-900'
-                              : isDarkMode
-                                ? 'text-white/90 hover:text-white'
-                                : 'text-slate-800 font-semibold hover:text-slate-900'
+                              ? 'text-gray-900 dark:text-gray-200 font-semibold hover:text-gray-900 dark:hover:text-white'
+                              : 'text-white/90 hover:text-white'
                           }`
                         : 'w-28 px-6 py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
                     }

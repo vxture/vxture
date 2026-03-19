@@ -5,8 +5,8 @@
  *
  * @author vxture team
  * @created 2024-06-01
- * @lastModified 2026-03-18
- * @version 2.2.0
+ * @lastModified 2026-03-19
+ * @version 2.3.0
  * @copyright Copyright (c) 2024-2026 Vxture Team
  * @license MIT
  *
@@ -68,7 +68,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
     : HERO_DATA.media.posterImage;
 
   // ==========================================================================
-  // 调试日志（方案 A：直接在组件里，生产环境自动禁用）
+  // 调试日志
   // ==========================================================================
 
   debugLog('Hero data:', HERO_DATA);
@@ -118,7 +118,6 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
   // 早期返回
   // ==========================================================================
 
-  // 如果内容被禁用，不渲染
   if (!HERO_DATA.enabled) {
     return null;
   }
@@ -166,9 +165,9 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
               <source src={HERO_DATA.media.videoUrl} type='video/mp4' />
             </video>
 
-            {/* 视频遮罩 - 浅色背景用较淡的遮罩 */}
+            {/* 视频遮罩 */}
             <div
-              className={`absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 transition-opacity duration-1000 ${
+              className={`absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 dark:from-slate-800/30 dark:via-blue-900/20 dark:to-slate-800/30 transition-opacity duration-1000 ${
                 videoLoaded && !videoError ? 'opacity-70' : 'opacity-0'
               }`}
             ></div>
@@ -184,7 +183,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
               fill
               className='object-cover'
             />
-            <div className='absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10'></div>
+            <div className='absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 dark:from-slate-800/30 dark:via-blue-900/20 dark:to-slate-800/30'></div>
           </>
         )}
 
@@ -193,7 +192,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
           (HERO_DATA.media.type === 'video' && !HERO_DATA.media.videoUrl) ||
           (HERO_DATA.media.type === 'image' && !HERO_DATA.media.url) ||
           (HERO_DATA.media.type === 'video' && videoError)) && (
-          <div className='absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50 to-slate-100'>
+          <div className='absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800'>
             <div className='absolute inset-0'>
               <div className='absolute top-8 right-0 w-64 h-64 bg-blue-200/30 rounded-full blur-3xl animate-pulse' />
             </div>
@@ -206,13 +205,14 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
         <div className='max-w-5xl px-4 sm:px-6 lg:px-8 py-32 text-center'>
           {/* 主标题 + 高亮部分 */}
           <h1 className='text-5xl lg:text-7xl font-bold py-8 leading-tight'>
-            <span className='inline-block bg-linear-to-r from-slate-800 to-slate-700 bg-clip-text text-transparent'>
+            {/* light: 深灰渐变；dark: 浅白渐变，在深色背景上清晰可读 */}
+            <span className='inline-block bg-linear-to-r from-slate-700 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent'>
               {t('title')}
             </span>
             {t('titleHighlight') && (
               <>
                 {' '}
-                <span className='inline-block bg-linear-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent'>
+                <span className='inline-block bg-linear-to-r from-blue-600 to-cyan-500 dark:from-blue-300 dark:to-cyan-300 bg-clip-text text-transparent'>
                   {t('titleHighlight')}
                 </span>
               </>
@@ -221,7 +221,9 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
 
           {/* 描述 */}
           {t('description') && (
-            <p className='text-xl text-slate-800 mb-12 max-w-2xl mx-auto'>{t('description')}</p>
+            <p className='text-xl text-slate-700 dark:text-slate-200 mb-12 max-w-2xl mx-auto'>
+              {t('description')}
+            </p>
           )}
 
           {/* CTA 按钮 */}
@@ -241,7 +243,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       {/* 底部滚动提示 */}
       {HERO_DATA.scrollIndicator?.enabled && (
         <div className='absolute bottom-8 flex justify-center items-center z-10 pointer-events-auto'>
-          <div className='text-slate-500 animate-bounce px-4 py-2 flex flex-col items-center'>
+          <div className='text-slate-500 dark:text-slate-300 animate-bounce px-4 py-2 flex flex-col items-center'>
             <Icon name='arrow-down' className='w-6 h-6' />
             {t('scrollIndicator.text') && (
               <p className='text-sm text-center'>{t('scrollIndicator.text')}</p>

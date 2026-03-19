@@ -27,6 +27,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useTheme, Icon } from '@vxture/design-system';
 
 // ============================================================================
@@ -43,8 +44,13 @@ export default function ThemeSwitcher({
   showLabel?: boolean;
 }) {
   const { theme, setTheme } = useTheme();
-  const isDarkMode = theme === 'dark';
-  const toggleTheme = () => setTheme(isDarkMode ? 'light' : 'dark');
+
+  // ——— SSR / Hydration 安全 ———
+  // next-themes 在服务端 theme 为 undefined，直接用 isDarkMode 会导致
+  // SSR 与 Client 渲染结果不一致 → Hydration mismatch。
+  // 解决方案：mounted 前始终渲染"亮色"占位，mount 后再读取真实主题。
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   // 尺寸配置
   const sizeClasses = {
@@ -59,10 +65,28 @@ export default function ThemeSwitcher({
     large: 'w-6 h-6',
   };
 
+  // mount 前渲染占位，保持与 SSR 输出一致，避免 hydration mismatch
+  if (!mounted) {
+    return (
+      <button
+        className={`flex items-center justify-center transition-all duration-300 hover:opacity-80 ${sizeClasses[size]} ${className}`}
+        title='切换到暗色模式'
+        aria-label='切换到暗色模式'
+        disabled
+      >
+        <Icon name='moon' className={`${iconSizes[size]} text-gray-700`} />
+      </button>
+    );
+  }
+
+  const isDarkMode = theme === 'dark';
+  const toggleTheme = () => setTheme(isDarkMode ? 'light' : 'dark');
+
   return (
     <button
       className={`flex items-center justify-center transition-all duration-300 hover:opacity-80 ${sizeClasses[size]} ${className}`}
       title={isDarkMode ? '切换到亮色模式' : '切换到暗色模式'}
+      aria-label={isDarkMode ? '切换到亮色模式' : '切换到暗色模式'}
       onClick={toggleTheme}
     >
       <span className='sr-only'>
@@ -71,23 +95,13 @@ export default function ThemeSwitcher({
 
       {isDarkMode ? (
         <>
-          <Icon
-            name="sun"
-            className={`${iconSizes[size]} text-yellow-400`}
-          />
-          {showLabel && (
-            <span className='ml-2 text-sm font-medium'>亮色</span>
-          )}
+          <Icon name='sun' className={`${iconSizes[size]} text-yellow-400`} />
+          {showLabel && <span className='ml-2 text-sm font-medium'>亮色</span>}
         </>
       ) : (
         <>
-          <Icon
-            name="moon"
-            className={`${iconSizes[size]} text-gray-700`}
-          />
-          {showLabel && (
-            <span className='ml-2 text-sm font-medium'>暗色</span>
-          )}
+          <Icon name='moon' className={`${iconSizes[size]} text-gray-700`} />
+          {showLabel && <span className='ml-2 text-sm font-medium'>暗色</span>}
         </>
       )}
     </button>

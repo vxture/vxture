@@ -5,8 +5,8 @@
  *
  * @author vxture team
  * @created 2024-06-01
- * @lastModified 2026-03-04
- * @version 2.1.0
+ * @lastModified 2026-03-19
+ * @version 2.2.0
  * @copyright Copyright (c) 2024-2026 Vxture Team
  * @license MIT
  *
@@ -32,13 +32,6 @@ import { SOLUTIONS_DATA, type SolutionItem } from '@/data/home/home.solutions.da
 interface SolutionCardProps {
   readonly solution: SolutionItem;
   readonly idx: number;
-  readonly colors: {
-    readonly gradient: string;
-    readonly bg: string;
-    readonly border: string;
-    readonly text: string;
-    readonly button: string;
-  };
   readonly uiTexts: {
     readonly viewDetails: string;
     readonly prev: string;
@@ -57,156 +50,109 @@ interface SolutionSectionProps {
   readonly name?: string;
 }
 
-/**
- * 主题颜色映射类型
- */
-type ColorMap = {
-  readonly [key: string]: {
-    readonly gradient: string;
-    readonly bg: string;
-    readonly border: string;
-    readonly text: string;
-    readonly button: string;
-  };
-};
-
-// ============================================================================
-// 常量定义
-// ============================================================================
-
-/**
- * 主题颜色映射表
- */
-const colorMap: ColorMap = {
-  primary: {
-    gradient: 'from-blue-500 to-cyan-500',
-    bg: 'bg-blue-50',
-    border: 'border-blue-200',
-    text: 'text-blue-600',
-    button: 'bg-blue-500 hover:bg-blue-600',
-  },
-  brand: {
-    gradient: 'from-purple-500 to-blue-500',
-    bg: 'bg-purple-50',
-    border: 'border-purple-200',
-    text: 'text-purple-600',
-    button: 'bg-purple-500 hover:bg-purple-600',
-  },
-  info: {
-    gradient: 'from-cyan-500 to-green-500',
-    bg: 'bg-cyan-50',
-    border: 'border-cyan-200',
-    text: 'text-cyan-600',
-    button: 'bg-cyan-500 hover:bg-cyan-600',
-  },
-  success: {
-    gradient: 'from-green-500 to-emerald-500',
-    bg: 'bg-green-50',
-    border: 'border-green-200',
-    text: 'text-green-600',
-    button: 'bg-green-500 hover:bg-green-600',
-  },
-};
-
 // ============================================================================
 // 子组件定义
 // ============================================================================
 
 /**
  * 解决方案卡片组件（性能优化：React.memo）
+ *
+ * 统一色值规范：
+ *   light: 左侧白底，蓝色标题，灰色描述；右侧浅蓝渐变背景
+ *   dark:  左侧 slate-700，蓝色浅标题，slate-300 描述；右侧 slate-600 渐变背景
  */
 const SolutionCard = memo(function SolutionCard({
   solution,
   idx,
-  colors,
   uiTexts,
   featuresTitle,
   prev,
   next,
 }: SolutionCardProps) {
   const t = useTranslations('home.solutions');
-  // ==========================================================================
-  // 渲染
-  // ==========================================================================
 
   return (
-    <div className={`w-full transition-all duration-500 ${colors.border} ${colors.bg}`}>
+    <div className='w-full transition-all duration-500'>
       <div className='grid grid-cols-1 lg:grid-cols-[38%_62%] h-full rounded-2xl shadow-lg overflow-hidden'>
         {/* 左侧文本内容 */}
-        <div className='relative flex h-full items-center justify-start px-4 py-4'>
+        <div className='relative flex h-full items-center justify-start px-4 py-4 bg-white dark:bg-slate-700'>
           <div className='relative w-full h-full flex flex-col gap-4 justify-items-start'>
             {/* 标题与副标题 */}
             <div className='relative flex items-center h-20 min-h-20'>
               {/* 背景数字 */}
               <span
-                className='absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-blue-400 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
+                className='absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-blue-300 dark:text-blue-500 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
                 aria-hidden='true'
-                style={{
-                  letterSpacing: '-0.05em',
-                  textShadow: '0 4px 24px #60a5fa, 0 1px 0 #fff',
-                }}
+                style={{ letterSpacing: '-0.05em' }}
               >
                 {idx + 1}
               </span>
               {/* 标题内容 */}
               <div className='relative z-10 flex-1 flex flex-col items-start py-6 pl-12'>
-                <h3 className='text-xl font-bold text-blue-800 text-left'>{t(`items.${solution.id}.title`)}</h3>
-                <p className='text-sm text-gray-600 mt-1 text-left'>{t(`items.${solution.id}.subtitle`)}</p>
+                <h3 className='text-xl font-bold text-blue-700 dark:text-blue-200 text-left'>
+                  {t(`items.${solution.id}.title`)}
+                </h3>
+                <p className='text-sm text-gray-600 dark:text-slate-300 mt-1 text-left'>
+                  {t(`items.${solution.id}.subtitle`)}
+                </p>
               </div>
             </div>
             {/* 方案描述 */}
             <div className='items-center justify-left ml-12'>
-              <p className='text-base text-gray-600 leading-relaxed'>{t(`items.${solution.id}.description`)}</p>
+              <p className='text-base text-gray-600 dark:text-slate-300 leading-relaxed'>
+                {t(`items.${solution.id}.description`)}
+              </p>
             </div>
             {/* 特色标签 */}
             <div className='items-center justify-left mt-4 ml-12'>
-              <h4 className='text-lg font-semibold text-gray-800'>{featuresTitle}</h4>
+              <h4 className='text-lg font-semibold text-blue-700 dark:text-blue-200'>{featuresTitle}</h4>
               <div className='grid grid-cols-2 gap-3 justify-items-left my-2'>
-                {[t(`items.${solution.id}.tags.0`), t(`items.${solution.id}.tags.1`), t(`items.${solution.id}.tags.2`)].map((tag, tagIdx) => (
-                  tag && (
-                    <div key={tagIdx} className='flex items-center justify-start space-x-2'>
-                      <div
-                        className={`w-2 h-2 rounded-full bg-linear-to-r ${colors.gradient}`}
-                      ></div>
-                      <span className='text-base text-gray-600'>{tag}</span>
-                    </div>
-                  )
-                ))}
+                {[
+                  t(`items.${solution.id}.tags.0`),
+                  t(`items.${solution.id}.tags.1`),
+                  t(`items.${solution.id}.tags.2`),
+                ].map(
+                  (tag, tagIdx) =>
+                    tag && (
+                      <div key={tagIdx} className='flex items-center justify-start space-x-2'>
+                        <div className='w-2 h-2 rounded-full bg-linear-to-r from-blue-500 to-cyan-500'></div>
+                        <span className='text-base text-gray-600 dark:text-slate-300'>{tag}</span>
+                      </div>
+                    )
+                )}
               </div>
             </div>
             {/* 了解更多与导航按钮 */}
             <div className='flex flex-col gap-4 mt-auto mb-4'>
-              {/* 第一行：了解更多 */}
+              {/* 了解更多 */}
               <div className='flex justify-start items-center ml-12'>
                 <a
                   href={solution.cta.href}
-                  className={`inline-flex items-center px-5 py-2 ${colors.button} text-white rounded-lg transition-all duration-300 font-semibold w-max hover:opacity-90 text-sm`}
+                  className='inline-flex items-center px-5 py-2 bg-blue-500 hover:bg-blue-600 dark:bg-blue-500/80 dark:hover:bg-blue-500 text-white rounded-lg transition-all duration-300 font-semibold w-max hover:opacity-90 text-sm'
                 >
                   {uiTexts.viewDetails}
                 </a>
               </div>
               {/* 分割线 */}
-              <div className='w-full h-px bg-gray-200'></div>
-              {/* 第二行：两个操作按钮 */}
+              <div className='w-full h-px bg-gray-200 dark:bg-slate-600'></div>
+              {/* 导航按钮 */}
               <div className='flex justify-center'>
                 <div className='flex gap-6'>
-                  {/* 上一项 */}
                   <button
                     aria-label='Previous'
                     onClick={prev}
-                    className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
+                    className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-600 transition-all duration-300 hover:shadow-md'
                   >
-                    <Icon name='caret-left-bold' className='w-4 h-4 text-gray-400' />
-                    <span className='text-gray-400 font-medium text-sm'>{uiTexts.prev}</span>
+                    <Icon name='caret-left-bold' className='w-4 h-4 text-gray-400 dark:text-slate-400' />
+                    <span className='text-gray-400 dark:text-slate-400 font-medium text-sm'>{uiTexts.prev}</span>
                   </button>
-                  {/* 下一项 */}
                   <button
                     aria-label='Next'
                     onClick={next}
-                    className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-200 transition-all duration-300 hover:shadow-md'
+                    className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-600 transition-all duration-300 hover:shadow-md'
                   >
-                    <span className='text-gray-400 font-medium text-sm'>{uiTexts.next}</span>
-                    <Icon name='caret-right-bold' className='w-4 h-4 text-gray-400' />
+                    <span className='text-gray-400 dark:text-slate-400 font-medium text-sm'>{uiTexts.next}</span>
+                    <Icon name='caret-right-bold' className='w-4 h-4 text-gray-400 dark:text-slate-400' />
                   </button>
                 </div>
               </div>
@@ -214,19 +160,13 @@ const SolutionCard = memo(function SolutionCard({
           </div>
         </div>
         {/* 右侧图片内容 */}
-        <div className='bg-linear-to-r from-blue-100 via-blue-100 to-blue-200'>
-          <div className='relative flex items-center justify-center bg-linear-to-r from-blue-100 via-blue-50 to-blue-100 px-38 '>
+        <div className='bg-linear-to-r from-blue-50 via-blue-100 to-blue-50 dark:from-slate-600 dark:via-slate-500 dark:to-slate-600'>
+          <div className='relative flex items-center justify-center px-38'>
             <div className='relative w-full max-w-2xl h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300 py-6'>
-              {/* 方案主图层（响应式自适应） */}
               <div className='relative w-full pointer-events-none select-none'>
                 <div
                   className='absolute flex items-center justify-center'
-                  style={{
-                    top: '4%',
-                    right: '3%',
-                    bottom: '4.5%',
-                    left: '3%',
-                  }}
+                  style={{ top: '4%', right: '3%', bottom: '4.5%', left: '3%' }}
                 >
                   <div className='w-full h-full overflow-hidden z-10'>
                     <Image
@@ -257,32 +197,20 @@ const SolutionCard = memo(function SolutionCard({
 
 /**
  * 解决方案区块主组件
+ *
+ * 背景渐变：section 3（Solutions）
+ *   light: from-blue-50 to-white   （上接 Features 浅蓝，向下过渡到白）
+ *   dark:  from-slate-700 to-slate-800
  */
 const SolutionSection = memo(function SolutionSection({
   id,
   name = 'Solutions',
 }: SolutionSectionProps) {
-  // ==========================================================================
-  // 状态初始化
-  // ==========================================================================
-
-  // 轮播当前索引
   const [current, setCurrent] = useState<number>(0);
-
-  // ==========================================================================
-  // Hooks 调用
-  // ==========================================================================
-
   const t = useTranslations('home.solutions');
 
-  // 调试日志
   debugLog('Solutions data:', SOLUTIONS_DATA);
 
-  // ==========================================================================
-  // 事件处理
-  // ==========================================================================
-
-  // 轮播切换
   const total = SOLUTIONS_DATA.items.length;
 
   const prev = useCallback(() => {
@@ -293,18 +221,9 @@ const SolutionSection = memo(function SolutionSection({
     setCurrent((prev) => (prev + 1) % total);
   }, [total]);
 
-  // ==========================================================================
-  // 早期返回
-  // ==========================================================================
-
-  // 如果内容被禁用，不渲染
   if (!SOLUTIONS_DATA.enabled) {
     return null;
   }
-
-  // ==========================================================================
-  // 渲染
-  // ==========================================================================
 
   const { items } = SOLUTIONS_DATA;
   const title = t(SOLUTIONS_DATA.titleKey);
@@ -321,16 +240,16 @@ const SolutionSection = memo(function SolutionSection({
     <section
       id={id}
       data-name={name}
-      className='relative snap-section min-h-screen flex flex-col bg-linear-to-b from-blue-50 to-white'
+      className='relative snap-section min-h-screen flex flex-col bg-linear-to-br from-blue-100 to-white dark:from-slate-800 dark:to-slate-700'
     >
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
-        {/* 1. 标题区 - 靠上对齐 */}
+        {/* 1. 标题区 */}
         <div className='text-center pt-28'>
-          <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-4'>{title}</h2>
-          <p className='text-lg text-gray-600 max-w-4xl mx-auto'>{subtitle}</p>
+          <h2 className='text-3xl lg:text-4xl font-bold text-blue-700 dark:text-blue-200 mb-4'>{title}</h2>
+          <p className='text-lg text-gray-600 dark:text-slate-300 max-w-4xl mx-auto'>{subtitle}</p>
         </div>
 
-        {/* 2. 内容区 - 上下居中 */}
+        {/* 2. 内容区 */}
         <div className='flex flex-1 items-center justify-center py-8'>
           <div className='w-full'>
             {/* 方案标题导航 */}
@@ -340,13 +259,11 @@ const SolutionSection = memo(function SolutionSection({
                   <button
                     key={solution.id}
                     onClick={() => setCurrent(idx)}
-                    className={`text-xs sm:text-sm transition-all duration-300 px-2 sm:px-3 py-1 rounded-full
-                      ${
-                        idx === current
-                          ? 'text-blue-800 font-semibold bg-blue-100'
-                          : 'text-gray-400 hover:text-gray-600'
-                      }
-                    `}
+                    className={`text-xs sm:text-sm transition-all duration-300 px-2 sm:px-3 py-1 rounded-full ${
+                      idx === current
+                        ? 'text-blue-700 dark:text-blue-200 font-semibold bg-blue-100 dark:bg-blue-800/40'
+                        : 'text-gray-400 dark:text-slate-400 hover:text-gray-600 dark:hover:text-slate-300'
+                    }`}
                   >
                     {t(`items.${solution.id}.title`)}
                   </button>
@@ -358,20 +275,11 @@ const SolutionSection = memo(function SolutionSection({
             <div className='w-full flex justify-center'>
               {items.map((solution, idx) => {
                 if (idx !== current) return null;
-                const colors =
-                  colorMap[solution.theme as keyof typeof colorMap] || colorMap.primary || {
-                    gradient: '',
-                    bg: '',
-                    border: '',
-                    text: '',
-                    button: '',
-                  };
                 return (
                   <SolutionCard
                     key={solution.id}
                     solution={solution}
                     idx={idx}
-                    colors={colors}
                     uiTexts={uiTexts}
                     featuresTitle={featuresTitle}
                     prev={prev}
@@ -383,13 +291,13 @@ const SolutionSection = memo(function SolutionSection({
           </div>
         </div>
 
-        {/* 3. 底部区 - 靠下对齐 */}
+        {/* 3. 底部 tagline */}
         {tagline && (
           <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-blue-200'></div>
-              <span className='text-sm font-medium text-blue-500'>{tagline}</span>
-              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-blue-200'></div>
+              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-blue-200 dark:to-blue-600'></div>
+              <span className='text-sm font-medium text-blue-500 dark:text-blue-300'>{tagline}</span>
+              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-blue-200 dark:to-blue-600'></div>
             </div>
           </div>
         )}

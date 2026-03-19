@@ -17,12 +17,14 @@
    --------------------------------------------------------------------------- */
 @import "tailwindcss";
 
-/* Tailwind v4 Dark Mode Fix */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
+/* ---------------------------------------------------------------------------
+   Tailwind v4 Dark Mode 配置
+   说明：v4 废弃了 tailwind.config.js 的 darkMode: 'class' 写法。
+         必须用 @custom-variant 声明 dark 变体的触发选择器。
+   触发：html 元素带有 class="dark" 时（由 next-themes ThemeProvider 注入）
+   参考：https://tailwindcss.com/docs/dark-mode#using-a-custom-selector
+   --------------------------------------------------------------------------- */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ---------------------------------------------------------------------------
    主题系统 (Theme System)

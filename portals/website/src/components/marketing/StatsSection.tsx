@@ -186,12 +186,12 @@ export default function StatsSection() {
       ref={sectionRef}
       id='snapTarget-5'
       aria-label='公司核心数据统计'
-      className={`relative snap-section h-screen pt-28 bg-linear-to-b from-slate-50 to-white`}
+      className={`relative snap-section h-screen pt-28 bg-linear-to-br from-blue-100 to-white dark:from-slate-800 dark:to-slate-700`}
     >
       {/* 背景装饰圆形（z-0，放在内容容器后面，仅限section内定位） */}
       <div className='absolute inset-0 z-0 pointer-events-none'>
-        <div className='absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 rounded-full blur-3xl'></div>
-        <div className='absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 rounded-full blur-3xl'></div>
+        <div className='absolute top-0 left-1/4 w-96 h-96 bg-blue-100/10 dark:bg-blue-900/10 rounded-full blur-3xl'></div>
+        <div className='absolute bottom-0 right-1/4 w-96 h-96 bg-cyan-100/10 dark:bg-blue-900/10 rounded-full blur-3xl'></div>
         <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-linear-to-r from-blue-100/5 to-cyan-100/5 rounded-full blur-3xl'></div>
       </div>
 
@@ -201,8 +201,8 @@ export default function StatsSection() {
         <div className='flex items-center justify-between mb-16'>
           {/* Section title and subtitle */}
           <div className='flex-1 text-center'>
-            <h2 className='text-3xl lg:text-4xl font-bold text-blue-800 mb-6'>服务的客户</h2>
-            <p className='text-lg text-gray-400 max-w-4xl mx-auto'>
+            <h2 className='text-3xl lg:text-4xl font-bold text-blue-700 dark:text-blue-200 mb-6'>服务的客户</h2>
+            <p className='text-lg text-gray-500 dark:text-slate-300 max-w-4xl mx-auto'>
               用数字见证我们在数据智能领域的专业实力与客户信赖
             </p>
           </div>
@@ -217,7 +217,7 @@ export default function StatsSection() {
               style={{ animationDelay: `${index * 150}ms` }} // 瀑布式动画延迟
             >
               {/* 卡片主体 */}
-              <div className='relative pb-8 bg-white/60 backdrop-blur-sm border border-blue-100 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 hover:scale-105 overflow-hidden'>
+              <div className='relative pb-8 bg-white/80 dark:bg-slate-600/60 backdrop-blur-sm border border-blue-100 dark:border-slate-500 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:border-blue-400 dark:hover:border-blue-400 hover:scale-105 overflow-hidden'>
                 {/* 渐变边框效果，hover 时显现, 用伪元素实现渐变边框 */}
 
                 <div
@@ -245,12 +245,12 @@ export default function StatsSection() {
                   </div>
 
                   {/* 标签 */}
-                  <h3 className='text-xl font-semibold text-gray-900 text-center mb-3'>
+                  <h3 className='text-xl font-semibold text-blue-700 dark:text-blue-200 text-center mb-3'>
                     {stat.label}
                   </h3>
 
                   {/* 描述 */}
-                  <p className='text-gray-600 text-center text-base leading-relaxed'>
+                  <p className='text-gray-600 dark:text-slate-300 text-center text-base leading-relaxed'>
                     {stat.description}
                   </p>
                 </div>
@@ -265,10 +265,10 @@ export default function StatsSection() {
         </div>
         {/* 底部装饰文本，样式与 FeaturesSection 完全一致 */}
         <div className='text-center my-16'>
-          <div className='inline-flex items-center space-x-2 text-gray-500'>
-            <div className='w-8 h-px bg-linear-to-r from-transparent to-gray-300'></div>
+          <div className='inline-flex items-center space-x-2 text-gray-500 dark:text-slate-300'>
+            <div className='w-8 h-px bg-linear-to-r from-transparent to-gray-300 dark:to-slate-600'></div>
             <span className='text-sm font-medium'>持续创新，共创数字未来</span>
-            <div className='w-8 h-px bg-linear-to-l from-transparent to-gray-300'></div>
+            <div className='w-8 h-px bg-linear-to-l from-transparent to-gray-300 dark:to-slate-600'></div>
           </div>
         </div>
         {/* 客户logo展示区域，两行五列布局 */}
@@ -287,7 +287,7 @@ export default function StatsSection() {
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     if (e.currentTarget.parentElement) {
-                      e.currentTarget.parentElement.innerHTML = `<span class='flex items-center justify-center w-full h-full bg-blue-200 text-gray-400 text-xs rounded-lg'>客户Logo${num}</span>`;
+                      e.currentTarget.parentElement.innerHTML = `<span class='flex items-center justify-center w-full h-full bg-blue-200 dark:bg-slate-700 text-gray-400 text-xs rounded-lg'>客户Logo${num}</span>`;
                     }
                   }}
                   unoptimized
