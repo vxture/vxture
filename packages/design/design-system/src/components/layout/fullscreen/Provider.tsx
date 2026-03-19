@@ -11,25 +11,41 @@
  */
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
-import { FullscreenContextValue, FullscreenMode, FullscreenProviderProps, FullscreenState } from "../../../types/fullscreen";
+import type {
+  FullscreenContextValue,
+  FullscreenMode,
+  FullscreenOptions,
+  FullscreenProviderProps,
+  FullscreenState,
+} from "../../../types/fullscreen";
+
+// ─── Context ───────────────────────────────────────────────────────────────────
 
 const FullscreenContext = createContext<FullscreenContextValue | undefined>(undefined);
 
 const DEFAULT_MODE: FullscreenMode = "pseudo";
+const DEFAULT_LOCK_SCROLL = true;
 
-export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: FullscreenProviderProps) {
+// ─── Provider ─────────────────────────────────────────────────────────────────
+
+export function FullscreenProvider({
+  children,
+  defaultMode = DEFAULT_MODE,
+  defaultLockScroll = DEFAULT_LOCK_SCROLL,
+}: FullscreenProviderProps) {
   const [state, setState] = useState<FullscreenState>({
     isFullscreen: false,
     mode: defaultMode,
-    targetId: undefined
+    targetId: undefined,
   });
 
   const originalOverflowRef = useRef<string | null>(null);
   const activeElementRef = useRef<HTMLElement | null>(null);
+  // 记录当次全屏是否锁定了滚动，退出时对应解锁
+  const isScrollLockedRef = useRef(false);
 
-  /**
-   * 检查原生全屏是否支持
-   */
+  // ─── 原生全屏能力检测 ──────────────────────────────────────────────────────
+
   const isNativeSupported = useCallback((): boolean => {
     return !!(
       document.documentElement.requestFullscreen ||
@@ -39,9 +55,8 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
     );
   }, []);
 
-  /**
-   * 进入原生全屏
-   */
+  // ─── 原生全屏操作 ──────────────────────────────────────────────────────────
+
   const enterNativeFullscreen = useCallback(async (element: HTMLElement) => {
     try {
       if (element.requestFullscreen) {
@@ -58,9 +73,6 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
     }
   }, []);
 
-  /**
-   * 退出原生全屏
-   */
   const exitNativeFullscreen = useCallback(async () => {
     try {
       if (document.exitFullscreen) {
@@ -77,50 +89,50 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
     }
   }, []);
 
-  /**
-   * 锁定页面滚动
-   */
+  // ─── 滚动锁定 ──────────────────────────────────────────────────────────────
+
   const lockScroll = useCallback(() => {
     if (originalOverflowRef.current === null) {
       originalOverflowRef.current = document.body.style.overflow;
       document.body.style.overflow = "hidden";
+      isScrollLockedRef.current = true;
     }
   }, []);
 
-  /**
-   * 解锁页面滚动
-   */
   const unlockScroll = useCallback(() => {
-    if (originalOverflowRef.current !== null) {
+    if (isScrollLockedRef.current && originalOverflowRef.current !== null) {
       document.body.style.overflow = originalOverflowRef.current;
       originalOverflowRef.current = null;
+      isScrollLockedRef.current = false;
     }
   }, []);
 
-  /**
-   * 进入全屏
-   */
-  const enterFullscreen = useCallback((id: string, element: HTMLElement, mode?: FullscreenMode) => {
-    const targetMode = mode || state.mode;
+  // ─── 进入 / 退出 / 切换全屏 ────────────────────────────────────────────────
 
-    activeElementRef.current = element;
+  const enterFullscreen = useCallback(
+    (id: string, element: HTMLElement, options?: FullscreenOptions) => {
+      const targetMode = options?.mode ?? state.mode;
+      // 优先使用调用方传入的 lockScroll，其次使用 Provider 全局默认值
+      const shouldLock = options?.lockScroll ?? defaultLockScroll;
 
-    if (targetMode === "native" && isNativeSupported()) {
-      enterNativeFullscreen(element);
-    }
+      activeElementRef.current = element;
 
-    lockScroll();
+      if (targetMode === "native" && isNativeSupported()) {
+        enterNativeFullscreen(element);
+      }
 
-    setState({
-      isFullscreen: true,
-      targetId: id,
-      mode: targetMode
-    });
-  }, [state.mode, isNativeSupported, enterNativeFullscreen, lockScroll]);
+      if (shouldLock) {
+        lockScroll();
+      } else {
+        // 确保上次残留的锁定状态被清除
+        isScrollLockedRef.current = false;
+      }
 
-  /**
-   * 退出全屏
-   */
+      setState({ isFullscreen: true, targetId: id, mode: targetMode });
+    },
+    [state.mode, defaultLockScroll, isNativeSupported, enterNativeFullscreen, lockScroll]
+  );
+
   const exitFullscreen = useCallback(() => {
     if (state.mode === "native") {
       exitNativeFullscreen();
@@ -129,41 +141,34 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
     unlockScroll();
     activeElementRef.current = null;
 
-    setState({
-      isFullscreen: false,
-      targetId: undefined,
-      mode: state.mode
-    });
+    setState({ isFullscreen: false, targetId: undefined, mode: state.mode });
   }, [state.mode, exitNativeFullscreen, unlockScroll]);
 
-  /**
-   * 切换全屏
-   */
-  const toggleFullscreen = useCallback((id: string, element: HTMLElement, mode?: FullscreenMode) => {
-    if (state.isFullscreen && state.targetId === id) {
-      exitFullscreen();
-    } else {
-      enterFullscreen(id, element, mode);
-    }
-  }, [state.isFullscreen, state.targetId, enterFullscreen, exitFullscreen]);
+  const toggleFullscreen = useCallback(
+    (id: string, element: HTMLElement, options?: FullscreenOptions) => {
+      if (state.isFullscreen && state.targetId === id) {
+        exitFullscreen();
+      } else {
+        enterFullscreen(id, element, options);
+      }
+    },
+    [state.isFullscreen, state.targetId, enterFullscreen, exitFullscreen]
+  );
 
-  /**
-   * 监听 ESC 键
-   */
+  // ─── 键盘 / 原生全屏事件监听 ───────────────────────────────────────────────
+
+  /** ESC 退出 pseudo 全屏 */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape" && state.isFullscreen && state.mode === "pseudo") {
         exitFullscreen();
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [state.isFullscreen, state.mode, exitFullscreen]);
 
-  /**
-   * 监听原生全屏变化
-   */
+  /** 监听浏览器原生全屏退出（用户按 ESC 触发的原生退出） */
   useEffect(() => {
     const handleFullscreenChange = () => {
       const isInNativeFullscreen = !!(
@@ -175,11 +180,7 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
 
       if (!isInNativeFullscreen && state.isFullscreen && state.mode === "native") {
         unlockScroll();
-        setState(prev => ({
-          ...prev,
-          isFullscreen: false,
-          targetId: undefined
-        }));
+        setState(prev => ({ ...prev, isFullscreen: false, targetId: undefined }));
       }
     };
 
@@ -196,9 +197,7 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
     };
   }, [state.isFullscreen, state.mode, unlockScroll]);
 
-  /**
-   * 组件卸载时清理
-   */
+  /** 组件卸载时清理 */
   useEffect(() => {
     return () => {
       if (state.isFullscreen) {
@@ -210,11 +209,13 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
     };
   }, [state.isFullscreen, state.mode, unlockScroll, exitNativeFullscreen]);
 
+  // ─── Context Value ─────────────────────────────────────────────────────────
+
   const contextValue: FullscreenContextValue = {
     ...state,
     enterFullscreen,
     exitFullscreen,
-    toggleFullscreen
+    toggleFullscreen,
   };
 
   return (
@@ -224,8 +225,10 @@ export function FullscreenProvider({ children, defaultMode = DEFAULT_MODE }: Ful
   );
 }
 
+// ─── Hook ──────────────────────────────────────────────────────────────────────
+
 /**
- * Hook 用于访问全屏上下文
+ * 访问全屏上下文，必须在 FullscreenProvider 内部使用
  */
 export function useFullscreenContext(): FullscreenContextValue {
   const context = useContext(FullscreenContext);

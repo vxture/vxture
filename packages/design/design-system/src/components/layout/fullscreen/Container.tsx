@@ -17,7 +17,7 @@ import { Portal } from "./Portal";
 import { cn } from "../../../utils/cn";
 
 export const FullscreenContainer = forwardRef<FullscreenContainerRef, FullscreenContainerProps>(
-  ({ id, mode = "pseudo", portal = false, className, children }, ref) => {
+  ({ id, mode = "pseudo", lockScroll, portal = false, className, children }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const { isFullscreen, targetId, enterFullscreen, exitFullscreen } = useFullscreenContext();
     const [isActive, setIsActive] = useState(false);
@@ -33,7 +33,7 @@ export const FullscreenContainer = forwardRef<FullscreenContainerRef, Fullscreen
     useImperativeHandle(ref, () => ({
       enter: () => {
         if (containerRef.current) {
-          enterFullscreen(id, containerRef.current, mode);
+          enterFullscreen(id, containerRef.current, { mode, lockScroll });
         }
       },
       exit: exitFullscreen,
@@ -41,7 +41,7 @@ export const FullscreenContainer = forwardRef<FullscreenContainerRef, Fullscreen
         if (isTarget) {
           exitFullscreen();
         } else if (containerRef.current) {
-          enterFullscreen(id, containerRef.current, mode);
+          enterFullscreen(id, containerRef.current, { mode, lockScroll });
         }
       }
     }));

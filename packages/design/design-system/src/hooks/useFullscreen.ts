@@ -12,7 +12,7 @@
  */
 
 import { useFullscreenContext } from "../components/layout/fullscreen/Provider";
-import type { FullscreenMode } from "../types/fullscreen";
+import type { FullscreenOptions } from "../types/fullscreen";
 
 export function useFullscreen() {
   const context = useFullscreenContext();
@@ -20,8 +20,8 @@ export function useFullscreen() {
   /**
    * 进入全屏（简化签名）
    */
-  const enter = (id: string, element: HTMLElement, mode?: FullscreenMode) => {
-    context.enterFullscreen(id, element, mode);
+  const enter = (id: string, element: HTMLElement, options?: FullscreenOptions) => {
+    context.enterFullscreen(id, element, options);
   };
 
   /**
@@ -34,8 +34,8 @@ export function useFullscreen() {
   /**
    * 切换全屏（简化签名）
    */
-  const toggle = (id: string, element: HTMLElement, mode?: FullscreenMode) => {
-    context.toggleFullscreen(id, element, mode);
+  const toggle = (id: string, element: HTMLElement, options?: FullscreenOptions) => {
+    context.toggleFullscreen(id, element, options);
   };
 
   /**

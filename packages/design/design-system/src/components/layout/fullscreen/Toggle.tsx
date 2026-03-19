@@ -20,6 +20,7 @@ import { cn } from "../../../utils/cn";
 export function FullscreenToggle({
   targetId,
   mode = "pseudo",
+  lockScroll,
   className,
   children
 }: FullscreenToggleProps) {
@@ -37,7 +38,7 @@ export function FullscreenToggle({
   const handleToggle = () => {
     const targetElement = document.querySelector(`[data-fullscreen-id="${targetId}"]`);
     if (targetElement instanceof HTMLElement) {
-      toggleFullscreen(targetId, targetElement, mode);
+      toggleFullscreen(targetId, targetElement, { mode, lockScroll });
     }
   };
 

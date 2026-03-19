@@ -12,6 +12,21 @@
 
 export type FullscreenMode = "pseudo" | "native";
 
+// ─── 进入/切换全屏时的选项 ──────────────────────────────────────────────────────
+
+/**
+ * enterFullscreen / toggleFullscreen 的调用选项
+ *
+ * @property mode       - 全屏模式，覆盖 Provider 的 defaultMode
+ * @property lockScroll - 是否禁止页面滚动，覆盖 Provider 的 defaultLockScroll
+ *                        true（默认）：锁定 body overflow，防止背景滚动
+ *                        false：保留滚动能力（适合内容本身需要滚动的场景）
+ */
+export interface FullscreenOptions {
+  mode?: FullscreenMode;
+  lockScroll?: boolean;
+}
+
 export interface FullscreenState {
   isFullscreen: boolean;
   targetId?: string;
@@ -19,19 +34,28 @@ export interface FullscreenState {
 }
 
 export interface FullscreenContextValue extends FullscreenState {
-  enterFullscreen: (id: string, element: HTMLElement, mode?: FullscreenMode) => void;
+  enterFullscreen: (id: string, element: HTMLElement, options?: FullscreenOptions) => void;
   exitFullscreen: () => void;
-  toggleFullscreen: (id: string, element: HTMLElement, mode?: FullscreenMode) => void;
+  toggleFullscreen: (id: string, element: HTMLElement, options?: FullscreenOptions) => void;
 }
 
 export interface FullscreenProviderProps {
   children: React.ReactNode;
+  /** 默认全屏模式，可在调用时通过 options.mode 覆盖 */
   defaultMode?: FullscreenMode;
+  /**
+   * 是否默认禁止页面滚动
+   * @default true
+   * 可在调用时通过 options.lockScroll 覆盖
+   */
+  defaultLockScroll?: boolean;
 }
 
 export interface FullscreenContainerProps {
   id: string;
   mode?: FullscreenMode;
+  /** 是否禁止页面滚动，覆盖 Provider 的 defaultLockScroll */
+  lockScroll?: boolean;
   portal?: boolean;
   className?: string;
   children: React.ReactNode;
@@ -55,6 +79,8 @@ export interface FullscreenContainerRef {
 export interface FullscreenToggleProps {
   targetId: string;
   mode?: FullscreenMode;
+  /** 是否禁止页面滚动，覆盖 Provider 的 defaultLockScroll */
+  lockScroll?: boolean;
   className?: string;
   children?: React.ReactNode;
 }

@@ -31,7 +31,7 @@
 
 import { useRef } from 'react';
 import { useFullscreen, Icon } from '@vxture/design-system';
-import type { FullscreenMode } from '@vxture/design-system';
+import type { FullscreenMode, FullscreenOptions } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义区
@@ -42,6 +42,11 @@ interface FullscreenSwitcherProps {
   targetId?: string;
   /** 全屏模式：pseudo = 工作区全屏，native = 显示器全屏 */
   mode?: FullscreenMode;
+  /**
+   * 是否禁止页面滚动，覆盖 FullscreenProvider 的 defaultLockScroll
+   * 不传则沿用 Provider 全局配置（默认 true）
+   */
+  lockScroll?: boolean;
   /** 图标尺寸类名 */
   className?: string;
   /** 图标大小 */
@@ -62,6 +67,7 @@ const PAGE_FULLSCREEN_ID = 'page-root';
 export default function FullscreenSwitcher({
   targetId = PAGE_FULLSCREEN_ID,
   mode = 'pseudo',
+  lockScroll,
   className = '',
   size = 'medium',
 }: FullscreenSwitcherProps) {
@@ -94,7 +100,8 @@ export default function FullscreenSwitcher({
   const handleToggle = () => {
     const target = document.documentElement;
     containerRef.current = target;
-    toggle(targetId, target, mode);
+    const options: FullscreenOptions = { mode, ...(lockScroll !== undefined && { lockScroll }) };
+    toggle(targetId, target, options);
   };
 
   return (
