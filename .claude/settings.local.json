@@ -1,5 +1,14 @@
-// d:\MyWebSite\vxture\.claude\settings.local.json
 {
+  "permissions": {
+    "allow": [
+      "Bash(pnpm build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)"
+    ]
+  },
   "ANTHROPIC_AUTH_TOKEN": "sk-gQGnrRYM8BOAtrFOtmqbCwNuEE8guEPLpo74E9usjjekz4kt",
   "ANTHROPIC_BASE_URL": "http://ai-api.e-tudou.com:9200/v1",
   "ANTHROPIC_MODEL": "claude-3-5-sonnet-20241022",

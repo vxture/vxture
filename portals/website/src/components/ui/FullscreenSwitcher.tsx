@@ -31,7 +31,7 @@
 
 import { useRef } from 'react';
 import { useFullscreen, Icon } from '@vxture/design-system';
-import type { FullscreenMode, FullscreenOptions } from '@vxture/design-system';
+import type { FullscreenMode } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义区
@@ -96,11 +96,14 @@ export default function FullscreenSwitcher({
     native: isActive ? '退出显示器全屏' : '显示器全屏',
   };
 
-  // 切换全屏：pseudo 模式操作 document.documentElement，native 模式同理
+  // 切换全屏：
+  // - pseudo 模式：操作 document.documentElement，由 Provider 用 CSS 模拟全屏
+  // - native 模式：同样传 documentElement，Provider 内部调用 requestFullscreen()
+  //   关键：第三个参数必须是 FullscreenOptions 对象 { mode }，而非裸字符串
   const handleToggle = () => {
     const target = document.documentElement;
     containerRef.current = target;
-    toggle(targetId, target, mode);
+    toggle(targetId, target, { mode, ...(lockScroll !== undefined && { lockScroll }) });
   };
 
   return (

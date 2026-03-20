@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* ThemeProvider 管理全站明暗主题，defaultTheme="system" 跟随系统偏好 */}
         <ThemeProvider defaultTheme="system">
           {/* FullscreenProvider 管理全站全屏状态，默认 pseudo 模式 */}
-          <FullscreenProvider defaultMode="pseudo">
+          <FullscreenProvider defaultMode="native" defaultLockScroll={false}>
             {children}
           </FullscreenProvider>
         </ThemeProvider>

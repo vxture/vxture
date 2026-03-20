@@ -28,8 +28,10 @@ import { HEADER_DATA } from '@/data/layout/header.data';
  * Header 组件
  *
  * 主题颜色说明：
- * - Header 背景透明时文字用白色（视频/图片背景上可读）
- * - 滚动后毛玻璃背景出现时，用 dark: 变体切换深色/浅色文字
+ * - Light 模式：背景为浅蓝色，文字统一用 text-gray-800（主）/ text-gray-600（次），
+ *   与其他 section 保持一致；滚动前后颜色不变
+ * - Dark 模式：背景为深灰色，文字统一用 dark:text-slate-200（主）/ dark:text-slate-300（次），
+ *   与其他 section 保持一致
  * - 不使用 useTheme() 做 className 拼接，避免 SSR hydration mismatch
  */
 export default function Header() {
@@ -76,13 +78,7 @@ export default function Header() {
               height={24}
               className='object-contain'
             />
-            <h1
-              className={`text-2xl font-bold transition-colors duration-300 ${
-                isScrolled
-                  ? 'text-blue-700 dark:text-white'
-                  : 'text-blue-700'
-              }`}
-            >
+            <h1 className='text-2xl font-bold text-gray-800 dark:text-slate-200'>
               {t(HEADER_DATA.logo.labelKey)}
             </h1>
           </div>
@@ -93,11 +89,7 @@ export default function Header() {
               <a
                 key={item.href}
                 href={item.href}
-                className={`transition-colors duration-300 hover:text-cyan-500 ${
-                  isScrolled
-                    ? 'text-blue-700 dark:text-slate-200 font-medium'
-                    : 'text-blue-700/80'
-                }`}
+              className='transition-colors duration-300 text-gray-800 dark:text-slate-200 font-medium hover:text-cyan-500 dark:hover:text-cyan-400'
               >
                 {t(item.labelKey)}
               </a>
@@ -110,14 +102,14 @@ export default function Header() {
             {/* 主题切换 */}
             <ThemeSwitcher
               size='medium'
-              className={isScrolled ? 'text-blue-600 dark:text-yellow-400' : 'text-white/80 dark:text-yellow-400'}
+              className='text-gray-600 dark:text-yellow-400'
             />
 
             {/* 语言切换 */}
             {HEADER_DATA.language.enabled && (
               <LocaleSwitcher
                 size='medium'
-                className={isScrolled ? 'text-blue-600 dark:text-cyan-400' : 'text-white/80 dark:text-cyan-400'}
+                className='text-gray-600 dark:text-slate-300'
               />
             )}
 
@@ -125,7 +117,7 @@ export default function Header() {
             <FullscreenSwitcher
               mode='pseudo'
               size='medium'
-              className={isScrolled ? 'text-blue-600 dark:text-slate-200' : 'text-white/80'}
+              className='text-gray-600 dark:text-slate-300'
             />
 
             {/* 全屏切换 — native 模式（调用浏览器原生全屏 API） */}
@@ -133,13 +125,13 @@ export default function Header() {
               targetId='page-root-native'
               mode='native'
               size='medium'
-              className={isScrolled ? 'text-blue-600 dark:text-slate-200' : 'text-white/80'}
+              className='text-gray-600 dark:text-slate-300'
             />
 
             {/* 密度切换：compact / default / comfortable 循环 */}
             <DensitySwitcher
               size='medium'
-              className={isScrolled ? 'text-blue-600 dark:text-slate-200' : 'text-white/80'}
+              className='text-gray-600 dark:text-slate-300'
             />
 
             {/* CTA Buttons - 固定宽度 */}
@@ -151,11 +143,7 @@ export default function Header() {
                     href={action.href}
                     className={
                       action.variant === 'secondary'
-                        ? `w-20 px-4 py-2 rounded-lg transition-all duration-300 text-center ${
-                            isScrolled
-                              ? 'text-blue-700 dark:text-slate-200 font-semibold hover:text-blue-500 dark:hover:text-white'
-                              : 'text-blue-700/90 hover:text-white'
-                          }`
+                        ? 'w-20 px-4 py-2 rounded-lg transition-all duration-300 text-center text-gray-700 dark:text-slate-200 font-semibold hover:text-gray-900 dark:hover:text-white'
                         : 'w-28 px-6 py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
                     }
                   >
