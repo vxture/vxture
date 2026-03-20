@@ -9,6 +9,7 @@ export { default as LocaleSwitcher } from './LocaleSwitcher';
 export { default as ThemeSwitcher } from './ThemeSwitcher';
 export { default as FullscreenSwitcher } from './FullscreenSwitcher';
 export { default as DensitySwitcher } from './DensitySwitcher';
+export { default as PreferencesPanel } from './PreferencesPanel';
 export { default as PriceDisplay } from './PriceDisplay';
 export type { PriceDisplayProps } from './PriceDisplay';
 

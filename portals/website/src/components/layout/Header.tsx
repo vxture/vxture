@@ -22,6 +22,7 @@ import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 import FullscreenSwitcher from '@/components/ui/FullscreenSwitcher';
 import DensitySwitcher from '@/components/ui/DensitySwitcher';
+import PreferencesPanel from '@/components/ui/PreferencesPanel';
 import { HEADER_DATA } from '@/data/layout/header.data';
 
 /**
@@ -96,7 +97,7 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* 工具栏：主题 / 语言 / 全屏(pseudo) / 全屏(native) / 密度 / CTA */}
+          {/* 工具栏：主题 / 语言 / 全屏(pseudo) / 全屏(native) / 密度 / CTA / 偏好设置 */}
           <div className='flex space-x-4 items-center'>
 
             {/* 主题切换 */}
@@ -130,6 +131,13 @@ export default function Header() {
 
             {/* 密度切换：compact / default / comfortable 循环 */}
             <DensitySwitcher
+              size='medium'
+              className='text-gray-600 dark:text-slate-300'
+            />
+
+            {/* 偏好设置面板（整合所有设置） */}
+            <PreferencesPanel
+              isLoggedIn={false}
               size='medium'
               className='text-gray-600 dark:text-slate-300'
             />

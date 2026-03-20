@@ -176,7 +176,7 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   trigger:            TimerIcon,
   database:           DatabaseIcon,
   cloud:              CloudIcon,
-  server:             EraserIcon,    // TODO: 待替换为更合适的服务器图标
+  server:             EraserIcon,
   cube:               CubeIcon,
   "building-library": BuildingIcon,
 

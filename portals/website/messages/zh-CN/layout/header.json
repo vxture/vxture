@@ -23,5 +23,36 @@
     "title": "切换主题",
     "light": "浅色",
     "dark": "深色"
+  },
+  "preferences": {
+    "title": "偏好设置",
+    "status": {
+      "loggedIn": "已登录",
+      "guest": "访客"
+    },
+    "language": {
+      "title": "语言"
+    },
+    "theme": {
+      "title": "主题",
+      "system": "跟随系统",
+      "light": "亮色",
+      "dark": "暗色"
+    },
+    "density": {
+      "title": "布局密度",
+      "compact": "紧凑",
+      "default": "默认",
+      "comfortable": "宽松"
+    },
+    "fullscreen": {
+      "title": "全屏模式",
+      "workspace": "工作区",
+      "browser": "浏览器"
+    },
+    "hint": {
+      "synced": "设置已同步至账户",
+      "local": "设置仅保存在本地"
+    }
   }
 }

@@ -23,5 +23,36 @@
     "title": "Toggle Theme",
     "light": "Light",
     "dark": "Dark"
+  },
+  "preferences": {
+    "title": "Preferences",
+    "status": {
+      "loggedIn": "Logged in",
+      "guest": "Guest"
+    },
+    "language": {
+      "title": "Language"
+    },
+    "theme": {
+      "title": "Theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "density": {
+      "title": "Density",
+      "compact": "Compact",
+      "default": "Default",
+      "comfortable": "Comfortable"
+    },
+    "fullscreen": {
+      "title": "Fullscreen",
+      "workspace": "Workspace",
+      "browser": "Browser"
+    },
+    "hint": {
+      "synced": "Settings synced to your account",
+      "local": "Settings saved locally"
+    }
   }
 }
