@@ -5,7 +5,7 @@
  */
 
 // Auth constants
-export {  AUTH_CONSTANTS } from './auth.constants';
+export { AUTH_CONSTANTS } from './auth.constants';
 
 // Locale constants
 export {
@@ -17,7 +17,7 @@ export {
 } from './locale.constants';
 
 // Theme constants
-export {  THEME_CONSTANTS } from './theme.constants';
+export { THEME_CONSTANTS } from './theme.constants';
 
 // UI constants
-export {  SEMANTIC_COLORS } from './ui.constants';
+export { SEMANTIC_COLORS } from './ui.constants';

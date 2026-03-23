@@ -1,7 +1,7 @@
 /**
- * Shared locale type definitions.
- * Pure structural types only — no store logic, no runtime behavior.
+ * locale.types.ts - 语言与本地化类型定义
  * @package @vxture/shared
+ * @description 全平台唯一的 Locale 类型及语言展示配置，纯结构类型，无运行时行为
  */
 
 // ============================================================================

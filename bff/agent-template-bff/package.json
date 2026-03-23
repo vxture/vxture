@@ -13,7 +13,6 @@
     "build": "echo \"No build yet\""
   },
   "dependencies": {
-    "@vxture/agent-server-agent01": "workspace:*",
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
     "@vxture/core-auth": "workspace:*",

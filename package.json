@@ -17,13 +17,11 @@
   "scripts": {
     "// === 开发环境 ===": "",
     "dev": "pnpm --filter @vxture/website dev",
-    "dev:gateway": "pnpm --filter @vxture/gateway dev",
-    "dev:full": "concurrently \"pnpm dev\" \"pnpm dev:gateway\" --names \"website,gateway\" --prefix-colors \"cyan,yellow\"",
-    "start": "pnpm dev:full",
+    "start": "pnpm dev",
     "// === 构建和部署 ===": "",
     "build": "pnpm --filter @vxture/website build",
-    "build:gateway": "pnpm --filter @vxture/gateway build",
-    "build:all": "pnpm --parallel build",
+    "build:gateway": "pnpm --filter @vxture/bff-website build",
+    "build:all": "pnpm --filter @vxture/shared build && pnpm --filter '@vxture/core-*' build && pnpm --filter '@vxture/platform-*' build && pnpm --filter '@vxture/design-*' build",
     "build:shared": "pnpm --filter @vxture/shared build",
     "build:core": "pnpm --filter @vxture/core-* build",
     "build:platform": "pnpm --filter @vxture/platform-* build",
@@ -50,9 +48,9 @@
     "check-env": "node -e \"console.log('Node:', process.version); console.log('PNPM:', process.env.npm_config_user_agent)\"",
     "health": "pnpm check-env && pnpm type-check && pnpm lint",
     "// === 数据库操作 ===": "",
-    "db:migrate": "pnpm --filter @vxture/gateway db:migrate",
-    "db:reset": "pnpm --filter @vxture/gateway db:reset",
-    "db:seed": "pnpm --filter @vxture/gateway db:seed",
+    "db:migrate": "pnpm --filter @vxture/bff-website db:migrate",
+    "db:reset": "pnpm --filter @vxture/bff-website db:reset",
+    "db:seed": "pnpm --filter @vxture/bff-website db:seed",
     "// === 部署相关 ===": "",
     "prepare": "husky || true",
     "precommit": "pnpm lint:fix && pnpm type-check",
@@ -60,13 +58,11 @@
   },
   "devDependencies": {
     "@swc/core": "^1.15.18",
-    "@types/express": "^4.17.25",
     "@types/node": "^25.3.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
-    "concurrently": "^9.2.1",
     "eslint": "^9.39.3",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.4",
@@ -82,11 +78,5 @@
     "*.{json,md}": [
       "prettier --write"
     ]
-  },
-  "dependencies": {
-    "@nestjs/common": "^11.1.16",
-    "@nestjs/core": "^11.1.16",
-    "@nestjs/jwt": "^11.0.2",
-    "express": "^4.22.1"
   }
 }

@@ -1,11 +1,9 @@
 {
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
-    "emitDeclarationOnly": true,
     "rootDir": "./src",
-    "outDir": "./dist"
+    "noEmit": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2023"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

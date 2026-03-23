@@ -8,10 +8,9 @@ export default defineConfig({
   },
   dts: true,
   sourcemap: true,
-  clean: true,
+  // clean 移至 package.json build 脚本显式执行，避免 watch 模式下触发循环
   target: 'es2023',
   treeshake: true,
-  // 显式启用 swc 处理装饰器元数据
   experimentalDts: false,
   esbuildOptions(options) {
     options.keepNames = true;

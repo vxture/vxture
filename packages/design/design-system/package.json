@@ -15,9 +15,9 @@
   },
   "files": ["dist", "src/styles"],
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "build": "tsup",
-    "dev": "tsup --watch"
+    "build": "rimraf dist && tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit"
   },
 
   "dependencies": {
@@ -54,6 +54,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },

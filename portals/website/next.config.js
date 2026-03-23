@@ -29,26 +29,18 @@ const __dirname = dirname(__filename);
 // 所有包统一指向包根目录，由各包 package.json exports 字段路由到 dist/index.mjs。
 
 // Webpack 用：绝对路径
+// 只保留 portal 层允许引用的包（shared / core-locale / design-system）
 const internalAliases = {
   '@vxture/shared':        join(__dirname, '../../packages/shared/shared'),
-  '@vxture/core-api':      join(__dirname, '../../packages/core/api'),
-  '@vxture/core-config':   join(__dirname, '../../packages/core/config'),
   '@vxture/core-locale':   join(__dirname, '../../packages/core/locale'),
-  '@vxture/core-tenant':   join(__dirname, '../../packages/core/tenant'),
-  '@vxture/core-auth':     join(__dirname, '../../packages/core/auth'),
-  '@vxture/core-utils':    join(__dirname, '../../packages/core/utils'),
   '@vxture/design-system': join(__dirname, '../../packages/design/design-system'),
 };
 
 // Turbopack 用：相对路径（Windows 限制，不可改为绝对路径）
+// 只保留 portal 层允许引用的包（shared / core-locale / design-system）
 const turboAliases = {
   '@vxture/shared':        '../../packages/shared/shared',
-  '@vxture/core-api':      '../../packages/core/api',
-  '@vxture/core-config':   '../../packages/core/config',
   '@vxture/core-locale':   '../../packages/core/locale',
-  '@vxture/core-tenant':   '../../packages/core/tenant',
-  '@vxture/core-auth':     '../../packages/core/auth',
-  '@vxture/core-utils':    '../../packages/core/utils',
   '@vxture/design-system': '../../packages/design/design-system',
 };
 

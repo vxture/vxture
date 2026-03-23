@@ -8,7 +8,7 @@ export default defineConfig({
   },
   dts: true,
   sourcemap: true,
-  clean: true,
+  // clean 移至 package.json build 脚本显式执行，避免 watch 模式下触发循环
   target: 'es2023',
   keepNames: true,
   treeshake: true,

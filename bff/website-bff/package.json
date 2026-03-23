@@ -26,6 +26,7 @@
     "@vxture/core-tenant": "workspace:*",
     "@vxture/core-utils": "workspace:*",
     "cookie-parser": "^1.4.7",
+    "express": "^4.22.1",
     "ioredis": "^5.0.0",
     "class-validator": "^0.14.0",
     "class-transformer": "^0.5.0",

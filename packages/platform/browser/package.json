@@ -10,8 +10,7 @@
     "type-check": "tsc --noEmit",
     "lint": "echo \"No lint yet\"",
     "lint:fix": "echo \"No lint:fix yet\"",
-    "build": "tsup",
-    "clean": "rimraf dist"
+    "build": "rimraf dist && tsup"
   },
   "dependencies": {
     "@vxture/shared": "workspace:*"

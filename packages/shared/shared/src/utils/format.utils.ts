@@ -54,12 +54,3 @@ export function formatNumber(value: number, locale: Locale): string {
     return String(value);
   }
 }
-
-/**
- * 获取 HTML lang 属性值
- * @param locale 语言（完整 BCP47 标签）
- * @returns 用于 HTML lang 属性的字符串
- */
-export function getHtmlLang(locale: Locale): string {
-  return locale;
-}

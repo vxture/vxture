@@ -22,6 +22,7 @@
     { "path": "agent-server/ruinagent" },
     { "path": "agent-server/agent-template" },
     { "path": "agent-studio/agent-template" },
+    { "path": "packages/platform/browser" },
     { "path": "portals/website" },
     { "path": "portals/admin" },
     { "path": "portals/tenant" }

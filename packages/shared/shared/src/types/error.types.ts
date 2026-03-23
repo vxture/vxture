@@ -9,6 +9,5 @@ export interface ErrorMetadata {
   code?: string;
   status?: number;
   details?: unknown;
-  timestamp?: Date;
   requestId?: string;
 }

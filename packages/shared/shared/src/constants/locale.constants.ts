@@ -4,7 +4,7 @@
  * @description Global configuration constants for language and localization, shared across all layers. Contains supported locales, default locale, and complete language configurations.
  */
 
-import type { Locale } from '../types/locale.types';
+import type { Locale, LocaleConfig } from '../types/locale.types';
 
 // =============================================================================
 // 语言枚举定义
@@ -30,12 +30,7 @@ export const DEFAULT_LOCALE: Locale = 'zh-CN';
  * 语言配置对象，包含完整的语言信息
  * @description 提供语言的显示名称、本地名称、国旗等信息
  */
-export const LOCALE_CONFIGS: Record<Locale, {
-  locale: Locale;
-  displayName: string;
-  nativeName: string;
-  flag?: string;
-}> = {
+export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
   'zh-CN': {
     locale: 'zh-CN',
     displayName: '简体中文',
@@ -48,7 +43,7 @@ export const LOCALE_CONFIGS: Record<Locale, {
     nativeName: 'English (US)',
     flag: '🇺🇸'
   }
-} as const;
+};
 
 /**
  * Locale 的默认货币，调用方未指定货币时使用

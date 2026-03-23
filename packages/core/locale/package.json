@@ -14,14 +14,14 @@
   },
   "files": ["dist"],
   "scripts": {
-    "type-check": "tsc --noEmit",
-    "build": "tsup",
-    "dev": "tsup --watch"
+    "build": "rimraf dist && tsup",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@vxture/shared": "workspace:*"
   },
   "devDependencies": {
+    "rimraf": "^6.0.1",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
