@@ -33,8 +33,9 @@ import {
   Icon,
   useTheme,
 } from '@vxture/design-system';
-import type { Locale, Density } from '@vxture/design-system';
+import type { Density } from '@vxture/design-system';
 import { SUPPORTED_LOCALES, LOCALE_CONFIGS, DEFAULT_LOCALE } from '@vxture/shared';
+import type { Locale } from '@vxture/shared';
 import {
   MOCK_USER_PREFERENCES,
   getGuestPreferences,

@@ -21,7 +21,6 @@ import Image from 'next/image';
 import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
 import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 import FullscreenSwitcher from '@/components/ui/FullscreenSwitcher';
-import DensitySwitcher from '@/components/ui/DensitySwitcher';
 import PreferencesPanel from '@/components/ui/PreferencesPanel';
 import { HEADER_DATA } from '@/data/layout/header.data';
 
@@ -114,23 +113,10 @@ export default function Header() {
               />
             )}
 
-            {/* 全屏切换 — pseudo 模式（工作区全屏，CSS 模拟） */}
-            <FullscreenSwitcher
-              mode='pseudo'
-              size='medium'
-              className='text-gray-600 dark:text-slate-300'
-            />
-
             {/* 全屏切换 — native 模式（调用浏览器原生全屏 API） */}
             <FullscreenSwitcher
               targetId='page-root-native'
               mode='native'
-              size='medium'
-              className='text-gray-600 dark:text-slate-300'
-            />
-
-            {/* 密度切换：compact / default / comfortable 循环 */}
-            <DensitySwitcher
               size='medium'
               className='text-gray-600 dark:text-slate-300'
             />
@@ -160,6 +146,7 @@ export default function Header() {
                 ))}
               </>
             )}
+
           </div>
         </div>
       </div>

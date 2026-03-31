@@ -66,29 +66,6 @@ src/
 
 ---
 
-## 文件头模板
-
-```typescript
-/**
- * filename.ts - 简短描述
- * @package @vxture/service-billing
- *
- * Description: 详细说明
- *
- * @author AI-Generated
- * @date YYYY-MM-DD
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Domain
- * @category Service | Repository | DTO | Types
- */
-```
-
----
-
 ## 分层职责约束
 
 - **service**：只含业务逻辑，调用 repository，不直接操作 Prisma

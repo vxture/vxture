@@ -68,10 +68,9 @@ const nextConfig = {
 
   // ─── Turbopack 配置（next dev --turbo 专用）──────────────────────────────────
   // webpack() 回调在 Turbopack 模式下完全不执行，alias 必须在此处单独声明。
-  experimental: {
-    turbo: {
-      resolveAlias: turboAliases,
-    },
+  // experimental.turbo 已废弃，迁移至顶层 turbopack 字段（Next.js 15+）。
+  turbopack: {
+    resolveAlias: turboAliases,
   },
 
   // ─── Webpack 配置（next build / next dev 无 --turbo）────────────────────────

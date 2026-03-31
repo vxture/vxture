@@ -6,7 +6,12 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)"
+      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\packages\\\\ai\\\\ai-sdk\\\\tsconfig.build.json\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\commerce\\\\billing\\\\tsconfig.build.json\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\commerce\\\\subscription\\\\tsconfig.build.json\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\support\\\\ticket\\\\tsconfig.build.json\" -Force)",
+      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\support\\\\workers\\\\tsconfig.build.json\" -Force)"
     ]
   },
   "ANTHROPIC_AUTH_TOKEN": "sk-gQGnrRYM8BOAtrFOtmqbCwNuEE8guEPLpo74E9usjjekz4kt",

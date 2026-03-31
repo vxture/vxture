@@ -53,29 +53,6 @@ src/
 
 ---
 
-## 文件头模板
-
-```typescript
-/**
- * filename.ts - 简短描述
- * @package @vxture/platform-browser
- *
- * Description: 详细说明
- *
- * @author AI-Generated
- * @date YYYY-MM-DD
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Infrastructure
- * @category Utils
- */
-```
-
----
-
 ## 核心设计约束
 
 - 仅在浏览器环境使用
