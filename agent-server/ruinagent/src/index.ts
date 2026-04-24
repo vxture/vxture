@@ -16,20 +16,30 @@
  */
 
 import { createServer } from 'http';
+import type { IncomingMessage, ServerResponse } from 'http';
+import { JwtService } from '@nestjs/jwt';
+import type { JwtAccessPayload } from '@vxture/core-auth';
+import { extractBearerTokenFromHeaders } from '@vxture/core-auth';
 import { aiProvider } from './providers/ai.provider';
 import { sessionRouter } from './routers/session.router';
+import type {
+  AgentRequestContext,
+  CreateSessionRequest,
+  SendMessageRequest,
+} from './types/ruinagent.types';
 
 // ============================================================================
 // 服务器配置
 // ============================================================================
 
 const DEFAULT_PORT = 4002;
+const jwtService = new JwtService();
 
 // ============================================================================
 // 请求处理函数
 // ============================================================================
 
-const handleRequest = async (req: any, res: any): Promise<void> => {
+const handleRequest = async (req: IncomingMessage, res: ServerResponse): Promise<void> => {
   try {
     // 设置 CORS 头部
     res.setHeader('Content-Type', 'application/json');
@@ -45,33 +55,35 @@ const handleRequest = async (req: any, res: any): Promise<void> => {
     }
 
     // 路由处理
-    const url = req.url || '';
+    const requestUrl = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
+    const pathname = requestUrl.pathname;
 
     // 健康检查
-    if (url === '/health') {
-      res.writeHead(200);
-      res.end(JSON.stringify({ status: 'healthy', timestamp: new Date().toISOString() }));
+    if (pathname === '/health') {
+      writeJson(res, 200, { status: 'healthy', timestamp: new Date().toISOString() });
       return;
     }
 
     // API 路由
-    if (url.startsWith('/api')) {
-      await handleApiRequest(req, res, url);
+    if (pathname.startsWith('/api')) {
+      const context = resolveRequestContext(req);
+      if (!context) {
+        writeJson(res, 401, { error: 'Unauthorized' });
+        return;
+      }
+
+      await handleApiRequest(req, res, pathname, requestUrl, context);
       return;
     }
 
     // 默认响应
-    res.writeHead(404);
-    res.end(JSON.stringify({ error: 'Not Found' }));
+    writeJson(res, 404, { error: 'Not Found' });
   } catch (error) {
     console.error('Request handling error:', error);
-    res.writeHead(500);
-    res.end(
-      JSON.stringify({
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error',
-      })
-    );
+    writeJson(res, 500, {
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 };
 
@@ -79,97 +91,93 @@ const handleRequest = async (req: any, res: any): Promise<void> => {
 // API 请求处理
 // ============================================================================
 
-const handleApiRequest = async (req: any, res: any, url: string): Promise<void> => {
-  if (url === '/api/session') {
+const handleApiRequest = async (
+  req: IncomingMessage,
+  res: ServerResponse,
+  pathname: string,
+  requestUrl: URL,
+  context: AgentRequestContext,
+): Promise<void> => {
+  if (pathname === '/api/session') {
     if (req.method === 'POST') {
-      await handleCreateSession(req, res);
+      await handleCreateSession(req, res, context);
     } else {
-      res.writeHead(405);
-      res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+      writeJson(res, 405, { error: 'Method Not Allowed' });
     }
     return;
   }
 
-  if (url.startsWith('/api/session/')) {
-    const match = url.match(/\/api\/session\/([^/]+)/);
-    if (match) {
-      await handleSessionOperations(req, res, match[1]);
+  if (pathname.startsWith('/api/session/')) {
+    const match = pathname.match(/\/api\/session\/([^/]+)/);
+    const sessionId = match?.[1];
+    if (sessionId) {
+      await handleSessionOperations(req, res, pathname, requestUrl, sessionId, context);
     } else {
-      res.writeHead(404);
-      res.end(JSON.stringify({ error: 'Not Found' }));
+      writeJson(res, 404, { error: 'Not Found' });
     }
     return;
   }
 
-  res.writeHead(404);
-  res.end(JSON.stringify({ error: 'API endpoint not found' }));
+  writeJson(res, 404, { error: 'API endpoint not found' });
 };
 
 // ============================================================================
 // 会话操作处理
 // ============================================================================
 
-const handleCreateSession = async (req: any, res: any): Promise<void> => {
-  let body = '';
-
-  await new Promise<void>((resolve, reject) => {
-    req.on('data', (chunk: any) => (body += chunk));
-    req.on('end', resolve);
-    req.on('error', reject);
-  });
-
-  const requestData = JSON.parse(body);
-
-  const response = await sessionRouter.createSession(requestData);
-
-  res.writeHead(response.code);
-  res.end(JSON.stringify(response));
+const handleCreateSession = async (
+  req: IncomingMessage,
+  res: ServerResponse,
+  context: AgentRequestContext,
+): Promise<void> => {
+  const requestData = await readJsonBody<CreateSessionRequest>(req);
+  const response = await sessionRouter.createSession(context, requestData);
+  writeJson(res, response.code, response);
 };
 
-const handleSessionOperations = async (req: any, res: any, sessionId: string): Promise<void> => {
-  const url = req.url || '';
-
-  if (url === `/api/session/${sessionId}`) {
+const handleSessionOperations = async (
+  req: IncomingMessage,
+  res: ServerResponse,
+  pathname: string,
+  requestUrl: URL,
+  sessionId: string,
+  context: AgentRequestContext,
+): Promise<void> => {
+  if (pathname === `/api/session/${sessionId}`) {
     if (req.method === 'GET') {
-      // 获取会话详情（待实现）
+      writeJson(res, 501, { error: 'Not Implemented' });
+      return;
     }
-  } else if (url === `/api/session/${sessionId}/history`) {
+  } else if (pathname === `/api/session/${sessionId}/history`) {
     if (req.method === 'GET') {
-      const response = await sessionRouter.getSessionHistory(sessionId, 50);
-      res.writeHead(response.code);
-      res.end(JSON.stringify(response));
+      const response = await sessionRouter.getSessionHistory(context, sessionId, 50);
+      writeJson(res, response.code, response);
+      return;
     }
-  } else if (url === `/api/session/${sessionId}/message`) {
+  } else if (pathname === `/api/session/${sessionId}/message`) {
     if (req.method === 'POST') {
-      let body = '';
-      await new Promise<void>((resolve, reject) => {
-        req.on('data', (chunk: any) => (body += chunk));
-        req.on('end', resolve);
-        req.on('error', reject);
-      });
-
-      const requestData = JSON.parse(body);
-      const response = await sessionRouter.sendMessage({
+      const requestData = await readJsonBody<Omit<SendMessageRequest, 'sessionId'>>(req);
+      const response = await sessionRouter.sendMessage(context, {
         sessionId,
         ...requestData,
       });
-
-      res.writeHead(response.code);
-      res.end(JSON.stringify(response));
+      writeJson(res, response.code, response);
+      return;
     }
-  } else if (url === `/api/session/${sessionId}/task`) {
+  } else if (pathname === `/api/session/${sessionId}/task`) {
     if (req.method === 'GET') {
-      const taskId = new URL(req.url, `http://${req.headers.host}`).searchParams.get('taskId');
+      const taskId = requestUrl.searchParams.get('taskId');
       if (taskId) {
-        const response = await sessionRouter.getTaskStatus({ taskId });
-        res.writeHead(response.code);
-        res.end(JSON.stringify(response));
+        const response = await sessionRouter.getTaskStatus(context, sessionId, { taskId });
+        writeJson(res, response.code, response);
       } else {
-        res.writeHead(400);
-        res.end(JSON.stringify({ error: 'Missing taskId parameter' }));
+        writeJson(res, 400, { error: 'Missing taskId parameter' });
       }
+      return;
     }
   }
+
+  writeJson(res, 405, { error: 'Method Not Allowed' });
 };
 
 // ============================================================================
@@ -237,3 +245,43 @@ export function startRuinAgentServer(port?: number): Promise<RuinAgentServer> {
 }
 
 export default RuinAgentServer;
+
+async function readJsonBody<T>(req: IncomingMessage): Promise<T> {
+  let body = '';
+
+  await new Promise<void>((resolve, reject) => {
+    req.on('data', (chunk: Buffer | string) => {
+      body += chunk.toString();
+    });
+    req.on('end', resolve);
+    req.on('error', reject);
+  });
+
+  return (body ? JSON.parse(body) : {}) as T;
+}
+
+function resolveRequestContext(req: IncomingMessage): AgentRequestContext | null {
+  const token = extractBearerTokenFromHeaders(req.headers);
+  const secret = process.env.JWT_SECRET;
+
+  if (!token || !secret) {
+    return null;
+  }
+
+  try {
+    const payload = jwtService.verify<JwtAccessPayload>(token, { secret });
+    return {
+      userId: payload.sub,
+      tenantId: payload.tenantId,
+      email: payload.email,
+      role: payload.role,
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeJson(res: ServerResponse, statusCode: number, body: unknown): void {
+  res.writeHead(statusCode);
+  res.end(JSON.stringify(body));
+}

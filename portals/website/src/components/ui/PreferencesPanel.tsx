@@ -34,6 +34,7 @@ import {
   useTheme,
 } from '@vxture/design-system';
 import type { Density } from '@vxture/design-system';
+import type { IconName } from '@vxture/design-system';
 import { SUPPORTED_LOCALES, LOCALE_CONFIGS, DEFAULT_LOCALE } from '@vxture/shared';
 import type { Locale } from '@vxture/shared';
 import {
@@ -44,6 +45,12 @@ import {
   type ThemePreference,
   type FullscreenMode,
 } from '@/data/user/mock-user-preferences';
+import { WEBSITE_THEME_OPTIONS } from '@/data/theme/theme.data';
+import {
+  setGlobalDensityPreference,
+  setGlobalLocalePreference,
+  setGlobalThemePreference,
+} from '@vxture/platform-browser';
 
 // ============================================================================
 // 类型定义
@@ -63,21 +70,21 @@ interface PreferencesPanelProps {
 // ============================================================================
 
 /** 主题选项 */
-const THEME_OPTIONS: { value: ThemePreference; icon: string; labelKey: string }[] = [
-  { value: 'system', icon: 'globe', labelKey: 'theme.system' },
-  { value: 'light', icon: 'sun', labelKey: 'theme.light' },
-  { value: 'dark', icon: 'moon', labelKey: 'theme.dark' },
-];
+const THEME_OPTIONS = WEBSITE_THEME_OPTIONS.map((option) => ({
+  value: option.value as ThemePreference,
+  icon: option.icon,
+  labelKey: `theme.${option.labelKey}`,
+})) satisfies { value: ThemePreference; icon: typeof WEBSITE_THEME_OPTIONS[number]['icon']; labelKey: string }[];
 
 /** 密度选项 */
-const DENSITY_OPTIONS: { value: Density; icon: string; labelKey: string }[] = [
+const DENSITY_OPTIONS: { value: Density; icon: IconName; labelKey: string }[] = [
   { value: 'compact', icon: 'rows', labelKey: 'density.compact' },
   { value: 'default', icon: 'chart-bar', labelKey: 'density.default' },
   { value: 'comfortable', icon: 'users', labelKey: 'density.comfortable' },
 ];
 
 /** 全屏模式选项 */
-const FULLSCREEN_OPTIONS: { value: FullscreenMode; icon: string; labelKey: string }[] = [
+const FULLSCREEN_OPTIONS: { value: FullscreenMode; icon: IconName; labelKey: string }[] = [
   { value: 'workspace', icon: 'maximize', labelKey: 'fullscreen.workspace' },
   { value: 'browser', icon: 'maximize', labelKey: 'fullscreen.browser' },
 ];
@@ -163,6 +170,7 @@ export default function PreferencesPanel({
   const handleLocaleChange = (newLocale: Locale) => {
     setSelectedLocale(newLocale);
     savePreferences({ locale: newLocale });
+    setGlobalLocalePreference(newLocale);
     router.push(pathname, { locale: newLocale });
   };
 
@@ -170,12 +178,14 @@ export default function PreferencesPanel({
     setSelectedTheme(newTheme);
     setTheme(newTheme);
     savePreferences({ theme: newTheme });
+    setGlobalThemePreference(newTheme);
   };
 
   const handleDensityChange = (newDensity: Density) => {
     setSelectedDensity(newDensity);
     setDensity(newDensity);
     savePreferences({ density: newDensity });
+    setGlobalDensityPreference(newDensity);
   };
 
   const handleFullscreenChange = (newMode: FullscreenMode) => {
@@ -189,7 +199,7 @@ export default function PreferencesPanel({
 
   const renderOptionGroup = (
     title: string,
-    options: { value: string; icon: string; labelKey: string }[],
+    options: { value: string; icon: IconName; labelKey: string }[],
     selectedValue: string,
     onChange: (value: any) => void
   ) => (

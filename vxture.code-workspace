@@ -9,6 +9,10 @@
       "path": "portals/website",
     },
     {
+      "name": "portals/console",
+      "path": "portals/console",
+    },
+    {
       "name": "portals/admin",
       "path": "portals/admin",
     },

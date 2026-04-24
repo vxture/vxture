@@ -11,6 +11,7 @@
     "about": "Company"
   },
   "actions": {
+    "console": "Console",
     "signup": "Signup",
     "login": "Login"
   },
@@ -21,8 +22,10 @@
   },
   "theme": {
     "title": "Toggle Theme",
+    "system": "System",
     "light": "Light",
-    "dark": "Dark"
+    "dark": "Dark",
+    "switchTo": "Switch to {theme}"
   },
   "preferences": {
     "title": "Preferences",

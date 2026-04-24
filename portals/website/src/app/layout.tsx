@@ -20,7 +20,9 @@
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { cookies } from 'next/headers';
 import { ThemeProvider, FullscreenProvider } from '@vxture/design-system';
+import { DEFAULT_LOCALE, PREFERENCE_CONSTANTS, THEME_CONSTANTS } from '@vxture/shared';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -30,13 +32,20 @@ export const metadata: Metadata = {
   description: 'AI-based virtual nature exploration platform',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const defaultTheme = cookieStore.get(THEME_CONSTANTS.COOKIE_KEY)?.value ?? THEME_CONSTANTS.DEFAULT_THEME;
+  const defaultDensity = cookieStore.get(PREFERENCE_CONSTANTS.DENSITY_COOKIE_KEY)?.value;
+
   return (
     // suppressHydrationWarning 是 next-themes 官方要求，避免 SSR/CSR class 不一致警告
-    <html lang="en" suppressHydrationWarning>
+    <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
       <body className={inter.className}>
-        {/* ThemeProvider 管理全站明暗主题，defaultTheme="system" 跟随系统偏好 */}
-        <ThemeProvider defaultTheme="system">
+        {/* ThemeProvider 管理全站多主题模式，默认跟随系统偏好 */}
+        <ThemeProvider
+          defaultTheme={defaultTheme}
+          defaultDensity={defaultDensity === 'compact' || defaultDensity === 'comfortable' ? defaultDensity : 'default'}
+        >
           {/* FullscreenProvider 管理全站全屏状态，默认 pseudo 模式 */}
           <FullscreenProvider defaultMode="native" defaultLockScroll={false}>
             {children}

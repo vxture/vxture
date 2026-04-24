@@ -32,29 +32,29 @@ export interface LoginFormProps {
 }
 
 export function LoginForm({ className = '' }: LoginFormProps) {
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const { login, isLoading: loginLoading } = useAuth();
   const { addNotification } = useNotificationStore();
   const router = useRouter();
-  const t = useTranslations('auth.login');
+  const t = useTranslations('auth.signin');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      addNotification(t('email') + ' ' + t('password'), 'error');
+    if (!identifier || !password) {
+      addNotification(t('required'), 'error');
       return;
     }
 
     setLoading(true);
     try {
-      await login(email, password);
+      await login(identifier, password);
       addNotification(t('success'), 'success');
       router.push('/'); // 登录成功后跳转到首页
-    } catch {
-      addNotification(t('error'), 'error');
+    } catch (error) {
+      addNotification(error instanceof Error ? error.message : t('error'), 'error');
     } finally {
       setLoading(false);
     }
@@ -67,11 +67,11 @@ export function LoginForm({ className = '' }: LoginFormProps) {
         <div>
           <label className='block mb-2'>{t('email')}</label>
           <input
-            type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type='text'
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
             className='w-full p-2 border rounded'
-            placeholder='your@email.com'
+            placeholder='email / username / phone'
             disabled={loading || loginLoading}
           />
         </div>

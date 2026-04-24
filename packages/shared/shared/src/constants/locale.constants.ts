@@ -65,6 +65,9 @@ export const LOCALE_CONSTANTS = {
   /** localStorage key */
   STORAGE_KEY: 'locale-storage',
 
+  /** Cookie key */
+  COOKIE_KEY: 'NEXT_LOCALE',
+
   /** HTML lang attribute */
   HTML_LANG_ATTRIBUTE: 'lang',
 

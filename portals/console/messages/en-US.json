@@ -1,0 +1,557 @@
+{
+  "shell": {
+    "loading": {
+      "eyebrow": "Session restore",
+      "title": "Preparing console context",
+      "description": "Loading current user, tenant context, and capability switches."
+    }
+  },
+  "header": {
+    "title": "Console",
+    "searchPlaceholder": "Search modules, members, billing records",
+    "workspace": "Workspace",
+    "switchWorkspace": "Switch workspace",
+    "platformMode": "Platform",
+    "tenantMode": "Tenant",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "toggleTheme": "Toggle theme",
+    "toggleLanguage": "Toggle language",
+    "openNavigation": "Open navigation",
+    "closeNavigation": "Close navigation",
+    "collapseNavigation": "Collapse navigation",
+    "openAssistant": "Open assistant",
+    "closeAssistant": "Close assistant",
+    "tenantType": {
+      "individual": "Personal",
+      "company": "Organization"
+    }
+  },
+  "preferences": {
+    "title": "Display preferences",
+    "locale": {
+      "label": "Language",
+      "zh-CN": "简体中文",
+      "en-US": "English (US)"
+    },
+    "density": {
+      "label": "Density",
+      "compact": "Compact",
+      "default": "Default",
+      "comfortable": "Comfortable"
+    },
+    "theme": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "switchTo": "Switch to {theme}"
+    }
+  },
+  "sidebar": {
+    "eyebrow": "Vxture Console",
+    "title": "Console",
+    "description": "Modern SaaS operations shell",
+    "ariaLabel": "Console navigation",
+    "footer": {
+      "label": "Status",
+      "value": "UI framework preview"
+    },
+    "workspaceMode": {
+      "platform": "Platform workspace",
+      "tenant": "Tenant workspace"
+    },
+    "sections": {
+      "workspace": "Workspace",
+      "accountTenant": "Account & Tenant",
+      "membersPermissions": "Members & Permissions",
+      "subscriptionBilling": "Subscription & Billing",
+      "advancedSettings": "Advanced Settings"
+    },
+    "items": {
+      "overview": {
+        "label": "Data Overview",
+        "description": "Tenant status, subscription expiry, usage, and quick entries"
+      },
+      "todos": {
+        "label": "Todo Items",
+        "description": "Key actions waiting for the current tenant"
+      },
+      "profile": {
+        "label": "Profile",
+        "description": "Avatar, name, password, phone, and email binding"
+      },
+      "personalTenant": {
+        "label": "My Tenant",
+        "description": "Personal tenant information, visible for personal tenants"
+      },
+      "organization": {
+        "label": "Organization Info",
+        "description": "Organization name, logo, bio, verification, and locale"
+      },
+      "members": {
+        "label": "Member Management",
+        "description": "Invites, access review, and team membership"
+      },
+      "roles": {
+        "label": "Role Management",
+        "description": "Tenant roles such as admin, member, and readonly"
+      },
+      "invitations": {
+        "label": "Invitation Records",
+        "description": "Pending and historical workspace invitations"
+      },
+      "subscription": {
+        "label": "Service Subscription",
+        "description": "Plan details, upgrade, and downgrade entry"
+      },
+      "billing": {
+        "label": "Billing Records",
+        "description": "Historical bills and invoice downloads"
+      },
+      "quotas": {
+        "label": "Usage Quotas",
+        "description": "Resource progress for API calls, storage, and more"
+      },
+      "notifications": {
+        "label": "Notifications",
+        "description": "Email and in-console notification preferences"
+      },
+      "security": {
+        "label": "Security Settings",
+        "description": "Login logs, device management, and future controls"
+      },
+      "tenantSettings": {
+        "label": "Tenant Settings",
+        "description": "Language, timezone, and dangerous tenant cancellation"
+      }
+    }
+  },
+  "assistant": {
+    "eyebrow": "Assistant",
+    "title": "Smart Assistant",
+    "description": "Reserved AI assistant surface for {page}.",
+    "close": "Close assistant",
+    "enterFullscreen": "Expand assistant to fullscreen",
+    "exitFullscreen": "Exit assistant fullscreen",
+    "resizeWidth": "Resize assistant width",
+    "resizeBottom": "Resize assistant input area",
+    "suggestions": {
+      "title": "Suggested actions",
+      "summary": "Summarize current page",
+      "risks": "Highlight risks and blockers",
+      "next": "Draft next-step checklist"
+    },
+    "brief": {
+      "title": "Working brief",
+      "description": "Keep this panel compact and actionable instead of turning it into a second dashboard.",
+      "items": {
+        "focus": "Track the one or two changes most likely to move the current page forward.",
+        "owners": "Keep owners and follow-up items visible when the main content is dense.",
+        "followUp": "Use the panel as a launch point for quick summaries, not permanent clutter."
+      }
+    },
+    "drafts": {
+      "title": "Quick drafts",
+      "one": "Prepare stakeholder summary",
+      "two": "Generate operator checklist"
+    },
+    "composer": {
+      "title": "Prompt draft",
+      "placeholder": "Type a question, instruction, or draft for \"{page}\"...",
+      "hint": "This keeps the framework ready before wiring the real assistant request flow.",
+      "send": "Send"
+    }
+  },
+  "routes": {
+    "dashboard": "Dashboard",
+    "todos": "Todo Items",
+    "profile": "Profile",
+    "personalTenant": "My Tenant",
+    "organization": "Organization Info",
+    "members": "Members",
+    "roles": "Roles & Permissions",
+    "invitations": "Invitation Records",
+    "subscription": "Subscription",
+    "billing": "Billing",
+    "quotas": "Quotas",
+    "notifications": "Notifications",
+    "security": "Security Settings",
+    "settings": "Tenant Settings",
+    "tenantSettings": "Tenant Settings"
+  },
+  "login": {
+    "hero": {
+      "eyebrow": "Unified access",
+      "title": "Sign in to the Vxture console.",
+      "description": "Access platform operations, tenant management, and capability-scoped modules from one controlled entry point.",
+      "signals": {
+        "capability": "Capability-aware navigation",
+        "tenant": "Tenant context resolution",
+        "session": "Console BFF session gateway"
+      }
+    },
+    "card": {
+      "eyebrow": "Console login",
+      "title": "Sign in",
+      "description": "Use your account to continue to the workspace."
+    },
+    "form": {
+      "account": "Account",
+      "accountPlaceholder": "username / email / phone",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "forgotPassword": "Forgot password?",
+      "acceptPrefix": "I have read and agree to the ",
+      "terms": "User Agreement",
+      "acceptJoiner": " and ",
+      "privacy": "Privacy Policy",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "register": "Create account"
+    },
+    "social": {
+      "label": "Third-party sign in",
+      "divider": "Other sign-in options",
+      "dingtalk": "Sign in with DingTalk",
+      "dingtalkShort": "DingTalk",
+      "feishu": "Sign in with Feishu",
+      "feishuShort": "Feishu",
+      "wechat": "Sign in with WeChat",
+      "wechatShort": "WeChat"
+    },
+    "errors": {
+      "required": "Account and password are required.",
+      "terms": "Please agree to the User Agreement and Privacy Policy first.",
+      "invalid": "Unable to sign in with the current credentials.",
+      "unavailable": "The console login service is unavailable. Start console-bff first."
+    },
+    "footer": {
+      "copyright": "© 2026 Vxture Studio",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    }
+  },
+  "dashboard": {
+    "eyebrow": "Overview",
+    "title": "Workspace command center",
+    "description": "A restrained control surface for subscription health, quota pressure, and access posture across the active tenant.",
+    "createAction": "Create workspace action",
+    "stats": {
+      "plan": {
+        "label": "Current plan",
+        "value": "Growth",
+        "hint": "Renews on May 18, 2026 with pooled workspace billing."
+      },
+      "quota": {
+        "label": "Quota health",
+        "value": "78%",
+        "hint": "Inference remains healthy, but GPU tuning is approaching alert range."
+      },
+      "reminders": {
+        "label": "Open reminders",
+        "value": "3",
+        "hint": "One invoice, one invite, and one quota threshold need review."
+      }
+    },
+    "quickActions": {
+      "title": "Quick actions",
+      "description": "Guide frequent workspace operations without flooding the page with primary buttons.",
+      "addMember": {
+        "label": "Add member",
+        "description": "Invite operators, workspace owners, and readonly reviewers."
+      },
+      "reviewSubscription": {
+        "label": "Review subscription",
+        "description": "Inspect plan details, renewal timing, and quota pool pressure."
+      },
+      "adjustQuotas": {
+        "label": "Adjust quotas",
+        "description": "Rebalance shared limits before overage costs increase."
+      }
+    },
+    "signals": {
+      "title": "Signals",
+      "description": "Keep the dashboard concise: only what needs attention now.",
+      "badge": "Today",
+      "billing": {
+        "title": "Billing follow-up",
+        "description": "An invoice for model overage is due within 5 days."
+      },
+      "quota": {
+        "title": "Quota hotspot",
+        "description": "Fine-tune GPU hours are nearing the configured monthly cap."
+      },
+      "access": {
+        "title": "Access hygiene",
+        "description": "Two invited members have not accepted access yet."
+      }
+    },
+    "invoices": {
+      "title": "Recent invoices",
+      "description": "Subscription and overage charges stay secondary to plan status.",
+      "headers": {
+        "invoice": "Invoice",
+        "date": "Date",
+        "scope": "Scope",
+        "status": "Status",
+        "amount": "Amount"
+      }
+    },
+    "quotas": {
+      "title": "Quota posture",
+      "description": "Usage remains visible, but not as an oversized ops dashboard.",
+      "headers": {
+        "pool": "Pool",
+        "usage": "Usage",
+        "share": "Share",
+        "status": "Status"
+      }
+    }
+  },
+  "settings": {
+    "eyebrow": "Settings",
+    "title": "Tenant settings",
+    "description": "Settings use clearly separated cards and restrained form density instead of a long uninterrupted form wall.",
+    "save": "Save changes",
+    "workspace": {
+      "title": "Workspace profile",
+      "description": "Public workspace labels, locale, and administrative contacts.",
+      "name": "Workspace name",
+      "domain": "Primary domain",
+      "email": "Operations contact"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Keep toggle controls grouped and visually quiet.",
+      "billing": {
+        "title": "Billing reminders",
+        "description": "Notify finance owners before renewal or overdue invoices."
+      },
+      "quota": {
+        "title": "Quota alerts",
+        "description": "Send alerts when shared pools cross configured thresholds."
+      },
+      "approvals": {
+        "title": "New member approvals",
+        "description": "Notify workspace owners when access requests need review."
+      }
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "description": "These actions affect the current tenant and require explicit confirmation.",
+      "cancelTenant": {
+        "title": "Cancel tenant",
+        "description": "Tenant cancellation enters a guarded confirmation flow and later requires entering the tenant name.",
+        "confirmHint": "Requires secondary confirmation and the current tenant name before execution.",
+        "action": "Cancel tenant"
+      }
+    }
+  },
+  "membersPage": {
+    "header": {
+      "eyebrow": "Workspace",
+      "title": "Members",
+      "description": "Invite, review, and govern tenant operators with a lower-noise member management surface.",
+      "addMember": "Add member"
+    },
+    "metrics": {
+      "members": {
+        "label": "Members",
+        "trend": "{count} active"
+      },
+      "pendingInvites": {
+        "label": "Pending invites",
+        "trendWarning": "Need follow-up",
+        "trendOk": "None pending"
+      },
+      "adminCoverage": {
+        "label": "Admin coverage",
+        "trendOk": "Primary owner available",
+        "trendWarning": "No owner found"
+      }
+    },
+    "signals": {
+      "ownerCoverage": {
+        "title": "Owner coverage",
+        "description": "Two primary owners are active this week, keeping tenant-critical approvals covered."
+      },
+      "pendingOnboarding": {
+        "title": "Pending onboarding",
+        "description": "Three invitations are older than 72 hours and should be nudged or revoked."
+      },
+      "securityReview": {
+        "title": "Security review",
+        "description": "One suspended analyst still has historical billing exports attached to their profile."
+      }
+    },
+    "sections": {
+      "accessPosture": {
+        "title": "Access posture",
+        "description": "Lead with operational signals before dropping into the full member directory."
+      },
+      "nextActions": {
+        "title": "Next actions",
+        "description": "Keep repetitive administration visible without turning the page into a tool menu.",
+        "reviewInvites": "Review pending invites",
+        "exportAccess": "Export member access",
+        "auditRoles": "Audit admin roles"
+      }
+    },
+    "table": {
+      "title": "Workspace members",
+      "description": "Keep the directory focused on the fields operators actually scan, and push everything else into the detail drawer.",
+      "toolbarTitle": "{count} members in scope",
+      "toolbarHint": "Search, filter, then open the drawer for contextual actions.",
+      "searchPlaceholder": "Search by name, email, or role",
+      "filterAriaLabel": "Member status filters",
+      "columns": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "status": "Status",
+        "lastActive": "Last active"
+      }
+    },
+    "filters": {
+      "all": "All members",
+      "active": "Active",
+      "invited": "Invited",
+      "suspended": "Suspended"
+    },
+    "empty": {
+      "loadingTitle": "Loading members...",
+      "loadingDescription": "Reading workspace members from the console BFF.",
+      "title": "No members match the current filters.",
+      "description": "Try widening the status scope or searching by another field.",
+      "resetFilters": "Reset filters"
+    },
+    "drawer": {
+      "accessSummary": {
+        "title": "Access summary",
+        "description": "{name} currently operates in the {team} group with scoped console permissions."
+      },
+      "followUp": {
+        "title": "Suggested follow-up",
+        "invited": "Confirm invitation acceptance or resend access instructions.",
+        "suspended": "Review audit history before restoring workspace access.",
+        "active": "Review role scope before expanding access to billing or tenant settings."
+      },
+      "fields": {
+        "role": "Role",
+        "status": "Status",
+        "team": "Team",
+        "lastActive": "Last active"
+      },
+      "actions": {
+        "edit": "Edit member",
+        "disableInvite": "Disable invite",
+        "disableMember": "Disable member",
+        "enableMember": "Enable member",
+        "delete": "Delete member"
+      }
+    },
+    "dialogs": {
+      "create": {
+        "title": "Add member"
+      },
+      "invite": {
+        "title": "Invite member"
+      },
+      "edit": {
+        "title": "Edit member"
+      },
+      "fields": {
+        "email": "Email",
+        "nickname": "Nickname",
+        "teamRemark": "Team remark",
+        "role": "Role",
+        "defaultRole": "Default member"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "create": "Create member",
+        "sendInvite": "Send invite",
+        "save": "Save"
+      }
+    }
+  },
+  "rolesPage": {
+    "header": {
+      "eyebrow": "Workspace",
+      "title": "Roles & permissions",
+      "description": "Manage real tenant roles and permissions from the database with a simplified page layout.",
+      "create": "Create role"
+    },
+    "metrics": {
+      "roles": {
+        "label": "Roles",
+        "trend": "{count} active"
+      },
+      "customRoles": {
+        "label": "Custom roles",
+        "trend": "Non-system roles only"
+      },
+      "permissions": {
+        "label": "Permissions",
+        "trend": "From tenant permission mappings"
+      }
+    },
+    "list": {
+      "title": "Role list",
+      "description": "Show role name, status, and permission count first, then open details only when needed.",
+      "noDescription": "No description",
+      "system": "System role",
+      "permissionCount": "{count} permissions",
+      "permissionsColumn": "Permissions"
+    },
+    "detail": {
+      "title": "Role details",
+      "description": "Review the current role definition and its bound permissions.",
+      "edit": "Edit role",
+      "delete": "Delete role",
+      "fields": {
+        "code": "Role code",
+        "name": "Role name",
+        "status": "Status",
+        "description": "Description"
+      },
+      "permissionsTitle": "Permission list",
+      "permissionsDescription": "Permission codes currently bound to this role.",
+      "noPermissions": "No permissions assigned"
+    },
+    "dialog": {
+      "createTitle": "Create role",
+      "editTitle": "Edit role",
+      "fields": {
+        "code": "Role code",
+        "name": "Role name",
+        "description": "Description",
+        "status": "Status"
+      },
+      "permissionsTitle": "Select permissions",
+      "permissionsDescription": "Click tags to toggle permission bindings.",
+      "cancel": "Cancel",
+      "create": "Create role",
+      "save": "Save"
+    },
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "empty": {
+      "loadingTitle": "Loading roles...",
+      "loadingDescription": "Reading tenant roles and permissions from the console BFF.",
+      "title": "No roles found for this tenant.",
+      "description": "Create a role first, then continue configuring permissions."
+    },
+    "feedback": {
+      "loadError": "Failed to load role data. Please try again later.",
+      "createSuccess": "Role created.",
+      "createError": "Role creation failed. Please try again later.",
+      "updateSuccess": "Role updated.",
+      "updateError": "Role update failed. Please try again later.",
+      "deleteSuccess": "Role deleted.",
+      "deleteError": "Role delete failed. Please try again later."
+    }
+  }
+}

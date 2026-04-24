@@ -54,8 +54,8 @@ export function buildOAuthProfile(params: {
     providerId: params.providerId,
     provider:   params.provider,
     name:       params.name,
-    email:      params.email,
-    avatar:     params.avatar,
+    ...(params.email ? { email: params.email } : {}),
+    ...(params.avatar ? { avatar: params.avatar } : {}),
     raw:        params.raw,
   };
 }

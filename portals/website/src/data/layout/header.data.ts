@@ -55,7 +55,7 @@ export interface HeaderTheme {
   icon: string;
   titleKey: string;
   options: Array<{
-    code: 'light' | 'dark';
+    code: 'system' | 'light' | 'dark';
     labelKey: string;
   }>;
 }
@@ -92,7 +92,7 @@ export const HEADER_DATA: HeaderData = {
   ],
   actions: [
     { href: '/signup', variant: 'secondary', labelKey: 'actions.signup' },
-    { href: '/login', variant: 'primary', labelKey: 'actions.login' }
+    { href: '/signin', variant: 'primary', labelKey: 'actions.login' }
   ],
   language: {
     enabled: true,
@@ -108,6 +108,7 @@ export const HEADER_DATA: HeaderData = {
     icon: 'sun',
     titleKey: 'theme.title',
     options: [
+      { code: 'system', labelKey: 'theme.system' },
       { code: 'light', labelKey: 'theme.light' },
       { code: 'dark', labelKey: 'theme.dark' }
     ]

@@ -16,6 +16,7 @@
  */
 
 import type {
+  AgentRequestContext,
   CreateSessionRequest,
   CreateSessionResponse,
   SendMessageRequest,
@@ -51,9 +52,12 @@ export class SessionRouter {
   /**
    * 创建新会话
    */
-  async createSession(req: CreateSessionRequest): Promise<ApiResponse<CreateSessionResponse>> {
+  async createSession(
+    context: AgentRequestContext,
+    req: CreateSessionRequest,
+  ): Promise<ApiResponse<CreateSessionResponse>> {
     try {
-      const session = await chatService.createSession(req.userId, req.tenantId, req.config);
+      const session = await chatService.createSession(context.userId, context.tenantId, req.config);
 
       return {
         code: 200,
@@ -75,9 +79,12 @@ export class SessionRouter {
   /**
    * 发送消息
    */
-  async sendMessage(req: SendMessageRequest): Promise<ApiResponse<SendMessageResponse>> {
+  async sendMessage(
+    context: AgentRequestContext,
+    req: SendMessageRequest,
+  ): Promise<ApiResponse<SendMessageResponse>> {
     try {
-      const result = await chatService.sendMessage(req);
+      const result = await chatService.sendMessage(req, context);
 
       return {
         code: 200,
@@ -96,9 +103,13 @@ export class SessionRouter {
   /**
    * 获取会话历史
    */
-  async getSessionHistory(sessionId: string, limit?: number): Promise<ApiResponse<ChatMessage[]>> {
+  async getSessionHistory(
+    context: AgentRequestContext,
+    sessionId: string,
+    limit?: number,
+  ): Promise<ApiResponse<ChatMessage[]>> {
     try {
-      const messages = await chatService.getSessionHistory(sessionId, limit);
+      const messages = await chatService.getSessionHistory(sessionId, context, limit);
 
       return {
         code: 200,
@@ -117,8 +128,13 @@ export class SessionRouter {
   /**
    * 获取任务状态
    */
-  async getTaskStatus(req: GetTaskStatusRequest): Promise<ApiResponse<GetTaskStatusResponse>> {
+  async getTaskStatus(
+    context: AgentRequestContext,
+    sessionId: string,
+    req: GetTaskStatusRequest,
+  ): Promise<ApiResponse<GetTaskStatusResponse>> {
     try {
+      await chatService.ensureSessionAccess(sessionId, context.userId, context.tenantId);
       const task = workflowTaskManager.getTaskStatus(req.taskId);
 
       if (!task) {
@@ -135,7 +151,11 @@ export class SessionRouter {
           status: task.status,
           progress: task.status === 'running' ? 50 : task.status === 'completed' ? 100 : 0,
           result: task.result,
-          error: task.status === 'failed' ? (task.result?.error as string) : undefined,
+          ...(task.status === 'failed'
+            ? { error: task.result && typeof task.result === 'object' && 'error' in task.result
+                ? String(task.result.error)
+                : 'Task failed' }
+            : {}),
         },
       };
     } catch (error) {

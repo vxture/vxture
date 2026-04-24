@@ -1,11 +1,12 @@
 /**
- * index.ts - Ruin Agent BFF 入口
+ * index.ts - Ruin Agent BFF bootstrap
  * @package @vxture/bff-ruinagent
  *
- * Description: Ruin Agent 前端的后端代理服务入口
+ * Description: Bootstraps the NestJS application that fronts agent-studio/ruinagent
+ * and proxies authenticated requests to agent-server/ruinagent.
  *
  * @author AI-Generated
- * @date 2026-03-11 11:20:00
+ * @date 2026-04-22
  * @version 1.0
  *
  * @copyright Vxture Team
@@ -15,77 +16,22 @@
  * @category Ruin Agent - BFF
  */
 
-import { createServer } from 'http';
+import 'reflect-metadata';
+import { NestFactory } from '@nestjs/core';
+import cookieParser from 'cookie-parser';
+import { VxConfigService } from '@vxture/core-config';
+import { AppModule } from './app.module';
 
-/**
- * Ruin Agent BFF 服务器
- */
-class RuinAgentBFF {
-  private server: ReturnType<typeof createServer> | null = null;
-  private port: number;
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
 
-  constructor(port: number = 3002) {
-    this.port = port;
-  }
-
-  /**
-   * 启动服务器
-   */
-  start(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.server = createServer((req, res) => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
-          message: 'Ruin Agent BFF server is running',
-          timestamp: new Date().toISOString(),
-          agent: 'ruinagent',
-          mode: 'bff',
-        }));
-      });
-
-      this.server.listen(this.port, () => {
-        console.log(`Ruin Agent BFF server running on port ${this.port}`);
-        resolve();
-      });
-
-      this.server.on('error', (error) => {
-        console.error('Server error:', error);
-        reject(error);
-      });
-    });
-  }
-
-  /**
-   * 停止服务器
-   */
-  stop(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (this.server) {
-        this.server.close((error) => {
-          if (error) {
-            console.error('Error closing server:', error);
-            reject(error);
-          } else {
-            console.log('Ruin Agent BFF server stopped');
-            resolve();
-          }
-        });
-      } else {
-        resolve();
-      }
-    });
-  }
+  const configService = app.get(VxConfigService);
+  await app.listen(configService.app.PORT);
 }
 
-/**
- * 启动服务器的函数
- */
-export function startRuinAgentBFF(port?: number): Promise<RuinAgentBFF> {
-  const bff = new RuinAgentBFF(port);
-  return bff.start().then(() => bff);
-}
-
-/**
- * 默认导出
- */
-export default RuinAgentBFF;
+void bootstrap();

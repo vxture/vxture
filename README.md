@@ -213,6 +213,7 @@ vxture/
 ```powershell
 # 🚀 开发环境
 pnpm dev          # 启动前端开发服务器
+pnpm dev:panel    # 启动本地服务控制面板 http://localhost:8090
 pnpm dev:api      # 启动后端 API 服务器
 pnpm start        # 同时启动前后端（等同于 .\start-dev.ps1）
 
@@ -237,6 +238,29 @@ pnpm clean        # 清理构建文件
 pnpm reset        # 完全重置项目（清理 + 重新安装）
 pnpm health       # 环境健康检查
 ```
+
+### 本地可视化控制面板
+
+用于统一管理 `website`、`console`、`website-bff`、`console-bff` 和 `gateway-bff`：
+
+```powershell
+pnpm dev:panel
+```
+
+默认地址：
+
+```text
+http://localhost:8090
+```
+
+能力包括：
+
+- 启动 / 停止 / 重启单个服务
+- 一键全部启动 / 全部停止
+- 按依赖顺序启动：`website-bff`、`console-bff`、`gateway-bff`、`website`、`console`
+- 查看最近日志
+- 直接打开服务地址
+- 健康检查不只看端口，还会检查关键接口返回码
 
 ### 数据库操作
 
@@ -266,8 +290,12 @@ notepad .env.local
 ```env
 # 🌐 应用配置
 NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_WEBSITE_API_PREFIX=/website-api
+NEXT_PUBLIC_CONSOLE_API_PREFIX=/console-api
+NEXT_PUBLIC_CONSOLE_URL=http://localhost:3002
 NEXTAUTH_SECRET=your-nextauth-secret
 NEXTAUTH_URL=http://localhost:3000
+AUTH_COOKIE_DOMAIN=.vxture.local
 
 # 🗄️ 数据库配置
 DATABASE_URL=postgresql://user:password@localhost:5432/vxture

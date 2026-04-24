@@ -7,10 +7,12 @@
   "types": "src/main.ts",
   "description": "Vxture platform — website BFF (Backend For Frontend)",
   "scripts": {
+    "build": "esbuild src/main.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/main.cjs --tsconfig=tsconfig.json --external:@nestjs/websockets/socket-module --external:@nestjs/microservices --external:@nestjs/microservices/microservices-module",
+    "dev": "pnpm run build && node dist/main.cjs",
+    "start": "node dist/main.cjs",
     "type-check": "tsc --noEmit",
     "lint": "echo \"No lint yet\"",
-    "lint:fix": "echo \"No lint:fix yet\"",
-    "build": "echo \"No build yet\""
+    "lint:fix": "echo \"No lint:fix yet\""
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
@@ -25,6 +27,7 @@
     "@vxture/core-locale": "workspace:*",
     "@vxture/core-tenant": "workspace:*",
     "@vxture/core-utils": "workspace:*",
+    "@vxture/service-iam": "workspace:*",
     "cookie-parser": "^1.4.7",
     "express": "^4.22.1",
     "ioredis": "^5.0.0",
@@ -33,6 +36,7 @@
     "reflect-metadata": "^0.2.0"
   },
   "devDependencies": {
+    "esbuild": "^0.27.4",
     "typescript": "^5.9.3"
   },
   "engines": {

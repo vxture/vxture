@@ -12,6 +12,9 @@ export const THEME_CONSTANTS = {
   /** localStorage key */
   STORAGE_KEY: 'theme-storage',
 
+  /** Cookie key */
+  COOKIE_KEY: 'vx-theme',
+
   /** HTML data-theme attribute */
   THEME_ATTRIBUTE: 'data-theme',
 
@@ -19,10 +22,11 @@ export const THEME_CONSTANTS = {
   DARK_CLASS: 'dark',
 
   /** Default theme */
-  DEFAULT_THEME: 'light',
+  DEFAULT_THEME: 'system',
 
   /** Available themes */
   AVAILABLE_THEMES: [
+    { name: 'system', displayName: '跟随系统', isDark: false },
     { name: 'light', displayName: '浅色', isDark: false },
     { name: 'dark', displayName: '深色', isDark: true },
   ],

@@ -20,7 +20,8 @@ export interface AuthState {
 
   // Methods
   setUser: (user: UserInfo | null) => void;
-  login: (email: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  restoreSession: () => Promise<void>;
   clearError: () => void;
 }

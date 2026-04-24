@@ -9,9 +9,12 @@
  */
 
 import { DynamicModule, Global, Logger, Module } from '@nestjs/common';
+import { existsSync, readFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { ZodError } from 'zod';
 
 import { appSchema, databaseSchema, redisSchema, authSchema, aiSchema } from '../schemas';
+import { VxConfigService } from '../service';
 
 import { CONFIG_TOKEN } from '../types';
 import type { ConfigLoadResult, ConfigValidationError } from '../types';
@@ -57,6 +60,7 @@ export interface VxConfigModuleOptions {
 @Module({})
 export class VxConfigModule {
   private static readonly logger = new Logger('VxConfigModule');
+  private static envLoaded = false;
 
   /**
    * Call in AppModule imports:
@@ -70,6 +74,8 @@ export class VxConfigModule {
    * ```
    */
   static register(options: VxConfigModuleOptions = {}): DynamicModule {
+    VxConfigModule.loadEnvFiles();
+
     const {
       domains = ['app', 'database', 'redis', 'auth'],
       strict = true,
@@ -120,8 +126,96 @@ export class VxConfigModule {
 
     return {
       module: VxConfigModule,
-      providers,
-      exports: providers.map((p) => p.provide),
+      providers: [...providers, VxConfigService],
+      exports: [...providers.map((p) => p.provide), VxConfigService],
     };
   }
+
+  private static loadEnvFiles(): void {
+    if (VxConfigModule.envLoaded) {
+      return;
+    }
+
+    const rootDir = resolve(process.cwd(), '..', '..');
+    const candidates = [
+      join(rootDir, '.env.local'),
+      join(rootDir, '.env'),
+      resolve(process.cwd(), '.env.local'),
+      resolve(process.cwd(), '.env'),
+    ];
+
+    for (const filePath of candidates) {
+      if (!existsSync(filePath)) {
+        continue;
+      }
+
+      try {
+        const content = readFileSync(filePath, 'utf8');
+        for (const rawLine of content.split(/\r?\n/)) {
+          const line = rawLine.trim();
+          if (!line || line.startsWith('#')) {
+            continue;
+          }
+
+          const withoutInlineComment = stripInlineComment(line);
+          const separatorIndex = withoutInlineComment.indexOf('=');
+          if (separatorIndex < 0) {
+            continue;
+          }
+
+          const key = withoutInlineComment.slice(0, separatorIndex).trim();
+          let value = withoutInlineComment.slice(separatorIndex + 1).trim();
+
+          if (!key || process.env[key] !== undefined) {
+            continue;
+          }
+
+          if (
+            (value.startsWith('"') && value.endsWith('"')) ||
+            (value.startsWith("'") && value.endsWith("'"))
+          ) {
+            value = value.slice(1, -1);
+          }
+
+          process.env[key] = value;
+        }
+      } catch (error) {
+        VxConfigModule.logger.warn(
+          `[core-config] Failed to load env file "${filePath}": ${
+            error instanceof Error ? error.message : 'Unknown error'
+          }`,
+        );
+      }
+    }
+
+    VxConfigModule.envLoaded = true;
+  }
+}
+
+function stripInlineComment(line: string): string {
+  let inSingleQuote = false;
+  let inDoubleQuote = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+
+    if (char === "'" && !inDoubleQuote) {
+      inSingleQuote = !inSingleQuote;
+      continue;
+    }
+
+    if (char === '"' && !inSingleQuote) {
+      inDoubleQuote = !inDoubleQuote;
+      continue;
+    }
+
+    if (char === '#' && !inSingleQuote && !inDoubleQuote) {
+      const previous = index === 0 ? '' : (line[index - 1] ?? '');
+      if (previous === '' || /\s/.test(previous)) {
+        return line.slice(0, index).trimEnd();
+      }
+    }
+  }
+
+  return line;
 }

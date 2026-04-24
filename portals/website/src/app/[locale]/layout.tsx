@@ -16,15 +16,26 @@
 
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/lib/i18n/routing';
+import { AuthSessionBootstrap } from '@/components/auth';
 import Notifications from '@/components/ui/Notifications';
 import type { Locale } from '@vxture/shared';
+import { buildMetadata } from '@/app/metadata';
 
 type Props = {
   children: React.ReactNode;
   params: { locale: Locale };
 };
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Pick<Props, 'params'>) {
+  const { locale } = await params;
+  return buildMetadata(locale);
+}
 
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
@@ -34,11 +45,14 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
+  setRequestLocale(locale);
+
   // 获取翻译消息
-  const messages = await getMessages();
+  const messages = await getMessages({ locale });
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
+      <AuthSessionBootstrap />
       <Notifications />
       {children}
     </NextIntlClientProvider>

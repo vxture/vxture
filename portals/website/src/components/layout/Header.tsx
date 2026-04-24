@@ -23,6 +23,16 @@ import LocaleSwitcher from '@/components/ui/LocaleSwitcher';
 import FullscreenSwitcher from '@/components/ui/FullscreenSwitcher';
 import PreferencesPanel from '@/components/ui/PreferencesPanel';
 import { HEADER_DATA } from '@/data/layout/header.data';
+import { useAuthStore } from '@/stores/auth.store';
+
+function resolveConsoleUrl(): string {
+  const configuredUrl = process.env.NEXT_PUBLIC_CONSOLE_URL?.trim();
+  if (configuredUrl) {
+    return configuredUrl.replace(/\/+$/, '');
+  }
+
+  return 'http://localhost:3002';
+}
 
 /**
  * Header 组件
@@ -37,6 +47,8 @@ import { HEADER_DATA } from '@/data/layout/header.data';
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const t = useTranslations('layout.header');
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const consoleUrl = resolveConsoleUrl();
 
   // ----------------------------------------------------------------------------
   // 监听滚动
@@ -58,6 +70,16 @@ export default function Header() {
   if (!HEADER_DATA.enabled) {
     return null;
   }
+
+  const guestActions = HEADER_DATA.actions;
+  const authenticatedActions = [
+    {
+      href: consoleUrl,
+      labelKey: 'actions.console',
+      variant: 'primary' as const,
+    },
+  ];
+  const actions = isAuthenticated ? authenticatedActions : guestActions;
 
   return (
     <header
@@ -129,9 +151,9 @@ export default function Header() {
             />
 
             {/* CTA Buttons - 固定宽度 */}
-            {HEADER_DATA.actions.length > 0 && (
+            {actions.length > 0 && (
               <>
-                {HEADER_DATA.actions.map((action) => (
+                {actions.map((action) => (
                   <a
                     key={action.href}
                     href={action.href}

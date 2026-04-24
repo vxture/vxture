@@ -1,0 +1,24 @@
+{
+  "name": "@vxture/service-iam",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Identity and account authentication service",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "echo \"Build for service-iam\"",
+    "dev": "echo \"Dev mode for service-iam\"",
+    "type-check": "tsc --noEmit",
+    "test": "echo \"Test for service-iam\""
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@vxture/core-config": "workspace:*",
+    "bcryptjs": "^3.0.2",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.6",
+    "typescript": "^5.9.3"
+  }
+}

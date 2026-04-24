@@ -11,15 +11,20 @@
  * @category Types
  */
 
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class LoginDto {
+  @IsOptional()
+  @IsString()
+  identifier?: string;
+
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @IsString()
-  @MinLength(8)
-  password: string;
+  @MinLength(1)
+  password!: string;
 }
 
 export interface AuthUserDto {
@@ -27,4 +32,8 @@ export interface AuthUserDto {
   name: string;
   email: string;
   role: string;
+}
+
+export interface RequestContext {
+  user?: AuthUserDto;
 }

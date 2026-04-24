@@ -148,6 +148,8 @@ export interface AuthTokenPair {
   refreshToken:  string;
   /** Access token expiry (seconds) */
   expiresIn:     number;
+  /** Refresh token expiry (seconds) */
+  refreshExpiresIn: number;
 }
 
 // ============================================================================

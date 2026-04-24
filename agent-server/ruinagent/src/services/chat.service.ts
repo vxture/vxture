@@ -42,7 +42,7 @@ export class ChatService {
   /**
    * 创建新会话
    */
-  async createSession(userId: string, tenantId: string, config?: Record<string, any>): Promise<SessionConfig> {
+  async createSession(userId: string, tenantId: string, config?: Record<string, unknown>): Promise<SessionConfig> {
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     const sessionConfig: SessionConfig = {
@@ -58,13 +58,33 @@ export class ChatService {
   }
 
   /**
-   * 发送消息
+   * 确保会话属于当前认证用户
    */
-  async sendMessage(request: SendMessageRequest): Promise<SendMessageResponse> {
-    const session = await sessionStorage.getSession(request.sessionId);
+  async ensureSessionAccess(sessionId: string, userId: string, tenantId: string): Promise<SessionConfig> {
+    const session = await sessionStorage.getSession(sessionId);
     if (!session) {
       throw new Error('Session not found');
     }
+
+    if (session.userId !== userId) {
+      throw new Error('Session access denied');
+    }
+
+    if (tenantId && session.tenantId && session.tenantId !== tenantId) {
+      throw new Error('Session access denied');
+    }
+
+    return session;
+  }
+
+  /**
+   * 发送消息
+   */
+  async sendMessage(
+    request: SendMessageRequest,
+    context: { userId: string; tenantId: string },
+  ): Promise<SendMessageResponse> {
+    await this.ensureSessionAccess(request.sessionId, context.userId, context.tenantId);
 
     const userMessage: ChatMessage = {
       id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -72,7 +92,7 @@ export class ChatService {
       content: request.content,
       type: request.type,
       timestamp: new Date(),
-      taskId: request.taskId,
+      ...(request.taskId ? { taskId: request.taskId } : {}),
     };
 
     await sessionStorage.storeMessage(request.sessionId, userMessage);
@@ -107,14 +127,19 @@ export class ChatService {
   /**
    * 获取会话历史
    */
-  async getSessionHistory(sessionId: string, limit?: number): Promise<ChatMessage[]> {
+  async getSessionHistory(
+    sessionId: string,
+    context: { userId: string; tenantId: string },
+    limit?: number,
+  ): Promise<ChatMessage[]> {
+    await this.ensureSessionAccess(sessionId, context.userId, context.tenantId);
     return await sessionStorage.getSessionHistory(sessionId, limit);
   }
 
   /**
    * 向知识库添加文档
    */
-  async addToKnowledgeBase(content: string, metadata: Record<string, any> = {}): Promise<void> {
+  async addToKnowledgeBase(content: string, metadata: Record<string, unknown> = {}): Promise<void> {
     // 简单的模拟实现
     const mockEmbedding = Array(1536).fill(0).map(() => Math.random());
     

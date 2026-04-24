@@ -11,51 +11,82 @@
  * @category Router
  */
 
-import { Controller, Post, Get, Body, Res, HttpCode, HttpStatus } from '@nestjs/common';
-import type { Response } from 'express';
-import { LoginDto, AuthUserDto } from '../types/auth.types';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
+import type { Request, Response } from 'express';
+import { AUTH_CONSTANTS } from '@vxture/shared';
+import { WebsiteAuthService } from '../auth/auth.service';
+import { LoginDto, type AuthUserDto, type RequestContext } from '../types/auth.types';
+
+function resolveCookieDomain(): string | undefined {
+  const cookieDomain = process.env.AUTH_COOKIE_DOMAIN?.trim();
+
+  if (!cookieDomain || cookieDomain === 'localhost') {
+    return undefined;
+  }
+
+  return cookieDomain;
+}
 
 @Controller('api/auth')
 export class AuthRouter {
+  constructor(private readonly websiteAuthService: WebsiteAuthService) {}
+
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) res: Response): Promise<AuthUserDto> {
-    // TODO: Implement login logic
-    // 1. Validate LoginDto
-    // 2. Call VxHttpClient to backend auth service
-    // 3. Store accessToken in Redis: SET session:{userId} {accessToken} EX {expiresIn}
-    // 4. Write refreshToken to HttpOnly Cookie
-    // 5. Return AuthUserDto (no tokens)
-    return {
-      id: 'temp-id',
-      name: 'Temp User',
-      email: loginDto.email,
-      role: 'user',
-    };
+    const result = await this.websiteAuthService.loginWithPassword(
+      loginDto.identifier ?? loginDto.email ?? '',
+      loginDto.password,
+    );
+    const secure = process.env.NODE_ENV === 'production';
+    const domain = resolveCookieDomain();
+
+    res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN, result.tokens.accessToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure,
+      path: '/',
+      domain,
+      maxAge: result.tokens.expiresIn * 1000,
+    });
+
+    res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN, result.tokens.refreshToken, {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure,
+      path: '/',
+      domain,
+      maxAge: result.tokens.refreshExpiresIn * 1000,
+    });
+
+    return result.user;
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Res({ passthrough: true }) res: Response): Promise<void> {
-    // TODO: Implement logout logic
-    // 1. Clear Cookie
-    // 2. Remove from Redis
-  }
-
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
-  async refresh(): Promise<void> {
-    // TODO: Implement token refresh logic (BFF internal)
+  logout(@Res({ passthrough: true }) res: Response) {
+    const domain = resolveCookieDomain();
+    res.clearCookie(AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN, { path: '/', domain });
+    res.clearCookie(AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN, { path: '/', domain });
+    return { status: 'logged_out' };
   }
 
   @Get('me')
-  async getProfile(): Promise<AuthUserDto> {
-    // TODO: Implement get current user logic
-    return {
-      id: 'temp-id',
-      name: 'Temp User',
-      email: 'user@example.com',
-      role: 'user',
-    };
+  async getProfile(@Req() req: Request & RequestContext): Promise<AuthUserDto> {
+    if (!req.user) {
+      throw new UnauthorizedException('No active session');
+    }
+
+    return req.user;
   }
 }

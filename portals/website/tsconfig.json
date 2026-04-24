@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
     "noEmit": true,
     "jsx": "preserve",
     "lib": [ "DOM", "DOM.Iterable", "ES2023" ],
@@ -11,9 +10,15 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@vxture/shared": ["../../packages/shared/shared/src"],
+      "@vxture/shared/*": ["../../packages/shared/shared/src/*"],
+      "@vxture/core-locale": ["../../packages/core/locale/src"],
+      "@vxture/core-locale/*": ["../../packages/core/locale/src/*"],
+      "@vxture/design-system": ["../../packages/design/design-system/dist/index.d.ts"],
+      "@vxture/design-system/*": ["../../packages/design/design-system/dist/*"],
+      "@vxture/platform-browser": ["../../packages/platform/browser/src"],
+      "@vxture/platform-browser/*": ["../../packages/platform/browser/src/*"]
     },
     "allowJs": true,
     "incremental": true,

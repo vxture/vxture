@@ -20,13 +20,11 @@ import { useAuthStore } from '@/stores/auth.store';
 export function useAuth() {
   const { login: loginStore, logout: logoutStore, isLoading, error } = useAuthStore();
 
-  const login = async (email: string, password: string) => {
-    // TODO: Call BFF API
-    await loginStore(email, password);
+  const login = async (identifier: string, password: string) => {
+    await loginStore(identifier, password);
   };
 
   const logout = async () => {
-    // TODO: Call BFF API
     await logoutStore();
   };
 

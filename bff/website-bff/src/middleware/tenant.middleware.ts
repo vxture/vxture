@@ -16,7 +16,7 @@ import type { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {
-  use(req: Request, res: Response, next: NextFunction) {
+  use(_req: Request, _res: Response, next: NextFunction) {
     // TODO: Implement tenant detection logic
     // 1. Call TenantDetector.detectFromHeaders()
     // 2. Call TenantManager.setTenantContext()

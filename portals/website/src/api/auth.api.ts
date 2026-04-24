@@ -17,6 +17,7 @@
  */
 
 import { apiClient } from './client';
+import { AUTH_CONSTANTS } from '@vxture/shared';
 
 export interface AuthUserDto {
   id: string;
@@ -26,7 +27,7 @@ export interface AuthUserDto {
 }
 
 export interface LoginRequest {
-  email: string;
+  identifier: string;
   password: string;
 }
 
@@ -37,7 +38,7 @@ export interface SignupRequest {
 }
 
 export async function login(data: LoginRequest): Promise<AuthUserDto> {
-  const response = await apiClient.post('/api/auth/login', data);
+  const response = await apiClient.post(AUTH_CONSTANTS.API_ENDPOINTS.LOGIN, data);
   return response.data;
 }
 
@@ -47,10 +48,10 @@ export async function signup(data: SignupRequest): Promise<AuthUserDto> {
 }
 
 export async function logout(): Promise<void> {
-  await apiClient.post('/api/auth/logout');
+  await apiClient.post(AUTH_CONSTANTS.API_ENDPOINTS.LOGOUT);
 }
 
 export async function getProfile(): Promise<AuthUserDto> {
-  const response = await apiClient.get('/api/auth/me');
+  const response = await apiClient.get(AUTH_CONSTANTS.API_ENDPOINTS.ME);
   return response.data;
 }

@@ -12,13 +12,19 @@
  */
 
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  app.enableCors();
+  // 开启全局参数校验：自动剥离多余字段，校验不通过直接 400
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.enableCors({
+    origin: true,
+    credentials: true,
+  });
   await app.listen(3001);
 }
 

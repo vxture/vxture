@@ -29,11 +29,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useLocale as useNextIntlLocale } from 'next-intl';
+import { useLocale as useNextIntlLocale, useTranslations } from 'next-intl';
 import { useRouter, usePathname } from '@/lib/i18n/navigation';
 import { useTheme, Icon } from '@vxture/design-system';
 import type { Locale } from '@vxture/shared';
 import { SUPPORTED_LOCALES, DEFAULT_LOCALE, LOCALE_CONFIGS } from '@vxture/shared';
+import { setGlobalLocalePreference } from '@vxture/platform-browser';
 
 // ============================================================================
 // 类型定义区
@@ -59,6 +60,7 @@ export default function LocaleSwitcher({
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations('layout.header');
   const currentLocale = useNextIntlLocale() as Locale;
   const router = useRouter();
   const pathname = usePathname();
@@ -68,6 +70,7 @@ export default function LocaleSwitcher({
 
   // 语言切换函数
   const setLocale = (newLocale: Locale) => {
+    setGlobalLocalePreference(newLocale);
     router.push(pathname, { locale: newLocale });
   };
 
@@ -120,10 +123,11 @@ export default function LocaleSwitcher({
     <div ref={menuRef} className={`relative ${className}`}>
       <button
         className={`flex items-center justify-center transition-all duration-300 hover:opacity-80 ${sizeClasses[size]}`}
-        title="切换语言"
+        title={t('language.title')}
+        aria-label={t('language.title')}
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
-        <span className='sr-only'>切换语言</span>
+        <span className='sr-only'>{t('language.title')}</span>
 
         <Icon
           name="globe"

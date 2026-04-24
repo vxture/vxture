@@ -28,7 +28,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { useTheme, Icon } from '@vxture/design-system';
+import { WEBSITE_THEME_OPTIONS } from '@/data/theme/theme.data';
+import type { Theme } from '@vxture/shared';
+import { setGlobalThemePreference } from '@vxture/platform-browser';
 
 // ============================================================================
 // 组件实现区
@@ -44,6 +48,7 @@ export default function ThemeSwitcher({
   showLabel?: boolean;
 }) {
   const { theme, setTheme } = useTheme();
+  const t = useTranslations('layout.header.theme');
 
   // ——— SSR / Hydration 安全 ———
   // next-themes 在服务端 theme 为 undefined，直接用 isDarkMode 会导致
@@ -65,13 +70,21 @@ export default function ThemeSwitcher({
     large: 'w-6 h-6',
   };
 
+  const activeTheme = (theme ?? 'system') as Theme;
+  const activeOptionIndex = Math.max(
+    WEBSITE_THEME_OPTIONS.findIndex((option) => option.value === activeTheme),
+    0,
+  );
+  const activeOption = WEBSITE_THEME_OPTIONS[activeOptionIndex]!;
+  const nextOption = WEBSITE_THEME_OPTIONS[(activeOptionIndex + 1) % WEBSITE_THEME_OPTIONS.length]!;
+
   // mount 前渲染占位，保持与 SSR 输出一致，避免 hydration mismatch
   if (!mounted) {
     return (
       <button
         className={`flex items-center justify-center transition-all duration-300 hover:opacity-80 ${sizeClasses[size]} ${className}`}
-        title='切换到暗色模式'
-        aria-label='切换到暗色模式'
+        title={t('switchTo', { theme: t('dark') })}
+        aria-label={t('switchTo', { theme: t('dark') })}
         disabled
       >
         <Icon name='moon' className={`${iconSizes[size]} text-gray-700`} />
@@ -79,31 +92,31 @@ export default function ThemeSwitcher({
     );
   }
 
-  const isDarkMode = theme === 'dark';
-  const toggleTheme = () => setTheme(isDarkMode ? 'light' : 'dark');
-
   return (
     <button
       className={`flex items-center justify-center transition-all duration-300 hover:opacity-80 ${sizeClasses[size]} ${className}`}
-      title={isDarkMode ? '切换到亮色模式' : '切换到暗色模式'}
-      aria-label={isDarkMode ? '切换到亮色模式' : '切换到暗色模式'}
-      onClick={toggleTheme}
+      title={t('switchTo', { theme: t(nextOption.labelKey) })}
+      aria-label={t('switchTo', { theme: t(nextOption.labelKey) })}
+      onClick={() => {
+        setTheme(nextOption.value);
+        setGlobalThemePreference(nextOption.value);
+      }}
     >
       <span className='sr-only'>
-        {isDarkMode ? '亮色模式' : '暗色模式'}
+        {t(activeOption.labelKey)}
       </span>
 
-      {isDarkMode ? (
-        <>
-          <Icon name='sun' className={`${iconSizes[size]} text-yellow-400`} />
-          {showLabel && <span className='ml-2 text-sm font-medium'>亮色</span>}
-        </>
-      ) : (
-        <>
-          <Icon name='moon' className={`${iconSizes[size]} text-gray-700`} />
-          {showLabel && <span className='ml-2 text-sm font-medium'>暗色</span>}
-        </>
-      )}
+      <Icon
+        name={activeOption.icon}
+        className={`${iconSizes[size]} ${
+          activeOption.value === 'dark'
+            ? 'text-yellow-400'
+            : activeOption.value === 'light'
+            ? 'text-gray-700'
+            : 'text-cyan-500'
+        }`}
+      />
+      {showLabel && <span className='ml-2 text-sm font-medium'>{t(activeOption.labelKey)}</span>}
     </button>
   );
 }

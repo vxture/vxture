@@ -23,10 +23,24 @@
  */
 
 import { create } from 'zustand';
+import axios from 'axios';
 import type { StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { makeAuthPersistOptions } from './persistOptions/authPersist';
 import type { AuthState, UserInfo } from '@/types/auth.types';
+import { getProfile, login as loginRequest, logout as logoutRequest } from '@/api/auth.api';
+
+function extractAuthErrorMessage(error: unknown): string {
+  if (axios.isAxiosError<{ message?: string }>(error)) {
+    if (error.response?.status === 401) {
+      return '登录失败，请检查账号密码';
+    }
+
+    return error.response?.data?.message ?? error.message;
+  }
+
+  return error instanceof Error ? error.message : '登录失败，请重试';
+}
 
 const authStoreCreator: StateCreator<AuthState> = (set) => ({
   user: null,
@@ -38,46 +52,59 @@ const authStoreCreator: StateCreator<AuthState> = (set) => ({
     set({ user, isAuthenticated: !!user });
   },
 
-  login: async (email: string, _password: string) => {
+  login: async (identifier: string, password: string) => {
     set({ isLoading: true, error: null });
     try {
-      // TODO: Call BFF API
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      const mockUser: UserInfo = {
-        id: 'temp-id',
-        name: 'Temp User',
-        email,
-        role: 'user',
-      };
+      const user = await loginRequest({ identifier, password });
       set({
-        user: mockUser,
+        user,
         isAuthenticated: true,
         isLoading: false,
         error: null,
       });
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '登录失败，请重试';
+    } catch (error: unknown) {
+      const errorMessage = extractAuthErrorMessage(error);
       set({
         user: null,
         isAuthenticated: false,
         isLoading: false,
         error: errorMessage,
       });
-      throw error;
+      throw new Error(errorMessage);
     }
   },
 
   logout: async () => {
     set({ isLoading: true });
     try {
-      // TODO: Call BFF API
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await logoutRequest();
     } finally {
       set({
         user: null,
         isAuthenticated: false,
         isLoading: false,
         error: null,
+      });
+    }
+  },
+
+  restoreSession: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const user = await getProfile();
+      set({
+        user,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+    } catch (error: unknown) {
+      const isUnauthorized = axios.isAxiosError(error) && error.response?.status === 401;
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: isUnauthorized ? null : extractAuthErrorMessage(error),
       });
     }
   },

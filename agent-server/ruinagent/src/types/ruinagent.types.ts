@@ -30,11 +30,25 @@ export interface SessionConfig {
   /** 租户ID */
   tenantId: string;
   /** 会话配置 */
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   /** 创建时间 */
   createdAt: Date;
   /** 更新时间 */
   updatedAt: Date;
+}
+
+/**
+ * 认证后的请求上下文
+ */
+export interface AgentRequestContext {
+  /** 用户ID */
+  userId: string;
+  /** 租户ID */
+  tenantId: string;
+  /** 用户邮箱 */
+  email: string;
+  /** 平台角色 */
+  role: string;
 }
 
 /**
@@ -141,12 +155,8 @@ export interface ApiResponse<T = any> {
  * 会话创建请求
  */
 export interface CreateSessionRequest {
-  /** 用户ID */
-  userId: string;
-  /** 租户ID */
-  tenantId: string;
   /** 初始配置 */
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 /**

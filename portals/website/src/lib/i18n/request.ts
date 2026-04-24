@@ -13,7 +13,7 @@ import { routing } from './routing';
 // ── 类型定义 ─────────────────────────────────────────────────────────────────
 
 /** 支持按需加载的页面标识 */
-type PageKey = 'home' | 'appcenter' | 'products' | 'solutions' | 'cases' | 'company';
+type PageKey = 'home' | 'appcenter' | 'products' | 'solutions' | 'cases' | 'company' | 'auth';
 
 /** namespace 条目：嵌套写入 key 和对应文件路径（不含 .json） */
 type NsEntry = { key: string; file: string };
@@ -32,6 +32,7 @@ const PAGE_NAMESPACE_MAP: Record<PageKey, NsEntry[]> = {
   products:  [{ key: 'products',  file: 'products' }],
   solutions: [{ key: 'solutions', file: 'solutions' }],
   cases:     [{ key: 'cases',     file: 'cases' }],
+  auth:      [{ key: 'auth',      file: 'auth' }],
   company: [
     { key: 'company.about',   file: 'company/about' },
     { key: 'company.contact', file: 'company/contact' },
@@ -48,6 +49,12 @@ function resolvePageKey(pathname: string): PageKey | null {
   if (path.startsWith('/products'))                              return 'products';
   if (path.startsWith('/solutions'))                             return 'solutions';
   if (path.startsWith('/cases'))                                 return 'cases';
+  if (
+    path.startsWith('/signin') ||
+    path.startsWith('/login') ||
+    path.startsWith('/signup') ||
+    path.startsWith('/register')
+  )  return 'auth';
   if (path.startsWith('/about') || path.startsWith('/company')) return 'company';
   return null;
 }
@@ -78,6 +85,7 @@ async function loadZhCN(file: string): Promise<Record<string, unknown>> {
     case 'home/cases':     return (await import('@/../messages/zh-CN/home/cases.json')).default as Record<string, unknown>;
     case 'home/cta':       return (await import('@/../messages/zh-CN/home/cta.json')).default as Record<string, unknown>;
     // ── 单文件页面 ────────────────────────────────────────────────────────────
+    case 'auth':           return (await import('@/../messages/zh-CN/auth/auth.json')).default as Record<string, unknown>;
     case 'appcenter':      return (await import('@/../messages/zh-CN/appcenter.json')).default as Record<string, unknown>;
     case 'products':       return (await import('@/../messages/zh-CN/products.json')).default as Record<string, unknown>;
     case 'solutions':      return (await import('@/../messages/zh-CN/solutions.json')).default as Record<string, unknown>;
@@ -107,6 +115,7 @@ async function loadEnUS(file: string): Promise<Record<string, unknown>> {
     case 'home/cases':     return (await import('@/../messages/en-US/home/cases.json')).default as Record<string, unknown>;
     case 'home/cta':       return (await import('@/../messages/en-US/home/cta.json')).default as Record<string, unknown>;
     // ── 单文件页面 ────────────────────────────────────────────────────────────
+    case 'auth':           return (await import('@/../messages/en-US/auth/auth.json')).default as Record<string, unknown>;
     case 'appcenter':      return (await import('@/../messages/en-US/appcenter.json')).default as Record<string, unknown>;
     case 'products':       return (await import('@/../messages/en-US/products.json')).default as Record<string, unknown>;
     case 'solutions':      return (await import('@/../messages/en-US/solutions.json')).default as Record<string, unknown>;

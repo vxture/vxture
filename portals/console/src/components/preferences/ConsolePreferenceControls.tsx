@@ -1,0 +1,87 @@
+'use client';
+
+import { startTransition, useEffect, useState } from 'react';
+import { useTheme } from '@vxture/design-system';
+import { Button } from '@/components/ui/primitives';
+import { useConsoleLocale, useConsoleTranslations } from '@/lib/console-intl';
+import {
+  getGlobalUserPreferences,
+  setGlobalDensityPreference,
+  setGlobalLocalePreference,
+  setGlobalThemePreference,
+  subscribeToGlobalPreferenceChanges,
+} from '@vxture/platform-browser';
+import type { Locale, Theme } from '@vxture/shared';
+import type { Density } from '@vxture/design-system';
+
+const THEME_OPTIONS: readonly Theme[] = ['system', 'light', 'dark'];
+const DENSITY_OPTIONS: readonly Density[] = ['compact', 'default', 'comfortable'];
+
+export function ConsolePreferenceControls() {
+  const t = useConsoleTranslations('preferences');
+  const locale = useConsoleLocale() as Locale;
+  const { theme, setTheme, density, setDensity } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    return subscribeToGlobalPreferenceChanges((preferences) => {
+      startTransition(() => {
+        setTheme(preferences.theme);
+        setDensity(preferences.density);
+      });
+    });
+  }, [setDensity, setTheme]);
+
+  const currentTheme = (theme ?? getGlobalUserPreferences().theme) as Theme;
+  const currentThemeIndex = Math.max(THEME_OPTIONS.indexOf(currentTheme), 0);
+  const nextTheme = THEME_OPTIONS[(currentThemeIndex + 1) % THEME_OPTIONS.length]!;
+
+  return (
+    <div className="console-preferences" aria-label={t('title')}>
+      <label className="console-preferences__field">
+        <span>{t('locale.label')}</span>
+        <select
+          className="vx-select-trigger"
+          value={locale}
+          onChange={(event) => {
+            setGlobalLocalePreference(event.target.value as Locale);
+          }}
+        >
+          <option value="zh-CN">{t('locale.zh-CN')}</option>
+          <option value="en-US">{t('locale.en-US')}</option>
+        </select>
+      </label>
+
+      <label className="console-preferences__field">
+        <span>{t('density.label')}</span>
+        <select
+          className="vx-select-trigger"
+          value={mounted ? density : getGlobalUserPreferences().density}
+          onChange={(event) => {
+            const nextDensity = event.target.value as Density;
+            setDensity(nextDensity);
+            setGlobalDensityPreference(nextDensity);
+          }}
+        >
+          {DENSITY_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {t(`density.${option}`)}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => {
+          setTheme(nextTheme);
+          setGlobalThemePreference(nextTheme);
+        }}
+      >
+        {t('theme.switchTo', { theme: t(`theme.${nextTheme}`) })}
+      </Button>
+    </div>
+  );
+}

@@ -16,6 +16,7 @@ import type { ReactNode } from "react";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import type { Density } from "../density";
 import { DEFAULT_DENSITY, DENSITY_STORAGE_KEY } from "../density";
+import { THEME_CONSTANTS } from "@vxture/shared";
 
 // ─── 类型定义 ──────────────────────────────────────────────────────────────────
 
@@ -158,7 +159,12 @@ export function ThemeProvider({
   defaultDensity = DEFAULT_DENSITY,
 }: ThemeProviderProps) {
   return (
-    <NextThemeProvider attribute="class" defaultTheme={defaultTheme} enableSystem>
+    <NextThemeProvider
+      attribute="class"
+      defaultTheme={defaultTheme}
+      storageKey={THEME_CONSTANTS.STORAGE_KEY}
+      enableSystem
+    >
       <ThemeContextBridge defaultDensity={defaultDensity}>
         {children}
       </ThemeContextBridge>

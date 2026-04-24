@@ -12,6 +12,15 @@ export const AUTH_CONSTANTS = {
   /** localStorage key */
   STORAGE_KEY: 'auth-storage',
 
+  /** Platform-wide HttpOnly cookie keys */
+  COOKIE_KEYS: {
+    ACCESS_TOKEN: 'vx_access_token',
+    REFRESH_TOKEN: 'vx_refresh_token',
+  } as const,
+
+  /** Session storage key prefix for server-side session adapters */
+  SESSION_KEY_PREFIX: 'session:',
+
   /** Token refresh buffer time in milliseconds - refresh 30 seconds before expiry */
   TOKEN_REFRESH_BUFFER: 30 * 1000,
 
@@ -33,6 +42,8 @@ export const AUTH_CONSTANTS = {
   API_ENDPOINTS: {
     LOGIN: '/api/auth/login',
     LOGOUT: '/api/auth/logout',
-    REFRESH_TOKEN: '/api/auth/refresh-token',
+    REFRESH: '/api/auth/refresh',
+    ME: '/api/auth/me',
+    SESSION: '/api/auth/session',
   },
 } as const;

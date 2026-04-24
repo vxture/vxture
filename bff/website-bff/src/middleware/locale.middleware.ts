@@ -1,14 +1,9 @@
-import { resolveLocale } from '@vxture/core-locale';
-import type { LocaleRequest } from '@vxture/core-locale';
+import { Injectable, type NestMiddleware } from '@nestjs/common';
+import type { NextFunction, Request, Response } from 'express';
 
-function adaptRequest(req: Request): LocaleRequest {
-  return {
-    headers: {
-      get: (name: string) =>
-        (req.headers[name.toLowerCase()] as string) ?? null,
-    },
-    cookies: req.cookies, // Express cookie-parser 解析后的对象
-  };
+@Injectable()
+export class LocaleMiddleware implements NestMiddleware {
+  use(_req: Request, _res: Response, next: NextFunction) {
+    next();
+  }
 }
-
-const locale = resolveLocale(adaptRequest(req));

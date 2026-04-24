@@ -23,6 +23,9 @@ export const appSchema = z.object({
   /** HTTP listening port */
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
 
+  /** Paired internal upstream API base URL, primarily used by agent BFFs */
+  AGENT_SERVER_BASE_URL: z.string().url().default('http://127.0.0.1:4002'),
+
   /** Log level */
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug', 'verbose']).default('info'),
 

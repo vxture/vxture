@@ -89,6 +89,7 @@ export class VxJwtClient {
    * @param refreshSecret  refresh token specific secret
    * @param refreshExpires refresh token expiry (e.g. '7d')
    * @param accessExpiresIn access token expiry (seconds, for frontend)
+   * @param refreshExpiresIn refresh token expiry (seconds, for cookie lifetime)
    */
   signTokenPair(params: {
     accessPayload:   Omit<JwtAccessPayload,  'iat' | 'exp'>;
@@ -96,6 +97,7 @@ export class VxJwtClient {
     refreshSecret:   string;
     refreshExpires:  string;
     accessExpiresIn: number;
+    refreshExpiresIn: number;
   }): AuthTokenPair {
     const accessToken  = this.signAccessToken(params.accessPayload);
     const refreshToken = this.signRefreshToken(
@@ -108,6 +110,7 @@ export class VxJwtClient {
       accessToken,
       refreshToken,
       expiresIn: params.accessExpiresIn,
+      refreshExpiresIn: params.refreshExpiresIn,
     };
   }
 }

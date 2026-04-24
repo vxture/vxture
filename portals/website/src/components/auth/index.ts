@@ -7,3 +7,4 @@
 
 export { LoginForm } from './LoginForm';
 export { SignupForm } from './SignupForm';
+export { AuthSessionBootstrap } from './AuthSessionBootstrap';
