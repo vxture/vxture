@@ -22,6 +22,7 @@ import { useTheme, Icon } from '@vxture/design-system';
 import Image from 'next/image';
 
 import { HERO_DATA } from '@/data/home/home.hero.data';
+import ThemedHeroImage from './ThemedHeroImage';
 
 // ============================================================================
 // 类型定义
@@ -112,7 +113,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       video.removeEventListener('loadeddata', handleVideoLoaded);
       video.removeEventListener('error', handleVideoError);
     };
-  }, [HERO_DATA.media.type, handleVideoLoaded, handleVideoError]);
+  }, [handleVideoLoaded, handleVideoError]);
 
   // ==========================================================================
   // 早期返回
@@ -177,13 +178,11 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
         {/* 图片背景 */}
         {HERO_DATA.media.type === 'image' && HERO_DATA.media.url && (
           <>
-            <Image
-              src={HERO_DATA.media.url}
+            <ThemedHeroImage
+              lightSrc={HERO_DATA.media.url}
+              darkSrc={HERO_DATA.media.urlDark ?? HERO_DATA.media.url}
               alt={t('title') || '背景图片'}
-              fill
-              className='object-cover'
             />
-            <div className='absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 dark:from-slate-800/30 dark:via-blue-900/20 dark:to-slate-800/30'></div>
           </>
         )}
 

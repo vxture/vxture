@@ -30,8 +30,16 @@ export class LoginDto {
 export interface AuthUserDto {
   id: string;
   name: string;
+  displayName?: string | null;
+  username?: string;
   email: string;
+  phone?: string | null;
   role: string;
+  roleLabel?: string;
+  personalVerified?: boolean | null;
+  organizationVerified?: boolean | null;
+  organizationName?: string | null;
+  tenantType?: string | null;
 }
 
 export interface RequestContext {

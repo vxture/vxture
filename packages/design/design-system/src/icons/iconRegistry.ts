@@ -72,6 +72,7 @@ import {
   // 用户/组织
   // ==========================================================================
   UserIcon,
+  UserSwitchIcon,
   UsersIcon,
   MedalIcon,
   StarIcon,
@@ -109,6 +110,7 @@ import {
   CornersOutIcon,       // corners-out：伪全屏展开
   CornersInIcon,        // corners-in：伪全屏收起
   RowsIcon,
+  SignOutIcon,
 
   // ==========================================================================
   // 其他
@@ -195,10 +197,11 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   // ==========================================================================
   // 用户/组织
   // ==========================================================================
-  user:  UserIcon,
-  users: UsersIcon,
-  medal: MedalIcon,
-  star:  StarIcon,
+  user:          UserIcon,
+  "user-switch": UserSwitchIcon,
+  users:         UsersIcon,
+  medal:         MedalIcon,
+  star:          StarIcon,
 
   // ==========================================================================
   // 通讯/联系
@@ -233,6 +236,7 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   "corners-out": CornersOutIcon,
   "corners-in":  CornersInIcon,
   rows:          RowsIcon,
+  "sign-out":    SignOutIcon,
 
   // ==========================================================================
   // 其他

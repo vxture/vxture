@@ -17,6 +17,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
   Res,
@@ -39,7 +40,7 @@ function resolveCookieDomain(): string | undefined {
 
 @Controller('api/auth')
 export class AuthRouter {
-  constructor(private readonly websiteAuthService: WebsiteAuthService) {}
+  constructor(@Inject(WebsiteAuthService) private readonly websiteAuthService: WebsiteAuthService) {}
 
   @Post('login')
   @HttpCode(HttpStatus.OK)

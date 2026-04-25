@@ -11,7 +11,7 @@
  * @category Middleware
  */
 
-import { Injectable, type NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import type { Request, Response, NextFunction } from 'express';
 import { AUTH_CONSTANTS } from '@vxture/shared';
 import { WebsiteAuthService } from '../auth/auth.service';
@@ -19,7 +19,7 @@ import type { RequestContext } from '../types/auth.types';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly websiteAuthService: WebsiteAuthService) {}
+  constructor(@Inject(WebsiteAuthService) private readonly websiteAuthService: WebsiteAuthService) {}
 
   async use(req: Request, _res: Response, next: NextFunction) {
     if (req.path === AUTH_CONSTANTS.API_ENDPOINTS.LOGIN || req.path === AUTH_CONSTANTS.API_ENDPOINTS.REFRESH) {

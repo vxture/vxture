@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { AuthTokenPair, JwtAccessPayload, JwtRefreshPayload } from '@vxture/core-auth';
 import { OAuthProviderType } from '@vxture/core-auth';
@@ -9,8 +9,11 @@ import type { AuthUserDto } from '../types/auth.types';
 @Injectable()
 export class WebsiteAuthService {
   constructor(
+    @Inject(JwtService)
     private readonly jwtService: JwtService,
+    @Inject(VxConfigService)
     private readonly configService: VxConfigService,
+    @Inject(AccountAuthService)
     private readonly accountAuthService: AccountAuthService,
   ) {}
 
@@ -48,13 +51,21 @@ export class WebsiteAuthService {
       refreshExpiresIn: parseExpiresToSeconds(this.configService.auth.JWT_REFRESH_EXPIRES_IN),
     };
 
+    const profile = await this.accountAuthService.getAccountProfile(account.id);
+
     return {
       tokens,
       user: {
         id: account.id,
         name: account.username,
+        displayName: profile?.displayName ?? null,
+        username: account.username,
         email: account.email ?? `${account.username}@local.vxture`,
+        phone: account.phone,
         role: 'member',
+        roleLabel: 'Member',
+        personalVerified: true,
+        organizationVerified: false,
       },
     };
   }
@@ -65,11 +76,19 @@ export class WebsiteAuthService {
       return null;
     }
 
+    const profile = await this.accountAuthService.getAccountProfile(account.id);
+
     return {
       id: account.id,
       name: account.username,
+      displayName: profile?.displayName ?? null,
+      username: account.username,
       email: account.email ?? `${account.username}@local.vxture`,
+      phone: account.phone,
       role: 'member',
+      roleLabel: 'Member',
+      personalVerified: true,
+      organizationVerified: false,
     };
   }
 

@@ -4,7 +4,7 @@
     "alt": "logo"
   },
   "nav": {
-    "appcenter": "应用广场",
+    "appcenter": "智能体广场",
     "products": "产品服务",
     "solutions": "解决方案",
     "cases": "最佳实践",
@@ -14,6 +14,55 @@
     "console": "工作台",
     "signup": "注册",
     "login": "登录"
+  },
+  "userMenu": {
+    "open": "打开用户菜单",
+    "status": "已登录",
+    "unnamed": "未命名用户",
+    "noEmail": "未设置邮箱",
+    "badges": {
+      "personal": "个人认证",
+      "organization": "组织认证"
+    },
+    "fields": {
+      "name": "用户名",
+      "email": "邮箱",
+      "role": "角色",
+      "account": "账号 ID"
+    },
+    "roles": {
+      "admin": "管理员",
+      "member": "成员",
+      "tenantAdmin": "租户管理员",
+      "user": "用户"
+    },
+    "settings": {
+      "title": "快捷设置",
+      "theme": {
+        "system": "系统",
+        "light": "亮色",
+        "dark": "暗色"
+      },
+      "density": {
+        "compact": "紧凑",
+        "default": "默认",
+        "comfortable": "宽松"
+      },
+      "fullscreen": {
+        "workspace": "页面",
+        "browser": "浏览器"
+      },
+      "fontSize": {
+        "small": "缩小",
+        "default": "默认",
+        "large": "放大"
+      }
+    },
+    "switchUser": "切换用户",
+    "signOut": "退出登录",
+    "switchReady": "已退出，请登录其他账号",
+    "logoutSuccess": "已安全退出",
+    "logoutFailed": "退出登录失败"
   },
   "language": {
     "title": "语言",

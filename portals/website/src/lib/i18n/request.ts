@@ -39,26 +39,6 @@ const PAGE_NAMESPACE_MAP: Record<PageKey, NsEntry[]> = {
   ],
 };
 
-// ── 路由解析 ──────────────────────────────────────────────────────────────────
-
-/** 去除语言前缀后，将 pathname 映射到 PageKey；无匹配返回 null */
-function resolvePageKey(pathname: string): PageKey | null {
-  const path = pathname.replace(/^\/(zh-CN|en-US)/, '') || '/';
-  if (path === '/' || path === '')                                return 'home';
-  if (path.startsWith('/appcenter'))                             return 'appcenter';
-  if (path.startsWith('/products'))                              return 'products';
-  if (path.startsWith('/solutions'))                             return 'solutions';
-  if (path.startsWith('/cases'))                                 return 'cases';
-  if (
-    path.startsWith('/signin') ||
-    path.startsWith('/login') ||
-    path.startsWith('/signup') ||
-    path.startsWith('/register')
-  )  return 'auth';
-  if (path.startsWith('/about') || path.startsWith('/company')) return 'company';
-  return null;
-}
-
 // ── 静态 import 映射表 ────────────────────────────────────────────────────────
 //
 // Turbopack/Webpack 要求动态 import() 的路径在编译时可静态分析。
@@ -174,12 +154,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
     ? (requested as typeof routing.locales[number])
     : routing.defaultLocale;
 
-  // ── 读取当前 pathname（由 middleware 写入 x-pathname header）────────────────
-  const { headers } = await import('next/headers');
-  const headersList = await headers();
-  const pathname = headersList.get('x-pathname') ?? '/';
-  const pageKey = resolvePageKey(pathname);
-
   // ── 始终加载：root + common + layout ────────────────────────────────────────
   const [rootMessages, commonMessages, headerMessages, footerMessages] =
     await Promise.all([
@@ -189,8 +163,10 @@ export default getRequestConfig(async ({ requestLocale }) => {
       loadNamespace(locale, 'layout/footer'),
     ]);
 
-  // ── 按需加载：当前页面 namespace ────────────────────────────────────────────
-  const pageEntries = pageKey ? PAGE_NAMESPACE_MAP[pageKey] : [];
+  // ── 页面 namespace ─────────────────────────────────────────────────────────
+  // [locale]/layout 会在客户端跨页面导航时复用，Provider 不能依赖首次请求路径。
+  // 因此这里一次性提供所有页面 namespace，避免从 auth 页登录跳首页时缺少 home.*。
+  const pageEntries = Object.values(PAGE_NAMESPACE_MAP).flat();
   const pageValues  = await Promise.all(
     pageEntries.map((e) => loadNamespace(locale, e.file)),
   );

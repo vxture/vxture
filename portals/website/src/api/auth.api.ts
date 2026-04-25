@@ -22,8 +22,16 @@ import { AUTH_CONSTANTS } from '@vxture/shared';
 export interface AuthUserDto {
   id: string;
   name: string;
+  displayName?: string | null;
+  username?: string;
   email: string;
+  phone?: string | null;
   role: string;
+  roleLabel?: string;
+  personalVerified?: boolean | null;
+  organizationVerified?: boolean | null;
+  organizationName?: string | null;
+  tenantType?: 'individual' | 'company' | 'organization' | string | null;
 }
 
 export interface LoginRequest {

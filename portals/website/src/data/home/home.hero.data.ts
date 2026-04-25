@@ -23,6 +23,7 @@ export interface HeroMedia {
   /** 暗色模式封面图（可选，未配置时回退到 posterImage） */
   posterImageDark?: string;
   url?: string;
+  urlDark?: string;
 }
 
 /**
@@ -63,8 +64,10 @@ export const HERO_DATA: HeroData = {
     href: "/products"
   },
   media: {
-    type: "video",
+    type: "image",
     videoUrl: "/videos/herosection/banner-hero-01.mp4",
+    url: "/images/herosection/banner-hero-poster-light-01.png",
+    urlDark: "/images/herosection/banner-hero-poster-dark-01.png",
     posterImage: "/images/herosection/banner-hero-poster-light-01.png",
     posterImageDark: "/images/herosection/banner-hero-poster-dark-01.png"
   },

@@ -13,7 +13,7 @@ const START_WAIT_INTERVAL_MS = 1_000;
 
 // ─── 服务清单 ──────────────────────────────────────────────────────────────────
 
-/** @type {Array<{id:string,name:string,port:number,url:string,command:string,priority:number,healthChecks:Array<{label:string,url:string,okStatuses:number[]}>}>} */
+/** @type {Array<{id:string,name:string,port:number,url:string,command:string,priority:number,healthChecks:Array<{label:string,kind?:'http'|'tcp',url?:string,port?:number,okStatuses?:number[]}>}>} */
 const SERVICES = [
   {
     id: 'website-bff',
@@ -60,8 +60,7 @@ const SERVICES = [
     url: 'http://localhost:3000',
     command: 'pnpm --filter @vxture/website dev',
     healthChecks: [
-      { label: 'home',    url: 'http://localhost:3000',               okStatuses: [200, 307, 308] },
-      { label: 'signin',  url: 'http://localhost:3000/zh-CN/signin',  okStatuses: [200, 307, 308] },
+      { label: 'port', kind: 'tcp', port: 3000 },
     ],
   },
   {
@@ -72,8 +71,7 @@ const SERVICES = [
     url: 'http://localhost:3002',
     command: 'pnpm --filter @vxture/console dev',
     healthChecks: [
-      { label: 'home',   url: 'http://localhost:3002',          okStatuses: [200, 307, 308] },
-      { label: 'login',  url: 'http://localhost:3002/login',    okStatuses: [200] },
+      { label: 'port', kind: 'tcp', port: 3002 },
     ],
   },
 ];
@@ -119,8 +117,120 @@ function appendLog(serviceId, line) {
   }
 }
 
+function isChildAlive(child) {
+  return Boolean(child && child.exitCode === null && child.signalCode === null && !child.killed);
+}
+
 function findService(serviceId) {
   return SERVICES.find((item) => item.id === serviceId) ?? null;
+}
+
+function runProcess(file, args, { timeoutMs = 10_000 } = {}) {
+  return new Promise((resolve) => {
+    const child = spawn(file, args, { windowsHide: true });
+    let stdout = '';
+    let stderr = '';
+    let settled = false;
+
+    const finish = (payload) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      resolve({ stdout, stderr, ...payload });
+    };
+
+    const timer = setTimeout(() => {
+      child.kill();
+      finish({ code: null, timedOut: true });
+    }, timeoutMs);
+
+    child.stdout?.on('data', (chunk) => { stdout += chunk; });
+    child.stderr?.on('data', (chunk) => { stderr += chunk; });
+    child.on('error', (error) => finish({ code: null, error }));
+    child.on('close', (code) => finish({ code, timedOut: false }));
+  });
+}
+
+function parsePidLines(text) {
+  return [...new Set(
+    String(text)
+      .split(/\s+/)
+      .map((item) => Number(item.trim()))
+      .filter((pid) => Number.isInteger(pid) && pid > 0 && pid !== process.pid),
+  )];
+}
+
+async function findListeningPids(port) {
+  if (process.platform === 'win32') {
+    const command = [
+      `Get-NetTCPConnection -LocalPort ${port} -State Listen -ErrorAction SilentlyContinue`,
+      'Select-Object -ExpandProperty OwningProcess -Unique',
+    ].join(' | ');
+    const result = await runProcess('powershell.exe', [
+      '-NoProfile',
+      '-NonInteractive',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-Command',
+      command,
+    ]);
+    if (result.stdout.trim()) return parsePidLines(result.stdout);
+
+    const netstat = await runProcess('netstat.exe', ['-ano', '-p', 'tcp']);
+    return [...new Set(
+      netstat.stdout
+        .split(/\r?\n/)
+        .filter((line) => line.includes('LISTENING'))
+        .map((line) => line.trim().split(/\s+/))
+        .filter((cols) => cols.length >= 5 && cols[1].endsWith(`:${port}`))
+        .map((cols) => Number(cols[4]))
+        .filter((pid) => Number.isInteger(pid) && pid > 0 && pid !== process.pid),
+    )];
+  }
+
+  const lsof = await runProcess('lsof', ['-nP', '-ti', `TCP:${port}`, '-sTCP:LISTEN'], { timeoutMs: 5_000 });
+  if (lsof.stdout.trim()) return parsePidLines(lsof.stdout);
+
+  const fuser = await runProcess('fuser', [`${port}/tcp`], { timeoutMs: 5_000 });
+  return parsePidLines(`${fuser.stdout}\n${fuser.stderr}`);
+}
+
+async function waitForPortClosed(port, timeoutMs = 7_000) {
+  const startedAt = Date.now();
+  while (Date.now() - startedAt < timeoutMs) {
+    const listening = await checkPort(port);
+    if (!listening) return true;
+    await sleep(300);
+  }
+  return !(await checkPort(port));
+}
+
+async function killProcessTree(pid) {
+  if (!Number.isInteger(pid) || pid <= 0 || pid === process.pid) return false;
+
+  if (process.platform === 'win32') {
+    const result = await runProcess('taskkill.exe', ['/pid', String(pid), '/t', '/f'], { timeoutMs: 15_000 });
+    return result.code === 0;
+  }
+
+  try {
+    process.kill(-pid, 'SIGTERM');
+  } catch {
+    try {
+      process.kill(pid, 'SIGTERM');
+    } catch {
+      return false;
+    }
+  }
+
+  await sleep(900);
+  try {
+    process.kill(pid, 0);
+    process.kill(pid, 'SIGKILL');
+  } catch {
+    // Process already exited.
+  }
+  return true;
 }
 
 function checkPort(port) {
@@ -155,7 +265,21 @@ async function runHealthChecks(service) {
   return Promise.all(
     checks.map(async (check) => {
       const t0 = Date.now();
+      if (check.kind === 'tcp') {
+        const port = check.port ?? service.port;
+        const ok = await checkPort(port);
+        return {
+          label:      check.label,
+          url:        `tcp://127.0.0.1:${port}`,
+          status:     ok ? 'open' : null,
+          okStatuses: null,
+          durationMs: Date.now() - t0,
+          ok,
+        };
+      }
+
       try {
+        if (!check.url || !check.okStatuses) throw new Error('Invalid HTTP health check');
         const response = await fetch(check.url, { method: 'GET', redirect: 'manual' });
         return {
           label:      check.label,
@@ -182,7 +306,7 @@ async function runHealthChecks(service) {
 async function getServiceSnapshot(service) {
   const state     = runtime.get(service.id);
   const listening = await checkPort(service.port);
-  const running   = Boolean(state?.child && !state.child.killed);
+  const running   = isChildAlive(state?.child);
   const health    = await runHealthChecks(service);
   const uptimeMs  = state?.startedAt ? Date.now() - new Date(state.startedAt).getTime() : null;
 
@@ -208,10 +332,18 @@ async function getServiceSnapshot(service) {
 
 // ─── 服务生命周期 ──────────────────────────────────────────────────────────────
 
-function startService(service) {
+async function startService(service) {
   const state = runtime.get(service.id);
   if (!state) throw new Error(`Unknown service: ${service.id}`);
-  if (state.child && !state.child.killed) return;
+  if (isChildAlive(state.child)) {
+    appendLog(service.id, '[panel] start skipped: already managed by panel');
+    return;
+  }
+
+  if (await checkPort(service.port)) {
+    appendLog(service.id, `[panel] start skipped: port ${service.port} is already listening`);
+    return;
+  }
 
   const shell = shellForPlatform(service.command);
   const child = spawn(shell.file, shell.args, {
@@ -240,35 +372,50 @@ function startService(service) {
   });
 }
 
-function stopService(service) {
+async function stopService(service) {
   const state = runtime.get(service.id);
-  if (!state?.child || state.child.killed) return;
+  if (!state) throw new Error(`Unknown service: ${service.id}`);
+  if (state.stopping) return;
 
   state.stopping = true;
   appendLog(service.id, '[panel] stopping service tree');
 
-  if (process.platform === 'win32') {
-    const killer = spawn('taskkill', ['/pid', String(state.child.pid), '/t', '/f'], { windowsHide: true });
-    killer.on('exit', () => {
-      const current = runtime.get(service.id);
-      if (current) current.stopping = false;
-    });
+  const pids = new Set();
+  if (isChildAlive(state.child)) pids.add(state.child.pid);
+  for (const pid of await findListeningPids(service.port)) pids.add(pid);
+
+  if (pids.size === 0) {
+    appendLog(service.id, `[panel] nothing to stop on port ${service.port}`);
+    state.child     = null;
+    state.startedAt = null;
+    state.stopping  = false;
     return;
   }
 
-  state.child.kill('SIGTERM');
+  for (const pid of pids) {
+    const killed = await killProcessTree(pid);
+    appendLog(service.id, killed ? `[panel] stopped pid=${pid}` : `[panel] failed to stop pid=${pid}`);
+  }
+
+  const closed = await waitForPortClosed(service.port);
+  appendLog(service.id, closed ? `[panel] port ${service.port} is closed` : `[panel] port ${service.port} is still listening`);
+
+  state.child     = null;
+  state.startedAt = null;
+  state.stopping  = false;
 }
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function waitForHealthy(serviceId, timeoutMs = START_WAIT_TIMEOUT_MS) {
+async function waitForHealthy(serviceId, timeoutMs = START_WAIT_TIMEOUT_MS, shouldCancel = () => false) {
   const service = findService(serviceId);
   if (!service) return false;
 
   const startedAt = Date.now();
   while (Date.now() - startedAt < timeoutMs) {
+    if (shouldCancel()) return false;
     const snapshot = await getServiceSnapshot(service);
     if (snapshot.listening && snapshot.healthy) return true;
     await sleep(START_WAIT_INTERVAL_MS);
@@ -276,21 +423,42 @@ async function waitForHealthy(serviceId, timeoutMs = START_WAIT_TIMEOUT_MS) {
   return false;
 }
 
+let bulkStartPromise = null;
+let bulkOperationVersion = 0;
+
 async function startAllOrdered() {
-  for (const serviceId of START_ORDER) {
-    const service = findService(serviceId);
-    if (!service) continue;
-    startService(service);
-    appendLog(service.id, '[panel] waiting for health checks');
-    const ready = await waitForHealthy(service.id);
-    appendLog(service.id, ready ? '[panel] service is healthy' : '[panel] health wait timed out');
+  if (bulkStartPromise) return bulkStartPromise;
+
+  const version = ++bulkOperationVersion;
+  bulkStartPromise = (async () => {
+    for (const serviceId of START_ORDER) {
+      if (version !== bulkOperationVersion) break;
+      const service = findService(serviceId);
+      if (!service) continue;
+      await startService(service);
+      appendLog(service.id, '[panel] waiting for health checks');
+      const ready = await waitForHealthy(service.id, START_WAIT_TIMEOUT_MS, () => version !== bulkOperationVersion);
+      if (version !== bulkOperationVersion) {
+        appendLog(service.id, '[panel] start queue cancelled');
+        break;
+      }
+      appendLog(service.id, ready ? '[panel] service is healthy' : '[panel] health wait timed out');
+    }
+  })();
+
+  try {
+    await bulkStartPromise;
+  } finally {
+    bulkStartPromise = null;
   }
 }
 
-function stopAll() {
+async function stopAll() {
+  bulkOperationVersion += 1;
+
   for (const serviceId of [...START_ORDER].reverse()) {
     const service = findService(serviceId);
-    if (service) stopService(service);
+    if (service) await stopService(service);
   }
 }
 
@@ -312,30 +480,62 @@ function pageHtml() {
   <title>Vxture Dev Panel</title>
   <style>
     :root {
-      --bg:         #eef3f1;
-      --panel:      #ffffff;
-      --ink:        #10211d;
-      --muted:      #5e6f69;
-      --line:       #d7e2de;
-      --ok:         #1b8a5a;
+      --vx-color-brand-50: #f5f8ff;
+      --vx-color-brand-100: #e6edff;
+      --vx-color-brand-200: #c7d6ff;
+      --vx-color-brand-300: #9fb7ff;
+      --vx-color-brand-400: #6f90ff;
+      --vx-color-brand-500: #3f6cff;
+      --vx-color-brand-600: #2f55e6;
+      --vx-color-brand-700: #2443b4;
+      --vx-color-brand-800: #1a3282;
+      --vx-color-brand-900: #101f52;
+
+      --vx-color-gray-50: #f9fafb;
+      --vx-color-gray-100: #f3f4f6;
+      --vx-color-gray-200: #e5e7eb;
+      --vx-color-gray-300: #d1d5db;
+      --vx-color-gray-400: #9ca3af;
+      --vx-color-gray-500: #6b7280;
+      --vx-color-gray-600: #4b5563;
+      --vx-color-gray-700: #374151;
+      --vx-color-gray-800: #1f2937;
+      --vx-color-gray-900: #111827;
+
+      --bg:         var(--vx-color-brand-50);
+      --panel:      rgba(255,255,255,.94);
+      --surface:    rgba(255,255,255,.82);
+      --ink:        var(--vx-color-gray-900);
+      --muted:      var(--vx-color-gray-500);
+      --line:       #dbe5ff;
+      --line-strong:#c7d6ff;
+      --ok:         #168557;
       --warn:       #b76c00;
-      --off:        #8d3b3b;
-      --brand:      #0f766e;
-      --brand-soft: #dbf4ef;
+      --off:        #b4233a;
+      --brand:      var(--vx-color-brand-600);
+      --brand-hover:var(--vx-color-brand-700);
+      --brand-deep: var(--vx-color-brand-900);
+      --brand-soft: var(--vx-color-brand-100);
+      --radius:     8px;
     }
     * { box-sizing: border-box; }
     body {
+      min-height: 100vh;
       margin: 0;
       font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       color: var(--ink);
-      background: radial-gradient(circle at top left, #ffffff 0, #eef3f1 42%, #e4ece8 100%);
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(rgba(63,108,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(63,108,255,.055) 1px, transparent 1px);
+      background-size: 36px 36px;
     }
 
     /* ── 布局 ── */
     .wrap {
-      max-width: 1200px;
+      width: 100%;
       margin: 0 auto;
-      padding: 40px 80px;
+      padding: 24px 5rem;
     }
 
     .hero {
@@ -344,53 +544,103 @@ function pageHtml() {
       gap: 24px;
       align-items: flex-end;
       margin-bottom: 32px;
+      padding: 24px 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(245,248,255,.98), rgba(255,255,255,.94) 58%, rgba(230,237,255,.92));
+      box-shadow: 0 18px 44px rgba(16,31,82,.08);
     }
-    .hero h1 { margin: 0; font-size: 34px; line-height: 1.1; letter-spacing: -0.03em; }
+    .hero h1 { margin: 0; font-size: 34px; line-height: 1.1; letter-spacing: 0; color: var(--brand-deep); }
     .hero p  { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
 
     .toolbar { display: flex; gap: 12px; flex-wrap: wrap; }
     button {
-      border: 0; border-radius: 999px; padding: 10px 18px;
-      cursor: pointer; font: inherit;
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: 10px 18px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
     }
-    .ghost   { background: #fff; color: var(--ink); border: 1px solid var(--line); }
-    .primary { background: var(--brand); color: #fff; box-shadow: 0 10px 20px rgba(15,118,110,.18); }
+    button:hover:not(:disabled) { transform: translateY(-1px); }
+    button:disabled { cursor: not-allowed; opacity: .48; }
+    .ghost   { background: rgba(255,255,255,.76); color: var(--brand-hover); border-color: var(--line-strong); }
+    .ghost:hover:not(:disabled) { background: #fff; border-color: var(--vx-color-brand-400); box-shadow: 0 10px 24px rgba(47,85,230,.12); }
+    .primary {
+      background: linear-gradient(135deg, var(--vx-color-brand-500), var(--vx-color-brand-700));
+      color: #fff;
+      box-shadow: 0 14px 28px rgba(47,85,230,.24);
+    }
+    .primary:hover:not(:disabled) { box-shadow: 0 18px 36px rgba(47,85,230,.28); }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 0;
+      gap: 0;
+      align-items: start;
+      --column-gap: 20px;
+      transition: grid-template-columns .22s ease, gap .22s ease;
+    }
+    .workspace.log-open {
+      grid-template-columns: minmax(520px, 62fr) minmax(360px, 38fr);
+      gap: var(--column-gap);
+    }
+
+    .service-panel {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
 
     /* ── 服务列表 ── */
     .list { display: flex; flex-direction: column; gap: 12px; }
 
     /* ── 卡片 ── */
     .card {
-      background: rgba(255,255,255,.97);
-      border: 1px solid rgba(215,226,222,.9);
-      border-radius: 20px;
-      box-shadow: 0 4px 16px rgba(16,33,29,.06);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px rgba(16,31,82,.07);
       overflow: hidden;
-      transition: box-shadow .15s;
+      transition: box-shadow .15s, border-color .15s, transform .15s;
+      backdrop-filter: blur(10px);
     }
-    .card:hover { box-shadow: 0 8px 28px rgba(16,33,29,.10); }
+    .card:hover {
+      border-color: var(--line-strong);
+      box-shadow: 0 16px 40px rgba(16,31,82,.10);
+      transform: translateY(-1px);
+    }
+    .card.selected {
+      border-color: var(--vx-color-brand-400);
+      box-shadow: 0 16px 42px rgba(47,85,230,.14);
+    }
+    .card.selected .card-head {
+      background: linear-gradient(135deg, rgba(245,248,255,.98), rgba(230,237,255,.72));
+    }
 
-    /* ── 卡片头部：两行结构 ── */
+    /* ── 卡片头部：两行列表结构 ── */
     .card-head {
-      padding: 20px 28px 18px;
+      padding: 10px 16px;
       cursor: pointer;
       user-select: none;
     }
-    .card-head:hover { background: rgba(15,118,110,.025); }
+    .card-head:hover { background: rgba(63,108,255,.045); }
 
-    /* 第一行：优先级 + 服务名 + 状态 + 箭头 */
+    /* 第一行：优先级 + 服务名 + 端口 + 状态 */
     .head-row1 {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 7px;
     }
 
-    /* 第二行：健康检查胶囊 + 操作按钮（右对齐） */
+    /* 第二行：健康检查 + 运行摘要 + 操作按钮 */
     .head-row2 {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     /* 优先级徽章 */
@@ -398,22 +648,40 @@ function pageHtml() {
       flex-shrink: 0;
       font-size: 10px;
       font-weight: 800;
-      letter-spacing: .05em;
-      padding: 4px 8px;
+      letter-spacing: 0;
+      padding: 3px 6px;
       border-radius: 6px;
       text-transform: uppercase;
     }
-    .p0 { background: #fdeaea; color: var(--off); }
-    .p1 { background: #fff2df; color: var(--warn); }
-    .p2 { background: var(--brand-soft); color: var(--brand); }
+    .p0 { background: #fff1f3; color: var(--off); border: 1px solid #ffd2dc; }
+    .p1 { background: #fff7e8; color: var(--warn); border: 1px solid #ffdf9f; }
+    .p2 { background: var(--brand-soft); color: var(--brand-hover); border: 1px solid var(--line-strong); }
 
     /* 服务名 + 元信息（占满剩余宽度） */
     .info { flex: 1; min-width: 0; }
-    .name { font-size: 17px; font-weight: 700; letter-spacing: -.015em; }
-    .meta {
-      margin-top: 4px;
-      color: var(--muted);
+    .name {
+      overflow: hidden;
+      color: var(--vx-color-gray-900);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .port {
+      flex-shrink: 0;
+      color: var(--brand-hover);
       font-size: 12px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border: 1px solid var(--line-strong);
+      border-radius: 6px;
+      background: var(--brand-soft);
+    }
+    .meta {
+      color: var(--muted);
+      font-size: 11px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -424,13 +692,14 @@ function pageHtml() {
       flex-shrink: 0;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 7px 14px;
-      border-radius: 10px;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 6px;
       font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
       border-left: 3px solid transparent;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.55);
     }
     .status::before {
       content: '';
@@ -441,137 +710,229 @@ function pageHtml() {
     }
     /* 运行中：绿色 */
     .status.on {
-      background: #e8f7ef;
-      color: #1b8a5a;
-      border-left-color: #1b8a5a;
+      background: #eaf8f1;
+      color: var(--ok);
+      border-left-color: var(--ok);
     }
-    .status.on::before { background: #1b8a5a; }
+    .status.on::before { background: var(--ok); }
     /* 启动中 / 停止中：橙色 */
     .status.wait {
-      background: #fff6e6;
-      color: #b76c00;
+      background: #fff7e8;
+      color: var(--warn);
       border-left-color: #f59e0b;
     }
     .status.wait::before { background: #f59e0b; animation: pulse .9s ease-in-out infinite; }
     /* 未启动：红色 */
     .status.off {
-      background: #fdf2f2;
-      color: #8d3b3b;
-      border-left-color: #e05252;
+      background: #fff1f3;
+      color: var(--off);
+      border-left-color: var(--off);
     }
-    .status.off::before { background: #e05252; }
+    .status.off::before { background: var(--off); }
 
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50%       { opacity: .3; }
     }
 
-    /* 折叠箭头 */
-    .chevron {
-      flex-shrink: 0;
-      width: 22px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--muted);
-      transition: transform .2s;
-      font-size: 13px;
-    }
-    .card.open .chevron { transform: rotate(180deg); }
-
     /* 健康检查胶囊区域（占满剩余宽度） */
     .health-row {
-      flex: 1;
+      flex: 1.1;
+      min-width: 0;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       align-items: center;
     }
     .health-item {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 5px 10px;
+      gap: 4px;
+      padding: 3px 7px;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       border: 1px solid var(--line);
-      background: #f4f8f7;
+      background: rgba(245,248,255,.88);
       color: var(--muted);
       white-space: nowrap;
     }
-    .health-item .hi-url { font-weight: 400; opacity: .65; font-size: 11px; }
     .health-item .hi-dur { opacity: .55; font-size: 11px; }
-    .health-item.ok  { background: #e8f7ef; color: var(--ok);  border-color: #b8e8cf; }
-    .health-item.bad { background: #fdeaea; color: var(--off); border-color: #f4c0c0; }
+    .health-item.ok  { background: #eaf8f1; color: var(--ok);  border-color: #b9e7d0; }
+    .health-item.bad { background: #fff1f3; color: var(--off); border-color: #ffc5d0; }
 
     /* 操作按钮组（右侧，不参与 flex 拉伸） */
-    .actions { display: flex; gap: 8px; flex-shrink: 0; }
-    .actions button { border-radius: 10px; padding: 8px 14px; font-size: 13px; }
-    .btn-start   { background: var(--brand); color: #fff; }
-    .btn-stop    { background: #f4dfdf; color: var(--off); }
-    .btn-restart { background: #e3efff; color: #1d4ed8; }
-    .btn-open    { background: var(--brand-soft); color: var(--brand); }
-
-    /* ── 展开区域（日志 + 元信息） ── */
-    .card-body {
-      display: none;
-      padding: 0 28px 24px;
-      border-top: 1px solid var(--line);
+    .actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .actions button { border-radius: 6px; padding: 6px 10px; font-size: 12px; }
+    .btn-start {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(47,85,230,.18);
     }
-    .card.open .card-body { display: block; }
+    .btn-start:hover:not(:disabled) { background: var(--brand-hover); }
+    .btn-stop {
+      background: #fff1f3;
+      color: var(--off);
+      border-color: #ffc5d0;
+    }
+    .btn-stop:hover:not(:disabled) { background: #ffe4e9; }
+    .btn-restart {
+      background: var(--brand-soft);
+      color: var(--brand-hover);
+      border-color: var(--line-strong);
+    }
+    .btn-restart:hover:not(:disabled) { background: var(--vx-color-brand-200); }
+    .btn-open {
+      background: #fff;
+      color: var(--brand);
+      border-color: var(--line);
+    }
+    .btn-open:hover:not(:disabled) { border-color: var(--vx-color-brand-400); color: var(--brand-hover); }
 
-    .body-meta {
+    .service-meta {
       display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      padding: 16px 0 14px;
-      font-size: 13px;
+      flex: .9;
+      min-width: 0;
+      flex-wrap: nowrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 11px;
       color: var(--muted);
     }
-    .body-meta span { display: flex; gap: 6px; align-items: center; }
-    .body-meta b { color: var(--ink); font-weight: 600; }
+    .service-meta span {
+      display: inline-flex;
+      min-width: 0;
+      gap: 4px;
+      align-items: center;
+      white-space: nowrap;
+    }
+    .service-meta span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .service-meta b { color: var(--ink); font-weight: 700; }
+
+    .log-panel {
+      position: sticky;
+      top: 24px;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #0b1024;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transform: translateX(18px);
+      transition: transform .22s ease, opacity .18s ease, visibility .18s ease;
+    }
+    .workspace.log-open .log-panel {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+      transform: translateX(0);
+    }
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      height: 40px;
+      padding: 0 8px 0 14px;
+      border-bottom: 1px solid rgba(199,214,255,.22);
+      background: rgba(11,16,36,.96);
+    }
+    .log-header h2 {
+      margin: 0;
+      min-width: 0;
+      overflow: hidden;
+      color: #d8e4ff;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .log-close {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      padding: 0;
+      border: 1px solid rgba(199,214,255,.35);
+      border-radius: 6px;
+      background: rgba(11,16,36,.92);
+      color: #d8e4ff;
+      line-height: 1;
+      font-size: 20px;
+      font-weight: 400;
+      box-shadow: none;
+    }
+    .log-close:hover:not(:disabled) {
+      background: rgba(36,67,180,.92);
+      transform: none;
+    }
 
     pre.log-box {
       margin: 0;
-      padding: 16px 18px;
-      height: 380px;
+      padding: 14px 16px;
+      width: 100%;
+      height: calc(100vh - 88px);
+      min-height: 0;
       overflow: auto;
-      border-radius: 14px;
-      background: #0f1715;
-      color: #d7eee7;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: #d8e4ff;
       font: 12.5px/1.6 Consolas, "SFMono-Regular", monospace;
       white-space: pre-wrap;
       word-break: break-word;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
     }
 
     @media (max-width: 860px) {
       .wrap { padding: 24px 32px; }
       .hero { flex-direction: column; align-items: stretch; }
+      .workspace,
+      .workspace.log-open { grid-template-columns: 1fr; gap: 16px; }
+      .log-panel { position: static; display: none; }
+      .workspace.log-open .log-panel { display: block; }
+      pre.log-box { height: 520px; }
       .actions button { padding: 7px 10px; font-size: 12px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="hero">
-      <div>
-        <h1>Vxture Dev Panel</h1>
-        <p>本地开发服务控制台。统一启动、停止、重启并查看服务日志。</p>
-      </div>
-      <div class="toolbar">
-        <button class="primary" onclick="bulkAction('start')">全部启动</button>
-        <button class="ghost"   onclick="bulkAction('stop')">全部停止</button>
-        <button class="ghost"   onclick="loadServices()">刷新状态</button>
-      </div>
+    <div class="workspace">
+      <section class="service-panel">
+        <div class="hero">
+          <div>
+            <h1>Vxture Dev Panel</h1>
+            <p>Local Runtime · Vxture workspace</p>
+          </div>
+          <div class="toolbar">
+            <button type="button" class="primary" onclick="bulkAction('start')">全部启动</button>
+            <button type="button" class="ghost"   onclick="bulkAction('stop')">全部停止</button>
+            <button type="button" class="ghost"   onclick="refreshServices()">刷新状态</button>
+          </div>
+        </div>
+        <div id="list" class="list"></div>
+      </section>
+      <aside class="log-panel" id="log-panel" aria-live="polite" aria-hidden="true">
+        <div class="log-header">
+          <h2 id="log-title">日志</h2>
+          <button type="button" class="log-close" onclick="closeLogDrawer()" aria-label="关闭日志">×</button>
+        </div>
+        <pre class="log-box" id="log-view">[select a service]</pre>
+      </aside>
     </div>
-    <div id="list" class="list"></div>
   </div>
 
   <script>
-    /* ── 已展开的卡片 id 集合（刷新时保留展开状态） ── */
-    const openSet = new Set();
+    let selectedServiceId = null;
+    let latestServices = [];
+    let isLogDrawerOpen = false;
 
     async function request(path, options = {}) {
       const response = await fetch(path, {
@@ -615,51 +976,100 @@ function pageHtml() {
         const cls = item.ok ? 'ok' : 'bad';
         const dot = item.ok ? '●' : '✕';
         const dur = item.durationMs != null ? \`<span class="hi-dur">\${item.durationMs}ms</span>\` : '';
-        const exp = item.okStatuses ? \`<span class="hi-url">(\${item.okStatuses.join('/')})</span>\` : '';
-        return \`<span class="health-item \${cls}" title="\${escapeHtml(item.url)}">\${dot} \${escapeHtml(item.label)}: \${item.status ?? 'down'} \${exp} \${dur}</span>\`;
+        return \`<span class="health-item \${cls}" title="\${escapeHtml(item.url)}">\${dot} \${escapeHtml(item.label)} \${item.status ?? 'down'} \${dur}</span>\`;
       }).join('');
     }
 
-    function renderCard(s) {
-      const isOpen = openSet.has(s.id);
+    function startedAtText(s) {
+      return s.startedAt ? new Date(s.startedAt).toLocaleString('zh-CN', { hour12: false }) : '-';
+    }
+
+    function serviceMetaHtml(s) {
       return \`
-        <div class="card\${isOpen ? ' open' : ''}" id="card-\${s.id}">
-          <div class="card-head" onclick="toggleCard('\${s.id}')">
-            <!-- 第一行：优先级徽章 + 服务名/命令 + 状态 + 箭头 -->
+        <span>PID <b>\${s.pid ?? '-'}</b></span>
+        <span>运行 <b>\${s.uptime ?? '-'}</b></span>
+        <span>启动 <b>\${startedAtText(s)}</b></span>
+      \`;
+    }
+
+    function renderLogPanel() {
+      const service = latestServices.find((item) => item.id === selectedServiceId);
+      const title = document.getElementById('log-title');
+      const logView = document.getElementById('log-view');
+      if (!logView) return;
+
+      if (!service) {
+        if (title) title.textContent = '日志';
+        logView.textContent = '[select a service]';
+        return;
+      }
+
+      const atBottom = logView.scrollHeight - logView.scrollTop - logView.clientHeight < 40;
+      if (title) title.textContent = \`\${service.name} · :\${service.port}\`;
+      logView.textContent = service.logs.length ? service.logs.join('\\n') : '[no logs yet]';
+      if (atBottom) logView.scrollTop = logView.scrollHeight;
+    }
+
+    function setLogDrawerOpen(open) {
+      isLogDrawerOpen = open;
+      const panel = document.getElementById('log-panel');
+      const workspace = document.querySelector('.workspace');
+      if (!panel) return;
+      panel.classList.toggle('open', open);
+      panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if (workspace) workspace.classList.toggle('log-open', open);
+    }
+
+    function closeLogDrawer() {
+      selectedServiceId = null;
+      setLogDrawerOpen(false);
+      document.querySelectorAll('.card').forEach((card) => {
+        card.classList.remove('selected');
+      });
+      renderLogPanel();
+    }
+
+    function renderCard(s) {
+      const canStart = !s.listening && !s.running && !s.stopping;
+      const canStop = s.listening || s.running || s.stopping;
+      const startDisabled = canStart ? '' : ' disabled';
+      const stopDisabled = canStop ? '' : ' disabled';
+      const selected = selectedServiceId === s.id ? ' selected' : '';
+      return \`
+        <div class="card\${selected}" id="card-\${s.id}" onclick="selectService('\${s.id}')">
+          <div class="card-head">
+            <!-- 第一行：优先级徽章 + 服务名/命令 + 状态 -->
             <div class="head-row1">
               \${priorityBadge(s.priority)}
               <div class="info">
                 <div class="name">\${escapeHtml(s.name)}</div>
-                <div class="meta">:\${s.port} &nbsp;·&nbsp; \${escapeHtml(s.command)}</div>
               </div>
+              <div class="port">:\${s.port}</div>
               <div class="status \${statusClass(s)}">\${statusText(s)}</div>
-              <div class="chevron">▼</div>
             </div>
             <!-- 第二行：健康检查胶囊（左）+ 操作按钮（右） -->
-            <div class="head-row2" onclick="event.stopPropagation()">
+            <div class="head-row2">
               <div class="health-row">\${renderHealth(s.health)}</div>
-              <div class="actions">
-                <button class="btn-start"   onclick="serviceAction('\${s.id}','start')">启动</button>
-                <button class="btn-stop"    onclick="serviceAction('\${s.id}','stop')">停止</button>
-                <button class="btn-restart" onclick="serviceAction('\${s.id}','restart')">重启</button>
-                <button class="btn-open"    onclick="window.open('\${escapeHtml(s.url)}','_blank')">打开</button>
+              <div class="service-meta">\${serviceMetaHtml(s)}</div>
+              <div class="actions" onclick="event.stopPropagation()">
+                <button type="button" class="btn-start"   onclick="serviceAction('\${s.id}','start')"\${startDisabled}>启动</button>
+                <button type="button" class="btn-stop"    onclick="serviceAction('\${s.id}','stop')"\${stopDisabled}>停止</button>
+                <button type="button" class="btn-restart" onclick="serviceAction('\${s.id}','restart')"\${stopDisabled}>重启</button>
+                <button type="button" class="btn-open"    onclick="window.open('\${escapeHtml(s.url)}','_blank')">打开</button>
               </div>
             </div>
-          </div>
-          <div class="card-body">
-            <div class="body-meta">
-              <span>PID <b>\${s.pid ?? '-'}</b></span>
-              <span>端口 <b>\${s.port}</b></span>
-              <span>运行时长 <b>\${s.uptime ?? '-'}</b></span>
-              <span>启动于 <b>\${s.startedAt ? new Date(s.startedAt).toLocaleTimeString('zh-CN') : '-'}</b></span>
-            </div>
-            <pre class="log-box" id="log-\${s.id}">\${escapeHtml(s.logs.length ? s.logs.join('\\n') : '[no logs yet]')}</pre>
           </div>
         </div>
       \`;
     }
 
     function render(services) {
+      latestServices = services;
+      if (selectedServiceId && !services.some((s) => s.id === selectedServiceId)) {
+        selectedServiceId = null;
+        setLogDrawerOpen(false);
+      }
+
       /* 仅更新已存在卡片的内容，保留滚动位置；不存在则整体重建 */
       const list = document.getElementById('list');
       const existing = new Set([...list.querySelectorAll('.card')].map((el) => el.id));
@@ -669,6 +1079,7 @@ function pageHtml() {
       const sameStructure = existing.size === incoming.size && [...incoming].every((id) => existing.has(id));
       if (!sameStructure) {
         list.innerHTML = services.map(renderCard).join('');
+        renderLogPanel();
         return;
       }
 
@@ -677,8 +1088,8 @@ function pageHtml() {
         const card = document.getElementById(\`card-\${s.id}\`);
         if (!card) continue;
 
-        /* 更新开合状态 */
-        card.classList.toggle('open', openSet.has(s.id));
+        /* 更新选中状态 */
+        card.classList.toggle('selected', selectedServiceId === s.id);
 
         /* 更新状态标签 */
         const statusEl = card.querySelector('.status');
@@ -691,37 +1102,32 @@ function pageHtml() {
         const healthRow = card.querySelector('.health-row');
         if (healthRow) healthRow.innerHTML = renderHealth(s.health);
 
-        /* 更新 body-meta */
-        const meta = card.querySelector('.body-meta');
-        if (meta) {
-          meta.innerHTML = \`
-            <span>PID <b>\${s.pid ?? '-'}</b></span>
-            <span>端口 <b>\${s.port}</b></span>
-            <span>运行时长 <b>\${s.uptime ?? '-'}</b></span>
-            <span>启动于 <b>\${s.startedAt ? new Date(s.startedAt).toLocaleTimeString('zh-CN') : '-'}</b></span>
-          \`;
+        /* 更新按钮可用状态 */
+        if (!card.dataset.busy) {
+          const canStart = !s.listening && !s.running && !s.stopping;
+          const canStop = s.listening || s.running || s.stopping;
+          const startBtn = card.querySelector('.btn-start');
+          const stopBtn = card.querySelector('.btn-stop');
+          const restartBtn = card.querySelector('.btn-restart');
+          if (startBtn) startBtn.disabled = !canStart;
+          if (stopBtn) stopBtn.disabled = !canStop;
+          if (restartBtn) restartBtn.disabled = !canStop;
         }
 
-        /* 更新日志（仅当卡片展开时，保留滚动位置） */
-        if (openSet.has(s.id)) {
-          const pre = document.getElementById(\`log-\${s.id}\`);
-          if (pre) {
-            const atBottom = pre.scrollHeight - pre.scrollTop - pre.clientHeight < 40;
-            pre.textContent = s.logs.length ? s.logs.join('\\n') : '[no logs yet]';
-            if (atBottom) pre.scrollTop = pre.scrollHeight;
-          }
-        }
+        /* 更新服务元信息 */
+        const meta = card.querySelector('.service-meta');
+        if (meta) meta.innerHTML = serviceMetaHtml(s);
       }
+      renderLogPanel();
     }
 
-    function toggleCard(id) {
-      if (openSet.has(id)) {
-        openSet.delete(id);
-      } else {
-        openSet.add(id);
-      }
-      const card = document.getElementById(\`card-\${id}\`);
-      if (card) card.classList.toggle('open', openSet.has(id));
+    function selectService(id) {
+      selectedServiceId = id;
+      setLogDrawerOpen(true);
+      document.querySelectorAll('.card').forEach((card) => {
+        card.classList.toggle('selected', card.id === \`card-\${id}\`);
+      });
+      renderLogPanel();
     }
 
     async function loadServices() {
@@ -750,7 +1156,8 @@ function pageHtml() {
       /* 立即锁定该卡片所有操作按钮，给用户即时反馈 */
       const card = document.getElementById('card-' + id);
       const btns = card ? Array.from(card.querySelectorAll('.actions button')) : [];
-      btns.forEach(function(b) { b.disabled = true; b.style.opacity = '0.45'; });
+      if (card) card.dataset.busy = '1';
+      btns.forEach(function(b) { b.disabled = true; });
 
       try {
         await request('/api/service/' + id + '/' + action, { method: 'POST' });
@@ -758,20 +1165,48 @@ function pageHtml() {
         console.warn('[panel] serviceAction failed:', err);
       } finally {
         pendingActions.delete(key);
-        btns.forEach(function(b) { b.disabled = false; b.style.opacity = ''; });
+        if (card) delete card.dataset.busy;
         /* 操作后立即刷新一次，不等下次轮询 */
         await loadServices();
       }
     }
 
+    let pendingBulkAction = false;
+
+    function setToolbarBusy(busy) {
+      document.querySelectorAll('.toolbar button').forEach((button) => {
+        button.disabled = busy;
+      });
+    }
+
+    async function refreshServices() {
+      if (pendingBulkAction) return;
+      setToolbarBusy(true);
+      try {
+        await loadServices();
+      } finally {
+        setToolbarBusy(false);
+      }
+    }
+
     async function bulkAction(action) {
+      if (pendingBulkAction) return;
+      pendingBulkAction = true;
+      setToolbarBusy(true);
       try {
         await request('/api/bulk/' + action, { method: 'POST' });
+        await loadServices();
       } catch (err) {
         console.warn('[panel] bulkAction failed:', err);
+      } finally {
+        pendingBulkAction = false;
+        setToolbarBusy(false);
       }
-      /* 全部启动是异步排队的，稍候再刷 */
-      setTimeout(loadServices, 600);
+      if (action === 'start') {
+        /* 全部启动是异步排队的，稍候再刷 */
+        setTimeout(loadServices, 600);
+        setTimeout(loadServices, 1800);
+      }
     }
 
     /* ── 轮询：每 1.5s 刷新一次，后台任务，不阻塞 UI ── */
@@ -821,13 +1256,18 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    if (action === 'start') {
-      startService(service);
-    } else if (action === 'stop') {
-      stopService(service);
-    } else if (action === 'restart') {
-      stopService(service);
-      setTimeout(() => startService(service), 1200);
+    try {
+      if (action === 'start') {
+        await startService(service);
+      } else if (action === 'stop') {
+        await stopService(service);
+      } else if (action === 'restart') {
+        await stopService(service);
+        await startService(service);
+      }
+    } catch (err) {
+      sendJson(res, 500, { message: String(err?.message ?? err) });
+      return;
     }
 
     sendJson(res, 200, { status: 'ok' });
@@ -841,7 +1281,12 @@ const server = http.createServer(async (req, res) => {
     if (action === 'start') {
       startAllOrdered().catch(() => {});
     } else {
-      stopAll();
+      try {
+        await stopAll();
+      } catch (err) {
+        sendJson(res, 500, { message: String(err?.message ?? err) });
+        return;
+      }
     }
 
     sendJson(res, 200, { status: 'ok' });

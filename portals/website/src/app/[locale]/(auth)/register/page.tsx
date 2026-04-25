@@ -8,9 +8,5 @@
 import { SignupForm } from '@/components/auth/SignupForm';
 
 export default function RegisterAliasPage() {
-  return (
-    <div className='min-h-screen flex items-center justify-center'>
-      <SignupForm />
-    </div>
-  );
+  return <SignupForm />;
 }

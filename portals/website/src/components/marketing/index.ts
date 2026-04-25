@@ -13,3 +13,8 @@ export { default as SolutionSection } from './SolutionSection';
 export { default as StatsSection } from './StatsSection';
 export { default as TestSection } from './TestSection';
 export { default as ProductDetailPartOne } from './ProductDetailPartOne';
+export { default as EmergencySolutionPage } from './EmergencySolutionPage';
+export { default as BestPracticePage } from './BestPracticePage';
+export { default as AgentMarketplacePage } from './AgentMarketplacePage';
+export { default as AboutUsPage } from './AboutUsPage';
+export { default as ThemedHeroImage } from './ThemedHeroImage';

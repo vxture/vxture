@@ -1,99 +1,582 @@
-/**
- * LoginForm.tsx - 登录表单组件
- * @package @vxture/website
- * @layer Presentation
- * @category Components
- *
- * 功能：
- * - 提供登录表单 UI
- * - 表单验证
- * - 调用 useAuth 钩子
- * - 处理错误状态
- *
- * @file LoginForm.tsx
- * @desc 登录表单组件
- * @author AI-Generated
- * @date 2026-03-15
- * @version 1.0
- * @copyright Vxture Team
- * @license MIT
- */
-
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { AuthFooter, AuthHeader } from '@/components/auth/AuthChrome';
+import { SliderCaptcha } from '@/components/auth/SliderCaptcha';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationStore } from '@/stores/notification.store';
 import { useRouter } from '@/lib/i18n/navigation';
-import { useTranslations } from 'next-intl';
 
-export interface LoginFormProps {
+type AuthScreen = 'login' | 'forgot';
+
+interface LoginFormProps {
   className?: string;
+  initialScreen?: AuthScreen;
 }
 
-export function LoginForm({ className = '' }: LoginFormProps) {
+interface FieldProps {
+  label: string;
+  name: string;
+  type: string;
+  placeholder: string;
+  value: string;
+  error?: string;
+  hint?: string;
+  autoComplete?: string;
+  autoFocus?: boolean;
+  disabled?: boolean;
+  onChange: (value: string) => void;
+}
+
+const BG_SRC = '/images/login-bg-light.jpg';
+const REMEMBER_LOGIN_KEY = 'vxture-login-remember';
+const REMEMBER_IDENTIFIER_KEY = 'vxture-login-identifier';
+
+export function LoginForm({ className = '', initialScreen = 'login' }: LoginFormProps) {
+  const [screen, setScreen] = useState<AuthScreen>(initialScreen);
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [rememberLogin, setRememberLogin] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [captchaOpen, setCaptchaOpen] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [localLoading, setLocalLoading] = useState(false);
 
-  const { login, isLoading: loginLoading } = useAuth();
+  const { login, isLoading: authLoading } = useAuth();
   const { addNotification } = useNotificationStore();
   const router = useRouter();
-  const t = useTranslations('auth.signin');
+  const loading = localLoading || authLoading;
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!identifier || !password) {
-      addNotification(t('required'), 'error');
+  useEffect(() => {
+    const shouldRemember = window.localStorage.getItem(REMEMBER_LOGIN_KEY) === '1';
+    const savedIdentifier = window.localStorage.getItem(REMEMBER_IDENTIFIER_KEY);
+
+    setRememberLogin(shouldRemember);
+    if (shouldRemember && savedIdentifier) {
+      setIdentifier(savedIdentifier);
+    }
+  }, []);
+
+  const openScreen = (nextScreen: AuthScreen) => {
+    setScreen(nextScreen);
+    setErrors({});
+    setResetSent(false);
+  };
+
+  const validateLogin = () => {
+    const nextErrors: Record<string, string> = {};
+    if (!identifier.trim()) {
+      nextErrors.identifier = '请输入邮箱、用户名或手机号';
+    }
+
+    if (!password) {
+      nextErrors.password = '请输入密码';
+    }
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (validateLogin()) {
+      setCaptchaOpen(true);
+    }
+  };
+
+  const handleCaptchaSuccess = async () => {
+    setCaptchaOpen(false);
+
+    setLocalLoading(true);
+    try {
+      const trimmedIdentifier = identifier.trim();
+      await login(trimmedIdentifier, password);
+      if (rememberLogin) {
+        window.localStorage.setItem(REMEMBER_LOGIN_KEY, '1');
+        window.localStorage.setItem(REMEMBER_IDENTIFIER_KEY, trimmedIdentifier);
+      } else {
+        window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+        window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+      }
+      addNotification('登录成功', 'success');
+      router.push('/');
+    } catch (error) {
+      addNotification(error instanceof Error ? error.message : '登录失败，请稍后重试', 'error');
+    } finally {
+      setLocalLoading(false);
+    }
+  };
+
+  const handleForgotSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!identifier.includes('@')) {
+      setErrors({ identifier: '请输入有效邮箱' });
       return;
     }
 
-    setLoading(true);
-    try {
-      await login(identifier, password);
-      addNotification(t('success'), 'success');
-      router.push('/'); // 登录成功后跳转到首页
-    } catch (error) {
-      addNotification(error instanceof Error ? error.message : t('error'), 'error');
-    } finally {
-      setLoading(false);
+    setErrors({});
+    setLocalLoading(true);
+    window.setTimeout(() => {
+      setLocalLoading(false);
+      setResetSent(true);
+    }, 600);
+  };
+
+  return (
+    <section className={`vx-auth-page ${className}`} style={{ '--vx-auth-bg': `url(${BG_SRC})` } as React.CSSProperties}>
+      {captchaOpen ? (
+        <SliderCaptcha onClose={() => setCaptchaOpen(false)} onSuccess={handleCaptchaSuccess} />
+      ) : null}
+
+      <AuthHeader />
+
+      <main className='vx-auth-main'>
+        <div className='vx-auth-card' aria-label='vxture authentication'>
+          <VisualPanel />
+          <div className='vx-auth-divider' />
+          <div className='vx-auth-form-panel'>
+            {screen === 'forgot' ? (
+              <ForgotPanel
+                email={identifier}
+                error={errors.identifier}
+                loading={loading}
+                resetSent={resetSent}
+                onBack={() => openScreen('login')}
+                onChange={setIdentifier}
+                onSubmit={handleForgotSubmit}
+              />
+            ) : (
+              <LoginPanel
+                identifier={identifier}
+                password={password}
+                rememberLogin={rememberLogin}
+                errors={errors}
+                loading={loading}
+                onChangeIdentifier={setIdentifier}
+                onChangePassword={setPassword}
+                onRememberLoginChange={setRememberLogin}
+                onForgot={() => openScreen('forgot')}
+                onRegister={() => router.push('/signup')}
+                onSubmit={handleSubmit}
+              />
+            )}
+          </div>
+        </div>
+      </main>
+
+      <AuthFooter />
+    </section>
+  );
+}
+
+function VisualPanel() {
+  return (
+    <aside className='vx-auth-visual'>
+      <NodeGraph />
+      <div className='vx-auth-grid' />
+      <div className='vx-auth-scan' />
+      <div className='vx-auth-fade' />
+
+      <div className='vx-auth-status'>
+        <span className='vx-auth-status-dot' />
+        <span>All systems operational</span>
+      </div>
+
+      <div className='vx-auth-copy'>
+        <h2>Build intelligence into everything.</h2>
+        <p>Orchestrate models, manage pipelines, and deploy AI workflows at scale from a single workspace.</p>
+        <div className='vx-auth-stats'>
+          <Stat value='40ms' label='avg latency' />
+          <Stat value='99.97%' label='uptime SLA' />
+          <Stat value='12B+' label='tokens/day' />
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+function Stat({ value, label }: { value: string; label: string }) {
+  return (
+    <div>
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </div>
+  );
+}
+
+function LoginPanel({
+  identifier,
+  password,
+  rememberLogin,
+  errors,
+  loading,
+  onChangeIdentifier,
+  onChangePassword,
+  onRememberLoginChange,
+  onForgot,
+  onRegister,
+  onSubmit,
+}: {
+  identifier: string;
+  password: string;
+  rememberLogin: boolean;
+  errors: Record<string, string>;
+  loading: boolean;
+  onChangeIdentifier: (value: string) => void;
+  onChangePassword: (value: string) => void;
+  onRememberLoginChange: (value: boolean) => void;
+  onForgot: () => void;
+  onRegister: () => void;
+  onSubmit: (event: React.FormEvent) => void;
+}) {
+  const handleRememberLoginChange = (checked: boolean) => {
+    onRememberLoginChange(checked);
+    if (!checked) {
+      window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+      window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
     }
   };
 
   return (
-    <div className={`max-w-md mx-auto p-6 ${className}`}>
-      <h1 className='text-2xl font-bold mb-6'>{t('title')}</h1>
-      <form onSubmit={handleLogin} className='space-y-4'>
-        <div>
-          <label className='block mb-2'>{t('email')}</label>
-          <input
-            type='text'
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            className='w-full p-2 border rounded'
-            placeholder='email / username / phone'
-            disabled={loading || loginLoading}
-          />
+    <>
+      <div className='vx-auth-panel-heading'>
+        <h1>欢迎回来</h1>
+        <p>登录您的 vxture 工作区</p>
+      </div>
+
+      <form onSubmit={onSubmit} autoComplete='on'>
+        <Field
+          label='邮箱'
+          name='username'
+          type='text'
+          placeholder='email / username / phone'
+          value={identifier}
+          error={errors.identifier}
+          autoComplete='username'
+          autoFocus
+          disabled={loading}
+          onChange={onChangeIdentifier}
+        />
+        <Field
+          label='密码'
+          name='password'
+          type='password'
+          placeholder='请输入密码'
+          value={password}
+          error={errors.password}
+          autoComplete='current-password'
+          disabled={loading}
+          onChange={onChangePassword}
+        />
+
+        <div className='vx-auth-options'>
+          <label className='vx-auth-remember'>
+            <input
+              type='checkbox'
+              checked={rememberLogin}
+              disabled={loading}
+              onChange={(event) => handleRememberLoginChange(event.target.checked)}
+            />
+            <span>记住登录信息</span>
+          </label>
+          <button type='button' className='vx-auth-forgot-link' onClick={onForgot}>
+            忘记密码？
+          </button>
         </div>
-        <div>
-          <label className='block mb-2'>{t('password')}</label>
-          <input
-            type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className='w-full p-2 border rounded'
-            placeholder='password'
-            disabled={loading || loginLoading}
-          />
-        </div>
-        <button
-          type='submit'
-          disabled={loading || loginLoading}
-          className='w-full p-2 bg-blue-500 text-white rounded disabled:opacity-70'
-        >
-          {loading || loginLoading ? '登录中...' : t('loginButton')}
-        </button>
+
+        <PrimaryButton loading={loading} label='登录' loadingLabel='登录中...' />
+
+        <SocialLoginButtons />
+
+        <p className='vx-auth-switch'>
+          还没有账号？
+          <button type='button' onClick={onRegister}>
+            注册账号
+          </button>
+        </p>
       </form>
+    </>
+  );
+}
+
+function ForgotPanel({
+  email,
+  error,
+  loading,
+  resetSent,
+  onBack,
+  onChange,
+  onSubmit,
+}: {
+  email: string;
+  error?: string;
+  loading: boolean;
+  resetSent: boolean;
+  onBack: () => void;
+  onChange: (value: string) => void;
+  onSubmit: (event: React.FormEvent) => void;
+}) {
+  if (resetSent) {
+    return (
+      <>
+        <BackButton onClick={onBack}>Back to sign in</BackButton>
+        <div className='vx-auth-reset-done'>
+          <div className='vx-auth-check'>✓</div>
+          <h1>Check your inbox</h1>
+          <p>
+            Reset link sent to <strong>{email || 'your email'}</strong>. Expires in 15 minutes.
+          </p>
+          <button type='button' onClick={onBack}>
+            Back to sign in
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <BackButton onClick={onBack}>Back to sign in</BackButton>
+      <div className='vx-auth-panel-heading'>
+        <h1>Reset your password</h1>
+        <p>Enter your email and we will send a secure reset link.</p>
+      </div>
+
+      <form onSubmit={onSubmit} autoComplete='on'>
+        <Field
+          label='Email'
+          name='email'
+          type='email'
+          placeholder='you@company.com'
+          value={email}
+          error={error}
+          autoComplete='email'
+          autoFocus
+          disabled={loading}
+          onChange={onChange}
+        />
+        <PrimaryButton loading={loading} label='发送重置链接' loadingLabel='Sending...' />
+      </form>
+    </>
+  );
+}
+
+function BackButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+  return (
+    <button type='button' className='vx-auth-back' onClick={onClick}>
+      <span>←</span>
+      {children}
+    </button>
+  );
+}
+
+function Field({ label, name, type, placeholder, value, error, hint, autoComplete, autoFocus, disabled, onChange }: FieldProps) {
+  return (
+    <div className='vx-auth-field'>
+      <label>{label}</label>
+      <input
+        name={name}
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        autoComplete={autoComplete}
+        autoFocus={autoFocus}
+        disabled={disabled}
+        onChange={(event) => onChange(event.target.value)}
+        aria-invalid={Boolean(error)}
+      />
+      {error ? <p className='vx-auth-error'>{error}</p> : null}
+      {hint && !error ? <p className='vx-auth-hint'>{hint}</p> : null}
     </div>
   );
+}
+
+function PrimaryButton({ loading, label, loadingLabel }: { loading: boolean; label: string; loadingLabel: string }) {
+  return (
+    <button type='submit' className='vx-auth-primary' disabled={loading}>
+      {loading ? (
+        <>
+          <span className='vx-auth-spinner' />
+          {loadingLabel}
+        </>
+      ) : (
+        label
+      )}
+    </button>
+  );
+}
+
+function SocialLoginButtons() {
+  return (
+    <>
+      <div className='vx-auth-or'>
+        <span />
+        <em>其他方式登录</em>
+        <span />
+      </div>
+      <div className='vx-auth-socials'>
+        <SocialButton className='wechat' icon={<WechatIcon />} label='微信' />
+        <SocialButton className='dingtalk' icon={<DingTalkIcon />} label='钉钉' />
+        <SocialButton className='feishu' icon={<FeishuIcon />} label='飞书' />
+      </div>
+    </>
+  );
+}
+
+function SocialButton({ icon, label, className }: { icon: React.ReactNode; label: string; className: string }) {
+  return (
+    <button type='button' className={`vx-auth-social ${className}`}>
+      {icon}
+      {label}
+    </button>
+  );
+}
+
+function WechatIcon() {
+  return (
+    <svg width='15' height='15' viewBox='0 0 24 24' aria-hidden='true'>
+      <path
+        d='M9.5 4C5.36 4 2 6.91 2 10.5c0 1.98 1.01 3.75 2.6 4.96L4 18l2.8-1.4c.86.24 1.77.4 2.7.4.23 0 .46 0 .69-.02A5.7 5.7 0 0 1 10 15.5c0-3.04 2.86-5.5 6.5-5.5.23 0 .46.01.69.03C16.54 7.12 13.3 4 9.5 4z'
+        fill='#07C160'
+      />
+      <path
+        d='M16.5 11c-3.04 0-5.5 2.02-5.5 4.5S13.46 20 16.5 20c.7 0 1.37-.12 1.98-.34L21 21l-.52-2.6A4.35 4.35 0 0 0 22 15.5C22 13.02 19.54 11 16.5 11z'
+        fill='#07C160'
+      />
+    </svg>
+  );
+}
+
+function DingTalkIcon() {
+  return (
+    <svg width='15' height='15' viewBox='0 0 24 24' aria-hidden='true'>
+      <circle cx='12' cy='12' r='10' fill='#1677FF' />
+      <path d='M13.5 7l-4 5.5h3l-1 4.5 5-6.5h-3.2L13.5 7z' fill='white' />
+    </svg>
+  );
+}
+
+function FeishuIcon() {
+  return (
+    <svg width='15' height='15' viewBox='0 0 24 24' aria-hidden='true'>
+      <path d='M4 12.5C4 8.36 7.36 5 11.5 5c1.5 0 2.9.45 4.05 1.22L7.22 15.55A7.5 7.5 0 0 1 4 12.5z' fill='#3370FF' />
+      <path d='M12 19.5a7.5 7.5 0 0 1-3.6-.92l8.38-9.33A7.5 7.5 0 0 1 12 19.5z' fill='#56D5CC' />
+    </svg>
+  );
+}
+
+function NodeGraph() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const mouseRef = useRef({ x: -999, y: -999 });
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return undefined;
+    }
+
+    const context = canvas.getContext('2d');
+    if (!context) {
+      return undefined;
+    }
+
+    let frame = 0;
+    let width = 0;
+    let height = 0;
+    let nodes: Array<{ x: number; y: number; vx: number; vy: number; radius: number; phase: number }> = [];
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = window.devicePixelRatio || 1;
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.max(1, Math.floor(width * ratio));
+      canvas.height = Math.max(1, Math.floor(height * ratio));
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      const count = Math.max(22, Math.floor((width * height) / 9000));
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        radius: Math.random() * 1.8 + 0.6,
+        phase: Math.random() * Math.PI * 2,
+      }));
+    };
+
+    const draw = () => {
+      context.clearRect(0, 0, width, height);
+      const mouse = mouseRef.current;
+
+      for (const node of nodes) {
+        node.phase += 0.014;
+        node.x += node.vx;
+        node.y += node.vy;
+
+        if (node.x < 0 || node.x > width) {
+          node.vx *= -1;
+        }
+        if (node.y < 0 || node.y > height) {
+          node.vy *= -1;
+        }
+
+        const dx = node.x - mouse.x;
+        const dy = node.y - mouse.y;
+        const distance = Math.hypot(dx, dy);
+        if (distance > 0 && distance < 100) {
+          node.x += (dx / distance) * 0.5;
+          node.y += (dy / distance) * 0.5;
+        }
+      }
+
+      for (let i = 0; i < nodes.length; i += 1) {
+        for (let j = i + 1; j < nodes.length; j += 1) {
+          const first = nodes[i];
+          const second = nodes[j];
+          if (!first || !second) {
+            continue;
+          }
+
+          const distance = Math.hypot(first.x - second.x, first.y - second.y);
+          if (distance < 140) {
+            context.beginPath();
+            context.moveTo(first.x, first.y);
+            context.lineTo(second.x, second.y);
+            context.strokeStyle = `rgba(147,197,253,${(1 - distance / 140) * 0.35})`;
+            context.lineWidth = 0.6;
+            context.stroke();
+          }
+        }
+      }
+
+      for (const node of nodes) {
+        const pulse = Math.sin(node.phase) * 0.5 + 0.5;
+        context.beginPath();
+        context.arc(node.x, node.y, node.radius * (1 + pulse * 0.35), 0, Math.PI * 2);
+        context.fillStyle = `rgba(147,197,253,${0.45 + pulse * 0.4})`;
+        context.fill();
+      }
+
+      frame = window.requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+
+    const handlePointerMove = (event: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+    };
+
+    window.addEventListener('resize', resize);
+    canvas.addEventListener('pointermove', handlePointerMove);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener('resize', resize);
+      canvas.removeEventListener('pointermove', handlePointerMove);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className='vx-auth-nodegraph' aria-hidden='true' />;
 }

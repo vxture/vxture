@@ -88,7 +88,7 @@ export const HEADER_DATA: HeaderData = {
     { href: '/products', labelKey: 'nav.products' },
     { href: '/solutions', labelKey: 'nav.solutions' },
     { href: '/cases', labelKey: 'nav.cases' },
-    { href: '/company', labelKey: 'nav.about' }
+    { href: '/about', labelKey: 'nav.about' }
   ],
   actions: [
     { href: '/signup', variant: 'secondary', labelKey: 'actions.signup' },

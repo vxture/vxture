@@ -4,7 +4,7 @@
     "alt": "logo"
   },
   "nav": {
-    "appcenter": "AppCenter",
+    "appcenter": "Agent Marketplace",
     "products": "Products",
     "solutions": "Solutions",
     "cases": "Cases",
@@ -14,6 +14,55 @@
     "console": "Console",
     "signup": "Signup",
     "login": "Login"
+  },
+  "userMenu": {
+    "open": "Open user menu",
+    "status": "Signed in",
+    "unnamed": "Unnamed user",
+    "noEmail": "No email set",
+    "badges": {
+      "personal": "Personal verified",
+      "organization": "Organization verified"
+    },
+    "fields": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "account": "Account ID"
+    },
+    "roles": {
+      "admin": "Admin",
+      "member": "Member",
+      "tenantAdmin": "Tenant Admin",
+      "user": "User"
+    },
+    "settings": {
+      "title": "Quick settings",
+      "theme": {
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "density": {
+        "compact": "Compact",
+        "default": "Default",
+        "comfortable": "Comfort"
+      },
+      "fullscreen": {
+        "workspace": "Page",
+        "browser": "Browser"
+      },
+      "fontSize": {
+        "small": "Smaller",
+        "default": "Default",
+        "large": "Larger"
+      }
+    },
+    "switchUser": "Switch user",
+    "signOut": "Sign out",
+    "switchReady": "Signed out. Please sign in with another account.",
+    "logoutSuccess": "Signed out securely",
+    "logoutFailed": "Failed to sign out"
   },
   "language": {
     "title": "Language",

@@ -74,6 +74,7 @@ export const iconDictionary = [
   // 用户/组织
   // ==========================================================================
   "user",
+  "user-switch",
   "users",      // 用户组（原 user-group 已合并）
   "medal",
   "star",
@@ -111,6 +112,7 @@ export const iconDictionary = [
   "maximize",     // 原生全屏展开（ArrowsOutSimple）
   "minimize",     // 原生全屏收起（ArrowsInSimple）
   "rows",         // 密度切换
+  "sign-out",     // 退出登录
 
   // ==========================================================================
   // 其他
