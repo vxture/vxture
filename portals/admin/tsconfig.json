@@ -1,8 +1,27 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "preserve",
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@vxture/shared": ["../../packages/shared/shared/src"],
+      "@vxture/shared/*": ["../../packages/shared/shared/src/*"],
+      "@vxture/design-system": ["../../packages/design/design-system/dist/index.d.ts"],
+      "@vxture/design-system/*": ["../../packages/design/design-system/dist/*"],
+      "@vxture/platform-browser": ["../../packages/platform/browser/src"],
+      "@vxture/platform-browser/*": ["../../packages/platform/browser/src/*"]
+    },
+    "allowJs": true,
+    "incremental": true,
+    "isolatedModules": true
   },
-  "include": ["**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", "next.config.js", "src", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
 }

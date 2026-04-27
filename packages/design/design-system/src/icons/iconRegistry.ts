@@ -25,17 +25,23 @@ import {
   CaretRightIcon,
   CaretUpIcon,
   CaretDownIcon,
+  SquaresFourIcon,
 
   // ==========================================================================
   // 通用交互 - 操作
   // ==========================================================================
   MagnifyingGlassIcon,
+  DotsNineIcon,
+  DotsThreeVerticalIcon,
   GearIcon,
+  BellIcon,
   PencilIcon,
+  KeyIcon,
   TrashIcon,
   PlusIcon,
   XIcon,
   CheckIcon,
+  CopyIcon,
 
   // ==========================================================================
   // 通用交互 - 状态
@@ -73,6 +79,7 @@ import {
   // ==========================================================================
   UserIcon,
   UserSwitchIcon,
+  BuildingsIcon,
   UsersIcon,
   MedalIcon,
   StarIcon,
@@ -109,6 +116,7 @@ import {
   ArrowsInSimpleIcon,   // minimize：原生全屏收起
   CornersOutIcon,       // corners-out：伪全屏展开
   CornersInIcon,        // corners-in：伪全屏收起
+  ListIcon,
   RowsIcon,
   SignOutIcon,
 
@@ -150,17 +158,24 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   "chevron-right":    CaretRightIcon,
   "chevron-up":       CaretUpIcon,
   "chevron-down":     CaretDownIcon,
+  "squares-four":     SquaresFourIcon,
 
   // ==========================================================================
   // 通用交互 - 操作
   // ==========================================================================
   search:    MagnifyingGlassIcon,
+  "app-grid": DotsNineIcon,
   settings:  GearIcon,
+  help:      QuestionIcon,
+  bell:      BellIcon,
+  "more-vertical": DotsThreeVerticalIcon,
   edit:      PencilIcon,
+  key:       KeyIcon,
   trash:     TrashIcon,
   plus:      PlusIcon,
   x:         XIcon,
   check:     CheckIcon,
+  copy:      CopyIcon,
 
   // ==========================================================================
   // 通用交互 - 状态
@@ -199,6 +214,7 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   // ==========================================================================
   user:          UserIcon,
   "user-switch": UserSwitchIcon,
+  buildings:     BuildingsIcon,
   users:         UsersIcon,
   medal:         MedalIcon,
   star:          StarIcon,
@@ -235,6 +251,7 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   minimize:     ArrowsInSimpleIcon,
   "corners-out": CornersOutIcon,
   "corners-in":  CornersInIcon,
+  list:          ListIcon,
   rows:          RowsIcon,
   "sign-out":    SignOutIcon,
 

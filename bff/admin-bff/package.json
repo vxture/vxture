@@ -1,24 +1,37 @@
 {
   "name": "@vxture/bff-admin",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
-  "description": "Admin Portal BFF",
+  "main": "src/main.ts",
+  "types": "src/main.ts",
+  "description": "Vxture platform operations BFF",
   "scripts": {
+    "build": "esbuild src/main.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/main.cjs --tsconfig=tsconfig.json --external:@nestjs/websockets/socket-module --external:@nestjs/microservices --external:@nestjs/microservices/microservices-module",
+    "dev": "pnpm run build && node dist/main.cjs",
+    "start": "node dist/main.cjs",
     "type-check": "tsc --noEmit",
     "lint": "echo \"No lint yet\"",
-    "lint:fix": "echo \"No lint:fix yet\"",
-    "build": "echo \"No build yet\""
+    "lint:fix": "echo \"No lint:fix yet\""
   },
   "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/jwt": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
     "@vxture/core-auth": "workspace:*",
-    "@vxture/core-tenant": "workspace:*"
+    "@vxture/core-config": "workspace:*",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "express": "^4.22.1",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.0"
   },
   "devDependencies": {
+    "@types/pg": "^8.16.0",
+    "esbuild": "^0.27.4",
     "typescript": "^5.9.3"
   },
   "engines": {

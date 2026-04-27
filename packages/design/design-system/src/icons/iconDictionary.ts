@@ -26,17 +26,24 @@ export const iconDictionary = [
   "chevron-right",
   "chevron-up",
   "chevron-down",
+  "squares-four",
 
   // ==========================================================================
   // 通用交互 - 操作
   // ==========================================================================
   "search",
+  "app-grid",
   "settings",   // 齿轮/设置（原 cog 已合并）
+  "help",
+  "bell",
+  "more-vertical",
   "edit",
+  "key",
   "trash",      // 删除（原 delete 已合并）
   "plus",       // 新增（原 add 已合并）
   "x",
   "check",
+  "copy",
 
   // ==========================================================================
   // 通用交互 - 状态
@@ -75,6 +82,7 @@ export const iconDictionary = [
   // ==========================================================================
   "user",
   "user-switch",
+  "buildings",
   "users",      // 用户组（原 user-group 已合并）
   "medal",
   "star",
@@ -111,6 +119,7 @@ export const iconDictionary = [
   "corners-in",   // 伪全屏收起
   "maximize",     // 原生全屏展开（ArrowsOutSimple）
   "minimize",     // 原生全屏收起（ArrowsInSimple）
+  "list",         // 列表视图
   "rows",         // 密度切换
   "sign-out",     // 退出登录
 

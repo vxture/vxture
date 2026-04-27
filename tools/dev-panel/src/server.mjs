@@ -2,6 +2,8 @@ import http from 'node:http';
 import { spawn } from 'node:child_process';
 import net from 'node:net';
 import { URL } from 'node:url';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 
 // ─── 全局常量 ──────────────────────────────────────────────────────────────────
 
@@ -10,16 +12,29 @@ const PANEL_PORT      = Number(process.env.DEV_PANEL_PORT ?? 8090);
 const MAX_LOG_LINES   = 300;
 const START_WAIT_TIMEOUT_MS  = 30_000;
 const START_WAIT_INTERVAL_MS = 1_000;
+const ROOT_ENV        = loadRootEnv();
 
 // ─── 服务清单 ──────────────────────────────────────────────────────────────────
 
-/** @type {Array<{id:string,name:string,port:number,url:string,command:string,priority:number,healthChecks:Array<{label:string,kind?:'http'|'tcp',url?:string,port?:number,okStatuses?:number[]}>}>} */
+/** @type {Array<{id:string,name:string,port:number,url:string,command:string,priority:number,env?:Record<string,string>,healthChecks:Array<{label:string,kind?:'http'|'tcp',url?:string,port?:number,okStatuses?:number[]}>}>} */
 const SERVICES = [
+  {
+    id: 'ai-gateway',
+    name: 'AI Gateway',
+    port: 3100,
+    priority: 1,                              // P1 — 模型接入、授权、配额和计量
+    url: 'http://localhost:3100',
+    command: 'pnpm --filter @vxture/service-ai-gateway dev',
+    healthChecks: [
+      { label: 'port',   kind: 'tcp', port: 3100 },
+      { label: 'models', url: 'http://localhost:3100/ai/gateway/models', okStatuses: [200] },
+    ],
+  },
   {
     id: 'website-bff',
     name: 'Website BFF',
     port: 3001,
-    priority: 0,                              // P0 — 最高优先级，前置依赖
+    priority: 1,                              // P1 — Website 后端接口
     url: 'http://localhost:3001',
     command: 'pnpm --filter @vxture/bff-website dev',
     healthChecks: [
@@ -31,32 +46,56 @@ const SERVICES = [
     id: 'console-bff',
     name: 'Console BFF',
     port: 3003,
-    priority: 0,                              // P0 — 最高优先级，前置依赖
+    priority: 1,                              // P1 — Console 后端接口，依赖 AI Gateway 的模型管理能力
     url: 'http://localhost:3003',
     command: 'pnpm --filter @vxture/bff-console dev',
+    env: {
+      AI_GATEWAY_URL: 'http://localhost:3100',
+    },
     healthChecks: [
       { label: 'healthz',     url: 'http://localhost:3003/healthz',            okStatuses: [200] },
       { label: 'auth.session', url: 'http://localhost:3003/api/auth/session',   okStatuses: [401] },
     ],
   },
   {
+    id: 'admin-bff',
+    name: 'Admin BFF',
+    port: 3005,
+    priority: 1,                              // P1 — 平台运营后台接口，承载供给侧管理能力
+    url: 'http://localhost:3005',
+    command: 'pnpm --filter @vxture/bff-admin dev',
+    env: {
+      AI_GATEWAY_URL: 'http://localhost:3100',
+      ADMIN_BFF_PORT: '3005',
+    },
+    healthChecks: [
+      { label: 'healthz',      url: 'http://localhost:3005/healthz',              okStatuses: [200] },
+      { label: 'auth.session', url: 'http://localhost:3005/api/auth/session',     okStatuses: [401] },
+      { label: 'ai-gateway',   url: 'http://localhost:3005/api/ai-gateway/models', okStatuses: [401] },
+    ],
+  },
+  {
     id: 'gateway',
     name: 'Gateway BFF',
     port: 8000,
-    priority: 1,                              // P1 — 依赖 website-bff + console-bff
+    priority: 2,                              // P2 — 依赖 website-bff + console-bff + admin-bff
     url: 'http://localhost:8000',
     command: 'pnpm dev:gateway',
+    env: {
+      ADMIN_BFF_ORIGIN: 'http://localhost:3005',
+    },
     healthChecks: [
       { label: 'healthz',      url: 'http://localhost:8000/healthz',                          okStatuses: [200] },
       { label: 'website-api',  url: 'http://localhost:8000/website-api/api/auth/me',          okStatuses: [401] },
       { label: 'console-api',  url: 'http://localhost:8000/console-api/api/auth/session',     okStatuses: [401] },
+      { label: 'admin-api',    url: 'http://localhost:8000/admin-api/api/auth/session',       okStatuses: [401] },
     ],
   },
   {
     id: 'website',
     name: 'Website',
     port: 3000,
-    priority: 2,                              // P2 — 依赖 gateway
+    priority: 3,                              // P3 — 依赖 gateway
     url: 'http://localhost:3000',
     command: 'pnpm --filter @vxture/website dev',
     healthChecks: [
@@ -67,17 +106,28 @@ const SERVICES = [
     id: 'console',
     name: 'Console',
     port: 3002,
-    priority: 2,                              // P2 — 依赖 gateway
+    priority: 3,                              // P3 — 依赖 gateway
     url: 'http://localhost:3002',
     command: 'pnpm --filter @vxture/console dev',
     healthChecks: [
       { label: 'port', kind: 'tcp', port: 3002 },
     ],
   },
+  {
+    id: 'admin',
+    name: 'Admin',
+    port: 3004,
+    priority: 3,                              // P3 — 平台运营前端，依赖 gateway + admin-bff
+    url: 'http://localhost:3004',
+    command: 'pnpm --filter @vxture/admin dev',
+    healthChecks: [
+      { label: 'port', kind: 'tcp', port: 3004 },
+    ],
+  },
 ];
 
 /** 启动顺序（按优先级顺序逐级等待健康） */
-const START_ORDER = ['website-bff', 'console-bff', 'gateway', 'website', 'console'];
+const START_ORDER = ['ai-gateway', 'website-bff', 'console-bff', 'admin-bff', 'gateway', 'website', 'console', 'admin'];
 
 // ─── 运行时状态 ─────────────────────────────────────────────────────────────────
 
@@ -99,6 +149,35 @@ function shellForPlatform(command) {
   return process.platform === 'win32'
     ? { file: 'cmd.exe', args: ['/d', '/s', '/c', command] }
     : { file: 'sh', args: ['-lc', command] };
+}
+
+function loadRootEnv() {
+  const envPath = path.join(ROOT_DIR, '.env.local');
+  if (!existsSync(envPath)) return {};
+
+  const env = {};
+  const lines = readFileSync(envPath, 'utf8').split(/\r?\n/);
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line || line.startsWith('#')) continue;
+
+    const separator = line.indexOf('=');
+    if (separator <= 0) continue;
+
+    const key = line.slice(0, separator).trim();
+    const value = unwrapEnvValue(line.slice(separator + 1).trim());
+    if (key) env[key] = value;
+  }
+
+  return env;
+}
+
+function unwrapEnvValue(value) {
+  const quote = value[0];
+  if ((quote === '"' || quote === "'") && value.endsWith(quote)) {
+    return value.slice(1, -1);
+  }
+  return value;
 }
 
 function appendLog(serviceId, line) {
@@ -348,7 +427,7 @@ async function startService(service) {
   const shell = shellForPlatform(service.command);
   const child = spawn(shell.file, shell.args, {
     cwd:         ROOT_DIR,
-    env:         process.env,
+    env:         { ...process.env, ...ROOT_ENV, ...(service.env ?? {}) },
     windowsHide: true,
   });
 

@@ -13,7 +13,7 @@
     },
     "./styles/globals.css": "./src/styles/globals.css"
   },
-  "files": ["dist", "src/styles"],
+  "files": ["dist", "src/styles", "assets"],
   "scripts": {
     "build": "rimraf dist && tsup",
     "dev": "tsup --watch",
