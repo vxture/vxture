@@ -4,9 +4,10 @@ import { Readable } from 'node:stream';
 const PORT = Number(process.env.GATEWAY_PORT ?? 8000);
 const WEBSITE_BFF_ORIGIN = (process.env.WEBSITE_BFF_ORIGIN ?? 'http://localhost:3001').replace(/\/+$/, '');
 const CONSOLE_BFF_ORIGIN = (process.env.CONSOLE_BFF_ORIGIN ?? 'http://localhost:3003').replace(/\/+$/, '');
+const ADMIN_BFF_ORIGIN = (process.env.ADMIN_BFF_ORIGIN ?? 'http://localhost:3005').replace(/\/+$/, '');
 const ALLOWED_ORIGINS = new Set(
   (process.env.GATEWAY_ALLOWED_ORIGINS ??
-    'http://localhost:3000,http://localhost:3002,http://127.0.0.1:3000,http://127.0.0.1:3002')
+    'http://localhost:3000,http://localhost:3002,http://localhost:3004,http://127.0.0.1:3000,http://127.0.0.1:3002,http://127.0.0.1:3004')
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean),
@@ -51,6 +52,20 @@ function mapTarget(pathname) {
     };
   }
 
+  if (pathname.startsWith('/admin-api/')) {
+    return {
+      targetOrigin: ADMIN_BFF_ORIGIN,
+      targetPath: pathname.replace(/^\/admin-api/, ''),
+    };
+  }
+
+  if (pathname === '/admin-api') {
+    return {
+      targetOrigin: ADMIN_BFF_ORIGIN,
+      targetPath: '/',
+    };
+  }
+
   return null;
 }
 
@@ -85,6 +100,7 @@ const server = http.createServer(async (req, res) => {
         service: 'gateway-bff',
         website: WEBSITE_BFF_ORIGIN,
         console: CONSOLE_BFF_ORIGIN,
+        admin: ADMIN_BFF_ORIGIN,
       }),
     );
     return;
@@ -161,4 +177,5 @@ server.listen(PORT, () => {
   console.log(`[gateway-bff] listening on http://localhost:${PORT}`);
   console.log(`[gateway-bff] website-api -> ${WEBSITE_BFF_ORIGIN}`);
   console.log(`[gateway-bff] console-api -> ${CONSOLE_BFF_ORIGIN}`);
+  console.log(`[gateway-bff] admin-api -> ${ADMIN_BFF_ORIGIN}`);
 });

@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { SubscriptionsPage } from '@/modules/subscriptions/SubscriptionsPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/subscriptions" />;
+  return <SubscriptionsPage />;
 }

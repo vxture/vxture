@@ -12,3 +12,7 @@ export class UpdateMemberDto {
   roleId?: string | null;
   status?: 'active' | 'inactive' | 'banned';
 }
+
+export class ResetMemberPasswordDto {
+  nextPassword!: string;
+}

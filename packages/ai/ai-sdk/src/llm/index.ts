@@ -16,4 +16,5 @@
  */
 
 // 导出类型
+export * from './client';
 export * from './types';

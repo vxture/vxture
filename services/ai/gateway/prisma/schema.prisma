@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["ai_gateway", "commerce"]
+}
+
+model AiProvider {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  providerCode String   @unique @map("provider_code") @db.VarChar(64)
+  providerName String   @map("provider_name") @db.VarChar(128)
+  providerType String   @default("online") @map("provider_type") @db.VarChar(32)
+  homepageUrl  String?  @map("homepage_url") @db.Text
+  consoleUrl   String?  @map("console_url") @db.Text
+  billingUrl   String?  @map("billing_url") @db.Text
+  isActive     Boolean  @default(true) @map("is_active")
+  config       Json?    @db.JsonB
+  createdBy    String?  @map("created_by") @db.Uuid
+  updatedBy    String?  @map("updated_by") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  models AiModel[]
+
+  @@index([providerType], map: "idx_ai_provider_type")
+  @@index([isActive], map: "idx_ai_provider_is_active")
+  @@map("ai_provider")
+  @@schema("ai_gateway")
+}
+
+model AiModel {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  providerId   String?  @map("provider_id") @db.Uuid
+  modelCode    String   @unique @map("model_code") @db.VarChar(128)
+  modelName    String   @map("model_name") @db.VarChar(128)
+  provider     String   @db.VarChar(64)
+  endpointUrl  String   @map("endpoint_url") @db.Text
+  protocol     String   @db.VarChar(64)
+  capabilities String[] @default([])
+  apiKeyEnvVar String   @map("api_key_env_var") @db.VarChar(128)
+  isActive     Boolean  @default(true) @map("is_active")
+  config       Json?    @db.JsonB
+  createdBy    String?  @map("created_by") @db.Uuid
+  updatedBy    String?  @map("updated_by") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  providerRef AiProvider? @relation(fields: [providerId], references: [id])
+  grants      AiModelGrant[]
+  costRates   AiModelCostRate[]
+
+  @@index([provider], map: "idx_ai_model_provider")
+  @@index([providerId], map: "idx_ai_model_provider_id")
+  @@index([isActive], map: "idx_ai_model_is_active")
+  @@map("ai_model")
+  @@schema("ai_gateway")
+}
+
+model AiModelGrant {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelId   String    @map("model_id") @db.Uuid
+  tenantId  String    @map("tenant_id") @db.Uuid
+  agentId   String?   @map("agent_id") @db.Uuid
+  priority  Int       @default(100)
+  reason    String?   @db.VarChar(512)
+  expiresAt DateTime? @map("expires_at") @db.Timestamptz(6)
+  isActive  Boolean   @default(true) @map("is_active")
+  createdBy String?   @map("created_by") @db.Uuid
+  updatedBy String?   @map("updated_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  model AiModel @relation(fields: [modelId], references: [id])
+
+  @@index([tenantId], map: "idx_ai_model_grant_tenant")
+  @@index([modelId], map: "idx_ai_model_grant_model")
+  @@index([agentId], map: "idx_ai_model_grant_agent")
+  @@index([isActive], map: "idx_ai_model_grant_is_active")
+  @@map("ai_model_grant")
+  @@schema("ai_gateway")
+}
+
+model AiModelCostRate {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelId          String    @map("model_id") @db.Uuid
+  currency         String    @default("CNY") @db.VarChar(16)
+  unitTokens       Int       @default(1000000) @map("unit_tokens")
+  inputUnitPrice   Decimal   @default(0) @map("input_unit_price") @db.Decimal(18, 8)
+  outputUnitPrice  Decimal   @default(0) @map("output_unit_price") @db.Decimal(18, 8)
+  requestUnitPrice Decimal   @default(0) @map("request_unit_price") @db.Decimal(18, 8)
+  billingMode      String    @default("token") @map("billing_mode") @db.VarChar(32)
+  effectiveAt      DateTime  @default(now()) @map("effective_at") @db.Timestamptz(6)
+  expiresAt        DateTime? @map("expires_at") @db.Timestamptz(6)
+  isActive         Boolean   @default(true) @map("is_active")
+  createdBy        String?   @map("created_by") @db.Uuid
+  updatedBy        String?   @map("updated_by") @db.Uuid
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  model AiModel @relation(fields: [modelId], references: [id])
+
+  @@index([modelId], map: "idx_ai_model_cost_rate_model")
+  @@index([effectiveAt], map: "idx_ai_model_cost_rate_effective")
+  @@index([isActive], map: "idx_ai_model_cost_rate_is_active")
+  @@map("ai_model_cost_rate")
+  @@schema("ai_gateway")
+}
+
+model TenantSubscriptionQuota {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId           String    @unique @map("tenant_id") @db.Uuid
+  subscriptionId     String?   @map("subscription_id") @db.Uuid
+  maxUsers           Int       @default(10) @map("max_users")
+  maxApiKeys         Int       @default(5) @map("max_api_keys")
+  maxWorkflows       Int       @default(20) @map("max_workflows")
+  maxConcurrent      Int       @default(5) @map("max_concurrent")
+  rateLimitPerMinute Int       @default(60) @map("rate_limit_per_minute")
+  periodTokens       BigInt    @default(1000000) @map("period_tokens")
+  quotaCycle         String    @default("monthly") @map("quota_cycle") @db.VarChar(32)
+  allowedModels      String[]  @default([]) @map("allowed_models")
+  allowCustomModel   Boolean   @default(false) @map("allow_custom_model")
+  createdBy          String?   @map("created_by") @db.Uuid
+  updatedBy          String?   @map("updated_by") @db.Uuid
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  effectiveAt        DateTime  @map("effective_at") @db.Timestamptz(6)
+  expiresAt          DateTime? @map("expires_at") @db.Timestamptz(6)
+
+  @@index([tenantId], map: "idx_tsq_tenant_id")
+  @@index([subscriptionId], map: "idx_tsq_subscription_id")
+  @@map("tenant_subscription_quota")
+  @@schema("commerce")
+}
+
+model TenantUsageEvent {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String   @map("tenant_id") @db.Uuid
+  agentId     String   @map("agent_id") @db.Uuid
+  featureId   String   @map("feature_id") @db.Uuid
+  userId      String?  @map("user_id") @db.Uuid
+  usedQuota   BigInt   @default(0) @map("used_quota")
+  inputQuota  BigInt?  @default(0) @map("input_quota")
+  outputQuota BigInt?  @default(0) @map("output_quota")
+  requestId   String?  @map("request_id") @db.VarChar(128)
+  businessId  String?  @map("business_id") @db.VarChar(128)
+  usageType   String   @default("normal") @map("usage_type") @db.VarChar(32)
+  cycleDate   DateTime @map("cycle_date") @db.Date
+  cycleMonth  String   @map("cycle_month") @db.VarChar(6)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  modelCode   String?  @map("model_code") @db.VarChar(64)
+  latencyMs   Int?     @map("latency_ms")
+
+  @@index([tenantId], map: "idx_tue_tenant_id")
+  @@index([agentId], map: "idx_tue_agent_id")
+  @@index([featureId], map: "idx_tue_feature_id")
+  @@index([userId], map: "idx_tue_user_id")
+  @@index([modelCode], map: "idx_tue_model_code")
+  @@index([requestId], map: "idx_tue_request_id")
+  @@index([cycleDate], map: "idx_tue_cycle_date")
+  @@index([cycleMonth], map: "idx_tue_cycle_month")
+  @@index([tenantId, cycleMonth], map: "idx_tue_tenant_month")
+  @@map("tenant_usage_event")
+  @@schema("commerce")
+}
+
+model TenantUsageSummary {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId      String   @map("tenant_id") @db.Uuid
+  featureId     String   @default("00000000-0000-0000-0000-000000000000") @map("feature_id") @db.Uuid
+  agentId       String   @default("00000000-0000-0000-0000-000000000000") @map("agent_id") @db.Uuid
+  cycleMonth    String   @map("cycle_month") @db.VarChar(6)
+  totalQuota    BigInt   @default(0) @map("total_quota")
+  inputQuota    BigInt   @default(0) @map("input_quota")
+  outputQuota   BigInt   @default(0) @map("output_quota")
+  requestCount  BigInt   @default(0) @map("request_count")
+  lastSyncedAt  DateTime @default(now()) @map("last_synced_at") @db.Timestamptz(6)
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  statType      String   @default("detail") @map("stat_type") @db.VarChar(32)
+
+  @@unique([tenantId, featureId, agentId, cycleMonth, statType], map: "tenant_usage_summary_unique")
+  @@index([tenantId], map: "idx_tus_tenant_id")
+  @@index([featureId], map: "idx_tus_feature_id")
+  @@index([agentId], map: "idx_tus_agent_id")
+  @@index([cycleMonth], map: "idx_tus_cycle_month")
+  @@index([statType], map: "idx_tus_stat_type")
+  @@index([tenantId, cycleMonth], map: "idx_tus_tenant_month")
+  @@map("tenant_usage_summary")
+  @@schema("commerce")
+}

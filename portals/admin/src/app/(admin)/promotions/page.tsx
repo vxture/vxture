@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { PromotionsPage } from '@/modules/commercial/PromotionsPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/promotions" />;
+  return <PromotionsPage />;
 }

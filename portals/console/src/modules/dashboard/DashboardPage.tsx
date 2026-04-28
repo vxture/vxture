@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Icon, type IconName } from '@vxture/design-system';
 import { Badge } from '@/components/ui/primitives';
 import { invoiceRows, quotaRows } from '@/shared/mock-console-data';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -9,26 +10,27 @@ import { TableToolbar } from '@/modules/shared/TableToolbar';
 import { useConsoleTranslations } from '@/lib/console-intl';
 import { DashboardSplit, PageSection, SignalList, SummaryStrip } from '@/layout/shell';
 
-function getActionGlyph(label: string) {
-  return label.trim().charAt(0).toUpperCase();
-}
-
 export function DashboardPage() {
   const t = useConsoleTranslations('dashboard');
   const dashboardStats = [
-    { id: 'plan' },
-    { id: 'quota' },
-    { id: 'reminders' },
+    { id: 'plan', icon: 'medal' },
+    { id: 'quota', icon: 'chart-bar' },
+    { id: 'reminders', icon: 'warning' },
   ] as const;
   const quickActions = [
-    { id: 'addMember', href: '/members' },
-    { id: 'reviewSubscription', href: '/subscription' },
-    { id: 'adjustQuotas', href: '/quotas' },
+    { id: 'addMember', href: '/members', icon: 'users' },
+    { id: 'reviewSubscription', href: '/subscription', icon: 'chart-bar' },
+    { id: 'adjustQuotas', href: '/quotas', icon: 'database' },
   ] as const;
   const summaryItems = dashboardStats.map((stat) => ({
     label: t(`stats.${stat.id}.label`),
     value: t(`stats.${stat.id}.value`),
     hint: t(`stats.${stat.id}.hint`),
+    aside: (
+      <span className="vx-summary-strip__icon" aria-hidden="true">
+        <Icon name={stat.icon as IconName} size="sm" fallback="info" />
+      </span>
+    ),
   }));
   const signalItems = [
     {
@@ -66,7 +68,7 @@ export function DashboardPage() {
             {quickActions.map((action) => (
               <Link key={action.id} href={action.href} className="vx-action-item">
                 <div className="vx-action-item__icon">
-                  <span aria-hidden="true">{getActionGlyph(t(`quickActions.${action.id}.label`))}</span>
+                  <Icon name={action.icon as IconName} size={20} fallback="arrow-right" />
                 </div>
                 <div>
                   <strong>{t(`quickActions.${action.id}.label`)}</strong>

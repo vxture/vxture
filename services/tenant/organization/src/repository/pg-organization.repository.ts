@@ -80,6 +80,7 @@ interface TenantMemberRow {
   tenant_id: string;
   account_id: string;
   username: string;
+  avatar_url: string | null;
   email: string | null;
   phone: string | null;
   nickname: string | null;
@@ -119,6 +120,8 @@ interface AccountLookupRow {
 
 @Injectable()
 export class PgOrganizationRepository implements OrganizationReadRepository {
+  private profileTableEnsured = false;
+
   constructor(@Inject(PG_POOL) private readonly pool: Pool) {}
 
   async getTenantMembershipsByAccountId(accountId: string): Promise<TenantMembershipView[]> {
@@ -296,6 +299,8 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   }
 
   async getTenantMemberById(tenantId: string, memberId: string): Promise<TenantMemberView | null> {
+    await this.ensureAccountProfileTable();
+
     const result = await this.pool.query<TenantMemberRow>(
       `
         select
@@ -303,6 +308,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           tm.tenant_id,
           tm.account_id,
           account.username,
+          profile.avatar_url,
           account.email,
           account.phone,
           tm.nickname,
@@ -317,6 +323,8 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
         join account.account account
           on account.id = tm.account_id
          and account.deleted_at is null
+        left join account.account_profile profile
+          on profile.account_id = account.id
         left join tenancy.tenant_role tr
           on tr.id = tm.role_id
          and tr.deleted_at is null
@@ -600,7 +608,8 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
             updated_by = excluded.updated_by,
             updated_at = now(),
             deleted_at = null
-          returning id, tenant_id, account_id, ''::varchar as username, $10::varchar as email, null::varchar as phone,
+          returning id, tenant_id, account_id, ''::varchar as username, null::varchar as avatar_url,
+            $10::varchar as email, null::varchar as phone,
             nickname, remark, $4::varchar as role_code, null::varchar as role_name, status, is_primary_owner, joined_at, last_active_at
         `,
         [
@@ -716,6 +725,8 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   }
 
   async listTenantMembers(tenantId: string): Promise<TenantMemberView[]> {
+    await this.ensureAccountProfileTable();
+
     const result = await this.pool.query<TenantMemberRow>(
       `
         select
@@ -723,6 +734,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           tm.tenant_id,
           tm.account_id,
           account.username,
+          profile.avatar_url,
           account.email,
           account.phone,
           tm.nickname,
@@ -737,6 +749,8 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
         join account.account account
           on account.id = tm.account_id
          and account.deleted_at is null
+        left join account.account_profile profile
+          on profile.account_id = account.id
         left join tenancy.tenant_role tr
           on tr.id = tm.role_id
          and tr.deleted_at is null
@@ -854,6 +868,27 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       );
     }
   }
+
+  private async ensureAccountProfileTable() {
+    if (this.profileTableEnsured) {
+      return;
+    }
+
+    await this.pool.query(`
+      create table if not exists account.account_profile (
+        account_id uuid primary key references account.account(id) on delete cascade,
+        display_name varchar(96),
+        avatar_url varchar(512),
+        headline varchar(128),
+        bio text,
+        timezone varchar(64),
+        language varchar(32),
+        updated_at timestamptz default now()
+      )
+    `);
+
+    this.profileTableEnsured = true;
+  }
 }
 
 function mapTenantMember(row?: TenantMemberRow): TenantMemberView | null {
@@ -866,6 +901,7 @@ function mapTenantMember(row?: TenantMemberRow): TenantMemberView | null {
     tenantId: row.tenant_id,
     accountId: row.account_id,
     username: row.username,
+    avatarUrl: row.avatar_url,
     email: row.email,
     phone: row.phone,
     nickname: row.nickname,

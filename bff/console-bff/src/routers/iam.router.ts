@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, Post, Put, Query, Req, UnauthorizedException } from '@nestjs/common';
 import type { Request } from 'express';
 import { SessionAggregator } from '../aggregators/session.aggregator';
-import { UpdateMemberDto, UpsertMemberDto } from '../dto/member.dto';
+import { ResetMemberPasswordDto, UpdateMemberDto, UpsertMemberDto } from '../dto/member.dto';
 import { CreateRoleDto, UpdateRoleDto } from '../dto/role.dto';
 import type { RequestContext } from '../types/console.types';
 
@@ -196,6 +196,25 @@ export class IamRouter {
     }
 
     return member;
+  }
+
+  @Post('members/:memberId/reset-password')
+  async resetMemberPassword(
+    @Req() req: Request & RequestContext,
+    @Param('memberId') memberId: string,
+    @Body() body: ResetMemberPasswordDto,
+    @Query('tenantId') tenantId?: string,
+  ) {
+    if (!req.user) {
+      throw new UnauthorizedException('No active session');
+    }
+
+    const reset = await this.sessionAggregator.resetMemberPassword(req.user.id, tenantId, memberId, body.nextPassword);
+    if (!reset) {
+      throw new NotFoundException('Member not found');
+    }
+
+    return { status: 'ok' as const };
   }
 
   @Delete('members/:memberId')

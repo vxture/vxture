@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { BillingPage } from '@/modules/billing/BillingPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/billing" />;
+  return <BillingPage />;
 }

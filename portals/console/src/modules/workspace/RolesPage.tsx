@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { Icon } from '@vxture/design-system';
 import { Badge, Button, Input, Label } from '@/components/ui/primitives';
 import {
   createTenantRole,
@@ -9,26 +10,53 @@ import {
   fetchTenantRoles,
   updateTenantRole,
 } from '@/api/console-bff';
-import type { SummaryMetric, TenantPermissionRecord, TenantRoleRecord } from '@/entities/console';
+import type { TenantPermissionRecord, TenantRoleRecord } from '@/entities/console';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { useConsoleTranslations } from '@/lib/console-intl';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { MetricGrid } from '@/modules/shared/MetricGrid';
-import { PageSection } from '@/layout/shell';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { EmptyState } from '@/modules/shared/EmptyState';
+import { PageHeader } from '@/modules/shared/PageHeader';
+
+type RoleFilter = 'all' | 'active' | 'disabled' | 'system' | 'custom';
+type Feedback = { tone: 'success' | 'error'; key: string; values?: Record<string, number | string> } | null;
+
+const ROLES_PAGE_SIZE = 10;
+
+function rolePermissionSummary(role: TenantRoleRecord) {
+  return role.permissions.map((permission) => permission.permissionCode).join(', ');
+}
+
+function roleSearchText(role: TenantRoleRecord) {
+  return [
+    role.roleName,
+    role.roleCode,
+    role.description,
+    role.status,
+    role.isSystem ? 'system' : 'custom',
+    rolePermissionSummary(role),
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+}
 
 export function RolesPage() {
   const t = useConsoleTranslations('rolesPage');
   const { session } = useConsoleSession();
   const [roles, setRoles] = useState<TenantRoleRecord[]>([]);
   const [permissions, setPermissions] = useState<TenantPermissionRecord[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<Feedback>(null);
+  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState<RoleFilter>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [dialogMode, setDialogMode] = useState<'create' | 'edit' | null>(null);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
   const [form, setForm] = useState({
     roleCode: '',
     roleName: '',
@@ -37,15 +65,13 @@ export function RolesPage() {
     permissionIds: [] as string[],
   });
 
-  function tenantId() {
-    return session.tenant?.mode === 'tenant' ? session.tenant.id : undefined;
-  }
+  const currentTenantId = session.tenant?.mode === 'tenant' ? session.tenant.id : undefined;
 
   useEffect(() => {
     let active = true;
     setLoading(true);
 
-    Promise.all([fetchTenantRoles(tenantId()), fetchTenantPermissions(tenantId())])
+    Promise.all([fetchTenantRoles(currentTenantId), fetchTenantPermissions(currentTenantId)])
       .then(([roleRecords, permissionRecords]) => {
         if (!active) {
           return;
@@ -53,12 +79,14 @@ export function RolesPage() {
 
         setRoles(roleRecords);
         setPermissions(permissionRecords);
-        setSelectedId((current) => current ?? roleRecords[0]?.id ?? null);
-        setError(null);
+        setSelectedIds(new Set());
+        setOpenMenuId(null);
+        setSelectedId(null);
+        setFeedback(null);
       })
       .catch(() => {
         if (active) {
-          setError(t('feedback.loadError'));
+          setFeedback({ tone: 'error', key: 'loadError' });
         }
       })
       .finally(() => {
@@ -70,56 +98,64 @@ export function RolesPage() {
     return () => {
       active = false;
     };
-  }, [session.tenant?.id, session.tenant?.mode]);
+  }, [currentTenantId]);
 
-  const selected = roles.find((role) => role.id === selectedId) ?? null;
+  useEffect(() => {
+    setCurrentPage(1);
+    setOpenMenuId(null);
+  }, [query, filter]);
 
-  const metrics: SummaryMetric[] = useMemo(() => {
-    const activeRoles = roles.filter((role) => role.status === 'active').length;
-    const customRoles = roles.filter((role) => !role.isSystem).length;
+  function resetFeedback() {
+    setFeedback(null);
+  }
 
-    return [
-      { label: t('metrics.roles.label'), value: loading ? '...' : String(roles.length), trend: t('metrics.roles.trend', { count: activeRoles }) },
-      { label: t('metrics.customRoles.label'), value: loading ? '...' : String(customRoles), trend: t('metrics.customRoles.trend') },
-      { label: t('metrics.permissions.label'), value: loading ? '...' : String(permissions.length), trend: t('metrics.permissions.trend') },
-    ];
-  }, [loading, permissions.length, roles, t]);
+  function resetForm(role?: TenantRoleRecord | null) {
+    setForm({
+      roleCode: role?.roleCode ?? '',
+      roleName: role?.roleName ?? '',
+      description: role?.description ?? '',
+      status: role?.status ?? 'active',
+      permissionIds: role?.permissions.map((permission) => permission.id) ?? [],
+    });
+  }
 
   function openCreateDialog() {
-    setForm({ roleCode: '', roleName: '', description: '', status: 'active', permissionIds: [] });
-    setMessage(null);
-    setError(null);
+    resetForm();
+    resetFeedback();
     setDialogMode('create');
   }
 
-  function openEditDialog() {
-    if (!selected) {
-      return;
-    }
-
-    setForm({
-      roleCode: selected.roleCode,
-      roleName: selected.roleName,
-      description: selected.description ?? '',
-      status: selected.status,
-      permissionIds: selected.permissions.map((permission) => permission.id),
-    });
-    setMessage(null);
-    setError(null);
+  function openEditDialog(role: TenantRoleRecord) {
+    setSelectedId(role.id);
+    setOpenMenuId(null);
+    resetForm(role);
+    resetFeedback();
     setDialogMode('edit');
   }
 
+  function openDeleteDialog(role: TenantRoleRecord) {
+    if (role.isSystem) {
+      return;
+    }
+
+    setSelectedId(role.id);
+    setOpenMenuId(null);
+    resetFeedback();
+    setDeleteOpen(true);
+  }
+
   async function reloadRoles(nextSelectedId?: string | null) {
-    const roleRecords = await fetchTenantRoles(tenantId());
+    const roleRecords = await fetchTenantRoles(currentTenantId);
     setRoles(roleRecords);
-    setSelectedId(nextSelectedId ?? roleRecords[0]?.id ?? null);
+    setSelectedIds(new Set());
+    setSelectedId(nextSelectedId ?? null);
+    setOpenMenuId(null);
   }
 
   async function submitRole(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitting(true);
-    setMessage(null);
-    setError(null);
+    resetFeedback();
 
     try {
       if (dialogMode === 'create') {
@@ -130,10 +166,10 @@ export function RolesPage() {
             description: form.description,
             permissionIds: form.permissionIds,
           },
-          tenantId(),
+          currentTenantId,
         );
         await reloadRoles(created.id);
-        setMessage(t('feedback.createSuccess'));
+        setFeedback({ tone: 'success', key: 'createSuccess' });
       } else if (dialogMode === 'edit' && selected) {
         const updated = await updateTenantRole(
           selected.id,
@@ -143,15 +179,32 @@ export function RolesPage() {
             status: form.status,
             permissionIds: form.permissionIds,
           },
-          tenantId(),
+          currentTenantId,
         );
         await reloadRoles(updated.id);
-        setMessage(t('feedback.updateSuccess'));
+        setFeedback({ tone: 'success', key: 'updateSuccess' });
       }
 
       setDialogMode(null);
     } catch {
-      setError(dialogMode === 'create' ? t('feedback.createError') : t('feedback.updateError'));
+      setFeedback({ tone: 'error', key: dialogMode === 'create' ? 'createError' : 'updateError' });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleToggleRoleStatus(role: TenantRoleRecord) {
+    const nextStatus = role.status === 'active' ? 'disabled' : 'active';
+    setSubmitting(true);
+    resetFeedback();
+    setOpenMenuId(null);
+
+    try {
+      const updated = await updateTenantRole(role.id, { status: nextStatus }, currentTenantId);
+      await reloadRoles(updated.id);
+      setFeedback({ tone: 'success', key: nextStatus === 'active' ? 'enableSuccess' : 'disableSuccess' });
+    } catch {
+      setFeedback({ tone: 'error', key: nextStatus === 'active' ? 'enableError' : 'disableError' });
     } finally {
       setSubmitting(false);
     }
@@ -163,15 +216,62 @@ export function RolesPage() {
     }
 
     setSubmitting(true);
-    setMessage(null);
-    setError(null);
+    resetFeedback();
 
     try {
-      await deleteTenantRole(selected.id, tenantId());
+      await deleteTenantRole(selected.id, currentTenantId);
       await reloadRoles();
-      setMessage(t('feedback.deleteSuccess'));
+      setDeleteOpen(false);
+      setFeedback({ tone: 'success', key: 'deleteSuccess' });
     } catch {
-      setError(t('feedback.deleteError'));
+      setFeedback({ tone: 'error', key: 'deleteError' });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleBulkStatus(nextStatus: 'active' | 'disabled') {
+    const targets = roles.filter((role) => selectedIds.has(role.id) && role.status !== nextStatus);
+    if (!targets.length) {
+      return;
+    }
+
+    setSubmitting(true);
+    resetFeedback();
+    setOpenMenuId(null);
+
+    try {
+      await Promise.all(targets.map((role) => updateTenantRole(role.id, { status: nextStatus }, currentTenantId)));
+      await reloadRoles();
+      setFeedback({
+        tone: 'success',
+        key: nextStatus === 'active' ? 'bulkEnabled' : 'bulkDisabled',
+        values: { count: targets.length },
+      });
+    } catch {
+      setFeedback({ tone: 'error', key: nextStatus === 'active' ? 'bulkEnableError' : 'bulkDisableError' });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleBulkDeleteRoles() {
+    const targets = roles.filter((role) => selectedIds.has(role.id) && !role.isSystem);
+    if (!targets.length) {
+      return;
+    }
+
+    setSubmitting(true);
+    resetFeedback();
+    setOpenMenuId(null);
+
+    try {
+      await Promise.all(targets.map((role) => deleteTenantRole(role.id, currentTenantId)));
+      await reloadRoles();
+      setBulkDeleteOpen(false);
+      setFeedback({ tone: 'success', key: 'bulkDeleted', values: { count: targets.length } });
+    } catch {
+      setFeedback({ tone: 'error', key: 'bulkDeleteError' });
     } finally {
       setSubmitting(false);
     }
@@ -186,174 +286,474 @@ export function RolesPage() {
     }));
   }
 
-  return (
-    <div className="vx-page-stack">
-      <PageHeader
-        eyebrow={t('header.eyebrow')}
-        title={t('header.title')}
-        description={t('header.description')}
-        action={
-          <ActionButton icon="plus" onClick={openCreateDialog}>
-            {t('header.create')}
-          </ActionButton>
+  const filtered = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    return roles.filter((role) => {
+      const matchesQuery = !normalizedQuery || roleSearchText(role).includes(normalizedQuery);
+      const matchesFilter =
+        filter === 'all' ||
+        role.status === filter ||
+        (filter === 'system' && role.isSystem) ||
+        (filter === 'custom' && !role.isSystem);
+      return matchesQuery && matchesFilter;
+    });
+  }, [filter, query, roles]);
+
+  const roleCounts = useMemo(
+    () => ({
+      active: roles.filter((role) => role.status === 'active').length,
+      disabled: roles.filter((role) => role.status === 'disabled').length,
+      system: roles.filter((role) => role.isSystem).length,
+      custom: roles.filter((role) => !role.isSystem).length,
+    }),
+    [roles],
+  );
+
+  const selected = roles.find((role) => role.id === selectedId) ?? null;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / ROLES_PAGE_SIZE));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const pageStart = (safeCurrentPage - 1) * ROLES_PAGE_SIZE;
+  const pagedRoles = filtered.slice(pageStart, pageStart + ROLES_PAGE_SIZE);
+  const selectedRoles = roles.filter((role) => selectedIds.has(role.id));
+  const selectedCount = selectedRoles.length;
+  const selectablePageIds = pagedRoles.map((role) => role.id);
+  const isPageSelected = selectablePageIds.length > 0 && selectablePageIds.every((id) => selectedIds.has(id));
+  const hasSelectedActive = selectedRoles.some((role) => role.status === 'active');
+  const hasSelectedDisabled = selectedRoles.some((role) => role.status === 'disabled');
+  const hasSelectedCustom = selectedRoles.some((role) => !role.isSystem);
+  const bulkDeleteCount = selectedRoles.filter((role) => !role.isSystem).length;
+  const countTitle = t('toolbar.countHint', {
+    total: roles.length,
+    active: roleCounts.active,
+    disabled: roleCounts.disabled,
+    system: roleCounts.system,
+    custom: roleCounts.custom,
+  });
+
+  const roleFilters = [
+    { value: 'all', label: t('filters.all') },
+    { value: 'active', label: t('filters.active') },
+    { value: 'disabled', label: t('filters.disabled') },
+    { value: 'system', label: t('filters.system') },
+    { value: 'custom', label: t('filters.custom') },
+  ] as const;
+
+  const canCreateRole = true;
+
+  function toggleRoleSelection(roleId: string, checked: boolean) {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      if (checked) {
+        next.add(roleId);
+      } else {
+        next.delete(roleId);
+      }
+      return next;
+    });
+  }
+
+  function togglePageSelection(checked: boolean) {
+    setSelectedIds((current) => {
+      const next = new Set(current);
+      selectablePageIds.forEach((id) => {
+        if (checked) {
+          next.add(id);
+        } else {
+          next.delete(id);
         }
-      />
+      });
+      return next;
+    });
+  }
 
-      {message ? <p className="vx-profile-message">{message}</p> : null}
-      {error ? <p className="vx-profile-error">{error}</p> : null}
+  return (
+    <div className={selectedCount ? 'vx-page-stack vx-roles-page vx-roles-page--selecting' : 'vx-page-stack vx-roles-page'}>
+      <PageHeader eyebrow={t('header.eyebrow')} title={t('header.title')} description={t('header.description')} />
 
-      <MetricGrid items={metrics} />
+      {feedback ? (
+        <p className={feedback.tone === 'success' ? 'vx-profile-message' : 'vx-profile-error'}>
+          {t(`feedback.${feedback.key}`, feedback.values)}
+        </p>
+      ) : null}
 
-      <PageSection title={t('list.title')} description={t('list.description')}>
-        {roles.length ? (
-          <div className="vx-table-stack">
-            <div className="vx-member-table vx-role-table">
-              <div className="vx-member-table__header vx-role-table__header">
-                <span>{t('detail.fields.name')}</span>
-                <span>{t('detail.fields.code')}</span>
-                <span>{t('detail.fields.status')}</span>
-                <span>{t('list.system')}</span>
-                <span>{t('detail.fields.description')}</span>
-                <span>{t('list.permissionsColumn')}</span>
-              </div>
-              {roles.map((role) => (
-                <div
-                  key={role.id}
-                  className={selectedId === role.id ? 'vx-member-table__row vx-role-table__row vx-role-table__row--active' : 'vx-member-table__row vx-role-table__row'}
-                  onClick={() => setSelectedId(role.id)}
+      <div className="vx-roles-workspace">
+        <div className="vx-roles-actionbar">
+          <div className="vx-roles-header-actions">
+            {selectedCount ? (
+              <div className="vx-roles-header-selection">
+                <span>{t('bulk.selected', { count: selectedCount })}</span>
+                <ActionButton
+                  variant="outline"
+                  icon="shield-check"
+                  disabled={submitting || !hasSelectedActive}
+                  onClick={() => void handleBulkStatus('disabled')}
                 >
-                  <div className="vx-member-table__identity">
-                    <div>
-                      <strong>{role.roleName}</strong>
-                    </div>
-                  </div>
-                  <span>{role.roleCode}</span>
-                  <span>
-                    <Badge className={role.status === 'active' ? 'vx-badge-positive' : 'vx-badge-warning'}>
-                      {role.status === 'active' ? t('status.active') : t('status.disabled')}
-                    </Badge>
-                  </span>
-                  <span>{role.isSystem ? t('list.system') : '--'}</span>
-                  <span className="vx-role-table__description">{role.description || t('list.noDescription')}</span>
-                  <span>{t('list.permissionCount', { count: role.permissions.length })}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : (
-          <EmptyState title={loading ? t('empty.loadingTitle') : t('empty.title')} description={loading ? t('empty.loadingDescription') : t('empty.description')} />
-        )}
-      </PageSection>
-
-      {selected ? (
-        <PageSection
-          title={t('detail.title')}
-          description={t('detail.description')}
-          action={
-            <div className="vx-detail-actions">
-              <ActionButton variant="outline" icon="edit" onClick={openEditDialog}>
-                {t('detail.edit')}
-              </ActionButton>
-              {!selected.isSystem ? (
-                <ActionButton variant="outline" icon="x" onClick={() => void handleDeleteRole()}>
-                  {t('detail.delete')}
+                  {t('bulk.disable')}
+                </ActionButton>
+                <ActionButton
+                  variant="outline"
+                  icon="check"
+                  disabled={submitting || !hasSelectedDisabled}
+                  onClick={() => void handleBulkStatus('active')}
+                >
+                  {t('bulk.enable')}
+                </ActionButton>
+                <ActionButton
+                  variant="outline"
+                  icon="trash"
+                  disabled={submitting || !hasSelectedCustom}
+                  onClick={() => setBulkDeleteOpen(true)}
+                >
+                  {t('bulk.delete')}
+                </ActionButton>
+              </div>
+            ) : null}
+            <div className="vx-roles-header-primary">
+              {canCreateRole ? (
+                <ActionButton icon="plus" onClick={openCreateDialog}>
+                  {t('header.create')}
                 </ActionButton>
               ) : null}
             </div>
-          }
-        >
-          <div className="vx-profile-group">
-            <div className="vx-profile-row">
-              <span>{t('detail.fields.code')}</span>
-              <strong>{selected.roleCode}</strong>
-            </div>
-            <div className="vx-profile-row">
-              <span>{t('detail.fields.name')}</span>
-              <strong>{selected.roleName}</strong>
-            </div>
-            <div className="vx-profile-row">
-              <span>{t('detail.fields.status')}</span>
-              <strong>{selected.status === 'active' ? t('status.active') : t('status.disabled')}</strong>
-            </div>
-            <div className="vx-profile-row">
-              <span>{t('detail.fields.description')}</span>
-              <strong>{selected.description || '--'}</strong>
+          </div>
+        </div>
+
+        <div className="vx-roles-toolbar">
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={t('toolbar.searchPlaceholder')}
+            className="vx-search-input vx-roles-toolbar__search"
+            aria-label={t('toolbar.searchAriaLabel')}
+          />
+          <div className="vx-roles-toolbar__filters">
+            <span className="vx-roles-toolbar__count" title={countTitle}>
+              {t('toolbar.count', { count: filtered.length })}
+            </span>
+            <div className="vx-segmented-control" role="tablist" aria-label={t('toolbar.filterAriaLabel')}>
+              {roleFilters.map((item) => (
+                <button
+                  key={item.value}
+                  type="button"
+                  role="tab"
+                  title={item.label}
+                  aria-selected={filter === item.value}
+                  className={
+                    filter === item.value
+                      ? 'vx-segmented-control__item vx-segmented-control__item--active'
+                      : 'vx-segmented-control__item'
+                  }
+                  onClick={() => setFilter(item.value)}
+                >
+                  {item.label}
+                </button>
+              ))}
             </div>
           </div>
+        </div>
 
-          <div className="vx-profile-group">
-            <header className="vx-profile-group__header">
-              <div>
-                <h2>{t('detail.permissionsTitle')}</h2>
-                <p>{t('detail.permissionsDescription')}</p>
-              </div>
-            </header>
-            <div className="vx-role-permissions">
-              {selected.permissions.length ? (
-                selected.permissions.map((permission) => <span key={permission.id}>{permission.permissionCode}</span>)
-              ) : (
-                <span>{t('detail.noPermissions')}</span>
-              )}
-            </div>
+        <div className="vx-role-list">
+          <div className="vx-role-list__header">
+            <label className="vx-role-select vx-role-select--header" title={t('list.selectPage')}>
+              <input
+                type="checkbox"
+                checked={isPageSelected}
+                aria-label={t('list.selectPage')}
+                onChange={(event) => togglePageSelection(event.target.checked)}
+              />
+            </label>
+            <span>{t('list.columns.name')}</span>
+            <span>{t('list.columns.code')}</span>
+            <span>{t('list.columns.status')}</span>
+            <span>{t('list.columns.type')}</span>
+            <span>{t('list.columns.permissions')}</span>
+            <span>{t('list.columns.description')}</span>
+            <span />
           </div>
-        </PageSection>
-      ) : null}
 
-      {dialogMode ? (
-        <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={dialogMode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}>
-          <div className="vx-profile-dialog__backdrop" onClick={() => setDialogMode(null)} />
-          <form className="vx-profile-dialog__content" onSubmit={(event) => void submitRole(event)}>
-            <h3>{dialogMode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}</h3>
-            <Label>
-              {t('dialog.fields.code')}
-              <Input value={form.roleCode} disabled={dialogMode === 'edit'} onChange={(event) => setForm((old) => ({ ...old, roleCode: event.target.value }))} />
-            </Label>
-            <Label>
-              {t('dialog.fields.name')}
-              <Input value={form.roleName} onChange={(event) => setForm((old) => ({ ...old, roleName: event.target.value }))} />
-            </Label>
-            <Label>
-              {t('dialog.fields.description')}
-              <Input value={form.description} onChange={(event) => setForm((old) => ({ ...old, description: event.target.value }))} />
-            </Label>
-            <Label>
-              {t('dialog.fields.status')}
-              <select className="vx-input" value={form.status} onChange={(event) => setForm((old) => ({ ...old, status: event.target.value as 'active' | 'disabled' }))}>
-                <option value="active">{t('status.active')}</option>
-                <option value="disabled">{t('status.disabled')}</option>
-              </select>
-            </Label>
-            <div className="vx-profile-group">
-              <header className="vx-profile-group__header">
-                <div>
+          {pagedRoles.length ? (
+            pagedRoles.map((role) => {
+              const permissionCodes = rolePermissionSummary(role) || t('list.noPermissions');
+              const roleTitle = t('list.roleTitle', {
+                name: role.roleName,
+                code: role.roleCode,
+                status: role.status === 'active' ? t('status.active') : t('status.disabled'),
+                type: role.isSystem ? t('type.system') : t('type.custom'),
+                permissions: role.permissions.length,
+              });
+
+              return (
+                <div
+                  key={role.id}
+                  className={openMenuId === role.id ? 'vx-role-row vx-role-row--active' : 'vx-role-row'}
+                  title={roleTitle}
+                >
+                  <label className="vx-role-select" title={t('list.selectRole', { name: role.roleName })}>
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.has(role.id)}
+                      aria-label={t('list.selectRole', { name: role.roleName })}
+                      onChange={(event) => toggleRoleSelection(role.id, event.target.checked)}
+                    />
+                  </label>
+                  <div className="vx-role-row__identity">
+                    <span
+                      className={role.isSystem ? 'vx-role-avatar vx-role-avatar--system' : 'vx-role-avatar vx-role-avatar--custom'}
+                      role="img"
+                      aria-label={role.isSystem ? t('type.systemIcon') : t('type.customIcon')}
+                      title={role.isSystem ? t('type.systemIcon') : t('type.customIcon')}
+                    >
+                      <Icon name={role.isSystem ? 'shield-check' : 'users'} size="xs" fallback="placeholder" />
+                    </span>
+                    <div className="vx-role-row__identity-copy">
+                      <strong>{role.roleName}</strong>
+                      <p title={role.description || t('list.noDescription')}>{role.description || t('list.noDescription')}</p>
+                    </div>
+                  </div>
+                  <span className="vx-role-row__muted" title={role.roleCode}>
+                    {role.roleCode}
+                  </span>
+                  <span>
+                    <Badge
+                      className={role.status === 'active' ? 'vx-role-status vx-role-status--active' : 'vx-role-status vx-role-status--disabled'}
+                      title={role.status === 'active' ? t('status.active') : t('status.disabled')}
+                    >
+                      {role.status === 'active' ? t('status.active') : t('status.disabled')}
+                    </Badge>
+                  </span>
+                  <span className="vx-role-row__muted">{role.isSystem ? t('type.system') : t('type.custom')}</span>
+                  <span className="vx-role-row__text" title={permissionCodes}>
+                    {t('list.permissionCount', { count: role.permissions.length })}
+                  </span>
+                  <span className="vx-role-row__muted" title={role.description || t('list.noDescription')}>
+                    {role.description || t('list.noDescription')}
+                  </span>
+                  <div
+                    className="vx-role-row__menu"
+                    onBlur={(event) => {
+                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                        setOpenMenuId(null);
+                      }
+                    }}
+                  >
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      aria-label={t('actions.menuLabel', { name: role.roleName })}
+                      title={t('actions.menuLabel', { name: role.roleName })}
+                      aria-haspopup="menu"
+                      aria-expanded={openMenuId === role.id}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setOpenMenuId((current) => (current === role.id ? null : role.id));
+                      }}
+                    >
+                      <Icon name="more-vertical" size="xs" fallback="placeholder" />
+                    </Button>
+                    {openMenuId === role.id ? (
+                      <div className="vx-role-actions-menu" role="menu">
+                        <button type="button" role="menuitem" onClick={() => openEditDialog(role)}>
+                          <Icon name="edit" size="xs" fallback="placeholder" />
+                          <span>{t('actions.edit')}</span>
+                        </button>
+                        <button
+                          type="button"
+                          role="menuitem"
+                          disabled={submitting}
+                          onClick={() => void handleToggleRoleStatus(role)}
+                        >
+                          <Icon name="shield-check" size="xs" fallback="placeholder" />
+                          <span>{role.status === 'active' ? t('actions.disable') : t('actions.enable')}</span>
+                        </button>
+                        {!role.isSystem ? (
+                          <button
+                            type="button"
+                            role="menuitem"
+                            className="vx-role-actions-menu__danger"
+                            disabled={submitting}
+                            onClick={() => openDeleteDialog(role)}
+                          >
+                            <Icon name="trash" size="xs" fallback="placeholder" />
+                            <span>{t('actions.delete')}</span>
+                          </button>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <EmptyState
+              title={loading ? t('empty.loadingTitle') : t('empty.title')}
+              description={loading ? t('empty.loadingDescription') : t('empty.description')}
+              action={
+                <ActionButton
+                  variant="outline"
+                  icon="x"
+                  onClick={() => {
+                    setQuery('');
+                    setFilter('all');
+                  }}
+                >
+                  {t('empty.resetFilters')}
+                </ActionButton>
+              }
+            />
+          )}
+        </div>
+
+        <div className="vx-roles-pagination">
+          <div className="vx-roles-pagination__actions">
+            <span>{t('pagination.summary', { page: safeCurrentPage, totalPages, total: filtered.length })}</span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={safeCurrentPage <= 1}
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+            >
+              {t('pagination.previous')}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={safeCurrentPage >= totalPages}
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+            >
+              {t('pagination.next')}
+            </Button>
+          </div>
+        </div>
+
+        {dialogMode ? (
+          <div
+            className="vx-profile-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label={dialogMode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}
+          >
+            <div className="vx-profile-dialog__backdrop" onClick={() => setDialogMode(null)} />
+            <form className="vx-profile-dialog__content" onSubmit={(event) => void submitRole(event)}>
+              <h3>{dialogMode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}</h3>
+              <Label>
+                {t('dialog.fields.code')}
+                <Input
+                  value={form.roleCode}
+                  disabled={dialogMode === 'edit'}
+                  onChange={(event) => setForm((old) => ({ ...old, roleCode: event.target.value }))}
+                  required
+                />
+              </Label>
+              <Label>
+                {t('dialog.fields.name')}
+                <Input
+                  value={form.roleName}
+                  onChange={(event) => setForm((old) => ({ ...old, roleName: event.target.value }))}
+                  required
+                />
+              </Label>
+              <Label>
+                {t('dialog.fields.description')}
+                <Input
+                  value={form.description}
+                  onChange={(event) => setForm((old) => ({ ...old, description: event.target.value }))}
+                />
+              </Label>
+              <Label>
+                {t('dialog.fields.status')}
+                <select
+                  className="vx-input"
+                  value={form.status}
+                  onChange={(event) => setForm((old) => ({ ...old, status: event.target.value as 'active' | 'disabled' }))}
+                >
+                  <option value="active">{t('status.active')}</option>
+                  <option value="disabled">{t('status.disabled')}</option>
+                </select>
+              </Label>
+              <div className="vx-role-permission-picker">
+                <header>
                   <h2>{t('dialog.permissionsTitle')}</h2>
                   <p>{t('dialog.permissionsDescription')}</p>
+                </header>
+                <div className="vx-role-permission-picker__list">
+                  {permissions.map((permission) => (
+                    <button
+                      key={permission.id}
+                      type="button"
+                      title={permission.description ?? permission.permissionName}
+                      className={
+                        form.permissionIds.includes(permission.id)
+                          ? 'vx-role-permission-chip vx-role-permission-chip--active'
+                          : 'vx-role-permission-chip'
+                      }
+                      onClick={() => togglePermission(permission.id)}
+                    >
+                      {permission.permissionCode}
+                    </button>
+                  ))}
                 </div>
-              </header>
-              <div className="vx-role-permissions">
-                {permissions.map((permission) => (
-                  <button
-                    key={permission.id}
-                    type="button"
-                    className={form.permissionIds.includes(permission.id) ? 'vx-tab vx-tab--active' : 'vx-tab'}
-                    onClick={() => togglePermission(permission.id)}
-                  >
-                    {permission.permissionCode}
-                  </button>
-                ))}
               </div>
-            </div>
-            <div className="vx-profile-dialog__actions">
-              <Button variant="outline" onClick={() => setDialogMode(null)}>
-                {t('dialog.cancel')}
-              </Button>
-              <Button type="submit" disabled={submitting}>
-                {dialogMode === 'create' ? t('dialog.create') : t('dialog.save')}
-              </Button>
-            </div>
-          </form>
-        </div>
-      ) : null}
+              <div className="vx-profile-dialog__actions">
+                <Button variant="outline" onClick={() => setDialogMode(null)}>
+                  {t('dialog.cancel')}
+                </Button>
+                <Button type="submit" disabled={submitting}>
+                  {dialogMode === 'create' ? t('dialog.create') : t('dialog.save')}
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : null}
+
+        {deleteOpen && selected ? (
+          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialog.deleteTitle')}>
+            <div className="vx-profile-dialog__backdrop" onClick={() => setDeleteOpen(false)} />
+            <form
+              className="vx-profile-dialog__content"
+              onSubmit={(event) => {
+                event.preventDefault();
+                void handleDeleteRole();
+              }}
+            >
+              <h3>{t('dialog.deleteTitle')}</h3>
+              <p className="vx-profile-dialog__hint">{t('dialog.deleteDescription', { name: selected.roleName })}</p>
+              <div className="vx-profile-dialog__actions">
+                <Button variant="outline" onClick={() => setDeleteOpen(false)}>
+                  {t('dialog.cancel')}
+                </Button>
+                <Button type="submit" disabled={submitting}>
+                  {t('dialog.delete')}
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : null}
+
+        {bulkDeleteOpen ? (
+          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialog.bulkDeleteTitle')}>
+            <div className="vx-profile-dialog__backdrop" onClick={() => setBulkDeleteOpen(false)} />
+            <form
+              className="vx-profile-dialog__content"
+              onSubmit={(event) => {
+                event.preventDefault();
+                void handleBulkDeleteRoles();
+              }}
+            >
+              <h3>{t('dialog.bulkDeleteTitle')}</h3>
+              <p className="vx-profile-dialog__hint">{t('dialog.bulkDeleteDescription', { count: bulkDeleteCount })}</p>
+              <div className="vx-profile-dialog__actions">
+                <Button variant="outline" onClick={() => setBulkDeleteOpen(false)}>
+                  {t('dialog.cancel')}
+                </Button>
+                <Button type="submit" disabled={submitting || !bulkDeleteCount}>
+                  {t('dialog.delete')}
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

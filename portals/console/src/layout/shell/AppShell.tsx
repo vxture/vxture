@@ -16,10 +16,10 @@ const ASSISTANT_MIN_WIDTH = 380;
 const ASSISTANT_DEFAULT_WIDTH = 420;
 const ASSISTANT_MAX_WIDTH = 720;
 const SHELL_HORIZONTAL_PADDING = 32;
-const SHELL_BODY_GAPS = 40;
+const SHELL_BODY_GAPS = 0;
 const CONTENT_MIN_WIDTH = 360;
-const SIDEBAR_EXPANDED_WIDTH = 232;
-const SIDEBAR_COLLAPSED_WIDTH_REM = 3;
+const SIDEBAR_EXPANDED_WIDTH = 252;
+const SIDEBAR_COLLAPSED_WIDTH_REM = 4;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);

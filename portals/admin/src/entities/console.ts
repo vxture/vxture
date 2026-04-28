@@ -616,6 +616,450 @@ export interface TenantOperationRecord {
   tickets: TenantOperationTicket[];
 }
 
+export type SubscriptionOperationStatus = 'trial' | 'active' | 'expiring' | 'overdue' | 'suspended' | 'cancelled';
+export type SubscriptionOperationCycle = 'monthly' | 'yearly' | 'once';
+export type SubscriptionOperationQuotaRisk = 'normal' | 'warning' | 'danger';
+export type SubscriptionOperationAction = 'renew' | 'suspend' | 'resume' | 'cancel';
+export type SubscriptionSolutionAssociationSource = 'industry_rule' | 'legacy_plan';
+
+export interface SubscriptionOperationQuotaSnapshot {
+  maxUsers: number;
+  periodTokens: number;
+  usedTokens: number;
+  usageRate: number;
+  quotaCycle: SubscriptionOperationCycle;
+  allowedModelCount: number;
+  allowCustomModel: boolean;
+  risk: SubscriptionOperationQuotaRisk;
+}
+
+export interface SubscriptionSolutionAssociation {
+  solutionCode: string | null;
+  solutionName: string;
+  tierCode: ProductSolutionTierCode;
+  tierName: string;
+  source: SubscriptionSolutionAssociationSource;
+  note: string;
+}
+
+export interface SubscriptionEntitlementSnapshot {
+  productCode: string;
+  productName: string;
+  productType: ProductSolutionCapabilityType;
+  source: ProductSolutionCapabilitySource;
+  included: boolean;
+  quotaSummary: string;
+  note: string;
+}
+
+export interface SubscriptionOperationEvent {
+  id: string;
+  title: string;
+  description: string;
+  actor: string;
+  at: string;
+  tone: 'success' | 'warning' | 'danger' | 'neutral';
+}
+
+export interface SubscriptionOperationRecord {
+  id: string;
+  subscriptionCode: string;
+  orderNo: string | null;
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  tenantStatus: TenantOperationStatus;
+  region: string;
+  industry: string;
+  solutionCode: string | null;
+  solutionName: string;
+  servicePlanCode: string;
+  servicePlanName: string;
+  tierName: string;
+  status: SubscriptionOperationStatus;
+  rawStatus: string;
+  cycleType: SubscriptionOperationCycle;
+  autoRenew: boolean;
+  currency: string;
+  payAmount: number;
+  monthlyRevenue: number;
+  quota: SubscriptionOperationQuotaSnapshot;
+  operatorName: string;
+  operationHint: string;
+  startAt: string;
+  endAt: string | null;
+  trialEndAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SubscriptionOperationDetailRecord extends SubscriptionOperationRecord {
+  solutionAssociation: SubscriptionSolutionAssociation;
+  entitlementSnapshot: SubscriptionEntitlementSnapshot[];
+  operationTimeline: SubscriptionOperationEvent[];
+}
+
+export type OrderOperationStatus = 'pending' | 'pending_verify' | 'confirmed' | 'overdue' | 'closed' | 'abnormal';
+export type OrderPaymentStatus =
+  | 'not_required'
+  | 'unpaid'
+  | 'pending'
+  | 'pending_verify'
+  | 'paid'
+  | 'partial'
+  | 'failed'
+  | 'closed'
+  | 'refunding';
+export type OrderPaySource = 'online' | 'offline' | 'none';
+export type OrderOfflinePaymentType = 'bank_transfer' | 'cash' | 'other';
+
+export interface OrderInvoiceItemRecord {
+  id: string;
+  itemName: string;
+  itemType: string;
+  itemUnit: string | null;
+  quantity: number;
+  unitPrice: number;
+  totalAmount: number;
+  remark: string | null;
+}
+
+export interface OrderPaymentRecord {
+  id: string;
+  paymentNo: string;
+  paySource: OrderPaySource;
+  payMethod: string | null;
+  offlinePayType: OrderOfflinePaymentType | null;
+  offlinePayerName: string | null;
+  paidAmount: number;
+  currency: string;
+  paymentStatus: OrderPaymentStatus;
+  paidAt: string | null;
+  operatorName: string;
+  remark: string | null;
+}
+
+export interface OrderOperationEvent {
+  id: string;
+  title: string;
+  description: string;
+  actor: string;
+  at: string;
+  tone: 'success' | 'warning' | 'danger' | 'neutral';
+}
+
+export interface OrderOperationRecord {
+  id: string;
+  orderNo: string;
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  region: string;
+  industry: string;
+  solutionCode: string | null;
+  solutionName: string;
+  servicePlanCode: string;
+  servicePlanName: string;
+  tierName: string;
+  subscriptionId: string;
+  subscriptionStatus: SubscriptionOperationStatus;
+  cycleType: SubscriptionOperationCycle;
+  orderStatus: OrderOperationStatus;
+  paymentStatus: OrderPaymentStatus;
+  paySource: OrderPaySource;
+  payMethod: string | null;
+  billId: string | null;
+  billNo: string | null;
+  billStatus: string | null;
+  paymentId: string | null;
+  paymentNo: string | null;
+  amount: number;
+  paidAmount: number;
+  currency: string;
+  operatorName: string;
+  operationHint: string;
+  createdAt: string;
+  confirmedAt: string | null;
+  updatedAt: string;
+}
+
+export interface OrderOperationDetailRecord extends OrderOperationRecord {
+  invoiceItems: OrderInvoiceItemRecord[];
+  paymentRecords: OrderPaymentRecord[];
+  operationTimeline: OrderOperationEvent[];
+}
+
+export type PaymentReconciliationStatus = 'normal' | 'pending_verify' | 'partial' | 'overpaid' | 'bill_cancelled' | 'failed' | 'unlinked';
+
+export interface PaymentOperationRecord {
+  id: string;
+  paymentNo: string;
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  region: string;
+  industry: string;
+  billId: string | null;
+  billNo: string | null;
+  billStatus: BillingBillStatus | null;
+  billType: BillingBillType | null;
+  billPayableAmount: number;
+  billPaidAmount: number;
+  subscriptionId: string | null;
+  orderNo: string | null;
+  servicePlanName: string | null;
+  tierName: string | null;
+  paySource: OrderPaySource;
+  payChannel: string | null;
+  payMethod: string | null;
+  offlinePayType: OrderOfflinePaymentType | null;
+  offlinePayerName: string | null;
+  totalAmount: number;
+  paidAmount: number;
+  currency: string;
+  paymentStatus: OrderPaymentStatus;
+  reconciliationStatus: PaymentReconciliationStatus;
+  transactionId: string | null;
+  channelOrderNo: string | null;
+  channelTransactionNo: string | null;
+  offlineEvidenceUrl: string | null;
+  statusMessage: string | null;
+  remark: string | null;
+  operatorName: string;
+  paidAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type UsageMeteringRisk = 'normal' | 'warning' | 'danger' | 'anomaly';
+
+export interface UsageMeteringRecord {
+  id: string;
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  region: string;
+  industry: string;
+  subscriptionId: string | null;
+  orderNo: string | null;
+  servicePlanName: string | null;
+  tierName: string | null;
+  productCode: string;
+  productName: string;
+  productType: string;
+  metricCode: string;
+  metricName: string;
+  metricUnit: string;
+  cycleMonth: string;
+  usedValue: number;
+  quotaValue: number;
+  usageRate: number;
+  requestCount: number;
+  inputTokens: number;
+  outputTokens: number;
+  risk: UsageMeteringRisk;
+  lastSyncedAt: string;
+  updatedAt: string;
+}
+
+export type PromotionOperationStatus = 'active' | 'scheduled' | 'expired' | 'paused';
+export type PromotionOperationType = 'discount' | 'coupon' | 'campaign';
+
+export interface PromotionOperationRecord {
+  id: string;
+  promotionCode: string;
+  promotionName: string;
+  promotionType: PromotionOperationType;
+  status: PromotionOperationStatus;
+  scopeLabel: string;
+  planCode: string | null;
+  planName: string | null;
+  tierName: string | null;
+  discountLabel: string;
+  currency: string;
+  originalPrice: number;
+  salePrice: number;
+  discountAmount: number;
+  redemptionCount: number;
+  usedAmount: number;
+  tenantCount: number;
+  startsAt: string;
+  endsAt: string | null;
+  ownerName: string;
+  description: string;
+  updatedAt: string;
+}
+
+export type PromotionRedemptionStatus = 'applied' | 'redeemed' | 'reversed';
+
+export interface PromotionRedemptionRecord {
+  id: string;
+  redemptionNo: string;
+  promotionCode: string;
+  promotionName: string;
+  status: PromotionRedemptionStatus;
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  orderNo: string | null;
+  billId: string;
+  billNo: string;
+  billStatus: BillingBillStatus;
+  servicePlanName: string | null;
+  tierName: string | null;
+  currency: string;
+  orderAmount: number;
+  discountAmount: number;
+  payableAmount: number;
+  operatorName: string;
+  redeemedAt: string;
+  remark: string | null;
+}
+
+export interface CommerceOverviewMetric {
+  key: string;
+  label: string;
+  value: number;
+  amount?: number;
+  currency?: string;
+  tone: 'blue' | 'green' | 'amber' | 'rose';
+  hint: string;
+}
+
+export interface CommerceOverviewRiskItem {
+  id: string;
+  title: string;
+  detail: string;
+  tone: 'green' | 'amber' | 'rose';
+  href: string;
+}
+
+export interface CommerceOverviewPlanRevenue {
+  planName: string;
+  tierName: string;
+  subscriptionCount: number;
+  revenueAmount: number;
+  paidAmount: number;
+  discountAmount: number;
+  currency: string;
+}
+
+export interface CommerceOverviewSnapshot {
+  generatedAt: string;
+  metrics: CommerceOverviewMetric[];
+  risks: CommerceOverviewRiskItem[];
+  planRevenue: CommerceOverviewPlanRevenue[];
+}
+
+export type BillingBillStatus = 'unpaid' | 'paying' | 'paid' | 'partial' | 'cancelled' | 'overdue';
+export type BillingBillType = 'normal' | 'adjust' | 'supplement' | 'prepaid';
+export type BillingBillAction = 'cancel' | 'discount' | 'mark_overdue' | 'create_adjustment' | 'create_supplement';
+export type BillingInvoiceStatus = 'none' | 'applying' | 'auditing' | 'issued' | 'sending' | 'finished' | 'rejected' | 'red';
+export type BillingInvoiceType = 'special_vat' | 'normal_vat' | 'electronic' | 'paper' | 'other';
+export type BillingInvoiceTaxType = 'enterprise' | 'individual' | 'government' | 'other';
+export type BillingInvoiceReceiptAction = 'update_shipping' | 'finish' | 'red';
+
+export interface BillingInvoiceReceiptRecord {
+  id: string;
+  billId?: string;
+  invoiceNo: string;
+  invoiceType: BillingInvoiceType;
+  invoiceTaxType: BillingInvoiceTaxType;
+  invoiceTitle: string;
+  taxNo: string | null;
+  invoiceAmount: number;
+  taxAmount: number;
+  currency: string;
+  invoiceStatus: BillingInvoiceStatus;
+  statusRemark: string | null;
+  invoiceCode: string | null;
+  invoiceElectronicNo: string | null;
+  invoiceFileUrl: string | null;
+  issuedAt: string | null;
+  expressCompany: string | null;
+  expressNo: string | null;
+  sendAt: string | null;
+  auditorName: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BillingInvoiceLedgerRecord extends BillingInvoiceReceiptRecord {
+  billId: string;
+  billNo: string;
+  billStatus: BillingBillStatus;
+  billType: BillingBillType;
+  billPayableAmount: number;
+  billPaidAmount: number;
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  region: string;
+  industry: string;
+  subscriptionId: string | null;
+  orderNo: string | null;
+  servicePlanName: string | null;
+  tierName: string | null;
+  sourceLabel: 'offline';
+}
+
+export interface BillingOperationEvent {
+  id: string;
+  title: string;
+  description: string;
+  actor: string;
+  at: string;
+  tone: 'success' | 'warning' | 'danger' | 'neutral';
+}
+
+export interface BillingRecord {
+  id: string;
+  billNo: string;
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  region: string;
+  industry: string;
+  subscriptionId: string | null;
+  orderNo: string | null;
+  servicePlanName: string | null;
+  tierName: string | null;
+  billCycle: string;
+  cycleStartDate: string;
+  cycleEndDate: string;
+  billStatus: BillingBillStatus;
+  billType: BillingBillType;
+  invoiceStatus: BillingInvoiceStatus;
+  invoiceNo: string | null;
+  totalAmount: number;
+  discountAmount: number;
+  payableAmount: number;
+  paidAmount: number;
+  invoicedAmount: number;
+  currency: string;
+  paymentMethod: string | null;
+  transactionNo: string | null;
+  operationRemark: string | null;
+  operatorName: string;
+  paidAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BillingDetailRecord extends BillingRecord {
+  invoiceItems: OrderInvoiceItemRecord[];
+  paymentRecords: OrderPaymentRecord[];
+  invoiceReceipts: BillingInvoiceReceiptRecord[];
+  operationTimeline: BillingOperationEvent[];
+}
+
 export type AccountOperationStatus = 'active' | 'invited' | 'locked' | 'disabled';
 
 export interface AccountTenantBinding {

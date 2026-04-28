@@ -99,9 +99,15 @@ export const adminNavigationSections: AdminNavigationSection[] = [
     title: '商业与财务',
     items: [
       {
+        href: '/commerce-overview',
+        label: '商业财务概览',
+        description: '聚合订阅、订单、收款、账单、发票、用量和优惠的运营指标与风险快照。',
+        icon: 'chart-bar',
+      },
+      {
         href: '/subscriptions',
-        label: '订阅管理',
-        description: '管理租户与套餐的订阅关系，处理试用、生效、到期和取消。',
+        label: '租户订阅运营',
+        description: '运营侧管理租户服务权益实例，处理试用转正、续期、暂停、取消和配额风险。',
         icon: 'star',
       },
       {
@@ -111,10 +117,22 @@ export const adminNavigationSections: AdminNavigationSection[] = [
         icon: 'table',
       },
       {
+        href: '/payments',
+        label: '收款管理',
+        description: '收款台账与对账视角，查看线下/线上收款、账单关联和需关注流水。',
+        icon: 'check',
+      },
+      {
         href: '/billing',
-        label: '账单发票',
-        description: '管理账单生成、发票申请审核、对账和应收确认。',
+        label: '账单管理',
+        description: '管理账单生成、应收确认、异常处理和线下发票登记入口。',
         icon: 'key',
+      },
+      {
+        href: '/invoices',
+        label: '发票管理',
+        description: '线下发票台账，跟踪开票登记、寄送交付、红冲作废和账单关联。',
+        icon: 'table',
       },
       {
         href: '/usage-metering',

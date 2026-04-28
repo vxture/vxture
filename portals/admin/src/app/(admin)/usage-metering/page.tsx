@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { UsageMeteringPage } from '@/modules/commercial/UsageMeteringPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/usage-metering" />;
+  return <UsageMeteringPage />;
 }

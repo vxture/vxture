@@ -366,6 +366,26 @@ export class SessionAggregator {
     return this.updateMember(accountId, tenantId, memberId, { status: 'banned' });
   }
 
+  async resetMemberPassword(
+    accountId: string,
+    tenantId: string | undefined,
+    memberId: string,
+    nextPassword: string,
+  ): Promise<boolean> {
+    const tenantContext = await this.getTenantContext(accountId, tenantId);
+    if (tenantContext.mode === 'platform') {
+      return false;
+    }
+
+    const member = await this.organizationReadService.getTenantMember(tenantContext.id, memberId);
+    if (!member) {
+      return false;
+    }
+
+    await this.accountAuthService.resetPassword(member.accountId, nextPassword);
+    return true;
+  }
+
   async removeMember(accountId: string, tenantId: string | undefined, memberId: string): Promise<boolean> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
     if (tenantContext.mode === 'platform') {
@@ -390,6 +410,7 @@ function mapMemberRecord(member: {
   id: string;
   accountId: string;
   username: string;
+  avatarUrl: string | null;
   email: string | null;
   phone: string | null;
   nickname: string | null;
@@ -405,6 +426,8 @@ function mapMemberRecord(member: {
     id: member.id,
     accountId: member.accountId,
     name: member.nickname ?? member.username,
+    username: member.username,
+    avatarUrl: member.avatarUrl,
     email: member.email ?? `${member.username}@local.vxture`,
     phone: member.phone,
     role: member.roleName ?? member.roleCode ?? 'Member',

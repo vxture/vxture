@@ -33,7 +33,7 @@ const doubaoSchema = z.object({
    * Default model ID (Doubao ARK model endpoint ID)
    * Different tenants may have different endpoints, this is the platform-level default
    */
-  DOUBAO_DEFAULT_MODEL: z.string().default('doubao-pro-32k'),
+  DOUBAO_DEFAULT_MODEL: z.string().default('doubao-seed-2-0-lite-260215'),
 
   /** Embedding model ID */
   DOUBAO_EMBEDDING_MODEL: z.string().default('doubao-embedding'),

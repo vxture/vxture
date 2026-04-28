@@ -1,27 +1,9 @@
 {
   "recommendations": [
-    "anthropic.claude-code",
-    "bradlc.vscode-tailwindcss",
-    "christian-kohler.path-intellisense",
-    "dbaeumer.vscode-eslint",
     "dsznajder.es7-react-js-snippets",
-    "eamodio.gitlens",
-    "esbenp.prettier-vscode",
-    "github.copilot-chat",
     "github.vscode-pull-request-github",
-    "mikestead.dotenv",
     "ms-python.python",
-    "ms-python.vscode-pylance",
-    "ms-python.debugpy",
-    "ms-python.vscode-python-envs",
-    "ms-vscode.vscode-typescript-next",
-    "pkief.material-icon-theme",
-    "pulkitgangwar.nextjs-snippets",
-    "sonarsource.sonarlint-vscode",
-    "streetsidesoftware.code-spell-checker",
-    "usernamehw.errorlens",
-    "wix.vscode-import-cost",
-    "yoavbls.pretty-ts-errors"
+    "sonarsource.sonarlint-vscode"
   ],
   "unwantedRecommendations": []
 }

@@ -3,10 +3,25 @@ import type {
   Capability,
   AdminAssistantChatMessage,
   AdminAssistantChatResponse,
+  BillingBillAction,
   AiModelGrantRecord,
   AiModelRecord,
+  BillingDetailRecord,
+  BillingInvoiceLedgerRecord,
+  BillingInvoiceReceiptAction,
+  BillingInvoiceStatus,
+  BillingInvoiceTaxType,
+  BillingInvoiceType,
+  BillingRecord,
+  CommerceOverviewSnapshot,
   ConsoleUser,
   DevServiceSnapshot,
+  OrderOfflinePaymentType,
+  OrderOperationDetailRecord,
+  OrderOperationRecord,
+  PaymentOperationRecord,
+  PromotionOperationRecord,
+  PromotionRedemptionRecord,
   ProductAgentRecord,
   ProductCapabilityRecord,
   ProductModelPolicyRecord,
@@ -17,7 +32,11 @@ import type {
   ProductSolutionRecord,
   PlatformRoleRecord,
   SessionSnapshot,
+  SubscriptionOperationAction,
+  SubscriptionOperationDetailRecord,
+  SubscriptionOperationRecord,
   TenantOperationRecord,
+  UsageMeteringRecord,
 } from '@/entities/console';
 import {
   aiModelGrantRecords,
@@ -152,6 +171,237 @@ export async function fetchProductModelPolicies(): Promise<ProductModelPolicyRec
 
 export async function fetchTenantOperations(): Promise<TenantOperationRecord[]> {
   return readJson<TenantOperationRecord[]>('/api/tenants', tenantOperationRecords);
+}
+
+export async function fetchSubscriptionOperations(): Promise<SubscriptionOperationRecord[]> {
+  return readJson<SubscriptionOperationRecord[]>('/api/subscriptions', []);
+}
+
+export async function fetchSubscriptionOperation(subscriptionId: string): Promise<SubscriptionOperationDetailRecord | null> {
+  return readJson<SubscriptionOperationDetailRecord | null>(`/api/subscriptions/${encodeURIComponent(subscriptionId)}`, null);
+}
+
+export async function fetchOrderOperations(): Promise<OrderOperationRecord[]> {
+  return readJson<OrderOperationRecord[]>('/api/orders', []);
+}
+
+export async function fetchOrderOperation(orderId: string): Promise<OrderOperationDetailRecord | null> {
+  return readJson<OrderOperationDetailRecord | null>(`/api/orders/${encodeURIComponent(orderId)}`, null);
+}
+
+export async function fetchPaymentOperations(): Promise<PaymentOperationRecord[]> {
+  return readJson<PaymentOperationRecord[]>('/api/payments', []);
+}
+
+export async function fetchUsageMeteringRecords(): Promise<UsageMeteringRecord[]> {
+  return readJson<UsageMeteringRecord[]>('/api/commercial/usage-metering', []);
+}
+
+export async function fetchPromotionOperations(): Promise<PromotionOperationRecord[]> {
+  return readJson<PromotionOperationRecord[]>('/api/commercial/promotions', []);
+}
+
+export async function fetchPromotionRedemptionRecords(): Promise<PromotionRedemptionRecord[]> {
+  return readJson<PromotionRedemptionRecord[]>('/api/commercial/promotion-redemptions', []);
+}
+
+export async function fetchCommerceOverview(): Promise<CommerceOverviewSnapshot | null> {
+  return readJson<CommerceOverviewSnapshot | null>('/api/commercial/overview', null);
+}
+
+export async function confirmOrderOfflinePayment(
+  orderId: string,
+  payload: {
+    paidAmount: number;
+    offlinePayType: OrderOfflinePaymentType;
+    payerName: string;
+    paidAt: string;
+    transactionNo?: string | null;
+    evidenceUrl?: string | null;
+    reason: string;
+  },
+): Promise<OrderOperationDetailRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/orders/${encodeURIComponent(orderId)}/offline-payment-confirm`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let message = 'Order offline payment confirmation failed';
+
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch {
+      // Keep a typed error for non-JSON proxy responses.
+    }
+
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as OrderOperationDetailRecord;
+}
+
+export async function fetchBillingRecords(): Promise<BillingRecord[]> {
+  return readJson<BillingRecord[]>('/api/billing', []);
+}
+
+export async function fetchBillingRecord(billId: string): Promise<BillingDetailRecord | null> {
+  return readJson<BillingDetailRecord | null>(`/api/billing/${encodeURIComponent(billId)}`, null);
+}
+
+export async function fetchInvoiceLedgerRecords(): Promise<BillingInvoiceLedgerRecord[]> {
+  return readJson<BillingInvoiceLedgerRecord[]>('/api/invoices', []);
+}
+
+export async function syncOfflineInvoice(
+  billId: string,
+  payload: {
+    invoiceNo: string;
+    invoiceType: BillingInvoiceType;
+    invoiceTaxType: BillingInvoiceTaxType;
+    invoiceTitle: string;
+    taxNo?: string | null;
+    invoiceAmount: number;
+    taxAmount?: number | null;
+    invoiceStatus: Extract<BillingInvoiceStatus, 'issued' | 'sending' | 'finished'>;
+    statusRemark: string;
+    invoiceCode?: string | null;
+    invoiceElectronicNo?: string | null;
+    invoiceFileUrl?: string | null;
+    issuedAt: string;
+    expressCompany?: string | null;
+    expressNo?: string | null;
+    sendAt?: string | null;
+  },
+): Promise<BillingDetailRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/billing/${encodeURIComponent(billId)}/offline-invoice-sync`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let message = 'Offline invoice sync failed';
+
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch {
+      // Keep a typed error for non-JSON proxy responses.
+    }
+
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as BillingDetailRecord;
+}
+
+export async function submitBillingInvoiceReceiptAction(
+  billId: string,
+  receiptId: string,
+  payload: {
+    action: BillingInvoiceReceiptAction;
+    statusRemark: string;
+    expressCompany?: string | null;
+    expressNo?: string | null;
+    sendAt?: string | null;
+  },
+): Promise<BillingDetailRecord> {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/billing/${encodeURIComponent(billId)}/invoice-receipts/${encodeURIComponent(receiptId)}/actions`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!response.ok) {
+    let message = 'Billing invoice receipt action failed';
+
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch {
+      // Keep a typed error for non-JSON proxy responses.
+    }
+
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as BillingDetailRecord;
+}
+
+export async function submitBillingBillAction(
+  billId: string,
+  payload: {
+    action: BillingBillAction;
+    reason: string;
+    discountAmount?: number | null;
+    amount?: number | null;
+    itemName?: string | null;
+    cycleStartDate?: string | null;
+    cycleEndDate?: string | null;
+  },
+): Promise<BillingDetailRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/billing/${encodeURIComponent(billId)}/actions`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let message = 'Billing bill action failed';
+
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch {
+      // Keep a typed error for non-JSON proxy responses.
+    }
+
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as BillingDetailRecord;
+}
+
+export async function submitSubscriptionOperation(
+  subscriptionId: string,
+  payload: { action: SubscriptionOperationAction; reason: string },
+): Promise<SubscriptionOperationDetailRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/subscriptions/${encodeURIComponent(subscriptionId)}/actions`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let message = 'Subscription operation failed';
+
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch {
+      // Preserve a useful typed error even when a proxy returns non-JSON.
+    }
+
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as SubscriptionOperationDetailRecord;
 }
 
 export async function fetchAccountOperations(): Promise<AccountOperationRecord[]> {

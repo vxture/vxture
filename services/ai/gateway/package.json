@@ -1,0 +1,38 @@
+{
+  "name": "@vxture/service-ai-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "description": "Vxture AI Gateway - model registry, routing, quota and metering",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/main.cjs --tsconfig=tsconfig.json --external:@nestjs/websockets/socket-module --external:@nestjs/microservices --external:@nestjs/microservices/microservices-module --external:@prisma/client",
+    "dev": "pnpm run build && node dist/main.cjs",
+    "start": "node dist/main.cjs",
+    "type-check": "tsc --noEmit",
+    "lint": "echo \"No lint yet\"",
+    "lint:fix": "echo \"No lint:fix yet\"",
+    "db:generate": "prisma generate --schema prisma/schema.prisma",
+    "db:migrate": "node scripts/prisma-with-root-env.mjs migrate dev --schema prisma/schema.prisma",
+    "db:deploy": "node scripts/prisma-with-root-env.mjs migrate deploy --schema prisma/schema.prisma",
+    "db:seed": "node scripts/prisma-with-root-env.mjs db execute --schema prisma/schema.prisma --file prisma/seeds/20260425_initial_platform_seed.sql"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
+    "@prisma/client": "^6.0.0",
+    "@vxture/core-config": "workspace:*",
+    "@vxture/shared": "workspace:*",
+    "reflect-metadata": "^0.2.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.4",
+    "prisma": "^6.0.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

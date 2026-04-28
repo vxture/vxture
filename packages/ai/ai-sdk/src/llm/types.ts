@@ -25,13 +25,18 @@ export enum LLMModel {
 }
 
 /**
+ * Gateway 模型编码，支持平台预置枚举，也支持数据库注册的自定义模型编码
+ */
+export type LLMModelCode = LLMModel | string;
+
+/**
  * LLM 请求配置
  */
 export interface LLMConfig {
   /**
    * 模型名称
    */
-  model: LLMModel;
+  model: LLMModelCode;
 
   /**
    * 温度参数，控制输出的随机性

@@ -10,10 +10,16 @@ import { AiGatewayRouter } from './routers/ai-gateway.router';
 import { AccountsRouter } from './routers/accounts.router';
 import { AdminRolesRouter } from './routers/admin-roles.router';
 import { AssistantRouter } from './routers/assistant.router';
+import { BillingRouter } from './routers/billing.router';
 import { CapabilitiesRouter } from './routers/capabilities.router';
+import { CommercialRouter } from './routers/commercial.router';
 import { HealthRouter } from './routers/health.router';
+import { InvoicesRouter } from './routers/invoices.router';
 import { MeRouter } from './routers/me.router';
+import { OrdersRouter } from './routers/orders.router';
+import { PaymentsRouter } from './routers/payments.router';
 import { ProductsRouter } from './routers/products.router';
+import { SubscriptionRouter } from './routers/subscription.router';
 import { TenantsRouter } from './routers/tenants.router';
 
 @Module({
@@ -23,7 +29,24 @@ import { TenantsRouter } from './routers/tenants.router';
     }),
     JwtModule.register({}),
   ],
-  controllers: [HealthRouter, AuthRouter, MeRouter, CapabilitiesRouter, AiGatewayRouter, AccountsRouter, AdminRolesRouter, ProductsRouter, AssistantRouter, TenantsRouter],
+  controllers: [
+    HealthRouter,
+    AuthRouter,
+    MeRouter,
+    CapabilitiesRouter,
+    AiGatewayRouter,
+    AccountsRouter,
+    AdminRolesRouter,
+    OrdersRouter,
+    ProductsRouter,
+    SubscriptionRouter,
+    AssistantRouter,
+    BillingRouter,
+    CommercialRouter,
+    InvoicesRouter,
+    PaymentsRouter,
+    TenantsRouter,
+  ],
   providers: [PlatformAuthService, SessionAggregator],
 })
 export class AppModule implements NestModule {

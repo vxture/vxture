@@ -40,13 +40,11 @@ export function Sidebar({
         </button>
       </div>
 
-      {!collapsed ? (
-        <div className="vx-shell-sidebar__tenant-switcher">
-          <TenantSwitcher />
-        </div>
-      ) : null}
+      <div className="vx-shell-sidebar__tenant-switcher">
+        <TenantSwitcher />
+      </div>
 
-      <nav className="vx-shell-nav" aria-label={t('ariaLabel')} aria-hidden={collapsed}>
+      <nav className="vx-shell-nav" aria-label={t('ariaLabel')}>
         {navigationSections.map((section) => {
           const items = section.items.filter((item) => {
             const allowedByCapability = hasCapability(session.capabilities, item.capability);

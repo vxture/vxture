@@ -10192,6 +10192,54 @@ body.dark {
   grid-template-columns: 2.75rem minmax(10rem, 1.15fr) minmax(9rem, 0.9fr) minmax(13rem, 1.25fr) minmax(10rem, 0.9fr) minmax(8rem, 0.7fr) 3rem;
 }
 
+.vx-subscription-directory-list .vx-tenant-directory-list__header,
+.vx-subscription-directory-list .vx-tenant-directory-row {
+  min-width: 84rem;
+  grid-template-columns: 2.75rem minmax(15rem, 1.2fr) minmax(12rem, 0.95fr) minmax(12rem, 0.9fr) minmax(11rem, 0.85fr) minmax(9rem, 0.7fr) minmax(9rem, 0.7fr) 3rem;
+}
+
+.vx-order-directory-list .vx-tenant-directory-list__header,
+.vx-order-directory-list .vx-tenant-directory-row {
+  min-width: 92rem;
+  grid-template-columns: 2.75rem minmax(15rem, 1.1fr) minmax(15rem, 1.1fr) minmax(12rem, 0.9fr) minmax(12rem, 0.9fr) minmax(10rem, 0.72fr) minmax(10rem, 0.72fr) 3rem;
+}
+
+.vx-billing-directory-list .vx-tenant-directory-list__header,
+.vx-billing-directory-list .vx-tenant-directory-row {
+  min-width: 106rem;
+  grid-template-columns: 2.75rem minmax(15rem, 1.05fr) minmax(15rem, 1.05fr) minmax(12rem, 0.9fr) minmax(10rem, 0.7fr) minmax(11rem, 0.72fr) minmax(10rem, 0.68fr) minmax(10rem, 0.68fr) 3rem;
+}
+
+.vx-invoice-directory-list .vx-tenant-directory-list__header,
+.vx-invoice-directory-list .vx-tenant-directory-row {
+  min-width: 96rem;
+  grid-template-columns: 2.75rem minmax(16rem, 1.1fr) minmax(15rem, 1fr) minmax(12rem, 0.82fr) minmax(10rem, 0.7fr) minmax(10rem, 0.68fr) minmax(11rem, 0.78fr) 3rem;
+}
+
+.vx-payment-directory-list .vx-tenant-directory-list__header,
+.vx-payment-directory-list .vx-tenant-directory-row {
+  min-width: 98rem;
+  grid-template-columns: 2.75rem minmax(16rem, 1.1fr) minmax(15rem, 1fr) minmax(13rem, 0.9fr) minmax(10rem, 0.7fr) minmax(10rem, 0.68fr) minmax(11rem, 0.78fr) 3rem;
+}
+
+.vx-usage-directory-list .vx-tenant-directory-list__header,
+.vx-usage-directory-list .vx-tenant-directory-row {
+  min-width: 104rem;
+  grid-template-columns: 2.75rem minmax(15rem, 1.05fr) minmax(14rem, 0.95fr) minmax(13rem, 0.9fr) minmax(11rem, 0.72fr) minmax(10rem, 0.68fr) minmax(10rem, 0.68fr) 3rem;
+}
+
+.vx-promotion-directory-list .vx-tenant-directory-list__header,
+.vx-promotion-directory-list .vx-tenant-directory-row {
+  min-width: 98rem;
+  grid-template-columns: 2.75rem minmax(16rem, 1.1fr) minmax(14rem, 0.98fr) minmax(12rem, 0.8fr) minmax(11rem, 0.72fr) minmax(10rem, 0.68fr) minmax(10rem, 0.68fr) 3rem;
+}
+
+.vx-redemption-directory-list .vx-tenant-directory-list__header,
+.vx-redemption-directory-list .vx-tenant-directory-row {
+  min-width: 104rem;
+  grid-template-columns: 2.75rem minmax(16rem, 1.1fr) minmax(15rem, 1fr) minmax(14rem, 0.95fr) minmax(12rem, 0.8fr) minmax(10rem, 0.68fr) minmax(10rem, 0.68fr) 3rem;
+}
+
 .vx-product-solutions-page .vx-tenant-directory-row {
   cursor: default;
 }
@@ -10202,6 +10250,55 @@ body.dark {
 }
 
 .vx-product-solution-directory-list .vx-tenant-directory-row > span:not(.vx-tenant-directory-row__index):not(.vx-tenant-actions) {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-subscription-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-subscription-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-subscription-directory-list .vx-tenant-directory-list__header > span:nth-child(4) {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(4),
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(5) {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-billing-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-billing-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-billing-directory-list .vx-tenant-directory-list__header > span:nth-child(4) {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-invoice-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-invoice-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-invoice-directory-list .vx-tenant-directory-list__header > span:nth-child(4) {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-payment-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-payment-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-payment-directory-list .vx-tenant-directory-list__header > span:nth-child(4) {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-usage-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-usage-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-usage-directory-list .vx-tenant-directory-list__header > span:nth-child(4),
+.vx-promotion-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-promotion-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-promotion-directory-list .vx-tenant-directory-list__header > span:nth-child(4),
+.vx-redemption-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-redemption-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-redemption-directory-list .vx-tenant-directory-list__header > span:nth-child(4) {
   justify-self: start;
   text-align: left;
 }
@@ -10336,12 +10433,153 @@ body.dark {
   --tenant-row-tone: #94a3b8;
 }
 
+.vx-subscription-row--active,
+.vx-subscription-card--active {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-subscription-row--trial,
+.vx-subscription-card--trial,
+.vx-subscription-row--expiring,
+.vx-subscription-card--expiring {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-subscription-row--overdue,
+.vx-subscription-card--overdue,
+.vx-subscription-row--suspended,
+.vx-subscription-card--suspended {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-subscription-row--cancelled,
+.vx-subscription-card--cancelled {
+  --tenant-row-tone: #94a3b8;
+}
+
+.vx-order-row--confirmed,
+.vx-order-card--confirmed {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-order-row--pending,
+.vx-order-card--pending,
+.vx-order-row--pending_verify,
+.vx-order-card--pending_verify {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-order-row--overdue,
+.vx-order-card--overdue,
+.vx-order-row--abnormal,
+.vx-order-card--abnormal {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-order-row--closed,
+.vx-order-card--closed {
+  --tenant-row-tone: #94a3b8;
+}
+
+.vx-billing-row--paid,
+.vx-billing-card--paid {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-billing-row--unpaid,
+.vx-billing-card--unpaid,
+.vx-billing-row--paying,
+.vx-billing-card--paying,
+.vx-billing-row--partial,
+.vx-billing-card--partial {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-billing-row--overdue,
+.vx-billing-card--overdue {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-billing-row--cancelled,
+.vx-billing-card--cancelled {
+  --tenant-row-tone: #94a3b8;
+}
+
+.vx-invoice-row--finished,
+.vx-invoice-card--finished {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-invoice-row--issued,
+.vx-invoice-card--issued,
+.vx-invoice-row--sending,
+.vx-invoice-card--sending,
+.vx-invoice-row--applying,
+.vx-invoice-card--applying,
+.vx-invoice-row--auditing,
+.vx-invoice-card--auditing {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-invoice-row--red,
+.vx-invoice-card--red,
+.vx-invoice-row--rejected,
+.vx-invoice-card--rejected {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-payment-row--normal,
+.vx-payment-card--normal {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-payment-row--pending_verify,
+.vx-payment-card--pending_verify,
+.vx-payment-row--partial,
+.vx-payment-card--partial {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-payment-row--overpaid,
+.vx-payment-card--overpaid,
+.vx-payment-row--bill_cancelled,
+.vx-payment-card--bill_cancelled,
+.vx-payment-row--failed,
+.vx-payment-card--failed {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-payment-row--unlinked,
+.vx-payment-card--unlinked {
+  --tenant-row-tone: #94a3b8;
+}
+
+.vx-commercial-row--normal,
+.vx-commercial-card--normal {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-commercial-row--warning,
+.vx-commercial-card--warning {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-commercial-row--danger,
+.vx-commercial-card--danger {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-commercial-row--muted,
+.vx-commercial-card--muted {
+  --tenant-row-tone: #94a3b8;
+}
+
 .vx-tenant-directory-row > span,
 .vx-tenant-directory-row__tenant span {
   min-width: 0;
 }
 
-.vx-tenant-directory-row > span:not(.vx-tenant-directory-row__tenant):not(.vx-tenant-directory-row__status):not(.vx-tenant-directory-row__service):not(.vx-tenant-directory-row__active):not(.vx-tenant-directory-row__member):not(.vx-tenant-directory-row__subscription) {
+.vx-tenant-directory-row > span:not(.vx-tenant-directory-row__tenant):not(.vx-tenant-directory-row__status):not(.vx-tenant-directory-row__service):not(.vx-tenant-directory-row__active):not(.vx-tenant-directory-row__member):not(.vx-tenant-directory-row__subscription):not(.vx-commercial-row__tenant):not(.vx-commercial-row__main):not(.vx-commercial-row__center) {
   min-width: 0;
   display: grid;
   gap: 0.5rem;
@@ -10607,6 +10845,1285 @@ body.dark {
 
 .vx-product-solution-select--industry {
   width: 10rem;
+}
+
+.vx-subscription-search {
+  width: clamp(13rem, 16vw, 20rem);
+  flex-basis: clamp(13rem, 16vw, 20rem);
+}
+
+.vx-subscription-row__tenant,
+.vx-subscription-row__solution,
+.vx-subscription-row__plan,
+.vx-subscription-row__status,
+.vx-subscription-row__quota,
+.vx-subscription-row__revenue {
+  min-width: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-subscription-row__tenant {
+  justify-self: start;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.vx-subscription-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-subscription-row__solution,
+.vx-subscription-row__plan {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-subscription-row__status,
+.vx-subscription-row__quota,
+.vx-subscription-row__revenue {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-subscription-row__solution small,
+.vx-subscription-row__plan small,
+.vx-subscription-row__status small,
+.vx-subscription-row__quota small,
+.vx-subscription-row__revenue small {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.vx-subscription-status-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.vx-subscription-status-dot {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--subscription-status-dot, #94a3b8);
+  color: #fff;
+  box-shadow: 0 0 0 0.125rem var(--subscription-status-halo, rgba(148, 163, 184, 0.14));
+}
+
+.vx-subscription-status-dot svg {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  stroke-width: 2.5;
+}
+
+.vx-subscription-status-dot--active {
+  --subscription-status-dot: var(--tenant-green);
+  --subscription-status-halo: rgba(5, 150, 105, 0.12);
+}
+
+.vx-subscription-status-dot--trial,
+.vx-subscription-status-dot--expiring {
+  --subscription-status-dot: var(--tenant-amber);
+  --subscription-status-halo: rgba(217, 119, 6, 0.14);
+}
+
+.vx-subscription-status-dot--overdue,
+.vx-subscription-status-dot--suspended {
+  --subscription-status-dot: var(--tenant-rose);
+  --subscription-status-halo: rgba(225, 29, 72, 0.14);
+}
+
+.vx-subscription-status-dot--cancelled {
+  --subscription-status-dot: #94a3b8;
+  --subscription-status-halo: rgba(148, 163, 184, 0.14);
+}
+
+.vx-subscription-card__solution {
+  margin: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-subscription-detail-links {
+  justify-content: flex-start;
+}
+
+.vx-subscription-timeline {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+  border-top: 1px dashed rgba(37, 99, 235, 0.1);
+}
+
+.vx-subscription-timeline__item {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr);
+  align-items: start;
+  gap: 0.875rem;
+  padding: 1rem 0;
+  border-bottom: 1px dashed rgba(37, 99, 235, 0.08);
+}
+
+.vx-subscription-timeline__item:last-child {
+  border-bottom: 0;
+}
+
+.vx-subscription-timeline__item > span {
+  width: 1.35rem;
+  height: 1.35rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--subscription-timeline-bg, rgba(100, 116, 139, 0.1));
+  color: var(--subscription-timeline-color, #64748b);
+}
+
+.vx-subscription-timeline__item strong {
+  display: block;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 760;
+}
+
+.vx-subscription-timeline__item p {
+  margin: 0.35rem 0 0;
+  color: #475569;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.vx-subscription-timeline__item small {
+  display: block;
+  margin-top: 0.35rem;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+}
+
+.vx-subscription-timeline__item--success {
+  --subscription-timeline-bg: rgba(5, 150, 105, 0.08);
+  --subscription-timeline-color: var(--tenant-green);
+}
+
+.vx-subscription-timeline__item--warning {
+  --subscription-timeline-bg: rgba(217, 119, 6, 0.1);
+  --subscription-timeline-color: var(--tenant-amber);
+}
+
+.vx-subscription-timeline__item--danger {
+  --subscription-timeline-bg: rgba(225, 29, 72, 0.12);
+  --subscription-timeline-color: var(--tenant-rose);
+}
+
+.vx-subscription-operation-feedback {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(34, 197, 94, 0.1);
+  color: #15803d;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}
+
+.vx-subscription-action-button--danger {
+  border-color: rgba(225, 29, 72, 0.18) !important;
+  color: var(--tenant-rose) !important;
+}
+
+.vx-subscription-action-button--danger:hover:not(:disabled) {
+  border-color: rgba(225, 29, 72, 0.32) !important;
+  background: rgba(225, 29, 72, 0.08) !important;
+  color: var(--tenant-rose) !important;
+}
+
+.vx-tenant-actions__menu button.vx-subscription-menu-action--danger {
+  color: var(--tenant-rose);
+}
+
+.vx-tenant-actions__menu button.vx-subscription-menu-action--danger:hover:not(:disabled) {
+  background: rgba(225, 29, 72, 0.08);
+  color: var(--tenant-rose);
+}
+
+.vx-subscription-action-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(15, 23, 42, 0.22);
+  backdrop-filter: blur(8px);
+}
+
+.vx-subscription-action-dialog__panel {
+  width: min(100%, 34rem);
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: var(--tenant-card-radius);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 24px 64px rgba(37, 99, 235, 0.16);
+}
+
+.vx-subscription-action-dialog__panel header {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.vx-subscription-action-dialog__icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--tenant-blue);
+}
+
+.vx-subscription-action-dialog__icon--suspend,
+.vx-subscription-action-dialog__icon--cancel {
+  background: rgba(225, 29, 72, 0.1);
+  color: var(--tenant-rose);
+}
+
+.vx-subscription-action-dialog__icon--renew {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-subscription-action-dialog__icon--resume {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--tenant-green);
+}
+
+.vx-subscription-action-dialog__panel h2 {
+  margin: 0;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-section-title-size);
+  font-weight: 760;
+}
+
+.vx-subscription-action-dialog__panel header p,
+.vx-subscription-action-dialog__description,
+.vx-subscription-action-dialog__field span,
+.vx-subscription-action-dialog__error {
+  margin: 0;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}
+
+.vx-subscription-action-dialog__panel header p,
+.vx-subscription-action-dialog__description,
+.vx-subscription-action-dialog__field span {
+  color: var(--tenant-muted);
+}
+
+.vx-subscription-action-dialog__field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-subscription-action-dialog__field textarea {
+  min-height: 7.5rem;
+  resize: vertical;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #24304f;
+  font: inherit;
+  line-height: 1.6;
+}
+
+.vx-subscription-action-dialog__field input,
+.vx-subscription-action-dialog__field select {
+  min-height: 2.5rem;
+  padding: 0 0.875rem;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #24304f;
+  font: inherit;
+}
+
+.vx-subscription-action-dialog__field select {
+  appearance: none;
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 5.25L7 8.75L10.5 5.25' stroke='%2394A3B8' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.875rem;
+}
+
+.vx-subscription-action-dialog__field textarea:focus,
+.vx-subscription-action-dialog__field input:focus,
+.vx-subscription-action-dialog__field select:focus {
+  outline: 2px solid rgba(37, 99, 235, 0.16);
+  outline-offset: 0;
+  border-color: rgba(37, 99, 235, 0.32);
+}
+
+.vx-subscription-action-dialog__error {
+  color: var(--tenant-rose);
+}
+
+.vx-subscription-action-dialog__panel footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.vx-order-payment-dialog__panel {
+  width: min(100%, 42rem);
+}
+
+.vx-order-payment-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.vx-offline-invoice-dialog__panel {
+  width: min(100%, 48rem);
+}
+
+.vx-offline-invoice-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.vx-invoice-receipt-action-dialog__panel {
+  width: min(100%, 40rem);
+}
+
+.vx-invoice-receipt-action-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.vx-billing-bill-action-dialog__panel {
+  width: min(100%, 42rem);
+}
+
+.vx-billing-bill-action-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.vx-order-search {
+  width: clamp(13rem, 16vw, 20rem);
+  flex-basis: clamp(13rem, 16vw, 20rem);
+}
+
+.vx-billing-search {
+  width: clamp(13rem, 16vw, 20rem);
+  flex-basis: clamp(13rem, 16vw, 20rem);
+}
+
+.vx-invoice-search {
+  width: clamp(13rem, 16vw, 20rem);
+  flex-basis: clamp(13rem, 16vw, 20rem);
+}
+
+.vx-payment-search {
+  width: clamp(13rem, 16vw, 20rem);
+  flex-basis: clamp(13rem, 16vw, 20rem);
+}
+
+.vx-order-row__order,
+.vx-order-row__tenant,
+.vx-order-row__solution,
+.vx-order-row__plan,
+.vx-order-row__amount,
+.vx-order-row__status {
+  min-width: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-order-row__tenant {
+  justify-self: start;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.vx-order-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-order-row__order,
+.vx-order-row__solution,
+.vx-order-row__plan {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-order-row__amount,
+.vx-order-row__status {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-order-row__order small,
+.vx-order-row__tenant small,
+.vx-order-row__solution small,
+.vx-order-row__plan small,
+.vx-order-row__amount small,
+.vx-order-row__status small {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.vx-order-status-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.vx-order-status-dot {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--order-status-dot, #94a3b8);
+  color: #fff;
+  box-shadow: 0 0 0 0.125rem var(--order-status-halo, rgba(148, 163, 184, 0.14));
+}
+
+.vx-order-status-dot svg {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  stroke-width: 2.5;
+}
+
+.vx-order-status-dot--confirmed {
+  --order-status-dot: var(--tenant-green);
+  --order-status-halo: rgba(5, 150, 105, 0.12);
+}
+
+.vx-order-status-dot--pending,
+.vx-order-status-dot--pending_verify {
+  --order-status-dot: var(--tenant-amber);
+  --order-status-halo: rgba(217, 119, 6, 0.14);
+}
+
+.vx-order-status-dot--overdue,
+.vx-order-status-dot--abnormal {
+  --order-status-dot: var(--tenant-rose);
+  --order-status-halo: rgba(225, 29, 72, 0.14);
+}
+
+.vx-order-status-dot--closed {
+  --order-status-dot: #94a3b8;
+  --order-status-halo: rgba(148, 163, 184, 0.14);
+}
+
+.vx-order-card__solution {
+  margin: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-billing-row__bill,
+.vx-billing-row__tenant,
+.vx-billing-row__plan,
+.vx-billing-row__amount,
+.vx-billing-row__exception,
+.vx-billing-row__payment,
+.vx-billing-row__invoice {
+  min-width: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-billing-row__tenant {
+  justify-self: start;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.vx-billing-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-billing-row__bill,
+.vx-billing-row__plan {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-billing-row__amount,
+.vx-billing-row__exception,
+.vx-billing-row__payment,
+.vx-billing-row__invoice {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-billing-row__bill small,
+.vx-billing-row__tenant small,
+.vx-billing-row__plan small,
+.vx-billing-row__amount small,
+.vx-billing-row__exception small,
+.vx-billing-row__payment small,
+.vx-billing-row__invoice small {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.vx-billing-row__exception small {
+  max-width: 10rem;
+  overflow: hidden;
+  color: var(--tenant-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-billing-exception-tags {
+  min-width: 0;
+  display: inline-flex;
+  justify-content: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.vx-billing-exception-empty {
+  color: #94a3b8 !important;
+}
+
+.vx-billing-status-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.vx-billing-status-dot {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--billing-status-dot, #94a3b8);
+  color: #fff;
+  box-shadow: 0 0 0 0.125rem var(--billing-status-halo, rgba(148, 163, 184, 0.14));
+}
+
+.vx-billing-status-dot svg {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  stroke-width: 2.5;
+}
+
+.vx-billing-status-dot--paid {
+  --billing-status-dot: var(--tenant-green);
+  --billing-status-halo: rgba(5, 150, 105, 0.12);
+}
+
+.vx-billing-status-dot--unpaid,
+.vx-billing-status-dot--paying,
+.vx-billing-status-dot--partial {
+  --billing-status-dot: var(--tenant-amber);
+  --billing-status-halo: rgba(217, 119, 6, 0.14);
+}
+
+.vx-billing-status-dot--overdue {
+  --billing-status-dot: var(--tenant-rose);
+  --billing-status-halo: rgba(225, 29, 72, 0.14);
+}
+
+.vx-billing-status-dot--cancelled {
+  --billing-status-dot: #94a3b8;
+  --billing-status-halo: rgba(148, 163, 184, 0.14);
+}
+
+.vx-billing-card__plan {
+  margin: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-invoice-row__invoice,
+.vx-invoice-row__tenant,
+.vx-invoice-row__bill,
+.vx-invoice-row__amount,
+.vx-invoice-row__status,
+.vx-invoice-row__delivery {
+  min-width: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-invoice-row__tenant {
+  justify-self: start;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.vx-invoice-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-invoice-row__invoice,
+.vx-invoice-row__bill {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-invoice-row__amount,
+.vx-invoice-row__status,
+.vx-invoice-row__delivery {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-invoice-row__invoice small,
+.vx-invoice-row__tenant small,
+.vx-invoice-row__bill small,
+.vx-invoice-row__amount small,
+.vx-invoice-row__status small,
+.vx-invoice-row__delivery small {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.vx-invoice-row__delivery small {
+  max-width: 10rem;
+  overflow: hidden;
+  color: var(--tenant-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-invoice-status-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.vx-invoice-status-dot {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--invoice-status-dot, #94a3b8);
+  color: #fff;
+  box-shadow: 0 0 0 0.125rem var(--invoice-status-halo, rgba(148, 163, 184, 0.14));
+}
+
+.vx-invoice-status-dot svg {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  stroke-width: 2.5;
+}
+
+.vx-invoice-status-dot--finished {
+  --invoice-status-dot: var(--tenant-green);
+  --invoice-status-halo: rgba(5, 150, 105, 0.12);
+}
+
+.vx-invoice-status-dot--issued,
+.vx-invoice-status-dot--sending,
+.vx-invoice-status-dot--applying,
+.vx-invoice-status-dot--auditing {
+  --invoice-status-dot: var(--tenant-amber);
+  --invoice-status-halo: rgba(217, 119, 6, 0.14);
+}
+
+.vx-invoice-status-dot--red,
+.vx-invoice-status-dot--rejected {
+  --invoice-status-dot: var(--tenant-rose);
+  --invoice-status-halo: rgba(225, 29, 72, 0.14);
+}
+
+.vx-invoice-card__bill {
+  margin: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-payment-row__payment,
+.vx-payment-row__tenant,
+.vx-payment-row__bill,
+.vx-payment-row__amount,
+.vx-payment-row__status,
+.vx-payment-row__reconcile {
+  min-width: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-payment-row__tenant {
+  justify-self: start;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.vx-payment-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-payment-row__payment,
+.vx-payment-row__bill {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-payment-row__amount,
+.vx-payment-row__status,
+.vx-payment-row__reconcile {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-payment-row__payment small,
+.vx-payment-row__tenant small,
+.vx-payment-row__bill small,
+.vx-payment-row__amount small,
+.vx-payment-row__status small,
+.vx-payment-row__reconcile small {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.vx-payment-row__reconcile small {
+  max-width: 10rem;
+  overflow: hidden;
+  color: var(--tenant-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-payment-status-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.vx-payment-status-dot {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--payment-status-dot, #94a3b8);
+  color: #fff;
+  box-shadow: 0 0 0 0.125rem var(--payment-status-halo, rgba(148, 163, 184, 0.14));
+}
+
+.vx-payment-status-dot svg {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  stroke-width: 2.5;
+}
+
+.vx-payment-status-dot--paid,
+.vx-payment-status-dot--reconcile-normal {
+  --payment-status-dot: var(--tenant-green);
+  --payment-status-halo: rgba(5, 150, 105, 0.12);
+}
+
+.vx-payment-status-dot--pending,
+.vx-payment-status-dot--pending_verify,
+.vx-payment-status-dot--partial,
+.vx-payment-status-dot--reconcile-pending_verify,
+.vx-payment-status-dot--reconcile-partial {
+  --payment-status-dot: var(--tenant-amber);
+  --payment-status-halo: rgba(217, 119, 6, 0.14);
+}
+
+.vx-payment-status-dot--failed,
+.vx-payment-status-dot--refunding,
+.vx-payment-status-dot--reconcile-overpaid,
+.vx-payment-status-dot--reconcile-bill_cancelled,
+.vx-payment-status-dot--reconcile-failed {
+  --payment-status-dot: var(--tenant-rose);
+  --payment-status-halo: rgba(225, 29, 72, 0.14);
+}
+
+.vx-payment-status-dot--closed,
+.vx-payment-status-dot--reconcile-unlinked {
+  --payment-status-dot: #94a3b8;
+  --payment-status-halo: rgba(148, 163, 184, 0.14);
+}
+
+.vx-payment-card__bill {
+  margin: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-commercial-search {
+  width: clamp(13rem, 16vw, 20rem);
+  flex-basis: clamp(13rem, 16vw, 20rem);
+}
+
+.vx-promotions-page .vx-tenant-directory-row {
+  cursor: default;
+}
+
+.vx-commercial-row__tenant,
+.vx-commercial-row__main,
+.vx-commercial-row__center {
+  min-width: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-commercial-row__tenant {
+  justify-self: start;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.vx-commercial-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-commercial-row__main {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-commercial-row__center {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-commercial-row__tenant small,
+.vx-commercial-row__main small,
+.vx-commercial-row__center small {
+  margin-top: 0;
+  max-width: 100%;
+  color: var(--tenant-muted);
+  font-weight: 400;
+}
+
+.vx-commercial-row__center small {
+  max-width: 13rem;
+}
+
+.vx-commercial-status-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.vx-commercial-status-dot {
+  width: 1.125rem;
+  height: 1.125rem;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--commercial-status-dot, #94a3b8);
+  color: #fff;
+  box-shadow: 0 0 0 0.125rem var(--commercial-status-halo, rgba(148, 163, 184, 0.14));
+}
+
+.vx-commercial-status-dot svg {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  stroke-width: 2.5;
+}
+
+.vx-commercial-status-dot--normal {
+  --commercial-status-dot: var(--tenant-green);
+  --commercial-status-halo: rgba(5, 150, 105, 0.12);
+}
+
+.vx-commercial-status-dot--warning {
+  --commercial-status-dot: var(--tenant-amber);
+  --commercial-status-halo: rgba(217, 119, 6, 0.14);
+}
+
+.vx-commercial-status-dot--danger {
+  --commercial-status-dot: var(--tenant-rose);
+  --commercial-status-halo: rgba(225, 29, 72, 0.14);
+}
+
+.vx-commercial-status-dot--muted {
+  --commercial-status-dot: #94a3b8;
+  --commercial-status-halo: rgba(148, 163, 184, 0.14);
+}
+
+.vx-commercial-card__description {
+  margin: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-commercial-pill--normal,
+.vx-commercial-pill--free {
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--tenant-green);
+}
+
+.vx-commercial-pill--warning,
+.vx-commercial-pill--pro {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-commercial-pill--danger {
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--tenant-rose);
+}
+
+.vx-commercial-pill--enterprise {
+  background: rgba(124, 58, 237, 0.08);
+  color: #7c3aed;
+}
+
+.vx-commercial-pill--muted,
+.vx-commercial-pill--other {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+}
+
+.vx-commerce-overview-page {
+  gap: 2rem;
+}
+
+.vx-commerce-overview-layout {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.vx-commerce-panel {
+  min-width: 0;
+  display: grid;
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed rgba(37, 99, 235, 0.12);
+}
+
+.vx-commerce-panel__header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1.25rem;
+}
+
+.vx-commerce-panel__header > a,
+.vx-commerce-panel__header > small {
+  margin-top: 0.35rem;
+  color: var(--tenant-blue);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 760;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.vx-commerce-panel__header > small {
+  color: var(--tenant-muted);
+  font-weight: 400;
+}
+
+.vx-commerce-risk-list,
+.vx-commerce-plan-list,
+.vx-commerce-link-grid {
+  min-width: 0;
+  display: grid;
+}
+
+.vx-commerce-risk-list,
+.vx-commerce-plan-list {
+  gap: 0;
+  border-top: 1px dashed rgba(37, 99, 235, 0.1);
+}
+
+.vx-commerce-risk-item,
+.vx-commerce-plan-row {
+  min-width: 0;
+  display: grid;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px dashed rgba(37, 99, 235, 0.08);
+  color: inherit;
+  text-decoration: none;
+}
+
+.vx-commerce-risk-item {
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+}
+
+.vx-commerce-risk-item:hover,
+.vx-commerce-link-card:hover {
+  background: rgba(239, 246, 255, 0.42);
+}
+
+.vx-commerce-risk-item__icon,
+.vx-commerce-link-card > span {
+  width: 2rem;
+  height: 2rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--commerce-item-bg, rgba(37, 99, 235, 0.08));
+  color: var(--commerce-item-tone, var(--tenant-blue));
+}
+
+.vx-commerce-risk-item--green {
+  --commerce-item-bg: rgba(5, 150, 105, 0.08);
+  --commerce-item-tone: var(--tenant-green);
+}
+
+.vx-commerce-risk-item--amber {
+  --commerce-item-bg: rgba(217, 119, 6, 0.1);
+  --commerce-item-tone: var(--tenant-amber);
+}
+
+.vx-commerce-risk-item--rose {
+  --commerce-item-bg: rgba(225, 29, 72, 0.12);
+  --commerce-item-tone: var(--tenant-rose);
+}
+
+.vx-commerce-risk-item > span,
+.vx-commerce-plan-row__main,
+.vx-commerce-plan-row__amounts span,
+.vx-commerce-link-card {
+  min-width: 0;
+}
+
+.vx-commerce-risk-item strong,
+.vx-commerce-plan-row strong,
+.vx-commerce-link-card strong {
+  display: block;
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-commerce-risk-item small,
+.vx-commerce-plan-row small,
+.vx-commerce-link-card small {
+  display: block;
+  overflow: hidden;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-commerce-plan-row {
+  grid-template-columns: minmax(14rem, 1fr) minmax(20rem, 1.25fr);
+}
+
+.vx-commerce-plan-row__main {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.vx-commerce-plan-row__main > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.vx-commerce-plan-row__amounts {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  text-align: right;
+}
+
+.vx-commerce-plan-row__amounts small {
+  margin-top: 0.25rem;
+}
+
+.vx-commerce-link-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  border-top: 1px dashed rgba(37, 99, 235, 0.1);
+}
+
+.vx-commerce-link-card {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: 0.35rem 0.875rem;
+  align-items: center;
+  padding: 1rem 1rem 1rem 0;
+  border-bottom: 1px dashed rgba(37, 99, 235, 0.08);
+  color: inherit;
+  text-decoration: none;
+}
+
+.vx-commerce-link-card small {
+  grid-column: 2;
+}
+
+.vx-commerce-panel__empty {
+  min-height: 6rem;
+  display: grid;
+  place-items: center;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}
+
+.vx-commerce-overview-footer {
+  min-height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0 0.95rem;
+  border-top: 1px dashed rgba(37, 99, 235, 0.12);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+}
+
+.vx-commerce-overview-footer strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 760;
+}
+
+.vx-product-detail-list__row .vx-billing-receipt-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  overflow: visible;
+  white-space: normal;
+}
+
+.vx-billing-receipt-actions > span {
+  min-width: min(100%, 8rem);
+  overflow: hidden;
+  color: var(--tenant-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-billing-receipt-actions button {
+  min-height: 1.75rem;
+  padding: 0 0.55rem;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #24304f;
+  cursor: pointer;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+}
+
+.vx-billing-receipt-actions button:hover:not(:disabled) {
+  border-color: rgba(37, 99, 235, 0.3);
+  color: var(--tenant-blue);
+}
+
+.vx-billing-receipt-actions button.is-danger {
+  border-color: rgba(225, 29, 72, 0.2);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-receipt-actions button.is-danger:hover:not(:disabled) {
+  border-color: rgba(225, 29, 72, 0.34);
+  background: rgba(225, 29, 72, 0.06);
+}
+
+.vx-billing-receipt-actions button:disabled {
+  cursor: default;
+  opacity: 0.42;
 }
 
 .vx-product-plan-feature-tags,
@@ -13275,6 +14792,231 @@ body.dark {
   color: var(--tenant-rose);
 }
 
+.vx-subscription-pill--active,
+.vx-subscription-pill--tier-free,
+.vx-subscription-pill--quota-normal {
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--tenant-green);
+}
+
+.vx-subscription-pill--trial,
+.vx-subscription-pill--expiring,
+.vx-subscription-pill--tier-pro,
+.vx-subscription-pill--quota-warning {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-subscription-pill--overdue,
+.vx-subscription-pill--suspended,
+.vx-subscription-pill--quota-danger {
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--tenant-rose);
+}
+
+.vx-subscription-pill--cancelled,
+.vx-subscription-pill--cycle,
+.vx-subscription-pill--tier-other {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+}
+
+.vx-subscription-pill--tier-enterprise {
+  background: rgba(124, 58, 237, 0.08);
+  color: #7c3aed;
+}
+
+.vx-order-pill--confirmed,
+.vx-order-pill--payment-paid,
+.vx-order-pill--payment-not_required,
+.vx-order-pill--tier-free {
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--tenant-green);
+}
+
+.vx-order-pill--pending,
+.vx-order-pill--pending_verify,
+.vx-order-pill--payment-pending,
+.vx-order-pill--payment-pending_verify,
+.vx-order-pill--payment-partial,
+.vx-order-pill--tier-pro {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-order-pill--overdue,
+.vx-order-pill--abnormal,
+.vx-order-pill--payment-failed,
+.vx-order-pill--payment-refunding {
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--tenant-rose);
+}
+
+.vx-order-pill--closed,
+.vx-order-pill--payment-unpaid,
+.vx-order-pill--payment-closed,
+.vx-order-pill--source,
+.vx-order-pill--tier-other {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+}
+
+.vx-order-pill--tier-enterprise {
+  background: rgba(124, 58, 237, 0.08);
+  color: #7c3aed;
+}
+
+.vx-billing-pill--paid,
+.vx-billing-pill--invoice-issued,
+.vx-billing-pill--invoice-finished,
+.vx-billing-pill--tier-free {
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--tenant-green);
+}
+
+.vx-billing-pill--unpaid,
+.vx-billing-pill--paying,
+.vx-billing-pill--partial,
+.vx-billing-pill--invoice-applying,
+.vx-billing-pill--invoice-auditing,
+.vx-billing-pill--invoice-sending,
+.vx-billing-pill--tier-pro {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-pill--overdue,
+.vx-billing-pill--invoice-rejected,
+.vx-billing-pill--invoice-red {
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-pill--cancelled,
+.vx-billing-pill--invoice-none,
+.vx-billing-pill--type-normal,
+.vx-billing-pill--type-adjust,
+.vx-billing-pill--type-supplement,
+.vx-billing-pill--type-prepaid,
+.vx-billing-pill--tier-other {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+}
+
+.vx-billing-pill--tier-enterprise {
+  background: rgba(124, 58, 237, 0.08);
+  color: #7c3aed;
+}
+
+.vx-billing-exception-pill--adjust {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--tenant-blue);
+}
+
+.vx-billing-exception-pill--supplement {
+  background: rgba(124, 58, 237, 0.08);
+  color: #7c3aed;
+}
+
+.vx-billing-exception-pill--discount {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-exception-pill--overdue,
+.vx-billing-exception-pill--invoice {
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-exception-pill--cancelled {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+}
+
+.vx-invoice-pill--finished,
+.vx-invoice-pill--bill-paid,
+.vx-invoice-pill--tax-enterprise {
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--tenant-green);
+}
+
+.vx-invoice-pill--issued,
+.vx-invoice-pill--sending,
+.vx-invoice-pill--applying,
+.vx-invoice-pill--auditing,
+.vx-invoice-pill--bill-unpaid,
+.vx-invoice-pill--bill-paying,
+.vx-invoice-pill--bill-partial,
+.vx-invoice-pill--bill-overdue {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-invoice-pill--red,
+.vx-invoice-pill--rejected {
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--tenant-rose);
+}
+
+.vx-invoice-pill--none,
+.vx-invoice-pill--bill-cancelled,
+.vx-invoice-pill--type-normal,
+.vx-invoice-pill--type-adjust,
+.vx-invoice-pill--type-supplement,
+.vx-invoice-pill--type-prepaid,
+.vx-invoice-pill--type-special_vat,
+.vx-invoice-pill--type-normal_vat,
+.vx-invoice-pill--type-electronic,
+.vx-invoice-pill--type-paper,
+.vx-invoice-pill--type-other,
+.vx-invoice-pill--tax-individual,
+.vx-invoice-pill--tax-government,
+.vx-invoice-pill--tax-other {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+}
+
+.vx-payment-pill--paid,
+.vx-payment-pill--reconcile-normal,
+.vx-payment-pill--bill-paid {
+  background: rgba(5, 150, 105, 0.08);
+  color: var(--tenant-green);
+}
+
+.vx-payment-pill--pending,
+.vx-payment-pill--pending_verify,
+.vx-payment-pill--partial,
+.vx-payment-pill--reconcile-pending_verify,
+.vx-payment-pill--reconcile-partial,
+.vx-payment-pill--bill-unpaid,
+.vx-payment-pill--bill-paying,
+.vx-payment-pill--bill-partial,
+.vx-payment-pill--bill-overdue {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
+}
+
+.vx-payment-pill--failed,
+.vx-payment-pill--refunding,
+.vx-payment-pill--reconcile-overpaid,
+.vx-payment-pill--reconcile-bill_cancelled,
+.vx-payment-pill--reconcile-failed {
+  background: rgba(225, 29, 72, 0.12);
+  color: var(--tenant-rose);
+}
+
+.vx-payment-pill--closed,
+.vx-payment-pill--unpaid,
+.vx-payment-pill--not_required,
+.vx-payment-pill--reconcile-unlinked,
+.vx-payment-pill--bill-cancelled,
+.vx-payment-pill--bill-none,
+.vx-payment-pill--source {
+  background: rgba(100, 116, 139, 0.1);
+  color: #64748b;
+}
+
 .vx-admin-role-card__description {
   color: var(--tenant-muted);
   font-size: var(--vx-admin-caption-size);
@@ -13678,6 +15420,9 @@ body.dark {
   .vx-product-capability-fields--compact,
   .vx-product-detail-list__row,
   .vx-product-detail-list--entitlements .vx-product-detail-list__row,
+  .vx-offline-invoice-dialog__grid,
+  .vx-invoice-receipt-action-dialog__grid,
+  .vx-billing-bill-action-dialog__grid,
   .vx-service-plan-tier-row,
   .vx-service-plan-tier-grid {
     grid-template-columns: 1fr;

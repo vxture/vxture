@@ -1,5 +1,7 @@
 import type {
   Capability,
+  AiModelGrantRecord,
+  AiModelRecord,
   ConsoleOrganizationProfile,
   ConsoleUser,
   ConsoleUserProfile,
@@ -9,7 +11,7 @@ import type {
   TenantPermissionRecord,
   TenantRoleRecord,
 } from '@/entities/console';
-import { anonymousSession } from '@/shared/mock-console-data';
+import { aiModelGrantRecords, aiModelRecords, anonymousSession } from '@/shared/mock-console-data';
 
 function normalizeOrigin(value: string | undefined): string {
   const normalized = value?.trim().replace(/\/+$/, '');
@@ -87,6 +89,163 @@ export async function fetchTenantRoles(tenantId?: string): Promise<TenantRoleRec
 
 export async function fetchTenantPermissions(tenantId?: string): Promise<TenantPermissionRecord[]> {
   return readJson<TenantPermissionRecord[]>(withTenant('/api/iam/permissions', tenantId), []);
+}
+
+export async function fetchAiModels(includeInactive = true): Promise<AiModelRecord[]> {
+  return readJson<AiModelRecord[]>(
+    `/api/ai-gateway/models?includeInactive=${includeInactive ? 'true' : 'false'}`,
+    aiModelRecords,
+  );
+}
+
+export async function fetchAiModelGrants(filters: { tenantId?: string; modelId?: string } = {}): Promise<AiModelGrantRecord[]> {
+  const params = new URLSearchParams();
+  if (filters.tenantId) params.set('tenantId', filters.tenantId);
+  if (filters.modelId) params.set('modelId', filters.modelId);
+
+  return readJson<AiModelGrantRecord[]>(
+    `/api/ai-gateway/grants${params.size ? `?${params.toString()}` : ''}`,
+    aiModelGrantRecords,
+  );
+}
+
+export async function createAiModel(payload: {
+  modelCode: string;
+  modelName: string;
+  provider: string;
+  endpointUrl: string;
+  protocol: string;
+  capabilities: string[];
+  apiKeyEnvVar: string;
+  providerId?: string | null;
+  config?: Record<string, unknown> | null;
+}): Promise<AiModelRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new ConsoleBffError('AI model creation failed', response.status);
+  }
+
+  return (await response.json()) as AiModelRecord;
+}
+
+export async function updateAiModel(
+  modelId: string,
+  payload: {
+    modelCode?: string;
+    modelName?: string;
+    provider?: string;
+    endpointUrl?: string;
+    protocol?: string;
+    capabilities?: string[];
+    apiKeyEnvVar?: string;
+    providerId?: string | null;
+    config?: Record<string, unknown> | null;
+    isActive?: boolean;
+  },
+): Promise<AiModelRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models/${modelId}`, {
+    method: 'PUT',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new ConsoleBffError('AI model update failed', response.status);
+  }
+
+  return (await response.json()) as AiModelRecord;
+}
+
+export async function setAiModelActive(modelId: string, active: boolean): Promise<AiModelRecord> {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models/${modelId}/${active ? 'activate' : 'deactivate'}`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+    },
+  );
+
+  if (!response.ok) {
+    throw new ConsoleBffError('AI model state update failed', response.status);
+  }
+
+  return (await response.json()) as AiModelRecord;
+}
+
+export async function createAiModelGrant(payload: {
+  modelId: string;
+  tenantId: string;
+  agentId?: string | null;
+  priority?: number | null;
+  reason?: string | null;
+  expiresAt?: string | null;
+  isActive?: boolean;
+}): Promise<AiModelGrantRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new ConsoleBffError('AI model grant creation failed', response.status);
+  }
+
+  return (await response.json()) as AiModelGrantRecord;
+}
+
+export async function updateAiModelGrant(
+  grantId: string,
+  payload: {
+    agentId?: string | null;
+    priority?: number | null;
+    reason?: string | null;
+    expiresAt?: string | null;
+    isActive?: boolean;
+  },
+): Promise<AiModelGrantRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants/${grantId}`, {
+    method: 'PUT',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new ConsoleBffError('AI model grant update failed', response.status);
+  }
+
+  return (await response.json()) as AiModelGrantRecord;
+}
+
+export async function setAiModelGrantActive(grantId: string, active: boolean): Promise<AiModelGrantRecord> {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants/${grantId}${active ? '/activate' : ''}`,
+    {
+      method: active ? 'POST' : 'DELETE',
+      credentials: 'include',
+      cache: 'no-store',
+    },
+  );
+
+  if (!response.ok) {
+    throw new ConsoleBffError('AI model grant state update failed', response.status);
+  }
+
+  return (await response.json()) as AiModelGrantRecord;
 }
 
 export async function createTenantRole(
@@ -212,7 +371,24 @@ export async function disableMember(memberId: string, tenantId?: string): Promis
   return (await response.json()) as MemberRecord;
 }
 
-export async function deleteMember(memberId: string, tenantId?: string) {
+export async function resetMemberPassword(memberId: string, payload: { nextPassword: string }, tenantId?: string) {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}/reset-password`, tenantId)}`,
+    {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!response.ok) {
+    throw new ConsoleBffError('Member password reset failed', response.status);
+  }
+}
+
+export async function unlinkMember(memberId: string, tenantId?: string) {
   const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}`, tenantId)}`, {
     method: 'DELETE',
     credentials: 'include',
@@ -220,7 +396,7 @@ export async function deleteMember(memberId: string, tenantId?: string) {
   });
 
   if (!response.ok) {
-    throw new ConsoleBffError('Member delete failed', response.status);
+    throw new ConsoleBffError('Member unlink failed', response.status);
   }
 }
 

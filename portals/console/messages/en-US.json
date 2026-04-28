@@ -8,11 +8,16 @@
   },
   "header": {
     "title": "Console",
-    "searchPlaceholder": "Search modules, members, billing records",
+    "searchPlaceholder": "Search members, tenants, subscriptions, billing",
     "workspace": "Workspace",
     "switchWorkspace": "Switch workspace",
     "platformMode": "Platform",
     "tenantMode": "Tenant",
+    "appLauncher": "App launcher",
+    "featureOverview": "Feature overview",
+    "quickPreferences": "Quick preferences",
+    "workspaceActions": "Workspace actions",
+    "help": "Help",
     "notifications": "Notifications",
     "settings": "Settings",
     "toggleTheme": "Toggle theme",
@@ -50,11 +55,11 @@
   "sidebar": {
     "eyebrow": "Vxture Console",
     "title": "Console",
-    "description": "Modern SaaS operations shell",
+    "description": "Self-service account, tenant, member, and subscription management",
     "ariaLabel": "Console navigation",
     "footer": {
       "label": "Status",
-      "value": "UI framework preview"
+      "value": "Self-service platform"
     },
     "workspaceMode": {
       "platform": "Platform workspace",
@@ -111,6 +116,10 @@
       "quotas": {
         "label": "Usage Quotas",
         "description": "Resource progress for API calls, storage, and more"
+      },
+      "modelGateway": {
+        "label": "Model Gateway",
+        "description": "Online models, private models, and tenant grants"
       },
       "notifications": {
         "label": "Notifications",
@@ -174,6 +183,7 @@
     "subscription": "Subscription",
     "billing": "Billing",
     "quotas": "Quotas",
+    "modelGateway": "Model Gateway",
     "notifications": "Notifications",
     "security": "Security Settings",
     "settings": "Tenant Settings",
@@ -233,9 +243,9 @@
   },
   "dashboard": {
     "eyebrow": "Overview",
-    "title": "Workspace command center",
-    "description": "A restrained control surface for subscription health, quota pressure, and access posture across the active tenant.",
-    "createAction": "Create workspace action",
+    "title": "Account and tenant console",
+    "description": "A self-service entry for users and tenants to manage members, subscriptions, billing, quotas, and security posture.",
+    "createAction": "Create management item",
     "stats": {
       "plan": {
         "label": "Current plan",
@@ -255,7 +265,7 @@
     },
     "quickActions": {
       "title": "Quick actions",
-      "description": "Guide frequent workspace operations without flooding the page with primary buttons.",
+      "description": "Guide frequent management actions without flooding the page with primary buttons.",
       "addMember": {
         "label": "Add member",
         "description": "Invite operators, workspace owners, and readonly reviewers."
@@ -309,108 +319,513 @@
     }
   },
   "settings": {
-    "eyebrow": "Settings",
+    "eyebrow": "Advanced settings",
     "title": "Tenant settings",
-    "description": "Settings use clearly separated cards and restrained form density instead of a long uninterrupted form wall.",
+    "description": "Configure tenant-level policies, access controls, security constraints, and audit rules.",
     "save": "Save changes",
-    "workspace": {
-      "title": "Workspace profile",
-      "description": "Public workspace labels, locale, and administrative contacts.",
-      "name": "Workspace name",
-      "domain": "Primary domain",
-      "email": "Operations contact"
+    "reset": "Restore defaults",
+    "backend": {
+      "pending": "Backend pending"
     },
-    "notifications": {
-      "title": "Notifications",
-      "description": "Keep toggle controls grouped and visually quiet.",
-      "billing": {
-        "title": "Billing reminders",
-        "description": "Notify finance owners before renewal or overdue invoices."
+    "summary": {
+      "title": "Tenant settings overview",
+      "scope": "Scope",
+      "scopeValue": "Tenant policy",
+      "enabled": "Enabled",
+      "enabledValue": "{count}",
+      "profile": "Profile fields",
+      "profileValue": "Managed elsewhere"
+    },
+    "general": {
+      "title": "General settings",
+      "count": "{count} groups"
+    },
+    "table": {
+      "policy": "Policy",
+      "state": "State",
+      "value": "Setting"
+    },
+    "states": {
+      "enabled": "Enabled",
+      "disabled": "Off"
+    },
+    "sections": {
+      "access": {
+        "title": "Access entry",
+        "count": "{count} items"
       },
-      "quota": {
-        "title": "Quota alerts",
-        "description": "Send alerts when shared pools cross configured thresholds."
+      "security": {
+        "title": "Security policy",
+        "count": "{count} items"
       },
-      "approvals": {
-        "title": "New member approvals",
-        "description": "Notify workspace owners when access requests need review."
+      "data": {
+        "title": "Data & audit",
+        "count": "{count} items"
+      }
+    },
+    "rows": {
+      "inviteApproval": {
+        "title": "Invite approval",
+        "hint": "Member invitations require admin confirmation before joining the tenant."
+      },
+      "externalMembers": {
+        "title": "External members",
+        "hint": "Allow accounts outside the organization domain to join this tenant."
+      },
+      "defaultRole": {
+        "title": "Default role",
+        "hint": "Initial role granted to a member after accepting an invitation."
+      },
+      "mfaRequired": {
+        "title": "Require MFA",
+        "hint": "Require additional verification when members sign in to the console."
+      },
+      "trustedDeviceReview": {
+        "title": "New device review",
+        "hint": "Record first-time device sign-ins for later review."
+      },
+      "sessionTimeout": {
+        "title": "Session lifetime",
+        "hint": "Maximum time a console session can stay signed in."
+      },
+      "auditRetention": {
+        "title": "Audit retention",
+        "hint": "How long tenant operation logs are retained by the platform."
+      },
+      "exportApproval": {
+        "title": "Export approval",
+        "hint": "Require confirmation before exporting members, billing, or audit data."
+      },
+      "apiKeyCreation": {
+        "title": "API key self-service",
+        "hint": "Allow members to create integration access keys by themselves."
+      }
+    },
+    "options": {
+      "defaultRole": {
+        "readonly": "Readonly",
+        "member": "Member",
+        "admin": "Admin"
+      },
+      "sessionTimeout": {
+        "8h": "8 hours",
+        "24h": "24 hours",
+        "7d": "7 days"
+      },
+      "auditRetention": {
+        "90": "90 days",
+        "180": "180 days",
+        "365": "365 days"
       }
     },
     "danger": {
       "title": "Danger Zone",
-      "description": "These actions affect the current tenant and require explicit confirmation.",
+      "count": "High-risk action",
+      "confirmRequired": "Confirmation required",
       "cancelTenant": {
         "title": "Cancel tenant",
-        "description": "Tenant cancellation enters a guarded confirmation flow and later requires entering the tenant name.",
         "confirmHint": "Requires secondary confirmation and the current tenant name before execution.",
         "action": "Cancel tenant"
       }
+    },
+    "feedback": {
+      "saved": "Tenant settings were saved to local frontend state and will sync to the server after backend support lands.",
+      "reset": "Tenant settings restored to default policy."
+    }
+  },
+  "notificationsPage": {
+    "header": {
+      "eyebrow": "Personal settings",
+      "title": "Notifications",
+      "description": "Subscriptions enabled"
+    },
+    "actions": {
+      "save": "Save preferences",
+      "reset": "Restore defaults"
+    },
+    "backend": {
+      "pending": "Backend pending"
+    },
+    "preference": {
+      "label": "Notification preference",
+      "enabled": "Subscriptions enabled"
+    },
+    "summary": {
+      "title": "Notification subscription overview",
+      "topics": "Topics",
+      "topicsValue": "{enabled}/{total}",
+      "inboxDefault": "Inbox by default",
+      "emailValue": "Email {count}",
+      "smsValue": "SMS {count}"
+    },
+    "channels": {
+      "title": "Base reminder channels",
+      "short": {
+        "inbox": "Inbox",
+        "email": "Email",
+        "sms": "SMS"
+      },
+      "items": {
+        "inbox": {
+          "title": "Inbox"
+        },
+        "email": {
+          "title": "Email"
+        },
+        "sms": {
+          "title": "SMS"
+        }
+      }
+    },
+    "topics": {
+      "title": "Subscription topics",
+      "count": "{count} items",
+      "groupCount": "{count} items",
+      "policyLocked": "Policy locked",
+      "policyLockedDescription": "This reminder is locked by platform policy and cannot be turned off by the current user.",
+      "toggleLabel": "{topic} - {channel}",
+      "subscribed": "Subscribed",
+      "unsubscribed": "Not subscribed",
+      "columns": {
+        "topic": "Topic",
+        "status": "Status"
+      },
+      "items": {
+        "account": {
+          "title": "Account activity"
+        },
+        "security": {
+          "title": "Security risk"
+        },
+        "subscription": {
+          "title": "Subscription"
+        },
+        "billing": {
+          "title": "Billing & invoices"
+        },
+        "usage": {
+          "title": "Usage & quotas"
+        },
+        "product": {
+          "title": "Product & system"
+        }
+      }
+    },
+    "groups": {
+      "identity": "Account & security",
+      "commerce": "Subscription & usage",
+      "system": "Product & system"
+    },
+    "feedback": {
+      "saved": "Notification preferences were saved to local frontend state and will sync to the server after backend support lands.",
+      "reset": "Notification preferences restored to defaults."
+    }
+  },
+  "profilePage": {
+    "header": {
+      "eyebrow": "Account center",
+      "title": "Profile",
+      "description": "Manage your avatar, display name, contact details, and account credentials in one place."
+    },
+    "common": {
+      "empty": "--",
+      "loading": "Loading..."
+    },
+    "summary": {
+      "defaultRole": "Console user",
+      "avatar": "Avatar",
+      "email": "Email",
+      "phone": "Phone",
+      "updatedAt": "Updated",
+      "customAvatar": "Custom avatar",
+      "defaultAvatar": "Default avatar"
+    },
+    "sections": {
+      "profile": {
+        "title": "Profile",
+        "description": "Used for identity display across the console, collaboration lists, and notifications."
+      },
+      "contact": {
+        "title": "Contact",
+        "description": "Used for notifications, account recovery, and localized display."
+      },
+      "security": {
+        "title": "Security credentials",
+        "description": "Your password is used only for sign-in verification and is never shown here."
+      },
+      "connectedAccounts": {
+        "title": "Connected accounts",
+        "description": "Manage WeChat, DingTalk, Feishu, Google, and other sign-in methods for this personal account."
+      }
+    },
+    "fields": {
+      "displayName": "Display name",
+      "username": "Username",
+      "avatarUrl": "Avatar URL",
+      "headline": "Headline",
+      "bio": "Bio",
+      "email": "Email",
+      "phone": "Phone",
+      "timezone": "Timezone",
+      "language": "Language",
+      "password": "Password",
+      "updatedAt": "Profile updated",
+      "currentPassword": "Current password",
+      "nextPassword": "New password",
+      "confirmPassword": "Confirm new password"
+    },
+    "language": {
+      "zhCN": "简体中文",
+      "enUS": "English (US)"
+    },
+    "security": {
+      "passwordSet": "Set"
+    },
+    "avatar": {
+      "alt": "{name} avatar",
+      "edit": "Edit avatar",
+      "previewAlt": "{name} avatar preview",
+      "customPreview": "Using custom avatar",
+      "defaultPreview": "Using default avatar"
+    },
+    "actions": {
+      "editProfile": "Edit profile",
+      "clearAvatar": "Clear avatar",
+      "edit": "Edit",
+      "changePassword": "Change password",
+      "cancel": "Cancel",
+      "save": "Save",
+      "clear": "Clear",
+      "updatePassword": "Update password"
+    },
+    "dialogs": {
+      "profile": {
+        "title": "Edit profile",
+        "description": "The avatar preview updates with the URL and syncs to your console identity after saving."
+      },
+      "contact": {
+        "title": "Edit contact",
+        "description": "Keep contact details accurate for notifications and account recovery."
+      },
+      "password": {
+        "title": "Change password",
+        "description": "Use a new password with at least 6 characters."
+      }
+    },
+    "placeholders": {
+      "avatarUrl": "https://example.com/avatar.png",
+      "headline": "Example: Platform admin / Operations lead",
+      "bio": "Briefly describe your role or collaboration preference.",
+      "timezone": "Example: Asia/Shanghai"
+    },
+    "feedback": {
+      "noProfile": "No profile was found.",
+      "loadError": "Failed to load your profile. Please try again later.",
+      "profileSaved": "Profile updated.",
+      "profileSaveError": "Could not save the profile. Please try again later.",
+      "contactSaved": "Contact details updated.",
+      "contactSaveError": "Could not save contact details. Please try again later.",
+      "passwordSaved": "Password updated.",
+      "passwordSaveError": "Password update failed. Check the current password and try again.",
+      "passwordMismatch": "The two new password entries do not match.",
+      "passwordTooShort": "The new password must contain at least 6 characters.",
+      "avatarCleared": "Avatar cleared.",
+      "avatarClearError": "Could not clear the avatar. Please try again later.",
+      "connectedAccountBound": "{provider} connected.",
+      "connectedAccountUnbound": "{provider} disconnected."
+    },
+    "connectedAccounts": {
+      "summary": "{count} / {total} connected",
+      "providers": {
+        "wechat": {
+          "name": "WeChat",
+          "description": "Use WeChat scan sign-in and official-account identity linking."
+        },
+        "dingtalk": {
+          "name": "DingTalk",
+          "description": "Use DingTalk sign-in for enterprise collaboration scenarios."
+        },
+        "feishu": {
+          "name": "Feishu",
+          "description": "Use Feishu sign-in and identity recognition inside organizations."
+        },
+        "google": {
+          "name": "Google",
+          "description": "Use Google sign-in for global and general SaaS access."
+        }
+      },
+      "fields": {
+        "account": "Account",
+        "connectedAt": "Connected at"
+      },
+      "status": {
+        "connected": "Connected",
+        "disconnected": "Not connected",
+        "unavailable": "Unavailable"
+      },
+      "actions": {
+        "bind": "Connect",
+        "rebind": "Reconnect",
+        "unbind": "Disconnect",
+        "confirmUnbind": "Disconnect"
+      },
+      "dialogs": {
+        "unbindTitle": "Disconnect account",
+        "unbindDescription": "Disconnect this account from {provider}? You will not be able to use this method to sign in until it is connected again."
+      }
+    }
+  },
+  "organizationPage": {
+    "header": {
+      "eyebrow": "Tenant center",
+      "title": "Organization",
+      "description": "The organization is the current tenant for now. Review the logo, verification state, contact address, and localization settings."
+    },
+    "common": {
+      "empty": "--",
+      "loading": "Loading..."
+    },
+    "summary": {
+      "organization": "Organization",
+      "logo": "Logo",
+      "tenant": "Tenant",
+      "scope": "Scope",
+      "verified": "Verification",
+      "updatedAt": "Updated",
+      "customLogo": "Custom logo",
+      "defaultLogo": "Default logo",
+      "orgEqualsTenant": "Organization is tenant"
+    },
+    "sections": {
+      "foundation": {
+        "title": "Foundation",
+        "description": "Organization and tenant are treated as one entity; multiple tenants under one organization are not modeled yet."
+      },
+      "status": {
+        "title": "Verification & status",
+        "description": "Shows tenant operating state, business verification, and review details."
+      },
+      "contact": {
+        "title": "Contact & address",
+        "description": "Used for operational contact, domain ownership, and registered address display."
+      },
+      "localization": {
+        "title": "Localization",
+        "description": "Controls the default language, timezone, and basic profile attachments."
+      }
+    },
+    "fields": {
+      "organizationName": "Organization name",
+      "companyName": "Company name",
+      "tenantCode": "Tenant code",
+      "tenantType": "Tenant type",
+      "industryScale": "Industry / scale",
+      "description": "Description",
+      "tenantStatus": "Tenant status",
+      "verifiedStatus": "Verification status",
+      "unifiedSocialCreditCode": "Unified social credit code",
+      "verifiedAt": "Verified at",
+      "rejectedReason": "Rejected reason",
+      "contactName": "Contact",
+      "contactPhone": "Phone",
+      "contactEmail": "Email",
+      "primaryDomain": "Primary domain",
+      "location": "Location",
+      "address": "Address",
+      "postalCode": "Postal code",
+      "language": "Language",
+      "timeZone": "Timezone",
+      "businessLicenseUrl": "Business license",
+      "logoUrl": "Logo URL",
+      "updatedAt": "Last updated"
+    },
+    "actions": {
+      "editLogo": "Edit logo",
+      "clearLogo": "Clear logo",
+      "uploadLogo": "Upload logo",
+      "cancel": "Cancel",
+      "save": "Save",
+      "clear": "Clear"
+    },
+    "tenantType": {
+      "company": "Organization",
+      "individual": "Personal"
+    },
+    "status": {
+      "tenant": {
+        "trial": "Trial",
+        "active": "Active",
+        "suspended": "Suspended",
+        "cancelled": "Cancelled"
+      },
+      "verified": {
+        "unverified": "Unverified",
+        "pending": "Pending",
+        "verified": "Verified",
+        "rejected": "Rejected"
+      }
+    },
+    "logo": {
+      "alt": "{name} organization logo",
+      "edit": "Edit organization logo",
+      "previewAlt": "{name} organization logo preview",
+      "customPreview": "Using custom logo",
+      "defaultPreview": "Using default logo"
+    },
+    "dialogs": {
+      "logo": {
+        "title": "Edit organization logo",
+        "description": "Upload an image or paste a logo URL. Saving updates the current organization page.",
+        "uploadHint": "Use a 1:1 PNG or JPG under 5MB. This is saved locally until the organization profile API is connected."
+      }
+    },
+    "placeholders": {
+      "logoUrl": "https://example.com/logo.png"
+    },
+    "feedback": {
+      "noProfile": "No organization profile was found.",
+      "loadError": "Failed to load organization profile. Please try again later.",
+      "logoSaved": "Organization logo updated.",
+      "logoCleared": "Organization logo cleared.",
+      "logoFileTypeError": "Choose an image file.",
+      "logoFileSizeError": "Logo image must be under 5MB.",
+      "logoReadError": "Could not read the logo image. Choose another file."
     }
   },
   "membersPage": {
     "header": {
-      "eyebrow": "Workspace",
+      "eyebrow": "Tenant management",
       "title": "Members",
-      "description": "Invite, review, and govern tenant operators with a lower-noise member management surface.",
-      "addMember": "Add member"
-    },
-    "metrics": {
-      "members": {
-        "label": "Members",
-        "trend": "{count} active"
-      },
-      "pendingInvites": {
-        "label": "Pending invites",
-        "trendWarning": "Need follow-up",
-        "trendOk": "None pending"
-      },
-      "adminCoverage": {
-        "label": "Admin coverage",
-        "trendOk": "Primary owner available",
-        "trendWarning": "No owner found"
-      }
-    },
-    "signals": {
-      "ownerCoverage": {
-        "title": "Owner coverage",
-        "description": "Two primary owners are active this week, keeping tenant-critical approvals covered."
-      },
-      "pendingOnboarding": {
-        "title": "Pending onboarding",
-        "description": "Three invitations are older than 72 hours and should be nudged or revoked."
-      },
-      "securityReview": {
-        "title": "Security review",
-        "description": "One suspended analyst still has historical billing exports attached to their profile."
-      }
-    },
-    "sections": {
-      "accessPosture": {
-        "title": "Access posture",
-        "description": "Lead with operational signals before dropping into the full member directory."
-      },
-      "nextActions": {
-        "title": "Next actions",
-        "description": "Keep repetitive administration visible without turning the page into a tool menu.",
-        "reviewInvites": "Review pending invites",
-        "exportAccess": "Export member access",
-        "auditRoles": "Audit admin roles"
-      }
+      "description": "Manage tenant members, roles, and access status.",
+      "addMember": "Add member",
+      "inviteMember": "Invite member"
     },
     "table": {
-      "title": "Workspace members",
-      "description": "Keep the directory focused on the fields operators actually scan, and push everything else into the detail drawer.",
-      "toolbarTitle": "{count} members in scope",
-      "toolbarHint": "Search, filter, then open the drawer for contextual actions.",
+      "toolbarTitle": "{count} members",
+      "countHint": "{total} total, {active} active, {invited} invited, {suspended} suspended",
       "searchPlaceholder": "Search by name, email, or role",
+      "searchAriaLabel": "Search members",
       "filterAriaLabel": "Member status filters",
+      "memberTitle": "{name}, {username}, {phone}, {email}, {role}, {team}, {status}",
+      "statusTitle": "Current status: {status}",
+      "avatarAlt": "{name} avatar",
+      "emptyPhone": "Not set",
+      "primaryOwner": "Primary owner",
+      "selectPage": "Select members on this page",
+      "selectMember": "Select {name}",
       "columns": {
         "name": "Name",
+        "phone": "Phone",
         "email": "Email",
         "role": "Role",
         "status": "Status",
         "lastActive": "Last active"
       }
+    },
+    "status": {
+      "Active": "Active",
+      "Invited": "Invited",
+      "Suspended": "Suspended"
     },
     "filters": {
       "all": "All members",
@@ -425,30 +840,25 @@
       "description": "Try widening the status scope or searching by another field.",
       "resetFilters": "Reset filters"
     },
-    "drawer": {
-      "accessSummary": {
-        "title": "Access summary",
-        "description": "{name} currently operates in the {team} group with scoped console permissions."
-      },
-      "followUp": {
-        "title": "Suggested follow-up",
-        "invited": "Confirm invitation acceptance or resend access instructions.",
-        "suspended": "Review audit history before restoring workspace access.",
-        "active": "Review role scope before expanding access to billing or tenant settings."
-      },
-      "fields": {
-        "role": "Role",
-        "status": "Status",
-        "team": "Team",
-        "lastActive": "Last active"
-      },
-      "actions": {
-        "edit": "Edit member",
-        "disableInvite": "Disable invite",
-        "disableMember": "Disable member",
-        "enableMember": "Enable member",
-        "delete": "Delete member"
-      }
+    "actions": {
+      "menuLabel": "Member actions for {name}",
+      "edit": "Edit user",
+      "disableInvite": "Disable user",
+      "disableMember": "Disable user",
+      "enableMember": "Enable user",
+      "resetPassword": "Reset password",
+      "unlink": "Unlink"
+    },
+    "bulk": {
+      "selected": "{count} selected",
+      "disable": "Disable selected",
+      "enable": "Enable selected",
+      "unlink": "Unlink selected"
+    },
+    "pagination": {
+      "summary": "Page {page} / {totalPages}, {total} total",
+      "previous": "Previous",
+      "next": "Next"
     },
     "dialogs": {
       "create": {
@@ -460,68 +870,127 @@
       "edit": {
         "title": "Edit member"
       },
+      "reset": {
+        "title": "Reset password",
+        "description": "Set a new temporary password for {name}."
+      },
+      "unlink": {
+        "title": "Unlink member",
+        "description": "Unlink {name} from the current tenant? This will not delete the user account."
+      },
+      "bulkUnlink": {
+        "title": "Unlink selected members",
+        "description": "Unlink {count} selected members from the current tenant? This will not delete user accounts."
+      },
       "fields": {
         "email": "Email",
         "nickname": "Nickname",
         "teamRemark": "Team remark",
         "role": "Role",
-        "defaultRole": "Default member"
+        "defaultRole": "Default member",
+        "nextPassword": "New temporary password"
       },
       "actions": {
         "cancel": "Cancel",
         "create": "Create member",
         "sendInvite": "Send invite",
-        "save": "Save"
+        "save": "Save",
+        "resetPassword": "Reset password",
+        "unlink": "Unlink"
       }
+    },
+    "feedback": {
+      "createSuccess": "Member created.",
+      "inviteSuccess": "Member invitation created.",
+      "updateSuccess": "Member profile updated.",
+      "resetPasswordSuccess": "{name}'s password has been reset.",
+      "unlinkSuccess": "Member association unlinked.",
+      "bulkDisabled": "{count} members disabled.",
+      "bulkEnabled": "{count} members enabled.",
+      "bulkUnlinkSuccess": "{count} member associations unlinked.",
+      "memberDisabled": "Member disabled.",
+      "memberEnabled": "Member enabled.",
+      "createError": "Could not create the member. Try again later.",
+      "inviteError": "Could not create the invitation. Try again later.",
+      "updateError": "Could not save the member profile. Try again later.",
+      "resetPasswordError": "Could not reset the password. Try again later.",
+      "resetPasswordLength": "The new temporary password must contain at least 6 characters.",
+      "unlinkError": "Could not unlink the member association. Try again later.",
+      "bulkDisableError": "Could not disable the selected members. Try again later.",
+      "bulkEnableError": "Could not enable the selected members. Try again later.",
+      "bulkUnlinkError": "Could not unlink the selected members. Try again later.",
+      "memberDisableError": "Could not disable the member. Try again later.",
+      "memberEnableError": "Could not enable the member. Try again later."
     }
   },
   "rolesPage": {
     "header": {
-      "eyebrow": "Workspace",
+      "eyebrow": "Tenant management",
       "title": "Roles & permissions",
-      "description": "Manage real tenant roles and permissions from the database with a simplified page layout.",
+      "description": "Manage tenant role definitions, status, and permission bindings.",
       "create": "Create role"
     },
-    "metrics": {
-      "roles": {
-        "label": "Roles",
-        "trend": "{count} active"
-      },
-      "customRoles": {
-        "label": "Custom roles",
-        "trend": "Non-system roles only"
-      },
-      "permissions": {
-        "label": "Permissions",
-        "trend": "From tenant permission mappings"
-      }
+    "toolbar": {
+      "count": "{count} roles",
+      "countHint": "{total} total, {active} active, {disabled} disabled, {system} system, {custom} custom",
+      "searchPlaceholder": "Search by role, code, or permission",
+      "searchAriaLabel": "Search roles",
+      "filterAriaLabel": "Role filters"
+    },
+    "filters": {
+      "all": "All roles",
+      "active": "Active",
+      "disabled": "Disabled",
+      "system": "System",
+      "custom": "Custom"
     },
     "list": {
-      "title": "Role list",
-      "description": "Show role name, status, and permission count first, then open details only when needed.",
       "noDescription": "No description",
-      "system": "System role",
+      "noPermissions": "No permissions assigned",
       "permissionCount": "{count} permissions",
-      "permissionsColumn": "Permissions"
-    },
-    "detail": {
-      "title": "Role details",
-      "description": "Review the current role definition and its bound permissions.",
-      "edit": "Edit role",
-      "delete": "Delete role",
-      "fields": {
+      "roleTitle": "{name}, {code}, {status}, {type}, {permissions} permissions",
+      "selectPage": "Select roles on this page",
+      "selectRole": "Select {name}",
+      "columns": {
+        "name": "Role",
         "code": "Role code",
-        "name": "Role name",
         "status": "Status",
+        "type": "Type",
+        "permissions": "Permissions",
         "description": "Description"
-      },
-      "permissionsTitle": "Permission list",
-      "permissionsDescription": "Permission codes currently bound to this role.",
-      "noPermissions": "No permissions assigned"
+      }
+    },
+    "type": {
+      "system": "System role",
+      "custom": "Custom role",
+      "systemIcon": "System role",
+      "customIcon": "Custom role"
+    },
+    "actions": {
+      "menuLabel": "Role actions for {name}",
+      "edit": "Edit role",
+      "enable": "Enable role",
+      "disable": "Disable role",
+      "delete": "Delete role"
+    },
+    "bulk": {
+      "selected": "{count} roles selected",
+      "disable": "Disable selected",
+      "enable": "Enable selected",
+      "delete": "Delete selected"
+    },
+    "pagination": {
+      "summary": "Page {page} / {totalPages}, {total} total",
+      "previous": "Previous",
+      "next": "Next"
     },
     "dialog": {
       "createTitle": "Create role",
       "editTitle": "Edit role",
+      "deleteTitle": "Delete role",
+      "deleteDescription": "Delete {name}? System roles cannot be deleted. Custom role permission bindings will be removed.",
+      "bulkDeleteTitle": "Delete selected roles",
+      "bulkDeleteDescription": "Delete {count} selected custom roles? System roles will be ignored.",
       "fields": {
         "code": "Role code",
         "name": "Role name",
@@ -532,7 +1001,8 @@
       "permissionsDescription": "Click tags to toggle permission bindings.",
       "cancel": "Cancel",
       "create": "Create role",
-      "save": "Save"
+      "save": "Save",
+      "delete": "Delete"
     },
     "status": {
       "active": "Active",
@@ -541,8 +1011,9 @@
     "empty": {
       "loadingTitle": "Loading roles...",
       "loadingDescription": "Reading tenant roles and permissions from the console BFF.",
-      "title": "No roles found for this tenant.",
-      "description": "Create a role first, then continue configuring permissions."
+      "title": "No roles match the current filters.",
+      "description": "Try widening the filter scope or searching by another field.",
+      "resetFilters": "Reset filters"
     },
     "feedback": {
       "loadError": "Failed to load role data. Please try again later.",
@@ -550,8 +1021,156 @@
       "createError": "Role creation failed. Please try again later.",
       "updateSuccess": "Role updated.",
       "updateError": "Role update failed. Please try again later.",
+      "enableSuccess": "Role enabled.",
+      "enableError": "Role enable failed. Please try again later.",
+      "disableSuccess": "Role disabled.",
+      "disableError": "Role disable failed. Please try again later.",
       "deleteSuccess": "Role deleted.",
-      "deleteError": "Role delete failed. Please try again later."
+      "deleteError": "Role delete failed. Please try again later.",
+      "bulkDisabled": "{count} roles disabled.",
+      "bulkEnabled": "{count} roles enabled.",
+      "bulkDeleted": "{count} custom roles deleted.",
+      "bulkDisableError": "Bulk disable failed. Please try again later.",
+      "bulkEnableError": "Bulk enable failed. Please try again later.",
+      "bulkDeleteError": "Bulk delete failed. Please try again later."
+    }
+  },
+  "modelGatewayPage": {
+    "header": {
+      "eyebrow": "AI Gateway",
+      "title": "Model Gateway",
+      "description": "Manage online models, private models, endpoints, capability tags, and tenant/agent grants.",
+      "badge": "Production keys pending"
+    },
+    "summary": {
+      "ariaLabel": "Model gateway summary",
+      "models": "Registered models",
+      "modelsValue": "{active} / {total} active",
+      "privateModels": "Private models",
+      "grants": "Grants",
+      "grantsValue": "{active} / {total} active"
+    },
+    "providers": {
+      "doubao": "Doubao",
+      "claude": "Claude",
+      "private": "Private",
+      "custom": "Custom"
+    },
+    "filters": {
+      "all": "All models",
+      "active": "Active",
+      "inactive": "Inactive",
+      "online": "Online",
+      "private": "Private"
+    },
+    "actions": {
+      "addModel": "Add model",
+      "addGrant": "Add grant",
+      "modelMenu": "Model actions for {name}",
+      "grantMenu": "Grant actions",
+      "editModel": "Edit model",
+      "grantModel": "Grant tenant",
+      "enableModel": "Enable model",
+      "disableModel": "Disable model",
+      "editGrant": "Edit grant",
+      "enableGrant": "Enable grant",
+      "disableGrant": "Disable grant"
+    },
+    "table": {
+      "searchPlaceholder": "Search by model, provider, endpoint, or capability",
+      "searchAriaLabel": "Search models",
+      "filterAriaLabel": "Model filters",
+      "toolbarTitle": "{count} models",
+      "columns": {
+        "model": "Model",
+        "provider": "Provider",
+        "capabilities": "Capabilities",
+        "endpoint": "Endpoint",
+        "key": "Key env",
+        "status": "Status"
+      }
+    },
+    "grants": {
+      "title": "Model grants",
+      "count": "{count} grants",
+      "allAgents": "All agents",
+      "noReason": "No grant reason",
+      "permanent": "Permanent",
+      "columns": {
+        "model": "Model",
+        "tenant": "Tenant",
+        "agent": "Agent",
+        "priority": "Priority",
+        "expires": "Expires",
+        "status": "Status"
+      }
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "pagination": {
+      "summary": "Page {page} / {totalPages}, {total} models",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "dialogs": {
+      "createModel": {
+        "title": "Add model"
+      },
+      "editModel": {
+        "title": "Edit model"
+      },
+      "createGrant": {
+        "title": "Add grant"
+      },
+      "editGrant": {
+        "title": "Edit grant"
+      },
+      "fields": {
+        "modelName": "Model name",
+        "modelCode": "Model code",
+        "provider": "Provider",
+        "protocol": "Protocol",
+        "endpointUrl": "Endpoint URL",
+        "apiKeyEnvVar": "API key env var",
+        "capabilities": "Capabilities, comma separated",
+        "config": "Non-sensitive config JSON",
+        "grantModel": "Grant model",
+        "selectModel": "Select model",
+        "tenantId": "Tenant ID",
+        "agentId": "Agent ID, optional",
+        "priority": "Priority, lower value wins",
+        "reason": "Grant reason",
+        "expiresAt": "Expiration date",
+        "grantActive": "Enable grant now"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "save": "Save"
+      }
+    },
+    "empty": {
+      "loadingTitle": "Loading models...",
+      "loadingDescription": "Reading model registry and grants from AI Gateway.",
+      "title": "No models match the current filters.",
+      "description": "Try widening the filters or adding an online/private model.",
+      "resetFilters": "Reset filters"
+    },
+    "feedback": {
+      "loadError": "Failed to load model data. Check whether AI Gateway is running.",
+      "modelCreated": "Model created.",
+      "modelUpdated": "Model updated.",
+      "modelEnabled": "Model enabled.",
+      "modelDisabled": "Model disabled.",
+      "modelSaveError": "Model save failed. Check endpoint, capability tags, and config JSON.",
+      "modelStateError": "Model state update failed. Please try again later.",
+      "grantCreated": "Grant created.",
+      "grantUpdated": "Grant updated.",
+      "grantEnabled": "Grant enabled.",
+      "grantDisabled": "Grant disabled.",
+      "grantSaveError": "Grant save failed. Check tenant, model, and quota.",
+      "grantStateError": "Grant state update failed. Please try again later."
     }
   }
 }

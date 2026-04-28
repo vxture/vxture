@@ -75,6 +75,15 @@ export class AccountAuthService {
     await this.repository.updatePassword(accountId, nextPasswordHash);
   }
 
+  async resetPassword(accountId: string, nextPassword: string): Promise<void> {
+    if (!nextPassword || nextPassword.length < 6) {
+      throw new BadRequestException('New password must contain at least 6 characters.');
+    }
+
+    const nextPasswordHash = await hash(nextPassword, 10);
+    await this.repository.updatePassword(accountId, nextPasswordHash);
+  }
+
   private async verifyPassword(password: string, account: AccountCredentialRecord): Promise<boolean> {
     const hash = account.passwordHash ?? '';
 

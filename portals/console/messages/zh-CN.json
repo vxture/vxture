@@ -8,11 +8,16 @@
   },
   "header": {
     "title": "控制台",
-    "searchPlaceholder": "搜索模块、成员、账单记录",
-    "workspace": "工作区",
+    "searchPlaceholder": "搜索成员、租户、订阅、账单",
+    "workspace": "工作台",
     "switchWorkspace": "切换工作区",
     "platformMode": "平台",
     "tenantMode": "租户",
+    "appLauncher": "应用入口",
+    "featureOverview": "功能总览",
+    "quickPreferences": "快捷偏好",
+    "workspaceActions": "工作台操作",
+    "help": "帮助",
     "notifications": "通知",
     "settings": "设置",
     "toggleTheme": "切换主题",
@@ -50,11 +55,11 @@
   "sidebar": {
     "eyebrow": "Vxture 控制台",
     "title": "控制台",
-    "description": "现代 SaaS 运营控制台",
+    "description": "账户、租户、成员与订阅自主管理",
     "ariaLabel": "控制台导航",
     "footer": {
       "label": "状态",
-      "value": "UI 框架预览"
+      "value": "自主管理平台"
     },
     "workspaceMode": {
       "platform": "平台工作区",
@@ -111,6 +116,10 @@
       "quotas": {
         "label": "用量配额",
         "description": "API 调用、存储等资源用量进度"
+      },
+      "modelGateway": {
+        "label": "模型接入",
+        "description": "在线模型、自建模型与租户授权"
       },
       "notifications": {
         "label": "通知提醒",
@@ -174,6 +183,7 @@
     "subscription": "订阅",
     "billing": "账单",
     "quotas": "配额",
+    "modelGateway": "模型接入",
     "notifications": "通知提醒",
     "security": "安全设置",
     "settings": "租户设置",
@@ -233,9 +243,9 @@
   },
   "dashboard": {
     "eyebrow": "概览",
-    "title": "工作区指挥中心",
-    "description": "用克制的控制面板查看当前租户的订阅健康度、配额压力与访问姿态。",
-    "createAction": "创建工作区操作",
+    "title": "账户与租户管理台",
+    "description": "面向用户与租户的自主管理入口，集中查看成员、订阅、账单、配额与安全状态。",
+    "createAction": "新增管理事项",
     "stats": {
       "plan": {
         "label": "当前套餐",
@@ -255,7 +265,7 @@
     },
     "quickActions": {
       "title": "快捷操作",
-      "description": "引导高频工作区操作，而不是堆叠一排主按钮。",
+      "description": "引导高频管理动作，而不是堆叠一排主按钮。",
       "addMember": {
         "label": "添加成员",
         "description": "邀请运营人员、工作区所有者和只读审查者。"
@@ -309,108 +319,513 @@
     }
   },
   "settings": {
-    "eyebrow": "设置",
+    "eyebrow": "高级设置",
     "title": "租户设置",
-    "description": "设置页采用清晰分卡和克制密度，而不是一整面连续长表单。",
+    "description": "配置租户级策略、准入控制、安全约束与审计规则。",
     "save": "保存更改",
-    "workspace": {
-      "title": "工作区资料",
-      "description": "公开工作区名称、本地化信息和管理联系人。",
-      "name": "工作区名称",
-      "domain": "主域名",
-      "email": "运营联系人"
+    "reset": "恢复默认",
+    "backend": {
+      "pending": "待后端实现"
     },
-    "notifications": {
-      "title": "通知",
-      "description": "将开关项成组展示，并保持视觉克制。",
-      "billing": {
-        "title": "账单提醒",
-        "description": "在续费或发票逾期前通知财务负责人。"
+    "summary": {
+      "title": "租户设置概览",
+      "scope": "配置范围",
+      "scopeValue": "租户策略",
+      "enabled": "已启用",
+      "enabledValue": "{count} 项",
+      "profile": "资料维护",
+      "profileValue": "另页管理"
+    },
+    "general": {
+      "title": "一般设置",
+      "count": "{count} 组"
+    },
+    "table": {
+      "policy": "策略",
+      "state": "状态",
+      "value": "设置"
+    },
+    "states": {
+      "enabled": "已启用",
+      "disabled": "已关闭"
+    },
+    "sections": {
+      "access": {
+        "title": "访问准入",
+        "count": "{count} 项"
       },
-      "quota": {
-        "title": "配额预警",
-        "description": "当共享资源池超过阈值时发送提醒。"
+      "security": {
+        "title": "安全策略",
+        "count": "{count} 项"
       },
-      "approvals": {
-        "title": "新成员审批",
-        "description": "有访问申请待审核时通知工作区所有者。"
+      "data": {
+        "title": "数据与审计",
+        "count": "{count} 项"
+      }
+    },
+    "rows": {
+      "inviteApproval": {
+        "title": "邀请审批",
+        "hint": "成员邀请进入租户前需要管理员确认。"
+      },
+      "externalMembers": {
+        "title": "外部成员",
+        "hint": "允许非组织域账号加入当前租户。"
+      },
+      "defaultRole": {
+        "title": "默认角色",
+        "hint": "新成员通过邀请后获得的初始角色。"
+      },
+      "mfaRequired": {
+        "title": "强制多因素认证",
+        "hint": "要求成员登录控制台时完成额外验证。"
+      },
+      "trustedDeviceReview": {
+        "title": "新设备复核",
+        "hint": "首次使用新设备登录后记录并进入复核。"
+      },
+      "sessionTimeout": {
+        "title": "会话有效期",
+        "hint": "控制台登录会话保持在线的最长时间。"
+      },
+      "auditRetention": {
+        "title": "审计保留",
+        "hint": "租户操作日志在平台侧保留的时间。"
+      },
+      "exportApproval": {
+        "title": "数据导出审批",
+        "hint": "导出成员、账单和审计数据前需要确认。"
+      },
+      "apiKeyCreation": {
+        "title": "API Key 自助创建",
+        "hint": "允许成员自行创建集成用访问密钥。"
+      }
+    },
+    "options": {
+      "defaultRole": {
+        "readonly": "只读成员",
+        "member": "普通成员",
+        "admin": "管理员"
+      },
+      "sessionTimeout": {
+        "8h": "8 小时",
+        "24h": "24 小时",
+        "7d": "7 天"
+      },
+      "auditRetention": {
+        "90": "90 天",
+        "180": "180 天",
+        "365": "365 天"
       }
     },
     "danger": {
       "title": "危险区域",
-      "description": "以下操作会影响当前租户的可用性，需要二次确认。",
+      "count": "高风险操作",
+      "confirmRequired": "需要确认",
       "cancelTenant": {
         "title": "租户注销",
-        "description": "注销租户会进入严格确认流程，后续需要输入租户名称完成确认。",
         "confirmHint": "执行前需要二次确认，并输入当前租户名称。",
         "action": "注销租户"
       }
+    },
+    "feedback": {
+      "saved": "租户设置已保存到前端本地状态，待后端实现后同步到服务端。",
+      "reset": "租户设置已恢复为默认策略。"
+    }
+  },
+  "notificationsPage": {
+    "header": {
+      "eyebrow": "个人设置",
+      "title": "通知提醒",
+      "description": "订阅已开启"
+    },
+    "actions": {
+      "save": "保存偏好",
+      "reset": "恢复默认"
+    },
+    "backend": {
+      "pending": "待后端实现"
+    },
+    "preference": {
+      "label": "通知偏好",
+      "enabled": "订阅已开启"
+    },
+    "summary": {
+      "title": "通知订阅概览",
+      "topics": "订阅主题",
+      "topicsValue": "{enabled}/{total}",
+      "inboxDefault": "站内默认",
+      "emailValue": "邮件 {count} 项",
+      "smsValue": "短信 {count} 项"
+    },
+    "channels": {
+      "title": "基础提醒方式",
+      "short": {
+        "inbox": "站内",
+        "email": "邮件",
+        "sms": "短信"
+      },
+      "items": {
+        "inbox": {
+          "title": "站内消息"
+        },
+        "email": {
+          "title": "邮件"
+        },
+        "sms": {
+          "title": "短信"
+        }
+      }
+    },
+    "topics": {
+      "title": "订阅主题",
+      "count": "共 {count} 项",
+      "groupCount": "{count} 项",
+      "policyLocked": "策略锁定",
+      "policyLockedDescription": "该提醒由平台策略锁定，当前用户不能关闭。",
+      "toggleLabel": "{topic} - {channel}",
+      "subscribed": "订阅已开启",
+      "unsubscribed": "未订阅",
+      "columns": {
+        "topic": "主题",
+        "status": "状态"
+      },
+      "items": {
+        "account": {
+          "title": "账号动态"
+        },
+        "security": {
+          "title": "安全风险"
+        },
+        "subscription": {
+          "title": "服务订阅"
+        },
+        "billing": {
+          "title": "账单与发票"
+        },
+        "usage": {
+          "title": "用量与配额"
+        },
+        "product": {
+          "title": "产品与系统"
+        }
+      }
+    },
+    "groups": {
+      "identity": "账号与安全",
+      "commerce": "订阅与用量",
+      "system": "产品与系统"
+    },
+    "feedback": {
+      "saved": "通知偏好已保存到前端本地状态，待后端接入后同步到服务端。",
+      "reset": "通知偏好已恢复为默认配置。"
+    }
+  },
+  "profilePage": {
+    "header": {
+      "eyebrow": "账户中心",
+      "title": "个人信息",
+      "description": "集中管理头像、显示名称、联系方式和账号安全凭据。"
+    },
+    "common": {
+      "empty": "--",
+      "loading": "加载中..."
+    },
+    "summary": {
+      "defaultRole": "控制台用户",
+      "avatar": "头像",
+      "email": "邮箱",
+      "phone": "手机号",
+      "updatedAt": "更新于",
+      "customAvatar": "自定义头像",
+      "defaultAvatar": "默认头像"
+    },
+    "sections": {
+      "profile": {
+        "title": "基础资料",
+        "description": "用于控制台、协作列表和通知场景中的身份展示。"
+      },
+      "contact": {
+        "title": "联系方式",
+        "description": "用于通知、账号找回和本地化显示。"
+      },
+      "security": {
+        "title": "安全凭据",
+        "description": "密码仅用于登录校验，不会在页面明文展示。"
+      },
+      "connectedAccounts": {
+        "title": "第三方账号绑定",
+        "description": "管理微信、钉钉、飞书、Google 等登录方式，提升登录便利性和账号连续性。"
+      }
+    },
+    "fields": {
+      "displayName": "显示名称",
+      "username": "账号名",
+      "avatarUrl": "头像链接",
+      "headline": "头衔",
+      "bio": "简介",
+      "email": "邮箱",
+      "phone": "手机号",
+      "timezone": "时区",
+      "language": "语言",
+      "password": "密码",
+      "updatedAt": "资料更新时间",
+      "currentPassword": "当前密码",
+      "nextPassword": "新密码",
+      "confirmPassword": "再次输入新密码"
+    },
+    "language": {
+      "zhCN": "简体中文",
+      "enUS": "English (US)"
+    },
+    "security": {
+      "passwordSet": "已设置"
+    },
+    "avatar": {
+      "alt": "{name} 的头像",
+      "edit": "编辑头像",
+      "previewAlt": "{name} 的头像预览",
+      "customPreview": "使用自定义头像",
+      "defaultPreview": "使用默认头像"
+    },
+    "actions": {
+      "editProfile": "编辑资料",
+      "clearAvatar": "清除头像",
+      "edit": "编辑",
+      "changePassword": "修改密码",
+      "cancel": "取消",
+      "save": "保存",
+      "clear": "清除",
+      "updatePassword": "更新密码"
+    },
+    "dialogs": {
+      "profile": {
+        "title": "编辑基础资料",
+        "description": "头像预览会随链接变化实时更新，保存后同步到控制台身份信息。"
+      },
+      "contact": {
+        "title": "编辑联系信息",
+        "description": "保持联系方式准确，方便通知和账号找回。"
+      },
+      "password": {
+        "title": "修改密码",
+        "description": "请使用至少 6 位的新密码。"
+      }
+    },
+    "placeholders": {
+      "avatarUrl": "https://example.com/avatar.png",
+      "headline": "例如：平台管理员 / 运营负责人",
+      "bio": "简短介绍你的职责或协作偏好。",
+      "timezone": "例如：Asia/Shanghai"
+    },
+    "feedback": {
+      "noProfile": "未读取到个人资料。",
+      "loadError": "个人资料读取失败，请稍后重试。",
+      "profileSaved": "基础资料已更新。",
+      "profileSaveError": "基础资料保存失败，请稍后重试。",
+      "contactSaved": "联系方式已更新。",
+      "contactSaveError": "联系方式保存失败，请稍后重试。",
+      "passwordSaved": "密码已更新。",
+      "passwordSaveError": "密码更新失败，请确认当前密码是否正确。",
+      "passwordMismatch": "两次输入的新密码不一致。",
+      "passwordTooShort": "新密码至少需要 6 位。",
+      "avatarCleared": "头像已清除。",
+      "avatarClearError": "头像清除失败，请稍后重试。",
+      "connectedAccountBound": "{provider} 已绑定。",
+      "connectedAccountUnbound": "{provider} 已解绑。"
+    },
+    "connectedAccounts": {
+      "summary": "已绑定 {count} / {total}",
+      "providers": {
+        "wechat": {
+          "name": "微信",
+          "description": "用于微信扫码登录和公众号服务身份关联。"
+        },
+        "dingtalk": {
+          "name": "钉钉",
+          "description": "用于企业协同场景中的钉钉账号登录。"
+        },
+        "feishu": {
+          "name": "飞书",
+          "description": "用于飞书组织内的快捷登录和身份识别。"
+        },
+        "google": {
+          "name": "Google",
+          "description": "用于海外或通用 SaaS 场景的 Google 账号登录。"
+        }
+      },
+      "fields": {
+        "account": "绑定账号",
+        "connectedAt": "绑定时间"
+      },
+      "status": {
+        "connected": "已绑定",
+        "disconnected": "未绑定",
+        "unavailable": "暂不可用"
+      },
+      "actions": {
+        "bind": "绑定",
+        "rebind": "重新绑定",
+        "unbind": "解绑",
+        "confirmUnbind": "确认解绑"
+      },
+      "dialogs": {
+        "unbindTitle": "解绑第三方账号",
+        "unbindDescription": "确认解除当前账号与 {provider} 的绑定？后续将不能使用该方式直接登录。"
+      }
+    }
+  },
+  "organizationPage": {
+    "header": {
+      "eyebrow": "租户中心",
+      "title": "组织信息",
+      "description": "组织等同当前租户，集中展示组织 Logo、认证状态、联系地址和本地化配置。"
+    },
+    "common": {
+      "empty": "--",
+      "loading": "加载中..."
+    },
+    "summary": {
+      "organization": "组织",
+      "logo": "Logo",
+      "tenant": "租户",
+      "scope": "范围",
+      "verified": "认证",
+      "updatedAt": "更新于",
+      "customLogo": "自定义 Logo",
+      "defaultLogo": "默认 Logo",
+      "orgEqualsTenant": "组织即租户"
+    },
+    "sections": {
+      "foundation": {
+        "title": "基础资料",
+        "description": "组织与租户保持一体，当前暂不区分一个组织下多个租户。"
+      },
+      "status": {
+        "title": "认证与状态",
+        "description": "展示租户运行状态、企业认证和审核信息。"
+      },
+      "contact": {
+        "title": "联系与地址",
+        "description": "用于运营联系、域名归属和注册地址展示。"
+      },
+      "localization": {
+        "title": "本地化配置",
+        "description": "决定当前组织默认语言、时区和基础资料附件。"
+      }
+    },
+    "fields": {
+      "organizationName": "组织名称",
+      "companyName": "企业名称",
+      "tenantCode": "租户编码",
+      "tenantType": "租户类型",
+      "industryScale": "行业 / 规模",
+      "description": "描述",
+      "tenantStatus": "租户状态",
+      "verifiedStatus": "认证状态",
+      "unifiedSocialCreditCode": "统一社会信用代码",
+      "verifiedAt": "认证时间",
+      "rejectedReason": "拒绝原因",
+      "contactName": "联系人",
+      "contactPhone": "联系电话",
+      "contactEmail": "联系邮箱",
+      "primaryDomain": "主域名",
+      "location": "地区",
+      "address": "详细地址",
+      "postalCode": "邮编",
+      "language": "语言",
+      "timeZone": "时区",
+      "businessLicenseUrl": "营业执照",
+      "logoUrl": "Logo 链接",
+      "updatedAt": "最近更新时间"
+    },
+    "actions": {
+      "editLogo": "编辑 Logo",
+      "clearLogo": "清除 Logo",
+      "uploadLogo": "上传 Logo",
+      "cancel": "取消",
+      "save": "保存",
+      "clear": "清除"
+    },
+    "tenantType": {
+      "company": "组织",
+      "individual": "个人"
+    },
+    "status": {
+      "tenant": {
+        "trial": "试用中",
+        "active": "正常",
+        "suspended": "已暂停",
+        "cancelled": "已注销"
+      },
+      "verified": {
+        "unverified": "未认证",
+        "pending": "审核中",
+        "verified": "已认证",
+        "rejected": "已拒绝"
+      }
+    },
+    "logo": {
+      "alt": "{name} 的组织 Logo",
+      "edit": "编辑组织 Logo",
+      "previewAlt": "{name} 的组织 Logo 预览",
+      "customPreview": "使用自定义 Logo",
+      "defaultPreview": "使用默认 Logo"
+    },
+    "dialogs": {
+      "logo": {
+        "title": "编辑组织 Logo",
+        "description": "支持上传图片或填写 Logo 链接，保存后会同步到当前组织信息页。",
+        "uploadHint": "建议上传 1:1 比例 PNG 或 JPG，文件不超过 5MB。当前为前端本地保存，后续接入组织资料接口。"
+      }
+    },
+    "placeholders": {
+      "logoUrl": "https://example.com/logo.png"
+    },
+    "feedback": {
+      "noProfile": "未读取到组织资料。",
+      "loadError": "组织资料读取失败，请稍后重试。",
+      "logoSaved": "组织 Logo 已更新。",
+      "logoCleared": "组织 Logo 已清除。",
+      "logoFileTypeError": "请选择图片文件。",
+      "logoFileSizeError": "图片文件不能超过 5MB。",
+      "logoReadError": "Logo 图片读取失败，请重新选择。"
     }
   },
   "membersPage": {
     "header": {
-      "eyebrow": "工作区",
+      "eyebrow": "租户管理",
       "title": "成员管理",
-      "description": "邀请、审查并治理当前租户成员，用更低噪音的方式完成成员运维。",
-      "addMember": "新增成员"
-    },
-    "metrics": {
-      "members": {
-        "label": "成员数",
-        "trend": "{count} 人活跃"
-      },
-      "pendingInvites": {
-        "label": "待处理邀请",
-        "trendWarning": "需要跟进",
-        "trendOk": "暂无待处理"
-      },
-      "adminCoverage": {
-        "label": "管理员覆盖",
-        "trendOk": "存在主所有者",
-        "trendWarning": "未找到所有者"
-      }
-    },
-    "signals": {
-      "ownerCoverage": {
-        "title": "所有者覆盖",
-        "description": "本周已有两位主所有者保持活跃，可覆盖租户关键审批。"
-      },
-      "pendingOnboarding": {
-        "title": "待完成入驻",
-        "description": "有三条邀请已超过 72 小时，建议提醒或撤销。"
-      },
-      "securityReview": {
-        "title": "安全审查",
-        "description": "一名已禁用分析员仍保留历史账单导出记录。"
-      }
-    },
-    "sections": {
-      "accessPosture": {
-        "title": "访问态势",
-        "description": "先看关键运营信号，再进入完整成员目录。"
-      },
-      "nextActions": {
-        "title": "下一步操作",
-        "description": "保持高频管理动作可见，但不要把页面堆成工具菜单。",
-        "reviewInvites": "查看待处理邀请",
-        "exportAccess": "导出成员权限",
-        "auditRoles": "审查管理员角色"
-      }
+      "description": "管理当前租户的成员、角色和访问状态。",
+      "addMember": "新增成员",
+      "inviteMember": "邀请成员"
     },
     "table": {
-      "title": "工作区成员",
-      "description": "目录只保留运营最常扫描的字段，其余上下文放进详情抽屉。",
-      "toolbarTitle": "当前 {count} 名成员",
-      "toolbarHint": "先搜索和筛选，再在详情抽屉中执行上下文操作。",
+      "toolbarTitle": "{count} 人",
+      "countHint": "共 {total} 人，活跃 {active} 人，邀请 {invited} 人，禁用 {suspended} 人",
       "searchPlaceholder": "按姓名、邮箱或角色搜索",
+      "searchAriaLabel": "搜索成员",
       "filterAriaLabel": "成员状态筛选",
+      "memberTitle": "{name}，{username}，{phone}，{email}，{role}，{team}，{status}",
+      "statusTitle": "当前状态：{status}",
+      "avatarAlt": "{name} 的头像",
+      "emptyPhone": "未填写",
+      "primaryOwner": "主要所有者",
+      "selectPage": "选择当前页成员",
+      "selectMember": "选择 {name}",
       "columns": {
         "name": "姓名",
+        "phone": "电话",
         "email": "邮箱",
         "role": "角色",
         "status": "状态",
         "lastActive": "最近活跃"
       }
+    },
+    "status": {
+      "Active": "活跃",
+      "Invited": "已邀请",
+      "Suspended": "已禁用"
     },
     "filters": {
       "all": "全部成员",
@@ -425,30 +840,25 @@
       "description": "可以放宽状态范围，或改用其他字段搜索。",
       "resetFilters": "重置筛选"
     },
-    "drawer": {
-      "accessSummary": {
-        "title": "访问摘要",
-        "description": "{name} 当前在 {team} 分组下工作，并带有对应控制台权限。"
-      },
-      "followUp": {
-        "title": "建议跟进",
-        "invited": "确认邀请是否已接收，或重新发送接入说明。",
-        "suspended": "恢复访问前，先审查审计历史。",
-        "active": "扩展到账单或租户设置前，先复核角色范围。"
-      },
-      "fields": {
-        "role": "角色",
-        "status": "状态",
-        "team": "团队",
-        "lastActive": "最近活跃"
-      },
-      "actions": {
-        "edit": "编辑成员",
-        "disableInvite": "禁用邀请",
-        "disableMember": "禁用成员",
-        "enableMember": "启用成员",
-        "delete": "删除成员"
-      }
+    "actions": {
+      "menuLabel": "{name} 的成员操作",
+      "edit": "编辑用户",
+      "disableInvite": "禁用用户",
+      "disableMember": "禁用用户",
+      "enableMember": "启用用户",
+      "resetPassword": "重置密码",
+      "unlink": "解除关联"
+    },
+    "bulk": {
+      "selected": "已选择 {count} 人",
+      "disable": "批量禁用",
+      "enable": "批量启用",
+      "unlink": "批量解除关联"
+    },
+    "pagination": {
+      "summary": "第 {page} / {totalPages} 页，共 {total} 人",
+      "previous": "上一页",
+      "next": "下一页"
     },
     "dialogs": {
       "create": {
@@ -460,68 +870,127 @@
       "edit": {
         "title": "编辑成员"
       },
+      "reset": {
+        "title": "重置密码",
+        "description": "为 {name} 设置新的临时密码。"
+      },
+      "unlink": {
+        "title": "解除成员关联",
+        "description": "确认解除 {name} 与当前租户的关联？该操作不会删除用户账号。"
+      },
+      "bulkUnlink": {
+        "title": "批量解除成员关联",
+        "description": "确认解除已选 {count} 名成员与当前租户的关联？该操作不会删除用户账号。"
+      },
       "fields": {
         "email": "邮箱",
         "nickname": "昵称",
         "teamRemark": "团队备注",
         "role": "角色",
-        "defaultRole": "默认成员"
+        "defaultRole": "默认成员",
+        "nextPassword": "新临时密码"
       },
       "actions": {
         "cancel": "取消",
         "create": "创建成员",
         "sendInvite": "发送邀请",
-        "save": "保存"
+        "save": "保存",
+        "resetPassword": "确认重置",
+        "unlink": "解除关联"
       }
+    },
+    "feedback": {
+      "createSuccess": "成员已创建。",
+      "inviteSuccess": "成员邀请已创建。",
+      "updateSuccess": "成员资料已更新。",
+      "resetPasswordSuccess": "{name} 的密码已重置。",
+      "unlinkSuccess": "成员关联已解除。",
+      "bulkDisabled": "已禁用 {count} 名成员。",
+      "bulkEnabled": "已启用 {count} 名成员。",
+      "bulkUnlinkSuccess": "已解除 {count} 名成员关联。",
+      "memberDisabled": "成员已禁用。",
+      "memberEnabled": "成员已启用。",
+      "createError": "成员创建失败，请稍后重试。",
+      "inviteError": "成员邀请失败，请稍后重试。",
+      "updateError": "成员资料保存失败，请稍后重试。",
+      "resetPasswordError": "密码重置失败，请稍后重试。",
+      "resetPasswordLength": "新临时密码至少需要 6 位。",
+      "unlinkError": "成员关联解除失败，请稍后重试。",
+      "bulkDisableError": "批量禁用失败，请稍后重试。",
+      "bulkEnableError": "批量启用失败，请稍后重试。",
+      "bulkUnlinkError": "批量解除关联失败，请稍后重试。",
+      "memberDisableError": "成员禁用失败，请稍后重试。",
+      "memberEnableError": "成员启用失败，请稍后重试。"
     }
   },
   "rolesPage": {
     "header": {
-      "eyebrow": "工作区",
+      "eyebrow": "租户管理",
       "title": "角色与权限",
-      "description": "基于真实租户角色和权限表管理访问范围，页面保持简洁，不堆砌说明块。",
+      "description": "管理当前租户的角色定义、启用状态和权限绑定。",
       "create": "新建角色"
     },
-    "metrics": {
-      "roles": {
-        "label": "角色数",
-        "trend": "{count} 个启用中"
-      },
-      "customRoles": {
-        "label": "自定义角色",
-        "trend": "仅统计非系统角色"
-      },
-      "permissions": {
-        "label": "权限项",
-        "trend": "来自租户权限映射"
-      }
+    "toolbar": {
+      "count": "{count} 个角色",
+      "countHint": "共 {total} 个角色，启用 {active} 个，禁用 {disabled} 个，系统 {system} 个，自定义 {custom} 个",
+      "searchPlaceholder": "按角色名、编码或权限搜索",
+      "searchAriaLabel": "搜索角色",
+      "filterAriaLabel": "角色筛选"
+    },
+    "filters": {
+      "all": "全部角色",
+      "active": "启用",
+      "disabled": "禁用",
+      "system": "系统",
+      "custom": "自定义"
     },
     "list": {
-      "title": "角色列表",
-      "description": "只展示角色名、状态和权限数量，先解决管理任务，再展开细节。",
       "noDescription": "暂无描述",
-      "system": "系统角色",
+      "noPermissions": "未绑定权限",
       "permissionCount": "{count} 项权限",
-      "permissionsColumn": "权限数量"
-    },
-    "detail": {
-      "title": "角色详情",
-      "description": "查看当前角色定义和权限清单。",
-      "edit": "编辑角色",
-      "delete": "删除角色",
-      "fields": {
-        "code": "角色编码",
+      "roleTitle": "{name}，{code}，{status}，{type}，{permissions} 项权限",
+      "selectPage": "选择当前页角色",
+      "selectRole": "选择 {name}",
+      "columns": {
         "name": "角色名称",
+        "code": "角色编码",
         "status": "状态",
+        "type": "类型",
+        "permissions": "权限",
         "description": "描述"
-      },
-      "permissionsTitle": "权限清单",
-      "permissionsDescription": "当前角色已绑定的权限代码。",
-      "noPermissions": "未绑定权限"
+      }
+    },
+    "type": {
+      "system": "系统角色",
+      "custom": "自定义角色",
+      "systemIcon": "系统角色",
+      "customIcon": "自定义角色"
+    },
+    "actions": {
+      "menuLabel": "{name} 的角色操作",
+      "edit": "编辑角色",
+      "enable": "启用角色",
+      "disable": "禁用角色",
+      "delete": "删除角色"
+    },
+    "bulk": {
+      "selected": "已选择 {count} 个角色",
+      "disable": "批量禁用",
+      "enable": "批量启用",
+      "delete": "批量删除"
+    },
+    "pagination": {
+      "summary": "第 {page} / {totalPages} 页，共 {total} 个角色",
+      "previous": "上一页",
+      "next": "下一页"
     },
     "dialog": {
       "createTitle": "新建角色",
       "editTitle": "编辑角色",
+      "deleteTitle": "删除角色",
+      "deleteDescription": "确认删除 {name}？系统角色不可删除，删除自定义角色会解除其权限绑定。",
+      "bulkDeleteTitle": "批量删除角色",
+      "bulkDeleteDescription": "确认删除已选 {count} 个自定义角色？系统角色会被自动忽略。",
       "fields": {
         "code": "角色编码",
         "name": "角色名称",
@@ -532,7 +1001,8 @@
       "permissionsDescription": "点击标签切换权限绑定。",
       "cancel": "取消",
       "create": "创建角色",
-      "save": "保存"
+      "save": "保存",
+      "delete": "确认删除"
     },
     "status": {
       "active": "启用",
@@ -541,21 +1011,166 @@
     "empty": {
       "loadingTitle": "正在加载角色...",
       "loadingDescription": "正在从 console BFF 读取租户角色与权限。",
-      "title": "当前租户还没有角色。",
-      "description": "先创建一个角色，再继续配置权限。"
+      "title": "没有符合当前筛选条件的角色。",
+      "description": "可以放宽筛选范围，或改用其他字段搜索。",
+      "resetFilters": "重置筛选"
     },
     "feedback": {
-      "memberDisabled": "成员已禁用。",
-      "memberEnabled": "成员已启用。",
-      "memberDisableError": "成员禁用失败，请稍后重试。",
-      "memberEnableError": "成员启用失败，请稍后重试。",
       "loadError": "角色数据读取失败，请稍后重试。",
       "createSuccess": "角色已创建。",
       "createError": "角色创建失败，请稍后重试。",
       "updateSuccess": "角色已更新。",
       "updateError": "角色更新失败，请稍后重试。",
+      "enableSuccess": "角色已启用。",
+      "enableError": "角色启用失败，请稍后重试。",
+      "disableSuccess": "角色已禁用。",
+      "disableError": "角色禁用失败，请稍后重试。",
       "deleteSuccess": "角色已删除。",
-      "deleteError": "角色删除失败，请稍后重试。"
+      "deleteError": "角色删除失败，请稍后重试。",
+      "bulkDisabled": "已禁用 {count} 个角色。",
+      "bulkEnabled": "已启用 {count} 个角色。",
+      "bulkDeleted": "已删除 {count} 个自定义角色。",
+      "bulkDisableError": "批量禁用失败，请稍后重试。",
+      "bulkEnableError": "批量启用失败，请稍后重试。",
+      "bulkDeleteError": "批量删除失败，请稍后重试。"
+    }
+  },
+  "modelGatewayPage": {
+    "header": {
+      "eyebrow": "AI Gateway",
+      "title": "模型接入管理",
+      "description": "统一管理在线模型、自建模型、调用端点、能力标签与租户/智能体授权。",
+      "badge": "待接入生产密钥"
+    },
+    "summary": {
+      "ariaLabel": "模型接入概览",
+      "models": "模型注册",
+      "modelsValue": "{active} / {total} 启用",
+      "privateModels": "自建模型",
+      "grants": "授权关系",
+      "grantsValue": "{active} / {total} 启用"
+    },
+    "providers": {
+      "doubao": "豆包",
+      "claude": "Claude",
+      "private": "自建模型",
+      "custom": "自定义"
+    },
+    "filters": {
+      "all": "全部模型",
+      "active": "启用",
+      "inactive": "停用",
+      "online": "在线",
+      "private": "自建"
+    },
+    "actions": {
+      "addModel": "新增模型",
+      "addGrant": "新增授权",
+      "modelMenu": "{name} 的模型操作",
+      "grantMenu": "授权操作",
+      "editModel": "编辑模型",
+      "grantModel": "授权租户",
+      "enableModel": "启用模型",
+      "disableModel": "停用模型",
+      "editGrant": "编辑授权",
+      "enableGrant": "启用授权",
+      "disableGrant": "停用授权"
+    },
+    "table": {
+      "searchPlaceholder": "按模型、Provider、端点或能力搜索",
+      "searchAriaLabel": "搜索模型",
+      "filterAriaLabel": "模型筛选",
+      "toolbarTitle": "{count} 个模型",
+      "columns": {
+        "model": "模型",
+        "provider": "Provider",
+        "capabilities": "能力",
+        "endpoint": "端点",
+        "key": "密钥变量",
+        "status": "状态"
+      }
+    },
+    "grants": {
+      "title": "模型授权",
+      "count": "{count} 条授权",
+      "allAgents": "全部智能体",
+      "noReason": "暂无授权说明",
+      "permanent": "长期",
+      "columns": {
+        "model": "模型",
+        "tenant": "租户",
+        "agent": "智能体",
+        "priority": "优先级",
+        "expires": "有效期",
+        "status": "状态"
+      }
+    },
+    "status": {
+      "active": "启用",
+      "inactive": "停用"
+    },
+    "pagination": {
+      "summary": "第 {page} / {totalPages} 页，共 {total} 个模型",
+      "previous": "上一页",
+      "next": "下一页"
+    },
+    "dialogs": {
+      "createModel": {
+        "title": "新增模型"
+      },
+      "editModel": {
+        "title": "编辑模型"
+      },
+      "createGrant": {
+        "title": "新增授权"
+      },
+      "editGrant": {
+        "title": "编辑授权"
+      },
+      "fields": {
+        "modelName": "模型名称",
+        "modelCode": "模型编码",
+        "provider": "Provider",
+        "protocol": "协议",
+        "endpointUrl": "Endpoint URL",
+        "apiKeyEnvVar": "API Key 环境变量",
+        "capabilities": "能力标签，逗号分隔",
+        "config": "非敏感配置 JSON",
+        "grantModel": "授权模型",
+        "selectModel": "选择模型",
+        "tenantId": "租户 ID",
+        "agentId": "智能体 ID，可为空",
+        "priority": "优先级，数值越小越优先",
+        "reason": "授权说明",
+        "expiresAt": "到期日期",
+        "grantActive": "授权立即启用"
+      },
+      "actions": {
+        "cancel": "取消",
+        "save": "保存"
+      }
+    },
+    "empty": {
+      "loadingTitle": "正在加载模型...",
+      "loadingDescription": "正在从 AI Gateway 读取模型注册和授权关系。",
+      "title": "没有符合当前筛选条件的模型。",
+      "description": "可以放宽筛选范围，或新增一个在线/自建模型。",
+      "resetFilters": "重置筛选"
+    },
+    "feedback": {
+      "loadError": "模型数据读取失败，请确认 AI Gateway 是否已启动。",
+      "modelCreated": "模型已创建。",
+      "modelUpdated": "模型已更新。",
+      "modelEnabled": "模型已启用。",
+      "modelDisabled": "模型已停用。",
+      "modelSaveError": "模型保存失败，请检查端点、能力标签和配置 JSON。",
+      "modelStateError": "模型状态更新失败，请稍后重试。",
+      "grantCreated": "授权已创建。",
+      "grantUpdated": "授权已更新。",
+      "grantEnabled": "授权已启用。",
+      "grantDisabled": "授权已停用。",
+      "grantSaveError": "授权保存失败，请检查租户、模型和配额。",
+      "grantStateError": "授权状态更新失败，请稍后重试。"
     }
   }
 }

@@ -205,7 +205,7 @@ BCRYPT_ROUNDS=12
 # AI (agent-server only)
 DOUBAO_API_KEY=your-doubao-api-key
 DOUBAO_API_URL=https://ark.cn-beijing.volces.com/api/v3
-DOUBAO_DEFAULT_MODEL=doubao-pro-32k
+DOUBAO_DEFAULT_MODEL=doubao-seed-2-0-lite-260215
 ANTHROPIC_API_KEY=your-anthropic-api-key
 ANTHROPIC_DEFAULT_MODEL=claude-sonnet-4-20250514
 OPENAI_API_KEY=your-openai-api-key

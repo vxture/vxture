@@ -40,6 +40,7 @@ export interface TenantMemberView {
   tenantId: string;
   accountId: string;
   username: string;
+  avatarUrl: string | null;
   email: string | null;
   phone: string | null;
   nickname: string | null;

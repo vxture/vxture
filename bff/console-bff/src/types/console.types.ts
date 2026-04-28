@@ -89,6 +89,8 @@ export interface MemberRecord {
   id: string;
   accountId: string;
   name: string;
+  username: string;
+  avatarUrl: string | null;
   email: string;
   phone: string | null;
   role: string;
@@ -116,4 +118,33 @@ export interface RequestContext {
   user?: ConsoleUser;
   tenant?: TenantContext;
   capabilities?: Capability[];
+}
+
+export interface AiModelRecord {
+  id: string;
+  providerId: string | null;
+  modelCode: string;
+  modelName: string;
+  provider: string;
+  endpointUrl: string;
+  protocol: string;
+  capabilities: string[];
+  apiKeyEnvVar: string;
+  isActive: boolean;
+  config: Record<string, unknown> | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AiModelGrantRecord {
+  id: string;
+  modelId: string;
+  tenantId: string;
+  agentId: string | null;
+  priority: number;
+  reason: string | null;
+  expiresAt: string | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
