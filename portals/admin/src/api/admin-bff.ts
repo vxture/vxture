@@ -430,11 +430,12 @@ export async function sendAdminAssistantChat(payload: {
   page?: string;
   productCode?: string;
   tenantId?: string;
-}): Promise<AdminAssistantChatResponse> {
+}, signal?: AbortSignal): Promise<AdminAssistantChatResponse> {
   const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/assistant/chat`, {
     method: 'POST',
     credentials: 'include',
     cache: 'no-store',
+    signal,
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });

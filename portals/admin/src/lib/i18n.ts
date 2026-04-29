@@ -1,15 +1,17 @@
-import { DEFAULT_LOCALE, type Locale } from '@vxture/shared';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale } from '@vxture/shared';
+import enUSMessages from '../../messages/en-US.json';
+import zhCNMessages from '../../messages/zh-CN.json';
 
 export function normalizeConsoleLocale(locale: string | undefined): Locale {
-  return locale === 'en-US' || locale === 'zh-CN' ? locale : DEFAULT_LOCALE;
+  return locale && (SUPPORTED_LOCALES as readonly string[]).includes(locale) ? (locale as Locale) : DEFAULT_LOCALE;
 }
 
 export async function loadConsoleMessages(locale: Locale): Promise<Record<string, unknown>> {
   switch (locale) {
     case 'en-US':
-      return (await import('@/../messages/en-US.json')).default as Record<string, unknown>;
+      return enUSMessages as Record<string, unknown>;
     case 'zh-CN':
     default:
-      return (await import('@/../messages/zh-CN.json')).default as Record<string, unknown>;
+      return zhCNMessages as Record<string, unknown>;
   }
 }

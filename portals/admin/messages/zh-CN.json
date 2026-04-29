@@ -7,7 +7,9 @@
     }
   },
   "header": {
-    "title": "Admin",
+    "brandName": "vxture studio",
+    "brandHome": "vxture studio 首页",
+    "title": "智能运营中台",
     "searchPlaceholder": "搜索模型、产品发布、配置",
     "workspace": "工作台",
     "switchWorkspace": "切换工作区",
@@ -22,14 +24,197 @@
     "settings": "设置",
     "toggleTheme": "切换主题",
     "toggleLanguage": "切换语言",
+    "selectLanguage": "选择语言",
+    "language": {
+      "title": "选择语言"
+    },
+    "fullscreen": {
+      "enter": "显示器全屏",
+      "exit": "退出显示器全屏"
+    },
+    "theme": {
+      "system": "系统",
+      "light": "浅色",
+      "dark": "深色",
+      "switchTo": "切换到{theme}"
+    },
     "openNavigation": "展开导航",
     "closeNavigation": "关闭导航",
     "collapseNavigation": "收起导航",
-    "openAssistant": "展开助手",
+    "openAssistant": "开启智能助手",
     "closeAssistant": "收起助手",
+    "userMenu": {
+      "open": "打开用户菜单",
+      "unnamed": "未命名用户",
+      "switchUser": "切换账号",
+      "signOut": "退出登录",
+      "roles": {
+        "admin": "运营管理员",
+        "member": "成员",
+        "tenantAdmin": "租户管理员",
+        "superAdmin": "超级管理员",
+        "auditAdmin": "审计管理员",
+        "configAdmin": "配置管理员",
+        "helpdeskAdmin": "服务支持",
+        "readonlyAdmin": "只读观察员",
+        "user": "用户"
+      },
+      "badges": {
+        "personal": "个人认证",
+        "organization": "组织认证"
+      },
+      "settings": {
+        "title": "显示偏好",
+        "labels": {
+          "locale": "语言",
+          "theme": "主题",
+          "density": "界面密度",
+          "fontSize": "字号"
+        },
+        "hints": {
+          "locale": "切换当前运营后台的显示语言。",
+          "theme": "选择浅色、深色或跟随系统外观。",
+          "density": "调整界面元素间距，适配紧凑或宽松的工作习惯。",
+          "fontSize": "调整页面文字大小，提高阅读舒适度。"
+        },
+        "theme": {
+          "system": "系统",
+          "light": "浅色",
+          "dark": "深色"
+        },
+        "density": {
+          "compact": "紧凑",
+          "default": "默认",
+          "comfortable": "宽松"
+        },
+        "fontSize": {
+          "small": "小",
+          "default": "默认",
+          "large": "大"
+        }
+      }
+    },
     "tenantType": {
       "individual": "个人",
       "company": "组织"
+    }
+  },
+  "navigation": {
+    "fallback": "平台运营",
+    "sections": {
+      "overview": "运营总览",
+      "tenantsAccounts": "租户与账号",
+      "productsPlans": "产品与套餐",
+      "subscriptionsTransactions": "订阅与交易",
+      "capabilitiesServices": "能力与服务",
+      "financeSettlement": "财务与结算",
+      "supportCompliance": "支持与合规"
+    },
+    "items": {
+      "platformOverview": {
+        "label": "平台概览",
+        "description": "核心运营指标、各业务域关键趋势和平台健康快照。"
+      },
+      "opsTodos": {
+        "label": "运营待办",
+        "description": "聚合待审核、异常告警和需要人工介入的运营任务。"
+      },
+      "serviceHealth": {
+        "label": "服务健康",
+        "description": "展示服务运行状态摘要，异常时快速定位到服务监控。"
+      },
+      "tenants": {
+        "label": "租户管理",
+        "description": "管理平台租户资料、状态、生命周期和运营备注。"
+      },
+      "accounts": {
+        "label": "账号管理",
+        "description": "跨租户查询平台账号，管理账号状态、登录安全和联系方式。"
+      },
+      "verifications": {
+        "label": "组织认证",
+        "description": "审核租户企业资质材料，处理通过、驳回和复核状态。"
+      },
+      "adminRoles": {
+        "label": "角色权限",
+        "description": "维护运营平台内部角色和权限配置，与租户侧权限隔离。"
+      },
+      "servicePlans": {
+        "label": "服务套餐",
+        "description": "管理业务产品方案下的 Free、Pro、企业版等服务套餐，配置配额、价格和售卖范围。"
+      },
+      "productSolutions": {
+        "label": "产品方案",
+        "description": "按行业业务场景组合产品能力，定义方案边界、包含产品和适用客户。"
+      },
+      "products": {
+        "label": "产品能力",
+        "description": "管理可组合、可授权、可计量的基础产品能力，包括平台、智能体、大模型和三方接入能力。"
+      },
+      "promotions": {
+        "label": "推广优惠",
+        "description": "配置优惠码和折扣活动，限定适用产品、套餐和核销规则。"
+      },
+      "commerceOverview": {
+        "label": "商业概览",
+        "description": "聚合订阅、订单、收款、账单、发票、用量和优惠的运营指标与风险快照。"
+      },
+      "subscriptions": {
+        "label": "订阅权益",
+        "description": "运营侧管理租户服务权益实例，处理试用转正、续期、暂停、取消和配额风险。"
+      },
+      "orders": {
+        "label": "交易订单",
+        "description": "查询订单列表和详情，追踪支付状态并处理异常订单。"
+      },
+      "usageMetering": {
+        "label": "用量计量",
+        "description": "查询租户、产品和套餐维度的用量明细，维护计量规则和异常告警。"
+      },
+      "promotionRedemptions": {
+        "label": "优惠核销",
+        "description": "查看优惠码使用记录、折扣核销统计和订单关联数据。"
+      },
+      "serviceMonitor": {
+        "label": "服务监控",
+        "description": "查看服务运行详情、响应时间、错误率、可用性指标和告警规则。"
+      },
+      "modelGateway": {
+        "label": "模型接入",
+        "description": "维护 LLM Provider、API Key、限流、超时和调用端点。"
+      },
+      "modelGrants": {
+        "label": "模型策略",
+        "description": "按产品、租户和套餐配置模型访问权限、配额和路由优先级。"
+      },
+      "skills": {
+        "label": "技能接入",
+        "description": "注册和管理智能体可调用技能，配置上下线、端点和运行状态。"
+      },
+      "billing": {
+        "label": "账单管理",
+        "description": "管理账单生成、应收确认、异常处理和线下发票登记入口。"
+      },
+      "payments": {
+        "label": "收款管理",
+        "description": "收款台账与对账视角，查看线下/线上收款、账单关联和需关注流水。"
+      },
+      "invoices": {
+        "label": "发票管理",
+        "description": "线下发票台账，跟踪开票登记、寄送交付、红冲作废和账单关联。"
+      },
+      "tickets": {
+        "label": "工单反馈",
+        "description": "处理用户工单、人工分派、状态流转和反馈闭环。"
+      },
+      "announcements": {
+        "label": "通知公告",
+        "description": "发布平台公告和定向通知，查询通知触达与历史记录。"
+      },
+      "auditLogs": {
+        "label": "审计日志",
+        "description": "追溯运营后台关键操作，按操作人、时间和对象筛选审计记录。"
+      }
     }
   },
   "preferences": {
@@ -46,7 +231,7 @@
       "comfortable": "宽松"
     },
     "theme": {
-      "system": "跟随系统",
+      "system": "系统",
       "light": "浅色",
       "dark": "深色",
       "switchTo": "切换到{theme}"
@@ -142,18 +327,41 @@
     "close": "收起助手",
     "enterFullscreen": "全屏展开助手",
     "exitFullscreen": "退出全屏助手",
+    "workMode": "助手工作模式",
+    "resetWidth": "恢复默认宽度",
+    "modes": {
+      "max": "最大模式",
+      "sidebar": "边栏模式",
+      "floating": "浮动模式"
+    },
     "resizeWidth": "调整助手宽度",
-    "resizeBottom": "调整助手输入区高度",
     "empty": {
       "title": "有什么需要处理？",
-      "description": "可以直接问我关于“{page}”的问题。"
+      "description": "可以直接问我关于“{page}”的问题。",
+      "suggestionsLabel": "建议问题",
+      "suggestions": {
+        "summary": "总结“{page}”当前运营重点",
+        "risks": "分析“{page}”可能存在的风险",
+        "exceptions": "找出“{page}”需要优先处理的异常",
+        "actions": "给出“{page}”下一步行动建议"
+      }
+    },
+    "conversation": {
+      "current": "当前会话",
+      "new": "新会话",
+      "clear": "清空记录"
     },
     "composer": {
       "title": "输入",
       "placeholder": "围绕“{page}”输入你的问题、指令或草稿...",
+      "addResources": "添加资源和数据",
+      "voiceInput": "语音输入",
       "send": "发送",
       "sending": "发送中...",
-      "thinking": "正在生成回复...",
+      "stop": "停止生成",
+      "stopped": "已停止生成。",
+      "retry": "重试",
+      "thinking": "思考分析中...",
       "error": "智能助手请求失败，请稍后重试。"
     }
   },

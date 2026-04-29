@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { OpsTodosPage } from '@/modules/ops/OpsTodosPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/ops-todos" />;
+  return <OpsTodosPage />;
 }

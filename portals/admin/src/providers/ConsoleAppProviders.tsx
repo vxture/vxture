@@ -1,7 +1,7 @@
 'use client';
 
 import { startTransition, useEffect, useState } from 'react';
-import { ThemeProvider } from '@vxture/design-system';
+import { FullscreenProvider, ThemeProvider, TooltipProvider } from '@vxture/design-system';
 import type { Locale, Theme } from '@vxture/shared';
 import type { Density } from '@vxture/design-system';
 import { loadConsoleMessages, normalizeConsoleLocale } from '@/lib/i18n';
@@ -54,9 +54,11 @@ export function ConsoleAppProviders({
 
   return (
     <ThemeProvider defaultTheme={initialTheme} defaultDensity={initialDensity}>
-      <ConsoleIntlProvider locale={locale} messages={messages}>
-        {children}
-      </ConsoleIntlProvider>
+      <FullscreenProvider defaultMode="native" defaultLockScroll={false}>
+        <ConsoleIntlProvider locale={locale} messages={messages}>
+          <TooltipProvider>{children}</TooltipProvider>
+        </ConsoleIntlProvider>
+      </FullscreenProvider>
     </ThemeProvider>
   );
 }

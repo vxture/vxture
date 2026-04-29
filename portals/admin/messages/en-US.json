@@ -7,7 +7,9 @@
     }
   },
   "header": {
-    "title": "Admin",
+    "brandName": "vxture studio",
+    "brandHome": "vxture studio home",
+    "title": "Intelligent Operations Hub",
     "searchPlaceholder": "Search models, releases, and configuration",
     "workspace": "Workspace",
     "switchWorkspace": "Switch workspace",
@@ -22,14 +24,197 @@
     "settings": "Settings",
     "toggleTheme": "Toggle theme",
     "toggleLanguage": "Toggle language",
+    "selectLanguage": "Select language",
+    "language": {
+      "title": "Select language"
+    },
+    "fullscreen": {
+      "enter": "Enter fullscreen",
+      "exit": "Exit fullscreen"
+    },
+    "theme": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark",
+      "switchTo": "Switch to {theme}"
+    },
     "openNavigation": "Open navigation",
     "closeNavigation": "Close navigation",
     "collapseNavigation": "Collapse navigation",
-    "openAssistant": "Open assistant",
+    "openAssistant": "Open AI assistant",
     "closeAssistant": "Close assistant",
+    "userMenu": {
+      "open": "Open user menu",
+      "unnamed": "Unnamed user",
+      "switchUser": "Switch user",
+      "signOut": "Sign out",
+      "roles": {
+        "admin": "Operations admin",
+        "member": "Member",
+        "tenantAdmin": "Tenant admin",
+        "superAdmin": "Super Admin",
+        "auditAdmin": "Audit Admin",
+        "configAdmin": "Config Admin",
+        "helpdeskAdmin": "Helpdesk Admin",
+        "readonlyAdmin": "Readonly Admin",
+        "user": "User"
+      },
+      "badges": {
+        "personal": "Personal verified",
+        "organization": "Organization verified"
+      },
+      "settings": {
+        "title": "Display preferences",
+        "labels": {
+          "locale": "Language",
+          "theme": "Theme",
+          "density": "Interface density",
+          "fontSize": "Font size"
+        },
+        "hints": {
+          "locale": "Change the display language for the admin portal.",
+          "theme": "Choose light, dark, or system appearance.",
+          "density": "Adjust spacing for compact or comfortable workflows.",
+          "fontSize": "Adjust text size for reading comfort."
+        },
+        "theme": {
+          "system": "System",
+          "light": "Light",
+          "dark": "Dark"
+        },
+        "density": {
+          "compact": "Compact",
+          "default": "Default",
+          "comfortable": "Comfortable"
+        },
+        "fontSize": {
+          "small": "Small",
+          "default": "Default",
+          "large": "Large"
+        }
+      }
+    },
     "tenantType": {
       "individual": "Personal",
       "company": "Organization"
+    }
+  },
+  "navigation": {
+    "fallback": "Platform Operations",
+    "sections": {
+      "overview": "Overview",
+      "tenantsAccounts": "Tenants & Accounts",
+      "productsPlans": "Plans & Products",
+      "subscriptionsTransactions": "Subscriptions & Orders",
+      "capabilitiesServices": "Capabilities & Services",
+      "financeSettlement": "Finance & Settlement",
+      "supportCompliance": "Support & Compliance"
+    },
+    "items": {
+      "platformOverview": {
+        "label": "Platform Overview",
+        "description": "Core operating metrics, key trends across business domains, and platform health."
+      },
+      "opsTodos": {
+        "label": "Ops Todos",
+        "description": "Reviews, alerts, and operating tasks that need manual handling."
+      },
+      "serviceHealth": {
+        "label": "Service Health",
+        "description": "Service status summaries and quick access to monitoring when exceptions occur."
+      },
+      "tenants": {
+        "label": "Tenants",
+        "description": "Manage tenant profiles, status, lifecycle, and operating notes."
+      },
+      "accounts": {
+        "label": "Accounts",
+        "description": "Search accounts across tenants and manage status, security, and contacts."
+      },
+      "verifications": {
+        "label": "Org Verification",
+        "description": "Review organization credentials, approvals, rejections, and rechecks."
+      },
+      "adminRoles": {
+        "label": "Roles & Permissions",
+        "description": "Maintain internal platform roles and permissions, isolated from tenant roles."
+      },
+      "servicePlans": {
+        "label": "Service Plans",
+        "description": "Manage Free, Pro, and Enterprise service plans with quotas, prices, and sales scope."
+      },
+      "productSolutions": {
+        "label": "Product Solutions",
+        "description": "Compose capabilities into industry scenarios and define solution boundaries."
+      },
+      "products": {
+        "label": "Product Capabilities",
+        "description": "Manage composable, grantable, and metered platform, agent, model, and integration capabilities."
+      },
+      "promotions": {
+        "label": "Promotions",
+        "description": "Configure coupon and discount campaigns with product, plan, and redemption rules."
+      },
+      "commerceOverview": {
+        "label": "Commerce Overview",
+        "description": "Operating metrics and risk snapshots across subscriptions, orders, payments, billing, invoices, usage, and promotions."
+      },
+      "subscriptions": {
+        "label": "Entitlements",
+        "description": "Operate tenant service entitlement instances, renewals, suspensions, cancellations, and quota risks."
+      },
+      "orders": {
+        "label": "Orders",
+        "description": "Search order lists and details, track payment status, and handle exceptions."
+      },
+      "usageMetering": {
+        "label": "Usage Metering",
+        "description": "Review usage by tenant, product, and plan, and maintain metering rules and alerts."
+      },
+      "promotionRedemptions": {
+        "label": "Promotion Usage",
+        "description": "Review coupon usage, discount redemption statistics, and related orders."
+      },
+      "serviceMonitor": {
+        "label": "Service Monitoring",
+        "description": "Review response time, error rate, availability, and alert rules."
+      },
+      "modelGateway": {
+        "label": "Model Gateway",
+        "description": "Maintain LLM providers, API keys, rate limits, timeouts, and endpoints."
+      },
+      "modelGrants": {
+        "label": "Model Policies",
+        "description": "Configure model access, quotas, and routing priority by product, tenant, and plan."
+      },
+      "skills": {
+        "label": "Skill Integrations",
+        "description": "Register and manage callable agent skills, endpoints, publishing, and runtime status."
+      },
+      "billing": {
+        "label": "Billing",
+        "description": "Manage bill generation, receivables confirmation, exceptions, and offline invoice entries."
+      },
+      "payments": {
+        "label": "Payments",
+        "description": "Review online and offline payment ledgers, reconciliation, bill links, and notable flows."
+      },
+      "invoices": {
+        "label": "Invoices",
+        "description": "Track offline invoice registration, delivery, reversals, voiding, and bill links."
+      },
+      "tickets": {
+        "label": "Tickets",
+        "description": "Handle user tickets, manual assignment, status flow, and feedback closure."
+      },
+      "announcements": {
+        "label": "Announcements",
+        "description": "Publish platform announcements and targeted notices, and review delivery history."
+      },
+      "auditLogs": {
+        "label": "Audit Logs",
+        "description": "Trace key admin operations by operator, time, and target."
+      }
     }
   },
   "preferences": {
@@ -142,18 +327,41 @@
     "close": "Close assistant",
     "enterFullscreen": "Expand assistant to fullscreen",
     "exitFullscreen": "Exit assistant fullscreen",
+    "workMode": "Assistant work mode",
+    "resetWidth": "Reset default width",
+    "modes": {
+      "max": "Max mode",
+      "sidebar": "Sidebar mode",
+      "floating": "Floating mode"
+    },
     "resizeWidth": "Resize assistant width",
-    "resizeBottom": "Resize assistant input area",
     "empty": {
       "title": "What should we handle?",
-      "description": "Ask anything about \"{page}\"."
+      "description": "Ask anything about \"{page}\".",
+      "suggestionsLabel": "Suggested prompts",
+      "suggestions": {
+        "summary": "Summarize the current operating priorities for \"{page}\"",
+        "risks": "Analyze possible risks in \"{page}\"",
+        "exceptions": "Find exceptions in \"{page}\" that need priority handling",
+        "actions": "Suggest next actions for \"{page}\""
+      }
+    },
+    "conversation": {
+      "current": "Current chat",
+      "new": "New chat",
+      "clear": "Clear"
     },
     "composer": {
       "title": "Input",
       "placeholder": "Type a question, instruction, or draft for \"{page}\"...",
+      "addResources": "Add resources and data",
+      "voiceInput": "Voice input",
       "send": "Send",
       "sending": "Sending...",
-      "thinking": "Generating...",
+      "stop": "Stop generating",
+      "stopped": "Generation stopped.",
+      "retry": "Retry",
+      "thinking": "Thinking and analyzing...",
       "error": "Assistant request failed. Please try again."
     }
   },
