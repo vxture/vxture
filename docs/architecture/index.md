@@ -48,14 +48,14 @@
 
 | 实例 | 前端 | 后端 | BFF |
 | ---- | ---- | ---- | --- |
-| ruinagent | agent-studio/ruinagent | agent-server/ruinagent | bff/ruinagent-bff |
+| ruyinagent | agent-studio/ruyinagent | agent-server/ruyinagent | bff/ruyinagent-bff |
 
 ## Changelog
 
 ### v1.3.0 — 2026-03-11
 
 - 新增 `13-tech-stack.md`：技术栈选型文档，含当前基准版本与升级路径
-- 补充 Agent 实例索引表（ruinagent）
+- 补充 Agent 实例索引表（ruyinagent）
 
 ### v1.2.0 — 2026-03-10
 
