@@ -70,7 +70,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  agent-server/ruinagent:
+  agent-server/ruyinagent:
     dependencies:
       '@nestjs/jwt':
         specifier: ^11.0.0
@@ -245,7 +245,7 @@ importers:
 
   bff/gateway-bff: {}
 
-  bff/ruinagent-bff:
+  bff/ruyinagent-bff:
     dependencies:
       '@nestjs/common':
         specifier: ^11.0.0
