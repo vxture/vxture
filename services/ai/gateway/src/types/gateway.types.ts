@@ -1,9 +1,47 @@
-export type ChatRole = 'system' | 'user' | 'assistant';
+export type ChatRole = 'system' | 'user' | 'assistant' | 'tool';
 
 export interface ChatMessage {
   role: ChatRole;
   content: string;
+  /** assistant 角色：模型本轮发起的工具调用列表 */
+  toolCalls?: ToolCall[];
+  /** tool 角色：本条消息对应的 toolCall ID */
+  toolCallId?: string;
+  /** tool 角色：工具名称（部分 provider 要求） */
+  name?: string;
 }
+
+/**
+ * 工具定义（function calling 兼容形态）
+ */
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  parameters: Record<string, unknown>;
+}
+
+/**
+ * 工具选择策略
+ */
+export type ToolChoice =
+  | 'auto'
+  | 'none'
+  | 'required'
+  | { type: 'function'; name: string };
+
+/**
+ * 模型发起的一次工具调用
+ */
+export interface ToolCall {
+  id: string;
+  name: string;
+  arguments: Record<string, unknown>;
+}
+
+/**
+ * 模型结束原因
+ */
+export type FinishReason = 'stop' | 'tool_calls' | 'length' | 'content_filter';
 
 export interface ChatRequest {
   modelCode: string;
@@ -11,6 +49,8 @@ export interface ChatRequest {
   temperature?: number;
   maxTokens?: number;
   topP?: number;
+  tools?: ToolDefinition[];
+  toolChoice?: ToolChoice;
   stream?: boolean;
   tenantId: string;
   agentId?: string;
@@ -27,13 +67,20 @@ export interface ChatResponse {
   message: ChatMessage;
   usage: TokenUsage;
   latencyMs: number;
+  finishReason?: FinishReason;
 }
 
-export interface StreamChunk {
-  id: string;
-  delta: string;
-  done: boolean;
-}
+/**
+ * 流式响应事件（与 ai-sdk LLMStreamChunk 形态对齐）
+ *
+ * Gateway 以 SSE 形式逐条 `data: <json>` 推送，
+ * 流尾以 `data: [DONE]` 结束。
+ */
+export type StreamEvent =
+  | { type: 'text';      delta: string }
+  | { type: 'tool_call'; toolCall: ToolCall }
+  | { type: 'done';      usage?: TokenUsage; finishReason?: FinishReason }
+  | { type: 'error';     code: string; message: string };
 
 export interface TokenUsage {
   promptTokens: number;
@@ -44,7 +91,7 @@ export interface TokenUsage {
 export interface IModelProvider {
   readonly providerName: string;
   chat(request: ProviderChatRequest): Promise<ProviderChatResponse>;
-  chatStream(request: ProviderChatRequest): AsyncGenerator<StreamChunk>;
+  chatStream(request: ProviderChatRequest): AsyncGenerator<StreamEvent>;
 }
 
 export interface ProviderChatRequest {
@@ -55,11 +102,15 @@ export interface ProviderChatRequest {
   temperature?: number;
   maxTokens?: number;
   topP?: number;
+  tools?: ToolDefinition[];
+  toolChoice?: ToolChoice;
   config?: ModelConfig;
 }
 
 export interface ProviderChatResponse extends TokenUsage {
   content: string;
+  toolCalls?: ToolCall[];
+  finishReason?: FinishReason;
 }
 
 export interface QuotaCheckResult {

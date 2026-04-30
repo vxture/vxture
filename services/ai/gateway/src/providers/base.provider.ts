@@ -2,7 +2,7 @@ import type {
   IModelProvider,
   ProviderChatRequest,
   ProviderChatResponse,
-  StreamChunk,
+  StreamEvent,
 } from '../types/gateway.types';
 
 export class ProviderHttpError extends Error {
@@ -22,7 +22,9 @@ export abstract class BaseProvider implements IModelProvider {
 
   abstract chat(request: ProviderChatRequest): Promise<ProviderChatResponse>;
 
-  async *chatStream(_request: ProviderChatRequest): AsyncGenerator<StreamChunk> {
+  // 默认抛错；具体 provider 根据是否支持流式自行覆盖。
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, require-yield
+  async *chatStream(_request: ProviderChatRequest): AsyncGenerator<StreamEvent> {
     throw new Error(`${this.providerName} stream chat is not enabled yet`);
   }
 

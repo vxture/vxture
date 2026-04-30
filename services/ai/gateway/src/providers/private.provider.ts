@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { BaseProvider } from './base.provider';
 import {
+  buildOpenAiCompatibleBody,
   normalizeOpenAiCompatibleResponse,
   resolveChatCompletionsEndpoint,
 } from './doubao.provider';
@@ -25,13 +26,7 @@ export class PrivateModelProvider extends BaseProvider {
     const response = await this.postJson<OpenAiCompatibleChatResponse>(
       resolveChatCompletionsEndpoint(request.endpointUrl),
       headers,
-      {
-        model: request.modelCode,
-        messages: request.messages,
-        temperature: request.temperature,
-        max_tokens: request.maxTokens,
-        top_p: request.topP,
-      },
+      buildOpenAiCompatibleBody(request, false),
     );
 
     return normalizeOpenAiCompatibleResponse(this.providerName, response);

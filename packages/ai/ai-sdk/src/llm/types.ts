@@ -65,14 +65,32 @@ export interface LLMConfig {
  */
 export interface LLMMessage {
   /**
-   * 角色：system、user、assistant
+   * 角色：system / user / assistant / tool
+   * 'tool' 用于把工具执行结果回填给模型，需配合 toolCallId 使用
    */
-  role: 'system' | 'user' | 'assistant';
+  role: 'system' | 'user' | 'assistant' | 'tool';
 
   /**
    * 消息内容
+   * tool 角色：填工具执行结果（建议 JSON.stringify 后存入）
+   * assistant 角色：发起工具调用时可为空字符串，工具调用元信息走 toolCalls 字段
    */
   content: string;
+
+  /**
+   * assistant 角色：模型本轮发起的工具调用列表
+   */
+  toolCalls?: LLMToolCall[];
+
+  /**
+   * tool 角色：本条消息对应的 toolCall ID
+   */
+  toolCallId?: string;
+
+  /**
+   * tool 角色：工具名称（部分 provider 的 tool 消息要求附带名称）
+   */
+  name?: string;
 
   /**
    * 消息时间戳
@@ -88,6 +106,17 @@ export interface LLMResponse {
    * 模型输出内容
    */
   content: string;
+
+  /**
+   * 模型本轮发起的工具调用列表（仅 function calling 场景下出现）
+   */
+  toolCalls?: LLMToolCall[];
+
+  /**
+   * 结束原因
+   * stop / tool_calls / length / content_filter
+   */
+  finishReason?: LLMFinishReason;
 
   /**
    * 响应的使用的令牌统计
@@ -108,6 +137,70 @@ export interface LLMResponse {
    */
   latency?: number;
 }
+
+/**
+ * 模型结束原因
+ * - stop：正常结束
+ * - tool_calls：模型决定调用工具，等待调用结果
+ * - length：超过 maxTokens 截断
+ * - content_filter：被安全/合规过滤
+ */
+export type LLMFinishReason = 'stop' | 'tool_calls' | 'length' | 'content_filter';
+
+/**
+ * 工具定义（function calling）
+ *
+ * 平台采用「OpenAI function calling 兼容形态」作为统一抽象，
+ * 由 ai-gateway 在转发到不同 provider 时做协议适配（如 Claude tool_use）。
+ */
+export interface LLMTool {
+  /** 工具名称，作为 LLM 调用的唯一标识 */
+  name: string;
+  /** 工具用途描述，提供给 LLM 用于决定是否调用 */
+  description: string;
+  /** 工具入参 JSON Schema */
+  parameters: Record<string, unknown>;
+}
+
+/**
+ * 工具选择策略
+ * - 'auto'：由模型自行决定是否调用（默认）
+ * - 'none'：禁止调用任何工具
+ * - 'required'：强制必须调用某个工具（具体由模型决定调哪个）
+ * - { type: 'function', name }：强制调用指定工具
+ */
+export type LLMToolChoice =
+  | 'auto'
+  | 'none'
+  | 'required'
+  | { type: 'function'; name: string };
+
+/**
+ * 模型发起的一次工具调用请求
+ */
+export interface LLMToolCall {
+  /** Provider 侧的工具调用 ID（用于把工具结果回填给模型） */
+  id: string;
+  /** 被调用的工具名称 */
+  name: string;
+  /** 工具入参（已解析为对象） */
+  arguments: Record<string, unknown>;
+}
+
+/**
+ * 流式响应片段
+ *
+ * 调用方按事件类型增量处理：
+ * - text 事件：拼接文本输出
+ * - tool_call 事件：模型在本轮决定调用工具，arguments 为聚合后的完整入参
+ * - done 事件：本轮结束，附带 usage 和 finishReason
+ * - error 事件：流中错误（HTTP 层错误以异常形式抛出）
+ */
+export type LLMStreamChunk =
+  | { type: 'text';      delta: string }
+  | { type: 'tool_call'; toolCall: LLMToolCall }
+  | { type: 'done';      usage?: LLMResponse['usage']; finishReason?: LLMFinishReason }
+  | { type: 'error';     code: string; message: string };
 
 /**
  * LLM 错误类型
@@ -167,4 +260,15 @@ export interface LLMOptions {
    * 请求超时时间（毫秒）
    */
   timeout?: number;
+
+  /**
+   * 工具集合（function calling）
+   * 传入时，模型可在本轮决定调用工具，返回 toolCalls
+   */
+  tools?: LLMTool[];
+
+  /**
+   * 工具选择策略，默认 'auto'
+   */
+  toolChoice?: LLMToolChoice;
 }

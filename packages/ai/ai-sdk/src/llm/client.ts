@@ -1,9 +1,14 @@
 import type {
   LLMConfig,
   LLMError,
+  LLMFinishReason,
   LLMMessage,
   LLMOptions,
   LLMResponse,
+  LLMStreamChunk,
+  LLMTool,
+  LLMToolCall,
+  LLMToolChoice,
 } from './types';
 
 export interface GatewayLLMClientOptions {
@@ -19,15 +24,22 @@ export interface GatewayLLMChatOptions extends LLMOptions {
   agentId?: string;
 }
 
+interface GatewayChatMessage {
+  role: LLMMessage['role'];
+  content: string;
+  toolCalls?: LLMToolCall[];
+  toolCallId?: string;
+  name?: string;
+}
+
 interface GatewayChatRequest {
   modelCode: string;
-  messages: Array<{
-    role: LLMMessage['role'];
-    content: string;
-  }>;
+  messages: GatewayChatMessage[];
   temperature?: number;
   maxTokens?: number;
   topP?: number;
+  tools?: LLMTool[];
+  toolChoice?: LLMToolChoice;
   stream?: boolean;
   tenantId: string;
   agentId?: string;
@@ -39,6 +51,7 @@ interface GatewayChatResponse {
   message: {
     role: 'assistant';
     content: string;
+    toolCalls?: LLMToolCall[];
   };
   usage: {
     promptTokens: number;
@@ -46,6 +59,7 @@ interface GatewayChatResponse {
     totalTokens: number;
   };
   latencyMs: number;
+  finishReason?: LLMFinishReason;
 }
 
 export class GatewayLLMError extends Error implements LLMError {
@@ -86,24 +100,11 @@ export class GatewayLLMClient {
     if (options.stream) {
       throw new GatewayLLMError(
         'STREAM_NOT_SUPPORTED',
-        'Gateway streaming is not enabled in the ai-sdk client yet',
+        'Use chatStream() for streaming responses',
       );
     }
 
-    const request: GatewayChatRequest = {
-      modelCode: String(config.model),
-      messages: messages.map((message) => ({
-        role: message.role,
-        content: message.content,
-      })),
-      temperature: config.temperature,
-      maxTokens: config.maxTokens,
-      topP: config.topP,
-      stream: false,
-      tenantId: options.tenantId ?? this.tenantId,
-      agentId: options.agentId ?? this.agentId,
-    };
-
+    const request = this.buildRequest(messages, config, options, false);
     const response = await this.post<GatewayChatResponse>(
       '/ai/gateway/chat',
       request,
@@ -112,9 +113,97 @@ export class GatewayLLMClient {
 
     return {
       content: response.message.content,
+      toolCalls: response.message.toolCalls,
+      finishReason: response.finishReason,
       usage: response.usage,
       model: response.modelCode,
       latency: response.latencyMs,
+    };
+  }
+
+  /**
+   * 流式对话，返回 AsyncGenerator<LLMStreamChunk>
+   *
+   * 调用方按事件类型增量处理：
+   * - 'text' 事件 → 拼接到对外输出
+   * - 'tool_call' 事件 → 中断本轮，执行工具，把结果以 role:'tool' 消息追加后再次调用
+   * - 'done' 事件 → 本轮结束
+   * - 'error' 事件 → 流内错误（HTTP 层错误以异常形式抛出）
+   *
+   * @example
+   * for await (const chunk of client.chatStream(messages, config, { tools })) {
+   *   if (chunk.type === 'text') process.stdout.write(chunk.delta);
+   *   if (chunk.type === 'tool_call') await runTool(chunk.toolCall);
+   * }
+   */
+  async *chatStream(
+    messages: LLMMessage[],
+    config: LLMConfig,
+    options: GatewayLLMChatOptions = {},
+  ): AsyncGenerator<LLMStreamChunk, void, void> {
+    const request = this.buildRequest(messages, config, options, true);
+    const controller = new AbortController();
+    const timeoutMs = options.timeout ?? this.defaultTimeoutMs;
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+    let response: Response;
+    try {
+      response = await this.fetchImpl(`${this.gatewayUrl}/ai/gateway/chat`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+          accept: 'text/event-stream',
+        },
+        body: JSON.stringify(request),
+        signal: controller.signal,
+      });
+    } catch (error) {
+      clearTimeout(timer);
+      throw new GatewayLLMError(
+        'GATEWAY_REQUEST_FAILED',
+        'AI gateway streaming request failed',
+        error,
+      );
+    }
+
+    if (!response.ok) {
+      const errorText = await safeReadText(response);
+      clearTimeout(timer);
+      throw new GatewayLLMError(
+        `HTTP_${response.status}`,
+        parseErrorMessage(errorText, response.status),
+      );
+    }
+
+    if (!response.body) {
+      clearTimeout(timer);
+      throw new GatewayLLMError('EMPTY_GATEWAY_STREAM', 'AI gateway returned an empty stream');
+    }
+
+    try {
+      yield* parseSseStream(response.body);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  private buildRequest(
+    messages: LLMMessage[],
+    config: LLMConfig,
+    options: GatewayLLMChatOptions,
+    stream: boolean,
+  ): GatewayChatRequest {
+    return {
+      modelCode: String(config.model),
+      messages: messages.map(toWireMessage),
+      temperature: config.temperature,
+      maxTokens: config.maxTokens,
+      topP: config.topP,
+      tools: options.tools,
+      toolChoice: options.toolChoice,
+      stream,
+      tenantId: options.tenantId ?? this.tenantId,
+      agentId: options.agentId ?? this.agentId,
     };
   }
 
@@ -154,6 +243,99 @@ export class GatewayLLMClient {
     } finally {
       clearTimeout(timeout);
     }
+  }
+}
+
+function toWireMessage(message: LLMMessage): GatewayChatMessage {
+  const wire: GatewayChatMessage = {
+    role: message.role,
+    content: message.content,
+  };
+  if (message.toolCalls?.length) {
+    wire.toolCalls = message.toolCalls;
+  }
+  if (message.toolCallId) {
+    wire.toolCallId = message.toolCallId;
+  }
+  if (message.name) {
+    wire.name = message.name;
+  }
+  return wire;
+}
+
+async function safeReadText(response: Response): Promise<string> {
+  try {
+    return await response.text();
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * 解析 SSE 流为 LLMStreamChunk 序列
+ *
+ * Gateway 约定：每个 `data:` 行的内容是一段 JSON，
+ * 形态为 LLMStreamChunk；流尾以 `data: [DONE]` 结束。
+ */
+async function* parseSseStream(
+  body: ReadableStream<Uint8Array>,
+): AsyncGenerator<LLMStreamChunk, void, void> {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+      buffer += decoder.decode(value, { stream: true });
+
+      let separatorIndex = findEventBoundary(buffer);
+      while (separatorIndex !== -1) {
+        const rawEvent = buffer.slice(0, separatorIndex);
+        buffer = buffer.slice(separatorIndex).replace(/^(\r?\n){1,2}/, '');
+        const chunk = parseSseEvent(rawEvent);
+        if (chunk === 'done') {
+          return;
+        }
+        if (chunk) {
+          yield chunk;
+        }
+        separatorIndex = findEventBoundary(buffer);
+      }
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
+
+function findEventBoundary(buffer: string): number {
+  const lf = buffer.indexOf('\n\n');
+  const crlf = buffer.indexOf('\r\n\r\n');
+  if (lf === -1) return crlf;
+  if (crlf === -1) return lf;
+  return Math.min(lf, crlf);
+}
+
+function parseSseEvent(raw: string): LLMStreamChunk | 'done' | null {
+  const dataLines: string[] = [];
+  for (const line of raw.split(/\r?\n/)) {
+    if (line.startsWith('data:')) {
+      dataLines.push(line.slice(5).replace(/^ /, ''));
+    }
+  }
+  if (dataLines.length === 0) return null;
+
+  const payload = dataLines.join('\n').trim();
+  if (!payload) return null;
+  if (payload === '[DONE]') return 'done';
+
+  try {
+    return JSON.parse(payload) as LLMStreamChunk;
+  } catch {
+    return { type: 'error', code: 'PARSE_FAILED', message: `Invalid SSE payload: ${payload}` };
   }
 }
 

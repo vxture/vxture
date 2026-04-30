@@ -15,6 +15,7 @@ import type {
   AiModelRecord,
   ChatRequest,
   ChatResponse,
+  StreamEvent,
   TokenUsage,
 } from '../types/gateway.types';
 
@@ -34,10 +35,6 @@ export class GatewayService {
   async chat(request: ChatRequest): Promise<ChatResponse> {
     this.validateChatRequest(request);
 
-    if (request.stream) {
-      throw new BadRequestException('Streaming chat is not enabled in the gateway yet');
-    }
-
     const model = await this.registry.getActiveModel(request.modelCode);
     await this.quota.assertAllowed(model, request);
     const provider = this.router.resolve(model.provider);
@@ -54,6 +51,8 @@ export class GatewayService {
         temperature: request.temperature,
         maxTokens: request.maxTokens,
         topP: request.topP,
+        tools: request.tools,
+        toolChoice: request.toolChoice,
         config: model.config ?? undefined,
       });
       const latencyMs = Date.now() - startedAt;
@@ -66,6 +65,7 @@ export class GatewayService {
         message: {
           role: 'assistant',
           content: providerResponse.content,
+          toolCalls: providerResponse.toolCalls,
         },
         usage: {
           promptTokens: providerResponse.promptTokens,
@@ -73,11 +73,68 @@ export class GatewayService {
           totalTokens: providerResponse.totalTokens,
         },
         latencyMs,
+        finishReason: providerResponse.finishReason,
       };
     } catch (error) {
       throw error instanceof Error
         ? new InternalServerErrorException(error.message)
         : new InternalServerErrorException('AI gateway request failed');
+    }
+  }
+
+  /**
+   * 流式对话，返回 AsyncGenerator<StreamEvent>
+   *
+   * 控制器把每个 event 序列化为 SSE `data:` 行写回客户端。
+   * 用量统计在流结束（done 事件）时写入。
+   */
+  async *chatStream(request: ChatRequest): AsyncGenerator<StreamEvent> {
+    this.validateChatRequest(request);
+
+    const model = await this.registry.getActiveModel(request.modelCode);
+    await this.quota.assertAllowed(model, request);
+    const provider = this.router.resolve(model.provider);
+    const apiKey = this.resolveApiKey(model);
+    const startedAt = Date.now();
+    const requestId = request.requestId?.trim() || randomUUID();
+
+    let lastUsage: TokenUsage | undefined;
+    try {
+      for await (const event of provider.chatStream({
+        endpointUrl: model.endpointUrl,
+        apiKey,
+        modelCode: model.modelCode,
+        messages: request.messages,
+        temperature: request.temperature,
+        maxTokens: request.maxTokens,
+        topP: request.topP,
+        tools: request.tools,
+        toolChoice: request.toolChoice,
+        config: model.config ?? undefined,
+      })) {
+        if (event.type === 'done' && event.usage) {
+          lastUsage = event.usage;
+        }
+        yield event;
+      }
+    } catch (error) {
+      yield {
+        type: 'error',
+        code: 'PROVIDER_ERROR',
+        message: error instanceof Error ? error.message : 'AI gateway streaming failed',
+      };
+      return;
+    }
+
+    if (lastUsage) {
+      const latencyMs = Date.now() - startedAt;
+      await this.recordUsage(
+        model,
+        request,
+        requestId,
+        lastUsage,
+        latencyMs,
+      );
     }
   }
 
@@ -94,11 +151,14 @@ export class GatewayService {
       throw new BadRequestException('messages cannot be empty');
     }
 
-    const invalidMessage = request.messages.some((message) => (
-      !['system', 'user', 'assistant'].includes(message.role)
-      || typeof message.content !== 'string'
-      || !message.content.trim()
-    ));
+    const validRoles = new Set(['system', 'user', 'assistant', 'tool']);
+    const invalidMessage = request.messages.some((message) => {
+      if (!validRoles.has(message.role)) return true;
+      if (typeof message.content !== 'string') return true;
+      // assistant 发起 tool_calls 时 content 允许为空字符串；其他角色必须非空
+      if (message.role === 'assistant' && message.toolCalls?.length) return false;
+      return !message.content.trim();
+    });
 
     if (invalidMessage) {
       throw new BadRequestException('messages contain invalid role or content');
