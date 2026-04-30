@@ -264,7 +264,15 @@ function ServiceHealthList({ services }: { services: DevServiceSnapshot[] }) {
   );
 }
 
-export function ServiceHealthPage() {
+export function ServiceHealthPage({
+  eyebrow = '运营总览',
+  title = '服务健康',
+  description = '集中查看 dev-tools、核心服务、BFF、网关和门户的只读健康状态。',
+}: {
+  eyebrow?: string;
+  title?: string;
+  description?: string;
+}) {
   const [services, setServices] = useState<DevServiceSnapshot[]>([]);
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState<string | null>(null);
@@ -389,9 +397,9 @@ export function ServiceHealthPage() {
     <div className="vx-page-stack vx-service-health-page">
       <PageHeader
         icon="server"
-        eyebrow="运营总览"
-        title="服务健康"
-        description="集中查看 dev-tools、核心服务、BFF、网关和门户的只读健康状态。"
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
         secondary={<Badge>{formatUpdatedAt(lastUpdatedAt)}</Badge>}
       />
 

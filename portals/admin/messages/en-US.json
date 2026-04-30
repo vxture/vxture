@@ -119,10 +119,6 @@
         "label": "Ops Todos",
         "description": "Reviews, alerts, and operating tasks that need manual handling."
       },
-      "serviceHealth": {
-        "label": "Service Health",
-        "description": "Service status summaries and quick access to monitoring when exceptions occur."
-      },
       "tenants": {
         "label": "Tenants",
         "description": "Manage tenant profiles, status, lifecycle, and operating notes."

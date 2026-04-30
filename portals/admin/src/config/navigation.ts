@@ -34,13 +34,6 @@ export const adminNavigationSections: AdminNavigationSection[] = [
         description: '聚合待审核、异常告警和需要人工介入的运营任务。',
         icon: 'table',
       },
-      {
-        id: 'serviceHealth',
-        href: '/service-health',
-        label: '服务健康',
-        description: '展示服务运行状态摘要，异常时快速定位到服务监控。',
-        icon: 'server',
-      },
     ],
   },
   {

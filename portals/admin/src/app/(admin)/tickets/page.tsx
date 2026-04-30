@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { TicketsPage } from '@/modules/support/TicketsPage';
 
-export default function Page() {
-  return <AdminRoutePlaceholderPage href="/tickets" />;
+export default function AdminTicketsRoute() {
+  return <TicketsPage />;
 }
