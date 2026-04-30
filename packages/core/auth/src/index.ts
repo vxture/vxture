@@ -6,7 +6,7 @@
  */
 
 // Types
-export { OAuthProviderType, PlatformRole } from './types';
+export { OAuthProviderType, PlatformRole, JwtUserType } from './types';
 export type {
   JwtAccessPayload,
   JwtRefreshPayload,

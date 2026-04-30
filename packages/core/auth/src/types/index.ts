@@ -6,6 +6,7 @@
 export {
   OAuthProviderType,
   PlatformRole,
+  JwtUserType,
 } from './auth.types';
 
 export type {

@@ -31,6 +31,19 @@ export type PlatformRole = typeof PlatformRole[keyof typeof PlatformRole];
 export type OAuthProviderType = typeof OAuthProviderType[keyof typeof OAuthProviderType];
 
 // ============================================================================
+// JWT User Type
+// — 平台运营人员 (operator) vs 租户用户 (tenant_user)
+// — 用于 surface 路由（admin / console / vela）做权限隔离
+// ============================================================================
+
+export const JwtUserType = {
+  OPERATOR:    'operator',
+  TENANT_USER: 'tenant_user',
+} as const;
+
+export type JwtUserType = typeof JwtUserType[keyof typeof JwtUserType];
+
+// ============================================================================
 // JWT Payload
 // — Payload written when issuing access token, can be used directly after verification
 // ============================================================================
@@ -48,6 +61,12 @@ export interface JwtAccessPayload {
   email:      string;
   /** User role (single role model) */
   role:       string;
+  /**
+   * 用户身份类型：operator（平台运营）/ tenant_user（租户用户）
+   * 用于 surface 路由（admin / console / vela）做权限隔离。
+   * 为兼容旧 token，验证侧应允许字段缺失并按 tenantId 兜底推断。
+   */
+  userType?: JwtUserType;
   /** Permission list (optional, omitted to reduce token size, queried by server) */
   permissions?: string[];
   /** Login method */
@@ -79,6 +98,8 @@ export interface AuthUser {
   tenantId:    string;
   email:       string;
   role:        string;
+  /** 用户身份类型，由 JWT payload 的 userType 字段透传 */
+  userType?:   JwtUserType;
   permissions: string[];
   provider:    OAuthProviderType;
 }

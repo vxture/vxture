@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { AuthTokenPair, JwtAccessPayload, JwtRefreshPayload } from '@vxture/core-auth';
-import { OAuthProviderType } from '@vxture/core-auth';
+import { JwtUserType, OAuthProviderType } from '@vxture/core-auth';
 import { VxConfigService } from '@vxture/core-config';
 import { AccountAuthService } from '@vxture/service-iam';
 import type { AuthUserDto } from '../types/auth.types';
@@ -28,6 +28,7 @@ export class WebsiteAuthService {
       tenantId: '',
       email: account.email ?? `${account.username}@local.vxture`,
       role: 'member',
+      userType: JwtUserType.TENANT_USER,
       permissions: [],
       provider: OAuthProviderType.PASSWORD,
     };

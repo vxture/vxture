@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { JwtAccessPayload, JwtRefreshPayload } from '@vxture/core-auth';
-import { OAuthProviderType } from '@vxture/core-auth';
+import { JwtUserType, OAuthProviderType } from '@vxture/core-auth';
 import { VxConfigService } from '@vxture/core-config';
 import { AccountAuthService } from '@vxture/service-iam';
 import { OrganizationReadService } from '@vxture/service-organization';
@@ -35,6 +35,7 @@ export class ConsoleAuthService {
       tenantId,
       email: account.email ?? `${account.username}@local.vxture`,
       role: tenantContext ? 'tenant_admin' : 'member',
+      userType: JwtUserType.TENANT_USER,
       permissions: [],
       provider: OAuthProviderType.PASSWORD,
     };
@@ -88,14 +89,8 @@ export class ConsoleAuthService {
     };
   }
 
-  verifyAccessToken(token: string) {
-    return this.jwtService.verify<{
-      sub: string;
-      tenantId: string;
-      email: string;
-      role: string;
-      permissions?: string[];
-    }>(token, {
+  verifyAccessToken(token: string): JwtAccessPayload {
+    return this.jwtService.verify<JwtAccessPayload>(token, {
       secret: this.configService.auth.JWT_SECRET,
     });
   }

@@ -3,6 +3,7 @@ import { Inject, Injectable, OnModuleDestroy, UnauthorizedException } from '@nes
 import { JwtService } from '@nestjs/jwt';
 import { VxConfigService } from '@vxture/core-config';
 import type { AuthTokenPair } from '@vxture/core-auth';
+import { JwtUserType } from '@vxture/core-auth';
 import { Pool } from 'pg';
 import type { ConsoleUser } from '../types/console.types';
 
@@ -68,6 +69,7 @@ export class PlatformAuthService implements OnModuleDestroy {
       sub: admin.id,
       email: admin.email ?? `${admin.username}@local.vxture`,
       role: 'admin',
+      userType: JwtUserType.OPERATOR,
       permissions: admin.permissions,
       authScope: 'platform-admin',
       provider: 'password',
@@ -237,6 +239,8 @@ interface PlatformAdminJwtPayload {
   sub: string;
   email: string;
   role: string;
+  /** 平台运营人员固定为 'operator'，供 vela-bff surface 校验使用 */
+  userType: JwtUserType;
   permissions?: string[];
   authScope: 'platform-admin';
   provider: 'password';
