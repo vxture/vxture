@@ -1,5 +1,0 @@
-{
-  "ANTHROPIC_BASE_URL": "http://ai-api.i-tudou.com:9200/v1/chat/completions",
-  "ANTHROPIC_API_KEY": "sk-gQGnrRYM8BOAtrFOtmqbCwNuEE8guEPLpo74E9usjjekz4kt",
-  "claudeCode.hideOnboarding": true
-}

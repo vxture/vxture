@@ -1,6 +1,0 @@
-{
-  "ANTHROPIC_BASE_URL": "https://ark.cn-beijing.volces.com/api/coding",
-  "ANTHROPIC_API_KEY": "66d237a9-157e-4fc8-896a-9effdfcf73ca",
-  "ANTHROPIC_MODEL": "doubao-seed-2-0-pro-260215",
-  "claudeCode.hideOnboarding": true
-}

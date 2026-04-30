@@ -1,22 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm build:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "mcp__ide__getDiagnostics",
-      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)",
-      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\packages\\\\ai\\\\ai-sdk\\\\tsconfig.build.json\" -Force)",
-      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\commerce\\\\billing\\\\tsconfig.build.json\" -Force)",
-      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\commerce\\\\subscription\\\\tsconfig.build.json\" -Force)",
-      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\support\\\\ticket\\\\tsconfig.build.json\" -Force)",
-      "Bash(Remove-Item \"D:\\\\MyWebSite\\\\vxture\\\\services\\\\support\\\\workers\\\\tsconfig.build.json\" -Force)"
+      "Bash(docker exec *)",
+      "Bash(xargs grep *)",
+      "Bash(pnpm --filter @vxture/core-auth type-check)",
+      "Bash(pnpm --filter @vxture/bff-console type-check)",
+      "Bash(pnpm --filter @vxture/bff-website type-check)",
+      "Bash(pnpm --filter @vxture/bff-admin type-check)",
+      "Bash(pnpm --filter @vxture/ai-sdk type-check)"
     ]
-  },
-  "ANTHROPIC_AUTH_TOKEN": "sk-gQGnrRYM8BOAtrFOtmqbCwNuEE8guEPLpo74E9usjjekz4kt",
-  "ANTHROPIC_BASE_URL": "http://ai-api.e-tudou.com:9200/v1",
-  "ANTHROPIC_MODEL": "claude-3-5-sonnet-20241022",
-  "timeout": 120,
-  "verify_ssl": false
+  }
 }
