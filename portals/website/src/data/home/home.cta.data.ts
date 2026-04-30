@@ -80,7 +80,7 @@ export const CTA_DATA: CtaData = {
       icon: "calendar"
     },
     {
-      href: "/ruins-agent",
+      href: "/ruyin-agent",
       variant: "secondary",
       icon: "bot"
     }

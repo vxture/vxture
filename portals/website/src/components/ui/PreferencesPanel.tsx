@@ -197,11 +197,11 @@ export default function PreferencesPanel({
   // 渲染辅助：选项组
   // ----------------------------------------------------------------------------
 
-  const renderOptionGroup = (
+  const renderOptionGroup = <TValue extends string>(
     title: string,
-    options: { value: string; icon: IconName; labelKey: string }[],
-    selectedValue: string,
-    onChange: (value: any) => void
+    options: { value: TValue; icon: IconName; labelKey: string }[],
+    selectedValue: TValue,
+    onChange: (value: TValue) => void
   ) => (
     <div className='space-y-2'>
       <Label className='text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider'>
