@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import { Badge, Button, Input } from '@/components/ui/primitives';
@@ -181,18 +181,46 @@ function ProductPlanListRows({
   plans,
   startIndex,
   openMenuId,
+  selectedPlanIds,
+  isPageSelected,
   onOpenMenu,
   onCloseMenu,
+  onTogglePlan,
+  onTogglePage,
 }: {
   plans: ProductPlanRecord[];
   startIndex: number;
   openMenuId: string | null;
+  selectedPlanIds: Set<string>;
+  isPageSelected: boolean;
   onOpenMenu: (planId: string) => void;
   onCloseMenu: () => void;
+  onTogglePlan: (planId: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = plans.filter((plan) => selectedPlanIds.has(plan.id)).length;
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < plans.length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate = isPagePartiallySelected;
+    }
+  }, [isPagePartiallySelected]);
+
   return (
     <div className="vx-tenant-directory-list vx-product-plan-directory-list" role="region" aria-label="套餐清单">
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页套餐"
+          />
+        </span>
         <span>序号</span>
         <span>套餐</span>
         <span>状态</span>
@@ -208,13 +236,32 @@ function ProductPlanListRows({
         const agents = plan.agents.slice(0, 3);
 
         return (
-          <div key={plan.id} className={joinClasses('vx-tenant-directory-row', plan.isActive ? 'vx-product-plan-row--active' : 'vx-product-plan-row--inactive')}>
+          <div
+            key={plan.id}
+            className={joinClasses('vx-tenant-directory-row', 'vx-product-plan-operation-row', plan.isActive ? 'vx-product-plan-row--active' : 'vx-product-plan-row--inactive', selectedPlanIds.has(plan.id) ? 'vx-product-plan-operation-row--selected' : '')}
+            onClick={(event) => {
+              if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+              onTogglePlan(plan.id, !selectedPlanIds.has(plan.id));
+            }}
+          >
+            <span className="vx-product-plan-operation-row__select">
+              <input
+                type="checkbox"
+                className="vx-model-select-checkbox"
+                checked={selectedPlanIds.has(plan.id)}
+                onClick={(event) => event.stopPropagation()}
+                onChange={(event) => onTogglePlan(plan.id, event.target.checked)}
+                aria-label={`选择 ${plan.planName}`}
+              />
+            </span>
             <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
             <span className="vx-tenant-directory-row__tenant vx-product-plan-row__identity">
               <Icon name="cube" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <strong>{plan.planName}</strong>
+                  <button type="button" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                    {plan.planName}
+                  </button>
                 </span>
                 <small>{plan.planCode} · Level {formatNumber(plan.level)}</small>
               </span>
@@ -367,6 +414,7 @@ export function ProductPlansPage() {
   const [plans, setPlans] = useState<ProductPlanRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [selectedPlanIds, setSelectedPlanIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [priceFilter, setPriceFilter] = useState<PriceFilter>('all');
@@ -410,6 +458,9 @@ export function ProductPlansPage() {
   const pageCount = Math.max(1, Math.ceil(filteredPlans.length / pageSize));
   const activePage = Math.min(currentPage, pageCount);
   const visiblePlans = filteredPlans.slice((activePage - 1) * pageSize, activePage * pageSize);
+  const visiblePlanIds = visiblePlans.map((plan) => plan.id);
+  const selectedVisiblePlanCount = visiblePlanIds.filter((planId) => selectedPlanIds.has(planId)).length;
+  const isPlanPageSelected = visiblePlanIds.length > 0 && selectedVisiblePlanCount === visiblePlanIds.length;
   const activePlans = plans.filter((plan) => plan.isActive).length;
   const freePlans = plans.filter((plan) => plan.isFree).length;
   const paidPlans = plans.length - freePlans;
@@ -435,6 +486,32 @@ export function ProductPlansPage() {
     setOpenMenuId(planId || null);
   }
 
+  function togglePlanSelection(planId: string, checked: boolean) {
+    setSelectedPlanIds((current) => {
+      const next = new Set(current);
+      if (checked) {
+        next.add(planId);
+      } else {
+        next.delete(planId);
+      }
+      return next;
+    });
+  }
+
+  function togglePlanPageSelection(checked: boolean) {
+    setSelectedPlanIds((current) => {
+      const next = new Set(current);
+      for (const planId of visiblePlanIds) {
+        if (checked) {
+          next.add(planId);
+        } else {
+          next.delete(planId);
+        }
+      }
+      return next;
+    });
+  }
+
   return (
     <div className="vx-page-stack vx-tenant-management-page vx-product-plans-page">
       <PageHeader
@@ -447,7 +524,7 @@ export function ProductPlansPage() {
         <PlanSummaryItem icon="cube" label="套餐总数" value={formatNumber(plans.length)} tags={[`启用 ${formatNumber(activePlans)}`]} />
         <PlanSummaryItem icon="chart-bar" label="商业套餐" value={formatNumber(paidPlans)} tags={[`Free ${formatNumber(freePlans)}`]} tone="green" />
         <PlanSummaryItem icon="shield-check" label="配额权益" value={formatNumber(featureCount)} tags={[`智能体 ${formatNumber(agentCount)}`]} tone="amber" />
-        <PlanSummaryItem icon="users" label="订阅使用" value={formatNumber(subscriptionCount)} tags={[`公开 ${formatNumber(publicPlans)}`]} tone="blue" />
+        <PlanSummaryItem icon="user" label="订阅使用" value={formatNumber(subscriptionCount)} tags={[`公开 ${formatNumber(publicPlans)}`]} tone="blue" />
       </section>
 
       <div className="vx-tenant-list-shell">
@@ -503,8 +580,12 @@ export function ProductPlansPage() {
                 plans={visiblePlans}
                 startIndex={(activePage - 1) * pageSize}
                 openMenuId={openMenuId}
+                selectedPlanIds={selectedPlanIds}
+                isPageSelected={isPlanPageSelected}
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
+                onTogglePlan={togglePlanSelection}
+                onTogglePage={togglePlanPageSelection}
               />
             ) : (
               <ProductPlanCards

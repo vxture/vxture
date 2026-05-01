@@ -1,12 +1,12 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { AUTH_CONSTANTS } from '@vxture/shared';
+import { CONSOLE_AUTH_COOKIES } from '../auth/cookie.constants';
 import { ConsoleAuthService } from '../auth/auth.service';
 import { AuthResultDto, LoginDto } from '../dto/auth.dto';
 import type { RequestContext } from '../types/console.types';
 
-const ACCESS_COOKIE_KEY = AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN;
-const REFRESH_COOKIE_KEY = AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN;
+const ACCESS_COOKIE_KEY = CONSOLE_AUTH_COOKIES.ACCESS_TOKEN;
+const REFRESH_COOKIE_KEY = CONSOLE_AUTH_COOKIES.REFRESH_TOKEN;
 
 function resolveCookieDomain(): string | undefined {
   const cookieDomain = process.env.AUTH_COOKIE_DOMAIN?.trim();

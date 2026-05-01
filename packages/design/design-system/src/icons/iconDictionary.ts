@@ -81,6 +81,7 @@ export const iconDictionary = [
   // 用户/组织
   // ==========================================================================
   "user",
+  "role",       // 角色/权限主体
   "user-switch",
   "buildings",
   "users",      // 用户组（原 user-group 已合并）

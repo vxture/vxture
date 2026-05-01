@@ -12,12 +12,14 @@
  * @category Repository
  */
 
-import type { Subscription, SubscriptionQueryParams, SubscriptionChange, SubscriptionStatus, BillingCycle } from '../types/subscription.types';
+import type { Subscription, SubscriptionQueryParams, SubscriptionChange } from '../types/subscription.types';
+import { SubscriptionStatus, BillingCycle } from '../types/subscription.types';
 
 // 模拟订阅数据
 const mockSubscriptions: Subscription[] = [
   {
     id: '1',
+    tenantId: 'tenant_demo',
     customerId: 'cust001',
     planId: '2',
     planName: '专业版',
@@ -84,6 +86,10 @@ export class SubscriptionRepository {
     return this.subscriptions.filter(sub => sub.customerId === customerId);
   }
 
+  async getSubscriptionsByTenantId(tenantId: string): Promise<Subscription[]> {
+    return this.subscriptions.filter(sub => sub.tenantId === tenantId);
+  }
+
   // 获取客户的活跃订阅
   async getActiveSubscriptionByCustomerId(customerId: string): Promise<Subscription | null> {
     const activeSubscriptions = this.subscriptions.filter(
@@ -92,7 +98,7 @@ export class SubscriptionRepository {
     );
 
     if (activeSubscriptions.length > 0) {
-      return activeSubscriptions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+      return activeSubscriptions.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0] ?? null;
     }
 
     return null;
@@ -101,6 +107,10 @@ export class SubscriptionRepository {
   // 查询订阅列表
   async getSubscriptions(params: SubscriptionQueryParams = {}): Promise<Subscription[]> {
     let results = [...this.subscriptions];
+
+    if (params.tenantId) {
+      results = results.filter(sub => sub.tenantId === params.tenantId);
+    }
 
     if (params.customerId) {
       results = results.filter(sub => sub.customerId === params.customerId);
@@ -138,10 +148,10 @@ export class SubscriptionRepository {
       return null;
     }
 
-    const oldSubscription = { ...this.subscriptions[index] };
+    const oldSubscription = this.subscriptions[index]!;
 
     this.subscriptions[index] = {
-      ...this.subscriptions[index],
+      ...oldSubscription,
       ...updates,
       updatedAt: new Date()
     };
@@ -166,7 +176,7 @@ export class SubscriptionRepository {
       this.recordChange(id, 'updated', undefined, undefined, oldSubscription.planId, updates.planId, changedBy);
     }
 
-    return this.subscriptions[index];
+    return this.subscriptions[index] ?? null;
   }
 
   // 记录订阅变更历史

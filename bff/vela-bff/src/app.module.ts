@@ -1,0 +1,40 @@
+/**
+ * app.module.ts - Vela BFF 根模块
+ * @package @vxture/bff-vela
+ * @layer Application
+ * @category Module
+ *
+ * @description
+ *   中间件执行顺序：AuthMiddleware（JWT 验证 + jti 黑名单）→ SurfaceMiddleware（CallerContext 构造）
+ *   中间件只作用于 /vela/* 路由（ChatRouter、ConfirmRouter），/health 不经过中间件。
+ *
+ * @author AI-Generated
+ * @date 2026-04-30
+ */
+
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { VxConfigModule } from '@vxture/core-config';
+import { AuthMiddleware } from './middleware/auth.middleware';
+import { SurfaceMiddleware } from './middleware/surface.middleware';
+import { ChatRouter } from './routers/chat.router';
+import { ConfirmRouter } from './routers/confirm.router';
+import { HealthRouter } from './routers/health.router';
+import { RedisModule } from './redis/redis.module';
+
+@Module({
+  imports: [
+    VxConfigModule.register({ domains: ['app', 'auth', 'redis'] }),
+    JwtModule.register({}),
+    RedisModule,
+  ],
+  controllers: [HealthRouter, ChatRouter, ConfirmRouter],
+  providers: [],
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(AuthMiddleware, SurfaceMiddleware)
+      .forRoutes({ path: 'vela/*path', method: RequestMethod.ALL });
+  }
+}

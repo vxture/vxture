@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
@@ -235,22 +235,49 @@ function SubscriptionListRows({
   subscriptions,
   startIndex,
   openMenuId,
+  selectedSubscriptionIds,
+  isPageSelected,
   onOpenMenu,
   onCloseMenu,
   onAction,
+  onToggleSubscription,
+  onTogglePage,
 }: {
   subscriptions: SubscriptionOperationRecord[];
   startIndex: number;
   openMenuId: string | null;
+  selectedSubscriptionIds: Set<string>;
+  isPageSelected: boolean;
   onOpenMenu: (id: string) => void;
   onCloseMenu: () => void;
   onAction: (subscription: SubscriptionOperationRecord, action: SubscriptionOperationAction) => void;
+  onToggleSubscription: (id: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = subscriptions.filter((subscription) => selectedSubscriptionIds.has(subscription.id)).length;
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < subscriptions.length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate = isPagePartiallySelected;
+    }
+  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-subscription-directory-list" role="region" aria-label="租户订阅运营清单">
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页订阅"
+          />
+        </span>
         <span>序号</span>
         <span>租户</span>
         <span>业务方案</span>
@@ -263,20 +290,30 @@ function SubscriptionListRows({
       {subscriptions.map((subscription, index) => (
         <div
           key={subscription.id}
-          className={joinClasses('vx-tenant-directory-row', `vx-subscription-row--${subscription.status}`, `vx-subscription-row--quota-${subscription.quota.risk}`)}
-          role="button"
-          tabIndex={0}
-          onClick={() => router.push(`/subscriptions/${encodeURIComponent(subscription.id)}`)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') router.push(`/subscriptions/${encodeURIComponent(subscription.id)}`);
+          className={joinClasses('vx-tenant-directory-row', 'vx-subscription-operation-row', `vx-subscription-row--${subscription.status}`, `vx-subscription-row--quota-${subscription.quota.risk}`, selectedSubscriptionIds.has(subscription.id) ? 'vx-subscription-operation-row--selected' : '')}
+          onClick={(event) => {
+            if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+            onToggleSubscription(subscription.id, !selectedSubscriptionIds.has(subscription.id));
           }}
         >
+          <span className="vx-subscription-operation-row__select">
+            <input
+              type="checkbox"
+              className="vx-model-select-checkbox"
+              checked={selectedSubscriptionIds.has(subscription.id)}
+              onClick={(event) => event.stopPropagation()}
+              onChange={(event) => onToggleSubscription(subscription.id, event.target.checked)}
+              aria-label={`选择 ${subscription.tenantName}`}
+            />
+          </span>
           <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
           <span className="vx-subscription-row__tenant">
             <Icon name={subscription.tenantType === 'company' ? 'buildings' : 'user'} size="sm" fallback="placeholder" />
             <span>
               <span className="vx-tenant-directory-row__title-line">
-                <strong>{subscription.tenantName}</strong>
+                <button type="button" className="vx-model-name-button" onClick={() => router.push(`/subscriptions/${encodeURIComponent(subscription.id)}`)}>
+                  {subscription.tenantName}
+                </button>
               </span>
               <small>{subscription.tenantCode} · {subscription.region}</small>
             </span>
@@ -432,6 +469,7 @@ export function SubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [selectedSubscriptionIds, setSelectedSubscriptionIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [tierFilter, setTierFilter] = useState<TierFilter>('all');
@@ -479,6 +517,9 @@ export function SubscriptionsPage() {
   const pageCount = Math.max(1, Math.ceil(filteredSubscriptions.length / pageSize));
   const activePage = Math.min(currentPage, pageCount);
   const visibleSubscriptions = filteredSubscriptions.slice((activePage - 1) * pageSize, activePage * pageSize);
+  const visibleSubscriptionIds = visibleSubscriptions.map((subscription) => subscription.id);
+  const selectedVisibleSubscriptionCount = visibleSubscriptionIds.filter((id) => selectedSubscriptionIds.has(id)).length;
+  const isSubscriptionPageSelected = visibleSubscriptionIds.length > 0 && selectedVisibleSubscriptionCount === visibleSubscriptionIds.length;
   const effectiveCount = subscriptions.filter((item) => item.status === 'active' || item.status === 'expiring').length;
   const followUpCount = subscriptions.filter((item) => item.status === 'trial' || item.status === 'expiring' || item.status === 'overdue' || item.quota.risk !== 'normal').length;
   const dangerQuotaCount = subscriptions.filter((item) => item.quota.risk === 'danger').length;
@@ -507,6 +548,32 @@ export function SubscriptionsPage() {
     setOperationError(null);
     setOperationFeedback(null);
     setActionTarget({ subscription, action });
+  }
+
+  function toggleSubscriptionSelection(id: string, checked: boolean) {
+    setSelectedSubscriptionIds((current) => {
+      const next = new Set(current);
+      if (checked) {
+        next.add(id);
+      } else {
+        next.delete(id);
+      }
+      return next;
+    });
+  }
+
+  function toggleSubscriptionPageSelection(checked: boolean) {
+    setSelectedSubscriptionIds((current) => {
+      const next = new Set(current);
+      for (const id of visibleSubscriptionIds) {
+        if (checked) {
+          next.add(id);
+        } else {
+          next.delete(id);
+        }
+      }
+      return next;
+    });
   }
 
   async function handleSubmitSubscriptionAction(reason: string) {
@@ -609,9 +676,13 @@ export function SubscriptionsPage() {
                 subscriptions={visibleSubscriptions}
                 startIndex={(activePage - 1) * pageSize}
                 openMenuId={openMenuId}
+                selectedSubscriptionIds={selectedSubscriptionIds}
+                isPageSelected={isSubscriptionPageSelected}
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
                 onAction={requestSubscriptionAction}
+                onToggleSubscription={toggleSubscriptionSelection}
+                onTogglePage={toggleSubscriptionPageSelection}
               />
             ) : (
               <SubscriptionCards

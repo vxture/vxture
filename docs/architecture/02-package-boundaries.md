@@ -1,7 +1,7 @@
 # Vxture Package Boundaries
 
 **Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Last Updated**: 2026-05-01
 
 This document defines the **package boundaries and responsibilities** for the Vxture Monorepo.
 
@@ -194,7 +194,8 @@ import { getBillingStatus } from '@vxture/service-billing';
 ```
 @vxture/bff-website        # Serves portals/website
 @vxture/bff-admin          # Serves portals/admin
-@vxture/bff-tenant         # Serves portals/tenant
+@vxture/bff-console        # Serves portals/console
+@vxture/bff-vela           # Serves embedded agent-studio/vela ↔ agent-server/vela
 @vxture/bff-agent01        # Serves agent-studio/agent01 ↔ agent-server/agent01
 @vxture/bff-agent{N}       # Serves agent-studio/agent{N} ↔ agent-server/agent{N}
 ```
@@ -276,7 +277,7 @@ Agent product frontend. Pure frontend — no backend logic. Governed independent
 **Deployment modes**:
 
 - **Standalone**: independent web app with its own URL
-- **Embedded**: loaded inside `portals/admin` or `portals/tenant` as a micro-frontend
+- **Embedded**: loaded inside `portals/admin` or `portals/console` as a micro-frontend
 
 **Allowed dependencies**: `@vxture/design-system`, `@vxture/platform-*`, `@vxture/shared`,
 own BFF over **HTTP only**.
@@ -371,7 +372,7 @@ portals/* and agent-studio/* (frontend only)
 | `core`     | `packages/core/{name}/`          | `@vxture/core-api`, `core-auth`, `core-tenant`, `core-config`                     |
 | `ai`       | `packages/ai/ai-sdk/`            | `@vxture/ai-sdk`                                                                  |
 | `service`  | `services/{domain}/{name}/`      | `@vxture/service-billing`, `service-subscription`, `service-ticket`               |
-| `bff`      | `bff/{name}-bff/`                | `@vxture/bff-website`, `bff-admin`, `bff-tenant`, `bff-agent{N}`                  |
+| `bff`      | `bff/{name}-bff/`                | `@vxture/bff-website`, `bff-admin`, `bff-console`, `bff-vela`, `bff-agent{N}`     |
 | `platform` | `packages/platform/{name}/`      | `@vxture/platform-amap`, `platform-cesium`, `platform-{name}`                     |
 | `design`   | `packages/design/design-system/` | `@vxture/design-system`                                                           |
 

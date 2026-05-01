@@ -8,7 +8,7 @@ import { TenantProvider } from '@/features/tenant';
 import { useConsoleTranslations } from '@/lib/console-intl';
 import { AppShell } from '@/layout/shell';
 
-function ShellFrame({ children }: { children: ReactNode }) {
+function ShellFrame({ children, endPanel }: { children: ReactNode; endPanel?: ReactNode }) {
   const { session, status } = useConsoleSession();
   const router = useRouter();
   const pathname = usePathname();
@@ -37,7 +37,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AppShell>
+    <AppShell endPanel={endPanel}>
       <div className="console-page">
         <div className="console-page__body">
           {children}
@@ -47,11 +47,11 @@ function ShellFrame({ children }: { children: ReactNode }) {
   );
 }
 
-export function ConsoleShell({ children }: { children: ReactNode }) {
+export function ConsoleShell({ children, endPanel }: { children: ReactNode; endPanel?: ReactNode }) {
   return (
     <ConsoleSessionProvider>
       <TenantProvider>
-        <ShellFrame>{children}</ShellFrame>
+        <ShellFrame endPanel={endPanel}>{children}</ShellFrame>
       </TenantProvider>
     </ConsoleSessionProvider>
   );

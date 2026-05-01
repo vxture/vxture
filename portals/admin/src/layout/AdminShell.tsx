@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { TextIndentIcon, TextOutdentIcon, TranslateIcon } from '@phosphor-icons/react';
-import type { CSSProperties, ReactNode } from 'react';
+import { CaretDoubleDownIcon, CaretDoubleUpIcon, TextIndentIcon, TextOutdentIcon, TranslateIcon } from '@phosphor-icons/react';
+import type { ReactNode } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Avatar,
@@ -28,73 +28,47 @@ import {
   setGlobalThemePreference,
 } from '@vxture/platform-browser';
 import { DEFAULT_LOCALE, LOCALE_CONFIGS, SUPPORTED_LOCALES, type Locale, type Theme } from '@vxture/shared';
-import { adminNavigationSections } from '@/config/navigation';
+import {
+  adminWorkspaces,
+  getAdminNavigationItemByPath,
+  getAdminWorkspaceByPath,
+} from '@/config/navigation';
 import type { ConsoleUser } from '@/entities/console';
 import { AdminSessionProvider, useAdminSession } from '@/features/session/AdminSessionProvider';
 import { useConsoleLocale, useConsoleTranslations } from '@/lib/console-intl';
-import { AssistantPanel, type AssistantWorkMode } from './AssistantPanel';
 
 const ADMIN_SIDEBAR_KEY = 'vx-admin-sidebar-collapsed';
 const ADMIN_NAV_SECTION_KEY = 'vx-admin-nav-collapsed-sections';
-const ADMIN_ASSISTANT_KEY = 'vx-admin-assistant-open';
-const ADMIN_ASSISTANT_WIDTH_KEY = 'vx-admin-assistant-width';
-const ADMIN_ASSISTANT_MODE_KEY = 'vx-admin-assistant-mode';
 const PAGE_FULLSCREEN_ID = 'admin-page-root-native';
-const ASSISTANT_MIN_WIDTH = 380;
-const ASSISTANT_DEFAULT_WIDTH = 420;
-const ASSISTANT_MAX_WIDTH = 720;
-const ASSISTANT_ANIMATION_MS = 420;
-const ASSISTANT_CONTENT_REVEAL_MS = 140;
-const CONTENT_MIN_WIDTH = 360;
-const ADMIN_SIDEBAR_WIDTH = 320;
-const ADMIN_SIDEBAR_COLLAPSED_WIDTH = 64;
 const ADMIN_SIDEBAR_ANIMATION_MS = 420;
 const ADMIN_SIDEBAR_TEXT_REVEAL_MS = 140;
-const ADMIN_HORIZONTAL_RESERVE = 32;
+const ADMIN_SIDEBAR_AUTO_COLLAPSE_QUERY = '(max-width: 1360px)';
 const DEFAULT_AVATAR_SRC = '/assets/icon/avatar-default.png';
 const FONT_SIZE_PREFERENCE_KEY = 'vxture-font-size-preference';
 
 type FontSizePreference = 'small' | 'default' | 'large';
-type FeatureTagTone = 'new' | 'beta';
-
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), max);
-}
-
-function getAssistantMaxWidth(sidebarCollapsed: boolean, mode: AssistantWorkMode = 'sidebar') {
-  if (typeof window === 'undefined') {
-    return ASSISTANT_DEFAULT_WIDTH;
-  }
-
-  if (mode !== 'sidebar') {
-    return clamp(window.innerWidth - ADMIN_HORIZONTAL_RESERVE, ASSISTANT_MIN_WIDTH, ASSISTANT_MAX_WIDTH);
-  }
-
-  const sidebarWidth = sidebarCollapsed ? ADMIN_SIDEBAR_COLLAPSED_WIDTH : ADMIN_SIDEBAR_WIDTH;
-  const availableWidth = window.innerWidth - sidebarWidth - CONTENT_MIN_WIDTH - ADMIN_HORIZONTAL_RESERVE;
-  return clamp(availableWidth, ASSISTANT_MIN_WIDTH, ASSISTANT_MAX_WIDTH);
-}
 
 function isActivePath(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function isAssistantWorkMode(value: string | null): value is AssistantWorkMode {
-  return value === 'max' || value === 'sidebar' || value === 'floating';
-}
-
-function readCollapsedSections() {
+function readCollapsedSections(storageKey: string) {
   if (typeof window === 'undefined') {
     return new Set<string>();
   }
 
   try {
-    const raw = window.localStorage.getItem(ADMIN_NAV_SECTION_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     const parsed = raw ? (JSON.parse(raw) as unknown) : [];
     return new Set(Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === 'string') : []);
   } catch {
     return new Set<string>();
   }
+}
+
+function getTranslatedLabel(t: ReturnType<typeof useConsoleTranslations>, key: string, fallback: string): string {
+  const translated = t(key);
+  return translated === `navigation.${key}` ? fallback : translated;
 }
 
 function UserAvatar({ user, size = 'md' }: { user: ConsoleUser; size?: 'md' | 'lg' }) {
@@ -153,45 +127,9 @@ function applyFontSizePreference(value: FontSizePreference) {
 }
 
 function getRoleLabel(user: ConsoleUser, t: ReturnType<typeof useConsoleTranslations>): string {
-  const rawRole = user.roleLabel?.trim();
-  if (!rawRole) {
-    return t('roles.admin');
-  }
-
-  const normalizedRole = rawRole.toLowerCase();
-  const roleKeyMap: Record<string, string> = {
-    super_admin: 'superAdmin',
-    name_super_admin: 'superAdmin',
-    audit_admin: 'auditAdmin',
-    name_audit_admin: 'auditAdmin',
-    config_admin: 'configAdmin',
-    name_config_admin: 'configAdmin',
-    tenant_admin: 'tenantAdmin',
-    name_tenant_admin: 'tenantAdmin',
-    helpdesk_admin: 'helpdeskAdmin',
-    name_helpdesk_admin: 'helpdeskAdmin',
-    readonly_admin: 'readonlyAdmin',
-    name_readonly_admin: 'readonlyAdmin',
-    admin: 'admin',
-    member: 'member',
-    user: 'user',
-  };
-  const mappedKey = roleKeyMap[normalizedRole];
-
-  if (mappedKey) {
-    return t(`roles.${mappedKey}`);
-  }
-
-  if (/^[A-Z0-9_]+$/.test(rawRole)) {
-    return rawRole
-      .replace(/^NAME_/, '')
-      .split('_')
-      .filter(Boolean)
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-      .join(' ');
-  }
-
-  return rawRole;
+  const roleI18nKey = user.roleI18nKey?.trim() || user.roleLabel?.trim();
+  const fallback = user.roleNameEn?.trim() || user.roleLabel?.trim() || 'Platform Architect';
+  return roleI18nKey ? t(roleI18nKey, fallback) : fallback;
 }
 
 function UserBadge({ children }: { children: ReactNode }) {
@@ -223,14 +161,6 @@ function SettingOption({
     >
       {children}
     </button>
-  );
-}
-
-function FeatureTag({ tone, className = '' }: { tone: FeatureTagTone; className?: string }) {
-  return (
-    <small className={['admin-feature-tag', `admin-feature-tag--${tone}`, className].filter(Boolean).join(' ')}>
-      {tone}
-    </small>
   );
 }
 
@@ -550,9 +480,10 @@ function UserMenu({
 }) {
   const [open, setOpen] = useState(false);
   const t = useConsoleTranslations('header.userMenu');
+  const tRoot = useConsoleTranslations();
   const displayName = getDisplayName(user, t('unnamed'));
   const uniqueLine = getUniqueLine(user);
-  const roleLabel = getRoleLabel(user, t);
+  const roleLabel = getRoleLabel(user, tRoot);
 
   const handleSwitchUser = async () => {
     setOpen(false);
@@ -640,26 +571,24 @@ function ShellFrame({ children }: { children: ReactNode }) {
   const headerT = useConsoleTranslations('header');
   const navigationT = useConsoleTranslations('navigation');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarAutoCollapsed, setSidebarAutoCollapsed] = useState(false);
   const [sidebarVisualCollapsed, setSidebarVisualCollapsed] = useState(false);
   const [sidebarAnimating, setSidebarAnimating] = useState(false);
   const [sidebarTextMounted, setSidebarTextMounted] = useState(true);
   const [sidebarTextVisible, setSidebarTextVisible] = useState(true);
   const [collapsedSections, setCollapsedSections] = useState<Set<string>>(() => new Set());
-  const [assistantOpen, setAssistantOpen] = useState(false);
-  const [assistantMounted, setAssistantMounted] = useState(false);
-  const [assistantVisualOpen, setAssistantVisualOpen] = useState(false);
-  const [assistantContentVisible, setAssistantContentVisible] = useState(false);
-  const [assistantHydrated, setAssistantHydrated] = useState(false);
-  const [assistantFocusSignal, setAssistantFocusSignal] = useState(0);
-  const [assistantWidth, setAssistantWidth] = useState(ASSISTANT_DEFAULT_WIDTH);
-  const [assistantMode, setAssistantMode] = useState<AssistantWorkMode>('sidebar');
-  const assistantAnimationReadyRef = useRef(false);
+  const [workspacePanelOpen, setWorkspacePanelOpen] = useState(false);
 
-  const activeItem = adminNavigationSections
-    .flatMap((section) => section.items)
-    .find((item) => isActivePath(pathname, item.href));
-  const activeItemLabel = activeItem ? navigationT(`items.${activeItem.id}.label`) : navigationT('fallback');
-  const assistantLabel = assistantOpen ? headerT('closeAssistant') : headerT('openAssistant');
+  const activeWorkspace = getAdminWorkspaceByPath(pathname);
+  const activeSections = activeWorkspace.sections;
+  const activeItemMatch = getAdminNavigationItemByPath(pathname);
+  const activeItem = activeItemMatch?.item;
+  const activeItemLabel = activeItem
+    ? getTranslatedLabel(navigationT, `items.${activeItem.id}.label`, activeItem.label)
+    : navigationT('fallback');
+  const activeSectionStorageKey = `${ADMIN_NAV_SECTION_KEY}:${activeWorkspace.id}`;
+  const allSectionsCollapsed = activeSections.every((section) => collapsedSections.has(section.id));
+  const sidebarEffectiveCollapsed = sidebarCollapsed || sidebarAutoCollapsed;
 
   useEffect(() => {
     const savedSidebarCollapsed = window.localStorage.getItem(ADMIN_SIDEBAR_KEY) === 'true';
@@ -668,70 +597,28 @@ function ShellFrame({ children }: { children: ReactNode }) {
     setSidebarAnimating(false);
     setSidebarTextMounted(!savedSidebarCollapsed);
     setSidebarTextVisible(!savedSidebarCollapsed);
-    setCollapsedSections(readCollapsedSections());
-    const savedAssistant = window.localStorage.getItem(ADMIN_ASSISTANT_KEY);
-    const savedAssistantOpen = savedAssistant === 'true';
-    setAssistantOpen(savedAssistantOpen);
-    setAssistantMounted(savedAssistantOpen);
-    setAssistantVisualOpen(savedAssistantOpen);
-    setAssistantContentVisible(savedAssistantOpen);
-    const savedAssistantMode = window.localStorage.getItem(ADMIN_ASSISTANT_MODE_KEY);
-    setAssistantMode(isAssistantWorkMode(savedAssistantMode) ? savedAssistantMode : 'sidebar');
-    setAssistantHydrated(true);
   }, []);
 
   useEffect(() => {
-    if (!assistantHydrated) {
-      return;
-    }
+    setCollapsedSections(readCollapsedSections(activeSectionStorageKey));
+  }, [activeSectionStorageKey]);
 
-    if (!assistantAnimationReadyRef.current) {
-      assistantAnimationReadyRef.current = true;
-      return;
-    }
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(ADMIN_SIDEBAR_AUTO_COLLAPSE_QUERY);
+    const updateAutoCollapse = () => setSidebarAutoCollapsed(mediaQuery.matches);
 
-    if (!assistantOpen) {
-      setAssistantContentVisible(false);
-      setAssistantVisualOpen(false);
-
-      const timeout = window.setTimeout(() => {
-        setAssistantMounted(false);
-      }, ASSISTANT_ANIMATION_MS);
-
-      return () => {
-        window.clearTimeout(timeout);
-      };
-    }
-
-    setAssistantMounted(true);
-    setAssistantContentVisible(false);
-    let secondFrame: number | undefined;
-    let revealTimeout: number | undefined;
-
-    const firstFrame = window.requestAnimationFrame(() => {
-      secondFrame = window.requestAnimationFrame(() => {
-        setAssistantVisualOpen(true);
-        revealTimeout = window.setTimeout(() => {
-          setAssistantContentVisible(true);
-        }, ASSISTANT_CONTENT_REVEAL_MS);
-      });
-    });
+    updateAutoCollapse();
+    mediaQuery.addEventListener('change', updateAutoCollapse);
 
     return () => {
-      window.cancelAnimationFrame(firstFrame);
-      if (secondFrame !== undefined) {
-        window.cancelAnimationFrame(secondFrame);
-      }
-      if (revealTimeout !== undefined) {
-        window.clearTimeout(revealTimeout);
-      }
+      mediaQuery.removeEventListener('change', updateAutoCollapse);
     };
-  }, [assistantHydrated, assistantOpen]);
+  }, []);
 
   useEffect(() => {
     setSidebarAnimating(true);
 
-    if (sidebarCollapsed) {
+    if (sidebarEffectiveCollapsed) {
       setSidebarTextVisible(false);
       setSidebarVisualCollapsed(true);
       const timeout = window.setTimeout(() => {
@@ -773,33 +660,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
         window.clearTimeout(settleTimeout);
       }
     };
-  }, [sidebarCollapsed]);
-
-  useEffect(() => {
-    const saved = window.localStorage.getItem(ADMIN_ASSISTANT_WIDTH_KEY);
-    const parsed = saved ? Number(saved) : NaN;
-    const nextWidth = Number.isFinite(parsed) ? parsed : ASSISTANT_DEFAULT_WIDTH;
-    const maxWidth = getAssistantMaxWidth(sidebarCollapsed, assistantMode);
-    setAssistantWidth(clamp(nextWidth, ASSISTANT_MIN_WIDTH, maxWidth));
-  }, [assistantMode, sidebarCollapsed]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const maxWidth = getAssistantMaxWidth(sidebarCollapsed, assistantMode);
-      setAssistantWidth((current) => {
-        const next = clamp(current, ASSISTANT_MIN_WIDTH, maxWidth);
-        window.localStorage.setItem(ADMIN_ASSISTANT_WIDTH_KEY, String(next));
-        return next;
-      });
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [assistantMode, sidebarCollapsed]);
+  }, [sidebarEffectiveCollapsed]);
 
   useEffect(() => {
     if (status === 'ready' && (!session.isAuthenticated || !session.user)) {
@@ -815,21 +676,6 @@ function ShellFrame({ children }: { children: ReactNode }) {
     });
   }
 
-  function handleToggleAssistantFromSidebar() {
-    setAssistantOpen((current) => {
-      const next = !current;
-      window.localStorage.setItem(ADMIN_ASSISTANT_KEY, String(next));
-
-      if (next) {
-        setAssistantFocusSignal((signal) => signal + 1);
-        setSidebarCollapsed(true);
-        window.localStorage.setItem(ADMIN_SIDEBAR_KEY, 'true');
-      }
-
-      return next;
-    });
-  }
-
   function handleToggleNavSection(sectionTitle: string) {
     setCollapsedSections((current) => {
       const next = new Set(current);
@@ -838,7 +684,17 @@ function ShellFrame({ children }: { children: ReactNode }) {
       } else {
         next.add(sectionTitle);
       }
-      window.localStorage.setItem(ADMIN_NAV_SECTION_KEY, JSON.stringify([...next]));
+      window.localStorage.setItem(activeSectionStorageKey, JSON.stringify([...next]));
+      return next;
+    });
+  }
+
+  function handleToggleAllNavSections() {
+    setCollapsedSections(() => {
+      const next = allSectionsCollapsed
+        ? new Set<string>()
+        : new Set(activeSections.map((section) => section.id));
+      window.localStorage.setItem(activeSectionStorageKey, JSON.stringify([...next]));
       return next;
     });
   }
@@ -851,35 +707,6 @@ function ShellFrame({ children }: { children: ReactNode }) {
   async function handleSwitchUser() {
     await signOut();
     router.replace('/login');
-  }
-
-  function handleToggleAssistant() {
-    setAssistantOpen((current) => {
-      const next = !current;
-      window.localStorage.setItem(ADMIN_ASSISTANT_KEY, String(next));
-      if (next) {
-        setAssistantFocusSignal((signal) => signal + 1);
-      }
-      return next;
-    });
-  }
-
-  function handleAssistantWidthChange(width: number) {
-    const maxWidth = getAssistantMaxWidth(sidebarCollapsed, assistantMode);
-    const next = clamp(width, ASSISTANT_MIN_WIDTH, maxWidth);
-    setAssistantWidth(next);
-    window.localStorage.setItem(ADMIN_ASSISTANT_WIDTH_KEY, String(next));
-  }
-
-  function handleAssistantModeChange(mode: AssistantWorkMode) {
-    setAssistantMode(mode);
-    window.localStorage.setItem(ADMIN_ASSISTANT_MODE_KEY, mode);
-  }
-
-  function handleAssistantResetWidth() {
-    const next = clamp(ASSISTANT_DEFAULT_WIDTH, ASSISTANT_MIN_WIDTH, getAssistantMaxWidth(sidebarCollapsed, assistantMode));
-    setAssistantWidth(next);
-    window.localStorage.setItem(ADMIN_ASSISTANT_WIDTH_KEY, String(next));
   }
 
   if (status !== 'ready') {
@@ -898,31 +725,69 @@ function ShellFrame({ children }: { children: ReactNode }) {
     return null;
   }
 
-  const assistantInLayout = assistantMounted && assistantMode === 'sidebar';
-  const assistantDockedOpen = assistantInLayout && assistantVisualOpen;
   const shellClassName = [
     'admin-shell',
     sidebarVisualCollapsed ? 'admin-shell--nav-collapsed' : '',
+    sidebarAutoCollapsed ? 'admin-shell--nav-auto-collapsed' : '',
     sidebarAnimating ? 'admin-shell--nav-transitioning' : '',
     !sidebarTextVisible ? 'admin-shell--nav-text-hidden' : '',
-    assistantInLayout ? 'admin-shell--assistant-mounted' : '',
-    assistantDockedOpen ? 'admin-shell--assistant-open' : '',
-    assistantMode !== 'sidebar' ? 'admin-shell--assistant-overlay' : '',
-    !assistantContentVisible ? 'admin-shell--assistant-content-hidden' : '',
   ].filter(Boolean).join(' ');
-  const assistantVisualWidth = assistantDockedOpen ? `${assistantWidth}px` : '0px';
-  const shellStyle = {
-    '--vx-shell-assistant-width': `${assistantWidth}px`,
-    '--vx-admin-assistant-visual-width': assistantVisualWidth,
-  } as CSSProperties;
 
   return (
-    <div className={shellClassName} style={shellStyle} data-fullscreen-id={PAGE_FULLSCREEN_ID}>
+    <div className={shellClassName} data-fullscreen-id={PAGE_FULLSCREEN_ID}>
       <header className="admin-shell__header">
         <div className="admin-shell-header__left">
-          <button type="button" className="admin-shell-icon-button admin-shell-icon-button--launcher" aria-label={headerT('appLauncher')} title={headerT('appLauncher')}>
-            <Icon name="app-grid" size="lg" fallback="placeholder" />
-          </button>
+          <Popover open={workspacePanelOpen} onOpenChange={setWorkspacePanelOpen}>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className={`admin-shell-icon-button admin-shell-icon-button--launcher ${workspacePanelOpen ? 'admin-shell-icon-button--active' : ''}`}
+                aria-label={headerT('appLauncher')}
+                title={headerT('appLauncher')}
+              >
+                <Icon name="app-grid" size="lg" fallback="placeholder" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent
+              align="start"
+              sideOffset={14}
+              className="admin-workspace-switcher w-80 rounded-lg border border-slate-200 bg-white p-2 text-slate-900 shadow-xl shadow-blue-950/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            >
+              <div className="admin-workspace-switcher__header">
+                <strong>工作域</strong>
+                <span>运营与自治完全隔离，消息与通知保持全局可见。</span>
+              </div>
+              <div className="admin-workspace-switcher__list">
+                {adminWorkspaces.map((workspace) => {
+                  const active = workspace.id === activeWorkspace.id;
+
+                  return (
+                    <button
+                      key={workspace.id}
+                      type="button"
+                      className={`admin-workspace-switcher__item ${active ? 'admin-workspace-switcher__item--active' : ''}`}
+                      aria-current={active ? 'page' : undefined}
+                      onClick={() => {
+                        setWorkspacePanelOpen(false);
+                        if (!active) {
+                          router.push(workspace.homeHref);
+                        }
+                      }}
+                    >
+                      <span className="admin-workspace-switcher__icon" aria-hidden="true">
+                        <Icon name={workspace.icon} size="md" fallback="placeholder" />
+                      </span>
+                      <span className="admin-workspace-switcher__copy">
+                        <strong>{workspace.label}</strong>
+                        <span>{workspace.description}</span>
+                      </span>
+                      {active ? <Icon name="check" className="admin-workspace-switcher__check" size="sm" fallback="check" /> : null}
+                    </button>
+                  );
+                })}
+              </div>
+            </PopoverContent>
+          </Popover>
           <Link className="admin-shell-header__brand" href="/" aria-label={headerT('brandHome')}>
             <Image
               className="admin-shell-header__brand-logo"
@@ -948,27 +813,6 @@ function ShellFrame({ children }: { children: ReactNode }) {
         </label>
 
         <div className="admin-shell-header__actions">
-          <button
-            type="button"
-            className={`vx-shell-agent-button ${assistantOpen ? 'vx-shell-agent-button--active' : ''}`}
-            aria-pressed={assistantOpen}
-            aria-expanded={assistantOpen}
-            aria-controls="vx-assistant-panel"
-            aria-label={assistantLabel}
-            title={assistantLabel}
-            onClick={handleToggleAssistant}
-          >
-            <Image
-              className="vx-shell-agent-button__icon"
-              src="/assets/ai/ai-agent-icon-32.gif"
-              alt=""
-              aria-hidden="true"
-              width={32}
-              height={32}
-              unoptimized
-            />
-          </button>
-
           <div className="admin-shell-header__action-group" role="group" aria-label={headerT('quickPreferences')}>
             <HeaderThemeToggle />
             <HeaderLocaleSelect />
@@ -991,24 +835,36 @@ function ShellFrame({ children }: { children: ReactNode }) {
       </header>
 
       <div className="admin-shell__body">
-        <aside id="vx-admin-sidebar" className="admin-shell-sidebar" aria-label="平台运营导航">
+        <aside id="vx-admin-sidebar" className="admin-shell-sidebar" aria-label={`${activeWorkspace.label}导航`}>
           <div className="admin-shell-sidebar__top">
             <button
               type="button"
               className="admin-shell-icon-button admin-shell-icon-button--rail"
-              aria-label={sidebarCollapsed ? headerT('openNavigation') : headerT('collapseNavigation')}
-              aria-expanded={!sidebarCollapsed}
+              aria-label={sidebarEffectiveCollapsed ? headerT('openNavigation') : headerT('collapseNavigation')}
+              aria-expanded={!sidebarEffectiveCollapsed}
               aria-controls="vx-admin-sidebar"
               onClick={handleToggleSidebar}
             >
-              {sidebarCollapsed ? <TextIndentIcon size={24} aria-hidden="true" /> : <TextOutdentIcon size={24} aria-hidden="true" />}
+              {sidebarEffectiveCollapsed ? <TextIndentIcon size={24} aria-hidden="true" /> : <TextOutdentIcon size={24} aria-hidden="true" />}
             </button>
-            {sidebarTextMounted ? <strong className="admin-shell-sidebar__domain-title">运营业务域</strong> : null}
+            {sidebarTextMounted ? <strong className="admin-shell-sidebar__domain-title">{activeWorkspace.label}</strong> : null}
+            {sidebarTextMounted ? (
+              <button
+                type="button"
+                className="admin-shell-sidebar__section-toggle-all"
+                aria-label={allSectionsCollapsed ? '展开全部导航分组' : '收起全部导航分组'}
+                title={allSectionsCollapsed ? '展开全部导航分组' : '收起全部导航分组'}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={handleToggleAllNavSections}
+              >
+                {allSectionsCollapsed ? <CaretDoubleDownIcon size={16} aria-hidden="true" /> : <CaretDoubleUpIcon size={16} aria-hidden="true" />}
+              </button>
+            ) : null}
           </div>
 
           <nav className="admin-shell-nav">
-            {adminNavigationSections.map((section) => {
-              const sectionTitle = navigationT(`sections.${section.id}`);
+            {activeSections.map((section) => {
+              const sectionTitle = getTranslatedLabel(navigationT, `sections.${section.id}`, section.title);
               const sectionCollapsed = collapsedSections.has(section.id);
               const sectionActive = section.items.some((item) => isActivePath(pathname, item.href));
 
@@ -1042,7 +898,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
                     <div className="admin-shell-nav__items">
                       {section.items.map((item) => {
                     const active = isActivePath(pathname, item.href);
-                    const itemLabel = navigationT(`items.${item.id}.label`);
+                    const itemLabel = getTranslatedLabel(navigationT, `items.${item.id}.label`, item.label);
                     const className = [
                       'admin-shell-nav__item',
                       active ? 'admin-shell-nav__item--active' : '',
@@ -1083,37 +939,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
             })}
           </nav>
 
-          <div className="admin-shell-sidebar__footer">
-            <SidebarTooltip label={assistantLabel} enabled={sidebarVisualCollapsed}>
-              <button
-                type="button"
-                className="admin-shell-sidebar__assistant-button"
-                aria-label={assistantLabel}
-                aria-pressed={assistantOpen}
-                aria-expanded={assistantOpen}
-                onClick={handleToggleAssistantFromSidebar}
-              >
-                <Image
-                  className="admin-shell-sidebar__assistant-icon"
-                  src="/assets/ai/ai-agent-icon-32.gif"
-                  alt=""
-                  aria-hidden="true"
-                  width={32}
-                  height={32}
-                  unoptimized
-                />
-                {sidebarTextMounted ? (
-                  <span className="admin-shell-sidebar__assistant-copy">
-                    <span className="admin-shell-sidebar__assistant-label">{assistantLabel}</span>
-                    <span className="admin-shell-sidebar__assistant-tags" aria-hidden="true">
-                      <FeatureTag tone="new" />
-                      <FeatureTag tone="beta" />
-                    </span>
-                  </span>
-                ) : null}
-              </button>
-            </SidebarTooltip>
-          </div>
+          <div className="admin-shell-sidebar__footer" />
         </aside>
 
         <main className="admin-content" aria-label="Admin content">
@@ -1121,22 +947,6 @@ function ShellFrame({ children }: { children: ReactNode }) {
           <section className="admin-content__visual-space" aria-hidden="true" />
         </main>
 
-        {assistantMounted ? (
-          <AssistantPanel
-            id="vx-assistant-panel"
-            conversationKey={pathname}
-            routeLabel={activeItemLabel}
-            open={assistantVisualOpen}
-            maxWidth={getAssistantMaxWidth(sidebarCollapsed, assistantMode)}
-            minWidth={ASSISTANT_MIN_WIDTH}
-            focusSignal={assistantFocusSignal}
-            mode={assistantMode}
-            onWidthChange={handleAssistantWidthChange}
-            onModeChange={handleAssistantModeChange}
-            onResetWidth={handleAssistantResetWidth}
-            onClose={handleToggleAssistant}
-          />
-        ) : null}
       </div>
     </div>
   );

@@ -1,95 +1,111 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Icon } from '@vxture/design-system';
-import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
-import { fetchInvoiceLedgerRecords, submitBillingInvoiceReceiptAction } from '@/api/admin-bff';
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Icon } from "@vxture/design-system";
+import type { IconName } from "@vxture/design-system";
+import { Badge, Button, Input } from "@/components/ui/primitives";
+import {
+  fetchInvoiceLedgerRecords,
+  submitBillingInvoiceReceiptAction,
+} from "@/api/admin-bff";
 import type {
   BillingInvoiceLedgerRecord,
   BillingInvoiceReceiptAction,
   BillingInvoiceStatus,
   BillingInvoiceTaxType,
   BillingInvoiceType,
-} from '@/entities/console';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
+} from "@/entities/console";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
 import {
   canRunInvoiceReceiptAction,
   InvoiceReceiptActionDialog,
   invoiceReceiptActionDisabledReason,
   invoiceReceiptActionLabel,
-} from '@/modules/billing/InvoiceReceiptActionDialog';
-import { formatDate, formatNumber, joinClasses, typeLabel } from '@/modules/tenants/tenant-utils';
+} from "@/modules/billing/InvoiceReceiptActionDialog";
+import {
+  formatDate,
+  formatNumber,
+  joinClasses,
+  typeLabel,
+} from "@/modules/tenants/tenant-utils";
 
-type ViewMode = 'list' | 'cards';
-type InvoiceStatusFilter = 'all' | BillingInvoiceStatus | 'active' | 'exception';
-type InvoiceTypeFilter = 'all' | BillingInvoiceType;
-type InvoiceTaxFilter = 'all' | BillingInvoiceTaxType;
-type DeliveryFilter = 'all' | 'not_sent' | 'sent' | 'finished';
+type ViewMode = "list" | "cards";
+type InvoiceStatusFilter =
+  | "all"
+  | BillingInvoiceStatus
+  | "active"
+  | "exception";
+type InvoiceTypeFilter = "all" | BillingInvoiceType;
+type InvoiceTaxFilter = "all" | BillingInvoiceTaxType;
+type DeliveryFilter = "all" | "not_sent" | "sent" | "finished";
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
 type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
-function formatCurrency(value: number, currency: string, maximumFractionDigits = 0) {
-  return new Intl.NumberFormat('zh-CN', {
-    style: 'currency',
-    currency: currency || 'CNY',
+function formatCurrency(
+  value: number,
+  currency: string,
+  maximumFractionDigits = 0,
+) {
+  return new Intl.NumberFormat("zh-CN", {
+    style: "currency",
+    currency: currency || "CNY",
     maximumFractionDigits,
   }).format(value);
 }
 
 function invoiceStatusLabel(status: BillingInvoiceStatus) {
-  if (status === 'applying') return '申请中';
-  if (status === 'auditing') return '审核中';
-  if (status === 'issued') return '已开票';
-  if (status === 'sending') return '寄送中';
-  if (status === 'finished') return '已完成';
-  if (status === 'rejected') return '已驳回';
-  if (status === 'red') return '已红冲';
-  return '未开票';
+  if (status === "applying") return "申请中";
+  if (status === "auditing") return "审核中";
+  if (status === "issued") return "已开票";
+  if (status === "sending") return "寄送中";
+  if (status === "finished") return "已完成";
+  if (status === "rejected") return "已驳回";
+  if (status === "red") return "已红冲";
+  return "未开票";
 }
 
 function invoiceTypeLabel(type: BillingInvoiceType) {
-  if (type === 'special_vat') return '增值税专票';
-  if (type === 'normal_vat') return '增值税普票';
-  if (type === 'electronic') return '电子发票';
-  if (type === 'paper') return '纸质发票';
-  return '其他';
+  if (type === "special_vat") return "增值税专票";
+  if (type === "normal_vat") return "增值税普票";
+  if (type === "electronic") return "电子发票";
+  if (type === "paper") return "纸质发票";
+  return "其他";
 }
 
 function taxTypeLabel(type: BillingInvoiceTaxType) {
-  if (type === 'enterprise') return '企业';
-  if (type === 'individual') return '个人';
-  if (type === 'government') return '政府/事业单位';
-  return '其他';
+  if (type === "enterprise") return "企业";
+  if (type === "individual") return "个人";
+  if (type === "government") return "政府/事业单位";
+  return "其他";
 }
 
 function billTypeLabel(type: string) {
-  if (type === 'adjust') return '调整单';
-  if (type === 'supplement') return '补录单';
-  if (type === 'prepaid') return '预付费';
-  return '正常账单';
+  if (type === "adjust") return "调整单";
+  if (type === "supplement") return "补录单";
+  if (type === "prepaid") return "预付费";
+  return "正常账单";
 }
 
 function billStatusLabel(status: string) {
-  if (status === 'paid') return '已结清';
-  if (status === 'partial') return '部分收款';
-  if (status === 'paying') return '支付中';
-  if (status === 'cancelled') return '已作废';
-  if (status === 'overdue') return '逾期';
-  return '待收款';
+  if (status === "paid") return "已结清";
+  if (status === "partial") return "部分收款";
+  if (status === "paying") return "支付中";
+  if (status === "cancelled") return "已作废";
+  if (status === "overdue") return "逾期";
+  return "待收款";
 }
 
 function invoiceStatusIcon(status: BillingInvoiceStatus): IconName {
-  if (status === 'finished') return 'check';
-  if (status === 'red' || status === 'rejected') return 'warning';
-  if (status === 'sending') return 'table';
-  return 'key';
+  if (status === "finished") return "check";
+  if (status === "red" || status === "rejected") return "warning";
+  if (status === "sending") return "table";
+  return "key";
 }
 
 function invoiceSearchText(invoice: BillingInvoiceLedgerRecord) {
@@ -115,21 +131,38 @@ function invoiceSearchText(invoice: BillingInvoiceLedgerRecord) {
     invoiceStatusLabel(invoice.invoiceStatus),
     invoiceTypeLabel(invoice.invoiceType),
     taxTypeLabel(invoice.invoiceTaxType),
-  ].filter(Boolean).join(' ').toLowerCase();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }
 
-function matchesStatusFilter(invoice: BillingInvoiceLedgerRecord, filter: InvoiceStatusFilter) {
-  if (filter === 'all') return true;
-  if (filter === 'active') return invoice.invoiceStatus === 'issued' || invoice.invoiceStatus === 'sending';
-  if (filter === 'exception') return invoice.invoiceStatus === 'red' || invoice.invoiceStatus === 'rejected';
+function matchesStatusFilter(
+  invoice: BillingInvoiceLedgerRecord,
+  filter: InvoiceStatusFilter,
+) {
+  if (filter === "all") return true;
+  if (filter === "active")
+    return (
+      invoice.invoiceStatus === "issued" || invoice.invoiceStatus === "sending"
+    );
+  if (filter === "exception")
+    return (
+      invoice.invoiceStatus === "red" || invoice.invoiceStatus === "rejected"
+    );
   return invoice.invoiceStatus === filter;
 }
 
-function matchesDeliveryFilter(invoice: BillingInvoiceLedgerRecord, filter: DeliveryFilter) {
-  if (filter === 'all') return true;
-  if (filter === 'not_sent') return invoice.invoiceStatus === 'issued' && !invoice.expressNo;
-  if (filter === 'sent') return invoice.invoiceStatus === 'sending' || Boolean(invoice.expressNo);
-  return invoice.invoiceStatus === 'finished';
+function matchesDeliveryFilter(
+  invoice: BillingInvoiceLedgerRecord,
+  filter: DeliveryFilter,
+) {
+  if (filter === "all") return true;
+  if (filter === "not_sent")
+    return invoice.invoiceStatus === "issued" && !invoice.expressNo;
+  if (filter === "sent")
+    return invoice.invoiceStatus === "sending" || Boolean(invoice.expressNo);
+  return invoice.invoiceStatus === "finished";
 }
 
 function SummaryItem({
@@ -137,13 +170,13 @@ function SummaryItem({
   label,
   value,
   tags,
-  tone = 'blue',
+  tone = "blue",
 }: {
   icon: IconName;
   label: string;
   value: string;
   tags?: string[];
-  tone?: 'blue' | 'green' | 'amber' | 'rose';
+  tone?: "blue" | "green" | "amber" | "rose";
 }) {
   return (
     <article className={`vx-tenant-summary__item vx-tenant-tone--${tone}`}>
@@ -152,21 +185,29 @@ function SummaryItem({
         <span>{label}</span>
         <p>
           <strong>{value}</strong>
-          {tags?.map((tag) => <em key={tag}>{tag}</em>)}
+          {tags?.map((tag) => (
+            <em key={tag}>{tag}</em>
+          ))}
         </p>
       </div>
     </article>
   );
 }
 
-function PageSizePicker({ value, onChange }: { value: PageSize; onChange: (value: PageSize) => void }) {
+function PageSizePicker({
+  value,
+  onChange,
+}: {
+  value: PageSize;
+  onChange: (value: PageSize) => void;
+}) {
   return (
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
           <button
             type="button"
-            className={value === option ? 'is-active' : undefined}
+            className={value === option ? "is-active" : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
@@ -189,13 +230,26 @@ function InvoiceActionsMenu({
   open: boolean;
   onToggle: () => void;
   onClose: () => void;
-  onReceiptAction: (invoice: BillingInvoiceLedgerRecord, action: BillingInvoiceReceiptAction) => void;
+  onReceiptAction: (
+    invoice: BillingInvoiceLedgerRecord,
+    action: BillingInvoiceReceiptAction,
+  ) => void;
 }) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${invoice.invoiceNo} 发票操作`} title="操作" onClick={onToggle}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+      onMouseLeave={onClose}
+    >
+      <button
+        className="vx-tenant-actions__trigger"
+        type="button"
+        aria-label={`${invoice.invoiceNo} 发票操作`}
+        title="操作"
+        onClick={onToggle}
+      >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
       </button>
       {open ? (
@@ -222,20 +276,36 @@ function InvoiceActionsMenu({
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
           </button>
-          {(['update_shipping', 'finish', 'red'] as const).map((action) => (
+          {(["update_shipping", "finish", "red"] as const).map((action) => (
             <button
               key={action}
               type="button"
               role="menuitem"
-              className={action === 'red' ? 'vx-subscription-menu-action--danger' : undefined}
+              className={
+                action === "red"
+                  ? "vx-subscription-menu-action--danger"
+                  : undefined
+              }
               disabled={!canRunInvoiceReceiptAction(action, invoice)}
-              title={invoiceReceiptActionDisabledReason(action, invoice) ?? undefined}
+              title={
+                invoiceReceiptActionDisabledReason(action, invoice) ?? undefined
+              }
               onClick={() => {
                 onClose();
                 onReceiptAction(invoice, action);
               }}
             >
-              <Icon name={action === 'red' ? 'warning' : action === 'finish' ? 'check' : 'table'} size="xs" fallback="placeholder" />
+              <Icon
+                name={
+                  action === "red"
+                    ? "warning"
+                    : action === "finish"
+                      ? "check"
+                      : "table"
+                }
+                size="xs"
+                fallback="placeholder"
+              />
               {invoiceReceiptActionLabel(action)}
             </button>
           ))}
@@ -252,19 +322,55 @@ function InvoiceListRows({
   onOpenMenu,
   onCloseMenu,
   onReceiptAction,
+  selectedInvoiceIds,
+  isPageSelected,
+  onToggleInvoice,
+  onTogglePage,
 }: {
   invoices: BillingInvoiceLedgerRecord[];
   startIndex: number;
   openMenuId: string | null;
   onOpenMenu: (id: string) => void;
   onCloseMenu: () => void;
-  onReceiptAction: (invoice: BillingInvoiceLedgerRecord, action: BillingInvoiceReceiptAction) => void;
+  onReceiptAction: (
+    invoice: BillingInvoiceLedgerRecord,
+    action: BillingInvoiceReceiptAction,
+  ) => void;
+  selectedInvoiceIds: Set<string>;
+  isPageSelected: boolean;
+  onToggleInvoice: (id: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = invoices.filter((invoice) =>
+    selectedInvoiceIds.has(invoice.id),
+  ).length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate =
+        selectedOnPage > 0 && selectedOnPage < invoices.length;
+    }
+  }, [invoices.length, selectedOnPage]);
 
   return (
-    <div className="vx-tenant-directory-list vx-invoice-directory-list" role="region" aria-label="线下发票台账">
+    <div
+      className="vx-tenant-directory-list vx-invoice-directory-list"
+      role="region"
+      aria-label="线下发票台账"
+    >
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页发票"
+          />
+        </span>
         <span>序号</span>
         <span>发票</span>
         <span>租户</span>
@@ -274,64 +380,144 @@ function InvoiceListRows({
         <span>寄送</span>
         <span>操作</span>
       </div>
-      {invoices.map((invoice, index) => (
-        <div
-          key={invoice.id}
-          className={joinClasses('vx-tenant-directory-row', `vx-invoice-row--${invoice.invoiceStatus}`)}
-          role="button"
-          tabIndex={0}
-          onClick={() => router.push(`/billing/${encodeURIComponent(invoice.billId)}`)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') router.push(`/billing/${encodeURIComponent(invoice.billId)}`);
-          }}
-        >
-          <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
-          <span className="vx-invoice-row__invoice">
-            <span className="vx-tenant-directory-row__title-line">
-              <strong>{invoice.invoiceNo}</strong>
+      {invoices.map((invoice, index) => {
+        const selected = selectedInvoiceIds.has(invoice.id);
+
+        return (
+          <div
+            key={invoice.id}
+            className={joinClasses(
+              "vx-tenant-directory-row",
+              "vx-invoice-operation-row",
+              `vx-invoice-row--${invoice.invoiceStatus}`,
+              selected ? "vx-invoice-operation-row--selected" : undefined,
+            )}
+            onClick={(event) => {
+              const target = event.target as HTMLElement;
+              if (
+                target.closest(
+                  'button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]',
+                )
+              )
+                return;
+              onToggleInvoice(invoice.id, !selected);
+            }}
+          >
+            <span className="vx-invoice-operation-row__select">
+              <input
+                type="checkbox"
+                className="vx-model-select-checkbox"
+                checked={selected}
+                onChange={(event) =>
+                  onToggleInvoice(invoice.id, event.target.checked)
+                }
+                aria-label={`选择发票 ${invoice.invoiceNo}`}
+              />
             </span>
-            <small>{invoice.invoiceTitle} · {taxTypeLabel(invoice.invoiceTaxType)}</small>
-          </span>
-          <span className="vx-invoice-row__tenant">
-            <Icon name={invoice.tenantType === 'company' ? 'buildings' : 'user'} size="sm" fallback="placeholder" />
-            <span>
-              <strong>{invoice.tenantName}</strong>
-              <small>{invoice.tenantCode} · {typeLabel(invoice.tenantType)}</small>
+            <span className="vx-tenant-directory-row__index">
+              {formatNumber(startIndex + index + 1)}
             </span>
-          </span>
-          <span className="vx-invoice-row__bill">
-            <span className="vx-tenant-directory-row__tag-line">
-              <Badge className={`vx-tenant-pill vx-invoice-pill--bill-${invoice.billStatus}`}>{billStatusLabel(invoice.billStatus)}</Badge>
-              <Badge className={`vx-tenant-pill vx-invoice-pill--type-${invoice.billType}`}>{billTypeLabel(invoice.billType)}</Badge>
-            </span>
-            <small>{invoice.billNo}</small>
-          </span>
-          <span className="vx-invoice-row__amount">
-            <strong>{formatCurrency(invoice.invoiceAmount, invoice.currency)}</strong>
-            <small>税额 {formatCurrency(invoice.taxAmount, invoice.currency)}</small>
-          </span>
-          <span className="vx-invoice-row__status">
-            <span className="vx-invoice-status-line">
-              <span className={`vx-invoice-status-dot vx-invoice-status-dot--${invoice.invoiceStatus}`} role="img" aria-label={invoiceStatusLabel(invoice.invoiceStatus)}>
-                <Icon name={invoiceStatusIcon(invoice.invoiceStatus)} size="xs" fallback="placeholder" />
+            <span className="vx-invoice-row__invoice">
+              <span className="vx-tenant-directory-row__title-line">
+                <button
+                  type="button"
+                  className="vx-model-name-button"
+                  onClick={() =>
+                    router.push(
+                      `/billing/${encodeURIComponent(invoice.billId)}`,
+                    )
+                  }
+                >
+                  {invoice.invoiceNo}
+                </button>
               </span>
-              <Badge className={`vx-tenant-pill vx-invoice-pill--${invoice.invoiceStatus}`}>{invoiceStatusLabel(invoice.invoiceStatus)}</Badge>
+              <small>
+                {invoice.invoiceTitle} · {taxTypeLabel(invoice.invoiceTaxType)}
+              </small>
             </span>
-            <small>{invoiceTypeLabel(invoice.invoiceType)}</small>
-          </span>
-          <span className="vx-invoice-row__delivery">
-            <strong>{invoice.expressNo ? invoice.expressCompany ?? '线下寄送' : invoice.invoiceFileUrl ? '电子文件' : '未寄送'}</strong>
-            <small>{invoice.expressNo ?? invoice.invoiceFileUrl ?? formatDate(invoice.sendAt)}</small>
-          </span>
-          <InvoiceActionsMenu
-            invoice={invoice}
-            open={openMenuId === invoice.id}
-            onToggle={() => onOpenMenu(openMenuId === invoice.id ? '' : invoice.id)}
-            onClose={onCloseMenu}
-            onReceiptAction={onReceiptAction}
-          />
-        </div>
-      ))}
+            <span className="vx-invoice-row__tenant">
+              <Icon
+                name={invoice.tenantType === "company" ? "buildings" : "user"}
+                size="sm"
+                fallback="placeholder"
+              />
+              <span>
+                <strong>{invoice.tenantName}</strong>
+                <small>
+                  {invoice.tenantCode} · {typeLabel(invoice.tenantType)}
+                </small>
+              </span>
+            </span>
+            <span className="vx-invoice-row__bill">
+              <span className="vx-tenant-directory-row__tag-line">
+                <Badge
+                  className={`vx-tenant-pill vx-invoice-pill--bill-${invoice.billStatus}`}
+                >
+                  {billStatusLabel(invoice.billStatus)}
+                </Badge>
+                <Badge
+                  className={`vx-tenant-pill vx-invoice-pill--type-${invoice.billType}`}
+                >
+                  {billTypeLabel(invoice.billType)}
+                </Badge>
+              </span>
+              <small>{invoice.billNo}</small>
+            </span>
+            <span className="vx-invoice-row__amount">
+              <strong>
+                {formatCurrency(invoice.invoiceAmount, invoice.currency)}
+              </strong>
+              <small>
+                税额 {formatCurrency(invoice.taxAmount, invoice.currency)}
+              </small>
+            </span>
+            <span className="vx-invoice-row__status">
+              <span className="vx-invoice-status-line">
+                <span
+                  className={`vx-invoice-status-dot vx-invoice-status-dot--${invoice.invoiceStatus}`}
+                  role="img"
+                  aria-label={invoiceStatusLabel(invoice.invoiceStatus)}
+                >
+                  <Icon
+                    name={invoiceStatusIcon(invoice.invoiceStatus)}
+                    size="xs"
+                    fallback="placeholder"
+                  />
+                </span>
+                <Badge
+                  className={`vx-tenant-pill vx-invoice-pill--${invoice.invoiceStatus}`}
+                >
+                  {invoiceStatusLabel(invoice.invoiceStatus)}
+                </Badge>
+              </span>
+              <small>{invoiceTypeLabel(invoice.invoiceType)}</small>
+            </span>
+            <span className="vx-invoice-row__delivery">
+              <strong>
+                {invoice.expressNo
+                  ? (invoice.expressCompany ?? "线下寄送")
+                  : invoice.invoiceFileUrl
+                    ? "电子文件"
+                    : "未寄送"}
+              </strong>
+              <small>
+                {invoice.expressNo ??
+                  invoice.invoiceFileUrl ??
+                  formatDate(invoice.sendAt)}
+              </small>
+            </span>
+            <InvoiceActionsMenu
+              invoice={invoice}
+              open={openMenuId === invoice.id}
+              onToggle={() =>
+                onOpenMenu(openMenuId === invoice.id ? "" : invoice.id)
+              }
+              onClose={onCloseMenu}
+              onReceiptAction={onReceiptAction}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -347,60 +533,105 @@ function InvoiceCards({
   openMenuId: string | null;
   onOpenMenu: (id: string) => void;
   onCloseMenu: () => void;
-  onReceiptAction: (invoice: BillingInvoiceLedgerRecord, action: BillingInvoiceReceiptAction) => void;
+  onReceiptAction: (
+    invoice: BillingInvoiceLedgerRecord,
+    action: BillingInvoiceReceiptAction,
+  ) => void;
 }) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-directory-cards vx-invoice-cards" aria-label="线下发票卡片">
+    <div
+      className="vx-tenant-directory-cards vx-invoice-cards"
+      aria-label="线下发票卡片"
+    >
       {invoices.map((invoice) => (
         <article
           key={invoice.id}
-          className={joinClasses('vx-tenant-directory-card', `vx-invoice-card--${invoice.invoiceStatus}`)}
+          className={joinClasses(
+            "vx-tenant-directory-card",
+            `vx-invoice-card--${invoice.invoiceStatus}`,
+          )}
           role="button"
           tabIndex={0}
-          onClick={() => router.push(`/billing/${encodeURIComponent(invoice.billId)}`)}
+          onClick={() =>
+            router.push(`/billing/${encodeURIComponent(invoice.billId)}`)
+          }
           onKeyDown={(event) => {
-            if (event.key === 'Enter') router.push(`/billing/${encodeURIComponent(invoice.billId)}`);
+            if (event.key === "Enter")
+              router.push(`/billing/${encodeURIComponent(invoice.billId)}`);
           }}
         >
           <header>
             <Icon name="key" size="lg" fallback="placeholder" />
             <div>
               <strong>{invoice.invoiceNo}</strong>
-              <span>{invoice.tenantName} · {invoice.invoiceTitle}</span>
+              <span>
+                {invoice.tenantName} · {invoice.invoiceTitle}
+              </span>
             </div>
             <InvoiceActionsMenu
               invoice={invoice}
               open={openMenuId === invoice.id}
-              onToggle={() => onOpenMenu(openMenuId === invoice.id ? '' : invoice.id)}
+              onToggle={() =>
+                onOpenMenu(openMenuId === invoice.id ? "" : invoice.id)
+              }
               onClose={onCloseMenu}
               onReceiptAction={onReceiptAction}
             />
           </header>
           <div className="vx-tenant-directory-card__badges">
-            <Badge className={`vx-tenant-pill vx-invoice-pill--${invoice.invoiceStatus}`}>{invoiceStatusLabel(invoice.invoiceStatus)}</Badge>
-            <Badge className={`vx-tenant-pill vx-invoice-pill--tax-${invoice.invoiceTaxType}`}>{taxTypeLabel(invoice.invoiceTaxType)}</Badge>
-            <Badge className={`vx-tenant-pill vx-invoice-pill--type-${invoice.invoiceType}`}>{invoiceTypeLabel(invoice.invoiceType)}</Badge>
+            <Badge
+              className={`vx-tenant-pill vx-invoice-pill--${invoice.invoiceStatus}`}
+            >
+              {invoiceStatusLabel(invoice.invoiceStatus)}
+            </Badge>
+            <Badge
+              className={`vx-tenant-pill vx-invoice-pill--tax-${invoice.invoiceTaxType}`}
+            >
+              {taxTypeLabel(invoice.invoiceTaxType)}
+            </Badge>
+            <Badge
+              className={`vx-tenant-pill vx-invoice-pill--type-${invoice.invoiceType}`}
+            >
+              {invoiceTypeLabel(invoice.invoiceType)}
+            </Badge>
           </div>
-          <p className="vx-invoice-card__bill">{invoice.billNo} · {invoice.servicePlanName ?? invoice.orderNo ?? '未关联订阅'}</p>
+          <p className="vx-invoice-card__bill">
+            {invoice.billNo} ·{" "}
+            {invoice.servicePlanName ?? invoice.orderNo ?? "未关联订阅"}
+          </p>
           <div className="vx-tenant-directory-card__metrics">
             <span>
               <b>{formatCurrency(invoice.invoiceAmount, invoice.currency)}</b>
               <small>开票金额</small>
             </span>
             <span>
-              <b>{formatCurrency(invoice.billPayableAmount, invoice.currency)}</b>
+              <b>
+                {formatCurrency(invoice.billPayableAmount, invoice.currency)}
+              </b>
               <small>账单应收</small>
             </span>
             <span>
-              <b>{invoice.expressNo ? '已寄送' : invoice.invoiceStatus === 'finished' ? '已完成' : '待处理'}</b>
+              <b>
+                {invoice.expressNo
+                  ? "已寄送"
+                  : invoice.invoiceStatus === "finished"
+                    ? "已完成"
+                    : "待处理"}
+              </b>
               <small>交付状态</small>
             </span>
           </div>
           <footer>
-            <span>{formatDate(invoice.issuedAt)} · {invoice.auditorName}</span>
-            <strong>{invoice.sourceLabel === 'offline' ? '线下登记' : invoice.sourceLabel}</strong>
+            <span>
+              {formatDate(invoice.issuedAt)} · {invoice.auditorName}
+            </span>
+            <strong>
+              {invoice.sourceLabel === "offline"
+                ? "线下登记"
+                : invoice.sourceLabel}
+            </strong>
           </footer>
         </article>
       ))}
@@ -425,15 +656,27 @@ function Pagination({
 }) {
   return (
     <footer className="vx-tenant-pagination">
-      <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条发票记录</span>
+      <span className="vx-tenant-pagination__total">
+        共 {formatNumber(total)} 条发票记录
+      </span>
       <div className="vx-tenant-pagination__actions">
         <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
         <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
+          <Button
+            variant="outline"
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange(currentPage - 1)}
+          >
             上一页
           </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
+          <strong>
+            {currentPage} / {pageCount}
+          </strong>
+          <Button
+            variant="outline"
+            disabled={currentPage >= pageCount}
+            onClick={() => onPageChange(currentPage + 1)}
+          >
             下一页
           </Button>
         </div>
@@ -444,20 +687,29 @@ function Pagination({
 
 export function InvoicesPage() {
   const [invoices, setInvoices] = useState<BillingInvoiceLedgerRecord[]>([]);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<InvoiceStatusFilter>('all');
-  const [invoiceTypeFilter, setInvoiceTypeFilter] = useState<InvoiceTypeFilter>('all');
-  const [taxFilter, setTaxFilter] = useState<InvoiceTaxFilter>('all');
-  const [deliveryFilter, setDeliveryFilter] = useState<DeliveryFilter>('all');
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<InvoiceStatusFilter>("all");
+  const [invoiceTypeFilter, setInvoiceTypeFilter] =
+    useState<InvoiceTypeFilter>("all");
+  const [taxFilter, setTaxFilter] = useState<InvoiceTaxFilter>("all");
+  const [deliveryFilter, setDeliveryFilter] = useState<DeliveryFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
   const [loading, setLoading] = useState(true);
-  const [receiptActionTarget, setReceiptActionTarget] = useState<{ invoice: BillingInvoiceLedgerRecord; action: BillingInvoiceReceiptAction } | null>(null);
+  const [receiptActionTarget, setReceiptActionTarget] = useState<{
+    invoice: BillingInvoiceLedgerRecord;
+    action: BillingInvoiceReceiptAction;
+  } | null>(null);
   const [submittingReceiptAction, setSubmittingReceiptAction] = useState(false);
   const [operationError, setOperationError] = useState<string | null>(null);
-  const [operationFeedback, setOperationFeedback] = useState<string | null>(null);
+  const [operationFeedback, setOperationFeedback] = useState<string | null>(
+    null,
+  );
+  const [selectedInvoiceIds, setSelectedInvoiceIds] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   useEffect(() => {
     let active = true;
@@ -481,61 +733,145 @@ export function InvoicesPage() {
 
     return invoices.filter((invoice) => {
       if (!matchesStatusFilter(invoice, statusFilter)) return false;
-      if (invoiceTypeFilter !== 'all' && invoice.invoiceType !== invoiceTypeFilter) return false;
-      if (taxFilter !== 'all' && invoice.invoiceTaxType !== taxFilter) return false;
+      if (
+        invoiceTypeFilter !== "all" &&
+        invoice.invoiceType !== invoiceTypeFilter
+      )
+        return false;
+      if (taxFilter !== "all" && invoice.invoiceTaxType !== taxFilter)
+        return false;
       if (!matchesDeliveryFilter(invoice, deliveryFilter)) return false;
-      if (normalizedQuery && !invoiceSearchText(invoice).includes(normalizedQuery)) return false;
+      if (
+        normalizedQuery &&
+        !invoiceSearchText(invoice).includes(normalizedQuery)
+      )
+        return false;
       return true;
     });
-  }, [deliveryFilter, invoiceTypeFilter, invoices, query, statusFilter, taxFilter]);
+  }, [
+    deliveryFilter,
+    invoiceTypeFilter,
+    invoices,
+    query,
+    statusFilter,
+    taxFilter,
+  ]);
 
   const pageCount = Math.max(1, Math.ceil(filteredInvoices.length / pageSize));
   const activePage = Math.min(currentPage, pageCount);
-  const visibleInvoices = filteredInvoices.slice((activePage - 1) * pageSize, activePage * pageSize);
-  const validInvoices = invoices.filter((item) => item.invoiceStatus !== 'red' && item.invoiceStatus !== 'rejected');
-  const invoiceAmount = validInvoices.reduce((sum, item) => sum + item.invoiceAmount, 0);
-  const deliveryPendingCount = invoices.filter((item) => item.invoiceStatus === 'issued' || item.invoiceStatus === 'sending').length;
-  const finishedCount = invoices.filter((item) => item.invoiceStatus === 'finished').length;
-  const exceptionCount = invoices.filter((item) => item.invoiceStatus === 'red' || item.invoiceStatus === 'rejected').length;
+  const visibleInvoices = filteredInvoices.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize,
+  );
+  const visibleInvoiceIds = useMemo(
+    () => visibleInvoices.map((invoice) => invoice.id),
+    [visibleInvoices],
+  );
+  const selectedVisibleInvoiceCount = visibleInvoiceIds.filter((id) =>
+    selectedInvoiceIds.has(id),
+  ).length;
+  const isInvoicePageSelected =
+    visibleInvoiceIds.length > 0 &&
+    selectedVisibleInvoiceCount === visibleInvoiceIds.length;
+  const validInvoices = invoices.filter(
+    (item) => item.invoiceStatus !== "red" && item.invoiceStatus !== "rejected",
+  );
+  const invoiceAmount = validInvoices.reduce(
+    (sum, item) => sum + item.invoiceAmount,
+    0,
+  );
+  const deliveryPendingCount = invoices.filter(
+    (item) =>
+      item.invoiceStatus === "issued" || item.invoiceStatus === "sending",
+  ).length;
+  const finishedCount = invoices.filter(
+    (item) => item.invoiceStatus === "finished",
+  ).length;
+  const exceptionCount = invoices.filter(
+    (item) => item.invoiceStatus === "red" || item.invoiceStatus === "rejected",
+  ).length;
 
   useEffect(() => {
     setCurrentPage(1);
     setOpenMenuId(null);
-  }, [deliveryFilter, invoiceTypeFilter, pageSize, query, statusFilter, taxFilter, viewMode]);
+  }, [
+    deliveryFilter,
+    invoiceTypeFilter,
+    pageSize,
+    query,
+    statusFilter,
+    taxFilter,
+    viewMode,
+  ]);
 
   function handleReset() {
-    setQuery('');
-    setStatusFilter('all');
-    setInvoiceTypeFilter('all');
-    setTaxFilter('all');
-    setDeliveryFilter('all');
+    setQuery("");
+    setStatusFilter("all");
+    setInvoiceTypeFilter("all");
+    setTaxFilter("all");
+    setDeliveryFilter("all");
   }
 
   function handleOpenMenu(id: string) {
     setOpenMenuId(id || null);
   }
 
-  function requestReceiptAction(invoice: BillingInvoiceLedgerRecord, action: BillingInvoiceReceiptAction) {
+  function toggleInvoiceSelection(id: string, checked: boolean) {
+    setSelectedInvoiceIds((current) => {
+      const next = new Set(current);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
+
+  function toggleInvoicePageSelection(checked: boolean) {
+    setSelectedInvoiceIds((current) => {
+      const next = new Set(current);
+      visibleInvoiceIds.forEach((id) => {
+        if (checked) next.add(id);
+        else next.delete(id);
+      });
+      return next;
+    });
+  }
+
+  function requestReceiptAction(
+    invoice: BillingInvoiceLedgerRecord,
+    action: BillingInvoiceReceiptAction,
+  ) {
     setOpenMenuId(null);
     setOperationError(null);
     setOperationFeedback(null);
     setReceiptActionTarget({ invoice, action });
   }
 
-  async function handleSubmitReceiptAction(payload: Parameters<typeof submitBillingInvoiceReceiptAction>[2]) {
+  async function handleSubmitReceiptAction(
+    payload: Parameters<typeof submitBillingInvoiceReceiptAction>[2],
+  ) {
     if (!receiptActionTarget) return;
 
     setSubmittingReceiptAction(true);
     setOperationError(null);
 
     try {
-      await submitBillingInvoiceReceiptAction(receiptActionTarget.invoice.billId, receiptActionTarget.invoice.id, payload);
+      await submitBillingInvoiceReceiptAction(
+        receiptActionTarget.invoice.billId,
+        receiptActionTarget.invoice.id,
+        payload,
+      );
       const records = await fetchInvoiceLedgerRecords();
       setInvoices(records);
-      setOperationFeedback(`${invoiceReceiptActionLabel(receiptActionTarget.action)}已同步登记。`);
+      setOperationFeedback(
+        `${invoiceReceiptActionLabel(receiptActionTarget.action)}已同步登记。`,
+      );
       setReceiptActionTarget(null);
     } catch (error) {
-      setOperationError(error instanceof Error ? error.message : '发票后续动作登记失败，请稍后重试。');
+      setOperationError(
+        error instanceof Error
+          ? error.message
+          : "发票后续动作登记失败，请稍后重试。",
+      );
     } finally {
       setSubmittingReceiptAction(false);
     }
@@ -549,7 +885,10 @@ export function InvoicesPage() {
         title="发票管理"
         description="线下发票台账 MVP：集中查看人工登记的发票、寄送状态和红冲/作废结果，不调用在线开票接口。"
         action={
-          <Link href="/billing" className="vx-btn vx-btn--outline vx-btn--default">
+          <Link
+            href="/billing"
+            className="vx-btn vx-btn--outline vx-btn--default"
+          >
             <Icon name="table" size="xs" fallback="placeholder" />
             账单登记入口
           </Link>
@@ -557,18 +896,51 @@ export function InvoicesPage() {
       />
 
       <section className="vx-tenant-summary" aria-label="发票统计">
-        <SummaryItem icon="key" label="发票总数" value={formatNumber(invoices.length)} tags={[`筛选 ${formatNumber(filteredInvoices.length)}`]} />
-        <SummaryItem icon="chart-bar" label="有效开票" value={formatCurrency(invoiceAmount, 'CNY')} tags={[`完成 ${formatNumber(finishedCount)}`]} tone="green" />
-        <SummaryItem icon="table" label="待交付" value={formatNumber(deliveryPendingCount)} tags={[`线下 ${formatNumber(invoices.length)}`]} tone={deliveryPendingCount ? 'amber' : 'green'} />
-        <SummaryItem icon="warning" label="发票异常" value={formatNumber(exceptionCount)} tags={['红冲/驳回']} tone={exceptionCount ? 'rose' : 'green'} />
+        <SummaryItem
+          icon="key"
+          label="发票总数"
+          value={formatNumber(invoices.length)}
+          tags={[`筛选 ${formatNumber(filteredInvoices.length)}`]}
+        />
+        <SummaryItem
+          icon="chart-bar"
+          label="有效开票"
+          value={formatCurrency(invoiceAmount, "CNY")}
+          tags={[`完成 ${formatNumber(finishedCount)}`]}
+          tone="green"
+        />
+        <SummaryItem
+          icon="table"
+          label="待交付"
+          value={formatNumber(deliveryPendingCount)}
+          tags={[`线下 ${formatNumber(invoices.length)}`]}
+          tone={deliveryPendingCount ? "amber" : "green"}
+        />
+        <SummaryItem
+          icon="warning"
+          label="发票异常"
+          value={formatNumber(exceptionCount)}
+          tags={["红冲/驳回"]}
+          tone={exceptionCount ? "rose" : "green"}
+        />
       </section>
 
-      {operationFeedback ? <div className="vx-subscription-operation-feedback">{operationFeedback}</div> : null}
+      {operationFeedback ? (
+        <div className="vx-subscription-operation-feedback">
+          {operationFeedback}
+        </div>
+      ) : null}
 
       <div className="vx-tenant-list-shell">
         <section className="vx-tenant-toolbar" aria-label="发票筛选">
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="发票展示方式" />
-          <span className="vx-tenant-view-count">{formatNumber(filteredInvoices.length)}</span>
+          <ViewModeSwitch
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="发票展示方式"
+          />
+          <span className="vx-tenant-view-count">
+            {formatNumber(filteredInvoices.length)}
+          </span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
             value={query}
@@ -577,9 +949,18 @@ export function InvoicesPage() {
             className="vx-tenant-search vx-invoice-search"
             aria-label="搜索发票"
           />
-          <Button variant="outline" onClick={handleReset}>重置</Button>
+          <Button variant="outline" onClick={handleReset}>
+            重置
+          </Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as InvoiceStatusFilter)} aria-label="发票状态">
+            <select
+              className="vx-input vx-tenant-select"
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as InvoiceStatusFilter)
+              }
+              aria-label="发票状态"
+            >
               <option value="all">全部状态</option>
               <option value="active">待交付</option>
               <option value="issued">已开票</option>
@@ -589,7 +970,14 @@ export function InvoicesPage() {
               <option value="red">已红冲</option>
               <option value="rejected">已驳回</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={invoiceTypeFilter} onChange={(event) => setInvoiceTypeFilter(event.target.value as InvoiceTypeFilter)} aria-label="发票类型">
+            <select
+              className="vx-input vx-tenant-select"
+              value={invoiceTypeFilter}
+              onChange={(event) =>
+                setInvoiceTypeFilter(event.target.value as InvoiceTypeFilter)
+              }
+              aria-label="发票类型"
+            >
               <option value="all">全部类型</option>
               <option value="special_vat">增值税专票</option>
               <option value="normal_vat">增值税普票</option>
@@ -597,14 +985,28 @@ export function InvoicesPage() {
               <option value="paper">纸质发票</option>
               <option value="other">其他</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={taxFilter} onChange={(event) => setTaxFilter(event.target.value as InvoiceTaxFilter)} aria-label="抬头类型">
+            <select
+              className="vx-input vx-tenant-select"
+              value={taxFilter}
+              onChange={(event) =>
+                setTaxFilter(event.target.value as InvoiceTaxFilter)
+              }
+              aria-label="抬头类型"
+            >
               <option value="all">全部抬头</option>
               <option value="enterprise">企业</option>
               <option value="individual">个人</option>
               <option value="government">政府/事业单位</option>
               <option value="other">其他</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={deliveryFilter} onChange={(event) => setDeliveryFilter(event.target.value as DeliveryFilter)} aria-label="交付状态">
+            <select
+              className="vx-input vx-tenant-select"
+              value={deliveryFilter}
+              onChange={(event) =>
+                setDeliveryFilter(event.target.value as DeliveryFilter)
+              }
+              aria-label="交付状态"
+            >
               <option value="all">全部交付</option>
               <option value="not_sent">未寄送</option>
               <option value="sent">已寄送</option>
@@ -621,7 +1023,7 @@ export function InvoicesPage() {
           ) : null}
 
           {visibleInvoices.length ? (
-            viewMode === 'list' ? (
+            viewMode === "list" ? (
               <InvoiceListRows
                 invoices={visibleInvoices}
                 startIndex={(activePage - 1) * pageSize}
@@ -629,6 +1031,10 @@ export function InvoicesPage() {
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
                 onReceiptAction={requestReceiptAction}
+                selectedInvoiceIds={selectedInvoiceIds}
+                isPageSelected={isInvoicePageSelected}
+                onToggleInvoice={toggleInvoiceSelection}
+                onTogglePage={toggleInvoicePageSelection}
               />
             ) : (
               <InvoiceCards
@@ -642,10 +1048,18 @@ export function InvoicesPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? '正在加载发票' : '没有匹配的发票'}
-                description={loading ? '正在读取线下发票台账。' : '清空筛选条件后可查看全部线下发票记录。'}
+                title={loading ? "正在加载发票" : "没有匹配的发票"}
+                description={
+                  loading
+                    ? "正在读取线下发票台账。"
+                    : "清空筛选条件后可查看全部线下发票记录。"
+                }
                 action={
-                  <ActionButton variant="outline" icon="x" onClick={handleReset}>
+                  <ActionButton
+                    variant="outline"
+                    icon="x"
+                    onClick={handleReset}
+                  >
                     清空筛选
                   </ActionButton>
                 }
@@ -659,7 +1073,9 @@ export function InvoicesPage() {
             total={filteredInvoices.length}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
-            onPageChange={(page) => setCurrentPage(Math.min(Math.max(page, 1), pageCount))}
+            onPageChange={(page) =>
+              setCurrentPage(Math.min(Math.max(page, 1), pageCount))
+            }
           />
         </section>
       </div>

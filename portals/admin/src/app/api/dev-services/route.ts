@@ -48,7 +48,7 @@ export async function GET() {
   const startedAt = Date.now();
 
   try {
-    const response = await fetch(`${DEV_PANEL_ORIGIN}/api/services`, {
+    const response = await fetch(`${DEV_PANEL_ORIGIN}/api/services?ts=${Date.now()}`, {
       cache: 'no-store',
       signal: AbortSignal.timeout(5_000),
     });

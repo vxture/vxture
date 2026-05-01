@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
@@ -178,20 +178,47 @@ function VerificationListRows({
   tenants,
   startIndex,
   openMenuId,
+  selectedTenantIds,
+  isPageSelected,
   onOpenMenu,
   onCloseMenu,
+  onToggleTenant,
+  onTogglePage,
 }: {
   tenants: TenantOperationRecord[];
   startIndex: number;
   openMenuId: string | null;
+  selectedTenantIds: Set<string>;
+  isPageSelected: boolean;
   onOpenMenu: (tenantId: string) => void;
   onCloseMenu: () => void;
+  onToggleTenant: (tenantId: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = tenants.filter((tenant) => selectedTenantIds.has(tenant.id)).length;
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < tenants.length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate = isPagePartiallySelected;
+    }
+  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-verification-directory-list" role="region" aria-label="组织认证清单">
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页组织认证"
+          />
+        </span>
         <span>序号</span>
         <span>组织</span>
         <span>认证状态</span>
@@ -207,20 +234,34 @@ function VerificationListRows({
         return (
           <div
             key={tenant.id}
-            className={joinClasses('vx-tenant-directory-row', `vx-tenant-directory-row--${riskLevel}`)}
-            role="button"
-            tabIndex={0}
-            onClick={() => router.push(`/tenants/${encodeURIComponent(tenant.id)}`)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') router.push(`/tenants/${encodeURIComponent(tenant.id)}`);
+            className={joinClasses('vx-tenant-directory-row', 'vx-verification-operation-row', `vx-tenant-directory-row--${riskLevel}`, selectedTenantIds.has(tenant.id) ? 'vx-verification-operation-row--selected' : '')}
+            onClick={(event) => {
+              if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+              onToggleTenant(tenant.id, !selectedTenantIds.has(tenant.id));
             }}
           >
+            <span className="vx-verification-operation-row__select">
+              <input
+                type="checkbox"
+                className="vx-model-select-checkbox"
+                checked={selectedTenantIds.has(tenant.id)}
+                onClick={(event) => event.stopPropagation()}
+                onChange={(event) => onToggleTenant(tenant.id, event.target.checked)}
+                aria-label={`选择 ${tenant.displayName}`}
+              />
+            </span>
             <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
             <span className="vx-tenant-directory-row__tenant">
               <Icon name="buildings" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <strong>{tenant.displayName}</strong>
+                  <button
+                    type="button"
+                    className="vx-model-name-button"
+                    onClick={() => router.push(`/tenants/${encodeURIComponent(tenant.id)}`)}
+                  >
+                    {tenant.displayName}
+                  </button>
                 </span>
                 <small>{tenant.tenantCode} · {tenant.region}</small>
               </span>
@@ -371,6 +412,7 @@ export function VerificationsPage() {
   const [tenants, setTenants] = useState<TenantOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [selectedTenantIds, setSelectedTenantIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [verificationFilter, setVerificationFilter] = useState<VerificationFilter>('all');
   const [riskFilter, setRiskFilter] = useState<RiskFilter>('all');
@@ -433,6 +475,9 @@ export function VerificationsPage() {
 
   const pageCount = Math.max(1, Math.ceil(filteredTenants.length / pageSize));
   const visibleTenants = filteredTenants.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const visibleTenantIds = visibleTenants.map((tenant) => tenant.id);
+  const selectedVisibleTenantCount = visibleTenantIds.filter((tenantId) => selectedTenantIds.has(tenantId)).length;
+  const isTenantPageSelected = visibleTenantIds.length > 0 && selectedVisibleTenantCount === visibleTenantIds.length;
   const pendingCount = organizationTenants.filter((tenant) => tenant.verifiedStatus === 'pending').length;
   const overdueCount = organizationTenants.filter((tenant) => tenant.verifiedStatus === 'pending' && daysSince(tenant.verificationSubmittedAt) >= 3).length;
   const verifiedCount = organizationTenants.filter((tenant) => tenant.verifiedStatus === 'verified').length;
@@ -454,6 +499,32 @@ export function VerificationsPage() {
 
   function handleOpenMenu(tenantId: string) {
     setOpenMenuId(tenantId || null);
+  }
+
+  function toggleTenantSelection(tenantId: string, checked: boolean) {
+    setSelectedTenantIds((current) => {
+      const next = new Set(current);
+      if (checked) {
+        next.add(tenantId);
+      } else {
+        next.delete(tenantId);
+      }
+      return next;
+    });
+  }
+
+  function toggleTenantPageSelection(checked: boolean) {
+    setSelectedTenantIds((current) => {
+      const next = new Set(current);
+      for (const tenantId of visibleTenantIds) {
+        if (checked) {
+          next.add(tenantId);
+        } else {
+          next.delete(tenantId);
+        }
+      }
+      return next;
+    });
   }
 
   return (
@@ -527,8 +598,12 @@ export function VerificationsPage() {
                 tenants={visibleTenants}
                 startIndex={(Math.min(currentPage, pageCount) - 1) * pageSize}
                 openMenuId={openMenuId}
+                selectedTenantIds={selectedTenantIds}
+                isPageSelected={isTenantPageSelected}
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
+                onToggleTenant={toggleTenantSelection}
+                onTogglePage={toggleTenantPageSelection}
               />
             ) : (
               <VerificationCards

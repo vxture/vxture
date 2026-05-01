@@ -27,8 +27,8 @@ agent-server/agent{N}
 
 ```
 agent-server/
-├── agent01/
-├── agent02/
+├── ruyinagent/
+├── vela/
 └── agent{N}/
 ```
 
@@ -217,7 +217,40 @@ Agent backends consume platform capabilities through packages, not through the B
 
 ---
 
-# 11. AI Coding Rules
+# 11. Vela Implementation
+
+`agent-server/vela` is the current productized embedded assistant backend. It is paired with
+`bff/vela-bff` and consumed by `agent-studio/vela`, which is embedded into `portals/admin`
+and `portals/console`.
+
+```
+portals/admin
+portals/console
+      ↓ embeds
+agent-studio/vela
+      ↓ HTTP/SSE
+bff/vela-bff
+      ↓ internal HTTP
+agent-server/vela
+      ↓
+@vxture/ai-sdk, @vxture/service-billing, @vxture/service-subscription, @vxture/service-ticket
+```
+
+Vela follows the normal Agent Server rules, with these concrete responsibilities:
+
+- Validates `CallerContext` from `vela-bff` before every chat request
+- Resolves tool availability by surface (`admin` or `console`), role, and tenant context
+- Runs the tool-use loop through `@vxture/ai-sdk`
+- Uses platform services for billing, subscription, and ticket data instead of duplicating domain logic
+- Persists sessions and messages in Vela-owned storage through repository classes
+- Exposes internal chat endpoints only to `vela-bff`; browsers never call `agent-server/vela` directly
+
+Vela replaces the old admin-only AI assistant path. New assistant capabilities should be added to
+Vela tools or promoted service APIs, not to portal-local assistant routers.
+
+---
+
+# 12. AI Coding Rules
 
 When AI tools generate code for `agent-server/*`:
 

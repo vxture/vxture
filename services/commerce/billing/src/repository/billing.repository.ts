@@ -33,6 +33,7 @@ const generateInvoiceNumber = (): string => {
 const mockInvoices: Invoice[] = [
   {
     id: '1',
+    tenantId: 'tenant_demo',
     invoiceNumber: 'INV-2026-001',
     customerId: 'cust001',
     customerName: '测试客户',
@@ -64,6 +65,7 @@ const mockInvoices: Invoice[] = [
 const mockPayments: Payment[] = [
   {
     id: '1',
+    tenantId: 'tenant_demo',
     invoiceId: '1',
     amount: 1100,
     currency: 'CNY',
@@ -80,6 +82,7 @@ const mockPayments: Payment[] = [
 const mockSubscriptions: Subscription[] = [
   {
     id: '1',
+    tenantId: 'tenant_demo',
     customerId: 'cust001',
     planId: 'plan-pro',
     planName: '专业版',
@@ -128,6 +131,7 @@ export class BillingRepository {
 
     const newInvoice: Invoice = {
       id: Date.now().toString(),
+      tenantId: input.tenantId ?? input.customerId,
       invoiceNumber: generateInvoiceNumber(),
       customerId: input.customerId,
       customerName: input.customerName,
@@ -155,12 +159,35 @@ export class BillingRepository {
   async getInvoices(params: InvoiceQueryParams = {}): Promise<Invoice[]> {
     let results = [...this.invoices];
 
+    if (params.tenantId) {
+      results = results.filter(invoice => invoice.tenantId === params.tenantId);
+    }
+
     if (params.customerId) {
       results = results.filter(invoice => invoice.customerId === params.customerId);
     }
 
+    if (params.search) {
+      const search = params.search.toLowerCase();
+      results = results.filter(invoice =>
+        invoice.id.toLowerCase().includes(search) ||
+        invoice.invoiceNumber.toLowerCase().includes(search) ||
+        invoice.customerId.toLowerCase().includes(search) ||
+        invoice.customerName.toLowerCase().includes(search) ||
+        invoice.customerEmail.toLowerCase().includes(search)
+      );
+    }
+
     if (params.status) {
       results = results.filter(invoice => invoice.status === params.status);
+    }
+
+    if (params.startDate) {
+      results = results.filter(invoice => invoice.createdAt >= params.startDate!);
+    }
+
+    if (params.endDate) {
+      results = results.filter(invoice => invoice.createdAt <= params.endDate!);
     }
 
     // 分页
@@ -179,20 +206,23 @@ export class BillingRepository {
       return null;
     }
 
+    const invoice = this.invoices[index]!;
     this.invoices[index] = {
-      ...this.invoices[index],
+      ...invoice,
       status,
       updatedAt: new Date(),
       ...(status === InvoiceStatus.PAID ? { paidDate: new Date() } : {})
     };
 
-    return this.invoices[index];
+    return this.invoices[index] ?? null;
   }
 
   // 支付相关操作
   async createPayment(input: ProcessPaymentInput): Promise<Payment> {
+    const invoice = await this.getInvoiceById(input.invoiceId);
     const newPayment: Payment = {
       id: Date.now().toString(),
+      tenantId: input.tenantId ?? invoice?.tenantId ?? input.invoiceId,
       invoiceId: input.invoiceId,
       amount: input.amount,
       currency: input.currency || 'CNY',
@@ -213,8 +243,9 @@ export class BillingRepository {
       return null;
     }
 
+    const payment = this.payments[index]!;
     this.payments[index] = {
-      ...this.payments[index],
+      ...payment,
       status,
       transactionId,
       failureReason,
@@ -222,7 +253,7 @@ export class BillingRepository {
       updatedAt: new Date()
     };
 
-    return this.payments[index];
+    return this.payments[index] ?? null;
   }
 
   async getPaymentById(id: string): Promise<Payment | null> {
@@ -234,6 +265,10 @@ export class BillingRepository {
 
     if (params.invoiceId) {
       results = results.filter(payment => payment.invoiceId === params.invoiceId);
+    }
+
+    if (params.tenantId) {
+      results = results.filter(payment => payment.tenantId === params.tenantId);
     }
 
     if (params.status) {
@@ -258,6 +293,10 @@ export class BillingRepository {
 
   async getSubscriptions(params: SubscriptionQueryParams = {}): Promise<Subscription[]> {
     let results = [...this.subscriptions];
+
+    if (params.tenantId) {
+      results = results.filter(sub => sub.tenantId === params.tenantId);
+    }
 
     if (params.customerId) {
       results = results.filter(sub => sub.customerId === params.customerId);

@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { CodeIcon, PlayIcon, PlugIcon, StopIcon, TrashIcon } from '@phosphor-icons/react';
 import { Icon } from '@vxture/design-system';
 import { Badge, Button, Input, Label } from '@/components/ui/primitives';
 import {
@@ -15,14 +16,20 @@ import { useConsoleTranslations } from '@/lib/console-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { EmptyState } from '@/modules/shared/EmptyState';
 import { PageHeader } from '@/modules/shared/PageHeader';
+import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
 
-type ModelFilter = 'all' | 'active' | 'inactive' | 'online' | 'private';
+type ViewMode = 'list' | 'cards';
+type ModelStatusFilter = 'all' | 'active' | 'inactive';
+type ModelSourceFilter = 'all' | 'online' | 'private';
 type DialogMode = 'createModel' | 'editModel' | null;
 type Feedback = { tone: 'success' | 'error'; key: string; values?: Record<string, number | string> } | null;
+type ModelLinkStatus = 'normal' | 'abnormal' | 'checking';
 
 const PROVIDER_OPTIONS = ['doubao', 'claude', 'private', 'custom'] as const;
 const PROTOCOL_OPTIONS = ['openai-compatible', 'anthropic-messages', 'custom'] as const;
-const MODEL_PAGE_SIZE = 12;
+const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
+const LINK_CHECK_MIN_FEEDBACK_MS = 650;
+type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
 function defaultModelForm() {
   return {
@@ -67,9 +74,7 @@ function parseCapabilities(value: string): string[] {
 }
 
 function parseConfig(value: string): Record<string, unknown> | null {
-  if (!value.trim()) {
-    return null;
-  }
+  if (!value.trim()) return null;
 
   const parsed = JSON.parse(value) as unknown;
   if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
@@ -79,19 +84,149 @@ function parseConfig(value: string): Record<string, unknown> | null {
   return parsed as Record<string, unknown>;
 }
 
+function formatNumber(value: number) {
+  return new Intl.NumberFormat('zh-CN').format(value);
+}
+
+function modelTone(model: AiModelRecord) {
+  if (!model.isActive) return 'muted';
+  return isPrivateProvider(model.provider) ? 'private' : 'active';
+}
+
+function detectModelLinkStatus(model: AiModelRecord): ModelLinkStatus {
+  return model.endpointUrl.trim() && model.protocol.trim() && model.apiKeyEnvVar.trim() ? 'normal' : 'abnormal';
+}
+
+function isInteractiveTarget(target: EventTarget | null) {
+  return target instanceof HTMLElement && Boolean(target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]'));
+}
+
+function ModelSummaryItem({
+  icon: SummaryIcon,
+  label,
+  value,
+  tags,
+  tone = 'blue',
+}: {
+  icon: typeof PlugIcon;
+  label: string;
+  value: string;
+  tags?: string[];
+  tone?: 'blue' | 'green' | 'amber' | 'rose';
+}) {
+  return (
+    <article className={`vx-tenant-summary__item vx-tenant-tone--${tone}`}>
+      <SummaryIcon size={24} aria-hidden="true" />
+      <div>
+        <span>{label}</span>
+        <p>
+          <strong>{value}</strong>
+          {tags?.map((tag) => <em key={tag}>{tag}</em>)}
+        </p>
+      </div>
+    </article>
+  );
+}
+
+function ModelPageSizePicker({ value, onChange }: { value: PageSize; onChange: (value: PageSize) => void }) {
+  return (
+    <div className="vx-tenant-page-size" aria-label="page size">
+      {PAGE_SIZE_OPTIONS.map((option) => (
+        <span key={option}>
+          <button
+            type="button"
+            className={value === option ? 'is-active' : undefined}
+            onClick={() => onChange(option)}
+            aria-label={`Page size ${option}`}
+          >
+            {option}
+          </button>
+        </span>
+      ))}
+    </div>
+  );
+}
+
+function ModelOperationButtons({
+  model,
+  submitting,
+  onEnable,
+  onDisable,
+  onDelete,
+}: {
+  model: AiModelRecord;
+  submitting: boolean;
+  onEnable: (model: AiModelRecord) => void;
+  onDisable: (model: AiModelRecord) => void;
+  onDelete: (model: AiModelRecord) => void;
+}) {
+  return (
+    <div className="vx-model-operation-buttons" aria-label={`${model.modelName} 操作`}>
+      <button type="button" title="启用" aria-label={`启用 ${model.modelName}`} disabled={submitting || model.isActive} onClick={() => onEnable(model)}>
+        <PlayIcon size={24} aria-hidden="true" />
+      </button>
+      <button type="button" title="停用" aria-label={`停用 ${model.modelName}`} disabled={submitting || !model.isActive} onClick={() => onDisable(model)}>
+        <StopIcon size={24} aria-hidden="true" />
+      </button>
+      <button type="button" title={model.isActive ? '启用状态不可删除' : '删除'} aria-label={`删除 ${model.modelName}`} className="vx-model-operation-buttons__danger" disabled={submitting || model.isActive} onClick={() => onDelete(model)}>
+        <TrashIcon size={24} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
+function ModelBatchOperationButtons({
+  canEnable,
+  canDisable,
+  canDelete,
+  submitting,
+  onEnable,
+  onDisable,
+  onDelete,
+}: {
+  canEnable: boolean;
+  canDisable: boolean;
+  canDelete: boolean;
+  submitting: boolean;
+  onEnable: () => void;
+  onDisable: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <div className="vx-model-operation-buttons vx-model-batch-actions" aria-label="批量操作">
+      <button type="button" title="批量启用" aria-label="批量启用" disabled={submitting || !canEnable} onClick={onEnable}>
+        <PlayIcon size={24} weight={canEnable && !submitting ? 'fill' : 'regular'} aria-hidden="true" />
+      </button>
+      <button type="button" title="批量停用" aria-label="批量停用" disabled={submitting || !canDisable} onClick={onDisable}>
+        <StopIcon size={24} weight={canDisable && !submitting ? 'fill' : 'regular'} aria-hidden="true" />
+      </button>
+      <button type="button" title="批量删除" aria-label="批量删除" className="vx-model-operation-buttons__danger" disabled={submitting || !canDelete} onClick={onDelete}>
+        <TrashIcon size={24} weight={canDelete && !submitting ? 'fill' : 'regular'} aria-hidden="true" />
+      </button>
+    </div>
+  );
+}
+
 export function ModelGatewayPage() {
   const t = useConsoleTranslations('modelGatewayPage');
   const [models, setModels] = useState<AiModelRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
+  const [detectingLinks, setDetectingLinks] = useState(false);
+  const [linkStatusByModelId, setLinkStatusByModelId] = useState<Record<string, ModelLinkStatus>>({});
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState<ModelFilter>('all');
+  const [statusFilter, setStatusFilter] = useState<ModelStatusFilter>('all');
+  const [sourceFilter, setSourceFilter] = useState<ModelSourceFilter>('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState<PageSize>(20);
   const [openModelMenuId, setOpenModelMenuId] = useState<string | null>(null);
+  const [selectedModelIds, setSelectedModelIds] = useState<Set<string>>(() => new Set());
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
   const [modelForm, setModelForm] = useState(defaultModelForm);
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -101,18 +236,15 @@ export function ModelGatewayPage() {
       .then((records) => {
         if (!active) return;
         setModels(records);
+        setLinkStatusByModelId(Object.fromEntries(records.map((model) => [model.id, detectModelLinkStatus(model)])));
         setOpenModelMenuId(null);
         setSelectedModelId(null);
       })
       .catch(() => {
-        if (active) {
-          setFeedback({ tone: 'error', key: 'feedback.loadError' });
-        }
+        if (active) setFeedback({ tone: 'error', key: 'feedback.loadError' });
       })
       .finally(() => {
-        if (active) {
-          setLoading(false);
-        }
+        if (active) setLoading(false);
       });
 
     return () => {
@@ -123,45 +255,64 @@ export function ModelGatewayPage() {
   useEffect(() => {
     setCurrentPage(1);
     setOpenModelMenuId(null);
-  }, [query, filter]);
+  }, [pageSize, query, sourceFilter, statusFilter, viewMode]);
 
-  const modelById = useMemo(
-    () => new Map(models.map((model) => [model.id, model])),
-    [models],
-  );
+  const modelById = useMemo(() => new Map(models.map((model) => [model.id, model])), [models]);
 
   const filteredModels = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
     return models.filter((model) => {
       const matchesQuery = !normalizedQuery || modelSearchText(model).includes(normalizedQuery);
-      const matchesFilter =
-        filter === 'all' ||
-        (filter === 'active' && model.isActive) ||
-        (filter === 'inactive' && !model.isActive) ||
-        (filter === 'online' && !isPrivateProvider(model.provider)) ||
-        (filter === 'private' && isPrivateProvider(model.provider));
+      const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'active' && model.isActive) ||
+        (statusFilter === 'inactive' && !model.isActive);
+      const matchesSource =
+        sourceFilter === 'all' ||
+        (sourceFilter === 'online' && !isPrivateProvider(model.provider)) ||
+        (sourceFilter === 'private' && isPrivateProvider(model.provider));
 
-      return matchesQuery && matchesFilter;
+      return matchesQuery && matchesStatus && matchesSource;
     });
-  }, [filter, models, query]);
+  }, [models, query, sourceFilter, statusFilter]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredModels.length / MODEL_PAGE_SIZE));
+  const totalPages = Math.max(1, Math.ceil(filteredModels.length / pageSize));
   const safeCurrentPage = Math.min(currentPage, totalPages);
-  const pageStart = (safeCurrentPage - 1) * MODEL_PAGE_SIZE;
-  const pagedModels = filteredModels.slice(pageStart, pageStart + MODEL_PAGE_SIZE);
+  const pageStart = (safeCurrentPage - 1) * pageSize;
+  const pagedModels = filteredModels.slice(pageStart, pageStart + pageSize);
+  const pagedModelIds = pagedModels.map((model) => model.id);
+  const selectedOnPage = pagedModelIds.filter((id) => selectedModelIds.has(id)).length;
+  const isPageSelected = pagedModelIds.length > 0 && selectedOnPage === pagedModelIds.length;
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < pagedModelIds.length;
   const selectedModel = selectedModelId ? modelById.get(selectedModelId) ?? null : null;
+  const selectedModels = [...selectedModelIds]
+    .map((modelId) => modelById.get(modelId))
+    .filter((model): model is AiModelRecord => Boolean(model));
+  const canBatchEnable = selectedModels.some((model) => !model.isActive);
+  const canBatchDisable = selectedModels.some((model) => model.isActive);
+  const canBatchDelete = selectedModels.length > 0 && selectedModels.every((model) => !model.isActive);
   const activeModels = models.filter((model) => model.isActive).length;
+  const inactiveModels = models.length - activeModels;
   const privateModels = models.filter((model) => isPrivateProvider(model.provider)).length;
   const onlineModels = models.length - privateModels;
 
-  const filters = [
+  const statusFilters = [
     { value: 'all', label: t('filters.all') },
     { value: 'active', label: t('filters.active') },
     { value: 'inactive', label: t('filters.inactive') },
+  ] as const;
+  const sourceFilters = [
+    { value: 'all', label: t('filters.all') },
     { value: 'online', label: t('filters.online') },
     { value: 'private', label: t('filters.private') },
   ] as const;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate = isPagePartiallySelected;
+    }
+  }, [isPagePartiallySelected]);
 
   function resetFeedback() {
     setFeedback(null);
@@ -172,11 +323,22 @@ export function ModelGatewayPage() {
     return label.startsWith('modelGatewayPage.providers.') ? provider : label;
   }
 
+  function handleReset() {
+    setQuery('');
+    setStatusFilter('all');
+    setSourceFilter('all');
+  }
+
   async function reload(nextModelId?: string | null) {
     const records = await fetchAiModels(true);
     setModels(records);
+    setLinkStatusByModelId(Object.fromEntries(records.map((model) => [model.id, detectModelLinkStatus(model)])));
     setSelectedModelId(nextModelId ?? null);
     setOpenModelMenuId(null);
+    setSelectedModelIds((current) => {
+      const availableIds = new Set(records.map((model) => model.id));
+      return new Set([...current].filter((id) => availableIds.has(id)));
+    });
   }
 
   function openCreateModelDialog() {
@@ -240,12 +402,15 @@ export function ModelGatewayPage() {
   async function handleToggleModel(model: AiModelRecord) {
     setSubmitting(true);
     resetFeedback();
-    setOpenModelMenuId(null);
 
     try {
       const updated = await setAiModelActive(model.id, !model.isActive);
-      await reload(updated.id);
-      setFeedback({ tone: 'success', key: updated.isActive ? 'feedback.modelEnabled' : 'feedback.modelDisabled' });
+      setModels((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+      setLinkStatusByModelId((current) => ({
+        ...current,
+        [updated.id]: detectModelLinkStatus(updated),
+      }));
+      setSelectedModelId(updated.id);
     } catch {
       setFeedback({ tone: 'error', key: 'feedback.modelStateError' });
     } finally {
@@ -254,10 +419,8 @@ export function ModelGatewayPage() {
   }
 
   async function handleDeleteModel(model: AiModelRecord) {
-    setOpenModelMenuId(null);
-    if (!window.confirm(t('feedback.deleteConfirm', { name: model.modelName }))) {
-      return;
-    }
+    if (model.isActive) return;
+    if (!window.confirm(t('feedback.deleteConfirm', { name: model.modelName }))) return;
 
     setSubmitting(true);
     resetFeedback();
@@ -265,6 +428,11 @@ export function ModelGatewayPage() {
     try {
       await deleteAiModel(model.id);
       await reload(null);
+      setSelectedModelIds((current) => {
+        const next = new Set(current);
+        next.delete(model.id);
+        return next;
+      });
       setFeedback({ tone: 'success', key: 'feedback.modelDeleted' });
     } catch {
       setFeedback({ tone: 'error', key: 'feedback.modelDeleteError' });
@@ -273,25 +441,139 @@ export function ModelGatewayPage() {
     }
   }
 
-  async function handleCopyModelCode(model: AiModelRecord) {
-    setOpenModelMenuId(null);
+  async function handleBatchEnableModels() {
+    const targets = selectedModels.filter((model) => !model.isActive);
+    if (!targets.length) return;
+
+    setSubmitting(true);
+    resetFeedback();
+
     try {
-      await navigator.clipboard.writeText(model.modelCode);
-      setFeedback({ tone: 'success', key: 'feedback.modelCodeCopied' });
+      const updatedModels = await Promise.all(targets.map((model) => setAiModelActive(model.id, true)));
+      const updatedById = new Map(updatedModels.map((model) => [model.id, model]));
+      setModels((current) => current.map((item) => updatedById.get(item.id) ?? item));
+      setLinkStatusByModelId((current) => ({
+        ...current,
+        ...Object.fromEntries(updatedModels.map((model) => [model.id, detectModelLinkStatus(model)])),
+      }));
+      setSelectedModelId(updatedModels[0]?.id ?? null);
     } catch {
-      setFeedback({ tone: 'error', key: 'feedback.copyError' });
+      setFeedback({ tone: 'error', key: 'feedback.modelStateError' });
+    } finally {
+      setSubmitting(false);
     }
   }
 
+  async function handleBatchDisableModels() {
+    const targets = selectedModels.filter((model) => model.isActive);
+    if (!targets.length) return;
+
+    setSubmitting(true);
+    resetFeedback();
+
+    try {
+      const updatedModels = await Promise.all(targets.map((model) => setAiModelActive(model.id, false)));
+      const updatedById = new Map(updatedModels.map((model) => [model.id, model]));
+      setModels((current) => current.map((item) => updatedById.get(item.id) ?? item));
+      setLinkStatusByModelId((current) => ({
+        ...current,
+        ...Object.fromEntries(updatedModels.map((model) => [model.id, detectModelLinkStatus(model)])),
+      }));
+      setSelectedModelId(updatedModels[0]?.id ?? null);
+    } catch {
+      setFeedback({ tone: 'error', key: 'feedback.modelStateError' });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleBatchDeleteModels() {
+    const targets = selectedModels.filter((model) => !model.isActive);
+    if (!targets.length || targets.length !== selectedModels.length) return;
+    if (!window.confirm(`确认删除已选 ${targets.length} 个已停用模型？`)) return;
+
+    setSubmitting(true);
+    resetFeedback();
+
+    try {
+      await Promise.all(targets.map((model) => deleteAiModel(model.id)));
+      await reload(null);
+      setSelectedModelIds(new Set());
+      setFeedback({ tone: 'success', key: 'feedback.modelDeleted' });
+    } catch {
+      setFeedback({ tone: 'error', key: 'feedback.modelDeleteError' });
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleDetectLinks() {
+    const targetIds = selectedModels.map((model) => model.id);
+    if (!targetIds.length) return;
+
+    setDetectingLinks(true);
+    resetFeedback();
+    setLinkStatusByModelId((current) => ({
+      ...current,
+      ...Object.fromEntries(targetIds.map((modelId) => [modelId, 'checking' as const])),
+    }));
+
+    try {
+      const [records] = await Promise.all([
+        fetchAiModels(true),
+        new Promise((resolve) => window.setTimeout(resolve, LINK_CHECK_MIN_FEEDBACK_MS)),
+      ]);
+      const targetIdSet = new Set(targetIds);
+      setModels(records);
+      setLinkStatusByModelId((current) => ({
+        ...current,
+        ...Object.fromEntries(
+          records
+            .filter((model) => targetIdSet.has(model.id))
+            .map((model) => [model.id, detectModelLinkStatus(model)]),
+        ),
+      }));
+    } catch {
+      setFeedback({ tone: 'error', key: 'feedback.loadError' });
+    } finally {
+      setDetectingLinks(false);
+    }
+  }
+
+  function toggleModelSelection(modelId: string, checked: boolean) {
+    setSelectedModelIds((current) => {
+      const next = new Set(current);
+      if (checked) {
+        next.add(modelId);
+      } else {
+        next.delete(modelId);
+      }
+      return next;
+    });
+  }
+
+  function togglePageSelection(checked: boolean) {
+    setSelectedModelIds((current) => {
+      const next = new Set(current);
+      for (const modelId of pagedModelIds) {
+        if (checked) {
+          next.add(modelId);
+        } else {
+          next.delete(modelId);
+        }
+      }
+      return next;
+    });
+  }
+
   return (
-    <div className="vx-page-stack vx-models-page">
+    <div className="vx-page-stack vx-tenant-management-page vx-model-gateway-page">
       <PageHeader
-        icon="cloud"
+        icon="code"
         eyebrow={t('header.eyebrow')}
         title={t('header.title')}
         description={t('header.description')}
         secondary={<Badge>{t('header.badge')}</Badge>}
-        action={<ActionButton icon="plus" onClick={openCreateModelDialog}>{t('actions.addModel')}</ActionButton>}
       />
 
       {feedback ? (
@@ -300,180 +582,257 @@ export function ModelGatewayPage() {
         </p>
       ) : null}
 
-      <section className="vx-models-summary" aria-label={t('summary.ariaLabel')}>
-        <div className="vx-models-summary__item">
-          <Icon name="cloud" size="xs" fallback="placeholder" />
-          <span>{t('summary.models')}</span>
-          <strong>{t('summary.modelsValue', { active: activeModels, total: models.length })}</strong>
-        </div>
-        <div className="vx-models-summary__item">
-          <Icon name="server" size="xs" fallback="placeholder" />
-          <span>{t('summary.privateModels')}</span>
-          <strong>{privateModels}</strong>
-        </div>
-        <div className="vx-models-summary__item">
-          <Icon name="api" size="xs" fallback="placeholder" />
-          <span>{t('summary.onlineModels')}</span>
-          <strong>{onlineModels}</strong>
-        </div>
+      <section className="vx-tenant-summary" aria-label={t('summary.ariaLabel')}>
+        <ModelSummaryItem
+          icon={PlugIcon}
+          label={t('summary.models')}
+          value={formatNumber(models.length)}
+          tags={[`${t('status.active')} ${formatNumber(activeModels)}`, `${t('status.inactive')} ${formatNumber(inactiveModels)}`]}
+        />
+        <ModelSummaryItem icon={CodeIcon} label={t('summary.privateModels')} value={formatNumber(privateModels)} tags={[t('filters.private')]} tone="green" />
+        <ModelSummaryItem icon={PlugIcon} label={t('summary.onlineModels')} value={formatNumber(onlineModels)} tags={[t('filters.online')]} />
+        <ModelSummaryItem icon={PlayIcon} label={t('filters.active')} value={formatNumber(activeModels)} tags={['可调度']} tone={activeModels ? 'green' : 'amber'} />
       </section>
 
-      <div className="vx-models-workspace">
-        <div className="vx-models-toolbar">
-          <span className="vx-models-toolbar__count">{t('table.toolbarTitle', { count: filteredModels.length })}</span>
-          <span className="vx-models-toolbar__spacer" aria-hidden="true" />
+      <div className="vx-tenant-list-shell">
+        <section className="vx-tenant-toolbar" aria-label={t('table.filterAriaLabel')}>
+          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="模型展示方式" />
+          <span className="vx-tenant-view-count">{formatNumber(filteredModels.length)}</span>
+          <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t('table.searchPlaceholder')}
-            className="vx-search-input vx-models-toolbar__search"
+            className="vx-tenant-search"
             aria-label={t('table.searchAriaLabel')}
           />
-          <div className="vx-models-toolbar__filters">
-            <div className="vx-segmented-control" role="tablist" aria-label={t('table.filterAriaLabel')}>
-              {filters.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  role="tab"
-                  aria-selected={filter === item.value}
-                  className={
-                    filter === item.value
-                      ? 'vx-segmented-control__item vx-segmented-control__item--active'
-                      : 'vx-segmented-control__item'
-                  }
-                  onClick={() => setFilter(item.value)}
-                >
-                  {item.label}
-                </button>
+          <Button variant="outline" onClick={handleReset}>重置</Button>
+          <div className="vx-tenant-filters">
+            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as ModelStatusFilter)} aria-label="模型状态">
+              {statusFilters.map((item) => (
+                <option key={item.value} value={item.value}>{item.label}</option>
               ))}
-            </div>
+            </select>
+            <select className="vx-input vx-tenant-select" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value as ModelSourceFilter)} aria-label="模型来源">
+              {sourceFilters.map((item) => (
+                <option key={item.value} value={item.value}>{item.label}</option>
+              ))}
+            </select>
           </div>
-        </div>
+          <ModelBatchOperationButtons
+            canEnable={canBatchEnable}
+            canDisable={canBatchDisable}
+            canDelete={canBatchDelete}
+            submitting={submitting}
+            onEnable={() => void handleBatchEnableModels()}
+            onDisable={() => void handleBatchDisableModels()}
+            onDelete={() => void handleBatchDeleteModels()}
+          />
+          <ActionButton icon="shield-check" variant="outline" disabled={detectingLinks || selectedModels.length === 0} onClick={() => void handleDetectLinks()}>
+            状态检测
+          </ActionButton>
+          <ActionButton icon="plus" onClick={openCreateModelDialog}>{t('actions.addModel')}</ActionButton>
+        </section>
 
-        <div className="vx-model-list">
-          <div className="vx-model-list__header">
-            <span>{t('table.columns.model')}</span>
-            <span>{t('table.columns.provider')}</span>
-            <span>{t('table.columns.capabilities')}</span>
-            <span>{t('table.columns.endpoint')}</span>
-            <span>{t('table.columns.key')}</span>
-            <span>{t('table.columns.status')}</span>
-            <span />
-          </div>
-          {pagedModels.length ? (
-            pagedModels.map((model) => (
-              <div
-                key={model.id}
-                className={openModelMenuId === model.id ? 'vx-model-row vx-model-row--active' : 'vx-model-row'}
-                title={`${model.modelName} · ${model.modelCode}`}
-              >
-                <div className="vx-model-row__identity">
-                  <span className={isPrivateProvider(model.provider) ? 'vx-model-row__icon vx-model-row__icon--private' : 'vx-model-row__icon'}>
-                    <Icon name={isPrivateProvider(model.provider) ? 'server' : 'cloud'} size="xs" fallback="placeholder" />
+        <section className="vx-tenant-directory" aria-label={t('table.toolbarTitle', { count: filteredModels.length })}>
+          {loading ? (
+            <header className="vx-tenant-directory__header">
+              <span>{t('empty.loadingTitle')}</span>
+            </header>
+          ) : null}
+
+          {pagedModels.length && viewMode === 'list' ? (
+            <div className="vx-tenant-directory-list vx-model-gateway-directory-list" role="region" aria-label={t('table.toolbarTitle', { count: filteredModels.length })}>
+              <div className="vx-tenant-directory-list__header">
+                <span>
+                  <input
+                    ref={pageSelectRef}
+                    type="checkbox"
+                    className="vx-model-select-checkbox"
+                    checked={isPageSelected}
+                    onChange={(event) => togglePageSelection(event.target.checked)}
+                    aria-label="选择当前页模型"
+                  />
+                </span>
+                <span>序号</span>
+                <span>{t('table.columns.model')}</span>
+                <span>{t('table.columns.status')}</span>
+                <span>链路状态</span>
+                <span>来源</span>
+                <span>模型能力</span>
+                <span>操作</span>
+              </div>
+              {pagedModels.map((model, index) => (
+                <div
+                  key={model.id}
+                  className={`vx-tenant-directory-row vx-model-gateway-row vx-model-gateway-row--${modelTone(model)} ${selectedModelIds.has(model.id) ? 'vx-model-gateway-row--selected' : ''}`}
+                  title={`${model.modelName} · ${model.modelCode}`}
+                  onClick={(event) => {
+                    if (isInteractiveTarget(event.target)) return;
+                    toggleModelSelection(model.id, !selectedModelIds.has(model.id));
+                  }}
+                >
+                  <span className="vx-model-gateway-row__select">
+                    <input
+                      type="checkbox"
+                      className="vx-model-select-checkbox"
+                      checked={selectedModelIds.has(model.id)}
+                      onClick={(event) => event.stopPropagation()}
+                      onChange={(event) => toggleModelSelection(model.id, event.target.checked)}
+                      aria-label={`选择 ${model.modelName}`}
+                    />
                   </span>
-                  <div>
-                    <strong>{model.modelName}</strong>
-                    <p>{model.modelCode}</p>
+                  <span className="vx-tenant-directory-row__index">{formatNumber(pageStart + index + 1)}</span>
+                  <span className="vx-tenant-directory-row__tenant">
+                    {isPrivateProvider(model.provider) ? <CodeIcon size={20} aria-hidden="true" /> : <PlugIcon size={20} aria-hidden="true" />}
+                    <span>
+                      <span className="vx-tenant-directory-row__title-line">
+                        <button type="button" className="vx-model-name-button" onClick={() => openEditModelDialog(model)}>
+                          {model.modelName}
+                        </button>
+                      </span>
+                      <small>{model.modelCode}</small>
+                    </span>
+                  </span>
+                  <span className="vx-model-gateway-row__status">
+                    <span className="vx-tenant-directory-row__status-line">
+                      <span className={`vx-model-state-icon vx-model-state-icon--${model.isActive ? 'active' : 'inactive'}`} role="img" aria-label={model.isActive ? t('status.active') : t('status.inactive')} title={model.isActive ? t('status.active') : t('status.inactive')}>
+                        <Icon name={model.isActive ? 'check' : 'x'} size="xs" fallback="placeholder" />
+                      </span>
+                      <Badge className={`vx-tenant-pill vx-tenant-pill--${model.isActive ? 'active' : 'disabled'}`}>
+                        {model.isActive ? t('status.active') : t('status.inactive')}
+                      </Badge>
+                    </span>
+                  </span>
+                  <span className="vx-model-gateway-row__link">
+                    <Badge className={`vx-tenant-pill vx-model-link-pill--${linkStatusByModelId[model.id] ?? detectModelLinkStatus(model)}`}>
+                      {(linkStatusByModelId[model.id] ?? detectModelLinkStatus(model)) === 'checking'
+                        ? '检测中'
+                        : (linkStatusByModelId[model.id] ?? detectModelLinkStatus(model)) === 'normal'
+                          ? '正常'
+                          : '异常'}
+                    </Badge>
+                  </span>
+                  <span className="vx-model-gateway-row__source">
+                    <Badge className={`vx-tenant-pill vx-model-provider-pill--${isPrivateProvider(model.provider) ? 'private' : 'online'}`}>{providerLabel(model.provider)}</Badge>
+                    <small>{model.protocol}</small>
+                  </span>
+                  <span className="vx-model-gateway-row__capabilities">
+                    <span className="vx-tenant-directory-row__tag-line">
+                      {model.capabilities.slice(0, 3).map((capability) => (
+                        <Badge key={capability} className="vx-tenant-pill vx-tenant-pill--permission">{capability}</Badge>
+                      ))}
+                      {model.capabilities.length > 3 ? <Badge className="vx-tenant-pill vx-tenant-pill--quota">+{model.capabilities.length - 3}</Badge> : null}
+                    </span>
+                  </span>
+                  <div className="vx-tenant-actions" onMouseLeave={() => setOpenModelMenuId(null)}>
+                    <button
+                      className="vx-tenant-actions__trigger"
+                      type="button"
+                      aria-label={t('actions.modelMenu', { name: model.modelName })}
+                      aria-haspopup="menu"
+                      aria-expanded={openModelMenuId === model.id}
+                      onClick={() => setOpenModelMenuId((current) => (current === model.id ? null : model.id))}
+                    >
+                      <Icon name="more-vertical" size="lg" fallback="placeholder" />
+                    </button>
+                    {openModelMenuId === model.id ? (
+                      <div className="vx-tenant-actions__menu" role="menu">
+                        <button type="button" role="menuitem" onClick={() => openEditModelDialog(model)}>
+                          <Icon name="edit" size="xs" fallback="placeholder" />
+                          <span>{t('actions.editModel')}</span>
+                        </button>
+                        <button type="button" role="menuitem" disabled={submitting || model.isActive} onClick={() => void handleToggleModel(model)}>
+                          <PlayIcon size={16} weight="fill" aria-hidden="true" />
+                          <span>{t('actions.enableModel')}</span>
+                        </button>
+                        <button type="button" role="menuitem" disabled={submitting || !model.isActive} onClick={() => void handleToggleModel(model)}>
+                          <StopIcon size={16} weight="fill" aria-hidden="true" />
+                          <span>{t('actions.disableModel')}</span>
+                        </button>
+                        <button type="button" role="menuitem" className="vx-model-actions-menu__danger" disabled={submitting || model.isActive} onClick={() => void handleDeleteModel(model)}>
+                          <TrashIcon size={16} aria-hidden="true" />
+                          <span>{t('actions.deleteModel')}</span>
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
-                <span className="vx-model-row__text">{providerLabel(model.provider)}</span>
-                <div className="vx-model-row__chips">
-                  {model.capabilities.slice(0, 3).map((capability) => (
-                    <span key={capability}>{capability}</span>
-                  ))}
-                  {model.capabilities.length > 3 ? <span>+{model.capabilities.length - 3}</span> : null}
-                </div>
-                <span className="vx-model-row__muted" title={model.endpointUrl}>{model.endpointUrl}</span>
-                <span className="vx-model-row__muted" title={model.apiKeyEnvVar}>{model.apiKeyEnvVar}</span>
-                <span>
-                  <Badge className={model.isActive ? 'vx-model-status vx-model-status--active' : 'vx-model-status vx-model-status--inactive'}>
-                    {model.isActive ? t('status.active') : t('status.inactive')}
-                  </Badge>
-                </span>
-                <div
-                  className="vx-model-row__menu"
-                  onMouseLeave={() => setOpenModelMenuId(null)}
-                  onBlur={(event) => {
-                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                      setOpenModelMenuId(null);
-                    }
-                  }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label={t('actions.modelMenu', { name: model.modelName })}
-                    aria-haspopup="menu"
-                    aria-expanded={openModelMenuId === model.id}
-                    onClick={() => setOpenModelMenuId((current) => (current === model.id ? null : model.id))}
-                  >
-                    <Icon name="more-vertical" size="sm" fallback="placeholder" />
-                  </Button>
-                  {openModelMenuId === model.id ? (
-                    <div className="vx-model-actions-menu" role="menu">
-                      <button type="button" role="menuitem" onClick={() => openEditModelDialog(model)}>
-                        <Icon name="edit" size="xs" fallback="placeholder" />
-                        <span>{t('actions.editModel')}</span>
+              ))}
+            </div>
+          ) : pagedModels.length ? (
+            <div className="vx-tenant-directory-cards vx-model-gateway-cards" aria-label={t('table.toolbarTitle', { count: filteredModels.length })}>
+              {pagedModels.map((model) => (
+                <article key={model.id} className={`vx-tenant-directory-card vx-model-gateway-card vx-model-gateway-card--${modelTone(model)}`}>
+                  <header>
+                    {isPrivateProvider(model.provider) ? <CodeIcon size={24} aria-hidden="true" /> : <PlugIcon size={24} aria-hidden="true" />}
+                    <div>
+                      <button type="button" className="vx-model-name-button" onClick={() => openEditModelDialog(model)}>
+                        {model.modelName}
                       </button>
-                      <button type="button" role="menuitem" onClick={() => void handleCopyModelCode(model)}>
-                        <Icon name="code" size="xs" fallback="placeholder" />
-                        <span>{t('actions.copyModelCode')}</span>
-                      </button>
-                      <button type="button" role="menuitem" disabled={submitting} onClick={() => void handleToggleModel(model)}>
-                        <Icon name={model.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />
-                        <span>{model.isActive ? t('actions.disableModel') : t('actions.enableModel')}</span>
-                      </button>
-                      <button type="button" role="menuitem" className="vx-model-actions-menu__danger" disabled={submitting} onClick={() => void handleDeleteModel(model)}>
-                        <Icon name="trash" size="xs" fallback="placeholder" />
-                        <span>{t('actions.deleteModel')}</span>
-                      </button>
+                      <span>{model.modelCode}</span>
                     </div>
-                  ) : null}
-                </div>
-              </div>
-            ))
+                    <ModelOperationButtons
+                      model={model}
+                      submitting={submitting}
+                      onEnable={(target) => void handleToggleModel(target)}
+                      onDisable={(target) => void handleToggleModel(target)}
+                      onDelete={(target) => void handleDeleteModel(target)}
+                    />
+                  </header>
+                  <div className="vx-tenant-directory-card__badges">
+                    <Badge className={`vx-tenant-pill vx-model-provider-pill--${isPrivateProvider(model.provider) ? 'private' : 'online'}`}>{providerLabel(model.provider)}</Badge>
+                    <Badge className={`vx-tenant-pill vx-tenant-pill--${model.isActive ? 'active' : 'disabled'}`}>
+                      {model.isActive ? t('status.active') : t('status.inactive')}
+                    </Badge>
+                  </div>
+                  <div className="vx-tenant-directory-card__metrics">
+                    <span>
+                      <b>{model.capabilities.length}</b>
+                      <small>{t('table.columns.capabilities')}</small>
+                    </span>
+                    <span>
+                      <b>{isPrivateProvider(model.provider) ? t('filters.private') : t('filters.online')}</b>
+                      <small>{t('table.columns.provider')}</small>
+                    </span>
+                    <span>
+                      <b>{model.protocol}</b>
+                      <small>{t('dialogs.fields.protocol')}</small>
+                    </span>
+                  </div>
+                  <footer>
+                    <span>{model.capabilities.slice(0, 2).join(', ') || '-'}</span>
+                    <strong>{model.apiKeyEnvVar || '-'}</strong>
+                  </footer>
+                </article>
+              ))}
+            </div>
           ) : (
-            <EmptyState
-              title={loading ? t('empty.loadingTitle') : t('empty.title')}
-              description={loading ? t('empty.loadingDescription') : t('empty.description')}
-              action={
-                <ActionButton
-                  variant="outline"
-                  icon="x"
-                  onClick={() => {
-                    setQuery('');
-                    setFilter('all');
-                  }}
-                >
-                  {t('empty.resetFilters')}
-                </ActionButton>
-              }
-            />
+            <section className="vx-tenant-empty">
+              <EmptyState
+                title={loading ? t('empty.loadingTitle') : t('empty.title')}
+                description={loading ? t('empty.loadingDescription') : t('empty.description')}
+                action={<ActionButton variant="outline" icon="x" onClick={handleReset}>{t('empty.resetFilters')}</ActionButton>}
+              />
+            </section>
           )}
-        </div>
 
-        <div className="vx-models-pagination">
-          <span className="vx-models-pagination__total">{t('pagination.summary', { page: safeCurrentPage, totalPages, total: filteredModels.length })}</span>
-          <div className="vx-models-pagination__actions">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={safeCurrentPage <= 1}
-              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-            >
-              {t('pagination.previous')}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={safeCurrentPage >= totalPages}
-              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-            >
-              {t('pagination.next')}
-            </Button>
-          </div>
-        </div>
+          <footer className="vx-tenant-pagination">
+            <span className="vx-tenant-pagination__total">{t('pagination.summary', { page: safeCurrentPage, totalPages, total: filteredModels.length })}</span>
+            <div className="vx-tenant-pagination__actions">
+              <ModelPageSizePicker value={pageSize} onChange={setPageSize} />
+              <div className="vx-tenant-pagination__pager">
+                <Button variant="outline" disabled={safeCurrentPage <= 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>
+                  {t('pagination.previous')}
+                </Button>
+                <strong>{safeCurrentPage} / {totalPages}</strong>
+                <Button variant="outline" disabled={safeCurrentPage >= totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}>
+                  {t('pagination.next')}
+                </Button>
+              </div>
+            </div>
+          </footer>
+        </section>
       </div>
 
       {dialogMode === 'createModel' || dialogMode === 'editModel' ? (

@@ -15,6 +15,7 @@ const ASSISTANT_WIDTH_KEY = 'vx-console-assistant-width';
 const ASSISTANT_MIN_WIDTH = 380;
 const ASSISTANT_DEFAULT_WIDTH = 420;
 const ASSISTANT_MAX_WIDTH = 720;
+const END_PANEL_WIDTH = 360;
 const SHELL_HORIZONTAL_PADDING = 32;
 const SHELL_BODY_GAPS = 0;
 const CONTENT_MIN_WIDTH = 360;
@@ -46,7 +47,7 @@ function getAssistantMaxWidth(sidebarCollapsed: boolean) {
   return clamp(availableWidth, ASSISTANT_MIN_WIDTH, ASSISTANT_MAX_WIDTH);
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children, endPanel }: { children: ReactNode; endPanel?: ReactNode }) {
   const pathname = usePathname();
   const routeLabels = useConsoleTranslations('routes');
   const layoutMode = getShellLayoutMode(pathname);
@@ -120,13 +121,14 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   const shellStyle = {
     '--vx-shell-assistant-width': `${assistantWidth}px`,
+    '--vx-shell-end-panel-width': `${END_PANEL_WIDTH}px`,
   } as CSSProperties;
 
   return (
     <div
       className={`vx-shell ${
         sidebarCollapsed ? 'vx-shell--sidebar-collapsed' : ''
-      } ${assistantOpen ? 'vx-shell--assistant-open' : ''}`}
+      } ${assistantOpen ? 'vx-shell--assistant-open' : ''} ${endPanel ? 'vx-shell--end-panel-open' : ''}`}
       style={shellStyle}
     >
       <div className="vx-shell__header-slot">
@@ -143,6 +145,12 @@ export function AppShell({ children }: { children: ReactNode }) {
         <main className="vx-shell__content" aria-label="Console content">
           {children}
         </main>
+
+        {endPanel ? (
+          <aside className="vx-shell__end-panel" aria-label="Vela assistant">
+            {endPanel}
+          </aside>
+        ) : null}
 
         {layoutMode.assistantEnabled ? (
           <AssistantPanel

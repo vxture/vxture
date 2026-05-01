@@ -2,40 +2,165 @@
 
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '@/components/ui/primitives';
 import { AdminBffError } from '@/api/admin-bff';
 import { AdminSessionProvider, useAdminSession } from '@/features/session/AdminSessionProvider';
 import { useConsoleTranslations } from '@/lib/console-intl';
+
+const CAPTCHA_HANDLE_SIZE = 42;
+const CAPTCHA_PIECE_SIZE = 42;
+const CAPTCHA_TOLERANCE = 10;
+const CAPTCHA_RETURN_MS = 220;
+
+function randomCaptchaTargetRatio() {
+  return 0.42 + Math.random() * 0.36;
+}
 
 function LoginScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { signIn, status } = useAdminSession();
   const t = useConsoleTranslations('login');
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [captchaOffset, setCaptchaOffset] = useState(0);
+  const [captchaDragging, setCaptchaDragging] = useState(false);
+  const [captchaReturning, setCaptchaReturning] = useState(false);
+  const [captchaSolved, setCaptchaSolved] = useState(false);
+  const [captchaOpen, setCaptchaOpen] = useState(false);
+  const [captchaTargetRatio, setCaptchaTargetRatio] = useState(randomCaptchaTargetRatio);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const pendingCredentialsRef = useRef({ identifier: '', password: '' });
+  const captchaSliderRef = useRef<HTMLDivElement | null>(null);
+  const captchaHandleRef = useRef<HTMLButtonElement | null>(null);
+  const captchaPieceRef = useRef<HTMLDivElement | null>(null);
+  const captchaProgressRef = useRef<HTMLDivElement | null>(null);
+  const captchaMaxRef = useRef(0);
+  const captchaOffsetRef = useRef(0);
+  const captchaAnimationFrameRef = useRef<number | null>(null);
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  useEffect(() => {
+    return () => {
+      if (captchaAnimationFrameRef.current !== null) {
+        window.cancelAnimationFrame(captchaAnimationFrameRef.current);
+      }
+    };
+  }, []);
 
-    if (!identifier || !password) {
-      setError(t('errors.required'));
+  function captchaGeometry() {
+    const slider = captchaSliderRef.current;
+    if (!slider) return { max: 0, target: 0 };
+    const max = Math.max(0, slider.getBoundingClientRect().width - CAPTCHA_HANDLE_SIZE);
+    return {
+      max,
+      target: Math.round(max * captchaTargetRatio),
+    };
+  }
+
+  function applyCaptchaOffset(value: number) {
+    const max = captchaMaxRef.current;
+    captchaOffsetRef.current = value;
+
+    if (captchaAnimationFrameRef.current !== null) {
+      window.cancelAnimationFrame(captchaAnimationFrameRef.current);
+    }
+
+    captchaAnimationFrameRef.current = window.requestAnimationFrame(() => {
+      const transform = `translate3d(${value}px, 0, 0)`;
+      if (captchaHandleRef.current) {
+        captchaHandleRef.current.style.transform = transform;
+      }
+      if (captchaPieceRef.current) {
+        captchaPieceRef.current.style.transform = transform;
+      }
+      if (captchaProgressRef.current) {
+        captchaProgressRef.current.style.transform = `scaleX(${max ? value / max : 0})`;
+      }
+    });
+  }
+
+  function resetCaptcha() {
+    setCaptchaOffset(0);
+    setCaptchaDragging(false);
+    setCaptchaReturning(false);
+    setCaptchaSolved(false);
+    captchaOffsetRef.current = 0;
+    captchaMaxRef.current = 0;
+    applyCaptchaOffset(0);
+  }
+
+  function handleCaptchaPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
+    if (captchaSolved || submitting || status === 'loading') return;
+    const { max } = captchaGeometry();
+    captchaMaxRef.current = max;
+    captchaOffsetRef.current = captchaOffset;
+    setCaptchaReturning(false);
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setCaptchaDragging(true);
+    setError('');
+  }
+
+  function handleCaptchaPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+    if (!captchaDragging || captchaSolved) return;
+    const slider = captchaSliderRef.current;
+    if (!slider) return;
+    const rect = slider.getBoundingClientRect();
+    const max = captchaMaxRef.current || captchaGeometry().max;
+    const next = Math.min(max, Math.max(0, event.clientX - rect.left - CAPTCHA_HANDLE_SIZE / 2));
+    applyCaptchaOffset(next);
+  }
+
+  function handleCaptchaPointerEnd() {
+    if (!captchaDragging || captchaSolved) return;
+    setCaptchaDragging(false);
+    const { max, target } = captchaGeometry();
+    captchaMaxRef.current = max;
+    const offset = captchaOffsetRef.current;
+    if (Math.abs(offset - target) <= CAPTCHA_TOLERANCE) {
+      setCaptchaSolved(true);
+      setCaptchaOffset(target);
+      applyCaptchaOffset(target);
+      setError('');
+      void continueSignIn();
       return;
+    }
+    setCaptchaReturning(true);
+    setCaptchaOffset(0);
+    applyCaptchaOffset(0);
+    window.setTimeout(() => setCaptchaReturning(false), CAPTCHA_RETURN_MS);
+  }
+
+  function readLoginForm(form: HTMLFormElement) {
+    const formData = new FormData(form);
+    return {
+      identifier: String(formData.get('username') ?? '').trim(),
+      password: String(formData.get('password') ?? ''),
+    };
+  }
+
+  function validateLoginForm(form: HTMLFormElement) {
+    const credentials = readLoginForm(form);
+    if (!credentials.identifier || !credentials.password) {
+      setError(t('errors.required'));
+      return false;
     }
 
     if (!acceptedTerms) {
       setError(t('errors.terms'));
-      return;
+      return false;
     }
 
+    pendingCredentialsRef.current = credentials;
+    return true;
+  }
+
+  async function continueSignIn() {
     setError('');
     setSubmitting(true);
 
     try {
+      const { identifier, password } = pendingCredentialsRef.current;
       await signIn(identifier, password);
       const next = searchParams.get('next') || '/';
       router.replace(next);
@@ -51,7 +176,18 @@ function LoginScreen() {
       }
     } finally {
       setSubmitting(false);
+      setCaptchaOpen(false);
+      resetCaptcha();
     }
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!validateLoginForm(event.currentTarget)) return;
+
+    resetCaptcha();
+    setCaptchaTargetRatio(randomCaptchaTargetRatio());
+    setCaptchaOpen(true);
   }
 
   return (
@@ -79,34 +215,27 @@ function LoginScreen() {
             </CardHeader>
             <CardContent>
               <form className="auth-form" onSubmit={handleSubmit} autoComplete="on">
-                <label className="auth-field" htmlFor="console-login-username">
+                <label className="auth-field" htmlFor="admin-login-username">
                   <span>{t('form.account')}</span>
                   <Input
-                    id="console-login-username"
+                    id="admin-login-username"
                     name="username"
                     type="text"
-                    value={identifier}
-                    onChange={(event) => setIdentifier(event.target.value)}
                     placeholder={t('form.accountPlaceholder')}
                     autoComplete="username"
                     disabled={submitting || status === 'loading'}
                   />
                 </label>
-                <label className="auth-field" htmlFor="console-login-password">
+                <label className="auth-field" htmlFor="admin-login-password">
                   <span className="auth-field__label">{t('form.password')}</span>
                   <Input
-                    id="console-login-password"
+                    id="admin-login-password"
                     name="password"
                     type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
                     placeholder={t('form.passwordPlaceholder')}
                     autoComplete="current-password"
                     disabled={submitting || status === 'loading'}
                   />
-                  <a className="auth-forgot-link" href="#forgot-password">
-                    {t('form.forgotPassword')}
-                  </a>
                 </label>
                 <label className="auth-agreement">
                   <input
@@ -128,7 +257,66 @@ function LoginScreen() {
                     {submitting || status === 'loading' ? t('form.submitting') : t('form.submit')}
                   </Button>
                 </div>
+                <div className="auth-secondary-actions">
+                  <a className="auth-forgot-link" href="#forgot-password">
+                    {t('form.forgotPassword')}
+                  </a>
+                </div>
               </form>
+              {captchaOpen ? (
+                <div className="auth-captcha-modal" role="dialog" aria-modal="true" aria-label={t('form.dragToVerify')}>
+                  <div className="auth-captcha-modal__backdrop" />
+                  <div className="auth-captcha-modal__panel">
+                    <button
+                      type="button"
+                      className="auth-captcha-modal__close"
+                      aria-label={t('form.closeVerification')}
+                      onClick={() => {
+                        setCaptchaOpen(false);
+                        resetCaptcha();
+                      }}
+                      disabled={submitting}
+                    >
+                      ×
+                    </button>
+                    <div className="auth-captcha-modal__header">
+                      <strong>{t('form.humanVerification')}</strong>
+                      <span>{t('form.dragToVerify')}</span>
+                    </div>
+                    <div
+                      className={[
+                        'auth-captcha',
+                        captchaDragging ? 'auth-captcha--dragging' : '',
+                        captchaReturning ? 'auth-captcha--returning' : '',
+                        captchaSolved ? 'auth-captcha--solved' : '',
+                      ].filter(Boolean).join(' ')}
+                    >
+                      <div className="auth-captcha__image" aria-hidden="true">
+                        <div className="auth-captcha__target" style={{ left: `calc((100% - ${CAPTCHA_PIECE_SIZE}px) * ${captchaTargetRatio})` }} />
+                        <div ref={captchaPieceRef} className="auth-captcha__piece" style={{ transform: `translate3d(${captchaOffset}px, 0, 0)` }} />
+                      </div>
+                      <div className="auth-captcha__slider" ref={captchaSliderRef}>
+                        <div ref={captchaProgressRef} className="auth-captcha__progress" style={{ transform: `scaleX(${captchaMaxRef.current ? captchaOffset / captchaMaxRef.current : 0})` }} aria-hidden="true" />
+                        <span className="auth-captcha__hint">{captchaSolved ? t('form.verificationPassed') : t('form.dragToVerify')}</span>
+                        <button
+                          type="button"
+                          ref={captchaHandleRef}
+                          className="auth-captcha__handle"
+                          style={{ transform: `translate3d(${captchaOffset}px, 0, 0)` }}
+                          onPointerDown={handleCaptchaPointerDown}
+                          onPointerMove={handleCaptchaPointerMove}
+                          onPointerUp={handleCaptchaPointerEnd}
+                          onPointerCancel={handleCaptchaPointerEnd}
+                          aria-label={t('form.dragToVerify')}
+                          disabled={captchaSolved || submitting || status === 'loading'}
+                        >
+                          <span aria-hidden="true" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </CardContent>
           </Card>
         </div>

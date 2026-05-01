@@ -1,11 +1,9 @@
 import { notFound } from 'next/navigation';
-import { adminNavigationSections } from '@/config/navigation';
+import { flattenAdminNavigationItems } from '@/config/navigation';
 import { AdminPlaceholderPage } from './AdminPlaceholderPage';
 
 export function AdminRoutePlaceholderPage({ href }: { href: string }) {
-  const match = adminNavigationSections
-    .flatMap((section) => section.items.map((item) => ({ section, item })))
-    .find(({ item }) => item.href === href);
+  const match = flattenAdminNavigationItems().find(({ item }) => item.href === href);
 
   if (!match) {
     notFound();

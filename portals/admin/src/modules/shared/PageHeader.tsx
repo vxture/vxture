@@ -17,7 +17,7 @@ export function PageHeader({
   secondary?: ReactNode;
 }) {
   return (
-    <section className="vx-page-header admin-overview-heading admin-overview-heading--page">
+    <section className={`vx-page-header admin-overview-heading admin-overview-heading--page vx-page-header--icon-${icon}`}>
       <span className="vx-page-header__icon admin-overview-heading__icon" aria-hidden="true">
         <Icon name={icon} size="lg" fallback="placeholder" />
       </span>

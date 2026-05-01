@@ -21,7 +21,9 @@ import type {
   InvoiceQueryParams,
   PaymentQueryParams,
   SubscriptionQueryParams,
-  BillingStats
+  BillingStats,
+  BillingStatsQuery,
+  QueryInvoicesParams
 } from '../types/billing.types';
 import { InvoiceStatus, PaymentStatus } from '../types/billing.types';
 import { billingRepository } from '../repository/billing.repository';
@@ -93,6 +95,11 @@ export class BillingService {
     return invoices;
   }
 
+  async queryInvoices(params: QueryInvoicesParams = {}): Promise<Invoice[]> {
+    const invoices = await billingRepository.getInvoices(normalizeBillingPeriod(params));
+    return invoices;
+  }
+
   /**
    * 发送发票
    * @param id 发票ID
@@ -138,6 +145,7 @@ export class BillingService {
    * @throws {Error} 当发票状态不符合要求时
    */
   async cancelInvoice(id: string, reason?: string): Promise<Invoice> {
+    void reason;
     const invoice = await this.getInvoiceById(id);
 
     if (invoice.status === InvoiceStatus.PAID) {
@@ -365,6 +373,7 @@ export class BillingService {
    * @throws {Error} 当订阅状态不符合要求时
    */
   async cancelSubscription(id: string, reason?: string): Promise<Subscription> {
+    void reason;
     const subscription = await this.getSubscriptionById(id);
 
     if (subscription.status === 'cancelled' || subscription.status === 'expired') {
@@ -398,7 +407,57 @@ export class BillingService {
       activeSubscriptions
     };
   }
+
+  async getBillingOverview(query: BillingStatsQuery = {}): Promise<BillingStats> {
+    const params = normalizeBillingPeriod(query);
+    const invoices = await billingRepository.getInvoices(params);
+    const subscriptions = await billingRepository.getSubscriptions({
+      tenantId: params.tenantId,
+      customerId: params.customerId,
+    });
+
+    const paidInvoices = invoices.filter(i => i.status === InvoiceStatus.PAID);
+    const pendingInvoices = invoices.filter(i => i.status === InvoiceStatus.PENDING);
+    const overdueInvoices = invoices.filter(i => i.status === InvoiceStatus.OVERDUE);
+    const totalRevenue = paidInvoices.reduce((sum, i) => sum + i.totalAmount, 0);
+    const activeSubscriptions = subscriptions.filter(s => s.status === 'active').length;
+
+    return {
+      totalInvoices: invoices.length,
+      paidInvoices: paidInvoices.length,
+      pendingInvoices: pendingInvoices.length,
+      overdueInvoices: overdueInvoices.length,
+      totalRevenue,
+      activeSubscriptions
+    };
+  }
 }
 
 // 导出单例实例
 export const billingService = new BillingService();
+
+function normalizeBillingPeriod<T extends BillingStatsQuery | QueryInvoicesParams>(
+  query: T,
+): T & { startDate?: Date; endDate?: Date } {
+  if (!query.period) return query;
+
+  const endDate = new Date();
+  const startDate = new Date(endDate);
+
+  switch (query.period) {
+    case '7d':
+      startDate.setDate(endDate.getDate() - 7);
+      break;
+    case '30d':
+      startDate.setDate(endDate.getDate() - 30);
+      break;
+    case '90d':
+      startDate.setDate(endDate.getDate() - 90);
+      break;
+    case '1y':
+      startDate.setFullYear(endDate.getFullYear() - 1);
+      break;
+  }
+
+  return { ...query, startDate, endDate };
+}

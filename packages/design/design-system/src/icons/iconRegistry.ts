@@ -213,6 +213,7 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   // 用户/组织
   // ==========================================================================
   user:          UserIcon,
+  role:          UsersIcon,
   "user-switch": UserSwitchIcon,
   buildings:     BuildingsIcon,
   users:         UsersIcon,

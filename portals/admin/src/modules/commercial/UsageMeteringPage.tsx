@@ -1,40 +1,62 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Icon } from '@vxture/design-system';
-import type { IconName } from '@vxture/design-system';
-import { Button, Input } from '@/components/ui/primitives';
-import { fetchUsageMeteringRecords } from '@/api/admin-bff';
-import type { UsageMeteringRecord, UsageMeteringRisk } from '@/entities/console';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
-import { formatDate, formatNumber, joinClasses, typeLabel } from '@/modules/tenants/tenant-utils';
-import { formatPercent, PageSizePicker, type PageSize, SummaryItem, Tag, tierTone, type ViewMode } from './commercial-utils';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Icon } from "@vxture/design-system";
+import type { IconName } from "@vxture/design-system";
+import { Button, Input } from "@/components/ui/primitives";
+import { fetchUsageMeteringRecords } from "@/api/admin-bff";
+import type {
+  UsageMeteringRecord,
+  UsageMeteringRisk,
+} from "@/entities/console";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
+import {
+  formatDate,
+  formatNumber,
+  joinClasses,
+  typeLabel,
+} from "@/modules/tenants/tenant-utils";
+import {
+  formatPercent,
+  PageSizePicker,
+  type PageSize,
+  SummaryItem,
+  Tag,
+  tierTone,
+  type ViewMode,
+} from "./commercial-utils";
 
-type RiskFilter = 'all' | UsageMeteringRisk;
-type ProductTypeFilter = 'all' | '智能体' | '平台' | '大模型' | '三方接入' | '产品能力';
-type CycleFilter = 'all' | string;
+type RiskFilter = "all" | UsageMeteringRisk;
+type ProductTypeFilter =
+  | "all"
+  | "智能体"
+  | "平台"
+  | "大模型"
+  | "三方接入"
+  | "产品能力";
+type CycleFilter = "all" | string;
 
 function riskLabel(risk: UsageMeteringRisk) {
-  if (risk === 'danger') return '超额';
-  if (risk === 'warning') return '接近上限';
-  if (risk === 'anomaly') return '计量异常';
-  return '正常';
+  if (risk === "danger") return "超额";
+  if (risk === "warning") return "接近上限";
+  if (risk === "anomaly") return "计量异常";
+  return "正常";
 }
 
 function riskIcon(risk: UsageMeteringRisk): IconName {
-  if (risk === 'normal') return 'check';
-  if (risk === 'warning') return 'clock';
-  return 'warning';
+  if (risk === "normal") return "check";
+  if (risk === "warning") return "clock";
+  return "warning";
 }
 
 function riskTone(risk: UsageMeteringRisk) {
-  if (risk === 'normal') return 'normal';
-  if (risk === 'warning') return 'warning';
-  return 'danger';
+  if (risk === "normal") return "normal";
+  if (risk === "warning") return "warning";
+  return "danger";
 }
 
 function usageSearchText(record: UsageMeteringRecord) {
@@ -52,33 +74,85 @@ function usageSearchText(record: UsageMeteringRecord) {
     record.metricCode,
     record.metricName,
     riskLabel(record.risk),
-  ].filter(Boolean).join(' ').toLowerCase();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }
 
 function formatUsageValue(value: number, unit: string) {
-  if (unit === 'token' || unit === '字') return formatNumber(value);
+  if (unit === "token" || unit === "字") return formatNumber(value);
   return `${formatNumber(value)} ${unit}`;
 }
 
-function UsageActionsMenu({ record, open, onToggle, onClose }: { record: UsageMeteringRecord; open: boolean; onToggle: () => void; onClose: () => void }) {
+function UsageActionsMenu({
+  record,
+  open,
+  onToggle,
+  onClose,
+}: {
+  record: UsageMeteringRecord;
+  open: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+}) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${record.tenantName} 用量操作`} title="操作" onClick={onToggle}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+      onMouseLeave={onClose}
+    >
+      <button
+        className="vx-tenant-actions__trigger"
+        type="button"
+        aria-label={`${record.tenantName} 用量操作`}
+        title="操作"
+        onClick={onToggle}
+      >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
       </button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button type="button" role="menuitem" onClick={() => { onClose(); router.push(`/tenants/${encodeURIComponent(record.tenantId)}`); }}>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              onClose();
+              router.push(`/tenants/${encodeURIComponent(record.tenantId)}`);
+            }}
+          >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
           </button>
-          <button type="button" role="menuitem" disabled={!record.subscriptionId} onClick={() => { if (!record.subscriptionId) return; onClose(); router.push(`/subscriptions/${encodeURIComponent(record.subscriptionId)}`); }}>
+          <button
+            type="button"
+            role="menuitem"
+            disabled={!record.subscriptionId}
+            onClick={() => {
+              if (!record.subscriptionId) return;
+              onClose();
+              router.push(
+                `/subscriptions/${encodeURIComponent(record.subscriptionId)}`,
+              );
+            }}
+          >
             <Icon name="star" size="xs" fallback="placeholder" />
             查看订阅
           </button>
-          <button type="button" role="menuitem" disabled={!record.subscriptionId} onClick={() => { if (!record.subscriptionId) return; onClose(); router.push(`/orders/${encodeURIComponent(record.subscriptionId)}`); }}>
+          <button
+            type="button"
+            role="menuitem"
+            disabled={!record.subscriptionId}
+            onClick={() => {
+              if (!record.subscriptionId) return;
+              onClose();
+              router.push(
+                `/orders/${encodeURIComponent(record.subscriptionId)}`,
+              );
+            }}
+          >
             <Icon name="table" size="xs" fallback="placeholder" />
             查看订单
           </button>
@@ -94,18 +168,51 @@ function UsageListRows({
   openMenuId,
   onOpenMenu,
   onCloseMenu,
+  selectedRecordIds,
+  isPageSelected,
+  onToggleRecord,
+  onTogglePage,
 }: {
   records: UsageMeteringRecord[];
   startIndex: number;
   openMenuId: string | null;
   onOpenMenu: (id: string) => void;
   onCloseMenu: () => void;
+  selectedRecordIds: Set<string>;
+  isPageSelected: boolean;
+  onToggleRecord: (id: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = records.filter((record) =>
+    selectedRecordIds.has(record.id),
+  ).length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate =
+        selectedOnPage > 0 && selectedOnPage < records.length;
+    }
+  }, [records.length, selectedOnPage]);
 
   return (
-    <div className="vx-tenant-directory-list vx-usage-directory-list" role="region" aria-label="用量计量清单">
+    <div
+      className="vx-tenant-directory-list vx-usage-directory-list"
+      role="region"
+      aria-label="用量计量清单"
+    >
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页用量记录"
+          />
+        </span>
         <span>序号</span>
         <span>租户</span>
         <span>产品能力</span>
@@ -115,85 +222,196 @@ function UsageListRows({
         <span>周期</span>
         <span>操作</span>
       </div>
-      {records.map((record, index) => (
-        <div
-          key={record.id}
-          className={joinClasses('vx-tenant-directory-row', `vx-commercial-row--${riskTone(record.risk)}`)}
-          role="button"
-          tabIndex={0}
-          onClick={() => router.push(`/tenants/${encodeURIComponent(record.tenantId)}`)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') router.push(`/tenants/${encodeURIComponent(record.tenantId)}`);
-          }}
-        >
-          <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
-          <span className="vx-commercial-row__tenant">
-            <Icon name={record.tenantType === 'company' ? 'buildings' : 'user'} size="sm" fallback="placeholder" />
-            <span>
-              <strong>{record.tenantName}</strong>
-              <small>{record.tenantCode} · {typeLabel(record.tenantType)}</small>
+      {records.map((record, index) => {
+        const selected = selectedRecordIds.has(record.id);
+
+        return (
+          <div
+            key={record.id}
+            className={joinClasses(
+              "vx-tenant-directory-row",
+              "vx-usage-operation-row",
+              `vx-commercial-row--${riskTone(record.risk)}`,
+              selected ? "vx-usage-operation-row--selected" : undefined,
+            )}
+            onClick={(event) => {
+              const target = event.target as HTMLElement;
+              if (
+                target.closest(
+                  'button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]',
+                )
+              )
+                return;
+              onToggleRecord(record.id, !selected);
+            }}
+          >
+            <span className="vx-usage-operation-row__select">
+              <input
+                type="checkbox"
+                className="vx-model-select-checkbox"
+                checked={selected}
+                onChange={(event) =>
+                  onToggleRecord(record.id, event.target.checked)
+                }
+                aria-label={`选择用量记录 ${record.tenantName}`}
+              />
             </span>
-          </span>
-          <span className="vx-commercial-row__main">
-            <strong>{record.productName}</strong>
-            <small>{record.productType} · {record.productCode}</small>
-          </span>
-          <span className="vx-commercial-row__main">
-            <span className="vx-tenant-directory-row__tag-line">
-              <Tag tone={tierTone(record.tierName)}>{record.tierName ?? '未关联'}</Tag>
-              <Tag tone="muted">{record.metricUnit}</Tag>
+            <span className="vx-tenant-directory-row__index">
+              {formatNumber(startIndex + index + 1)}
             </span>
-            <small>{record.metricName}</small>
-          </span>
-          <span className="vx-commercial-row__center">
-            <strong>{formatUsageValue(record.usedValue, record.metricUnit)}</strong>
-            <small>配额 {formatUsageValue(record.quotaValue, record.metricUnit)} · {formatPercent(record.usageRate)}</small>
-          </span>
-          <span className="vx-commercial-row__center">
-            <span className="vx-commercial-status-line">
-              <span className={`vx-commercial-status-dot vx-commercial-status-dot--${riskTone(record.risk)}`} aria-hidden="true">
-                <Icon name={riskIcon(record.risk)} size="xs" fallback="placeholder" />
+            <span className="vx-commercial-row__tenant">
+              <Icon
+                name={record.tenantType === "company" ? "buildings" : "user"}
+                size="sm"
+                fallback="placeholder"
+              />
+              <span>
+                <button
+                  type="button"
+                  className="vx-model-name-button"
+                  onClick={() =>
+                    router.push(
+                      `/tenants/${encodeURIComponent(record.tenantId)}`,
+                    )
+                  }
+                >
+                  {record.tenantName}
+                </button>
+                <small>
+                  {record.tenantCode} · {typeLabel(record.tenantType)}
+                </small>
               </span>
-              <Tag tone={riskTone(record.risk)}>{riskLabel(record.risk)}</Tag>
             </span>
-            <small>请求 {formatNumber(record.requestCount)}</small>
-          </span>
-          <span className="vx-commercial-row__center">
-            <strong>{record.cycleMonth}</strong>
-            <small>{formatDate(record.lastSyncedAt)}</small>
-          </span>
-          <UsageActionsMenu record={record} open={openMenuId === record.id} onToggle={() => onOpenMenu(openMenuId === record.id ? '' : record.id)} onClose={onCloseMenu} />
-        </div>
-      ))}
+            <span className="vx-commercial-row__main">
+              <strong>{record.productName}</strong>
+              <small>
+                {record.productType} · {record.productCode}
+              </small>
+            </span>
+            <span className="vx-commercial-row__main">
+              <span className="vx-tenant-directory-row__tag-line">
+                <Tag tone={tierTone(record.tierName)}>
+                  {record.tierName ?? "未关联"}
+                </Tag>
+                <Tag tone="muted">{record.metricUnit}</Tag>
+              </span>
+              <small>{record.metricName}</small>
+            </span>
+            <span className="vx-commercial-row__center">
+              <strong>
+                {formatUsageValue(record.usedValue, record.metricUnit)}
+              </strong>
+              <small>
+                配额 {formatUsageValue(record.quotaValue, record.metricUnit)} ·{" "}
+                {formatPercent(record.usageRate)}
+              </small>
+            </span>
+            <span className="vx-commercial-row__center">
+              <span className="vx-commercial-status-line">
+                <span
+                  className={`vx-commercial-status-dot vx-commercial-status-dot--${riskTone(record.risk)}`}
+                  aria-hidden="true"
+                >
+                  <Icon
+                    name={riskIcon(record.risk)}
+                    size="xs"
+                    fallback="placeholder"
+                  />
+                </span>
+                <Tag tone={riskTone(record.risk)}>{riskLabel(record.risk)}</Tag>
+              </span>
+              <small>请求 {formatNumber(record.requestCount)}</small>
+            </span>
+            <span className="vx-commercial-row__center">
+              <strong>{record.cycleMonth}</strong>
+              <small>{formatDate(record.lastSyncedAt)}</small>
+            </span>
+            <UsageActionsMenu
+              record={record}
+              open={openMenuId === record.id}
+              onToggle={() =>
+                onOpenMenu(openMenuId === record.id ? "" : record.id)
+              }
+              onClose={onCloseMenu}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function UsageCards({ records, openMenuId, onOpenMenu, onCloseMenu }: { records: UsageMeteringRecord[]; openMenuId: string | null; onOpenMenu: (id: string) => void; onCloseMenu: () => void }) {
+function UsageCards({
+  records,
+  openMenuId,
+  onOpenMenu,
+  onCloseMenu,
+}: {
+  records: UsageMeteringRecord[];
+  openMenuId: string | null;
+  onOpenMenu: (id: string) => void;
+  onCloseMenu: () => void;
+}) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-directory-cards vx-commercial-cards" aria-label="用量计量卡片">
+    <div
+      className="vx-tenant-directory-cards vx-commercial-cards"
+      aria-label="用量计量卡片"
+    >
       {records.map((record) => (
-        <article key={record.id} className={joinClasses('vx-tenant-directory-card', `vx-commercial-card--${riskTone(record.risk)}`)} role="button" tabIndex={0} onClick={() => router.push(`/tenants/${encodeURIComponent(record.tenantId)}`)}>
+        <article
+          key={record.id}
+          className={joinClasses(
+            "vx-tenant-directory-card",
+            `vx-commercial-card--${riskTone(record.risk)}`,
+          )}
+          role="button"
+          tabIndex={0}
+          onClick={() =>
+            router.push(`/tenants/${encodeURIComponent(record.tenantId)}`)
+          }
+        >
           <header>
             <Icon name="graph" size="lg" fallback="placeholder" />
             <div>
               <strong>{record.tenantName}</strong>
-              <span>{record.productName} · {record.metricName}</span>
+              <span>
+                {record.productName} · {record.metricName}
+              </span>
             </div>
-            <UsageActionsMenu record={record} open={openMenuId === record.id} onToggle={() => onOpenMenu(openMenuId === record.id ? '' : record.id)} onClose={onCloseMenu} />
+            <UsageActionsMenu
+              record={record}
+              open={openMenuId === record.id}
+              onToggle={() =>
+                onOpenMenu(openMenuId === record.id ? "" : record.id)
+              }
+              onClose={onCloseMenu}
+            />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Tag tone={riskTone(record.risk)}>{riskLabel(record.risk)}</Tag>
-            <Tag tone={tierTone(record.tierName)}>{record.tierName ?? '未关联'}</Tag>
+            <Tag tone={tierTone(record.tierName)}>
+              {record.tierName ?? "未关联"}
+            </Tag>
             <Tag tone="muted">{record.productType}</Tag>
           </div>
-          <p className="vx-commercial-card__description">{record.servicePlanName ?? record.orderNo ?? '未关联订阅'}</p>
+          <p className="vx-commercial-card__description">
+            {record.servicePlanName ?? record.orderNo ?? "未关联订阅"}
+          </p>
           <div className="vx-tenant-directory-card__metrics">
-            <span><b>{formatUsageValue(record.usedValue, record.metricUnit)}</b><small>已用</small></span>
-            <span><b>{formatUsageValue(record.quotaValue, record.metricUnit)}</b><small>配额</small></span>
-            <span><b>{formatPercent(record.usageRate)}</b><small>使用率</small></span>
+            <span>
+              <b>{formatUsageValue(record.usedValue, record.metricUnit)}</b>
+              <small>已用</small>
+            </span>
+            <span>
+              <b>{formatUsageValue(record.quotaValue, record.metricUnit)}</b>
+              <small>配额</small>
+            </span>
+            <span>
+              <b>{formatPercent(record.usageRate)}</b>
+              <small>使用率</small>
+            </span>
           </div>
           <footer>
             <span>{record.cycleMonth}</span>
@@ -207,46 +425,86 @@ function UsageCards({ records, openMenuId, onOpenMenu, onCloseMenu }: { records:
 
 export function UsageMeteringPage() {
   const [records, setRecords] = useState<UsageMeteringRecord[]>([]);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [riskFilter, setRiskFilter] = useState<RiskFilter>('all');
-  const [productTypeFilter, setProductTypeFilter] = useState<ProductTypeFilter>('all');
-  const [cycleFilter, setCycleFilter] = useState<CycleFilter>('all');
+  const [query, setQuery] = useState("");
+  const [riskFilter, setRiskFilter] = useState<RiskFilter>("all");
+  const [productTypeFilter, setProductTypeFilter] =
+    useState<ProductTypeFilter>("all");
+  const [cycleFilter, setCycleFilter] = useState<CycleFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
   const [loading, setLoading] = useState(true);
+  const [selectedRecordIds, setSelectedRecordIds] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   useEffect(() => {
     let active = true;
     setLoading(true);
-    fetchUsageMeteringRecords().then((items) => {
-      if (active) setRecords(items);
-    }).finally(() => {
-      if (active) setLoading(false);
-    });
-    return () => { active = false; };
+    fetchUsageMeteringRecords()
+      .then((items) => {
+        if (active) setRecords(items);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
   }, []);
 
-  const cycles = useMemo(() => Array.from(new Set(records.map((record) => record.cycleMonth))).sort().reverse(), [records]);
+  const cycles = useMemo(
+    () =>
+      Array.from(new Set(records.map((record) => record.cycleMonth)))
+        .sort()
+        .reverse(),
+    [records],
+  );
   const filteredRecords = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return records.filter((record) => {
-      if (riskFilter !== 'all' && record.risk !== riskFilter) return false;
-      if (productTypeFilter !== 'all' && record.productType !== productTypeFilter) return false;
-      if (cycleFilter !== 'all' && record.cycleMonth !== cycleFilter) return false;
-      if (normalizedQuery && !usageSearchText(record).includes(normalizedQuery)) return false;
+      if (riskFilter !== "all" && record.risk !== riskFilter) return false;
+      if (
+        productTypeFilter !== "all" &&
+        record.productType !== productTypeFilter
+      )
+        return false;
+      if (cycleFilter !== "all" && record.cycleMonth !== cycleFilter)
+        return false;
+      if (normalizedQuery && !usageSearchText(record).includes(normalizedQuery))
+        return false;
       return true;
     });
   }, [cycleFilter, productTypeFilter, query, records, riskFilter]);
 
   const pageCount = Math.max(1, Math.ceil(filteredRecords.length / pageSize));
   const activePage = Math.min(currentPage, pageCount);
-  const visibleRecords = filteredRecords.slice((activePage - 1) * pageSize, activePage * pageSize);
+  const visibleRecords = filteredRecords.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize,
+  );
+  const visibleRecordIds = useMemo(
+    () => visibleRecords.map((record) => record.id),
+    [visibleRecords],
+  );
+  const selectedVisibleRecordCount = visibleRecordIds.filter((id) =>
+    selectedRecordIds.has(id),
+  ).length;
+  const isRecordPageSelected =
+    visibleRecordIds.length > 0 &&
+    selectedVisibleRecordCount === visibleRecordIds.length;
   const totalUsed = records.reduce((sum, record) => sum + record.usedValue, 0);
-  const warningCount = records.filter((record) => record.risk === 'warning').length;
-  const dangerCount = records.filter((record) => record.risk === 'danger' || record.risk === 'anomaly').length;
-  const requestCount = records.reduce((sum, record) => sum + record.requestCount, 0);
+  const warningCount = records.filter(
+    (record) => record.risk === "warning",
+  ).length;
+  const dangerCount = records.filter(
+    (record) => record.risk === "danger" || record.risk === "anomaly",
+  ).length;
+  const requestCount = records.reduce(
+    (sum, record) => sum + record.requestCount,
+    0,
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -254,39 +512,115 @@ export function UsageMeteringPage() {
   }, [cycleFilter, pageSize, productTypeFilter, query, riskFilter, viewMode]);
 
   function handleReset() {
-    setQuery('');
-    setRiskFilter('all');
-    setProductTypeFilter('all');
-    setCycleFilter('all');
+    setQuery("");
+    setRiskFilter("all");
+    setProductTypeFilter("all");
+    setCycleFilter("all");
+  }
+
+  function toggleRecordSelection(id: string, checked: boolean) {
+    setSelectedRecordIds((current) => {
+      const next = new Set(current);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
+
+  function toggleRecordPageSelection(checked: boolean) {
+    setSelectedRecordIds((current) => {
+      const next = new Set(current);
+      visibleRecordIds.forEach((id) => {
+        if (checked) next.add(id);
+        else next.delete(id);
+      });
+      return next;
+    });
   }
 
   return (
     <div className="vx-page-stack vx-tenant-management-page vx-usage-page">
-      <PageHeader icon="graph" eyebrow="商业与财务" title="用量计量" description="运营侧查看租户、订阅、产品能力维度的计量消耗、配额使用率和超额风险。" />
+      <PageHeader
+        icon="graph"
+        eyebrow="商业与财务"
+        title="用量计量"
+        description="运营侧查看租户、订阅、产品能力维度的计量消耗、配额使用率和超额风险。"
+      />
 
       <section className="vx-tenant-summary" aria-label="用量计量统计">
-        <SummaryItem icon="graph" label="计量记录" value={formatNumber(records.length)} tags={[`筛选 ${formatNumber(filteredRecords.length)}`]} />
-        <SummaryItem icon="chart-bar" label="总消耗" value={formatNumber(totalUsed)} tags={[`请求 ${formatNumber(requestCount)}`]} tone="green" />
-        <SummaryItem icon="clock" label="接近上限" value={formatNumber(warningCount)} tags={['>=85%']} tone={warningCount ? 'amber' : 'green'} />
-        <SummaryItem icon="warning" label="超额异常" value={formatNumber(dangerCount)} tags={['>100% / 异常']} tone={dangerCount ? 'rose' : 'green'} />
+        <SummaryItem
+          icon="graph"
+          label="计量记录"
+          value={formatNumber(records.length)}
+          tags={[`筛选 ${formatNumber(filteredRecords.length)}`]}
+        />
+        <SummaryItem
+          icon="chart-bar"
+          label="总消耗"
+          value={formatNumber(totalUsed)}
+          tags={[`请求 ${formatNumber(requestCount)}`]}
+          tone="green"
+        />
+        <SummaryItem
+          icon="clock"
+          label="接近上限"
+          value={formatNumber(warningCount)}
+          tags={[">=85%"]}
+          tone={warningCount ? "amber" : "green"}
+        />
+        <SummaryItem
+          icon="warning"
+          label="超额异常"
+          value={formatNumber(dangerCount)}
+          tags={[">100% / 异常"]}
+          tone={dangerCount ? "rose" : "green"}
+        />
       </section>
 
       <div className="vx-tenant-list-shell">
         <section className="vx-tenant-toolbar" aria-label="用量筛选">
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="用量展示方式" />
-          <span className="vx-tenant-view-count">{formatNumber(filteredRecords.length)}</span>
+          <ViewModeSwitch
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="用量展示方式"
+          />
+          <span className="vx-tenant-view-count">
+            {formatNumber(filteredRecords.length)}
+          </span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
-          <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索租户、产品、计量项" className="vx-tenant-search vx-commercial-search" aria-label="搜索用量" />
-          <Button variant="outline" onClick={handleReset}>重置</Button>
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="搜索租户、产品、计量项"
+            className="vx-tenant-search vx-commercial-search"
+            aria-label="搜索用量"
+          />
+          <Button variant="outline" onClick={handleReset}>
+            重置
+          </Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={riskFilter} onChange={(event) => setRiskFilter(event.target.value as RiskFilter)} aria-label="风险状态">
+            <select
+              className="vx-input vx-tenant-select"
+              value={riskFilter}
+              onChange={(event) =>
+                setRiskFilter(event.target.value as RiskFilter)
+              }
+              aria-label="风险状态"
+            >
               <option value="all">全部风险</option>
               <option value="normal">正常</option>
               <option value="warning">接近上限</option>
               <option value="danger">超额</option>
               <option value="anomaly">计量异常</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={productTypeFilter} onChange={(event) => setProductTypeFilter(event.target.value as ProductTypeFilter)} aria-label="产品类型">
+            <select
+              className="vx-input vx-tenant-select"
+              value={productTypeFilter}
+              onChange={(event) =>
+                setProductTypeFilter(event.target.value as ProductTypeFilter)
+              }
+              aria-label="产品类型"
+            >
               <option value="all">全部产品</option>
               <option value="智能体">智能体</option>
               <option value="平台">平台</option>
@@ -294,32 +628,94 @@ export function UsageMeteringPage() {
               <option value="三方接入">三方接入</option>
               <option value="产品能力">产品能力</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={cycleFilter} onChange={(event) => setCycleFilter(event.target.value)} aria-label="计量周期">
+            <select
+              className="vx-input vx-tenant-select"
+              value={cycleFilter}
+              onChange={(event) => setCycleFilter(event.target.value)}
+              aria-label="计量周期"
+            >
               <option value="all">全部周期</option>
-              {cycles.map((cycle) => <option key={cycle} value={cycle}>{cycle}</option>)}
+              {cycles.map((cycle) => (
+                <option key={cycle} value={cycle}>
+                  {cycle}
+                </option>
+              ))}
             </select>
           </div>
         </section>
 
         <section className="vx-tenant-directory" aria-label="用量清单">
-          {loading ? <header className="vx-tenant-directory__header"><span>读取中</span></header> : null}
+          {loading ? (
+            <header className="vx-tenant-directory__header">
+              <span>读取中</span>
+            </header>
+          ) : null}
           {visibleRecords.length ? (
-            viewMode === 'list'
-              ? <UsageListRows records={visibleRecords} startIndex={(activePage - 1) * pageSize} openMenuId={openMenuId} onOpenMenu={(id) => setOpenMenuId(id || null)} onCloseMenu={() => setOpenMenuId(null)} />
-              : <UsageCards records={visibleRecords} openMenuId={openMenuId} onOpenMenu={(id) => setOpenMenuId(id || null)} onCloseMenu={() => setOpenMenuId(null)} />
+            viewMode === "list" ? (
+              <UsageListRows
+                records={visibleRecords}
+                startIndex={(activePage - 1) * pageSize}
+                openMenuId={openMenuId}
+                onOpenMenu={(id) => setOpenMenuId(id || null)}
+                onCloseMenu={() => setOpenMenuId(null)}
+                selectedRecordIds={selectedRecordIds}
+                isPageSelected={isRecordPageSelected}
+                onToggleRecord={toggleRecordSelection}
+                onTogglePage={toggleRecordPageSelection}
+              />
+            ) : (
+              <UsageCards
+                records={visibleRecords}
+                openMenuId={openMenuId}
+                onOpenMenu={(id) => setOpenMenuId(id || null)}
+                onCloseMenu={() => setOpenMenuId(null)}
+              />
+            )
           ) : (
             <section className="vx-tenant-empty">
-              <EmptyState title={loading ? '正在加载用量' : '没有匹配的用量记录'} description={loading ? '正在读取计量汇总数据。' : '清空筛选条件后可查看全部计量记录。'} action={<ActionButton variant="outline" icon="x" onClick={handleReset}>清空筛选</ActionButton>} />
+              <EmptyState
+                title={loading ? "正在加载用量" : "没有匹配的用量记录"}
+                description={
+                  loading
+                    ? "正在读取计量汇总数据。"
+                    : "清空筛选条件后可查看全部计量记录。"
+                }
+                action={
+                  <ActionButton
+                    variant="outline"
+                    icon="x"
+                    onClick={handleReset}
+                  >
+                    清空筛选
+                  </ActionButton>
+                }
+              />
             </section>
           )}
           <footer className="vx-tenant-pagination">
-            <span className="vx-tenant-pagination__total">共 {formatNumber(filteredRecords.length)} 条用量记录</span>
+            <span className="vx-tenant-pagination__total">
+              共 {formatNumber(filteredRecords.length)} 条用量记录
+            </span>
             <div className="vx-tenant-pagination__actions">
               <PageSizePicker value={pageSize} onChange={setPageSize} />
               <div className="vx-tenant-pagination__pager">
-                <Button variant="outline" disabled={activePage <= 1} onClick={() => setCurrentPage(activePage - 1)}>上一页</Button>
-                <strong>{activePage} / {pageCount}</strong>
-                <Button variant="outline" disabled={activePage >= pageCount} onClick={() => setCurrentPage(activePage + 1)}>下一页</Button>
+                <Button
+                  variant="outline"
+                  disabled={activePage <= 1}
+                  onClick={() => setCurrentPage(activePage - 1)}
+                >
+                  上一页
+                </Button>
+                <strong>
+                  {activePage} / {pageCount}
+                </strong>
+                <Button
+                  variant="outline"
+                  disabled={activePage >= pageCount}
+                  onClick={() => setCurrentPage(activePage + 1)}
+                >
+                  下一页
+                </Button>
               </div>
             </div>
           </footer>

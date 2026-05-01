@@ -1,7 +1,7 @@
 # Vxture Platform Architecture Overview
 
 **Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Last Updated**: 2026-05-01
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -38,18 +38,18 @@ Both surfaces share the same platform infrastructure and are governed independen
 │                                                                 │
 │   portals/              agent-studio/                          │
 │   (platform UI)         (agent product UI)                     │
-│   website               agent01/                               │
-│   admin                 agent02/               Frontend only   │
-│   tenant                agent{N}/                              │
+│   website               ruyinagent/                            │
+│   admin                 vela/                  Frontend only   │
+│   console               agent{N}/                              │
 └──────────────┬──────────────────┬───────────────────────────────┘
                │ HTTP              │ HTTP
                ▼                  ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │  BFF LAYER                                                      │
 │                                                                 │
-│   bff/website-bff       bff/agent01-bff                        │
+│   bff/website-bff       bff/vela-bff                           │
 │   bff/admin-bff         bff/agent{N}-bff    Server-side only   │
-│   bff/tenant-bff                                               │
+│   bff/console-bff                                              │
 │                                                                 │
 │   Auth · Tenant resolution · Aggregation · Response shaping    │
 └──────────┬──────────────────────┬───────────────────────────────┘
@@ -57,7 +57,7 @@ Both surfaces share the same platform infrastructure and are governed independen
            │               ┌──────▼──────────────────────────┐
            │               │  AGENT SERVER LAYER             │
            │               │                                 │
-           │               │  agent-server/agent01           │
+           │               │  agent-server/vela              │
            │               │  agent-server/agent{N}          │
            │               │                                 │
            │               │  Private backend per agent      │
@@ -145,7 +145,7 @@ Stable operational applications serving **platform operators and tenant admins**
 ```
 portals/website    Public marketing site
 portals/admin      Platform operations — manage tenants, billing, config
-portals/tenant     Tenant management — manage users, subscriptions, settings
+portals/console    Tenant console — manage users, subscriptions, settings
 ```
 
 - Governed by the platform team
@@ -211,8 +211,8 @@ Agent servers live in the top-level `agent-server/` directory.
 
 ```
 agent-server/
-  agent01/
-  agent02/
+  ruyinagent/
+  vela/
   agent{N}/
 ```
 
@@ -436,9 +436,12 @@ Agent frontends support two deployment modes without changing their codebase:
 **Standalone** — deployed as an independent web application with its own URL and routing.
 Suitable for agents marketed as separate products.
 
-**Embedded** — loaded inside `portals/admin` or `portals/tenant` as a micro-frontend module,
+**Embedded** — loaded inside `portals/admin` or `portals/console` as a micro-frontend module,
 sharing the portal's shell, auth session, and theme.
 Suitable for agents that are integral features of a portal experience.
+
+Current embedded example: `agent-studio/vela` is hosted by admin and console, calls
+`bff/vela-bff` over HTTP/SSE, and reaches `agent-server/vela` only through that BFF.
 
 ---
 

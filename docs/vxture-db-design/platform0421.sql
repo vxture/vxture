@@ -29,6 +29,7 @@ CREATE TABLE "platform"."platform_admin" (
   "password_hash" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
   "role_id" uuid NOT NULL,
   "status" bool NOT NULL DEFAULT true,
+  "status_code" varchar(32) COLLATE "pg_catalog"."default" NOT NULL DEFAULT 'active'::character varying,
   "last_login_at" timestamptz(6),
   "last_login_ip" varchar(64) COLLATE "pg_catalog"."default",
   "created_by" uuid,
@@ -43,6 +44,7 @@ CREATE TABLE "platform"."platform_admin" (
 ;
 COMMENT ON COLUMN "platform"."platform_admin"."is_system" IS '是否系统内置用户：true=SYSTEM系统用户，false=普通管理员';
 COMMENT ON COLUMN "platform"."platform_admin"."display_name" IS '用户显示名称';
+COMMENT ON COLUMN "platform"."platform_admin"."status_code" IS '平台用户状态：active=启用，disabled=停用，locked=锁定，pending=待激活，suspended=暂停';
 
 -- ----------------------------
 -- Table structure for platform_config
@@ -107,16 +109,25 @@ CREATE TABLE "platform"."platform_role" (
   "id" uuid NOT NULL DEFAULT gen_random_uuid(),
   "sort" int4 NOT NULL DEFAULT 999,
   "role_code" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
-  "role_name" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "name_i18n_key" varchar(128) COLLATE "pg_catalog"."default" NOT NULL,
+  "name_en" varchar(128) COLLATE "pg_catalog"."default" NOT NULL,
+  "description_i18n_key" varchar(128) COLLATE "pg_catalog"."default",
   "description" varchar(255) COLLATE "pg_catalog"."default" NOT NULL DEFAULT ''::character varying,
   "is_system" bool NOT NULL DEFAULT false,
   "status" bool NOT NULL DEFAULT true,
+  "status_code" varchar(32) COLLATE "pg_catalog"."default" NOT NULL DEFAULT 'active'::character varying,
   "created_at" timestamptz(6) NOT NULL DEFAULT now(),
   "updated_at" timestamptz(6) NOT NULL DEFAULT now(),
   "created_by" uuid,
   "updated_by" uuid
 )
 ;
+COMMENT ON COLUMN "platform"."platform_role"."role_code" IS '固定 RBAC 角色 code：PLATFORM_ARCHITECT | SECURITY_GOVERNANCE_OFFICER | SYSTEM_OPERATIONS_CONTROLLER | TENANT_OPERATIONS_MANAGER | SUPPORT_RESPONSE_OFFICER | OBSERVER';
+COMMENT ON COLUMN "platform"."platform_role"."name_i18n_key" IS '角色名称国际化 key，UI 主展示入口';
+COMMENT ON COLUMN "platform"."platform_role"."name_en" IS '角色英文 fallback 名称';
+COMMENT ON COLUMN "platform"."platform_role"."description_i18n_key" IS '角色描述国际化 key，可为空';
+COMMENT ON COLUMN "platform"."platform_role"."description" IS '角色默认 fallback 描述，不存储 i18n key；UI 优先使用 description_i18n_key。';
+COMMENT ON COLUMN "platform"."platform_role"."status_code" IS '平台角色状态：active=启用，disabled=停用，archived=归档';
 
 -- ----------------------------
 -- Table structure for platform_role_permission
@@ -147,29 +158,29 @@ $BODY$
   COST 100;
 
 -- ----------------------------
--- Function structure for sync_super_admin_perm
+-- Function structure for sync_platform_architect_perm
 -- ----------------------------
-DROP FUNCTION IF EXISTS "platform"."sync_super_admin_perm"();
-CREATE FUNCTION "platform"."sync_super_admin_perm"()
+DROP FUNCTION IF EXISTS "platform"."sync_platform_architect_perm"();
+CREATE FUNCTION "platform"."sync_platform_architect_perm"()
   RETURNS "pg_catalog"."trigger" AS $BODY$
 DECLARE
-    super_admin_id UUID;
+    platform_architect_id UUID;
 BEGIN
-    -- 获取超级管理员角色 ID（已修复：platform_roles → platform_role）
+    -- 获取平台架构设计师角色 ID
     SELECT id
-    INTO super_admin_id
+    INTO platform_architect_id
     FROM platform.platform_role
-    WHERE role_code = 'super_admin'
+    WHERE role_code = 'PLATFORM_ARCHITECT'
     LIMIT 1;
 
-    IF super_admin_id IS NULL THEN
+    IF platform_architect_id IS NULL THEN
         RETURN COALESCE(NEW, OLD);
     END IF;
 
     -- 新增权限：自动授权（已修复：platform_role_permissions → platform_role_permission）
     IF TG_OP = 'INSERT' THEN
         INSERT INTO platform.platform_role_permission (role_id, permission_id)
-        VALUES (super_admin_id, NEW.id)
+        VALUES (platform_architect_id, NEW.id)
         ON CONFLICT (role_id, permission_id) DO NOTHING;
     END IF;
 
@@ -206,6 +217,9 @@ CREATE INDEX "idx_platform_admin_sort" ON "platform"."platform_admin" USING btre
 CREATE INDEX "idx_platform_admin_status" ON "platform"."platform_admin" USING btree (
   "status" "pg_catalog"."bool_ops" ASC NULLS LAST
 );
+CREATE INDEX "idx_platform_admin_status_code" ON "platform"."platform_admin" USING btree (
+  "status_code" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+);
 
 -- ----------------------------
 -- Triggers structure for table platform_admin
@@ -220,6 +234,7 @@ EXECUTE PROCEDURE "platform"."set_updated_at"();
 ALTER TABLE "platform"."platform_admin" ADD CONSTRAINT "uk_admin_username" UNIQUE ("username");
 ALTER TABLE "platform"."platform_admin" ADD CONSTRAINT "uk_admin_phone" UNIQUE ("phone");
 ALTER TABLE "platform"."platform_admin" ADD CONSTRAINT "uk_admin_email" UNIQUE ("email");
+ALTER TABLE "platform"."platform_admin" ADD CONSTRAINT "ck_platform_admin_status_code" CHECK ("status_code"::text = ANY (ARRAY['active'::character varying, 'disabled'::character varying, 'locked'::character varying, 'pending'::character varying, 'suspended'::character varying]::text[]));
 
 -- ----------------------------
 -- Primary Key structure for table platform_admin
@@ -276,10 +291,10 @@ CREATE INDEX "idx_perm_type" ON "platform"."platform_permission" USING btree (
 -- ----------------------------
 CREATE TRIGGER "trg_platform_permission_after_delete" AFTER DELETE ON "platform"."platform_permission"
 FOR EACH ROW
-EXECUTE PROCEDURE "platform"."sync_super_admin_perm"();
+EXECUTE PROCEDURE "platform"."sync_platform_architect_perm"();
 CREATE TRIGGER "trg_platform_permission_after_insert" AFTER INSERT ON "platform"."platform_permission"
 FOR EACH ROW
-EXECUTE PROCEDURE "platform"."sync_super_admin_perm"();
+EXECUTE PROCEDURE "platform"."sync_platform_architect_perm"();
 CREATE TRIGGER "trg_platform_permission_updated" BEFORE UPDATE ON "platform"."platform_permission"
 FOR EACH ROW
 EXECUTE PROCEDURE "platform"."set_updated_at"();
@@ -305,6 +320,12 @@ ALTER TABLE "platform"."platform_permission" ADD CONSTRAINT "platform_permission
 CREATE INDEX "idx_platform_role_sort" ON "platform"."platform_role" USING btree (
   "sort" "pg_catalog"."int4_ops" ASC NULLS LAST
 );
+CREATE INDEX "idx_platform_role_status_code" ON "platform"."platform_role" USING btree (
+  "status_code" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+);
+CREATE INDEX "idx_platform_role_name_i18n_key" ON "platform"."platform_role" USING btree (
+  "name_i18n_key" COLLATE "pg_catalog"."default" "pg_catalog"."text_ops" ASC NULLS LAST
+);
 
 -- ----------------------------
 -- Triggers structure for table platform_role
@@ -317,6 +338,7 @@ EXECUTE PROCEDURE "platform"."set_updated_at"();
 -- Uniques structure for table platform_role
 -- ----------------------------
 ALTER TABLE "platform"."platform_role" ADD CONSTRAINT "uk_role_code" UNIQUE ("role_code");
+ALTER TABLE "platform"."platform_role" ADD CONSTRAINT "ck_platform_role_status_code" CHECK ("status_code"::text = ANY (ARRAY['active'::character varying, 'disabled'::character varying, 'archived'::character varying]::text[]));
 
 -- ----------------------------
 -- Primary Key structure for table platform_role

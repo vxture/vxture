@@ -1,8 +1,6 @@
 import type {
   AccountOperationRecord,
   Capability,
-  AdminAssistantChatMessage,
-  AdminAssistantChatResponse,
   BillingBillAction,
   AiModelGrantRecord,
   AiModelRecord,
@@ -20,6 +18,10 @@ import type {
   OrderOperationDetailRecord,
   OrderOperationRecord,
   PaymentOperationRecord,
+  PlatformAdminPermissionRecord,
+  PlatformAdminRecord,
+  PlatformGovernanceKind,
+  PlatformGovernanceRecord,
   PromotionOperationRecord,
   PromotionRedemptionRecord,
   ProductAgentRecord,
@@ -169,6 +171,10 @@ export async function fetchProductModelPolicies(): Promise<ProductModelPolicyRec
   return readJson<ProductModelPolicyRecord[]>('/api/products/model-policies', productModelPolicyRecords);
 }
 
+export async function fetchPlatformAdmins(): Promise<PlatformAdminRecord[]> {
+  return readJson<PlatformAdminRecord[]>('/api/platform-admins', []);
+}
+
 export async function fetchTenantOperations(): Promise<TenantOperationRecord[]> {
   return readJson<TenantOperationRecord[]>('/api/tenants', tenantOperationRecords);
 }
@@ -207,6 +213,16 @@ export async function fetchPromotionRedemptionRecords(): Promise<PromotionRedemp
 
 export async function fetchCommerceOverview(): Promise<CommerceOverviewSnapshot | null> {
   return readJson<CommerceOverviewSnapshot | null>('/api/commercial/overview', null);
+}
+
+export async function fetchPlatformGovernanceRecords(
+  kind: PlatformGovernanceKind,
+  fallback: PlatformGovernanceRecord[] = [],
+): Promise<PlatformGovernanceRecord[]> {
+  return readJson<PlatformGovernanceRecord[]>(
+    `/api/platform-governance/${encodeURIComponent(kind)}`,
+    fallback,
+  );
 }
 
 export async function confirmOrderOfflinePayment(
@@ -412,8 +428,12 @@ export async function fetchPlatformRoles(): Promise<PlatformRoleRecord[]> {
   return readJson<PlatformRoleRecord[]>('/api/admin-roles', []);
 }
 
+export async function fetchPlatformPermissions(): Promise<PlatformAdminPermissionRecord[]> {
+  return readJson<PlatformAdminPermissionRecord[]>('/api/admin-permissions', []);
+}
+
 export async function fetchDevServices(signal?: AbortSignal): Promise<DevServiceSnapshot[]> {
-  const response = await fetch('/api/dev-services', {
+  const response = await fetch(`/api/dev-services?ts=${Date.now()}`, {
     cache: 'no-store',
     signal,
   });
@@ -423,37 +443,6 @@ export async function fetchDevServices(signal?: AbortSignal): Promise<DevService
   }
 
   return (await response.json()) as DevServiceSnapshot[];
-}
-
-export async function sendAdminAssistantChat(payload: {
-  messages: AdminAssistantChatMessage[];
-  page?: string;
-  productCode?: string;
-  tenantId?: string;
-}, signal?: AbortSignal): Promise<AdminAssistantChatResponse> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/assistant/chat`, {
-    method: 'POST',
-    credentials: 'include',
-    cache: 'no-store',
-    signal,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    let message = 'Admin assistant request failed';
-
-    try {
-      const body = (await response.json()) as { message?: string | string[] };
-      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
-    } catch {
-      // Keep the typed error useful even if a proxy returns a non-JSON response.
-    }
-
-    throw new AdminBffError(message, response.status);
-  }
-
-  return (await response.json()) as AdminAssistantChatResponse;
 }
 
 export async function createAiModel(payload: {

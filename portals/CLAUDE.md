@@ -15,7 +15,7 @@ Portal 是**平台运营管理界面**，服务于平台运营者和租户管理
 ```
 portals/website   公开营销站点
 portals/admin     平台运营后台（管理租户、账单、配置）
-portals/tenant    租户管理后台（管理用户、订阅、设置）
+portals/console   租户工作台（管理用户、订阅、设置）
 ```
 
 ---

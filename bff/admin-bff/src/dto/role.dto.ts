@@ -1,12 +1,16 @@
 export class CreateRoleDto {
   roleCode!: string;
-  roleName!: string;
+  nameI18nKey!: string;
+  nameEn!: string;
+  descriptionI18nKey?: string | null;
   description?: string | null;
   permissionIds?: string[];
 }
 
 export class UpdateRoleDto {
-  roleName?: string | null;
+  nameI18nKey?: string | null;
+  nameEn?: string | null;
+  descriptionI18nKey?: string | null;
   description?: string | null;
   status?: 'active' | 'disabled';
   permissionIds?: string[];

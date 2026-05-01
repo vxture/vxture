@@ -43,6 +43,13 @@ export const JwtUserType = {
 
 export type JwtUserType = typeof JwtUserType[keyof typeof JwtUserType];
 
+export const JwtAuthScope = {
+  PLATFORM_ADMIN: 'platform-admin',
+  TENANT_CONSOLE: 'tenant-console',
+} as const;
+
+export type JwtAuthScope = typeof JwtAuthScope[keyof typeof JwtAuthScope];
+
 // ============================================================================
 // JWT Payload
 // — Payload written when issuing access token, can be used directly after verification
@@ -67,6 +74,11 @@ export interface JwtAccessPayload {
    * 为兼容旧 token，验证侧应允许字段缺失并按 tenantId 兜底推断。
    */
   userType?: JwtUserType;
+  /**
+   * Authentication surface that issued the token.
+   * Examples: platform-admin, tenant-console.
+   */
+  authScope?: string;
   /** Permission list (optional, omitted to reduce token size, queried by server) */
   permissions?: string[];
   /** Login method */
@@ -84,6 +96,8 @@ export interface JwtRefreshPayload {
   tenantId:  string;
   /** Refresh token unique ID, used for Redis blacklist comparison */
   jti:       string;
+  /** Authentication surface that issued the refresh token. */
+  authScope?: string;
   iat?: number;
   exp?: number;
 }

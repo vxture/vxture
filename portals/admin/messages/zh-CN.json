@@ -6,6 +6,22 @@
       "description": "正在加载内部管理员、平台权限与供给侧能力。"
     }
   },
+  "role": {
+    "platform_architect": "平台架构设计师",
+    "security_governance_officer": "平台安全治理官",
+    "system_operations_controller": "系统运行控制官",
+    "tenant_operations_manager": "租户运营管理官",
+    "support_response_officer": "服务支持响应官",
+    "observer": "观测体验官",
+    "description": {
+      "platform_architect": "负责平台架构、全局配置与高风险授权边界。",
+      "security_governance_officer": "负责安全治理、审计复核与控制策略监管。",
+      "system_operations_controller": "负责运行控制、服务可靠性与系统处置动作。",
+      "tenant_operations_manager": "负责租户生命周期、账号治理与业务侧运营处理。",
+      "support_response_officer": "负责服务响应、工单处理与客户问题协同。",
+      "observer": "用于 Beta、演示、审阅和观测场景的只读角色。"
+    }
+  },
   "header": {
     "brandName": "vxture studio",
     "brandHome": "vxture studio 首页",
@@ -48,17 +64,6 @@
       "unnamed": "未命名用户",
       "switchUser": "切换账号",
       "signOut": "退出登录",
-      "roles": {
-        "admin": "运营管理员",
-        "member": "成员",
-        "tenantAdmin": "租户管理员",
-        "superAdmin": "超级管理员",
-        "auditAdmin": "审计管理员",
-        "configAdmin": "配置管理员",
-        "helpdeskAdmin": "服务支持",
-        "readonlyAdmin": "只读观察员",
-        "user": "用户"
-      },
       "badges": {
         "personal": "个人认证",
         "organization": "组织认证"
@@ -106,9 +111,9 @@
       "tenantsAccounts": "租户与账号",
       "productsPlans": "产品与套餐",
       "subscriptionsTransactions": "订阅与交易",
-      "capabilitiesServices": "能力与服务",
+      "capabilitiesServices": "模型与技能",
       "financeSettlement": "财务与结算",
-      "supportCompliance": "支持与合规"
+      "supportCompliance": "服务与支持"
     },
     "items": {
       "platformOverview": {
@@ -401,6 +406,10 @@
       "password": "密码",
       "passwordPlaceholder": "输入你的密码",
       "forgotPassword": "忘记密码？",
+      "humanVerification": "安全验证",
+      "dragToVerify": "拖动拼图完成验证",
+      "closeVerification": "关闭安全验证",
+      "verificationPassed": "验证通过",
       "acceptPrefix": "我已阅读并同意",
       "terms": "用户协议",
       "acceptJoiner": "和",
@@ -412,6 +421,7 @@
     "errors": {
       "required": "账号和密码不能为空。",
       "terms": "请先阅读并同意用户协议和隐私政策。",
+      "humanVerification": "请先完成人机验证。",
       "invalid": "当前凭据无法完成登录。",
       "unavailable": "Admin 登录服务当前不可用，请先启动 admin-bff。"
     },

@@ -3,7 +3,7 @@ import { Inject, Injectable, OnModuleDestroy, UnauthorizedException } from '@nes
 import { JwtService } from '@nestjs/jwt';
 import { VxConfigService } from '@vxture/core-config';
 import type { AuthTokenPair } from '@vxture/core-auth';
-import { JwtUserType } from '@vxture/core-auth';
+import { JwtAuthScope, JwtUserType } from '@vxture/core-auth';
 import { Pool } from 'pg';
 import type { ConsoleUser } from '../types/console.types';
 
@@ -25,8 +25,9 @@ export class PlatformAuthService implements OnModuleDestroy {
     email: 'superadmin@local.vxture',
     phone: '13800000000',
     displayName: 'Super Admin',
-    roleCode: 'super_admin',
-    roleName: 'Super Admin',
+    roleCode: 'PLATFORM_ARCHITECT',
+    roleI18nKey: 'role.platform_architect',
+    roleNameEn: 'Platform Architect',
     permissions: PLATFORM_ADMIN_CAPABILITIES,
   };
 
@@ -71,13 +72,13 @@ export class PlatformAuthService implements OnModuleDestroy {
       role: 'admin',
       userType: JwtUserType.OPERATOR,
       permissions: admin.permissions,
-      authScope: 'platform-admin',
+      authScope: JwtAuthScope.PLATFORM_ADMIN,
       provider: 'password',
     };
 
     const refreshPayload: PlatformAdminRefreshPayload = {
       sub: admin.id,
-      authScope: 'platform-admin',
+      authScope: JwtAuthScope.PLATFORM_ADMIN,
       jti: `${admin.id}:${Date.now()}`,
     };
 
@@ -114,7 +115,7 @@ export class PlatformAuthService implements OnModuleDestroy {
     const payload = this.jwtService.verify<PlatformAdminJwtPayload>(token, {
       secret: this.configService.auth.JWT_SECRET,
     });
-    if (payload.authScope !== 'platform-admin') {
+    if (payload.authScope !== JwtAuthScope.PLATFORM_ADMIN) {
       throw new UnauthorizedException('Invalid admin token');
     }
     return payload;
@@ -169,12 +170,14 @@ export class PlatformAuthService implements OnModuleDestroy {
           a.password_hash,
           a.display_name,
           r.role_code,
-          r.role_name,
+          r.name_i18n_key,
+          r.name_en,
           coalesce(array_remove(array_agg(distinct p.perm_code), null), array[]::varchar[]) as permissions
         from platform.platform_admin a
         join platform.platform_role r
           on r.id = a.role_id
          and r.status = true
+         and coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) = 'active'
         left join platform.platform_role_permission rp
           on rp.role_id = r.id
         left join platform.platform_permission p
@@ -183,7 +186,8 @@ export class PlatformAuthService implements OnModuleDestroy {
         where a.id = $1
           and a.deleted_at is null
           and a.status = true
-        group by a.id, r.role_code, r.role_name
+          and coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) = 'active'
+        group by a.id, r.role_code, r.name_i18n_key, r.name_en
         limit 1
       `,
       [adminId],
@@ -207,12 +211,14 @@ export class PlatformAuthService implements OnModuleDestroy {
           a.password_hash,
           a.display_name,
           r.role_code,
-          r.role_name,
+          r.name_i18n_key,
+          r.name_en,
           coalesce(array_remove(array_agg(distinct p.perm_code), null), array[]::varchar[]) as permissions
         from platform.platform_admin a
         join platform.platform_role r
           on r.id = a.role_id
          and r.status = true
+         and coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) = 'active'
         left join platform.platform_role_permission rp
           on rp.role_id = r.id
         left join platform.platform_permission p
@@ -220,12 +226,13 @@ export class PlatformAuthService implements OnModuleDestroy {
          and p.status = true
         where a.deleted_at is null
           and a.status = true
+          and coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) = 'active'
           and (
             lower(a.username) = lower($1)
             or lower(coalesce(a.email, '')) = lower($1)
             or coalesce(a.phone, '') = $1
           )
-        group by a.id, r.role_code, r.role_name
+        group by a.id, r.role_code, r.name_i18n_key, r.name_en
         limit 1
       `,
       [identifier.trim()],
@@ -242,7 +249,7 @@ interface PlatformAdminJwtPayload {
   /** 平台运营人员固定为 'operator'，供 vela-bff surface 校验使用 */
   userType: JwtUserType;
   permissions?: string[];
-  authScope: 'platform-admin';
+  authScope: JwtAuthScope;
   provider: 'password';
   iat?: number;
   exp?: number;
@@ -250,7 +257,7 @@ interface PlatformAdminJwtPayload {
 
 interface PlatformAdminRefreshPayload {
   sub: string;
-  authScope: 'platform-admin';
+  authScope: JwtAuthScope;
   jti: string;
   iat?: number;
   exp?: number;
@@ -264,7 +271,8 @@ interface PlatformAdminRow {
   password_hash: string | null;
   display_name: string | null;
   role_code: string;
-  role_name: string;
+  name_i18n_key: string;
+  name_en: string;
   permissions: string[];
 }
 
@@ -275,7 +283,8 @@ interface PlatformAdminView {
   phone: string | null;
   displayName: string | null;
   roleCode: string;
-  roleName: string;
+  roleI18nKey: string;
+  roleNameEn: string;
   permissions: string[];
   passwordHash?: string | null;
 }
@@ -301,19 +310,20 @@ function mapPlatformAdminRow(row?: PlatformAdminRow): (PlatformAdminView & { pas
     passwordHash: row.password_hash,
     displayName: row.display_name,
     roleCode: row.role_code,
-    roleName: row.role_name,
+    roleI18nKey: row.name_i18n_key,
+    roleNameEn: row.name_en,
     permissions: normalizePlatformPermissions(row.role_code, row.permissions ?? []),
   };
 }
 
 function normalizePlatformPermissions(roleCode: string, permissions: string[]): string[] {
   const normalized = new Set(permissions);
-  const isSuperAdmin =
-    roleCode === 'super_admin' ||
+  const isPlatformArchitect =
+    roleCode === 'PLATFORM_ARCHITECT' ||
     normalized.has('system:admin') ||
     normalized.has('admin:manage');
 
-  if (isSuperAdmin) {
+  if (isPlatformArchitect) {
     PLATFORM_ADMIN_CAPABILITIES.forEach((permission) => normalized.add(permission));
   }
 
@@ -330,7 +340,9 @@ function mapPlatformAdminUser(admin: PlatformAdminView): ConsoleUser {
     name: admin.username,
     displayName: admin.displayName,
     email: admin.email ?? `${admin.username}@local.vxture`,
-    roleLabel: admin.roleName,
+    roleLabel: admin.roleI18nKey,
+    roleI18nKey: admin.roleI18nKey,
+    roleNameEn: admin.roleNameEn,
     username: admin.username,
     phone: admin.phone,
   };

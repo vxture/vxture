@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { JwtAccessPayload, JwtRefreshPayload } from '@vxture/core-auth';
-import { JwtUserType, OAuthProviderType } from '@vxture/core-auth';
+import { JwtAuthScope, JwtUserType, OAuthProviderType } from '@vxture/core-auth';
 import { VxConfigService } from '@vxture/core-config';
 import { AccountAuthService } from '@vxture/service-iam';
 import { OrganizationReadService } from '@vxture/service-organization';
@@ -36,6 +36,7 @@ export class ConsoleAuthService {
       email: account.email ?? `${account.username}@local.vxture`,
       role: tenantContext ? 'tenant_admin' : 'member',
       userType: JwtUserType.TENANT_USER,
+      authScope: JwtAuthScope.TENANT_CONSOLE,
       permissions: [],
       provider: OAuthProviderType.PASSWORD,
     };
@@ -43,6 +44,7 @@ export class ConsoleAuthService {
     const refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'> = {
       sub: account.id,
       tenantId,
+      authScope: JwtAuthScope.TENANT_CONSOLE,
       jti: `${account.id}:${Date.now()}`,
     };
 
@@ -90,9 +92,21 @@ export class ConsoleAuthService {
   }
 
   verifyAccessToken(token: string): JwtAccessPayload {
-    return this.jwtService.verify<JwtAccessPayload>(token, {
+    const payload = this.jwtService.verify<JwtAccessPayload>(token, {
       secret: this.configService.auth.JWT_SECRET,
     });
+
+    if (payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
+      throw new Error('Invalid console token scope');
+    }
+    if (payload.userType !== JwtUserType.TENANT_USER) {
+      throw new Error('Invalid console token user type');
+    }
+    if (!payload.tenantId?.trim()) {
+      throw new Error('Console token requires tenantId');
+    }
+
+    return payload;
   }
 }
 

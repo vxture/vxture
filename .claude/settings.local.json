@@ -7,7 +7,12 @@
       "Bash(pnpm --filter @vxture/bff-console type-check)",
       "Bash(pnpm --filter @vxture/bff-website type-check)",
       "Bash(pnpm --filter @vxture/bff-admin type-check)",
-      "Bash(pnpm --filter @vxture/ai-sdk type-check)"
+      "Bash(pnpm --filter @vxture/ai-sdk type-check)",
+      "Bash(rm -rf \"d:/MyWebSite/vxture/portals/tenant\")",
+      "Bash(rm -rf \"d:/MyWebSite/vxture/bff/tenant-bff\")",
+      "Bash(psql *)",
+      "PowerShell(psql *)",
+      "Bash(node *)"
     ]
   }
 }

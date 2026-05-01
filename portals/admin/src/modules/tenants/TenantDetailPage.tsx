@@ -48,7 +48,7 @@ type TenantInfoDraft = {
 
 const tenantTabs: Array<{ id: TenantTabId; label: string; icon: IconName }> = [
   { id: 'info', label: '租户信息', icon: 'buildings' },
-  { id: 'members', label: '成员账号', icon: 'users' },
+  { id: 'members', label: '成员账号', icon: 'user' },
   { id: 'subscriptions', label: '订阅产品', icon: 'star' },
   { id: 'usage', label: '配额用量', icon: 'graph' },
   { id: 'models', label: '模型策略', icon: 'shield-check' },

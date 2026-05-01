@@ -1,6 +1,6 @@
 import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
-import { AUTH_CONSTANTS } from '@vxture/shared';
+import { CONSOLE_AUTH_COOKIES } from '../auth/cookie.constants';
 import { ConsoleAuthService } from '../auth/auth.service';
 import type { RequestContext } from '../types/console.types';
 
@@ -14,9 +14,7 @@ export class AuthMiddleware implements NestMiddleware {
       return;
     }
 
-    const accessToken =
-      req.cookies?.[AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN] ??
-      req.cookies?.vx_console_access_token;
+    const accessToken = req.cookies?.[CONSOLE_AUTH_COOKIES.ACCESS_TOKEN];
     if (!accessToken) {
       next();
       return;

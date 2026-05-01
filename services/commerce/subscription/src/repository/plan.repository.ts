@@ -146,13 +146,14 @@ export class PlanRepository {
       return null;
     }
 
+    const plan = this.plans[index]!;
     this.plans[index] = {
-      ...this.plans[index],
+      ...plan,
       ...updates,
       updatedAt: new Date()
     };
 
-    return this.plans[index];
+    return this.plans[index] ?? null;
   }
 
   // 删除套餐
@@ -163,8 +164,9 @@ export class PlanRepository {
       return false;
     }
 
+    const plan = this.plans[index]!;
     this.plans[index] = {
-      ...this.plans[index],
+      ...plan,
       isActive: false,
       updatedAt: new Date()
     };

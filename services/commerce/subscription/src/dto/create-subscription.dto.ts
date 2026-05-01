@@ -19,11 +19,11 @@ import { BillingCycle } from '../types/subscription.types';
 export class CreateSubscriptionInput {
   @ApiProperty({ description: '客户ID', example: 'cust001' })
   @IsString()
-  customerId: string;
+  customerId!: string;
 
   @ApiProperty({ description: '套餐ID', example: '2' })
   @IsString()
-  planId: string;
+  planId!: string;
 
   @ApiProperty({ description: '计费周期', example: BillingCycle.MONTHLY, required: false })
   @IsOptional()

@@ -11,7 +11,7 @@ import { PageHeader } from '@/modules/shared/PageHeader';
 import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
 
 type ServiceStatus = 'healthy' | 'degraded' | 'offline' | 'stopping';
-type ServiceLayer = 'tooling' | 'ai' | 'gateway' | 'bff' | 'portal' | 'other';
+type ServiceLayer = 'tooling' | 'ai' | 'agent' | 'gateway' | 'bff' | 'portal' | 'other';
 type ViewMode = 'cards' | 'list';
 type StatusFilter = 'all' | ServiceStatus;
 type LayerFilter = 'all' | ServiceLayer;
@@ -38,6 +38,7 @@ function serviceStatus(service: DevServiceSnapshot): ServiceStatus {
 
 function serviceLayer(service: DevServiceSnapshot): ServiceLayer {
   if (service.id === 'dev-tools') return 'tooling';
+  if (service.id.includes('vela') || service.id.includes('ruyinagent')) return 'agent';
   if (service.id.includes('ai')) return 'ai';
   if (service.id === 'gateway') return 'gateway';
   if (service.id.endsWith('-bff')) return 'bff';
@@ -64,6 +65,7 @@ function statusLabel(status: ServiceStatus) {
 function layerLabel(layer: ServiceLayer) {
   if (layer === 'tooling') return '开发工具';
   if (layer === 'ai') return 'AI 服务';
+  if (layer === 'agent') return '智能体';
   if (layer === 'gateway') return '网关';
   if (layer === 'bff') return 'BFF';
   if (layer === 'portal') return '门户';
@@ -79,6 +81,7 @@ function sourceLabel(source: SourceFilter) {
 function layerIcon(layer: ServiceLayer): IconName {
   if (layer === 'tooling') return 'settings';
   if (layer === 'ai') return 'cloud';
+  if (layer === 'agent') return 'sparkles';
   if (layer === 'gateway') return 'api';
   if (layer === 'bff') return 'server';
   if (layer === 'portal') return 'home';
@@ -277,7 +280,7 @@ export function ServiceHealthPage({
   const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<Date | null>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('cards');
+  const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -441,6 +444,7 @@ export function ServiceHealthPage({
               <option value="all">全部分层</option>
               <option value="tooling">开发工具</option>
               <option value="ai">AI 服务</option>
+              <option value="agent">智能体</option>
               <option value="gateway">网关</option>
               <option value="bff">BFF</option>
               <option value="portal">门户</option>

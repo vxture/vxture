@@ -1,91 +1,101 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Icon } from '@vxture/design-system';
-import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
-import { confirmOrderOfflinePayment, fetchOrderOperations } from '@/api/admin-bff';
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Icon } from "@vxture/design-system";
+import type { IconName } from "@vxture/design-system";
+import { Badge, Button, Input } from "@/components/ui/primitives";
+import {
+  confirmOrderOfflinePayment,
+  fetchOrderOperations,
+} from "@/api/admin-bff";
 import type {
   OrderOperationRecord,
   OrderOperationStatus,
   OrderPaymentStatus,
   OrderPaySource,
-} from '@/entities/console';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
+} from "@/entities/console";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
 import {
   canConfirmOrderOfflinePayment,
   confirmOfflinePaymentDisabledReason,
   OrderOfflinePaymentDialog,
-} from '@/modules/orders/OrderOfflinePaymentDialog';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
-import { formatDate, formatNumber, joinClasses, typeLabel } from '@/modules/tenants/tenant-utils';
+} from "@/modules/orders/OrderOfflinePaymentDialog";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
+import {
+  formatDate,
+  formatNumber,
+  joinClasses,
+  typeLabel,
+} from "@/modules/tenants/tenant-utils";
 
-type ViewMode = 'list' | 'cards';
-type OrderStatusFilter = 'all' | OrderOperationStatus;
-type PaymentStatusFilter = 'all' | OrderPaymentStatus;
-type PaySourceFilter = 'all' | OrderPaySource;
-type TierFilter = 'all' | 'free' | 'pro' | 'enterprise' | 'other';
+type ViewMode = "list" | "cards";
+type OrderStatusFilter = "all" | OrderOperationStatus;
+type PaymentStatusFilter = "all" | OrderPaymentStatus;
+type PaySourceFilter = "all" | OrderPaySource;
+type TierFilter = "all" | "free" | "pro" | "enterprise" | "other";
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
 type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
 function formatCurrency(value: number, currency: string) {
-  return new Intl.NumberFormat('zh-CN', {
-    style: 'currency',
-    currency: currency || 'CNY',
+  return new Intl.NumberFormat("zh-CN", {
+    style: "currency",
+    currency: currency || "CNY",
     maximumFractionDigits: 0,
   }).format(value);
 }
 
-function cycleLabel(cycle: OrderOperationRecord['cycleType']) {
-  if (cycle === 'yearly') return '年付';
-  if (cycle === 'once') return '一次性';
-  return '月付';
+function cycleLabel(cycle: OrderOperationRecord["cycleType"]) {
+  if (cycle === "yearly") return "年付";
+  if (cycle === "once") return "一次性";
+  return "月付";
 }
 
 function orderStatusLabel(status: OrderOperationStatus) {
-  if (status === 'pending') return '待付款';
-  if (status === 'pending_verify') return '待复核';
-  if (status === 'confirmed') return '已确认';
-  if (status === 'overdue') return '逾期';
-  if (status === 'closed') return '已关闭';
-  return '异常';
+  if (status === "pending") return "待付款";
+  if (status === "pending_verify") return "待复核";
+  if (status === "confirmed") return "已确认";
+  if (status === "overdue") return "逾期";
+  if (status === "closed") return "已关闭";
+  return "异常";
 }
 
 function orderStatusIcon(status: OrderOperationStatus): IconName {
-  if (status === 'confirmed') return 'check';
-  if (status === 'pending' || status === 'pending_verify') return 'clock';
-  if (status === 'closed') return 'x';
-  return 'warning';
+  if (status === "confirmed") return "check";
+  if (status === "pending" || status === "pending_verify") return "clock";
+  if (status === "closed") return "x";
+  return "warning";
 }
 
 function paymentStatusLabel(status: OrderPaymentStatus) {
-  if (status === 'not_required') return '无需支付';
-  if (status === 'unpaid') return '未支付';
-  if (status === 'pending') return '支付中';
-  if (status === 'pending_verify') return '线下待核';
-  if (status === 'paid') return '已支付';
-  if (status === 'partial') return '部分支付';
-  if (status === 'failed') return '支付失败';
-  if (status === 'closed') return '已关闭';
-  return '退款中';
+  if (status === "not_required") return "无需支付";
+  if (status === "unpaid") return "未支付";
+  if (status === "pending") return "支付中";
+  if (status === "pending_verify") return "线下待核";
+  if (status === "paid") return "已支付";
+  if (status === "partial") return "部分支付";
+  if (status === "failed") return "支付失败";
+  if (status === "closed") return "已关闭";
+  return "退款中";
 }
 
 function paySourceLabel(source: OrderPaySource) {
-  if (source === 'online') return '线上';
-  if (source === 'offline') return '线下';
-  return '无';
+  if (source === "online") return "线上";
+  if (source === "offline") return "线下";
+  return "无";
 }
 
 function tierFilterValue(record: OrderOperationRecord): TierFilter {
   const tierName = record.tierName.toLowerCase();
-  if (tierName === 'free' || record.servicePlanCode === 'starter') return 'free';
-  if (tierName === 'pro' || record.servicePlanCode === 'growth') return 'pro';
-  if (tierName === 'enterprise' || record.servicePlanCode === 'enterprise') return 'enterprise';
-  return 'other';
+  if (tierName === "free" || record.servicePlanCode === "starter")
+    return "free";
+  if (tierName === "pro" || record.servicePlanCode === "growth") return "pro";
+  if (tierName === "enterprise" || record.servicePlanCode === "enterprise")
+    return "enterprise";
+  return "other";
 }
 
 function orderSearchText(record: OrderOperationRecord) {
@@ -105,7 +115,10 @@ function orderSearchText(record: OrderOperationRecord) {
     record.operationHint,
     record.orderStatus,
     record.paymentStatus,
-  ].filter(Boolean).join(' ').toLowerCase();
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }
 
 function SummaryItem({
@@ -113,13 +126,13 @@ function SummaryItem({
   label,
   value,
   tags,
-  tone = 'blue',
+  tone = "blue",
 }: {
   icon: IconName;
   label: string;
   value: string;
   tags?: string[];
-  tone?: 'blue' | 'green' | 'amber' | 'rose';
+  tone?: "blue" | "green" | "amber" | "rose";
 }) {
   return (
     <article className={`vx-tenant-summary__item vx-tenant-tone--${tone}`}>
@@ -128,21 +141,29 @@ function SummaryItem({
         <span>{label}</span>
         <p>
           <strong>{value}</strong>
-          {tags?.map((tag) => <em key={tag}>{tag}</em>)}
+          {tags?.map((tag) => (
+            <em key={tag}>{tag}</em>
+          ))}
         </p>
       </div>
     </article>
   );
 }
 
-function PageSizePicker({ value, onChange }: { value: PageSize; onChange: (value: PageSize) => void }) {
+function PageSizePicker({
+  value,
+  onChange,
+}: {
+  value: PageSize;
+  onChange: (value: PageSize) => void;
+}) {
   return (
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
           <button
             type="button"
-            className={value === option ? 'is-active' : undefined}
+            className={value === option ? "is-active" : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
@@ -170,8 +191,18 @@ function OrderActionsMenu({
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${order.orderNo} 订单操作`} title="操作" onClick={onToggle}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+      onMouseLeave={onClose}
+    >
+      <button
+        className="vx-tenant-actions__trigger"
+        type="button"
+        aria-label={`${order.orderNo} 订单操作`}
+        title="操作"
+        onClick={onToggle}
+      >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
       </button>
       {open ? (
@@ -216,7 +247,9 @@ function OrderActionsMenu({
             role="menuitem"
             onClick={() => {
               onClose();
-              router.push(`/subscriptions/${encodeURIComponent(order.subscriptionId)}`);
+              router.push(
+                `/subscriptions/${encodeURIComponent(order.subscriptionId)}`,
+              );
             }}
           >
             <Icon name="star" size="xs" fallback="placeholder" />
@@ -235,6 +268,10 @@ function OrderListRows({
   onOpenMenu,
   onCloseMenu,
   onConfirmPayment,
+  selectedOrderIds,
+  isPageSelected,
+  onToggleOrder,
+  onTogglePage,
 }: {
   orders: OrderOperationRecord[];
   startIndex: number;
@@ -242,12 +279,41 @@ function OrderListRows({
   onOpenMenu: (id: string) => void;
   onCloseMenu: () => void;
   onConfirmPayment: (order: OrderOperationRecord) => void;
+  selectedOrderIds: Set<string>;
+  isPageSelected: boolean;
+  onToggleOrder: (id: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = orders.filter((order) =>
+    selectedOrderIds.has(order.id),
+  ).length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate =
+        selectedOnPage > 0 && selectedOnPage < orders.length;
+    }
+  }, [orders.length, selectedOnPage]);
 
   return (
-    <div className="vx-tenant-directory-list vx-order-directory-list" role="region" aria-label="订单管理清单">
+    <div
+      className="vx-tenant-directory-list vx-order-directory-list"
+      role="region"
+      aria-label="订单管理清单"
+    >
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页订单"
+          />
+        </span>
         <span>序号</span>
         <span>订单</span>
         <span>租户</span>
@@ -257,64 +323,133 @@ function OrderListRows({
         <span>状态</span>
         <span>操作</span>
       </div>
-      {orders.map((order, index) => (
-        <div
-          key={order.id}
-          className={joinClasses('vx-tenant-directory-row', `vx-order-row--${order.orderStatus}`)}
-          role="button"
-          tabIndex={0}
-          onClick={() => router.push(`/orders/${encodeURIComponent(order.id)}`)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') router.push(`/orders/${encodeURIComponent(order.id)}`);
-          }}
-        >
-          <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
-          <span className="vx-order-row__order">
-            <span className="vx-tenant-directory-row__title-line">
-              <strong>{order.orderNo}</strong>
+      {orders.map((order, index) => {
+        const selected = selectedOrderIds.has(order.id);
+
+        return (
+          <div
+            key={order.id}
+            className={joinClasses(
+              "vx-tenant-directory-row",
+              "vx-order-operation-row",
+              `vx-order-row--${order.orderStatus}`,
+              selected ? "vx-order-operation-row--selected" : undefined,
+            )}
+            onClick={(event) => {
+              const target = event.target as HTMLElement;
+              if (
+                target.closest(
+                  'button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]',
+                )
+              )
+                return;
+              onToggleOrder(order.id, !selected);
+            }}
+          >
+            <span className="vx-order-operation-row__select">
+              <input
+                type="checkbox"
+                className="vx-model-select-checkbox"
+                checked={selected}
+                onChange={(event) =>
+                  onToggleOrder(order.id, event.target.checked)
+                }
+                aria-label={`选择订单 ${order.orderNo}`}
+              />
             </span>
-            <small>{order.billNo ?? '未生成账单'} · {formatDate(order.createdAt)}</small>
-          </span>
-          <span className="vx-order-row__tenant">
-            <Icon name={order.tenantType === 'company' ? 'buildings' : 'user'} size="sm" fallback="placeholder" />
-            <span>
-              <strong>{order.tenantName}</strong>
-              <small>{order.tenantCode} · {typeLabel(order.tenantType)}</small>
+            <span className="vx-tenant-directory-row__index">
+              {formatNumber(startIndex + index + 1)}
             </span>
-          </span>
-          <span className="vx-order-row__solution">
-            <strong>{order.solutionName}</strong>
-            <small>{order.industry} · {order.region}</small>
-          </span>
-          <span className="vx-order-row__plan">
-            <span className="vx-tenant-directory-row__tag-line">
-              <Badge className={`vx-tenant-pill vx-order-pill--tier-${tierFilterValue(order)}`}>{order.tierName}</Badge>
-              <Badge className="vx-tenant-pill vx-order-pill--source">{cycleLabel(order.cycleType)}</Badge>
-            </span>
-            <small>{order.servicePlanName}</small>
-          </span>
-          <span className="vx-order-row__amount">
-            <strong>{formatCurrency(order.amount, order.currency)}</strong>
-            <small>已收 {formatCurrency(order.paidAmount, order.currency)}</small>
-          </span>
-          <span className="vx-order-row__status">
-            <span className="vx-order-status-line">
-              <span className={`vx-order-status-dot vx-order-status-dot--${order.orderStatus}`} role="img" aria-label={orderStatusLabel(order.orderStatus)}>
-                <Icon name={orderStatusIcon(order.orderStatus)} size="xs" fallback="placeholder" />
+            <span className="vx-order-row__order">
+              <span className="vx-tenant-directory-row__title-line">
+                <button
+                  type="button"
+                  className="vx-model-name-button"
+                  onClick={() =>
+                    router.push(`/orders/${encodeURIComponent(order.id)}`)
+                  }
+                >
+                  {order.orderNo}
+                </button>
               </span>
-              <Badge className={`vx-tenant-pill vx-order-pill--${order.orderStatus}`}>{orderStatusLabel(order.orderStatus)}</Badge>
+              <small>
+                {order.billNo ?? "未生成账单"} · {formatDate(order.createdAt)}
+              </small>
             </span>
-            <small>{paymentStatusLabel(order.paymentStatus)} · {paySourceLabel(order.paySource)}</small>
-          </span>
-          <OrderActionsMenu
-            order={order}
-            open={openMenuId === order.id}
-            onToggle={() => onOpenMenu(openMenuId === order.id ? '' : order.id)}
-            onClose={onCloseMenu}
-            onConfirmPayment={onConfirmPayment}
-          />
-        </div>
-      ))}
+            <span className="vx-order-row__tenant">
+              <Icon
+                name={order.tenantType === "company" ? "buildings" : "user"}
+                size="sm"
+                fallback="placeholder"
+              />
+              <span>
+                <strong>{order.tenantName}</strong>
+                <small>
+                  {order.tenantCode} · {typeLabel(order.tenantType)}
+                </small>
+              </span>
+            </span>
+            <span className="vx-order-row__solution">
+              <strong>{order.solutionName}</strong>
+              <small>
+                {order.industry} · {order.region}
+              </small>
+            </span>
+            <span className="vx-order-row__plan">
+              <span className="vx-tenant-directory-row__tag-line">
+                <Badge
+                  className={`vx-tenant-pill vx-order-pill--tier-${tierFilterValue(order)}`}
+                >
+                  {order.tierName}
+                </Badge>
+                <Badge className="vx-tenant-pill vx-order-pill--source">
+                  {cycleLabel(order.cycleType)}
+                </Badge>
+              </span>
+              <small>{order.servicePlanName}</small>
+            </span>
+            <span className="vx-order-row__amount">
+              <strong>{formatCurrency(order.amount, order.currency)}</strong>
+              <small>
+                已收 {formatCurrency(order.paidAmount, order.currency)}
+              </small>
+            </span>
+            <span className="vx-order-row__status">
+              <span className="vx-order-status-line">
+                <span
+                  className={`vx-order-status-dot vx-order-status-dot--${order.orderStatus}`}
+                  role="img"
+                  aria-label={orderStatusLabel(order.orderStatus)}
+                >
+                  <Icon
+                    name={orderStatusIcon(order.orderStatus)}
+                    size="xs"
+                    fallback="placeholder"
+                  />
+                </span>
+                <Badge
+                  className={`vx-tenant-pill vx-order-pill--${order.orderStatus}`}
+                >
+                  {orderStatusLabel(order.orderStatus)}
+                </Badge>
+              </span>
+              <small>
+                {paymentStatusLabel(order.paymentStatus)} ·{" "}
+                {paySourceLabel(order.paySource)}
+              </small>
+            </span>
+            <OrderActionsMenu
+              order={order}
+              open={openMenuId === order.id}
+              onToggle={() =>
+                onOpenMenu(openMenuId === order.id ? "" : order.id)
+              }
+              onClose={onCloseMenu}
+              onConfirmPayment={onConfirmPayment}
+            />
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -335,38 +470,61 @@ function OrderCards({
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-directory-cards vx-order-cards" aria-label="订单管理卡片">
+    <div
+      className="vx-tenant-directory-cards vx-order-cards"
+      aria-label="订单管理卡片"
+    >
       {orders.map((order) => (
         <article
           key={order.id}
-          className={joinClasses('vx-tenant-directory-card', `vx-order-card--${order.orderStatus}`)}
+          className={joinClasses(
+            "vx-tenant-directory-card",
+            `vx-order-card--${order.orderStatus}`,
+          )}
           role="button"
           tabIndex={0}
           onClick={() => router.push(`/orders/${encodeURIComponent(order.id)}`)}
           onKeyDown={(event) => {
-            if (event.key === 'Enter') router.push(`/orders/${encodeURIComponent(order.id)}`);
+            if (event.key === "Enter")
+              router.push(`/orders/${encodeURIComponent(order.id)}`);
           }}
         >
           <header>
             <Icon name="table" size="lg" fallback="placeholder" />
             <div>
               <strong>{order.orderNo}</strong>
-              <span>{order.tenantName} · {order.tierName}</span>
+              <span>
+                {order.tenantName} · {order.tierName}
+              </span>
             </div>
             <OrderActionsMenu
               order={order}
               open={openMenuId === order.id}
-              onToggle={() => onOpenMenu(openMenuId === order.id ? '' : order.id)}
+              onToggle={() =>
+                onOpenMenu(openMenuId === order.id ? "" : order.id)
+              }
               onClose={onCloseMenu}
               onConfirmPayment={onConfirmPayment}
             />
           </header>
           <div className="vx-tenant-directory-card__badges">
-            <Badge className={`vx-tenant-pill vx-order-pill--${order.orderStatus}`}>{orderStatusLabel(order.orderStatus)}</Badge>
-            <Badge className={`vx-tenant-pill vx-order-pill--payment-${order.paymentStatus}`}>{paymentStatusLabel(order.paymentStatus)}</Badge>
-            <Badge className="vx-tenant-pill vx-order-pill--source">{paySourceLabel(order.paySource)}</Badge>
+            <Badge
+              className={`vx-tenant-pill vx-order-pill--${order.orderStatus}`}
+            >
+              {orderStatusLabel(order.orderStatus)}
+            </Badge>
+            <Badge
+              className={`vx-tenant-pill vx-order-pill--payment-${order.paymentStatus}`}
+            >
+              {paymentStatusLabel(order.paymentStatus)}
+            </Badge>
+            <Badge className="vx-tenant-pill vx-order-pill--source">
+              {paySourceLabel(order.paySource)}
+            </Badge>
           </div>
-          <p className="vx-order-card__solution">{order.solutionName} · {order.servicePlanName}</p>
+          <p className="vx-order-card__solution">
+            {order.solutionName} · {order.servicePlanName}
+          </p>
           <div className="vx-tenant-directory-card__metrics">
             <span>
               <b>{formatCurrency(order.amount, order.currency)}</b>
@@ -408,15 +566,27 @@ function Pagination({
 }) {
   return (
     <footer className="vx-tenant-pagination">
-      <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条订单记录</span>
+      <span className="vx-tenant-pagination__total">
+        共 {formatNumber(total)} 条订单记录
+      </span>
       <div className="vx-tenant-pagination__actions">
         <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
         <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
+          <Button
+            variant="outline"
+            disabled={currentPage <= 1}
+            onClick={() => onPageChange(currentPage - 1)}
+          >
             上一页
           </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
+          <strong>
+            {currentPage} / {pageCount}
+          </strong>
+          <Button
+            variant="outline"
+            disabled={currentPage >= pageCount}
+            onClick={() => onPageChange(currentPage + 1)}
+          >
             下一页
           </Button>
         </div>
@@ -427,20 +597,28 @@ function Pagination({
 
 export function OrdersPage() {
   const [orders, setOrders] = useState<OrderOperationRecord[]>([]);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<OrderStatusFilter>('all');
-  const [paymentFilter, setPaymentFilter] = useState<PaymentStatusFilter>('all');
-  const [paySourceFilter, setPaySourceFilter] = useState<PaySourceFilter>('all');
-  const [tierFilter, setTierFilter] = useState<TierFilter>('all');
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<OrderStatusFilter>("all");
+  const [paymentFilter, setPaymentFilter] =
+    useState<PaymentStatusFilter>("all");
+  const [paySourceFilter, setPaySourceFilter] =
+    useState<PaySourceFilter>("all");
+  const [tierFilter, setTierFilter] = useState<TierFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
   const [loading, setLoading] = useState(true);
-  const [paymentTarget, setPaymentTarget] = useState<OrderOperationRecord | null>(null);
+  const [paymentTarget, setPaymentTarget] =
+    useState<OrderOperationRecord | null>(null);
   const [submittingPayment, setSubmittingPayment] = useState(false);
   const [operationError, setOperationError] = useState<string | null>(null);
-  const [operationFeedback, setOperationFeedback] = useState<string | null>(null);
+  const [operationFeedback, setOperationFeedback] = useState<string | null>(
+    null,
+  );
+  const [selectedOrderIds, setSelectedOrderIds] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   useEffect(() => {
     let active = true;
@@ -463,40 +641,93 @@ export function OrdersPage() {
     const normalizedQuery = query.trim().toLowerCase();
 
     return orders.filter((order) => {
-      if (statusFilter !== 'all' && order.orderStatus !== statusFilter) return false;
-      if (paymentFilter !== 'all' && order.paymentStatus !== paymentFilter) return false;
-      if (paySourceFilter !== 'all' && order.paySource !== paySourceFilter) return false;
-      if (tierFilter !== 'all' && tierFilterValue(order) !== tierFilter) return false;
-      if (normalizedQuery && !orderSearchText(order).includes(normalizedQuery)) return false;
+      if (statusFilter !== "all" && order.orderStatus !== statusFilter)
+        return false;
+      if (paymentFilter !== "all" && order.paymentStatus !== paymentFilter)
+        return false;
+      if (paySourceFilter !== "all" && order.paySource !== paySourceFilter)
+        return false;
+      if (tierFilter !== "all" && tierFilterValue(order) !== tierFilter)
+        return false;
+      if (normalizedQuery && !orderSearchText(order).includes(normalizedQuery))
+        return false;
       return true;
     });
   }, [orders, paymentFilter, paySourceFilter, query, statusFilter, tierFilter]);
 
   const pageCount = Math.max(1, Math.ceil(filteredOrders.length / pageSize));
   const activePage = Math.min(currentPage, pageCount);
-  const visibleOrders = filteredOrders.slice((activePage - 1) * pageSize, activePage * pageSize);
-  const pendingCount = orders.filter((item) => item.orderStatus === 'pending' || item.orderStatus === 'pending_verify').length;
+  const visibleOrders = filteredOrders.slice(
+    (activePage - 1) * pageSize,
+    activePage * pageSize,
+  );
+  const visibleOrderIds = useMemo(
+    () => visibleOrders.map((order) => order.id),
+    [visibleOrders],
+  );
+  const selectedVisibleOrderCount = visibleOrderIds.filter((id) =>
+    selectedOrderIds.has(id),
+  ).length;
+  const isOrderPageSelected =
+    visibleOrderIds.length > 0 &&
+    selectedVisibleOrderCount === visibleOrderIds.length;
+  const pendingCount = orders.filter(
+    (item) =>
+      item.orderStatus === "pending" || item.orderStatus === "pending_verify",
+  ).length;
   const confirmedAmount = orders
-    .filter((item) => item.orderStatus === 'confirmed')
+    .filter((item) => item.orderStatus === "confirmed")
     .reduce((sum, item) => sum + item.paidAmount, 0);
-  const overdueCount = orders.filter((item) => item.orderStatus === 'overdue').length;
-  const abnormalCount = orders.filter((item) => item.orderStatus === 'abnormal').length;
+  const overdueCount = orders.filter(
+    (item) => item.orderStatus === "overdue",
+  ).length;
+  const abnormalCount = orders.filter(
+    (item) => item.orderStatus === "abnormal",
+  ).length;
 
   useEffect(() => {
     setCurrentPage(1);
     setOpenMenuId(null);
-  }, [pageSize, paymentFilter, paySourceFilter, query, statusFilter, tierFilter, viewMode]);
+  }, [
+    pageSize,
+    paymentFilter,
+    paySourceFilter,
+    query,
+    statusFilter,
+    tierFilter,
+    viewMode,
+  ]);
 
   function handleReset() {
-    setQuery('');
-    setStatusFilter('all');
-    setPaymentFilter('all');
-    setPaySourceFilter('all');
-    setTierFilter('all');
+    setQuery("");
+    setStatusFilter("all");
+    setPaymentFilter("all");
+    setPaySourceFilter("all");
+    setTierFilter("all");
   }
 
   function handleOpenMenu(id: string) {
     setOpenMenuId(id || null);
+  }
+
+  function toggleOrderSelection(id: string, checked: boolean) {
+    setSelectedOrderIds((current) => {
+      const next = new Set(current);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
+
+  function toggleOrderPageSelection(checked: boolean) {
+    setSelectedOrderIds((current) => {
+      const next = new Set(current);
+      visibleOrderIds.forEach((id) => {
+        if (checked) next.add(id);
+        else next.delete(id);
+      });
+      return next;
+    });
   }
 
   function requestConfirmPayment(order: OrderOperationRecord) {
@@ -506,7 +737,9 @@ export function OrdersPage() {
     setPaymentTarget(order);
   }
 
-  async function handleConfirmOfflinePayment(payload: Parameters<typeof confirmOrderOfflinePayment>[1]) {
+  async function handleConfirmOfflinePayment(
+    payload: Parameters<typeof confirmOrderOfflinePayment>[1],
+  ) {
     if (!paymentTarget) return;
 
     setSubmittingPayment(true);
@@ -516,10 +749,14 @@ export function OrdersPage() {
       await confirmOrderOfflinePayment(paymentTarget.id, payload);
       const records = await fetchOrderOperations();
       setOrders(records);
-      setOperationFeedback('线下收款已确认。');
+      setOperationFeedback("线下收款已确认。");
       setPaymentTarget(null);
     } catch (error) {
-      setOperationError(error instanceof Error ? error.message : '确认线下收款失败，请稍后重试。');
+      setOperationError(
+        error instanceof Error
+          ? error.message
+          : "确认线下收款失败，请稍后重试。",
+      );
     } finally {
       setSubmittingPayment(false);
     }
@@ -535,18 +772,53 @@ export function OrdersPage() {
       />
 
       <section className="vx-tenant-summary" aria-label="订单管理统计">
-        <SummaryItem icon="table" label="订单总数" value={formatNumber(orders.length)} tags={[`筛选 ${formatNumber(filteredOrders.length)}`]} />
-        <SummaryItem icon="clock" label="待处理" value={formatNumber(pendingCount)} tags={[`待复核 ${formatNumber(orders.filter((item) => item.orderStatus === 'pending_verify').length)}`]} tone={pendingCount ? 'amber' : 'green'} />
-        <SummaryItem icon="chart-bar" label="已确认金额" value={formatCurrency(confirmedAmount, 'CNY')} tags={['运营口径']} tone="green" />
-        <SummaryItem icon="warning" label="异常逾期" value={formatNumber(overdueCount + abnormalCount)} tags={[`异常 ${formatNumber(abnormalCount)}`]} tone={overdueCount || abnormalCount ? 'rose' : 'green'} />
+        <SummaryItem
+          icon="table"
+          label="订单总数"
+          value={formatNumber(orders.length)}
+          tags={[`筛选 ${formatNumber(filteredOrders.length)}`]}
+        />
+        <SummaryItem
+          icon="clock"
+          label="待处理"
+          value={formatNumber(pendingCount)}
+          tags={[
+            `待复核 ${formatNumber(orders.filter((item) => item.orderStatus === "pending_verify").length)}`,
+          ]}
+          tone={pendingCount ? "amber" : "green"}
+        />
+        <SummaryItem
+          icon="chart-bar"
+          label="已确认金额"
+          value={formatCurrency(confirmedAmount, "CNY")}
+          tags={["运营口径"]}
+          tone="green"
+        />
+        <SummaryItem
+          icon="warning"
+          label="异常逾期"
+          value={formatNumber(overdueCount + abnormalCount)}
+          tags={[`异常 ${formatNumber(abnormalCount)}`]}
+          tone={overdueCount || abnormalCount ? "rose" : "green"}
+        />
       </section>
 
-      {operationFeedback ? <div className="vx-subscription-operation-feedback">{operationFeedback}</div> : null}
+      {operationFeedback ? (
+        <div className="vx-subscription-operation-feedback">
+          {operationFeedback}
+        </div>
+      ) : null}
 
       <div className="vx-tenant-list-shell">
         <section className="vx-tenant-toolbar" aria-label="订单筛选">
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="订单展示方式" />
-          <span className="vx-tenant-view-count">{formatNumber(filteredOrders.length)}</span>
+          <ViewModeSwitch
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="订单展示方式"
+          />
+          <span className="vx-tenant-view-count">
+            {formatNumber(filteredOrders.length)}
+          </span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
             value={query}
@@ -555,9 +827,18 @@ export function OrdersPage() {
             className="vx-tenant-search vx-order-search"
             aria-label="搜索订单"
           />
-          <Button variant="outline" onClick={handleReset}>重置</Button>
+          <Button variant="outline" onClick={handleReset}>
+            重置
+          </Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as OrderStatusFilter)} aria-label="订单状态">
+            <select
+              className="vx-input vx-tenant-select"
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as OrderStatusFilter)
+              }
+              aria-label="订单状态"
+            >
               <option value="all">全部订单</option>
               <option value="pending">待付款</option>
               <option value="pending_verify">待复核</option>
@@ -566,7 +847,14 @@ export function OrdersPage() {
               <option value="closed">已关闭</option>
               <option value="abnormal">异常</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={paymentFilter} onChange={(event) => setPaymentFilter(event.target.value as PaymentStatusFilter)} aria-label="支付状态">
+            <select
+              className="vx-input vx-tenant-select"
+              value={paymentFilter}
+              onChange={(event) =>
+                setPaymentFilter(event.target.value as PaymentStatusFilter)
+              }
+              aria-label="支付状态"
+            >
               <option value="all">全部支付</option>
               <option value="not_required">无需支付</option>
               <option value="unpaid">未支付</option>
@@ -578,13 +866,27 @@ export function OrdersPage() {
               <option value="closed">已关闭</option>
               <option value="refunding">退款中</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={paySourceFilter} onChange={(event) => setPaySourceFilter(event.target.value as PaySourceFilter)} aria-label="支付来源">
+            <select
+              className="vx-input vx-tenant-select"
+              value={paySourceFilter}
+              onChange={(event) =>
+                setPaySourceFilter(event.target.value as PaySourceFilter)
+              }
+              aria-label="支付来源"
+            >
               <option value="all">全部来源</option>
               <option value="online">线上</option>
               <option value="offline">线下</option>
               <option value="none">无</option>
             </select>
-            <select className="vx-input vx-tenant-select" value={tierFilter} onChange={(event) => setTierFilter(event.target.value as TierFilter)} aria-label="套餐版本">
+            <select
+              className="vx-input vx-tenant-select"
+              value={tierFilter}
+              onChange={(event) =>
+                setTierFilter(event.target.value as TierFilter)
+              }
+              aria-label="套餐版本"
+            >
               <option value="all">全部套餐</option>
               <option value="free">Free</option>
               <option value="pro">Pro</option>
@@ -605,7 +907,7 @@ export function OrdersPage() {
           ) : null}
 
           {visibleOrders.length ? (
-            viewMode === 'list' ? (
+            viewMode === "list" ? (
               <OrderListRows
                 orders={visibleOrders}
                 startIndex={(activePage - 1) * pageSize}
@@ -613,6 +915,10 @@ export function OrdersPage() {
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
                 onConfirmPayment={requestConfirmPayment}
+                selectedOrderIds={selectedOrderIds}
+                isPageSelected={isOrderPageSelected}
+                onToggleOrder={toggleOrderSelection}
+                onTogglePage={toggleOrderPageSelection}
               />
             ) : (
               <OrderCards
@@ -626,10 +932,18 @@ export function OrdersPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? '正在加载订单' : '没有匹配的订单'}
-                description={loading ? '正在读取订单、账单和支付状态。' : '清空筛选条件后可查看全部订单记录。'}
+                title={loading ? "正在加载订单" : "没有匹配的订单"}
+                description={
+                  loading
+                    ? "正在读取订单、账单和支付状态。"
+                    : "清空筛选条件后可查看全部订单记录。"
+                }
                 action={
-                  <ActionButton variant="outline" icon="x" onClick={handleReset}>
+                  <ActionButton
+                    variant="outline"
+                    icon="x"
+                    onClick={handleReset}
+                  >
                     清空筛选
                   </ActionButton>
                 }
@@ -643,7 +957,9 @@ export function OrdersPage() {
             total={filteredOrders.length}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
-            onPageChange={(page) => setCurrentPage(Math.min(Math.max(page, 1), pageCount))}
+            onPageChange={(page) =>
+              setCurrentPage(Math.min(Math.max(page, 1), pageCount))
+            }
           />
         </section>
       </div>

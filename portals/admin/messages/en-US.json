@@ -6,6 +6,22 @@
       "description": "Loading the internal operator, platform permissions, and supply-side capabilities."
     }
   },
+  "role": {
+    "platform_architect": "Platform Architect",
+    "security_governance_officer": "Security Governance Officer",
+    "system_operations_controller": "System Operations Controller",
+    "tenant_operations_manager": "Tenant Operations Manager",
+    "support_response_officer": "Support Response Officer",
+    "observer": "Observer",
+    "description": {
+      "platform_architect": "Owns platform architecture, global configuration, and high-risk authorization boundaries.",
+      "security_governance_officer": "Owns security governance, audit review, and control policy oversight.",
+      "system_operations_controller": "Owns runtime operations, service reliability, and system control actions.",
+      "tenant_operations_manager": "Owns tenant lifecycle operations, account governance, and business-side handling.",
+      "support_response_officer": "Owns support response, ticket handling, and customer-facing issue coordination.",
+      "observer": "Read-only role for beta, demo, review, and observation scenarios."
+    }
+  },
   "header": {
     "brandName": "vxture studio",
     "brandHome": "vxture studio home",
@@ -48,17 +64,6 @@
       "unnamed": "Unnamed user",
       "switchUser": "Switch user",
       "signOut": "Sign out",
-      "roles": {
-        "admin": "Operations admin",
-        "member": "Member",
-        "tenantAdmin": "Tenant admin",
-        "superAdmin": "Super Admin",
-        "auditAdmin": "Audit Admin",
-        "configAdmin": "Config Admin",
-        "helpdeskAdmin": "Helpdesk Admin",
-        "readonlyAdmin": "Readonly Admin",
-        "user": "User"
-      },
       "badges": {
         "personal": "Personal verified",
         "organization": "Organization verified"
@@ -106,9 +111,9 @@
       "tenantsAccounts": "Tenants & Accounts",
       "productsPlans": "Plans & Products",
       "subscriptionsTransactions": "Subscriptions & Orders",
-      "capabilitiesServices": "Capabilities & Services",
+      "capabilitiesServices": "Models & Skills",
       "financeSettlement": "Finance & Settlement",
-      "supportCompliance": "Support & Compliance"
+      "supportCompliance": "Services & Support"
     },
     "items": {
       "platformOverview": {
@@ -401,6 +406,10 @@
       "password": "Password",
       "passwordPlaceholder": "Enter your password",
       "forgotPassword": "Forgot password?",
+      "humanVerification": "Security verification",
+      "dragToVerify": "Drag the puzzle piece to verify",
+      "closeVerification": "Close security verification",
+      "verificationPassed": "Verified",
       "acceptPrefix": "I have read and agree to the ",
       "terms": "User Agreement",
       "acceptJoiner": " and ",
@@ -412,6 +421,7 @@
     "errors": {
       "required": "Account and password are required.",
       "terms": "Please agree to the User Agreement and Privacy Policy first.",
+      "humanVerification": "Please complete the human verification.",
       "invalid": "Unable to sign in with the current credentials.",
       "unavailable": "The Admin login service is unavailable. Start admin-bff first."
     },

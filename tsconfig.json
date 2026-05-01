@@ -18,17 +18,18 @@
     { "path": "services/support/workers" },
     { "path": "bff/website-bff" },
     { "path": "bff/console-bff" },
-    { "path": "bff/tenant-bff" },
+    { "path": "bff/vela-bff" },
     { "path": "bff/admin-bff" },
     { "path": "bff/ruyinagent-bff" },
     { "path": "bff/agent-template-bff" },
+    { "path": "agent-server/vela" },
     { "path": "agent-server/ruyinagent" },
     { "path": "agent-server/agent-template" },
     { "path": "agent-studio/agent-template" },
+    { "path": "agent-studio/vela" },
     { "path": "packages/platform/browser" },
     { "path": "portals/website" },
     { "path": "portals/console" },
-    { "path": "portals/admin" },
-    { "path": "portals/tenant" }
+    { "path": "portals/admin" }
   ]
 }

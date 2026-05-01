@@ -63,9 +63,12 @@ export class AdminRolesRouter implements OnModuleDestroy {
     return roleRows.rows.map((role) => ({
       id: role.id,
       roleCode: role.role_code,
-      roleName: role.role_name,
+      nameI18nKey: role.name_i18n_key,
+      nameEn: role.name_en,
+      descriptionI18nKey: role.description_i18n_key,
       description: role.description,
       isSystem: role.is_system,
+      statusCode: normalizeRoleStatusCode(role.status_code, role.status),
       status: role.status,
       sort: role.sort,
       adminCount: role.admin_count,
@@ -74,6 +77,8 @@ export class AdminRolesRouter implements OnModuleDestroy {
       menuPermissionCount: role.menu_permission_count,
       buttonPermissionCount: role.button_permission_count,
       apiPermissionCount: role.api_permission_count,
+      createdBy: role.created_by,
+      createdByName: role.created_by_name,
       createdAt: toIso(role.created_at),
       updatedAt: toIso(role.updated_at),
       permissions: (permissionsByRole.get(role.id) ?? []).map(mapPermissionRow),
@@ -111,6 +116,13 @@ function toIso(value: Date | string | null): string {
   return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
 }
 
+function normalizeRoleStatusCode(value: string | null, legacyStatus: boolean): PlatformRoleRecord['statusCode'] {
+  if (value === 'active' || value === 'disabled' || value === 'archived') {
+    return value;
+  }
+  return legacyStatus ? 'active' : 'disabled';
+}
+
 function mapPermissionRow(row: PlatformRolePermissionRow): PlatformRolePermissionRecord {
   return {
     id: row.id,
@@ -127,9 +139,12 @@ function mapPermissionRow(row: PlatformRolePermissionRow): PlatformRolePermissio
 interface PlatformRoleRow {
   id: string;
   role_code: string;
-  role_name: string;
+  name_i18n_key: string;
+  name_en: string;
+  description_i18n_key: string | null;
   description: string;
   is_system: boolean;
+  status_code: string | null;
   status: boolean;
   sort: number;
   admin_count: number;
@@ -138,6 +153,8 @@ interface PlatformRoleRow {
   menu_permission_count: number;
   button_permission_count: number;
   api_permission_count: number;
+  created_by: string | null;
+  created_by_name: string | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -158,27 +175,38 @@ const PLATFORM_ROLE_SQL = `
   select
     r.id,
     r.role_code,
-    r.role_name,
+    r.name_i18n_key,
+    r.name_en,
+    r.description_i18n_key,
     r.description,
     r.is_system,
+    coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) as status_code,
     r.status,
     r.sort,
+    r.created_by,
+    coalesce(nullif(creator.display_name, ''), nullif(creator.username, ''), r.created_by::text) as created_by_name,
     r.created_at,
     r.updated_at,
     count(distinct a.id) filter (where a.deleted_at is null)::int as admin_count,
-    count(distinct a.id) filter (where a.deleted_at is null and a.status = true)::int as active_admin_count,
+    count(distinct a.id) filter (
+      where a.deleted_at is null
+        and a.status = true
+        and coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) = 'active'
+    )::int as active_admin_count,
     count(distinct p.id) filter (where p.status = true)::int as permission_count,
     count(distinct p.id) filter (where p.status = true and p.perm_type = 'MENU')::int as menu_permission_count,
     count(distinct p.id) filter (where p.status = true and p.perm_type = 'BUTTON')::int as button_permission_count,
     count(distinct p.id) filter (where p.status = true and p.perm_type = 'API')::int as api_permission_count
   from platform.platform_role r
+  left join platform.platform_admin creator
+    on creator.id = r.created_by
   left join platform.platform_admin a
     on a.role_id = r.id
   left join platform.platform_role_permission rp
     on rp.role_id = r.id
   left join platform.platform_permission p
     on p.id = rp.permission_id
-  group by r.id
+  group by r.id, creator.id
   order by r.sort asc, r.created_at asc
 `;
 

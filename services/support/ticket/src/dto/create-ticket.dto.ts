@@ -19,11 +19,11 @@ import { TicketPriority } from '../types/ticket.types';
 export class CreateTicketInput {
   @ApiProperty({ description: '工单标题', example: '登录页面无法加载' })
   @IsString()
-  title: string;
+  title!: string;
 
   @ApiProperty({ description: '工单描述', example: '用户反馈登录页面无法正常加载，显示白屏' })
   @IsString()
-  description: string;
+  description!: string;
 
   @ApiProperty({ description: '工单优先级', example: TicketPriority.HIGH, required: false })
   @IsOptional()
@@ -37,7 +37,7 @@ export class CreateTicketInput {
 
   @ApiProperty({ description: '工单分类', example: 'frontend' })
   @IsString()
-  category: string;
+  category!: string;
 
   @ApiProperty({ description: '标签列表', example: ['bug', 'login'], required: false })
   @IsOptional()

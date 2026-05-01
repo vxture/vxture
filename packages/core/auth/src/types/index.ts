@@ -6,6 +6,7 @@
 export {
   OAuthProviderType,
   PlatformRole,
+  JwtAuthScope,
   JwtUserType,
 } from './auth.types';
 
@@ -18,5 +19,6 @@ export type {
   OAuthProvider,
   AuthTokenPair,
   PermissionCheckOptions,
+  JwtAuthScope as JwtAuthScopeType,
   PlatformRole as PlatformRoleType
 } from './auth.types';

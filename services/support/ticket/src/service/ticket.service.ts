@@ -13,7 +13,7 @@
  */
 
 import type { Ticket, CreateTicketInput, UpdateTicketInput, TicketQueryParams, TicketStats } from '../types/ticket.types';
-import { TicketStatus, TicketPriority } from '../types/ticket.types';
+import { TicketStatus } from '../types/ticket.types';
 import { ticketRepository } from '../repository/ticket.repository';
 
 export class TicketService {

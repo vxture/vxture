@@ -43,6 +43,38 @@ const SERVICES = [
     ],
   },
   {
+    id: 'vela-server',
+    name: 'Vela Server',
+    port: 3011,
+    priority: 1,                              // P1 — Vela 私有智能体后端，依赖 AI Gateway + 数据库
+    url: 'http://localhost:3011',
+    command: 'pnpm --filter vela-server dev',
+    env: {
+      AI_GATEWAY_URL: 'http://localhost:3100',
+      VELA_SERVER_PORT: '3011',
+      VELA_PLATFORM_LLM_TENANT_ID: '82cf3e39-f7f0-4597-bb55-b1303ca19d46',
+      VELA_DEFAULT_MODEL_CODE: 'doubao-seed-2-0-lite-260215',
+    },
+    healthChecks: [
+      { label: 'port', kind: 'tcp', port: 3011 },
+    ],
+  },
+  {
+    id: 'vela-bff',
+    name: 'Vela BFF',
+    port: 3010,
+    priority: 1,                              // P1 — Vela 认证边界与 SSE 代理，依赖 Vela Server
+    url: 'http://localhost:3010',
+    command: 'pnpm --filter @vxture/bff-vela dev',
+    env: {
+      VELA_BFF_PORT: '3010',
+      VELA_SERVER_INTERNAL_URL: 'http://localhost:3011',
+    },
+    healthChecks: [
+      { label: 'health', url: 'http://localhost:3010/health', okStatuses: [200] },
+    ],
+  },
+  {
     id: 'console-bff',
     name: 'Console BFF',
     port: 3003,
@@ -124,10 +156,33 @@ const SERVICES = [
       { label: 'port', kind: 'tcp', port: 3004 },
     ],
   },
+  {
+    id: 'vela-studio',
+    name: 'Vela Studio',
+    port: 3020,
+    priority: 3,                              // P3 — Vela 独立前端调试入口；admin/console 内嵌版本不依赖它
+    url: 'http://localhost:3020',
+    command: 'pnpm --filter @vxture/agent-studio-vela dev',
+    healthChecks: [
+      { label: 'port', kind: 'tcp', port: 3020 },
+    ],
+  },
 ];
 
 /** 启动顺序（按优先级顺序逐级等待健康） */
-const START_ORDER = ['ai-gateway', 'website-bff', 'console-bff', 'admin-bff', 'gateway', 'website', 'console', 'admin'];
+const START_ORDER = [
+  'ai-gateway',
+  'vela-server',
+  'vela-bff',
+  'website-bff',
+  'console-bff',
+  'admin-bff',
+  'gateway',
+  'website',
+  'console',
+  'admin',
+  'vela-studio',
+];
 
 // ─── 运行时状态 ─────────────────────────────────────────────────────────────────
 
@@ -315,10 +370,20 @@ async function killProcessTree(pid) {
 function checkPort(port) {
   return new Promise((resolve) => {
     const socket  = new net.Socket();
-    const finish  = (value) => { socket.destroy(); resolve(value); };
+    let settled = false;
+    const finish  = (value) => {
+      if (settled) return;
+      settled = true;
+      socket.destroy();
+      resolve(value);
+    };
 
     socket.setTimeout(500);
-    socket.once('connect', () => finish(true));
+    socket.once('connect', () => {
+      settled = true;
+      socket.end();
+      resolve(true);
+    });
     socket.once('timeout', () => finish(false));
     socket.once('error',   () => finish(false));
     socket.connect(port, '127.0.0.1');
@@ -359,7 +424,12 @@ async function runHealthChecks(service) {
 
       try {
         if (!check.url || !check.okStatuses) throw new Error('Invalid HTTP health check');
-        const response = await fetch(check.url, { method: 'GET', redirect: 'manual' });
+        const response = await fetch(check.url, {
+          method: 'GET',
+          redirect: 'manual',
+          cache: 'no-store',
+          signal: AbortSignal.timeout(1_500),
+        });
         return {
           label:      check.label,
           url:        check.url,
@@ -544,7 +614,12 @@ async function stopAll() {
 // ─── HTTP 工具 ─────────────────────────────────────────────────────────────────
 
 function sendJson(res, status, payload) {
-  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.writeHead(status, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+    'Pragma': 'no-cache',
+    'Expires': '0',
+  });
   res.end(JSON.stringify(payload));
 }
 
@@ -614,30 +689,30 @@ function pageHtml() {
     .wrap {
       width: 100%;
       margin: 0 auto;
-      padding: 24px 5rem;
+      padding: 16px 3rem;
     }
 
     .hero {
       display: flex;
       justify-content: space-between;
-      gap: 24px;
+      gap: 16px;
       align-items: flex-end;
-      margin-bottom: 32px;
-      padding: 24px 28px;
+      margin-bottom: 16px;
+      padding: 16px 20px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background:
         linear-gradient(135deg, rgba(245,248,255,.98), rgba(255,255,255,.94) 58%, rgba(230,237,255,.92));
       box-shadow: 0 18px 44px rgba(16,31,82,.08);
     }
-    .hero h1 { margin: 0; font-size: 34px; line-height: 1.1; letter-spacing: 0; color: var(--brand-deep); }
-    .hero p  { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+    .hero h1 { margin: 0; font-size: 26px; line-height: 1.1; letter-spacing: 0; color: var(--brand-deep); }
+    .hero p  { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
 
-    .toolbar { display: flex; gap: 12px; flex-wrap: wrap; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
     button {
       border: 1px solid transparent;
       border-radius: var(--radius);
-      padding: 10px 18px;
+      padding: 8px 12px;
       cursor: pointer;
       font: inherit;
       font-weight: 700;
@@ -659,11 +734,11 @@ function pageHtml() {
       grid-template-columns: minmax(0, 1fr) 0;
       gap: 0;
       align-items: start;
-      --column-gap: 20px;
+      --column-gap: 14px;
       transition: grid-template-columns .22s ease, gap .22s ease;
     }
     .workspace.log-open {
-      grid-template-columns: minmax(520px, 62fr) minmax(360px, 38fr);
+      grid-template-columns: minmax(520px, 64fr) minmax(340px, 36fr);
       gap: var(--column-gap);
     }
 
@@ -674,26 +749,26 @@ function pageHtml() {
     }
 
     /* ── 服务列表 ── */
-    .list { display: flex; flex-direction: column; gap: 12px; }
+    .list { display: flex; flex-direction: column; gap: 8px; }
 
     /* ── 卡片 ── */
     .card {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      box-shadow: 0 10px 30px rgba(16,31,82,.07);
+      box-shadow: 0 8px 22px rgba(16,31,82,.06);
       overflow: hidden;
       transition: box-shadow .15s, border-color .15s, transform .15s;
       backdrop-filter: blur(10px);
     }
     .card:hover {
       border-color: var(--line-strong);
-      box-shadow: 0 16px 40px rgba(16,31,82,.10);
+      box-shadow: 0 12px 30px rgba(16,31,82,.09);
       transform: translateY(-1px);
     }
     .card.selected {
       border-color: var(--vx-color-brand-400);
-      box-shadow: 0 16px 42px rgba(47,85,230,.14);
+      box-shadow: 0 12px 32px rgba(47,85,230,.13);
     }
     .card.selected .card-head {
       background: linear-gradient(135deg, rgba(245,248,255,.98), rgba(230,237,255,.72));
@@ -701,7 +776,7 @@ function pageHtml() {
 
     /* ── 卡片头部：两行列表结构 ── */
     .card-head {
-      padding: 10px 16px;
+      padding: 8px 12px;
       cursor: pointer;
       user-select: none;
     }
@@ -712,14 +787,14 @@ function pageHtml() {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 7px;
+      margin-bottom: 5px;
     }
 
     /* 第二行：健康检查 + 运行摘要 + 操作按钮 */
     .head-row2 {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
     /* 优先级徽章 */
@@ -741,7 +816,7 @@ function pageHtml() {
     .name {
       overflow: hidden;
       color: var(--vx-color-gray-900);
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 800;
       letter-spacing: 0;
       line-height: 1.2;
@@ -772,7 +847,7 @@ function pageHtml() {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 5px 9px;
+      padding: 4px 8px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 700;
@@ -820,14 +895,14 @@ function pageHtml() {
       min-width: 0;
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
     }
     .health-item {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 3px 7px;
+      padding: 2px 6px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 600;
@@ -841,8 +916,8 @@ function pageHtml() {
     .health-item.bad { background: #fff1f3; color: var(--off); border-color: #ffc5d0; }
 
     /* 操作按钮组（右侧，不参与 flex 拉伸） */
-    .actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .actions button { border-radius: 6px; padding: 6px 10px; font-size: 12px; }
+    .actions { display: flex; gap: 5px; flex-shrink: 0; }
+    .actions button { border-radius: 6px; padding: 5px 8px; font-size: 12px; }
     .btn-start {
       background: var(--brand);
       color: #fff;
@@ -873,7 +948,7 @@ function pageHtml() {
       flex: .9;
       min-width: 0;
       flex-wrap: nowrap;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       justify-content: flex-end;
       font-size: 11px;
@@ -894,7 +969,7 @@ function pageHtml() {
 
     .log-panel {
       position: sticky;
-      top: 24px;
+      top: 16px;
       min-width: 0;
       border: 1px solid var(--line);
       border-radius: var(--radius);
@@ -954,9 +1029,9 @@ function pageHtml() {
 
     pre.log-box {
       margin: 0;
-      padding: 14px 16px;
+      padding: 12px 14px;
       width: 100%;
-      height: calc(100vh - 88px);
+      height: calc(100vh - 64px);
       min-height: 0;
       overflow: auto;
       border: 0;
@@ -970,7 +1045,7 @@ function pageHtml() {
     }
 
     @media (max-width: 860px) {
-      .wrap { padding: 24px 32px; }
+      .wrap { padding: 16px 20px; }
       .hero { flex-direction: column; align-items: stretch; }
       .workspace,
       .workspace.log-open { grid-template-columns: 1fr; gap: 16px; }
@@ -1014,10 +1089,15 @@ function pageHtml() {
     let isLogDrawerOpen = false;
 
     async function request(path, options = {}) {
+      const { timeoutMs = 4_000, ...fetchOptions } = options;
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
       const response = await fetch(path, {
-        ...options,
-        headers: { 'Content-Type': 'application/json', ...(options.headers ?? {}) },
-      });
+        ...fetchOptions,
+        cache: 'no-store',
+        signal: fetchOptions.signal ?? controller.signal,
+        headers: { 'Content-Type': 'application/json', ...(fetchOptions.headers ?? {}) },
+      }).finally(() => clearTimeout(timeout));
       if (!response.ok) throw new Error('request failed');
       return response.json();
     }
@@ -1211,7 +1291,7 @@ function pageHtml() {
 
     async function loadServices() {
       try {
-        const services = await request('/api/services');
+        const services = await request('/api/services?ts=' + Date.now());
         render(services);
       } catch (err) {
         /* 首次加载失败时在列表区显示错误提示，轮询失败静默等待下次 */
@@ -1224,7 +1304,7 @@ function pageHtml() {
       }
     }
 
-    /* ── 按钮防抖：操作进行中禁用同一张卡片的所有按钮 ── */
+    /* ── 按钮防抖：操作进行中只锁定生命周期按钮，保留“打开”可用 ── */
     const pendingActions = new Set();
 
     async function serviceAction(id, action) {
@@ -1232,14 +1312,14 @@ function pageHtml() {
       if (pendingActions.has(key)) return;
       pendingActions.add(key);
 
-      /* 立即锁定该卡片所有操作按钮，给用户即时反馈 */
+      /* 立即锁定该卡片的启动/停止/重启按钮，给用户即时反馈 */
       const card = document.getElementById('card-' + id);
-      const btns = card ? Array.from(card.querySelectorAll('.actions button')) : [];
+      const btns = card ? Array.from(card.querySelectorAll('.btn-start, .btn-stop, .btn-restart')) : [];
       if (card) card.dataset.busy = '1';
       btns.forEach(function(b) { b.disabled = true; });
 
       try {
-        await request('/api/service/' + id + '/' + action, { method: 'POST' });
+        await request('/api/service/' + id + '/' + action, { method: 'POST', timeoutMs: 30_000 });
       } catch (err) {
         console.warn('[panel] serviceAction failed:', err);
       } finally {
@@ -1273,7 +1353,7 @@ function pageHtml() {
       pendingBulkAction = true;
       setToolbarBusy(true);
       try {
-        await request('/api/bulk/' + action, { method: 'POST' });
+        await request('/api/bulk/' + action, { method: 'POST', timeoutMs: action === 'stop' ? 120_000 : 10_000 });
         await loadServices();
       } catch (err) {
         console.warn('[panel] bulkAction failed:', err);
@@ -1314,7 +1394,12 @@ const server = http.createServer(async (req, res) => {
   const url    = new URL(req.url ?? '/', `http://${req.headers.host ?? 'localhost'}`);
 
   if (method === 'GET' && url.pathname === '/') {
-    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    });
     res.end(pageHtml());
     return;
   }

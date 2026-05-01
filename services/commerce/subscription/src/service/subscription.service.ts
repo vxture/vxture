@@ -19,7 +19,9 @@ import type {
   UpdateSubscriptionInput,
   PlanQueryParams,
   SubscriptionQueryParams,
-  SubscriptionStats
+  SubscriptionStats,
+  UsageStats,
+  UsageStatsQuery
 } from '../types/subscription.types';
 import { SubscriptionStatus, BillingCycle } from '../types/subscription.types';
 import { planRepository } from '../repository/plan.repository';
@@ -125,6 +127,7 @@ export class SubscriptionService {
 
     const subscription = await subscriptionRepository.createSubscription({
       customerId: input.customerId,
+      tenantId: input.tenantId ?? input.customerId,
       planId: input.planId,
       planName: plan.name,
       status: SubscriptionStatus.ACTIVE,
@@ -200,6 +203,15 @@ export class SubscriptionService {
     }
 
     const subscriptions = await subscriptionRepository.getSubscriptionsByCustomerId(customerId);
+    return subscriptions;
+  }
+
+  async getTenantSubscriptions(tenantId: string): Promise<Subscription[]> {
+    if (!tenantId || tenantId.trim().length === 0) {
+      throw new Error('租户ID不能为空');
+    }
+
+    const subscriptions = await subscriptionRepository.getSubscriptionsByTenantId(tenantId);
     return subscriptions;
   }
 
@@ -549,13 +561,37 @@ export class SubscriptionService {
     };
 
     subscriptions.forEach(subscription => {
-      if (!stats.byPlan[subscription.planId]) {
-        stats.byPlan[subscription.planId] = 0;
-      }
-      stats.byPlan[subscription.planId]++;
+      stats.byPlan[subscription.planId] = (stats.byPlan[subscription.planId] ?? 0) + 1;
     });
 
     return stats;
+  }
+
+  async getUsageStats(query: UsageStatsQuery): Promise<UsageStats> {
+    const period = query.period ?? '30d';
+    const subscriptions = await subscriptionRepository.getSubscriptions({ tenantId: query.tenantId });
+    const activeSubscriptions = subscriptions.filter(s => s.status === SubscriptionStatus.ACTIVE);
+    const trialSubscriptions = subscriptions.filter(s => s.isTrial);
+    const plans = new Map<string, { planId: string; planName: string; count: number }>();
+
+    for (const subscription of subscriptions) {
+      const plan = plans.get(subscription.planId) ?? {
+        planId: subscription.planId,
+        planName: subscription.planName,
+        count: 0,
+      };
+      plan.count += 1;
+      plans.set(subscription.planId, plan);
+    }
+
+    return {
+      tenantId: query.tenantId,
+      period,
+      activeSubscriptions: activeSubscriptions.length,
+      trialSubscriptions: trialSubscriptions.length,
+      estimatedMonthlySpend: activeSubscriptions.reduce((sum, sub) => sum + sub.price, 0),
+      plans: [...plans.values()],
+    };
   }
 }
 

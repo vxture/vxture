@@ -912,6 +912,31 @@ select.vx-select-trigger {
   grid-template-columns: var(--vx-shell-sidebar-collapsed-width) minmax(0, 1fr) var(--vx-shell-assistant-width);
 }
 
+.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-width) minmax(0, 1fr) var(--vx-shell-end-panel-width);
+}
+
+.vx-shell--sidebar-collapsed.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-collapsed-width) minmax(0, 1fr) var(--vx-shell-end-panel-width);
+}
+
+.vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-width) minmax(0, 1fr) var(--vx-shell-end-panel-width) var(--vx-shell-assistant-width);
+}
+
+.vx-shell--sidebar-collapsed.vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-collapsed-width) minmax(0, 1fr) var(--vx-shell-end-panel-width) var(--vx-shell-assistant-width);
+}
+
+.vx-shell__end-panel {
+  min-width: 0;
+  height: calc(100dvh - var(--vx-shell-header-height));
+  max-height: calc(100dvh - var(--vx-shell-header-height));
+  min-height: calc(100dvh - var(--vx-shell-header-height));
+  align-self: start;
+  overflow: hidden;
+}
+
 .vx-shell-sidebar {
   display: grid;
   grid-template-rows: auto auto 1fr auto;
@@ -6537,8 +6562,12 @@ body.dark {
 @media (max-width: 1100px) {
   .vx-shell__body,
   .vx-shell--assistant-open .vx-shell__body,
+  .vx-shell--end-panel-open .vx-shell__body,
   .vx-shell--sidebar-collapsed .vx-shell__body,
   .vx-shell--sidebar-collapsed.vx-shell--assistant-open .vx-shell__body,
+  .vx-shell--sidebar-collapsed.vx-shell--end-panel-open .vx-shell__body,
+  .vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body,
+  .vx-shell--sidebar-collapsed.vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body,
   .vx-settings-layout,
   .vx-settings-split-page,
   .vx-dashboard-layout {
@@ -6546,6 +6575,7 @@ body.dark {
   }
 
   .vx-shell-sidebar,
+  .vx-shell__end-panel,
   .vx-assistant-panel {
     position: static;
     height: auto;

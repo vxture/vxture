@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
@@ -188,20 +188,48 @@ function ProductSolutionListRows({
   solutions,
   startIndex,
   openMenuId,
+  selectedSolutionIds,
+  isPageSelected,
   onOpenMenu,
   onCloseMenu,
   onOpenDetails,
+  onToggleSolution,
+  onTogglePage,
 }: {
   solutions: ProductSolutionRecord[];
   startIndex: number;
   openMenuId: string | null;
+  selectedSolutionIds: Set<string>;
+  isPageSelected: boolean;
   onOpenMenu: (solutionId: string) => void;
   onCloseMenu: () => void;
   onOpenDetails: (solutionCode: string) => void;
+  onToggleSolution: (solutionId: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = solutions.filter((solution) => selectedSolutionIds.has(solution.id)).length;
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < solutions.length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate = isPagePartiallySelected;
+    }
+  }, [isPagePartiallySelected]);
+
   return (
     <div className="vx-tenant-directory-list vx-product-solution-directory-list" role="region" aria-label="业务产品方案清单">
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页业务方案"
+          />
+        </span>
         <span>序号</span>
         <span>业务方案</span>
         <span>行业场景</span>
@@ -216,20 +244,30 @@ function ProductSolutionListRows({
         return (
           <div
             key={solution.id}
-            className={joinClasses('vx-tenant-directory-row', `vx-product-solution-row--${solution.status}`)}
-            role="button"
-            tabIndex={0}
-            onClick={() => onOpenDetails(solution.solutionCode)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') onOpenDetails(solution.solutionCode);
+            className={joinClasses('vx-tenant-directory-row', 'vx-product-solution-operation-row', `vx-product-solution-row--${solution.status}`, selectedSolutionIds.has(solution.id) ? 'vx-product-solution-operation-row--selected' : '')}
+            onClick={(event) => {
+              if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+              onToggleSolution(solution.id, !selectedSolutionIds.has(solution.id));
             }}
           >
+            <span className="vx-product-solution-operation-row__select">
+              <input
+                type="checkbox"
+                className="vx-model-select-checkbox"
+                checked={selectedSolutionIds.has(solution.id)}
+                onClick={(event) => event.stopPropagation()}
+                onChange={(event) => onToggleSolution(solution.id, event.target.checked)}
+                aria-label={`选择 ${solution.solutionName}`}
+              />
+            </span>
             <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
             <span className="vx-tenant-directory-row__tenant vx-product-solution-row__identity">
               <Icon name="workflow" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <strong>{solution.solutionName}</strong>
+                  <button type="button" className="vx-model-name-button" onClick={() => onOpenDetails(solution.solutionCode)}>
+                    {solution.solutionName}
+                  </button>
                 </span>
                 <small>{solution.solutionCode} · {solution.ownerTeam}</small>
               </span>
@@ -393,6 +431,7 @@ export function ProductSolutionsPage() {
   const [solutions, setSolutions] = useState<ProductSolutionRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [selectedSolutionIds, setSelectedSolutionIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [visibilityFilter, setVisibilityFilter] = useState<VisibilityFilter>('all');
@@ -437,6 +476,9 @@ export function ProductSolutionsPage() {
   const pageCount = Math.max(1, Math.ceil(filteredSolutions.length / pageSize));
   const activePage = Math.min(currentPage, pageCount);
   const visibleSolutions = filteredSolutions.slice((activePage - 1) * pageSize, activePage * pageSize);
+  const visibleSolutionIds = visibleSolutions.map((solution) => solution.id);
+  const selectedVisibleSolutionCount = visibleSolutionIds.filter((solutionId) => selectedSolutionIds.has(solutionId)).length;
+  const isSolutionPageSelected = visibleSolutionIds.length > 0 && selectedVisibleSolutionCount === visibleSolutionIds.length;
   const activeSolutions = solutions.filter((solution) => solution.status === 'active').length;
   const productCount = solutions.reduce((sum, solution) => sum + solution.products.length, 0);
   const partnerProductCount = solutions.reduce((sum, solution) => sum + solution.products.filter((product) => product.source === 'partner').length, 0);
@@ -463,6 +505,32 @@ export function ProductSolutionsPage() {
 
   function handleOpenDetails(solutionCode: string) {
     router.push(`/product-solutions/${encodeURIComponent(solutionCode)}`);
+  }
+
+  function toggleSolutionSelection(solutionId: string, checked: boolean) {
+    setSelectedSolutionIds((current) => {
+      const next = new Set(current);
+      if (checked) {
+        next.add(solutionId);
+      } else {
+        next.delete(solutionId);
+      }
+      return next;
+    });
+  }
+
+  function toggleSolutionPageSelection(checked: boolean) {
+    setSelectedSolutionIds((current) => {
+      const next = new Set(current);
+      for (const solutionId of visibleSolutionIds) {
+        if (checked) {
+          next.add(solutionId);
+        } else {
+          next.delete(solutionId);
+        }
+      }
+      return next;
+    });
   }
 
   return (
@@ -535,9 +603,13 @@ export function ProductSolutionsPage() {
                 solutions={visibleSolutions}
                 startIndex={(activePage - 1) * pageSize}
                 openMenuId={openMenuId}
+                selectedSolutionIds={selectedSolutionIds}
+                isPageSelected={isSolutionPageSelected}
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
                 onOpenDetails={handleOpenDetails}
+                onToggleSolution={toggleSolutionSelection}
+                onTogglePage={toggleSolutionPageSelection}
               />
             ) : (
               <ProductSolutionCards

@@ -21,7 +21,9 @@ function getMessageValue(messages: Messages, path: string): unknown {
   }, messages);
 }
 
-function formatMessage(template: string, values?: Record<string, string | number>): string {
+type MessageValues = Record<string, string | number>;
+
+function formatMessage(template: string, values?: MessageValues): string {
   if (!values) return template;
   return template.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? `{${key}}`));
 }
@@ -56,14 +58,16 @@ export function useConsoleTranslations(namespace?: string) {
     throw new Error('useConsoleTranslations must be used within ConsoleIntlProvider');
   }
 
-  return (key: string, values?: Record<string, string | number>): string => {
+  return (key: string, fallbackOrValues?: string | MessageValues, values?: MessageValues): string => {
     const fullKey = namespace ? `${namespace}.${key}` : key;
     const value = getMessageValue(context.messages, fullKey);
+    const fallback = typeof fallbackOrValues === 'string' ? fallbackOrValues : undefined;
+    const messageValues = typeof fallbackOrValues === 'string' ? values : fallbackOrValues;
 
     if (typeof value === 'string') {
-      return formatMessage(value, values);
+      return formatMessage(value, messageValues);
     }
 
-    return fullKey;
+    return fallback ?? fullKey;
   };
 }

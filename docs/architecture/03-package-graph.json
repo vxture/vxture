@@ -1,6 +1,6 @@
 {
   "version": "1.2.0",
-  "lastUpdated": "2026-03-10",
+  "lastUpdated": "2026-05-01",
   "layers": [
     {
       "name": "shared",
@@ -119,7 +119,8 @@
       "packages": [
         "@vxture/bff-website",
         "@vxture/bff-admin",
-        "@vxture/bff-tenant",
+        "@vxture/bff-console",
+        "@vxture/bff-vela",
         "@vxture/bff-agent{N}"
       ],
       "location": "bff/{name}-bff/",
@@ -200,7 +201,7 @@
       "examples": [
         "website",
         "admin",
-        "tenant"
+        "console"
       ],
       "allowed_dependencies": [
         "bff (HTTP only)",
@@ -218,6 +219,13 @@
     "agent_studio": {
       "location": "agent-studio/*",
       "description": "Agent product frontends — fast-changing, customer-facing",
+      "examples": [
+        "ruyinagent",
+        "vela"
+      ],
+      "packages": [
+        "@vxture/agent-studio-vela"
+      ],
       "allowed_dependencies": [
         "bff (HTTP only)",
         "design-system",
@@ -235,6 +243,10 @@
     "agent_server": {
       "location": "agent-server/*",
       "description": "Agent-private backends — promotes to services when proven reusable",
+      "examples": [
+        "ruyinagent",
+        "vela"
+      ],
       "allowed_dependencies": [
         "ai-sdk",
         "service",
@@ -249,9 +261,44 @@
       ]
     }
   },
+  "agent_products": {
+    "vela": {
+      "description": "Productized embedded assistant for admin and console surfaces",
+      "frontend": {
+        "path": "agent-studio/vela",
+        "package": "@vxture/agent-studio-vela",
+        "embedded_in": [
+          "portals/admin",
+          "portals/console"
+        ]
+      },
+      "bff": {
+        "path": "bff/vela-bff",
+        "package": "@vxture/bff-vela",
+        "public_routes": [
+          "/vela/chat"
+        ]
+      },
+      "server": {
+        "path": "agent-server/vela",
+        "package": "vela-server",
+        "internal_routes": [
+          "/internal/vela/chat"
+        ],
+        "capabilities": [
+          "CallerContext validation",
+          "surface-aware tool registry",
+          "LLM tool-use loop",
+          "session and message persistence",
+          "billing, subscription, and ticket service access"
+        ]
+      }
+    }
+  },
   "dependency_direction": [
     "portals/* --HTTP--> bff/* --> service --> core --> shared",
     "agent-studio/* --HTTP--> bff/* --> agent-server --> ai-sdk",
+    "portals/admin and portals/console --embed--> agent-studio/vela --HTTP/SSE--> bff/vela-bff --> agent-server/vela",
     "portals/* and agent-studio/* --> design-system --> shared",
     "portals/* and agent-studio/* --> platform --> shared"
   ],
@@ -280,6 +327,7 @@
   "notes": {
     "ai_sdk": "Single package with internal modules: llm, rag, embedding, workflow. Server-side only.",
     "bff": "One BFF per consumer (portal or agent). Domain-split internally via router modules.",
+    "vela": "Vela is an embedded agent product: admin and console host its UI, but all assistant traffic goes through @vxture/bff-vela and vela-server.",
     "agent_lifecycle": "agent-server logic promotes to services/{domain}/{name}/ when proven reusable across agents.",
     "service_domains": "services/ uses domain subdirectories for organization. Package names remain @vxture/service-{name}."
   }

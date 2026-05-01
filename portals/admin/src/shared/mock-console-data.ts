@@ -21,7 +21,9 @@ export const mockAuthenticatedSession: SessionSnapshot = {
     id: 'platform_admin_mock',
     name: 'Super Admin',
     email: 'superadmin@local.vxture',
-    roleLabel: 'Super Admin',
+    roleLabel: 'role.platform_architect',
+    roleI18nKey: 'role.platform_architect',
+    roleNameEn: 'Platform Architect',
     username: 'superadmin',
     phone: '13800000000',
   },
@@ -141,7 +143,7 @@ export const quickActions: QuickAction[] = [
     label: 'Add member',
     description: 'Invite operators, workspace owners, and readonly reviewers.',
     href: '/members',
-    icon: 'users',
+    icon: 'user',
   },
   {
     label: 'Review subscription',
@@ -616,6 +618,9 @@ function productPolicy(input: {
 
   return {
     id: input.id,
+    subjectType: 'tenant',
+    subjectId: '*',
+    subjectName: '租户主体',
     scopeType: 'product',
     scopeCode: input.productCode,
     scopeName: release?.productName ?? input.productCode,
@@ -637,6 +642,29 @@ function productPolicy(input: {
 }
 
 export const productModelPolicyRecords: ProductModelPolicyRecord[] = [
+  {
+    id: 'policy-platform-vela-admin',
+    subjectType: 'platform',
+    subjectId: 'platform',
+    subjectName: '平台主体',
+    scopeType: 'tenant_default',
+    scopeCode: 'platform',
+    scopeName: '平台主体模型策略',
+    isDefined: true,
+    productCode: 'platform',
+    productName: '平台自治域',
+    productRegion: null,
+    agentId: null,
+    agentCode: 'vela-admin',
+    agentName: 'Vela Admin',
+    modelCode: 'doubao-seed-2-0-pro-260215',
+    quotaTokens: 10_000_000,
+    isUnlimited: false,
+    priority: 50,
+    isActive: true,
+    cycle: 'monthly',
+    note: '平台自治域和 admin 内 Vela 使用的平台主体配额，独立于租户体系。',
+  },
   productPolicy({
     id: 'policy-product-console-cn-lite',
     productCode: 'vxture-console-cn',
@@ -694,6 +722,9 @@ export const productModelPolicyRecords: ProductModelPolicyRecord[] = [
   }),
   {
     id: 'policy-default-new-product',
+    subjectType: 'tenant',
+    subjectId: '*',
+    subjectName: '租户主体',
     scopeType: 'new_product_default',
     scopeCode: NEW_PRODUCT_DEFAULT_CODE,
     scopeName: '新产品授权策略',
@@ -714,6 +745,9 @@ export const productModelPolicyRecords: ProductModelPolicyRecord[] = [
   },
   {
     id: 'policy-default-tenant',
+    subjectType: 'tenant',
+    subjectId: '*',
+    subjectName: '租户主体',
     scopeType: 'tenant_default',
     scopeCode: TENANT_DEFAULT_CODE,
     scopeName: '按租户授权策略',
@@ -734,6 +768,9 @@ export const productModelPolicyRecords: ProductModelPolicyRecord[] = [
   },
   {
     id: 'policy-undefined-ruyinagent-intl',
+    subjectType: 'tenant',
+    subjectId: '*',
+    subjectName: '租户主体',
     scopeType: 'product',
     scopeCode: 'ruyinagent-intl',
     scopeName: 'Ruyin Agent 国际版',

@@ -30,6 +30,7 @@ export enum TicketPriority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
+  URGENT = 'urgent',
   CRITICAL = 'critical'
 }
 
@@ -40,6 +41,7 @@ export enum TicketPriority {
 // 工单基本信息类型
 export interface Ticket {
   id: string;
+  tenantId: string;
   title: string;
   description: string;
   status: TicketStatus;
@@ -61,6 +63,7 @@ export interface Ticket {
 
 // 工单查询参数类型
 export interface TicketQueryParams {
+  tenantId?: string;
   status?: TicketStatus;
   priority?: TicketPriority;
   assigneeId?: string;
@@ -73,6 +76,31 @@ export interface TicketQueryParams {
   limit?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+}
+
+export interface CreateTicketInput {
+  tenantId?: string;
+  title: string;
+  description: string;
+  priority?: TicketPriority;
+  assigneeId?: string;
+  reporterId?: string;
+  category: string;
+  tags?: string[];
+  dueDate?: Date;
+}
+
+export interface UpdateTicketInput {
+  title?: string;
+  description?: string;
+  status?: TicketStatus;
+  priority?: TicketPriority;
+  assigneeId?: string;
+  category?: string;
+  tags?: string[];
+  dueDate?: Date;
+  resolution?: string;
+  resolutionDate?: Date;
 }
 
 // ============================================================================

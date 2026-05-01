@@ -69,6 +69,7 @@ export interface LineItem {
 // 发票类型
 export interface Invoice {
   id: string;
+  tenantId: string;
   invoiceNumber: string;
   customerId: string;
   customerName: string;
@@ -89,6 +90,7 @@ export interface Invoice {
 // 支付记录类型
 export interface Payment {
   id: string;
+  tenantId: string;
   invoiceId: string;
   amount: number;
   currency: string;
@@ -104,6 +106,7 @@ export interface Payment {
 // 订阅类型
 export interface Subscription {
   id: string;
+  tenantId: string;
   customerId: string;
   planId: string;
   planName: string;
@@ -125,8 +128,11 @@ export interface Subscription {
 
 // 发票查询参数类型
 export interface InvoiceQueryParams {
+  tenantId?: string;
   customerId?: string;
+  search?: string;
   status?: InvoiceStatus;
+  period?: BillingPeriod;
   startDate?: Date;
   endDate?: Date;
   page?: number;
@@ -135,6 +141,7 @@ export interface InvoiceQueryParams {
 
 // 支付查询参数类型
 export interface PaymentQueryParams {
+  tenantId?: string;
   invoiceId?: string;
   status?: PaymentStatus;
   method?: PaymentMethod;
@@ -146,10 +153,43 @@ export interface PaymentQueryParams {
 
 // 订阅查询参数类型
 export interface SubscriptionQueryParams {
+  tenantId?: string;
   customerId?: string;
   status?: Subscription['status'];
   page?: number;
   limit?: number;
+}
+
+export type BillingPeriod = '7d' | '30d' | '90d' | '1y';
+
+export interface BillingStatsQuery {
+  tenantId?: string;
+  customerId?: string;
+  period?: BillingPeriod;
+}
+
+export interface QueryInvoicesParams extends InvoiceQueryParams {
+  limit?: number;
+}
+
+export interface CreateInvoiceInput {
+  tenantId?: string;
+  customerId: string;
+  customerName: string;
+  customerEmail: string;
+  lineItems: Omit<LineItem, 'id' | 'amount' | 'taxAmount'>[];
+  currency?: string;
+  dueDate?: Date;
+  notes?: string;
+}
+
+export interface ProcessPaymentInput {
+  tenantId?: string;
+  invoiceId: string;
+  amount: number;
+  method: PaymentMethod;
+  currency?: string;
+  metadata?: Record<string, unknown>;
 }
 
 // ============================================================================

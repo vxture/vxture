@@ -70,6 +70,7 @@ export interface Plan {
 // 订阅类型
 export interface Subscription {
   id: string;
+  tenantId: string;
   customerId: string;
   planId: string;
   planName: string;
@@ -119,6 +120,7 @@ export interface PlanQueryParams {
 
 // 订阅查询参数类型
 export interface SubscriptionQueryParams {
+  tenantId?: string;
   customerId?: string;
   planId?: string;
   status?: SubscriptionStatus;
@@ -127,6 +129,56 @@ export interface SubscriptionQueryParams {
   startDateTo?: Date;
   page?: number;
   limit?: number;
+}
+
+export type UsagePeriod = '7d' | '30d' | '90d';
+
+export interface UsageStatsQuery {
+  tenantId: string;
+  period?: UsagePeriod;
+}
+
+export interface UsageStats {
+  tenantId: string;
+  period: UsagePeriod;
+  activeSubscriptions: number;
+  trialSubscriptions: number;
+  estimatedMonthlySpend: number;
+  plans: Array<{
+    planId: string;
+    planName: string;
+    count: number;
+  }>;
+}
+
+export interface CreateSubscriptionInput {
+  tenantId?: string;
+  customerId: string;
+  planId: string;
+  cycle?: BillingCycle;
+  startDate?: Date;
+  trialDays?: number;
+  autoRenew?: boolean;
+  paymentMethodId?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface UpdateSubscriptionInput {
+  planId?: string;
+  planName?: string;
+  status?: SubscriptionStatus;
+  price?: number;
+  currency?: string;
+  cycle?: BillingCycle;
+  startDate?: Date;
+  endDate?: Date;
+  nextBillingDate?: Date;
+  trialEndDate?: Date;
+  isTrial?: boolean;
+  autoRenew?: boolean;
+  cancelAtPeriodEnd?: boolean;
+  paymentMethodId?: string;
+  metadata?: Record<string, unknown>;
 }
 
 // ============================================================================

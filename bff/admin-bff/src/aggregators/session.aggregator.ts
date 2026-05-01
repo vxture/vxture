@@ -33,7 +33,7 @@ export class SessionAggregator {
       username: user.username ?? user.name,
       displayName: user.displayName ?? user.name,
       avatarUrl: null,
-      headline: user.roleLabel,
+      headline: user.roleNameEn,
       bio: null,
       email: user.email,
       phone: user.phone ?? null,

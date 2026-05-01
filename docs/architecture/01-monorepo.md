@@ -1,7 +1,7 @@
 # Vxture Monorepo Architecture
 
 **Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Last Updated**: 2026-05-01
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -26,22 +26,23 @@ vxture/
 ├── portals/                    # Platform frontend applications (stable, ops-facing)
 │   ├── website/
 │   ├── admin/
-│   └── tenant/
+│   └── console/
 │
 ├── agent-studio/               # Agent frontend applications (fast-changing, customer-facing)
-│   ├── agent01/
-│   ├── agent02/
+│   ├── ruyinagent/
+│   ├── vela/
 │   └── agent{N}/
 │
 ├── agent-server/               # Agent backend services (fast-changing, private per agent)
-│   ├── agent01/
-│   ├── agent02/
+│   ├── ruyinagent/
+│   ├── vela/
 │   └── agent{N}/
 │
 ├── bff/                        # Backend For Frontend — all BFFs in one place
 │   ├── website-bff/
 │   ├── admin-bff/
-│   ├── tenant-bff/
+│   ├── console-bff/
+│   ├── vela-bff/
 │   ├── agent01-bff/
 │   └── agent{N}-bff/
 │
@@ -137,7 +138,7 @@ Stable, robust, and slow-changing. They form the operational backbone of the pla
 portals/
 ├── website/          # Public marketing site
 ├── admin/            # Platform operations portal (for platform operators)
-└── tenant/           # Tenant management portal (for tenant admins)
+└── console/          # Tenant console (for tenant admins)
 ```
 
 All portals, including `website`, have a dedicated BFF for server-side concerns
@@ -165,15 +166,15 @@ Each agent frontend is independently governed and deployed.
 
 ```
 agent-studio/
-├── agent01/          # e.g. AI report writing agent (frontend only)
-├── agent02/
+├── ruyinagent/       # Example standalone/agent product frontend
+├── vela/             # Embedded Vela assistant frontend
 └── agent{N}/
 ```
 
 Each agent frontend:
 
 - Is independently deployable as a standalone web application
-- Is optionally embeddable inside `portals/admin` or `portals/tenant` as a micro-frontend
+- Is optionally embeddable inside `portals/admin` or `portals/console` as a micro-frontend
 - Calls its own BFF (`bff/agent{N}-bff`) over HTTP
 - Uses `@vxture/design-system` and `@vxture/platform-*` from the platform
 - Has no knowledge of its paired backend — all backend interaction goes through BFF
@@ -193,8 +194,8 @@ Each agent has its own private backend, governed and deployed independently.
 
 ```
 agent-server/
-├── agent01/          # Backend for agent-studio/agent01
-├── agent02/
+├── ruyinagent/       # Backend for agent-studio/ruyinagent
+├── vela/             # Backend for embedded Vela assistant
 └── agent{N}/
 ```
 
@@ -259,7 +260,14 @@ bff/
 │       ├── middleware/
 │       └── index.ts
 │
-├── tenant-bff/             # BFF for portals/tenant
+├── console-bff/            # BFF for portals/console
+│   └── src/
+│       ├── routers/
+│       ├── aggregators/
+│       ├── middleware/
+│       └── index.ts
+│
+├── vela-bff/               # BFF for agent-studio/vela ↔ agent-server/vela
 │   └── src/
 │       ├── routers/
 │       ├── aggregators/
@@ -392,7 +400,8 @@ Examples:
 
 @vxture/bff-website
 @vxture/bff-admin
-@vxture/bff-tenant
+@vxture/bff-console
+@vxture/bff-vela
 @vxture/bff-agent01
 @vxture/bff-agent{N}
 
@@ -450,7 +459,7 @@ support domain:   @vxture/service-ticket
 Backend For Frontend. One per consumer. Domain-split internally via router modules.
 
 ```
-@vxture/bff-website, bff-admin, bff-tenant, bff-agent01, bff-agent{N}
+@vxture/bff-website, bff-admin, bff-console, bff-vela, bff-agent01, bff-agent{N}
 ```
 
 ## platform
@@ -567,7 +576,7 @@ Agent frontends (`agent-studio/{agent}/`) support two deployment modes:
 **Standalone**: Deployed as an independent web application with its own URL.
 Suitable for agents marketed as separate products.
 
-**Embedded (micro-frontend)**: Loaded inside `portals/admin` or `portals/tenant`
+**Embedded (micro-frontend)**: Loaded inside `portals/admin` or `portals/console`
 as a module, sharing the portal's navigation shell, auth session, and theme.
 Suitable for agents that are integral features of a portal.
 

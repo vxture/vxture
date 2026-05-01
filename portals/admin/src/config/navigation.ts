@@ -1,5 +1,7 @@
 import type { IconName } from '@vxture/design-system';
 
+export type AdminWorkspaceId = 'tenant-ops' | 'platform-autonomy';
+
 export interface AdminNavigationItem {
   id: string;
   href: string;
@@ -15,7 +17,17 @@ export interface AdminNavigationSection {
   items: AdminNavigationItem[];
 }
 
-export const adminNavigationSections: AdminNavigationSection[] = [
+export interface AdminNavigationWorkspace {
+  id: AdminWorkspaceId;
+  label: string;
+  shortLabel: string;
+  description: string;
+  homeHref: string;
+  icon: IconName;
+  sections: AdminNavigationSection[];
+}
+
+const tenantOpsSections: AdminNavigationSection[] = [
   {
     id: 'overview',
     title: '运营总览',
@@ -52,7 +64,7 @@ export const adminNavigationSections: AdminNavigationSection[] = [
         href: '/accounts',
         label: '账号管理',
         description: '跨租户查询平台账号，管理账号状态、登录安全和联系方式。',
-        icon: 'users',
+        icon: 'user',
       },
       {
         id: 'verifications',
@@ -60,13 +72,6 @@ export const adminNavigationSections: AdminNavigationSection[] = [
         label: '组织认证',
         description: '审核租户企业资质材料，处理通过、驳回和复核状态。',
         icon: 'medal',
-      },
-      {
-        id: 'adminRoles',
-        href: '/admin-roles',
-        label: '角色权限',
-        description: '维护运营平台内部角色和权限配置，与租户侧权限隔离。',
-        icon: 'shield-check',
       },
     ],
   },
@@ -147,22 +152,8 @@ export const adminNavigationSections: AdminNavigationSection[] = [
   },
   {
     id: 'capabilitiesServices',
-    title: '能力与服务',
+    title: '模型与技能',
     items: [
-      {
-        id: 'serviceMonitor',
-        href: '/service-monitor',
-        label: '服务监控',
-        description: '查看服务运行详情、响应时间、错误率、可用性指标和告警规则。',
-        icon: 'server',
-      },
-      {
-        id: 'modelGateway',
-        href: '/model-gateway',
-        label: '模型接入',
-        description: '维护 LLM Provider、API Key、限流、超时和调用端点。',
-        icon: 'cloud',
-      },
       {
         id: 'modelGrants',
         href: '/model-grants',
@@ -208,7 +199,7 @@ export const adminNavigationSections: AdminNavigationSection[] = [
   },
   {
     id: 'supportCompliance',
-    title: '支持与合规',
+    title: '服务与支持',
     items: [
       {
         id: 'tickets',
@@ -224,6 +215,95 @@ export const adminNavigationSections: AdminNavigationSection[] = [
         description: '发布平台公告和定向通知，查询通知触达与历史记录。',
         icon: 'bell',
       },
+    ],
+  },
+];
+
+const platformAutonomySections: AdminNavigationSection[] = [
+  {
+    id: 'autonomyOverview',
+    title: '自治总览',
+    items: [
+      {
+        id: 'platformAutonomy',
+        href: '/platform',
+        label: '平台自治',
+        description: '观察平台内部身份、权限、供给资源、运行状态和安全审计。',
+        icon: 'squares-four',
+      },
+    ],
+  },
+  {
+    id: 'identityAccess',
+    title: '身份与权限',
+    items: [
+      {
+        id: 'platformAdmins',
+        href: '/platform-admins',
+        label: '用户管理',
+        description: '管理平台内部管理员、运营人员和运维人员的账号、岗位、状态和准入边界。',
+        icon: 'user',
+      },
+      {
+        id: 'adminRoles',
+        href: '/admin-roles',
+        label: '角色权限',
+        description: '维护运营平台内部角色和权限配置，与租户侧权限隔离。',
+        icon: 'role',
+      },
+      {
+        id: 'adminPermissions',
+        href: '/admin-permissions',
+        label: '权限管理',
+        description: '展示和治理 admin 平台全部菜单、按钮和接口权限。',
+        icon: 'shield-check',
+      },
+    ],
+  },
+  {
+    id: 'platformResources',
+    title: '平台资源',
+    items: [
+      {
+        id: 'modelGateway',
+        href: '/model-gateway',
+        label: '模型接入',
+        description: '维护 LLM Provider、API Key、限流、超时和调用端点。',
+        icon: 'cloud',
+      },
+      {
+        id: 'platformSecrets',
+        href: '/platform-secrets',
+        label: '密钥配置',
+        description: '集中管理平台级密钥、凭据、轮换策略和最小可见范围。',
+        icon: 'key',
+      },
+    ],
+  },
+  {
+    id: 'operationsReliability',
+    title: '运行与可靠性',
+    items: [
+      {
+        id: 'serviceMonitor',
+        href: '/service-monitor',
+        label: '服务监控',
+        description: '查看服务运行详情、响应时间、错误率、可用性指标和告警规则。',
+        icon: 'server',
+      },
+      {
+        id: 'platformJobs',
+        href: '/platform-jobs',
+        label: '任务队列',
+        description: '观察平台异步任务、重试、死信和关键调度状态。',
+        icon: 'workflow',
+      },
+    ],
+  },
+  {
+    id: 'securityAudit',
+    title: '安全与审计',
+    items: [
       {
         id: 'auditLogs',
         href: '/audit-logs',
@@ -231,6 +311,74 @@ export const adminNavigationSections: AdminNavigationSection[] = [
         description: '追溯运营后台关键操作，按操作人、时间和对象筛选审计记录。',
         icon: 'info',
       },
+      {
+        id: 'approvalCenter',
+        href: '/approval-center',
+        label: '审批中心',
+        description: '承接高风险操作的二次确认、审批流和执行凭证。',
+        icon: 'check',
+      },
     ],
   },
 ];
+
+export const adminWorkspaces: AdminNavigationWorkspace[] = [
+  {
+    id: 'tenant-ops',
+    label: '运营业务域',
+    shortLabel: '运营域',
+    description: '面向租户、用户、产品、订阅、交易和服务支持的运营管理。',
+    homeHref: '/',
+    icon: 'buildings',
+    sections: tenantOpsSections,
+  },
+  {
+    id: 'platform-autonomy',
+    label: '平台自治域',
+    shortLabel: '自治域',
+    description: '面向内部用户、平台资源、运行可靠性、安全审计和治理能力。',
+    homeHref: '/platform',
+    icon: 'shield-check',
+    sections: platformAutonomySections,
+  },
+];
+
+export const defaultAdminWorkspace: AdminNavigationWorkspace = adminWorkspaces[0] as AdminNavigationWorkspace;
+export const adminNavigationSections: AdminNavigationSection[] = tenantOpsSections;
+
+export function flattenAdminNavigationSections(workspaces: AdminNavigationWorkspace[] = adminWorkspaces) {
+  return workspaces.flatMap((workspace) =>
+    workspace.sections.map((section) => ({
+      workspace,
+      section,
+    })),
+  );
+}
+
+export function flattenAdminNavigationItems(workspaces: AdminNavigationWorkspace[] = adminWorkspaces) {
+  return flattenAdminNavigationSections(workspaces).flatMap(({ workspace, section }) =>
+    section.items.map((item) => ({
+      workspace,
+      section,
+      item,
+    })),
+  );
+}
+
+function isActivePath(pathname: string, href: string) {
+  return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+}
+
+export function getAdminNavigationItemByPath(pathname: string) {
+  return flattenAdminNavigationItems().find(({ item }) => isActivePath(pathname, item.href));
+}
+
+export function getAdminWorkspaceByPath(pathname: string): AdminNavigationWorkspace {
+  const itemMatch = getAdminNavigationItemByPath(pathname);
+
+  if (itemMatch) {
+    return itemMatch.workspace;
+  }
+
+  return adminWorkspaces.find((workspace) => isActivePath(pathname, workspace.homeHref)) ?? defaultAdminWorkspace;
+}

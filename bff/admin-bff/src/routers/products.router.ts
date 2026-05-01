@@ -371,6 +371,29 @@ export const productReleases: ProductReleaseRecord[] = [
 ];
 
 export const explicitModelPolicies: ProductModelPolicyRecord[] = [
+  {
+    id: 'policy-platform-vela-admin',
+    subjectType: 'platform',
+    subjectId: 'platform',
+    subjectName: '平台主体',
+    scopeType: 'tenant_default',
+    scopeCode: 'platform',
+    scopeName: '平台主体模型策略',
+    isDefined: true,
+    productCode: 'platform',
+    productName: '平台自治域',
+    productRegion: null,
+    agentId: null,
+    agentCode: 'vela-admin',
+    agentName: 'Vela Admin',
+    modelCode: 'doubao-seed-2-0-pro-260215',
+    quotaTokens: 10_000_000,
+    isUnlimited: false,
+    priority: 50,
+    isActive: true,
+    cycle: 'monthly',
+    note: '平台自治域和 admin 内 Vela 使用的平台主体配额，独立于租户体系。',
+  },
   createProductPolicy({
     id: 'policy-product-console-cn-lite',
     productCode: 'vxture-console-cn',
@@ -431,6 +454,9 @@ export const explicitModelPolicies: ProductModelPolicyRecord[] = [
 export const defaultModelPolicies: ProductModelPolicyRecord[] = [
   {
     id: 'policy-default-new-product',
+    subjectType: 'tenant',
+    subjectId: '*',
+    subjectName: '租户主体',
     scopeType: 'new_product_default',
     scopeCode: NEW_PRODUCT_DEFAULT_CODE,
     scopeName: '新产品授权策略',
@@ -451,6 +477,9 @@ export const defaultModelPolicies: ProductModelPolicyRecord[] = [
   },
   {
     id: 'policy-default-tenant',
+    subjectType: 'tenant',
+    subjectId: '*',
+    subjectName: '租户主体',
     scopeType: 'tenant_default',
     scopeCode: TENANT_DEFAULT_CODE,
     scopeName: '按租户授权策略',
@@ -617,6 +646,9 @@ function createProductPolicy(input: {
 
   return {
     id: input.id,
+    subjectType: 'tenant',
+    subjectId: '*',
+    subjectName: '租户主体',
     scopeType: 'product',
     scopeCode: input.productCode,
     scopeName: release?.productName ?? input.productCode,
@@ -1216,6 +1248,9 @@ export function listEffectiveModelPolicies(): ProductModelPolicyRecord[] {
 
     rows.push({
       id: `policy-undefined-${release.productCode}`,
+      subjectType: 'tenant',
+      subjectId: '*',
+      subjectName: '租户主体',
       scopeType: 'product',
       scopeCode: release.productCode,
       scopeName: release.productName,

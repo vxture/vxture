@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
@@ -178,20 +178,48 @@ function ProductListRows({
   products,
   startIndex,
   openMenuId,
+  selectedProductCodes,
+  isPageSelected,
   onOpenMenu,
   onCloseMenu,
   onOpenDetails,
+  onToggleProduct,
+  onTogglePage,
 }: {
   products: ProductCapabilityRecord[];
   startIndex: number;
   openMenuId: string | null;
+  selectedProductCodes: Set<string>;
+  isPageSelected: boolean;
   onOpenMenu: (productCode: string) => void;
   onCloseMenu: () => void;
   onOpenDetails: (productCode: string) => void;
+  onToggleProduct: (productCode: string, checked: boolean) => void;
+  onTogglePage: (checked: boolean) => void;
 }) {
+  const pageSelectRef = useRef<HTMLInputElement | null>(null);
+  const selectedOnPage = products.filter((product) => selectedProductCodes.has(product.productCode)).length;
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < products.length;
+
+  useEffect(() => {
+    if (pageSelectRef.current) {
+      pageSelectRef.current.indeterminate = isPagePartiallySelected;
+    }
+  }, [isPagePartiallySelected]);
+
   return (
     <div className="vx-tenant-directory-list vx-product-directory-list" role="region" aria-label="产品能力清单">
       <div className="vx-tenant-directory-list__header">
+        <span>
+          <input
+            ref={pageSelectRef}
+            type="checkbox"
+            className="vx-model-select-checkbox"
+            checked={isPageSelected}
+            onChange={(event) => onTogglePage(event.target.checked)}
+            aria-label="选择当前页产品能力"
+          />
+        </span>
         <span>序号</span>
         <span>产品能力</span>
         <span>类型</span>
@@ -204,20 +232,30 @@ function ProductListRows({
       {products.map((product, index) => (
         <div
           key={product.productCode}
-          className={joinClasses('vx-tenant-directory-row', `vx-product-row--${product.status}`)}
-          role="button"
-          tabIndex={0}
-          onClick={() => onOpenDetails(product.productCode)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') onOpenDetails(product.productCode);
+          className={joinClasses('vx-tenant-directory-row', 'vx-product-operation-row', `vx-product-row--${product.status}`, selectedProductCodes.has(product.productCode) ? 'vx-product-operation-row--selected' : '')}
+          onClick={(event) => {
+            if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+            onToggleProduct(product.productCode, !selectedProductCodes.has(product.productCode));
           }}
         >
+          <span className="vx-product-operation-row__select">
+            <input
+              type="checkbox"
+              className="vx-model-select-checkbox"
+              checked={selectedProductCodes.has(product.productCode)}
+              onClick={(event) => event.stopPropagation()}
+              onChange={(event) => onToggleProduct(product.productCode, event.target.checked)}
+              aria-label={`选择 ${product.productName}`}
+            />
+          </span>
           <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
           <span className="vx-tenant-directory-row__tenant vx-product-row__identity">
             <Icon name={productTypeIcon(product.productType)} size="sm" fallback="placeholder" />
             <span>
               <span className="vx-tenant-directory-row__title-line">
-                <strong>{product.productName}</strong>
+                <button type="button" className="vx-model-name-button" onClick={() => onOpenDetails(product.productCode)}>
+                  {product.productName}
+                </button>
               </span>
               <small>{product.productCode} · {productRegionLabel(product.region)}</small>
             </span>
@@ -365,6 +403,7 @@ export function ProductsPage() {
   const [products, setProducts] = useState<ProductCapabilityRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [selectedProductCodes, setSelectedProductCodes] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all');
@@ -408,6 +447,9 @@ export function ProductsPage() {
   const pageCount = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
   const activePage = Math.min(currentPage, pageCount);
   const visibleProducts = filteredProducts.slice((activePage - 1) * pageSize, activePage * pageSize);
+  const visibleProductCodes = visibleProducts.map((product) => product.productCode);
+  const selectedVisibleProductCount = visibleProductCodes.filter((productCode) => selectedProductCodes.has(productCode)).length;
+  const isProductPageSelected = visibleProductCodes.length > 0 && selectedVisibleProductCount === visibleProductCodes.length;
   const activeProducts = products.filter((product) => product.status === 'active').length;
   const agentProducts = products.filter((product) => product.productType === 'agent').length;
   const platformProducts = products.filter((product) => product.productType === 'platform').length;
@@ -434,6 +476,32 @@ export function ProductsPage() {
 
   function handleOpenDetails(productCode: string) {
     router.push(`/products/${encodeURIComponent(productCode)}`);
+  }
+
+  function toggleProductSelection(productCode: string, checked: boolean) {
+    setSelectedProductCodes((current) => {
+      const next = new Set(current);
+      if (checked) {
+        next.add(productCode);
+      } else {
+        next.delete(productCode);
+      }
+      return next;
+    });
+  }
+
+  function toggleProductPageSelection(checked: boolean) {
+    setSelectedProductCodes((current) => {
+      const next = new Set(current);
+      for (const productCode of visibleProductCodes) {
+        if (checked) {
+          next.add(productCode);
+        } else {
+          next.delete(productCode);
+        }
+      }
+      return next;
+    });
   }
 
   return (
@@ -510,9 +578,13 @@ export function ProductsPage() {
                 products={visibleProducts}
                 startIndex={(activePage - 1) * pageSize}
                 openMenuId={openMenuId}
+                selectedProductCodes={selectedProductCodes}
+                isPageSelected={isProductPageSelected}
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
                 onOpenDetails={handleOpenDetails}
+                onToggleProduct={toggleProductSelection}
+                onTogglePage={toggleProductPageSelection}
               />
             ) : (
               <ProductCards

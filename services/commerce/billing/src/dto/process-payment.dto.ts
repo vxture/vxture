@@ -19,15 +19,15 @@ import { PaymentMethod } from '../types/billing.types';
 export class ProcessPaymentInput {
   @ApiProperty({ description: '发票ID', example: '1' })
   @IsString()
-  invoiceId: string;
+  invoiceId!: string;
 
   @ApiProperty({ description: '支付金额', example: 1100 })
   @IsNumber()
-  amount: number;
+  amount!: number;
 
   @ApiProperty({ description: '支付方式', example: PaymentMethod.CREDIT_CARD })
   @IsEnum(PaymentMethod)
-  method: PaymentMethod;
+  method!: PaymentMethod;
 
   @ApiProperty({ description: '货币类型', example: 'CNY', required: false })
   @IsOptional()

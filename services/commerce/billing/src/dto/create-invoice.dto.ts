@@ -12,21 +12,21 @@
  * @category DTO
  */
 
-import { IsString, IsEmail, IsArray, IsNumber, IsOptional, IsDateString, IsEnum } from 'class-validator';
+import { IsString, IsEmail, IsArray, IsNumber, IsOptional, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateInvoiceInput {
   @ApiProperty({ description: '客户ID', example: 'cust001' })
   @IsString()
-  customerId: string;
+  customerId!: string;
 
   @ApiProperty({ description: '客户姓名', example: '测试客户' })
   @IsString()
-  customerName: string;
+  customerName!: string;
 
   @ApiProperty({ description: '客户邮箱', example: 'customer@example.com' })
   @IsEmail()
-  customerEmail: string;
+  customerEmail!: string;
 
   @ApiProperty({
     description: '订单项列表',
@@ -40,7 +40,7 @@ export class CreateInvoiceInput {
     ]
   })
   @IsArray()
-  lineItems: Omit<LineItemInput, 'id' | 'amount' | 'taxAmount'>[];
+  lineItems!: Omit<LineItemInput, 'id' | 'amount' | 'taxAmount'>[];
 
   @ApiProperty({ description: '货币类型', example: 'CNY', required: false })
   @IsOptional()
@@ -61,15 +61,15 @@ export class CreateInvoiceInput {
 export class LineItemInput {
   @ApiProperty({ description: '订单项描述', example: '月度服务费' })
   @IsString()
-  description: string;
+  description!: string;
 
   @ApiProperty({ description: '数量', example: 1 })
   @IsNumber()
-  quantity: number;
+  quantity!: number;
 
   @ApiProperty({ description: '单价', example: 1000 })
   @IsNumber()
-  unitPrice: number;
+  unitPrice!: number;
 
   @ApiProperty({ description: '税率', example: 0.1, required: false })
   @IsOptional()

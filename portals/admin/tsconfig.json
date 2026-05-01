@@ -16,7 +16,9 @@
       "@vxture/design-system": ["../../packages/design/design-system/dist/index.d.ts"],
       "@vxture/design-system/*": ["../../packages/design/design-system/dist/*"],
       "@vxture/platform-browser": ["../../packages/platform/browser/src"],
-      "@vxture/platform-browser/*": ["../../packages/platform/browser/src/*"]
+      "@vxture/platform-browser/*": ["../../packages/platform/browser/src/*"],
+      "@vxture/agent-studio-vela": ["../../agent-studio/vela/src"],
+      "@vxture/agent-studio-vela/*": ["../../agent-studio/vela/src/*"]
     },
     "allowJs": true,
     "incremental": true,

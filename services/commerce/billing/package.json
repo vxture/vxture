@@ -11,8 +11,11 @@
     "test": "echo \"Test for service-billing\""
   },
   "dependencies": {
+    "@nestjs/common": "^11.0.0",
+    "@nestjs/swagger": "^11.0.0",
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
-    "@vxture/core-utils": "workspace:*"
+    "@vxture/core-utils": "workspace:*",
+    "class-validator": "^0.14.0"
   }
 }

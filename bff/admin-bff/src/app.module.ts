@@ -8,8 +8,8 @@ import { PermissionMiddleware } from './middleware/permission.middleware';
 import { AuthRouter } from './routers/auth.router';
 import { AiGatewayRouter } from './routers/ai-gateway.router';
 import { AccountsRouter } from './routers/accounts.router';
+import { AdminPermissionsRouter } from './routers/admin-permissions.router';
 import { AdminRolesRouter } from './routers/admin-roles.router';
-import { AssistantRouter } from './routers/assistant.router';
 import { BillingRouter } from './routers/billing.router';
 import { CapabilitiesRouter } from './routers/capabilities.router';
 import { CommercialRouter } from './routers/commercial.router';
@@ -18,6 +18,8 @@ import { InvoicesRouter } from './routers/invoices.router';
 import { MeRouter } from './routers/me.router';
 import { OrdersRouter } from './routers/orders.router';
 import { PaymentsRouter } from './routers/payments.router';
+import { PlatformAdminsRouter } from './routers/platform-admins.router';
+import { PlatformGovernanceRouter } from './routers/platform-governance.router';
 import { ProductsRouter } from './routers/products.router';
 import { SubscriptionRouter } from './routers/subscription.router';
 import { TenantsRouter } from './routers/tenants.router';
@@ -36,16 +38,18 @@ import { TenantsRouter } from './routers/tenants.router';
     CapabilitiesRouter,
     AiGatewayRouter,
     AccountsRouter,
+    AdminPermissionsRouter,
     AdminRolesRouter,
     OrdersRouter,
     ProductsRouter,
     SubscriptionRouter,
-    AssistantRouter,
     BillingRouter,
     CommercialRouter,
     InvoicesRouter,
     PaymentsRouter,
     TenantsRouter,
+    PlatformAdminsRouter,
+    PlatformGovernanceRouter,
   ],
   providers: [PlatformAuthService, SessionAggregator],
 })

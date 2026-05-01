@@ -6,6 +6,8 @@ export interface ConsoleUser {
   displayName?: string;
   email: string;
   roleLabel: string;
+  roleI18nKey?: string;
+  roleNameEn?: string;
   username?: string;
   phone?: string | null;
 }
@@ -65,6 +67,21 @@ export interface SessionSnapshot {
   isAuthenticated: boolean;
   user: ConsoleUser | null;
   capabilities: Capability[];
+}
+
+export type PlatformGovernanceKind = 'admins' | 'secrets' | 'jobs' | 'approvals';
+export type PlatformGovernanceStatus = 'normal' | 'warning' | 'blocked' | 'pending';
+
+export interface PlatformGovernanceRecord {
+  id: string;
+  name: string;
+  status: PlatformGovernanceStatus;
+  scope: string;
+  owner: string;
+  policy: string;
+  updatedAt: string;
+  description: string;
+  tags: string[];
 }
 
 export interface ModuleCardStat {
@@ -184,28 +201,6 @@ export interface AiModelGrantRecord {
   updatedAt: string;
 }
 
-export interface AdminAssistantChatMessage {
-  role: 'user' | 'assistant';
-  content: string;
-}
-
-export interface AdminAssistantChatResponse {
-  id: string;
-  modelCode: string;
-  agentCode: string;
-  agentId: string;
-  productCode: string;
-  tenantId: string;
-  policyId: string;
-  message: AdminAssistantChatMessage;
-  usage: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-  };
-  latencyMs: number;
-}
-
 export interface ProductAgentRecord {
   id: string;
   agentCode: string;
@@ -221,6 +216,9 @@ export interface ProductAgentRecord {
 
 export interface ProductModelPolicyRecord {
   id: string;
+  subjectType: 'tenant' | 'platform';
+  subjectId: string;
+  subjectName: string;
   scopeType: 'product' | 'new_product_default' | 'tenant_default';
   scopeCode: string;
   scopeName: string;
@@ -1106,12 +1104,25 @@ export interface PlatformRolePermissionRecord {
   routePath: string | null;
 }
 
+export interface PlatformAdminPermissionRecord extends PlatformRolePermissionRecord {
+  icon: string | null;
+  sort: number;
+  component: string | null;
+  roleCount: number;
+  activeRoleCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface PlatformRoleRecord {
   id: string;
   roleCode: string;
-  roleName: string;
+  nameI18nKey: string;
+  nameEn: string;
+  descriptionI18nKey: string | null;
   description: string;
   isSystem: boolean;
+  statusCode: 'active' | 'disabled' | 'archived';
   status: boolean;
   sort: number;
   adminCount: number;
@@ -1120,7 +1131,30 @@ export interface PlatformRoleRecord {
   menuPermissionCount: number;
   buttonPermissionCount: number;
   apiPermissionCount: number;
+  createdBy: string | null;
+  createdByName: string | null;
   createdAt: string;
   updatedAt: string;
   permissions: PlatformRolePermissionRecord[];
+}
+
+export interface PlatformAdminRecord {
+  id: string;
+  sort: number;
+  username: string;
+  displayName: string;
+  phone: string | null;
+  email: string | null;
+  roleId: string;
+  roleCode: string;
+  roleNameI18nKey: string;
+  roleNameEn: string;
+  statusCode: 'active' | 'disabled' | 'locked' | 'pending' | 'suspended';
+  status: boolean;
+  isSystem: boolean;
+  lastLoginAt: string | null;
+  lastLoginIp: string | null;
+  remark: string | null;
+  createdAt: string;
+  updatedAt: string;
 }

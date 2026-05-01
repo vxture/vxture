@@ -467,7 +467,7 @@ export function ServicePlansPage() {
       <section className="vx-tenant-summary" aria-label="服务套餐管理统计">
         <ServicePlanSummaryItem icon="workflow" label="业务方案" value={formatNumber(solutionCount)} tags={[`套餐 ${formatNumber(tierItems.length)}`]} />
         <ServicePlanSummaryItem icon="star" label="启用套餐" value={formatNumber(activeTierCount)} tags={[`公开 ${formatNumber(publicTierCount)}`]} tone="green" />
-        <ServicePlanSummaryItem icon="users" label="订阅使用" value={formatNumber(subscriptionCount)} tags={[`场景 ${formatNumber(industries.length)}`]} tone="amber" />
+        <ServicePlanSummaryItem icon="user" label="订阅使用" value={formatNumber(subscriptionCount)} tags={[`场景 ${formatNumber(industries.length)}`]} tone="amber" />
         <ServicePlanSummaryItem icon="chart-bar" label="月度收入" value={formatMoney(monthlyRevenue)} tags={['方案口径']} tone="blue" />
       </section>
 

@@ -19,6 +19,7 @@ import { TicketStatus, TicketPriority } from '../types/ticket.types';
 const mockTickets: Ticket[] = [
   {
     id: '1',
+    tenantId: 'tenant_demo',
     title: '登录页面无法加载',
     description: '用户反馈登录页面无法正常加载，显示白屏',
     status: TicketStatus.OPEN,
@@ -32,6 +33,7 @@ const mockTickets: Ticket[] = [
   },
   {
     id: '2',
+    tenantId: 'tenant_demo',
     title: 'API响应超时',
     description: '用户查询接口响应时间超过5秒',
     status: TicketStatus.IN_PROGRESS,
@@ -57,12 +59,13 @@ export class TicketRepository {
   async createTicket(input: CreateTicketInput): Promise<Ticket> {
     const newTicket: Ticket = {
       id: Date.now().toString(),
+      tenantId: input.tenantId ?? 'platform',
       title: input.title,
       description: input.description,
       status: TicketStatus.OPEN,
       priority: input.priority || TicketPriority.MEDIUM,
       assigneeId: input.assigneeId,
-      reporterId: 'current-user',
+      reporterId: input.reporterId ?? 'current-user',
       category: input.category,
       tags: input.tags || [],
       createdAt: new Date(),
@@ -80,6 +83,10 @@ export class TicketRepository {
 
   async getTickets(params: TicketQueryParams = {}): Promise<Ticket[]> {
     let results = [...this.tickets];
+
+    if (params.tenantId) {
+      results = results.filter(ticket => ticket.tenantId === params.tenantId);
+    }
 
     if (params.status) {
       results = results.filter(ticket => ticket.status === params.status);
@@ -122,13 +129,14 @@ export class TicketRepository {
       return null;
     }
 
+    const ticket = this.tickets[index]!;
     this.tickets[index] = {
-      ...this.tickets[index],
+      ...ticket,
       ...input,
       updatedAt: new Date()
     };
 
-    return this.tickets[index];
+    return this.tickets[index] ?? null;
   }
 
   async deleteTicket(id: string): Promise<boolean> {
@@ -153,20 +161,18 @@ export class TicketRepository {
         [TicketPriority.LOW]: 0,
         [TicketPriority.MEDIUM]: 0,
         [TicketPriority.HIGH]: 0,
+        [TicketPriority.URGENT]: 0,
         [TicketPriority.CRITICAL]: 0
       },
       byCategory: {} as { [category: string]: number }
     };
 
     this.tickets.forEach(ticket => {
-      stats.byPriority[ticket.priority]++;
+      stats.byPriority[ticket.priority] = (stats.byPriority[ticket.priority] ?? 0) + 1;
     });
 
     this.tickets.forEach(ticket => {
-      if (!stats.byCategory[ticket.category]) {
-        stats.byCategory[ticket.category] = 0;
-      }
-      stats.byCategory[ticket.category]++;
+      stats.byCategory[ticket.category] = (stats.byCategory[ticket.category] ?? 0) + 1;
     });
 
     return stats;

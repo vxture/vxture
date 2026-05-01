@@ -37,7 +37,7 @@ import { useConsoleLocale } from '@/lib/console-intl';
 type Tone = 'blue' | 'green' | 'cyan' | 'amber' | 'rose' | 'indigo';
 type PeriodKey = 'recent30' | 'total' | 'year' | 'quarter' | 'month';
 type BusinessPanelId = 'tenantScale' | 'subscription' | 'finance';
-type BusinessMetricIcon = 'building-library' | 'users' | 'api' | 'database' | 'chart-bar' | 'shield-check' | 'cloud';
+type BusinessMetricIcon = 'building-library' | 'user' | 'api' | 'database' | 'chart-bar' | 'shield-check' | 'cloud';
 
 interface SummaryMetric {
   label: string;
@@ -990,7 +990,7 @@ function businessCardMetrics(panel: ReturnType<typeof businessPanelsFor>[number]
         valueTag: compactMetricValue(second?.secondary, ['活跃用户', '活跃']),
         detail: second?.detail ?? '暂无用户规模数据。',
         tone: 'blue',
-        icon: 'users',
+        icon: 'user',
         minor: [
           { label: '新增', value: second?.delta ?? '—' },
           { label: '注销', value: lifecycle.userChurn, tone: 'rose' },
@@ -1547,9 +1547,9 @@ export default function AdminOverviewPage() {
 
     return [
       {
-        label: '服务运行',
-        value: `${serviceHealth.availability}%`,
-        detail: `服务运行观察服务监控中的运行、探针和可用性状态，当前健康 ${serviceHealth.healthy} 个，异常 ${serviceHealth.abnormal} 个。`,
+        label: '服务监控',
+        value: String(serviceHealth.total),
+        detail: `服务监控显示当前纳入观测的服务 ${serviceHealth.total} 个，其中健康 ${serviceHealth.healthy} 个，异常 ${serviceHealth.abnormal} 个。`,
         tone: serviceHealth.abnormal > 0 ? 'amber' : 'blue',
         icon: 'server',
         tags: [{ label: '异常', value: String(serviceHealth.abnormal), tone: riskTagTone(serviceHealth.abnormal) }],
@@ -1567,8 +1567,8 @@ export default function AdminOverviewPage() {
       },
       {
         label: '策略覆盖',
-        value: `${policyCoverage.rate}%`,
-        detail: `策略覆盖统计模型策略和租户授权的启用情况，当前生效 ${policyCoverage.active} 条，待配置或停用 ${policyCoverage.pending} 条。`,
+        value: String(policyCoverage.active),
+        detail: `策略覆盖统计模型策略和租户授权的启用情况，当前有效策略 ${policyCoverage.active} 条，待配置或停用 ${policyCoverage.pending} 条。`,
         tone: policyCoverage.pending > 0 ? 'amber' : 'blue',
         icon: 'shield-check',
         tags: [{ label: '待配', value: String(policyCoverage.pending), tone: riskTagTone(policyCoverage.pending) }],
