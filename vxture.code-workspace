@@ -17,10 +17,6 @@
       "path": "portals/admin",
     },
     {
-      "name": "portals/tenant",
-      "path": "portals/tenant",
-    },
-    {
       "name": "agent-studio",
       "path": "agent-studio",
     },
