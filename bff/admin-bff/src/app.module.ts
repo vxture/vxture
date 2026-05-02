@@ -2,6 +2,8 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
 import { PlatformAuthService } from './auth/auth.service';
+import { LoginRateLimiterService } from './auth/login-rate-limiter.service';
+import { CaptchaService } from './auth/captcha.service';
 import { SessionAggregator } from './aggregators/session.aggregator';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { PermissionMiddleware } from './middleware/permission.middleware';
@@ -51,7 +53,7 @@ import { TenantsRouter } from './routers/tenants.router';
     PlatformAdminsRouter,
     PlatformGovernanceRouter,
   ],
-  providers: [PlatformAuthService, SessionAggregator],
+  providers: [PlatformAuthService, LoginRateLimiterService, CaptchaService, SessionAggregator],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

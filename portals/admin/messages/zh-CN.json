@@ -423,7 +423,9 @@
       "terms": "请先阅读并同意用户协议和隐私政策。",
       "humanVerification": "请先完成人机验证。",
       "invalid": "当前凭据无法完成登录。",
-      "unavailable": "Admin 登录服务当前不可用，请先启动 admin-bff。"
+      "unavailable": "Admin 登录服务当前不可用，请先启动 admin-bff。",
+      "tooManyAttempts": "登录尝试次数过多，请稍后重试。",
+      "captchaUnavailable": "验证码服务暂时不可用，请稍后重试。"
     },
     "footer": {
       "copyright": "© 2026 Vxture Studio",

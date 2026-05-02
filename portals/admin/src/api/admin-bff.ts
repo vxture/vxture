@@ -74,9 +74,16 @@ function resolveAdminApiPrefix(): string {
   return usesDirectAdminBff ? '' : '/admin-api';
 }
 
+export interface CaptchaChallenge {
+  token: string;
+  targetRatio: number;
+}
+
 interface LoginPayload {
   identifier: string;
   password: string;
+  captchaToken: string;
+  captchaPosition: number;
 }
 
 export class AdminBffError extends Error {
@@ -629,6 +636,26 @@ export async function restoreSession(): Promise<SessionSnapshot> {
   };
 
   return snapshot;
+}
+
+export async function getCaptchaChallenge(): Promise<CaptchaChallenge> {
+  let response: Response;
+
+  try {
+    response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/auth/captcha/challenge`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+    });
+  } catch {
+    throw new AdminBffError('Admin BFF is unavailable.', 503);
+  }
+
+  if (!response.ok) {
+    throw new AdminBffError('Failed to obtain captcha challenge.', response.status);
+  }
+
+  return (await response.json()) as CaptchaChallenge;
 }
 
 export async function login(payload: LoginPayload): Promise<SessionSnapshot> {

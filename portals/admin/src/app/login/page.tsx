@@ -4,18 +4,19 @@ import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '@/components/ui/primitives';
-import { AdminBffError } from '@/api/admin-bff';
+import { AdminBffError, getCaptchaChallenge } from '@/api/admin-bff';
 import { AdminSessionProvider, useAdminSession } from '@/features/session/AdminSessionProvider';
 import { useConsoleTranslations } from '@/lib/console-intl';
 
+// ─── 常量 ─────────────────────────────────────────────────────────────────────
+
 const CAPTCHA_HANDLE_SIZE = 42;
 const CAPTCHA_PIECE_SIZE = 42;
+/** 客户端像素容差，决定"视觉上是否对齐"，服务端独立校验比例容差 */
 const CAPTCHA_TOLERANCE = 10;
 const CAPTCHA_RETURN_MS = 220;
 
-function randomCaptchaTargetRatio() {
-  return 0.42 + Math.random() * 0.36;
-}
+// ─── 组件 ─────────────────────────────────────────────────────────────────────
 
 function LoginScreen() {
   const router = useRouter();
@@ -28,10 +29,11 @@ function LoginScreen() {
   const [captchaReturning, setCaptchaReturning] = useState(false);
   const [captchaSolved, setCaptchaSolved] = useState(false);
   const [captchaOpen, setCaptchaOpen] = useState(false);
-  const [captchaTargetRatio, setCaptchaTargetRatio] = useState(randomCaptchaTargetRatio);
+  const [captchaTargetRatio, setCaptchaTargetRatio] = useState(0.6);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const pendingCredentialsRef = useRef({ identifier: '', password: '' });
+  const captchaTokenRef = useRef('');
   const captchaSliderRef = useRef<HTMLDivElement | null>(null);
   const captchaHandleRef = useRef<HTMLButtonElement | null>(null);
   const captchaPieceRef = useRef<HTMLDivElement | null>(null);
@@ -87,6 +89,7 @@ function LoginScreen() {
     setCaptchaSolved(false);
     captchaOffsetRef.current = 0;
     captchaMaxRef.current = 0;
+    captchaTokenRef.current = '';
     applyCaptchaOffset(0);
   }
 
@@ -117,14 +120,18 @@ function LoginScreen() {
     const { max, target } = captchaGeometry();
     captchaMaxRef.current = max;
     const offset = captchaOffsetRef.current;
+
     if (Math.abs(offset - target) <= CAPTCHA_TOLERANCE) {
       setCaptchaSolved(true);
       setCaptchaOffset(target);
       applyCaptchaOffset(target);
       setError('');
-      void continueSignIn();
+      // 将像素偏移转换为比例，传给服务端校验
+      const position = max > 0 ? offset / max : 0;
+      void continueSignIn(captchaTokenRef.current, position);
       return;
     }
+
     setCaptchaReturning(true);
     setCaptchaOffset(0);
     applyCaptchaOffset(0);
@@ -155,17 +162,19 @@ function LoginScreen() {
     return true;
   }
 
-  async function continueSignIn() {
+  async function continueSignIn(captchaToken: string, captchaPosition: number) {
     setError('');
     setSubmitting(true);
 
     try {
       const { identifier, password } = pendingCredentialsRef.current;
-      await signIn(identifier, password);
+      await signIn(identifier, password, captchaToken, captchaPosition);
       const next = searchParams.get('next') || '/';
       router.replace(next);
     } catch (error) {
-      if (error instanceof AdminBffError && error.status === 401) {
+      if (error instanceof AdminBffError && error.status === 429) {
+        setError(error.message || t('errors.tooManyAttempts'));
+      } else if (error instanceof AdminBffError && error.status === 401) {
         setError(t('errors.invalid'));
       } else if (error instanceof AdminBffError && error.status === 503) {
         setError(t('errors.unavailable'));
@@ -186,8 +195,24 @@ function LoginScreen() {
     if (!validateLoginForm(event.currentTarget)) return;
 
     resetCaptcha();
-    setCaptchaTargetRatio(randomCaptchaTargetRatio());
-    setCaptchaOpen(true);
+    setSubmitting(true);
+    setError('');
+
+    try {
+      // 从服务端获取签名挑战令牌，目标位置由服务端决定
+      const challenge = await getCaptchaChallenge();
+      captchaTokenRef.current = challenge.token;
+      setCaptchaTargetRatio(challenge.targetRatio);
+      setCaptchaOpen(true);
+    } catch (error) {
+      if (error instanceof AdminBffError && error.status === 503) {
+        setError(t('errors.unavailable'));
+      } else {
+        setError(t('errors.captchaUnavailable'));
+      }
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (

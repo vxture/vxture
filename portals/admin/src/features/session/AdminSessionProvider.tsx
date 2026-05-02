@@ -10,7 +10,7 @@ type SessionStatus = 'idle' | 'loading' | 'ready';
 interface SessionContextValue {
   session: SessionSnapshot;
   status: SessionStatus;
-  signIn: (identifier: string, password: string) => Promise<void>;
+  signIn: (identifier: string, password: string, captchaToken: string, captchaPosition: number) => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
 }
@@ -44,10 +44,10 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  async function signIn(identifier: string, password: string) {
+  async function signIn(identifier: string, password: string, captchaToken: string, captchaPosition: number) {
     setStatus('loading');
     try {
-      const snapshot = await login({ identifier, password });
+      const snapshot = await login({ identifier, password, captchaToken, captchaPosition });
       setSession(snapshot);
       setStatus('ready');
     } catch (error) {

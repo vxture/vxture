@@ -423,7 +423,9 @@
       "terms": "Please agree to the User Agreement and Privacy Policy first.",
       "humanVerification": "Please complete the human verification.",
       "invalid": "Unable to sign in with the current credentials.",
-      "unavailable": "The Admin login service is unavailable. Start admin-bff first."
+      "unavailable": "The Admin login service is unavailable. Start admin-bff first.",
+      "tooManyAttempts": "Too many attempts. Please try again later.",
+      "captchaUnavailable": "The captcha service is temporarily unavailable. Please try again later."
     },
     "footer": {
       "copyright": "© 2026 Vxture Studio",
