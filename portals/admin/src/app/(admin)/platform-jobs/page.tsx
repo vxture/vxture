@@ -1,5 +1,5 @@
-import { PlatformGovernanceListPage } from '@/modules/platform/PlatformGovernanceListPage';
+import { PlatformJobsPage } from '@/modules/platform/PlatformJobsPage';
 
-export default function PlatformJobsPage() {
-  return <PlatformGovernanceListPage kind="jobs" />;
+export default function Page() {
+  return <PlatformJobsPage />;
 }

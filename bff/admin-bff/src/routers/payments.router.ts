@@ -14,6 +14,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { VxConfigService } from '@vxture/core-config';
+import { MailService } from '@vxture/core-mail';
 import type { Request } from 'express';
 import { Pool } from 'pg';
 import type {
@@ -31,7 +32,10 @@ import type {
 export class PaymentsRouter implements OnModuleDestroy {
   private readonly pool: Pool | null;
 
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
+  constructor(
+    @Inject(VxConfigService) private readonly configService: VxConfigService,
+    @Inject(MailService) private readonly mailService: MailService,
+  ) {
     const database = this.configService.database;
     const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
     this.pool = hasDatabaseConfig
@@ -123,7 +127,18 @@ export class PaymentsRouter implements OnModuleDestroy {
 
     const updated = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
     if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
-    return mapPaymentLedgerRow(updated.rows[0]);
+
+    const result = mapPaymentLedgerRow(updated.rows[0]);
+    const tenantEmail = updated.rows[0].contact_email;
+    if (tenantEmail) {
+      void this.mailService.send({
+        to: tenantEmail,
+        subject: `[Vxture] 付款已核销确认 — ${result.paymentNo}`,
+        html: buildPaymentEmail('verify', result),
+      }).catch(() => {});
+    }
+
+    return result;
   }
 
   @Post(':paymentId/reject')
@@ -155,7 +170,18 @@ export class PaymentsRouter implements OnModuleDestroy {
 
     const updated = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
     if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
-    return mapPaymentLedgerRow(updated.rows[0]);
+
+    const result = mapPaymentLedgerRow(updated.rows[0]);
+    const tenantEmail = updated.rows[0].contact_email;
+    if (tenantEmail) {
+      void this.mailService.send({
+        to: tenantEmail,
+        subject: `[Vxture] 付款申请驳回通知 — ${result.paymentNo}`,
+        html: buildPaymentEmail('reject', result),
+      }).catch(() => {});
+    }
+
+    return result;
   }
 }
 
@@ -305,6 +331,7 @@ interface PaymentLedgerRow {
   province: string | null;
   city: string | null;
   industry: string | null;
+  contact_email: string | null;
   bill_id: string | null;
   bill_no: string | null;
   bill_status: string | null;
@@ -350,6 +377,7 @@ const PAYMENT_LEDGER_SQL = `
     org.province,
     org.city,
     org.industry,
+    org.contact_email,
     bill.id as bill_id,
     bill.bill_no,
     bill.bill_status,
@@ -476,4 +504,44 @@ function normalizeRemark(value: unknown, fieldName: string): string {
     throw new BadRequestException(`${fieldName}不能超过 512 个字`);
   }
   return text;
+}
+
+// ─── 付款操作通知邮件 ──────────────────────────────────────────────────────────
+
+function buildPaymentEmail(type: 'verify' | 'reject', rec: PaymentOperationRecord): string {
+  const isVerify = type === 'verify';
+  const statusColor = isVerify ? '#16a34a' : '#dc2626';
+  const statusText  = isVerify ? '核销确认' : '驳回通知';
+  const bodyText    = isVerify
+    ? `您于 ${rec.createdAt.slice(0, 10)} 提交的离线付款申请已由平台管理员审核通过，款项已确认收款。`
+    : `您于 ${rec.createdAt.slice(0, 10)} 提交的离线付款申请未通过审核，请根据以下备注重新处理。`;
+
+  return `
+<div style="font-family:sans-serif;max-width:540px;margin:0 auto;color:#1a1a2e">
+  <h2 style="color:${statusColor};margin-bottom:8px">付款${statusText}</h2>
+  <p style="color:#555">${bodyText}</p>
+  <table style="border-collapse:collapse;width:100%;margin:16px 0">
+    <tr style="background:#f5f5f5">
+      <td style="padding:10px 12px;color:#888;width:130px">付款单号</td>
+      <td style="padding:10px 12px">${rec.paymentNo}</td>
+    </tr>
+    <tr>
+      <td style="padding:10px 12px;color:#888">套餐</td>
+      <td style="padding:10px 12px">${rec.servicePlanName ?? '—'}</td>
+    </tr>
+    <tr style="background:#f5f5f5">
+      <td style="padding:10px 12px;color:#888">付款金额</td>
+      <td style="padding:10px 12px">${rec.currency} ${rec.paidAmount.toFixed(2)}</td>
+    </tr>
+    ${rec.remark ? `
+    <tr>
+      <td style="padding:10px 12px;color:#888">备注</td>
+      <td style="padding:10px 12px">${rec.remark}</td>
+    </tr>` : ''}
+  </table>
+  <p style="color:#aaa;font-size:12px;margin-top:24px">
+    如有疑问，请联系 Vxture 支持团队。<br>
+    此邮件由系统自动发送，请勿回复。
+  </p>
+</div>`;
 }

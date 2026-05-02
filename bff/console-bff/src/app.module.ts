@@ -1,8 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
+import { MailModule } from '@vxture/core-mail';
 import { IamModule } from '@vxture/service-iam';
 import { OrganizationModule } from '@vxture/service-organization';
+import { SubscriptionModule } from '@vxture/service-subscription';
 import { ConsoleAuthService } from './auth/auth.service';
 import { SessionAggregator } from './aggregators/session.aggregator';
 import { AuthMiddleware } from './middleware/auth.middleware';
@@ -22,8 +24,10 @@ import { TenantContextRouter } from './routers/tenant-context.router';
       domains: ['app', 'auth', 'database'],
     }),
     JwtModule.register({}),
+    MailModule,
     IamModule,
     OrganizationModule,
+    SubscriptionModule,
   ],
   controllers: [HealthRouter, AuthRouter, MeRouter, CapabilitiesRouter, TenantContextRouter, IamRouter, SubscriptionRouter],
   providers: [ConsoleAuthService, SessionAggregator],

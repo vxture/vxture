@@ -1,7 +1,7 @@
 # Vxture BFF Layer Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.3.0
+**Last Updated**: 2026-05-03
 **TypeScript**: 5.9.3
 
 ## Overview
@@ -164,7 +164,50 @@ bff/{name}-bff/
 
 ---
 
-# 6. Aggregators
+# 6. Transactional Email in Portal BFFs
+
+Portal BFFs (`admin-bff`, `console-bff`) use `@vxture/core-mail` to send transactional
+email notifications after state-changing operations.
+
+**Pattern**:
+
+```ts
+// AppModule: 导入一次，全局可用
+@Module({
+  imports: [MailModule, ...],
+})
+export class AppModule {}
+
+// Router: 注入 MailService，操作成功后 fire-and-forget 发信
+constructor(@Inject(MailService) private readonly mailService: MailService) {}
+
+await performAction(); // 主业务操作
+
+void this.mailService.send({
+  to: tenantContactEmail,
+  subject: '[Vxture] 操作已完成',
+  html: buildEmailHtml(result),
+}).catch(() => {}); // 发信失败不阻断 HTTP 响应
+```
+
+**设计约束**:
+
+- `MailModule` 用 `@Global()` 装饰 — `AppModule` 导入一次即在所有 controller 中可注入
+- `MailService.send()` 在未配置 SMTP 时自动进入 no-op 模式，不抛异常
+- 邮件发送使用 `void ... .catch(() => {})` — 失败静默处理，不影响主流程返回
+- 邮件 HTML 由 BFF 内部函数构建，不依赖前端模板
+- 收件人取自数据库字段（如 `tenant_organization.contact_email`）；为 `null` 时跳过发信
+
+**当前 BFF 使用情况**:
+
+| BFF | 触发场景 | 收件人 |
+| --- | -------- | ------ |
+| `admin-bff` | 离线付款核销 / 驳回 | 租户联系邮箱（`org.contact_email`） |
+| `console-bff` | 订阅升级 / 暂停 / 恢复 / 取消 | 操作者邮箱（`req.user.email`） |
+
+---
+
+# 7. Aggregators
 
 Aggregator 负责**跨域数据聚合**，组合来自多个 router 或服务的数据。
 
@@ -178,7 +221,7 @@ Aggregator 负责**跨域数据聚合**，组合来自多个 router 或服务的
 
 ---
 
-# 7. Response Shaping
+# 8. Response Shaping
 
 BFF 对响应格式负全责。
 
@@ -189,7 +232,7 @@ BFF 对响应格式负全责。
 
 ---
 
-# 8. Error Handling
+# 9. Error Handling
 
 - 每个 router 模块独立捕获并处理错误
 - 错误统一转化为标准化 HTTP 错误响应（状态码 + 错误码 + 消息）
@@ -198,7 +241,7 @@ BFF 对响应格式负全责。
 
 ---
 
-# 9. Dependency Rules
+# 10. Dependency Rules
 
 Allowed:
 
@@ -224,7 +267,7 @@ React / 任何浏览器 API
 
 ---
 
-# 10. Expansion Rules
+# 11. Expansion Rules
 
 | 场景 | 正确做法 |
 | ---- | -------- |
@@ -236,7 +279,7 @@ React / 任何浏览器 API
 
 ---
 
-# 11. AI Coding Rules
+# 12. AI Coding Rules
 
 AI 在操作 `bff/*` 时必须：
 

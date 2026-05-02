@@ -5,8 +5,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
+import { fetchSupportTicketsStrict, fetchTenantOperationsStrict } from "@/api/admin-bff";
 import { Badge } from "@/components/ui/primitives";
-import { tenantOperationRecords } from "@/shared/mock-console-data";
+import type { SupportTicketRecord, TenantOperationRecord } from "@/entities/console";
+import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
 import {
   formatNumber,
@@ -76,12 +78,28 @@ function severityOrder(severity: TodoSeverity) {
   return 3;
 }
 
-function buildTenantMeta(tenant: (typeof tenantOperationRecords)[number]) {
+function buildTenantMeta(tenant: TenantOperationRecord) {
   return `${typeLabel(tenant.tenantType)} / ${tenant.region} / ${statusLabel(tenant.status)}`;
 }
 
-function buildOpsTodos(): OpsTodoItem[] {
-  return tenantOperationRecords
+function ticketSeverity(ticket: SupportTicketRecord): TodoSeverity {
+  if (ticket.priority === "p0" || ticket.status === "blocked") return "rose";
+  if (ticket.priority === "p1") return "amber";
+  return "blue";
+}
+
+function ticketPriority(ticket: SupportTicketRecord) {
+  if (ticket.priority === "p0") return 1;
+  if (ticket.priority === "p1") return 10;
+  if (ticket.priority === "p2") return 30;
+  return 50;
+}
+
+function buildOpsTodos(
+  tenants: TenantOperationRecord[],
+  tickets: SupportTicketRecord[],
+): OpsTodoItem[] {
+  const tenantTodos = tenants
     .flatMap((tenant) => {
       const items: OpsTodoItem[] = [];
       const tenantMeta = buildTenantMeta(tenant);
@@ -125,38 +143,6 @@ function buildOpsTodos(): OpsTodoItem[] {
           tags: [`风险 ${riskLabel(tenant.riskLevel)}`, `SLA ${tenant.sla}`],
         });
       }
-
-      tenant.tickets
-        .filter((ticket) => ticket.status !== "closed")
-        .forEach((ticket) => {
-          items.push({
-            id: `${tenant.id}-${ticket.id}`,
-            type: "ticket",
-            title: `${ticket.id} ${ticket.title}`,
-            description: `${tenant.displayName} 的 ${ticket.priority.toUpperCase()} 工单处于${ticket.status === "blocked" ? "阻塞" : ticket.status === "processing" ? "处理中" : "待处理"}状态。`,
-            tenantId: tenant.id,
-            tenantName: tenant.displayName,
-            tenantMeta,
-            href: tenantHref,
-            severity:
-              ticket.priority === "p0" || ticket.status === "blocked"
-                ? "rose"
-                : ticket.priority === "p1"
-                  ? "amber"
-                  : "blue",
-            priority:
-              ticket.priority === "p0"
-                ? 1
-                : ticket.priority === "p1"
-                  ? 10
-                  : ticket.priority === "p2"
-                    ? 30
-                    : 50,
-            updatedAt: ticket.updatedAt,
-            icon: TODO_TYPE_ICON.ticket,
-            tags: [ticket.priority.toUpperCase(), TODO_TYPE_LABEL.ticket],
-          });
-        });
 
       tenant.usage
         .filter((usage) => usage.status !== "normal")
@@ -206,16 +192,35 @@ function buildOpsTodos(): OpsTodoItem[] {
         });
 
       return items;
-    })
-    .sort((left, right) => {
-      const severityDiff =
-        severityOrder(left.severity) - severityOrder(right.severity);
-      if (severityDiff !== 0) return severityDiff;
-      return (
-        left.priority - right.priority ||
-        new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
-      );
     });
+
+  const ticketTodos = tickets
+    .filter((ticket) => ticket.status !== "closed")
+    .map((ticket) => ({
+      id: `${ticket.tenantId}-${ticket.id}`,
+      type: "ticket" as const,
+      title: `${ticket.id} ${ticket.title}`,
+      description: `${ticket.tenantName} 的 ${ticket.priority.toUpperCase()} 工单处于${ticket.status === "blocked" ? "阻塞" : ticket.status === "processing" ? "处理中" : "待处理"}状态。`,
+      tenantId: ticket.tenantId,
+      tenantName: ticket.tenantName,
+      tenantMeta: `${typeLabel(ticket.tenantType)} / ${ticket.region} / ${statusLabel(ticket.tenantStatus)}`,
+      href: "/tickets",
+      severity: ticketSeverity(ticket),
+      priority: ticketPriority(ticket),
+      updatedAt: ticket.updatedAt,
+      icon: TODO_TYPE_ICON.ticket,
+      tags: [ticket.priority.toUpperCase(), TODO_TYPE_LABEL.ticket],
+    }));
+
+  return [...tenantTodos, ...ticketTodos].sort((left, right) => {
+    const severityDiff =
+      severityOrder(left.severity) - severityOrder(right.severity);
+    if (severityDiff !== 0) return severityDiff;
+    return (
+      left.priority - right.priority ||
+      new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
+    );
+  });
 }
 
 function SummaryItem({
@@ -414,7 +419,12 @@ function TodoRow({
 }
 
 export function OpsTodosPage() {
-  const todos = useMemo(buildOpsTodos, []);
+  const [tenants, setTenants] = useState<TenantOperationRecord[]>([]);
+  const [tickets, setTickets] = useState<SupportTicketRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [tenantLoadError, setTenantLoadError] = useState<string | null>(null);
+  const [ticketLoadError, setTicketLoadError] = useState<string | null>(null);
+  const todos = useMemo(() => buildOpsTodos(tenants, tickets), [tenants, tickets]);
   const [selectedTodoIds, setSelectedTodoIds] = useState<Set<string>>(
     () => new Set(),
   );
@@ -437,6 +447,46 @@ export function OpsTodosPage() {
   ).length;
   const isTodoPageSelected =
     todos.length > 0 && selectedVisibleTodoCount === todos.length;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    setIsLoading(true);
+    setTenantLoadError(null);
+    setTicketLoadError(null);
+
+    Promise.all([
+      fetchTenantOperationsStrict(),
+      fetchSupportTicketsStrict().catch((error) => {
+        if (!cancelled) {
+          setTicketLoadError(error instanceof Error ? error.message : "工单数据读取失败");
+        }
+        return [];
+      }),
+    ])
+      .then(([tenantRecords, ticketRecords]) => {
+        if (!cancelled) {
+          setTenants(tenantRecords);
+          setTickets(ticketRecords);
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setTenants([]);
+          setTickets([]);
+          setTenantLoadError(error instanceof Error ? error.message : "租户运营数据读取失败");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     if (pageSelectRef.current) {
@@ -533,48 +583,74 @@ export function OpsTodosPage() {
           <div className="vx-tenant-directory vx-ops-todo-directory">
             <header className="vx-tenant-directory__header">
               <strong>优先处理队列</strong>
-              <span>{formatNumber(todos.length)} 条事项</span>
+              <span>
+                {formatNumber(todos.length)} 条事项
+                {ticketLoadError ? " / 工单未接入" : ""}
+              </span>
             </header>
-            <div className="vx-tenant-directory-list vx-ops-todo-directory-list">
-              <div className="vx-tenant-directory-list__header">
-                <span>
-                  <input
-                    ref={pageSelectRef}
-                    type="checkbox"
-                    className="vx-model-select-checkbox"
-                    checked={isTodoPageSelected}
-                    onChange={(event) =>
-                      toggleTodoPageSelection(event.target.checked)
-                    }
-                    aria-label="选择全部待办"
-                  />
-                </span>
-                <span>#</span>
-                <span>事项</span>
-                <span>租户</span>
-                <span>类型 / 更新时间</span>
-                <span>标签</span>
-                <span>操作</span>
-              </div>
-              {todos.map((item, index) => (
-                <TodoRow
-                  key={item.id}
-                  item={item}
-                  index={index}
-                  selected={selectedTodoIds.has(item.id)}
-                  menuOpen={openMenuId === item.id}
-                  onToggleSelected={(checked) =>
-                    toggleTodoSelection(item.id, checked)
-                  }
-                  onOpenMenu={() =>
-                    setOpenMenuId((current) =>
-                      current === item.id ? null : item.id,
-                    )
-                  }
-                  onCloseMenu={() => setOpenMenuId(null)}
+            {isLoading ? (
+              <div className="vx-service-health-empty">
+                <EmptyState
+                  title="正在加载待办"
+                  description="正在从租户、用量、订阅与工单数据库读取数据。"
                 />
-              ))}
-            </div>
+              </div>
+            ) : tenantLoadError ? (
+              <div className="vx-service-health-empty">
+                <EmptyState
+                  title="待办数据读取失败"
+                  description={tenantLoadError}
+                />
+              </div>
+            ) : todos.length ? (
+              <div className="vx-tenant-directory-list vx-ops-todo-directory-list">
+                <div className="vx-tenant-directory-list__header">
+                  <span>
+                    <input
+                      ref={pageSelectRef}
+                      type="checkbox"
+                      className="vx-model-select-checkbox"
+                      checked={isTodoPageSelected}
+                      onChange={(event) =>
+                        toggleTodoPageSelection(event.target.checked)
+                      }
+                      aria-label="选择全部待办"
+                    />
+                  </span>
+                  <span>#</span>
+                  <span>事项</span>
+                  <span>租户</span>
+                  <span>类型 / 更新时间</span>
+                  <span>标签</span>
+                  <span>操作</span>
+                </div>
+                {todos.map((item, index) => (
+                  <TodoRow
+                    key={item.id}
+                    item={item}
+                    index={index}
+                    selected={selectedTodoIds.has(item.id)}
+                    menuOpen={openMenuId === item.id}
+                    onToggleSelected={(checked) =>
+                      toggleTodoSelection(item.id, checked)
+                    }
+                    onOpenMenu={() =>
+                      setOpenMenuId((current) =>
+                        current === item.id ? null : item.id,
+                      )
+                    }
+                    onCloseMenu={() => setOpenMenuId(null)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="vx-service-health-empty">
+                <EmptyState
+                  title="当前没有待办"
+                  description={ticketLoadError ?? "数据库中没有匹配的运营待办。"}
+                />
+              </div>
+            )}
           </div>
         </section>
       </section>

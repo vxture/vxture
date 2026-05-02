@@ -750,12 +750,11 @@ function ShellFrame({ children }: { children: ReactNode }) {
             </PopoverTrigger>
             <PopoverContent
               align="start"
-              sideOffset={14}
-              className="admin-workspace-switcher w-80 rounded-lg border border-slate-200 bg-white p-2 text-slate-900 shadow-xl shadow-blue-950/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              sideOffset={20}
+              className="admin-workspace-switcher w-[320px] rounded-lg border border-slate-200 bg-white p-5 text-slate-900 shadow-xl shadow-blue-950/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
               <div className="admin-workspace-switcher__header">
                 <strong>工作域</strong>
-                <span>运营与自治完全隔离，消息与通知保持全局可见。</span>
               </div>
               <div className="admin-workspace-switcher__list">
                 {adminWorkspaces.map((workspace) => {
@@ -765,7 +764,8 @@ function ShellFrame({ children }: { children: ReactNode }) {
                     <button
                       key={workspace.id}
                       type="button"
-                      className={`admin-workspace-switcher__item ${active ? 'admin-workspace-switcher__item--active' : ''}`}
+                      className="admin-workspace-switcher__item"
+                      data-workspace={workspace.id}
                       aria-current={active ? 'page' : undefined}
                       onClick={() => {
                         setWorkspacePanelOpen(false);
@@ -775,13 +775,11 @@ function ShellFrame({ children }: { children: ReactNode }) {
                       }}
                     >
                       <span className="admin-workspace-switcher__icon" aria-hidden="true">
-                        <Icon name={workspace.icon} size="md" fallback="placeholder" />
+                        <Icon name={workspace.icon} size={32} fallback="placeholder" />
                       </span>
                       <span className="admin-workspace-switcher__copy">
                         <strong>{workspace.label}</strong>
-                        <span>{workspace.description}</span>
                       </span>
-                      {active ? <Icon name="check" className="admin-workspace-switcher__check" size="sm" fallback="check" /> : null}
                     </button>
                   );
                 })}

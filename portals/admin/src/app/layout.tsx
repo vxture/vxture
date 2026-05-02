@@ -4,7 +4,7 @@ import { cookies } from 'next/headers';
 import { LOCALE_CONSTANTS, PREFERENCE_CONSTANTS, THEME_CONSTANTS, type Locale, type Theme } from '@vxture/shared';
 import type { Density } from '@vxture/design-system';
 import { ConsoleAppProviders } from '@/providers/ConsoleAppProviders';
-import { loadConsoleMessages, normalizeConsoleLocale } from '@/lib/i18n';
+import { loadConsoleMessageCatalog, loadConsoleMessages, normalizeConsoleLocale } from '@/lib/i18n';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -20,6 +20,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   const initialDensity: Density =
     densityCookie === 'compact' || densityCookie === 'comfortable' ? densityCookie : 'default';
   const messages = await loadConsoleMessages(locale);
+  const messageCatalog = await loadConsoleMessageCatalog();
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -27,6 +28,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
         <ConsoleAppProviders
           initialLocale={locale}
           initialMessages={messages}
+          initialMessageCatalog={messageCatalog}
           initialTheme={initialTheme}
           initialDensity={initialDensity}
         >

@@ -1,6 +1,7 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
+import { MailModule } from '@vxture/core-mail';
 import { PlatformAuthService } from './auth/auth.service';
 import { LoginRateLimiterService } from './auth/login-rate-limiter.service';
 import { CaptchaService } from './auth/captcha.service';
@@ -28,6 +29,7 @@ import { ProductsRouter } from './routers/products.router';
 import { SkillsRouter } from './routers/skills.router';
 import { SubscriptionRouter } from './routers/subscription.router';
 import { TenantsRouter } from './routers/tenants.router';
+import { TicketsRouter } from './routers/tickets.router';
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { TenantsRouter } from './routers/tenants.router';
       domains: ['app', 'auth', 'database'],
     }),
     JwtModule.register({}),
+    MailModule,
   ],
   controllers: [
     HealthRouter,
@@ -56,6 +59,7 @@ import { TenantsRouter } from './routers/tenants.router';
     InvoicesRouter,
     PaymentsRouter,
     TenantsRouter,
+    TicketsRouter,
     PlatformAdminsRouter,
     PlatformGovernanceRouter,
   ],

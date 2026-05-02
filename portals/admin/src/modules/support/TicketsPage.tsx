@@ -4,14 +4,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
+import { fetchSupportTicketsStrict } from "@/api/admin-bff";
 import { Badge, Button, Input } from "@/components/ui/primitives";
-import type {
-  TenantOperationRecord,
-  TenantOperationTicket,
-} from "@/entities/console";
+import type { SupportTicketRecord, TenantOperationTicket } from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
-import { tenantOperationRecords } from "@/shared/mock-console-data";
 import {
   formatNumber,
   ticketStatusLabel,
@@ -20,18 +17,6 @@ import {
 
 type TicketStatusFilter = "all" | TenantOperationTicket["status"];
 type TicketPriorityFilter = "all" | TenantOperationTicket["priority"];
-
-interface SupportTicketRecord extends TenantOperationTicket {
-  tenantId: string;
-  tenantCode: string;
-  tenantName: string;
-  tenantType: TenantOperationRecord["tenantType"];
-  tenantStatus: TenantOperationRecord["status"];
-  tenantRiskLevel: TenantOperationRecord["riskLevel"];
-  region: string;
-  industry: string;
-  ownerName: string;
-}
 
 const priorityLabels: Record<TenantOperationTicket["priority"], string> = {
   p0: "P0 紧急",
@@ -78,31 +63,6 @@ function ticketSearchText(ticket: SupportTicketRecord) {
   ]
     .join(" ")
     .toLowerCase();
-}
-
-function buildTickets(): SupportTicketRecord[] {
-  return tenantOperationRecords
-    .flatMap((tenant) =>
-      tenant.tickets.map((ticket) => ({
-        ...ticket,
-        tenantId: tenant.id,
-        tenantCode: tenant.tenantCode,
-        tenantName: tenant.displayName,
-        tenantType: tenant.tenantType,
-        tenantStatus: tenant.status,
-        tenantRiskLevel: tenant.riskLevel,
-        region: tenant.region,
-        industry: tenant.industry,
-        ownerName: tenant.ownerName,
-      })),
-    )
-    .sort((left, right) => {
-      const priorityDiff = left.priority.localeCompare(right.priority);
-      if (priorityDiff !== 0) return priorityDiff;
-      return (
-        new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
-      );
-    });
 }
 
 function SummaryItem({
@@ -306,7 +266,9 @@ function TicketRow({
 }
 
 export function TicketsPage() {
-  const tickets = useMemo(buildTickets, []);
+  const [tickets, setTickets] = useState<SupportTicketRecord[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<TicketStatusFilter>("all");
   const [priority, setPriority] = useState<TicketPriorityFilter>("all");
@@ -315,6 +277,35 @@ export function TicketsPage() {
   );
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const pageSelectRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    setIsLoading(true);
+    setLoadError(null);
+
+    fetchSupportTicketsStrict()
+      .then((records) => {
+        if (!cancelled) {
+          setTickets(records);
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setTickets([]);
+          setLoadError(error instanceof Error ? error.message : "工单数据读取失败");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const visibleTickets = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -420,7 +411,7 @@ export function TicketsPage() {
           icon="table"
           label="工单总数"
           value={formatNumber(tickets.length)}
-          tags={["来自租户运营档案"]}
+          tags={["来自工单数据库"]}
         />
       </section>
 
@@ -474,7 +465,21 @@ export function TicketsPage() {
           <strong>工单队列</strong>
           <span>{formatNumber(visibleTickets.length)} 条匹配</span>
         </header>
-        {visibleTickets.length ? (
+        {isLoading ? (
+          <div className="vx-service-health-empty">
+            <EmptyState
+              title="正在加载工单"
+              description="正在从工单数据库读取数据。"
+            />
+          </div>
+        ) : loadError ? (
+          <div className="vx-service-health-empty">
+            <EmptyState
+              title="工单数据读取失败"
+              description={loadError}
+            />
+          </div>
+        ) : visibleTickets.length ? (
           <div className="vx-tenant-directory-list vx-ticket-directory-list">
             <div className="vx-tenant-directory-list__header">
               <span>

@@ -21,6 +21,7 @@
     "@nestjs/platform-express": "^11.0.0",
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
+    "@vxture/core-mail": "workspace:*",
     "@vxture/core-auth": "workspace:*",
     "@vxture/core-config": "workspace:*",
     "bcryptjs": "^3.0.2",

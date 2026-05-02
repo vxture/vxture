@@ -555,6 +555,18 @@ export interface TenantOperationTicket {
   updatedAt: string;
 }
 
+export interface SupportTicketRecord extends TenantOperationTicket {
+  tenantId: string;
+  tenantCode: string;
+  tenantName: string;
+  tenantType: TenantOperationType;
+  tenantStatus: TenantOperationStatus;
+  tenantRiskLevel: TenantRiskLevel;
+  region: string;
+  industry: string;
+  ownerName: string;
+}
+
 export interface TenantOperationRecord {
   id: string;
   tenantCode: string;

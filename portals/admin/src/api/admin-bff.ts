@@ -37,6 +37,7 @@ import type {
   PlatformRoleRecord,
   SessionSnapshot,
   SkillRecord,
+  SupportTicketRecord,
   SubscriptionOperationAction,
   SubscriptionOperationDetailRecord,
   SubscriptionOperationRecord,
@@ -209,6 +210,14 @@ export async function fetchTenantOperations(): Promise<TenantOperationRecord[]> 
   return readJson<TenantOperationRecord[]>('/api/tenants', []);
 }
 
+export async function fetchTenantOperationsStrict(): Promise<TenantOperationRecord[]> {
+  return readJsonStrict<TenantOperationRecord[]>('/api/tenants');
+}
+
+export async function fetchSupportTicketsStrict(): Promise<SupportTicketRecord[]> {
+  return readJsonStrict<SupportTicketRecord[]>('/api/tickets');
+}
+
 export async function fetchSubscriptionOperations(): Promise<SubscriptionOperationRecord[]> {
   return readJson<SubscriptionOperationRecord[]>('/api/subscriptions', []);
 }
@@ -289,12 +298,8 @@ export async function fetchCommerceOverview(): Promise<CommerceOverviewSnapshot 
 
 export async function fetchPlatformGovernanceRecords(
   kind: PlatformGovernanceKind,
-  fallback: PlatformGovernanceRecord[] = [],
 ): Promise<PlatformGovernanceRecord[]> {
-  return readJson<PlatformGovernanceRecord[]>(
-    `/api/platform-governance/${encodeURIComponent(kind)}`,
-    fallback,
-  );
+  return readJsonStrict<PlatformGovernanceRecord[]>(`/api/platform-governance/${encodeURIComponent(kind)}`);
 }
 
 export async function confirmOrderOfflinePayment(

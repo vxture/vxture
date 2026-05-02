@@ -1,7 +1,7 @@
 # Vxture Platform Architecture Overview
 
 **Version**: 1.2.0
-**Last Updated**: 2026-05-01
+**Last Updated**: 2026-05-03
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -84,10 +84,12 @@ Both surfaces share the same platform infrastructure and are governed independen
 │  CORE LAYER                                                     │
 │                                                                 │
 │   @vxture/core-api      @vxture/core-auth                      │
-│   @vxture/core-config   @vxture/core-locale   Framework-       │
-│   @vxture/core-tenant   @vxture/core-utils    agnostic         │
+│   @vxture/core-config   @vxture/core-locale   Mostly           │
+│   @vxture/core-tenant   @vxture/core-utils    framework-       │
+│   @vxture/core-mail                           agnostic*        │
 │                                                                 │
 │   Platform infrastructure primitives                           │
+│   * core-mail is NestJS-specific (server-side BFF only)        │
 └──────────────────────────┬──────────────────────────────────────┘
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -339,7 +341,7 @@ packages/{group}/{name}/   →   @vxture/{group}-{name}
 | Group      | Purpose                              | Key packages                                                                       |
 | ---------- | ------------------------------------ | ---------------------------------------------------------------------------------- |
 | `shared`   | Cross-cutting utilities and types    | `@vxture/shared`                                                                   |
-| `core`     | Platform infrastructure primitives   | `core-api`, `core-auth`, `core-tenant`, `core-locale`, `core-config`, `core-utils` |
+| `core`     | Platform infrastructure primitives   | `core-api`, `core-auth`, `core-tenant`, `core-locale`, `core-config`, `core-utils`, `core-mail` |
 | `ai`       | Shared AI capabilities (server-side) | `@vxture/ai-sdk` (llm, rag, embedding, workflow)                                   |
 | `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`                                                 |
 | `design`   | UI design system                     | `@vxture/design-system`                                                            |

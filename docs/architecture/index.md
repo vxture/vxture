@@ -1,7 +1,7 @@
 # Architecture Documentation Index
 
-**Version**: 1.3.0
-**Last Updated**: 2026-03-11
+**Version**: 1.4.0
+**Last Updated**: 2026-05-03
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -46,11 +46,20 @@
 
 ## Agent 实例
 
-| 实例 | 前端 | 后端 | BFF |
-| ---- | ---- | ---- | --- |
-| ruyinagent | agent-studio/ruyinagent | agent-server/ruyinagent | bff/ruyinagent-bff |
+| 实例 | 前端 | 后端 | BFF | 状态 |
+| ---- | ---- | ---- | --- | ---- |
+| ruyinagent | agent-studio/ruyinagent | agent-server/ruyinagent | bff/ruyinagent-bff | 🟡 server 运行中，studio/bff 建设中 |
+| vela | agent-studio/vela | agent-server/vela | bff/vela-bff | ✅ 三端运行中（嵌入 admin / console） |
 
 ## Changelog
+
+### v1.4.0 — 2026-05-03
+
+- 新增 `@vxture/core-mail`：事务邮件包，nodemailer 封装，无 SMTP 时自动 no-op
+- `05-core-layer.md` v1.3.0：补充 `core-mail` 包描述、跨依赖约束说明、消费者表格
+- `10-bff-layer.md` v1.3.0：新增"事务邮件"章节，记录 Portal BFF fire-and-forget 邮件模式
+- `00-overview.md`：ASCII 图和包表格补充 `@vxture/core-mail`
+- Agent 实例表补充 Vela（三端运行中，嵌入式部署）
 
 ### v1.3.0 — 2026-03-11
 

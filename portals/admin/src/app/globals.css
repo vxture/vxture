@@ -7025,7 +7025,7 @@ body.dark {
   min-height: 2.5rem;
   display: flex;
   align-items: center;
-  gap: 0.875rem;
+  gap: 1rem;
   overflow: hidden;
   padding: 0 var(--vx-admin-sidebar-control-inset);
   border-radius: var(--vx-shell-radius-item);
@@ -18456,91 +18456,125 @@ body.dark {
 }
 
 .admin-workspace-switcher__header {
-  display: grid;
-  gap: 0.25rem;
-  padding: 0.5rem 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--vx-shell-line-soft);
+  min-height: 2.25rem;
+  display: flex;
+  align-items: center;
+  padding: 0 0 1rem;
 }
 
 .admin-workspace-switcher__header strong {
   color: var(--vx-shell-ink);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 760;
-  line-height: 1.25rem;
-}
-
-.admin-workspace-switcher__header span {
-  color: var(--vx-shell-muted);
-  font-size: 0.75rem;
   line-height: 1.125rem;
 }
 
 .admin-workspace-switcher__list {
-  display: grid;
-  gap: 0.25rem;
-  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
 }
 
 .admin-workspace-switcher__item {
+  position: relative;
   width: 100%;
-  min-height: 4rem;
-  display: grid;
-  grid-template-columns: 2rem minmax(0, 1fr) 1.25rem;
+  min-height: 5rem;
+  display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 0.5rem;
-  border: 0;
-  border-radius: 0.5rem;
-  background: transparent;
-  color: var(--vx-shell-muted);
+  justify-content: start;
+  gap: 0.875rem;
+  overflow: hidden;
+  padding: 0.875rem 1rem 0.875rem 1.5rem;
+  border: 1px solid color-mix(in srgb, currentColor 24%, var(--vx-shell-line-soft));
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, currentColor 11%, #ffffff), color-mix(in srgb, currentColor 6%, #f8fafc)),
+    #f8fbff;
+  color: var(--vx-console-brand-strong);
   cursor: pointer;
   text-align: left;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 10px 22px -18px rgba(30, 64, 175, 0.34);
   transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
     background 160ms ease,
-    color 160ms ease;
+    color 160ms ease,
+    transform 160ms ease;
 }
 
-.admin-workspace-switcher__item:hover,
-.admin-workspace-switcher__item--active {
-  background: var(--vx-shell-hover);
-  color: var(--vx-console-brand-strong);
+.admin-workspace-switcher__item[data-workspace='platform-autonomy'] {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, #047857 12%, #ffffff), color-mix(in srgb, #047857 7%, #f8fafc)),
+    #f6fdf9;
+  color: #047857;
+}
+
+.admin-workspace-switcher__item:hover {
+  border-color: color-mix(in srgb, currentColor 24%, var(--vx-shell-line));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, currentColor 15%, #ffffff), color-mix(in srgb, currentColor 8%, #f8fafc)),
+    #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.86),
+    0 18px 38px -28px color-mix(in srgb, currentColor 42%, transparent);
+  transform: translateY(-2px);
 }
 
 .admin-workspace-switcher__icon {
-  width: 2rem;
-  height: 2rem;
+  width: 3.25rem;
+  height: 3.25rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 0.5rem;
-  background: var(--vx-shell-surface-soft);
+  border-radius: 1rem;
+  background: transparent;
   color: currentColor;
+  box-shadow: none;
+}
+
+.admin-workspace-switcher__icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
 }
 
 .admin-workspace-switcher__copy {
   min-width: 0;
-  display: grid;
-  gap: 0.125rem;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .admin-workspace-switcher__copy strong {
-  color: currentColor;
-  font-size: 0.875rem;
-  font-weight: 720;
-  line-height: 1.25rem;
-}
-
-.admin-workspace-switcher__copy span {
+  display: block;
+  max-width: 100%;
   overflow: hidden;
-  color: var(--vx-shell-muted);
-  font-size: 0.75rem;
-  line-height: 1.125rem;
+  color: currentColor;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  line-height: 1.375rem;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.admin-workspace-switcher__check {
-  color: var(--vx-console-brand-strong);
+.dark .admin-workspace-switcher__item {
+  border-color: color-mix(in srgb, currentColor 26%, var(--vx-shell-line));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, currentColor 18%, #0f172a), color-mix(in srgb, currentColor 10%, #020617)),
+    #111827;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 24px -22px rgba(0, 0, 0, 0.75);
+}
+
+.dark .admin-workspace-switcher__item[data-workspace='platform-autonomy'] {
+  color: #6ee7b7;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, #6ee7b7 18%, #0f172a), color-mix(in srgb, #6ee7b7 10%, #020617)),
+    #111827;
 }
 
 .platform-autonomy-page {

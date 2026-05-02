@@ -1,5 +1,5 @@
-import { PlatformGovernanceListPage } from '@/modules/platform/PlatformGovernanceListPage';
+import { ApprovalCenterPage } from '@/modules/platform/ApprovalCenterPage';
 
-export default function ApprovalCenterPage() {
-  return <PlatformGovernanceListPage kind="approvals" />;
+export default function Page() {
+  return <ApprovalCenterPage />;
 }

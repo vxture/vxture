@@ -15,3 +15,10 @@ export async function loadConsoleMessages(locale: Locale): Promise<Record<string
       return zhCNMessages as Record<string, unknown>;
   }
 }
+
+export async function loadConsoleMessageCatalog(): Promise<Record<Locale, Record<string, unknown>>> {
+  return {
+    'en-US': enUSMessages as Record<string, unknown>,
+    'zh-CN': zhCNMessages as Record<string, unknown>,
+  };
+}

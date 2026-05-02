@@ -1,5 +1,5 @@
-import { PlatformGovernanceListPage } from '@/modules/platform/PlatformGovernanceListPage';
+import { PlatformSecretsPage } from '@/modules/platform/PlatformSecretsPage';
 
-export default function PlatformSecretsPage() {
-  return <PlatformGovernanceListPage kind="secrets" />;
+export default function Page() {
+  return <PlatformSecretsPage />;
 }

@@ -1,7 +1,7 @@
 # Vxture Core Layer Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.3.0
+**Last Updated**: 2026-05-03
 
 ## Overview
 
@@ -30,6 +30,7 @@ packages/core/
 ├── auth/       # @vxture/core-auth
 ├── config/     # @vxture/core-config
 ├── locale/     # @vxture/core-locale
+├── mail/       # @vxture/core-mail
 ├── tenant/     # @vxture/core-tenant
 └── utils/      # @vxture/core-utils
 ```
@@ -98,6 +99,20 @@ General-purpose platform helpers:
 
 Supports both server and browser environments.
 
+## core-mail — Transactional Email
+
+NestJS-based transactional email service built on nodemailer.
+
+- SMTP transport configured via `SMTP_*` environment variables
+- **No-op mode**: when `SMTP_HOST` is absent, `send()` logs a warning and returns silently — guaranteed safe in local and CI environments without SMTP credentials
+- **Global NestJS module**: import `MailModule` once in `AppModule`; `MailService` is then injectable anywhere without re-importing the module
+- Single `send(MailPayload)` interface; does not expose nodemailer internals
+
+> **Cross-dependency constraint**: `core-mail` reads `SMTP_*` directly from `process.env`
+> rather than delegating to `core-config`. This is intentional — core packages cannot
+> depend on each other. Consumer BFFs are expected to call `VxConfigModule.register()` at
+> startup, which loads `.env` files before any service constructs.
+
 ---
 
 # 3. Dependency Rules
@@ -114,7 +129,9 @@ core-* → platform-*      ❌
 core-* → React / Next.js ❌
 ```
 
-Core must remain **framework-agnostic** and runnable in both Node.js and browser.
+Core must remain **framework-agnostic** where possible. `core-mail` is the sole NestJS-specific
+exception — it ships a `@Global() @Module()` wrapper and is only consumed by server-side BFFs.
+All other core packages remain runnable in both Node.js and browser.
 
 ---
 
@@ -182,6 +199,7 @@ import { apiClient } from '@vxture/core-api';
 import { validateToken } from '@vxture/core-auth';
 import { getConfig } from '@vxture/core-config';
 import { translate } from '@vxture/core-locale';
+import { MailModule, MailService } from '@vxture/core-mail';
 import { getTenantId } from '@vxture/core-tenant';
 import { log } from '@vxture/core-utils';
 
@@ -190,6 +208,15 @@ const response = await apiClient.get(`/users?tenant=${tenantId}`);
 log('Fetched users:', response);
 
 const label = translate('welcome_message');
+
+// core-mail — NestJS usage (server-side BFF only)
+// 1. AppModule imports MailModule once
+// 2. Any router / service can inject MailService directly
+await mailService.send({
+  to: 'user@example.com',
+  subject: 'Welcome to Vxture',
+  html: '<p>Hello!</p>',
+});
 ```
 
 ---
@@ -198,11 +225,15 @@ const label = translate('welcome_message');
 
 Core packages are consumed by:
 
-| Consumer         | Example usage                            |
-| ---------------- | ---------------------------------------- |
-| `bff/*`          | Auth validation, tenant resolution       |
-| `agent-server/*` | Config access, tenant context, API calls |
-| `services/*`     | Shared infrastructure primitives         |
+| Consumer         | Core packages used                                              |
+| ---------------- | --------------------------------------------------------------- |
+| `bff/*`          | `core-auth`, `core-config`, `core-tenant`, `core-mail`         |
+| `agent-server/*` | `core-config`, `core-tenant`, `core-api`                       |
+| `services/*`     | `core-config`                                                   |
+
+`core-mail` is consumed exclusively by Portal BFFs (`admin-bff`, `console-bff`) for
+server-side transactional email notifications. It is not available to frontend code
+(`portals/`, `agent-studio/`) — those layers communicate with BFFs over HTTP.
 
 Core packages are **not** consumed directly by frontend code (`portals/`, `agent-studio/`).
 Frontend layers access core capabilities through their BFF over HTTP.
