@@ -37,7 +37,9 @@
       "Bash(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\bff\\\\vela-bff\\\\src\" -Recurse -File)",
       "Bash(Select-Object -ExpandProperty FullName)",
       "Bash(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\bff\\\\website-bff\\\\src\\\\routers\" -File)",
-      "Bash(Select-Object -ExpandProperty Name)"
+      "Bash(Select-Object -ExpandProperty Name)",
+      "Bash(pnpm build *)",
+      "Bash(pnpm type-check *)"
     ]
   }
 }
