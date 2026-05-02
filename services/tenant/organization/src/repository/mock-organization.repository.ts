@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import type {
+  CreateTenantInput,
   OrganizationProfileView,
   OrganizationReadRepository,
   TenantContextView,
@@ -152,6 +153,10 @@ const mockOrganizationProfile: OrganizationProfileView = {
 
 @Injectable()
 export class MockOrganizationRepository implements OrganizationReadRepository {
+  async createTenant(_input: CreateTenantInput): Promise<TenantContextView> {
+    return mockTenantContext;
+  }
+
   async getTenantMembershipsByAccountId(accountId: string): Promise<TenantMembershipView[]> {
     return mockMemberships.filter((membership) => membership.accountId === accountId);
   }

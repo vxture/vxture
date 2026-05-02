@@ -5,5 +5,6 @@ export type {
   AccountProfileView,
   AccountReadRepository,
   AuthenticatedAccountView,
+  CreateAccountInput,
   UpdateAccountProfileInput,
 } from './types/iam.types';

@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { Pool } from 'pg';
 import { PG_POOL } from '../tokens';
 import type {
+  CreateTenantInput,
   OrganizationProfileView,
   OrganizationReadRepository,
   TenantContextView,
@@ -123,6 +124,73 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   private profileTableEnsured = false;
 
   constructor(@Inject(PG_POOL) private readonly pool: Pool) {}
+
+  async createTenant(input: CreateTenantInput): Promise<TenantContextView> {
+    const client = await this.pool.connect();
+    try {
+      await client.query('begin');
+
+      const tenantCode = deriveTenantCode(input.displayName);
+
+      const tenantResult = await client.query<{ id: string }>(
+        `
+          insert into tenancy.tenant (
+            tenant_code,
+            tenant_name,
+            display_name,
+            tenant_type,
+            status,
+            created_by,
+            updated_by,
+            created_at,
+            updated_at
+          )
+          values ($1, $2, $3, $4, 'trial', $5, $5, now(), now())
+          returning id
+        `,
+        [tenantCode, input.displayName.trim(), input.displayName.trim(), input.type, input.accountId],
+      );
+
+      const tenantId = tenantResult.rows[0]?.id;
+      if (!tenantId) {
+        throw new Error('Tenant creation completed without a returned id.');
+      }
+
+      await client.query(
+        `
+          insert into tenancy.tenant_member (
+            tenant_id,
+            account_id,
+            role,
+            is_primary_owner,
+            status,
+            joined_source,
+            joined_at,
+            created_by,
+            updated_by,
+            created_at,
+            updated_at
+          )
+          values ($1, $2, 'owner', true, 'active', 'created', now(), $3, $3, now(), now())
+        `,
+        [tenantId, input.accountId, input.accountId],
+      );
+
+      await client.query('commit');
+
+      const context = await this.getTenantContextById(tenantId);
+      if (!context) {
+        throw new Error('Tenant creation completed but context could not be reloaded.');
+      }
+
+      return context;
+    } catch (error) {
+      await client.query('rollback');
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
 
   async getTenantMembershipsByAccountId(accountId: string): Promise<TenantMembershipView[]> {
     const result = await this.pool.query<TenantMembershipRow>(
@@ -927,4 +995,10 @@ function normalizeNullable(value: string | null | undefined) {
 function buildUsernameFromEmail(email: string) {
   const base = email.split('@')[0]?.replace(/[^a-z0-9._-]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'user';
   return `${base}-${Date.now().toString(36)}`.slice(0, 64);
+}
+
+function deriveTenantCode(displayName: string): string {
+  const base = displayName.trim().toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 6) || 'tx';
+  const suffix = Date.now().toString(36).slice(-5);
+  return `${base}${suffix}`.slice(0, 16);
 }

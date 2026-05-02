@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { AnnouncementsPage } from '@/modules/announcements/AnnouncementsPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/announcements" />;
+  return <AnnouncementsPage />;
 }

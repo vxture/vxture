@@ -6,6 +6,7 @@ import { SliderCaptcha } from '@/components/auth/SliderCaptcha';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationStore } from '@/stores/notification.store';
 import { useRouter } from '@/lib/i18n/navigation';
+import { forgotPassword } from '@/api/auth.api';
 
 type AuthScreen = 'login' | 'forgot';
 
@@ -107,19 +108,23 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
     }
   };
 
-  const handleForgotSubmit = (event: React.FormEvent) => {
+  const handleForgotSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!identifier.includes('@')) {
+    if (!identifier.trim() || !identifier.includes('@')) {
       setErrors({ identifier: '请输入有效邮箱' });
       return;
     }
 
     setErrors({});
     setLocalLoading(true);
-    window.setTimeout(() => {
+    try {
+      await forgotPassword({ email: identifier.trim() });
+    } catch {
+      // 出错时与正常情况相同，防止邮箱枚举
+    } finally {
       setLocalLoading(false);
       setResetSent(true);
-    }, 600);
+    }
   };
 
   return (
@@ -319,15 +324,18 @@ function ForgotPanel({
   if (resetSent) {
     return (
       <>
-        <BackButton onClick={onBack}>Back to sign in</BackButton>
+        <BackButton onClick={onBack}>返回登录</BackButton>
         <div className='vx-auth-reset-done'>
           <div className='vx-auth-check'>✓</div>
-          <h1>Check your inbox</h1>
+          <h1>重置邮件已发送</h1>
           <p>
-            Reset link sent to <strong>{email || 'your email'}</strong>. Expires in 15 minutes.
+            重置链接已发送至 <strong>{email || '您的邮箱'}</strong>，请在 15 分钟内查收并完成重置。
           </p>
-          <button type='button' onClick={onBack}>
-            Back to sign in
+          <p style={{ fontSize: '0.85rem', color: 'var(--vx-text-muted, #888)', marginTop: '0.5rem' }}>
+            未收到邮件？请检查垃圾邮件文件夹。
+          </p>
+          <button type='button' onClick={onBack} style={{ marginTop: '1rem' }}>
+            返回登录
           </button>
         </div>
       </>
@@ -336,15 +344,15 @@ function ForgotPanel({
 
   return (
     <>
-      <BackButton onClick={onBack}>Back to sign in</BackButton>
+      <BackButton onClick={onBack}>返回登录</BackButton>
       <div className='vx-auth-panel-heading'>
-        <h1>Reset your password</h1>
-        <p>Enter your email and we will send a secure reset link.</p>
+        <h1>重置密码</h1>
+        <p>输入注册邮箱，获取重置链接</p>
       </div>
 
       <form onSubmit={onSubmit} autoComplete='on'>
         <Field
-          label='Email'
+          label='邮箱'
           name='email'
           type='email'
           placeholder='you@company.com'
@@ -355,7 +363,7 @@ function ForgotPanel({
           disabled={loading}
           onChange={onChange}
         />
-        <PrimaryButton loading={loading} label='发送重置链接' loadingLabel='Sending...' />
+        <PrimaryButton loading={loading} label='获取重置链接' loadingLabel='生成中...' />
       </form>
     </>
   );

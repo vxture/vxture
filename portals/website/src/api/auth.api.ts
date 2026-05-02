@@ -63,3 +63,16 @@ export async function getProfile(): Promise<AuthUserDto> {
   const response = await apiClient.get(AUTH_CONSTANTS.API_ENDPOINTS.ME);
   return response.data;
 }
+
+export async function forgotPassword(data: { email: string }): Promise<void> {
+  await apiClient.post('/api/auth/forgot-password', data);
+}
+
+export async function resetPassword(data: { token: string; newPassword: string }): Promise<void> {
+  await apiClient.post('/api/auth/reset-password', data);
+}
+
+export async function initTenant(data: { type: 'individual' | 'organization' }): Promise<{ tenantId: string }> {
+  const response = await apiClient.post<{ tenantId: string }>('/api/auth/tenant/init', data);
+  return response.data;
+}

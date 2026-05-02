@@ -460,8 +460,8 @@ export function ServicePlansPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-service-plans-page">
       <PageHeader
         icon="star"
-        title="服务套餐管理"
-        description="按业务产品方案铺开 Free / Pro / Enterprise 等服务套餐，维护配额、价格、售卖状态和适用范围。"
+        title="服务套餐"
+        description="按解决方案铺开 Free / Pro / Enterprise 等服务套餐，维护配额、价格、售卖状态和适用范围。"
       />
 
       <section className="vx-tenant-summary" aria-label="服务套餐管理统计">

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
 import { Badge, Button, Input } from "@/components/ui/primitives";
-import { fetchPaymentOperations } from "@/api/admin-bff";
+import { AdminBffError, fetchPaymentOperations, rejectPayment, verifyPayment } from "@/api/admin-bff";
 import type {
   OrderOfflinePaymentType,
   OrderPaymentStatus,
@@ -212,18 +212,88 @@ function PageSizePicker({
   );
 }
 
+function PaymentRemarkDialog({
+  title,
+  payment,
+  remark,
+  loading,
+  error,
+  onRemarkChange,
+  onConfirm,
+  onCancel,
+}: {
+  title: string;
+  payment: PaymentOperationRecord;
+  remark: string;
+  loading: boolean;
+  error: string | null;
+  onRemarkChange: (v: string) => void;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div className="vx-dialog-overlay" onClick={onCancel}>
+      <div
+        className="vx-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header className="vx-dialog__header">
+          <h2 className="vx-dialog__title">{title}</h2>
+          <button type="button" className="vx-dialog__close" onClick={onCancel} aria-label="关闭">
+            <Icon name="x" size="sm" fallback="placeholder" />
+          </button>
+        </header>
+        <div className="vx-dialog__body">
+          <p className="vx-dialog__desc">
+            流水号：<strong>{payment.paymentNo}</strong>
+            {payment.tenantName ? `  ·  ${payment.tenantName}` : ''}
+          </p>
+          <label className="vx-dialog__label" htmlFor="vx-payment-remark">
+            操作备注 <small>（必填，最少 4 字）</small>
+          </label>
+          <textarea
+            id="vx-payment-remark"
+            className="vx-dialog__textarea"
+            value={remark}
+            onChange={(e) => onRemarkChange(e.target.value)}
+            rows={3}
+            placeholder="请输入操作备注…"
+            // eslint-disable-next-line jsx-a11y/no-autofocus
+            autoFocus
+          />
+          {error ? <p className="vx-dialog__error">{error}</p> : null}
+        </div>
+        <footer className="vx-dialog__footer">
+          <Button variant="outline" onClick={onCancel} disabled={loading}>取消</Button>
+          <Button onClick={onConfirm} disabled={loading || remark.trim().length < 4}>
+            {loading ? '处理中…' : '确认'}
+          </Button>
+        </footer>
+      </div>
+    </div>
+  );
+}
+
 function PaymentActionsMenu({
   payment,
   open,
   onToggle,
   onClose,
+  onVerify,
+  onReject,
 }: {
   payment: PaymentOperationRecord;
   open: boolean;
   onToggle: () => void;
   onClose: () => void;
+  onVerify: (payment: PaymentOperationRecord) => void;
+  onReject: (payment: PaymentOperationRecord) => void;
 }) {
   const router = useRouter();
+  const isPendingVerify = payment.paymentStatus === "pending_verify";
 
   return (
     <div
@@ -242,6 +312,26 @@ function PaymentActionsMenu({
       </button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
+          {isPendingVerify ? (
+            <>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => { onClose(); onVerify(payment); }}
+              >
+                <Icon name="check" size="xs" fallback="placeholder" />
+                核销确认
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => { onClose(); onReject(payment); }}
+              >
+                <Icon name="x" size="xs" fallback="placeholder" />
+                驳回退回
+              </button>
+            </>
+          ) : null}
           <button
             type="button"
             role="menuitem"
@@ -314,6 +404,8 @@ function PaymentListRows({
   isPageSelected,
   onTogglePayment,
   onTogglePage,
+  onVerify,
+  onReject,
 }: {
   payments: PaymentOperationRecord[];
   startIndex: number;
@@ -324,6 +416,8 @@ function PaymentListRows({
   isPageSelected: boolean;
   onTogglePayment: (id: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
+  onVerify: (payment: PaymentOperationRecord) => void;
+  onReject: (payment: PaymentOperationRecord) => void;
 }) {
   const router = useRouter();
   const pageSelectRef = useRef<HTMLInputElement | null>(null);
@@ -505,6 +599,8 @@ function PaymentListRows({
                 onOpenMenu(openMenuId === payment.id ? "" : payment.id)
               }
               onClose={onCloseMenu}
+              onVerify={onVerify}
+              onReject={onReject}
             />
           </div>
         );
@@ -518,11 +614,15 @@ function PaymentCards({
   openMenuId,
   onOpenMenu,
   onCloseMenu,
+  onVerify,
+  onReject,
 }: {
   payments: PaymentOperationRecord[];
   openMenuId: string | null;
   onOpenMenu: (id: string) => void;
   onCloseMenu: () => void;
+  onVerify: (payment: PaymentOperationRecord) => void;
+  onReject: (payment: PaymentOperationRecord) => void;
 }) {
   const router = useRouter();
 
@@ -561,6 +661,8 @@ function PaymentCards({
                 onOpenMenu(openMenuId === payment.id ? "" : payment.id)
               }
               onClose={onCloseMenu}
+              onVerify={onVerify}
+              onReject={onReject}
             />
           </header>
           <div className="vx-tenant-directory-card__badges">
@@ -680,6 +782,11 @@ export function PaymentsPage() {
   const [selectedPaymentIds, setSelectedPaymentIds] = useState<Set<string>>(
     () => new Set(),
   );
+  const [verifyTarget, setVerifyTarget] = useState<PaymentOperationRecord | null>(null);
+  const [rejectTarget, setRejectTarget] = useState<PaymentOperationRecord | null>(null);
+  const [remarkInput, setRemarkInput] = useState('');
+  const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -783,6 +890,43 @@ export function PaymentsPage() {
     setOfflineTypeFilter("all");
   }
 
+  function handleOpenVerify(payment: PaymentOperationRecord) {
+    setVerifyTarget(payment);
+    setRejectTarget(null);
+    setRemarkInput('');
+    setActionError(null);
+  }
+
+  function handleOpenReject(payment: PaymentOperationRecord) {
+    setRejectTarget(payment);
+    setVerifyTarget(null);
+    setRemarkInput('');
+    setActionError(null);
+  }
+
+  function handleCloseDialog() {
+    setVerifyTarget(null);
+    setRejectTarget(null);
+    setRemarkInput('');
+    setActionError(null);
+  }
+
+  async function handleConfirmAction() {
+    const target = verifyTarget ?? rejectTarget;
+    if (!target || remarkInput.trim().length < 4) return;
+    setActionLoading(true);
+    setActionError(null);
+    try {
+      const updated = await (verifyTarget ? verifyPayment : rejectPayment)(target.id, remarkInput.trim());
+      setPayments((current) => current.map((p) => (p.id === updated.id ? updated : p)));
+      handleCloseDialog();
+    } catch (err) {
+      setActionError(err instanceof AdminBffError ? err.message : '操作失败，请重试');
+    } finally {
+      setActionLoading(false);
+    }
+  }
+
   function handleOpenMenu(id: string) {
     setOpenMenuId(id || null);
   }
@@ -811,7 +955,7 @@ export function PaymentsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-payments-page">
       <PageHeader
         icon="check"
-        eyebrow="商业与财务"
+        eyebrow="财务结算"
         title="收款管理"
         description="运营侧收款台账 MVP：集中查看线下/线上收款记录、账单关联和对账状态；确认收款仍从订单侧进入。"
         action={
@@ -966,6 +1110,8 @@ export function PaymentsPage() {
                 isPageSelected={isPaymentPageSelected}
                 onTogglePayment={togglePaymentSelection}
                 onTogglePage={togglePaymentPageSelection}
+                onVerify={handleOpenVerify}
+                onReject={handleOpenReject}
               />
             ) : (
               <PaymentCards
@@ -973,6 +1119,8 @@ export function PaymentsPage() {
                 openMenuId={openMenuId}
                 onOpenMenu={handleOpenMenu}
                 onCloseMenu={() => setOpenMenuId(null)}
+                onVerify={handleOpenVerify}
+                onReject={handleOpenReject}
               />
             )
           ) : (
@@ -1009,6 +1157,19 @@ export function PaymentsPage() {
           />
         </section>
       </div>
+
+      {(verifyTarget ?? rejectTarget) ? (
+        <PaymentRemarkDialog
+          title={verifyTarget ? '核销线下收款' : '驳回线下收款'}
+          payment={(verifyTarget ?? rejectTarget)!}
+          remark={remarkInput}
+          loading={actionLoading}
+          error={actionError}
+          onRemarkChange={setRemarkInput}
+          onConfirm={handleConfirmAction}
+          onCancel={handleCloseDialog}
+        />
+      ) : null}
     </div>
   );
 }

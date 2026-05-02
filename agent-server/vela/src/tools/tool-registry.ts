@@ -132,7 +132,7 @@ export class ToolRegistry {
     const tool = this.tools.get(toolId);
 
     if (!tool || !ctx.allowedTools.includes(toolId)) {
-      await this.auditRepository.updateConfirmed(auditId, false);
+      await this.auditRepository.updateExecution(auditId, false, { error: `Tool '${toolId}' not allowed in current context` });
       return { success: false, error: `Tool '${toolId}' not allowed in current context` };
     }
 

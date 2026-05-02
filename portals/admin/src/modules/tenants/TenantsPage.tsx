@@ -494,8 +494,8 @@ export function TenantsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-tenant-operations-page">
       <PageHeader
         icon="buildings"
-        eyebrow="租户与账号"
-        title="租户管理"
+        eyebrow="租户账号"
+        title="租户信息"
         description="平台运营侧统一检索租户、识别风险、处理订阅和进入单租户管理。"
       />
 

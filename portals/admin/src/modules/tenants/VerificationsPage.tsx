@@ -207,7 +207,7 @@ function VerificationListRows({
   }, [isPagePartiallySelected]);
 
   return (
-    <div className="vx-tenant-directory-list vx-verification-directory-list" role="region" aria-label="组织认证清单">
+    <div className="vx-tenant-directory-list vx-verification-directory-list" role="region" aria-label="实名认证清单">
       <div className="vx-tenant-directory-list__header">
         <span>
           <input
@@ -216,7 +216,7 @@ function VerificationListRows({
             className="vx-model-select-checkbox"
             checked={isPageSelected}
             onChange={(event) => onTogglePage(event.target.checked)}
-            aria-label="选择当前页组织认证"
+            aria-label="选择当前页实名认证"
           />
         </span>
         <span>序号</span>
@@ -317,7 +317,7 @@ function VerificationCards({
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-directory-cards vx-verification-cards" aria-label="组织认证卡片">
+    <div className="vx-tenant-directory-cards vx-verification-cards" aria-label="实名认证卡片">
       {tenants.map((tenant) => {
         const riskLevel = normalizeTenantRiskLevel(tenant.riskLevel);
 
@@ -531,11 +531,11 @@ export function VerificationsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-verification-page">
       <PageHeader
         icon="medal"
-        title="组织认证"
+        title="实名认证"
         description="集中处理组织租户提交的企业资质认证，按待审、通过、驳回和未提交状态推进审核流转。"
       />
 
-      <section className="vx-tenant-summary" aria-label="组织认证统计">
+      <section className="vx-tenant-summary" aria-label="实名认证统计">
         <VerificationSummaryItem icon="buildings" label="组织总数" value={formatNumber(organizationTenants.length)} tags={[`待审 ${formatNumber(pendingCount)}`]} />
         <VerificationSummaryItem icon="clock" label="待审核" value={formatNumber(pendingCount)} tags={[`超 3 天 ${formatNumber(overdueCount)}`]} tone="amber" />
         <VerificationSummaryItem icon="check" label="已认证" value={formatNumber(verifiedCount)} tags={[`通过率 ${formatNumber(passRate)}%`]} tone="green" />
@@ -543,8 +543,8 @@ export function VerificationsPage() {
       </section>
 
       <div className="vx-tenant-list-shell">
-        <section className="vx-tenant-toolbar" aria-label="组织认证筛选">
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="组织认证展示方式" />
+        <section className="vx-tenant-toolbar" aria-label="实名认证筛选">
+          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="实名认证展示方式" />
           <span className="vx-tenant-view-count">{formatNumber(filteredTenants.length)}</span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
@@ -552,7 +552,7 @@ export function VerificationsPage() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="搜索组织、编码、联系人、地区"
             className="vx-tenant-search vx-verification-search"
-            aria-label="搜索组织认证"
+            aria-label="搜索实名认证"
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
@@ -585,7 +585,7 @@ export function VerificationsPage() {
           </ActionButton>
         </section>
 
-        <section className="vx-tenant-directory" aria-label="组织认证清单">
+        <section className="vx-tenant-directory" aria-label="实名认证清单">
           {loading ? (
             <header className="vx-tenant-directory__header">
               <span>读取中</span>
@@ -616,8 +616,8 @@ export function VerificationsPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? '正在加载组织认证' : '没有匹配的组织认证'}
-                description={loading ? '正在读取组织租户认证数据。' : '清空筛选条件后可查看全部组织认证记录。'}
+                title={loading ? '正在加载实名认证' : '没有匹配的实名认证'}
+                description={loading ? '正在读取租户认证数据。' : '清空筛选条件后可查看全部实名认证记录。'}
                 action={
                   <ActionButton variant="outline" icon="x" onClick={handleReset}>
                     清空筛选

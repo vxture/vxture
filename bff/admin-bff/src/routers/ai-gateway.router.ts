@@ -174,11 +174,18 @@ async function gatewayRequest<TResponse>(
   path: string,
   options: { method?: 'GET' | 'POST' | 'PUT' | 'DELETE'; body?: JsonObject } = {},
 ): Promise<TResponse> {
-  const response = await fetch(`${gatewayBaseUrl()}${path}`, {
-    method: options.method ?? 'GET',
-    headers: options.body ? { 'content-type': 'application/json' } : undefined,
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(`${gatewayBaseUrl()}${path}`, {
+      method: options.method ?? 'GET',
+      headers: options.body ? { 'content-type': 'application/json' } : undefined,
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
+  } catch {
+    throw new BadGatewayException('AI Gateway is unavailable');
+  }
+
   const responseText = await response.text();
 
   if (!response.ok) {

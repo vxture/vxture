@@ -12,10 +12,16 @@ export const AUTH_CONSTANTS = {
   /** localStorage key */
   STORAGE_KEY: 'auth-storage',
 
-  /** Platform-wide HttpOnly cookie keys */
+  /** Website-BFF HttpOnly cookie keys（website 登录态） */
   COOKIE_KEYS: {
     ACCESS_TOKEN: 'vx_access_token',
     REFRESH_TOKEN: 'vx_refresh_token',
+  } as const,
+
+  /** Console-BFF HttpOnly cookie keys（console 登录态） */
+  CONSOLE_COOKIE_KEYS: {
+    ACCESS_TOKEN: 'vx_console_access_token',
+    REFRESH_TOKEN: 'vx_console_refresh_token',
   } as const,
 
   /** Session storage key prefix for server-side session adapters */

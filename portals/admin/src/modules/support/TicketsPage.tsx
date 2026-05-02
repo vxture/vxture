@@ -388,8 +388,8 @@ export function TicketsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-tickets-page">
       <PageHeader
         icon="chat-circle"
-        eyebrow="支持与合规"
-        title="工单反馈"
+        eyebrow="客户服务"
+        title="工单中心"
         description="聚合租户侧待处理工单，按优先级、阻塞状态和更新时间推进支持闭环。"
         secondary={<Badge>只读聚合</Badge>}
       />

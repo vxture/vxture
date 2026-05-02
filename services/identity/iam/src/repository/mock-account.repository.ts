@@ -4,6 +4,7 @@ import type {
   AccountProfileView,
   AccountReadRepository,
   AuthenticatedAccountView,
+  CreateAccountInput,
   UpdateAccountProfileInput,
 } from '../types/iam.types';
 
@@ -91,5 +92,17 @@ export class MockAccountRepository implements AccountReadRepository {
     if (accountId === mockAccount.id) {
       mockAccount.passwordHash = passwordHash;
     }
+  }
+
+  async createAccount(_input: CreateAccountInput): Promise<AuthenticatedAccountView> {
+    return { id: mockAccount.id, username: mockAccount.username, email: mockAccount.email, phone: mockAccount.phone };
+  }
+
+  async createPasswordResetToken(_accountId: string, _expiresAt: Date): Promise<string> {
+    return 'mock-reset-token';
+  }
+
+  async consumePasswordResetToken(_rawToken: string): Promise<string | null> {
+    return mockAccount.id;
   }
 }

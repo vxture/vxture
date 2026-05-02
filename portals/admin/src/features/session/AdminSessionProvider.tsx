@@ -3,9 +3,14 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { login, logout, restoreSession } from '@/api/admin-bff';
 import type { SessionSnapshot } from '@/entities/console';
-import { anonymousSession } from '@/shared/mock-console-data';
 
 type SessionStatus = 'idle' | 'loading' | 'ready';
+
+const EMPTY_SESSION: SessionSnapshot = {
+  isAuthenticated: false,
+  user: null,
+  capabilities: [],
+};
 
 interface SessionContextValue {
   session: SessionSnapshot;
@@ -16,7 +21,7 @@ interface SessionContextValue {
 }
 
 const SessionContext = createContext<SessionContextValue>({
-  session: anonymousSession,
+  session: EMPTY_SESSION,
   status: 'idle',
   signIn: async () => undefined,
   signOut: async () => undefined,
@@ -24,7 +29,7 @@ const SessionContext = createContext<SessionContextValue>({
 });
 
 export function AdminSessionProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<SessionSnapshot>(anonymousSession);
+  const [session, setSession] = useState<SessionSnapshot>(EMPTY_SESSION);
   const [status, setStatus] = useState<SessionStatus>('loading');
 
   useEffect(() => {
@@ -51,7 +56,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
       setSession(snapshot);
       setStatus('ready');
     } catch (error) {
-      setSession(anonymousSession);
+      setSession(EMPTY_SESSION);
       setStatus('ready');
       throw error;
     }
@@ -59,7 +64,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     await logout();
-    setSession(anonymousSession);
+    setSession(EMPTY_SESSION);
     setStatus('ready');
   }
 

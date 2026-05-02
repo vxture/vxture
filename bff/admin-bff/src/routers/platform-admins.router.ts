@@ -81,6 +81,8 @@ function mapPlatformAdminRow(row: PlatformAdminRow): PlatformAdminRecord {
     roleCode: row.role_code,
     roleNameI18nKey: row.name_i18n_key,
     roleNameEn: row.name_en,
+    roleStatusCode: normalizeRoleStatusCode(row.role_status_code, row.role_status),
+    roleStatus: row.role_status,
     statusCode: normalizeStatusCode(row.status_code, row.status),
     status: row.status,
     isSystem: row.is_system,
@@ -110,6 +112,8 @@ interface PlatformAdminRow {
   role_code: string;
   name_i18n_key: string;
   name_en: string;
+  role_status_code: string | null;
+  role_status: boolean;
   status_code: string | null;
   status: boolean;
   is_system: boolean;
@@ -132,6 +136,8 @@ const PLATFORM_ADMIN_SQL = `
     r.role_code,
     r.name_i18n_key,
     r.name_en,
+    coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) as role_status_code,
+    r.status as role_status,
     coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) as status_code,
     a.status,
     a.is_system,
@@ -146,3 +152,10 @@ const PLATFORM_ADMIN_SQL = `
   where a.deleted_at is null
   order by a.sort asc, a.created_at asc
 `;
+
+function normalizeRoleStatusCode(value: string | null, legacyStatus: boolean): PlatformAdminRecord['roleStatusCode'] {
+  if (value === 'active' || value === 'disabled' || value === 'archived') {
+    return value;
+  }
+  return legacyStatus ? 'active' : 'disabled';
+}

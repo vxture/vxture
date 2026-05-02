@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { SkillsPage } from '@/modules/skills/SkillsPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/skills" />;
+  return <SkillsPage />;
 }

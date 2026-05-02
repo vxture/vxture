@@ -28,6 +28,8 @@
     "@vxture/core-tenant": "workspace:*",
     "@vxture/core-utils": "workspace:*",
     "@vxture/service-iam": "workspace:*",
+    "@vxture/service-organization": "workspace:*",
+    "@vxture/service-mail": "workspace:*",
     "cookie-parser": "^1.4.7",
     "express": "^4.22.1",
     "ioredis": "^5.0.0",

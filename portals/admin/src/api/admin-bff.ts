@@ -1,5 +1,7 @@
 import type {
   AccountOperationRecord,
+  AnnouncementRecord,
+  AuditLogRecord,
   Capability,
   BillingBillAction,
   AiModelGrantRecord,
@@ -34,23 +36,13 @@ import type {
   ProductSolutionRecord,
   PlatformRoleRecord,
   SessionSnapshot,
+  SkillRecord,
   SubscriptionOperationAction,
   SubscriptionOperationDetailRecord,
   SubscriptionOperationRecord,
   TenantOperationRecord,
   UsageMeteringRecord,
 } from '@/entities/console';
-import {
-  aiModelGrantRecords,
-  aiModelRecords,
-  anonymousSession,
-  productAgentRecords,
-  productModelPolicyRecords,
-  productReleaseRecords,
-  productSolutionRecords,
-  tenantOperationRecords,
-} from '@/shared/mock-console-data';
-
 function normalizeOrigin(value: string | undefined): string {
   const normalized = value?.trim().replace(/\/+$/, '');
   if (!normalized) {
@@ -63,6 +55,11 @@ const DEFAULT_BFF_URL = normalizeOrigin(
   process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_ADMIN_BFF_URL
 );
 const ADMIN_API_PREFIX = resolveAdminApiPrefix();
+const EMPTY_SESSION: SessionSnapshot = {
+  isAuthenticated: false,
+  user: null,
+  capabilities: [],
+};
 
 function resolveAdminApiPrefix(): string {
   const explicitPrefix = process.env.NEXT_PUBLIC_ADMIN_API_PREFIX;
@@ -110,18 +107,45 @@ async function readJson<T>(path: string, fallback: T): Promise<T> {
   }
 }
 
+async function readJsonStrict<T>(path: string): Promise<T> {
+  let response: Response;
+
+  try {
+    response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}${path}`, {
+      credentials: 'include',
+      cache: 'no-store',
+    });
+  } catch {
+    throw new AdminBffError('Admin BFF is unavailable.', 503);
+  }
+
+  if (!response.ok) {
+    throw new AdminBffError(await responseErrorMessage(response, `Admin BFF request failed: ${path}`), response.status);
+  }
+
+  return (await response.json()) as T;
+}
+
+async function responseErrorMessage(response: Response, fallback: string) {
+  try {
+    const body = (await response.clone().json()) as { message?: string | string[] };
+    return Array.isArray(body.message) ? body.message[0] ?? fallback : body.message ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export async function fetchCurrentUser(): Promise<ConsoleUser | null> {
-  return readJson<ConsoleUser | null>('/api/me', anonymousSession.user);
+  return readJsonStrict<ConsoleUser | null>('/api/me');
 }
 
 export async function fetchCapabilities(): Promise<Capability[]> {
-  return readJson<Capability[]>('/api/capabilities', anonymousSession.capabilities);
+  return readJsonStrict<Capability[]>('/api/capabilities');
 }
 
 export async function fetchAiModels(includeInactive = true): Promise<AiModelRecord[]> {
-  return readJson<AiModelRecord[]>(
+  return readJsonStrict<AiModelRecord[]>(
     `/api/ai-gateway/models?includeInactive=${includeInactive ? 'true' : 'false'}`,
-    aiModelRecords,
   );
 }
 
@@ -130,9 +154,8 @@ export async function fetchAiModelGrants(filters: { tenantId?: string; modelId?:
   if (filters.tenantId) params.set('tenantId', filters.tenantId);
   if (filters.modelId) params.set('modelId', filters.modelId);
 
-  return readJson<AiModelGrantRecord[]>(
+  return readJsonStrict<AiModelGrantRecord[]>(
     `/api/ai-gateway/grants${params.size ? `?${params.toString()}` : ''}`,
-    aiModelGrantRecords,
   );
 }
 
@@ -149,11 +172,11 @@ export async function fetchProductCapability(productCode: string): Promise<Produ
 }
 
 export async function fetchProductReleases(): Promise<ProductReleaseRecord[]> {
-  return readJson<ProductReleaseRecord[]>('/api/products/releases', productReleaseRecords);
+  return readJson<ProductReleaseRecord[]>('/api/products/releases', []);
 }
 
 export async function fetchProductSolutions(): Promise<ProductSolutionRecord[]> {
-  return readJson<ProductSolutionRecord[]>('/api/products/solutions', productSolutionRecords);
+  return readJson<ProductSolutionRecord[]>('/api/products/solutions', []);
 }
 
 export async function fetchProductSolution(solutionCode: string): Promise<ProductSolutionDetailRecord | null> {
@@ -171,19 +194,19 @@ export async function fetchProductServicePlan(
 }
 
 export async function fetchProductAgents(): Promise<ProductAgentRecord[]> {
-  return readJson<ProductAgentRecord[]>('/api/products/agents', productAgentRecords);
+  return readJson<ProductAgentRecord[]>('/api/products/agents', []);
 }
 
 export async function fetchProductModelPolicies(): Promise<ProductModelPolicyRecord[]> {
-  return readJson<ProductModelPolicyRecord[]>('/api/products/model-policies', productModelPolicyRecords);
+  return readJson<ProductModelPolicyRecord[]>('/api/products/model-policies', []);
 }
 
 export async function fetchPlatformAdmins(): Promise<PlatformAdminRecord[]> {
-  return readJson<PlatformAdminRecord[]>('/api/platform-admins', []);
+  return readJsonStrict<PlatformAdminRecord[]>('/api/platform-admins');
 }
 
 export async function fetchTenantOperations(): Promise<TenantOperationRecord[]> {
-  return readJson<TenantOperationRecord[]>('/api/tenants', tenantOperationRecords);
+  return readJson<TenantOperationRecord[]>('/api/tenants', []);
 }
 
 export async function fetchSubscriptionOperations(): Promise<SubscriptionOperationRecord[]> {
@@ -204,6 +227,48 @@ export async function fetchOrderOperation(orderId: string): Promise<OrderOperati
 
 export async function fetchPaymentOperations(): Promise<PaymentOperationRecord[]> {
   return readJson<PaymentOperationRecord[]>('/api/payments', []);
+}
+
+export async function verifyPayment(paymentId: string, remark: string): Promise<PaymentOperationRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/payments/${encodeURIComponent(paymentId)}/verify`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ remark }),
+  });
+
+  if (!response.ok) {
+    let message = '核销操作失败';
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch { /* ignore */ }
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as PaymentOperationRecord;
+}
+
+export async function rejectPayment(paymentId: string, remark: string): Promise<PaymentOperationRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/payments/${encodeURIComponent(paymentId)}/reject`, {
+    method: 'POST',
+    credentials: 'include',
+    cache: 'no-store',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ remark }),
+  });
+
+  if (!response.ok) {
+    let message = '驳回操作失败';
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch { /* ignore */ }
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as PaymentOperationRecord;
 }
 
 export async function fetchUsageMeteringRecords(): Promise<UsageMeteringRecord[]> {
@@ -432,11 +497,37 @@ export async function fetchAccountOperations(): Promise<AccountOperationRecord[]
 }
 
 export async function fetchPlatformRoles(): Promise<PlatformRoleRecord[]> {
-  return readJson<PlatformRoleRecord[]>('/api/admin-roles', []);
+  return readJsonStrict<PlatformRoleRecord[]>('/api/admin-roles');
+}
+
+export async function replacePlatformRolePermissions(roleId: string, permissionIds: string[]): Promise<PlatformRoleRecord> {
+  const response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/admin-roles/${encodeURIComponent(roleId)}/permissions`, {
+    method: 'PUT',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ permissionIds }),
+  });
+
+  if (!response.ok) {
+    let message = 'Role authorization update failed';
+
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      message = Array.isArray(body.message) ? body.message[0] ?? message : body.message ?? message;
+    } catch {
+      // Preserve a typed error when the BFF returns a non-JSON response.
+    }
+
+    throw new AdminBffError(message, response.status);
+  }
+
+  return (await response.json()) as PlatformRoleRecord;
 }
 
 export async function fetchPlatformPermissions(): Promise<PlatformAdminPermissionRecord[]> {
-  return readJson<PlatformAdminPermissionRecord[]>('/api/admin-permissions', []);
+  return readJsonStrict<PlatformAdminPermissionRecord[]>('/api/admin-permissions');
 }
 
 export async function fetchDevServices(signal?: AbortSignal): Promise<DevServiceSnapshot[]> {
@@ -621,7 +712,7 @@ async function hasActiveSession() {
 export async function restoreSession(): Promise<SessionSnapshot> {
   const active = await hasActiveSession();
   if (!active) {
-    return anonymousSession;
+    return EMPTY_SESSION;
   }
 
   const [user, capabilities] = await Promise.all([
@@ -710,4 +801,16 @@ export async function logout() {
   } catch {
     // Keep local sign-out resilient even if the BFF is unavailable.
   }
+}
+
+export async function fetchAuditLogs(): Promise<AuditLogRecord[]> {
+  return readJson<AuditLogRecord[]>('/api/audit-logs', []);
+}
+
+export async function fetchAnnouncements(): Promise<AnnouncementRecord[]> {
+  return readJson<AnnouncementRecord[]>('/api/announcements', []);
+}
+
+export async function fetchSkills(): Promise<SkillRecord[]> {
+  return readJson<SkillRecord[]>('/api/skills', []);
 }

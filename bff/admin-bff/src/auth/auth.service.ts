@@ -1,5 +1,5 @@
 import { compare } from 'bcryptjs';
-import { Inject, Injectable, OnModuleDestroy, UnauthorizedException } from '@nestjs/common';
+import { BadGatewayException, Inject, Injectable, OnModuleDestroy, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { VxConfigService } from '@vxture/core-config';
 import type { AuthTokenPair } from '@vxture/core-auth';
@@ -18,18 +18,6 @@ const PLATFORM_ADMIN_CAPABILITIES = [
 @Injectable()
 export class PlatformAuthService implements OnModuleDestroy {
   private readonly pool: Pool | null;
-  private readonly mockAdminPassword = '123456';
-  private readonly mockAdmin: PlatformAdminView = {
-    id: 'platform_admin_mock',
-    username: 'superadmin',
-    email: 'superadmin@local.vxture',
-    phone: '13800000000',
-    displayName: 'Super Admin',
-    roleCode: 'PLATFORM_ARCHITECT',
-    roleI18nKey: 'role.platform_architect',
-    roleNameEn: 'Platform Architect',
-    permissions: PLATFORM_ADMIN_CAPABILITIES,
-  };
 
   constructor(
     @Inject(JwtService)
@@ -127,10 +115,7 @@ export class PlatformAuthService implements OnModuleDestroy {
     }
 
     if (!this.pool) {
-      if (identifier.trim().toLowerCase() !== this.mockAdmin.username || password !== this.mockAdminPassword) {
-        throw new UnauthorizedException('Invalid credentials');
-      }
-      return this.mockAdmin;
+      throw new BadGatewayException('Platform admin database is not configured');
     }
 
     const admin = await this.findPlatformAdminByIdentifier(identifier);
@@ -157,7 +142,7 @@ export class PlatformAuthService implements OnModuleDestroy {
 
   private async getPlatformAdminById(adminId: string): Promise<PlatformAdminView | null> {
     if (!this.pool) {
-      return adminId === this.mockAdmin.id ? this.mockAdmin : null;
+      throw new BadGatewayException('Platform admin database is not configured');
     }
 
     const result = await this.pool.query<PlatformAdminRow>(

@@ -17,7 +17,7 @@
  * @category Service
  */
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomBytes, randomUUID } from 'node:crypto';
 
@@ -51,7 +51,7 @@ export class CaptchaService {
   /** jti 黑名单：已使用或已失效的令牌 ID → 过期时间戳 */
   private readonly usedJtis = new Map<string, number>();
 
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(@Inject(JwtService) private readonly jwtService: JwtService) {}
 
   /** 生成一个新的滑块验证码挑战，返回签名令牌和目标位置比例 */
   generateChallenge(): CaptchaChallenge {

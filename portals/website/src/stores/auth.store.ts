@@ -28,7 +28,7 @@ import type { StateCreator } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { makeAuthPersistOptions } from './persistOptions/authPersist';
 import type { AuthState, UserInfo } from '@/types/auth.types';
-import { getProfile, login as loginRequest, logout as logoutRequest } from '@/api/auth.api';
+import { getProfile, login as loginRequest, logout as logoutRequest, signup as signupRequest } from '@/api/auth.api';
 
 function extractAuthErrorMessage(error: unknown): string {
   if (axios.isAxiosError<{ message?: string }>(error)) {
@@ -70,6 +70,18 @@ const authStoreCreator: StateCreator<AuthState> = (set) => ({
         isLoading: false,
         error: errorMessage,
       });
+      throw new Error(errorMessage);
+    }
+  },
+
+  signup: async (email: string, name: string, password: string) => {
+    set({ isLoading: true, error: null });
+    try {
+      const user = await signupRequest({ email, name, password });
+      set({ user, isAuthenticated: true, isLoading: false, error: null });
+    } catch (error: unknown) {
+      const errorMessage = extractAuthErrorMessage(error);
+      set({ user: null, isAuthenticated: false, isLoading: false, error: errorMessage });
       throw new Error(errorMessage);
     }
   },

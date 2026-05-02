@@ -1555,9 +1555,9 @@ export default function AdminOverviewPage() {
         tags: [{ label: '异常', value: String(serviceHealth.abnormal), tone: riskTagTone(serviceHealth.abnormal) }],
       },
       {
-        label: '模型接入',
+        label: '模型网关',
         value: String(totalModelCounts.total),
-        detail: `${modelPeriodLabel}模型接入观察平台可调度模型资源池，模型总数 ${totalModelCounts.total} 个，生效模型 ${activeModelCounts.total} 个，接入异常 ${abnormalModelCounts.total} 个，Token 总量 ${formatTokenCount(totalTokenCalls)}。`,
+        detail: `${modelPeriodLabel}模型网关观察平台可调度模型资源池，模型总数 ${totalModelCounts.total} 个，生效模型 ${activeModelCounts.total} 个，接入异常 ${abnormalModelCounts.total} 个，Token 总量 ${formatTokenCount(totalTokenCalls)}。`,
         tone: 'blue',
         icon: 'cloud',
         tags: [
@@ -1568,15 +1568,15 @@ export default function AdminOverviewPage() {
       {
         label: '策略覆盖',
         value: String(policyCoverage.active),
-        detail: `策略覆盖统计模型策略和租户授权的启用情况，当前有效策略 ${policyCoverage.active} 条，待配置或停用 ${policyCoverage.pending} 条。`,
+        detail: `策略覆盖统计模型授权和租户授权的启用情况，当前有效策略 ${policyCoverage.active} 条，待配置或停用 ${policyCoverage.pending} 条。`,
         tone: policyCoverage.pending > 0 ? 'amber' : 'blue',
         icon: 'shield-check',
         tags: [{ label: '待配', value: String(policyCoverage.pending), tone: riskTagTone(policyCoverage.pending) }],
       },
       {
-        label: '技能接入',
+        label: '技能市场',
         value: String(activeAgents),
-        detail: `技能接入当前以智能体可调用能力作为过渡口径，启用 ${activeAgents} 个，公开 ${publicAgents} 个，异常或停用 ${inactiveAgents} 个。`,
+        detail: `技能市场当前以智能体可调用能力作为过渡口径，启用 ${activeAgents} 个，公开 ${publicAgents} 个，异常或停用 ${inactiveAgents} 个。`,
         tone: inactiveAgents > 0 ? 'amber' : 'blue',
         icon: 'cube',
         tags: [{ label: '异常', value: String(inactiveAgents), tone: riskTagTone(inactiveAgents) }],
@@ -1634,27 +1634,27 @@ export default function AdminOverviewPage() {
         rows: (serviceRows.length ? serviceRows : fallbackServiceRows).sort((left, right) => Number.parseInt(right.value.replace(/\D/g, ''), 10) - Number.parseInt(left.value.replace(/\D/g, ''), 10)).slice(0, 3),
       },
       {
-        title: '模型接入',
+        title: '模型网关',
         summary: 'Token 调用量前三。',
-        detail: '按 Token 调用量观察模型接入后的真实使用强度。',
+        detail: '按 Token 调用量观察模型网关后的真实使用强度。',
         tone: 'blue',
         href: '/model-gateway',
         rankStyle: 'medal',
         rows: modelRows,
       },
       {
-        title: '模型策略',
+        title: '模型授权',
         summary: '策略、授权和配额。',
-        detail: '按产品、租户和智能体观察模型策略与配额配置。',
+        detail: '按产品、租户和智能体观察模型授权与配额配置。',
         tone: 'blue',
         href: '/model-grants',
         rankStyle: 'medal',
         rows: policyRows,
       },
       {
-        title: '技能接入',
+        title: '技能市场',
         summary: '可调用能力接入状态。',
-        detail: '当前以智能体可调用能力作为技能接入过渡口径。',
+        detail: '当前以智能体可调用能力作为技能市场过渡口径。',
         tone: 'blue',
         href: '/skills',
         rankStyle: 'medal',
@@ -1709,7 +1709,7 @@ export default function AdminOverviewPage() {
       </section>
 
       <section className="admin-overview-section" aria-label="能力与服务">
-        <OverviewHeading icon="cloud" title="能力与服务" description={`${modelPeriodLabel}观察服务运行、模型调用、策略覆盖和技能接入，判断平台 AI 能力是否稳定、可控、可被业务调用。`} period={modelPeriod} onPeriodChange={setModelPeriod} />
+        <OverviewHeading icon="cloud" title="模型技能" description={`${modelPeriodLabel}观察服务运行、模型调用、策略覆盖和技能市场，判断平台 AI 能力是否稳定、可控、可被业务调用。`} period={modelPeriod} onPeriodChange={setModelPeriod} />
         <div className="admin-overview-model-metrics">
           {capabilityMetrics.map((metric) => (
             <ModelMetricCard key={metric.label} metric={metric} />

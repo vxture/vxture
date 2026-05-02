@@ -118,7 +118,7 @@ function ProductCapabilitySummary({ product }: { product: ProductCapabilityRecor
         <DetailMetric label="业务方案" value={formatNumber(product.solutionCount)} tag={`${formatNumber(product.planCount)} 套餐`} />
         <DetailMetric label="接入状态" value={integrationStatusLabel(product.integration.status)} tag={product.integration.providerName} />
         <DetailMetric label="计量单位" value={product.meteringUnit} tag={product.billingMode} />
-        <DetailMetric label="可用状态" value={healthLabel(product.healthStatus)} tag={`${formatNumber(product.modelPolicyCount)} 模型策略`} />
+        <DetailMetric label="可用状态" value={healthLabel(product.healthStatus)} tag={`${formatNumber(product.modelPolicyCount)} 模型授权`} />
       </div>
     </section>
   );
@@ -164,7 +164,7 @@ function ProductCapabilityDetails({ product }: { product: ProductCapabilityRecor
           ) : (
             <article>
               <strong>暂未被业务方案引用</strong>
-              <span>后续可在业务产品方案中配置。</span>
+              <span>后续可在解决方案中配置。</span>
             </article>
           )}
         </div>

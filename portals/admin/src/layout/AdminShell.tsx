@@ -913,6 +913,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
                         {sidebarTextMounted ? (
                           <span>
                             <strong>{itemLabel}</strong>
+                            {item.status === 'planned' ? <em className="admin-shell-nav__status">待建设</em> : null}
                           </span>
                         ) : null}
                       </>

@@ -582,16 +582,15 @@ export function ModelGatewayPage() {
         </p>
       ) : null}
 
-      <section className="vx-tenant-summary" aria-label={t('summary.ariaLabel')}>
+      <section className="vx-tenant-summary vx-model-gateway-summary" aria-label={t('summary.ariaLabel')}>
         <ModelSummaryItem
           icon={PlugIcon}
           label={t('summary.models')}
           value={formatNumber(models.length)}
-          tags={[`${t('status.active')} ${formatNumber(activeModels)}`, `${t('status.inactive')} ${formatNumber(inactiveModels)}`]}
+          tags={[`${t('filters.online')} ${formatNumber(onlineModels)}`, `${t('filters.private')} ${formatNumber(privateModels)}`]}
         />
-        <ModelSummaryItem icon={CodeIcon} label={t('summary.privateModels')} value={formatNumber(privateModels)} tags={[t('filters.private')]} tone="green" />
-        <ModelSummaryItem icon={PlugIcon} label={t('summary.onlineModels')} value={formatNumber(onlineModels)} tags={[t('filters.online')]} />
         <ModelSummaryItem icon={PlayIcon} label={t('filters.active')} value={formatNumber(activeModels)} tags={['可调度']} tone={activeModels ? 'green' : 'amber'} />
+        <ModelSummaryItem icon={CodeIcon} label={t('status.inactive')} value={formatNumber(inactiveModels)} tags={inactiveModels ? ['需复核'] : ['无停用']} tone={inactiveModels ? 'amber' : 'green'} />
       </section>
 
       <div className="vx-tenant-list-shell">

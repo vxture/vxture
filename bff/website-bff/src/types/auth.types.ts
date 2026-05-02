@@ -11,7 +11,7 @@
  * @category Types
  */
 
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
 export class LoginDto {
   @IsOptional()
@@ -25,6 +25,40 @@ export class LoginDto {
   @IsString()
   @MinLength(1)
   password!: string;
+}
+
+export class SignupDto {
+  @IsEmail({}, { message: '请输入有效邮箱' })
+  email!: string;
+
+  @IsString()
+  @IsNotEmpty({ message: '姓名不能为空' })
+  name!: string;
+
+  @IsString()
+  @MinLength(8, { message: '密码至少 8 位字符' })
+  password!: string;
+}
+
+export class ForgotPasswordDto {
+  @IsEmail({}, { message: '请输入有效邮箱' })
+  email!: string;
+}
+
+export class ResetPasswordDto {
+  @IsString()
+  @IsNotEmpty()
+  token!: string;
+
+  @IsString()
+  @MinLength(8, { message: '密码至少 8 位字符' })
+  newPassword!: string;
+}
+
+export class InitTenantDto {
+  @IsString()
+  @IsIn(['individual', 'organization'], { message: '请选择个人或企业' })
+  type!: 'individual' | 'organization';
 }
 
 export interface AuthUserDto {
@@ -44,4 +78,5 @@ export interface AuthUserDto {
 
 export interface RequestContext {
   user?: AuthUserDto;
+  tenantId?: string;
 }

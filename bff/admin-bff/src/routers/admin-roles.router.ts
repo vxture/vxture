@@ -1,10 +1,15 @@
 import {
+  BadRequestException,
   BadGatewayException,
+  Body,
   Controller,
   ForbiddenException,
   Get,
   Inject,
+  NotFoundException,
   OnModuleDestroy,
+  Param,
+  Put,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -56,7 +61,7 @@ export class AdminRolesRouter implements OnModuleDestroy {
 
     const [roleRows, permissionRows] = await Promise.all([
       this.pool.query<PlatformRoleRow>(PLATFORM_ROLE_SQL),
-      this.pool.query<PlatformRolePermissionRow>(PLATFORM_ROLE_PERMISSION_SQL),
+      this.pool.query<PlatformRolePermissionRow>(`${PLATFORM_ROLE_PERMISSION_SQL} ${PLATFORM_ROLE_PERMISSION_ORDER_SQL}`),
     ]);
     const permissionsByRole = groupBy(permissionRows.rows, (row) => row.role_id);
 
@@ -83,6 +88,132 @@ export class AdminRolesRouter implements OnModuleDestroy {
       updatedAt: toIso(role.updated_at),
       permissions: (permissionsByRole.get(role.id) ?? []).map(mapPermissionRow),
     }));
+  }
+
+  @Put(':roleId/permissions')
+  async replaceAdminRolePermissions(
+    @Req() req: Request & RequestContext,
+    @Param('roleId') roleId: string,
+    @Body() body: ReplaceRolePermissionsBody,
+  ): Promise<PlatformRoleRecord> {
+    assertCanManageAdminRoles(req);
+
+    if (!this.pool) {
+      throw new BadGatewayException('Platform role database is not configured');
+    }
+
+    const actorId = requireUuid(req.user?.id, 'Invalid platform admin principal');
+    const targetRoleId = requireUuid(roleId, 'Invalid role id');
+    const permissionIds = normalizePermissionIds(body?.permissionIds);
+    const client = await this.pool.connect();
+
+    try {
+      await client.query('begin');
+
+      const roleResult = await client.query<PlatformRoleIdentityRow>(
+        `
+          select
+            r.id,
+            r.role_code,
+            coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) as status_code,
+            exists (
+              select 1
+              from platform.platform_admin a
+              where a.id = $2
+                and a.role_id = r.id
+                and a.deleted_at is null
+            ) as is_actor_role
+          from platform.platform_role r
+          where r.id = $1
+          for update
+        `,
+        [targetRoleId, actorId],
+      );
+      const role = roleResult.rows[0];
+      if (!role) {
+        throw new NotFoundException('Platform role not found');
+      }
+      if (role.status_code === 'archived') {
+        throw new BadRequestException('Archived roles cannot be authorized');
+      }
+
+      const permissionResult = await client.query<PermissionIntegrityRow>(
+        `
+          select id, parent_id, perm_code, status
+          from platform.platform_permission
+          where id = any($1::uuid[])
+        `,
+        [permissionIds],
+      );
+      if (permissionResult.rowCount !== permissionIds.length) {
+        throw new BadRequestException('Permission set contains unknown permission ids');
+      }
+
+      const permissionIdSet = new Set(permissionIds);
+      for (const permission of permissionResult.rows) {
+        if (!permission.status) {
+          throw new BadRequestException(`Disabled permission cannot be authorized: ${permission.perm_code}`);
+        }
+        if (permission.parent_id && !permissionIdSet.has(permission.parent_id)) {
+          throw new BadRequestException(`Permission ancestor is required: ${permission.perm_code}`);
+        }
+      }
+
+      if (role.is_actor_role && !permissionResult.rows.some((permission) => permission.perm_code === 'platform.admin.manage')) {
+        throw new ForbiddenException('Cannot remove platform.admin.manage from the active administrator role');
+      }
+
+      await client.query(
+        `
+          delete from platform.platform_role_permission
+          where role_id = $1
+            and not (permission_id = any($2::uuid[]))
+        `,
+        [targetRoleId, permissionIds],
+      );
+
+      if (permissionIds.length) {
+        await client.query(
+          `
+            insert into platform.platform_role_permission (role_id, permission_id, created_by, updated_by)
+            select $1::uuid, selected.permission_id, $3::uuid, $3::uuid
+            from unnest($2::uuid[]) as selected(permission_id)
+            on conflict (role_id, permission_id) do update
+              set updated_at = now(),
+                  updated_by = excluded.updated_by
+          `,
+          [targetRoleId, permissionIds, actorId],
+        );
+      }
+
+      await client.query(
+        `
+          update platform.platform_role
+          set updated_by = $2,
+              updated_at = now()
+          where id = $1
+        `,
+        [targetRoleId, actorId],
+      );
+
+      await client.query('commit');
+    } catch (error) {
+      await client.query('rollback');
+      throw error;
+    } finally {
+      client.release();
+    }
+
+    const [roleRows, permissionRows] = await Promise.all([
+      this.pool.query<PlatformRoleRow>(`${PLATFORM_ROLE_SQL_WITH_FILTER} where r.id = $1 ${PLATFORM_ROLE_SQL_GROUP_ORDER}`, [targetRoleId]),
+      this.pool.query<PlatformRolePermissionRow>(`${PLATFORM_ROLE_PERMISSION_SQL} where rp.role_id = $1 ${PLATFORM_ROLE_PERMISSION_ORDER_SQL}`, [targetRoleId]),
+    ]);
+    const updatedRole = roleRows.rows[0];
+    if (!updatedRole) {
+      throw new NotFoundException('Platform role not found');
+    }
+    const permissionsByRole = groupBy(permissionRows.rows, (row) => row.role_id);
+    return mapRoleRow(updatedRole, permissionsByRole);
   }
 }
 
@@ -116,6 +247,31 @@ function toIso(value: Date | string | null): string {
   return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
 }
 
+function requireUuid(value: string | undefined, message: string) {
+  if (!value || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)) {
+    throw new UnauthorizedException(message);
+  }
+  return value;
+}
+
+function normalizePermissionIds(value: unknown) {
+  if (!Array.isArray(value)) {
+    throw new BadRequestException('permissionIds must be an array');
+  }
+  if (value.length > 1000) {
+    throw new BadRequestException('Too many permissions in one authorization request');
+  }
+
+  const ids = new Set<string>();
+  for (const item of value) {
+    if (typeof item !== 'string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(item)) {
+      throw new BadRequestException('permissionIds contains an invalid permission id');
+    }
+    ids.add(item);
+  }
+  return [...ids];
+}
+
 function normalizeRoleStatusCode(value: string | null, legacyStatus: boolean): PlatformRoleRecord['statusCode'] {
   if (value === 'active' || value === 'disabled' || value === 'archived') {
     return value;
@@ -134,6 +290,50 @@ function mapPermissionRow(row: PlatformRolePermissionRow): PlatformRolePermissio
     description: row.description,
     routePath: row.route_path,
   };
+}
+
+function mapRoleRow(role: PlatformRoleRow, permissionsByRole: Map<string, PlatformRolePermissionRow[]>): PlatformRoleRecord {
+  return {
+    id: role.id,
+    roleCode: role.role_code,
+    nameI18nKey: role.name_i18n_key,
+    nameEn: role.name_en,
+    descriptionI18nKey: role.description_i18n_key,
+    description: role.description,
+    isSystem: role.is_system,
+    statusCode: normalizeRoleStatusCode(role.status_code, role.status),
+    status: role.status,
+    sort: role.sort,
+    adminCount: role.admin_count,
+    activeAdminCount: role.active_admin_count,
+    permissionCount: role.permission_count,
+    menuPermissionCount: role.menu_permission_count,
+    buttonPermissionCount: role.button_permission_count,
+    apiPermissionCount: role.api_permission_count,
+    createdBy: role.created_by,
+    createdByName: role.created_by_name,
+    createdAt: toIso(role.created_at),
+    updatedAt: toIso(role.updated_at),
+    permissions: (permissionsByRole.get(role.id) ?? []).map(mapPermissionRow),
+  };
+}
+
+interface ReplaceRolePermissionsBody {
+  permissionIds?: unknown;
+}
+
+interface PlatformRoleIdentityRow {
+  id: string;
+  role_code: string;
+  status_code: PlatformRoleRecord['statusCode'];
+  is_actor_role: boolean;
+}
+
+interface PermissionIntegrityRow {
+  id: string;
+  parent_id: string | null;
+  perm_code: string;
+  status: boolean;
 }
 
 interface PlatformRoleRow {
@@ -171,7 +371,7 @@ interface PlatformRolePermissionRow {
   route_path: string | null;
 }
 
-const PLATFORM_ROLE_SQL = `
+const PLATFORM_ROLE_SQL_WITH_FILTER = `
   select
     r.id,
     r.role_code,
@@ -206,9 +406,14 @@ const PLATFORM_ROLE_SQL = `
     on rp.role_id = r.id
   left join platform.platform_permission p
     on p.id = rp.permission_id
+`;
+
+const PLATFORM_ROLE_SQL_GROUP_ORDER = `
   group by r.id, creator.id
   order by r.sort asc, r.created_at asc
 `;
+
+const PLATFORM_ROLE_SQL = `${PLATFORM_ROLE_SQL_WITH_FILTER} ${PLATFORM_ROLE_SQL_GROUP_ORDER}`;
 
 const PLATFORM_ROLE_PERMISSION_SQL = `
   select
@@ -224,5 +429,8 @@ const PLATFORM_ROLE_PERMISSION_SQL = `
   from platform.platform_role_permission rp
   join platform.platform_permission p
     on p.id = rp.permission_id
+`;
+
+const PLATFORM_ROLE_PERMISSION_ORDER_SQL = `
   order by rp.role_id, p.sort asc, p.perm_type asc, p.perm_code asc
 `;

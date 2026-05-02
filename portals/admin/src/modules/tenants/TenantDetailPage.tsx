@@ -51,7 +51,7 @@ const tenantTabs: Array<{ id: TenantTabId; label: string; icon: IconName }> = [
   { id: 'members', label: '成员账号', icon: 'user' },
   { id: 'subscriptions', label: '订阅产品', icon: 'star' },
   { id: 'usage', label: '配额用量', icon: 'graph' },
-  { id: 'models', label: '模型策略', icon: 'shield-check' },
+  { id: 'models', label: '模型授权', icon: 'shield-check' },
   { id: 'risk', label: '风控审计', icon: 'table' },
   { id: 'tickets', label: '工单备注', icon: 'chat-circle' },
 ];

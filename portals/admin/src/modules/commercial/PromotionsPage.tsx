@@ -167,7 +167,7 @@ function PromotionRows({
     <div
       className="vx-tenant-directory-list vx-promotion-directory-list"
       role="region"
-      aria-label="推广优惠清单"
+      aria-label="营销优惠清单"
     >
       <div className="vx-tenant-directory-list__header">
         <span>
@@ -302,7 +302,7 @@ function PromotionCards({
   return (
     <div
       className="vx-tenant-directory-cards vx-commercial-cards"
-      aria-label="推广优惠卡片"
+      aria-label="营销优惠卡片"
     >
       {records.map((record) => (
         <article
@@ -471,11 +471,11 @@ export function PromotionsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-promotions-page">
       <PageHeader
         icon="sparkles"
-        eyebrow="产品与套餐"
-        title="推广优惠"
+        eyebrow="产品体系"
+        title="营销优惠"
         description="市场运营侧查看套餐优惠活动、价格折扣和核销效果；MVP 阶段基于套餐价格与账单减免自动生成台账。"
       />
-      <section className="vx-tenant-summary" aria-label="推广优惠统计">
+      <section className="vx-tenant-summary" aria-label="营销优惠统计">
         <SummaryItem
           icon="sparkles"
           label="优惠活动"
@@ -508,11 +508,11 @@ export function PromotionsPage() {
         />
       </section>
       <div className="vx-tenant-list-shell">
-        <section className="vx-tenant-toolbar" aria-label="推广优惠筛选">
+        <section className="vx-tenant-toolbar" aria-label="营销优惠筛选">
           <ViewModeSwitch
             value={viewMode}
             onChange={setViewMode}
-            ariaLabel="推广优惠展示方式"
+            ariaLabel="营销优惠展示方式"
           />
           <span className="vx-tenant-view-count">
             {formatNumber(filteredRecords.length)}
@@ -561,7 +561,7 @@ export function PromotionsPage() {
             新建优惠
           </ActionButton>
         </section>
-        <section className="vx-tenant-directory" aria-label="推广优惠清单">
+        <section className="vx-tenant-directory" aria-label="营销优惠清单">
           {loading ? (
             <header className="vx-tenant-directory__header">
               <span>读取中</span>
@@ -594,7 +594,7 @@ export function PromotionsPage() {
                 title={loading ? "正在加载优惠" : "没有匹配的优惠"}
                 description={
                   loading
-                    ? "正在读取推广优惠台账。"
+                    ? "正在读取营销优惠台账。"
                     : "清空筛选条件后可查看全部优惠活动。"
                 }
                 action={

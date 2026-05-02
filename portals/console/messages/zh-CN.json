@@ -1051,7 +1051,7 @@
       "grantsValue": "{active} / {total} 启用"
     },
     "providers": {
-      "doubao": "豆包",
+      "doubao": "doubao",
       "claude": "Claude",
       "private": "自建模型",
       "custom": "自定义"

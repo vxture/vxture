@@ -74,6 +74,13 @@ export interface TenantPermissionView {
   sort: number;
 }
 
+export interface CreateTenantInput {
+  accountId: string;
+  email: string;
+  displayName: string;
+  type: TenantType;
+}
+
 export interface UpsertTenantMemberInput {
   email: string;
   nickname?: string | null;
@@ -117,6 +124,7 @@ export interface OrganizationProfileView {
 }
 
 export interface OrganizationReadRepository {
+  createTenant(input: CreateTenantInput): Promise<TenantContextView>;
   getTenantMembershipsByAccountId(accountId: string): Promise<TenantMembershipView[]>;
   getTenantContextById(tenantId: string): Promise<TenantContextView | null>;
   getOrganizationProfileByTenantId(tenantId: string): Promise<OrganizationProfileView | null>;

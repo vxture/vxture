@@ -12,7 +12,32 @@
       "Bash(rm -rf \"d:/MyWebSite/vxture/bff/tenant-bff\")",
       "Bash(psql *)",
       "PowerShell(psql *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('scripts',{}\\), indent=2\\)\\)\")",
+      "Bash(git *)",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('dependencies',{}\\), indent=2\\)\\)\")",
+      "Bash(ls agent-server/ruyinagent/src/workflows/)",
+      "Bash(ls agent-server/ruyinagent/src/services/)",
+      "Bash(ls agent-server/ruyinagent/src/routers/)",
+      "Bash(cat agent-server/ruyinagent/src/types/)",
+      "Bash(ls agent-server/ruyinagent/src/types/)",
+      "Bash(xargs wc *)",
+      "Bash(grep -E '^\\\\s*d|\\\\.ts$')",
+      "Bash(powershell *)",
+      "Bash(Select-String *)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm --filter @vxture/bff-website exec tsc --noEmit)",
+      "Bash(pnpm --filter @vxture/website exec tsc --noEmit)",
+      "Bash(pnpm --filter @vxture/service-mail exec tsc --noEmit)",
+      "Bash(xargs ls *)",
+      "Bash(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\admin\\\\src\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\admin\\\\src\\\\modules\" -name \"*[Ss]kill*\" -o -name \"*[Aa]udit*\" -o -name \"*[Aa]nnouncement*\")",
+      "Bash(Get-ChildItem -Path agent-studio -ErrorAction SilentlyContinue)",
+      "Bash(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\bff\\\\vela-bff\\\\src\" -Recurse -File)",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\bff\\\\website-bff\\\\src\\\\routers\" -File)",
+      "Bash(Select-Object -ExpandProperty Name)"
     ]
   }
 }

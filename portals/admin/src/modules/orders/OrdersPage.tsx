@@ -766,7 +766,7 @@ export function OrdersPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-orders-page">
       <PageHeader
         icon="table"
-        eyebrow="商业与财务"
+        eyebrow="订阅交易"
         title="订单管理"
         description="运营侧查看租户订阅订单、账单和收款状态，支撑续期确认、异常处理和财务对账。"
       />

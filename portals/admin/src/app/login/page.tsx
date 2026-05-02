@@ -169,6 +169,21 @@ function LoginScreen() {
     try {
       const { identifier, password } = pendingCredentialsRef.current;
       await signIn(identifier, password, captchaToken, captchaPosition);
+
+      // SPA 登录不触发浏览器原生表单提交，需主动通知浏览器保存凭据
+      // 这样浏览器才能在下次提供自动填充和联想补全（Chrome/Edge 支持，Firefox 静默忽略）
+      const PasswordCredentialConstructor = (window as Window & {
+        PasswordCredential?: new (data: { id: string; password: string }) => Credential;
+      }).PasswordCredential;
+      if (PasswordCredentialConstructor) {
+        try {
+          const cred = new PasswordCredentialConstructor({ id: identifier, password });
+          await navigator.credentials.store(cred);
+        } catch {
+          // 隐私模式或用户拒绝时静默忽略
+        }
+      }
+
       const next = searchParams.get('next') || '/';
       router.replace(next);
     } catch (error) {

@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { createHash, randomBytes } from 'node:crypto';
 import type { Pool } from 'pg';
 import { IAM_PG_POOL } from '../tokens';
 import type {
@@ -6,6 +7,7 @@ import type {
   AccountProfileView,
   AccountReadRepository,
   AuthenticatedAccountView,
+  CreateAccountInput,
   UpdateAccountProfileInput,
 } from '../types/iam.types';
 
@@ -215,6 +217,80 @@ export class PgAccountRepository implements AccountReadRepository {
     return this.getProfile(accountId);
   }
 
+  async createPasswordResetToken(accountId: string, expiresAt: Date): Promise<string> {
+    await this.ensureTokenTable();
+
+    // 生成 64 字符随机 hex token，仅在此处可见，DB 存哈希
+    const rawToken = randomBytes(32).toString('hex');
+    const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+
+    await this.pool.query(
+      `insert into account.password_reset_token (account_id, token_hash, expires_at)
+       values ($1, $2, $3)
+       on conflict do nothing`,
+      [accountId, tokenHash, expiresAt],
+    );
+
+    return rawToken;
+  }
+
+  async consumePasswordResetToken(token: string): Promise<string | null> {
+    await this.ensureTokenTable();
+
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+
+    const result = await this.pool.query<{ account_id: string }>(
+      `update account.password_reset_token
+       set used_at = now()
+       where token_hash = $1
+         and used_at is null
+         and expires_at > now()
+       returning account_id`,
+      [tokenHash],
+    );
+
+    return result.rows[0]?.account_id ?? null;
+  }
+
+  async createAccount(input: CreateAccountInput): Promise<AuthenticatedAccountView> {
+    await this.ensureProfileTable();
+
+    const id = crypto.randomUUID();
+    const username = deriveUsername(input.email);
+    const email = input.email.toLowerCase().trim();
+
+    const client = await this.pool.connect();
+    try {
+      await client.query('begin');
+
+      await client.query(
+        `insert into account.account (id, username, email, password_hash, status, created_at, updated_at)
+         values ($1, $2, $3, $4, true, now(), now())`,
+        [id, username, email, input.passwordHash],
+      );
+
+      await client.query(
+        `insert into account.account_profile (account_id, display_name, created_at, updated_at)
+         values ($1, $2, now(), now())`,
+        [id, input.name.trim()],
+      );
+
+      await client.query('commit');
+    } catch (error: unknown) {
+      await client.query('rollback');
+      // PostgreSQL unique_violation 错误码
+      if (isUniqueViolation(error)) {
+        throw new ConflictException('该邮箱已被注册');
+      }
+
+      throw error;
+    } finally {
+      client.release();
+    }
+
+    return { id, username, email, phone: null };
+  }
+
   async updatePassword(accountId: string, passwordHash: string): Promise<void> {
     await this.pool.query(
       `
@@ -284,6 +360,26 @@ export class PgAccountRepository implements AccountReadRepository {
     `);
     this.profileTableEnsured = true;
   }
+
+  private tokenTableEnsured = false;
+
+  private async ensureTokenTable() {
+    if (this.tokenTableEnsured) {
+      return;
+    }
+
+    await this.pool.query(`
+      create table if not exists account.password_reset_token (
+        id uuid primary key default gen_random_uuid(),
+        account_id uuid not null references account.account(id) on delete cascade,
+        token_hash varchar(64) not null unique,
+        expires_at timestamptz not null,
+        used_at timestamptz,
+        created_at timestamptz not null default now()
+      )
+    `);
+    this.tokenTableEnsured = true;
+  }
 }
 
 function normalizeNullable(value: string | null | undefined) {
@@ -293,4 +389,23 @@ function normalizeNullable(value: string | null | undefined) {
 
   const normalized = value?.trim();
   return normalized ? normalized : null;
+}
+
+// 从邮箱前缀派生用户名，加随机后缀避免冲突
+function deriveUsername(email: string): string {
+  const prefix = (email.split('@')[0] ?? '')
+    .toLowerCase()
+    .replace(/[^a-z0-9_]/g, '_')
+    .slice(0, 24);
+  const suffix = Math.random().toString(36).slice(2, 6);
+  return prefix ? `${prefix}_${suffix}` : `user_${suffix}`;
+}
+
+function isUniqueViolation(error: unknown): boolean {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    (error as { code: string }).code === '23505'
+  );
 }

@@ -12,12 +12,12 @@ import { formatDate, formatNumber } from '@/modules/tenants/tenant-utils';
 import { formatCurrency, SummaryItem, Tag, tierTone } from './commercial-utils';
 
 const quickLinks: Array<{ href: string; label: string; description: string; icon: IconName }> = [
-  { href: '/subscriptions', label: '订阅运营', description: '权益实例、续期、暂停和配额风险。', icon: 'star' },
+  { href: '/subscriptions', label: '订阅管理', description: '权益实例、续期、暂停和配额风险。', icon: 'star' },
   { href: '/orders', label: '订单管理', description: '订单状态、支付确认和异常订单。', icon: 'table' },
   { href: '/payments', label: '收款管理', description: '线下/线上收款台账与对账状态。', icon: 'check' },
-  { href: '/billing', label: '账单管理', description: '应收、调整、补录、作废与逾期跟进。', icon: 'key' },
+  { href: '/billing', label: '账单中心', description: '应收、调整、补录、作废与逾期跟进。', icon: 'key' },
   { href: '/invoices', label: '发票管理', description: '线下开票登记、寄送交付和红冲。', icon: 'table' },
-  { href: '/usage-metering', label: '用量计量', description: '产品能力消耗、配额使用和超额风险。', icon: 'graph' },
+  { href: '/usage-metering', label: '用量计费', description: '产品能力消耗、配额使用和超额风险。', icon: 'graph' },
   { href: '/promotion-redemptions', label: '优惠核销', description: '账单减免、优惠使用和退回核销。', icon: 'sparkles' },
 ];
 
@@ -46,7 +46,7 @@ function riskIcon(tone: CommerceOverviewSnapshot['risks'][number]['tone']): Icon
 
 function OverviewMetricSummary({ metrics }: { metrics: CommerceOverviewMetric[] }) {
   return (
-    <section className="vx-tenant-summary" aria-label="商业财务概览统计">
+    <section className="vx-tenant-summary" aria-label="商业总览统计">
       {metrics.map((metric) => (
         <SummaryItem
           key={metric.key}
@@ -187,8 +187,8 @@ export function CommerceOverviewPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-commerce-overview-page">
       <PageHeader
         icon="chart-bar"
-        eyebrow="商业与财务"
-        title="商业财务概览"
+        eyebrow="商业分析"
+        title="商业总览"
         description="运营管理平台的商业财务入口：聚合订阅、订单、收款、账单、发票、用量和优惠数据，辅助运营人员判断风险与跟进优先级。"
       />
 
@@ -196,7 +196,7 @@ export function CommerceOverviewPage() {
 
       {!snapshot && !loading ? (
         <section className="vx-tenant-empty">
-          <EmptyState title="暂未读取到商业财务数据" description="请确认商业财务 BFF 服务和数据库连接状态。" />
+          <EmptyState title="暂未读取到商业分析数据" description="请确认商业 BFF 服务和数据库连接状态。" />
         </section>
       ) : null}
 

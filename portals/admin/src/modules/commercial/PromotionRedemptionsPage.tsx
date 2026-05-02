@@ -568,7 +568,7 @@ export function PromotionRedemptionsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-redemptions-page">
       <PageHeader
         icon="check"
-        eyebrow="商业与财务"
+        eyebrow="订阅交易"
         title="优惠核销"
         description="运营侧查看账单减免、套餐优惠和核销状态；MVP 阶段基于账单 discount_amount 自动形成核销台账。"
       />

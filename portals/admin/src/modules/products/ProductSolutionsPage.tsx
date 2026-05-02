@@ -218,7 +218,7 @@ function ProductSolutionListRows({
   }, [isPagePartiallySelected]);
 
   return (
-    <div className="vx-tenant-directory-list vx-product-solution-directory-list" role="region" aria-label="业务产品方案清单">
+    <div className="vx-tenant-directory-list vx-product-solution-directory-list" role="region" aria-label="解决方案清单">
       <div className="vx-tenant-directory-list__header">
         <span>
           <input
@@ -329,7 +329,7 @@ function ProductSolutionCards({
   onOpenDetails: (solutionCode: string) => void;
 }) {
   return (
-    <div className="vx-tenant-directory-cards vx-product-solution-cards" aria-label="业务产品方案卡片">
+    <div className="vx-tenant-directory-cards vx-product-solution-cards" aria-label="解决方案卡片">
       {solutions.map((solution) => (
         <article
           key={solution.id}
@@ -537,11 +537,11 @@ export function ProductSolutionsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-product-solutions-page">
       <PageHeader
         icon="workflow"
-        title="业务产品方案"
+        title="解决方案"
         description="按行业业务场景组合产品能力，定义方案边界、包含产品、服务套餐和适用客户。"
       />
 
-      <section className="vx-tenant-summary" aria-label="业务产品方案统计">
+      <section className="vx-tenant-summary" aria-label="解决方案统计">
         <SolutionSummaryItem icon="workflow" label="方案总数" value={formatNumber(solutions.length)} tags={[`启用 ${formatNumber(activeSolutions)}`]} />
         <SolutionSummaryItem icon="cube" label="产品能力" value={formatNumber(productCount)} tags={[`三方 ${formatNumber(partnerProductCount)}`]} tone="green" />
         <SolutionSummaryItem icon="star" label="服务套餐" value={formatNumber(tierCount)} tags={[`订阅 ${formatNumber(subscriptionCount)}`]} tone="amber" />
@@ -549,8 +549,8 @@ export function ProductSolutionsPage() {
       </section>
 
       <div className="vx-tenant-list-shell">
-        <section className="vx-tenant-toolbar" aria-label="业务产品方案筛选">
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="业务产品方案展示方式" />
+        <section className="vx-tenant-toolbar" aria-label="解决方案筛选">
+          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="解决方案展示方式" />
           <span className="vx-tenant-view-count">{formatNumber(filteredSolutions.length)}</span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
@@ -558,7 +558,7 @@ export function ProductSolutionsPage() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="搜索方案、行业、产品能力"
             className="vx-tenant-search vx-product-solution-search"
-            aria-label="搜索业务产品方案"
+            aria-label="搜索解决方案"
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
@@ -590,7 +590,7 @@ export function ProductSolutionsPage() {
           </ActionButton>
         </section>
 
-        <section className="vx-tenant-directory" aria-label="业务产品方案清单">
+        <section className="vx-tenant-directory" aria-label="解决方案清单">
           {loading ? (
             <header className="vx-tenant-directory__header">
               <span>读取中</span>
@@ -623,8 +623,8 @@ export function ProductSolutionsPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? '正在加载业务产品方案' : '没有匹配的业务产品方案'}
-                description={loading ? '正在读取行业业务方案数据。' : '清空筛选条件后可查看全部业务产品方案。'}
+                title={loading ? '正在加载解决方案' : '没有匹配的解决方案'}
+                description={loading ? '正在读取行业解决方案数据。' : '清空筛选条件后可查看全部解决方案。'}
                 action={
                   <ActionButton variant="outline" icon="x" onClick={handleReset}>
                     清空筛选

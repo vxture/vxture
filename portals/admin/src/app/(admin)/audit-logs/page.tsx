@@ -1,5 +1,5 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { AuditLogsPage } from '@/modules/audit-logs/AuditLogsPage';
 
 export default function Page() {
-  return <AdminRoutePlaceholderPage href="/audit-logs" />;
+  return <AuditLogsPage />;
 }

@@ -307,6 +307,51 @@ export interface ProductPlanAgent {
   status: 'active' | 'inactive' | 'draft';
 }
 
+export interface AuditLogRecord {
+  id: string;
+  operatorId: string;
+  operatorName: string;
+  operatorEmail: string;
+  action: string;
+  actionLabel: string;
+  targetType: string;
+  targetId: string | null;
+  targetLabel: string | null;
+  module: string;
+  ip: string | null;
+  result: 'success' | 'failure';
+  errorMessage: string | null;
+  createdAt: string;
+}
+
+export interface AnnouncementRecord {
+  id: string;
+  title: string;
+  content: string;
+  type: 'system' | 'maintenance' | 'marketing' | 'security';
+  status: 'draft' | 'published' | 'archived';
+  targetScope: 'all' | 'trial' | 'active' | 'custom';
+  publishedAt: string | null;
+  expiresAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface SkillRecord {
+  id: string;
+  skillCode: string;
+  skillName: string;
+  description: string;
+  category: string;
+  endpointUrl: string | null;
+  version: string;
+  status: 'active' | 'disabled' | 'draft';
+  invocations: number;
+  isSystem: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ProductPlanRecord {
   id: string;
   planCode: string;
@@ -1149,6 +1194,8 @@ export interface PlatformAdminRecord {
   roleCode: string;
   roleNameI18nKey: string;
   roleNameEn: string;
+  roleStatusCode: 'active' | 'disabled' | 'archived';
+  roleStatus: boolean;
   statusCode: 'active' | 'disabled' | 'locked' | 'pending' | 'suspended';
   status: boolean;
   isSystem: boolean;

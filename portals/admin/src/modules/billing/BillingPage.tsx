@@ -406,7 +406,7 @@ function BillingListRows({
     <div
       className="vx-tenant-directory-list vx-billing-directory-list"
       role="region"
-      aria-label="账单发票清单"
+      aria-label="账单中心清单"
     >
       <div className="vx-tenant-directory-list__header">
         <span>
@@ -606,7 +606,7 @@ function BillingCards({
   return (
     <div
       className="vx-tenant-directory-cards vx-billing-cards"
-      aria-label="账单发票卡片"
+      aria-label="账单中心卡片"
     >
       {bills.map((bill) => (
         <article
@@ -941,12 +941,12 @@ export function BillingPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-billing-page">
       <PageHeader
         icon="key"
-        eyebrow="商业与财务"
-        title="账单发票"
+        eyebrow="财务结算"
+        title="账单中心"
         description="运营侧查看租户账单、收款进度和线下发票处理结果；当前仅支持人工同步登记，不调用在线开票接口。"
       />
 
-      <section className="vx-tenant-summary" aria-label="账单发票统计">
+      <section className="vx-tenant-summary" aria-label="账单中心统计">
         <SummaryItem
           icon="key"
           label="账单总数"

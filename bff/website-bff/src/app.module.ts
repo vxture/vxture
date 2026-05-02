@@ -15,10 +15,14 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
 import { IamModule } from '@vxture/service-iam';
+import { MailModule } from '@vxture/service-mail';
+import { OrganizationModule } from '@vxture/service-organization';
 import { WebsiteAuthService } from './auth/auth.service';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { TenantMiddleware } from './middleware/tenant.middleware';
 import { AuthRouter } from './routers/auth.router';
 import { HealthRouter } from './routers/health.router';
+import { VerifyCodeRouter } from './routers/verifycode.router';
 
 @Module({
   imports: [
@@ -27,14 +31,16 @@ import { HealthRouter } from './routers/health.router';
     }),
     JwtModule.register({}),
     IamModule,
+    OrganizationModule,
+    MailModule,
   ],
-  controllers: [HealthRouter, AuthRouter],
+  controllers: [HealthRouter, AuthRouter, VerifyCodeRouter],
   providers: [WebsiteAuthService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthMiddleware)
+      .apply(AuthMiddleware, TenantMiddleware)
       .forRoutes({ path: 'api/(.*)', method: RequestMethod.ALL });
   }
 }

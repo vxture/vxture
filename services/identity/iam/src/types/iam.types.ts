@@ -35,11 +35,20 @@ export interface UpdateAccountProfileInput {
   phone?: string | null;
 }
 
+export interface CreateAccountInput {
+  email: string;
+  name: string;
+  passwordHash: string;
+}
+
 export interface AccountReadRepository {
+  createPasswordResetToken(accountId: string, expiresAt: Date): Promise<string>;
+  consumePasswordResetToken(token: string): Promise<string | null>;
   findByIdentifier(identifier: string): Promise<AccountCredentialRecord | null>;
   findCredentialById(accountId: string): Promise<AccountCredentialRecord | null>;
   findById(accountId: string): Promise<AuthenticatedAccountView | null>;
   getProfile(accountId: string): Promise<AccountProfileView | null>;
   updateProfile(accountId: string, input: UpdateAccountProfileInput): Promise<AccountProfileView | null>;
   updatePassword(accountId: string, passwordHash: string): Promise<void>;
+  createAccount(input: CreateAccountInput): Promise<AuthenticatedAccountView>;
 }

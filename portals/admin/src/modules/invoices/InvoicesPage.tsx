@@ -881,7 +881,7 @@ export function InvoicesPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-invoices-page">
       <PageHeader
         icon="key"
-        eyebrow="商业与财务"
+        eyebrow="财务结算"
         title="发票管理"
         description="线下发票台账 MVP：集中查看人工登记的发票、寄送状态和红冲/作废结果，不调用在线开票接口。"
         action={

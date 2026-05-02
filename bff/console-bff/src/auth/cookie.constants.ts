@@ -1,4 +1,4 @@
-export const CONSOLE_AUTH_COOKIES = {
-  ACCESS_TOKEN: 'vx_console_access_token',
-  REFRESH_TOKEN: 'vx_console_refresh_token',
-} as const;
+import { AUTH_CONSTANTS } from '@vxture/shared';
+
+/** Console-BFF cookie key，从 shared 统一引用，避免硬编码 */
+export const CONSOLE_AUTH_COOKIES = AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS;

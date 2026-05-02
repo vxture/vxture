@@ -602,7 +602,7 @@ export function SubscriptionsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-subscriptions-page">
       <PageHeader
         icon="star"
-        eyebrow="商业与财务"
+        eyebrow="订阅交易"
         title="租户订阅运营"
         description="运营侧管理租户服务权益实例，跟进试用转正、续期、暂停、配额风险和收入状态。"
       />

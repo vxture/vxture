@@ -276,7 +276,7 @@ function ProductListRows({
           </span>
           <span className="vx-product-row__access">
             <Badge className={`vx-tenant-pill vx-product-pill--access-${product.integration.status}`}>{productAccessLabel(product.integration.status)}</Badge>
-            <small>{formatNumber(product.modelPolicyCount)} 模型策略</small>
+            <small>{formatNumber(product.modelPolicyCount)} 模型授权</small>
           </span>
           <span className="vx-product-row__updated">
             <strong>{product.meteringUnit}</strong>
@@ -508,8 +508,8 @@ export function ProductsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-product-management-page">
       <PageHeader
         icon="database"
-        title="产品能力管理"
-        description="统一管理可组合、可授权、可计量的基础产品能力，作为业务产品方案、服务套餐和模型策略的供给目录。"
+        title="产品能力"
+        description="统一管理可组合、可授权、可计量的基础产品能力，作为解决方案、服务套餐和模型授权的供给目录。"
       />
 
       <section className="vx-tenant-summary" aria-label="产品能力管理统计">

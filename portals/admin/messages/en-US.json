@@ -108,16 +108,24 @@
     "fallback": "Platform Operations",
     "sections": {
       "overview": "Overview",
-      "tenantsAccounts": "Tenants & Accounts",
-      "productsPlans": "Plans & Products",
-      "subscriptionsTransactions": "Subscriptions & Orders",
-      "capabilitiesServices": "Models & Skills",
-      "financeSettlement": "Finance & Settlement",
-      "supportCompliance": "Services & Support"
+      "tenantsAccounts": "Tenant Accounts",
+      "productsPlans": "Product System",
+      "subscriptionsTransactions": "Subscription Transactions",
+      "commercialAnalysis": "Commercial Analysis",
+      "capabilitiesServices": "Model Skills",
+      "financeSettlement": "Finance Settlement",
+      "supportCompliance": "Customer Service",
+      "autonomyOverview": "Platform Overview",
+      "identityAccess": "Identity Access",
+      "platformResources": "Platform Resource",
+      "runtimeOps": "Runtime Ops",
+      "securityAudit": "Security Audit",
+      "systemSetting": "System Settings",
+      "notificationCenter": "Notification Center"
     },
     "items": {
       "platformOverview": {
-        "label": "Platform Overview",
+        "label": "Operation Overview",
         "description": "Core operating metrics, key trends across business domains, and platform health."
       },
       "opsTodos": {
@@ -125,27 +133,27 @@
         "description": "Reviews, alerts, and operating tasks that need manual handling."
       },
       "tenants": {
-        "label": "Tenants",
+        "label": "Tenant Profile",
         "description": "Manage tenant profiles, status, lifecycle, and operating notes."
       },
       "accounts": {
-        "label": "Accounts",
+        "label": "Account System",
         "description": "Search accounts across tenants and manage status, security, and contacts."
       },
       "verifications": {
-        "label": "Org Verification",
+        "label": "Identity Verification",
         "description": "Review organization credentials, approvals, rejections, and rechecks."
       },
       "adminRoles": {
-        "label": "Roles & Permissions",
-        "description": "Maintain internal platform roles and permissions, isolated from tenant roles."
+        "label": "Platform Roles",
+        "description": "Maintain platform autonomy roles, role status, and role authorization."
       },
       "servicePlans": {
         "label": "Service Plans",
         "description": "Manage Free, Pro, and Enterprise service plans with quotas, prices, and sales scope."
       },
       "productSolutions": {
-        "label": "Product Solutions",
+        "label": "Solutions",
         "description": "Compose capabilities into industry scenarios and define solution boundaries."
       },
       "products": {
@@ -153,15 +161,15 @@
         "description": "Manage composable, grantable, and metered platform, agent, model, and integration capabilities."
       },
       "promotions": {
-        "label": "Promotions",
+        "label": "Marketing Offers",
         "description": "Configure coupon and discount campaigns with product, plan, and redemption rules."
       },
       "commerceOverview": {
-        "label": "Commerce Overview",
+        "label": "Commercial Overview",
         "description": "Operating metrics and risk snapshots across subscriptions, orders, payments, billing, invoices, usage, and promotions."
       },
       "subscriptions": {
-        "label": "Entitlements",
+        "label": "Subscription Management",
         "description": "Operate tenant service entitlement instances, renewals, suspensions, cancellations, and quota risks."
       },
       "orders": {
@@ -169,7 +177,7 @@
         "description": "Search order lists and details, track payment status, and handle exceptions."
       },
       "usageMetering": {
-        "label": "Usage Metering",
+        "label": "Usage Billing",
         "description": "Review usage by tenant, product, and plan, and maintain metering rules and alerts."
       },
       "promotionRedemptions": {
@@ -185,15 +193,15 @@
         "description": "Maintain LLM providers, API keys, rate limits, timeouts, and endpoints."
       },
       "modelGrants": {
-        "label": "Model Policies",
+        "label": "Model Authorization",
         "description": "Configure model access, quotas, and routing priority by product, tenant, and plan."
       },
       "skills": {
-        "label": "Skill Integrations",
+        "label": "Skill Market",
         "description": "Register and manage callable agent skills, endpoints, publishing, and runtime status."
       },
       "billing": {
-        "label": "Billing",
+        "label": "Billing Center",
         "description": "Manage bill generation, receivables confirmation, exceptions, and offline invoice entries."
       },
       "payments": {
@@ -205,16 +213,60 @@
         "description": "Track offline invoice registration, delivery, reversals, voiding, and bill links."
       },
       "tickets": {
-        "label": "Tickets",
+        "label": "Ticket Center",
         "description": "Handle user tickets, manual assignment, status flow, and feedback closure."
       },
       "announcements": {
-        "label": "Announcements",
+        "label": "Messages",
         "description": "Publish platform announcements and targeted notices, and review delivery history."
       },
       "auditLogs": {
         "label": "Audit Logs",
         "description": "Trace key admin operations by operator, time, and target."
+      },
+      "platformAutonomy": {
+        "label": "Platform Overview",
+        "description": "Show platform autonomy health, key metrics, risks, and governance entries."
+      },
+      "platformAdmins": {
+        "label": "Platform Users",
+        "description": "Manage internal platform autonomy users, not tenant end users."
+      },
+      "adminPermissions": {
+        "label": "Permission Policy",
+        "description": "Manage platform autonomy permissions, groups, policy bindings, and authorization scope."
+      },
+      "platformSecrets": {
+        "label": "Secret Store",
+        "description": "Manage platform-level secrets, credentials, service tokens, and sensitive config references."
+      },
+      "platformJobs": {
+        "label": "Job Scheduler",
+        "description": "Manage platform background jobs, async queues, executions, failed retries, and schedule status."
+      },
+      "approvalCenter": {
+        "label": "Approval Center",
+        "description": "Handle sensitive operation approvals, permission requests, secret requests, and high-risk change confirmations."
+      },
+      "systemParameters": {
+        "label": "System Parameters",
+        "description": "Planned module for platform parameters, defaults, runtime parameters, and global policy parameters."
+      },
+      "dataDictionaries": {
+        "label": "Data Dictionaries",
+        "description": "Planned module for system dictionaries, enum items, business options, and configurable static data."
+      },
+      "featureToggles": {
+        "label": "Feature Toggles",
+        "description": "Planned module for feature flags, rollout switches, experiment switches, and risk isolation switches."
+      },
+      "notificationChannels": {
+        "label": "Notification Channels",
+        "description": "Planned module for platform notification channels, template bindings, and sending configuration."
+      },
+      "notificationLogs": {
+        "label": "Sending Records",
+        "description": "Planned module for platform notification sending records, receipts, and failed retries."
       }
     }
   },
@@ -1333,12 +1385,12 @@
   "modelGrantsPage": {
     "header": {
       "eyebrow": "AI Gateway",
-      "title": "Agent Model Policies",
+      "title": "Model Authorization",
       "description": "Configure model authorization, cycle quota, and routing priority by product and agent; versions belong to product releases.",
       "badge": "Product policy"
     },
     "summary": {
-      "ariaLabel": "Agent model policy summary",
+      "ariaLabel": "Model authorization summary",
       "policies": "Product policies",
       "policiesValue": "{usable} / {total} usable",
       "products": "Covered products",
@@ -1362,7 +1414,7 @@
     },
     "policyTable": {
       "searchPlaceholder": "Search by product, policy, agent, model, or note",
-      "searchAriaLabel": "Search agent model policies",
+      "searchAriaLabel": "Search model authorization",
       "filterAriaLabel": "Policy filters",
       "toolbarTitle": "{count} policies",
       "unlimited": "Unlimited",
@@ -1384,7 +1436,7 @@
     },
     "overrides": {
       "title": "Tenant overrides",
-      "description": "For gray release, customization, and temporary overrides. Normal traffic should use product model policies above.",
+      "description": "For gray release, customization, and temporary overrides. Normal traffic should use product model authorization above.",
       "count": "{count} overrides"
     },
     "table": {
@@ -1434,11 +1486,11 @@
     },
     "empty": {
       "loadingTitle": "Loading policies...",
-      "loadingDescription": "Reading product model policies and AI Gateway tenant overrides.",
+      "loadingDescription": "Reading product model authorization and AI Gateway tenant overrides.",
       "policyTitle": "No policies match the current filters.",
-      "policyDescription": "Try widening the filters or checking product-level agent model policies.",
+      "policyDescription": "Try widening the filters or checking product-level model authorization.",
       "overrideTitle": "No tenant overrides yet.",
-      "overrideDescription": "Product model policies are currently used directly. Add overrides for gray release or customization.",
+      "overrideDescription": "Product model authorization is currently used directly. Add overrides for gray release or customization.",
       "resetFilters": "Reset filters"
     },
     "feedback": {

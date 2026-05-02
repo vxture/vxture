@@ -7045,7 +7045,9 @@ body.dark {
 
 .admin-shell-nav__item span {
   min-width: 0;
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
   opacity: 1;
   transform: translateX(0);
   transition:
@@ -7072,6 +7074,7 @@ body.dark {
 
 .admin-shell-nav__item strong {
   display: block;
+  min-width: 0;
   max-width: 100%;
   overflow: hidden;
   color: currentColor;
@@ -7080,6 +7083,19 @@ body.dark {
   line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.admin-shell-nav__status {
+  flex: 0 0 auto;
+  padding: 0 0.375rem;
+  border: 1px solid rgba(217, 119, 6, 0.2);
+  border-radius: var(--vx-shell-radius-pill, 999px);
+  background: rgba(217, 119, 6, 0.1);
+  color: #b45309;
+  font-size: 0.625rem;
+  font-style: normal;
+  font-weight: 760;
+  line-height: 1rem;
 }
 
 .admin-shell-nav__item:hover {
@@ -10038,6 +10054,16 @@ body.dark {
   gap: 1rem;
 }
 
+.vx-platform-users-summary,
+.vx-admin-roles-summary,
+.vx-admin-permissions-summary,
+.vx-model-gateway-summary,
+.vx-model-strategy-summary,
+.vx-platform-governance-summary,
+.vx-audit-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .vx-tenant-summary__item {
   min-width: 0;
   min-height: 6rem;
@@ -10516,8 +10542,8 @@ body.dark {
 .vx-platform-user-directory-list .vx-tenant-directory-row {
   min-width: min(100%, 74rem);
   grid-template-columns:
-    2.5rem 2.75rem minmax(0, 1.55fr) minmax(0, 0.42fr)
-    minmax(0, 0.82fr) minmax(0, 1.05fr) minmax(0, 0.96fr) 5rem;
+    2.5rem 2.75rem minmax(15rem, 1.45fr) minmax(5rem, 0.48fr)
+    minmax(10rem, 0.9fr) minmax(10rem, 0.9fr) minmax(10rem, 0.9fr) 5rem;
 }
 
 .vx-platform-user-directory-list .vx-tenant-directory-row {
@@ -10619,6 +10645,22 @@ body.dark {
   white-space: nowrap;
 }
 
+.vx-platform-user-row__role-line {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vx-platform-user-row__role-line strong {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.vx-platform-user-row__role-line .vx-tenant-pill {
+  flex: 0 0 auto;
+}
+
 .vx-platform-user-directory-list .vx-tenant-directory-row__tenant,
 .vx-platform-user-directory-list .vx-tenant-directory-row__tenant > span,
 .vx-platform-user-directory-list .vx-tenant-directory-row__title-line,
@@ -10651,8 +10693,12 @@ body.dark {
 .vx-admin-role-directory-list .vx-tenant-directory-row {
   min-width: min(100%, 74rem);
   grid-template-columns:
-    2.5rem 2.75rem minmax(0, 1.34fr) minmax(0, 0.72fr)
-    minmax(0, 0.6fr) minmax(0, 1.25fr) minmax(0, 0.78fr) 5rem;
+    2.5rem 2.75rem minmax(15rem, 1.45fr) minmax(5rem, 0.48fr)
+    minmax(10rem, 0.9fr) minmax(10rem, 0.9fr) minmax(10rem, 0.9fr) 5rem;
+}
+
+.vx-admin-role-directory-list .vx-tenant-directory-row {
+  min-height: 4rem;
 }
 
 .vx-admin-roles-page .vx-tenant-directory-row {
@@ -10660,22 +10706,68 @@ body.dark {
 }
 
 .vx-admin-role-directory-list
-  .vx-tenant-directory-list__header
-  > span:not(:first-child):not(:last-child) {
+  .vx-tenant-directory-row
+  > span:not(.vx-tenant-directory-row__index):not(.vx-tenant-actions) {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-admin-role-row__identity {
   justify-self: start;
+  text-align: left;
+}
+
+.vx-admin-role-directory-list .vx-admin-role-row__identity,
+.vx-admin-role-directory-list .vx-admin-role-row__identity > span,
+.vx-admin-role-directory-list .vx-admin-role-row__identity .vx-tenant-directory-row__title-line {
+  justify-items: start;
+  justify-content: flex-start;
   text-align: left;
 }
 
 .vx-admin-role-directory-list
   .vx-tenant-directory-row
-  > span:not(.vx-tenant-directory-row__index):not(.vx-tenant-actions) {
-  justify-self: start;
+  > .vx-tenant-directory-row__tenant.vx-admin-role-row__identity {
+  justify-self: stretch;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant.vx-admin-role-row__identity
+  > span {
+  width: 100%;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant.vx-admin-role-row__identity
+  .vx-model-name-button,
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant.vx-admin-role-row__identity
+  small {
   text-align: left;
 }
 
 .vx-admin-role-directory-list .vx-tenant-directory-list__header > span {
+  min-width: 0;
+  overflow: hidden;
   justify-self: center;
   text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-admin-role-directory-list .vx-tenant-directory-row > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .vx-admin-role-directory-list
@@ -10734,6 +10826,19 @@ body.dark {
 
 .vx-admin-role-operation-row__select {
   justify-self: center;
+}
+
+.vx-admin-role-directory-list .vx-admin-role-row__status,
+.vx-admin-role-directory-list .vx-admin-role-row__admins,
+.vx-admin-role-directory-list .vx-admin-role-row__permissions,
+.vx-admin-role-directory-list .vx-admin-role-row__updated {
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-admin-role-directory-list .vx-admin-role-row__status .vx-tenant-directory-row__status-line,
+.vx-admin-role-directory-list .vx-admin-role-permission-tags {
+  justify-content: center;
 }
 
 .vx-product-directory-list .vx-tenant-directory-list__header,
@@ -12495,6 +12600,30 @@ body.dark {
 .vx-model-name-button:hover,
 .vx-model-name-button:focus-visible {
   color: var(--tenant-blue);
+}
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant.vx-admin-role-row__identity {
+  width: 100%;
+  justify-self: stretch;
+  justify-content: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant.vx-admin-role-row__identity
+  > span,
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant.vx-admin-role-row__identity
+  .vx-tenant-directory-row__title-line {
+  width: 100%;
+  justify-content: flex-start;
+  justify-items: start;
+  text-align: left;
 }
 
 .vx-model-operation-buttons {
@@ -17036,6 +17165,12 @@ body.dark {
   flex-wrap: wrap;
 }
 
+.vx-admin-role-permission-dialog__summary .vx-tenant-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+}
+
 .vx-admin-role-permission-dialog__body {
   min-height: 0;
   overflow: auto;
@@ -17097,9 +17232,109 @@ body.dark {
   font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
 }
 
+.vx-admin-role-auth-dialog__panel {
+  width: min(58rem, calc(100vw - 2rem));
+  max-height: min(44rem, calc(100vh - 2rem));
+}
+
+.vx-admin-role-auth-dialog__toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.vx-admin-role-auth-dialog__error {
+  margin: 0;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.5rem;
+  background: rgba(225, 29, 72, 0.08);
+  color: #be123c;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+}
+
+.vx-admin-role-auth-dialog__tree {
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  gap: 0;
+  border-top: 1px solid rgba(100, 116, 139, 0.12);
+  border-bottom: 1px solid rgba(100, 116, 139, 0.12);
+}
+
+.vx-admin-role-auth-node {
+  min-width: 0;
+  display: grid;
+}
+
+.vx-admin-role-auth-node label {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  padding-left: calc(0.75rem + var(--permission-depth, 0) * 1.25rem);
+  border-bottom: 1px solid rgba(100, 116, 139, 0.08);
+  cursor: pointer;
+}
+
+.vx-admin-role-auth-node label:hover {
+  background: rgba(248, 250, 252, 0.78);
+}
+
+.vx-admin-role-auth-node__main {
+  min-width: 0;
+  display: grid;
+  gap: 0.25rem;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-admin-role-auth-node__main strong,
+.vx-admin-role-auth-node__main small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-admin-role-auth-node__main strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+}
+
+.vx-admin-role-auth-node__main > span {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.vx-admin-role-auth-node__main small {
+  color: #94a3b8;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 560;
+}
+
+.vx-admin-role-auth-node__children {
+  display: grid;
+}
+
+.vx-admin-role-auth-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
 .vx-admin-permission-structure {
   display: grid;
-  gap: 0.875rem;
+  gap: 0;
   padding-bottom: 1rem;
 }
 
@@ -17129,6 +17364,159 @@ body.dark {
   line-height: 1.55;
 }
 
+.vx-admin-permission-domain-stack {
+  display: grid;
+  gap: 2.25rem;
+}
+
+.vx-admin-permission-domain {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+}
+
+.vx-admin-permission-domain__header {
+  padding-top: 1.375rem;
+  margin-bottom: 1.25rem;
+  border-top: 1px solid rgba(111, 144, 255, 0.16);
+}
+
+.vx-admin-permission-domain__badges {
+  margin-top: 0.125rem;
+}
+
+.vx-admin-permission-domain__badges .vx-btn {
+  min-height: 1.875rem;
+  padding-inline: 0.625rem;
+  font-size: var(--vx-admin-caption-size);
+}
+
+.vx-admin-permission-domain__badges .vx-badge {
+  min-height: 1.75rem;
+  border-color: rgba(37, 99, 235, 0.16);
+  background: rgba(37, 99, 235, 0.08);
+  color: #2563eb;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 760;
+}
+
+.vx-admin-permission-domain__stats {
+  margin: 0;
+}
+
+.vx-admin-permission-domain__toolbar {
+  margin: 0;
+}
+
+.vx-admin-permission-card-grid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.vx-admin-permission-card {
+  min-width: 0;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.875rem;
+  border: 1px solid rgba(100, 116, 139, 0.14);
+  border-top: 2px solid var(--tenant-row-tone, #2563eb);
+  border-radius: var(--admin-overview-card-radius);
+  background: transparent;
+}
+
+.vx-admin-permission-card--disabled {
+  opacity: 0.66;
+}
+
+.vx-admin-permission-card header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.625rem;
+}
+
+.vx-admin-permission-card header > span {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-grid;
+  place-items: center;
+  color: var(--tenant-row-tone, #2563eb);
+}
+
+.vx-admin-permission-card header div {
+  min-width: 0;
+  display: grid;
+  gap: 0.1875rem;
+}
+
+.vx-admin-permission-card p,
+.vx-admin-permission-card dd {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-admin-permission-card strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 800;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.vx-admin-permission-card code {
+  color: #64748b;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 680;
+}
+
+.vx-admin-permission-card p {
+  margin: 0;
+  color: #667085;
+  font-size: var(--vx-admin-caption-size);
+  line-height: 1.45;
+}
+
+.vx-admin-permission-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.625rem;
+  margin: 0;
+}
+
+.vx-admin-permission-card dl div {
+  min-width: 0;
+  display: grid;
+  gap: 0.125rem;
+}
+
+.vx-admin-permission-card dt {
+  color: #94a3b8;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 680;
+}
+
+.vx-admin-permission-card dd {
+  margin: 0;
+  color: #334155;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+}
+
+.vx-admin-permission-card dd svg {
+  margin-right: 0.3125rem;
+  vertical-align: -0.125rem;
+}
+
 .vx-admin-permission-type--menu {
   --tenant-row-tone: var(--tenant-blue);
 }
@@ -17150,11 +17538,10 @@ body.dark {
 }
 
 .vx-admin-permission-tree__header {
-  min-width: 0;
+  min-width: 62rem;
   display: grid;
   grid-template-columns:
-    minmax(14rem, 1.5fr) minmax(10rem, 1fr) 4.5rem 4.5rem 5rem 4.5rem
-    minmax(7rem, 0.7fr) minmax(9rem, 0.9fr) 3.5rem;
+    3.25rem minmax(22rem, 1.65fr) minmax(5.5rem, 0.48fr) minmax(4.75rem, 0.42fr) minmax(5rem, 0.42fr) minmax(5.75rem, 0.52fr) 5rem;
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 0.875rem;
@@ -17166,6 +17553,24 @@ body.dark {
   color: #64748b;
   font-size: var(--vx-admin-caption-size);
   font-weight: 800;
+}
+
+.vx-admin-permission-tree__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-admin-permission-tree__header > span:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: -1px 0 0 rgba(37, 99, 235, 0.1);
 }
 
 .vx-admin-permission-tree__workspace {
@@ -17180,7 +17585,7 @@ body.dark {
   gap: 0.75rem;
   padding: 1rem 0.875rem 0.75rem;
   border-bottom: 1px solid rgba(100, 116, 139, 0.11);
-  background: rgba(248, 250, 252, 0.72);
+  background: transparent;
 }
 
 .vx-admin-permission-tree__workspace > header > span {
@@ -17190,7 +17595,7 @@ body.dark {
   align-items: center;
   justify-content: center;
   border-radius: 0.4375rem;
-  background: rgba(100, 116, 139, 0.08);
+  background: transparent;
   color: #475569;
 }
 
@@ -17236,15 +17641,15 @@ body.dark {
 }
 
 .vx-admin-permission-tree-node:hover {
-  background: rgba(248, 250, 252, 0.82);
+  background: transparent;
 }
 
 .vx-admin-permission-tree-node--section {
-  background: rgba(255, 255, 255, 0.5);
+  background: transparent;
 }
 
 .vx-admin-permission-tree-node--section:hover {
-  background: rgba(241, 245, 249, 0.74);
+  background: transparent;
 }
 
 .vx-admin-permission-tree-node--disabled {
@@ -17279,7 +17684,7 @@ body.dark {
 }
 
 .vx-admin-permission-tree-node__toggle:not(:disabled):hover {
-  background: rgba(100, 116, 139, 0.1);
+  background: transparent;
   color: #334155;
 }
 
@@ -17291,43 +17696,59 @@ body.dark {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  gap: 0.625rem;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .vx-admin-permission-tree-node__title strong {
   color: var(--tenant-ink);
+  flex: 0 1 auto;
+  font-size: var(--vx-admin-body-size);
   font-weight: 800;
   line-height: 1.35;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  overflow: hidden;
+  display: block;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.vx-admin-permission-tree-node__title > span {
+.vx-admin-permission-tree-node__title-tags,
+.vx-admin-permission-tree-node__title > em {
   color: #94a3b8;
   font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace);
   font-size: var(--vx-admin-caption-size);
   font-weight: 620;
+  font-style: normal;
 }
 
-.vx-admin-permission-tree-node__title--level-2 strong {
-  font-size: var(--vx-admin-body-size);
+.vx-admin-permission-tree-node__title-tags {
+  width: fit-content;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  font-family: inherit;
 }
 
-.vx-admin-permission-tree-node__title--level-3 strong {
-  font-size: var(--vx-admin-meta-size);
+.vx-admin-permission-tree-node__title-tags .vx-tenant-pill {
+  width: fit-content;
+  flex: 0 0 auto;
 }
 
 .vx-admin-permission-tree-node__detail-row {
-  min-width: 0;
+  min-width: 62rem;
   display: grid;
   grid-template-columns:
-    minmax(14rem, 1.5fr) minmax(10rem, 1fr) 4.5rem 4.5rem 5rem 4.5rem
-    minmax(7rem, 0.7fr) minmax(9rem, 0.9fr) 3.5rem;
+    3.25rem minmax(22rem, 1.65fr) minmax(5.5rem, 0.48fr) minmax(4.75rem, 0.42fr) minmax(5rem, 0.42fr) minmax(5.75rem, 0.52fr) 5rem;
   gap: 0.5rem;
-  padding: 0 0.875rem 0.8125rem;
+  padding: 0.625rem 0.875rem;
 }
 
-.vx-admin-permission-tree-node__detail-row span {
+.vx-admin-permission-tree-node__detail-row > span {
   min-width: 0;
   display: grid;
   gap: 0.1875rem;
@@ -17336,25 +17757,48 @@ body.dark {
 
 .vx-admin-permission-tree-node__detail-row strong,
 .vx-admin-permission-tree-node__detail-row code,
-.vx-admin-permission-tree-node__detail-row small {
+.vx-admin-permission-tree-node__detail-row small,
+.vx-admin-permission-tree-node__detail-row > span > span {
   min-width: 0;
   color: #475569;
-  font-size: var(--vx-admin-meta-size);
-  font-weight: 680;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
   line-height: 1.35;
+}
+
+.vx-admin-permission-tree-node__detail-row .vx-admin-permission-tree-node__title strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.vx-admin-permission-tree-node__detail-row code,
+.vx-admin-permission-tree-node__detail-row small {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .vx-admin-permission-tree-node__summary {
-  padding-left: calc(4rem + var(--permission-depth, 0) * 1.25rem);
+  padding-left: 0;
+  justify-items: start;
+  text-align: left;
 }
 
-.vx-admin-permission-tree-node__summary strong {
+.vx-admin-permission-tree-node__summary span {
   color: #94a3b8;
   font-size: var(--vx-admin-caption-size);
-  font-weight: 560;
+  font-weight: 400;
+}
+
+.vx-admin-permission-tree-node__summary span,
+.vx-admin-permission-tree-node__code span {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .vx-admin-permission-tree-node__detail-row code {
@@ -17372,39 +17816,127 @@ body.dark {
 .vx-admin-permission-tree-node__source,
 .vx-admin-permission-tree-node__roles,
 .vx-admin-permission-tree-node__actions {
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-admin-permission-tree-node__actions {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: -1px 0 0 rgba(37, 99, 235, 0.08);
+}
+
+.vx-admin-permission-tree-node__status .vx-tenant-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+  font-weight: 800;
+}
+
+.vx-admin-permission-tree-node__status .vx-admin-role-status-pill--enabled {
+  color: var(--tenant-green);
+}
+
+.vx-admin-permission-tree-node__status .vx-admin-role-status-pill--disabled {
+  color: #64748b;
+}
+
+.vx-admin-permission-tree-node__title-tags .vx-admin-permission-layer-pill--root {
+  border-color: rgba(71, 85, 105, 0.2);
+  background: rgba(71, 85, 105, 0.08);
+  color: #475569;
+}
+
+.vx-admin-permission-tree-node__title-tags .vx-admin-permission-layer-pill--l1 {
+  border-color: rgba(37, 99, 235, 0.22);
+  background: rgba(37, 99, 235, 0.08);
+  color: #1d4ed8;
+}
+
+.vx-admin-permission-tree-node__title-tags .vx-admin-permission-layer-pill--l2 {
+  border-color: rgba(8, 145, 178, 0.24);
+  background: rgba(8, 145, 178, 0.09);
+  color: #0e7490;
+}
+
+.vx-admin-permission-tree-node__title-tags .vx-admin-permission-layer-pill--l3 {
+  border-color: rgba(217, 119, 6, 0.26);
+  background: rgba(217, 119, 6, 0.1);
+  color: #b45309;
+}
+
+.vx-admin-permission-tree-node__name {
+  display: grid;
+  grid-template-columns: 1.5rem 1.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: calc(var(--permission-depth, 0) * 1.25rem);
   justify-items: start;
+  text-align: left;
 }
 
 .vx-admin-permission-tree-node__children {
   display: grid;
 }
 
-.vx-admin-permission-tree-node__actions button {
-  width: fit-content;
-  min-height: 1.75rem;
-  padding: 0 0.625rem;
-  border: 1px solid rgba(100, 116, 139, 0.16);
-  border-radius: 0.375rem;
-  background: transparent;
-  color: #64748b;
-  font: inherit;
-  font-size: var(--vx-admin-caption-size);
-  font-weight: 760;
-  opacity: 0;
-  pointer-events: none;
+.vx-admin-permission-tree-node__actions .vx-tenant-actions {
+  opacity: 1;
+  pointer-events: auto;
   transition: opacity 0.14s ease, background-color 0.14s ease, border-color 0.14s ease;
 }
 
-.vx-admin-permission-tree-node:hover .vx-admin-permission-tree-node__actions button,
-.vx-admin-permission-tree-node:focus-within .vx-admin-permission-tree-node__actions button {
+.vx-admin-permission-tree-node:hover .vx-admin-permission-tree-node__actions .vx-tenant-actions,
+.vx-admin-permission-tree-node:focus-within .vx-admin-permission-tree-node__actions .vx-tenant-actions {
   opacity: 1;
   pointer-events: auto;
 }
 
-.vx-admin-permission-tree-node__actions button:not(:disabled):hover {
-  border-color: rgba(37, 99, 235, 0.24);
-  background: rgba(37, 99, 235, 0.06);
-  color: #1d4ed8;
+.vx-admin-permission-card .vx-tenant-actions {
+  justify-self: end;
+}
+
+.vx-admin-permission-card__type {
+  justify-self: start;
+}
+
+.vx-admin-permission-detail-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  margin: 0;
+}
+
+.vx-admin-permission-detail-dialog__grid div {
+  min-width: 0;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.vx-admin-permission-detail-dialog__grid dt {
+  color: #94a3b8;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+}
+
+.vx-admin-permission-detail-dialog__grid dd {
+  min-width: 0;
+  margin: 0;
+  color: #334155;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 680;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.vx-admin-permission-detail-dialog__wide {
+  grid-column: 1 / -1;
 }
 
 .vx-verification-cards .vx-tenant-directory-card__metrics b {
@@ -17463,6 +17995,16 @@ body.dark {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .vx-platform-users-summary,
+  .vx-admin-roles-summary,
+  .vx-admin-permissions-summary,
+  .vx-model-gateway-summary,
+  .vx-model-strategy-summary,
+  .vx-platform-governance-summary,
+  .vx-audit-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .vx-tenant-toolbar {
     flex-wrap: wrap;
   }
@@ -17503,6 +18045,16 @@ body.dark {
   .vx-tenant-tab-grid--risk,
   .vx-tenant-subscription__metrics,
   .vx-tenant-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-platform-users-summary,
+  .vx-admin-roles-summary,
+  .vx-admin-permissions-summary,
+  .vx-model-gateway-summary,
+  .vx-model-strategy-summary,
+  .vx-platform-governance-summary,
+  .vx-audit-summary {
     grid-template-columns: 1fr;
   }
 
@@ -18260,10 +18812,19 @@ body.dark {
   font-weight: 720;
 }
 
+.platform-autonomy-resource-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .platform-autonomy-resource-row em {
   font-style: normal;
   color: var(--vx-console-brand-strong);
   font-weight: 720;
+}
+
+.platform-autonomy-resource-row--error em {
+  color: var(--vx-status-danger-fg, #be123c);
 }
 
 .platform-autonomy-risk-list {
@@ -18325,134 +18886,127 @@ body.dark {
 
 .vx-platform-governance-page {
   max-width: min(100%, 74rem);
+  --vx-page-text-size: var(--vx-admin-body-size);
 }
 
 .vx-platform-governance-directory {
   min-width: 0;
 }
 
-.vx-platform-governance-directory .vx-tenant-directory__toolbar {
-  grid-template-columns: minmax(18rem, 1fr) minmax(10rem, 12rem) auto;
-}
-
 .vx-platform-governance-list {
-  --vx-platform-governance-select-width: 2.5rem;
-  --vx-platform-governance-index-width: 2.75rem;
-  --vx-platform-governance-action-width: 5rem;
-  position: relative;
-  min-width: 0;
-  overflow-x: auto;
-  border: 1px solid var(--vx-shell-line-soft);
-  border-radius: 0.5rem;
-  background: var(--vx-shell-surface);
-}
-
-.vx-platform-governance-list__header,
-.vx-platform-governance-row {
-  display: grid;
   grid-template-columns:
-    var(--vx-platform-governance-select-width)
-    var(--vx-platform-governance-index-width)
-    minmax(14rem, 1.2fr)
-    minmax(5.5rem, 0.36fr)
-    minmax(7rem, 0.5fr)
-    minmax(7rem, 0.5fr)
-    minmax(9rem, 0.7fr)
-    minmax(8.5rem, 0.56fr)
-    var(--vx-platform-governance-action-width);
-  align-items: center;
-  min-width: 74rem;
+    2.5rem 2.75rem minmax(0, 1.25fr) minmax(0, 0.5fr)
+    minmax(0, 0.68fr) minmax(0, 0.68fr) minmax(0, 0.9fr) 5rem;
 }
 
-.vx-platform-governance-list__header {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  min-height: 2.75rem;
-  border-bottom: 1px solid var(--vx-shell-line-soft);
-  background: var(--vx-shell-surface);
-  color: var(--vx-shell-subtle);
-  font-size: 0.75rem;
-  font-weight: 720;
-  line-height: 1rem;
-  text-align: center;
-}
-
-.vx-platform-governance-list__header > span,
-.vx-platform-governance-row > span {
-  min-width: 0;
-  padding: 0 0.625rem;
-}
-
-.vx-platform-governance-list__header > :first-child,
-.vx-platform-governance-list__header > :last-child,
-.vx-platform-governance-row > :first-child,
-.vx-platform-governance-row > :last-child {
-  position: sticky;
-  z-index: 4;
-  background: inherit;
-}
-
-.vx-platform-governance-list__header > :first-child,
-.vx-platform-governance-row > :first-child {
-  left: 0;
-  display: inline-flex;
-  justify-content: center;
-}
-
-.vx-platform-governance-list__header > :last-child,
-.vx-platform-governance-row > :last-child {
-  right: 0;
-  display: inline-flex;
-  justify-content: center;
+.vx-platform-governance-list .vx-tenant-directory-list__header,
+.vx-platform-governance-row {
+  min-width: min(100%, 74rem);
+  grid-template-columns:
+    2.5rem 2.75rem minmax(0, 1.25fr) minmax(0, 0.5fr)
+    minmax(0, 0.68fr) minmax(0, 0.68fr) minmax(0, 0.9fr) 5rem;
 }
 
 .vx-platform-governance-row {
-  min-height: 4.25rem;
-  border-bottom: 1px solid var(--vx-shell-line-soft);
-  background: var(--vx-shell-surface);
-  color: var(--vx-shell-text);
+  min-height: 4rem;
   cursor: pointer;
-  transition:
-    background 160ms ease,
-    color 160ms ease;
-}
-
-.vx-platform-governance-row:last-child {
-  border-bottom: 0;
-}
-
-.vx-platform-governance-row:hover {
-  background: var(--vx-shell-hover);
 }
 
 .vx-platform-governance-row--selected {
-  background: var(--vx-shell-active);
+  background: #edf4ff;
+}
+
+.vx-platform-governance-page--approvals .vx-platform-governance-row {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-platform-governance-page--approvals .vx-platform-governance-row__policy strong {
+  color: var(--tenant-ink);
+}
+
+.vx-platform-governance-page--approvals .vx-platform-governance-row__scope .vx-tenant-pill {
+  background: rgba(217, 119, 6, 0.1);
+  color: var(--tenant-amber);
 }
 
 .vx-platform-governance-row__index,
-.vx-platform-governance-row__status,
-.vx-platform-governance-row__updated {
+.vx-platform-governance-row__status {
   text-align: center;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-meta-size);
+  white-space: nowrap;
+}
+
+.vx-platform-governance-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:first-child,
+.vx-platform-governance-list
+  .vx-tenant-directory-row
+  > .vx-platform-governance-row__select {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: 1px 0 0 rgba(37, 99, 235, 0.06);
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:first-child {
+  z-index: 4;
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:last-child,
+.vx-platform-governance-list .vx-tenant-directory-row > .vx-tenant-actions {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: -1px 0 0 rgba(37, 99, 235, 0.1);
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:last-child {
+  z-index: 4;
 }
 
 .vx-platform-governance-row__identity {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 .vx-platform-governance-row__identity > svg {
-  width: 1.75rem;
-  height: 1.75rem;
-  flex: 0 0 1.75rem;
-  padding: 0.3125rem;
+  width: 1.625rem;
+  height: 1.625rem;
+  flex: 0 0 1.625rem;
+  padding: 0.3rem;
   border-radius: 0.5rem;
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
 }
 
 .vx-platform-governance-row__identity > span,
+.vx-platform-governance-row__owner,
 .vx-platform-governance-row__policy {
   min-width: 0;
   display: grid;
@@ -18460,24 +19014,57 @@ body.dark {
 }
 
 .vx-platform-governance-row__identity strong,
+.vx-platform-governance-row__owner strong,
 .vx-platform-governance-row__policy strong {
   overflow: hidden;
-  color: var(--vx-shell-ink);
-  font-size: 0.8125rem;
-  font-weight: 720;
-  line-height: 1.125rem;
+  color: var(--vx-console-text);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 640;
+  line-height: 1.25rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .vx-platform-governance-row__identity small,
+.vx-platform-governance-row__owner small,
 .vx-platform-governance-row__policy small {
   overflow: hidden;
-  color: var(--vx-shell-muted);
-  font-size: 0.75rem;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-meta-size);
   line-height: 1rem;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.vx-platform-governance-row__scope,
+.vx-platform-governance-row__status {
+  min-width: 0;
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-platform-governance-row__owner,
+.vx-platform-governance-row__policy {
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-platform-governance-row > span:not(.vx-platform-governance-row__identity, .vx-platform-governance-row__status, .vx-platform-governance-row__policy, .vx-platform-governance-row__owner, .vx-platform-governance-row__scope, .vx-platform-governance-row__index, .vx-tenant-actions) {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-meta-size);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .vx-platform-governance-status {
@@ -18485,12 +19072,9 @@ body.dark {
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
-  min-width: 4.25rem;
-  border: 0;
-  background: transparent;
-  font-size: 0.75rem;
-  font-weight: 720;
-  line-height: 1rem;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 640;
+  line-height: 1.125rem;
 }
 
 .vx-platform-governance-status--normal {
@@ -18593,4 +19177,432 @@ body.dark {
   .vx-platform-governance-cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+@media (max-width: 1200px) {
+  .vx-platform-governance-list,
+  .vx-platform-governance-list .vx-tenant-directory-list__header,
+  .vx-platform-governance-row {
+    grid-template-columns:
+      2.5rem 2.75rem minmax(18rem, 1.25fr) minmax(7rem, 0.5fr)
+      minmax(8rem, 0.68fr) minmax(8rem, 0.68fr) minmax(10rem, 0.9fr) 5rem;
+  }
+}
+
+/* ============================================================
+   审计日志页 / 通知公告页 / 技能接入页 共用样式
+   ============================================================ */
+
+/* ── 通用筛选 select ── */
+.vx-admin-filter-select {
+  height: 2.5rem;
+  padding: 0 0.75rem;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--vx-console-text);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+  cursor: pointer;
+}
+.dark .vx-admin-filter-select {
+  border-color: rgba(148, 163, 184, 0.16);
+  background: transparent;
+  color: var(--vx-console-text);
+}
+
+/* ── 视图切换按钮组 ── */
+.vx-admin-view-toggle {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(37, 99, 235, 0.12);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.dark .vx-admin-view-toggle {
+  border-color: rgba(148, 163, 184, 0.16);
+}
+.vx-admin-view-toggle__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  background: transparent;
+  border: 0;
+  color: var(--vx-console-muted);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.vx-admin-view-toggle__btn:hover {
+  background: rgba(37, 99, 235, 0.06);
+  color: var(--vx-console-brand);
+}
+.vx-admin-view-toggle__btn--active {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--vx-console-brand);
+}
+
+/* ── 操作按钮 ── */
+.vx-admin-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2.25rem;
+  padding: 0 1rem;
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  border-radius: 0.5rem;
+  background: rgba(37, 99, 235, 0.07);
+  color: var(--vx-console-brand);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 640;
+  cursor: pointer;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+.vx-admin-action-btn:hover:not(:disabled) {
+  background: rgba(37, 99, 235, 0.14);
+}
+.vx-admin-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   审计日志列表
+   ============================================================ */
+
+.vx-audit-page { --vx-page-text-size: var(--vx-admin-body-size); }
+
+.vx-audit-directory-list {
+  grid-template-columns:
+    2.75rem minmax(12rem, 0.95fr) minmax(13rem, 1fr) minmax(12rem, 0.95fr)
+    minmax(7rem, 0.48fr) minmax(7rem, 0.48fr) minmax(8rem, 0.56fr) minmax(10rem, 0.72fr);
+}
+.vx-audit-directory-list .vx-tenant-directory-list__header,
+.vx-audit-row {
+  min-width: min(100%, 74rem);
+  grid-template-columns:
+    2.75rem minmax(12rem, 0.95fr) minmax(13rem, 1fr) minmax(12rem, 0.95fr)
+    minmax(7rem, 0.48fr) minmax(7rem, 0.48fr) minmax(8rem, 0.56fr) minmax(10rem, 0.72fr);
+}
+
+.vx-audit-row {
+  min-height: 4rem;
+}
+
+.vx-audit-directory-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-audit-row__operator,
+.vx-audit-row__action,
+.vx-audit-row__target {
+  min-width: 0;
+  display: grid;
+  gap: 0.125rem;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-audit-row__operator-name,
+.vx-audit-row__action-label,
+.vx-audit-row__target-label {
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+  line-height: 1.25rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-audit-row__operator-email,
+.vx-audit-row__action-code,
+.vx-audit-row__target-type {
+  overflow: hidden;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+  line-height: 1rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-audit-row__target-empty { color: var(--vx-console-muted); }
+.vx-audit-row__result {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+.vx-audit-row__error { display: flex; align-items: center; color: var(--vx-console-muted); cursor: help; }
+.vx-audit-row__index,
+.vx-audit-row__module,
+.vx-audit-row__ip,
+.vx-audit-row__time {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.vx-audit-row__module,
+.vx-audit-row__ip {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============================================================
+   通知公告列表 / 卡片
+   ============================================================ */
+
+.vx-announcement-page { --vx-page-text-size: var(--vx-admin-body-size); }
+
+.vx-announcement-directory-list {
+  grid-template-columns: 3rem 1fr 6rem 7rem 7rem 10rem 10rem 4rem;
+}
+.vx-announcement-directory-list .vx-tenant-directory-list__header,
+.vx-announcement-row {
+  grid-template-columns: 3rem 1fr 6rem 7rem 7rem 10rem 10rem 4rem;
+}
+
+.vx-announcement-row__title { font-weight: 640; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-announcement-row__index,
+.vx-announcement-row__scope,
+.vx-announcement-row__published,
+.vx-announcement-row__expires { font-size: var(--vx-admin-meta-size); color: var(--vx-console-muted); white-space: nowrap; }
+
+.vx-announcement-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+.vx-announcement-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--vx-console-border);
+  border-radius: var(--vx-admin-card-radius);
+  background: var(--vx-console-surface);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+.vx-announcement-card__header { display: flex; gap: 0.5rem; }
+.vx-announcement-card__title { font-size: var(--vx-admin-card-title-size); font-weight: 700; margin: 0; }
+.vx-announcement-card__content {
+  font-size: var(--vx-admin-body-size);
+  color: var(--vx-console-muted);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.vx-announcement-card__meta {
+  display: flex;
+  gap: 1rem;
+  font-size: var(--vx-admin-meta-size);
+  color: var(--vx-console-muted);
+  margin-top: auto;
+}
+
+/* ============================================================
+   技能接入列表 / 卡片
+   ============================================================ */
+
+.vx-skills-page { --vx-page-text-size: var(--vx-admin-body-size); }
+
+.vx-skills-directory-list {
+  grid-template-columns: 3rem 1fr 7rem 5rem 14rem 7rem 9rem 10rem 4rem;
+}
+.vx-skills-directory-list .vx-tenant-directory-list__header,
+.vx-skill-row {
+  grid-template-columns: 3rem 1fr 7rem 5rem 14rem 7rem 9rem 10rem 4rem;
+}
+
+.vx-skill-row__info { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.vx-skill-row__name { font-weight: 640; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-skill-row__code { color: var(--vx-console-muted); font-size: var(--vx-admin-meta-size); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-skill-row__endpoint { color: var(--vx-console-muted); font-size: var(--vx-admin-meta-size); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-skill-row__index,
+.vx-skill-row__category,
+.vx-skill-row__version,
+.vx-skill-row__invocations,
+.vx-skill-row__updated { font-size: var(--vx-admin-meta-size); color: var(--vx-console-muted); white-space: nowrap; }
+.vx-skill-row__status { display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap; }
+
+.vx-skills-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+}
+.vx-skill-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--vx-console-border);
+  border-radius: var(--vx-admin-card-radius);
+  background: var(--vx-console-surface);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+.vx-skill-card__header { display: flex; align-items: center; justify-content: space-between; }
+.vx-skill-card__icon { color: var(--vx-console-brand); display: flex; }
+.vx-skill-card__badges { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+.vx-skill-card__name { font-size: var(--vx-admin-card-title-size); font-weight: 700; margin: 0; }
+.vx-skill-card__code { font-size: var(--vx-admin-meta-size); color: var(--vx-console-muted); margin: 0; }
+.vx-skill-card__description {
+  font-size: var(--vx-admin-body-size);
+  color: var(--vx-console-muted);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.vx-skill-card__meta {
+  display: flex;
+  gap: 1rem;
+  font-size: var(--vx-admin-meta-size);
+  color: var(--vx-console-muted);
+  margin-top: auto;
+}
+
+@media (max-width: 1200px) {
+  .vx-audit-directory-list,
+  .vx-audit-directory-list .vx-tenant-directory-list__header,
+  .vx-audit-row {
+    grid-template-columns: 3rem 13rem 12rem 12rem 7rem 6rem 9rem 1fr;
+  }
+  .vx-skills-directory-list,
+  .vx-skills-directory-list .vx-tenant-directory-list__header,
+  .vx-skill-row {
+    grid-template-columns: 3rem 1fr 7rem 5rem 0 7rem 9rem 10rem 4rem;
+  }
+  .vx-skill-row__endpoint { display: none; }
+}
+
+/* ─── 收款核销/驳回 对话框 ──────────────────────────────────────────────── */
+
+.vx-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.46);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  backdrop-filter: blur(2px);
+}
+
+.vx-dialog {
+  background: var(--vx-console-surface);
+  border: 1px solid var(--vx-console-border);
+  border-radius: var(--vx-admin-card-radius);
+  box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.28);
+  width: 100%;
+  max-width: 28rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vx-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid var(--vx-console-border);
+}
+
+.vx-dialog__title {
+  margin: 0;
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.vx-dialog__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 0;
+  background: transparent;
+  color: var(--vx-console-muted);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.vx-dialog__close:hover {
+  background: var(--vx-shell-hover, rgba(37, 99, 235, 0.06));
+  color: var(--vx-console-text);
+}
+
+.vx-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem;
+}
+
+.vx-dialog__desc {
+  margin: 0;
+  font-size: var(--vx-admin-body-size);
+  color: var(--vx-console-muted);
+}
+
+.vx-dialog__label {
+  font-size: var(--vx-admin-body-size);
+  font-weight: 500;
+  color: var(--vx-console-text);
+}
+
+.vx-dialog__label small {
+  font-weight: 400;
+  color: var(--vx-console-muted);
+}
+
+.vx-dialog__textarea {
+  width: 100%;
+  min-height: 5rem;
+  resize: vertical;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--vx-console-border);
+  border-radius: 0.375rem;
+  background: var(--vx-console-bg);
+  color: var(--vx-console-text);
+  font: inherit;
+  font-size: var(--vx-admin-body-size);
+  line-height: 1.5;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+  box-sizing: border-box;
+}
+
+.vx-dialog__textarea:focus {
+  outline: none;
+  border-color: var(--vx-console-brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vx-console-brand) 18%, transparent);
+}
+
+.vx-dialog__error {
+  margin: 0;
+  font-size: var(--vx-admin-meta-size);
+  color: var(--vx-admin-rose-fg, #e11d48);
+}
+
+.vx-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem 1rem;
+  border-top: 1px solid var(--vx-console-border);
 }

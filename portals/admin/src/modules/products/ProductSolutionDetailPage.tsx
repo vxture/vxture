@@ -210,8 +210,8 @@ export function ProductSolutionDetailPage({ solutionCode }: { solutionCode: stri
       <div className="vx-page-stack vx-product-capability-page">
         <PageHeader
           icon="workflow"
-          title="业务产品方案详情"
-          description="未找到对应的业务产品方案。"
+          title="解决方案详情"
+          description="未找到对应的解决方案。"
           action={
             <Link href="/product-solutions" className="vx-btn vx-btn--outline vx-btn--default">
               <Icon name="arrow-left" size="xs" fallback="placeholder" />
@@ -219,7 +219,7 @@ export function ProductSolutionDetailPage({ solutionCode }: { solutionCode: stri
             </Link>
           }
         />
-        <EmptyState title="业务产品方案不存在" description="该方案可能已归档，或当前账号无权访问。" />
+        <EmptyState title="解决方案不存在" description="该方案可能已归档，或当前账号无权访问。" />
       </div>
     );
   }
@@ -228,8 +228,8 @@ export function ProductSolutionDetailPage({ solutionCode }: { solutionCode: stri
     <div className="vx-page-stack vx-product-capability-page">
       <PageHeader
         icon="workflow"
-        title={solution?.solutionName ?? '业务产品方案详情'}
-        description={solution?.description ?? '正在读取业务产品方案详情。'}
+        title={solution?.solutionName ?? '解决方案详情'}
+        description={solution?.description ?? '正在读取解决方案详情。'}
         action={
           <div className="vx-product-capability-actions">
             <Link href="/product-solutions" className="vx-btn vx-btn--outline vx-btn--default">

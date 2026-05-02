@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ORGANIZATION_REPOSITORY } from '../tokens';
 import type {
+  CreateTenantInput,
   OrganizationProfileView,
   OrganizationReadRepository,
   TenantContextView,
@@ -16,6 +17,10 @@ export class OrganizationReadService {
     @Inject(ORGANIZATION_REPOSITORY)
     private readonly repository: OrganizationReadRepository,
   ) {}
+
+  async createTenantForAccount(input: CreateTenantInput): Promise<TenantContextView> {
+    return this.repository.createTenant(input);
+  }
 
   async resolveTenantContextForAccount(accountId: string): Promise<TenantContextView | null> {
     const memberships = await this.repository.getTenantMembershipsByAccountId(accountId);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { ClockCounterClockwiseIcon, PlayIcon, ShieldCheckIcon, StopIcon, UsersThreeIcon } from '@phosphor-icons/react';
+import { ClockCounterClockwiseIcon, PlayIcon, ShieldCheckIcon, StopIcon } from '@phosphor-icons/react';
 import { Icon } from '@vxture/design-system';
 import { Badge, Button, Input, Label } from '@/components/ui/primitives';
 import {
@@ -480,7 +480,7 @@ export function ModelGrantsPage() {
         </p>
       ) : null}
 
-      <section className="vx-tenant-summary" aria-label={t('summary.ariaLabel')}>
+      <section className="vx-tenant-summary vx-model-strategy-summary" aria-label={t('summary.ariaLabel')}>
         <ModelStrategySummaryItem
           icon={ShieldCheckIcon}
           label={t('summary.policies')}
@@ -488,10 +488,10 @@ export function ModelGrantsPage() {
           tags={[`${t('filters.usable')} ${formatNumber(usablePolicies)}`]}
         />
         <ModelStrategySummaryItem
-          icon={UsersThreeIcon}
-          label="平台主体"
-          value={formatNumber(platformPolicyCount)}
-          tags={['独立配额']}
+          icon={PlayIcon}
+          label={t('overrides.title')}
+          value={formatNumber(grants.length)}
+          tags={[`${t('status.active')} ${formatNumber(grants.filter((grant) => grant.isActive).length)}`, `平台主体 ${formatNumber(platformPolicyCount)}`]}
           tone="green"
         />
         <ModelStrategySummaryItem
@@ -501,18 +501,11 @@ export function ModelGrantsPage() {
           tags={[t('filters.undefined')]}
           tone={undefinedPolicies ? 'amber' : 'green'}
         />
-        <ModelStrategySummaryItem
-          icon={PlayIcon}
-          label={t('overrides.title')}
-          value={formatNumber(grants.length)}
-          tags={[`${t('status.active')} ${formatNumber(grants.filter((grant) => grant.isActive).length)}`]}
-          tone="blue"
-        />
       </section>
 
       <div className="vx-tenant-list-shell">
         <section className="vx-tenant-toolbar" aria-label={t('policyTable.filterAriaLabel')}>
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="模型策略展示方式" />
+          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="模型授权展示方式" />
           <span className="vx-tenant-view-count">{formatNumber(filteredPolicies.length)}</span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input

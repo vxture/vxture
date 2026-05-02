@@ -7,11 +7,13 @@ import { CaptchaService } from './auth/captcha.service';
 import { SessionAggregator } from './aggregators/session.aggregator';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { PermissionMiddleware } from './middleware/permission.middleware';
-import { AuthRouter } from './routers/auth.router';
-import { AiGatewayRouter } from './routers/ai-gateway.router';
 import { AccountsRouter } from './routers/accounts.router';
 import { AdminPermissionsRouter } from './routers/admin-permissions.router';
 import { AdminRolesRouter } from './routers/admin-roles.router';
+import { AiGatewayRouter } from './routers/ai-gateway.router';
+import { AnnouncementsRouter } from './routers/announcements.router';
+import { AuditLogsRouter } from './routers/audit-logs.router';
+import { AuthRouter } from './routers/auth.router';
 import { BillingRouter } from './routers/billing.router';
 import { CapabilitiesRouter } from './routers/capabilities.router';
 import { CommercialRouter } from './routers/commercial.router';
@@ -23,6 +25,7 @@ import { PaymentsRouter } from './routers/payments.router';
 import { PlatformAdminsRouter } from './routers/platform-admins.router';
 import { PlatformGovernanceRouter } from './routers/platform-governance.router';
 import { ProductsRouter } from './routers/products.router';
+import { SkillsRouter } from './routers/skills.router';
 import { SubscriptionRouter } from './routers/subscription.router';
 import { TenantsRouter } from './routers/tenants.router';
 
@@ -42,8 +45,11 @@ import { TenantsRouter } from './routers/tenants.router';
     AccountsRouter,
     AdminPermissionsRouter,
     AdminRolesRouter,
+    AnnouncementsRouter,
+    AuditLogsRouter,
     OrdersRouter,
     ProductsRouter,
+    SkillsRouter,
     SubscriptionRouter,
     BillingRouter,
     CommercialRouter,

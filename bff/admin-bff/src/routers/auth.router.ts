@@ -20,16 +20,16 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
   HttpCode,
   HttpStatus,
   Inject,
   Post,
   Req,
   Res,
-  TooManyRequestsException,
   UnauthorizedException,
 } from '@nestjs/common';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { ADMIN_AUTH_COOKIES } from '../auth/cookie.constants';
 import { PlatformAuthService } from '../auth/auth.service';
 import { LoginRateLimiterService } from '../auth/login-rate-limiter.service';
@@ -42,6 +42,11 @@ import type { RequestContext } from '../types/console.types';
 const ACCESS_COOKIE_KEY = ADMIN_AUTH_COOKIES.ACCESS_TOKEN;
 const REFRESH_COOKIE_KEY = ADMIN_AUTH_COOKIES.REFRESH_TOKEN;
 
+interface AuthHttpRequest {
+  headers: Record<string, string | string[] | undefined>;
+  ip?: string;
+}
+
 // ─── 工具函数 ─────────────────────────────────────────────────────────────────
 
 function resolveCookieDomain(): string | undefined {
@@ -53,7 +58,7 @@ function resolveCookieDomain(): string | undefined {
 }
 
 /** 优先取 x-forwarded-for 首项，兼容反向代理场景 */
-function resolveClientIp(req: Request): string {
+function resolveClientIp(req: AuthHttpRequest): string {
   const forwarded = req.headers['x-forwarded-for'];
   if (typeof forwarded === 'string' && forwarded) {
     return forwarded.split(',')[0]?.trim() ?? req.ip ?? 'unknown';
@@ -82,7 +87,7 @@ export class AuthRouter {
   @HttpCode(HttpStatus.OK)
   async login(
     @Body() body: LoginDto,
-    @Req() req: Request,
+    @Req() req: AuthHttpRequest,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthResultDto> {
     const ip = resolveClientIp(req);
@@ -90,8 +95,9 @@ export class AuthRouter {
     // Part C：限速检查（在验证码之前，避免验证码生成消耗被滥用）
     const rateLimit = this.rateLimiter.check(ip, body.identifier);
     if (!rateLimit.allowed) {
-      throw new TooManyRequestsException(
+      throw new HttpException(
         `登录请求过于频繁，请 ${rateLimit.retryAfter ?? 900} 秒后重试`,
+        HttpStatus.TOO_MANY_REQUESTS,
       );
     }
 

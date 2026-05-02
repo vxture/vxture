@@ -1,10 +1,15 @@
 import {
   BadGatewayException,
+  BadRequestException,
+  Body,
   Controller,
   ForbiddenException,
   Get,
   Inject,
+  NotFoundException,
   OnModuleDestroy,
+  Param,
+  Post,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -60,6 +65,97 @@ export class PaymentsRouter implements OnModuleDestroy {
 
     const rows = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_SQL);
     return rows.rows.map(mapPaymentLedgerRow);
+  }
+
+  @Post(':paymentId/verify')
+  async verifyPayment(
+    @Req() req: Request & RequestContext,
+    @Param('paymentId') paymentId: string,
+    @Body() body: PaymentActionBody,
+  ): Promise<PaymentOperationRecord> {
+    assertCanManagePayments(req);
+
+    if (!this.pool) {
+      throw new BadGatewayException('Payment database is not configured');
+    }
+
+    const remark = normalizeRemark(body?.remark, '核销原因');
+    const operatorId = req.user?.id ?? null;
+    const client = await this.pool.connect();
+
+    try {
+      await client.query('begin');
+
+      // 查询当前支付记录
+      const lookupResult = await client.query<PaymentLookupRow>(PAYMENT_LOOKUP_SQL, [paymentId]);
+      const current = lookupResult.rows[0];
+
+      if (!current) {
+        throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+      }
+      if (current.pay_status !== 'pending_verify') {
+        throw new BadRequestException(`当前状态（${current.pay_status}）不允许核销，仅 pending_verify 状态可核销`);
+      }
+
+      // 更新支付状态为已收款
+      await client.query(PAYMENT_VERIFY_SQL, [
+        remark,
+        operatorId,
+        paymentId,
+      ]);
+
+      // 联动更新账单收款金额和状态
+      if (current.bill_id) {
+        const paidAmount = Number(current.paid_amount ?? 0);
+        await client.query(BILL_PAID_AMOUNT_UPDATE_SQL, [
+          paidAmount,
+          current.bill_id,
+        ]);
+      }
+
+      await client.query('commit');
+    } catch (error) {
+      await client.query('rollback');
+      throw error;
+    } finally {
+      client.release();
+    }
+
+    const updated = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
+    if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+    return mapPaymentLedgerRow(updated.rows[0]);
+  }
+
+  @Post(':paymentId/reject')
+  async rejectPayment(
+    @Req() req: Request & RequestContext,
+    @Param('paymentId') paymentId: string,
+    @Body() body: PaymentActionBody,
+  ): Promise<PaymentOperationRecord> {
+    assertCanManagePayments(req);
+
+    if (!this.pool) {
+      throw new BadGatewayException('Payment database is not configured');
+    }
+
+    const remark = normalizeRemark(body?.remark, '驳回原因');
+    const operatorId = req.user?.id ?? null;
+
+    const lookupResult = await this.pool.query<PaymentLookupRow>(PAYMENT_LOOKUP_SQL, [paymentId]);
+    const current = lookupResult.rows[0];
+
+    if (!current) {
+      throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+    }
+    if (current.pay_status !== 'pending_verify') {
+      throw new BadRequestException(`当前状态（${current.pay_status}）不允许驳回，仅 pending_verify 状态可驳回`);
+    }
+
+    await this.pool.query(PAYMENT_REJECT_SQL, [remark, operatorId, paymentId]);
+
+    const updated = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
+    if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+    return mapPaymentLedgerRow(updated.rows[0]);
   }
 }
 
@@ -297,3 +393,87 @@ const PAYMENT_LEDGER_SQL = `
     coalesce(pay.paid_at, pay.updated_at, pay.created_at) desc,
     pay.pay_order_no asc
 `;
+
+// ─── 单条查询（verify / reject 后重新读取）────────────────────────────────────
+
+const PAYMENT_LEDGER_BY_ID_SQL = PAYMENT_LEDGER_SQL.replace(
+  'order by',
+  'where pay.id = $1\n  order by',
+);
+
+// ─── 核销前状态查询 ────────────────────────────────────────────────────────────
+
+const PAYMENT_LOOKUP_SQL = `
+  select id, pay_status, paid_amount, bill_id
+  from commerce.tenant_payment
+  where id = $1
+`;
+
+// ─── 核销：pending_verify → paid ──────────────────────────────────────────────
+
+const PAYMENT_VERIFY_SQL = `
+  update commerce.tenant_payment
+  set
+    pay_status   = 'paid',
+    operate_remark = coalesce(operate_remark || ' | 核销：', '核销：') || $1,
+    operator_id  = $2,
+    paid_at      = coalesce(paid_at, now()),
+    updated_at   = now()
+  where id = $3
+    and pay_status = 'pending_verify'
+`;
+
+// ─── 驳回：pending_verify → failed ────────────────────────────────────────────
+
+const PAYMENT_REJECT_SQL = `
+  update commerce.tenant_payment
+  set
+    pay_status   = 'failed',
+    operate_remark = coalesce(operate_remark || ' | 驳回：', '驳回：') || $1,
+    operator_id  = $2,
+    updated_at   = now()
+  where id = $3
+    and pay_status = 'pending_verify'
+`;
+
+// ─── 联动更新账单已收金额和状态 ───────────────────────────────────────────────
+
+const BILL_PAID_AMOUNT_UPDATE_SQL = `
+  update commerce.tenant_invoice
+  set
+    paid_amount = least(payable_amount, coalesce(paid_amount, 0) + $1),
+    bill_status = case
+      when least(payable_amount, coalesce(paid_amount, 0) + $1) >= payable_amount then 'paid'
+      when least(payable_amount, coalesce(paid_amount, 0) + $1) > 0              then 'partial'
+      else bill_status
+    end,
+    updated_at = now()
+  where id = $2
+    and deleted_at is null
+`;
+
+// ─── 请求体类型 ────────────────────────────────────────────────────────────────
+
+interface PaymentLookupRow {
+  id: string;
+  pay_status: string | null;
+  paid_amount: string | number | null;
+  bill_id: string | null;
+}
+
+interface PaymentActionBody {
+  remark?: unknown;
+}
+
+// ─── 辅助：文本规范化 ──────────────────────────────────────────────────────────
+
+function normalizeRemark(value: unknown, fieldName: string): string {
+  const text = typeof value === 'string' ? value.trim() : '';
+  if (text.length < 4) {
+    throw new BadRequestException(`${fieldName}至少填写 4 个字`);
+  }
+  if (text.length > 512) {
+    throw new BadRequestException(`${fieldName}不能超过 512 个字`);
+  }
+  return text;
+}

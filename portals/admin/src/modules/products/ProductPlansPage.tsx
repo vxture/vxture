@@ -516,8 +516,8 @@ export function ProductPlansPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-product-plans-page">
       <PageHeader
         icon="cube"
-        title="服务套餐管理"
-        description="统一管理业务产品方案下的 Free / Pro / Enterprise 等服务套餐，重点维护配额权益、价格周期、售卖状态和适用范围。"
+        title="服务套餐"
+        description="统一管理解决方案下的 Free / Pro / Enterprise 等服务套餐，重点维护配额权益、价格周期、售卖状态和适用范围。"
       />
 
       <section className="vx-tenant-summary" aria-label="服务套餐管理统计">

@@ -25,6 +25,18 @@ function platformRoleDisplayName(admin: PlatformAdminRecord, t: ReturnType<typeo
   return t(admin.roleNameI18nKey, admin.roleNameEn);
 }
 
+function platformRoleStatusLabel(admin: PlatformAdminRecord) {
+  if (admin.roleStatusCode === 'active') return '启用';
+  if (admin.roleStatusCode === 'archived') return '归档';
+  return '停用';
+}
+
+function platformRoleStatusPillClass(admin: PlatformAdminRecord) {
+  if (admin.roleStatusCode === 'active') return 'vx-admin-role-status-pill--enabled';
+  if (admin.roleStatusCode === 'archived') return 'vx-platform-user-status-pill--attention';
+  return 'vx-admin-role-status-pill--disabled';
+}
+
 function platformAdminStatusCode(admin: PlatformAdminRecord): PlatformAdminStatusCode {
   const statusCode = admin.statusCode;
   if (statusCode === 'active' || statusCode === 'disabled' || statusCode === 'locked' || statusCode === 'pending' || statusCode === 'suspended') {
@@ -265,7 +277,10 @@ function PlatformUsersList({
               </span>
             </span>
             <span className="vx-platform-user-row__role">
-              <strong>{platformRoleDisplayName(admin, t)}</strong>
+              <span className="vx-platform-user-row__role-line">
+                <strong>{platformRoleDisplayName(admin, t)}</strong>
+                <Badge className={`vx-tenant-pill ${platformRoleStatusPillClass(admin)}`}>{platformRoleStatusLabel(admin)}</Badge>
+              </span>
             </span>
             <span className="vx-platform-user-row__login">
               <strong>{admin.lastLoginAt ? formatDate(admin.lastLoginAt) : EMPTY_MARK}</strong>
@@ -303,6 +318,7 @@ function PlatformUsersCards({ admins, t }: { admins: PlatformAdminRecord[]; t: R
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--permission">{platformRoleDisplayName(admin, t)}</Badge>
+            <Badge className={`vx-tenant-pill ${platformRoleStatusPillClass(admin)}`}>{platformRoleStatusLabel(admin)}</Badge>
             {admin.isSystem ? <Badge className="vx-tenant-pill vx-tenant-pill--system">系统</Badge> : null}
           </div>
           <div className="vx-tenant-directory-card__metrics">
@@ -394,13 +410,18 @@ export function PlatformUsersPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
     setLoading(true);
+    setLoadError(null);
     fetchPlatformAdmins()
       .then((records) => {
         if (active) setAdmins(records);
+      })
+      .catch((error) => {
+        if (active) setLoadError(error instanceof Error ? error.message : '平台用户数据库读取失败');
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -423,8 +444,12 @@ export function PlatformUsersPage() {
   }, [admins, query, statusFilter, typeFilter]);
 
   const enabledCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'active').length;
-  const disabledCount = admins.filter((admin) => platformAdminStatusCode(admin) !== 'active').length;
   const systemCount = admins.filter((admin) => admin.isSystem).length;
+  const disabledCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'disabled').length;
+  const lockedCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'locked').length;
+  const pendingCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'pending').length;
+  const suspendedCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'suspended').length;
+  const otherUserCount = disabledCount + lockedCount + pendingCount + suspendedCount;
   const pageCount = Math.max(1, Math.ceil(filteredAdmins.length / pageSize));
   const clampedCurrentPage = Math.min(currentPage, pageCount);
   const visibleAdmins = filteredAdmins.slice((clampedCurrentPage - 1) * pageSize, clampedCurrentPage * pageSize);
@@ -464,27 +489,32 @@ export function PlatformUsersPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-platform-users-page">
       <PageHeader
         icon="user"
-        eyebrow="身份与权限"
-        title="用户管理"
-        description="读取 platform.platform_admin，管理平台内部管理员、运营人员和运维人员；平台用户不归属于任何租户。"
+        eyebrow="身份权限"
+        title="平台用户"
+        description="管理平台内部管理员、运营人员和运维人员；平台用户不归属于任何租户。"
       />
 
-      <section className="vx-tenant-summary" aria-label="平台用户统计">
+      <section className="vx-tenant-summary vx-platform-users-summary" aria-label="平台用户统计">
         <article className="vx-tenant-summary__item vx-tenant-summary__item--identity-icon vx-tenant-tone--blue">
           <Icon name="user" size="lg" fallback="placeholder" />
-          <div><span>用户总数</span><p><strong>{formatNumber(admins.length)}</strong><em>platform_admin</em></p></div>
+          <div><span>用户总数</span><p><strong>{formatNumber(admins.length)}</strong><em>系统用户 {formatNumber(systemCount)}人</em></p></div>
         </article>
         <article className="vx-tenant-summary__item vx-tenant-tone--green">
           <Icon name="check" size="lg" fallback="placeholder" />
           <div><span>启用用户</span><p><strong>{formatNumber(enabledCount)}</strong><em>可登录</em></p></div>
         </article>
-        <article className="vx-tenant-summary__item vx-tenant-tone--amber">
-          <Icon name="shield-check" size="lg" fallback="placeholder" />
-          <div><span>系统用户</span><p><strong>{formatNumber(systemCount)}</strong><em>内置账号</em></p></div>
-        </article>
         <article className="vx-tenant-summary__item vx-tenant-tone--rose">
           <Icon name="x" size="lg" fallback="placeholder" />
-          <div><span>非启用用户</span><p><strong>{formatNumber(disabledCount)}</strong><em>不可登录</em></p></div>
+          <div>
+            <span>其他用户</span>
+            <p>
+              <strong>{formatNumber(otherUserCount)}</strong>
+              {disabledCount ? <em>停用 {formatNumber(disabledCount)}</em> : null}
+              {lockedCount ? <em>锁定 {formatNumber(lockedCount)}</em> : null}
+              {pendingCount ? <em>待激活 {formatNumber(pendingCount)}</em> : null}
+              {suspendedCount ? <em>暂停 {formatNumber(suspendedCount)}</em> : null}
+            </p>
+          </div>
         </article>
       </section>
 
@@ -539,8 +569,8 @@ export function PlatformUsersPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? '正在加载平台用户' : '没有匹配的平台用户'}
-                description={loading ? '正在读取 platform.platform_admin。' : '清空筛选条件后可查看全部平台用户。'}
+                title={loading ? '正在加载平台用户' : loadError ? '平台用户读取失败' : '没有匹配的平台用户'}
+                description={loading ? '正在读取 platform.platform_admin。' : loadError ?? '清空筛选条件后可查看全部平台用户。'}
                 action={<ActionButton variant="outline" icon="x" onClick={resetFilters}>清空筛选</ActionButton>}
               />
             </section>

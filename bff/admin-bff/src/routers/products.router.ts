@@ -178,7 +178,7 @@ export const productAgents: ProductAgentRecord[] = [
     agentType: 'chat',
     status: 'active',
     visibility: 'internal',
-    defaultModelCode: 'doubao-seed-2-0-lite-260215',
+    defaultModelCode: null,
     createdAt: NOW,
     updatedAt: NOW,
   },
@@ -190,7 +190,7 @@ export const productAgents: ProductAgentRecord[] = [
     agentType: 'chat',
     status: 'active',
     visibility: 'public',
-    defaultModelCode: 'doubao-seed-2-0-lite-260215',
+    defaultModelCode: null,
     createdAt: NOW,
     updatedAt: NOW,
   },
@@ -370,86 +370,7 @@ export const productReleases: ProductReleaseRecord[] = [
   },
 ];
 
-export const explicitModelPolicies: ProductModelPolicyRecord[] = [
-  {
-    id: 'policy-platform-vela-admin',
-    subjectType: 'platform',
-    subjectId: 'platform',
-    subjectName: '平台主体',
-    scopeType: 'tenant_default',
-    scopeCode: 'platform',
-    scopeName: '平台主体模型策略',
-    isDefined: true,
-    productCode: 'platform',
-    productName: '平台自治域',
-    productRegion: null,
-    agentId: null,
-    agentCode: 'vela-admin',
-    agentName: 'Vela Admin',
-    modelCode: 'doubao-seed-2-0-pro-260215',
-    quotaTokens: 10_000_000,
-    isUnlimited: false,
-    priority: 50,
-    isActive: true,
-    cycle: 'monthly',
-    note: '平台自治域和 admin 内 Vela 使用的平台主体配额，独立于租户体系。',
-  },
-  createProductPolicy({
-    id: 'policy-product-console-cn-lite',
-    productCode: 'vxture-console-cn',
-    agentId: CONSOLE_ASSISTANT_ID,
-    agentCode: 'console-assistant',
-    agentName: 'Console 平台智能助手',
-    modelCode: 'doubao-seed-2-0-lite-260215',
-    quotaTokens: 10_000_000,
-    priority: 100,
-    note: 'Console 国内版基础在线模型，按产品授权，不区分发布版本。',
-  }),
-  createProductPolicy({
-    id: 'policy-product-console-cn-pro',
-    productCode: 'vxture-console-cn',
-    agentId: CONSOLE_ASSISTANT_ID,
-    agentCode: 'console-assistant',
-    agentName: 'Console 平台智能助手',
-    modelCode: 'doubao-seed-2-0-pro-260215',
-    quotaTokens: 5_000_000,
-    priority: 80,
-    note: 'Console 国内版增强模型授权。',
-  }),
-  createProductPolicy({
-    id: 'policy-product-ruyin-cn-lite',
-    productCode: 'ruyinagent-cn',
-    agentId: RUYIN_AGENT_ID,
-    agentCode: 'ruyinagent',
-    agentName: 'Ruyin Agent',
-    modelCode: 'doubao-seed-2-0-lite-260215',
-    quotaTokens: 8_000_000,
-    priority: 100,
-    note: 'Ruyin Agent 国内版兜底对话模型。',
-  }),
-  createProductPolicy({
-    id: 'policy-product-ruyin-cn-pro',
-    productCode: 'ruyinagent-cn',
-    agentId: RUYIN_AGENT_ID,
-    agentCode: 'ruyinagent',
-    agentName: 'Ruyin Agent',
-    modelCode: 'doubao-seed-2-0-pro-260215',
-    quotaTokens: 6_000_000,
-    priority: 80,
-    note: 'Ruyin Agent 国内版增强对话模型。',
-  }),
-  createProductPolicy({
-    id: 'policy-product-ruyin-cn-private',
-    productCode: 'ruyinagent-cn',
-    agentId: RUYIN_AGENT_ID,
-    agentCode: 'ruyinagent',
-    agentName: 'Ruyin Agent',
-    modelCode: 'private-qwen-72b',
-    quotaTokens: 0,
-    priority: 40,
-    note: '自建模型接入位已授权但配额为 0，交付后再开通额度。',
-  }),
-];
+export const explicitModelPolicies: ProductModelPolicyRecord[] = [];
 
 export const defaultModelPolicies: ProductModelPolicyRecord[] = [
   {
@@ -629,44 +550,6 @@ export class ProductsRouter implements OnModuleDestroy {
     assertCanManageProducts(req);
     return listEffectiveModelPolicies();
   }
-}
-
-function createProductPolicy(input: {
-  id: string;
-  productCode: string;
-  agentId: string;
-  agentCode: string;
-  agentName: string;
-  modelCode: string;
-  quotaTokens: number;
-  priority: number;
-  note: string;
-}): ProductModelPolicyRecord {
-  const release = productReleases.find((item) => item.productCode === input.productCode);
-
-  return {
-    id: input.id,
-    subjectType: 'tenant',
-    subjectId: '*',
-    subjectName: '租户主体',
-    scopeType: 'product',
-    scopeCode: input.productCode,
-    scopeName: release?.productName ?? input.productCode,
-    isDefined: true,
-    productCode: input.productCode,
-    productName: release?.productName ?? input.productCode,
-    productRegion: release?.productRegion ?? null,
-    agentId: input.agentId,
-    agentCode: input.agentCode,
-    agentName: input.agentName,
-    modelCode: input.modelCode,
-    quotaTokens: input.quotaTokens,
-    isUnlimited: false,
-    priority: input.priority,
-    isActive: true,
-    cycle: 'monthly',
-    note: input.note,
-  };
 }
 
 export function listProductAgents(): ProductAgentRecord[] {

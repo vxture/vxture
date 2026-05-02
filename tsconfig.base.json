@@ -49,6 +49,8 @@
       "@vxture/service-organization/*": ["./services/tenant/organization/src/*"],
       "@vxture/service-iam": ["./services/identity/iam/src"],
       "@vxture/service-iam/*": ["./services/identity/iam/src/*"],
+      "@vxture/service-mail": ["./services/notification/mail/src"],
+      "@vxture/service-mail/*": ["./services/notification/mail/src/*"],
       "@vxture/service-ai-gateway": ["./services/ai/gateway/src"],
       "@vxture/service-ai-gateway/*": ["./services/ai/gateway/src/*"],
       "@vxture/platform-amap": ["./packages/platform/amap/src"],

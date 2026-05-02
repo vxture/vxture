@@ -200,7 +200,7 @@ function UsageListRows({
     <div
       className="vx-tenant-directory-list vx-usage-directory-list"
       role="region"
-      aria-label="用量计量清单"
+      aria-label="用量计费清单"
     >
       <div className="vx-tenant-directory-list__header">
         <span>
@@ -357,7 +357,7 @@ function UsageCards({
   return (
     <div
       className="vx-tenant-directory-cards vx-commercial-cards"
-      aria-label="用量计量卡片"
+      aria-label="用量计费卡片"
     >
       {records.map((record) => (
         <article
@@ -542,12 +542,12 @@ export function UsageMeteringPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-usage-page">
       <PageHeader
         icon="graph"
-        eyebrow="商业与财务"
-        title="用量计量"
+        eyebrow="订阅交易"
+        title="用量计费"
         description="运营侧查看租户、订阅、产品能力维度的计量消耗、配额使用率和超额风险。"
       />
 
-      <section className="vx-tenant-summary" aria-label="用量计量统计">
+      <section className="vx-tenant-summary" aria-label="用量计费统计">
         <SummaryItem
           icon="graph"
           label="计量记录"

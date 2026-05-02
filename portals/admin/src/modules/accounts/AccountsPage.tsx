@@ -40,8 +40,8 @@ type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 type AccountStatusIndicatorTone = 'normal' | 'progress' | 'attention' | 'closed';
 
 const defaultAccountsPageCopy: AccountsPageCopy = {
-  eyebrow: '租户与账号',
-  title: '账号管理',
+  eyebrow: '租户账号',
+  title: '账号体系',
   description: '平台运营侧跨租户检索账号、识别安全状态、处理账号启停与登录问题。',
   summaryAriaLabel: '账号运营统计',
   toolbarAriaLabel: '账号筛选',
