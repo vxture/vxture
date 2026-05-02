@@ -33,77 +33,77 @@ const SERVICES = [
   {
     id: 'website-bff',
     name: 'Website BFF',
-    port: 3001,
+    port: 3011,
     priority: 1,                              // P1 — Website 后端接口
-    url: 'http://localhost:3001',
+    url: 'http://localhost:3011',
     command: 'pnpm --filter @vxture/bff-website dev',
     healthChecks: [
-      { label: 'healthz',  url: 'http://localhost:3001/healthz',       okStatuses: [200] },
-      { label: 'auth.me',  url: 'http://localhost:3001/api/auth/me',   okStatuses: [401] },
+      { label: 'healthz',  url: 'http://localhost:3011/healthz',       okStatuses: [200] },
+      { label: 'auth.me',  url: 'http://localhost:3011/api/auth/me',   okStatuses: [401] },
     ],
   },
   {
     id: 'vela-server',
     name: 'Vela Server',
-    port: 3011,
+    port: 3122,
     priority: 1,                              // P1 — Vela 私有智能体后端，依赖 AI Gateway + 数据库
-    url: 'http://localhost:3011',
+    url: 'http://localhost:3122',
     command: 'pnpm --filter vela-server dev',
     env: {
       AI_GATEWAY_URL: 'http://localhost:3100',
-      VELA_SERVER_PORT: '3011',
+      VELA_SERVER_PORT: '3122',
       VELA_PLATFORM_LLM_TENANT_ID: '82cf3e39-f7f0-4597-bb55-b1303ca19d46',
       VELA_DEFAULT_MODEL_CODE: 'doubao-seed-2-0-lite-260215',
     },
     healthChecks: [
-      { label: 'port', kind: 'tcp', port: 3011 },
+      { label: 'port', kind: 'tcp', port: 3122 },
     ],
   },
   {
     id: 'vela-bff',
     name: 'Vela BFF',
-    port: 3010,
+    port: 3121,
     priority: 1,                              // P1 — Vela 认证边界与 SSE 代理，依赖 Vela Server
-    url: 'http://localhost:3010',
+    url: 'http://localhost:3121',
     command: 'pnpm --filter @vxture/bff-vela dev',
     env: {
-      VELA_BFF_PORT: '3010',
-      VELA_SERVER_INTERNAL_URL: 'http://localhost:3011',
+      VELA_BFF_PORT: '3121',
+      VELA_SERVER_INTERNAL_URL: 'http://localhost:3122',
     },
     healthChecks: [
-      { label: 'health', url: 'http://localhost:3010/health', okStatuses: [200] },
+      { label: 'health', url: 'http://localhost:3121/health', okStatuses: [200] },
     ],
   },
   {
     id: 'console-bff',
     name: 'Console BFF',
-    port: 3003,
+    port: 3021,
     priority: 1,                              // P1 — Console 后端接口，依赖 AI Gateway 的模型管理能力
-    url: 'http://localhost:3003',
+    url: 'http://localhost:3021',
     command: 'pnpm --filter @vxture/bff-console dev',
     env: {
       AI_GATEWAY_URL: 'http://localhost:3100',
     },
     healthChecks: [
-      { label: 'healthz',     url: 'http://localhost:3003/healthz',            okStatuses: [200] },
-      { label: 'auth.session', url: 'http://localhost:3003/api/auth/session',   okStatuses: [401] },
+      { label: 'healthz',     url: 'http://localhost:3021/healthz',            okStatuses: [200] },
+      { label: 'auth.session', url: 'http://localhost:3021/api/auth/session',   okStatuses: [401] },
     ],
   },
   {
     id: 'admin-bff',
     name: 'Admin BFF',
-    port: 3005,
+    port: 3031,
     priority: 1,                              // P1 — 平台运营后台接口，承载供给侧管理能力
-    url: 'http://localhost:3005',
+    url: 'http://localhost:3031',
     command: 'pnpm --filter @vxture/bff-admin dev',
     env: {
       AI_GATEWAY_URL: 'http://localhost:3100',
-      ADMIN_BFF_PORT: '3005',
+      ADMIN_BFF_PORT: '3031',
     },
     healthChecks: [
-      { label: 'healthz',      url: 'http://localhost:3005/healthz',              okStatuses: [200] },
-      { label: 'auth.session', url: 'http://localhost:3005/api/auth/session',     okStatuses: [401] },
-      { label: 'ai-gateway',   url: 'http://localhost:3005/api/ai-gateway/models', okStatuses: [401] },
+      { label: 'healthz',      url: 'http://localhost:3031/healthz',              okStatuses: [200] },
+      { label: 'auth.session', url: 'http://localhost:3031/api/auth/session',     okStatuses: [401] },
+      { label: 'ai-gateway',   url: 'http://localhost:3031/api/ai-gateway/models', okStatuses: [401] },
     ],
   },
   {
@@ -114,7 +114,7 @@ const SERVICES = [
     url: 'http://localhost:8000',
     command: 'pnpm dev:gateway',
     env: {
-      ADMIN_BFF_ORIGIN: 'http://localhost:3005',
+      ADMIN_BFF_ORIGIN: 'http://localhost:3031',
     },
     healthChecks: [
       { label: 'healthz',      url: 'http://localhost:8000/healthz',                          okStatuses: [200] },
@@ -126,45 +126,56 @@ const SERVICES = [
   {
     id: 'website',
     name: 'Website',
-    port: 3000,
+    port: 3010,
     priority: 3,                              // P3 — 依赖 gateway
-    url: 'http://localhost:3000',
+    url: 'http://localhost:3010',
     command: 'pnpm --filter @vxture/website dev',
     healthChecks: [
-      { label: 'port', kind: 'tcp', port: 3000 },
+      { label: 'port', kind: 'tcp', port: 3010 },
     ],
   },
   {
     id: 'console',
     name: 'Console',
-    port: 3002,
+    port: 3020,
     priority: 3,                              // P3 — 依赖 gateway
-    url: 'http://localhost:3002',
+    url: 'http://localhost:3020',
     command: 'pnpm --filter @vxture/console dev',
     healthChecks: [
-      { label: 'port', kind: 'tcp', port: 3002 },
+      { label: 'port', kind: 'tcp', port: 3020 },
     ],
   },
   {
     id: 'admin',
     name: 'Admin',
-    port: 3004,
+    port: 3030,
     priority: 3,                              // P3 — 平台运营前端，依赖 gateway + admin-bff
-    url: 'http://localhost:3004',
+    url: 'http://localhost:3030',
     command: 'pnpm --filter @vxture/admin dev',
     healthChecks: [
-      { label: 'port', kind: 'tcp', port: 3004 },
+      { label: 'port', kind: 'tcp', port: 3030 },
     ],
   },
   {
     id: 'vela-studio',
     name: 'Vela Studio',
-    port: 3020,
+    port: 3120,
     priority: 3,                              // P3 — Vela 独立前端调试入口；admin/console 内嵌版本不依赖它
-    url: 'http://localhost:3020',
+    url: 'http://localhost:3120',
     command: 'pnpm --filter @vxture/agent-studio-vela dev',
     healthChecks: [
-      { label: 'port', kind: 'tcp', port: 3020 },
+      { label: 'port', kind: 'tcp', port: 3120 },
+    ],
+  },
+  {
+    id: 'website-alias',
+    name: 'Website :3000 Alias',
+    port: 3000,
+    priority: 3,                              // P3 — :3000 302 重定向到 website:3010，方便开发者习惯性访问
+    url: 'http://localhost:3000',
+    command: 'node tools/dev-panel/redirect-3000.mjs',
+    healthChecks: [
+      { label: 'port', kind: 'tcp', port: 3000 },
     ],
   },
 ];
@@ -182,6 +193,7 @@ const START_ORDER = [
   'console',
   'admin',
   'vela-studio',
+  'website-alias',
 ];
 
 // ─── 运行时状态 ─────────────────────────────────────────────────────────────────

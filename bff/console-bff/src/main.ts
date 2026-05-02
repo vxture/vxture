@@ -10,7 +10,7 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   });
-  await app.listen(3003);
+  await app.listen(Number(process.env.CONSOLE_BFF_PORT ?? 3021));
 }
 
 void bootstrap();

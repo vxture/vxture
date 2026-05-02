@@ -48,7 +48,7 @@ export class ConfirmRouter {
     const ctx     = (req as VelaRequest).callerContext;
     const encoded = Buffer.from(JSON.stringify(ctx)).toString('base64');
 
-    const serverUrl = process.env['VELA_SERVER_INTERNAL_URL'] ?? 'http://localhost:3011';
+    const serverUrl = process.env['VELA_SERVER_INTERNAL_URL'] ?? 'http://localhost:3122';
 
     let upstream: globalThis.Response;
     try {

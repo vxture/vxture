@@ -2,12 +2,12 @@ import http from 'node:http';
 import { Readable } from 'node:stream';
 
 const PORT = Number(process.env.GATEWAY_PORT ?? 8000);
-const WEBSITE_BFF_ORIGIN = (process.env.WEBSITE_BFF_ORIGIN ?? 'http://localhost:3001').replace(/\/+$/, '');
-const CONSOLE_BFF_ORIGIN = (process.env.CONSOLE_BFF_ORIGIN ?? 'http://localhost:3003').replace(/\/+$/, '');
-const ADMIN_BFF_ORIGIN = (process.env.ADMIN_BFF_ORIGIN ?? 'http://localhost:3005').replace(/\/+$/, '');
+const WEBSITE_BFF_ORIGIN = (process.env.WEBSITE_BFF_ORIGIN ?? 'http://localhost:3011').replace(/\/+$/, '');
+const CONSOLE_BFF_ORIGIN = (process.env.CONSOLE_BFF_ORIGIN ?? 'http://localhost:3021').replace(/\/+$/, '');
+const ADMIN_BFF_ORIGIN = (process.env.ADMIN_BFF_ORIGIN ?? 'http://localhost:3031').replace(/\/+$/, '');
 const ALLOWED_ORIGINS = new Set(
   (process.env.GATEWAY_ALLOWED_ORIGINS ??
-    'http://localhost:3000,http://localhost:3002,http://localhost:3004,http://127.0.0.1:3000,http://127.0.0.1:3002,http://127.0.0.1:3004')
+    'http://localhost:3010,http://localhost:3020,http://localhost:3030,http://127.0.0.1:3010,http://127.0.0.1:3020,http://127.0.0.1:3030')
     .split(',')
     .map((item) => item.trim())
     .filter(Boolean),

@@ -12,7 +12,7 @@ export default function Page() {
           </p>
         </div>
         <div className="vx-page-header__actions">
-          <a className="vx-btn vx-btn--default vx-btn--sm" href="http://localhost:3004/model-gateway">
+          <a className="vx-btn vx-btn--default vx-btn--sm" href="http://localhost:3030/model-gateway">
             打开 Admin
           </a>
         </div>

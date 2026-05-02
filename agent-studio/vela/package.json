@@ -8,9 +8,9 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "dev": "next dev --turbo -p 3020",
+    "dev": "next dev --turbo -p 3120",
     "build": "next build",
-    "start": "next start -p 3020",
+    "start": "next start -p 3120",
     "type-check": "tsc --noEmit",
     "lint": "echo \"No lint yet\""
   },

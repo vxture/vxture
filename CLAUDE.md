@@ -15,6 +15,7 @@
 | **注释规范** | 文件头模板、JSDoc 格式、分区注释、中文注释要求 | `docs/ai/claude-coding-comments.md` |
 | **编码规则** | 包边界约束、层职责、AI 行为规范                | `docs/ai/claude-coding-rules.md`    |
 | **代码风格** | TypeScript 约定、命名规则、导出风格            | `docs/ai/claude-coding-style.md`    |
+| **端口分配** | 全局端口表、3NNX 规则、新 Agent 登记流程       | `docs/ai/port-allocation.md`        |
 
 > 三份文档与本文件如有冲突，**以本文件为准**。
 

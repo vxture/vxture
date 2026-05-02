@@ -99,10 +99,10 @@ function Stop-ProcessByPort {
     }
 }
 
-# 检查 3000 端口
-if (Test-Port 3000) {
-    Write-Host "发现 3000 端口被占用，正在清理..." -ForegroundColor Yellow
-    Stop-ProcessByPort 3000
+# 检查 3010 端口（website portal）
+if (Test-Port 3010) {
+    Write-Host "发现 3010 端口被占用，正在清理..." -ForegroundColor Yellow
+    Stop-ProcessByPort 3010
     Start-Sleep -Seconds 1
 }
 
@@ -120,7 +120,7 @@ Write-Host "`n==========================================" -ForegroundColor Gray
 Write-Host "  启动开发环境..." -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Gray
 Write-Host ""
-Write-Host "前端地址: http://localhost:3000" -ForegroundColor Cyan
+Write-Host "前端地址: http://localhost:3010" -ForegroundColor Cyan
 Write-Host "后端地址: http://localhost:8000" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "按 Ctrl+C 停止服务" -ForegroundColor Gray

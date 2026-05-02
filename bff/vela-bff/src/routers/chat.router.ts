@@ -9,7 +9,7 @@
  *   X-Vela-Context Header，透传给 agent-server/vela，并将 SSE 流式响应
  *   原样回传给前端，不缓冲、不解析内容（spec §6.3）。
  *
- *   目标地址由环境变量 VELA_SERVER_INTERNAL_URL 控制（默认 http://localhost:3011）。
+ *   目标地址由环境变量 VELA_SERVER_INTERNAL_URL 控制（默认 http://localhost:3122）。
  *
  * @author AI-Generated
  * @date 2026-04-30
@@ -47,7 +47,7 @@ export class ChatRouter {
     const ctx = (req as VelaRequest).callerContext;
     const encoded = Buffer.from(JSON.stringify(ctx)).toString('base64');
 
-    const serverUrl = process.env['VELA_SERVER_INTERNAL_URL'] ?? 'http://localhost:3011';
+    const serverUrl = process.env['VELA_SERVER_INTERNAL_URL'] ?? 'http://localhost:3122';
 
     // SSE 响应头，Nginx 需配置 proxy_buffering off
     res.setHeader('Content-Type', 'text/event-stream');

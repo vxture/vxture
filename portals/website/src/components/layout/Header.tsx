@@ -53,7 +53,7 @@ function resolveConsoleUrl(): string {
     return configuredUrl.replace(/\/+$/, '');
   }
 
-  return 'http://localhost:3002';
+  return 'http://localhost:3020';
 }
 
 const PAGE_FULLSCREEN_ID = 'page-root-native';

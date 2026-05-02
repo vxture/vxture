@@ -56,15 +56,15 @@ function Stop-ProcessByPort {
     }
 }
 
-# 检查并终止占用 3000 端口的进程（前端）
-Write-Host "检查前端服务端口 (3000)..." -ForegroundColor Cyan
-if (Test-Port 3000) {
-    Write-Host "发现占用 3000 端口的进程，正在终止..." -ForegroundColor Yellow
-    Stop-ProcessByPort 3000
+# 检查并终止占用 3010 端口的进程（website portal）
+Write-Host "检查前端服务端口 (3010)..." -ForegroundColor Cyan
+if (Test-Port 3010) {
+    Write-Host "发现占用 3010 端口的进程，正在终止..." -ForegroundColor Yellow
+    Stop-ProcessByPort 3010
     Start-Sleep -Seconds 1
 
-    if (Test-Port 3000) {
-        Write-Host "警告: 无法完全终止占用 3000 端口的进程" -ForegroundColor Yellow
+    if (Test-Port 3010) {
+        Write-Host "警告: 无法完全终止占用 3010 端口的进程" -ForegroundColor Yellow
     } else {
         Write-Host "前端服务已停止" -ForegroundColor Green
     }

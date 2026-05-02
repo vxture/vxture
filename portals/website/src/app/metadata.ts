@@ -26,7 +26,7 @@ export function buildMetadata(locale: string): Metadata {
     : DEFAULT_LOCALE as 'zh-CN' | 'en-US';
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3010'),
 
     title: {
       default: titles[validLocale] as string,

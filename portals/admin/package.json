@@ -5,9 +5,9 @@
   "description": "Vxture platform operations portal",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbo -p 3004",
+    "dev": "next dev --turbo -p 3030",
     "build": "next build",
-    "start": "next start -p 3004",
+    "start": "next start -p 3030",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "clean": "rimraf .next"

@@ -20,7 +20,7 @@ async function bootstrap() {
     origin: true,
     credentials: true,
   });
-  const port = Number(process.env['VELA_BFF_PORT'] ?? 3010);
+  const port = Number(process.env['VELA_BFF_PORT'] ?? 3121);
   await app.listen(port);
 }
 

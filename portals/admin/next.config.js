@@ -38,7 +38,7 @@ const nextConfig = {
     return [
       {
         source: '/vela/:path*',
-        destination: `${process.env.VELA_BFF_DEV_URL ?? 'http://localhost:3010'}/vela/:path*`,
+        destination: `${process.env.VELA_BFF_DEV_URL ?? 'http://localhost:3121'}/vela/:path*`,
       },
     ];
   },

@@ -14,7 +14,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const port = Number(process.env['VELA_SERVER_PORT'] ?? 3011);
+  const port = Number(process.env['VELA_SERVER_PORT'] ?? 3122);
   await app.listen(port);
 }
 

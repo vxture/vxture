@@ -5,9 +5,9 @@
   "description": "Unified operations console for platform and tenant management",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbo -p 3002",
+    "dev": "next dev --turbo -p 3020",
     "build": "next build",
-    "start": "next start -p 3002",
+    "start": "next start -p 3020",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "clean": "rimraf .next"
