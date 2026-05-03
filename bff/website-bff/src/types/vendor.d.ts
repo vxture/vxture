@@ -13,6 +13,11 @@ declare module 'express' {
   export interface Response {
     cookie(name: string, value: string, options?: Record<string, unknown>): this;
     clearCookie(name: string, options?: Record<string, unknown>): this;
+    setHeader(name: string, value: string): this;
+    status(code: number): this;
+    redirect(url: string): void;
+    redirect(status: number, url: string): void;
+    end(): void;
   }
 
   export type NextFunction = () => void;

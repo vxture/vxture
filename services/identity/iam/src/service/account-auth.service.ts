@@ -7,6 +7,7 @@ import type {
   AccountProfileView,
   AccountReadRepository,
   AuthenticatedAccountView,
+  FindOrCreateByOAuthInput,
   UpdateAccountProfileInput,
 } from '../types/iam.types';
 
@@ -112,6 +113,11 @@ export class AccountAuthService {
 
     await this.resetPassword(accountId, newPassword);
     return true;
+  }
+
+  /** OAuth 登录：通过 provider + providerId 查找或自动创建账号。*/
+  async loginWithOAuth(input: FindOrCreateByOAuthInput): Promise<AuthenticatedAccountView> {
+    return this.repository.findOrCreateByOAuth(input);
   }
 
   async registerWithPassword(email: string, name: string, password: string): Promise<AuthenticatedAccountView> {

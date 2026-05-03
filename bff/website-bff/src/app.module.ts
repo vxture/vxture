@@ -21,6 +21,7 @@ import { WebsiteAuthService } from './auth/auth.service';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { TenantMiddleware } from './middleware/tenant.middleware';
 import { AuthRouter } from './routers/auth.router';
+import { DingtalkOAuthRouter } from './routers/dingtalk-oauth.router';
 import { HealthRouter } from './routers/health.router';
 import { VerifyCodeRouter } from './routers/verifycode.router';
 
@@ -34,7 +35,7 @@ import { VerifyCodeRouter } from './routers/verifycode.router';
     OrganizationModule,
     MailModule,
   ],
-  controllers: [HealthRouter, AuthRouter, VerifyCodeRouter],
+  controllers: [HealthRouter, AuthRouter, VerifyCodeRouter, DingtalkOAuthRouter],
   providers: [WebsiteAuthService],
 })
 export class AppModule implements NestModule {

@@ -6,5 +6,6 @@ export type {
   AccountReadRepository,
   AuthenticatedAccountView,
   CreateAccountInput,
+  FindOrCreateByOAuthInput,
   UpdateAccountProfileInput,
 } from './types/iam.types';

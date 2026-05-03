@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import type { AuthTokenPair, JwtAccessPayload, JwtRefreshPayload } from '@vxture/core-auth';
+import type { AuthTokenPair, JwtAccessPayload, JwtRefreshPayload, OAuthUserProfile } from '@vxture/core-auth';
 import { JwtAuthScope, JwtUserType, OAuthProviderType } from '@vxture/core-auth';
 import { VxConfigService } from '@vxture/core-config';
 import { AccountAuthService } from '@vxture/service-iam';
@@ -237,6 +237,70 @@ export class WebsiteAuthService {
     };
 
     return { tokens, tenantId };
+  }
+
+  /**
+   * OAuth 登录：根据第三方 profile 查找或创建账号，签发 JWT。
+   * 仅用于 website + console 账号体系（tenant_user），禁止签发 operator token。
+   */
+  async loginWithOAuth(profile: OAuthUserProfile): Promise<{
+    tokens: AuthTokenPair;
+    user: AuthUserDto;
+  }> {
+    const account = await this.accountAuthService.loginWithOAuth({
+      provider: profile.provider,
+      providerId: profile.providerId,
+      name: profile.name,
+      email: profile.email,
+      avatarUrl: profile.avatar,
+    });
+
+    const accessPayload: Omit<JwtAccessPayload, 'iat' | 'exp'> = {
+      sub: account.id,
+      tenantId: '',
+      email: account.email ?? `${account.username}@local.vxture`,
+      role: 'member',
+      userType: JwtUserType.TENANT_USER,
+      permissions: [],
+      provider: profile.provider,
+    };
+
+    const refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'> = {
+      sub: account.id,
+      tenantId: '',
+      jti: `${account.id}:${Date.now()}`,
+    };
+
+    const tokens: AuthTokenPair = {
+      accessToken: this.jwtService.sign(accessPayload, {
+        secret: this.configService.auth.JWT_SECRET,
+        expiresIn: this.configService.auth.JWT_ACCESS_EXPIRES_IN as never,
+      }),
+      refreshToken: this.jwtService.sign(refreshPayload, {
+        secret: this.configService.auth.JWT_SECRET,
+        expiresIn: this.configService.auth.JWT_REFRESH_EXPIRES_IN as never,
+      }),
+      expiresIn: parseExpiresToSeconds(this.configService.auth.JWT_ACCESS_EXPIRES_IN),
+      refreshExpiresIn: parseExpiresToSeconds(this.configService.auth.JWT_REFRESH_EXPIRES_IN),
+    };
+
+    const accountProfile = await this.accountAuthService.getAccountProfile(account.id);
+
+    return {
+      tokens,
+      user: {
+        id: account.id,
+        name: account.username,
+        displayName: accountProfile?.displayName ?? profile.name,
+        username: account.username,
+        email: account.email ?? `${account.username}@local.vxture`,
+        phone: account.phone,
+        role: 'member',
+        roleLabel: 'Member',
+        personalVerified: true,
+        organizationVerified: false,
+      },
+    };
   }
 
   verifyAccessToken(token: string) {

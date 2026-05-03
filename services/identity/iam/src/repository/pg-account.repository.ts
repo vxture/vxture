@@ -8,6 +8,7 @@ import type {
   AccountReadRepository,
   AuthenticatedAccountView,
   CreateAccountInput,
+  FindOrCreateByOAuthInput,
   UpdateAccountProfileInput,
 } from '../types/iam.types';
 
@@ -305,6 +306,61 @@ export class PgAccountRepository implements AccountReadRepository {
     );
   }
 
+  async findOrCreateByOAuth(input: FindOrCreateByOAuthInput): Promise<AuthenticatedAccountView> {
+    await this.ensureOAuthTable();
+
+    // 1. 通过 OAuth 绑定表查找已存在账号
+    const existing = await this.pool.query<{ account_id: string }>(
+      `select account_id from account.account_oauth
+       where provider = $1 and provider_id = $2
+       limit 1`,
+      [input.provider, input.providerId],
+    );
+
+    if (existing.rows[0]) {
+      const account = await this.findById(existing.rows[0].account_id);
+      if (account) {
+        return account;
+      }
+    }
+
+    // 2. 不存在则创建新账号（事务）
+    const id = crypto.randomUUID();
+    const username = deriveUsernameFromName(input.name);
+    const client = await this.pool.connect();
+
+    try {
+      await client.query('begin');
+
+      await client.query(
+        `insert into account.account (id, username, email, password_hash, status, created_at, updated_at)
+         values ($1, $2, $3, null, true, now(), now())`,
+        [id, username, input.email?.toLowerCase().trim() ?? null],
+      );
+
+      await client.query(
+        `insert into account.account_profile (account_id, display_name, avatar_url, created_at, updated_at)
+         values ($1, $2, $3, now(), now())`,
+        [id, input.name.trim(), input.avatarUrl ?? null],
+      );
+
+      await client.query(
+        `insert into account.account_oauth (account_id, provider, provider_id, created_at)
+         values ($1, $2, $3, now())`,
+        [id, input.provider, input.providerId],
+      );
+
+      await client.query('commit');
+    } catch (error) {
+      await client.query('rollback');
+      throw error;
+    } finally {
+      client.release();
+    }
+
+    return { id, username, email: input.email?.toLowerCase().trim() ?? null, phone: null };
+  }
+
   private mapCredential(row?: AccountRow): AccountCredentialRecord | null {
     if (!row) {
       return null;
@@ -363,6 +419,26 @@ export class PgAccountRepository implements AccountReadRepository {
 
   private tokenTableEnsured = false;
 
+  private oauthTableEnsured = false;
+
+  private async ensureOAuthTable() {
+    if (this.oauthTableEnsured) {
+      return;
+    }
+
+    await this.pool.query(`
+      create table if not exists account.account_oauth (
+        id uuid primary key default gen_random_uuid(),
+        account_id uuid not null references account.account(id) on delete cascade,
+        provider varchar(32) not null,
+        provider_id varchar(256) not null,
+        created_at timestamptz not null default now(),
+        unique (provider, provider_id)
+      )
+    `);
+    this.oauthTableEnsured = true;
+  }
+
   private async ensureTokenTable() {
     if (this.tokenTableEnsured) {
       return;
@@ -389,6 +465,16 @@ function normalizeNullable(value: string | null | undefined) {
 
   const normalized = value?.trim();
   return normalized ? normalized : null;
+}
+
+// 从显示名派生用户名，加随机后缀避免冲突（OAuth 账号无邮箱时使用）
+function deriveUsernameFromName(name: string): string {
+  const prefix = name
+    .toLowerCase()
+    .replace(/[^a-z0-9_]/g, '_')
+    .slice(0, 20);
+  const suffix = Math.random().toString(36).slice(2, 6);
+  return prefix ? `${prefix}_${suffix}` : `user_${suffix}`;
 }
 
 // 从邮箱前缀派生用户名，加随机后缀避免冲突
