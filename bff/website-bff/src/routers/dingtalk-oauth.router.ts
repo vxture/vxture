@@ -239,8 +239,7 @@ export class DingtalkOAuthRouter {
       return configured;
     }
 
-    // 本地开发兜底：使用 WEBSITE_BASE_URL + callback 路径
-    const base = process.env['WEBSITE_BASE_URL']?.replace(/\/$/, '') ?? 'http://localhost:3011';
-    return `${base}/api/auth/oauth/dingtalk/callback`;
+    // 未配置时用网关地址兜底（本地 dev 需要 ngrok 等隧道对外暴露）
+    return 'http://localhost:8000/website-api/api/auth/oauth/dingtalk/callback';
   }
 }
