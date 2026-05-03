@@ -414,7 +414,18 @@ function PrimaryButton({ loading, label, loadingLabel }: { loading: boolean; lab
   );
 }
 
+function buildDingTalkStartUrl(): string {
+  const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/+$/, '');
+  const apiPrefix = (process.env.NEXT_PUBLIC_WEBSITE_API_PREFIX ?? '/website-api').replace(/\/+$/, '');
+  const returnTo = typeof window !== 'undefined' ? window.location.origin + '/' : '/';
+  return `${apiUrl}${apiPrefix}/api/auth/oauth/dingtalk/start?returnTo=${encodeURIComponent(returnTo)}`;
+}
+
 function SocialLoginButtons() {
+  const handleDingTalk = () => {
+    window.location.href = buildDingTalkStartUrl();
+  };
+
   return (
     <>
       <div className='vx-auth-or'>
@@ -423,17 +434,23 @@ function SocialLoginButtons() {
         <span />
       </div>
       <div className='vx-auth-socials'>
-        <SocialButton className='wechat' icon={<WechatIcon />} label='微信' />
-        <SocialButton className='dingtalk' icon={<DingTalkIcon />} label='钉钉' />
-        <SocialButton className='feishu' icon={<FeishuIcon />} label='飞书' />
+        <SocialButton className='wechat' icon={<WechatIcon />} label='微信' disabled />
+        <SocialButton className='dingtalk' icon={<DingTalkIcon />} label='钉钉' onClick={handleDingTalk} />
+        <SocialButton className='feishu' icon={<FeishuIcon />} label='飞书' disabled />
       </div>
     </>
   );
 }
 
-function SocialButton({ icon, label, className }: { icon: React.ReactNode; label: string; className: string }) {
+function SocialButton({ icon, label, className, onClick, disabled }: {
+  icon: React.ReactNode;
+  label: string;
+  className: string;
+  onClick?: () => void;
+  disabled?: boolean;
+}) {
   return (
-    <button type='button' className={`vx-auth-social ${className}`}>
+    <button type='button' className={`vx-auth-social ${className}`} onClick={onClick} disabled={disabled}>
       {icon}
       {label}
     </button>

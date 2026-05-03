@@ -88,18 +88,32 @@ function timingSafeCompare(a: string, b: string): boolean {
   return result === 0;
 }
 
-// returnTo 只允许已知安全域：website、console（相对路径或同域绝对路径）
+/**
+ * returnTo 白名单校验：
+ * - 相对路径（/foo）直接允许
+ * - 绝对 URL 只允许 WEBSITE_BASE_URL 或 CONSOLE_BASE_URL 前缀（防开放重定向）
+ * - 其他情况回退到 WEBSITE_BASE_URL
+ */
 function sanitizeReturnTo(returnTo: string | undefined): string {
+  const websiteBase = (process.env['WEBSITE_BASE_URL'] ?? '').replace(/\/$/, '');
+  const consoleBase = (process.env['CONSOLE_BASE_URL'] ?? '').replace(/\/$/, '');
+  const fallback = websiteBase || '/';
+
   if (!returnTo) {
-    return '/';
+    return fallback;
   }
 
-  // 只允许相对路径，或以已知域开头的绝对路径
   if (returnTo.startsWith('/') && !returnTo.startsWith('//')) {
     return returnTo;
   }
 
-  return '/';
+  for (const base of [websiteBase, consoleBase].filter(Boolean)) {
+    if (returnTo === base || returnTo.startsWith(base + '/')) {
+      return returnTo;
+    }
+  }
+
+  return fallback;
 }
 
 function resolveCookieDomain(): string | undefined {
@@ -193,22 +207,25 @@ export class DingtalkOAuthRouter {
 
     const secure = process.env['NODE_ENV'] === 'production';
     const domain = resolveCookieDomain();
+    const cookieBase = { httpOnly: true, sameSite: 'lax' as const, secure, path: '/', domain };
 
+    // website 登录态 cookie
     res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN, result.tokens.accessToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
+      ...cookieBase,
       maxAge: result.tokens.expiresIn * 1000,
     });
-
     res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN, result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
+      ...cookieBase,
+      maxAge: result.tokens.refreshExpiresIn * 1000,
+    });
+
+    // 同步写入 console 登录态 cookie（同一套账号体系，console 读 vx_console_* 键）
+    res.cookie(AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.ACCESS_TOKEN, result.tokens.accessToken, {
+      ...cookieBase,
+      maxAge: result.tokens.expiresIn * 1000,
+    });
+    res.cookie(AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.REFRESH_TOKEN, result.tokens.refreshToken, {
+      ...cookieBase,
       maxAge: result.tokens.refreshExpiresIn * 1000,
     });
 

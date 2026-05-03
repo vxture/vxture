@@ -7,6 +7,13 @@ import { ConsoleBffError } from '@/api/console-bff';
 import { ConsoleSessionProvider, useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { useConsoleTranslations } from '@/lib/console-intl';
 
+function buildDingTalkStartUrl(): string {
+  // 钉钉 OAuth 在 website-bff 实现（website + console 共用同一套账号体系）
+  const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/+$/, '');
+  const returnTo = typeof window !== 'undefined' ? window.location.origin + '/' : '/';
+  return `${apiUrl}/website-api/api/auth/oauth/dingtalk/start?returnTo=${encodeURIComponent(returnTo)}`;
+}
+
 function LoginScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -17,6 +24,10 @@ function LoginScreen() {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const handleDingTalkLogin = () => {
+    window.location.href = buildDingTalkStartUrl();
+  };
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -123,7 +134,7 @@ function LoginScreen() {
               <div className="auth-social" aria-label={t('social.label')}>
                 <span className="auth-social__divider">{t('social.divider')}</span>
                 <div className="auth-social__actions">
-                  <button type="button" className="auth-social__button" aria-label={t('social.dingtalk')} disabled>
+                  <button type="button" className="auth-social__button" aria-label={t('social.dingtalk')} onClick={handleDingTalkLogin}>
                     <span className="auth-provider-mark auth-provider-mark--dingtalk" aria-hidden="true" />
                     <span className="auth-provider-label">{t('social.dingtalkShort')}</span>
                   </button>
