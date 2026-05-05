@@ -6,9 +6,10 @@ import { SliderCaptcha } from '@/components/auth/SliderCaptcha';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationStore } from '@/stores/notification.store';
 import { useRouter } from '@/lib/i18n/navigation';
-import { forgotPassword } from '@/api/auth.api';
+import { useSearchParams } from 'next/navigation';
+import { forgotPassword, loginWithPhone, sendPhoneCode } from '@/api/auth.api';
 
-type AuthScreen = 'login' | 'forgot';
+type AuthScreen = 'login' | 'phone' | 'forgot';
 
 interface LoginFormProps {
   className?: string;
@@ -43,9 +44,17 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [localLoading, setLocalLoading] = useState(false);
 
+  // 手机验证码登录状态
+  const [phone, setPhone] = useState('');
+  const [phoneCode, setPhoneCode] = useState('');
+  const [phoneErrors, setPhoneErrors] = useState<Record<string, string>>({});
+  const [codeSending, setCodeSending] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+
   const { login, isLoading: authLoading } = useAuth();
   const { addNotification } = useNotificationStore();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const loading = localLoading || authLoading;
 
   useEffect(() => {
@@ -61,7 +70,59 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
   const openScreen = (nextScreen: AuthScreen) => {
     setScreen(nextScreen);
     setErrors({});
+    setPhoneErrors({});
     setResetSent(false);
+  };
+
+  // 发送手机验证码（含倒计时）
+  const handleSendCode = async () => {
+    if (!/^1[3-9]\d{9}$/.test(phone.trim())) {
+      setPhoneErrors({ phone: '请输入有效的中国大陆手机号' });
+      return;
+    }
+    setPhoneErrors({});
+    setCodeSending(true);
+    try {
+      await sendPhoneCode(phone.trim());
+      addNotification('验证码已发送，请查收短信', 'success');
+      setCountdown(60);
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      addNotification(error instanceof Error ? error.message : '验证码发送失败', 'error');
+    } finally {
+      setCodeSending(false);
+    }
+  };
+
+  // 手机验证码登录
+  const handlePhoneLogin = async (event: React.FormEvent) => {
+    event.preventDefault();
+    const nextErrors: Record<string, string> = {};
+    if (!/^1[3-9]\d{9}$/.test(phone.trim())) nextErrors.phone = '请输入有效的中国大陆手机号';
+    if (phoneCode.trim().length !== 6) nextErrors.code = '请输入 6 位验证码';
+    if (Object.keys(nextErrors).length > 0) {
+      setPhoneErrors(nextErrors);
+      return;
+    }
+    setPhoneErrors({});
+    setLocalLoading(true);
+    try {
+      await loginWithPhone(phone.trim(), phoneCode.trim());
+      addNotification('登录成功', 'success');
+      router.push((searchParams.get('next') ?? '/') as '/');
+    } catch (error) {
+      addNotification(error instanceof Error ? error.message : '登录失败，请稍后重试', 'error');
+    } finally {
+      setLocalLoading(false);
+    }
   };
 
   const validateLogin = () => {
@@ -99,12 +160,41 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
         window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
         window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
       }
+
+      // 通知浏览器保存凭据，下次可自动填充（Chrome/Edge 支持，Firefox/Safari 静默忽略）
+      const PasswordCredentialCtor = (window as Window & {
+        PasswordCredential?: new (data: { id: string; password: string }) => Credential;
+      }).PasswordCredential;
+      if (PasswordCredentialCtor) {
+        try {
+          await navigator.credentials.store(new PasswordCredentialCtor({ id: trimmedIdentifier, password }));
+        } catch {
+          // 隐私模式或用户拒绝时静默忽略
+        }
+      }
+
       addNotification('登录成功', 'success');
-      router.push('/');
+      router.push((searchParams.get('next') ?? '/') as '/');
     } catch (error) {
       addNotification(error instanceof Error ? error.message : '登录失败，请稍后重试', 'error');
     } finally {
       setLocalLoading(false);
+    }
+  };
+
+  const handleForgetMe = async () => {
+    setIdentifier('');
+    setPassword('');
+    setRememberLogin(false);
+    window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+    window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+    // 告知浏览器不再自动填充此站点凭据
+    if (navigator.credentials?.preventSilentAccess) {
+      try {
+        await navigator.credentials.preventSilentAccess();
+      } catch {
+        // 静默忽略
+      }
     }
   };
 
@@ -151,19 +241,60 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
                 onSubmit={handleForgotSubmit}
               />
             ) : (
-              <LoginPanel
-                identifier={identifier}
-                password={password}
-                rememberLogin={rememberLogin}
-                errors={errors}
-                loading={loading}
-                onChangeIdentifier={setIdentifier}
-                onChangePassword={setPassword}
-                onRememberLoginChange={setRememberLogin}
-                onForgot={() => openScreen('forgot')}
-                onRegister={() => router.push('/signup')}
-                onSubmit={handleSubmit}
-              />
+              <>
+                <div className='vx-auth-panel-heading'>
+                  <h1>欢迎回来</h1>
+                  <p>登录您的 vxture 工作区</p>
+                </div>
+
+                <div className='vx-auth-tabs'>
+                  <button
+                    type='button'
+                    className={`vx-auth-tab${screen === 'login' ? ' vx-auth-tab--active' : ''}`}
+                    onClick={() => openScreen('login')}
+                  >
+                    密码登录
+                  </button>
+                  <button
+                    type='button'
+                    className={`vx-auth-tab${screen === 'phone' ? ' vx-auth-tab--active' : ''}`}
+                    onClick={() => openScreen('phone')}
+                  >
+                    验证码登录
+                  </button>
+                </div>
+
+                {screen === 'phone' ? (
+                  <PhoneLoginPanel
+                    phone={phone}
+                    code={phoneCode}
+                    errors={phoneErrors}
+                    loading={localLoading}
+                    countdown={countdown}
+                    codeSending={codeSending}
+                    onChangePhone={setPhone}
+                    onChangeCode={setPhoneCode}
+                    onSendCode={handleSendCode}
+                    onSubmit={handlePhoneLogin}
+                    onRegister={() => router.push('/signup')}
+                  />
+                ) : (
+                  <LoginPanel
+                    identifier={identifier}
+                    password={password}
+                    rememberLogin={rememberLogin}
+                    errors={errors}
+                    loading={loading}
+                    onChangeIdentifier={setIdentifier}
+                    onChangePassword={setPassword}
+                    onRememberLoginChange={setRememberLogin}
+                    onForgot={() => openScreen('forgot')}
+                    onForgetMe={handleForgetMe}
+                    onRegister={() => router.push('/signup')}
+                    onSubmit={handleSubmit}
+                  />
+                )}
+              </>
             )}
           </div>
         </div>
@@ -219,6 +350,7 @@ function LoginPanel({
   onChangePassword,
   onRememberLoginChange,
   onForgot,
+  onForgetMe,
   onRegister,
   onSubmit,
 }: {
@@ -231,6 +363,7 @@ function LoginPanel({
   onChangePassword: (value: string) => void;
   onRememberLoginChange: (value: boolean) => void;
   onForgot: () => void;
+  onForgetMe: () => void;
   onRegister: () => void;
   onSubmit: (event: React.FormEvent) => void;
 }) {
@@ -244,11 +377,6 @@ function LoginPanel({
 
   return (
     <>
-      <div className='vx-auth-panel-heading'>
-        <h1>欢迎回来</h1>
-        <p>登录您的 vxture 工作区</p>
-      </div>
-
       <form onSubmit={onSubmit} autoComplete='on'>
         <Field
           label='邮箱'
@@ -284,9 +412,14 @@ function LoginPanel({
             />
             <span>记住登录信息</span>
           </label>
-          <button type='button' className='vx-auth-forgot-link' onClick={onForgot}>
-            忘记密码？
-          </button>
+          <div className='vx-auth-link-group'>
+            <button type='button' className='vx-auth-forgot-link' onClick={onForgot}>
+              忘记密码？
+            </button>
+            <button type='button' className='vx-auth-forget-me-link' onClick={onForgetMe} disabled={loading} title='清除浏览器保存的账号密码'>
+              忘记我
+            </button>
+          </div>
         </div>
 
         <PrimaryButton loading={loading} label='登录' loadingLabel='登录中...' />
@@ -301,6 +434,84 @@ function LoginPanel({
         </p>
       </form>
     </>
+  );
+}
+
+function PhoneLoginPanel({
+  phone,
+  code,
+  errors,
+  loading,
+  countdown,
+  codeSending,
+  onChangePhone,
+  onChangeCode,
+  onSendCode,
+  onSubmit,
+  onRegister,
+}: {
+  phone: string;
+  code: string;
+  errors: Record<string, string>;
+  loading: boolean;
+  countdown: number;
+  codeSending: boolean;
+  onChangePhone: (v: string) => void;
+  onChangeCode: (v: string) => void;
+  onSendCode: () => void;
+  onSubmit: (event: React.FormEvent) => void;
+  onRegister: () => void;
+}) {
+  return (
+    <form onSubmit={onSubmit} autoComplete='on'>
+      <div className='vx-auth-code-row'>
+        <Field
+          label='手机号'
+          name='phone'
+          type='tel'
+          placeholder='请输入手机号'
+          value={phone}
+          error={errors.phone}
+          autoComplete='tel'
+          autoFocus
+          disabled={loading}
+          onChange={onChangePhone}
+        />
+        <button
+          type='button'
+          className='vx-auth-send-code'
+          onClick={onSendCode}
+          disabled={loading || codeSending || countdown > 0}
+        >
+          {countdown > 0 ? `${countdown}s` : codeSending ? '发送中…' : '获取验证码'}
+        </button>
+      </div>
+
+      <div className='vx-auth-code-field-wrap'>
+        <Field
+          label='验证码'
+          name='code'
+          type='text'
+          placeholder='请输入 6 位验证码'
+          value={code}
+          error={errors.code}
+          autoComplete='one-time-code'
+          disabled={loading}
+          onChange={onChangeCode}
+        />
+      </div>
+
+      <PrimaryButton loading={loading} label='登录' loadingLabel='登录中...' />
+
+      <SocialLoginButtons />
+
+      <p className='vx-auth-switch'>
+        还没有账号？
+        <button type='button' onClick={onRegister}>
+          注册账号
+        </button>
+      </p>
+    </form>
   );
 }
 
@@ -414,16 +625,20 @@ function PrimaryButton({ loading, label, loadingLabel }: { loading: boolean; lab
   );
 }
 
-function buildDingTalkStartUrl(): string {
+function buildOAuthStartUrl(provider: 'dingtalk' | 'feishu'): string {
   const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/+$/, '');
   const apiPrefix = (process.env.NEXT_PUBLIC_WEBSITE_API_PREFIX ?? '/website-api').replace(/\/+$/, '');
   const returnTo = typeof window !== 'undefined' ? window.location.origin + '/' : '/';
-  return `${apiUrl}${apiPrefix}/api/auth/oauth/dingtalk/start?returnTo=${encodeURIComponent(returnTo)}`;
+  return `${apiUrl}${apiPrefix}/api/auth/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}`;
 }
 
 function SocialLoginButtons() {
   const handleDingTalk = () => {
-    window.location.href = buildDingTalkStartUrl();
+    window.location.href = buildOAuthStartUrl('dingtalk');
+  };
+
+  const handleFeishu = () => {
+    window.location.href = buildOAuthStartUrl('feishu');
   };
 
   return (
@@ -436,7 +651,7 @@ function SocialLoginButtons() {
       <div className='vx-auth-socials'>
         <SocialButton className='wechat' icon={<WechatIcon />} label='微信' disabled />
         <SocialButton className='dingtalk' icon={<DingTalkIcon />} label='钉钉' onClick={handleDingTalk} />
-        <SocialButton className='feishu' icon={<FeishuIcon />} label='飞书' disabled />
+        <SocialButton className='feishu' icon={<FeishuIcon />} label='飞书' onClick={handleFeishu} />
       </div>
     </>
   );

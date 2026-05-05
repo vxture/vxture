@@ -34,6 +34,36 @@ export interface AuthUserDto {
   tenantType?: 'individual' | 'company' | 'organization' | string | null;
 }
 
+export interface AccountProfileDto {
+  id: string;
+  username: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  headline: string | null;
+  bio: string | null;
+  email: string | null;
+  phone: string | null;
+  timezone: string | null;
+  language: string | null;
+  profileUpdatedAt: string | null;
+}
+
+export interface UpdateProfileRequest {
+  displayName?: string | null;
+  avatarUrl?: string | null;
+  headline?: string | null;
+  bio?: string | null;
+  timezone?: string | null;
+  language?: string | null;
+  email?: string | null;
+  phone?: string | null;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  nextPassword: string;
+}
+
 export interface LoginRequest {
   identifier: string;
   password: string;
@@ -64,6 +94,20 @@ export async function getProfile(): Promise<AuthUserDto> {
   return response.data;
 }
 
+export async function getUserProfile(): Promise<AccountProfileDto> {
+  const response = await apiClient.get<AccountProfileDto>('/api/me/profile');
+  return response.data;
+}
+
+export async function updateUserProfile(data: UpdateProfileRequest): Promise<AccountProfileDto> {
+  const response = await apiClient.put<AccountProfileDto>('/api/me/profile', data);
+  return response.data;
+}
+
+export async function changeUserPassword(data: ChangePasswordRequest): Promise<void> {
+  await apiClient.put('/api/me/password', data);
+}
+
 export async function forgotPassword(data: { email: string }): Promise<void> {
   await apiClient.post('/api/auth/forgot-password', data);
 }
@@ -74,5 +118,16 @@ export async function resetPassword(data: { token: string; newPassword: string }
 
 export async function initTenant(data: { type: 'individual' | 'organization' }): Promise<{ tenantId: string }> {
   const response = await apiClient.post<{ tenantId: string }>('/api/auth/tenant/init', data);
+  return response.data;
+}
+
+/** 发送手机验证码 */
+export async function sendPhoneCode(phone: string): Promise<void> {
+  await apiClient.post('/api/auth/send-phone-code', { phone });
+}
+
+/** 手机验证码登录 */
+export async function loginWithPhone(phone: string, code: string): Promise<AuthUserDto> {
+  const response = await apiClient.post<AuthUserDto>('/api/auth/login-with-phone', { phone, code });
   return response.data;
 }

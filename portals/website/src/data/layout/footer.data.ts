@@ -165,11 +165,11 @@ export const FOOTER_DATA: FooterData = {
     }
   ],
   legal: [
-    { href: '/terms-service', labelKey: 'legal.terms' },
-    { href: '/privacy-policy', labelKey: 'legal.privacy' },
-    { href: '/copyright-policy', labelKey: 'legal.copyright' },
-    { href: '/brand-policy', labelKey: 'legal.brand' },
-    { href: '/cookies-policy', labelKey: 'legal.cookies' }
+    { href: '/legal/terms', labelKey: 'legal.terms' },
+    { href: '/legal/privacy', labelKey: 'legal.privacy' },
+    { href: '/legal/copyright', labelKey: 'legal.copyright' },
+    { href: '/legal/brand', labelKey: 'legal.brand' },
+    { href: '/legal/cookies', labelKey: 'legal.cookies' }
   ],
   icp: {
     textKey: 'icp.text',

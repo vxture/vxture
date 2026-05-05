@@ -15,7 +15,7 @@
    处理：通过 PostCSS 和 @tailwindcss/postcss 插件处理
    注意：Tailwind v4 只需要单一的 @import "tailwindcss" 导入
    --------------------------------------------------------------------------- */
-@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800&family=Outfit:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Barlow:wght@600;700;800&family=Outfit:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap");
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
@@ -140,6 +140,11 @@
   --vx-auth-muted: #94a3b8;
   --vx-auth-error: #ef4444;
   --vx-auth-success: #10b981;
+  font-family: "Inter", "Noto Sans SC", system-ui, sans-serif;
+  font-feature-settings: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -152,6 +157,70 @@
   width: 100%;
   height: 64px;
   flex: 0 0 64px;
+}
+
+.vx-auth-header-inner {
+  max-width: 80rem;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .vx-auth-header-inner {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .vx-auth-header-inner {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .vx-auth-header-inner {
+    max-width: 96rem;
+  }
+}
+
+.vx-auth-brand {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.375rem;
+  text-decoration: none;
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.vx-auth-brand:hover {
+  opacity: 0.85;
+}
+
+.vx-auth-brand:focus-visible {
+  outline: none;
+  /* ring-2 ring-blue-500 ring-offset-2 ring-offset-transparent */
+  box-shadow: 0 0 0 2px transparent, 0 0 0 4px #3b82f6;
+}
+
+.vx-auth-brand-name {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.5rem;   /* text-2xl */
+  font-weight: 700;    /* font-bold */
+  line-height: 2rem;   /* text-2xl 附带的行高 */
+}
+
+.dark .vx-auth-brand-name {
+  color: #e2e8f0; /* dark:text-slate-200 */
 }
 
 .vx-auth-main {
@@ -433,6 +502,7 @@
 .vx-auth-terms a,
 .vx-auth-footer a,
 .vx-auth-forgot-link,
+.vx-auth-forget-me-link,
 .vx-captcha-refresh,
 .vx-captcha-close {
   border: 0;
@@ -443,10 +513,26 @@
   transition: color 0.2s ease;
 }
 
-.vx-auth-forgot-link {
+.vx-auth-link-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+}
+
+.vx-auth-forgot-link,
+.vx-auth-forget-me-link {
   flex: 0 0 auto;
   padding: 0;
   font-size: 12px;
+}
+
+.vx-auth-forget-me-link {
+  opacity: 0.6;
+}
+
+.vx-auth-forget-me-link:hover {
+  opacity: 1;
 }
 
 .vx-auth-switch button:hover,
@@ -454,6 +540,7 @@
 .vx-auth-terms a:hover,
 .vx-auth-footer a:hover,
 .vx-auth-forgot-link:hover,
+.vx-auth-forget-me-link:hover,
 .vx-captcha-refresh:hover,
 .vx-captcha-close:hover {
   color: var(--vx-auth-accent);
@@ -638,16 +725,115 @@
   color: var(--vx-auth-accent);
 }
 
+/* ── 登录方式 Tab 切换 ───────────────────────────────────────── */
+
+.vx-auth-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--vx-auth-border);
+  margin-bottom: 24px;
+}
+
+.vx-auth-tab {
+  flex: 1;
+  padding: 10px 0;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 13.5px;
+  color: var(--vx-auth-secondary);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.vx-auth-tab:hover:not(.vx-auth-tab--active) { color: var(--vx-auth-text); }
+
+.vx-auth-tab--active {
+  color: var(--vx-auth-accent);
+  border-bottom-color: var(--vx-auth-accent);
+  font-weight: 500;
+}
+
+/* ── 手机号输入行（输入框 + 发送按钮） ───────────────────────── */
+
+.vx-auth-code-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.vx-auth-code-row .vx-auth-field {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.vx-auth-send-code {
+  flex-shrink: 0;
+  margin-top: 29px;
+  padding: 0 14px;
+  height: 42px;
+  border: 1px solid var(--vx-auth-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--vx-auth-accent);
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.vx-auth-send-code:hover:not(:disabled) {
+  border-color: var(--vx-auth-accent);
+  background: rgba(37, 99, 235, 0.06);
+}
+
+.vx-auth-send-code:disabled {
+  cursor: not-allowed;
+  color: var(--vx-auth-muted);
+}
+
+.vx-auth-code-field-wrap { margin-top: 16px; }
+
 .vx-auth-footer {
   height: 52px;
   flex: 0 0 52px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
   color: var(--vx-auth-muted);
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.04em;
+}
+
+.vx-auth-footer-inner {
+  max-width: 80rem;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@media (min-width: 640px) {
+  .vx-auth-footer-inner {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .vx-auth-footer-inner {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .vx-auth-footer-inner {
+    max-width: 96rem;
+  }
 }
 
 .vx-auth-footer-links {
@@ -973,8 +1159,7 @@
     overflow: hidden;
   }
 
-  .vx-auth-header,
-  .vx-auth-footer {
+  .vx-auth-header {
     padding-right: 0;
     padding-left: 0;
   }
@@ -1014,8 +1199,12 @@
   .vx-auth-footer {
     height: auto;
     min-height: 52px;
+  }
+
+  .vx-auth-footer-inner {
     flex-wrap: wrap;
     gap: 10px;
+    height: auto;
     padding-top: 12px;
     padding-bottom: 12px;
   }
@@ -1074,5 +1263,186 @@
   .vx-signup-terms,
   .vx-signup-login {
     margin-top: 8px;
+  }
+}
+
+.vx-legal-page {
+  min-height: 70vh;
+  background:
+    linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 1));
+  color: #0f172a;
+}
+
+.vx-legal-container {
+  width: min(1120px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 88px 0 96px;
+}
+
+.vx-legal-hero {
+  max-width: 780px;
+  margin-bottom: 36px;
+}
+
+.vx-legal-hero > span,
+.vx-legal-breadcrumb {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #2563eb;
+}
+
+.vx-legal-hero h1 {
+  margin: 12px 0 16px;
+  font-size: clamp(2.3rem, 4vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.vx-legal-hero p {
+  margin: 0;
+  max-width: 720px;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: #475569;
+}
+
+.vx-legal-hero small {
+  display: inline-block;
+  margin-top: 18px;
+  color: #64748b;
+}
+
+.vx-legal-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.vx-legal-card {
+  display: flex;
+  min-height: 220px;
+  flex-direction: column;
+  gap: 12px;
+  padding: 22px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.vx-legal-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(37, 99, 235, 0.38);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.1);
+}
+
+.vx-legal-card span {
+  color: #2563eb;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.vx-legal-card strong {
+  font-size: 1.05rem;
+}
+
+.vx-legal-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+}
+
+.vx-legal-card small {
+  margin-top: auto;
+  color: #64748b;
+}
+
+.vx-legal-document {
+  max-width: 920px;
+}
+
+.vx-legal-breadcrumb {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 28px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.vx-legal-breadcrumb a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.vx-legal-document__hero {
+  margin-bottom: 24px;
+}
+
+.vx-legal-notice {
+  margin: 24px 0 36px;
+  padding: 18px 20px;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e3a8a;
+  line-height: 1.7;
+}
+
+.vx-legal-sections {
+  display: grid;
+  gap: 18px;
+}
+
+.vx-legal-section {
+  padding: 28px;
+  border: 1px solid rgba(15, 23, 42, 0.09);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.vx-legal-section h2 {
+  margin: 0 0 14px;
+  font-size: 1.35rem;
+  letter-spacing: 0;
+}
+
+.vx-legal-section p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.85;
+}
+
+.vx-legal-section p + p {
+  margin-top: 12px;
+}
+
+@media (max-width: 1040px) {
+  .vx-legal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .vx-legal-container {
+    width: min(100% - 28px, 1120px);
+    padding: 56px 0 72px;
+  }
+
+  .vx-legal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-legal-card {
+    min-height: 180px;
+  }
+
+  .vx-legal-section {
+    padding: 22px;
   }
 }

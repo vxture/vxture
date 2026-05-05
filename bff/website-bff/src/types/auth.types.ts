@@ -80,3 +80,63 @@ export interface RequestContext {
   user?: AuthUserDto;
   tenantId?: string;
 }
+
+// ── 账户 Profile DTO ─────────────────────────────────────────────────────────
+
+export interface AccountProfileDto {
+  id: string;
+  username: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  headline: string | null;
+  bio: string | null;
+  email: string | null;
+  phone: string | null;
+  timezone: string | null;
+  language: string | null;
+  profileUpdatedAt: string | null;
+}
+
+export class UpdateProfileDto {
+  @IsOptional()
+  @IsString()
+  displayName?: string | null;
+
+  @IsOptional()
+  @IsString()
+  avatarUrl?: string | null;
+
+  @IsOptional()
+  @IsString()
+  headline?: string | null;
+
+  @IsOptional()
+  @IsString()
+  bio?: string | null;
+
+  @IsOptional()
+  @IsString()
+  timezone?: string | null;
+
+  @IsOptional()
+  @IsString()
+  language?: string | null;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string | null;
+
+  @IsOptional()
+  @IsString()
+  phone?: string | null;
+}
+
+export class ChangePasswordDto {
+  @IsString()
+  @IsNotEmpty({ message: '当前密码不能为空' })
+  currentPassword!: string;
+
+  @IsString()
+  @MinLength(8, { message: '新密码至少 8 位字符' })
+  nextPassword!: string;
+}

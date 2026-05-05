@@ -27,14 +27,14 @@ const __dirname = dirname(__filename);
 //   turboAliases    → 相对路径，供 Turbopack（next dev --turbo）使用
 //
 // shared / core-locale / platform-browser 直接指向 src。
-// design-system 仍指向包根目录，沿用现有 dist 产物策略。
+// design-system 指向 dist 入口，沿用现有 dist 产物策略。
 
 // Webpack 用：绝对路径
 // 只保留 portal 层允许引用的包（shared / core-locale / design-system）
 const internalAliases = {
   '@vxture/shared':        join(__dirname, '../../packages/shared/shared/src'),
   '@vxture/core-locale':   join(__dirname, '../../packages/core/locale/src'),
-  '@vxture/design-system': join(__dirname, '../../packages/design/design-system'),
+  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/dist/index.mjs'),
   '@vxture/platform-browser': join(__dirname, '../../packages/platform/browser/src'),
 };
 
@@ -43,7 +43,7 @@ const internalAliases = {
 const turboAliases = {
   '@vxture/shared':        '../../packages/shared/shared/src',
   '@vxture/core-locale':   '../../packages/core/locale/src',
-  '@vxture/design-system': '../../packages/design/design-system',
+  '@vxture/design-system': '../../packages/design/design-system/dist/index.mjs',
   '@vxture/platform-browser': '../../packages/platform/browser/src',
 };
 

@@ -13,7 +13,7 @@ import { routing } from './routing';
 // ── 类型定义 ─────────────────────────────────────────────────────────────────
 
 /** 支持按需加载的页面标识 */
-type PageKey = 'home' | 'appcenter' | 'products' | 'solutions' | 'cases' | 'company' | 'auth';
+type PageKey = 'home' | 'appcenter' | 'products' | 'solutions' | 'cases' | 'company' | 'auth' | 'legal';
 
 /** namespace 条目：嵌套写入 key 和对应文件路径（不含 .json） */
 type NsEntry = { key: string; file: string };
@@ -33,6 +33,7 @@ const PAGE_NAMESPACE_MAP: Record<PageKey, NsEntry[]> = {
   solutions: [{ key: 'solutions', file: 'solutions' }],
   cases:     [{ key: 'cases',     file: 'cases' }],
   auth:      [{ key: 'auth',      file: 'auth' }],
+  legal:     [{ key: 'legal',     file: 'legal' }],
   company: [
     { key: 'company.about',   file: 'company/about' },
     { key: 'company.contact', file: 'company/contact' },
@@ -70,6 +71,7 @@ async function loadZhCN(file: string): Promise<Record<string, unknown>> {
     case 'products':       return (await import('@/../messages/zh-CN/products.json')).default as Record<string, unknown>;
     case 'solutions':      return (await import('@/../messages/zh-CN/solutions.json')).default as Record<string, unknown>;
     case 'cases':          return (await import('@/../messages/zh-CN/cases.json')).default as Record<string, unknown>;
+    case 'legal':          return (await import('@/../messages/zh-CN/legal.json')).default as Record<string, unknown>;
     // ── company ───────────────────────────────────────────────────────────────
     case 'company/about':   return (await import('@/../messages/zh-CN/company/about.json')).default as Record<string, unknown>;
     case 'company/contact': return (await import('@/../messages/zh-CN/company/contact.json')).default as Record<string, unknown>;
@@ -100,6 +102,7 @@ async function loadEnUS(file: string): Promise<Record<string, unknown>> {
     case 'products':       return (await import('@/../messages/en-US/products.json')).default as Record<string, unknown>;
     case 'solutions':      return (await import('@/../messages/en-US/solutions.json')).default as Record<string, unknown>;
     case 'cases':          return (await import('@/../messages/en-US/cases.json')).default as Record<string, unknown>;
+    case 'legal':          return (await import('@/../messages/en-US/legal.json')).default as Record<string, unknown>;
     // ── company ───────────────────────────────────────────────────────────────
     case 'company/about':   return (await import('@/../messages/en-US/company/about.json')).default as Record<string, unknown>;
     case 'company/contact': return (await import('@/../messages/en-US/company/contact.json')).default as Record<string, unknown>;

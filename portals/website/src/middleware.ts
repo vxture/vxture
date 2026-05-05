@@ -46,9 +46,14 @@ export function middleware(request: NextRequest) {
   const hasSession = request.cookies.has(AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN);
 
   // 认证重定向（在 intl 处理之前）
-  // 只保护 dashboard：无 session cookie 时跳转到登录页
+  // 只保护 dashboard：无 session cookie 时跳转到登录页，携带 next 参数供登录后回跳
   if (isProtectedRoute && !hasSession) {
-    return NextResponse.redirect(new URL(`${localePrefix}/signin`, request.url));
+    return NextResponse.redirect(
+      new URL(
+        `${localePrefix}/signin?next=${encodeURIComponent(normalizedPath)}`,
+        request.url,
+      ),
+    );
   }
 
   // 注意：不在 middleware 层拦截"已登录用户访问登录页"的情况

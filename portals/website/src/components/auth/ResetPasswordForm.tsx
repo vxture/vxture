@@ -57,7 +57,7 @@ export function ResetPasswordForm() {
     try {
       await resetPassword({ token, newPassword });
       setStep('done');
-    } catch (err) {
+    } catch {
       // token 无效或已过期
       setStep('invalid');
     } finally {

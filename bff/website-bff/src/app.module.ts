@@ -16,14 +16,19 @@ import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
 import { IamModule } from '@vxture/service-iam';
 import { MailModule } from '@vxture/service-mail';
+import { SmsModule } from '@vxture/service-sms';
 import { OrganizationModule } from '@vxture/service-organization';
 import { WebsiteAuthService } from './auth/auth.service';
+import { SessionAggregator } from './aggregators/session.aggregator';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { TenantMiddleware } from './middleware/tenant.middleware';
 import { AuthRouter } from './routers/auth.router';
 import { DingtalkOAuthRouter } from './routers/dingtalk-oauth.router';
+import { FeishuOAuthRouter } from './routers/feishu-oauth.router';
 import { HealthRouter } from './routers/health.router';
+import { MeRouter } from './routers/me.router';
 import { VerifyCodeRouter } from './routers/verifycode.router';
+import { PhoneAuthRouter } from './routers/phone-auth.router';
 
 @Module({
   imports: [
@@ -34,9 +39,10 @@ import { VerifyCodeRouter } from './routers/verifycode.router';
     IamModule,
     OrganizationModule,
     MailModule,
+    SmsModule,
   ],
-  controllers: [HealthRouter, AuthRouter, VerifyCodeRouter, DingtalkOAuthRouter],
-  providers: [WebsiteAuthService],
+  controllers: [HealthRouter, AuthRouter, VerifyCodeRouter, PhoneAuthRouter, DingtalkOAuthRouter, FeishuOAuthRouter, MeRouter],
+  providers: [WebsiteAuthService, SessionAggregator],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

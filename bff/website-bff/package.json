@@ -30,6 +30,7 @@
     "@vxture/service-iam": "workspace:*",
     "@vxture/service-organization": "workspace:*",
     "@vxture/service-mail": "workspace:*",
+    "@vxture/service-sms": "workspace:*",
     "cookie-parser": "^1.4.7",
     "express": "^4.22.1",
     "ioredis": "^5.0.0",

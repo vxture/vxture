@@ -197,7 +197,7 @@ export function SignupForm({ className = '' }: SignupFormProps) {
           <SocialRegisterButtons onSocialLogin={handleSocialLogin} />
 
           <p className='vx-signup-terms'>
-            注册即表示您同意 <a href='#terms'>服务条款</a> 与 <a href='#privacy'>隐私政策</a>
+            注册即表示您同意 <Link href='/legal/terms'>服务条款</Link> 与 <Link href='/legal/privacy'>隐私政策</Link>
           </p>
           <p className='vx-signup-login'>
             已有账号？

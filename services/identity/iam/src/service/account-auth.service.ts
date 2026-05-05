@@ -45,6 +45,23 @@ export class AccountAuthService {
     return this.repository.findById(accountId);
   }
 
+  /**
+   * 通过手机号查找账号（不验证密码，用于验证码登录场景）。
+   * 手机号不存在时返回 null，由调用方决定是否抛出业务错误。
+   */
+  async getAccountByPhone(phone: string): Promise<AuthenticatedAccountView | null> {
+    const record = await this.repository.findByIdentifier(phone.trim());
+    if (!record || !record.phone) {
+      return null;
+    }
+    return {
+      id: record.id,
+      username: record.username,
+      email: record.email,
+      phone: record.phone,
+    };
+  }
+
   async getAccountProfile(accountId: string): Promise<AccountProfileView | null> {
     return this.repository.getProfile(accountId);
   }

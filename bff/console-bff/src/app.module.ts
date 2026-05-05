@@ -3,7 +3,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
 import { MailModule } from '@vxture/core-mail';
 import { IamModule } from '@vxture/service-iam';
+import { SmsModule } from '@vxture/service-sms';
 import { OrganizationModule } from '@vxture/service-organization';
+import { BillingModule } from '@vxture/service-billing';
 import { SubscriptionModule } from '@vxture/service-subscription';
 import { ConsoleAuthService } from './auth/auth.service';
 import { SessionAggregator } from './aggregators/session.aggregator';
@@ -11,6 +13,8 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 import { PermissionMiddleware } from './middleware/permission.middleware';
 import { TenantMiddleware } from './middleware/tenant.middleware';
 import { AuthRouter } from './routers/auth.router';
+import { PhoneAuthRouter } from './routers/phone-auth.router';
+import { BillingRouter } from './routers/billing.router';
 import { CapabilitiesRouter } from './routers/capabilities.router';
 import { HealthRouter } from './routers/health.router';
 import { IamRouter } from './routers/iam.router';
@@ -26,10 +30,12 @@ import { TenantContextRouter } from './routers/tenant-context.router';
     JwtModule.register({}),
     MailModule,
     IamModule,
+    SmsModule,
     OrganizationModule,
+    BillingModule,
     SubscriptionModule,
   ],
-  controllers: [HealthRouter, AuthRouter, MeRouter, CapabilitiesRouter, TenantContextRouter, IamRouter, SubscriptionRouter],
+  controllers: [HealthRouter, AuthRouter, PhoneAuthRouter, MeRouter, CapabilitiesRouter, TenantContextRouter, IamRouter, SubscriptionRouter, BillingRouter],
   providers: [ConsoleAuthService, SessionAggregator],
 })
 export class AppModule implements NestModule {

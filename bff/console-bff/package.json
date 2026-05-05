@@ -25,7 +25,10 @@
     "@vxture/core-mail": "workspace:*",
     "@vxture/service-iam": "workspace:*",
     "@vxture/service-organization": "workspace:*",
+    "@vxture/service-sms": "workspace:*",
     "@vxture/service-subscription": "workspace:*",
+    "class-validator": "^0.14.0",
+    "class-transformer": "^0.5.0",
     "cookie-parser": "^1.4.7",
     "express": "^4.22.1",
     "reflect-metadata": "^0.2.0"

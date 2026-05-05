@@ -13,6 +13,41 @@ import type {
 } from '@/entities/console';
 import { aiModelGrantRecords, aiModelRecords, anonymousSession } from '@/shared/mock-console-data';
 
+// ── 订阅与账单 DTO（与 BFF 响应结构对齐）────────────────────────────────────
+
+export interface ConsoleSubscription {
+  id: string;
+  tenantId: string;
+  planId: string;
+  planName: string;
+  status: string;
+  price: number;
+  currency: string;
+  cycle: string;
+  nextBillingDate: string;
+  autoRenew: boolean;
+  isTrial: boolean;
+}
+
+export interface ConsoleInvoice {
+  id: string;
+  invoiceNumber: string;
+  status: string;
+  totalAmount: number;
+  currency: string;
+  dueDate: string;
+  lineItems: Array<{ description: string; quantity: number; unitPrice: number; amount: number }>;
+}
+
+export interface ConsoleBillingOverview {
+  totalInvoices: number;
+  paidInvoices: number;
+  pendingInvoices: number;
+  overdueInvoices: number;
+  totalRevenue: number;
+  activeSubscriptions: number;
+}
+
 function normalizeOrigin(value: string | undefined): string {
   const normalized = value?.trim().replace(/\/+$/, '');
   if (!normalized) {
@@ -400,6 +435,20 @@ export async function unlinkMember(memberId: string, tenantId?: string) {
   }
 }
 
+export async function fetchMySubscriptions(tenantId?: string): Promise<ConsoleSubscription[]> {
+  return readJson<ConsoleSubscription[]>(withTenant('/api/subscription/my', tenantId), []);
+}
+
+export async function fetchBillingInvoices(tenantId?: string, limit = 20): Promise<ConsoleInvoice[]> {
+  const params = new URLSearchParams({ limit: String(limit) });
+  if (tenantId) params.set('tenantId', tenantId);
+  return readJson<ConsoleInvoice[]>(`/api/billing/invoices?${params.toString()}`, []);
+}
+
+export async function fetchBillingOverview(tenantId?: string): Promise<ConsoleBillingOverview | null> {
+  return readJson<ConsoleBillingOverview | null>(withTenant('/api/billing/overview', tenantId), null);
+}
+
 export async function fetchUserProfile(): Promise<ConsoleUserProfile | null> {
   return readJson<ConsoleUserProfile | null>('/api/me/profile', null);
 }
@@ -528,6 +577,78 @@ export async function login(payload: LoginPayload, tenantId?: string): Promise<S
   }
 
   return snapshot;
+}
+
+/** 发送手机验证码 */
+export async function sendPhoneCode(phone: string): Promise<void> {
+  let response: Response;
+  try {
+    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/send-phone-code`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone }),
+    });
+  } catch {
+    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+  }
+
+  if (!response.ok) {
+    let message = '发送验证码失败';
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      if (Array.isArray(body.message)) message = body.message[0] ?? message;
+      else if (body.message) message = body.message;
+    } catch { /* 忽略 */ }
+    throw new ConsoleBffError(message, response.status);
+  }
+}
+
+/** 手机验证码登录 */
+export async function loginWithPhone(payload: { phone: string; code: string }, tenantId?: string): Promise<SessionSnapshot> {
+  let response: Response;
+  try {
+    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/login-with-phone`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+  }
+
+  if (!response.ok) {
+    let message = '登录失败';
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      if (Array.isArray(body.message)) message = body.message[0] ?? message;
+      else if (body.message) message = body.message;
+    } catch { /* 忽略 */ }
+    throw new ConsoleBffError(message, response.status);
+  }
+
+  const snapshot = await restoreSession(tenantId);
+  if (!snapshot.isAuthenticated) {
+    throw new ConsoleBffError('Authenticated session could not be restored after login.', 500);
+  }
+  return snapshot;
+}
+
+export async function forgotPassword(payload: { email: string }): Promise<void> {
+  try {
+    await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/forgot-password`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    // 防止邮箱枚举，忽略所有错误
+  }
 }
 
 export async function logout() {

@@ -21,6 +21,7 @@ import { useTheme, Icon } from "@vxture/design-system";
 import { debugLog } from "@vxture/shared";
 import Image from 'next/image';
 import { FOOTER_DATA } from "@/data/layout/footer.data";
+import { Link } from '@/lib/i18n/navigation';
 
 export default function Footer() {
   const { theme } = useTheme();
@@ -210,19 +211,13 @@ export default function Footer() {
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 justify-end">
               {FOOTER_DATA.legal?.length > 0 &&
                 FOOTER_DATA.legal.map((link) => (
-                  <a
+                  <Link
                     key={link.href}
                     href={link.href}
                     className="hover:text-blue-600 transition-colors whitespace-nowrap"
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={
-                      link.href.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
                   >
                     {t(link.labelKey)}
-                  </a>
+                  </Link>
                 ))}
               {t(FOOTER_DATA.icp.textKey) && (
                 <a

@@ -303,6 +303,67 @@ export class WebsiteAuthService {
     };
   }
 
+  /**
+   * 手机验证码登录：验证码已在路由层核验，此处仅负责账号查找与 JWT 签发。
+   * 手机号未注册时返回 null，路由层应抛出 401。
+   */
+  async loginWithPhoneCode(phone: string): Promise<{
+    tokens: AuthTokenPair;
+    user: AuthUserDto;
+  } | null> {
+    const account = await this.accountAuthService.getAccountByPhone(phone);
+    if (!account) {
+      return null;
+    }
+
+    const accessPayload: Omit<JwtAccessPayload, 'iat' | 'exp'> = {
+      sub: account.id,
+      tenantId: '',
+      email: account.email ?? `${account.username}@local.vxture`,
+      role: 'member',
+      userType: JwtUserType.TENANT_USER,
+      permissions: [],
+      provider: OAuthProviderType.PASSWORD,
+    };
+
+    const refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'> = {
+      sub: account.id,
+      tenantId: '',
+      jti: `${account.id}:${Date.now()}`,
+    };
+
+    const tokens: AuthTokenPair = {
+      accessToken: this.jwtService.sign(accessPayload, {
+        secret: this.configService.auth.JWT_SECRET,
+        expiresIn: this.configService.auth.JWT_ACCESS_EXPIRES_IN as never,
+      }),
+      refreshToken: this.jwtService.sign(refreshPayload, {
+        secret: this.configService.auth.JWT_SECRET,
+        expiresIn: this.configService.auth.JWT_REFRESH_EXPIRES_IN as never,
+      }),
+      expiresIn: parseExpiresToSeconds(this.configService.auth.JWT_ACCESS_EXPIRES_IN),
+      refreshExpiresIn: parseExpiresToSeconds(this.configService.auth.JWT_REFRESH_EXPIRES_IN),
+    };
+
+    const profile = await this.accountAuthService.getAccountProfile(account.id);
+
+    return {
+      tokens,
+      user: {
+        id: account.id,
+        name: account.username,
+        displayName: profile?.displayName ?? null,
+        username: account.username,
+        email: account.email ?? `${account.username}@local.vxture`,
+        phone: account.phone,
+        role: 'member',
+        roleLabel: 'Member',
+        personalVerified: true,
+        organizationVerified: false,
+      },
+    };
+  }
+
   verifyAccessToken(token: string) {
     return this.jwtService.verify<JwtAccessPayload>(token, {
       secret: this.configService.auth.JWT_SECRET,
