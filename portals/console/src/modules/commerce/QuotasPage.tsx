@@ -1,9 +1,10 @@
 import { ActionButton } from '@/modules/shared/ActionButton';
-import { quotaMetrics, quotaRows } from '@/shared/mock-console-data';
-import { MetricGrid } from '@/modules/shared/MetricGrid';
 import { PageHeader } from '@/modules/shared/PageHeader';
-import { TableToolbar } from '@/modules/shared/TableToolbar';
 import { DashboardSplit, PageSection, SignalList } from '@/layout/shell';
+
+// ============================================================================
+// QuotasPage
+// ============================================================================
 
 const quotaSignals = [
   {
@@ -26,8 +27,6 @@ export function QuotasPage() {
         action={<ActionButton icon="warning">Adjust alert policy</ActionButton>}
       />
 
-      <MetricGrid items={quotaMetrics} />
-
       <DashboardSplit>
         <PageSection title="Quota posture" description="Lead with the pools that need human attention before expanding into raw usage rows." tone="muted">
           <SignalList items={quotaSignals} />
@@ -42,23 +41,10 @@ export function QuotasPage() {
         </PageSection>
       </DashboardSplit>
 
-      <PageSection title="Quota pools" description="Core pools stay within 5 to 7 columns so scanning remains fast.">
-        <TableToolbar title="3 shared resource pools" hint="Usage, share, and health stay visible in one scan line." />
-        <div className="vx-table">
-          <div className="vx-table__header vx-table__row">
-            <span>Pool</span>
-            <span>Usage</span>
-            <span>Share</span>
-            <span>Status</span>
-          </div>
-          {quotaRows.map((row) => (
-            <div key={row[0]} className="vx-table__row">
-              {row.map((cell) => (
-                <span key={cell}>{cell}</span>
-              ))}
-            </div>
-          ))}
-        </div>
+      <PageSection title="Quota pools" description="Real-time quota usage data will be available after your first billing cycle.">
+        <p className="vx-empty-hint">
+          Quota pool data is not yet available. Usage metering is activated once your subscription is provisioned and your first workload runs.
+        </p>
       </PageSection>
     </div>
   );

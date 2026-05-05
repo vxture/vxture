@@ -14,7 +14,7 @@ import {
   updateMember,
 } from '@/api/console-bff';
 import type { MemberRecord, TenantRoleRecord } from '@/entities/console';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useTranslations } from 'next-intl';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { EmptyState } from '@/modules/shared/EmptyState';
@@ -47,7 +47,7 @@ function memberSearchText(member: MemberRecord) {
 }
 
 export function MembersPage() {
-  const t = useConsoleTranslations('membersPage');
+  const t = useTranslations('membersPage');
   const { session } = useConsoleSession();
   const [members, setMembers] = useState<MemberRecord[]>([]);
   const [roles, setRoles] = useState<TenantRoleRecord[]>([]);

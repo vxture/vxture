@@ -2,8 +2,8 @@
 
 import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { usePathname } from '@/lib/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { AssistantPanel } from './AssistantPanel';
 import { getShellLayoutMode } from './config';
 import { Header } from './Header';
@@ -49,7 +49,7 @@ function getAssistantMaxWidth(sidebarCollapsed: boolean) {
 
 export function AppShell({ children, endPanel }: { children: ReactNode; endPanel?: ReactNode }) {
   const pathname = usePathname();
-  const routeLabels = useConsoleTranslations('routes');
+  const routeLabels = useTranslations('routes');
   const layoutMode = getShellLayoutMode(pathname);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [assistantOpen, setAssistantOpen] = useState(layoutMode.assistantDefaultOpen);

@@ -6,7 +6,7 @@ import { changeUserPassword, fetchUserProfile, updateUserProfile } from '@/api/c
 import { Avatar, Badge, Button, Input, Label } from '@/components/ui/primitives';
 import type { ConsoleUserProfile } from '@/entities/console';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { useConsoleLocale, useConsoleTranslations } from '@/lib/console-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
 
@@ -135,8 +135,8 @@ function maskConnectedAccountId(value: string | null) {
 }
 
 export function ProfilePage() {
-  const t = useConsoleTranslations('profilePage');
-  const locale = useConsoleLocale();
+  const t = useTranslations('profilePage');
+  const locale = useLocale();
   const { session, refreshSession } = useConsoleSession();
   const [profile, setProfile] = useState<ConsoleUserProfile | null>(null);
   const [loading, setLoading] = useState(true);

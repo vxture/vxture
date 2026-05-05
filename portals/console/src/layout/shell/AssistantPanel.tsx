@@ -3,7 +3,7 @@
 import { Icon } from '@vxture/design-system';
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { Button, Badge } from '@/components/ui/primitives';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useTranslations } from 'next-intl';
 
 const ASSISTANT_BAR_HEIGHT = 44;
 const ASSISTANT_OUTPUT_MIN_HEIGHT = 180;
@@ -38,7 +38,7 @@ export function AssistantPanel({
   onWidthChange: (width: number) => void;
   onClose: () => void;
 }) {
-  const t = useConsoleTranslations('assistant');
+  const t = useTranslations('assistant');
   const panelRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const [draft, setDraft] = useState('');

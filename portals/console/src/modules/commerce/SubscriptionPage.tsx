@@ -1,17 +1,72 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/primitives';
-import { subscriptionHighlights, invoiceRows } from '@/shared/mock-console-data';
+import { fetchBillingInvoices, fetchMySubscriptions, type ConsoleInvoice, type ConsoleSubscription } from '@/api/console-bff';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
+import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { DashboardSplit, PageSection, SignalList, SummaryStrip } from '@/layout/shell';
+import type { ModuleCardStat } from '@/entities/console';
 
-const includedCapabilities = [
-  '120 workspace seats with pooled operator access',
-  '12M monthly inference requests across shared production environments',
-  'Enterprise support with quarterly architecture review',
-];
+// ============================================================================
+// 数据格式化工具
+// ============================================================================
+
+function formatDate(dateStr: string): string {
+  try {
+    return new Date(dateStr).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
+function formatAmount(amount: number, currency = 'CNY'): string {
+  return currency === 'CNY' ? `¥${amount.toLocaleString()}` : `${currency} ${amount.toLocaleString()}`;
+}
+
+function buildSummaryItems(subscriptions: ConsoleSubscription[]): ModuleCardStat[] {
+  const active = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
+  if (!active) {
+    return [
+      { label: 'Plan', value: '—', hint: 'No active subscription.' },
+      { label: 'Renewal', value: '—', hint: '—' },
+      { label: 'Billing', value: '—', hint: '—' },
+    ];
+  }
+
+  return [
+    {
+      label: 'Plan',
+      value: active.planName,
+      hint: `${formatAmount(active.price, active.currency)} / ${active.cycle}`,
+    },
+    {
+      label: 'Renewal',
+      value: formatDate(active.nextBillingDate),
+      hint: active.autoRenew ? 'Auto-renew enabled' : 'Will not auto-renew',
+    },
+    {
+      label: 'Status',
+      value: active.status.charAt(0).toUpperCase() + active.status.slice(1),
+      hint: active.isTrial ? 'Trial period active' : 'Paid subscription',
+    },
+  ];
+}
+
+function buildInvoiceRows(invoices: ConsoleInvoice[]): string[][] {
+  return invoices.map((inv) => [
+    inv.invoiceNumber,
+    formatDate(inv.dueDate),
+    inv.lineItems[0]?.description ?? '—',
+    inv.status.charAt(0).toUpperCase() + inv.status.slice(1),
+    formatAmount(inv.totalAmount, inv.currency),
+  ]);
+}
+
+// ============================================================================
+// SubscriptionPage
+// ============================================================================
 
 const changePlanningNotes = [
   {
@@ -20,7 +75,7 @@ const changePlanningNotes = [
   },
   {
     title: 'Renewal note',
-    body: 'Seats can still be adjusted before the invoice locks on May 10, 2026.',
+    body: 'Seats can still be adjusted before the invoice locks on the next billing date.',
   },
 ];
 
@@ -36,43 +91,45 @@ const paymentMethods = [
 ];
 
 export function SubscriptionPage() {
+  const { session } = useConsoleSession();
   const [tab, setTab] = useState<'overview' | 'billing' | 'payments'>('overview');
-  const summaryItems = subscriptionHighlights.map((stat) => ({
-    label: stat.label,
-    value: stat.value,
-    hint: stat.hint,
-  }));
-  const planningSignals = changePlanningNotes.map((note) => ({
-    title: note.title,
-    description: note.body,
-  }));
-  const includedSignals = includedCapabilities.map((item) => ({
-    title: item,
-  }));
+  const [subscriptions, setSubscriptions] = useState<ConsoleSubscription[]>([]);
+  const [invoices, setInvoices] = useState<ConsoleInvoice[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      fetchMySubscriptions(session.tenant?.id),
+      fetchBillingInvoices(session.tenant?.id, 10),
+    ])
+      .then(([subs, invs]) => {
+        setSubscriptions(subs);
+        setInvoices(invs);
+      })
+      .finally(() => setLoading(false));
+  }, [session.tenant?.id]);
+
+  const summaryItems = buildSummaryItems(subscriptions);
+  const invoiceRows = buildInvoiceRows(invoices);
+  const planningSignals = changePlanningNotes.map((note) => ({ title: note.title, description: note.body }));
+  const paymentSignals = paymentMethods.map((method) => ({ title: method.title, description: method.body }));
+
+  const activeSubscription = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
+
   const postureSignals = [
     {
-      title: 'Projected overage',
-      description: 'Current model traffic projects a moderate monthly overage, but still below contract expansion threshold.',
-    },
-    {
       title: 'Invoice readiness',
-      description: 'Finance contact and payment routing are healthy, so renewal can proceed without manual intervention.',
+      description: 'Finance contact and payment routing are configured, renewal can proceed without manual intervention.',
     },
   ];
+
   const chargeSignals = [
     {
       title: 'Overage driver',
       description: 'Most variable spend comes from burst model access rather than additional seat growth.',
     },
-    {
-      title: 'Recommended review',
-      description: 'Compare projected May usage with current plan limits before approving another fine-tune workload.',
-    },
   ];
-  const paymentSignals = paymentMethods.map((method) => ({
-    title: method.title,
-    description: method.body,
-  }));
 
   return (
     <div className="vx-page-stack">
@@ -100,29 +157,34 @@ export function SubscriptionPage() {
       {tab === 'overview' ? (
         <DashboardSplit>
           <PageSection title="Current package" description="A modern SaaS billing page starts with the plan, not the table.">
-            <div className="vx-subscription-panel">
-              <div className="vx-stack-sm">
-                <div className="vx-inline-between">
-                  <strong>Growth annual</strong>
-                  <Badge className="vx-badge-positive">Healthy</Badge>
+            {loading ? (
+              <p className="vx-empty-hint">Loading subscription…</p>
+            ) : activeSubscription ? (
+              <div className="vx-subscription-panel">
+                <div className="vx-stack-sm">
+                  <div className="vx-inline-between">
+                    <strong>{activeSubscription.planName}</strong>
+                    <Badge className="vx-badge-positive">{activeSubscription.status}</Badge>
+                  </div>
+                  <div className="vx-detail-grid">
+                    <div>
+                      <span>Renewal</span>
+                      <strong>{formatDate(activeSubscription.nextBillingDate)}</strong>
+                    </div>
+                    <div>
+                      <span>Price</span>
+                      <strong>{formatAmount(activeSubscription.price, activeSubscription.currency)} / {activeSubscription.cycle}</strong>
+                    </div>
+                  </div>
                 </div>
-                <p>120 seats, 12M inference requests, pooled quota alerts, and enterprise support.</p>
-                <div className="vx-detail-grid">
-                  <div>
-                    <span>Renewal window</span>
-                    <strong>May 18, 2026</strong>
-                  </div>
-                  <div>
-                    <span>Billing mode</span>
-                    <strong>Annual + monthly overage</strong>
-                  </div>
+                <div className="vx-detail-actions">
+                  <ActionButton variant="outline" icon="chart-bar">Compare tiers</ActionButton>
+                  <ActionButton variant="outline" icon="calendar">Preview renewal</ActionButton>
                 </div>
               </div>
-              <div className="vx-detail-actions">
-                <ActionButton variant="outline" icon="chart-bar">Compare tiers</ActionButton>
-                <ActionButton variant="outline" icon="calendar">Preview renewal</ActionButton>
-              </div>
-            </div>
+            ) : (
+              <p className="vx-empty-hint">No active subscription found.</p>
+            )}
           </PageSection>
 
           <PageSection title="Change planning" description="Keep upgrade or downgrade actions available, but visually secondary to the current state." tone="muted">
@@ -133,10 +195,6 @@ export function SubscriptionPage() {
 
       {tab === 'overview' ? (
         <DashboardSplit>
-          <PageSection title="Included in this plan" description="Summarize what operators are actually buying instead of repeating invoice language.">
-            <SignalList items={includedSignals} />
-          </PageSection>
-
           <PageSection title="Billing posture" description="Keep payment context available without turning subscription into a finance page." tone="muted">
             <SignalList items={postureSignals} />
           </PageSection>
@@ -146,22 +204,28 @@ export function SubscriptionPage() {
       {tab === 'billing' ? (
         <DashboardSplit>
           <PageSection title="Recent charges" description="Invoices and overage records remain secondary to the subscription overview.">
-            <div className="vx-table">
-              <div className="vx-table__header vx-table__row">
-                <span>Invoice</span>
-                <span>Date</span>
-                <span>Scope</span>
-                <span>Status</span>
-                <span>Amount</span>
-              </div>
-              {invoiceRows.map((row) => (
-                <div key={row[0]} className="vx-table__row">
-                  {row.map((cell) => (
-                    <span key={cell}>{cell}</span>
-                  ))}
+            {loading ? (
+              <p className="vx-empty-hint">Loading invoices…</p>
+            ) : invoiceRows.length > 0 ? (
+              <div className="vx-table">
+                <div className="vx-table__header vx-table__row">
+                  <span>Invoice</span>
+                  <span>Date</span>
+                  <span>Scope</span>
+                  <span>Status</span>
+                  <span>Amount</span>
                 </div>
-              ))}
-            </div>
+                {invoiceRows.map((row) => (
+                  <div key={row[0]} className="vx-table__row">
+                    {row.map((cell, idx) => (
+                      <span key={idx}>{cell}</span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="vx-empty-hint">No invoices found.</p>
+            )}
           </PageSection>
 
           <PageSection title="Charge guidance" description="Explain what changed and what operators need to review next." tone="muted">

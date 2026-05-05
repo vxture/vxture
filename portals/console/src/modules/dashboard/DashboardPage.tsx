@@ -1,27 +1,72 @@
 'use client';
 
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { Link } from '@/lib/i18n/navigation';
 import { Icon, type IconName } from '@vxture/design-system';
 import { Badge } from '@/components/ui/primitives';
-import { invoiceRows, quotaRows } from '@/shared/mock-console-data';
+import { fetchBillingInvoices, type ConsoleInvoice } from '@/api/console-bff';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
 import { TableToolbar } from '@/modules/shared/TableToolbar';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
+import { useTranslations } from 'next-intl';
 import { DashboardSplit, PageSection, SignalList, SummaryStrip } from '@/layout/shell';
 
+// ============================================================================
+// 数据格式化工具
+// ============================================================================
+
+function formatDate(dateStr: string): string {
+  try {
+    return new Date(dateStr).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
+function formatAmount(amount: number, currency = 'CNY'): string {
+  return currency === 'CNY' ? `¥${amount.toLocaleString()}` : `${currency} ${amount.toLocaleString()}`;
+}
+
+function buildInvoiceRows(invoices: ConsoleInvoice[]): string[][] {
+  return invoices.map((inv) => [
+    inv.invoiceNumber,
+    formatDate(inv.dueDate),
+    inv.lineItems[0]?.description ?? '—',
+    inv.status.charAt(0).toUpperCase() + inv.status.slice(1),
+    formatAmount(inv.totalAmount, inv.currency),
+  ]);
+}
+
+// ============================================================================
+// DashboardPage
+// ============================================================================
+
 export function DashboardPage() {
-  const t = useConsoleTranslations('dashboard');
+  const { session } = useConsoleSession();
+  const t = useTranslations('dashboard');
+  const [invoices, setInvoices] = useState<ConsoleInvoice[]>([]);
+  const [invoicesLoading, setInvoicesLoading] = useState(true);
+
+  useEffect(() => {
+    setInvoicesLoading(true);
+    fetchBillingInvoices(session.tenant?.id, 5)
+      .then(setInvoices)
+      .finally(() => setInvoicesLoading(false));
+  }, [session.tenant?.id]);
+
   const dashboardStats = [
     { id: 'plan', icon: 'medal' },
     { id: 'quota', icon: 'chart-bar' },
     { id: 'reminders', icon: 'warning' },
   ] as const;
+
   const quickActions = [
     { id: 'addMember', href: '/members', icon: 'users' },
     { id: 'reviewSubscription', href: '/subscription', icon: 'chart-bar' },
     { id: 'adjustQuotas', href: '/quotas', icon: 'database' },
   ] as const;
+
   const summaryItems = dashboardStats.map((stat) => ({
     label: t(`stats.${stat.id}.label`),
     value: t(`stats.${stat.id}.value`),
@@ -32,6 +77,7 @@ export function DashboardPage() {
       </span>
     ),
   }));
+
   const signalItems = [
     {
       title: t('signals.billing.title'),
@@ -46,6 +92,8 @@ export function DashboardPage() {
       description: t('signals.access.description'),
     },
   ];
+
+  const invoiceRows = buildInvoiceRows(invoices);
 
   return (
     <div className="vx-page-stack">
@@ -94,48 +142,40 @@ export function DashboardPage() {
 
       <PageSection title={t('invoices.title')} description={t('invoices.description')}>
         <TableToolbar
-          title="Growth annual / overage"
+          title={invoicesLoading ? 'Loading…' : `${invoiceRows.length} recent invoices`}
           hint={t('invoices.headers.scope')}
           action={
-            <ActionButton variant="outline" icon="warning">
+            <ActionButton variant="outline" icon="arrow-right">
               {t('signals.billing.title')}
             </ActionButton>
           }
         />
-        <div className="vx-table">
-          <div className="vx-table__header vx-table__row">
-            <span>{t('invoices.headers.invoice')}</span>
-            <span>{t('invoices.headers.date')}</span>
-            <span>{t('invoices.headers.scope')}</span>
-            <span>{t('invoices.headers.status')}</span>
-            <span>{t('invoices.headers.amount')}</span>
-          </div>
-          {invoiceRows.map((row) => (
-            <div key={row[0]} className="vx-table__row">
-              {row.map((cell) => (
-                <span key={cell}>{cell}</span>
-              ))}
+        {invoicesLoading ? (
+          <p className="vx-empty-hint">Loading invoices…</p>
+        ) : invoiceRows.length > 0 ? (
+          <div className="vx-table">
+            <div className="vx-table__header vx-table__row">
+              <span>{t('invoices.headers.invoice')}</span>
+              <span>{t('invoices.headers.date')}</span>
+              <span>{t('invoices.headers.scope')}</span>
+              <span>{t('invoices.headers.status')}</span>
+              <span>{t('invoices.headers.amount')}</span>
             </div>
-          ))}
-        </div>
+            {invoiceRows.map((row) => (
+              <div key={row[0]} className="vx-table__row">
+                {row.map((cell, idx) => (
+                  <span key={idx}>{cell}</span>
+                ))}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="vx-empty-hint">No invoices found.</p>
+        )}
       </PageSection>
 
       <PageSection title={t('quotas.title')} description={t('quotas.description')} tone="muted">
-        <div className="vx-table">
-          <div className="vx-table__header vx-table__row">
-            <span>{t('quotas.headers.pool')}</span>
-            <span>{t('quotas.headers.usage')}</span>
-            <span>{t('quotas.headers.share')}</span>
-            <span>{t('quotas.headers.status')}</span>
-          </div>
-          {quotaRows.map((row) => (
-            <div key={row[0]} className="vx-table__row">
-              {row.map((cell) => (
-                <span key={cell}>{cell}</span>
-              ))}
-            </div>
-          ))}
-        </div>
+        <p className="vx-empty-hint">Quota monitoring is not yet available. Check back after your first billing cycle.</p>
       </PageSection>
     </div>
   );

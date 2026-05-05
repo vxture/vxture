@@ -1,17 +1,16 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/lib/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { navigationSections } from '@/config/navigation';
 import { hasCapability } from '@/features/permissions/can';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { Icon } from '@vxture/design-system';
-import { useConsoleTranslations } from '@/lib/console-intl';
 
 export function ConsoleSidebar() {
   const pathname = usePathname();
   const { session } = useConsoleSession();
-  const t = useConsoleTranslations('sidebar');
+  const t = useTranslations('sidebar');
 
   return (
     <aside className="console-sidebar">

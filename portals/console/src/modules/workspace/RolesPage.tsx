@@ -12,7 +12,7 @@ import {
 } from '@/api/console-bff';
 import type { TenantPermissionRecord, TenantRoleRecord } from '@/entities/console';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { EmptyState } from '@/modules/shared/EmptyState';
 import { PageHeader } from '@/modules/shared/PageHeader';
@@ -41,7 +41,7 @@ function roleSearchText(role: TenantRoleRecord) {
 }
 
 export function RolesPage() {
-  const t = useConsoleTranslations('rolesPage');
+  const t = useTranslations('rolesPage');
   const { session } = useConsoleSession();
   const [roles, setRoles] = useState<TenantRoleRecord[]>([]);
   const [permissions, setPermissions] = useState<TenantPermissionRecord[]>([]);

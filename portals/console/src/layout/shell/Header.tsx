@@ -2,11 +2,11 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
+import { useLocale, useTranslations } from 'next-intl';
 import { useTheme, Icon } from '@vxture/design-system';
 import { Avatar, AvatarFallback, Input } from '@/components/ui/primitives';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { useConsoleLocale, useConsoleTranslations } from '@/lib/console-intl';
 import { getGlobalUserPreferences, setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
 import type { Locale, Theme } from '@vxture/shared';
 
@@ -20,11 +20,13 @@ export function Header({
   onToggleAssistant: () => void;
 }) {
   const { session } = useConsoleSession();
-  const locale = useConsoleLocale();
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [launcherOpen, setLauncherOpen] = useState(false);
   const launcherRef = useRef<HTMLDivElement>(null);
-  const t = useConsoleTranslations('header');
+  const t = useTranslations('header');
   const currentTheme = (theme ?? getGlobalUserPreferences().theme) as Theme;
   const nextTheme: Theme = currentTheme === 'dark' ? 'light' : 'dark';
   const nextLocale: Locale = locale === 'zh-CN' ? 'en-US' : 'zh-CN';
@@ -153,6 +155,7 @@ export function Header({
             title={t('toggleLanguage')}
             onClick={() => {
               setGlobalLocalePreference(nextLocale);
+              router.replace(pathname, { locale: nextLocale });
             }}
           >
             <Icon name="globe" size="sm" fallback="globe" />

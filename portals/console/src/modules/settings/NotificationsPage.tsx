@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Icon, type IconName } from '@vxture/design-system';
 import { Badge } from '@/components/ui/primitives';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
 
@@ -115,7 +115,7 @@ function readStoredState(): NotificationState {
 }
 
 export function NotificationsPage() {
-  const t = useConsoleTranslations('notificationsPage');
+  const t = useTranslations('notificationsPage');
   const [state, setState] = useState<NotificationState>(DEFAULT_NOTIFICATION_STATE);
   const [messageKey, setMessageKey] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);

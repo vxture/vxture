@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Icon, type IconName } from '@vxture/design-system';
 import { Badge, Switch } from '@/components/ui/primitives';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
 
@@ -88,7 +88,7 @@ function readStoredSettings(): TenantSettingState {
 }
 
 export function SettingsPage() {
-  const t = useConsoleTranslations('settings');
+  const t = useTranslations('settings');
   const [settings, setSettings] = useState<TenantSettingState>(DEFAULT_TENANT_SETTINGS);
   const [hydrated, setHydrated] = useState(false);
   const [messageKey, setMessageKey] = useState<string | null>(null);

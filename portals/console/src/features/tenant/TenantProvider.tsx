@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useMemo, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import type { TenantContext } from '@/entities/console';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { createMockTenant, tenantRolePriority } from './mock';

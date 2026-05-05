@@ -1,9 +1,10 @@
 'use client';
 
 import { startTransition, useEffect, useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useTheme } from '@vxture/design-system';
 import { Button } from '@/components/ui/primitives';
-import { useConsoleLocale, useConsoleTranslations } from '@/lib/console-intl';
 import {
   getGlobalUserPreferences,
   setGlobalDensityPreference,
@@ -18,8 +19,10 @@ const THEME_OPTIONS: readonly Theme[] = ['system', 'light', 'dark'];
 const DENSITY_OPTIONS: readonly Density[] = ['compact', 'default', 'comfortable'];
 
 export function ConsolePreferenceControls() {
-  const t = useConsoleTranslations('preferences');
-  const locale = useConsoleLocale() as Locale;
+  const t = useTranslations('preferences');
+  const locale = useLocale() as Locale;
+  const router = useRouter();
+  const pathname = usePathname();
   const { theme, setTheme, density, setDensity } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -45,7 +48,9 @@ export function ConsolePreferenceControls() {
           className="vx-select-trigger"
           value={locale}
           onChange={(event) => {
-            setGlobalLocalePreference(event.target.value as Locale);
+            const nextLocale = event.target.value as Locale;
+            setGlobalLocalePreference(nextLocale);
+            router.replace(pathname, { locale: nextLocale });
           }}
         >
           <option value="zh-CN">{t('locale.zh-CN')}</option>

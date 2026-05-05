@@ -1,12 +1,11 @@
 'use client';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/lib/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { Icon } from '@vxture/design-system';
 import { TenantSwitcher } from '@/components/navigation/tenant-switcher';
 import { navigationSections } from '@/config/navigation';
 import { hasCapability } from '@/features/permissions/can';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { useConsoleTranslations } from '@/lib/console-intl';
 
 export function Sidebar({
   collapsed,
@@ -17,8 +16,8 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const { session } = useConsoleSession();
-  const headerT = useConsoleTranslations('header');
-  const t = useConsoleTranslations('sidebar');
+  const headerT = useTranslations('header');
+  const t = useTranslations('sidebar');
 
   return (
     <aside id="vx-console-sidebar" className={collapsed ? 'vx-shell-sidebar vx-shell-sidebar--collapsed' : 'vx-shell-sidebar'}>

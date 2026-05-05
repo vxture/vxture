@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/lib/i18n/navigation';
 import { Icon } from '@vxture/design-system';
 import { Button } from '@/components/ui/primitives';
 import { useTenant, type TenantType } from '@/features/tenant';

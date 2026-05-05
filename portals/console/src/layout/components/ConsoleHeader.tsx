@@ -3,11 +3,11 @@
 import { Avatar, AvatarFallback, Badge, Button, Input } from '@/components/ui/primitives';
 import { ConsolePreferenceControls } from '@/components/preferences';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useTranslations } from 'next-intl';
 
 export function ConsoleHeader() {
   const { session } = useConsoleSession();
-  const t = useConsoleTranslations('header');
+  const t = useTranslations('header');
 
   return (
     <header className="console-header">
