@@ -215,3 +215,80 @@ ALTER TABLE "account"."account_oauth_state" ADD CONSTRAINT "oauth_states_state_k
 -- Primary Key structure for table account_oauth_state
 -- ----------------------------
 ALTER TABLE "account"."account_oauth_state" ADD CONSTRAINT "oauth_states_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Table structure for account_profile
+-- ----------------------------
+DROP TABLE IF EXISTS "account"."account_profile";
+CREATE TABLE "account"."account_profile" (
+  "account_id" uuid NOT NULL,
+  "display_name" varchar(96) COLLATE "pg_catalog"."default",
+  "avatar_url" varchar(512) COLLATE "pg_catalog"."default",
+  "headline" varchar(128) COLLATE "pg_catalog"."default",
+  "bio" text COLLATE "pg_catalog"."default",
+  "timezone" varchar(64) COLLATE "pg_catalog"."default",
+  "language" varchar(32) COLLATE "pg_catalog"."default",
+  "created_at" timestamptz(6) NOT NULL DEFAULT now(),
+  "updated_at" timestamptz(6) NOT NULL DEFAULT now()
+)
+;
+COMMENT ON COLUMN "account"."account_profile"."account_id" IS '关联全局账号ID';
+COMMENT ON TABLE "account"."account_profile" IS '账号扩展资料表（与 account 一对一）';
+
+-- ----------------------------
+-- Triggers structure for table account_profile
+-- ----------------------------
+CREATE TRIGGER "trg_account_profile_updated" BEFORE UPDATE ON "account"."account_profile"
+FOR EACH ROW
+EXECUTE PROCEDURE "tenancy"."set_updated_at"();
+
+-- ----------------------------
+-- Primary Key structure for table account_profile
+-- ----------------------------
+ALTER TABLE "account"."account_profile" ADD CONSTRAINT "account_profile_pkey" PRIMARY KEY ("account_id");
+
+-- ----------------------------
+-- Foreign Keys structure for table account_profile
+-- ----------------------------
+ALTER TABLE "account"."account_profile" ADD CONSTRAINT "account_profile_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "account"."account" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;
+
+-- ----------------------------
+-- Table structure for password_reset_token
+-- ----------------------------
+DROP TABLE IF EXISTS "account"."password_reset_token";
+CREATE TABLE "account"."password_reset_token" (
+  "id" uuid NOT NULL DEFAULT gen_random_uuid(),
+  "account_id" uuid NOT NULL,
+  "token_hash" varchar(64) COLLATE "pg_catalog"."default" NOT NULL,
+  "expires_at" timestamptz(6) NOT NULL,
+  "used_at" timestamptz(6),
+  "created_at" timestamptz(6) NOT NULL DEFAULT now()
+)
+;
+COMMENT ON COLUMN "account"."password_reset_token"."token_hash" IS 'SHA-256 哈希，原始 token 仅在生成时返回一次';
+COMMENT ON TABLE "account"."password_reset_token" IS '账号密码重置令牌表';
+
+-- ----------------------------
+-- Indexes structure for table password_reset_token
+-- ----------------------------
+CREATE INDEX "idx_password_reset_token_account_id" ON "account"."password_reset_token" USING btree (
+  "account_id" "pg_catalog"."uuid_ops" ASC NULLS LAST
+);
+CREATE INDEX "idx_password_reset_token_expires_at" ON "account"."password_reset_token" USING btree (
+  "expires_at" "pg_catalog"."timestamptz_ops" ASC NULLS LAST
+);
+
+-- ----------------------------
+-- Uniques structure for table password_reset_token
+-- ----------------------------
+ALTER TABLE "account"."password_reset_token" ADD CONSTRAINT "password_reset_token_token_hash_key" UNIQUE ("token_hash");
+
+-- ----------------------------
+-- Primary Key structure for table password_reset_token
+-- ----------------------------
+ALTER TABLE "account"."password_reset_token" ADD CONSTRAINT "password_reset_token_pkey" PRIMARY KEY ("id");
+
+-- ----------------------------
+-- Foreign Keys structure for table password_reset_token
+-- ----------------------------
+ALTER TABLE "account"."password_reset_token" ADD CONSTRAINT "password_reset_token_account_id_fkey" FOREIGN KEY ("account_id") REFERENCES "account"."account" ("id") ON DELETE CASCADE ON UPDATE NO ACTION;

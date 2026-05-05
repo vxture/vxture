@@ -27,7 +27,7 @@ agent-server/agent{N}
 
 ```
 agent-server/
-├── ruyinagent/
+├── ruyin/
 ├── vela/
 └── agent{N}/
 ```

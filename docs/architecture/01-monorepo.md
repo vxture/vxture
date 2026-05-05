@@ -29,12 +29,12 @@ vxture/
 │   └── console/
 │
 ├── agent-studio/               # Agent frontend applications (fast-changing, customer-facing)
-│   ├── ruyinagent/
+│   ├── ruyin/
 │   ├── vela/
 │   └── agent{N}/
 │
 ├── agent-server/               # Agent backend services (fast-changing, private per agent)
-│   ├── ruyinagent/
+│   ├── ruyin/
 │   ├── vela/
 │   └── agent{N}/
 │
@@ -166,7 +166,7 @@ Each agent frontend is independently governed and deployed.
 
 ```
 agent-studio/
-├── ruyinagent/       # Example standalone/agent product frontend
+├── ruyin/       # Example standalone/agent product frontend
 ├── vela/             # Embedded Vela assistant frontend
 └── agent{N}/
 ```
@@ -194,7 +194,7 @@ Each agent has its own private backend, governed and deployed independently.
 
 ```
 agent-server/
-├── ruyinagent/       # Backend for agent-studio/ruyinagent
+├── ruyin/       # Backend for agent-studio/ruyin
 ├── vela/             # Backend for embedded Vela assistant
 └── agent{N}/
 ```

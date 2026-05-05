@@ -220,7 +220,7 @@
       "location": "agent-studio/*",
       "description": "Agent product frontends — fast-changing, customer-facing",
       "examples": [
-        "ruyinagent",
+        "ruyin",
         "vela"
       ],
       "packages": [
@@ -244,7 +244,7 @@
       "location": "agent-server/*",
       "description": "Agent-private backends — promotes to services when proven reusable",
       "examples": [
-        "ruyinagent",
+        "ruyin",
         "vela"
       ],
       "allowed_dependencies": [

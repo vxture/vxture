@@ -73,7 +73,7 @@
 
 | Agent | NN | 端口 X0 | 端口 X1 | 端口 X2 | 状态 |
 |-------|----|---------|---------|---------|------|
-| **ruyinagent**（长子，P0） | `11` | 3110 studio | 3111 bff | **3112** server | 🟡 server 已运行，studio/bff 建设中 |
+| **ruyin**（长子，P0） | `11` | 3110 studio | 3111 bff | **3112** server | 🟡 server 已运行，studio/bff 建设中 |
 | **vela**（次子） | `12` | **3120** studio | **3121** bff | **3122** server | ✅ 三端运行中 |
 | Future Agent #3 | `13` | 3130 | 3131 | 3132 | 预留 |
 | Future Agent #4 | `14` | 3140 | 3141 | 3142 | 预留 |
@@ -98,9 +98,9 @@
 
 3100   AI Gateway（固定）
 
-3110   ruyinagent-studio（待建）
-3111   ruyinagent-bff（待建）
-3112   ruyinagent-server（运行中）
+3110   ruyin-studio（待建）
+3111   ruyin-bff（待建）
+3112   ruyin-server（运行中）
 
 3120   vela-studio（Next.js）
 3121   vela-bff（NestJS）

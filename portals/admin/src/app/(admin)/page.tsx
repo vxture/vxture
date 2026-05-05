@@ -310,8 +310,8 @@ const overviewSnapshots = {
 
 const productOperations: ProductOperation[] = [
   { productCode: 'vxture-console-cn', subscriptions: 846, monthlyNew: 68, revenue: 2_536_000 },
-  { productCode: 'ruyinagent-cn', subscriptions: 724, monthlyNew: 91, revenue: 1_468_000 },
-  { productCode: 'ruyinagent-intl', subscriptions: 118, monthlyNew: 27, revenue: 338_000 },
+  { productCode: 'ruyin-cn', subscriptions: 724, monthlyNew: 91, revenue: 1_468_000 },
+  { productCode: 'ruyin-intl', subscriptions: 118, monthlyNew: 27, revenue: 338_000 },
 ];
 
 const periodScale = {

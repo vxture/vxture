@@ -1082,7 +1082,7 @@ model VelaAuditLog {
 | `website` | Next.js | 不变 |
 | `admin` | Next.js | 新增 VelaChat embedded |
 | `console`（原 tenant） | Next.js | **更名**，新增 VelaChat embedded |
-| `ruyinagent` | Next.js | 不变 |
+| `ruyin` | Next.js | 不变 |
 | `website-bff` | NestJS | 不变 |
 | `admin-bff` | NestJS | 不变 |
 | `console-bff`（原 tenant-bff）| NestJS | **更名** |

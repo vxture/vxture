@@ -38,7 +38,7 @@ Both surfaces share the same platform infrastructure and are governed independen
 │                                                                 │
 │   portals/              agent-studio/                          │
 │   (platform UI)         (agent product UI)                     │
-│   website               ruyinagent/                            │
+│   website               ruyin/                            │
 │   admin                 vela/                  Frontend only   │
 │   console               agent{N}/                              │
 └──────────────┬──────────────────┬───────────────────────────────┘
@@ -213,7 +213,7 @@ Agent servers live in the top-level `agent-server/` directory.
 
 ```
 agent-server/
-  ruyinagent/
+  ruyin/
   vela/
   agent{N}/
 ```

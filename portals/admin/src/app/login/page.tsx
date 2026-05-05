@@ -34,6 +34,7 @@ function LoginScreen() {
   const [submitting, setSubmitting] = useState(false);
   const pendingCredentialsRef = useRef({ identifier: '', password: '' });
   const captchaTokenRef = useRef('');
+  const formRef = useRef<HTMLFormElement | null>(null);
   const captchaSliderRef = useRef<HTMLDivElement | null>(null);
   const captchaHandleRef = useRef<HTMLButtonElement | null>(null);
   const captchaPieceRef = useRef<HTMLDivElement | null>(null);
@@ -205,6 +206,18 @@ function LoginScreen() {
     }
   }
 
+  async function handleForgetMe() {
+    formRef.current?.reset();
+    // 告知浏览器不再自动填充此站点凭据
+    if (navigator.credentials?.preventSilentAccess) {
+      try {
+        await navigator.credentials.preventSilentAccess();
+      } catch {
+        // 静默忽略
+      }
+    }
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!validateLoginForm(event.currentTarget)) return;
@@ -254,7 +267,7 @@ function LoginScreen() {
               <CardTitle className="vx-card-title">{t('card.title')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="auth-form" onSubmit={handleSubmit} autoComplete="on">
+              <form ref={formRef} className="auth-form" onSubmit={handleSubmit} autoComplete="on">
                 <label className="auth-field" htmlFor="admin-login-username">
                   <span>{t('form.account')}</span>
                   <Input
@@ -301,6 +314,15 @@ function LoginScreen() {
                   <a className="auth-forgot-link" href="#forgot-password">
                     {t('form.forgotPassword')}
                   </a>
+                  <button
+                    type="button"
+                    className="auth-forget-me-link"
+                    onClick={handleForgetMe}
+                    disabled={submitting || status === 'loading'}
+                    title="清除浏览器保存的账号密码"
+                  >
+                    忘记我
+                  </button>
                 </div>
               </form>
               {captchaOpen ? (

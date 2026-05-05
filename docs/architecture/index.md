@@ -48,7 +48,7 @@
 
 | 实例 | 前端 | 后端 | BFF | 状态 |
 | ---- | ---- | ---- | --- | ---- |
-| ruyinagent | agent-studio/ruyinagent | agent-server/ruyinagent | bff/ruyinagent-bff | 🟡 server 运行中，studio/bff 建设中 |
+| ruyin | agent-studio/ruyin | agent-server/ruyin | bff/ruyin-bff | 🟡 server 运行中，studio/bff 建设中 |
 | vela | agent-studio/vela | agent-server/vela | bff/vela-bff | ✅ 三端运行中（嵌入 admin / console） |
 
 ## Changelog
@@ -64,7 +64,7 @@
 ### v1.3.0 — 2026-03-11
 
 - 新增 `13-tech-stack.md`：技术栈选型文档，含当前基准版本与升级路径
-- 补充 Agent 实例索引表（ruyinagent）
+- 补充 Agent 实例索引表（ruyin）
 
 ### v1.2.0 — 2026-03-10
 

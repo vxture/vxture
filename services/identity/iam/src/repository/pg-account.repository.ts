@@ -33,12 +33,9 @@ interface AccountProfileRow extends AccountRow {
 
 @Injectable()
 export class PgAccountRepository implements AccountReadRepository {
-  private profileTableEnsured = false;
-
   constructor(@Inject(IAM_PG_POOL) private readonly pool: Pool) {}
 
   async findByIdentifier(identifier: string): Promise<AccountCredentialRecord | null> {
-    await this.ensureProfileTable();
     const result = await this.pool.query<AccountRow>(
       `
         select
@@ -65,7 +62,6 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async findById(accountId: string): Promise<AuthenticatedAccountView | null> {
-    await this.ensureProfileTable();
     const result = await this.pool.query<AccountRow>(
       `
         select
@@ -98,7 +94,6 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async findCredentialById(accountId: string): Promise<AccountCredentialRecord | null> {
-    await this.ensureProfileTable();
     const result = await this.pool.query<AccountRow>(
       `
         select
@@ -121,7 +116,6 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async getProfile(accountId: string): Promise<AccountProfileView | null> {
-    await this.ensureProfileTable();
     const result = await this.pool.query<AccountProfileRow>(
       `
         select
@@ -152,8 +146,6 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async updateProfile(accountId: string, input: UpdateAccountProfileInput): Promise<AccountProfileView | null> {
-    await this.ensureProfileTable();
-
     const client = await this.pool.connect();
     try {
       await client.query('begin');
@@ -219,8 +211,6 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async createPasswordResetToken(accountId: string, expiresAt: Date): Promise<string> {
-    await this.ensureTokenTable();
-
     // 生成 64 字符随机 hex token，仅在此处可见，DB 存哈希
     const rawToken = randomBytes(32).toString('hex');
     const tokenHash = createHash('sha256').update(rawToken).digest('hex');
@@ -236,8 +226,6 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async consumePasswordResetToken(token: string): Promise<string | null> {
-    await this.ensureTokenTable();
-
     const tokenHash = createHash('sha256').update(token).digest('hex');
 
     const result = await this.pool.query<{ account_id: string }>(
@@ -254,8 +242,6 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async createAccount(input: CreateAccountInput): Promise<AuthenticatedAccountView> {
-    await this.ensureProfileTable();
-
     const id = crypto.randomUUID();
     const username = deriveUsername(input.email);
     const email = input.email.toLowerCase().trim();
@@ -307,12 +293,11 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async findOrCreateByOAuth(input: FindOrCreateByOAuthInput): Promise<AuthenticatedAccountView> {
-    await this.ensureOAuthTable();
-
-    // 1. 通过 OAuth 绑定表查找已存在账号
+    // 1. 通过 account_identity 表查找已绑定账号
     const existing = await this.pool.query<{ account_id: string }>(
-      `select account_id from account.account_oauth
-       where provider = $1 and provider_id = $2
+      `select account_id from account.account_identity
+       where provider = $1 and provider_account_id = $2
+         and deleted_at is null
        limit 1`,
       [input.provider, input.providerId],
     );
@@ -327,6 +312,12 @@ export class PgAccountRepository implements AccountReadRepository {
     // 2. 不存在则创建新账号（事务）
     const id = crypto.randomUUID();
     const username = deriveUsernameFromName(input.name);
+    const providerAccountData = JSON.stringify({
+      name: input.name,
+      email: input.email ?? null,
+      avatarUrl: input.avatarUrl ?? null,
+    });
+
     const client = await this.pool.connect();
 
     try {
@@ -345,9 +336,9 @@ export class PgAccountRepository implements AccountReadRepository {
       );
 
       await client.query(
-        `insert into account.account_oauth (account_id, provider, provider_id, created_at)
-         values ($1, $2, $3, now())`,
-        [id, input.provider, input.providerId],
+        `insert into account.account_identity (account_id, provider, provider_account_id, provider_account_data, created_at, updated_at)
+         values ($1, $2, $3, $4, now(), now())`,
+        [id, input.provider, input.providerId, providerAccountData],
       );
 
       await client.query('commit');
@@ -394,67 +385,6 @@ export class PgAccountRepository implements AccountReadRepository {
       language: row.language,
       profileUpdatedAt: row.profile_updated_at,
     };
-  }
-
-  private async ensureProfileTable() {
-    if (this.profileTableEnsured) {
-      return;
-    }
-
-    await this.pool.query(`
-      create table if not exists account.account_profile (
-        account_id uuid primary key references account.account(id) on delete cascade,
-        display_name varchar(96),
-        avatar_url varchar(512),
-        headline varchar(128),
-        bio text,
-        timezone varchar(64),
-        language varchar(32),
-        created_at timestamptz not null default now(),
-        updated_at timestamptz not null default now()
-      )
-    `);
-    this.profileTableEnsured = true;
-  }
-
-  private tokenTableEnsured = false;
-
-  private oauthTableEnsured = false;
-
-  private async ensureOAuthTable() {
-    if (this.oauthTableEnsured) {
-      return;
-    }
-
-    await this.pool.query(`
-      create table if not exists account.account_oauth (
-        id uuid primary key default gen_random_uuid(),
-        account_id uuid not null references account.account(id) on delete cascade,
-        provider varchar(32) not null,
-        provider_id varchar(256) not null,
-        created_at timestamptz not null default now(),
-        unique (provider, provider_id)
-      )
-    `);
-    this.oauthTableEnsured = true;
-  }
-
-  private async ensureTokenTable() {
-    if (this.tokenTableEnsured) {
-      return;
-    }
-
-    await this.pool.query(`
-      create table if not exists account.password_reset_token (
-        id uuid primary key default gen_random_uuid(),
-        account_id uuid not null references account.account(id) on delete cascade,
-        token_hash varchar(64) not null unique,
-        expires_at timestamptz not null,
-        used_at timestamptz,
-        created_at timestamptz not null default now()
-      )
-    `);
-    this.tokenTableEnsured = true;
   }
 }
 
