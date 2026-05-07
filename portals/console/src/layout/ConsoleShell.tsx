@@ -6,6 +6,7 @@ import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { ConsoleSessionProvider, useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { TenantProvider } from '@/features/tenant';
+import { PortalEntryProvider } from '@/contexts/PortalEntryContext';
 import { AppShell } from '@/layout/shell';
 
 function ShellFrame({ children, endPanel }: { children: ReactNode; endPanel?: ReactNode }) {
@@ -48,7 +49,9 @@ export function ConsoleShell({ children, endPanel }: { children: ReactNode; endP
   return (
     <ConsoleSessionProvider>
       <TenantProvider>
-        <ShellFrame endPanel={endPanel}>{children}</ShellFrame>
+        <PortalEntryProvider>
+          <ShellFrame endPanel={endPanel}>{children}</ShellFrame>
+        </PortalEntryProvider>
       </TenantProvider>
     </ConsoleSessionProvider>
   );

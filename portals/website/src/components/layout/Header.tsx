@@ -636,7 +636,6 @@ export default function Header() {
   const guestActions = HEADER_DATA.actions;
   const consoleLabel = t('actions.console');
   const isSessionSettling = !hasMounted || (isLoading && !isAuthenticated && !user);
-  const actions = isAuthenticated || isSessionSettling ? [] : guestActions;
 
   return (
     <header
@@ -669,13 +668,13 @@ export default function Header() {
           {/* Navigation */}
           <nav className='hidden md:flex space-x-8'>
             {HEADER_DATA.nav.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
-              className='transition-colors duration-300 text-gray-800 dark:text-slate-200 font-medium hover:text-cyan-500 dark:hover:text-cyan-400'
+                className='transition-colors duration-300 text-gray-800 dark:text-slate-200 font-medium hover:text-cyan-500 dark:hover:text-cyan-400'
               >
                 {t(item.labelKey)}
-              </a>
+              </Link>
             ))}
           </nav>
 
@@ -683,21 +682,33 @@ export default function Header() {
           <div className='flex items-center gap-4'>
             <HeaderQuickTools />
 
+            {/* 已登录：进入控制台 + 用户菜单 */}
             {isAuthenticated ? (
-              <a
-                href={consoleUrl}
-                title={consoleLabel}
-                className='text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-blue-600 focus-visible:outline-none dark:text-slate-200 dark:hover:text-blue-300'
-              >
-                {consoleLabel}
-              </a>
-            ) : null}
-
-            {/* CTA Buttons - 固定宽度 */}
-            {actions.length > 0 && (
               <>
-                {actions.map((action) => (
-                  <a
+                <a
+                  href={consoleUrl}
+                  title={consoleLabel}
+                  className='text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-blue-600 focus-visible:outline-none dark:text-slate-200 dark:hover:text-blue-300'
+                >
+                  {consoleLabel}
+                </a>
+                {user ? (
+                  <UserMenu
+                    user={user}
+                    disabled={isLoading}
+                    onSwitchUser={handleSwitchUser}
+                    onSignOut={handleSignOut}
+                  />
+                ) : null}
+              </>
+            ) : (
+              /* 访客 CTA：会话稳定期保留占位（invisible）防止布局跳动 */
+              <div
+                className={`flex items-center gap-2 ${isSessionSettling ? 'invisible' : ''}`}
+                aria-hidden={isSessionSettling ? 'true' : undefined}
+              >
+                {guestActions.map((action) => (
+                  <Link
                     key={action.href}
                     href={action.href}
                     className={
@@ -707,19 +718,10 @@ export default function Header() {
                     }
                   >
                     {t(action.labelKey)}
-                  </a>
+                  </Link>
                 ))}
-              </>
+              </div>
             )}
-
-            {isAuthenticated && user ? (
-              <UserMenu
-                user={user}
-                disabled={isLoading}
-                onSwitchUser={handleSwitchUser}
-                onSignOut={handleSignOut}
-              />
-            ) : null}
           </div>
         </div>
       </div>

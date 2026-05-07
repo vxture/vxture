@@ -21,6 +21,7 @@ import {
   Controller,
   Get,
   HttpException,
+  Inject,
   Param,
   Post,
   Query,
@@ -34,7 +35,7 @@ import type { CreateSessionDto, SendMessageDto } from '../types/ruyin.types';
 
 @Controller('api/session')
 export class SessionRouter {
-  constructor(private readonly ruyinAggregator: RuyinAggregator) {}
+  constructor(@Inject(RuyinAggregator) private readonly ruyinAggregator: RuyinAggregator) {}
 
   @Post()
   async createSession(

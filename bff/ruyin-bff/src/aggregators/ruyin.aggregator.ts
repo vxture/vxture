@@ -16,7 +16,7 @@
  * @category Aggregator
  */
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { VxConfigService } from '@vxture/core-config';
 import type {
   CreateSessionDto,
@@ -82,7 +82,7 @@ export class RuyinBffError extends Error {
 
 @Injectable()
 export class RuyinAggregator {
-  constructor(private readonly configService: VxConfigService) {}
+  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {}
 
   async createSession(accessToken: string, body: CreateSessionDto): Promise<CreateSessionResponseDto> {
     const data = await this.request<AgentServerCreateSessionData>('/api/session', {

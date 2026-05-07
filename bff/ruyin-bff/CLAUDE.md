@@ -91,6 +91,14 @@ src/
 - 如有 AI 流式输出，使用 SSE 在 router 层转发，不在 aggregator 处理
 - agent-server 通信失败时独立处理，不影响 service-* 路由
 
+### 跨域 SSO（重构 v1.4）
+
+本 BFF **不签发 JWT**。跨域登录委托 `@vxture/bff-auth` 完成：
+- `GET /api/auth/callback?token=` 接收前端传入的一次性 token
+- 调用 auth-bff `POST /api/auth/crossdomain/verify` 验证 token
+- 验证通过后调用 auth-bff `POST /api/auth/internal/sign` 在 ruyin.ai 域下签发新 Cookie
+- 本 BFF 仅保留 JWT **验证**能力（`JwtService.verify`），供 auth middleware 使用
+
 ---
 
 ## 关键约束

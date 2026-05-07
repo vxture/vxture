@@ -5,7 +5,7 @@ import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
 import Image from 'next/image';
-import ThemedHeroImage from './ThemedHeroImage';
+import AnimatedHeroBg from './AnimatedHeroBg';
 
 type Metric = {
   label: string;
@@ -36,11 +36,6 @@ type Dimension = {
   description: string;
 };
 
-const CASES_HERO_IMAGE = {
-  light: '/images/hero-banners/pixabay-network-light.jpg',
-  dark: '/images/hero-banners/pixabay-geometric-blue-dark.jpg',
-};
-
 export default function BestPracticePage() {
   const t = useTranslations('cases');
   const highlights = t.raw('page.hero.highlights') as string[];
@@ -51,25 +46,14 @@ export default function BestPracticePage() {
 
   return (
     <div className='min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-100'>
-      <section className='relative flex min-h-[74vh] items-end overflow-hidden pt-20'>
-        <ThemedHeroImage
-          lightSrc={CASES_HERO_IMAGE.light}
-          darkSrc={CASES_HERO_IMAGE.dark}
-          alt={t('page.hero.imageAlt')}
-          className='saturate-125'
-        />
-        <div className='relative mx-auto grid w-full max-w-7xl gap-8 px-6 pb-14 pt-24 lg:grid-cols-[minmax(0,1fr)_360px] lg:px-8 xl:max-w-screen-2xl'>
+            <section className='vx-hero-section'>
+        <AnimatedHeroBg />
+        <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-cyan-200'>
-              {t('page.hero.eyebrow')}
-            </p>
-            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>
-              {t('page.hero.title')}
-            </h1>
-            <p className='mt-6 max-w-2xl text-lg leading-8 text-slate-700 dark:text-slate-200'>
-              {t('page.hero.description')}
-            </p>
-            <div className='mt-8 flex flex-wrap gap-3'>
+            <p className='mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-cyan-200'>{t('page.hero.eyebrow')}</p>
+            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>{t('page.hero.title')}</h1>
+            <p className='mt-5 max-w-2xl text-sm leading-6 text-slate-700 dark:text-slate-200'>{t('page.hero.description')}</p>
+            <div className='mt-6 flex flex-wrap gap-3'>
               {highlights.map((item) => (
                 <span
                   key={item}
@@ -79,7 +63,7 @@ export default function BestPracticePage() {
                 </span>
               ))}
             </div>
-            <div className='mt-10 flex flex-wrap items-center gap-4'>
+            <div className='mt-8 flex flex-wrap items-center gap-4'>
               <Link
                 href='/signin'
                 className='inline-flex h-11 items-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500'
@@ -94,22 +78,10 @@ export default function BestPracticePage() {
               </a>
             </div>
           </div>
-
-          <aside className='self-end rounded-lg border border-blue-100 bg-white/72 p-5 shadow-lg shadow-blue-950/8 backdrop-blur-md dark:border-white/15 dark:bg-slate-950/42 dark:shadow-none'>
-            <p className='text-sm font-semibold text-blue-600 dark:text-cyan-100'>{t('page.hero.panelTitle')}</p>
-            <div className='mt-5 grid gap-4'>
-              {metrics.map((metric) => (
-                <div key={metric.label} className='border-l border-blue-200 pl-4 dark:border-cyan-300/40'>
-                  <p className='text-2xl font-semibold text-slate-950 dark:text-white'>{metric.value}</p>
-                  <p className='mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300'>{metric.label}</p>
-                </div>
-              ))}
-            </div>
-          </aside>
         </div>
       </section>
 
-      <section className='bg-linear-to-b from-blue-50 to-white py-16 dark:from-slate-900 dark:to-slate-950'>
+      <section className='vx-section-odd'>
         <div className='mx-auto max-w-7xl px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
             <div>

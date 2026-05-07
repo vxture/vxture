@@ -19,7 +19,6 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
-import { VxConfigService } from '@vxture/core-config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -30,8 +29,13 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const configService = app.get(VxConfigService);
-  await app.listen(configService.app.PORT);
+  const port = Number(
+    process.env.RUYIN_BFF_PORT ??
+    process.env.RUYINAGENT_BFF_PORT ??
+    process.env.PORT ??
+    3111,
+  );
+  await app.listen(port);
 }
 
 void bootstrap();

@@ -11,6 +11,9 @@ importers:
       '@swc/core':
         specifier: ^1.15.18
         version: 1.15.18
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
       '@types/node':
         specifier: ^25.3.3
         version: 25.3.3
@@ -109,6 +112,9 @@ importers:
         specifier: ^0.14.1
         version: 0.14.4
     devDependencies:
+      esbuild:
+        specifier: ^0.27.4
+        version: 0.27.4
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -266,6 +272,12 @@ importers:
         specifier: ^0.2.0
         version: 0.2.2
     devDependencies:
+      '@types/cookie-parser':
+        specifier: ^1.4.7
+        version: 1.4.10(@types/express@4.17.25)
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
       '@types/pg':
         specifier: ^8.16.0
         version: 8.20.0
@@ -291,6 +303,88 @@ importers:
         specifier: workspace:*
         version: link:../../packages/shared/shared
     devDependencies:
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+  bff/auth-bff:
+    dependencies:
+      '@nestjs/common':
+        specifier: ^11.0.0
+        version: 11.1.16(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/core':
+        specifier: ^11.0.0
+        version: 11.1.16(@nestjs/common@11.1.16(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.16)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      '@nestjs/jwt':
+        specifier: ^11.0.0
+        version: 11.0.2(@nestjs/common@11.1.16(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))
+      '@nestjs/platform-express':
+        specifier: ^11.0.0
+        version: 11.1.16(@nestjs/common@11.1.16(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.16)
+      '@nestjs/swagger':
+        specifier: ^11.0.0
+        version: 11.2.6(@nestjs/common@11.1.16(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.16)(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)
+      '@vxture/core-api':
+        specifier: workspace:*
+        version: link:../../packages/core/api
+      '@vxture/core-auth':
+        specifier: workspace:*
+        version: link:../../packages/core/auth
+      '@vxture/core-config':
+        specifier: workspace:*
+        version: link:../../packages/core/config
+      '@vxture/core-utils':
+        specifier: workspace:*
+        version: link:../../packages/core/utils
+      '@vxture/service-iam':
+        specifier: workspace:*
+        version: link:../../services/identity/iam
+      '@vxture/service-mail':
+        specifier: workspace:*
+        version: link:../../services/notification/mail
+      '@vxture/service-organization':
+        specifier: workspace:*
+        version: link:../../services/tenant/organization
+      '@vxture/service-sms':
+        specifier: workspace:*
+        version: link:../../services/notification/sms
+      '@vxture/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared/shared
+      class-transformer:
+        specifier: ^0.5.0
+        version: 0.5.1
+      class-validator:
+        specifier: ^0.14.0
+        version: 0.14.4
+      cookie-parser:
+        specifier: ^1.4.7
+        version: 1.4.7
+      express:
+        specifier: ^4.22.1
+        version: 4.22.1
+      ioredis:
+        specifier: ^5.0.0
+        version: 5.9.3
+      reflect-metadata:
+        specifier: ^0.2.0
+        version: 0.2.2
+      uuid:
+        specifier: ^11.0.0
+        version: 11.1.0
+    devDependencies:
+      '@types/cookie-parser':
+        specifier: ^1.4.0
+        version: 1.4.10(@types/express@4.17.25)
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
+      '@types/uuid':
+        specifier: ^10.0.0
+        version: 10.0.0
+      esbuild:
+        specifier: ^0.27.4
+        version: 0.27.4
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -324,9 +418,6 @@ importers:
       '@vxture/service-organization':
         specifier: workspace:*
         version: link:../../services/tenant/organization
-      '@vxture/service-sms':
-        specifier: workspace:*
-        version: link:../../services/notification/sms
       '@vxture/service-subscription':
         specifier: workspace:*
         version: link:../../services/commerce/subscription
@@ -349,6 +440,12 @@ importers:
         specifier: ^0.2.0
         version: 0.2.2
     devDependencies:
+      '@types/cookie-parser':
+        specifier: ^1.4.7
+        version: 1.4.10(@types/express@4.17.25)
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
       esbuild:
         specifier: ^0.27.4
         version: 0.27.4
@@ -397,6 +494,15 @@ importers:
         specifier: ^0.2.0
         version: 0.2.2
     devDependencies:
+      '@types/cookie-parser':
+        specifier: ^1.4.7
+        version: 1.4.10(@types/express@4.17.25)
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
+      esbuild:
+        specifier: ^0.27.4
+        version: 0.27.4
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -494,9 +600,6 @@ importers:
       '@vxture/service-organization':
         specifier: workspace:*
         version: link:../../services/tenant/organization
-      '@vxture/service-sms':
-        specifier: workspace:*
-        version: link:../../services/notification/sms
       '@vxture/shared':
         specifier: workspace:*
         version: link:../../packages/shared/shared
@@ -512,13 +615,16 @@ importers:
       express:
         specifier: ^4.22.1
         version: 4.22.1
-      ioredis:
-        specifier: ^5.0.0
-        version: 5.9.3
       reflect-metadata:
         specifier: ^0.2.0
         version: 0.2.2
     devDependencies:
+      '@types/cookie-parser':
+        specifier: ^1.4.7
+        version: 1.4.10(@types/express@4.17.25)
+      '@types/express':
+        specifier: ^4.17.0
+        version: 4.17.25
       esbuild:
         specifier: ^0.27.4
         version: 0.27.4
@@ -3563,6 +3669,9 @@ packages:
 
   '@types/sockjs@0.3.36':
     resolution: {integrity: sha512-MK9V6NzAS1+Ud7JV9lJLFqW85VbC9dq3LmwZCuBe4wBDgKC0Kj/jd8Xl+nSviU+Qc3+m7umHHyHg//2KSa0a0Q==}
+
+  '@types/uuid@10.0.0':
+    resolution: {integrity: sha512-7gqG38EyHgyP1S+7+xomFtL+ZNHcKv6DwNaCZmJmo1vgMugyF3TCnXVg4t1uk89mLNwnLtnY3TpOpCOyp1/xHQ==}
 
   '@types/uuid@11.0.0':
     resolution: {integrity: sha512-HVyk8nj2m+jcFRNazzqyVKiZezyhDKrGUA3jlEcg/nZ6Ms+qHwocba1Y/AaVaznJTAM9xpdFSh+ptbNrhOGvZA==}
@@ -9052,7 +9161,7 @@ snapshots:
 
   '@types/serve-index@1.9.4':
     dependencies:
-      '@types/express': 5.0.6
+      '@types/express': 4.17.25
 
   '@types/serve-static@1.15.10':
     dependencies:
@@ -9068,6 +9177,8 @@ snapshots:
   '@types/sockjs@0.3.36':
     dependencies:
       '@types/node': 25.3.3
+
+  '@types/uuid@10.0.0': {}
 
   '@types/uuid@11.0.0':
     dependencies:

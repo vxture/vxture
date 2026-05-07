@@ -19,7 +19,7 @@
  * @date 2026-05-01
  */
 
-import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { VxConfigService } from '@vxture/core-config';
 import Redis from 'ioredis';
 
@@ -33,7 +33,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client!: Redis;
   private keyPrefix!: string;
 
-  constructor(private readonly config: VxConfigService) {}
+  constructor(@Inject(VxConfigService) private readonly config: VxConfigService) {}
 
   onModuleInit(): void {
     const { REDIS_URL, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_KEY_PREFIX } =

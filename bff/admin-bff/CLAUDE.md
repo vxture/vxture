@@ -20,6 +20,14 @@
 服务 portals/admin 的 BFF：平台运营后台的认证、租户管理、计费、用户等数据聚合。
 对接多个 @vxture/service-* 服务，domain 较多，router 模块数量最多的 BFF。
 
+### JWT 认证架构（重构 v1.4）
+
+本 BFF **不签发 JWT**。认证流程如下：
+1. 本地执行：IP+账号双维度限速 → 滑块验证码校验 → DB 密码验证
+2. 验证通过后，通过 HTTP 调用 `auth-bff` 的 `POST /api/auth/internal/sign` 委托签发 Cookie
+3. 登出同样委托 auth-bff 完成
+4. JWT 验证（auth middleware 使用）保留本地 `JwtService.verify`，共享 `JWT_SECRET`
+
 ---
 
 ## 目录结构

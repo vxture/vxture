@@ -5,7 +5,7 @@ import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
 import Image from 'next/image';
-import ThemedHeroImage from './ThemedHeroImage';
+import AnimatedHeroBg from './AnimatedHeroBg';
 
 type Metric = {
   label: string;
@@ -43,10 +43,6 @@ type Practice = {
 };
 
 const PRACTICE_IMAGE = '/images/casessection/case-intro-03.jpg';
-const SOLUTION_HERO_IMAGE = {
-  light: '/images/hero-banners/pixabay-network-light.jpg',
-  dark: '/images/hero-banners/pixabay-big-data-dark.jpg',
-};
 
 export default function EmergencySolutionPage() {
   const t = useTranslations('solutions');
@@ -61,25 +57,14 @@ export default function EmergencySolutionPage() {
 
   return (
     <div className='min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-100'>
-      <section className='relative flex min-h-[76vh] items-end overflow-hidden pt-20'>
-        <ThemedHeroImage
-          lightSrc={SOLUTION_HERO_IMAGE.light}
-          darkSrc={SOLUTION_HERO_IMAGE.dark}
-          alt={t('hero.imageAlt')}
-          className='saturate-125'
-        />
-        <div className='relative mx-auto grid w-full max-w-7xl gap-8 px-6 pb-14 pt-24 lg:grid-cols-[minmax(0,1fr)_380px] lg:px-8 xl:max-w-screen-2xl'>
+            <section className='vx-hero-section'>
+        <AnimatedHeroBg />
+        <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-cyan-200'>
-              {t('hero.eyebrow')}
-            </p>
-            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>
-              {t('hero.title')}
-            </h1>
-            <p className='mt-6 max-w-2xl text-lg leading-8 text-slate-700 dark:text-slate-200'>
-              {t('hero.description')}
-            </p>
-            <div className='mt-8 flex flex-wrap gap-3'>
+            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-cyan-200'>{t('hero.eyebrow')}</p>
+            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>{t('hero.title')}</h1>
+            <p className='mt-5 max-w-2xl text-sm leading-6 text-slate-700 dark:text-slate-200'>{t('hero.description')}</p>
+            <div className='mt-6 flex flex-wrap gap-3'>
               {highlights.map((item) => (
                 <span
                   key={item}
@@ -89,7 +74,7 @@ export default function EmergencySolutionPage() {
                 </span>
               ))}
             </div>
-            <div className='mt-10 flex flex-wrap items-center gap-4'>
+            <div className='mt-8 flex flex-wrap items-center gap-4'>
               <Link
                 href='/signin'
                 className='inline-flex h-11 items-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500'
@@ -104,32 +89,12 @@ export default function EmergencySolutionPage() {
               </a>
             </div>
           </div>
-
-          <aside className='self-end rounded-lg border border-blue-100 bg-white/72 p-5 shadow-lg shadow-blue-950/8 backdrop-blur-md dark:border-white/15 dark:bg-slate-950/40 dark:shadow-none'>
-            <p className='text-sm font-semibold text-blue-600 dark:text-cyan-100'>{t('hero.intelligence.title')}</p>
-            <div className='mt-5 space-y-4'>
-              {intelligenceItems.map((item) => (
-                <div key={item} className='flex gap-3 text-sm leading-6 text-slate-600 dark:text-slate-200'>
-                  <Icon name='check' className='mt-1 h-4 w-4 shrink-0 text-blue-500 dark:text-cyan-300' />
-                  <span>{item}</span>
-                </div>
-              ))}
-            </div>
-            <div className='mt-6 grid grid-cols-3 gap-3 border-t border-blue-100 pt-5 dark:border-white/10'>
-              {metrics.map((metric) => (
-                <div key={metric.label}>
-                  <p className='text-xl font-semibold text-slate-950 dark:text-white'>{metric.value}</p>
-                  <p className='mt-1 text-xs leading-5 text-slate-600 dark:text-slate-300'>{metric.label}</p>
-                </div>
-              ))}
-            </div>
-          </aside>
         </div>
       </section>
 
       <section
         id='solution-architecture'
-        className='bg-linear-to-b from-blue-50 to-white py-16 dark:from-slate-900 dark:to-slate-950'
+        className='vx-section-odd'
       >
         <div className='mx-auto max-w-7xl px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>

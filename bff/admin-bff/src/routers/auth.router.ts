@@ -1,19 +1,19 @@
 /**
- * auth.router.ts - 认证路由
+ * auth.router.ts - 运营认证路由（重构 v1.4）
  * @package @vxture/bff-admin
  *
- * Description: 处理 admin portal 的登录、登出和会话查询。
- * 登录流程集成 IP+账号双维度限速（Part C）和服务端验证码校验（Part A）。
+ * 【重构说明】
+ * JWT 签发迁移至 auth-bff，admin-bff 保留：
+ *   - IP+账号双维度限速（Part C）
+ *   - 服务端滑块验证码校验（Part A）
+ *   - 运营账号 DB 密码验证
+ * 验证通过后，调用 auth-bff internal/sign 委托签发 Cookie。
+ *
+ * 本路由负责 HTTP 透传，并转发 set-cookie 头以确保 Cookie 正确写入。
  *
  * @author AI-Generated
- * @date 2026-05-02
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Application
- * @category Router
+ * @date 2026-05-07
+ * @version 1.4
  */
 
 import {
@@ -30,34 +30,27 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Response } from 'express';
-import { ADMIN_AUTH_COOKIES } from '../auth/cookie.constants';
 import { PlatformAuthService } from '../auth/auth.service';
 import { LoginRateLimiterService } from '../auth/login-rate-limiter.service';
 import { CaptchaService } from '../auth/captcha.service';
 import { AuthResultDto, CaptchaChallengeDto, LoginDto } from '../dto/auth.dto';
 import type { RequestContext } from '../types/console.types';
 
-// ─── 常量 ─────────────────────────────────────────────────────────────────────
+// ─── 工具 ─────────────────────────────────────────────────────────────────────
 
-const ACCESS_COOKIE_KEY = ADMIN_AUTH_COOKIES.ACCESS_TOKEN;
-const REFRESH_COOKIE_KEY = ADMIN_AUTH_COOKIES.REFRESH_TOKEN;
+function resolveAuthBffUrl(): string {
+  const configured = process.env['AUTH_BFF_URL']?.trim();
+  if (configured) return configured.replace(/\/+$/, '');
+  return 'http://localhost:3090';
+}
+
+const AUTH_BFF = resolveAuthBffUrl();
 
 interface AuthHttpRequest {
   headers: Record<string, string | string[] | undefined>;
   ip?: string;
 }
 
-// ─── 工具函数 ─────────────────────────────────────────────────────────────────
-
-function resolveCookieDomain(): string | undefined {
-  const cookieDomain = process.env.AUTH_COOKIE_DOMAIN?.trim();
-  if (!cookieDomain || cookieDomain === 'localhost') {
-    return undefined;
-  }
-  return cookieDomain;
-}
-
-/** 优先取 x-forwarded-for 首项，兼容反向代理场景 */
 function resolveClientIp(req: AuthHttpRequest): string {
   const forwarded = req.headers['x-forwarded-for'];
   if (typeof forwarded === 'string' && forwarded) {
@@ -66,7 +59,14 @@ function resolveClientIp(req: AuthHttpRequest): string {
   return req.ip ?? 'unknown';
 }
 
-// ─── 路由 ─────────────────────────────────────────────────────────────────────
+function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
+  const setCookie = upstream.headers.get('set-cookie');
+  if (setCookie) {
+    res.setHeader('set-cookie', setCookie);
+  }
+}
+
+// ─── Router ───────────────────────────────────────────────────────────────────
 
 @Controller('api/auth')
 export class AuthRouter {
@@ -109,10 +109,10 @@ export class AuthRouter {
       throw new UnauthorizedException('人机验证未通过，请重试');
     }
 
-    // 账号密码校验
-    let result: Awaited<ReturnType<PlatformAuthService['loginWithPassword']>>;
+    // 账号密码校验（本地 DB 验证）
+    let adminUser: Awaited<ReturnType<PlatformAuthService['loginWithPassword']>>;
     try {
-      result = await this.platformAuthService.loginWithPassword(body.identifier, body.password);
+      adminUser = await this.platformAuthService.loginWithPassword(body.identifier, body.password);
     } catch {
       this.rateLimiter.recordFailure(ip, body.identifier);
       throw new UnauthorizedException('用户名或密码错误');
@@ -121,40 +121,43 @@ export class AuthRouter {
     // 登录成功：清除限速计数
     this.rateLimiter.recordSuccess(ip, body.identifier);
 
-    const secure = process.env.NODE_ENV === 'production';
-    const domain = resolveCookieDomain();
-
-    res.cookie(ACCESS_COOKIE_KEY, result.tokens.accessToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.expiresIn * 1000,
+    // Part B：委托 auth-bff 签发 Cookie（内部接口，无需传输密码）
+    const signResponse = await fetch(AUTH_BFF + '/api/auth/internal/sign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sub: adminUser.user.id,
+        email: adminUser.user.email,
+        role: 'admin',
+        source: 'admin',
+      }),
     });
 
-    res.cookie(REFRESH_COOKIE_KEY, result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.refreshExpiresIn * 1000,
-    });
+    if (!signResponse.ok) {
+      throw new HttpException('签发会话失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    forwardSetCookie(res, signResponse);
 
     return {
-      userId: result.user.id,
+      userId: adminUser.user.id,
       status: 'authenticated',
     };
   }
 
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@Res({ passthrough: true }) res: Response) {
-    const domain = resolveCookieDomain();
-    res.clearCookie(ACCESS_COOKIE_KEY, { path: '/', domain });
-    res.clearCookie(REFRESH_COOKIE_KEY, { path: '/', domain });
-    return { status: 'logged_out' };
+  async logout(@Req() req: AuthHttpRequest, @Res({ passthrough: true }) res: Response) {
+    // 将 cookie 转发给 auth-bff 完成登出
+    const cookieHeader = req.headers['cookie'];
+    const response = await fetch(AUTH_BFF + '/api/auth/logout', {
+      method: 'POST',
+      headers: cookieHeader ? { Cookie: String(cookieHeader) } : {},
+    });
+
+    const data = await response.json();
+    forwardSetCookie(res, response);
+    return data;
   }
 
   @Get('session')

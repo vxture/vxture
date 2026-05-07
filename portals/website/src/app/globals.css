@@ -1446,3 +1446,65 @@
     padding: 22px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Banner / Hero 区块统一样式
+   用途：各营销页 Banner 统一高度、布局、间距，消除翻页跳动
+   用法：组件根 section → vx-hero-section，内容容器 → vx-hero-content
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vx-hero-section {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  min-height: 540px;
+  padding-top: 80px;           /* pt-20 */
+}
+
+.vx-hero-content {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;           /* max-w-7xl */
+  margin: 0 auto;
+  padding: 80px 24px 48px;     /* pt-20 pb-12 px-6 */
+}
+
+@media (min-width: 1024px) {
+  .vx-hero-content {
+    padding-left: 32px;        /* lg:px-8 */
+    padding-right: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .vx-hero-content {
+    max-width: 1536px;         /* xl:max-w-screen-2xl */
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   内容区块统一样式
+   用途：Banner 下方的内容区，标准奇数/偶数间隔色
+   用法：首区块 → vx-section-odd，下一个 → vx-section-even，依此类推
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.vx-section-odd {
+  background: linear-gradient(to bottom, #eff6ff, #ffffff);
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.dark .vx-section-odd {
+  background: linear-gradient(to bottom, #0f172a, #020617);
+}
+
+.vx-section-even {
+  background: #ffffff;
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.dark .vx-section-even {
+  background: #020617; /* slate-950 */
+}

@@ -1,7 +1,7 @@
 # Vxture Monorepo Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-05-01
+**Version**: 1.3.0
+**Last Updated**: 2026-05-06
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -316,6 +316,7 @@ appears only in the directory path, not in the package name.
 Consumers (`bff/*`, `agent-server/*`) import using `@vxture/service-{name}` as always.
 
 **Adding a new service**:
+
 1. Identify the business domain (e.g. `commerce`, `support`, `identity`)
 2. Create `services/{domain}/{name}/`
 3. Name the package `@vxture/service-{name}`
@@ -667,6 +668,100 @@ When AI tools generate code for this repository:
 - Flexible agent deployment — standalone or embedded in portal
 - Strong TypeScript type safety throughout
 - Service domain organization — services grouped by business domain for navigability and team ownership
+
+---
+
+## Appendix A: portals/website Internal Architecture (v2.0)
+
+### Routing Groups
+
+```
+[locale]/
+  (public)/layout.tsx         ⭐ Header + Footer 唯一实例，所有公开页共享
+  (marketing)/layout.tsx      透传（TODO：未来移入 (public)）
+  (content)/layout.tsx        透传（TODO：未来移入 (content)）
+  (auth)/                     无 Header/Footer，居中卡片布局
+```
+
+`(public)` 是新增的强化父布局，使 Header 和 Footer 实例唯一，跨任何公开页导航均不重新挂载。
+
+### Content Registry 系统
+
+通过 `(content)/[...slug]/page.tsx` 通配路由统一接管所有内容类页面，替代了原有的 `(footer-links)/` 路由组。
+
+```
+CONTENT_REGISTRY = {
+  legal:  { loader: legalLoader,  staticParams: legalStaticParams },
+  blog:   { loader: blogLoader,   staticParams: blogStaticParams },
+  faq:    { loader: createStubLoader('faq') },
+  support:{ loader: createStubLoader('support') },
+  // ... 其他 stub 区段
+}
+```
+
+**URL 映射**：
+| 路径 | 类型 | 渲染方式 |
+|---|---|---|
+| `/legal` | legal-index | 政策卡片列表（translations） |
+| `/legal/{policy}` | legal-detail | 政策详情文档 |
+| `/blog` | blog-index | 占位 |
+| `/faq`, `/support`, ... | stub | 占位 "开发中" |
+
+**扩展方式**：新增内容区段只需三步——`types.ts` 追加 key → 实现 Loader → `registry.ts` 注册。
+
+### Middleware 三个关注点
+
+```
+1. 认证重定向（读 vx_refresh_token Cookie，保护 /dashboard）
+2. next-intl 语言前缀路由（zh-CN / en-US）
+3. 写入 x-pathname header（供 request.ts 按需加载翻译）
+```
+
+不拦截"已登录用户访问登录页"——由客户端 AuthSessionBootstrap 处理。
+
+### 翻译文件加载策略
+
+| 路径                     | 加载 namespace                               |
+| ------------------------ | -------------------------------------------- |
+| `/`                      | home.\*（hero/features/solutions/cases/cta） |
+| `/appcenter*`            | appcenter                                    |
+| `/products*`             | products                                     |
+| `/cases*`                | cases                                        |
+| `/legal*`                | legal                                        |
+| `/about*` 或 `/company*` | company.about, company.contact               |
+| 其他（signin/signup）    | 不加载页面 namespace                         |
+
+每页始终加载：`root`（locale json）、`common/common.json`、`layout/header.json`、`layout/footer.json`
+
+注意：`common.json`、`layout.json`、`home.json` 等根级翻译文件为**指针文件（遗留残留）**，`request.ts` 忽略不加载。
+
+### 内部目录原则
+
+```
+data/            结构数据（href、图片路径、i18n key）—— 不含翻译文本
+components/      按职责分层：layout / marketing / cases / auth / ui
+stores/          只存 UI 状态（auth.store 不存 token）
+lib/content/     Content Registry（路由层与数据源解耦）
+lib/i18n/        框架胶水（routing, navigation, request）
+```
+
+所有组件目录通过 `index.ts` 统一导出。
+
+### 重构变更摘要
+
+| 变更                             | 说明                           |
+| -------------------------------- | ------------------------------ |
+| 🆕 `(public)/layout.tsx`         | Header + Footer 唯一实例       |
+| 🆕 `(content)/[...slug]`         | Content Registry 通配路由      |
+| 🆕 `lib/content/`                | types / registry / loaders     |
+| 🆕 `cases/[slug]`                | 案例详情页从 cases-pages/ 迁移 |
+| 🆕 `AnimatedHeroBg`              | 动态 Hero 背景组件             |
+| 🆕 `AuthSessionBootstrap`        | 登录态恢复引导                 |
+| 🆕 `constants/`                  | 认证/路由常量目录              |
+| ❌ `(footer-links)/`             | 被 Content Registry 替代       |
+| ❌ `(marketing)/legal/[policy]/` | 被 legal loader 替代           |
+| ❌ `(marketing)/cases-pages/`    | 迁移至 cases/[slug]/           |
+| 🔄 middleware.ts                 | 统一认证 + intl + x-pathname   |
 
 ---
 

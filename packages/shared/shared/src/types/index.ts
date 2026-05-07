@@ -24,3 +24,6 @@ export type { SemanticColor } from './ui.types';
 
 // Error Types - 错误元数据类型定义
 export type { ErrorMetadata } from './error.types';
+
+// Portal Context Types - 跨 Portal 导航上下文
+export type { PortalSource, PortalNavContext } from './portal-context.types';

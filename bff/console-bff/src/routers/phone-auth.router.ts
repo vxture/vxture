@@ -1,116 +1,95 @@
 /**
- * phone-auth.router.ts - 手机验证码认证路由
+ * phone-auth.router.ts - 手机验证码路由代理（重构 v1.4）
  * @package @vxture/bff-console
- * @description 发送手机验证码、验证码登录（控制台）
+ *
+ * 【重构说明】所有手机认证操作委托给 auth-bff 处理。
+ * console-bff 不再做短信验证码校验和 JWT 签发。
+ * 本路由负责 HTTP 透传，并转发 set-cookie 头以确保 Cookie 正确写入。
+ *
  * @author AI-Generated
- * @date 2026-05-05
- * @layer Application
- * @category Router
+ * @date 2026-05-07
+ * @version 1.4
  */
 
 import {
-  BadRequestException,
   Body,
   Controller,
   HttpCode,
   HttpStatus,
-  Inject,
   Post,
+  Req,
   Res,
-  UnauthorizedException,
 } from '@nestjs/common';
-import { IsString, Length, Matches } from 'class-validator';
-import type { Response } from 'express';
-import { PhoneCodeService } from '@vxture/service-sms';
-import { CONSOLE_AUTH_COOKIES } from '../auth/cookie.constants';
-import { ConsoleAuthService } from '../auth/auth.service';
-import type { AuthResultDto } from '../dto/auth.dto';
+import type { Request, Response } from 'express';
 
 // ─── DTO ──────────────────────────────────────────────────────────────────────
 
 class SendPhoneCodeDto {
-  @IsString()
-  @Matches(/^1[3-9]\d{9}$/, { message: '请输入有效的中国大陆手机号' })
   phone!: string;
 }
 
 class PhoneLoginDto {
-  @IsString()
-  @Matches(/^1[3-9]\d{9}$/, { message: '请输入有效的中国大陆手机号' })
   phone!: string;
-
-  @IsString()
-  @Length(6, 6, { message: '验证码为 6 位数字' })
   code!: string;
 }
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
-function resolveCookieDomain(): string | undefined {
-  const cookieDomain = process.env.AUTH_COOKIE_DOMAIN?.trim();
-  if (!cookieDomain || cookieDomain === 'localhost') return undefined;
-  return cookieDomain;
+function resolveAuthBffUrl(): string {
+  const configured = process.env['AUTH_BFF_URL']?.trim();
+  if (configured) return configured.replace(/\/+$/, '');
+  return 'http://localhost:3090';
+}
+
+const AUTH_BFF = resolveAuthBffUrl();
+
+function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
+  const setCookie = upstream.headers.get('set-cookie');
+  if (setCookie) {
+    res.setHeader('set-cookie', setCookie);
+  }
+}
+
+function forwardCookie(req: Request): string {
+  return req.headers.cookie ?? '';
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
 @Controller('api/auth')
 export class PhoneAuthRouter {
-  constructor(
-    @Inject(PhoneCodeService) private readonly phoneCodeService: PhoneCodeService,
-    @Inject(ConsoleAuthService) private readonly consoleAuthService: ConsoleAuthService,
-  ) {}
-
-  /** 发送手机验证码（含限流） */
+  /** 发送手机验证码 → 代理到 auth-bff */
   @Post('send-phone-code')
   @HttpCode(HttpStatus.OK)
-  async sendPhoneCode(@Body() dto: SendPhoneCodeDto): Promise<{ message: string }> {
-    await this.phoneCodeService.sendCode(dto.phone);
-    return { message: '验证码已发送，请在 10 分钟内输入' };
+  async sendPhoneCode(@Body() dto: SendPhoneCodeDto, @Res() res: Response) {
+    const response = await fetch(AUTH_BFF + '/api/auth/send-phone-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: dto.phone }),
+    });
+    const data = await response.json();
+    res.status(response.status).json(data);
   }
 
-  /** 验证码登录：校验验证码后签发 JWT，写入 HttpOnly cookie */
+  /** 验证码登录 → 代理到 auth-bff */
   @Post('login-with-phone')
   @HttpCode(HttpStatus.OK)
-  async loginWithPhone(
-    @Body() dto: PhoneLoginDto,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthResultDto> {
-    const valid = await this.phoneCodeService.verifyCode(dto.phone, dto.code);
-    if (!valid) {
-      throw new BadRequestException('验证码错误或已过期，请重新获取');
-    }
-
-    const result = await this.consoleAuthService.loginWithPhoneCode(dto.phone);
-    if (!result) {
-      throw new UnauthorizedException('该手机号尚未注册，请先注册账号');
-    }
-
-    const secure = process.env.NODE_ENV === 'production';
-    const domain = resolveCookieDomain();
-
-    res.cookie(CONSOLE_AUTH_COOKIES.ACCESS_TOKEN, result.tokens.accessToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.expiresIn * 1000,
+  async loginWithPhone(@Body() dto: PhoneLoginDto, @Req() req: Request, @Res() res: Response) {
+    const response = await fetch(AUTH_BFF + '/api/auth/login-with-phone', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: forwardCookie(req),
+      },
+      body: JSON.stringify({
+        phone: dto.phone,
+        code: dto.code,
+        source: 'console',
+      }),
     });
 
-    res.cookie(CONSOLE_AUTH_COOKIES.REFRESH_TOKEN, result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.refreshExpiresIn * 1000,
-    });
-
-    return {
-      userId: result.user.id,
-      status: 'authenticated',
-      tenantId: result.tenantId ?? undefined,
-    };
+    const data = await response.json();
+    forwardSetCookie(res, response);
+    res.status(response.status).json(data);
   }
 }

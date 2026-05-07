@@ -30,6 +30,9 @@ export type {
   SemanticColor,
   // Error Types
   ErrorMetadata,
+  // Portal Context Types
+  PortalSource,
+  PortalNavContext,
 } from './types';
 
 // Value Exports
@@ -64,6 +67,9 @@ export {
   deepMerge,
   deepClone,
   isPlainObject,
+  // Portal Context utils
+  encodePortalContext,
+  decodePortalContext,
 } from './utils';
 
 // Errors

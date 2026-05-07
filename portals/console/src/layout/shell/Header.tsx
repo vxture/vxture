@@ -5,8 +5,10 @@ import Image from 'next/image';
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme, Icon } from '@vxture/design-system';
-import { Avatar, AvatarFallback, Input } from '@/components/ui/primitives';
+import { Input } from '@/components/ui/primitives';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
+import { usePortalEntry } from '@/contexts/PortalEntryContext';
+import { UserPanel } from './UserPanel';
 import { getGlobalUserPreferences, setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
 import type { Locale, Theme } from '@vxture/shared';
 
@@ -20,6 +22,7 @@ export function Header({
   onToggleAssistant: () => void;
 }) {
   const { session } = useConsoleSession();
+  const { portalEntry } = usePortalEntry();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
@@ -31,8 +34,6 @@ export function Header({
   const nextTheme: Theme = currentTheme === 'dark' ? 'light' : 'dark';
   const nextLocale: Locale = locale === 'zh-CN' ? 'en-US' : 'zh-CN';
   const themeIconName = currentTheme === 'dark' ? 'moon' : 'sun';
-  const userDisplayName = session.user?.displayName ?? session.user?.name ?? session.user?.username ?? 'User';
-  const userFallback = userDisplayName.slice(0, 2).toUpperCase();
   const tenantLabel = session.tenant?.workspace ?? session.tenant?.name;
   const assistantLabel = assistantOpen ? t('closeAssistant') : t('openAssistant');
 
@@ -84,18 +85,39 @@ export function Header({
           ) : null}
         </div>
 
-        <Link href="/" className="vx-shell-header__brand" aria-label="vxture.ai">
-          <Image
-            className="vx-shell-header__brand-logo"
-            src="/brand/vxture-logo-white.png"
-            alt=""
-            aria-hidden="true"
-            width={24}
-            height={24}
-            priority
-          />
-          <strong className="vx-shell-header__brand-title">vxture.ai</strong>
-        </Link>
+        {/* Way 1：有跨 Portal 上下文时，logo 链接指向来源 Portal */}
+        {portalEntry ? (
+          <a
+            href={portalEntry.returnTo}
+            className="vx-shell-header__brand vx-shell-header__brand--portal"
+            aria-label={`返回 ${portalEntry.caller}`}
+            title={`返回 ${portalEntry.caller}`}
+          >
+            <Image
+              className="vx-shell-header__brand-logo"
+              src="/brand/vxture-logo-white.png"
+              alt=""
+              aria-hidden="true"
+              width={24}
+              height={24}
+              priority
+            />
+            <strong className="vx-shell-header__brand-title">vxture.ai</strong>
+          </a>
+        ) : (
+          <Link href="/" className="vx-shell-header__brand" aria-label="vxture.ai">
+            <Image
+              className="vx-shell-header__brand-logo"
+              src="/brand/vxture-logo-white.png"
+              alt=""
+              aria-hidden="true"
+              width={24}
+              height={24}
+              priority
+            />
+            <strong className="vx-shell-header__brand-title">vxture.ai</strong>
+          </Link>
+        )}
 
         <span className="vx-shell-header__divider" aria-hidden="true">|</span>
         <strong className="vx-shell-header__workspace-label">{t('workspace')}</strong>
@@ -191,11 +213,8 @@ export function Header({
           </Link>
         </div>
 
-        <button type="button" className="vx-shell-user" aria-label={userDisplayName} title={userDisplayName}>
-          <Avatar>
-            <AvatarFallback>{userFallback}</AvatarFallback>
-          </Avatar>
-        </button>
+        {/* Way 2：头像弹出面板，含返回来源 Portal 区块 */}
+        <UserPanel />
       </div>
     </header>
   );

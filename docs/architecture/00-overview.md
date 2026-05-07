@@ -1,7 +1,7 @@
 # Vxture Platform Architecture Overview
 
-**Version**: 1.2.0
-**Last Updated**: 2026-05-03
+**Version**: 1.3.0
+**Last Updated**: 2026-05-06
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -338,13 +338,13 @@ All shared code lives in `packages/` under a consistent two-level structure:
 packages/{group}/{name}/   →   @vxture/{group}-{name}
 ```
 
-| Group      | Purpose                              | Key packages                                                                       |
-| ---------- | ------------------------------------ | ---------------------------------------------------------------------------------- |
-| `shared`   | Cross-cutting utilities and types    | `@vxture/shared`                                                                   |
+| Group      | Purpose                              | Key packages                                                                                    |
+| ---------- | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| `shared`   | Cross-cutting utilities and types    | `@vxture/shared`                                                                                |
 | `core`     | Platform infrastructure primitives   | `core-api`, `core-auth`, `core-tenant`, `core-locale`, `core-config`, `core-utils`, `core-mail` |
-| `ai`       | Shared AI capabilities (server-side) | `@vxture/ai-sdk` (llm, rag, embedding, workflow)                                   |
-| `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`                                                 |
-| `design`   | UI design system                     | `@vxture/design-system`                                                            |
+| `ai`       | Shared AI capabilities (server-side) | `@vxture/ai-sdk` (llm, rag, embedding, workflow)                                                |
+| `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`                                                              |
+| `design`   | UI design system                     | `@vxture/design-system`                                                                         |
 
 Dependency direction within packages is strict:
 
@@ -462,6 +462,7 @@ or external API exposure is required.
 Path aliases aligned with `packages/{group}/{name}/` structure.
 
 **Type Imports/Exports**:
+
 - Always use `import type` for type-only imports
 - Always use `export type` for type-only exports in index files
 - Never use `export *` for type-only files; explicitly list exports
@@ -508,6 +509,49 @@ are kept apart by design. Different governance, deployment cadence, and dependen
 | `10-bff-layer.md`          | BFF 层架构                              |
 | `11-agent-server.md`       | Agent Server 层架构                     |
 | `12-typescript.md`         | TypeScript 配置标准                     |
+
+---
+
+## Appendix: Portal Internal Architecture Notes
+
+### portals/website — 重构至 v2.0 后的架构要点
+
+#### 路由结构
+
+```
+[locale]/
+  (public)/layout.tsx         ⭐ Header + Footer 唯一实例
+  (marketing)/                透传布局（TODO：未来移入 (public)）
+  (content)/                  Content Registry 通配路由（TODO：未来移入 (public)）
+  (auth)/                     无 Header/Footer，居中卡片布局
+```
+
+#### Content Registry 系统
+
+website 通过 `(content)/[...slug]/page.tsx` 通配路由统一接管所有内容类页面（legal / blog / faq / support / ...），
+通过 Loader 模式将路由层与数据源解耦：
+
+```
+CONTENT_REGISTRY = {
+  legal:  { loader: legalLoader,  staticParams: legalStaticParams },
+  blog:   { loader: blogLoader,   staticParams: blogStaticParams },
+  faq:    { loader: createStubLoader('faq') },
+  // ... 其他 stub 区段
+}
+```
+
+新增内容区段只需三步：`types.ts` 追加 key → 实现 Loader → registry.ts 注册。
+
+#### 关键架构决策
+
+| 决策                       | 说明                                                      |
+| -------------------------- | --------------------------------------------------------- |
+| Header/Footer 唯一实例     | 在 `(public)/layout.tsx` 渲染，子路由组透传               |
+| 结构数据与翻译分离         | `data/` 只存 href、图片路径、i18n key，文本在 `messages/` |
+| 组件按职责分层             | `layout/` / `marketing/` / `cases/` / `auth/` / `ui/`     |
+| Store 只存 UI 状态         | auth.store 存 `{user, isAuthenticated}`，不存 token       |
+| Middleware 三关注点        | 认证重定向 → intl → x-pathname                            |
+| 所有组件通过 index.ts 导出 | 各组件目录均有统一导出                                    |
 
 ---
 

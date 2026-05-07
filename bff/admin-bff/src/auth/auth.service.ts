@@ -1,9 +1,6 @@
 import { compare } from 'bcryptjs';
 import { BadGatewayException, Inject, Injectable, OnModuleDestroy, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { VxConfigService } from '@vxture/core-config';
-import type { AuthTokenPair } from '@vxture/core-auth';
-import { JwtAuthScope, JwtUserType } from '@vxture/core-auth';
 import { Pool } from 'pg';
 import type { ConsoleUser } from '../types/console.types';
 
@@ -20,10 +17,7 @@ export class PlatformAuthService implements OnModuleDestroy {
   private readonly pool: Pool | null;
 
   constructor(
-    @Inject(JwtService)
-    private readonly jwtService: JwtService,
-    @Inject(VxConfigService)
-    private readonly configService: VxConfigService,
+    @Inject(VxConfigService) private readonly configService: VxConfigService,
   ) {
     const database = this.configService.database;
     const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
@@ -48,43 +42,16 @@ export class PlatformAuthService implements OnModuleDestroy {
     await this.pool?.end();
   }
 
+  /**
+   * 【重构 v1.4】仅做 DB 密码校验，不再签发 JWT。
+   * JWT 签发统一委托给 auth-bff 的 /api/auth/internal/sign。
+   */
   async loginWithPassword(identifier: string, password: string): Promise<{
-    tokens: AuthTokenPair;
     user: ConsoleUser;
   }> {
     const admin = await this.authenticatePlatformAdmin(identifier, password);
 
-    const accessPayload: PlatformAdminJwtPayload = {
-      sub: admin.id,
-      email: admin.email ?? `${admin.username}@local.vxture`,
-      role: 'admin',
-      userType: JwtUserType.OPERATOR,
-      permissions: admin.permissions,
-      authScope: JwtAuthScope.PLATFORM_ADMIN,
-      provider: 'password',
-    };
-
-    const refreshPayload: PlatformAdminRefreshPayload = {
-      sub: admin.id,
-      authScope: JwtAuthScope.PLATFORM_ADMIN,
-      jti: `${admin.id}:${Date.now()}`,
-    };
-
-    const tokens = {
-      accessToken: this.jwtService.sign(accessPayload, {
-        secret: this.configService.auth.JWT_SECRET,
-        expiresIn: this.configService.auth.JWT_ACCESS_EXPIRES_IN as never,
-      }),
-      refreshToken: this.jwtService.sign(refreshPayload, {
-        secret: this.configService.auth.JWT_SECRET,
-        expiresIn: this.configService.auth.JWT_REFRESH_EXPIRES_IN as never,
-      }),
-      expiresIn: parseExpiresToSeconds(this.configService.auth.JWT_ACCESS_EXPIRES_IN),
-      refreshExpiresIn: parseExpiresToSeconds(this.configService.auth.JWT_REFRESH_EXPIRES_IN),
-    };
-
     return {
-      tokens,
       user: mapPlatformAdminUser(admin),
     };
   }
@@ -97,16 +64,6 @@ export class PlatformAuthService implements OnModuleDestroy {
   async getCapabilities(accountId: string): Promise<string[]> {
     const admin = await this.getPlatformAdminById(accountId);
     return admin?.permissions ?? [];
-  }
-
-  verifyAccessToken(token: string) {
-    const payload = this.jwtService.verify<PlatformAdminJwtPayload>(token, {
-      secret: this.configService.auth.JWT_SECRET,
-    });
-    if (payload.authScope !== JwtAuthScope.PLATFORM_ADMIN) {
-      throw new UnauthorizedException('Invalid admin token');
-    }
-    return payload;
   }
 
   private async authenticatePlatformAdmin(identifier: string, password: string): Promise<PlatformAdminView> {
@@ -227,27 +184,6 @@ export class PlatformAuthService implements OnModuleDestroy {
   }
 }
 
-interface PlatformAdminJwtPayload {
-  sub: string;
-  email: string;
-  role: string;
-  /** 平台运营人员固定为 'operator'，供 vela-bff surface 校验使用 */
-  userType: JwtUserType;
-  permissions?: string[];
-  authScope: JwtAuthScope;
-  provider: 'password';
-  iat?: number;
-  exp?: number;
-}
-
-interface PlatformAdminRefreshPayload {
-  sub: string;
-  authScope: JwtAuthScope;
-  jti: string;
-  iat?: number;
-  exp?: number;
-}
-
 interface PlatformAdminRow {
   id: string;
   username: string;
@@ -331,31 +267,4 @@ function mapPlatformAdminUser(admin: PlatformAdminView): ConsoleUser {
     username: admin.username,
     phone: admin.phone,
   };
-}
-
-function parseExpiresToSeconds(value: string): number {
-  if (/^\d+$/.test(value)) {
-    return Number(value);
-  }
-
-  const match = value.match(/^(\d+)([smhd])$/);
-  if (!match) {
-    return 900;
-  }
-
-  const amount = Number(match[1]);
-  const unit = match[2];
-
-  switch (unit) {
-    case 's':
-      return amount;
-    case 'm':
-      return amount * 60;
-    case 'h':
-      return amount * 60 * 60;
-    case 'd':
-      return amount * 60 * 60 * 24;
-    default:
-      return 900;
-  }
 }

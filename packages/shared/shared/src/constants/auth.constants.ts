@@ -49,7 +49,7 @@ export const AUTH_CONSTANTS = {
     LOGIN: '/api/auth/login',
     LOGOUT: '/api/auth/logout',
     REFRESH: '/api/auth/refresh',
-    ME: '/api/auth/me',
+    ME: '/api/me',
     SESSION: '/api/auth/session',
   },
 } as const;

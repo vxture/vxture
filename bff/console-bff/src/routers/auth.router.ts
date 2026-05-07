@@ -1,74 +1,139 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+/**
+ * auth.router.ts - 认证路由代理（重构 v1.4）
+ * @package @vxture/bff-console
+ *
+ * 【重构说明】所有认证操作（login/logout）委托给 auth-bff 处理。
+ * console-bff 不再做密码校验、JWT 签发、refresh token 管理。
+ * 本路由负责 HTTP 透传，并转发 set-cookie 头以确保 Cookie 正确写入。
+ *
+ * session 端点保留本地，依赖 auth middleware 挂载的用户上下文。
+ *
+ * @author AI-Generated
+ * @date 2026-05-07
+ * @version 1.4
+ */
+
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { CONSOLE_AUTH_COOKIES } from '../auth/cookie.constants';
-import { ConsoleAuthService } from '../auth/auth.service';
-import { AuthResultDto, LoginDto } from '../dto/auth.dto';
 import type { RequestContext } from '../types/console.types';
 
-const ACCESS_COOKIE_KEY = CONSOLE_AUTH_COOKIES.ACCESS_TOKEN;
-const REFRESH_COOKIE_KEY = CONSOLE_AUTH_COOKIES.REFRESH_TOKEN;
+// ─── DTO ──────────────────────────────────────────────────────────────────────
 
-function resolveCookieDomain(): string | undefined {
-  const cookieDomain = process.env.AUTH_COOKIE_DOMAIN?.trim();
-
-  if (!cookieDomain || cookieDomain === 'localhost') {
-    return undefined;
-  }
-
-  return cookieDomain;
+class LoginDto {
+  identifier!: string;
+  password!: string;
 }
+
+// ─── 工具 ─────────────────────────────────────────────────────────────────────
+
+function resolveAuthBffUrl(): string {
+  const configured = process.env['AUTH_BFF_URL']?.trim();
+  if (configured) return configured.replace(/\/+$/, '');
+  return 'http://localhost:3090';
+}
+
+const AUTH_BFF = resolveAuthBffUrl();
+
+function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
+  const setCookie = upstream.headers.get('set-cookie');
+  if (setCookie) {
+    res.setHeader('set-cookie', setCookie);
+  }
+}
+
+function forwardCookie(req: Request): string {
+  return req.headers.cookie ?? '';
+}
+
+// ─── Router ───────────────────────────────────────────────────────────────────
 
 @Controller('api/auth')
 export class AuthRouter {
-  constructor(@Inject(ConsoleAuthService) private readonly consoleAuthService: ConsoleAuthService) {}
-
+  /**
+   * 密码登录 → 代理到 auth-bff
+   * POST /api/auth/login
+   */
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: LoginDto, @Res({ passthrough: true }) res: Response): Promise<AuthResultDto> {
-    const result = await this.consoleAuthService.loginWithPassword(body.identifier, body.password);
-    const secure = process.env.NODE_ENV === 'production';
-    const domain = resolveCookieDomain();
-
-    res.cookie(ACCESS_COOKIE_KEY, result.tokens.accessToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.expiresIn * 1000,
+  async login(@Body() body: LoginDto, @Req() req: Request, @Res() res: Response): Promise<void> {
+    const response = await fetch(AUTH_BFF + '/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: forwardCookie(req),
+      },
+      body: JSON.stringify({
+        identifier: body.identifier,
+        password: body.password,
+        source: 'console',
+      }),
     });
 
-    res.cookie(REFRESH_COOKIE_KEY, result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.refreshExpiresIn * 1000,
-    });
-
-    return {
-      userId: result.user.id,
-      status: 'authenticated',
-      tenantId: result.tenantId ?? undefined,
-    };
+    const data = await response.json();
+    forwardSetCookie(res, response);
+    res.status(response.status).json(data);
   }
 
+  /**
+   * 登出 → 代理到 auth-bff
+   * POST /api/auth/logout
+   */
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@Res({ passthrough: true }) res: Response) {
-    const domain = resolveCookieDomain();
-    res.clearCookie(ACCESS_COOKIE_KEY, { path: '/', domain });
-    res.clearCookie(REFRESH_COOKIE_KEY, { path: '/', domain });
-    return { status: 'logged_out' };
+  async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const response = await fetch(AUTH_BFF + '/api/auth/logout', {
+      method: 'POST',
+      headers: {
+        Cookie: forwardCookie(req),
+      },
+    });
+
+    const data = await response.json();
+    forwardSetCookie(res, response);
+    res.status(response.status).json(data);
   }
 
+  /**
+   * 刷新 access token → 代理到 auth-bff
+   * POST /api/auth/refresh
+   */
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const response = await fetch(
+      AUTH_BFF + '/api/auth/refresh?source=console',
+      {
+        method: 'POST',
+        headers: {
+          Cookie: forwardCookie(req),
+        },
+      },
+    );
+
+    const data = await response.json();
+    forwardSetCookie(res, response);
+    res.status(response.status).json(data);
+  }
+
+  /**
+   * 会话状态查询（本地，依赖 auth middleware）
+   * GET /api/auth/session
+   */
   @Get('session')
   getSessionState(@Req() req: Request & RequestContext) {
     if (!req.user) {
       throw new UnauthorizedException('No active session');
     }
-
     return { status: 'active', userId: req.user.id };
   }
 }

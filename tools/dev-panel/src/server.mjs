@@ -49,9 +49,60 @@ const SERVICES = [
     priority: 1,
     url: 'http://localhost:3011',
     command: 'pnpm --filter @vxture/bff-website dev',
+    env: {
+      AUTH_BFF_URL: 'http://localhost:3090',
+    },
     healthChecks: [
       { label: 'healthz', url: 'http://localhost:3011/healthz',     okStatuses: [200] },
-      { label: 'auth.me', url: 'http://localhost:3011/api/auth/me', okStatuses: [401] },
+      { label: 'api.me',  url: 'http://localhost:3011/api/me',      okStatuses: [401] },
+    ],
+  },
+  {
+    id: 'auth-bff',
+    name: 'Auth BFF',
+    port: 3090,
+    priority: 1,
+    url: 'http://localhost:3090',
+    command: 'pnpm --filter @vxture/bff-auth dev',
+    env: {
+      AUTH_BFF_PORT: '3090',
+    },
+    healthChecks: [
+      { label: 'healthz', url: 'http://localhost:3090/healthz', okStatuses: [200] },
+    ],
+  },
+  {
+    id: 'ruyin-server',
+    name: 'Ruyin Server',
+    port: 3112,
+    priority: 1,
+    url: 'http://localhost:3112',
+    command: 'pnpm --filter @vxture/agent-server-ruyin dev',
+    env: {
+      RUYIN_SERVER_PORT: '3112',
+      RUYINAGENT_SERVER_PORT: '3112',
+    },
+    healthChecks: [
+      { label: 'health', url: 'http://localhost:3112/health', okStatuses: [200] },
+    ],
+  },
+  {
+    id: 'ruyin-bff',
+    name: 'Ruyin BFF',
+    port: 3111,
+    priority: 1,
+    url: 'http://localhost:3111',
+    command: 'pnpm --filter @vxture/bff-ruyin dev',
+    env: {
+      PORT: '3111',
+      RUYIN_BFF_PORT: '3111',
+      RUYINAGENT_BFF_PORT: '3111',
+      AGENT_SERVER_BASE_URL: 'http://127.0.0.1:3112',
+      AUTH_BFF_URL: 'http://localhost:3090',
+    },
+    healthChecks: [
+      { label: 'port', kind: 'tcp', port: 3111 },
+      { label: 'auth.session', url: 'http://localhost:3111/api/auth/session', okStatuses: [401] },
     ],
   },
   {
@@ -95,6 +146,7 @@ const SERVICES = [
     command: 'pnpm --filter @vxture/bff-console dev',
     env: {
       AI_GATEWAY_URL: 'http://localhost:3100',
+      AUTH_BFF_URL: 'http://localhost:3090',
     },
     healthChecks: [
       { label: 'healthz',      url: 'http://localhost:3021/healthz',           okStatuses: [200] },
@@ -111,6 +163,7 @@ const SERVICES = [
     env: {
       AI_GATEWAY_URL: 'http://localhost:3100',
       ADMIN_BFF_PORT: '3031',
+      AUTH_BFF_URL: 'http://localhost:3090',
     },
     healthChecks: [
       { label: 'healthz',       url: 'http://localhost:3031/healthz',               okStatuses: [200] },
@@ -126,13 +179,17 @@ const SERVICES = [
     url: 'http://localhost:8000',
     command: 'pnpm dev:gateway',
     env: {
+      WEBSITE_BFF_ORIGIN: 'http://localhost:3011',
+      CONSOLE_BFF_ORIGIN: 'http://localhost:3021',
       ADMIN_BFF_ORIGIN: 'http://localhost:3031',
+      AUTH_BFF_ORIGIN: 'http://localhost:3090',
     },
     healthChecks: [
       { label: 'healthz',     url: 'http://localhost:8000/healthz',                      okStatuses: [200] },
-      { label: 'website-api', url: 'http://localhost:8000/website-api/api/auth/me',      okStatuses: [401] },
+      { label: 'website-api', url: 'http://localhost:8000/website-api/api/me',           okStatuses: [401] },
       { label: 'console-api', url: 'http://localhost:8000/console-api/api/auth/session', okStatuses: [401] },
       { label: 'admin-api',   url: 'http://localhost:8000/admin-api/api/auth/session',   okStatuses: [401] },
+      { label: 'auth-api',    url: 'http://localhost:8000/auth-api/healthz',             okStatuses: [200] },
     ],
   },
   {
@@ -195,6 +252,9 @@ const SERVICES = [
 /** 启动顺序 — 按依赖顺序逐级等待健康检查通过 */
 const START_ORDER = [
   'ai-gateway',
+  'auth-bff',
+  'ruyin-server',
+  'ruyin-bff',
   'vela-server',
   'vela-bff',
   'website-bff',
@@ -566,8 +626,12 @@ function pageHtml() {
       --err:         #9f1239;
       --err-bg:      #ffe4e6;
       --err-border:  #fca5a5;
+      --card-bg:     #f7f9ff;
+      --card-hover:  #ffffff;
+      --card-head:   #dce6ff;
+      --card-head-hover: #d3ddfb;
       --topbar-h:    56px;
-      --radius:      10px;
+      --radius:      8px;
       --radius-sm:   6px;
     }
 
@@ -687,10 +751,16 @@ function pageHtml() {
     }
 
     /* ── 服务面板 ── */
-    .svc-panel { min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+    .svc-panel {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      container-type: inline-size;
+    }
 
     /* ── 优先级分组 ── */
-    .group { display: flex; flex-direction: column; gap: 8px; }
+    .group { display: flex; flex-direction: column; gap: 10px; }
     .group-header {
       display: flex;
       align-items: center;
@@ -706,17 +776,39 @@ function pageHtml() {
       white-space: nowrap;
     }
     .group-line { flex: 1; height: 1px; background: var(--border); }
+    .group-cards {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @container (max-width: 1180px) {
+      .group-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @container (max-width: 820px) {
+      .group-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @container (max-width: 540px) {
+      .group-cards { grid-template-columns: 1fr; }
+    }
 
     /* ── 卡片 ── */
     .card {
-      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      height: 100%;
+      min-height: 236px;
+      background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: 0 1px 6px rgba(30,50,180,.04);
-      transition: box-shadow .15s, border-color .15s, transform .12s;
+      cursor: pointer;
+      transition: background .15s, box-shadow .15s, border-color .15s, transform .12s;
     }
     .card:hover {
+      background: var(--card-hover);
       border-color: var(--border-med);
       box-shadow: 0 4px 20px rgba(30,60,200,.07);
       transform: translateY(-1px);
@@ -725,22 +817,22 @@ function pageHtml() {
       border-color: var(--brand-dim);
       box-shadow: 0 4px 24px rgba(79,117,255,.14);
     }
-    .card.selected .card-body { background: #fafbff; }
-
-    /* 点击区 */
-    .card-body {
-      padding: 10px 14px 8px;
-      cursor: pointer;
-      user-select: none;
-    }
-    .card-body:hover { background: #fafbff; }
+    .card.selected .card-head { background: #c8d6ff; }
 
     /* 第一行：优先级 + 名称 + 端口 + 状态 */
-    .card-r1 {
+    .card-head {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin-bottom: 7px;
+      min-height: 46px;
+      padding: 10px 12px;
+      background: var(--card-head);
+      border-bottom: 1px solid var(--border-med);
+      user-select: none;
+      transition: background .15s;
+    }
+    .card:hover .card-head {
+      background: var(--card-head-hover);
     }
     .svc-name {
       flex: 1;
@@ -762,21 +854,46 @@ function pageHtml() {
       white-space: nowrap;
     }
 
-    /* 第二行：健康检查 + 元信息 */
-    .card-r2 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .checks  { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+    .card-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 0;
+      padding: 14px;
+    }
+
+    /* 第二行：健康探针 */
+    .probe-row {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+    .checks {
+      display: grid;
+      grid-template-columns: repeat(var(--probe-cols, 1), minmax(0, 1fr));
+      grid-template-rows: repeat(2, auto);
+      gap: 6px;
+      min-width: 0;
+      align-items: stretch;
+    }
     .check {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      padding: 2px 7px;
+      min-width: 0;
+      padding: 4px 7px;
       border-radius: 999px;
       font-size: 11px;
       font-weight: 600;
       border: 1px solid var(--border);
-      background: #f8f9ff;
+      background: #ffffff;
       color: var(--ink-muted);
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .check .dur { opacity: .55; font-size: 10px; }
     .check.ok  { background: var(--ok-bg);  color: var(--ok);  border-color: var(--ok-border);  }
@@ -790,15 +907,19 @@ function pageHtml() {
       white-space: nowrap;
     }
     .svc-meta b { color: var(--ink-muted); font-weight: 600; }
+    .svc-meta:empty { display: none; }
 
-    /* 卡片底栏：命令行 + 操作按钮 */
-    .card-foot {
+    /* 第三行：命令 */
+    .command-row {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 6px 10px 6px 14px;
-      background: #f8f9ff;
-      border-top: 1px solid var(--border);
+      min-width: 0;
+      margin-top: auto;
+      padding: 8px 9px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
     }
     .svc-cmd {
       flex: 1;
@@ -811,24 +932,58 @@ function pageHtml() {
     }
     .btn-copy {
       flex-shrink: 0;
-      padding: 3px 7px;
-      font-size: 11px;
-      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      font-size: 13px;
+      background: #f8f9ff;
       color: var(--ink-faint);
       border: 1px solid var(--border);
       border-radius: var(--radius-sm);
     }
     .btn-copy:hover:not(:disabled) { background: var(--brand-light); color: var(--brand); border-color: var(--brand-border); }
-    .card-actions { display: flex; gap: 5px; flex-shrink: 0; }
-    .card-actions button { padding: 4px 9px; font-size: 12px; font-weight: 700; border: 1px solid transparent; }
-    .btn-start   { background: var(--brand); color: #fff; box-shadow: 0 2px 8px rgba(59,91,219,.25); }
-    .btn-start:hover:not(:disabled)   { background: var(--brand-dark); }
-    .btn-stop    { background: var(--err-bg); color: var(--err); border-color: var(--err-border); }
-    .btn-stop:hover:not(:disabled)    { background: #fecdd3; }
-    .btn-restart { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
-    .btn-restart:hover:not(:disabled) { background: #fde68a; }
-    .btn-open    { background: transparent; color: var(--brand); border-color: var(--border); }
-    .btn-open:hover:not(:disabled)    { background: var(--brand-light); border-color: var(--brand-border); }
+
+    /* 第四行：操作 */
+    .card-actions {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .card-actions button {
+      min-width: 0;
+      height: 32px;
+      padding: 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+    .btn-start,
+    .btn-stop,
+    .btn-restart {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(59,91,219,.22);
+    }
+    .btn-start:hover:not(:disabled),
+    .btn-stop:hover:not(:disabled),
+    .btn-restart:hover:not(:disabled) {
+      background: var(--brand-dark);
+    }
+    .btn-open {
+      background: #edf2ff;
+      color: var(--brand-dark);
+      border-color: #9fb0f8;
+      box-shadow: inset 0 0 0 1px rgba(59,91,219,.08);
+    }
+    .btn-open:hover:not(:disabled) {
+      background: #dfe7ff;
+      color: #10207a;
+      border-color: var(--brand-dim);
+      box-shadow: 0 2px 8px rgba(59,91,219,.16);
+    }
 
     /* ── 状态徽章 ── */
     .badge-p {
@@ -944,6 +1099,7 @@ function pageHtml() {
       color: #c8d8f8;
       white-space: pre-wrap;
       word-break: break-all;
+      user-select: text;
       background: transparent;
     }
 
@@ -979,6 +1135,7 @@ function pageHtml() {
           <div class="log-title" id="log-title">日志</div>
           <div class="log-controls">
             <button type="button" class="btn-log" id="btn-autoscroll" onclick="toggleAutoScroll()">自动滚动</button>
+            <button type="button" class="btn-log" id="btn-copy-log" onclick="copyLog()">复制</button>
             <button type="button" class="btn-log" onclick="clearLog()">清除</button>
             <button type="button" class="btn-log-close" onclick="closeLog()" aria-label="关闭日志">×</button>
           </div>
@@ -1019,6 +1176,31 @@ function pageHtml() {
       }
     }
 
+    async function copyText(text) {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (!ok) throw new Error('copy failed');
+    }
+
+    function flashButton(btn, text = '✓') {
+      if (!btn) return;
+      const orig = btn.textContent;
+      btn.textContent = text;
+      setTimeout(() => { btn.textContent = orig; }, 1200);
+    }
+
     /* ── 状态分类 ── */
     function statusCls(s)  {
       if (s.listening && s.healthy) return 'on';
@@ -1031,6 +1213,10 @@ function pageHtml() {
       if (s.stopping) return '停止中';
       if (s.running)  return '启动中';
       return '已停止';
+    }
+
+    function probeCols(health) {
+      return Math.max(1, Math.ceil((health?.length ?? 0) / 2));
     }
 
     /* ── 渲染健康检查 ── */
@@ -1057,22 +1243,22 @@ function pageHtml() {
       const meta = [pid, up].filter(Boolean).join(' · ');
 
       return \`
-        <div class="card\${sel}" id="card-\${esc(s.id)}">
-          <div class="card-body" onclick="select('\${esc(s.id)}')">
-            <div class="card-r1">
-              <span class="badge-p p\${s.priority}">P\${s.priority}</span>
-              <span class="svc-name">\${esc(s.name)}</span>
-              <span class="svc-port">:\${s.port}</span>
-              <span class="status-badge \${cls}">\${txt}</span>
-            </div>
-            <div class="card-r2">
-              <div class="checks">\${renderChecks(s.health)}</div>
-              \${meta ? \`<div class="svc-meta">\${meta}</div>\` : ''}
-            </div>
+        <div class="card\${sel}" id="card-\${esc(s.id)}" onclick="select('\${esc(s.id)}')">
+          <div class="card-head">
+            <span class="badge-p p\${s.priority}">P\${s.priority}</span>
+            <span class="svc-name">\${esc(s.name)}</span>
+            <span class="svc-port">:\${s.port}</span>
+            <span class="status-badge \${cls}">\${txt}</span>
           </div>
-          <div class="card-foot">
-            <code class="svc-cmd" title="\${esc(s.command)}">\${esc(s.command)}</code>
-            <button type="button" class="btn-copy" onclick="copyCmd('\${esc(s.id)}')" title="复制命令">⎘</button>
+          <div class="card-content">
+            <div class="probe-row">
+              <div class="checks" style="--probe-cols: \${probeCols(s.health)}">\${renderChecks(s.health)}</div>
+              <div class="svc-meta">\${meta}</div>
+            </div>
+            <div class="command-row">
+              <code class="svc-cmd" title="\${esc(s.command)}">\${esc(s.command)}</code>
+              <button type="button" class="btn-copy" onclick="event.stopPropagation(); copyCmd('\${esc(s.id)}')" title="复制命令">⎘</button>
+            </div>
             <div class="card-actions" onclick="event.stopPropagation()">
               <button type="button" class="btn-start"
                 \${canStart ? '' : 'disabled'}
@@ -1084,7 +1270,7 @@ function pageHtml() {
                 \${canStop ? '' : 'disabled'}
                 onclick="svcAction('\${esc(s.id)}','restart')">重启</button>
               <button type="button" class="btn-open"
-                onclick="window.open('\${esc(s.url)}','_blank')">↗</button>
+                onclick="window.open('\${esc(s.url)}','_blank')">打开</button>
             </div>
           </div>
         </div>
@@ -1105,7 +1291,9 @@ function pageHtml() {
               <span class="group-label">\${esc(GROUP_LABELS[p] ?? 'P' + p)}</span>
               <div class="group-line"></div>
             </div>
-            \${svcs.map(renderCard).join('')}
+            <div class="group-cards">
+              \${svcs.map(renderCard).join('')}
+            </div>
           </div>
         \`).join('');
     }
@@ -1121,7 +1309,10 @@ function pageHtml() {
       if (badge) { badge.className = 'status-badge ' + statusCls(s); badge.textContent = statusTxt(s); }
 
       const checksEl = card.querySelector('.checks');
-      if (checksEl) checksEl.innerHTML = renderChecks(s.health);
+      if (checksEl) {
+        checksEl.style.setProperty('--probe-cols', String(probeCols(s.health)));
+        checksEl.innerHTML = renderChecks(s.health);
+      }
 
       const metaEl = card.querySelector('.svc-meta');
       if (metaEl) {
@@ -1174,23 +1365,31 @@ function pageHtml() {
       const svc     = latestServices.find((s) => s.id === selectedId);
       const titleEl = document.getElementById('log-title');
       const logBox  = document.getElementById('log-box');
+      const copyBtn = document.getElementById('btn-copy-log');
       if (!logBox) return;
 
       if (!svc) {
         if (titleEl) titleEl.textContent = '日志';
+        if (copyBtn) copyBtn.disabled = true;
         logBox.textContent = '[点击卡片查看日志]';
         return;
       }
 
       const atBottom = logBox.scrollHeight - logBox.scrollTop - logBox.clientHeight < 40;
       if (titleEl) titleEl.textContent = \`\${svc.name}  :\${svc.port}\`;
+      if (copyBtn) copyBtn.disabled = !svc.logs.length;
       logBox.textContent = svc.logs.length ? svc.logs.join('\\n') : '[暂无日志]';
       if ((autoScroll || atBottom) && svc.logs.length) logBox.scrollTop = logBox.scrollHeight;
     }
 
     function select(id) {
+      const workspace = document.getElementById('workspace');
+      if (selectedId === id && workspace?.classList.contains('log-open')) {
+        closeLog();
+        return;
+      }
       selectedId = id;
-      document.getElementById('workspace')?.classList.add('log-open');
+      workspace?.classList.add('log-open');
       document.querySelectorAll('.card').forEach((c) => c.classList.toggle('selected', c.id === 'card-' + id));
       renderLog();
     }
@@ -1211,6 +1410,16 @@ function pageHtml() {
         if (svc) svc.logs = [];
         renderLog();
       } catch { /* ignore */ }
+    }
+
+    async function copyLog() {
+      const svc = latestServices.find((s) => s.id === selectedId);
+      const text = (svc?.logs ?? []).join('\\n');
+      if (!text) return;
+      try {
+        await copyText(text);
+        flashButton(document.getElementById('btn-copy-log'));
+      } catch { /* clipboard api not available */ }
     }
 
     function toggleAutoScroll() {
@@ -1237,13 +1446,8 @@ function pageHtml() {
       const svc = latestServices.find((s) => s.id === id);
       if (!svc) return;
       try {
-        await navigator.clipboard.writeText(svc.command);
-        const btn = document.querySelector(\`#card-\${id} .btn-copy\`);
-        if (btn) {
-          const orig = btn.textContent;
-          btn.textContent = '✓';
-          setTimeout(() => { btn.textContent = orig; }, 1200);
-        }
+        await copyText(svc.command);
+        flashButton(document.querySelector(\`#card-\${id} .btn-copy\`));
       } catch { /* clipboard api not available */ }
     }
 
@@ -1336,6 +1540,81 @@ function pageHtml() {
 </html>`;
 }
 
+async function detectExistingPanel(port) {
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      resolve(value);
+    };
+
+    const req = http.request(
+      { hostname: '127.0.0.1', port, path: '/api/status', method: 'GET', timeout: 700 },
+      (res) => {
+        let body = '';
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => { body += chunk; });
+        res.on('end', () => {
+          if (res.statusCode !== 200) {
+            finish(false);
+            return;
+          }
+          try {
+            const payload = JSON.parse(body);
+            finish(Number.isInteger(payload?.total));
+          } catch {
+            finish(false);
+          }
+        });
+      },
+    );
+
+    req.on('timeout', () => {
+      req.destroy();
+      finish(false);
+    });
+    req.on('error', () => finish(false));
+    req.end();
+  });
+}
+
+async function handleListenError(err) {
+  if (err?.code !== 'EADDRINUSE') {
+    console.error(err);
+    process.exit(1);
+  }
+
+  const existingPanel = await detectExistingPanel(PANEL_PORT);
+  if (existingPanel) {
+    console.log(`[dev-panel] already running at http://localhost:${PANEL_PORT}`);
+    process.exit(0);
+  }
+
+  console.error(`[dev-panel] port ${PANEL_PORT} is already in use by another process.`);
+  console.error('[dev-panel] stop that process or set DEV_PANEL_PORT to a free port.');
+  process.exit(1);
+}
+
+async function startPanelServer() {
+  const existingPanel = await detectExistingPanel(PANEL_PORT);
+  if (existingPanel) {
+    console.log(`[dev-panel] already running at http://localhost:${PANEL_PORT}`);
+    return;
+  }
+
+  server.on('error', (err) => {
+    handleListenError(err).catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
+  });
+
+  server.listen(PANEL_PORT, () => {
+    console.log(`[dev-panel] http://localhost:${PANEL_PORT}  (ROOT_DIR: ${ROOT_DIR})`);
+  });
+}
+
 // ─── HTTP 路由 ─────────────────────────────────────────────────────────────────
 
 const server = http.createServer(async (req, res) => {
@@ -1407,6 +1686,7 @@ const server = http.createServer(async (req, res) => {
   sendJson(res, 404, { message: 'Not found' });
 });
 
-server.listen(PANEL_PORT, () => {
-  console.log(`[dev-panel] http://localhost:${PANEL_PORT}  (ROOT_DIR: ${ROOT_DIR})`);
+startPanelServer().catch((err) => {
+  console.error(err);
+  process.exit(1);
 });

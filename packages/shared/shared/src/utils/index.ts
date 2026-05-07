@@ -12,3 +12,6 @@ export { formatCurrency, formatDate, formatNumber } from './format.utils';
 
 // Object utils
 export { deepMerge, deepClone, isPlainObject } from './object.utils';
+
+// Portal Context utils
+export { encodePortalContext, decodePortalContext } from './portal-context.utils';

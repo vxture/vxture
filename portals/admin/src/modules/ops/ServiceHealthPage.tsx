@@ -38,6 +38,7 @@ function serviceStatus(service: DevServiceSnapshot): ServiceStatus {
 
 function serviceLayer(service: DevServiceSnapshot): ServiceLayer {
   if (service.id === 'dev-tools') return 'tooling';
+  if (service.id === 'auth-bff') return 'bff';
   if (service.id.includes('vela') || service.id.includes('ruyin')) return 'agent';
   if (service.id.includes('ai')) return 'ai';
   if (service.id === 'gateway') return 'gateway';

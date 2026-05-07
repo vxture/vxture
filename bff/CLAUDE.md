@@ -29,8 +29,11 @@ BFF（Backend For Frontend）是**前端与后端之间的唯一通道**。
 - 包含**业务逻辑**（属于 service-\* 或 agent-server）
 - 调用**AI 模型**（属于 agent-server）
 - 引入 `design-system`、`platform-*` 等 UI 包
-- 与**其他 BFF** 通信
 - 直接访问数据库（通过 service-\* 间接访问）
+
+> **例外**：所有非 auth 的 BFF 允许通过 HTTP 与 `@vxture/bff-auth` 通信，
+> 用于委托登录、登出、refresh、跨域 SSO 等认证操作。
+> auth-bff 是**唯一有权签发 JWT** 的服务，其他 BFF 不持有 JWT 签发逻辑。
 
 ---
 

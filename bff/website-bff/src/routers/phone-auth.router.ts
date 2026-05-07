@@ -1,42 +1,28 @@
 /**
- * phone-auth.router.ts - 手机验证码认证路由
+ * phone-auth.router.ts - 手机认证路由（重构 v1.3）
  * @package @vxture/bff-website
- * @description 发送手机验证码、验证码登录
+ *
+ * 【重构说明】所有认证操作委托给 auth-bff 处理。
+ * website-bff 不再做短信验证码校验和 JWT 签发。
+ *
  * @author AI-Generated
- * @date 2026-05-05
- * @layer Application
- * @category Router
+ * @date 2026-05-07
+ * @version 1.3
  */
 
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  Post,
-  Res,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
 import { IsString, Length, Matches } from 'class-validator';
 import type { Response } from 'express';
-import { AUTH_CONSTANTS } from '@vxture/shared';
-import { PhoneCodeService } from '@vxture/service-sms';
-import { WebsiteAuthService } from '../auth/auth.service';
-import type { AuthUserDto } from '../types/auth.types';
 
-// ─── DTO ──────────────────────────────────────────────────────────────────────
-
-class SendPhoneCodeDto {
+class SendSmsCodeDto {
   @IsString()
-  @Matches(/^1[3-9]\d{9}$/, { message: '请输入有效的中国大陆手机号' })
+  @Matches(/^1[3-9]\\d{9}\$/, { message: '请输入有效的中国大陆手机号' })
   phone!: string;
 }
 
-class PhoneLoginDto {
+class SmsLoginDto {
   @IsString()
-  @Matches(/^1[3-9]\d{9}$/, { message: '请输入有效的中国大陆手机号' })
+  @Matches(/^1[3-9]\\d{9}\$/, { message: '请输入有效的中国大陆手机号' })
   phone!: string;
 
   @IsString()
@@ -44,69 +30,47 @@ class PhoneLoginDto {
   code!: string;
 }
 
-// ─── 工具 ─────────────────────────────────────────────────────────────────────
-
-function resolveCookieDomain(): string | undefined {
-  const cookieDomain = process.env.AUTH_COOKIE_DOMAIN?.trim();
-  if (!cookieDomain || cookieDomain === 'localhost') return undefined;
-  return cookieDomain;
+function resolveAuthBffUrl(): string {
+  const configured = process.env['AUTH_BFF_URL']?.trim();
+  if (configured) return configured.replace(/\/+$/, '');
+  return 'http://localhost:3090';
 }
 
-// ─── Router ───────────────────────────────────────────────────────────────────
+const AUTH_BFF = resolveAuthBffUrl();
 
 @Controller('api/auth')
 export class PhoneAuthRouter {
-  constructor(
-    @Inject(PhoneCodeService) private readonly phoneCodeService: PhoneCodeService,
-    @Inject(WebsiteAuthService) private readonly websiteAuthService: WebsiteAuthService,
-  ) {}
-
-  /** 发送手机验证码（含限流） */
   @Post('send-phone-code')
   @HttpCode(HttpStatus.OK)
-  async sendPhoneCode(@Body() dto: SendPhoneCodeDto): Promise<{ message: string }> {
-    await this.phoneCodeService.sendCode(dto.phone);
-    return { message: '验证码已发送，请在 10 分钟内输入' };
+  async sendPhoneCode(@Body() dto: SendSmsCodeDto, @Res() res: Response) {
+    const response = await fetch(AUTH_BFF + '/api/auth/send-phone-code', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: dto.phone }),
+    });
+    const data = await response.json();
+    res.status(response.status).json(data);
   }
 
-  /** 验证码登录：校验验证码后签发 JWT，写入 HttpOnly cookie */
   @Post('login-with-phone')
   @HttpCode(HttpStatus.OK)
-  async loginWithPhone(
-    @Body() dto: PhoneLoginDto,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<AuthUserDto> {
-    const valid = await this.phoneCodeService.verifyCode(dto.phone, dto.code);
-    if (!valid) {
-      throw new BadRequestException('验证码错误或已过期，请重新获取');
-    }
-
-    const result = await this.websiteAuthService.loginWithPhoneCode(dto.phone);
-    if (!result) {
-      throw new UnauthorizedException('该手机号尚未注册，请先注册账号');
-    }
-
-    const secure = process.env.NODE_ENV === 'production';
-    const domain = resolveCookieDomain();
-
-    res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN, result.tokens.accessToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.expiresIn * 1000,
+  async loginWithPhone(@Body() dto: SmsLoginDto, @Res() res: Response) {
+    const response = await fetch(AUTH_BFF + '/api/auth/login-with-phone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone: dto.phone, code: dto.code, source: 'website' }),
     });
 
-    res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN, result.tokens.refreshToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure,
-      path: '/',
-      domain,
-      maxAge: result.tokens.refreshExpiresIn * 1000,
-    });
+    const data = await response.json();
+    if (!response.ok) {
+      res.status(response.status).json(data);
+      return;
+    }
 
-    return result.user;
+    const setCookie = response.headers.get('set-cookie');
+    if (setCookie) {
+      res.setHeader('set-cookie', setCookie);
+    }
+    res.status(200).json(data);
   }
 }

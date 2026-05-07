@@ -7,7 +7,7 @@
   "types": "src/main.ts",
   "description": "Vela agent BFF — JWT 验证、CallerContext 构造、/vela/chat 流式透传",
   "scripts": {
-    "build": "esbuild src/main.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/main.cjs --tsconfig=tsconfig.json --external:@nestjs/websockets/socket-module --external:@nestjs/microservices --external:@nestjs/microservices/microservices-module",
+    "build": "pnpm -w build:backend-deps && esbuild src/main.ts --bundle --platform=node --format=cjs --target=node22 --outfile=dist/main.cjs --tsconfig=tsconfig.json --external:@nestjs/websockets/socket-module --external:@nestjs/microservices --external:@nestjs/microservices/microservices-module",
     "dev": "pnpm run build && node dist/main.cjs",
     "start": "node dist/main.cjs",
     "type-check": "tsc --noEmit",

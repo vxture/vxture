@@ -7,3 +7,4 @@
 
 export * from './resetScrollTop.utils';
 export * from './preferences.utils';
+export * from './portal-entry.utils';

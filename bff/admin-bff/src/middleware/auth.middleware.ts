@@ -1,4 +1,7 @@
 import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import type { JwtAccessPayload } from '@vxture/core-auth';
+import { VxConfigService } from '@vxture/core-config';
 import type { NextFunction, Request, Response } from 'express';
 import { ADMIN_AUTH_COOKIES } from '../auth/cookie.constants';
 import { PlatformAuthService } from '../auth/auth.service';
@@ -6,7 +9,11 @@ import type { RequestContext } from '../types/console.types';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(@Inject(PlatformAuthService) private readonly platformAuthService: PlatformAuthService) {}
+  constructor(
+    @Inject(PlatformAuthService) private readonly platformAuthService: PlatformAuthService,
+    @Inject(JwtService) private readonly jwtService: JwtService,
+    @Inject(VxConfigService) private readonly configService: VxConfigService,
+  ) {}
 
   async use(req: Request, _res: Response, next: NextFunction) {
     if (req.path === '/api/auth/login') {
@@ -21,7 +28,9 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     try {
-      const payload = this.platformAuthService.verifyAccessToken(accessToken);
+      const payload = this.jwtService.verify<JwtAccessPayload>(accessToken, {
+        secret: this.configService.auth.JWT_SECRET,
+      });
       const user = await this.platformAuthService.getCurrentUser(payload.sub);
 
       if (user) {

@@ -15,7 +15,7 @@
  * @category Middleware
  */
 
-import { Injectable, type NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
 import { AUTH_CONSTANTS } from '@vxture/shared';
 import { AgentAuthService } from '../auth/auth.service';
@@ -23,7 +23,7 @@ import type { RequestContext } from '../types/auth.types';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly agentAuthService: AgentAuthService) {}
+  constructor(@Inject(AgentAuthService) private readonly agentAuthService: AgentAuthService) {}
 
   use(req: Request, _res: Response, next: NextFunction) {
     const accessToken = req.cookies?.[AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN];

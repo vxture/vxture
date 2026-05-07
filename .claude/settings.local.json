@@ -70,7 +70,22 @@
       "PowerShell(ls *)",
       "Bash(Find \"D:\\\\MyWebSite\\\\vxture\" -type d -name \"*billing*\" -o -type d -name \"*subscription*\" -o -type d -name \"*ticket*\")",
       "Bash(Get-ChildItem *)",
-      "Bash(Select-Object FullName)"
+      "Bash(Select-Object FullName)",
+      "Bash(Select-Object Name, PSIsContainer)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\" | ForEach-Object { \"$\\($_.Name\\) - $\\($_.PSIsContainer\\)\" })",
+      "Bash(Remove-Item *)",
+      "PowerShell(Get-ChildItem -Recurse \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\app\\\\[locale]\" | Where-Object { $_.Name -match '\\\\.\\(tsx|ts\\)$' -or $_.Name -eq '.gitkeep' } | Select-Object -ExpandProperty FullName | Sort-Object)",
+      "PowerShell(cmd /c dir /s /b \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\app\")",
+      "Bash(Select-Object -Property FullName, PSIsContainer)",
+      "Bash(Sort-Object FullName)",
+      "Bash(Format-Table -AutoSize)",
+      "Bash(Select-Object -Property FullName)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\components\" -Recurse -Force | Where-Object { $_.Name -match \"\\(User|Avatar|Panel|Menu|Dropdown\\)\" } | Select-Object -Property FullName)",
+      "Bash(grep -E \"\\\\.\\(ts|js\\)$\")",
+      "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\app\\\\[locale]\" -name \"layout.tsx\" -type f)",
+      "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\components\\\\layout\" -type f)",
+      "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\data\" -type f -name \"*.ts\")",
+      "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\types\" -type f -name \"*.ts\")"
     ]
   }
 }

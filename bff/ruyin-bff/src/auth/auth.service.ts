@@ -15,7 +15,7 @@
  * @category Service
  */
 
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { JwtAccessPayload } from '@vxture/core-auth';
 import { VxConfigService } from '@vxture/core-config';
@@ -24,8 +24,8 @@ import type { AgentViewer } from '../types/auth.types';
 @Injectable()
 export class AgentAuthService {
   constructor(
-    private readonly jwtService: JwtService,
-    private readonly configService: VxConfigService,
+    @Inject(JwtService) private readonly jwtService: JwtService,
+    @Inject(VxConfigService) private readonly configService: VxConfigService,
   ) {}
 
   verifyAccessToken(token: string): JwtAccessPayload {

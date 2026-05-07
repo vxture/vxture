@@ -3,7 +3,6 @@ import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
 import { MailModule } from '@vxture/core-mail';
 import { IamModule } from '@vxture/service-iam';
-import { SmsModule } from '@vxture/service-sms';
 import { OrganizationModule } from '@vxture/service-organization';
 import { BillingModule } from '@vxture/service-billing';
 import { SubscriptionModule } from '@vxture/service-subscription';
@@ -30,7 +29,6 @@ import { TenantContextRouter } from './routers/tenant-context.router';
     JwtModule.register({}),
     MailModule,
     IamModule,
-    SmsModule,
     OrganizationModule,
     BillingModule,
     SubscriptionModule,

@@ -20,6 +20,12 @@
 服务 portals/website 的 BFF：认证、租户解析、数据聚合、响应塑形。
 主要对接 @vxture/service-* 平台服务，以公开营销站点为主。
 
+### JWT 认证架构（重构 v1.3）
+
+本 BFF **不签发 JWT**。所有认证端点（login / signup / logout / refresh / send-phone-code / login-with-phone）
+均通过 HTTP 透传至 `@vxture/bff-auth`，转发 Cookie 和 set-cookie 头。
+本 BFF 仅保留 JWT **验证**能力（`JwtService.verify`），供 auth middleware 使用。
+
 ---
 
 ## 目录结构

@@ -1,18 +1,14 @@
 /**
- * app.module.ts - Ruyin BFF Root Module
+ * app.module.ts - Ruyin BFF Root Module（重构 v1.4）
  * @package @vxture/bff-ruyin
  *
- * Description: Registers authentication middleware and Ruyin proxy routers.
+ * 【重构说明】
+ * 添加 CrossDomainRouter 注册，处理跨域 SSO callback。
+ * ruya.ai 作为独立 domain，通过 auth-bff 跨域一次性 token 实现 SSO。
  *
  * @author AI-Generated
- * @date 2026-04-22
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Application
- * @category Infrastructure
+ * @date 2026-05-07
+ * @version 1.4
  */
 
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
@@ -22,6 +18,7 @@ import { RuyinAggregator } from './aggregators/ruyin.aggregator';
 import { AgentAuthService } from './auth/auth.service';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { AuthRouter } from './routers/auth.router';
+import { CrossDomainRouter } from './routers/crossdomain.router';
 import { SessionRouter } from './routers/session.router';
 
 @Module({
@@ -31,7 +28,7 @@ import { SessionRouter } from './routers/session.router';
     }),
     JwtModule.register({}),
   ],
-  controllers: [AuthRouter, SessionRouter],
+  controllers: [AuthRouter, CrossDomainRouter, SessionRouter],
   providers: [AgentAuthService, RuyinAggregator],
 })
 export class AppModule implements NestModule {

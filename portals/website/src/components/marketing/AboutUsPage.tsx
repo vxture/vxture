@@ -1,10 +1,11 @@
 'use client';
 
+
 import { useTranslations } from 'next-intl';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
-import ThemedHeroImage from './ThemedHeroImage';
+import AnimatedHeroBg from './AnimatedHeroBg';
 
 type Pillar = {
   icon: IconName;
@@ -23,11 +24,6 @@ type Capability = {
   description: string;
 };
 
-const ABOUT_HERO_IMAGE = {
-  light: '/images/herosection/banner-hero-poster-light-01.png',
-  dark: '/images/herosection/banner-hero-poster-dark-01.png',
-};
-
 export default function AboutUsPage() {
   const t = useTranslations('company.about');
   const highlights = t.raw('hero.highlights') as string[];
@@ -38,26 +34,15 @@ export default function AboutUsPage() {
 
   return (
     <div className='min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-100'>
-      <section className='relative flex min-h-[72vh] items-end overflow-hidden bg-blue-50 pt-20 dark:bg-slate-950'>
-        <ThemedHeroImage
-          lightSrc={ABOUT_HERO_IMAGE.light}
-          darkSrc={ABOUT_HERO_IMAGE.dark}
-          alt={t('hero.imageAlt')}
-          className='saturate-125'
-        />
+            <section className='vx-hero-section'>
+        <AnimatedHeroBg />
 
-        <div className='relative mx-auto grid w-full max-w-7xl gap-10 px-6 pb-14 pt-24 lg:grid-cols-[minmax(0,1fr)_420px] lg:px-8 xl:max-w-screen-2xl'>
+        <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-cyan-200'>
-              {t('hero.eyebrow')}
-            </p>
-            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>
-              {t('hero.title')}
-            </h1>
-            <p className='mt-6 max-w-2xl text-lg leading-8 text-slate-700 dark:text-slate-200'>
-              {t('hero.description')}
-            </p>
-            <div className='mt-8 flex flex-wrap gap-3'>
+            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-cyan-200'>{t('hero.eyebrow')}</p>
+            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>{t('hero.title')}</h1>
+            <p className='mt-5 max-w-2xl text-sm leading-6 text-slate-700 dark:text-slate-200'>{t('hero.description')}</p>
+            <div className='mt-6 flex flex-wrap gap-3'>
               {highlights.map((item) => (
                 <span
                   key={item}
@@ -67,7 +52,7 @@ export default function AboutUsPage() {
                 </span>
               ))}
             </div>
-            <div className='mt-10 flex flex-wrap items-center gap-4'>
+            <div className='mt-8 flex flex-wrap items-center gap-4'>
               <Link
                 href='/signin'
                 className='inline-flex h-11 items-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500'
@@ -82,17 +67,11 @@ export default function AboutUsPage() {
               </a>
             </div>
           </div>
-
-          <aside className='self-end rounded-lg border border-blue-100 bg-white/72 p-5 shadow-lg shadow-blue-950/8 backdrop-blur-md dark:border-white/10 dark:bg-slate-950/52'>
-            <p className='text-sm font-semibold text-blue-600 dark:text-blue-300'>{t('hero.panelTitle')}</p>
-            <p className='mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300'>
-              {t('hero.panelDescription')}
-            </p>
-          </aside>
         </div>
       </section>
 
-      <section id='about-positioning' className='bg-white py-16 dark:bg-slate-950'>
+
+      <section id='about-positioning' className='vx-section-odd'>
         <div className='mx-auto max-w-7xl px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div className='max-w-3xl'>
             <p className='text-sm font-semibold text-blue-600 dark:text-blue-300'>{t('positioning.eyebrow')}</p>

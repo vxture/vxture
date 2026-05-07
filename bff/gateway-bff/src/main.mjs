@@ -5,6 +5,7 @@ const PORT = Number(process.env.GATEWAY_PORT ?? 8000);
 const WEBSITE_BFF_ORIGIN = (process.env.WEBSITE_BFF_ORIGIN ?? 'http://localhost:3011').replace(/\/+$/, '');
 const CONSOLE_BFF_ORIGIN = (process.env.CONSOLE_BFF_ORIGIN ?? 'http://localhost:3021').replace(/\/+$/, '');
 const ADMIN_BFF_ORIGIN = (process.env.ADMIN_BFF_ORIGIN ?? 'http://localhost:3031').replace(/\/+$/, '');
+const AUTH_BFF_ORIGIN = (process.env.AUTH_BFF_ORIGIN ?? 'http://localhost:3090').replace(/\/+$/, '');
 const ALLOWED_ORIGINS = new Set(
   (process.env.GATEWAY_ALLOWED_ORIGINS ??
     'http://localhost:3010,http://localhost:3020,http://localhost:3030,http://127.0.0.1:3010,http://127.0.0.1:3020,http://127.0.0.1:3030')
@@ -52,7 +53,7 @@ function mapTarget(pathname) {
     };
   }
 
-  if (pathname.startsWith('/admin-api/')) {
+    if (pathname.startsWith('/admin-api/')) {
     return {
       targetOrigin: ADMIN_BFF_ORIGIN,
       targetPath: pathname.replace(/^\/admin-api/, ''),
@@ -62,6 +63,20 @@ function mapTarget(pathname) {
   if (pathname === '/admin-api') {
     return {
       targetOrigin: ADMIN_BFF_ORIGIN,
+      targetPath: '/',
+    };
+  }
+
+  if (pathname.startsWith('/auth-api/')) {
+    return {
+      targetOrigin: AUTH_BFF_ORIGIN,
+      targetPath: pathname.replace(/^\/auth-api/, ''),
+    };
+  }
+
+  if (pathname === '/auth-api') {
+    return {
+      targetOrigin: AUTH_BFF_ORIGIN,
       targetPath: '/',
     };
   }
@@ -96,12 +111,13 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200);
     res.end(
       JSON.stringify({
-        status: 'ok',
-        service: 'gateway-bff',
-        website: WEBSITE_BFF_ORIGIN,
-        console: CONSOLE_BFF_ORIGIN,
-        admin: ADMIN_BFF_ORIGIN,
-      }),
+          status: 'ok',
+          service: 'gateway-bff',
+          website: WEBSITE_BFF_ORIGIN,
+          console: CONSOLE_BFF_ORIGIN,
+          admin: ADMIN_BFF_ORIGIN,
+          auth: AUTH_BFF_ORIGIN,
+        }),
     );
     return;
   }
@@ -175,7 +191,8 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, () => {
   console.log(`[gateway-bff] listening on http://localhost:${PORT}`);
-  console.log(`[gateway-bff] website-api -> ${WEBSITE_BFF_ORIGIN}`);
+    console.log(`[gateway-bff] website-api -> ${WEBSITE_BFF_ORIGIN}`);
   console.log(`[gateway-bff] console-api -> ${CONSOLE_BFF_ORIGIN}`);
   console.log(`[gateway-bff] admin-api -> ${ADMIN_BFF_ORIGIN}`);
+  console.log(`[gateway-bff] auth-api -> ${AUTH_BFF_ORIGIN}`);
 });

@@ -101,7 +101,6 @@ export class ChatService {
       let toolCallId:   string | null = null;
       let toolCallName: string | null = null;
       let toolCallArgs: Record<string, unknown> = {};
-      let hasText      = false;
 
       try {
         for await (const chunk of client.chatStream(
@@ -110,7 +109,6 @@ export class ChatService {
           { tools: llmTools.length > 0 ? llmTools : undefined, toolChoice: 'auto' },
         )) {
           if (chunk.type === 'text') {
-            hasText = true;
             assistantText += chunk.delta;
             yield { type: 'text', delta: chunk.delta };
           } else if (chunk.type === 'tool_call') {

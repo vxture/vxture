@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Icon } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
-import ThemedHeroImage from './ThemedHeroImage';
+import AnimatedHeroBg from './AnimatedHeroBg';
 
 type Metric = {
   label: string;
@@ -26,11 +26,6 @@ type Scenario = {
   description: string;
 };
 
-const PRODUCT_HERO_IMAGE = {
-  light: '/images/hero-banners/pixabay-network-light.jpg',
-  dark: '/images/hero-banners/pixabay-big-data-dark.jpg',
-};
-
 export default function ProductDetailPartOne() {
   const t = useTranslations('products');
   const metrics = t.raw('hero.metrics') as Metric[];
@@ -41,25 +36,14 @@ export default function ProductDetailPartOne() {
 
   return (
     <div className='min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-100'>
-      <section className='relative flex min-h-[78vh] items-end overflow-hidden pt-20'>
-        <ThemedHeroImage
-          lightSrc={PRODUCT_HERO_IMAGE.light}
-          darkSrc={PRODUCT_HERO_IMAGE.dark}
-          alt={t('hero.imageAlt')}
-          className='saturate-125'
-        />
-        <div className='relative mx-auto grid w-full max-w-7xl gap-10 px-6 pb-16 pt-24 lg:px-8 xl:max-w-screen-2xl'>
+            <section className='vx-hero-section'>
+        <AnimatedHeroBg />
+        <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-cyan-200'>
-              {t('hero.eyebrow')}
-            </p>
-            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>
-              {t('hero.title')}
-            </h1>
-            <p className='mt-6 max-w-2xl text-lg leading-8 text-slate-700 dark:text-slate-200'>
-              {t('hero.description')}
-            </p>
-            <div className='mt-8 flex flex-wrap gap-3'>
+            <p className='mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-blue-600 dark:text-cyan-200'>{t('hero.eyebrow')}</p>
+            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>{t('hero.title')}</h1>
+            <p className='mt-5 max-w-2xl text-sm leading-6 text-slate-700 dark:text-slate-200'>{t('hero.description')}</p>
+            <div className='mt-6 flex flex-wrap gap-3'>
               {highlights.map((item) => (
                 <span
                   key={item}
@@ -69,7 +53,7 @@ export default function ProductDetailPartOne() {
                 </span>
               ))}
             </div>
-            <div className='mt-10 flex flex-wrap items-center gap-4'>
+            <div className='mt-8 flex flex-wrap items-center gap-4'>
               <Link
                 href='/signin'
                 className='inline-flex h-11 items-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500'
@@ -84,24 +68,12 @@ export default function ProductDetailPartOne() {
               </a>
             </div>
           </div>
-
-          <div className='grid gap-3 sm:grid-cols-3'>
-            {metrics.map((metric) => (
-              <div
-                key={metric.label}
-                className='border-l border-blue-200 bg-white/70 px-4 py-3 shadow-sm shadow-blue-900/5 backdrop-blur-sm dark:border-white/20 dark:bg-slate-950/24 dark:shadow-none'
-              >
-                <p className='text-2xl font-semibold text-slate-950 dark:text-white'>{metric.value}</p>
-                <p className='mt-1 text-sm text-slate-600 dark:text-slate-300'>{metric.label}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
       <section
         id='product-capabilities'
-        className='bg-linear-to-b from-blue-50 to-white py-16 dark:from-slate-900 dark:to-slate-950'
+        className='vx-section-odd'
       >
         <div className='mx-auto max-w-7xl px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div className='flex flex-col gap-3 md:flex-row md:items-end md:justify-between'>
