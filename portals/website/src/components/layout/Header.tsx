@@ -524,7 +524,7 @@ function UserMenu({
             </div>
           </div>
 
-          <div className='ml-[68px] mt-3 flex flex-wrap gap-2'>
+          <div className='ml-17 mt-3 flex flex-wrap gap-2'>
             <UserBadge>{roleLabel}</UserBadge>
             {showPersonalBadge ? <UserBadge>{t('badges.personal')}</UserBadge> : null}
             {showOrganizationBadge ? <UserBadge>{t('badges.organization')}</UserBadge> : null}
