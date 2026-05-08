@@ -64,13 +64,13 @@ export default function Notifications() {
   const getStyle = (type: string) => {
     switch (type) {
       case 'success':
-        return 'bg-green-50 text-green-800 border-green-200';
+        return 'bg-vx-success-50 text-vx-success-800 border-vx-success-200';
       case 'error':
-        return 'bg-red-50 text-red-800 border-red-200';
+        return 'bg-vx-error-50 text-vx-error-800 border-vx-error-200';
       case 'warning':
-        return 'bg-yellow-50 text-yellow-800 border-yellow-200';
+        return 'bg-vx-warning-50 text-vx-warning-800 border-vx-warning-200';
       default:
-        return 'bg-blue-50 text-blue-800 border-blue-200';
+        return 'bg-vx-brand-50 text-vx-brand-800 border-vx-brand-200';
     }
   };
 
@@ -87,7 +87,7 @@ export default function Notifications() {
             <p>{notification.message}</p>
             <button
               onClick={() => removeNotification(notification.id)}
-              className='text-gray-500 hover:text-gray-700'
+              className='text-vx-gray-500 hover:text-vx-gray-700'
               aria-label='关闭通知'
             >
               <Icon name='trash' className='w-4 h-4' />

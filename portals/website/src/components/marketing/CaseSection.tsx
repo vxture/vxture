@@ -48,7 +48,7 @@ interface CaseSectionProps {
  *
  * 统一色值规范：
  *   light: 白底卡片，深灰标题，灰色描述，灰色标签
- *   dark:  slate-700 卡片，浅色标题，slate-300 描述，slate-600 标签
+ *   dark:  vx-gray-700 卡片，浅色标题，vx-gray-300 描述，vx-gray-600 标签
  */
 const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProps) {
   const formattedDate = useMemo(() => {
@@ -63,7 +63,7 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
   const tags  = (tRaw.raw(`${item.id}.tags`) as string[]) ?? [];
 
   return (
-    <div className='group relative flex flex-col rounded-2xl shadow-lg dark:shadow-slate-900/30 hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 h-full'>
+    <div className='group relative flex flex-col rounded-2xl shadow-lg dark:shadow-vx-gray-900/30 hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 h-full'>
       {/* 图片区域 16:9 */}
       <div className='relative w-full aspect-video shrink-0'>
         <Image
@@ -76,28 +76,28 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
         />
       </div>
       {/* 内容区 */}
-      <div className='p-4 flex flex-col grow bg-white dark:bg-slate-700'>
-        <h3 className='text-xl font-semibold mb-2 text-blue-700 dark:text-blue-200 group-hover:text-blue-500 dark:group-hover:text-blue-100 transition-colors'>
+      <div className='p-4 flex flex-col grow bg-vx-white dark:bg-vx-gray-700'>
+        <h3 className='text-xl font-semibold mb-2 text-vx-brand-700 dark:text-vx-brand-200 group-hover:text-vx-brand-500 dark:group-hover:text-vx-brand-100 transition-colors'>
           {title}
         </h3>
-        <p className='text-gray-600 dark:text-slate-300 mb-4 line-clamp-3'>{description}</p>
+        <p className='text-vx-gray-600 dark:text-vx-gray-300 mb-4 line-clamp-3'>{description}</p>
         {tags.length > 0 && (
           <div className='flex flex-wrap gap-2 mb-4'>
             {tags.slice(0, 3).map((tag: string, index: number) => (
               <span
                 key={index}
-                className='px-2 py-1 bg-blue-50 dark:bg-blue-800/40 text-blue-600 dark:text-blue-200 border border-blue-100 dark:border-blue-700/50 text-xs rounded-full'
+                className='px-2 py-1 bg-vx-brand-50 dark:bg-vx-brand-800/40 text-vx-brand-600 dark:text-vx-brand-200 border border-vx-brand-100 dark:border-vx-brand-700/50 text-xs rounded-full'
               >
                 {tag}
               </span>
             ))}
           </div>
         )}
-        <div className='mt-auto flex items-center justify-between text-sm text-gray-400 dark:text-slate-400'>
+        <div className='mt-auto flex items-center justify-between text-sm text-vx-gray-400 dark:text-vx-gray-400'>
           <span>{formattedDate}</span>
           <Link
             href={item.href}
-            className='text-blue-600 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-100 font-medium'
+            className='text-vx-brand-600 dark:text-vx-brand-300 hover:text-vx-brand-500 dark:hover:text-vx-brand-100 font-medium'
           >
             {viewDetailsLabel}
           </Link>
@@ -115,8 +115,8 @@ const CaseCard = memo(function CaseCard({ item, viewDetailsLabel }: CaseCardProp
  * 案例区块主组件
  *
  * 背景渐变：section 4（Cases）
- *   light: from-white to-blue-50   （上接 Solution 白底，向下过渡到浅蓝）
- *   dark:  from-slate-800 to-slate-700
+ *   light: from-vx-white to-vx-brand-50   （上接 Solution 白底，向下过渡到浅蓝）
+ *   dark:  from-vx-gray-800 to-vx-gray-700
  */
 export default function CaseSection({ id, name = 'Cases' }: CaseSectionProps) {
   const t = useTranslations('home.cases');
@@ -129,15 +129,15 @@ export default function CaseSection({ id, name = 'Cases' }: CaseSectionProps) {
     <section
       id={id}
       data-name={name}
-      className='relative snap-section min-h-screen flex flex-col bg-linear-to-br from-blue-100 to-white dark:from-slate-800 dark:to-slate-700'
+      className='vx-section-odd relative snap-section min-h-screen flex flex-col'
     >
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 标题区 */}
         <div className='text-center pt-28'>
-          <h2 className='text-3xl lg:text-4xl font-bold text-blue-700 dark:text-blue-200 mb-4'>
+          <h2 className='font-display text-3xl lg:text-4xl font-bold text-vx-brand-700 dark:text-vx-brand-200 mb-4'>
             {t(HOME_CASES_DATA.titleKey)}
           </h2>
-          <p className='text-lg text-gray-600 dark:text-slate-300 max-w-4xl mx-auto mb-8'>
+          <p className='text-lg text-vx-gray-600 dark:text-vx-gray-300 max-w-4xl mx-auto mb-8'>
             {t(HOME_CASES_DATA.subtitleKey)}
           </p>
         </div>
@@ -161,11 +161,11 @@ export default function CaseSection({ id, name = 'Cases' }: CaseSectionProps) {
         {HOME_CASES_DATA.taglineKey && (
           <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-blue-200 dark:to-blue-600'></div>
-              <span className='text-sm font-medium text-blue-500 dark:text-blue-300'>
+              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-vx-brand-200 dark:to-vx-brand-600'></div>
+              <span className='text-sm font-medium text-vx-brand-500 dark:text-vx-brand-300'>
                 {t(HOME_CASES_DATA.taglineKey)}
               </span>
-              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-blue-200 dark:to-blue-600'></div>
+              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-vx-brand-200 dark:to-vx-brand-600'></div>
             </div>
           </div>
         )}

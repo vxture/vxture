@@ -54,39 +54,39 @@ interface FeaturesSectionProps {
  *
  * 统一色值规范：
  *   light: 卡片白底，蓝色标题，灰色描述，蓝色标签
- *   dark:  卡片 slate-700，蓝色浅标题，slate-300 描述，蓝色浅标签
+ *   dark:  卡片 vx-gray-700，蓝色浅标题，vx-gray-300 描述，蓝色浅标签
  */
 const FeatureCard = memo(function FeatureCard({ feature }: FeatureCardProps) {
   const t = useTranslations('home.features');
 
   return (
-    <div className='group relative flex flex-col bg-white dark:bg-slate-700 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 h-full'>
+    <div className='group relative flex flex-col bg-vx-white dark:bg-vx-gray-700 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden hover:scale-105 h-full'>
       {/* 顶部与底部装饰条 */}
-      <div className='absolute top-0 left-0 w-full h-1 bg-blue-300 dark:bg-blue-400' />
-      <div className='absolute bottom-0 left-0 w-full h-1 bg-blue-300 dark:bg-blue-400' />
+      <div className='absolute top-0 left-0 w-full h-1 bg-vx-brand-300 dark:bg-vx-brand-400' />
+      <div className='absolute bottom-0 left-0 w-full h-1 bg-vx-brand-300 dark:bg-vx-brand-400' />
 
       {/* 右上角图标 */}
       <div className='absolute top-4 right-4 flex items-center justify-center w-8 h-8'>
-        <Icon name='medal' className='w-5 h-5 text-blue-400 dark:text-blue-300' />
+        <Icon name='medal' className='w-5 h-5 text-vx-brand-400 dark:text-vx-brand-300' />
       </div>
 
       {/* 卡片内容区 */}
       <div className='relative flex flex-col flex-1 p-8 space-y-8 z-10'>
         {/* 主图标 */}
         <div className='flex justify-center'>
-          <div className='w-24 h-24 bg-linear-to-r from-blue-50 to-blue-100 dark:from-blue-600/40 dark:to-blue-700/40 rounded-2xl flex items-center justify-center transition-transform duration-300 border-0'>
+          <div className='w-24 h-24 bg-linear-to-r from-vx-brand-50 to-vx-brand-100 dark:from-vx-brand-600/40 dark:to-vx-brand-700/40 rounded-2xl flex items-center justify-center transition-transform duration-300 border-0'>
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             <Icon name={t(`items.${feature.id}.icon`) as any} fallback='placeholder' className='w-16 h-16' />
           </div>
         </div>
 
         {/* 标题 */}
-        <h3 className='text-2xl font-bold text-center text-blue-700 dark:text-blue-200'>
+        <h3 className='text-2xl font-bold text-center text-vx-brand-700 dark:text-vx-brand-200'>
           {t(`items.${feature.id}.title`)}
         </h3>
 
         {/* 描述 */}
-        <p className='leading-relaxed text-center text-base text-gray-600 dark:text-slate-300'>
+        <p className='leading-relaxed text-center text-base text-vx-gray-600 dark:text-vx-gray-300'>
           {t(`items.${feature.id}.description`)}
         </p>
 
@@ -96,7 +96,7 @@ const FeatureCard = memo(function FeatureCard({ feature }: FeatureCardProps) {
             {feature.highlights.map((highlightKey, index) => (
               <span
                 key={highlightKey}
-                className='px-3 py-1 text-sm font-semibold rounded-full border bg-blue-50 dark:bg-blue-800/40 text-blue-600 dark:text-blue-200 border-blue-100 dark:border-blue-700/50'
+                className='px-3 py-1 text-sm font-semibold rounded-full border bg-vx-brand-50 dark:bg-vx-brand-800/40 text-vx-brand-600 dark:text-vx-brand-200 border-vx-brand-100 dark:border-vx-brand-700/50'
               >
                 {t(`items.${feature.id}.highlights.${index}`)}
               </span>
@@ -109,7 +109,7 @@ const FeatureCard = memo(function FeatureCard({ feature }: FeatureCardProps) {
           <div className='w-full text-center'>
             <a
               href={feature.cta.href}
-              className='inline-flex items-center px-4 py-1.5 text-sm rounded-md transition-all duration-300 text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-100 opacity-70 hover:opacity-100'
+              className='inline-flex items-center px-4 py-1.5 text-sm rounded-md transition-all duration-300 text-vx-brand-600 dark:text-vx-brand-300 hover:text-vx-brand-800 dark:hover:text-vx-brand-100 opacity-70 hover:opacity-100'
             >
               <span>{t(`items.${feature.id}.cta.label`)}</span>
               <Icon name='arrow-long-right' className='ml-1.5 w-3.5 h-3.5 transition-all' />
@@ -129,8 +129,8 @@ const FeatureCard = memo(function FeatureCard({ feature }: FeatureCardProps) {
  * 能力区块主组件
  *
  * 背景渐变：section 2（Features）
- *   light: from-white to-blue-50   （上接 Hero 白底，向下过渡到浅蓝）
- *   dark:  from-slate-800 to-slate-700
+ *   light: from-vx-white to-vx-brand-50   （上接 Hero 白底，向下过渡到浅蓝）
+ *   dark:  from-vx-gray-800 to-vx-gray-700
  */
 const FeaturesSection = memo(function FeaturesSection({
   id,
@@ -148,14 +148,14 @@ const FeaturesSection = memo(function FeaturesSection({
     <section
       id={id}
       data-name={name}
-      className='relative snap-section min-h-screen flex flex-col bg-linear-to-br from-blue-100 to-white dark:from-slate-800 dark:to-slate-700'
+      className='vx-section-odd relative snap-section min-h-screen flex flex-col'
     >
       <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
         {/* 1. 标题区 */}
         <div className='text-center pt-28'>
-          <h2 className='text-3xl lg:text-4xl font-bold text-blue-700 dark:text-blue-200 mb-4'>{t('title')}</h2>
+          <h2 className='font-display text-3xl lg:text-4xl font-bold text-vx-brand-700 dark:text-vx-brand-200 mb-4'>{t('title')}</h2>
           {t('subtitle') && (
-            <p className='text-lg text-gray-600 dark:text-slate-300 max-w-4xl mx-auto'>{t('subtitle')}</p>
+            <p className='text-lg text-vx-gray-600 dark:text-vx-gray-300 max-w-4xl mx-auto'>{t('subtitle')}</p>
           )}
         </div>
 
@@ -174,9 +174,9 @@ const FeaturesSection = memo(function FeaturesSection({
         {t('tagline') && (
           <div className='text-center pb-12'>
             <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-blue-200 dark:to-blue-600'></div>
-              <span className='text-sm font-medium text-blue-500 dark:text-blue-300'>{t('tagline')}</span>
-              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-blue-200 dark:to-blue-600'></div>
+              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-vx-brand-200 dark:to-vx-brand-600'></div>
+              <span className='text-sm font-medium text-vx-brand-500 dark:text-vx-brand-300'>{t('tagline')}</span>
+              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-vx-brand-200 dark:to-vx-brand-600'></div>
             </div>
           </div>
         )}

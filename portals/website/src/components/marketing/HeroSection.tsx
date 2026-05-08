@@ -168,7 +168,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
 
             {/* 视频遮罩 */}
             <div
-              className={`absolute inset-0 bg-linear-to-b from-slate-100/10 via-blue-100/10 to-slate-100/10 dark:from-slate-800/30 dark:via-blue-900/20 dark:to-slate-800/30 transition-opacity duration-1000 ${
+              className={`absolute inset-0 bg-linear-to-b from-vx-gray-100/10 via-vx-brand-100/10 to-vx-gray-100/10 dark:from-vx-gray-800/30 dark:via-vx-brand-900/20 dark:to-vx-gray-800/30 transition-opacity duration-1000 ${
                 videoLoaded && !videoError ? 'opacity-70' : 'opacity-0'
               }`}
             ></div>
@@ -191,9 +191,9 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
           (HERO_DATA.media.type === 'video' && !HERO_DATA.media.videoUrl) ||
           (HERO_DATA.media.type === 'image' && !HERO_DATA.media.url) ||
           (HERO_DATA.media.type === 'video' && videoError)) && (
-          <div className='absolute inset-0 bg-linear-to-br from-slate-50 via-blue-50 to-slate-100 dark:from-slate-800 dark:via-slate-700 dark:to-slate-800'>
+          <div className='absolute inset-0 bg-linear-to-br from-vx-gray-50 via-vx-brand-50 to-vx-gray-100 dark:from-vx-gray-800 dark:via-vx-gray-700 dark:to-vx-gray-800'>
             <div className='absolute inset-0'>
-              <div className='absolute top-8 right-0 w-64 h-64 bg-blue-200/30 rounded-full blur-3xl animate-pulse' />
+              <div className='absolute top-8 right-0 w-64 h-64 bg-vx-brand-200/30 rounded-full blur-3xl animate-pulse' />
             </div>
           </div>
         )}
@@ -203,15 +203,15 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       <div className='relative w-full flex flex-col items-center justify-center pointer-events-auto z-10'>
         <div className='max-w-5xl px-4 sm:px-6 lg:px-8 py-32 text-center'>
           {/* 主标题 + 高亮部分 */}
-          <h1 className='text-5xl lg:text-7xl font-bold py-8 leading-tight'>
+          <h1 className='font-brand text-5xl lg:text-7xl font-bold py-8 leading-tight'>
             {/* light: 深灰渐变；dark: 浅白渐变，在深色背景上清晰可读 */}
-            <span className='inline-block bg-linear-to-r from-slate-700 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent'>
+            <span className='inline-block bg-linear-to-r from-vx-gray-700 to-vx-gray-600 dark:from-vx-white dark:to-vx-gray-200 bg-clip-text text-transparent'>
               {t('title')}
             </span>
             {t('titleHighlight') && (
               <>
                 {' '}
-                <span className='inline-block bg-linear-to-r from-blue-600 to-cyan-500 dark:from-blue-300 dark:to-cyan-300 bg-clip-text text-transparent'>
+                <span className='inline-block bg-linear-to-r from-vx-brand-600 to-vx-info-500 dark:from-vx-brand-300 dark:to-vx-info-300 bg-clip-text text-transparent'>
                   {t('titleHighlight')}
                 </span>
               </>
@@ -220,7 +220,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
 
           {/* 描述 */}
           {t('description') && (
-            <p className='text-xl text-slate-700 dark:text-slate-200 mb-12 max-w-2xl mx-auto'>
+            <p className='text-xl text-vx-gray-700 dark:text-vx-gray-200 mb-12 max-w-2xl mx-auto'>
               {t('description')}
             </p>
           )}
@@ -230,7 +230,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
             <div className='flex justify-center'>
               <a
                 href={HERO_DATA.cta.href}
-                className='px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 shadow-2xl hover:scale-105 bg-linear-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700 hover:shadow-blue-500/25'
+                className='px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 shadow-2xl hover:scale-105 bg-linear-to-r from-vx-brand-600 to-vx-info-600 text-vx-white hover:from-vx-brand-700 hover:to-vx-info-700 hover:shadow-vx-brand-500/25'
               >
                 {t('cta.label')}
               </a>
@@ -242,7 +242,7 @@ export default function HeroSection({ id, name = 'Hero' }: HeroSectionProps) {
       {/* 底部滚动提示 */}
       {HERO_DATA.scrollIndicator?.enabled && (
         <div className='absolute bottom-8 flex justify-center items-center z-10 pointer-events-auto'>
-          <div className='text-slate-500 dark:text-slate-300 animate-bounce px-4 py-2 flex flex-col items-center'>
+          <div className='text-vx-gray-500 dark:text-vx-gray-300 animate-bounce px-4 py-2 flex flex-col items-center'>
             <Icon name='arrow-down' className='w-6 h-6' />
             {t('scrollIndicator.text') && (
               <p className='text-sm text-center'>{t('scrollIndicator.text')}</p>

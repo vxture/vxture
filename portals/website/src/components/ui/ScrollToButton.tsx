@@ -85,8 +85,8 @@ export default function ScrollToButton({
   const baseButtonClass = `
     flex items-center justify-center
     w-12 h-12 rounded-full
-    bg-gradient-to-br from-gray-100 to-blue-100
-    text-gray-500
+    bg-gradient-to-br from-vx-gray-100 to-vx-brand-100
+    text-vx-gray-500
     shadow-sm
     backdrop-blur-sm
     transition-all duration-300
@@ -94,15 +94,15 @@ export default function ScrollToButton({
 
   /** 基础样式（交互样式)  */
   const interactiveClass = `
-    hover:from-blue-100 hover:to-blue-200
-    hover:text-blue-500
+    hover:from-vx-brand-100 hover:to-vx-brand-200
+    hover:text-vx-brand-500
     hover:shadow-md
     hover:-translate-y-0.5
     active:translate-y-0
     active:shadow-sm
     focus:outline-none
     focus-visible:ring-2
-    focus-visible:ring-blue-100
+    focus-visible:ring-vx-brand-100
     focus-visible:ring-offset-2
   `;
 

@@ -189,7 +189,7 @@ function DoneStep({ onSignIn }: { onSignIn: () => void }) {
 function InvalidStep({ onRetry }: { onRetry: () => void }) {
   return (
     <div className='vx-auth-reset-done'>
-      <div className='vx-auth-check' style={{ background: 'var(--color-error, #ef4444)' }}>✕</div>
+      <div className='vx-auth-check' style={{ background: 'var(--vx-color-error)' }}>✕</div>
       <h1>链接已失效</h1>
       <p>该重置链接已过期或已使用。请重新申请密码重置。</p>
       <button type='button' className='vx-auth-primary' onClick={onRetry}>

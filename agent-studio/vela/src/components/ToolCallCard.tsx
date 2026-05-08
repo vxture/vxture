@@ -17,12 +17,12 @@ import type { VelaToolMessage } from '../types/vela.types';
 function renderData(data: unknown, hint?: string) {
   if (data === null || data === undefined) {
     // 工具正在运行
-    return <span style={{ color: '#9ca3af', fontSize: '13px' }}>运行中…</span>;
+    return <span style={{ color: 'var(--vx-color-text-disabled)', fontSize: '13px' }}>运行中…</span>;
   }
 
   if (hint === 'table' && Array.isArray(data)) {
     const rows = data as Record<string, unknown>[];
-    if (!rows.length) return <span style={{ color: '#6b7280' }}>暂无数据</span>;
+    if (!rows.length) return <span style={{ color: 'var(--vx-color-text-muted)' }}>暂无数据</span>;
     const keys = Object.keys(rows[0]!);
     return (
       <div style={{ overflowX: 'auto' }}>
@@ -30,7 +30,7 @@ function renderData(data: unknown, hint?: string) {
           <thead>
             <tr>
               {keys.map((k) => (
-                <th key={k} style={{ padding: '4px 8px', borderBottom: '1px solid #e5e7eb', textAlign: 'left', color: '#6b7280' }}>
+                <th key={k} style={{ padding: '4px 8px', borderBottom: '1px solid var(--vx-color-border)', textAlign: 'left', color: 'var(--vx-color-text-muted)' }}>
                   {k}
                 </th>
               ))}
@@ -40,7 +40,7 @@ function renderData(data: unknown, hint?: string) {
             {rows.map((row, i) => (
               <tr key={i}>
                 {keys.map((k) => (
-                  <td key={k} style={{ padding: '4px 8px', borderBottom: '1px solid #f3f4f6' }}>
+                  <td key={k} style={{ padding: '4px 8px', borderBottom: '1px solid var(--vx-color-border-muted)' }}>
                     {String(row[k] ?? '')}
                   </td>
                 ))}
@@ -68,7 +68,7 @@ function renderData(data: unknown, hint?: string) {
 
   // 默认：JSON 原始输出
   return (
-    <pre style={{ margin: 0, fontSize: '12px', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: '#374151' }}>
+    <pre style={{ margin: 0, fontSize: '12px', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--vx-color-text-secondary)' }}>
       {JSON.stringify(data, null, 2)}
     </pre>
   );
@@ -86,8 +86,8 @@ export function ToolCallCard({ message }: Props) {
   return (
     <div
       style={{
-        background:   '#f8fafc',
-        border:       '1px solid #e2e8f0',
+        background:   'var(--vx-color-surface-muted)',
+        border:       '1px solid var(--vx-color-border)',
         borderRadius: '8px',
         padding:      '10px 12px',
         margin:       '4px 0',
@@ -95,10 +95,10 @@ export function ToolCallCard({ message }: Props) {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-        <span style={{ fontSize: '11px', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+        <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--vx-color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
           工具
         </span>
-        <code style={{ fontSize: '11px', background: '#e2e8f0', borderRadius: '4px', padding: '1px 5px', color: '#334155' }}>
+        <code style={{ fontSize: '11px', background: 'var(--vx-color-primary-soft)', borderRadius: '4px', padding: '1px 5px', color: 'var(--vx-color-text-secondary)' }}>
           {message.toolId}
         </code>
       </div>

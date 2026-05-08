@@ -56,7 +56,7 @@ const Placeholder = () => (
  * @example
  * ```tsx
  * <Icon name="home" size="lg" />
- * <Icon name="settings" weight="fill" className="text-blue-500" />
+ * <Icon name="settings" weight="fill" className="text-vx-primary" />
  * ```
  */
 export const Icon = ({

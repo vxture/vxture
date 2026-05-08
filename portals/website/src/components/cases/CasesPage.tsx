@@ -61,12 +61,12 @@ export default function CasesPage() {
   if (!CASES_DATA.enabled) return null;
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <section className='vx-section-odd min-h-screen'>
       <div className='container mx-auto px-4 py-16'>
         {/* 标题区 */}
         <div className='text-center mb-12'>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>{t(CASES_DATA.titleKey)}</h1>
-          <p className='text-xl text-gray-600 max-w-3xl mx-auto'>{t(CASES_DATA.subtitleKey)}</p>
+          <h1 className='font-display text-4xl font-bold text-vx-gray-900 mb-4'>{t(CASES_DATA.titleKey)}</h1>
+          <p className='text-xl text-vx-gray-600 max-w-3xl mx-auto'>{t(CASES_DATA.subtitleKey)}</p>
         </div>
 
         {/* 筛选与搜索 */}
@@ -77,7 +77,7 @@ export default function CasesPage() {
               placeholder={t(CASES_DATA.ui.searchKey)}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className='w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+              className='w-full px-4 py-2 border border-vx-gray-300 rounded-lg focus:ring-2 focus:ring-vx-brand-500 focus:border-transparent'
             />
           </div>
           <div className='flex flex-wrap gap-2'>
@@ -85,8 +85,8 @@ export default function CasesPage() {
               onClick={() => setSelectedCategory('all')}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedCategory === 'all'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-100'
+                  ? 'bg-vx-brand-600 text-vx-white'
+                  : 'bg-vx-white text-vx-gray-600 hover:bg-vx-gray-100'
               }`}
             >
               {t('filters.all')}
@@ -97,8 +97,8 @@ export default function CasesPage() {
                 onClick={() => setSelectedCategory(category.slug)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   selectedCategory === category.slug
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-white text-gray-600 hover:bg-gray-100'
+                    ? 'bg-vx-brand-600 text-vx-white'
+                    : 'bg-vx-white text-vx-gray-600 hover:bg-vx-gray-100'
                 }`}
               >
                 {t(category.nameKey)}
@@ -117,7 +117,7 @@ export default function CasesPage() {
             return (
               <div
                 key={item.id}
-                className='bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'
+                className='bg-vx-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300'
               >
                 <div className='relative aspect-video'>
                   <Image
@@ -129,20 +129,20 @@ export default function CasesPage() {
                   />
                 </div>
                 <div className='p-6'>
-                  <h3 className='text-xl font-semibold text-gray-900 mb-2'>{title}</h3>
-                  <p className='text-gray-600 mb-4 line-clamp-3'>{description}</p>
+                  <h3 className='text-xl font-semibold text-vx-gray-900 mb-2'>{title}</h3>
+                  <p className='text-vx-gray-600 mb-4 line-clamp-3'>{description}</p>
                   <div className='flex flex-wrap gap-2 mb-4'>
                     {tags.slice(0, 3).map((tag, index) => (
-                      <span key={index} className='px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full'>
+                      <span key={index} className='px-3 py-1 bg-vx-brand-100 text-vx-brand-800 text-sm rounded-full'>
                         {tag}
                       </span>
                     ))}
                   </div>
                   <div className='flex justify-between items-center'>
-                    <span className='text-sm text-gray-500'>{item.publishedAt}</span>
+                    <span className='text-sm text-vx-gray-500'>{item.publishedAt}</span>
                     <Link
                       href={item.cta.href}
-                      className='text-blue-600 hover:text-blue-800 font-medium text-sm'
+                      className='text-vx-brand-600 hover:text-vx-brand-800 font-medium text-sm'
                     >
                       {t(CASES_DATA.ui.viewDetailsKey)}
                     </Link>
@@ -156,16 +156,16 @@ export default function CasesPage() {
         {/* 无结果提示 */}
         {filteredCases.length === 0 && (
           <div className='text-center py-16'>
-            <p className='text-gray-500 text-lg'>{t(CASES_DATA.ui.noResultsKey)}</p>
+            <p className='text-vx-gray-500 text-lg'>{t(CASES_DATA.ui.noResultsKey)}</p>
             <button
               onClick={() => { setSelectedCategory('all'); setSearchTerm(''); }}
-              className='mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors'
+              className='mt-4 px-6 py-2 bg-vx-brand-600 text-vx-white rounded-lg hover:bg-vx-brand-700 transition-colors'
             >
               {t(CASES_DATA.ui.clearFiltersKey)}
             </button>
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

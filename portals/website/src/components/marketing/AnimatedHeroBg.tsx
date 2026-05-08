@@ -16,25 +16,17 @@
 import { useEffect, useRef } from 'react';
 import { useTheme } from '@vxture/design-system';
 
-// ─── 颜色主题配置 ─────────────────────────────────────────────────────────────
+function readHeroCanvasPalette() {
+  const styles = getComputedStyle(document.documentElement);
+  const nodeRgb = styles.getPropertyValue('--vx-color-hero-node-rgb').trim();
+  const lineRgb = styles.getPropertyValue('--vx-color-hero-line-rgb').trim();
 
-const DARK = {
-  bgGradient: 'linear-gradient(145deg,#0f172a 0%,#1e3a8a 55%,#1d4ed8 100%)',
-  grid: 'rgba(255,255,255,0.04)',
-  node: (a: number) => `rgba(147,197,253,${a})`,
-  line: (a: number) => `rgba(147,197,253,${a})`,
-  scanColor: 'rgba(147,197,253,0.45)',
-  fade: 'rgba(15,23,42,0.52)',
-};
-
-const LIGHT = {
-  bgGradient: 'linear-gradient(180deg,#dee9f7 0%,#f2f7fe 35%,#ffffff 70%,#ffffff 100%)',
-  grid: 'rgba(37,99,235,0.008)',
-  node: (a: number) => `rgba(37,99,235,${a})`,
-  line: (a: number) => `rgba(99,102,241,${a})`,
-  scanColor: 'rgba(37,99,235,0.18)',
-  fade: 'rgba(255,255,255,1)',
-};
+  return {
+    node: (alpha: number) => `rgb(${nodeRgb} / ${alpha})`,
+    line: (alpha: number) => `rgb(${lineRgb} / ${alpha})`,
+    scanColor: styles.getPropertyValue('--vx-color-hero-scan').trim(),
+  };
+}
 
 // ─── 组件 ─────────────────────────────────────────────────────────────────────
 
@@ -46,7 +38,6 @@ export default function AnimatedHeroBg() {
   const mouseRef = useRef({ x: -999, y: -999 });
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const colors = isDark ? DARK : LIGHT;
 
   // ─── Canvas 动画 ───────────────────────────────────────────────────────────
 
@@ -56,7 +47,7 @@ export default function AnimatedHeroBg() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const palette = isDark ? DARK : LIGHT;
+    const palette = readHeroCanvasPalette();
     let raf = 0;
     let width = 0;
     let height = 0;
@@ -168,7 +159,7 @@ export default function AnimatedHeroBg() {
   return (
     <div className='pointer-events-none absolute inset-0 overflow-hidden' aria-hidden='true'>
       {/* 渐变底色 */}
-      <div className='absolute inset-0' style={{ background: colors.bgGradient }} />
+      <div className='absolute inset-0' style={{ background: 'var(--vx-color-hero-bg)' }} />
 
       {/* 节点连线动画层 */}
       <canvas ref={canvasRef} className='absolute inset-0 h-full w-full' />
@@ -177,7 +168,7 @@ export default function AnimatedHeroBg() {
       <div
         className='absolute inset-0'
         style={{
-          backgroundImage: `linear-gradient(${colors.grid} 1px,transparent 1px),linear-gradient(90deg,${colors.grid} 1px,transparent 1px)`,
+          backgroundImage: 'linear-gradient(var(--vx-color-hero-grid) 1px, transparent 1px), linear-gradient(90deg, var(--vx-color-hero-grid) 1px, transparent 1px)',
           backgroundSize: '32px 32px',
         }}
       />
@@ -185,7 +176,7 @@ export default function AnimatedHeroBg() {
       {/* 底部向下渐隐，与页面内容区平滑过渡 */}
       <div
         className='absolute bottom-0 left-0 right-0 h-28'
-        style={{ background: `linear-gradient(transparent,${colors.fade})` }}
+        style={{ background: 'linear-gradient(transparent, var(--vx-color-hero-fade))' }}
       />
     </div>
   );

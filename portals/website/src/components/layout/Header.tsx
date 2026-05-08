@@ -63,8 +63,8 @@ function UserAvatar({ user, size = 'md' }: { user: UserInfo; size?: 'md' | 'lg' 
   const textSize = size === 'lg' ? 'text-lg' : 'text-sm';
 
   return (
-    <Avatar className={`${dimension} border border-blue-200/80 shadow-sm shadow-blue-900/10 dark:border-blue-400/30`}>
-      <AvatarFallback className={`bg-linear-to-br from-blue-600 via-cyan-500 to-indigo-600 ${textSize} font-semibold text-white`}>
+    <Avatar className={`${dimension} border border-vx-brand-200/80 shadow-sm shadow-vx-brand-900/10 dark:border-vx-brand-400/30`}>
+      <AvatarFallback className={`bg-linear-to-br from-vx-brand-600 via-vx-info-500 to-vx-indigo-600 ${textSize} font-semibold text-vx-white`}>
         {getAvatarInitial(user)}
       </AvatarFallback>
     </Avatar>
@@ -140,7 +140,7 @@ function hasPersonalVerification(user: UserInfo): boolean {
 
 function UserBadge({ children }: { children: React.ReactNode }) {
   return (
-    <span className='inline-flex items-center rounded-full border border-blue-100 bg-blue-50/70 px-2.5 py-1 text-xs font-medium text-blue-700 dark:border-blue-400/20 dark:bg-blue-950/35 dark:text-blue-200'>
+    <span className='inline-flex items-center rounded-full border border-vx-brand-100 bg-vx-brand-50/70 px-2.5 py-1 text-xs font-medium text-vx-brand-700 dark:border-vx-brand-400/20 dark:bg-vx-brand-950/35 dark:text-vx-brand-200'>
       {children}
     </span>
   );
@@ -161,8 +161,8 @@ function SettingOption({
       onClick={onClick}
       className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
         active
-          ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-200 dark:bg-slate-800 dark:text-blue-200 dark:ring-blue-400/30'
-          : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+          ? 'bg-vx-surface text-vx-brand-700 shadow-sm ring-1 ring-vx-brand-200 dark:bg-vx-gray-800 dark:text-vx-brand-200 dark:ring-vx-brand-400/30'
+          : 'text-vx-text-muted hover:text-vx-text-primary'
       }`}
     >
       {children}
@@ -174,7 +174,7 @@ function SettingRow({ icon, children }: { icon: IconName; children: React.ReactN
   return (
     <div className='flex min-h-10 items-center gap-3'>
       <span className='flex w-5 shrink-0 justify-center'>
-        <Icon name={icon} className='h-4 w-4 text-slate-400 dark:text-slate-500' />
+        <Icon name={icon} className='h-4 w-4 text-vx-gray-400 dark:text-vx-gray-500' />
       </span>
       <div className='flex min-w-0 flex-1 items-center justify-end'>
         {children}
@@ -195,7 +195,7 @@ function SegmentedOptions<T extends string>({
   onChange: (value: T) => void;
 }) {
   return (
-    <div className='flex w-full rounded-lg border border-slate-200 bg-slate-50/70 p-0.5 dark:border-slate-700 dark:bg-slate-900/40'>
+    <div className='flex w-full rounded-lg border border-vx-border bg-vx-surface-muted/70 p-0.5 dark:border-vx-gray-700 dark:bg-vx-gray-900/40'>
       {options.map((option) => (
         <SettingOption
           key={option}
@@ -227,10 +227,10 @@ function HeaderToolButton({
       aria-label={title}
       aria-pressed={active}
       onClick={onClick}
-      className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
+      className={`flex h-8 w-8 items-center justify-center rounded-md transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vx-ring-strong ${
         active
-          ? 'text-blue-700 dark:text-blue-200'
-          : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700 dark:text-slate-300 dark:hover:bg-blue-950/40 dark:hover:text-blue-200'
+          ? 'text-vx-brand-700 dark:text-vx-brand-200'
+          : 'text-vx-gray-600 hover:bg-vx-brand-50 hover:text-vx-brand-700 dark:text-vx-gray-300 dark:hover:bg-vx-brand-950/40 dark:hover:text-vx-brand-200'
       }`}
     >
       <Icon name={icon} className='h-5 w-5' />
@@ -297,7 +297,7 @@ function HeaderLocaleSelect() {
         onClick={() => setOpen((value) => !value)}
       />
       {open ? (
-        <div className='absolute right-0 z-50 mt-2 w-36 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-lg shadow-blue-950/10 dark:border-slate-700 dark:bg-slate-900'>
+        <div className='absolute right-0 z-50 mt-2 w-36 overflow-hidden rounded-lg border border-vx-border bg-vx-surface py-1 shadow-lg shadow-vx-brand-950/10 dark:border-vx-gray-700 dark:bg-vx-gray-900'>
           {SUPPORTED_LOCALES.map((option) => (
             <button
               key={option}
@@ -305,8 +305,8 @@ function HeaderLocaleSelect() {
               onClick={() => handleLocaleChange(option)}
               className={`block w-full px-3 py-2 text-left text-sm transition-colors ${
                 locale === option
-                  ? 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-200'
-                  : 'text-slate-700 hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-800'
+                  ? 'bg-vx-brand-50 text-vx-brand-700 dark:bg-vx-brand-950/40 dark:text-vx-brand-200'
+                  : 'text-vx-text-secondary hover:bg-vx-surface-muted dark:text-vx-text-secondary dark:hover:bg-vx-gray-800'
               }`}
             >
               {LOCALE_CONFIGS[option].nativeName}
@@ -407,13 +407,13 @@ function QuickSettings() {
 
   return (
     <div className='space-y-2'>
-      <p className='text-sm font-semibold text-slate-900 dark:text-white'>{t('title')}</p>
+      <p className='text-sm font-semibold text-vx-text-primary'>{t('title')}</p>
       <SettingRow icon='globe'>
         <div className='relative w-full'>
           <select
             value={selectedLocale}
             onChange={(event) => handleLocaleChange(event.target.value as Locale)}
-            className='h-9 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-8 text-sm text-slate-700 outline-none transition focus:border-blue-300 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500/60 dark:focus:ring-blue-500/20'
+            className='h-9 w-full appearance-none rounded-lg border border-vx-border bg-vx-surface px-3 pr-8 text-sm text-vx-text-secondary outline-none transition focus:border-vx-brand-300 focus:ring-2 focus:ring-vx-ring dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-text-secondary dark:focus:border-vx-brand-400/60 dark:focus:ring-vx-ring'
           >
             {SUPPORTED_LOCALES.map((locale) => (
               <option key={locale} value={locale}>
@@ -421,7 +421,7 @@ function QuickSettings() {
               </option>
             ))}
           </select>
-          <Icon name='chevron-down' className='pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400' />
+          <Icon name='chevron-down' className='pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-vx-gray-400' />
         </div>
       </SettingRow>
 
@@ -501,26 +501,26 @@ function UserMenu({
       <PopoverTrigger asChild>
         <button
           type='button'
-          className='relative flex h-10 w-10 items-center justify-center rounded-full outline-none transition duration-200 hover:ring-2 hover:ring-blue-300 focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:ring-blue-500/60'
+          className='relative flex h-10 w-10 items-center justify-center rounded-full outline-none transition duration-200 hover:ring-2 hover:ring-vx-brand-300 focus-visible:ring-2 focus-visible:ring-vx-ring-strong dark:hover:ring-vx-brand-400/60'
           aria-label={t('open')}
           title={t('open')}
         >
           <UserAvatar user={user} />
-          <span className='absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-400 dark:border-slate-900' />
+          <span className='absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-vx-surface bg-vx-success-400 dark:border-vx-gray-900' />
         </button>
       </PopoverTrigger>
 
       <PopoverContent
         align='end'
         sideOffset={10}
-        className='w-80 overflow-hidden rounded-lg border-blue-100 bg-white p-0 text-slate-900 shadow-xl shadow-blue-950/10 dark:border-blue-400/20 dark:bg-slate-900 dark:text-slate-100'
+        className='w-80 overflow-hidden rounded-lg border-vx-brand-100 bg-vx-surface p-0 text-vx-text-primary shadow-xl shadow-vx-brand-950/10 dark:border-vx-brand-400/20 dark:bg-vx-gray-900 dark:text-vx-text-primary'
       >
         <div className='p-4'>
           <div className='flex items-center gap-3'>
             <UserAvatar user={user} size='lg' />
             <div className='min-w-0 flex-1'>
-              <p className='truncate text-base font-semibold text-slate-950 dark:text-white'>{displayName}</p>
-              <p className='mt-1 truncate text-sm font-normal text-slate-500 dark:text-slate-400'>{uniqueLine}</p>
+              <p className='truncate text-base font-semibold text-vx-text-primary'>{displayName}</p>
+              <p className='mt-1 truncate text-sm font-normal text-vx-text-muted'>{uniqueLine}</p>
             </div>
           </div>
 
@@ -531,13 +531,13 @@ function UserMenu({
           </div>
         </div>
 
-        <div className='mx-4 h-px bg-slate-200/70 dark:bg-slate-800' />
+        <div className='mx-4 h-px bg-vx-border' />
 
         <div className='px-4 py-3'>
           <QuickSettings />
         </div>
 
-        <div className='mx-4 h-px bg-slate-100 dark:bg-slate-800/70' />
+        <div className='mx-4 h-px bg-vx-border-muted' />
 
         <div className='p-2'>
           <div>
@@ -545,7 +545,7 @@ function UserMenu({
               type='button'
               onClick={handleSwitchUser}
               disabled={disabled}
-              className='flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-200 dark:hover:bg-blue-950/40 dark:hover:text-blue-200'
+              className='flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-vx-text-secondary transition hover:bg-vx-brand-50 hover:text-vx-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-vx-brand-950/40 dark:hover:text-vx-brand-200'
             >
               <Icon name='user-switch' className='h-4 w-4' />
               {t('switchUser')}
@@ -554,7 +554,7 @@ function UserMenu({
               type='button'
               onClick={handleSignOut}
               disabled={disabled}
-              className='flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-blue-50 hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-200 dark:hover:bg-blue-950/40 dark:hover:text-blue-200'
+              className='flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium text-vx-text-secondary transition hover:bg-vx-brand-50 hover:text-vx-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-vx-brand-950/40 dark:hover:text-vx-brand-200'
             >
               <Icon name='sign-out' className='h-4 w-4' />
               {t('signOut')}
@@ -570,9 +570,9 @@ function UserMenu({
  * Header 组件
  *
  * 主题颜色说明：
- * - Light 模式：背景为浅蓝色，文字统一用 text-gray-800（主）/ text-gray-600（次），
+ * - Light 模式：背景为浅蓝色，文字统一用 DS text token，
  *   与其他 section 保持一致；滚动前后颜色不变
- * - Dark 模式：背景为深灰色，文字统一用 dark:text-slate-200（主）/ dark:text-slate-300（次），
+ * - Dark 模式：背景为深灰色，文字统一用 DS text token，
  *   与其他 section 保持一致
  * - 不使用 useTheme() 做 className 拼接，避免 SSR hydration mismatch
  */
@@ -634,7 +634,7 @@ export default function Header() {
     <header
       className={`fixed w-full top-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-blue-50/80 dark:bg-slate-800/80 backdrop-blur-md shadow-lg'
+          ? 'bg-vx-brand-50/80 dark:bg-vx-gray-800/80 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       }`}
     >
@@ -644,7 +644,7 @@ export default function Header() {
           <Link
             href={HEADER_DATA.logo.href}
             aria-label={t(HEADER_DATA.logo.labelKey)}
-            className='shrink-0 flex items-center space-x-2 rounded-md transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
+            className='shrink-0 flex items-center space-x-2 rounded-md transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vx-ring-strong focus-visible:ring-offset-2 focus-visible:ring-offset-transparent'
           >
             <Image
               src={HEADER_DATA.logo.image}
@@ -653,7 +653,7 @@ export default function Header() {
               height={24}
               className='object-contain'
             />
-            <h1 className='text-2xl font-bold text-gray-800 dark:text-slate-200'>
+            <h1 className='logo-text text-2xl text-vx-gray-800 dark:text-vx-text-secondary'>
               {t(HEADER_DATA.logo.labelKey)}
             </h1>
           </Link>
@@ -664,7 +664,7 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className='transition-colors duration-300 text-gray-800 dark:text-slate-200 font-medium hover:text-cyan-500 dark:hover:text-cyan-400'
+                className='transition-colors duration-300 text-vx-gray-800 dark:text-vx-text-secondary font-medium hover:text-vx-info dark:hover:text-vx-info'
               >
                 {t(item.labelKey)}
               </Link>
@@ -681,7 +681,7 @@ export default function Header() {
                 <a
                   href={consoleUrl}
                   title={consoleLabel}
-                  className='text-sm font-medium text-gray-700 transition-colors duration-200 hover:text-blue-600 focus-visible:outline-none dark:text-slate-200 dark:hover:text-blue-300'
+                  className='text-sm font-medium text-vx-gray-700 transition-colors duration-200 hover:text-vx-primary focus-visible:outline-none dark:text-vx-text-secondary dark:hover:text-vx-brand-300'
                 >
                   {consoleLabel}
                 </a>
@@ -706,8 +706,8 @@ export default function Header() {
                     href={action.href}
                     className={
                       action.variant === 'secondary'
-                        ? 'w-20 px-4 py-2 rounded-lg transition-all duration-300 text-center text-gray-700 dark:text-slate-200 font-semibold hover:text-gray-900 dark:hover:text-white'
-                        : 'w-28 px-6 py-2 bg-linear-to-r from-cyan-500 to-blue-600 text-white rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
+                        ? 'w-20 px-4 py-2 rounded-lg transition-all duration-300 text-center text-vx-gray-700 dark:text-vx-text-secondary font-semibold hover:text-vx-gray-900 dark:hover:text-vx-white'
+                        : 'w-28 px-6 py-2 bg-linear-to-r from-vx-info-500 to-vx-brand-600 text-vx-white rounded-lg hover:from-vx-info-600 hover:to-vx-brand-700 transition-all duration-300 shadow-lg hover:shadow-xl text-center'
                     }
                   >
                     {t(action.labelKey)}

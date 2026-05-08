@@ -36,7 +36,7 @@ export default function AgentMarketplacePage() {
   const agents = t.raw('agents.items') as AgentItem[];
   const hasTenantSession = isAuthenticated && Boolean(user);
   const consoleEntryUrl = buildConsoleEntryUrl(locale);
-  const heroPrimaryClassName = 'inline-flex h-11 items-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500';
+  const heroPrimaryClassName = 'inline-flex h-11 items-center rounded-md bg-vx-brand-600 px-5 text-sm font-semibold text-vx-white transition hover:bg-vx-brand-500';
 
   const visibleAgents = useMemo(() => {
     if (activeIndustry === 'all') {
@@ -47,19 +47,19 @@ export default function AgentMarketplacePage() {
   }, [activeIndustry, agents]);
 
   return (
-    <div className='min-h-screen bg-white text-slate-950 dark:bg-slate-950 dark:text-slate-100'>
-            <section className='vx-hero-section'>
+    <div className='vx-page-surface'>
+      <section className='vx-hero-section'>
         <AnimatedHeroBg />
         <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-blue-600 dark:text-cyan-200'>{t('hero.eyebrow')}</p>
-            <h1 className='text-4xl font-bold leading-tight text-slate-950 dark:text-white md:text-6xl'>{t('hero.title')}</h1>
-            <p className='mt-5 max-w-2xl text-sm leading-6 text-slate-700 dark:text-slate-200'>{t('hero.description')}</p>
+            <p className='mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
+            <h1 className='font-brand text-4xl font-bold leading-tight text-vx-gray-900 dark:text-vx-white md:text-6xl'>{t('hero.title')}</h1>
+            <p className='mt-5 max-w-2xl text-sm leading-6 text-vx-gray-700 dark:text-vx-gray-200'>{t('hero.description')}</p>
             <div className='mt-6 flex flex-wrap gap-3'>
               {highlights.map((item) => (
                 <span
                   key={item}
-                  className='rounded-full border border-blue-100 bg-white/70 px-3 py-1 text-sm font-medium text-blue-700 shadow-sm shadow-blue-900/5 backdrop-blur dark:border-white/20 dark:bg-white/10 dark:text-slate-100'
+                  className='rounded-full border border-vx-brand-100 bg-vx-white/70 px-3 py-1 text-sm font-medium text-vx-brand-700 shadow-sm shadow-vx-brand-900/5 backdrop-blur dark:border-vx-white/20 dark:bg-vx-white/10 dark:text-vx-gray-100'
                 >
                   {item}
                 </span>
@@ -77,7 +77,7 @@ export default function AgentMarketplacePage() {
               )}
               <a
                 href='#agent-marketplace'
-                className='inline-flex h-11 items-center rounded-md border border-blue-200 bg-white/60 px-5 text-sm font-semibold text-blue-700 transition hover:border-blue-300 hover:bg-white dark:border-white/35 dark:bg-transparent dark:text-white dark:hover:border-white dark:hover:bg-white/10'
+                className='inline-flex h-11 items-center rounded-md border border-vx-brand-200 bg-vx-white/60 px-5 text-sm font-semibold text-vx-brand-700 transition hover:border-vx-brand-300 hover:bg-vx-white dark:border-vx-white/35 dark:bg-transparent dark:text-vx-white dark:hover:border-vx-white dark:hover:bg-vx-white/10'
               >
                 {t('hero.secondaryAction')}
               </a>
@@ -86,14 +86,14 @@ export default function AgentMarketplacePage() {
         </div>
       </section>
 
-      <section id='agent-marketplace' className='bg-linear-to-b from-blue-50 to-white py-16 dark:from-slate-900 dark:to-slate-950'>
+      <section id='agent-marketplace' className='vx-section-odd'>
         <div className='mx-auto max-w-7xl px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div className='flex flex-col gap-4 md:flex-row md:items-end md:justify-between'>
             <div>
-              <p className='text-sm font-semibold text-blue-600 dark:text-blue-300'>{t('filters.eyebrow')}</p>
-              <h2 className='mt-2 text-3xl font-bold text-slate-950 dark:text-white'>{t('filters.title')}</h2>
+              <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('filters.eyebrow')}</p>
+              <h2 className='font-display mt-2 text-3xl font-bold text-vx-gray-900 dark:text-vx-white'>{t('filters.title')}</h2>
             </div>
-            <p className='max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300'>
+            <p className='max-w-2xl text-sm leading-6 text-vx-gray-600 dark:text-vx-gray-300'>
               {t('filters.description')}
             </p>
           </div>
@@ -108,8 +108,8 @@ export default function AgentMarketplacePage() {
                   onClick={() => setActiveIndustry(filter.id)}
                   className={`h-10 rounded-md border px-4 text-sm font-medium transition ${
                     active
-                      ? 'border-blue-600 bg-blue-600 text-white shadow-sm shadow-blue-900/20'
-                      : 'border-slate-200 bg-white text-slate-600 hover:border-blue-200 hover:text-blue-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-500/40 dark:hover:text-blue-200'
+                      ? 'border-vx-brand-600 bg-vx-brand-600 text-vx-white shadow-sm shadow-vx-brand-900/20'
+                      : 'border-vx-gray-200 bg-vx-white text-vx-gray-600 hover:border-vx-brand-200 hover:text-vx-brand-700 dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-gray-300 dark:hover:border-vx-brand-500/40 dark:hover:text-vx-brand-200'
                   }`}
                 >
                   {filter.label}
@@ -122,35 +122,35 @@ export default function AgentMarketplacePage() {
             {visibleAgents.map((agent) => (
               <article
                 key={agent.name}
-                className='flex min-h-[360px] flex-col rounded-lg border border-slate-200 bg-white p-5 shadow-sm transition hover:border-blue-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-950 dark:hover:border-blue-500/30'
+                className='flex min-h-[360px] flex-col rounded-lg border border-vx-gray-200 bg-vx-white p-5 shadow-sm transition hover:border-vx-brand-200 hover:shadow-md dark:border-vx-gray-800 dark:bg-vx-gray-900 dark:hover:border-vx-brand-500/30'
               >
                 <div className='flex items-start justify-between gap-4'>
                   <div className='flex items-start gap-4'>
-                    <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 dark:bg-blue-950/50 dark:text-blue-200'>
+                    <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-vx-brand-50 text-vx-brand-600 dark:bg-vx-brand-950/50 dark:text-vx-brand-200'>
                       <Icon name={agent.icon} className='h-5 w-5' />
                     </div>
                     <div>
-                      <p className='text-xs font-semibold text-blue-600 dark:text-blue-300'>{agent.type}</p>
-                      <h3 className='mt-1 text-lg font-semibold text-slate-950 dark:text-white'>{agent.name}</h3>
+                      <p className='text-xs font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{agent.type}</p>
+                      <h3 className='mt-1 text-lg font-semibold text-vx-gray-900 dark:text-vx-white'>{agent.name}</h3>
                     </div>
                   </div>
-                  <span className='rounded-full border border-cyan-100 bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-700 dark:border-cyan-400/20 dark:bg-cyan-950/30 dark:text-cyan-200'>
+                  <span className='rounded-full border border-vx-info-100 bg-vx-info-50 px-2.5 py-1 text-xs font-medium text-vx-info-700 dark:border-vx-info-400/20 dark:bg-vx-brand-950/30 dark:text-vx-info-200'>
                     {t('agents.available')}
                   </span>
                 </div>
 
-                <p className='mt-5 text-sm leading-6 text-slate-600 dark:text-slate-300'>
+                <p className='mt-5 text-sm leading-6 text-vx-gray-600 dark:text-vx-gray-300'>
                   {agent.description}
                 </p>
-                <div className='mt-5 rounded-md border border-blue-100 bg-blue-50/50 p-4 dark:border-blue-400/15 dark:bg-blue-950/20'>
-                  <p className='text-xs font-semibold text-blue-600 dark:text-blue-300'>{t('agents.valueLabel')}</p>
-                  <p className='mt-2 text-sm leading-6 text-slate-700 dark:text-slate-200'>{agent.value}</p>
+                <div className='mt-5 rounded-md border border-vx-brand-100 bg-vx-brand-50/50 p-4 dark:border-vx-brand-400/15 dark:bg-vx-brand-950/20'>
+                  <p className='text-xs font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('agents.valueLabel')}</p>
+                  <p className='mt-2 text-sm leading-6 text-vx-gray-700 dark:text-vx-gray-200'>{agent.value}</p>
                 </div>
 
                 <ul className='mt-5 space-y-2'>
                   {agent.capabilities.map((capability) => (
-                    <li key={capability} className='flex gap-2 text-sm text-slate-600 dark:text-slate-300'>
-                      <Icon name='check' className='mt-0.5 h-4 w-4 shrink-0 text-blue-500' />
+                    <li key={capability} className='flex gap-2 text-sm text-vx-gray-600 dark:text-vx-gray-300'>
+                      <Icon name='check' className='mt-0.5 h-4 w-4 shrink-0 text-vx-brand-500' />
                       <span>{capability}</span>
                     </li>
                   ))}
@@ -161,7 +161,7 @@ export default function AgentMarketplacePage() {
                     {agent.tags.map((tag) => (
                       <span
                         key={tag}
-                        className='rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs text-slate-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300'
+                        className='rounded-full border border-vx-gray-200 bg-vx-gray-50 px-2.5 py-1 text-xs text-vx-gray-600 dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-gray-300'
                       >
                         {tag}
                       </span>
@@ -169,7 +169,7 @@ export default function AgentMarketplacePage() {
                   </div>
                   <Link
                     href='/signin'
-                    className='mt-5 inline-flex h-10 w-full items-center justify-center rounded-md bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500'
+                    className='mt-5 inline-flex h-10 w-full items-center justify-center rounded-md bg-vx-gray-900 px-4 text-sm font-semibold text-vx-white transition hover:bg-vx-brand-600 dark:bg-vx-brand-600 dark:hover:bg-vx-brand-500'
                   >
                     {t('agents.action')}
                   </Link>

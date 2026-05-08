@@ -130,20 +130,20 @@ export default function SnapDebugPanel(props: SnapDebugPanelProps): React.ReactE
 
   return (
     <div
-      className={`fixed w-56 max-w-56 overflow-y-auto p-2 bg-black/25 text-white/80 text-xs rounded shadow whitespace-normal ${className || ''}`}
+      className={`fixed w-56 max-w-56 overflow-y-auto p-2 bg-vx-black/25 text-vx-white/80 text-xs rounded shadow whitespace-normal ${className || ''}`}
       style={finalStyle}
     >
-      <h3 className='mb-1 border-b border-white/20 pb-0.5 font-semibold text-white/70'>
+      <h3 className='mb-1 border-b border-vx-white/20 pb-0.5 font-semibold text-vx-white/70'>
         Debug information
       </h3>
 
       {/* ScreenRect 和 TargetRect 信息 */}
       <div className='space-y-1'>
         <div>
-          <p className='font-semibold text-white/60'>ScreenRect:</p>
+          <p className='font-semibold text-vx-white/60'>ScreenRect:</p>
           {(() => {
             const rect = formatRect(snapdebugInfo.screenRect);
-            if (!rect) return <p className='ml-2 text-white/40'>null</p>;
+            if (!rect) return <p className='ml-2 text-vx-white/40'>null</p>;
             return (
               <div className='ml-2 space-y-0.5'>
                 <p>top: {rect.top}</p>
@@ -156,10 +156,10 @@ export default function SnapDebugPanel(props: SnapDebugPanelProps): React.ReactE
         </div>
 
         <div>
-          <p className='font-semibold text-white/60'>TargetRect:</p>
+          <p className='font-semibold text-vx-white/60'>TargetRect:</p>
           {(() => {
             const rect = formatRect(snapdebugInfo.targetRect);
-            if (!rect) return <p className='ml-2 text-white/40'>null</p>;
+            if (!rect) return <p className='ml-2 text-vx-white/40'>null</p>;
             return (
               <div className='ml-2 space-y-0.5'>
                 <p>top: {rect.top}</p>
@@ -173,7 +173,7 @@ export default function SnapDebugPanel(props: SnapDebugPanelProps): React.ReactE
       </div>
 
       {/* 分隔线 */}
-      <div className='my-1 h-px bg-white/15'></div>
+      <div className='my-1 h-px bg-vx-white/15'></div>
 
       {/* 目标和状态信息 */}
       <div className='space-y-1'>
@@ -187,7 +187,7 @@ export default function SnapDebugPanel(props: SnapDebugPanelProps): React.ReactE
       </div>
 
       {/* 分隔线 */}
-      <div className='my-1 h-px bg-white/15'></div>
+      <div className='my-1 h-px bg-vx-white/15'></div>
 
       {/* 滚动位置信息 */}
       <div className='space-y-1'>

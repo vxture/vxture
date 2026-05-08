@@ -132,7 +132,7 @@ export default function LocaleSwitcher({
         <Icon
           name="globe"
           className={`${iconSizes[size]} ${
-            isDarkMode ? 'text-cyan-400' : 'text-gray-700'
+            isDarkMode ? 'text-vx-info-400' : 'text-vx-gray-700'
           }`}
         />
 
@@ -146,7 +146,7 @@ export default function LocaleSwitcher({
       {/* 语言下拉菜单 */}
       {isMenuOpen && (
         <div className={`absolute right-0 mt-2 w-32 border rounded-lg shadow-lg z-10 ${
-          isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          isDarkMode ? 'bg-vx-gray-800 border-vx-gray-700' : 'bg-vx-surface border-vx-border'
         }`}>
           {localeOptions.map((lang, index) => (
             <button
@@ -154,10 +154,10 @@ export default function LocaleSwitcher({
               onClick={() => handleLocaleChange(lang.code)}
               className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                 locale === lang.code
-                  ? 'bg-cyan-50 text-cyan-600 font-medium'
+                  ? 'bg-vx-cyan-50 text-vx-cyan-600 font-medium'
                   : isDarkMode
-                  ? 'text-gray-200 hover:bg-gray-700'
-                  : 'text-gray-700 hover:bg-gray-50'
+                  ? 'text-vx-gray-200 hover:bg-vx-gray-700'
+                  : 'text-vx-gray-700 hover:bg-vx-gray-50'
               } ${index === 0 ? 'rounded-t-lg' : ''} ${
                 index === localeOptions.length - 1 ? 'rounded-b-lg' : ''
               }`}

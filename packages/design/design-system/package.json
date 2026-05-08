@@ -12,7 +12,9 @@
       "require": "./dist/index.cjs"
     },
     "./styles/auth.css": "./src/styles/auth.css",
-    "./styles/globals.css": "./src/styles/globals.css"
+    "./styles/globals.css": "./src/styles/globals.css",
+    "./styles/tokens.css": "./src/styles/tokens.css",
+    "./styles/typography.css": "./src/styles/typography.css"
   },
   "files": ["dist", "src/styles", "assets"],
   "scripts": {

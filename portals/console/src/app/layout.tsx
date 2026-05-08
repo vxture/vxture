@@ -13,12 +13,34 @@
 
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { Geist_Mono, Inter, Sora } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { ThemeProvider } from '@vxture/design-system';
 import type { Density } from '@vxture/design-system';
 import { DEFAULT_LOCALE, PREFERENCE_CONSTANTS, THEME_CONSTANTS } from '@vxture/shared';
 import type { Theme } from '@vxture/shared';
 import './globals.css';
+
+const sora = Sora({
+  subsets: ['latin'],
+  weight: ['600', '700', '800'],
+  display: 'swap',
+  variable: '--vx-font-loader-brand',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--vx-font-loader-sans',
+});
+
+const geistMono = Geist_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  display: 'swap',
+  variable: '--vx-font-loader-mono',
+});
 
 export const metadata: Metadata = {
   title: 'Vxture Console',
@@ -35,7 +57,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
-      <body>
+      <body className={`${sora.variable} ${inter.variable} ${geistMono.variable}`}>
         <ThemeProvider defaultTheme={initialTheme} defaultDensity={initialDensity}>
           {children}
         </ThemeProvider>

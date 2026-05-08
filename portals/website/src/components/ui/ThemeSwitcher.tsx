@@ -87,7 +87,7 @@ export default function ThemeSwitcher({
         aria-label={t('switchTo', { theme: t('dark') })}
         disabled
       >
-        <Icon name='moon' className={`${iconSizes[size]} text-gray-700`} />
+        <Icon name='moon' className={`${iconSizes[size]} text-vx-gray-700`} />
       </button>
     );
   }
@@ -110,10 +110,10 @@ export default function ThemeSwitcher({
         name={activeOption.icon}
         className={`${iconSizes[size]} ${
           activeOption.value === 'dark'
-            ? 'text-yellow-400'
+            ? 'text-vx-warning-400'
             : activeOption.value === 'light'
-            ? 'text-gray-700'
-            : 'text-cyan-500'
+            ? 'text-vx-gray-700'
+            : 'text-vx-info-500'
         }`}
       />
       {showLabel && <span className='ml-2 text-sm font-medium'>{t(activeOption.labelKey)}</span>}

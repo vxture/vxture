@@ -29,7 +29,7 @@ export function MessageList() {
 
   if (!messages.length) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: '14px' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--vx-color-text-muted)', fontSize: '14px' }}>
         你好！有什么可以帮助你的？
       </div>
     );

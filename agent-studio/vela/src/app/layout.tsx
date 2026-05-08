@@ -10,6 +10,8 @@
 
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import '@vxture/design-system/styles/tokens.css';
+import '@vxture/design-system/styles/typography.css';
 
 export const metadata: Metadata = {
   title:       'Vela 智能助手',
@@ -19,7 +21,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="zh-CN">
-      <body style={{ margin: 0, padding: 0, fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif' }}>
+      <body style={{ margin: 0, padding: 0, fontFamily: 'var(--font-sans)', color: 'var(--vx-color-text-primary)' }}>
         {children}
       </body>
     </html>

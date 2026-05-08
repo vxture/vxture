@@ -106,7 +106,7 @@ export default function PriceDisplay({
       {/* 周期 */}
       {period && periodText[period] && (
         <span className={`ml-1 text-sm ${
-          highlighted ? 'text-gray-500' : 'text-gray-600'
+          highlighted ? 'text-vx-gray-500' : 'text-vx-gray-600'
         }`}>
           {periodText[period]}
         </span>
@@ -114,7 +114,7 @@ export default function PriceDisplay({
 
       {/* 原价 */}
       {formattedOriginalPrice && (
-        <span className='ml-2 text-sm text-gray-500 line-through'>
+        <span className='ml-2 text-sm text-vx-gray-500 line-through'>
           {formattedOriginalPrice}
           {period && periodText[period]}
         </span>
@@ -122,7 +122,7 @@ export default function PriceDisplay({
 
       {/* 价格说明 */}
       {description && (
-        <span className='ml-2 text-sm text-gray-500'>
+        <span className='ml-2 text-sm text-vx-gray-500'>
           ({description})
         </span>
       )}

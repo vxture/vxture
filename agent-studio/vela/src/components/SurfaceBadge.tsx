@@ -36,8 +36,8 @@ export function SurfaceBadge({ surface }: Props) {
         borderRadius:   '9999px',
         fontSize:       '11px',
         fontWeight:     600,
-        background:     surface === 'admin' ? '#e0f2fe' : '#f0fdf4',
-        color:          surface === 'admin' ? '#0369a1' : '#15803d',
+        background:     surface === 'admin' ? 'var(--vx-color-info-surface)' : 'var(--vx-color-success-surface)',
+        color:          surface === 'admin' ? 'var(--vx-color-info-foreground)' : 'var(--vx-color-success-foreground)',
         letterSpacing:  '0.02em',
       }}
     >

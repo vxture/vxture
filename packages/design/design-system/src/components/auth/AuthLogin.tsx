@@ -266,7 +266,7 @@ export function UnifiedAuthPage({
   }
   if (visual?.leftBackgroundImage) {
     style["--vx-auth-visual-bg"] =
-      `linear-gradient(145deg, rgba(30, 58, 138, 0.74) 0%, rgba(29, 78, 216, 0.58) 50%, rgba(37, 99, 235, 0.5) 100%), url(${visual.leftBackgroundImage}) center / cover no-repeat`;
+      `var(--vx-color-auth-visual-bg), url(${visual.leftBackgroundImage}) center / cover no-repeat`;
   }
 
   return (
@@ -912,6 +912,9 @@ function NodeGraph() {
       return undefined;
     }
 
+    const styles = getComputedStyle(document.documentElement);
+    const nodeRgb = styles.getPropertyValue("--vx-color-auth-node-rgb").trim();
+    const graphColor = (alpha: number) => `rgb(${nodeRgb} / ${alpha})`;
     let frame = 0;
     let width = 0;
     let height = 0;
@@ -964,7 +967,7 @@ function NodeGraph() {
           if (!first || !second) continue;
           const distance = Math.hypot(first.x - second.x, first.y - second.y);
           if (distance < 140) {
-            context.strokeStyle = `rgba(147,197,253,${(1 - distance / 140) * 0.35})`;
+            context.strokeStyle = graphColor((1 - distance / 140) * 0.35);
             context.lineWidth = 0.6;
             context.beginPath();
             context.moveTo(first.x, first.y);
@@ -976,7 +979,7 @@ function NodeGraph() {
 
       for (const node of nodes) {
         const pulse = (Math.sin(node.phase) + 1) / 2;
-        context.fillStyle = `rgba(147,197,253,${0.45 + pulse * 0.4})`;
+        context.fillStyle = graphColor(0.45 + pulse * 0.4);
         context.beginPath();
         context.arc(node.x, node.y, node.radius * (1 + pulse * 0.35), 0, Math.PI * 2);
         context.fill();

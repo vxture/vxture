@@ -1,4 +1,5 @@
 @import "./tokens.css";
+@import "./typography.css";
 @import "./tailwind.css";
 @import "./fullscreen.css";
 
@@ -12,7 +13,6 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
 }
 
 button {

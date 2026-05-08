@@ -185,10 +185,10 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
 
   return (
     <div
-      className={`fixed flex flex-col gap-1 w-auto bg-black/25 text-white/80 p-2 rounded shadow text-xs ${className || ''}`}
+      className={`fixed flex flex-col gap-1 w-auto bg-vx-black/25 text-vx-white/80 p-2 rounded shadow text-xs ${className || ''}`}
       style={finalStyle}
     >
-      <h3 className='font-semibold mb-1 text-white/70'>Sections Choice</h3>
+      <h3 className='font-semibold mb-1 text-vx-white/70'>Sections Choice</h3>
 
       {normalizedSections.map(({ id, name }) => {
         const isActive = activeTarget?.id === id;
@@ -198,7 +198,7 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
             key={id}
             onClick={() => handleButtonClick(id)}
             className={`px-2 py-2 rounded transition text-left ${
-              isActive ? 'bg-blue-500/60 text-white' : 'bg-white/20 text-white/70 hover:bg-white/30'
+              isActive ? 'bg-vx-primary/60 text-vx-white' : 'bg-vx-white/20 text-vx-white/70 hover:bg-vx-white/30'
             }`}
             style={{ minWidth: 80 }}
           >

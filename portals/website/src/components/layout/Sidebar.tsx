@@ -116,7 +116,7 @@ export default function Sidebar({
       {showOverlay && (
         <div
           className={`absolute inset-0 transition-opacity duration-300 ${
-            isDarkMode ? 'bg-black/60' : 'bg-black/40'
+            isDarkMode ? 'bg-vx-black/60' : 'bg-vx-black/40'
           }`}
           onClick={onClose}
         />
@@ -132,7 +132,7 @@ export default function Sidebar({
       >
         <div
           className={`h-full ${
-            isDarkMode ? 'bg-gray-900' : 'bg-white'
+            isDarkMode ? 'bg-vx-gray-900' : 'bg-vx-surface'
           } shadow-xl`}
         >
           {children}

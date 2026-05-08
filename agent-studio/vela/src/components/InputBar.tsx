@@ -50,8 +50,8 @@ export function InputBar() {
         alignItems:   'flex-end',
         gap:          '8px',
         padding:      '12px 16px',
-        borderTop:    '1px solid #e2e8f0',
-        background:   '#ffffff',
+        borderTop:    '1px solid var(--vx-color-border)',
+        background:   'var(--vx-color-surface)',
       }}
     >
       <textarea
@@ -65,7 +65,7 @@ export function InputBar() {
         style={{
           flex:        1,
           resize:      'none',
-          border:      '1px solid #e2e8f0',
+          border:      '1px solid var(--vx-color-border)',
           borderRadius: '8px',
           padding:     '8px 12px',
           fontSize:    '14px',
@@ -73,8 +73,8 @@ export function InputBar() {
           outline:     'none',
           maxHeight:   '120px',
           overflowY:   'auto',
-          background:  isDisabled ? '#f8fafc' : '#ffffff',
-          color:       '#1e293b',
+          background:  isDisabled ? 'var(--vx-color-surface-muted)' : 'var(--vx-color-surface)',
+          color:       'var(--vx-color-text-primary)',
           fontFamily:  'inherit',
         }}
       />
@@ -85,8 +85,8 @@ export function InputBar() {
           padding:      '8px 16px',
           borderRadius: '8px',
           border:       'none',
-          background:   !text.trim() || isDisabled ? '#e2e8f0' : '#3b82f6',
-          color:        !text.trim() || isDisabled ? '#9ca3af' : '#ffffff',
+          background:   !text.trim() || isDisabled ? 'var(--vx-color-surface-muted)' : 'var(--vx-color-primary)',
+          color:        !text.trim() || isDisabled ? 'var(--vx-color-text-disabled)' : 'var(--vx-color-text-inverse)',
           fontSize:     '14px',
           fontWeight:   600,
           cursor:       !text.trim() || isDisabled ? 'not-allowed' : 'pointer',

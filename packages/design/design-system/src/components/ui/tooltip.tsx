@@ -48,10 +48,10 @@ const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentProps>(
           className={cn(
             "z-[1070] overflow-hidden rounded-md border px-3 py-1.5 text-sm shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
           variant === "soft"
-            ? "border-blue-100/80 bg-white/95 text-slate-700 shadow-[0_8px_24px_rgba(30,64,175,0.10)] backdrop-blur-md"
+            ? "[border-color:var(--vx-color-border)] [background:var(--vx-color-surface)] [color:var(--vx-color-text-secondary)] backdrop-blur-md"
             : variant === "inverse"
-              ? "border-slate-400/25 bg-slate-950/95 text-slate-50 shadow-slate-950/20"
-              : "border-gray-200 bg-white text-gray-950",
+              ? "[border-color:var(--vx-color-border-strong)] [background:var(--vx-color-foreground)] [color:var(--vx-color-text-inverse)]"
+              : "[border-color:var(--vx-color-border)] [background:var(--vx-color-surface)] [color:var(--vx-color-text-primary)]",
             className,
           )}
           {...props}

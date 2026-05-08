@@ -76,13 +76,13 @@ function UserAvatar({ user, size = 'md' }: { user: ConsoleUser; size?: 'md' | 'l
   const displayName = getDisplayName(user, 'Admin');
 
   return (
-    <Avatar className={`${dimension} border border-blue-200/80 shadow-sm shadow-blue-900/10 dark:border-blue-400/30`}>
+    <Avatar className={`${dimension} border border-vx-brand-200/80 shadow-sm shadow-vx-brand-900/10 dark:border-vx-brand-400/30`}>
       <AvatarImage
         className="h-full w-full object-cover"
         src={DEFAULT_AVATAR_SRC}
         alt={displayName}
       />
-      <AvatarFallback className="bg-blue-50 text-transparent dark:bg-slate-800" aria-hidden="true" />
+      <AvatarFallback className="bg-vx-brand-50 text-transparent dark:bg-vx-gray-800" aria-hidden="true" />
     </Avatar>
   );
 }
@@ -134,7 +134,7 @@ function getRoleLabel(user: ConsoleUser, t: ReturnType<typeof useConsoleTranslat
 
 function UserBadge({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex max-w-full items-center truncate whitespace-nowrap rounded-full border border-blue-100 bg-blue-50/70 px-2.5 py-1 text-[11px] font-medium leading-4 text-blue-700 dark:border-blue-400/20 dark:bg-blue-950/35 dark:text-blue-200">
+    <span className="inline-flex max-w-full items-center truncate whitespace-nowrap rounded-full border border-vx-brand-100 bg-vx-brand-50/70 px-2.5 py-1 text-[11px] font-medium leading-4 text-vx-brand-700 dark:border-vx-brand-400/20 dark:bg-vx-brand-950/35 dark:text-vx-brand-200">
       {children}
     </span>
   );
@@ -155,8 +155,8 @@ function SettingOption({
       onClick={onClick}
       className={`flex-1 rounded-md px-2 py-1.5 text-[12px] font-medium leading-4 transition-colors ${
         active
-          ? 'bg-white text-blue-700 shadow-sm ring-1 ring-blue-200 dark:bg-slate-800 dark:text-blue-200 dark:ring-blue-400/30'
-          : 'text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200'
+          ? 'bg-vx-white text-vx-brand-700 shadow-sm ring-1 ring-vx-brand-200 dark:bg-vx-gray-800 dark:text-vx-brand-200 dark:ring-vx-brand-400/30'
+          : 'text-vx-gray-500 hover:text-vx-gray-800 dark:text-vx-gray-400 dark:hover:text-vx-gray-200'
       }`}
     >
       {children}
@@ -205,7 +205,7 @@ function SettingRow({
         aria-label={`${label}: ${description}`}
         title={description}
       >
-        <Icon name={icon} className="h-4 w-4 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+        <Icon name={icon} className="h-4 w-4 text-vx-gray-400 dark:text-vx-gray-500" aria-hidden="true" />
       </span>
       <div className="flex min-w-0 flex-1 items-center justify-end">{children}</div>
     </div>
@@ -224,7 +224,7 @@ function SegmentedOptions<T extends string>({
   onChange: (value: T) => void;
 }) {
   return (
-    <div className="flex w-full rounded-lg border border-slate-200 bg-slate-50/70 p-0.5 dark:border-slate-700 dark:bg-slate-900/40">
+    <div className="flex w-full rounded-lg border border-vx-gray-200 bg-vx-gray-50/70 p-0.5 dark:border-vx-gray-700 dark:bg-vx-gray-900/40">
       {options.map((option) => (
         <SettingOption key={option} active={value === option} onClick={() => onChange(option)}>
           {labels[option]}
@@ -407,13 +407,13 @@ function QuickSettings() {
 
   return (
     <div className="space-y-2">
-      <p className="text-[11px] font-semibold uppercase leading-4 tracking-[0.08em] text-slate-400 dark:text-slate-500">{t('title')}</p>
+      <p className="text-[11px] font-semibold uppercase leading-4 tracking-[0.08em] text-vx-gray-400 dark:text-vx-gray-500">{t('title')}</p>
       <SettingRow icon="globe" label={t('labels.locale')} description={t('hints.locale')}>
         <div className="relative w-full">
           <select
             value={selectedLocale}
             onChange={(event) => handleLocaleChange(event.target.value as Locale)}
-            className="h-9 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-8 text-[13px] font-normal leading-5 text-slate-700 outline-none transition focus:border-blue-300 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500/60 dark:focus:ring-blue-500/20"
+            className="h-9 w-full appearance-none rounded-lg border border-vx-gray-200 bg-vx-white px-3 pr-8 text-[13px] font-normal leading-5 text-vx-gray-700 outline-none transition focus:border-vx-brand-300 focus:ring-2 focus:ring-vx-brand-100 dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-gray-100 dark:focus:border-vx-brand-500/60 dark:focus:ring-vx-brand-500/20"
           >
             {SUPPORTED_LOCALES.map((localeOption) => (
               <option key={localeOption} value={localeOption}>
@@ -421,7 +421,7 @@ function QuickSettings() {
               </option>
             ))}
           </select>
-          <Icon name="chevron-down" className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+          <Icon name="chevron-down" className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -tranvx-gray-y-1/2 text-vx-gray-400" />
         </div>
       </SettingRow>
 
@@ -500,26 +500,26 @@ function UserMenu({
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="relative flex h-10 w-10 items-center justify-center rounded-full outline-none transition duration-200 hover:ring-2 hover:ring-blue-300 focus-visible:ring-2 focus-visible:ring-blue-500 dark:hover:ring-blue-500/60"
+          className="relative flex h-10 w-10 items-center justify-center rounded-full outline-none transition duration-200 hover:ring-2 hover:ring-vx-brand-300 focus-visible:ring-2 focus-visible:ring-vx-brand-500 dark:hover:ring-vx-brand-500/60"
           aria-label={t('open')}
           title={t('open')}
         >
           <UserAvatar user={user} />
-          <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-400 dark:border-slate-900" />
+          <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-vx-white bg-vx-success-400 dark:border-vx-gray-900" />
         </button>
       </PopoverTrigger>
 
       <PopoverContent
         align="end"
         sideOffset={16}
-        className="w-80 overflow-hidden rounded-lg border-blue-100 bg-white p-0 text-[13px] font-normal leading-normal text-slate-900 shadow-xl shadow-blue-950/10 dark:border-blue-400/20 dark:bg-slate-900 dark:text-slate-100"
+        className="w-80 overflow-hidden rounded-lg border-vx-brand-100 bg-vx-white p-0 text-[13px] font-normal leading-normal text-vx-gray-900 shadow-xl shadow-vx-brand-950/10 dark:border-vx-brand-400/20 dark:bg-vx-gray-900 dark:text-vx-gray-100"
       >
         <div className="px-4 py-4">
           <div className="flex items-center gap-3">
             <UserAvatar user={user} size="lg" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[15px] font-semibold leading-6 text-slate-950 dark:text-white">{displayName}</p>
-              <p className="mt-1 truncate text-[13px] font-normal leading-5 text-slate-500 dark:text-slate-400">{uniqueLine}</p>
+              <p className="truncate text-[15px] font-semibold leading-6 text-vx-gray-900 dark:text-vx-white">{displayName}</p>
+              <p className="mt-1 truncate text-[13px] font-normal leading-5 text-vx-gray-500 dark:text-vx-gray-400">{uniqueLine}</p>
             </div>
           </div>
 
@@ -528,13 +528,13 @@ function UserMenu({
           </div>
         </div>
 
-        <div className="mx-4 h-px bg-slate-200/70 dark:bg-slate-800" />
+        <div className="mx-4 h-px bg-vx-gray-200/70 dark:bg-vx-gray-800" />
 
         <div className="px-4 py-4">
           <QuickSettings />
         </div>
 
-        <div className="mx-4 h-px bg-slate-100 dark:bg-slate-800/70" />
+        <div className="mx-4 h-px bg-vx-gray-100 dark:bg-vx-gray-800/70" />
 
         <div className="px-4 py-4">
           <div className="space-y-1">
@@ -542,18 +542,18 @@ function UserMenu({
               type="button"
               onClick={handleSwitchUser}
               disabled={disabled}
-              className="flex w-full items-center gap-3 rounded-md px-0 py-2.5 text-left text-[13px] font-medium leading-5 text-slate-700 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-200 dark:hover:text-blue-200"
+              className="flex w-full items-center gap-3 rounded-md px-0 py-2.5 text-left text-[13px] font-medium leading-5 text-vx-gray-700 transition hover:text-vx-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-vx-gray-200 dark:hover:text-vx-brand-200"
             >
-              <Icon name="user-switch" className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+              <Icon name="user-switch" className="h-4 w-4 text-vx-gray-400 dark:text-vx-gray-500" />
               {t('switchUser')}
             </button>
             <button
               type="button"
               onClick={handleSignOut}
               disabled={disabled}
-              className="flex w-full items-center gap-3 rounded-md px-0 py-2.5 text-left text-[13px] font-medium leading-5 text-slate-700 transition hover:text-blue-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-slate-200 dark:hover:text-blue-200"
+              className="flex w-full items-center gap-3 rounded-md px-0 py-2.5 text-left text-[13px] font-medium leading-5 text-vx-gray-700 transition hover:text-vx-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-vx-gray-200 dark:hover:text-vx-brand-200"
             >
-              <Icon name="sign-out" className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+              <Icon name="sign-out" className="h-4 w-4 text-vx-gray-400 dark:text-vx-gray-500" />
               {t('signOut')}
             </button>
           </div>
@@ -751,7 +751,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
             <PopoverContent
               align="start"
               sideOffset={20}
-              className="admin-workspace-switcher w-[320px] rounded-lg border border-slate-200 bg-white p-5 text-slate-900 shadow-xl shadow-blue-950/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              className="admin-workspace-switcher w-[320px] rounded-lg border border-vx-gray-200 bg-vx-white p-5 text-vx-gray-900 shadow-xl shadow-vx-brand-950/10 dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-gray-100"
             >
               <div className="admin-workspace-switcher__header">
                 <strong>工作域</strong>

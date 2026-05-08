@@ -337,8 +337,8 @@ function SocialButton({
 function WechatIcon() {
   return (
     <svg width='16' height='16' viewBox='0 0 24 24' aria-hidden='true'>
-      <path d='M9.5 4C5.36 4 2 6.91 2 10.5c0 1.98 1.01 3.75 2.6 4.96L4 18l2.8-1.4c.86.24 1.77.4 2.7.4.23 0 .46 0 .69-.02A5.7 5.7 0 0 1 10 15.5c0-3.04 2.86-5.5 6.5-5.5.23 0 .46.01.69.03C16.54 7.12 13.3 4 9.5 4z' fill='#07C160' />
-      <path d='M16.5 11c-3.04 0-5.5 2.02-5.5 4.5S13.46 20 16.5 20c.7 0 1.37-.12 1.98-.34L21 21l-.52-2.6A4.35 4.35 0 0 0 22 15.5C22 13.02 19.54 11 16.5 11z' fill='#07C160' />
+      <path d='M9.5 4C5.36 4 2 6.91 2 10.5c0 1.98 1.01 3.75 2.6 4.96L4 18l2.8-1.4c.86.24 1.77.4 2.7.4.23 0 .46 0 .69-.02A5.7 5.7 0 0 1 10 15.5c0-3.04 2.86-5.5 6.5-5.5.23 0 .46.01.69.03C16.54 7.12 13.3 4 9.5 4z' fill='var(--vx-color-social-wechat)' />
+      <path d='M16.5 11c-3.04 0-5.5 2.02-5.5 4.5S13.46 20 16.5 20c.7 0 1.37-.12 1.98-.34L21 21l-.52-2.6A4.35 4.35 0 0 0 22 15.5C22 13.02 19.54 11 16.5 11z' fill='var(--vx-color-social-wechat)' />
     </svg>
   );
 }
@@ -346,8 +346,8 @@ function WechatIcon() {
 function DingTalkIcon() {
   return (
     <svg width='16' height='16' viewBox='0 0 24 24' aria-hidden='true'>
-      <circle cx='12' cy='12' r='10' fill='#1677FF' />
-      <path d='M13.5 7l-4 5.5h3l-1 4.5 5-6.5h-3.2L13.5 7z' fill='white' />
+      <circle cx='12' cy='12' r='10' fill='var(--vx-color-social-dingtalk)' />
+      <path d='M13.5 7l-4 5.5h3l-1 4.5 5-6.5h-3.2L13.5 7z' fill='var(--vx-color-white)' />
     </svg>
   );
 }
@@ -355,8 +355,8 @@ function DingTalkIcon() {
 function FeishuIcon() {
   return (
     <svg width='16' height='16' viewBox='0 0 24 24' aria-hidden='true'>
-      <path d='M4 12.5C4 8.36 7.36 5 11.5 5c1.5 0 2.9.45 4.05 1.22L7.22 15.55A7.5 7.5 0 0 1 4 12.5z' fill='#3370FF' />
-      <path d='M12 19.5a7.5 7.5 0 0 1-3.6-.92l8.38-9.33A7.5 7.5 0 0 1 12 19.5z' fill='#56D5CC' />
+      <path d='M4 12.5C4 8.36 7.36 5 11.5 5c1.5 0 2.9.45 4.05 1.22L7.22 15.55A7.5 7.5 0 0 1 4 12.5z' fill='var(--vx-color-social-feishu)' />
+      <path d='M12 19.5a7.5 7.5 0 0 1-3.6-.92l8.38-9.33A7.5 7.5 0 0 1 12 19.5z' fill='var(--vx-color-social-feishu-accent)' />
     </svg>
   );
 }

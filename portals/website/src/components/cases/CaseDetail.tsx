@@ -37,20 +37,20 @@ export default function CaseDetail({ slug }: CaseDetailProps) {
   const tags        = (tItems.raw(`${caseItem.id}.tags`) as string[]) ?? [];
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <section className='vx-section-odd min-h-screen'>
       <div className='container mx-auto px-4 py-16'>
         {/* 案例头部 */}
         <div className='mb-12'>
           <div className='flex flex-wrap gap-2 mb-4'>
             {tags.map((tag, index) => (
-              <span key={index} className='px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full'>
+              <span key={index} className='px-3 py-1 bg-vx-brand-100 text-vx-brand-800 text-sm rounded-full'>
                 {tag}
               </span>
             ))}
           </div>
-          <h1 className='text-4xl font-bold text-gray-900 mb-4'>{title}</h1>
-          <p className='text-xl text-gray-600 mb-6'>{subtitle}</p>
-          <div className='flex items-center gap-4 text-sm text-gray-500'>
+          <h1 className='font-display text-4xl font-bold text-vx-gray-900 mb-4'>{title}</h1>
+          <p className='text-xl text-vx-gray-600 mb-6'>{subtitle}</p>
+          <div className='flex items-center gap-4 text-sm text-vx-gray-500'>
             <span>{caseItem.publishedAt}</span>
           </div>
         </div>
@@ -71,23 +71,23 @@ export default function CaseDetail({ slug }: CaseDetailProps) {
         <div className='space-y-12'>
           {/* 项目概述 */}
           <div>
-            <h2 className='text-2xl font-semibold text-gray-900 mb-4'>{t(CASES_DATA.ui.overviewKey)}</h2>
-            <p className='text-gray-600 leading-relaxed'>{description}</p>
+            <h2 className='font-display text-2xl font-semibold text-vx-gray-900 mb-4'>{t(CASES_DATA.ui.overviewKey)}</h2>
+            <p className='text-vx-gray-600 leading-relaxed'>{description}</p>
           </div>
 
           {/* 核心亮点 */}
           {tags.length > 0 && (
             <div>
-              <h2 className='text-2xl font-semibold text-gray-900 mb-6'>{t(CASES_DATA.ui.highlightsKey)}</h2>
+              <h2 className='font-display text-2xl font-semibold text-vx-gray-900 mb-6'>{t(CASES_DATA.ui.highlightsKey)}</h2>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                 {tags.map((tag, index) => (
-                  <div key={index} className='bg-white rounded-lg shadow-md p-6'>
+                  <div key={index} className='bg-vx-white rounded-lg shadow-md p-6'>
                     <div className='flex items-start gap-4'>
-                      <div className='flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-medium'>
+                      <div className='flex-shrink-0 w-8 h-8 bg-vx-brand-100 text-vx-brand-600 rounded-full flex items-center justify-center font-medium'>
                         {index + 1}
                       </div>
                       <div>
-                        <h3 className='text-lg font-medium text-gray-900'>{tag}</h3>
+                        <h3 className='text-lg font-medium text-vx-gray-900'>{tag}</h3>
                       </div>
                     </div>
                   </div>
@@ -97,6 +97,6 @@ export default function CaseDetail({ slug }: CaseDetailProps) {
           )}
         </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -36,8 +36,8 @@ export default function TestSection({ sections }: TestSectionProps) {
           style={{ backgroundColor: section.backgroundColor }}
         >
           <div className='text-center'>
-            <h2 className='text-4xl font-bold text-gray-800 mb-4'>{section.title}</h2>
-            <p className='text-lg text-gray-600'>
+            <h2 className='font-display text-4xl font-bold text-vx-gray-800 mb-4'>{section.title}</h2>
+            <p className='text-lg text-vx-gray-600'>
               欢迎来到关于我们页面！这里是 {section.title} 的内容。
             </p>
           </div>

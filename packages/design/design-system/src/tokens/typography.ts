@@ -12,8 +12,12 @@
 
 export const typography = {
   fontFamily: {
-    sans: "Inter, system-ui, sans-serif",
-    mono: "JetBrains Mono, monospace",
+    brand: "var(--font-brand)",
+    display: "var(--font-display)",
+    sans: "var(--font-sans)",
+    cjk: "var(--font-cjk)",
+    mono: "var(--font-mono)",
+    number: "var(--font-number)",
   },
 
   /**

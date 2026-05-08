@@ -674,7 +674,7 @@ function ForgotPanel({
           <p>
             重置链接已发送至 <strong>{email || '您的邮箱'}</strong>，请在 15 分钟内查收并完成重置。
           </p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--vx-text-muted, #888)', marginTop: '0.5rem' }}>
+          <p style={{ fontSize: '0.85rem', color: 'var(--vx-color-text-muted)', marginTop: '0.5rem' }}>
             未收到邮件？请检查垃圾邮件文件夹。
           </p>
           <button type='button' onClick={onBack} style={{ marginTop: '1rem' }}>

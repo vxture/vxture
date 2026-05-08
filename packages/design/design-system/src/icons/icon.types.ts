@@ -87,7 +87,7 @@ export interface IconProps {
 
   /**
    * 额外 className，用于 Tailwind 工具类覆盖
-   * @example className="text-blue-500"
+   * @example className="text-vx-primary"
    */
   readonly className?: string;
 

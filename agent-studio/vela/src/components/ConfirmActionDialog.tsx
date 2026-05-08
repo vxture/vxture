@@ -32,13 +32,13 @@ export function ConfirmActionDialog() {
   // ---- 执行成功状态
   if (confirmResult && confirmResult.success !== false && !confirmResult.cancelled) {
     return (
-      <div style={containerStyle('#f0fdf4', '#86efac')}>
+      <div style={containerStyle('var(--vx-color-success-surface)', 'var(--vx-color-success-border)')}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span>✅</span>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: '#166534' }}>执行成功</span>
-          <code style={badgeStyle('#dcfce7', '#166534')}>{pendingConfirm.toolId}</code>
+          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--vx-color-success-foreground)' }}>执行成功</span>
+          <code style={badgeStyle('var(--vx-color-success-100)', 'var(--vx-color-success-foreground)')}>{pendingConfirm.toolId}</code>
         </div>
-        <p style={{ margin: '6px 0 0', fontSize: '12px', color: '#15803d' }}>操作已完成，结果已记录。</p>
+        <p style={{ margin: '6px 0 0', fontSize: '12px', color: 'var(--vx-color-success-foreground)' }}>操作已完成，结果已记录。</p>
       </div>
     );
   }
@@ -46,15 +46,15 @@ export function ConfirmActionDialog() {
   // ---- 错误状态
   if (confirmError) {
     return (
-      <div style={containerStyle('#fef2f2', '#fca5a5')}>
+      <div style={containerStyle('var(--vx-color-error-surface)', 'var(--vx-color-error-border)')}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
           <span>❌</span>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: '#991b1b' }}>执行失败</span>
-          <code style={badgeStyle('#fee2e2', '#991b1b')}>{pendingConfirm.toolId}</code>
+          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--vx-color-error-foreground)' }}>执行失败</span>
+          <code style={badgeStyle('var(--vx-color-error-100)', 'var(--vx-color-error-foreground)')}>{pendingConfirm.toolId}</code>
         </div>
-        <p style={{ margin: '0 0 10px', fontSize: '13px', color: '#7f1d1d' }}>{confirmError}</p>
+        <p style={{ margin: '0 0 10px', fontSize: '13px', color: 'var(--vx-color-error-foreground)' }}>{confirmError}</p>
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button onClick={dismiss} style={btnStyle('#6b7280', '#ffffff')}>关闭</button>
+          <button onClick={dismiss} style={btnStyle('var(--vx-color-text-muted)', 'var(--vx-color-text-inverse)')}>关闭</button>
         </div>
       </div>
     );
@@ -62,27 +62,27 @@ export function ConfirmActionDialog() {
 
   // ---- 待确认状态
   return (
-    <div style={containerStyle('#fffbeb', '#fde68a')}>
+    <div style={containerStyle('var(--vx-color-warning-surface)', 'var(--vx-color-warning-border)')}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
         <span style={{ fontSize: '14px' }}>⚠️</span>
-        <span style={{ fontSize: '13px', fontWeight: 700, color: '#92400e' }}>需要确认</span>
-        <code style={badgeStyle('#fde68a', '#78350f')}>{pendingConfirm.toolId}</code>
+        <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--vx-color-warning-foreground)' }}>需要确认</span>
+        <code style={badgeStyle('var(--vx-color-warning-border)', 'var(--vx-color-warning-900)')}>{pendingConfirm.toolId}</code>
       </div>
-      <p style={{ margin: '0 0 12px', fontSize: '13px', color: '#78350f', lineHeight: '1.5' }}>
+      <p style={{ margin: '0 0 12px', fontSize: '13px', color: 'var(--vx-color-warning-900)', lineHeight: '1.5' }}>
         {pendingConfirm.summary}
       </p>
       <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
         <button
           onClick={() => void handleConfirm(false)}
           disabled={isConfirming}
-          style={btnStyle('#6b7280', '#ffffff', isConfirming)}
+          style={btnStyle('var(--vx-color-text-muted)', 'var(--vx-color-text-inverse)', isConfirming)}
         >
           取消
         </button>
         <button
           onClick={() => void handleConfirm(true)}
           disabled={isConfirming}
-          style={btnStyle('#f59e0b', '#ffffff', isConfirming)}
+          style={btnStyle('var(--vx-color-warning)', 'var(--vx-color-text-inverse)', isConfirming)}
         >
           {isConfirming ? '执行中…' : '确认执行'}
         </button>
@@ -122,8 +122,8 @@ function btnStyle(bg: string, color: string, disabled = false): React.CSSPropert
     padding:      '6px 14px',
     borderRadius: '6px',
     border:       'none',
-    background:   disabled ? '#d1d5db' : bg,
-    color:        disabled ? '#9ca3af' : color,
+    background:   disabled ? 'var(--vx-color-surface-muted)' : bg,
+    color:        disabled ? 'var(--vx-color-text-disabled)' : color,
     fontSize:     '13px',
     fontWeight:   600,
     cursor:       disabled ? 'not-allowed' : 'pointer',

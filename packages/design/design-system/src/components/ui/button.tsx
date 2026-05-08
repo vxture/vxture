@@ -27,15 +27,15 @@ const buttonVariants = ({
   size: ButtonSize;
 }) => {
   return cn(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-vx-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vx-ring-strong focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
     {
-      "bg-gray-900 text-gray-50 hover:bg-gray-900/90": variant === "default",
-      "bg-red-500 text-gray-50 hover:bg-red-500/90": variant === "destructive",
-      "border border-gray-200 bg-white hover:bg-gray-100 hover:text-gray-900":
+      "bg-vx-primary text-vx-text-inverse hover:bg-vx-primary-strong": variant === "default",
+      "bg-vx-danger text-vx-text-inverse hover:bg-vx-danger": variant === "destructive",
+      "border border-vx-border bg-vx-surface hover:bg-vx-surface-muted hover:text-vx-text-primary":
         variant === "outline",
-      "bg-gray-100 text-gray-900 hover:bg-gray-100/80": variant === "secondary",
-      "hover:bg-gray-100 hover:text-gray-900": variant === "ghost",
-      "text-gray-900 underline-offset-4 hover:underline": variant === "link",
+      "bg-vx-surface-muted text-vx-text-primary hover:bg-vx-primary-soft": variant === "secondary",
+      "hover:bg-vx-surface-muted hover:text-vx-text-primary": variant === "ghost",
+      "text-vx-text-primary underline-offset-4 hover:underline": variant === "link",
     },
     {
       "h-10 px-4 py-2": size === "default",

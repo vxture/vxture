@@ -37,8 +37,8 @@ const SIDEBAR_STYLE: React.CSSProperties = {
   flexDirection:  'column',
   width:          '360px',
   height:         '100%',
-  borderLeft:     '1px solid #e2e8f0',
-  background:     '#ffffff',
+  borderLeft:     '1px solid var(--vx-color-border)',
+  background:     'var(--vx-color-surface)',
   flexShrink:     0,
 };
 
@@ -51,9 +51,9 @@ const FLOAT_PANEL_STYLE: React.CSSProperties = {
   display:        'flex',
   flexDirection:  'column',
   borderRadius:   '16px',
-  boxShadow:      '0 8px 32px rgba(0,0,0,0.15)',
-  border:         '1px solid #e2e8f0',
-  background:     '#ffffff',
+  boxShadow:      'var(--vx-shadow-lg)',
+  border:         '1px solid var(--vx-color-border)',
+  background:     'var(--vx-color-surface)',
   zIndex:         9999,
   overflow:       'hidden',
 };
@@ -65,15 +65,15 @@ const FLOAT_BUTTON_STYLE: React.CSSProperties = {
   width:          '48px',
   height:         '48px',
   borderRadius:   '50%',
-  background:     '#3b82f6',
-  color:          '#ffffff',
+  background:     'var(--vx-color-primary)',
+  color:          'var(--vx-color-text-inverse)',
   border:         'none',
   fontSize:       '20px',
   cursor:         'pointer',
   display:        'flex',
   alignItems:     'center',
   justifyContent: 'center',
-  boxShadow:      '0 4px 12px rgba(59,130,246,0.4)',
+  boxShadow:      'var(--vx-shadow-md)',
   zIndex:         9999,
 };
 
@@ -134,18 +134,18 @@ function Header({ surface, onClose }: HeaderProps) {
         alignItems:     'center',
         justifyContent: 'space-between',
         padding:        '12px 16px',
-        borderBottom:   '1px solid #e2e8f0',
+        borderBottom:   '1px solid var(--vx-color-border)',
         flexShrink:     0,
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontWeight: 700, fontSize: '15px', color: '#0f172a' }}>维引</span>
+        <span style={{ fontWeight: 700, fontSize: '15px', color: 'var(--vx-color-text-primary)' }}>维引</span>
         <SurfaceBadge surface={surface} />
       </div>
       {onClose && (
         <button
           onClick={onClose}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', fontSize: '16px', padding: '2px' }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--vx-color-text-muted)', fontSize: '16px', padding: '2px' }}
           aria-label="关闭"
         >
           ✕
