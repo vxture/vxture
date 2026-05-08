@@ -15,15 +15,17 @@ import {
   HttpStatus,
   Inject,
   Post,
+  Req,
   Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { IsString, Length, Matches } from 'class-validator';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { AUTH_CONSTANTS } from '@vxture/shared';
+import { TurnstileVerifier } from '@vxture/core-auth';
 import { PhoneCodeService } from '@vxture/service-sms';
 import { AuthService, type LoginSource } from '../auth/auth.service';
-import { RedisService } from '../redis/redis.service';
+import { RedisService, type TenantRefreshSurface } from '../redis/redis.service';
 import type { AuthUserDto } from '../types/auth.types';
 
 // ─── DTO ──────────────────────────────────────────────────────────────────
@@ -32,6 +34,8 @@ class SendPhoneCodeDto {
   @IsString()
   @Matches(/^1[3-9]\d{9}$/, { message: '请输入有效的中国大陆手机号' })
   phone!: string;
+
+  turnstileToken?: string;
 }
 
 class PhoneLoginDto {
@@ -44,36 +48,72 @@ class PhoneLoginDto {
   code!: string;
 
   source?: LoginSource;
+  turnstileToken?: string;
 }
 
 // ─── Cookie 工具 ──────────────────────────────────────────────────────────
 
 function resolveCookies(source: LoginSource): Array<{ access: string; refresh: string }> {
-  const base = source === 'admin'
-    ? { access: 'vx_admin_access_token', refresh: 'vx_admin_refresh_token' }
-    : { access: AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN, refresh: AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN };
-
-  // 对 .vxture.com 系列同步写入 console cookie
-  if (source === 'website') {
-    return [
-      base,
-      { access: AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.ACCESS_TOKEN, refresh: AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.REFRESH_TOKEN },
-    ];
+  if (source === 'admin') {
+    return [{ access: 'vx_admin_access_token', refresh: 'vx_admin_refresh_token' }];
   }
 
-  return [base];
+  if (source === 'ruyin') {
+    return [{
+      access: AUTH_CONSTANTS.RUYIN_COOKIE_KEYS.ACCESS_TOKEN,
+      refresh: AUTH_CONSTANTS.RUYIN_COOKIE_KEYS.REFRESH_TOKEN,
+    }];
+  }
+
+  return [{
+    access: AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN,
+    refresh: AUTH_CONSTANTS.TENANT_COOKIE_KEYS.REFRESH_TOKEN,
+  }];
 }
 
-function resolveCookieDomain(): string | undefined {
-  const domain = process.env.AUTH_COOKIE_DOMAIN?.trim();
+function normalizeCookieDomain(domain: string | undefined): string | undefined {
   if (!domain || domain === 'localhost') return undefined;
   return domain;
 }
 
+function resolveCookieDomain(source: LoginSource): string | undefined {
+  if (source === 'ruyin') {
+    return normalizeCookieDomain(
+      process.env.COOKIE_DOMAIN_RUYIN?.trim()
+        || process.env.RUYIN_COOKIE_DOMAIN?.trim(),
+    );
+  }
+
+  return normalizeCookieDomain(
+    process.env.COOKIE_DOMAIN_PLATFORM?.trim()
+      || process.env.AUTH_COOKIE_DOMAIN?.trim(),
+  );
+}
+
+function resolveTenantRefreshSurface(source: LoginSource): TenantRefreshSurface {
+  return source === 'ruyin' ? 'ruyin' : 'platform';
+}
+
+function resolveRequestSource(value: unknown): LoginSource {
+  return value === 'admin' || value === 'console' || value === 'ruyin' ? value : 'website';
+}
+
+function resolveClientIp(req: Request): string | null {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (typeof forwarded === 'string' && forwarded.trim()) {
+    return forwarded.split(',')[0]?.trim() ?? null;
+  }
+  return req.ip ?? req.socket.remoteAddress ?? null;
+}
+
+const TENANT_TURNSTILE_ACTION = 'tenant_auth';
+
 // ─── Router ───────────────────────────────────────────────────────────────
 
-@Controller('api/auth')
+@Controller('auth')
 export class PhoneAuthRouter {
+  private readonly turnstile = TurnstileVerifier.fromEnv('tenant');
+
   constructor(
     @Inject(PhoneCodeService) private readonly phoneCodeService: PhoneCodeService,
     @Inject(AuthService) private readonly authService: AuthService,
@@ -83,7 +123,8 @@ export class PhoneAuthRouter {
   /** 发送手机验证码（含限流） */
   @Post('send-phone-code')
   @HttpCode(HttpStatus.OK)
-  async sendPhoneCode(@Body() dto: SendPhoneCodeDto): Promise<{ message: string }> {
+  async sendPhoneCode(@Body() dto: SendPhoneCodeDto, @Req() req: Request): Promise<{ message: string }> {
+    await this.verifyTenantTurnstile(dto.turnstileToken, req);
     await this.phoneCodeService.sendCode(dto.phone);
     return { message: '验证码已发送，请在 10 分钟内输入' };
   }
@@ -93,32 +134,54 @@ export class PhoneAuthRouter {
   @HttpCode(HttpStatus.OK)
   async loginWithPhone(
     @Body() dto: PhoneLoginDto,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ): Promise<AuthUserDto> {
+    await this.verifyTenantTurnstile(dto.turnstileToken, req);
     const valid = await this.phoneCodeService.verifyCode(dto.phone, dto.code);
     if (!valid) {
       throw new BadRequestException('验证码错误或已过期，请重新获取');
     }
 
-    const source: LoginSource = dto.source ?? 'website';
+    const source = resolveRequestSource(dto.source);
+    if (source === 'admin') {
+      throw new BadRequestException('Admin login must be completed through admin-bff');
+    }
     const result = await this.authService.loginWithPhoneCode(dto.phone, source);
     if (!result) {
       throw new UnauthorizedException('该手机号尚未注册，请先注册账号');
     }
 
     const secure = process.env.NODE_ENV === 'production';
-    const domain = resolveCookieDomain();
+    const domain = resolveCookieDomain(source);
     const cookieBase = { httpOnly: true, sameSite: 'lax' as const, secure, path: '/', domain };
     const cookies = resolveCookies(source);
+
+    await this.redis.storeRefreshToken(
+      result.user.id,
+      result.tokens.refreshToken,
+      result.tokens.refreshExpiresIn,
+      false,
+      resolveTenantRefreshSurface(source),
+    );
 
     for (const { access, refresh } of cookies) {
       res.cookie(access, result.tokens.accessToken, { ...cookieBase, maxAge: result.tokens.expiresIn * 1000 });
       res.cookie(refresh, result.tokens.refreshToken, { ...cookieBase, maxAge: result.tokens.refreshExpiresIn * 1000 });
     }
 
-    // store refresh token
-    void this.redis.storeRefreshToken(result.user.id, result.tokens.refreshToken, result.tokens.refreshExpiresIn);
-
     return result.user;
+  }
+
+  private async verifyTenantTurnstile(token: string | undefined, req: Request): Promise<void> {
+    try {
+      await this.turnstile.verify({
+        token,
+        remoteIp: resolveClientIp(req),
+        expectedAction: TENANT_TURNSTILE_ACTION,
+      });
+    } catch {
+      throw new UnauthorizedException('人机验证未通过，请重试');
+    }
   }
 }

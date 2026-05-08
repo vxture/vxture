@@ -78,10 +78,9 @@ export function MembersPage() {
 
   useEffect(() => {
     let active = true;
-    const currentTenantId = session.tenant?.mode === 'tenant' ? session.tenant.id : undefined;
 
     setLoading(true);
-    Promise.all([fetchMembers(currentTenantId), fetchTenantRoles(currentTenantId)])
+    Promise.all([fetchMembers(), fetchTenantRoles()])
       .then(([records, roleRecords]) => {
         if (!active) {
           return;
@@ -108,10 +107,6 @@ export function MembersPage() {
     setCurrentPage(1);
     setOpenMenuId(null);
   }, [query, status]);
-
-  function tenantId() {
-    return session.tenant?.mode === 'tenant' ? session.tenant.id : undefined;
-  }
 
   function resetFeedback() {
     setMessage(null);
@@ -157,7 +152,7 @@ export function MembersPage() {
   }
 
   async function reloadMembers(nextSelectedId?: string | null) {
-    const records = await fetchMembers(tenantId());
+    const records = await fetchMembers();
     setMembers(records);
     setSelectedIds(new Set());
     setSelectedId(nextSelectedId ?? null);
@@ -183,8 +178,8 @@ export function MembersPage() {
 
       const created =
         createMode === 'invite'
-          ? await inviteMember(payload, tenantId())
-          : await createMember(payload, tenantId());
+          ? await inviteMember(payload)
+          : await createMember(payload);
 
       await reloadMembers(created.id);
       setCreateMode(null);
@@ -214,7 +209,6 @@ export function MembersPage() {
           remark: memberForm.remark,
           roleId: memberForm.roleId || null,
         },
-        tenantId(),
       );
       await reloadMembers(updated.id);
       setEditOpen(false);
@@ -241,7 +235,7 @@ export function MembersPage() {
     resetFeedback();
 
     try {
-      await resetMemberPassword(selected.id, { nextPassword: passwordForm.nextPassword }, tenantId());
+      await resetMemberPassword(selected.id, { nextPassword: passwordForm.nextPassword });
       setResetOpen(false);
       setPasswordForm({ nextPassword: '' });
       setMessage(t('feedback.resetPasswordSuccess', { name: selected.name }));
@@ -261,8 +255,8 @@ export function MembersPage() {
     try {
       const updated =
         nextStatus === 'banned'
-          ? await disableMember(member.id, tenantId())
-          : await updateMember(member.id, { status: nextStatus }, tenantId());
+          ? await disableMember(member.id)
+          : await updateMember(member.id, { status: nextStatus });
       await reloadMembers(updated.id);
       setMessage(nextStatus === 'banned' ? t('feedback.memberDisabled') : t('feedback.memberEnabled'));
     } catch {
@@ -282,7 +276,7 @@ export function MembersPage() {
     setOpenMenuId(null);
 
     try {
-      await unlinkMember(selected.id, tenantId());
+      await unlinkMember(selected.id);
       await reloadMembers();
       setUnlinkOpen(false);
       setMessage(t('feedback.unlinkSuccess'));
@@ -311,8 +305,8 @@ export function MembersPage() {
       await Promise.all(
         targets.map((member) =>
           nextStatus === 'banned'
-            ? disableMember(member.id, tenantId())
-            : updateMember(member.id, { status: nextStatus }, tenantId()),
+            ? disableMember(member.id)
+            : updateMember(member.id, { status: nextStatus }),
         ),
       );
       await reloadMembers();
@@ -335,7 +329,7 @@ export function MembersPage() {
     setOpenMenuId(null);
 
     try {
-      await Promise.all(targets.map((member) => unlinkMember(member.id, tenantId())));
+      await Promise.all(targets.map((member) => unlinkMember(member.id)));
       await reloadMembers();
       setBulkUnlinkOpen(false);
       setMessage(t('feedback.bulkUnlinkSuccess', { count: targets.length }));

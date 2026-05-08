@@ -15,9 +15,30 @@
  * @category Router
  */
 
-import { Controller, Get, Req, UnauthorizedException } from '@nestjs/common';
-import type { Request } from 'express';
+import { Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UnauthorizedException } from '@nestjs/common';
+import type { Request, Response } from 'express';
+import { AUTH_CONSTANTS } from '@vxture/shared';
 import type { RequestContext } from '../types/auth.types';
+
+function resolveAuthBffUrl(): string {
+  const configured = process.env['AUTH_BFF_URL']?.trim();
+  if (configured) return configured.replace(/\/+$/, '');
+  return 'http://localhost:3090';
+}
+
+function resolveRuyinCookieDomain(): string | undefined {
+  const domain = process.env.COOKIE_DOMAIN_RUYIN?.trim()
+    || process.env.RUYIN_COOKIE_DOMAIN?.trim();
+  if (!domain || domain === 'localhost') return undefined;
+  return domain;
+}
+
+function forwardCookie(req: Request): string {
+  const raw = req.headers.cookie;
+  return Array.isArray(raw) ? raw.join('; ') : raw ?? '';
+}
+
+const AUTH_BFF = resolveAuthBffUrl();
 
 @Controller('api/auth')
 export class AuthRouter {
@@ -40,5 +61,32 @@ export class AuthRouter {
     }
 
     return req.user;
+  }
+
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
+    let status = HttpStatus.OK;
+    let data: unknown = { status: 'logged_out' };
+
+    try {
+      const response = await fetch(AUTH_BFF + '/auth/logout?source=ruyin', {
+        method: 'POST',
+        headers: {
+          Cookie: forwardCookie(req),
+        },
+      });
+      status = response.status;
+      data = await response.json().catch(() => ({ status: response.ok ? 'logged_out' : 'logout_failed' }));
+    } catch {
+      status = HttpStatus.BAD_GATEWAY;
+      data = { status: 'logout_failed', message: 'Failed to revoke tenant session' };
+    }
+
+    const domain = resolveRuyinCookieDomain();
+    res.clearCookie(AUTH_CONSTANTS.RUYIN_COOKIE_KEYS.ACCESS_TOKEN, { path: '/', domain });
+    res.clearCookie(AUTH_CONSTANTS.RUYIN_COOKIE_KEYS.REFRESH_TOKEN, { path: '/', domain });
+
+    res.status(status).json(data);
   }
 }

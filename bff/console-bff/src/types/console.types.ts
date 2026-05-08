@@ -1,3 +1,5 @@
+import type { JwtAccessPayload } from '@vxture/core-auth';
+
 export type Capability =
   | 'platform.tenant.manage'
   | 'platform.product.manage'
@@ -115,6 +117,7 @@ export interface TenantContext {
 }
 
 export interface RequestContext {
+  auth?: JwtAccessPayload;
   user?: ConsoleUser;
   tenant?: TenantContext;
   capabilities?: Capability[];

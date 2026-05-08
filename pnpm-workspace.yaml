@@ -2,6 +2,7 @@ packages:
   - 'portals/*'
   - 'agent-studio/*'
   - 'agent-server/*'
+  - 'business/*'
   - 'bff/*'
   - 'services/*/*'
   - 'packages/shared/shared'

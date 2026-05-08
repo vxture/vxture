@@ -15,6 +15,7 @@
 
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { AccessTokenRevocationService } from '@vxture/core-auth';
 import { VxConfigModule } from '@vxture/core-config';
 import { IamModule } from '@vxture/service-iam';
 import { OrganizationModule } from '@vxture/service-organization';
@@ -32,7 +33,7 @@ import { PhoneAuthRouter } from './routers/phone-auth.router';
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ['app', 'auth', 'database'],
+      domains: ['app', 'auth', 'database', 'redis'],
     }),
     JwtModule.register({}),
     IamModule,
@@ -46,7 +47,7 @@ import { PhoneAuthRouter } from './routers/phone-auth.router';
     PhoneAuthRouter,
     MeRouter,
   ],
-  providers: [WebsiteAuthService, SessionAggregator],
+  providers: [WebsiteAuthService, SessionAggregator, AccessTokenRevocationService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

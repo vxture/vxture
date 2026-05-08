@@ -12,6 +12,8 @@
 
 import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import type { Request, Response, NextFunction } from 'express';
+import { AccessTokenRevocationService } from '@vxture/core-auth';
+import { AUTH_CONSTANTS } from '@vxture/shared';
 import { WebsiteAuthService } from '../auth/auth.service';
 import type { RequestContext } from '../types/auth.types';
 
@@ -31,7 +33,11 @@ const PUBLIC_PATH_PREFIXES = [
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(@Inject(WebsiteAuthService) private readonly websiteAuthService: WebsiteAuthService) {}
+  constructor(
+    @Inject(WebsiteAuthService) private readonly websiteAuthService: WebsiteAuthService,
+    @Inject(AccessTokenRevocationService)
+    private readonly tokenRevocationService: AccessTokenRevocationService,
+  ) {}
 
   async use(req: Request, _res: Response, next: NextFunction) {
     if (PUBLIC_PATH_PREFIXES.some((prefix) => req.path.startsWith(prefix))) {
@@ -39,7 +45,9 @@ export class AuthMiddleware implements NestMiddleware {
       return;
     }
 
-    const accessToken = req.cookies?.['vx_access_token'] ?? req.cookies?.['vx_console_access_token'];
+    const accessToken = req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN]
+      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN]
+      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
     if (!accessToken) {
       next();
       return;
@@ -47,6 +55,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const payload = this.websiteAuthService.verifyAccessToken(accessToken);
+      await this.tokenRevocationService.assertAccessTokenActive(payload, 'tenant');
       const user = await this.websiteAuthService.getCurrentUser(payload.sub);
       if (user) {
         (req as Request & RequestContext).user = user;

@@ -30,19 +30,34 @@ import { makeAuthPersistOptions } from './persistOptions/authPersist';
 import type { AuthState, UserInfo } from '@/types/auth.types';
 import { getProfile, login as loginRequest, logout as logoutRequest, signup as signupRequest } from '@/api/auth.api';
 
+function extractResponseMessage(message: string | string[] | undefined): string | null {
+  if (Array.isArray(message)) {
+    return message[0] ?? null;
+  }
+  return message ?? null;
+}
+
 function extractAuthErrorMessage(error: unknown): string {
-  if (axios.isAxiosError<{ message?: string }>(error)) {
+  if (axios.isAxiosError<{ message?: string | string[] }>(error)) {
+    const upstreamMessage = extractResponseMessage(error.response?.data?.message);
+    if (upstreamMessage) {
+      return upstreamMessage;
+    }
     if (error.response?.status === 401) {
       return '登录失败，请检查账号密码';
     }
 
-    return error.response?.data?.message ?? error.message;
+    return error.message;
   }
 
   return error instanceof Error ? error.message : '登录失败，请重试';
 }
 
-const authStoreCreator: StateCreator<AuthState> = (set) => ({
+function getUserIdentity(user: UserInfo | null): string {
+  return JSON.stringify(user ?? null);
+}
+
+const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
@@ -52,10 +67,10 @@ const authStoreCreator: StateCreator<AuthState> = (set) => ({
     set({ user, isAuthenticated: !!user });
   },
 
-  login: async (identifier: string, password: string) => {
+  login: async (identifier: string, password: string, turnstileToken?: string) => {
     set({ isLoading: true, error: null });
     try {
-      const user = await loginRequest({ identifier, password });
+      const user = await loginRequest({ identifier, password, turnstileToken });
       set({
         user,
         isAuthenticated: true,
@@ -74,10 +89,10 @@ const authStoreCreator: StateCreator<AuthState> = (set) => ({
     }
   },
 
-  signup: async (email: string, name: string, password: string) => {
+  signup: async (email: string, name: string, password: string, turnstileToken?: string) => {
     set({ isLoading: true, error: null });
     try {
-      const user = await signupRequest({ email, name, password });
+      const user = await signupRequest({ email, name, password, turnstileToken });
       set({ user, isAuthenticated: true, isLoading: false, error: null });
     } catch (error: unknown) {
       const errorMessage = extractAuthErrorMessage(error);
@@ -100,24 +115,39 @@ const authStoreCreator: StateCreator<AuthState> = (set) => ({
     }
   },
 
-  restoreSession: async () => {
-    set({ isLoading: true, error: null });
+  restoreSession: async (options = {}) => {
+    if (!options.silent) {
+      set({ isLoading: true, error: null });
+    }
+
     try {
       const user = await getProfile();
-      set({
-        user,
-        isAuthenticated: true,
-        isLoading: false,
-        error: null,
-      });
+      const current = get();
+      if (current.isAuthenticated && getUserIdentity(current.user) === getUserIdentity(user)) {
+        set({ isLoading: false, error: null });
+      } else {
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
+      }
+      return user;
     } catch (error: unknown) {
       const isUnauthorized = axios.isAxiosError(error) && error.response?.status === 401;
+      if (options.silent && !isUnauthorized) {
+        set({ isLoading: false, error: null });
+        return get().user;
+      }
+
       set({
         user: null,
         isAuthenticated: false,
         isLoading: false,
-        error: isUnauthorized ? null : extractAuthErrorMessage(error),
+        error: options.silent || isUnauthorized ? null : extractAuthErrorMessage(error),
       });
+      return null;
     }
   },
 

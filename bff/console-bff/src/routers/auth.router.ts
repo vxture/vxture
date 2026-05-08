@@ -32,6 +32,11 @@ import type { RequestContext } from '../types/console.types';
 class LoginDto {
   identifier!: string;
   password!: string;
+  turnstileToken?: string;
+}
+
+class SwitchTenantDto {
+  tenantId!: string;
 }
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
@@ -45,14 +50,36 @@ function resolveAuthBffUrl(): string {
 const AUTH_BFF = resolveAuthBffUrl();
 
 function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
-  const setCookie = upstream.headers.get('set-cookie');
-  if (setCookie) {
-    res.setHeader('set-cookie', setCookie);
-  }
+  const setCookie = readSetCookie(upstream);
+  if (setCookie.length) res.setHeader('set-cookie', setCookie);
+}
+
+function readSetCookie(upstream: globalThis.Response): string[] {
+  const headers = upstream.headers as Headers & { getSetCookie?: () => string[] };
+  const setCookie = headers.getSetCookie?.();
+  if (setCookie?.length) return setCookie;
+  const single = upstream.headers.get('set-cookie');
+  return single ? [single] : [];
 }
 
 function forwardCookie(req: Request): string {
   return req.headers.cookie ?? '';
+}
+
+function forwardJsonHeaders(req: Request): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    Cookie: forwardCookie(req),
+  };
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const remoteIp = req.ip ?? req.socket.remoteAddress;
+  headers['X-Forwarded-For'] = [typeof forwardedFor === 'string' ? forwardedFor : '', remoteIp]
+    .filter(Boolean)
+    .join(', ');
+  if (req.headers['user-agent']) {
+    headers['User-Agent'] = req.headers['user-agent'];
+  }
+  return headers;
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
@@ -66,16 +93,14 @@ export class AuthRouter {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: LoginDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/api/auth/login', {
+    const response = await fetch(AUTH_BFF + '/auth/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Cookie: forwardCookie(req),
-      },
+      headers: forwardJsonHeaders(req),
       body: JSON.stringify({
         identifier: body.identifier,
         password: body.password,
         source: 'console',
+        turnstileToken: body.turnstileToken,
       }),
     });
 
@@ -91,7 +116,7 @@ export class AuthRouter {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/api/auth/logout', {
+    const response = await fetch(AUTH_BFF + '/auth/logout?source=console', {
       method: 'POST',
       headers: {
         Cookie: forwardCookie(req),
@@ -111,7 +136,7 @@ export class AuthRouter {
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
     const response = await fetch(
-      AUTH_BFF + '/api/auth/refresh?source=console',
+      AUTH_BFF + '/auth/refresh?source=console',
       {
         method: 'POST',
         headers: {
@@ -119,6 +144,30 @@ export class AuthRouter {
         },
       },
     );
+
+    const data = await response.json();
+    forwardSetCookie(res, response);
+    res.status(response.status).json(data);
+  }
+
+  /**
+   * 切换当前租户 → 代理到 auth-bff 重新签发 console token
+   * POST /api/auth/tenant/switch
+   */
+  @Post('tenant/switch')
+  @HttpCode(HttpStatus.OK)
+  async switchTenant(@Body() body: SwitchTenantDto, @Req() req: Request, @Res() res: Response): Promise<void> {
+    const response = await fetch(AUTH_BFF + '/auth/tenant/switch', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Cookie: forwardCookie(req),
+      },
+      body: JSON.stringify({
+        tenantId: body.tenantId,
+        source: 'console',
+      }),
+    });
 
     const data = await response.json();
     forwardSetCookie(res, response);

@@ -13,6 +13,6 @@ export class CapabilitiesRouter {
       throw new UnauthorizedException('No active session');
     }
 
-    return this.sessionAggregator.getCapabilities(req.user.id);
+    return req.capabilities ?? this.sessionAggregator.getCapabilities(req.user.id, req.tenant?.id);
   }
 }

@@ -38,8 +38,9 @@ export const legalLoader: ContentLoader = async (slug) => {
   }
 
   // /legal/[policy]（单政策详情）
-  if (slug.length === 1 && isPolicyKey(slug[0])) {
-    return { type: 'legal-detail', layout: 'legal', policyKey: slug[0] };
+  const [policyKey] = slug;
+  if (slug.length === 1 && policyKey && isPolicyKey(policyKey)) {
+    return { type: 'legal-detail', layout: 'legal', policyKey };
   }
 
   return null;

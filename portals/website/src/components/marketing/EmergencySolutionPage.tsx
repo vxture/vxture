@@ -7,11 +7,6 @@ import { Link } from '@/lib/i18n/navigation';
 import Image from 'next/image';
 import AnimatedHeroBg from './AnimatedHeroBg';
 
-type Metric = {
-  label: string;
-  value: string;
-};
-
 type Pillar = {
   icon: IconName;
   title: string;
@@ -47,8 +42,6 @@ const PRACTICE_IMAGE = '/images/casessection/case-intro-03.jpg';
 export default function EmergencySolutionPage() {
   const t = useTranslations('solutions');
   const highlights = t.raw('hero.highlights') as string[];
-  const metrics = t.raw('hero.metrics') as Metric[];
-  const intelligenceItems = t.raw('hero.intelligence.items') as string[];
   const pillars = t.raw('architecture.items') as Pillar[];
   const flow = t.raw('flow.steps') as FlowStep[];
   const agents = t.raw('agents.items') as AgentCapability[];

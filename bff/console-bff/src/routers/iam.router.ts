@@ -1,21 +1,30 @@
-import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, Post, Put, Query, Req, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, NotFoundException, Param, Post, Put, Req, UnauthorizedException } from '@nestjs/common';
 import type { Request } from 'express';
 import { SessionAggregator } from '../aggregators/session.aggregator';
 import { ResetMemberPasswordDto, UpdateMemberDto, UpsertMemberDto } from '../dto/member.dto';
 import { CreateRoleDto, UpdateRoleDto } from '../dto/role.dto';
 import type { RequestContext } from '../types/console.types';
 
+function requireTenantSession(req: Request & RequestContext) {
+  if (!req.user) {
+    throw new UnauthorizedException('No active session');
+  }
+  if (!req.tenant) {
+    throw new UnauthorizedException('Tenant context is required');
+  }
+
+  return { accountId: req.user.id, tenantId: req.tenant.id };
+}
+
 @Controller('api/iam')
 export class IamRouter {
   constructor(@Inject(SessionAggregator) private readonly sessionAggregator: SessionAggregator) {}
 
   @Get('summary')
-  async getSummary(@Req() req: Request & RequestContext, @Query('tenantId') tenantId?: string) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+  async getSummary(@Req() req: Request & RequestContext) {
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const summary = await this.sessionAggregator.getIamSummary(req.user.id, tenantId);
+    const summary = await this.sessionAggregator.getIamSummary(accountId, tenantId);
 
     return {
       members: summary.totalMembers,
@@ -26,25 +35,20 @@ export class IamRouter {
   }
 
   @Get('members')
-  async getMembers(@Req() req: Request & RequestContext, @Query('tenantId') tenantId?: string) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+  async getMembers(@Req() req: Request & RequestContext) {
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    return this.sessionAggregator.listMembers(req.user.id, tenantId);
+    return this.sessionAggregator.listMembers(accountId, tenantId);
   }
 
   @Get('members/:memberId')
   async getMember(
     @Req() req: Request & RequestContext,
     @Param('memberId') memberId: string,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const member = await this.sessionAggregator.getMember(req.user.id, tenantId, memberId);
+    const member = await this.sessionAggregator.getMember(accountId, tenantId, memberId);
     if (!member) {
       throw new NotFoundException('Member not found');
     }
@@ -53,34 +57,27 @@ export class IamRouter {
   }
 
   @Get('roles')
-  async getRoles(@Req() req: Request & RequestContext, @Query('tenantId') tenantId?: string) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+  async getRoles(@Req() req: Request & RequestContext) {
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    return this.sessionAggregator.listTenantRoles(req.user.id, tenantId);
+    return this.sessionAggregator.listTenantRoles(accountId, tenantId);
   }
 
   @Get('permissions')
-  async getPermissions(@Req() req: Request & RequestContext, @Query('tenantId') tenantId?: string) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+  async getPermissions(@Req() req: Request & RequestContext) {
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    return this.sessionAggregator.listTenantPermissions(req.user.id, tenantId);
+    return this.sessionAggregator.listTenantPermissions(accountId, tenantId);
   }
 
   @Post('roles')
   async createRole(
     @Req() req: Request & RequestContext,
     @Body() body: CreateRoleDto,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const role = await this.sessionAggregator.createRole(req.user.id, tenantId, body);
+    const role = await this.sessionAggregator.createRole(accountId, tenantId, body);
     if (!role) {
       throw new NotFoundException('Role could not be created');
     }
@@ -93,13 +90,10 @@ export class IamRouter {
     @Req() req: Request & RequestContext,
     @Param('roleId') roleId: string,
     @Body() body: UpdateRoleDto,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const role = await this.sessionAggregator.updateRole(req.user.id, tenantId, roleId, body);
+    const role = await this.sessionAggregator.updateRole(accountId, tenantId, roleId, body);
     if (!role) {
       throw new NotFoundException('Role not found');
     }
@@ -111,13 +105,10 @@ export class IamRouter {
   async deleteRole(
     @Req() req: Request & RequestContext,
     @Param('roleId') roleId: string,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const removed = await this.sessionAggregator.deleteRole(req.user.id, tenantId, roleId);
+    const removed = await this.sessionAggregator.deleteRole(accountId, tenantId, roleId);
     if (!removed) {
       throw new NotFoundException('Role not found');
     }
@@ -129,13 +120,10 @@ export class IamRouter {
   async createMember(
     @Req() req: Request & RequestContext,
     @Body() body: UpsertMemberDto,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const member = await this.sessionAggregator.createMember(req.user.id, tenantId, body);
+    const member = await this.sessionAggregator.createMember(accountId, tenantId, body);
     if (!member) {
       throw new NotFoundException('Tenant member could not be created');
     }
@@ -147,13 +135,10 @@ export class IamRouter {
   async inviteMember(
     @Req() req: Request & RequestContext,
     @Body() body: UpsertMemberDto,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const member = await this.sessionAggregator.inviteMember(req.user.id, tenantId, body);
+    const member = await this.sessionAggregator.inviteMember(accountId, tenantId, body);
     if (!member) {
       throw new NotFoundException('Tenant member could not be invited');
     }
@@ -166,13 +151,10 @@ export class IamRouter {
     @Req() req: Request & RequestContext,
     @Param('memberId') memberId: string,
     @Body() body: UpdateMemberDto,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const member = await this.sessionAggregator.updateMember(req.user.id, tenantId, memberId, body);
+    const member = await this.sessionAggregator.updateMember(accountId, tenantId, memberId, body);
     if (!member) {
       throw new NotFoundException('Member not found');
     }
@@ -184,13 +166,10 @@ export class IamRouter {
   async disableMember(
     @Req() req: Request & RequestContext,
     @Param('memberId') memberId: string,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const member = await this.sessionAggregator.disableMember(req.user.id, tenantId, memberId);
+    const member = await this.sessionAggregator.disableMember(accountId, tenantId, memberId);
     if (!member) {
       throw new NotFoundException('Member not found');
     }
@@ -203,13 +182,10 @@ export class IamRouter {
     @Req() req: Request & RequestContext,
     @Param('memberId') memberId: string,
     @Body() body: ResetMemberPasswordDto,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const reset = await this.sessionAggregator.resetMemberPassword(req.user.id, tenantId, memberId, body.nextPassword);
+    const reset = await this.sessionAggregator.resetMemberPassword(accountId, tenantId, memberId, body.nextPassword);
     if (!reset) {
       throw new NotFoundException('Member not found');
     }
@@ -221,13 +197,10 @@ export class IamRouter {
   async removeMember(
     @Req() req: Request & RequestContext,
     @Param('memberId') memberId: string,
-    @Query('tenantId') tenantId?: string,
   ) {
-    if (!req.user) {
-      throw new UnauthorizedException('No active session');
-    }
+    const { accountId, tenantId } = requireTenantSession(req);
 
-    const removed = await this.sessionAggregator.removeMember(req.user.id, tenantId, memberId);
+    const removed = await this.sessionAggregator.removeMember(accountId, tenantId, memberId);
     if (!removed) {
       throw new NotFoundException('Member not found');
     }

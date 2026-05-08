@@ -1,34 +1,40 @@
 'use client';
 
-import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { AuthChromeFooter, AuthChromeHeader, useTheme } from '@vxture/design-system';
+import { setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
 import { HEADER_DATA } from '@/data/layout/header.data';
-import { Link } from '@/lib/i18n/navigation';
+import { usePathname, useRouter } from '@/lib/i18n/navigation';
+import type { Locale, Theme } from '@vxture/shared';
 
 export function AuthHeader() {
   const t = useTranslations('layout.header');
+  const locale = useLocale() as Locale;
+  const router = useRouter();
+  const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   return (
-    <header className='vx-auth-header'>
-      <div className='vx-auth-header-inner'>
-        <Link
-          href={HEADER_DATA.logo.href}
-          aria-label={t(HEADER_DATA.logo.labelKey)}
-          className='vx-auth-brand'
-        >
-          <Image
-            src={HEADER_DATA.logo.image}
-            alt={t(HEADER_DATA.logo.altKey)}
-            width={24}
-            height={24}
-            className='object-contain'
-          />
-          <h1 className='vx-auth-brand-name'>
-            {t(HEADER_DATA.logo.labelKey)}
-          </h1>
-        </Link>
-      </div>
-    </header>
+    <AuthChromeHeader
+      brandHref={HEADER_DATA.logo.href}
+      brandLogoSrc={HEADER_DATA.logo.image}
+      brandLogoAlt={t(HEADER_DATA.logo.altKey)}
+      brandLabel={t(HEADER_DATA.logo.labelKey)}
+      currentLocale={locale}
+      currentTheme={theme}
+      localeButtonLabel={t('language.title')}
+      localePanelLabel={t('language.title')}
+      lightThemeLabel={t('theme.light')}
+      darkThemeLabel={t('theme.dark')}
+      onLocaleChange={(nextLocale) => {
+        setGlobalLocalePreference(nextLocale);
+        router.replace(pathname, { locale: nextLocale });
+      }}
+      onThemeChange={(nextTheme) => {
+        setTheme(nextTheme);
+        setGlobalThemePreference(nextTheme as Theme);
+      }}
+    />
   );
 }
 
@@ -36,15 +42,13 @@ export function AuthFooter() {
   const t = useTranslations('layout.footer');
 
   return (
-    <footer className='vx-auth-footer'>
-      <div className='vx-auth-footer-inner'>
-        <span>© 2026 vxture Inc. All rights reserved.</span>
-        <nav className='vx-auth-footer-links' aria-label='Legal links'>
-          <Link href='/legal/privacy'>{t('legal.privacy')}</Link>
-          <Link href='/legal/terms'>{t('legal.terms')}</Link>
-          <Link href='/legal/cookies'>{t('legal.cookies')}</Link>
-        </nav>
-      </div>
-    </footer>
+    <AuthChromeFooter
+      copyright={t('copyright.text')}
+      links={[
+        { href: '/legal/terms', label: t('legal.terms') },
+        { href: '/legal/privacy', label: t('legal.privacy') },
+        { href: '/legal/cookies', label: t('legal.cookies') },
+      ]}
+    />
   );
 }

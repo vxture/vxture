@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { AccessTokenRevocationService } from '@vxture/core-auth';
 import { VxConfigModule } from '@vxture/core-config';
 import { MailModule } from '@vxture/core-mail';
 import { IamModule } from '@vxture/service-iam';
@@ -24,7 +25,7 @@ import { TenantContextRouter } from './routers/tenant-context.router';
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ['app', 'auth', 'database'],
+      domains: ['app', 'auth', 'database', 'redis'],
     }),
     JwtModule.register({}),
     MailModule,
@@ -34,7 +35,7 @@ import { TenantContextRouter } from './routers/tenant-context.router';
     SubscriptionModule,
   ],
   controllers: [HealthRouter, AuthRouter, PhoneAuthRouter, MeRouter, CapabilitiesRouter, TenantContextRouter, IamRouter, SubscriptionRouter, BillingRouter],
-  providers: [ConsoleAuthService, SessionAggregator],
+  providers: [ConsoleAuthService, SessionAggregator, AccessTokenRevocationService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

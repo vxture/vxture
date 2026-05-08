@@ -71,7 +71,7 @@ export function RolesPage() {
     let active = true;
     setLoading(true);
 
-    Promise.all([fetchTenantRoles(currentTenantId), fetchTenantPermissions(currentTenantId)])
+    Promise.all([fetchTenantRoles(), fetchTenantPermissions()])
       .then(([roleRecords, permissionRecords]) => {
         if (!active) {
           return;
@@ -145,7 +145,7 @@ export function RolesPage() {
   }
 
   async function reloadRoles(nextSelectedId?: string | null) {
-    const roleRecords = await fetchTenantRoles(currentTenantId);
+    const roleRecords = await fetchTenantRoles();
     setRoles(roleRecords);
     setSelectedIds(new Set());
     setSelectedId(nextSelectedId ?? null);
@@ -166,7 +166,6 @@ export function RolesPage() {
             description: form.description,
             permissionIds: form.permissionIds,
           },
-          currentTenantId,
         );
         await reloadRoles(created.id);
         setFeedback({ tone: 'success', key: 'createSuccess' });
@@ -179,7 +178,6 @@ export function RolesPage() {
             status: form.status,
             permissionIds: form.permissionIds,
           },
-          currentTenantId,
         );
         await reloadRoles(updated.id);
         setFeedback({ tone: 'success', key: 'updateSuccess' });
@@ -200,7 +198,7 @@ export function RolesPage() {
     setOpenMenuId(null);
 
     try {
-      const updated = await updateTenantRole(role.id, { status: nextStatus }, currentTenantId);
+      const updated = await updateTenantRole(role.id, { status: nextStatus });
       await reloadRoles(updated.id);
       setFeedback({ tone: 'success', key: nextStatus === 'active' ? 'enableSuccess' : 'disableSuccess' });
     } catch {
@@ -219,7 +217,7 @@ export function RolesPage() {
     resetFeedback();
 
     try {
-      await deleteTenantRole(selected.id, currentTenantId);
+      await deleteTenantRole(selected.id);
       await reloadRoles();
       setDeleteOpen(false);
       setFeedback({ tone: 'success', key: 'deleteSuccess' });
@@ -241,7 +239,7 @@ export function RolesPage() {
     setOpenMenuId(null);
 
     try {
-      await Promise.all(targets.map((role) => updateTenantRole(role.id, { status: nextStatus }, currentTenantId)));
+      await Promise.all(targets.map((role) => updateTenantRole(role.id, { status: nextStatus })));
       await reloadRoles();
       setFeedback({
         tone: 'success',
@@ -266,7 +264,7 @@ export function RolesPage() {
     setOpenMenuId(null);
 
     try {
-      await Promise.all(targets.map((role) => deleteTenantRole(role.id, currentTenantId)));
+      await Promise.all(targets.map((role) => deleteTenantRole(role.id)));
       await reloadRoles();
       setBulkDeleteOpen(false);
       setFeedback({ tone: 'success', key: 'bulkDeleted', values: { count: targets.length } });

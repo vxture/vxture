@@ -138,10 +138,9 @@ export function OrganizationPage() {
 
   useEffect(() => {
     let active = true;
-    const tenantId = session.tenant?.mode === 'tenant' ? session.tenant.id : undefined;
 
     setLoading(true);
-    void fetchOrganizationProfile(tenantId)
+    void fetchOrganizationProfile()
       .then((data) => {
         if (!active) {
           return;

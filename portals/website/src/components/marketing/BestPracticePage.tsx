@@ -7,11 +7,6 @@ import { Link } from '@/lib/i18n/navigation';
 import Image from 'next/image';
 import AnimatedHeroBg from './AnimatedHeroBg';
 
-type Metric = {
-  label: string;
-  value: string;
-};
-
 type Capability = {
   icon: IconName;
   title: string;
@@ -39,7 +34,6 @@ type Dimension = {
 export default function BestPracticePage() {
   const t = useTranslations('cases');
   const highlights = t.raw('page.hero.highlights') as string[];
-  const metrics = t.raw('page.hero.metrics') as Metric[];
   const capabilities = t.raw('page.capabilities.items') as Capability[];
   const dimensions = t.raw('page.dimensions.items') as Dimension[];
   const practices = t.raw('page.practices.items') as Practice[];

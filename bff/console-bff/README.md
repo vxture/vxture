@@ -6,6 +6,7 @@ MVP scaffold for the unified `console` application.
 
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
+- `POST /api/auth/tenant/switch`
 - `GET /api/auth/session`
 - `GET /api/me`
 - `GET /api/capabilities`
@@ -15,6 +16,6 @@ MVP scaffold for the unified `console` application.
 
 ## Notes
 
-- Password login is wired through `AccountAuthService` and can authenticate against the IAM database when database config is present.
+- Password login and tenant switching are delegated to auth-bff; console-bff verifies JWT only.
 - Console session cookies now use platform-scoped names so the auth contract is not console-private.
-- Tenant context resolves from organization membership; when no tenant membership exists, the console falls back to a platform workspace context.
+- Tenant context is selected by the signed console token. Console APIs must not accept `tenantId` query parameters for tenant-scoped reads or writes.

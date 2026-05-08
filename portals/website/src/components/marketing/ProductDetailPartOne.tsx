@@ -5,11 +5,6 @@ import { Icon } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
 import AnimatedHeroBg from './AnimatedHeroBg';
 
-type Metric = {
-  label: string;
-  value: string;
-};
-
 type Capability = {
   title: string;
   description: string;
@@ -28,7 +23,6 @@ type Scenario = {
 
 export default function ProductDetailPartOne() {
   const t = useTranslations('products');
-  const metrics = t.raw('hero.metrics') as Metric[];
   const highlights = t.raw('hero.highlights') as string[];
   const capabilities = t.raw('capabilities.items') as Capability[];
   const workflow = t.raw('workflow.steps') as WorkflowStep[];

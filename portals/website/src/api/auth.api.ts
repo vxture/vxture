@@ -67,12 +67,14 @@ export interface ChangePasswordRequest {
 export interface LoginRequest {
   identifier: string;
   password: string;
+  turnstileToken?: string;
 }
 
 export interface SignupRequest {
   email: string;
   password: string;
   name: string;
+  turnstileToken?: string;
 }
 
 export async function login(data: LoginRequest): Promise<AuthUserDto> {
@@ -122,12 +124,12 @@ export async function initTenant(data: { type: 'individual' | 'organization' }):
 }
 
 /** 发送手机验证码 */
-export async function sendPhoneCode(phone: string): Promise<void> {
-  await apiClient.post('/api/auth/send-phone-code', { phone });
+export async function sendPhoneCode(phone: string, turnstileToken?: string): Promise<void> {
+  await apiClient.post('/api/auth/send-phone-code', { phone, turnstileToken });
 }
 
 /** 手机验证码登录 */
-export async function loginWithPhone(phone: string, code: string): Promise<AuthUserDto> {
-  const response = await apiClient.post<AuthUserDto>('/api/auth/login-with-phone', { phone, code });
+export async function loginWithPhone(phone: string, code: string, turnstileToken?: string): Promise<AuthUserDto> {
+  const response = await apiClient.post<AuthUserDto>('/api/auth/login-with-phone', { phone, code, turnstileToken });
   return response.data;
 }

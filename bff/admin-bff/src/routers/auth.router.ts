@@ -17,6 +17,7 @@
  */
 
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -28,12 +29,14 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { PhoneCodeService } from '@vxture/service-sms';
 import { PlatformAuthService } from '../auth/auth.service';
 import { LoginRateLimiterService } from '../auth/login-rate-limiter.service';
 import { CaptchaService } from '../auth/captcha.service';
-import { AuthResultDto, CaptchaChallengeDto, LoginDto } from '../dto/auth.dto';
+import { AuthResultDto, CaptchaChallengeDto, LoginDto, PhoneLoginDto, SendPhoneCodeDto } from '../dto/auth.dto';
 import type { RequestContext } from '../types/console.types';
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
@@ -45,6 +48,19 @@ function resolveAuthBffUrl(): string {
 }
 
 const AUTH_BFF = resolveAuthBffUrl();
+const logger = new Logger('AdminAuthRouter');
+const ADMIN_PHONE_CODE_SCOPE = 'admin-auth';
+const PHONE_PATTERN = /^1[3-9]\d{9}$/;
+const PHONE_CODE_PATTERN = /^\d{6}$/;
+
+function resolveInternalAuthToken(): string {
+  const token = process.env.AUTH_INTERNAL_TOKEN?.trim();
+  if (token) return token;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('AUTH_INTERNAL_TOKEN is required in production');
+  }
+  return 'vxture-local-internal-auth';
+}
 
 interface AuthHttpRequest {
   headers: Record<string, string | string[] | undefined>;
@@ -60,9 +76,31 @@ function resolveClientIp(req: AuthHttpRequest): string {
 }
 
 function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
-  const setCookie = upstream.headers.get('set-cookie');
-  if (setCookie) {
-    res.setHeader('set-cookie', setCookie);
+  const setCookie = readSetCookie(upstream);
+  if (setCookie.length) res.setHeader('set-cookie', setCookie);
+}
+
+function readSetCookie(upstream: globalThis.Response): string[] {
+  const headers = upstream.headers as Headers & { getSetCookie?: () => string[] };
+  const setCookie = headers.getSetCookie?.();
+  if (setCookie?.length) return setCookie;
+  const single = upstream.headers.get('set-cookie');
+  return single ? [single] : [];
+}
+
+function normalizePhone(phone: string): string {
+  return phone.trim().replace(/\s+/g, '');
+}
+
+function assertPhone(phone: string): void {
+  if (!PHONE_PATTERN.test(phone)) {
+    throw new BadRequestException('请输入有效的中国大陆手机号');
+  }
+}
+
+function assertPhoneCode(code: string): void {
+  if (!PHONE_CODE_PATTERN.test(code)) {
+    throw new BadRequestException('验证码为 6 位数字');
   }
 }
 
@@ -74,6 +112,7 @@ export class AuthRouter {
     @Inject(PlatformAuthService) private readonly platformAuthService: PlatformAuthService,
     @Inject(LoginRateLimiterService) private readonly rateLimiter: LoginRateLimiterService,
     @Inject(CaptchaService) private readonly captchaService: CaptchaService,
+    @Inject(PhoneCodeService) private readonly phoneCodeService: PhoneCodeService,
   ) {}
 
   /** 获取滑块验证码挑战令牌，前端在打开滑块前调用 */
@@ -81,6 +120,20 @@ export class AuthRouter {
   @HttpCode(HttpStatus.OK)
   getCaptchaChallenge(): CaptchaChallengeDto {
     return this.captchaService.generateChallenge();
+  }
+
+  @Post('send-phone-code')
+  @HttpCode(HttpStatus.OK)
+  async sendPhoneCode(@Body() body: SendPhoneCodeDto): Promise<{ message: string }> {
+    const phone = normalizePhone(String(body.phone ?? ''));
+    assertPhone(phone);
+
+    const canUsePhoneLogin = await this.platformAuthService.canUsePhoneLogin(phone);
+    if (canUsePhoneLogin) {
+      await this.phoneCodeService.sendCode(phone, { scope: ADMIN_PHONE_CODE_SCOPE });
+    }
+
+    return { message: '验证码已发送，请在 10 分钟内输入' };
   }
 
   @Post('login')
@@ -121,23 +174,7 @@ export class AuthRouter {
     // 登录成功：清除限速计数
     this.rateLimiter.recordSuccess(ip, body.identifier);
 
-    // Part B：委托 auth-bff 签发 Cookie（内部接口，无需传输密码）
-    const signResponse = await fetch(AUTH_BFF + '/api/auth/internal/sign', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sub: adminUser.user.id,
-        email: adminUser.user.email,
-        role: 'admin',
-        source: 'admin',
-      }),
-    });
-
-    if (!signResponse.ok) {
-      throw new HttpException('签发会话失败', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    forwardSetCookie(res, signResponse);
+    await this.signAdminSession(adminUser, res);
 
     return {
       userId: adminUser.user.id,
@@ -145,12 +182,90 @@ export class AuthRouter {
     };
   }
 
+  @Post('login-with-phone')
+  @HttpCode(HttpStatus.OK)
+  async loginWithPhone(
+    @Body() body: PhoneLoginDto,
+    @Req() req: AuthHttpRequest,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<AuthResultDto> {
+    const ip = resolveClientIp(req);
+    const phone = normalizePhone(String(body.phone ?? ''));
+    const code = String(body.code ?? '').trim();
+
+    assertPhone(phone);
+    assertPhoneCode(code);
+
+    const rateLimitKey = `phone:${phone}`;
+    const rateLimit = this.rateLimiter.check(ip, rateLimitKey);
+    if (!rateLimit.allowed) {
+      throw new HttpException(
+        `登录请求过于频繁，请 ${rateLimit.retryAfter ?? 900} 秒后重试`,
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
+
+    const valid = await this.phoneCodeService.verifyCode(phone, code, { scope: ADMIN_PHONE_CODE_SCOPE });
+    if (!valid) {
+      this.rateLimiter.recordFailure(ip, rateLimitKey);
+      throw new BadRequestException('验证码错误或已过期，请重新获取');
+    }
+
+    let adminUser: Awaited<ReturnType<PlatformAuthService['loginWithPhone']>>;
+    try {
+      adminUser = await this.platformAuthService.loginWithPhone(phone);
+    } catch {
+      this.rateLimiter.recordFailure(ip, rateLimitKey);
+      throw new UnauthorizedException('当前手机号未绑定可用的运营账号');
+    }
+
+    this.rateLimiter.recordSuccess(ip, rateLimitKey);
+    await this.signAdminSession(adminUser, res);
+
+    return {
+      userId: adminUser.user.id,
+      status: 'authenticated',
+    };
+  }
+
+  private async signAdminSession(
+    adminUser: Awaited<ReturnType<PlatformAuthService['loginWithPassword']>>,
+    res: Response,
+  ): Promise<void> {
+    // Part B：委托 auth-bff 签发 Cookie（内部接口，无需传输密码）
+    const signResponse = await fetch(AUTH_BFF + '/auth/internal/sign', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-vxture-internal-auth': resolveInternalAuthToken(),
+      },
+      body: JSON.stringify({
+        sub: adminUser.user.id,
+        email: adminUser.user.email,
+        username: adminUser.user.username,
+        displayName: adminUser.user.displayName,
+        role: adminUser.user.roleCode,
+        roleLabel: adminUser.user.roleI18nKey,
+        permissions: adminUser.permissions,
+        source: 'admin',
+      }),
+    });
+
+    if (!signResponse.ok) {
+      const upstreamBody = await signResponse.text().catch(() => '');
+      logger.error(`auth-bff internal sign failed status=${signResponse.status} body=${upstreamBody}`);
+      throw new HttpException('签发会话失败', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    forwardSetCookie(res, signResponse);
+  }
+
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: AuthHttpRequest, @Res({ passthrough: true }) res: Response) {
     // 将 cookie 转发给 auth-bff 完成登出
     const cookieHeader = req.headers['cookie'];
-    const response = await fetch(AUTH_BFF + '/api/auth/logout', {
+    const response = await fetch(AUTH_BFF + '/auth/logout?source=admin', {
       method: 'POST',
       headers: cookieHeader ? { Cookie: String(cookieHeader) } : {},
     });

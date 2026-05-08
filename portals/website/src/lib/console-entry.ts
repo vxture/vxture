@@ -13,11 +13,23 @@ import { encodePortalContext } from '@vxture/shared';
 // 环境变量（构建时注入）
 // =============================================================================
 
-const CONSOLE_BASE_URL =
-  process.env.NEXT_PUBLIC_CONSOLE_URL ?? 'https://console.vxture.com';
+function normalizeBaseUrl(url: string): string {
+  return url.trim().replace(/\/+$/, '');
+}
 
-const WEBSITE_BASE_URL =
-  process.env.NEXT_PUBLIC_WEBSITE_URL ?? 'https://vxture.com';
+const DEFAULT_CONSOLE_BASE_URL =
+  process.env.NODE_ENV === 'production' ? 'https://console.vxture.com' : 'http://localhost:3020';
+
+const DEFAULT_WEBSITE_BASE_URL =
+  process.env.NODE_ENV === 'production' ? 'https://vxture.com' : 'http://localhost:3010';
+
+const CONSOLE_BASE_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_CONSOLE_URL ?? DEFAULT_CONSOLE_BASE_URL,
+);
+
+const WEBSITE_BASE_URL = normalizeBaseUrl(
+  process.env.NEXT_PUBLIC_WEBSITE_URL ?? DEFAULT_WEBSITE_BASE_URL,
+);
 
 // =============================================================================
 // 入口 URL 构建

@@ -17,6 +17,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { JwtAccessPayload } from '@vxture/core-auth';
+import { JwtAuthScope, JwtUserType } from '@vxture/core-auth';
 import { VxConfigService } from '@vxture/core-config';
 import { AccountAuthService } from '@vxture/service-iam';
 import { MailService } from '@vxture/service-mail';
@@ -36,9 +37,18 @@ export class WebsiteAuthService {
   ) {}
 
   verifyAccessToken(token: string) {
-    return this.jwtService.verify<JwtAccessPayload>(token, {
+    const payload = this.jwtService.verify<JwtAccessPayload>(token, {
       secret: this.configService.auth.JWT_SECRET,
     });
+
+    if (payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
+      throw new Error('Invalid website token scope');
+    }
+    if (payload.userType !== JwtUserType.TENANT_USER) {
+      throw new Error('Invalid website token user type');
+    }
+
+    return payload;
   }
 
   async getCurrentUser(accountId: string): Promise<AuthUserDto | null> {

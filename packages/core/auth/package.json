@@ -5,6 +5,9 @@
   "license": "MIT",
   "private": true,
   "type": "module",
+  "types": "./dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -18,6 +21,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "ioredis": "^5.0.0",
     "@vxture/shared": "workspace:*"
   },
   "peerDependencies": {

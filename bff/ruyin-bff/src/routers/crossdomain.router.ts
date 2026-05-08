@@ -9,8 +9,8 @@
  *
  * 流程：
  *   1. 前端跳转 ruyin.ai/auth/callback?token={oneTimeToken}
- *   2. ruyin-bff 调 auth-bff POST /api/auth/crossdomain/verify
- *   3. ruyin-bff 调 auth-bff POST /api/auth/internal/sign 签发 Cookie
+ *   2. ruyin-bff 调 auth-bff POST /auth/crossdomain/verify
+ *   3. ruyin-bff 调 auth-bff POST /auth/internal/sign 签发 Cookie
  *
  * @author AI-Generated
  * @date 2026-05-07
@@ -44,11 +44,26 @@ function resolveAuthBffUrl(): string {
 
 const AUTH_BFF = resolveAuthBffUrl();
 
-function forwardSetCookie(res: RedirectResponse, upstream: globalThis.Response): void {
-  const setCookie = upstream.headers.get('set-cookie');
-  if (setCookie) {
-    res.setHeader('set-cookie', setCookie);
+function resolveInternalAuthToken(): string {
+  const token = process.env.AUTH_INTERNAL_TOKEN?.trim();
+  if (token) return token;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('AUTH_INTERNAL_TOKEN is required in production');
   }
+  return 'vxture-local-internal-auth';
+}
+
+function forwardSetCookie(res: RedirectResponse, upstream: globalThis.Response): void {
+  const setCookie = readSetCookie(upstream);
+  if (setCookie.length) res.setHeader('set-cookie', setCookie);
+}
+
+function readSetCookie(upstream: globalThis.Response): string[] {
+  const headers = upstream.headers as Headers & { getSetCookie?: () => string[] };
+  const setCookie = headers.getSetCookie?.();
+  if (setCookie?.length) return setCookie;
+  const single = upstream.headers.get('set-cookie');
+  return single ? [single] : [];
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
@@ -70,9 +85,12 @@ export class CrossDomainRouter {
     }
 
     // Step 1: 调用 auth-bff verify 接口，校验一次性 token
-    const verifyResponse = await fetch(`${AUTH_BFF}/api/auth/crossdomain/verify`, {
+    const verifyResponse = await fetch(`${AUTH_BFF}/auth/crossdomain/verify`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-vxture-internal-auth': resolveInternalAuthToken(),
+      },
       body: JSON.stringify({ token, source: 'ruyin.ai' }),
     });
 
@@ -84,14 +102,18 @@ export class CrossDomainRouter {
     const payload = await verifyResponse.json();
 
     // Step 2: 委托 auth-bff 签发 ruyin domain Cookie
-    const signResponse = await fetch(`${AUTH_BFF}/api/auth/internal/sign`, {
+    const signResponse = await fetch(`${AUTH_BFF}/auth/internal/sign`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-vxture-internal-auth': resolveInternalAuthToken(),
+      },
       body: JSON.stringify({
         sub: payload.sub,
         email: '',
         role: 'member',
         source: 'ruyin',
+        tenantId: payload.tenantId,
       }),
     });
 

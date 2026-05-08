@@ -453,11 +453,22 @@
       "description": "使用你的账号继续访问平台运营后台。"
     },
     "form": {
+      "passwordLogin": "密码登录",
+      "phoneLogin": "验证码登录",
       "account": "账号",
       "accountPlaceholder": "用户名 / 邮箱 / 手机号",
       "password": "密码",
       "passwordPlaceholder": "输入你的密码",
+      "rememberLogin": "记住登录信息",
+      "phone": "手机号",
+      "phonePlaceholder": "输入绑定运营账号的手机号",
+      "code": "验证码",
+      "codePlaceholder": "输入 6 位验证码",
+      "sendCode": "获取验证码",
+      "sendingCode": "发送中...",
+      "retryCode": "{seconds}s 后重试",
       "forgotPassword": "忘记密码？",
+      "forgetMe": "忘记我",
       "humanVerification": "安全验证",
       "dragToVerify": "拖动拼图完成验证",
       "closeVerification": "关闭安全验证",
@@ -475,14 +486,18 @@
       "terms": "请先阅读并同意用户协议和隐私政策。",
       "humanVerification": "请先完成人机验证。",
       "invalid": "当前凭据无法完成登录。",
+      "phoneInvalid": "请输入有效的中国大陆手机号。",
+      "codeInvalid": "请输入 6 位验证码。",
+      "phoneCodeInvalid": "验证码错误或已过期，请重新获取。",
       "unavailable": "Admin 登录服务当前不可用，请先启动 admin-bff。",
       "tooManyAttempts": "登录尝试次数过多，请稍后重试。",
       "captchaUnavailable": "验证码服务暂时不可用，请稍后重试。"
     },
     "footer": {
-      "copyright": "© 2026 Vxture Studio",
-      "privacy": "隐私条款",
-      "terms": "用户协议"
+      "copyright": "© 2026 vxture.ai. All rights reserved.",
+      "terms": "服务条款",
+      "privacy": "隐私政策",
+      "cookies": "Cookie 使用政策"
     }
   },
   "dashboard": {

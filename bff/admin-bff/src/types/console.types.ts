@@ -6,6 +6,7 @@ export interface ConsoleUser {
   displayName?: string | null;
   email: string;
   roleLabel: string;
+  roleCode: string;
   roleI18nKey: string;
   roleNameEn: string;
   username?: string;

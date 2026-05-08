@@ -20,12 +20,12 @@ import { useAuthStore } from '@/stores/auth.store';
 export function useAuth() {
   const { login: loginStore, signup: signupStore, logout: logoutStore, isLoading, error } = useAuthStore();
 
-  const login = async (identifier: string, password: string) => {
-    await loginStore(identifier, password);
+  const login = async (identifier: string, password: string, turnstileToken?: string) => {
+    await loginStore(identifier, password, turnstileToken);
   };
 
-  const signup = async (email: string, name: string, password: string) => {
-    await signupStore(email, name, password);
+  const signup = async (email: string, name: string, password: string, turnstileToken?: string) => {
+    await signupStore(email, name, password, turnstileToken);
   };
 
   const logout = async () => {

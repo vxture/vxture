@@ -100,8 +100,8 @@ export function SubscriptionPage() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      fetchMySubscriptions(session.tenant?.id),
-      fetchBillingInvoices(session.tenant?.id, 10),
+      fetchMySubscriptions(),
+      fetchBillingInvoices(10),
     ])
       .then(([subs, invs]) => {
         setSubscriptions(subs);

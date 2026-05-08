@@ -2,7 +2,7 @@
  * server.mjs - Vxture Dev Panel 开发服务管理面板
  *
  * 本地开发环境的服务编排与监控面板。
- * 提供有序启动（P1→P2→P3）、健康检查门控、进程生命周期管理和日志查看。
+ * 提供有序启动（P0→P1→P2）、健康检查门控、进程生命周期管理和日志查看。
  *
  * @version 2.0
  */
@@ -34,7 +34,7 @@ const SERVICES = [
     id: 'ai-gateway',
     name: 'AI Gateway',
     port: 3100,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3100',
     command: 'pnpm --filter @vxture/service-ai-gateway dev',
     healthChecks: [
@@ -46,7 +46,7 @@ const SERVICES = [
     id: 'website-bff',
     name: 'Website BFF',
     port: 3011,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3011',
     command: 'pnpm --filter @vxture/bff-website dev',
     env: {
@@ -61,7 +61,7 @@ const SERVICES = [
     id: 'auth-bff',
     name: 'Auth BFF',
     port: 3090,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3090',
     command: 'pnpm --filter @vxture/bff-auth dev',
     env: {
@@ -75,7 +75,7 @@ const SERVICES = [
     id: 'ruyin-server',
     name: 'Ruyin Server',
     port: 3112,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3112',
     command: 'pnpm --filter @vxture/agent-server-ruyin dev',
     env: {
@@ -90,7 +90,7 @@ const SERVICES = [
     id: 'ruyin-bff',
     name: 'Ruyin BFF',
     port: 3111,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3111',
     command: 'pnpm --filter @vxture/bff-ruyin dev',
     env: {
@@ -109,7 +109,7 @@ const SERVICES = [
     id: 'vela-server',
     name: 'Vela Server',
     port: 3122,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3122',
     command: 'pnpm --filter vela-server dev',
     env: {
@@ -126,7 +126,7 @@ const SERVICES = [
     id: 'vela-bff',
     name: 'Vela BFF',
     port: 3121,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3121',
     command: 'pnpm --filter @vxture/bff-vela dev',
     env: {
@@ -141,7 +141,7 @@ const SERVICES = [
     id: 'console-bff',
     name: 'Console BFF',
     port: 3021,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3021',
     command: 'pnpm --filter @vxture/bff-console dev',
     env: {
@@ -157,7 +157,7 @@ const SERVICES = [
     id: 'admin-bff',
     name: 'Admin BFF',
     port: 3031,
-    priority: 1,
+    priority: 0,
     url: 'http://localhost:3031',
     command: 'pnpm --filter @vxture/bff-admin dev',
     env: {
@@ -175,7 +175,7 @@ const SERVICES = [
     id: 'gateway',
     name: 'Gateway BFF',
     port: 8000,
-    priority: 2,
+    priority: 1,
     url: 'http://localhost:8000',
     command: 'pnpm dev:gateway',
     env: {
@@ -196,7 +196,7 @@ const SERVICES = [
     id: 'website',
     name: 'Website',
     port: 3010,
-    priority: 3,
+    priority: 2,
     url: 'http://localhost:3010',
     command: 'pnpm --filter @vxture/website dev',
     healthChecks: [
@@ -207,7 +207,7 @@ const SERVICES = [
     id: 'console',
     name: 'Console',
     port: 3020,
-    priority: 3,
+    priority: 2,
     url: 'http://localhost:3020',
     command: 'pnpm --filter @vxture/console dev',
     healthChecks: [
@@ -218,7 +218,7 @@ const SERVICES = [
     id: 'admin',
     name: 'Admin',
     port: 3030,
-    priority: 3,
+    priority: 2,
     url: 'http://localhost:3030',
     command: 'pnpm --filter @vxture/admin dev',
     healthChecks: [
@@ -226,10 +226,26 @@ const SERVICES = [
     ],
   },
   {
+    id: 'ruyin',
+    name: 'Ruyin',
+    port: 3110,
+    priority: 2,
+    url: 'http://localhost:3110',
+    command: 'pnpm --filter @vxture/ruyin dev',
+    env: {
+      AUTH_BFF_URL: 'http://localhost:3090',
+      RUYIN_BFF_URL: 'http://localhost:3111',
+      NEXT_PUBLIC_CONSOLE_LOGIN_URL: 'http://localhost:3020/zh-CN/signin',
+    },
+    healthChecks: [
+      { label: 'port', kind: 'tcp', port: 3110 },
+    ],
+  },
+  {
     id: 'vela-studio',
     name: 'Vela Studio',
     port: 3120,
-    priority: 3,
+    priority: 2,
     url: 'http://localhost:3120',
     command: 'pnpm --filter @vxture/agent-studio-vela dev',
     healthChecks: [
@@ -240,7 +256,7 @@ const SERVICES = [
     id: 'website-alias',
     name: 'Website :3000 Alias',
     port: 3000,
-    priority: 3,
+    priority: 2,
     url: 'http://localhost:3000',
     command: 'node tools/dev-panel/redirect-3000.mjs',
     healthChecks: [
@@ -249,21 +265,47 @@ const SERVICES = [
   },
 ];
 
-/** 启动顺序 — 按依赖顺序逐级等待健康检查通过 */
-const START_ORDER = [
-  'ai-gateway',
+/**
+ * 卡片展示顺序 — 每层保持同一产品族顺序：
+ * 基础平台 → website/console/admin → ruyin → vela → 辅助入口。
+ */
+const CARD_ORDER = [
   'auth-bff',
+  'ai-gateway',
+  'website-bff',
+  'console-bff',
+  'admin-bff',
   'ruyin-server',
   'ruyin-bff',
   'vela-server',
   'vela-bff',
-  'website-bff',
-  'console-bff',
-  'admin-bff',
   'gateway',
   'website',
   'console',
   'admin',
+  'ruyin',
+  'vela-studio',
+  'website-alias',
+];
+
+const CARD_ORDER_INDEX = new Map(CARD_ORDER.map((id, index) => [id, index]));
+
+/** 启动顺序 — 按依赖顺序逐级等待健康检查通过，并尽量贴近卡片分组顺序 */
+const START_ORDER = [
+  'auth-bff',
+  'ai-gateway',
+  'website-bff',
+  'console-bff',
+  'admin-bff',
+  'ruyin-server',
+  'ruyin-bff',
+  'vela-server',
+  'vela-bff',
+  'gateway',
+  'website',
+  'console',
+  'admin',
+  'ruyin',
   'vela-studio',
   'website-alias',
 ];
@@ -337,6 +379,18 @@ function isChildAlive(child) {
 
 function findService(id) {
   return SERVICES.find((s) => s.id === id) ?? null;
+}
+
+function orderForCards(items) {
+  return [...items].sort((a, b) => {
+    const pa = Number(a.priority ?? 99);
+    const pb = Number(b.priority ?? 99);
+    if (pa !== pb) return pa - pb;
+    const ia = CARD_ORDER_INDEX.get(a.id) ?? Number.MAX_SAFE_INTEGER;
+    const ib = CARD_ORDER_INDEX.get(b.id) ?? Number.MAX_SAFE_INTEGER;
+    if (ia !== ib) return ia - ib;
+    return String(a.name ?? a.id).localeCompare(String(b.name ?? b.id));
+  });
 }
 
 function runProcess(file, args, { timeoutMs = 10_000 } = {}) {
@@ -997,9 +1051,9 @@ function pageHtml() {
       letter-spacing: .03em;
       border: 1px solid;
     }
-    .badge-p.p1 { background: var(--err-bg);  color: var(--err);  border-color: var(--err-border);  }
-    .badge-p.p2 { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
-    .badge-p.p3 { background: var(--brand-light); color: var(--brand); border-color: var(--brand-border); }
+    .badge-p.p0 { background: var(--err-bg);  color: var(--err);  border-color: var(--err-border);  }
+    .badge-p.p1 { background: var(--warn-bg); color: var(--warn); border-color: var(--warn-border); }
+    .badge-p.p2 { background: var(--brand-light); color: var(--brand); border-color: var(--brand-border); }
 
     .status-badge {
       flex-shrink: 0;
@@ -1154,7 +1208,7 @@ function pageHtml() {
     let bulkBusy        = false;
     const pendingOps    = new Set();
 
-    const GROUP_LABELS = { 1: 'P1 · 基础服务', 2: 'P2 · 网关', 3: 'P3 · 前端应用' };
+    const GROUP_LABELS = { 0: 'P0 · 后端基础', 1: 'P1 · 网关聚合', 2: 'P2 · 前端应用' };
 
     /* ── 工具 ── */
     function esc(v) {
@@ -1631,7 +1685,7 @@ const server = http.createServer(async (req, res) => {
   /* 服务快照列表 */
   if (method === 'GET' && url.pathname === '/api/services') {
     const snaps = await Promise.all(SERVICES.map(getServiceSnapshot));
-    sendJson(res, 200, snaps);
+    sendJson(res, 200, orderForCards(snaps));
     return;
   }
 

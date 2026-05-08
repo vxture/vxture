@@ -1,16 +1,13 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
+import { buildConsoleEntryUrl } from '@/lib/console-entry';
+import { useAuthStore } from '@/stores/auth.store';
 import AnimatedHeroBg from './AnimatedHeroBg';
-
-type Metric = {
-  label: string;
-  value: string;
-};
 
 type FilterItem = {
   id: string;
@@ -30,11 +27,16 @@ type AgentItem = {
 
 export default function AgentMarketplacePage() {
   const t = useTranslations('appcenter');
+  const locale = useLocale();
   const [activeIndustry, setActiveIndustry] = useState('all');
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
   const highlights = t.raw('hero.highlights') as string[];
-  const metrics = t.raw('hero.metrics') as Metric[];
   const filters = t.raw('filters.items') as FilterItem[];
   const agents = t.raw('agents.items') as AgentItem[];
+  const hasTenantSession = isAuthenticated && Boolean(user);
+  const consoleEntryUrl = buildConsoleEntryUrl(locale);
+  const heroPrimaryClassName = 'inline-flex h-11 items-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500';
 
   const visibleAgents = useMemo(() => {
     if (activeIndustry === 'all') {
@@ -64,12 +66,15 @@ export default function AgentMarketplacePage() {
               ))}
             </div>
             <div className='mt-8 flex flex-wrap items-center gap-4'>
-              <Link
-                href='/signin'
-                className='inline-flex h-11 items-center rounded-md bg-blue-600 px-5 text-sm font-semibold text-white transition hover:bg-blue-500'
-              >
-                {t('hero.primaryAction')}
-              </Link>
+              {hasTenantSession ? (
+                <a href={consoleEntryUrl} className={heroPrimaryClassName}>
+                  {t('hero.primaryAction')}
+                </a>
+              ) : (
+                <Link href='/signup' className={heroPrimaryClassName}>
+                  {t('hero.guestPrimaryAction')}
+                </Link>
+              )}
               <a
                 href='#agent-marketplace'
                 className='inline-flex h-11 items-center rounded-md border border-blue-200 bg-white/60 px-5 text-sm font-semibold text-blue-700 transition hover:border-blue-300 hover:bg-white dark:border-white/35 dark:bg-transparent dark:text-white dark:hover:border-white dark:hover:bg-white/10'

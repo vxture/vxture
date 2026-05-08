@@ -1,46 +1,50 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import {
+  AuthField,
+  AuthFlowForm,
+  AuthLoginLayout,
+  AuthLoginOptions,
+  AuthPrimaryButton,
+  AuthSocialButtons,
+  AuthTabs,
+  AuthTurnstile,
+  UnifiedAuthPage,
+  useAuthVerificationCountdown,
+  type AuthLoginScreen,
+  type AuthLoginTab,
+} from '@vxture/design-system';
 import { AuthFooter, AuthHeader } from '@/components/auth/AuthChrome';
-import { SliderCaptcha } from '@/components/auth/SliderCaptcha';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationStore } from '@/stores/notification.store';
+import { useAuthStore } from '@/stores/auth.store';
 import { useRouter } from '@/lib/i18n/navigation';
 import { useSearchParams } from 'next/navigation';
 import { forgotPassword, loginWithPhone, sendPhoneCode } from '@/api/auth.api';
 
-type AuthScreen = 'login' | 'phone' | 'forgot';
-
 interface LoginFormProps {
   className?: string;
-  initialScreen?: AuthScreen;
-}
-
-interface FieldProps {
-  label: string;
-  name: string;
-  type: string;
-  placeholder: string;
-  value: string;
-  error?: string;
-  hint?: string;
-  autoComplete?: string;
-  autoFocus?: boolean;
-  disabled?: boolean;
-  onChange: (value: string) => void;
+  initialScreen?: AuthLoginScreen;
 }
 
 const BG_SRC = '/images/login-bg-light.jpg';
 const REMEMBER_LOGIN_KEY = 'vxture-login-remember';
 const REMEMBER_IDENTIFIER_KEY = 'vxture-login-identifier';
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? '';
+const TURNSTILE_ACTION = 'tenant_auth';
+type TurnstileStatus = 'pending' | 'ready' | 'failed';
 
 export function LoginForm({ className = '', initialScreen = 'login' }: LoginFormProps) {
-  const [screen, setScreen] = useState<AuthScreen>(initialScreen);
+  const [screen, setScreen] = useState<AuthLoginScreen>(initialScreen);
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [rememberLogin, setRememberLogin] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [resetSent, setResetSent] = useState(false);
-  const [captchaOpen, setCaptchaOpen] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
+  const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatus>(TURNSTILE_SITE_KEY ? 'pending' : 'ready');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [localLoading, setLocalLoading] = useState(false);
 
@@ -53,9 +57,12 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
 
   const { login, isLoading: authLoading } = useAuth();
   const { addNotification } = useNotificationStore();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const user = useAuthStore((state) => state.user);
   const router = useRouter();
   const searchParams = useSearchParams();
   const loading = localLoading || authLoading;
+  const nextPath = searchParams.get('next') ?? '/';
 
   useEffect(() => {
     const shouldRemember = window.localStorage.getItem(REMEMBER_LOGIN_KEY) === '1';
@@ -64,15 +71,75 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
     setRememberLogin(shouldRemember);
     if (shouldRemember && savedIdentifier) {
       setIdentifier(savedIdentifier);
+      setPhone(savedIdentifier);
     }
   }, []);
 
-  const openScreen = (nextScreen: AuthScreen) => {
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      router.replace(nextPath as '/');
+    }
+  }, [isAuthenticated, nextPath, router, user]);
+
+  const openScreen = (nextScreen: AuthLoginScreen) => {
     setScreen(nextScreen);
     setErrors({});
     setPhoneErrors({});
     setResetSent(false);
+    setTurnstileToken('');
+    setTurnstileStatus(TURNSTILE_SITE_KEY ? 'pending' : 'ready');
+    setTurnstileResetSignal((value) => value + 1);
   };
+
+  const handleAcceptedTermsChange = (checked: boolean) => {
+    setAcceptedTerms(checked);
+    setErrors((current) => {
+      const { form, ...rest } = current;
+      return form ? rest : current;
+    });
+    setPhoneErrors((current) => {
+      const { form, ...rest } = current;
+      return form ? rest : current;
+    });
+  };
+
+  const resetTurnstile = () => {
+    if (!TURNSTILE_SITE_KEY) return;
+    setTurnstileToken('');
+    setTurnstileStatus('pending');
+    setTurnstileResetSignal((value) => value + 1);
+  };
+
+  const requireTurnstileToken = () => {
+    if (!TURNSTILE_SITE_KEY) return undefined;
+    if (turnstileToken) return turnstileToken;
+    return null;
+  };
+
+  const turnstileNode = (
+    <AuthTurnstile
+      siteKey={TURNSTILE_SITE_KEY}
+      action={TURNSTILE_ACTION}
+      resetSignal={turnstileResetSignal}
+      onToken={(token) => {
+        setTurnstileToken(token);
+        setTurnstileStatus('ready');
+      }}
+      onExpire={() => {
+        setTurnstileToken('');
+        setTurnstileStatus(TURNSTILE_SITE_KEY ? 'pending' : 'ready');
+      }}
+      onError={() => {
+        setTurnstileToken('');
+        setTurnstileStatus('failed');
+        setErrors((current) => ({ ...current, form: '人机验证加载失败，请刷新后重试。' }));
+        setPhoneErrors((current) => ({ ...current, form: '人机验证加载失败，请刷新后重试。' }));
+      }}
+    />
+  );
+  const verificationPending = turnstileStatus === 'pending';
+  const verificationFailed = turnstileStatus === 'failed';
+  const verificationCountdown = useAuthVerificationCountdown(verificationPending);
 
   // 发送手机验证码（含倒计时）
   const handleSendCode = async () => {
@@ -80,10 +147,15 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
       setPhoneErrors({ phone: '请输入有效的中国大陆手机号' });
       return;
     }
+    const token = requireTurnstileToken();
+    if (token === null) {
+      setPhoneErrors({ form: '请先完成人机验证。' });
+      return;
+    }
     setPhoneErrors({});
     setCodeSending(true);
     try {
-      await sendPhoneCode(phone.trim());
+      await sendPhoneCode(phone.trim(), token);
       addNotification('验证码已发送，请查收短信', 'success');
       setCountdown(60);
       const timer = setInterval(() => {
@@ -99,29 +171,45 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
       addNotification(error instanceof Error ? error.message : '验证码发送失败', 'error');
     } finally {
       setCodeSending(false);
+      resetTurnstile();
     }
   };
 
   // 手机验证码登录
-  const handlePhoneLogin = async (event: React.FormEvent) => {
+  const handlePhoneLogin = async (event: FormEvent) => {
     event.preventDefault();
     const nextErrors: Record<string, string> = {};
     if (!/^1[3-9]\d{9}$/.test(phone.trim())) nextErrors.phone = '请输入有效的中国大陆手机号';
     if (phoneCode.trim().length !== 6) nextErrors.code = '请输入 6 位验证码';
+    if (!acceptedTerms) nextErrors.form = '请先阅读并同意用户协议和隐私政策。';
     if (Object.keys(nextErrors).length > 0) {
       setPhoneErrors(nextErrors);
+      return;
+    }
+    const token = requireTurnstileToken();
+    if (token === null) {
+      setPhoneErrors({ form: '请先完成人机验证。' });
       return;
     }
     setPhoneErrors({});
     setLocalLoading(true);
     try {
-      await loginWithPhone(phone.trim(), phoneCode.trim());
+      const trimmedPhone = phone.trim();
+      await loginWithPhone(trimmedPhone, phoneCode.trim(), token);
+      if (rememberLogin) {
+        window.localStorage.setItem(REMEMBER_LOGIN_KEY, '1');
+        window.localStorage.setItem(REMEMBER_IDENTIFIER_KEY, trimmedPhone);
+      } else {
+        window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+        window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+      }
       addNotification('登录成功', 'success');
-      router.push((searchParams.get('next') ?? '/') as '/');
+      router.push(nextPath as '/');
     } catch (error) {
       addNotification(error instanceof Error ? error.message : '登录失败，请稍后重试', 'error');
     } finally {
       setLocalLoading(false);
+      resetTurnstile();
     }
   };
 
@@ -134,25 +222,27 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
     if (!password) {
       nextErrors.password = '请输入密码';
     }
+    if (!acceptedTerms) {
+      nextErrors.form = '请先阅读并同意用户协议和隐私政策。';
+    }
 
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (validateLogin()) {
-      setCaptchaOpen(true);
+    if (!validateLogin()) return;
+
+    const token = requireTurnstileToken();
+    if (token === null) {
+      setErrors((current) => ({ ...current, form: '请先完成人机验证。' }));
+      return;
     }
-  };
-
-  const handleCaptchaSuccess = async () => {
-    setCaptchaOpen(false);
-
     setLocalLoading(true);
     try {
       const trimmedIdentifier = identifier.trim();
-      await login(trimmedIdentifier, password);
+      await login(trimmedIdentifier, password, token);
       if (rememberLogin) {
         window.localStorage.setItem(REMEMBER_LOGIN_KEY, '1');
         window.localStorage.setItem(REMEMBER_IDENTIFIER_KEY, trimmedIdentifier);
@@ -174,11 +264,12 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
       }
 
       addNotification('登录成功', 'success');
-      router.push((searchParams.get('next') ?? '/') as '/');
+      router.push(nextPath as '/');
     } catch (error) {
       addNotification(error instanceof Error ? error.message : '登录失败，请稍后重试', 'error');
     } finally {
       setLocalLoading(false);
+      resetTurnstile();
     }
   };
 
@@ -198,7 +289,7 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
     }
   };
 
-  const handleForgotSubmit = async (event: React.FormEvent) => {
+  const handleForgotSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!identifier.trim() || !identifier.includes('@')) {
       setErrors({ identifier: '请输入有效邮箱' });
@@ -218,154 +309,118 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
   };
 
   return (
-    <section className={`vx-auth-page ${className}`} style={{ '--vx-auth-bg': `url(${BG_SRC})` } as React.CSSProperties}>
-      {captchaOpen ? (
-        <SliderCaptcha onClose={() => setCaptchaOpen(false)} onSuccess={handleCaptchaSuccess} />
-      ) : null}
-
-      <AuthHeader />
-
-      <main className='vx-auth-main'>
-        <div className='vx-auth-card' aria-label='vxture authentication'>
-          <VisualPanel />
-          <div className='vx-auth-divider' />
-          <div className='vx-auth-form-panel'>
-            {screen === 'forgot' ? (
-              <ForgotPanel
-                email={identifier}
-                error={errors.identifier}
-                loading={loading}
-                resetSent={resetSent}
-                onBack={() => openScreen('login')}
-                onChange={setIdentifier}
-                onSubmit={handleForgotSubmit}
-              />
-            ) : (
-              <>
-                <div className='vx-auth-panel-heading'>
-                  <h1>欢迎回来</h1>
-                  <p>登录您的 vxture 工作区</p>
-                </div>
-
-                <div className='vx-auth-tabs'>
-                  <button
-                    type='button'
-                    className={`vx-auth-tab${screen === 'login' ? ' vx-auth-tab--active' : ''}`}
-                    onClick={() => openScreen('login')}
-                  >
-                    密码登录
-                  </button>
-                  <button
-                    type='button'
-                    className={`vx-auth-tab${screen === 'phone' ? ' vx-auth-tab--active' : ''}`}
-                    onClick={() => openScreen('phone')}
-                  >
-                    验证码登录
-                  </button>
-                </div>
-
-                {screen === 'phone' ? (
-                  <PhoneLoginPanel
-                    phone={phone}
-                    code={phoneCode}
-                    errors={phoneErrors}
-                    loading={localLoading}
-                    countdown={countdown}
-                    codeSending={codeSending}
-                    onChangePhone={setPhone}
-                    onChangeCode={setPhoneCode}
-                    onSendCode={handleSendCode}
-                    onSubmit={handlePhoneLogin}
-                    onRegister={() => router.push('/signup')}
-                  />
-                ) : (
-                  <LoginPanel
-                    identifier={identifier}
-                    password={password}
-                    rememberLogin={rememberLogin}
-                    errors={errors}
-                    loading={loading}
-                    onChangeIdentifier={setIdentifier}
-                    onChangePassword={setPassword}
-                    onRememberLoginChange={setRememberLogin}
-                    onForgot={() => openScreen('forgot')}
-                    onForgetMe={handleForgetMe}
-                    onRegister={() => router.push('/signup')}
-                    onSubmit={handleSubmit}
-                  />
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      </main>
-
-      <AuthFooter />
-    </section>
-  );
-}
-
-function VisualPanel() {
-  return (
-    <aside className='vx-auth-visual'>
-      <NodeGraph />
-      <div className='vx-auth-grid' />
-      <div className='vx-auth-scan' />
-      <div className='vx-auth-fade' />
-
-      <div className='vx-auth-status'>
-        <span className='vx-auth-status-dot' />
-        <span>All systems operational</span>
-      </div>
-
-      <div className='vx-auth-copy'>
-        <h2>Build intelligence into everything.</h2>
-        <p>Orchestrate models, manage pipelines, and deploy AI workflows at scale from a single workspace.</p>
-        <div className='vx-auth-stats'>
-          <Stat value='40ms' label='avg latency' />
-          <Stat value='99.97%' label='uptime SLA' />
-          <Stat value='12B+' label='tokens/day' />
-        </div>
-      </div>
-    </aside>
-  );
-}
-
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div>
-      <strong>{value}</strong>
-      <span>{label}</span>
-    </div>
+    <UnifiedAuthPage
+      className={className}
+      pageBackgroundImage={BG_SRC}
+      header={<AuthHeader />}
+      footer={<AuthFooter />}
+    >
+      {screen === 'forgot' ? (
+        <ForgotPanel
+          email={identifier}
+          error={errors.identifier}
+          loading={loading}
+          resetSent={resetSent}
+          onBack={() => openScreen('login')}
+          onChange={setIdentifier}
+          onSubmit={handleForgotSubmit}
+        />
+      ) : (
+        <AuthLoginLayout title='欢迎回来'>
+          {screen === 'phone' ? (
+            <PhoneLoginPanel
+              tabs={<AuthTabs active={screen as AuthLoginTab} onChange={openScreen} />}
+              phone={phone}
+              code={phoneCode}
+              errors={phoneErrors}
+              loading={localLoading}
+              countdown={countdown}
+              codeSending={codeSending}
+              rememberLogin={rememberLogin}
+              acceptedTerms={acceptedTerms}
+              onRememberLoginChange={setRememberLogin}
+              onAcceptedTermsChange={handleAcceptedTermsChange}
+              onForgot={() => openScreen('forgot')}
+              onForgetMe={handleForgetMe}
+              onChangePhone={setPhone}
+              onChangeCode={setPhoneCode}
+              onSendCode={handleSendCode}
+              onSubmit={handlePhoneLogin}
+              onRegister={() => router.push('/signup')}
+              turnstile={turnstileNode}
+              verificationPending={verificationPending}
+              verificationFailed={verificationFailed}
+              verificationCountdown={verificationCountdown}
+            />
+          ) : (
+            <LoginPanel
+              tabs={<AuthTabs active={screen as AuthLoginTab} onChange={openScreen} />}
+              identifier={identifier}
+              password={password}
+              rememberLogin={rememberLogin}
+              acceptedTerms={acceptedTerms}
+              errors={errors}
+              loading={loading}
+              onChangeIdentifier={setIdentifier}
+              onChangePassword={setPassword}
+              onRememberLoginChange={setRememberLogin}
+              onAcceptedTermsChange={handleAcceptedTermsChange}
+              onForgot={() => openScreen('forgot')}
+              onForgetMe={handleForgetMe}
+              onRegister={() => router.push('/signup')}
+              onSubmit={handleSubmit}
+              turnstile={turnstileNode}
+              verificationPending={verificationPending}
+              verificationFailed={verificationFailed}
+              verificationCountdown={verificationCountdown}
+            />
+          )}
+        </AuthLoginLayout>
+      )}
+    </UnifiedAuthPage>
   );
 }
 
 function LoginPanel({
+  tabs,
   identifier,
   password,
   rememberLogin,
+  acceptedTerms,
   errors,
   loading,
   onChangeIdentifier,
   onChangePassword,
   onRememberLoginChange,
+  onAcceptedTermsChange,
   onForgot,
   onForgetMe,
   onRegister,
   onSubmit,
+  turnstile,
+  verificationPending,
+  verificationFailed,
+  verificationCountdown,
 }: {
+  tabs: ReactNode;
   identifier: string;
   password: string;
   rememberLogin: boolean;
+  acceptedTerms: boolean;
   errors: Record<string, string>;
   loading: boolean;
   onChangeIdentifier: (value: string) => void;
   onChangePassword: (value: string) => void;
   onRememberLoginChange: (value: boolean) => void;
+  onAcceptedTermsChange: (value: boolean) => void;
   onForgot: () => void;
   onForgetMe: () => void;
   onRegister: () => void;
-  onSubmit: (event: React.FormEvent) => void;
+  onSubmit: (event: FormEvent) => void;
+  turnstile?: ReactNode;
+  verificationPending: boolean;
+  verificationFailed: boolean;
+  verificationCountdown: number;
 }) {
   const handleRememberLoginChange = (checked: boolean) => {
     onRememberLoginChange(checked);
@@ -376,142 +431,219 @@ function LoginPanel({
   };
 
   return (
-    <>
-      <form onSubmit={onSubmit} autoComplete='on'>
-        <Field
-          label='邮箱'
-          name='username'
-          type='text'
-          placeholder='email / username / phone'
-          value={identifier}
-          error={errors.identifier}
-          autoComplete='username'
-          autoFocus
-          disabled={loading}
-          onChange={onChangeIdentifier}
-        />
-        <Field
-          label='密码'
-          name='password'
-          type='password'
-          placeholder='请输入密码'
-          value={password}
-          error={errors.password}
-          autoComplete='current-password'
-          disabled={loading}
-          onChange={onChangePassword}
-        />
-
-        <div className='vx-auth-options'>
-          <label className='vx-auth-remember'>
-            <input
-              type='checkbox'
-              checked={rememberLogin}
+    <AuthFlowForm
+      onSubmit={onSubmit}
+      input={
+        <>
+          {tabs}
+          <div className='vx-auth-field-stack'>
+            <AuthField
+              label='邮箱'
+              name='username'
+              type='text'
+              placeholder='email / username / phone'
+              icon='user'
+              value={identifier}
+              error={errors.identifier}
+              autoComplete='username'
+              autoFocus
               disabled={loading}
-              onChange={(event) => handleRememberLoginChange(event.target.checked)}
+              onChange={onChangeIdentifier}
             />
-            <span>记住登录信息</span>
-          </label>
-          <div className='vx-auth-link-group'>
-            <button type='button' className='vx-auth-forgot-link' onClick={onForgot}>
-              忘记密码？
-            </button>
-            <button type='button' className='vx-auth-forget-me-link' onClick={onForgetMe} disabled={loading} title='清除浏览器保存的账号密码'>
-              忘记我
-            </button>
+            <AuthField
+              label='密码'
+              name='password'
+              type='password'
+              placeholder='请输入密码'
+              icon='lock'
+              value={password}
+              error={errors.password}
+              autoComplete='current-password'
+              disabled={loading}
+              onChange={onChangePassword}
+            />
+
+            <AuthLoginOptions
+              disabled={loading}
+              rememberChecked={rememberLogin}
+              agreementChecked={acceptedTerms}
+              onRememberChange={handleRememberLoginChange}
+              onAgreementChange={onAcceptedTermsChange}
+              onForgot={onForgot}
+              onForgetMe={onForgetMe}
+            />
           </div>
-        </div>
-
-        <PrimaryButton loading={loading} label='登录' loadingLabel='登录中...' />
-
-        <SocialLoginButtons />
-
+        </>
+      }
+      primary={
+        <>
+          {turnstile}
+          {errors.form ? <p className='vx-auth-error vx-auth-form-error'>{errors.form}</p> : null}
+          <AuthPrimaryButton
+            loading={loading}
+            disabled={verificationPending || verificationFailed}
+            label='登录'
+            loadingLabel='登录中...'
+            disabledLabel={verificationFailed ? '验证不可用' : `安全验证中... ${verificationCountdown}s`}
+          />
+        </>
+      }
+      social={<SocialLoginButtons />}
+      footer={
         <p className='vx-auth-switch'>
           还没有账号？
           <button type='button' onClick={onRegister}>
             注册账号
           </button>
         </p>
-      </form>
-    </>
+      }
+    />
   );
 }
 
 function PhoneLoginPanel({
+  tabs,
   phone,
   code,
   errors,
   loading,
   countdown,
   codeSending,
+  rememberLogin,
+  acceptedTerms,
+  onRememberLoginChange,
+  onAcceptedTermsChange,
+  onForgot,
+  onForgetMe,
   onChangePhone,
   onChangeCode,
   onSendCode,
   onSubmit,
   onRegister,
+  turnstile,
+  verificationPending,
+  verificationFailed,
+  verificationCountdown,
 }: {
+  tabs: ReactNode;
   phone: string;
   code: string;
   errors: Record<string, string>;
   loading: boolean;
   countdown: number;
   codeSending: boolean;
+  rememberLogin: boolean;
+  acceptedTerms: boolean;
+  onRememberLoginChange: (value: boolean) => void;
+  onAcceptedTermsChange: (value: boolean) => void;
+  onForgot: () => void;
+  onForgetMe: () => void;
   onChangePhone: (v: string) => void;
   onChangeCode: (v: string) => void;
   onSendCode: () => void;
-  onSubmit: (event: React.FormEvent) => void;
+  onSubmit: (event: FormEvent) => void;
   onRegister: () => void;
+  turnstile?: ReactNode;
+  verificationPending: boolean;
+  verificationFailed: boolean;
+  verificationCountdown: number;
 }) {
+  const handleRememberLoginChange = (checked: boolean) => {
+    onRememberLoginChange(checked);
+    if (!checked) {
+      window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+      window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+    }
+  };
+
   return (
-    <form onSubmit={onSubmit} autoComplete='on'>
-      <div className='vx-auth-code-row'>
-        <Field
-          label='手机号'
-          name='phone'
-          type='tel'
-          placeholder='请输入手机号'
-          value={phone}
-          error={errors.phone}
-          autoComplete='tel'
-          autoFocus
-          disabled={loading}
-          onChange={onChangePhone}
-        />
-        <button
-          type='button'
-          className='vx-auth-send-code'
-          onClick={onSendCode}
-          disabled={loading || codeSending || countdown > 0}
-        >
-          {countdown > 0 ? `${countdown}s` : codeSending ? '发送中…' : '获取验证码'}
-        </button>
-      </div>
+    <AuthFlowForm
+      onSubmit={onSubmit}
+      input={
+        <>
+          {tabs}
+          <div className='vx-auth-field-stack'>
+            <div className='vx-auth-phone-row'>
+              <AuthField
+                label='手机号'
+                name='phone'
+                type='tel'
+                placeholder='请输入手机号'
+                icon='phone'
+                value={phone}
+                error={errors.phone}
+                autoComplete='tel'
+                autoFocus
+                disabled={loading}
+                onChange={onChangePhone}
+              />
+            </div>
 
-      <div className='vx-auth-code-field-wrap'>
-        <Field
-          label='验证码'
-          name='code'
-          type='text'
-          placeholder='请输入 6 位验证码'
-          value={code}
-          error={errors.code}
-          autoComplete='one-time-code'
-          disabled={loading}
-          onChange={onChangeCode}
-        />
-      </div>
-
-      <PrimaryButton loading={loading} label='登录' loadingLabel='登录中...' />
-
-      <SocialLoginButtons />
-
-      <p className='vx-auth-switch'>
-        还没有账号？
-        <button type='button' onClick={onRegister}>
-          注册账号
-        </button>
-      </p>
-    </form>
+            <div className='vx-auth-code-field-wrap'>
+              <div className='vx-auth-code-row'>
+                <AuthField
+                  label='验证码'
+                  name='code'
+                  type='text'
+                  placeholder='请输入 6 位验证码'
+                  icon='shield'
+                  value={code}
+                  error={errors.code}
+                  autoComplete='one-time-code'
+                  disabled={loading}
+                  onChange={onChangeCode}
+                />
+                <button
+                  type='button'
+                  className='vx-auth-send-code'
+                  onClick={onSendCode}
+                  disabled={loading || codeSending || countdown > 0 || verificationPending || verificationFailed}
+                >
+                  {countdown > 0
+                    ? `${countdown}s 后重试`
+                    : codeSending
+                      ? '发送中...'
+                      : verificationPending
+                        ? '验证中...'
+                        : '获取验证码'}
+                </button>
+              </div>
+            </div>
+            <AuthLoginOptions
+              disabled={loading}
+              rememberChecked={rememberLogin}
+              agreementChecked={acceptedTerms}
+              onRememberChange={handleRememberLoginChange}
+              onAgreementChange={onAcceptedTermsChange}
+              onForgot={onForgot}
+              onForgetMe={onForgetMe}
+            />
+          </div>
+        </>
+      }
+      primary={
+        <>
+          {turnstile}
+          {errors.form ? <p className='vx-auth-error vx-auth-form-error'>{errors.form}</p> : null}
+          <AuthPrimaryButton
+            loading={loading}
+            disabled={verificationPending || verificationFailed}
+            label='登录'
+            loadingLabel='登录中...'
+            disabledLabel={verificationFailed ? '验证不可用' : `安全验证中... ${verificationCountdown}s`}
+          />
+        </>
+      }
+      social={<SocialLoginButtons />}
+      footer={
+        <p className='vx-auth-switch'>
+          还没有账号？
+          <button type='button' onClick={onRegister}>
+            注册账号
+          </button>
+        </p>
+      }
+    />
   );
 }
 
@@ -530,7 +662,7 @@ function ForgotPanel({
   resetSent: boolean;
   onBack: () => void;
   onChange: (value: string) => void;
-  onSubmit: (event: React.FormEvent) => void;
+  onSubmit: (event: FormEvent) => void;
 }) {
   if (resetSent) {
     return (
@@ -562,11 +694,12 @@ function ForgotPanel({
       </div>
 
       <form onSubmit={onSubmit} autoComplete='on'>
-        <Field
+        <AuthField
           label='邮箱'
           name='email'
           type='email'
           placeholder='you@company.com'
+          icon='mail'
           value={email}
           error={error}
           autoComplete='email'
@@ -574,13 +707,13 @@ function ForgotPanel({
           disabled={loading}
           onChange={onChange}
         />
-        <PrimaryButton loading={loading} label='获取重置链接' loadingLabel='生成中...' />
+        <AuthPrimaryButton loading={loading} label='获取重置链接' loadingLabel='生成中...' />
       </form>
     </>
   );
 }
 
-function BackButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+function BackButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
   return (
     <button type='button' className='vx-auth-back' onClick={onClick}>
       <span>←</span>
@@ -589,48 +722,18 @@ function BackButton({ children, onClick }: { children: React.ReactNode; onClick:
   );
 }
 
-function Field({ label, name, type, placeholder, value, error, hint, autoComplete, autoFocus, disabled, onChange }: FieldProps) {
-  return (
-    <div className='vx-auth-field'>
-      <label>{label}</label>
-      <input
-        name={name}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        autoFocus={autoFocus}
-        disabled={disabled}
-        onChange={(event) => onChange(event.target.value)}
-        aria-invalid={Boolean(error)}
-      />
-      {error ? <p className='vx-auth-error'>{error}</p> : null}
-      {hint && !error ? <p className='vx-auth-hint'>{hint}</p> : null}
-    </div>
-  );
-}
-
-function PrimaryButton({ loading, label, loadingLabel }: { loading: boolean; label: string; loadingLabel: string }) {
-  return (
-    <button type='submit' className='vx-auth-primary' disabled={loading}>
-      {loading ? (
-        <>
-          <span className='vx-auth-spinner' />
-          {loadingLabel}
-        </>
-      ) : (
-        label
-      )}
-    </button>
-  );
-}
-
 function buildOAuthStartUrl(provider: 'dingtalk' | 'feishu'): string {
   const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/+$/, '');
-  const apiPrefix = (process.env.NEXT_PUBLIC_WEBSITE_API_PREFIX ?? '/website-api').replace(/\/+$/, '');
+  const authApiPrefix = (process.env.NEXT_PUBLIC_AUTH_API_PREFIX ?? '/auth-api').replace(/\/+$/, '');
   const returnTo = typeof window !== 'undefined' ? window.location.origin + '/' : '/';
-  return `${apiUrl}${apiPrefix}/api/auth/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}`;
+  return `${apiUrl}${authApiPrefix}/auth/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}&source=website`;
 }
+
+const OFFICIAL_SOCIAL_ICON_SRC = {
+  feishu: '/brand/feishu-logo-icon.svg',
+  dingtalk: '/brand/dingtalk-logo-icon.svg',
+  wechat: '/brand/wechat_logo_icon.svg',
+} as const;
 
 function SocialLoginButtons() {
   const handleDingTalk = () => {
@@ -642,181 +745,12 @@ function SocialLoginButtons() {
   };
 
   return (
-    <>
-      <div className='vx-auth-or'>
-        <span />
-        <em>其他方式登录</em>
-        <span />
-      </div>
-      <div className='vx-auth-socials'>
-        <SocialButton className='wechat' icon={<WechatIcon />} label='微信' disabled />
-        <SocialButton className='dingtalk' icon={<DingTalkIcon />} label='钉钉' onClick={handleDingTalk} />
-        <SocialButton className='feishu' icon={<FeishuIcon />} label='飞书' onClick={handleFeishu} />
-      </div>
-    </>
+    <AuthSocialButtons
+      providers={[
+        { provider: 'feishu', label: '飞书', iconSrc: OFFICIAL_SOCIAL_ICON_SRC.feishu, onClick: handleFeishu },
+        { provider: 'dingtalk', label: '钉钉', iconSrc: OFFICIAL_SOCIAL_ICON_SRC.dingtalk, onClick: handleDingTalk },
+        { provider: 'wechat', label: '微信', iconSrc: OFFICIAL_SOCIAL_ICON_SRC.wechat, disabled: true },
+      ]}
+    />
   );
-}
-
-function SocialButton({ icon, label, className, onClick, disabled }: {
-  icon: React.ReactNode;
-  label: string;
-  className: string;
-  onClick?: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button type='button' className={`vx-auth-social ${className}`} onClick={onClick} disabled={disabled}>
-      {icon}
-      {label}
-    </button>
-  );
-}
-
-function WechatIcon() {
-  return (
-    <svg width='15' height='15' viewBox='0 0 24 24' aria-hidden='true'>
-      <path
-        d='M9.5 4C5.36 4 2 6.91 2 10.5c0 1.98 1.01 3.75 2.6 4.96L4 18l2.8-1.4c.86.24 1.77.4 2.7.4.23 0 .46 0 .69-.02A5.7 5.7 0 0 1 10 15.5c0-3.04 2.86-5.5 6.5-5.5.23 0 .46.01.69.03C16.54 7.12 13.3 4 9.5 4z'
-        fill='#07C160'
-      />
-      <path
-        d='M16.5 11c-3.04 0-5.5 2.02-5.5 4.5S13.46 20 16.5 20c.7 0 1.37-.12 1.98-.34L21 21l-.52-2.6A4.35 4.35 0 0 0 22 15.5C22 13.02 19.54 11 16.5 11z'
-        fill='#07C160'
-      />
-    </svg>
-  );
-}
-
-function DingTalkIcon() {
-  return (
-    <svg width='15' height='15' viewBox='0 0 24 24' aria-hidden='true'>
-      <circle cx='12' cy='12' r='10' fill='#1677FF' />
-      <path d='M13.5 7l-4 5.5h3l-1 4.5 5-6.5h-3.2L13.5 7z' fill='white' />
-    </svg>
-  );
-}
-
-function FeishuIcon() {
-  return (
-    <svg width='15' height='15' viewBox='0 0 24 24' aria-hidden='true'>
-      <path d='M4 12.5C4 8.36 7.36 5 11.5 5c1.5 0 2.9.45 4.05 1.22L7.22 15.55A7.5 7.5 0 0 1 4 12.5z' fill='#3370FF' />
-      <path d='M12 19.5a7.5 7.5 0 0 1-3.6-.92l8.38-9.33A7.5 7.5 0 0 1 12 19.5z' fill='#56D5CC' />
-    </svg>
-  );
-}
-
-function NodeGraph() {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const mouseRef = useRef({ x: -999, y: -999 });
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return undefined;
-    }
-
-    const context = canvas.getContext('2d');
-    if (!context) {
-      return undefined;
-    }
-
-    let frame = 0;
-    let width = 0;
-    let height = 0;
-    let nodes: Array<{ x: number; y: number; vx: number; vy: number; radius: number; phase: number }> = [];
-
-    const resize = () => {
-      const rect = canvas.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
-      width = rect.width;
-      height = rect.height;
-      canvas.width = Math.max(1, Math.floor(width * ratio));
-      canvas.height = Math.max(1, Math.floor(height * ratio));
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      const count = Math.max(22, Math.floor((width * height) / 9000));
-      nodes = Array.from({ length: count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        radius: Math.random() * 1.8 + 0.6,
-        phase: Math.random() * Math.PI * 2,
-      }));
-    };
-
-    const draw = () => {
-      context.clearRect(0, 0, width, height);
-      const mouse = mouseRef.current;
-
-      for (const node of nodes) {
-        node.phase += 0.014;
-        node.x += node.vx;
-        node.y += node.vy;
-
-        if (node.x < 0 || node.x > width) {
-          node.vx *= -1;
-        }
-        if (node.y < 0 || node.y > height) {
-          node.vy *= -1;
-        }
-
-        const dx = node.x - mouse.x;
-        const dy = node.y - mouse.y;
-        const distance = Math.hypot(dx, dy);
-        if (distance > 0 && distance < 100) {
-          node.x += (dx / distance) * 0.5;
-          node.y += (dy / distance) * 0.5;
-        }
-      }
-
-      for (let i = 0; i < nodes.length; i += 1) {
-        for (let j = i + 1; j < nodes.length; j += 1) {
-          const first = nodes[i];
-          const second = nodes[j];
-          if (!first || !second) {
-            continue;
-          }
-
-          const distance = Math.hypot(first.x - second.x, first.y - second.y);
-          if (distance < 140) {
-            context.beginPath();
-            context.moveTo(first.x, first.y);
-            context.lineTo(second.x, second.y);
-            context.strokeStyle = `rgba(147,197,253,${(1 - distance / 140) * 0.35})`;
-            context.lineWidth = 0.6;
-            context.stroke();
-          }
-        }
-      }
-
-      for (const node of nodes) {
-        const pulse = Math.sin(node.phase) * 0.5 + 0.5;
-        context.beginPath();
-        context.arc(node.x, node.y, node.radius * (1 + pulse * 0.35), 0, Math.PI * 2);
-        context.fillStyle = `rgba(147,197,253,${0.45 + pulse * 0.4})`;
-        context.fill();
-      }
-
-      frame = window.requestAnimationFrame(draw);
-    };
-
-    resize();
-    draw();
-
-    const handlePointerMove = (event: PointerEvent) => {
-      const rect = canvas.getBoundingClientRect();
-      mouseRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-    };
-
-    window.addEventListener('resize', resize);
-    canvas.addEventListener('pointermove', handlePointerMove);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener('resize', resize);
-      canvas.removeEventListener('pointermove', handlePointerMove);
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className='vx-auth-nodegraph' aria-hidden='true' />;
 }

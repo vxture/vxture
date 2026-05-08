@@ -26,7 +26,7 @@
 - 登出与 token 吊销（Redis refresh token + access token 黑名单）
 - access token 续期（基于 refresh token）
 - 跨域一次性 token 的生成与验证（用于 vxture.com ↔ ruyin.ai 跨域 SSO）
-- 内部签发端点 `POST /api/auth/internal/sign`（供 admin-bff / ruyin-bff 等委托签发）
+- 内部签发端点 `POST /auth/internal/sign`（供 admin-bff / ruyin-bff 等委托签发）
 
 ---
 
@@ -56,10 +56,10 @@ auth-bff（唯一 JWT 签发者）
 ```
 src/
 ├── routers/            # 路由模块
-│   ├── password-auth.router.ts   # POST /api/auth/login | signup | logout | refresh | internal/sign
-│   ├── phone-auth.router.ts      # POST /api/auth/send-phone-code | login-with-phone
-│   ├── oauth.router.ts           # GET  /api/auth/oauth/{provider}/authorize | callback
-│   ├── crossdomain.router.ts     # GET  /api/auth/crossdomain/token | POST verify
+│   ├── password-auth.router.ts   # POST /auth/login | signup | logout | refresh | internal/sign
+│   ├── phone-auth.router.ts      # POST /auth/send-phone-code | login-with-phone
+│   ├── oauth.router.ts           # GET  /auth/oauth/{provider}/start | callback
+│   ├── crossdomain.router.ts     # GET  /auth/crossdomain/token | POST verify
 │   ├── health.router.ts          # GET  /healthz
 ├── auth/
 │   └── auth.service.ts           # JWT 签发 · 验证 · OAuth · 租户初始化
@@ -76,18 +76,18 @@ src/
 
 | 端点 | 方法 | 说明 |
 |------|------|------|
-| `/api/auth/login` | POST | 邮箱密码登录，根据 `source` 区分运营/租户账号 |
-| `/api/auth/signup` | POST | 邮箱注册 |
-| `/api/auth/logout` | POST | 登出，吊销 refresh token，jti 入黑名单 |
-| `/api/auth/refresh` | POST | 基于 refresh token 续期 access token |
-| `/api/auth/session` | GET | 获取当前登录态 |
-| `/api/auth/send-phone-code` | POST | 发送手机验证码 |
-| `/api/auth/login-with-phone` | POST | 手机验证码登录 |
-| `/api/auth/internal/sign` | POST | **内部接口**：为其他 BFF 签发 JWT Cookie |
-| `/api/auth/oauth/{provider}/authorize` | GET | 启动 OAuth 授权跳转 |
-| `/api/auth/oauth/{provider}/callback` | GET | OAuth 回调处理 |
-| `/api/auth/crossdomain/token` | GET | 生成跨域一次性 token（30s TTL） |
-| `/api/auth/crossdomain/verify` | POST | 验证并消费跨域 token（原子 GETDEL） |
+| `/auth/login` | POST | 邮箱密码登录，根据 `source` 区分运营/租户账号 |
+| `/auth/signup` | POST | 邮箱注册 |
+| `/auth/logout` | POST | 登出，吊销 refresh token，jti 入黑名单 |
+| `/auth/refresh` | POST | 基于 refresh token 续期 access token |
+| `/auth/session` | GET | 获取当前登录态 |
+| `/auth/send-phone-code` | POST | 发送手机验证码 |
+| `/auth/login-with-phone` | POST | 手机验证码登录 |
+| `/auth/internal/sign` | POST | **内部接口**：为其他 BFF 签发 JWT Cookie |
+| `/auth/oauth/{provider}/start` | GET | 启动 OAuth 授权跳转 |
+| `/auth/oauth/{provider}/callback` | GET | OAuth 回调处理 |
+| `/auth/crossdomain/token` | GET | 生成跨域一次性 token（30s TTL） |
+| `/auth/crossdomain/verify` | POST | 验证并消费跨域 token（原子 GETDEL） |
 
 ---
 
@@ -113,15 +113,20 @@ src/
 
 ## 关键约束
 
-- **所有 JWT 签发**必须通过 `AuthService.signTokenPair()` / `reissueTokensForUser()`
+- **所有 JWT 签发**必须通过 `AuthService.signTokenPair()`，租户账号重签走 `reissueTokensForUser()`，运营账号签发走 `issueOperatorTokens()`
 - `jti` 必须是随机 UUID（`crypto.randomUUID()`），不得使用可预测值
 - access token 有效期从环境变量 `JWT_ACCESS_EXPIRES` 读取，默认 15 分钟
-- refresh token 必须存储到 Redis（key: `refresh:{source}:{userId}`）
-- 登出时 jti 必须写入 Redis 黑名单（TTL = access token 剩余有效期）
+- refresh token 必须存储到 Redis；operator 使用 `refresh:operator:{userId}`，租户端按物理登录面分为 `refresh:tenant:platform:{userId}` 与 `refresh:tenant:ruyin:{userId}`
+- refresh / logout / crossdomain / OAuth state 都依赖 Redis；Redis 缺失、查询失败或 refresh token 不匹配时必须 fail-closed，禁止退化成无状态 token
+- 登出时 jti 必须写入 Redis 黑名单（TTL = access token 剩余有效期），并写入 `revoked-before:{tenant|operator}:{userId}` 用户级撤销水位
 - 跨域 token 必须使用 Redis `GETDEL` 原子操作
-- Cookie domain 根据 `source` 选择：`.vxture.com` 或 `ruyin.ai`
+- website / console 使用统一租户 Cookie：`vx_tenant_access_token` / `vx_tenant_refresh_token`
+- admin 使用独立运营 Cookie：`vx_admin_access_token` / `vx_admin_refresh_token`
+- ruyin.ai 与 website / console 属于同一租户逻辑会话，但浏览器 Cookie 必须使用 ruyin.ai 本域 key：`ry_access_token` / `ry_refresh_token`
+- 旧的 `vx_*` / `vx_console_*` 只允许迁移期读取和清理，不再作为新写入目标
+- logout 必须按安全域隔离：租户端 logout 不清 admin，admin logout 不清租户端；ruyin 需要通过本域 logout 端点清理 `ry_*`
 - 所有认证 Cookie 必须设置 `HttpOnly: true`，生产环境 `Secure: true`
-- `internal/sign` 端点仅供内部 BFF 调用，不在前端暴露
+- `internal/sign` 端点仅供内部 BFF 调用，不在前端暴露，必须校验 `x-vxture-internal-auth`
 
 ---
 
@@ -136,6 +141,9 @@ JWT_REFRESH_EXPIRES=604800 # refresh token 有效期（秒）
 
 # Redis
 REDIS_URL=redis://redis:6379
+
+# Internal BFF auth
+AUTH_INTERNAL_TOKEN=
 
 # Cookie
 COOKIE_DOMAIN_PLATFORM=.vxture.com

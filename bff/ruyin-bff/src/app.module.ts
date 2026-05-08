@@ -13,6 +13,7 @@
 
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { AccessTokenRevocationService } from '@vxture/core-auth';
 import { VxConfigModule } from '@vxture/core-config';
 import { RuyinAggregator } from './aggregators/ruyin.aggregator';
 import { AgentAuthService } from './auth/auth.service';
@@ -24,12 +25,12 @@ import { SessionRouter } from './routers/session.router';
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ['app', 'auth'],
+      domains: ['app', 'auth', 'redis'],
     }),
     JwtModule.register({}),
   ],
   controllers: [AuthRouter, CrossDomainRouter, SessionRouter],
-  providers: [AgentAuthService, RuyinAggregator],
+  providers: [AgentAuthService, RuyinAggregator, AccessTokenRevocationService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

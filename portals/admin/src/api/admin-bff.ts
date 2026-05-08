@@ -84,6 +84,11 @@ interface LoginPayload {
   captchaPosition: number;
 }
 
+interface PhoneLoginPayload {
+  phone: string;
+  code: string;
+}
+
 export class AdminBffError extends Error {
   constructor(message: string, readonly status?: number) {
     super(message);
@@ -754,6 +759,28 @@ export async function getCaptchaChallenge(): Promise<CaptchaChallenge> {
   return (await response.json()) as CaptchaChallenge;
 }
 
+export async function sendAdminPhoneCode(phone: string): Promise<void> {
+  let response: Response;
+
+  try {
+    response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/auth/send-phone-code`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ phone }),
+    });
+  } catch {
+    throw new AdminBffError('Admin BFF is unavailable.', 503);
+  }
+
+  if (!response.ok) {
+    throw new AdminBffError(await responseErrorMessage(response, 'Failed to send phone code.'), response.status);
+  }
+}
+
 export async function login(payload: LoginPayload): Promise<SessionSnapshot> {
   let response: Response;
 
@@ -786,6 +813,35 @@ export async function login(payload: LoginPayload): Promise<SessionSnapshot> {
     }
 
     throw new AdminBffError(message, response.status);
+  }
+
+  const snapshot = await restoreSession();
+  if (!snapshot.isAuthenticated) {
+    throw new AdminBffError('Authenticated session could not be restored after login.', 500);
+  }
+
+  return snapshot;
+}
+
+export async function loginWithPhoneCode(payload: PhoneLoginPayload): Promise<SessionSnapshot> {
+  let response: Response;
+
+  try {
+    response = await fetch(`${DEFAULT_BFF_URL}${ADMIN_API_PREFIX}/api/auth/login-with-phone`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    throw new AdminBffError('Admin BFF is unavailable.', 503);
+  }
+
+  if (!response.ok) {
+    throw new AdminBffError(await responseErrorMessage(response, 'Phone login failed'), response.status);
   }
 
   const snapshot = await restoreSession();

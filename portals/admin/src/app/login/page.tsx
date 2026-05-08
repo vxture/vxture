@@ -1,28 +1,57 @@
 'use client';
 
-import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input } from '@/components/ui/primitives';
-import { AdminBffError, getCaptchaChallenge } from '@/api/admin-bff';
+import { useEffect, useRef, useState, type FormEvent, type PointerEvent, type RefObject } from 'react';
+import {
+  AuthChromeFooter,
+  AuthChromeHeader,
+  AuthField,
+  AuthFlowForm,
+  AuthLoginLayout,
+  AuthLoginOptions,
+  AuthPrimaryButton,
+  AuthTabs,
+  UnifiedAuthPage,
+  useTheme,
+  type AuthLoginTab,
+} from '@vxture/design-system';
+import { AdminBffError, getCaptchaChallenge, sendAdminPhoneCode } from '@/api/admin-bff';
 import { AdminSessionProvider, useAdminSession } from '@/features/session/AdminSessionProvider';
-import { useConsoleTranslations } from '@/lib/console-intl';
+import { useConsoleLocale, useConsoleTranslations } from '@/lib/console-intl';
+import { setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
+import type { Locale, Theme } from '@vxture/shared';
 
-// ─── 常量 ─────────────────────────────────────────────────────────────────────
-
+const BG_SRC = '/images/login-bg-light.jpg';
 const CAPTCHA_HANDLE_SIZE = 42;
 const CAPTCHA_PIECE_SIZE = 42;
-/** 客户端像素容差，决定"视觉上是否对齐"，服务端独立校验比例容差 */
 const CAPTCHA_TOLERANCE = 10;
 const CAPTCHA_RETURN_MS = 220;
+const PHONE_PATTERN = /^1[3-9]\d{9}$/;
+const REMEMBER_LOGIN_KEY = 'vxture-admin-login-remember';
+const REMEMBER_IDENTIFIER_KEY = 'vxture-admin-login-identifier';
 
-// ─── 组件 ─────────────────────────────────────────────────────────────────────
+function resolveSafeRedirect(next: string | null) {
+  if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('\\')) {
+    return '/';
+  }
+
+  return next;
+}
 
 function LoginScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { signIn, status } = useAdminSession();
+  const { signIn, signInWithPhone, status } = useAdminSession();
   const t = useConsoleTranslations('login');
+
+  const [screen, setScreen] = useState<AuthLoginTab>('login');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [phoneCode, setPhoneCode] = useState('');
+  const [phoneError, setPhoneError] = useState('');
+  const [phoneCodeError, setPhoneCodeError] = useState('');
+  const [rememberLogin, setRememberLogin] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [captchaOffset, setCaptchaOffset] = useState(0);
   const [captchaDragging, setCaptchaDragging] = useState(false);
@@ -32,9 +61,12 @@ function LoginScreen() {
   const [captchaTargetRatio, setCaptchaTargetRatio] = useState(0.6);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [codeSending, setCodeSending] = useState(false);
+  const [codeCountdown, setCodeCountdown] = useState(0);
+
   const pendingCredentialsRef = useRef({ identifier: '', password: '' });
+  const phoneCodeTimerRef = useRef<number | null>(null);
   const captchaTokenRef = useRef('');
-  const formRef = useRef<HTMLFormElement | null>(null);
   const captchaSliderRef = useRef<HTMLDivElement | null>(null);
   const captchaHandleRef = useRef<HTMLButtonElement | null>(null);
   const captchaPieceRef = useRef<HTMLDivElement | null>(null);
@@ -42,11 +74,26 @@ function LoginScreen() {
   const captchaMaxRef = useRef(0);
   const captchaOffsetRef = useRef(0);
   const captchaAnimationFrameRef = useRef<number | null>(null);
+  const loading = submitting || status === 'loading';
+
+  useEffect(() => {
+    const shouldRemember = window.localStorage.getItem(REMEMBER_LOGIN_KEY) === '1';
+    const savedIdentifier = window.localStorage.getItem(REMEMBER_IDENTIFIER_KEY);
+
+    setRememberLogin(shouldRemember);
+    if (shouldRemember && savedIdentifier) {
+      setIdentifier(savedIdentifier);
+      setPhone(savedIdentifier);
+    }
+  }, []);
 
   useEffect(() => {
     return () => {
       if (captchaAnimationFrameRef.current !== null) {
         window.cancelAnimationFrame(captchaAnimationFrameRef.current);
+      }
+      if (phoneCodeTimerRef.current !== null) {
+        window.clearInterval(phoneCodeTimerRef.current);
       }
     };
   }, []);
@@ -94,8 +141,8 @@ function LoginScreen() {
     applyCaptchaOffset(0);
   }
 
-  function handleCaptchaPointerDown(event: React.PointerEvent<HTMLButtonElement>) {
-    if (captchaSolved || submitting || status === 'loading') return;
+  function handleCaptchaPointerDown(event: PointerEvent<HTMLButtonElement>) {
+    if (captchaSolved || loading) return;
     const { max } = captchaGeometry();
     captchaMaxRef.current = max;
     captchaOffsetRef.current = captchaOffset;
@@ -105,7 +152,7 @@ function LoginScreen() {
     setError('');
   }
 
-  function handleCaptchaPointerMove(event: React.PointerEvent<HTMLButtonElement>) {
+  function handleCaptchaPointerMove(event: PointerEvent<HTMLButtonElement>) {
     if (!captchaDragging || captchaSolved) return;
     const slider = captchaSliderRef.current;
     if (!slider) return;
@@ -127,7 +174,6 @@ function LoginScreen() {
       setCaptchaOffset(target);
       applyCaptchaOffset(target);
       setError('');
-      // 将像素偏移转换为比例，传给服务端校验
       const position = max > 0 ? offset / max : 0;
       void continueSignIn(captchaTokenRef.current, position);
       return;
@@ -139,16 +185,12 @@ function LoginScreen() {
     window.setTimeout(() => setCaptchaReturning(false), CAPTCHA_RETURN_MS);
   }
 
-  function readLoginForm(form: HTMLFormElement) {
-    const formData = new FormData(form);
-    return {
-      identifier: String(formData.get('username') ?? '').trim(),
-      password: String(formData.get('password') ?? ''),
+  function validateLoginForm() {
+    const credentials = {
+      identifier: identifier.trim(),
+      password,
     };
-  }
 
-  function validateLoginForm(form: HTMLFormElement) {
-    const credentials = readLoginForm(form);
     if (!credentials.identifier || !credentials.password) {
       setError(t('errors.required'));
       return false;
@@ -163,30 +205,145 @@ function LoginScreen() {
     return true;
   }
 
+  function startPhoneCodeCountdown() {
+    if (phoneCodeTimerRef.current !== null) {
+      window.clearInterval(phoneCodeTimerRef.current);
+    }
+
+    setCodeCountdown(60);
+    phoneCodeTimerRef.current = window.setInterval(() => {
+      setCodeCountdown((seconds) => {
+        if (seconds <= 1) {
+          if (phoneCodeTimerRef.current !== null) {
+            window.clearInterval(phoneCodeTimerRef.current);
+            phoneCodeTimerRef.current = null;
+          }
+          return 0;
+        }
+        return seconds - 1;
+      });
+    }, 1000);
+  }
+
+  function validatePhoneValue(value: string) {
+    if (!PHONE_PATTERN.test(value)) {
+      setPhoneError(t('errors.phoneInvalid'));
+      return false;
+    }
+
+    setPhoneError('');
+    return true;
+  }
+
+  function validatePhoneLoginForm() {
+    const normalizedPhone = phone.trim().replace(/\s+/g, '');
+    const normalizedCode = phoneCode.trim();
+    let valid = true;
+
+    if (!PHONE_PATTERN.test(normalizedPhone)) {
+      setPhoneError(t('errors.phoneInvalid'));
+      valid = false;
+    } else {
+      setPhoneError('');
+    }
+
+    if (!/^\d{6}$/.test(normalizedCode)) {
+      setPhoneCodeError(t('errors.codeInvalid'));
+      valid = false;
+    } else {
+      setPhoneCodeError('');
+    }
+
+    if (!acceptedTerms) {
+      setError(t('errors.terms'));
+      valid = false;
+    }
+
+    if (valid) {
+      setPhone(normalizedPhone);
+      setPhoneCode(normalizedCode);
+    }
+
+    return valid;
+  }
+
+  function handleAuthTabChange(nextScreen: AuthLoginTab) {
+    setScreen(nextScreen);
+    setError('');
+    setPhoneError('');
+    setPhoneCodeError('');
+  }
+
+  function handleRememberLoginChange(checked: boolean) {
+    setRememberLogin(checked);
+    if (!checked) {
+      window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+      window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+    }
+  }
+
+  function persistRememberedLogin(value: string) {
+    if (rememberLogin) {
+      window.localStorage.setItem(REMEMBER_LOGIN_KEY, '1');
+      window.localStorage.setItem(REMEMBER_IDENTIFIER_KEY, value);
+      return;
+    }
+
+    window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+    window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+  }
+
+  async function handleSendPhoneCode() {
+    const normalizedPhone = phone.trim().replace(/\s+/g, '');
+    setError('');
+    setPhoneCodeError('');
+
+    if (!validatePhoneValue(normalizedPhone)) {
+      return;
+    }
+
+    setCodeSending(true);
+    try {
+      await sendAdminPhoneCode(normalizedPhone);
+      setPhone(normalizedPhone);
+      startPhoneCodeCountdown();
+    } catch (error) {
+      if (error instanceof AdminBffError && error.status === 429) {
+        setError(error.message || t('errors.tooManyAttempts'));
+      } else if (error instanceof AdminBffError && (error.status === 502 || error.status === 503)) {
+        setError(t('errors.unavailable'));
+      } else if (error instanceof AdminBffError && error.message) {
+        setError(error.message);
+      } else {
+        setError(t('errors.unavailable'));
+      }
+    } finally {
+      setCodeSending(false);
+    }
+  }
+
   async function continueSignIn(captchaToken: string, captchaPosition: number) {
     setError('');
     setSubmitting(true);
 
     try {
-      const { identifier, password } = pendingCredentialsRef.current;
-      await signIn(identifier, password, captchaToken, captchaPosition);
+      const credentials = pendingCredentialsRef.current;
+      await signIn(credentials.identifier, credentials.password, captchaToken, captchaPosition);
+      persistRememberedLogin(credentials.identifier);
 
-      // SPA 登录不触发浏览器原生表单提交，需主动通知浏览器保存凭据
-      // 这样浏览器才能在下次提供自动填充和联想补全（Chrome/Edge 支持，Firefox 静默忽略）
       const PasswordCredentialConstructor = (window as Window & {
         PasswordCredential?: new (data: { id: string; password: string }) => Credential;
       }).PasswordCredential;
       if (PasswordCredentialConstructor) {
         try {
-          const cred = new PasswordCredentialConstructor({ id: identifier, password });
+          const cred = new PasswordCredentialConstructor({ id: credentials.identifier, password: credentials.password });
           await navigator.credentials.store(cred);
         } catch {
           // 隐私模式或用户拒绝时静默忽略
         }
       }
 
-      const next = searchParams.get('next') || '/';
-      router.replace(next);
+      router.replace(resolveSafeRedirect(searchParams.get('next')));
     } catch (error) {
       if (error instanceof AdminBffError && error.status === 429) {
         setError(error.message || t('errors.tooManyAttempts'));
@@ -207,8 +364,15 @@ function LoginScreen() {
   }
 
   async function handleForgetMe() {
-    formRef.current?.reset();
-    // 告知浏览器不再自动填充此站点凭据
+    setIdentifier('');
+    setPassword('');
+    setPhone('');
+    setPhoneCode('');
+    setPhoneError('');
+    setPhoneCodeError('');
+    setRememberLogin(false);
+    window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+    window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
     if (navigator.credentials?.preventSilentAccess) {
       try {
         await navigator.credentials.preventSilentAccess();
@@ -218,16 +382,46 @@ function LoginScreen() {
     }
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!validateLoginForm(event.currentTarget)) return;
+    if (screen === 'phone') {
+      if (!validatePhoneLoginForm()) return;
+
+      setError('');
+      setSubmitting(true);
+
+      try {
+        const normalizedPhone = phone.trim().replace(/\s+/g, '');
+        await signInWithPhone(normalizedPhone, phoneCode.trim());
+        persistRememberedLogin(normalizedPhone);
+        router.replace(resolveSafeRedirect(searchParams.get('next')));
+      } catch (error) {
+        if (error instanceof AdminBffError && error.status === 429) {
+          setError(error.message || t('errors.tooManyAttempts'));
+        } else if (error instanceof AdminBffError && error.status === 400) {
+          setError(t('errors.phoneCodeInvalid'));
+        } else if (error instanceof AdminBffError && error.status === 401) {
+          setError(t('errors.invalid'));
+        } else if (error instanceof AdminBffError && (error.status === 502 || error.status === 503)) {
+          setError(t('errors.unavailable'));
+        } else if (error instanceof AdminBffError && error.message) {
+          setError(error.message);
+        } else {
+          setError(t('errors.invalid'));
+        }
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    if (!validateLoginForm()) return;
 
     resetCaptcha();
     setSubmitting(true);
     setError('');
 
     try {
-      // 从服务端获取签名挑战令牌，目标位置由服务端决定
       const challenge = await getCaptchaChallenge();
       captchaTokenRef.current = challenge.token;
       setCaptchaTargetRatio(challenge.targetRatio);
@@ -244,152 +438,312 @@ function LoginScreen() {
   }
 
   return (
-    <main className="auth-page">
-      <header className="auth-topbar">
-        <div className="auth-brand">
-          <Image
-            className="auth-brand__mark"
-            src="/brand/vxture-logo-white.png"
-            alt=""
-            aria-hidden="true"
-            width={30}
-            height={30}
-            priority
+    <UnifiedAuthPage
+      className="vx-admin-auth-page"
+      pageBackgroundImage={BG_SRC}
+      visual={{
+        title: t('hero.title'),
+        description: t('hero.description'),
+        statusText: t('hero.eyebrow'),
+        stats: [
+          { value: 'Admin', label: t('hero.signals.capability') },
+          { value: 'RBAC', label: t('hero.signals.tenant') },
+          { value: 'BFF', label: t('hero.signals.session') },
+        ],
+      }}
+      overlay={
+        captchaOpen ? (
+          <AdminCaptchaOverlay
+            targetRatio={captchaTargetRatio}
+            offset={captchaOffset}
+            max={captchaMaxRef.current}
+            dragging={captchaDragging}
+            returning={captchaReturning}
+            solved={captchaSolved}
+            loading={loading}
+            sliderRef={captchaSliderRef}
+            handleRef={captchaHandleRef}
+            pieceRef={captchaPieceRef}
+            progressRef={captchaProgressRef}
+            dragLabel={t('form.dragToVerify')}
+            closeLabel={t('form.closeVerification')}
+            title={t('form.humanVerification')}
+            solvedLabel={t('form.verificationPassed')}
+            onClose={() => {
+              setCaptchaOpen(false);
+              resetCaptcha();
+            }}
+            onPointerDown={handleCaptchaPointerDown}
+            onPointerMove={handleCaptchaPointerMove}
+            onPointerEnd={handleCaptchaPointerEnd}
           />
-          <span>Vxture Admin</span>
-        </div>
-      </header>
+        ) : null
+      }
+      header={<AuthHeader />}
+      footer={<AuthFooter />}
+    >
+      <AuthLoginLayout title={t('card.title')}>
+        <AuthFlowForm
+          onSubmit={handleSubmit}
+          input={
+            <div className="vx-auth-field-stack">
+              <AuthTabs
+                active={screen}
+                onChange={handleAuthTabChange}
+                passwordLabel={t('form.passwordLogin')}
+                phoneLabel={t('form.phoneLogin')}
+              />
 
-      <section className="auth-stage">
-        <div className="auth-card">
-          <Card className="vx-login-card">
-            <CardHeader>
-              <CardTitle className="vx-card-title">{t('card.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form ref={formRef} className="auth-form" onSubmit={handleSubmit} autoComplete="on">
-                <label className="auth-field" htmlFor="admin-login-username">
-                  <span>{t('form.account')}</span>
-                  <Input
-                    id="admin-login-username"
+              {screen === 'login' ? (
+                <>
+                  <AuthField
+                    label={t('form.account')}
                     name="username"
                     type="text"
                     placeholder={t('form.accountPlaceholder')}
+                    icon="user"
+                    value={identifier}
                     autoComplete="username"
-                    disabled={submitting || status === 'loading'}
+                    autoFocus
+                    disabled={loading}
+                    onChange={(value) => {
+                      setIdentifier(value);
+                      setError('');
+                    }}
                   />
-                </label>
-                <label className="auth-field" htmlFor="admin-login-password">
-                  <span className="auth-field__label">{t('form.password')}</span>
-                  <Input
-                    id="admin-login-password"
+                  <AuthField
+                    label={t('form.password')}
                     name="password"
                     type="password"
                     placeholder={t('form.passwordPlaceholder')}
+                    icon="lock"
+                    value={password}
                     autoComplete="current-password"
-                    disabled={submitting || status === 'loading'}
+                    disabled={loading}
+                    onChange={(value) => {
+                      setPassword(value);
+                      setError('');
+                    }}
                   />
-                </label>
-                <label className="auth-agreement">
-                  <input
-                    type="checkbox"
-                    checked={acceptedTerms}
-                    onChange={(event) => setAcceptedTerms(event.target.checked)}
-                    disabled={submitting || status === 'loading'}
-                  />
-                  <span>
-                    {t('form.acceptPrefix')}
-                    <a href="#terms">{t('form.terms')}</a>
-                    {t('form.acceptJoiner')}
-                    <a href="#privacy">{t('form.privacy')}</a>
-                  </span>
-                </label>
-                {error ? <p className="auth-error">{error}</p> : null}
-                <div className="auth-actions">
-                  <Button type="submit" className="auth-submit" disabled={submitting || status === 'loading'}>
-                    {submitting || status === 'loading' ? t('form.submitting') : t('form.submit')}
-                  </Button>
-                </div>
-                <div className="auth-secondary-actions">
-                  <a className="auth-forgot-link" href="#forgot-password">
-                    {t('form.forgotPassword')}
-                  </a>
-                  <button
-                    type="button"
-                    className="auth-forget-me-link"
-                    onClick={handleForgetMe}
-                    disabled={submitting || status === 'loading'}
-                    title="清除浏览器保存的账号密码"
-                  >
-                    忘记我
-                  </button>
-                </div>
-              </form>
-              {captchaOpen ? (
-                <div className="auth-captcha-modal" role="dialog" aria-modal="true" aria-label={t('form.dragToVerify')}>
-                  <div className="auth-captcha-modal__backdrop" />
-                  <div className="auth-captcha-modal__panel">
+                </>
+              ) : (
+                <>
+                  <div className="vx-auth-phone-row">
+                    <AuthField
+                      label={t('form.phone')}
+                      name="phone"
+                      type="tel"
+                      placeholder={t('form.phonePlaceholder')}
+                      icon="phone"
+                      value={phone}
+                      error={phoneError}
+                      autoComplete="tel"
+                      autoFocus
+                      disabled={loading}
+                      onChange={(value) => {
+                        setPhone(value);
+                        setPhoneError('');
+                        setError('');
+                      }}
+                    />
+                  </div>
+                  <div className="vx-auth-code-row">
+                    <AuthField
+                      label={t('form.code')}
+                      name="phone-code"
+                      type="text"
+                      placeholder={t('form.codePlaceholder')}
+                      icon="shield"
+                      value={phoneCode}
+                      error={phoneCodeError}
+                      autoComplete="one-time-code"
+                      disabled={loading}
+                      onChange={(value) => {
+                        setPhoneCode(value.replace(/\D/g, '').slice(0, 6));
+                        setPhoneCodeError('');
+                        setError('');
+                      }}
+                    />
                     <button
                       type="button"
-                      className="auth-captcha-modal__close"
-                      aria-label={t('form.closeVerification')}
-                      onClick={() => {
-                        setCaptchaOpen(false);
-                        resetCaptcha();
-                      }}
-                      disabled={submitting}
+                      className="vx-auth-send-code"
+                      onClick={handleSendPhoneCode}
+                      disabled={loading || codeSending || codeCountdown > 0}
                     >
-                      ×
+                      {codeSending
+                        ? t('form.sendingCode')
+                        : codeCountdown > 0
+                          ? t('form.retryCode', { seconds: codeCountdown })
+                          : t('form.sendCode')}
                     </button>
-                    <div className="auth-captcha-modal__header">
-                      <strong>{t('form.humanVerification')}</strong>
-                      <span>{t('form.dragToVerify')}</span>
-                    </div>
-                    <div
-                      className={[
-                        'auth-captcha',
-                        captchaDragging ? 'auth-captcha--dragging' : '',
-                        captchaReturning ? 'auth-captcha--returning' : '',
-                        captchaSolved ? 'auth-captcha--solved' : '',
-                      ].filter(Boolean).join(' ')}
-                    >
-                      <div className="auth-captcha__image" aria-hidden="true">
-                        <div className="auth-captcha__target" style={{ left: `calc((100% - ${CAPTCHA_PIECE_SIZE}px) * ${captchaTargetRatio})` }} />
-                        <div ref={captchaPieceRef} className="auth-captcha__piece" style={{ transform: `translate3d(${captchaOffset}px, 0, 0)` }} />
-                      </div>
-                      <div className="auth-captcha__slider" ref={captchaSliderRef}>
-                        <div ref={captchaProgressRef} className="auth-captcha__progress" style={{ transform: `scaleX(${captchaMaxRef.current ? captchaOffset / captchaMaxRef.current : 0})` }} aria-hidden="true" />
-                        <span className="auth-captcha__hint">{captchaSolved ? t('form.verificationPassed') : t('form.dragToVerify')}</span>
-                        <button
-                          type="button"
-                          ref={captchaHandleRef}
-                          className="auth-captcha__handle"
-                          style={{ transform: `translate3d(${captchaOffset}px, 0, 0)` }}
-                          onPointerDown={handleCaptchaPointerDown}
-                          onPointerMove={handleCaptchaPointerMove}
-                          onPointerUp={handleCaptchaPointerEnd}
-                          onPointerCancel={handleCaptchaPointerEnd}
-                          aria-label={t('form.dragToVerify')}
-                          disabled={captchaSolved || submitting || status === 'loading'}
-                        >
-                          <span aria-hidden="true" />
-                        </button>
-                      </div>
-                    </div>
                   </div>
-                </div>
-              ) : null}
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+                </>
+              )}
 
-      <footer className="auth-footer">
-        <span>{t('footer.copyright')}</span>
-        <a href="#privacy">{t('footer.privacy')}</a>
-        <a href="#terms">{t('footer.terms')}</a>
-      </footer>
-    </main>
+              <AuthLoginOptions
+                disabled={loading}
+                rememberChecked={rememberLogin}
+                agreementChecked={acceptedTerms}
+                rememberLabel={t('form.rememberLogin')}
+                agreementPrefix={t('form.acceptPrefix')}
+                termsLabel={t('form.terms')}
+                agreementJoiner={t('form.acceptJoiner')}
+                privacyLabel={t('form.privacy')}
+                forgotLabel={t('form.forgotPassword')}
+                forgotHref="#forgot-password"
+                forgetMeLabel={t('form.forgetMe')}
+                onRememberChange={handleRememberLoginChange}
+                onAgreementChange={(checked) => {
+                  setAcceptedTerms(checked);
+                  setError('');
+                }}
+                onForgetMe={handleForgetMe}
+              />
+            </div>
+          }
+          primary={
+            <>
+              {error ? <p className="vx-auth-error vx-auth-form-error">{error}</p> : null}
+              <AuthPrimaryButton loading={loading} label={t('form.submit')} loadingLabel={t('form.submitting')} />
+            </>
+          }
+          reserveSocialSpace
+          reserveFooterSpace
+        />
+      </AuthLoginLayout>
+    </UnifiedAuthPage>
+  );
+}
+
+function AuthHeader() {
+  const locale = useConsoleLocale();
+  const { theme, setTheme } = useTheme();
+  const isZh = locale === 'zh-CN';
+
+  return (
+    <AuthChromeHeader
+      brandHref="/"
+      brandLogoSrc="/brand/vxture-logo-white.png"
+      brandLogoAlt="vxture.ai"
+      brandLabel="vxture.ai"
+      currentLocale={locale}
+      currentTheme={theme}
+      localeButtonLabel={isZh ? '选择语言' : 'Select language'}
+      localePanelLabel={isZh ? '语言选择' : 'Language selection'}
+      lightThemeLabel={isZh ? '浅色模式' : 'Light mode'}
+      darkThemeLabel={isZh ? '深色模式' : 'Dark mode'}
+      onLocaleChange={(nextLocale: Locale) => {
+        setGlobalLocalePreference(nextLocale);
+      }}
+      onThemeChange={(nextTheme) => {
+        setTheme(nextTheme);
+        setGlobalThemePreference(nextTheme as Theme);
+      }}
+    />
+  );
+}
+
+function AuthFooter() {
+  const t = useConsoleTranslations('login');
+
+  return (
+    <AuthChromeFooter
+      copyright={t('footer.copyright')}
+      legalLabel="Legal links"
+      links={[
+        { href: '/legal/terms', label: t('footer.terms') },
+        { href: '/legal/privacy', label: t('footer.privacy') },
+        { href: '/legal/cookies', label: t('footer.cookies') },
+      ]}
+    />
+  );
+}
+
+function AdminCaptchaOverlay({
+  targetRatio,
+  offset,
+  max,
+  dragging,
+  returning,
+  solved,
+  loading,
+  sliderRef,
+  handleRef,
+  pieceRef,
+  progressRef,
+  dragLabel,
+  closeLabel,
+  title,
+  solvedLabel,
+  onClose,
+  onPointerDown,
+  onPointerMove,
+  onPointerEnd,
+}: {
+  targetRatio: number;
+  offset: number;
+  max: number;
+  dragging: boolean;
+  returning: boolean;
+  solved: boolean;
+  loading: boolean;
+  sliderRef: RefObject<HTMLDivElement | null>;
+  handleRef: RefObject<HTMLButtonElement | null>;
+  pieceRef: RefObject<HTMLDivElement | null>;
+  progressRef: RefObject<HTMLDivElement | null>;
+  dragLabel: string;
+  closeLabel: string;
+  title: string;
+  solvedLabel: string;
+  onClose: () => void;
+  onPointerDown: (event: PointerEvent<HTMLButtonElement>) => void;
+  onPointerMove: (event: PointerEvent<HTMLButtonElement>) => void;
+  onPointerEnd: () => void;
+}) {
+  return (
+    <div className="auth-captcha-modal" role="dialog" aria-modal="true" aria-label={dragLabel}>
+      <div className="auth-captcha-modal__backdrop" />
+      <div className="auth-captcha-modal__panel">
+        <button type="button" className="auth-captcha-modal__close" aria-label={closeLabel} onClick={onClose} disabled={loading}>
+          ×
+        </button>
+        <div className="auth-captcha-modal__header">
+          <strong>{title}</strong>
+          <span>{dragLabel}</span>
+        </div>
+        <div
+          className={[
+            'auth-captcha',
+            dragging ? 'auth-captcha--dragging' : '',
+            returning ? 'auth-captcha--returning' : '',
+            solved ? 'auth-captcha--solved' : '',
+          ].filter(Boolean).join(' ')}
+        >
+          <div className="auth-captcha__image" aria-hidden="true">
+            <div className="auth-captcha__target" style={{ left: `calc((100% - ${CAPTCHA_PIECE_SIZE}px) * ${targetRatio})` }} />
+            <div ref={pieceRef} className="auth-captcha__piece" style={{ transform: `translate3d(${offset}px, 0, 0)` }} />
+          </div>
+          <div className="auth-captcha__slider" ref={sliderRef}>
+            <div ref={progressRef} className="auth-captcha__progress" style={{ transform: `scaleX(${max ? offset / max : 0})` }} aria-hidden="true" />
+            <span className="auth-captcha__hint">{solved ? solvedLabel : dragLabel}</span>
+            <button
+              type="button"
+              ref={handleRef}
+              className="auth-captcha__handle"
+              style={{ transform: `translate3d(${offset}px, 0, 0)` }}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerEnd}
+              onPointerCancel={onPointerEnd}
+              aria-label={dragLabel}
+              disabled={solved || loading}
+            >
+              <span aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 

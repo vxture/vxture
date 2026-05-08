@@ -4,6 +4,7 @@
     "title": "智能体广场",
     "description": "汇聚数字员工、专业智能体与具身智能体，通过标签化分类与行业场景筛选，帮助企业快速找到可试用、可集成与可编排的智能体能力。",
     "primaryAction": "进入工作台",
+    "guestPrimaryAction": "申请试用",
     "secondaryAction": "浏览智能体",
     "highlights": ["数字员工", "软件智能体", "具身智能体", "行业智能体"],
     "metrics": [

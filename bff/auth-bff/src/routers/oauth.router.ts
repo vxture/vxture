@@ -23,7 +23,7 @@ import {
   Res,
   ServiceUnavailableException,
 } from '@nestjs/common';
-import { createHmac, randomBytes } from 'node:crypto';
+import { randomBytes } from 'node:crypto';
 import type { Response } from 'express';
 import { AUTH_CONSTANTS } from '@vxture/shared';
 import type { OAuthProviderType } from '@vxture/core-auth';
@@ -36,32 +36,24 @@ import { FeishuProvider } from '../providers/feishu.provider';
 // 安全工具
 // ============================================================================
 
-function buildState(returnTo: string, secret: string): string {
-  const nonce = randomBytes(16).toString('hex');
-  const payload = Buffer.from(JSON.stringify({ nonce, returnTo })).toString('base64url');
-  const sig = createHmac('sha256', secret).update(payload).digest('hex').slice(0, 16);
-  return `${payload}.${sig}`;
+function buildState(): string {
+  return randomBytes(32).toString('base64url');
 }
 
-function parseState(state: string, secret: string): { nonce: string; returnTo: string } | null {
-  const dotIndex = state.lastIndexOf('.');
-  if (dotIndex === -1) return null;
-  const payload = state.slice(0, dotIndex);
-  const sig = state.slice(dotIndex + 1);
-  const expected = createHmac('sha256', secret).update(payload).digest('hex').slice(0, 16);
-  if (sig.length !== expected.length || !timingSafeCompare(sig, expected)) return null;
+function encodeOAuthStateData(providerName: string, returnTo: string): string {
+  return JSON.stringify({ providerName, returnTo });
+}
+
+function parseOAuthStateData(data: string): { providerName: string; returnTo: string } | null {
   try {
-    return JSON.parse(Buffer.from(payload, 'base64url').toString('utf-8'));
+    const parsed = JSON.parse(data) as { providerName?: unknown; returnTo?: unknown };
+    if (typeof parsed.providerName !== 'string' || typeof parsed.returnTo !== 'string') {
+      return null;
+    }
+    return { providerName: parsed.providerName, returnTo: parsed.returnTo };
   } catch {
     return null;
   }
-}
-
-function timingSafeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let result = 0;
-  for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return result === 0;
 }
 
 function sanitizeReturnTo(returnTo: string | undefined): string {
@@ -78,7 +70,8 @@ function sanitizeReturnTo(returnTo: string | undefined): string {
 }
 
 function resolveCookieDomain(): string | undefined {
-  const domain = process.env.AUTH_COOKIE_DOMAIN?.trim();
+  const domain = process.env.COOKIE_DOMAIN_PLATFORM?.trim()
+    || process.env.AUTH_COOKIE_DOMAIN?.trim();
   if (!domain || domain === 'localhost') return undefined;
   return domain;
 }
@@ -93,7 +86,7 @@ interface OAuthProvider {
   getUserInfo(accessToken: string): Promise<{ provider: OAuthProviderType; providerId: string; name: string; email?: string; avatar?: string; raw: Record<string, unknown> }>;
 }
 
-function createProvider(providerName: string, redirectUri: string): OAuthProvider {
+function createProvider(providerName: string): OAuthProvider {
   switch (providerName) {
     case 'dingtalk': return new DingtalkProvider();
     case 'feishu': return new FeishuProvider();
@@ -106,14 +99,14 @@ function resolveRedirectUri(providerName: string): string {
   const configured = process.env[envVar]?.trim();
   if (configured) return configured;
   // 开发环境默认值
-  return `http://localhost:3090/api/auth/oauth/${providerName}/callback`;
+  return `http://localhost:3090/auth/oauth/${providerName}/callback`;
 }
 
 // ============================================================================
 // Router
 // ============================================================================
 
-@Controller('api/auth/oauth')
+@Controller('auth/oauth')
 export class OAuthRouter {
   constructor(
     @Inject(AuthService) private readonly authService: AuthService,
@@ -122,25 +115,24 @@ export class OAuthRouter {
 
   /**
    * 发起 OAuth 授权，重定向到第三方平台登录页
-   * GET /api/auth/oauth/:provider/start?returnTo=...
+   * GET /auth/oauth/:provider/start?returnTo=...
    */
   @Get(':provider/start')
   @Redirect()
-  startOAuth(
+  async startOAuth(
     @Param('provider') providerName: string,
     @Query('returnTo') returnTo?: string,
-    @Query('source') source?: string,
   ) {
     const clientId = this.resolveClientId(providerName);
     if (!clientId) {
       throw new ServiceUnavailableException(`${providerName} 登录未启用，请联系管理员配置`);
     }
 
-    const secret = process.env.JWT_SECRET ?? 'fallback';
     const safeReturnTo = sanitizeReturnTo(returnTo);
-    const state = buildState(safeReturnTo, secret);
+    const state = buildState();
+    await this.redis.storeOAuthState(state, encodeOAuthStateData(providerName, safeReturnTo));
     const redirectUri = resolveRedirectUri(providerName);
-    const provider = createProvider(providerName, redirectUri);
+    const provider = createProvider(providerName);
     const authUrl = provider.buildAuthorizationUrl(redirectUri, state);
 
     return { url: authUrl, statusCode: 302 };
@@ -148,7 +140,7 @@ export class OAuthRouter {
 
   /**
    * OAuth 回调，换取用户信息并签发 JWT
-   * GET /api/auth/oauth/:provider/callback?code=...&state=...
+   * GET /auth/oauth/:provider/callback?code=...&state=...
    */
   @Get(':provider/callback')
   async handleCallback(
@@ -160,12 +152,15 @@ export class OAuthRouter {
     if (!code) throw new BadRequestException('缺少授权码 code');
     if (!state) throw new BadRequestException('缺少 state 参数');
 
-    const secret = process.env.JWT_SECRET ?? 'fallback';
-    const parsed = parseState(state, secret);
+    const stateData = await this.redis.getAndDeleteOAuthState(state);
+    const parsed = stateData ? parseOAuthStateData(stateData) : null;
     if (!parsed) throw new BadRequestException('state 参数无效或已过期');
+    if (parsed.providerName !== providerName) {
+      throw new BadRequestException('state 与 OAuth provider 不匹配');
+    }
 
     const redirectUri = resolveRedirectUri(providerName);
-    const provider = createProvider(providerName, redirectUri);
+    const provider = createProvider(providerName);
 
     let tokens: Awaited<ReturnType<OAuthProvider['exchangeCode']>>;
     try {
@@ -187,22 +182,21 @@ export class OAuthRouter {
     const domain = resolveCookieDomain();
     const cookieBase = { httpOnly: true, sameSite: 'lax' as const, secure, path: '/', domain };
 
-    // 同步写入 website + console cookie（同一套账号体系）
-    res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN, result.tokens.accessToken, {
-      ...cookieBase, maxAge: result.tokens.expiresIn * 1000,
-    });
-    res.cookie(AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN, result.tokens.refreshToken, {
-      ...cookieBase, maxAge: result.tokens.refreshExpiresIn * 1000,
-    });
-    res.cookie(AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.ACCESS_TOKEN, result.tokens.accessToken, {
-      ...cookieBase, maxAge: result.tokens.expiresIn * 1000,
-    });
-    res.cookie(AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.REFRESH_TOKEN, result.tokens.refreshToken, {
-      ...cookieBase, maxAge: result.tokens.refreshExpiresIn * 1000,
-    });
+    await this.redis.storeRefreshToken(
+      result.user.id,
+      result.tokens.refreshToken,
+      result.tokens.refreshExpiresIn,
+      false,
+      'platform',
+    );
 
-    // store refresh token
-    void this.redis.storeRefreshToken(result.user.id, result.tokens.refreshToken, result.tokens.refreshExpiresIn);
+    // OAuth 只面向租户账号，website / console 共用统一租户登录态。
+    res.cookie(AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN, result.tokens.accessToken, {
+      ...cookieBase, maxAge: result.tokens.expiresIn * 1000,
+    });
+    res.cookie(AUTH_CONSTANTS.TENANT_COOKIE_KEYS.REFRESH_TOKEN, result.tokens.refreshToken, {
+      ...cookieBase, maxAge: result.tokens.refreshExpiresIn * 1000,
+    });
 
     const returnTo = sanitizeReturnTo(parsed.returnTo);
     res.redirect(returnTo || '/');

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, NotFoundException, Put, Query, Req, UnauthorizedException } from '@nestjs/common';
+import { Body, Controller, Get, Inject, NotFoundException, Put, Req, UnauthorizedException } from '@nestjs/common';
 import type { Request } from 'express';
 import { SessionAggregator } from '../aggregators/session.aggregator';
 import { ChangePasswordDto, UpdateProfileDto } from '../dto/profile.dto';
@@ -32,15 +32,15 @@ export class MeRouter {
   }
 
   @Get('organization')
-  async getCurrentOrganizationProfile(
-    @Req() req: Request & RequestContext,
-    @Query('tenantId') tenantId?: string,
-  ) {
+  async getCurrentOrganizationProfile(@Req() req: Request & RequestContext) {
     if (!req.user) {
       throw new UnauthorizedException('No active session');
     }
+    if (!req.tenant) {
+      throw new UnauthorizedException('Tenant context is required');
+    }
 
-    const profile = await this.sessionAggregator.getCurrentOrganizationProfile(req.user.id, tenantId ?? req.tenant?.id);
+    const profile = await this.sessionAggregator.getCurrentOrganizationProfile(req.user.id, req.tenant.id);
     if (!profile) {
       throw new NotFoundException('Organization profile not found');
     }

@@ -44,16 +44,39 @@ export class PlatformAuthService implements OnModuleDestroy {
 
   /**
    * 【重构 v1.4】仅做 DB 密码校验，不再签发 JWT。
-   * JWT 签发统一委托给 auth-bff 的 /api/auth/internal/sign。
+   * JWT 签发统一委托给 auth-bff 的 /auth/internal/sign。
    */
   async loginWithPassword(identifier: string, password: string): Promise<{
     user: ConsoleUser;
+    permissions: string[];
   }> {
     const admin = await this.authenticatePlatformAdmin(identifier, password);
 
     return {
       user: mapPlatformAdminUser(admin),
+      permissions: admin.permissions,
     };
+  }
+
+  async loginWithPhone(phone: string): Promise<{
+    user: ConsoleUser;
+    permissions: string[];
+  }> {
+    const admin = await this.authenticatePlatformAdminPhone(phone);
+
+    return {
+      user: mapPlatformAdminUser(admin),
+      permissions: admin.permissions,
+    };
+  }
+
+  async canUsePhoneLogin(phone: string): Promise<boolean> {
+    if (!this.pool) {
+      throw new BadGatewayException('Platform admin database is not configured');
+    }
+
+    const admin = await this.findPlatformAdminByPhone(phone);
+    return Boolean(admin);
   }
 
   async getCurrentUser(accountId: string): Promise<ConsoleUser | null> {
@@ -85,14 +108,26 @@ export class PlatformAuthService implements OnModuleDestroy {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    await this.pool.query(
-      `
-        update platform.platform_admin
-        set last_login_at = now()
-        where id = $1
-      `,
-      [admin.id],
-    );
+    await this.recordLastLogin(admin.id);
+
+    return admin;
+  }
+
+  private async authenticatePlatformAdminPhone(phone: string): Promise<PlatformAdminView> {
+    if (!phone.trim()) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (!this.pool) {
+      throw new BadGatewayException('Platform admin database is not configured');
+    }
+
+    const admin = await this.findPlatformAdminByPhone(phone);
+    if (!admin) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    await this.recordLastLogin(admin.id);
 
     return admin;
   }
@@ -102,43 +137,38 @@ export class PlatformAuthService implements OnModuleDestroy {
       throw new BadGatewayException('Platform admin database is not configured');
     }
 
-    const result = await this.pool.query<PlatformAdminRow>(
-      `
-        select
-          a.id,
-          a.username,
-          a.email,
-          a.phone,
-          a.password_hash,
-          a.display_name,
-          r.role_code,
-          r.name_i18n_key,
-          r.name_en,
-          coalesce(array_remove(array_agg(distinct p.perm_code), null), array[]::varchar[]) as permissions
-        from platform.platform_admin a
-        join platform.platform_role r
-          on r.id = a.role_id
-         and r.status = true
-         and coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) = 'active'
-        left join platform.platform_role_permission rp
-          on rp.role_id = r.id
-        left join platform.platform_permission p
-          on p.id = rp.permission_id
-         and p.status = true
-        where a.id = $1
-          and a.deleted_at is null
-          and a.status = true
-          and coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) = 'active'
-        group by a.id, r.role_code, r.name_i18n_key, r.name_en
-        limit 1
-      `,
-      [adminId],
-    );
-
-    return mapPlatformAdminRow(result.rows[0]);
+    return this.findPlatformAdmin('a.id = $1', [adminId]);
   }
 
   private async findPlatformAdminByIdentifier(identifier: string): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
+    if (!this.pool) {
+      return null;
+    }
+
+    return this.findPlatformAdmin(
+      `
+        (
+          lower(a.username) = lower($1)
+          or lower(coalesce(a.email, '')) = lower($1)
+          or coalesce(a.phone, '') = $1
+        )
+      `,
+      [identifier.trim()],
+    );
+  }
+
+  private async findPlatformAdminByPhone(phone: string): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
+    if (!this.pool) {
+      return null;
+    }
+
+    return this.findPlatformAdmin('coalesce(a.phone, \'\') = $1', [normalizePhone(phone)]);
+  }
+
+  private async findPlatformAdmin(
+    predicate: string,
+    params: readonly unknown[],
+  ): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
     if (!this.pool) {
       return null;
     }
@@ -169,18 +199,25 @@ export class PlatformAuthService implements OnModuleDestroy {
         where a.deleted_at is null
           and a.status = true
           and coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) = 'active'
-          and (
-            lower(a.username) = lower($1)
-            or lower(coalesce(a.email, '')) = lower($1)
-            or coalesce(a.phone, '') = $1
-          )
+          and ${predicate}
         group by a.id, r.role_code, r.name_i18n_key, r.name_en
         limit 1
       `,
-      [identifier.trim()],
+      [...params],
     );
 
     return mapPlatformAdminRow(result.rows[0]);
+  }
+
+  private async recordLastLogin(adminId: string): Promise<void> {
+    await this.pool?.query(
+      `
+        update platform.platform_admin
+        set last_login_at = now()
+        where id = $1
+      `,
+      [adminId],
+    );
   }
 }
 
@@ -262,9 +299,14 @@ function mapPlatformAdminUser(admin: PlatformAdminView): ConsoleUser {
     displayName: admin.displayName,
     email: admin.email ?? `${admin.username}@local.vxture`,
     roleLabel: admin.roleI18nKey,
+    roleCode: admin.roleCode,
     roleI18nKey: admin.roleI18nKey,
     roleNameEn: admin.roleNameEn,
     username: admin.username,
     phone: admin.phone,
   };
+}
+
+function normalizePhone(phone: string): string {
+  return phone.trim().replace(/\s+/g, '');
 }

@@ -33,6 +33,7 @@ import { HEADER_DATA } from '@/data/layout/header.data';
 import { useAuthStore } from '@/stores/auth.store';
 import { useNotificationStore } from '@/stores/notification.store';
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
+import { buildConsoleEntryUrl } from '@/lib/console-entry';
 import type { UserInfo } from '@/types/auth.types';
 import { DEFAULT_LOCALE, LOCALE_CONFIGS, SUPPORTED_LOCALES } from '@vxture/shared';
 import type { Locale } from '@vxture/shared';
@@ -46,15 +47,6 @@ import {
   setGlobalLocalePreference,
   setGlobalThemePreference,
 } from '@vxture/platform-browser';
-
-function resolveConsoleUrl(): string {
-  const configuredUrl = process.env.NEXT_PUBLIC_CONSOLE_URL?.trim();
-  if (configuredUrl) {
-    return configuredUrl.replace(/\/+$/, '');
-  }
-
-  return 'http://localhost:3020';
-}
 
 const PAGE_FULLSCREEN_ID = 'page-root-native';
 const FONT_SIZE_PREFERENCE_KEY = 'vxture-font-size-preference';
@@ -588,13 +580,14 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const t = useTranslations('layout.header');
+  const locale = useNextIntlLocale();
   const router = useRouter();
   const { addNotification } = useNotificationStore();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isLoading = useAuthStore((state) => state.isLoading);
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
-  const consoleUrl = resolveConsoleUrl();
+  const consoleUrl = buildConsoleEntryUrl(locale);
 
   // ----------------------------------------------------------------------------
   // 监听滚动

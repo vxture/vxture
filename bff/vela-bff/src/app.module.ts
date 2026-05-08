@@ -14,22 +14,21 @@
 
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { AccessTokenRevocationService } from '@vxture/core-auth';
 import { VxConfigModule } from '@vxture/core-config';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { SurfaceMiddleware } from './middleware/surface.middleware';
 import { ChatRouter } from './routers/chat.router';
 import { ConfirmRouter } from './routers/confirm.router';
 import { HealthRouter } from './routers/health.router';
-import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
     VxConfigModule.register({ domains: ['app', 'auth', 'redis'] }),
     JwtModule.register({}),
-    RedisModule,
   ],
   controllers: [HealthRouter, ChatRouter, ConfirmRouter],
-  providers: [],
+  providers: [AccessTokenRevocationService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

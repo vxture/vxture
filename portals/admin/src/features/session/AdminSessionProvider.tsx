@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { login, logout, restoreSession } from '@/api/admin-bff';
+import { login, loginWithPhoneCode, logout, restoreSession } from '@/api/admin-bff';
 import type { SessionSnapshot } from '@/entities/console';
 
 type SessionStatus = 'idle' | 'loading' | 'ready';
@@ -16,6 +16,7 @@ interface SessionContextValue {
   session: SessionSnapshot;
   status: SessionStatus;
   signIn: (identifier: string, password: string, captchaToken: string, captchaPosition: number) => Promise<void>;
+  signInWithPhone: (phone: string, code: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshSession: () => Promise<void>;
 }
@@ -24,6 +25,7 @@ const SessionContext = createContext<SessionContextValue>({
   session: EMPTY_SESSION,
   status: 'idle',
   signIn: async () => undefined,
+  signInWithPhone: async () => undefined,
   signOut: async () => undefined,
   refreshSession: async () => undefined,
 });
@@ -62,6 +64,19 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function signInWithPhone(phone: string, code: string) {
+    setStatus('loading');
+    try {
+      const snapshot = await loginWithPhoneCode({ phone, code });
+      setSession(snapshot);
+      setStatus('ready');
+    } catch (error) {
+      setSession(EMPTY_SESSION);
+      setStatus('ready');
+      throw error;
+    }
+  }
+
   async function signOut() {
     await logout();
     setSession(EMPTY_SESSION);
@@ -76,7 +91,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <SessionContext.Provider value={{ session, status, signIn, signOut, refreshSession }}>
+    <SessionContext.Provider value={{ session, status, signIn, signInWithPhone, signOut, refreshSession }}>
       {children}
     </SessionContext.Provider>
   );

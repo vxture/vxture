@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import type { JwtAccessPayload } from '@vxture/core-auth';
 import { JwtAuthScope, JwtUserType } from '@vxture/core-auth';
@@ -45,13 +45,13 @@ export class ConsoleAuthService {
     });
 
     if (payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
-      throw new Error('Invalid console token scope');
+      throw new ForbiddenException('Invalid console token scope');
     }
     if (payload.userType !== JwtUserType.TENANT_USER) {
-      throw new Error('Invalid console token user type');
+      throw new ForbiddenException('Invalid console token user type');
     }
     if (!payload.tenantId?.trim()) {
-      throw new Error('Console token requires tenantId');
+      throw new UnauthorizedException('Console token requires tenantId');
     }
 
     return payload;

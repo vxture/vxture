@@ -17,6 +17,7 @@
    --------------------------------------------------------------------------- */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Barlow:wght@600;700;800&family=Outfit:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;700&display=swap");
 @import "tailwindcss";
+@import "@vxture/design-system/styles/auth.css";
 
 /* ---------------------------------------------------------------------------
    Tailwind v4 Dark Mode 配置
@@ -111,12 +112,20 @@
 }
 
 @keyframes vx-auth-scan {
-  0% {
-    transform: translateY(-100%);
+  0%,
+  100% {
+    transform: translateY(-70%);
+    opacity: 0;
   }
 
-  100% {
-    transform: translateY(220px);
+  18%,
+  64% {
+    opacity: 1;
+  }
+
+  82% {
+    transform: translateY(70%);
+    opacity: 0;
   }
 }
 
@@ -249,12 +258,10 @@
 .vx-auth-visual {
   position: relative;
   flex: 0 0 52%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  min-width: 0;
   overflow: hidden;
-  padding: 40px 36px;
-  background: linear-gradient(145deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  isolation: isolate;
+  background: var(--vx-auth-visual-bg, linear-gradient(145deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%));
 }
 
 .vx-auth-nodegraph,
@@ -268,81 +275,97 @@
 .vx-auth-nodegraph {
   width: 100%;
   height: 100%;
+  z-index: 0;
 }
 
 .vx-auth-grid {
-  pointer-events: none;
+  z-index: 1;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at 50% 50%, black, transparent 74%);
 }
 
 .vx-auth-scan {
-  height: 1px;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(147, 197, 253, 0.35), transparent);
-  animation: vx-auth-scan 6s linear infinite;
+  z-index: 2;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.12) 50%, transparent 100%);
+  transform: translateY(-70%);
+  animation: vx-auth-scan 6.5s ease-in-out infinite;
 }
 
 .vx-auth-fade {
-  top: auto;
-  height: 42%;
-  pointer-events: none;
-  background: linear-gradient(transparent, rgba(30, 58, 138, 0.64));
-}
-
-.vx-auth-status,
-.vx-auth-copy {
-  position: relative;
-  z-index: 1;
+  z-index: 3;
+  background:
+    radial-gradient(circle at 20% 15%, rgba(255, 255, 255, 0.22), transparent 22%),
+    radial-gradient(circle at 78% 72%, rgba(96, 165, 250, 0.28), transparent 30%),
+    linear-gradient(180deg, transparent 52%, rgba(30, 58, 138, 0.42) 100%);
 }
 
 .vx-auth-status {
-  width: fit-content;
+  position: absolute;
+  top: 26px;
+  left: 28px;
+  z-index: 4;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
+  gap: 8px;
+  padding: 8px 12px;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  backdrop-filter: blur(8px);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.22);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 12px;
+  backdrop-filter: blur(10px);
 }
 
 .vx-auth-status-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 999px;
-  background: #86efac;
-  animation: vx-auth-pulse 2s ease-in-out infinite;
+  background: #34d399;
+  box-shadow: 0 0 0 5px rgba(52, 211, 153, 0.15);
+}
+
+.vx-auth-copy {
+  position: absolute;
+  inset: auto 42px 38px;
+  z-index: 4;
+  color: #fff;
 }
 
 .vx-auth-copy h2 {
-  max-width: 290px;
+  max-width: 560px;
   margin: 0 0 14px;
-  color: #fff;
   font-family: "Barlow", "Noto Sans SC", sans-serif;
-  font-size: 28px;
+  font-size: clamp(30px, 4vw, 56px);
   font-weight: 800;
-  line-height: 1.12;
+  line-height: 0.98;
+  letter-spacing: 0;
 }
 
 .vx-auth-copy p {
-  max-width: 306px;
-  margin: 0 0 24px;
-  color: rgba(255, 255, 255, 0.65);
-  font-size: 13px;
-  line-height: 1.65;
+  max-width: 500px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 .vx-auth-stats {
-  display: flex;
-  gap: 24px;
+  width: min(520px, 100%);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.vx-auth-stats div {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
 }
 
 .vx-auth-stats strong,
@@ -352,15 +375,15 @@
 
 .vx-auth-stats strong {
   color: #fff;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 18px;
 }
 
 .vx-auth-stats span {
-  margin-top: 2px;
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 9px;
-  letter-spacing: 0.08em;
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: uppercase;
 }
 
 .vx-auth-divider {
@@ -374,22 +397,69 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  overflow-y: auto;
-  padding: 42px 52px;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding: 34px 48px;
   background: #fff;
 }
 
+.vx-auth-login-layout,
+.vx-auth-flow-form {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.vx-auth-login-layout {
+  height: 100%;
+}
+
+.vx-auth-section {
+  min-width: 0;
+}
+
+.vx-auth-section-title {
+  flex: 0 0 auto;
+  padding: 4px 0 28px;
+  text-align: center;
+}
+
+.vx-auth-section-title .vx-auth-panel-heading {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.vx-auth-section-inputs {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.vx-auth-field-stack {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.vx-auth-bottom-stack {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: auto;
+}
+
 .vx-auth-panel-heading {
-  margin-bottom: 28px;
+  margin-bottom: 18px;
 }
 
 .vx-auth-panel-heading h1,
 .vx-auth-reset-done h1 {
-  margin: 0 0 4px;
+  margin: 0;
   color: var(--vx-auth-text);
   font-family: "Barlow", "Noto Sans SC", sans-serif;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
 }
 
@@ -402,18 +472,18 @@
 }
 
 .vx-auth-field {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 }
 
 .vx-auth-field label {
   display: block;
   margin-bottom: 7px;
-  color: var(--vx-auth-secondary);
-  font-size: 10px;
+  color: rgba(74, 90, 122, 0.72);
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.12em;
-  line-height: 1.2;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: 1.25;
+  text-transform: none;
   transition: color 0.2s ease;
 }
 
@@ -421,9 +491,38 @@
   color: var(--vx-auth-accent);
 }
 
+.vx-auth-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.vx-auth-field-icon {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vx-auth-muted);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.vx-auth-field-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.vx-auth-field:focus-within .vx-auth-field-icon {
+  color: var(--vx-auth-accent);
+}
+
 .vx-auth-field input {
   width: 100%;
-  padding: 11px 14px;
+  min-height: 42px;
+  padding: 10px 14px 10px 44px;
   border: 1px solid var(--vx-auth-border);
   border-radius: 8px;
   outline: none;
@@ -470,7 +569,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  margin: -8px 0 18px;
+  margin: -2px 0 14px;
 }
 
 .vx-auth-remember {
@@ -548,12 +647,12 @@
 
 .vx-auth-primary {
   width: 100%;
-  min-height: 46px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 13px;
+  padding: 11px 13px;
   border: 0;
   border-radius: 8px;
   background: var(--vx-auth-accent);
@@ -592,7 +691,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin: 20px 0;
+  margin: 14px 0;
+}
+
+.vx-auth-section-social .vx-auth-or {
+  margin: 0 0 12px;
 }
 
 .vx-auth-or span {
@@ -614,22 +717,37 @@
 
 .vx-auth-social {
   flex: 1;
-  min-height: 38px;
+  min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 10px;
+  gap: 8px;
+  padding: 9px 10px;
   border: 1px solid var(--vx-auth-border);
   border-radius: 7px;
   background: #f8faff;
   color: var(--vx-auth-secondary);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
     color 0.2s ease;
+}
+
+.vx-auth-social svg,
+.vx-auth-social img {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: block;
+  object-fit: contain;
+}
+
+.vx-auth-social-icon {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .vx-auth-social:hover {
@@ -653,11 +771,15 @@
 
 .vx-auth-switch,
 .vx-auth-terms {
-  margin: 24px 0 0;
+  margin: 16px 0 0;
   color: var(--vx-auth-secondary);
   font-size: 13px;
   line-height: 1.7;
   text-align: center;
+}
+
+.vx-auth-section-footer .vx-auth-switch {
+  margin: 0;
 }
 
 .vx-auth-switch button {
@@ -730,7 +852,7 @@
 .vx-auth-tabs {
   display: flex;
   border-bottom: 1px solid var(--vx-auth-border);
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .vx-auth-tab {
@@ -755,11 +877,15 @@
   font-weight: 500;
 }
 
-/* ── 手机号输入行（输入框 + 发送按钮） ───────────────────────── */
+/* ── 验证码登录输入行 ───────────────────────────────────────── */
+
+.vx-auth-phone-row .vx-auth-field {
+  margin-bottom: 0;
+}
 
 .vx-auth-code-row {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: flex-start;
 }
 
@@ -769,15 +895,17 @@
 }
 
 .vx-auth-send-code {
-  flex-shrink: 0;
-  margin-top: 29px;
-  padding: 0 14px;
+  flex: 0 0 128px;
+  width: 128px;
+  margin-top: 24px;
+  padding: 0 12px;
   height: 42px;
   border: 1px solid var(--vx-auth-border);
   border-radius: 8px;
   background: transparent;
   color: var(--vx-auth-accent);
   font-size: 13px;
+  text-align: center;
   white-space: nowrap;
   cursor: pointer;
   transition: border-color 0.2s, background 0.2s;
@@ -793,7 +921,7 @@
   color: var(--vx-auth-muted);
 }
 
-.vx-auth-code-field-wrap { margin-top: 16px; }
+.vx-auth-code-field-wrap { margin-top: 14px; }
 
 .vx-auth-footer {
   height: 52px;
@@ -1183,7 +1311,6 @@
   .vx-auth-visual {
     min-height: 220px;
     flex-basis: auto;
-    padding: 24px;
   }
 
   .vx-auth-divider {

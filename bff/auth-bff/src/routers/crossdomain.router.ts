@@ -6,12 +6,12 @@
  *
  * 流程：
  *   1. 用户在 console.vxture.com 已登录，触发跳转 ruyin.ai 操作
- *   2. 前端请求 auth.vxture.com/api/auth/crossdomain/token
+ *   2. 前端请求 auth.vxture.com/auth/crossdomain/token
  *      → 验证当前 Cookie 中的 access token
  *      → 生成一次性 token（TTL 30s），存入 Redis
  *      → 返回 token
  *   3. 前端跳转 ruyin.ai/auth/callback?token={oneTimeToken}
- *   4. ruyin-bff 调 auth.vxture.com/api/auth/crossdomain/verify
+ *   4. ruyin-bff 调 auth.vxture.com/auth/crossdomain/verify
  *      → 原子 GETDEL 取出 token，校验 userType
  *      → 返回 payload，ruyin-bff 据此签发自己的 cookie
  *
@@ -32,6 +32,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Request } from 'express';
+import { JwtAuthScope } from '@vxture/core-auth';
 import { AUTH_CONSTANTS } from '@vxture/shared';
 import { AuthService } from '../auth/auth.service';
 import { RedisService, type CrossDomainPayload } from '../redis/redis.service';
@@ -47,7 +48,7 @@ class VerifyDto {
 
 // ─── Router ───────────────────────────────────────────────────────────────
 
-@Controller('api/auth/crossdomain')
+@Controller('auth/crossdomain')
 export class CrossDomainRouter {
   constructor(
     @Inject(AuthService) private readonly authService: AuthService,
@@ -62,8 +63,9 @@ export class CrossDomainRouter {
   @HttpCode(HttpStatus.OK)
   async generateToken(@Req() req: Request): Promise<{ token: string; expiresIn: number }> {
     // 从 cookie 读取 access token
-    const accessToken = req.cookies?.[AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN]
-      ?? req.cookies?.[AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.ACCESS_TOKEN];
+    const accessToken = req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN]
+      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN]
+      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
 
     if (!accessToken) {
       throw new UnauthorizedException('No active session');
@@ -77,8 +79,17 @@ export class CrossDomainRouter {
     }
 
     // 校验 userType：必须是 tenant_user（跨域仅限租户账号）
-    if (payload.userType !== 'tenant_user') {
+    if (payload.userType !== 'tenant_user' || payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
       throw new UnauthorizedException('Cross-domain login is only available for tenant users');
+    }
+    if (!payload.jti) {
+      throw new UnauthorizedException('Invalid session');
+    }
+    if (
+      await this.redis.isBlacklisted(payload.jti)
+      || await this.redis.isSubjectAccessRevoked(payload.sub, false, payload.iat)
+    ) {
+      throw new UnauthorizedException('Session has been revoked');
     }
 
     const crossPayload: CrossDomainPayload = {

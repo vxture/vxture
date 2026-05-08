@@ -95,9 +95,10 @@ src/
 
 本 BFF **不签发 JWT**。跨域登录委托 `@vxture/bff-auth` 完成：
 - `GET /api/auth/callback?token=` 接收前端传入的一次性 token
-- 调用 auth-bff `POST /api/auth/crossdomain/verify` 验证 token
-- 验证通过后调用 auth-bff `POST /api/auth/internal/sign` 在 ruyin.ai 域下签发新 Cookie
-- 本 BFF 仅保留 JWT **验证**能力（`JwtService.verify`），供 auth middleware 使用
+- 调用 auth-bff `POST /auth/crossdomain/verify` 验证 token
+- 验证通过后调用 auth-bff `POST /auth/internal/sign` 在 ruyin.ai 域下签发新 Cookie，必须透传 `tenantId`
+- `POST /api/auth/logout` 必须先清理 ruyin.ai 本域 `ry_*` Cookie，再通知 auth-bff 吊销租户会话
+- 本 BFF 仅保留 JWT **验证**能力（`JwtService.verify`），供 auth middleware 使用；中间件必须检查 `tenant_user` / `tenant-console`、jti 黑名单与用户级撤销水位
 
 ---
 

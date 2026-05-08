@@ -83,6 +83,8 @@ export interface JwtAccessPayload {
   permissions?: string[];
   /** Login method */
   provider:   OAuthProviderType;
+  /** Access token unique ID, used for logout blacklist and session revocation */
+  jti?:       string;
   /** Standard JWT fields */
   iat?: number;
   exp?: number;

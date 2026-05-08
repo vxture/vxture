@@ -4,6 +4,7 @@
     "title": "Agent Marketplace",
     "description": "A marketplace for industry-ready agent services, including digital employees, professional software agents, embodied agents, and industry collaboration agents. Use tags and industry filters to quickly find agents that can be trialed, integrated, and orchestrated.",
     "primaryAction": "Open Console",
+    "guestPrimaryAction": "Request Trial",
     "secondaryAction": "Browse Agents",
     "highlights": ["Digital Employees", "Software Agents", "Embodied Agents", "Industry Agents"],
     "metrics": [

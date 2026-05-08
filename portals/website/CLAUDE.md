@@ -159,7 +159,7 @@ import { formatDate, formatNumber } from '@vxture/core-locale';
 `middleware.ts` 固定三个关注点顺序：
 
 ```
-1. 认证重定向 — 读取 vx_refresh_token Cookie，保护 /dashboard
+1. 认证重定向 — 读取 vx_tenant_refresh_token Cookie，保护 /dashboard
 2. intlMiddleware — next-intl 语言前缀路由（zh-CN / en-US）
 3. response.headers.set('x-pathname', ...) — 供 request.ts 按需加载翻译
 ```

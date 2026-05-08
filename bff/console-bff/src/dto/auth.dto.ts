@@ -6,5 +6,4 @@ export class LoginDto {
 export class AuthResultDto {
   userId = '';
   status = 'authenticated';
-  tenantId?: string;
 }

@@ -24,7 +24,7 @@
 
 本 BFF **不签发 JWT**。所有认证端点（login / signup / logout / refresh / send-phone-code / login-with-phone）
 均通过 HTTP 透传至 `@vxture/bff-auth`，转发 Cookie 和 set-cookie 头。
-本 BFF 仅保留 JWT **验证**能力（`JwtService.verify`），供 auth middleware 使用。
+本 BFF 仅保留 JWT **验证**能力（`JwtService.verify`），供 auth middleware 使用；中间件必须检查 `tenant_user` / `tenant-console`、jti 黑名单与用户级撤销水位。
 
 ---
 

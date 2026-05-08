@@ -1,6 +1,6 @@
 import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import type { JwtAccessPayload } from '@vxture/core-auth';
+import { AccessTokenRevocationService, JwtAuthScope, JwtUserType, type JwtAccessPayload } from '@vxture/core-auth';
 import { VxConfigService } from '@vxture/core-config';
 import type { NextFunction, Request, Response } from 'express';
 import { ADMIN_AUTH_COOKIES } from '../auth/cookie.constants';
@@ -13,6 +13,8 @@ export class AuthMiddleware implements NestMiddleware {
     @Inject(PlatformAuthService) private readonly platformAuthService: PlatformAuthService,
     @Inject(JwtService) private readonly jwtService: JwtService,
     @Inject(VxConfigService) private readonly configService: VxConfigService,
+    @Inject(AccessTokenRevocationService)
+    private readonly tokenRevocationService: AccessTokenRevocationService,
   ) {}
 
   async use(req: Request, _res: Response, next: NextFunction) {
@@ -31,6 +33,11 @@ export class AuthMiddleware implements NestMiddleware {
       const payload = this.jwtService.verify<JwtAccessPayload>(accessToken, {
         secret: this.configService.auth.JWT_SECRET,
       });
+      if (payload.userType !== JwtUserType.OPERATOR || payload.authScope !== JwtAuthScope.PLATFORM_ADMIN) {
+        next();
+        return;
+      }
+      await this.tokenRevocationService.assertAccessTokenActive(payload, 'operator');
       const user = await this.platformAuthService.getCurrentUser(payload.sub);
 
       if (user) {

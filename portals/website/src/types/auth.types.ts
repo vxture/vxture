@@ -20,6 +20,10 @@ export interface UserInfo {
   tenantType?: 'individual' | 'company' | 'organization' | string | null;
 }
 
+export interface RestoreSessionOptions {
+  silent?: boolean;
+}
+
 export interface AuthState {
   user: UserInfo | null;
   isAuthenticated: boolean;
@@ -28,9 +32,9 @@ export interface AuthState {
 
   // Methods
   setUser: (user: UserInfo | null) => void;
-  login: (identifier: string, password: string) => Promise<void>;
-  signup: (email: string, name: string, password: string) => Promise<void>;
+  login: (identifier: string, password: string, turnstileToken?: string) => Promise<void>;
+  signup: (email: string, name: string, password: string, turnstileToken?: string) => Promise<void>;
   logout: () => Promise<void>;
-  restoreSession: () => Promise<void>;
+  restoreSession: (options?: RestoreSessionOptions) => Promise<UserInfo | null>;
   clearError: () => void;
 }

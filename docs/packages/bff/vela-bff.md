@@ -1,0 +1,72 @@
+# @vxture/bff-vela
+
+> ⚠️ 待大版本重构 | 迁移自 `bff/vela-bff/CLAUDE.md`
+> 架构层参考：[`docs/architecture/10-bff-layer.md`](../../architecture/10-bff-layer.md)
+> 产品规格：[`docs/product/agents/vela/spec.md`](../../product/agents/vela/spec.md)
+
+---
+
+## 包信息
+
+| 项 | 值 |
+|----|----|
+| 包名 | `@vxture/bff-vela` |
+| 路径 | `bff/vela-bff/` |
+| @layer | `Application` |
+| 服务对象 | `agent-studio/vela`（admin + console 两个 surface） |
+| 端口 | 3121 |
+
+## 唯一职责
+
+1. 验证 JWT（来自宿主 portal 的 Cookie）
+2. 校验 `X-Vela-Surface` Header × JWT `userType` 合法性
+3. 构造 `CallerContext`（surface / userId / tenantId / allowedTools / dataScope）
+4. 将 `/vela/chat` 请求透传给 `agent-server/vela`，SSE 流式回传
+
+**不做**：登录/登出、业务数据聚合、直接调用 LLM、操作数据库。
+
+## Surface × userType 矩阵
+
+| X-Vela-Surface | JWT userType | 结果 |
+|---------------|-------------|------|
+| `admin` | `operator` | ✅ dataScope = global |
+| `admin` | `tenant_user` | ❌ 403 SURFACE_FORBIDDEN |
+| `console` | `tenant_user` | ✅ dataScope = tenant |
+| `console` | `operator` | ❌ 403 SURFACE_FORBIDDEN |
+
+## 目录结构
+
+```
+src/
+├── middleware/
+│   ├── auth.middleware.ts       # JWT 验证，挂载 req.user
+│   └── surface.middleware.ts   # Surface 校验，构造 req.callerContext
+├── routers/
+│   ├── chat.router.ts          # POST /vela/chat（SSE 透传）
+│   └── health.router.ts
+├── tools/
+│   └── tool-whitelist.const.ts # ADMIN_TOOLS / CONSOLE_TOOLS
+├── types/
+│   ├── caller-context.types.ts
+│   └── chat.types.ts
+└── index.ts
+```
+
+## 核心约束（违反破坏安全隔离）
+
+1. Surface 校验**只在 `surface.middleware.ts`** 做，router 不得重复校验
+2. `tenantId` 只从 JWT payload 取，禁止从 request body / query 读取
+3. `allowedTools` 只能来自常量，不接受前端传入
+4. 中间件顺序：AuthMiddleware → SurfaceMiddleware → ChatRouter
+5. `/health` 不经过中间件
+
+## 依赖约束
+
+**允许：**
+- `@vxture/core-auth`（JWT 类型，不引入签发逻辑）
+- `@vxture/core-config` / `@vxture/shared`
+- NestJS / `@nestjs/jwt` / `cookie-parser`
+
+**禁止：**
+- `@vxture/ai-sdk` / `@vxture/service-*` / `design-system` / `platform-*`
+- 跨 BFF 导入 / JWT 签发逻辑

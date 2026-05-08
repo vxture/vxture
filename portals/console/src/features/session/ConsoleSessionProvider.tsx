@@ -1,19 +1,25 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { login, logout, restoreSession } from '@/api/console-bff';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
+import { login, logout, restoreSession, switchTenantSession } from '@/api/console-bff';
 import type { SessionSnapshot } from '@/entities/console';
 import { anonymousSession } from '@/shared/mock-console-data';
 
 type SessionStatus = 'idle' | 'loading' | 'ready';
+const SESSION_SYNC_INTERVAL_MS = 2000;
+const SESSION_SYNC_THROTTLE_MS = 1500;
+
+interface RefreshSessionOptions {
+  silent?: boolean;
+}
 
 interface SessionContextValue {
   session: SessionSnapshot;
   status: SessionStatus;
-  signIn: (identifier: string, password: string) => Promise<void>;
+  signIn: (identifier: string, password: string, turnstileToken?: string) => Promise<void>;
   signOut: () => void;
   switchTenant: (tenantId: string) => Promise<void>;
-  refreshSession: () => Promise<void>;
+  refreshSession: (options?: RefreshSessionOptions) => Promise<SessionSnapshot>;
 }
 
 const SessionContext = createContext<SessionContextValue>({
@@ -22,7 +28,7 @@ const SessionContext = createContext<SessionContextValue>({
   signIn: async () => undefined,
   signOut: () => undefined,
   switchTenant: async () => undefined,
-  refreshSession: async () => undefined,
+  refreshSession: async () => anonymousSession,
 });
 
 const ACTIVE_TENANT_STORAGE_KEY = 'vx-console-active-tenant-id';
@@ -41,35 +47,112 @@ function writeStoredTenantId(tenantId: string) {
   }
 }
 
+async function applyStoredTenant(snapshot: SessionSnapshot) {
+  const storedTenantId = readStoredTenantId();
+  if (!storedTenantId || snapshot.tenant?.id === storedTenantId) {
+    return snapshot;
+  }
+
+  const canUseStoredTenant = (snapshot.tenantOptions ?? []).some((tenant) => tenant.id === storedTenantId);
+  return canUseStoredTenant ? switchTenantSession(storedTenantId) : snapshot;
+}
+
+function getSessionIdentity(snapshot: SessionSnapshot) {
+  return JSON.stringify({
+    isAuthenticated: snapshot.isAuthenticated,
+    user: snapshot.user,
+    tenant: snapshot.tenant,
+    tenantOptions: snapshot.tenantOptions ?? [],
+    capabilities: snapshot.capabilities,
+  });
+}
+
 export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<SessionSnapshot>(anonymousSession);
   const [status, setStatus] = useState<SessionStatus>('loading');
+  const sessionRef = useRef<SessionSnapshot>(anonymousSession);
+  const lastSyncAtRef = useRef(0);
+  const syncInFlightRef = useRef(false);
+
+  const commitSession = useCallback((snapshot: SessionSnapshot) => {
+    const previous = sessionRef.current;
+    sessionRef.current = snapshot;
+
+    if (getSessionIdentity(previous) !== getSessionIdentity(snapshot)) {
+      setSession(snapshot);
+    }
+  }, []);
+
+  const refreshSession = useCallback(async (options: RefreshSessionOptions = {}) => {
+    if (!options.silent) {
+      setStatus('loading');
+    }
+
+    try {
+      const snapshot = await applyStoredTenant(await restoreSession());
+      commitSession(snapshot);
+      setStatus('ready');
+
+      return snapshot;
+    } catch (error) {
+      if (!options.silent) {
+        commitSession(anonymousSession);
+      }
+
+      setStatus('ready');
+      return options.silent ? sessionRef.current : anonymousSession;
+    }
+  }, [commitSession]);
 
   useEffect(() => {
-    let active = true;
+    lastSyncAtRef.current = Date.now();
+    void refreshSession();
+  }, [refreshSession]);
 
-    void restoreSession(readStoredTenantId()).then((snapshot) => {
-      if (!active) {
+  useEffect(() => {
+    if (status !== 'ready') {
+      return;
+    }
+
+    const syncIfStale = () => {
+      const now = Date.now();
+      if (syncInFlightRef.current || now - lastSyncAtRef.current < SESSION_SYNC_THROTTLE_MS) {
         return;
       }
 
-      setSession(snapshot);
-      setStatus('ready');
-    });
+      syncInFlightRef.current = true;
+      lastSyncAtRef.current = now;
+
+      void refreshSession({ silent: true }).finally(() => {
+        syncInFlightRef.current = false;
+      });
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        syncIfStale();
+      }
+    };
+
+    const intervalId = window.setInterval(syncIfStale, SESSION_SYNC_INTERVAL_MS);
+    window.addEventListener('focus', syncIfStale);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
-      active = false;
+      window.clearInterval(intervalId);
+      window.removeEventListener('focus', syncIfStale);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, []);
+  }, [refreshSession, status]);
 
-  async function signIn(identifier: string, password: string) {
+  async function signIn(identifier: string, password: string, turnstileToken?: string) {
     setStatus('loading');
     try {
-      const snapshot = await login({ identifier, password }, readStoredTenantId());
-      setSession(snapshot);
+      const snapshot = await applyStoredTenant(await login({ identifier, password, turnstileToken }));
+      commitSession(snapshot);
       setStatus('ready');
     } catch (error) {
-      setSession(anonymousSession);
+      commitSession(anonymousSession);
       setStatus('ready');
       throw error;
     }
@@ -77,22 +160,15 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     await logout();
-    setSession(anonymousSession);
+    commitSession(anonymousSession);
     setStatus('ready');
   }
 
   async function switchTenant(tenantId: string) {
     setStatus('loading');
+    const snapshot = await switchTenantSession(tenantId);
     writeStoredTenantId(tenantId);
-    const snapshot = await restoreSession(tenantId);
-    setSession(snapshot);
-    setStatus('ready');
-  }
-
-  async function refreshSession() {
-    setStatus('loading');
-    const snapshot = await restoreSession(readStoredTenantId());
-    setSession(snapshot);
+    commitSession(snapshot);
     setStatus('ready');
   }
 

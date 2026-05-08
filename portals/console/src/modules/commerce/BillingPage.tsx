@@ -94,8 +94,8 @@ export function BillingPage() {
   useEffect(() => {
     setLoading(true);
     Promise.all([
-      fetchBillingOverview(session.tenant?.id),
-      fetchBillingInvoices(session.tenant?.id, 10),
+      fetchBillingOverview(),
+      fetchBillingInvoices(10),
     ])
       .then(([ov, invs]) => {
         setOverview(ov);

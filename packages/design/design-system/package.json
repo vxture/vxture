@@ -11,6 +11,7 @@
       "import":  "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./styles/auth.css": "./src/styles/auth.css",
     "./styles/globals.css": "./src/styles/globals.css"
   },
   "files": ["dist", "src/styles", "assets"],

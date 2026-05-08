@@ -712,7 +712,7 @@ CONTENT_REGISTRY = {
 ### Middleware 三个关注点
 
 ```
-1. 认证重定向（读 vx_refresh_token Cookie，保护 /dashboard）
+1. 认证重定向（读 vx_tenant_refresh_token Cookie，保护 /dashboard）
 2. next-intl 语言前缀路由（zh-CN / en-US）
 3. 写入 x-pathname header（供 request.ts 按需加载翻译）
 ```

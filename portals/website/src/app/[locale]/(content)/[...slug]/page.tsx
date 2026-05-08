@@ -162,7 +162,7 @@ interface ContentRouteProps {
 export default async function ContentRoutePage({ params }: ContentRouteProps) {
   const [section, ...rest] = params.slug ?? [];
 
-  if (!isContentSection(section)) notFound();
+  if (!section || !isContentSection(section)) notFound();
 
   const config = CONTENT_REGISTRY[section];
   const entry = await config.loader(rest, params.locale);

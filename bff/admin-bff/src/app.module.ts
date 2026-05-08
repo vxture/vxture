@@ -1,7 +1,9 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { AccessTokenRevocationService } from '@vxture/core-auth';
 import { VxConfigModule } from '@vxture/core-config';
 import { MailModule } from '@vxture/core-mail';
+import { SmsModule } from '@vxture/service-sms';
 import { PlatformAuthService } from './auth/auth.service';
 import { LoginRateLimiterService } from './auth/login-rate-limiter.service';
 import { CaptchaService } from './auth/captcha.service';
@@ -34,10 +36,11 @@ import { TicketsRouter } from './routers/tickets.router';
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ['app', 'auth', 'database'],
+      domains: ['app', 'auth', 'database', 'redis'],
     }),
     JwtModule.register({}),
     MailModule,
+    SmsModule,
   ],
   controllers: [
     HealthRouter,
@@ -63,7 +66,13 @@ import { TicketsRouter } from './routers/tickets.router';
     PlatformAdminsRouter,
     PlatformGovernanceRouter,
   ],
-  providers: [PlatformAuthService, LoginRateLimiterService, CaptchaService, SessionAggregator],
+  providers: [
+    PlatformAuthService,
+    LoginRateLimiterService,
+    CaptchaService,
+    SessionAggregator,
+    AccessTokenRevocationService,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

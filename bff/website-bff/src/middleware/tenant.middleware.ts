@@ -3,7 +3,7 @@
  * @package @vxture/bff-website
  *
  * 从 JWT 中解析 tenantId，挂载到请求上下文供后续路由使用。
- * 支持 vx_* 和 vx_console_* 两种 cookie key。
+ * 支持统一 vx_tenant_* cookie，并兼容旧 vx_* / vx_console_* key。
  *
  * @author AI-Generated
  * @date 2026-05-07
@@ -12,6 +12,7 @@
 
 import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 import type { Request, Response, NextFunction } from 'express';
+import { AUTH_CONSTANTS } from '@vxture/shared';
 import { WebsiteAuthService } from '../auth/auth.service';
 import type { RequestContext } from '../types/auth.types';
 
@@ -20,7 +21,9 @@ export class TenantMiddleware implements NestMiddleware {
   constructor(@Inject(WebsiteAuthService) private readonly websiteAuthService: WebsiteAuthService) {}
 
   use(req: Request, _res: Response, next: NextFunction) {
-    const accessToken = req.cookies?.['vx_access_token'] ?? req.cookies?.['vx_console_access_token'];
+    const accessToken = req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN]
+      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN]
+      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
     if (!accessToken) {
       next();
       return;

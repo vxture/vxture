@@ -17,16 +17,21 @@
 
 import { Inject, Injectable, type NestMiddleware } from '@nestjs/common';
 import type { NextFunction, Request, Response } from 'express';
+import { AccessTokenRevocationService } from '@vxture/core-auth';
 import { AUTH_CONSTANTS } from '@vxture/shared';
 import { AgentAuthService } from '../auth/auth.service';
 import type { RequestContext } from '../types/auth.types';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(@Inject(AgentAuthService) private readonly agentAuthService: AgentAuthService) {}
+  constructor(
+    @Inject(AgentAuthService) private readonly agentAuthService: AgentAuthService,
+    @Inject(AccessTokenRevocationService)
+    private readonly tokenRevocationService: AccessTokenRevocationService,
+  ) {}
 
-  use(req: Request, _res: Response, next: NextFunction) {
-    const accessToken = req.cookies?.[AUTH_CONSTANTS.COOKIE_KEYS.ACCESS_TOKEN];
+  async use(req: Request, _res: Response, next: NextFunction): Promise<void> {
+    const accessToken = req.cookies?.[AUTH_CONSTANTS.RUYIN_COOKIE_KEYS.ACCESS_TOKEN];
     if (!accessToken) {
       next();
       return;
@@ -34,6 +39,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const payload = this.agentAuthService.verifyAccessToken(accessToken);
+      await this.tokenRevocationService.assertAccessTokenActive(payload, 'tenant');
       const request = req as Request & RequestContext;
       request.user = this.agentAuthService.buildViewer(payload);
       request.accessToken = accessToken;

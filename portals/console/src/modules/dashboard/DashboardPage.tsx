@@ -50,7 +50,7 @@ export function DashboardPage() {
 
   useEffect(() => {
     setInvoicesLoading(true);
-    fetchBillingInvoices(session.tenant?.id, 5)
+    fetchBillingInvoices(5)
       .then(setInvoices)
       .finally(() => setInvoicesLoading(false));
   }, [session.tenant?.id]);

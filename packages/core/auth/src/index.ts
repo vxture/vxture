@@ -41,3 +41,24 @@ export {
   buildOAuthProfile,
   generateJti,
 } from './utils';
+
+// Session
+export {
+  AccessTokenRevocationService,
+  buildAccessTokenBlacklistKey,
+  buildSubjectRevokedBeforeKey,
+  resolveAccessRevocationSurface,
+} from './session';
+export type { AccessRevocationSurface } from './session';
+
+// Human verification
+export {
+  TurnstileVerifier,
+  TurnstileVerificationError,
+} from './turnstile';
+export type {
+  TurnstileSurface,
+  TurnstileSiteverifyResponse,
+  TurnstileVerifierOptions,
+  TurnstileVerifyInput,
+} from './turnstile';

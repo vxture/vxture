@@ -196,9 +196,9 @@ export class SessionAggregator {
     }));
   }
 
-  async getCapabilities(accountId: string) {
-    const tenantContext = await this.organizationReadService.resolveTenantContextForAccount(accountId);
-    return tenantContext ? [...TENANT_CAPABILITIES] : [...PLATFORM_CAPABILITIES];
+  async getCapabilities(accountId: string, tenantId?: string) {
+    const tenantContext = await this.getTenantContext(accountId, tenantId);
+    return tenantContext.mode === 'tenant' ? [...TENANT_CAPABILITIES] : [...PLATFORM_CAPABILITIES];
   }
 
   async getIamSummary(accountId: string, tenantId?: string) {

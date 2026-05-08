@@ -4,7 +4,7 @@
  * @layer Presentation
  * @category Auth
  *
- * 流程：填写基本信息 → 滑块验证码 → 调用 /api/auth/signup → 跳转 /verify
+ * 流程：填写基本信息 → Turnstile 人机验证 → 调用 /api/auth/signup → 跳转 /verify
  *
  * @author AI-Generated
  * @date 2026-05-02
@@ -12,9 +12,9 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, type CSSProperties, type FormEvent } from 'react';
 import { AuthFooter, AuthHeader } from '@/components/auth/AuthChrome';
-import { SliderCaptcha } from '@/components/auth/SliderCaptcha';
+import { AuthTurnstile, useAuthVerificationCountdown } from '@vxture/design-system';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationStore } from '@/stores/notification.store';
 import { Link, useRouter } from '@/lib/i18n/navigation';
@@ -26,11 +26,15 @@ type SignupErrors = {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  form?: string;
 };
 
 // ─── 常量 ──────────────────────────────────────────────────────────────────────
 
 const BG_SRC = '/images/login-bg-light.jpg';
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? '';
+const TURNSTILE_ACTION = 'tenant_auth';
+type TurnstileStatus = 'pending' | 'ready' | 'failed';
 
 // ─── 主组件 ────────────────────────────────────────────────────────────────────
 
@@ -43,12 +47,16 @@ export function SignupForm({ className = '' }: SignupFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [captchaOpen, setCaptchaOpen] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetSignal, setTurnstileResetSignal] = useState(0);
+  const [turnstileStatus, setTurnstileStatus] = useState<TurnstileStatus>(TURNSTILE_SITE_KEY ? 'pending' : 'ready');
   const [errors, setErrors] = useState<SignupErrors>({});
 
   const { signup, isLoading } = useAuth();
   const { addNotification } = useNotificationStore();
   const router = useRouter();
+  const verificationPending = turnstileStatus === 'pending';
+  const verificationCountdown = useAuthVerificationCountdown(verificationPending);
 
   // ─── 校验 ────────────────────────────────────────────────────────────────────
 
@@ -77,17 +85,31 @@ export function SignupForm({ className = '' }: SignupFormProps) {
 
   // ─── 事件处理 ─────────────────────────────────────────────────────────────────
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (validate()) {
-      setCaptchaOpen(true);
-    }
+  const resetTurnstile = () => {
+    if (!TURNSTILE_SITE_KEY) return;
+    setTurnstileToken('');
+    setTurnstileStatus('pending');
+    setTurnstileResetSignal((value) => value + 1);
   };
 
-  const handleCaptchaSuccess = async () => {
-    setCaptchaOpen(false);
+  const requireTurnstileToken = () => {
+    if (!TURNSTILE_SITE_KEY) return undefined;
+    if (turnstileToken) return turnstileToken;
+    return null;
+  };
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!validate()) return;
+
+    const token = requireTurnstileToken();
+    if (token === null) {
+      setErrors({ form: '请先完成人机验证。' });
+      return;
+    }
+
     try {
-      await signup(email.trim(), name.trim(), password);
+      await signup(email.trim(), name.trim(), password, token);
 
       // 通知浏览器保存凭据，支持后续自动填充
       if ('PasswordCredential' in window) {
@@ -104,6 +126,8 @@ export function SignupForm({ className = '' }: SignupFormProps) {
       router.push('/verify');
     } catch (error) {
       addNotification(error instanceof Error ? error.message : '注册失败，请稍后重试', 'error');
+    } finally {
+      resetTurnstile();
     }
   };
 
@@ -116,12 +140,8 @@ export function SignupForm({ className = '' }: SignupFormProps) {
   return (
     <section
       className={`vx-auth-page vx-signup-page ${className}`}
-      style={{ '--vx-auth-bg': `url(${BG_SRC})` } as React.CSSProperties}
+      style={{ '--vx-auth-bg': `url(${BG_SRC})` } as CSSProperties}
     >
-      {captchaOpen ? (
-        <SliderCaptcha onClose={() => setCaptchaOpen(false)} onSuccess={handleCaptchaSuccess} />
-      ) : null}
-
       <AuthHeader />
 
       <main className='vx-signup-main'>
@@ -177,17 +197,40 @@ export function SignupForm({ className = '' }: SignupFormProps) {
               disabled={isLoading}
               onChange={setConfirmPassword}
             />
+            <AuthTurnstile
+              siteKey={TURNSTILE_SITE_KEY}
+              action={TURNSTILE_ACTION}
+              resetSignal={turnstileResetSignal}
+              onToken={(token) => {
+                setTurnstileToken(token);
+                setTurnstileStatus('ready');
+              }}
+              onExpire={() => {
+                setTurnstileToken('');
+                setTurnstileStatus(TURNSTILE_SITE_KEY ? 'pending' : 'ready');
+              }}
+              onError={() => {
+                setTurnstileToken('');
+                setTurnstileStatus('failed');
+                setErrors((current) => ({ ...current, form: '人机验证加载失败，请刷新后重试。' }));
+              }}
+            />
+            {errors.form ? <p className='vx-auth-error vx-auth-form-error'>{errors.form}</p> : null}
 
             <button
               type='submit'
               className='vx-auth-primary vx-signup-primary'
-              disabled={isLoading}
+              disabled={isLoading || verificationPending || turnstileStatus === 'failed'}
             >
               {isLoading ? (
                 <>
                   <span className='vx-auth-spinner' />
                   注册中...
                 </>
+              ) : verificationPending ? (
+                `安全验证中... ${verificationCountdown}s`
+              ) : turnstileStatus === 'failed' ? (
+                '验证不可用'
               ) : (
                 '注册账号'
               )}

@@ -27,12 +27,14 @@ import type { Request, Response } from 'express';
 class LoginDto {
   identifier!: string;
   password!: string;
+  turnstileToken?: string;
 }
 
 class SignupDto {
   email!: string;
   name!: string;
   password!: string;
+  turnstileToken?: string;
 }
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
@@ -47,15 +49,37 @@ const AUTH_BFF = resolveAuthBffUrl();
 
 /** 将 auth-bff 的 set-cookie 头完整透传到客户端 */
 function forwardSetCookie(response: Response, upstream: globalThis.Response): void {
-  const setCookie = upstream.headers.get('set-cookie');
-  if (setCookie) {
-    response.setHeader('set-cookie', setCookie);
-  }
+  const setCookie = readSetCookie(upstream);
+  if (setCookie.length) response.setHeader('set-cookie', setCookie);
+}
+
+function readSetCookie(upstream: globalThis.Response): string[] {
+  const headers = upstream.headers as Headers & { getSetCookie?: () => string[] };
+  const setCookie = headers.getSetCookie?.();
+  if (setCookie?.length) return setCookie;
+  const single = upstream.headers.get('set-cookie');
+  return single ? [single] : [];
 }
 
 /** 将客户端请求中的 cookie 转发到 auth-bff */
 function forwardCookie(req: Request): string {
   return req.headers.cookie ?? '';
+}
+
+function forwardJsonHeaders(req: Request): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Cookie': forwardCookie(req),
+  };
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const remoteIp = req.ip ?? req.socket.remoteAddress;
+  headers['X-Forwarded-For'] = [typeof forwardedFor === 'string' ? forwardedFor : '', remoteIp]
+    .filter(Boolean)
+    .join(', ');
+  if (req.headers['user-agent']) {
+    headers['User-Agent'] = req.headers['user-agent'];
+  }
+  return headers;
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
@@ -69,16 +93,14 @@ export class AuthRouter {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() body: LoginDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/api/auth/login', {
+    const response = await fetch(AUTH_BFF + '/auth/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': forwardCookie(req),
-      },
+      headers: forwardJsonHeaders(req),
       body: JSON.stringify({
         identifier: body.identifier,
         password: body.password,
         source: 'website',
+        turnstileToken: body.turnstileToken,
       }),
     });
 
@@ -94,16 +116,14 @@ export class AuthRouter {
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() body: SignupDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/api/auth/signup', {
+    const response = await fetch(AUTH_BFF + '/auth/signup', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cookie': forwardCookie(req),
-      },
+      headers: forwardJsonHeaders(req),
       body: JSON.stringify({
         email: body.email,
         name: body.name,
         password: body.password,
+        turnstileToken: body.turnstileToken,
       }),
     });
 
@@ -119,7 +139,7 @@ export class AuthRouter {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/api/auth/logout', {
+    const response = await fetch(AUTH_BFF + '/auth/logout?source=website', {
       method: 'POST',
       headers: {
         'Cookie': forwardCookie(req),
@@ -139,7 +159,7 @@ export class AuthRouter {
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
     const response = await fetch(
-      AUTH_BFF + '/api/auth/refresh?source=website',
+      AUTH_BFF + '/auth/refresh?source=website',
       {
         method: 'POST',
         headers: {

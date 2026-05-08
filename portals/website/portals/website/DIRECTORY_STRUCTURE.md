@@ -252,7 +252,7 @@ portals/website/
 │   │   └── index.ts                       # 统一导出
 │   │
 │   ├── middleware.ts                      # 🆕 重构 Next.js Middleware
-│   │                                      #   1. 认证重定向（读 vx_refresh_token Cookie）
+│   │                                      #   1. 认证重定向（读 vx_tenant_refresh_token Cookie）
 │   │                                      #   2. next-intl 语言前缀路由
 │   │                                      #   3. 写入 x-pathname header
 │   └── global.d.ts                        # 全局类型扩展
@@ -461,7 +461,7 @@ portals/website
 `middleware.ts` 执行顺序（固定）：
 
 ```
-1. 认证重定向 — 读取 vx_refresh_token Cookie，保护 /dashboard
+1. 认证重定向 — 读取 vx_tenant_refresh_token Cookie，保护 /dashboard
 2. intlMiddleware — next-intl 语言前缀路由
 3. response.headers.set('x-pathname', ...) — 供 request.ts 按需加载翻译
 ```
