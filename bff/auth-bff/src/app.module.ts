@@ -7,7 +7,7 @@
  * @version 1.0
  */
 
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { VxConfigModule } from '@vxture/core-config';
 import { IamModule } from '@vxture/service-iam';
@@ -43,9 +43,4 @@ import { HealthRouter } from './routers/health.router';
   ],
   providers: [AuthService],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    // auth-bff 所有路由都是公开的（auth middleware 不需要，因为这里是签发端）
-    // login / logout / refresh / oauth / crossdomain 都不需要认证
-  }
-}
+export class AppModule {}

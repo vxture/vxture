@@ -57,10 +57,6 @@ class SignupDto {
   turnstileToken?: string;
 }
 
-class RefreshDto {
-  source?: LoginSource;
-}
-
 class SwitchTenantDto {
   tenantId!: string;
   source?: LoginSource;
@@ -84,7 +80,7 @@ const LEGACY_TENANT_COOKIES = [
     access: AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN,
     refresh: AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.REFRESH_TOKEN,
   },
-];
+] as const;
 
 const ADMIN_COOKIES = {
   access: 'vx_admin_access_token',

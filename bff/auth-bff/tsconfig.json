@@ -1,20 +1,19 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "rootDir": "src",
-    "outDir": "dist",
-    "declaration": true,
+    "noEmit": true,
+    "rootDir": "../..",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "isolatedModules": true
+    "emitDecoratorMetadata": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist", "node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "../../packages/shared/shared/src/**/*.ts",
+    "../../packages/core/auth/src/**/*.ts",
+    "../../packages/core/config/src/**/*.ts",
+    "../../services/identity/iam/src/**/*.ts",
+    "../../services/tenant/organization/src/**/*.ts",
+    "../../services/notification/mail/src/**/*.ts",
+    "../../services/notification/sms/src/**/*.ts"
+  ]
 }
