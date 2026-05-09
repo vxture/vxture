@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Button } from '@/components/ui/primitives';
+import { Button } from '@vxture/design-system';
 import type {
   BillingInvoiceStatus,
   BillingInvoiceTaxType,

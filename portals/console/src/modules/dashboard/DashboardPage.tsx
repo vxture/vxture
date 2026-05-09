@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@/lib/i18n/navigation';
 import { Icon, type IconName } from '@vxture/design-system';
-import { Badge } from '@/components/ui/primitives';
+import { Badge } from '@vxture/design-system';
 import { fetchBillingInvoices, type ConsoleInvoice } from '@/api/console-bff';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';

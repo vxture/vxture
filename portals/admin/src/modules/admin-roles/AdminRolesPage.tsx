@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
+import { Badge, Button, Input } from '@vxture/design-system';
 import { fetchPlatformPermissions, fetchPlatformRoles, replacePlatformRolePermissions } from '@/api/admin-bff';
 import type { PlatformAdminPermissionRecord, PlatformPermissionType, PlatformRoleRecord } from '@/entities/console';
 import { useConsoleTranslations } from '@/lib/console-intl';

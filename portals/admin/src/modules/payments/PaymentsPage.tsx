@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Input } from "@/components/ui/primitives";
+import { Badge, Button, Input } from "@vxture/design-system";
 import { AdminBffError, fetchPaymentOperations, rejectPayment, verifyPayment } from "@/api/admin-bff";
 import type {
   OrderOfflinePaymentType,
@@ -261,7 +261,6 @@ function PaymentRemarkDialog({
             onChange={(e) => onRemarkChange(e.target.value)}
             rows={3}
             placeholder="请输入操作备注…"
-            // eslint-disable-next-line jsx-a11y/no-autofocus
             autoFocus
           />
           {error ? <p className="vx-dialog__error">{error}</p> : null}

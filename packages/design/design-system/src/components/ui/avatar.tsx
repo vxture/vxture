@@ -33,6 +33,7 @@ const Avatar = React.forwardRef<HTMLSpanElement, AvatarProps>(function Avatar(
       ref={ref}
       className={cn(
         "relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full",
+        "vx-avatar",
         className,
       )}
       {...props}
@@ -59,6 +60,7 @@ const AvatarFallback = React.forwardRef<HTMLSpanElement, AvatarFallbackProps>(
         ref={ref}
         className={cn(
           "flex h-full w-full items-center justify-center rounded-full bg-vx-surface-muted",
+          "vx-avatar__fallback",
           className,
         )}
         {...props}

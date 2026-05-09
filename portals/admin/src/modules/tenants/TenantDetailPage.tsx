@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
+import { Badge, Button, Input } from '@vxture/design-system';
 import { fetchTenantOperations } from '@/api/admin-bff';
 import type {
   TenantOperationMember,

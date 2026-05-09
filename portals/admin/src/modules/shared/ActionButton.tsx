@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from 'react';
 import { Icon, type IconName } from '@vxture/design-system';
-import { Button } from '@/components/ui/primitives';
+import { Button } from '@vxture/design-system';
 
 type ActionButtonProps = Omit<ComponentProps<typeof Button>, 'children'> & {
   children: ReactNode;

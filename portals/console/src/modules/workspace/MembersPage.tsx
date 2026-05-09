@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Avatar, Badge, Button, Input, Label } from '@/components/ui/primitives';
+import { Avatar, Badge, Button, Input, Label } from '@vxture/design-system';
 import {
   createMember,
   disableMember,

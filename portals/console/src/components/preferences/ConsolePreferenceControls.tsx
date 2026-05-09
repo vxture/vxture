@@ -4,7 +4,7 @@ import { startTransition, useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useTheme } from '@vxture/design-system';
-import { Button } from '@/components/ui/primitives';
+import { Button } from '@vxture/design-system';
 import {
   getGlobalUserPreferences,
   setGlobalDensityPreference,

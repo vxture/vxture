@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
+import { Badge, Button, Input } from '@vxture/design-system';
 import { fetchPlatformGovernanceRecords } from '@/api/admin-bff';
 import type {
   PlatformGovernanceKind,

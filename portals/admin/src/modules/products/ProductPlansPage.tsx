@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
+import { Badge, Button, Input } from '@vxture/design-system';
 import { fetchProductPlans } from '@/api/admin-bff';
 import type { ProductPlanFeature, ProductPlanRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';

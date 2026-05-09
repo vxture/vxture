@@ -9,25 +9,11 @@
    =========================================================================== */
 
 /* ---------------------------------------------------------------------------
-   Tailwind CSS v4 核心导入 (Tailwind Core Import)
-   说明：导入 Tailwind CSS v4 的完整功能集
-   包含：Preflight (CSS Reset) + Base + Components + Utilities
-   处理：通过 PostCSS 和 @tailwindcss/postcss 插件处理
-   注意：Tailwind v4 只需要单一的 @import "tailwindcss" 导入
+   DS 全局样式入口 (Design System Global Entry)
+   说明：由 DS 统一聚合 Tailwind、dark 变体、tokens、typography、auth、fullscreen。
+   应用层只在其后追加业务页面样式，避免重复维护平台基础样式入口。
    --------------------------------------------------------------------------- */
-@import "tailwindcss";
-@import "@vxture/design-system/styles/tokens.css";
-@import "@vxture/design-system/styles/typography.css";
-@import "@vxture/design-system/styles/auth.css";
-
-/* ---------------------------------------------------------------------------
-   Tailwind v4 Dark Mode 配置
-   说明：v4 废弃了 tailwind.config.js 的 darkMode: 'class' 写法。
-         必须用 @custom-variant 声明 dark 变体的触发选择器。
-   触发：html 元素带有 class="dark" 时（由 next-themes ThemeProvider 注入）
-   参考：https://tailwindcss.com/docs/dark-mode#using-a-custom-selector
-   --------------------------------------------------------------------------- */
-@custom-variant dark (&:where(.dark, .dark *));
+@import "@vxture/design-system/styles/globals.css";
 
 /* ---------------------------------------------------------------------------
    主题系统 (Theme System)
@@ -59,40 +45,14 @@
 /* ---------------------------------------------------------------------------
    CSS 层叠架构说明
 
-   1. Tailwind 核心层 (@import "tailwindcss")
-      - Preflight: 浏览器样式重置
-      - Base: 基础 HTML 元素样式
-      - Components: Tailwind 组件类 (如 @apply)
-      - Utilities: 原子化工具类
-
-   2. 主题变量层 (themes/theme-colors.css + themes/theme-base.css)
-      - CSS 自定义属性定义
-      - 主题颜色变量 (light/dark 切换)
-      - 基础设计令牌 (间距、阴影等)
-
-   3. 基础样式层 (base.css)
-      - 聚合器文件，导入所有基础样式子文件
-      - 补充 Tailwind Preflight
-      - 自定义 HTML 元素样式
-      - 全局排版和表单样式
-
-   4. 组件样式层 (components.css)
-      - 复合组件样式
-      - 组件变体和状态
-      - 使用 @layer components 包装
-
-   5. 工具类层 (utilities.css)
-      - 自定义原子化工具类
-      - 主题感知工具类
-      - 使用 @layer utilities 包装
-
-   优先级：后导入的样式具有更高的优先级，工具类可以覆盖组件样式
+   1. DS 全局入口
+      - Tailwind v4 与动画插件
+      - dark 变体
+      - tokens / typography / auth / fullscreen
 
    注意事项：
-   - 确保主题变量在所有使用它们的样式之前导入
-   - 基础样式应该在组件样式之前
-   - 工具类应该在组件样式之后，以确保可以覆盖组件样式
-   - 不要直接在此文件中添加样式规则，使用对应的分类文件
+   - 应用层只追加 website 专属页面样式
+   - 平台基础样式必须回收至 DS，不在应用层重复定义
    --------------------------------------------------------------------------- */
 
 @keyframes vx-auth-pulse {

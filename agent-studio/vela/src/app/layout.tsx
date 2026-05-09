@@ -10,8 +10,7 @@
 
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import '@vxture/design-system/styles/tokens.css';
-import '@vxture/design-system/styles/typography.css';
+import '@vxture/design-system/styles/globals.css';
 
 export const metadata: Metadata = {
   title:       'Vela 智能助手',

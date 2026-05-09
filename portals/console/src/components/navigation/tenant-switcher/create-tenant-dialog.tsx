@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, type FormEvent } from 'react';
-import { Button, Input, Label } from '@/components/ui/primitives';
+import { Button, Input, Label } from '@vxture/design-system';
 import { useTenant, type TenantType } from '@/features/tenant';
 
 function toSlug(value: string) {

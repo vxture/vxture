@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
-import { Button, Input } from "@/components/ui/primitives";
+import { Button, Input } from "@vxture/design-system";
 import { fetchPromotionOperations } from "@/api/admin-bff";
 import type {
   PromotionOperationRecord,

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Badge } from '@/components/ui/primitives';
+import { Badge } from '@vxture/design-system';
 import { fetchAnnouncements } from '@/api/admin-bff';
 import type { AnnouncementRecord } from '@/entities/console';
 import { EmptyState } from '@/modules/shared/EmptyState';

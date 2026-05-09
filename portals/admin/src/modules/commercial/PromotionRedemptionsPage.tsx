@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Button, Input } from "@/components/ui/primitives";
+import { Button, Input } from "@vxture/design-system";
 import { fetchPromotionRedemptionRecords } from "@/api/admin-bff";
 import type {
   BillingBillStatus,

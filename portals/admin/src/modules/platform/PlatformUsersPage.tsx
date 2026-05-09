@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
+import { Badge, Button, Input } from '@vxture/design-system';
 import { fetchPlatformAdmins } from '@/api/admin-bff';
 import type { PlatformAdminRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';

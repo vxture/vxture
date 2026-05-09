@@ -52,6 +52,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     variant = "default",
     size = "default",
     asChild = false,
+    type,
     ...props
   },
   ref,
@@ -59,7 +60,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   const Comp = asChild ? Slot : "button";
   return (
     <Comp
-      className={cn(buttonVariants({ variant, size }), className)}
+      type={asChild ? type : (type ?? "button")}
+      className={cn(
+        buttonVariants({ variant, size }),
+        "vx-btn",
+        `vx-btn--${variant}`,
+        `vx-btn--${size}`,
+        className,
+      )}
       ref={ref}
       {...props}
     />

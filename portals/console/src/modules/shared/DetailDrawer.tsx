@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { Button } from '@/components/ui/primitives';
+import { Button } from '@vxture/design-system';
 import { DetailPanel, type DetailField } from './DetailPanel';
 
 export function DetailDrawer({

@@ -12,6 +12,8 @@
       "require": "./dist/index.cjs"
     },
     "./styles/auth.css": "./src/styles/auth.css",
+    "./styles/components.css": "./src/styles/components.css",
+    "./styles/fullscreen.css": "./src/styles/fullscreen.css",
     "./styles/globals.css": "./src/styles/globals.css",
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./styles/typography.css": "./src/styles/typography.css"
@@ -40,6 +42,7 @@
     "clsx": "^2.1.1",
     "next-themes": "^0.4.6",
     "tailwind-merge": "^3.5.0",
+    "tailwindcss": "^4.2.1",
     "tailwindcss-animate": "^1.0.7"
   },
 

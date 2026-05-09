@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button } from '@/components/ui/primitives';
+import { Badge, Button } from '@vxture/design-system';
 import { fetchProductCapability } from '@/api/admin-bff';
 import type {
   ProductCapabilityHealthStatus,

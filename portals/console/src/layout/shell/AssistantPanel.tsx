@@ -2,7 +2,7 @@
 
 import { Icon } from '@vxture/design-system';
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { Button, Badge } from '@/components/ui/primitives';
+import { Button, Badge } from '@vxture/design-system';
 import { useTranslations } from 'next-intl';
 
 const ASSISTANT_BAR_HEIGHT = 44;

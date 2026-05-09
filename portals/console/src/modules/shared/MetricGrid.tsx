@@ -1,4 +1,4 @@
-import { Badge, Card, CardContent, CardHeader } from '@/components/ui/primitives';
+import { Badge, Card, CardContent, CardHeader } from '@vxture/design-system';
 import type { SummaryMetric } from '@/entities/console';
 
 export function MetricGrid({ items }: { items: SummaryMetric[] }) {

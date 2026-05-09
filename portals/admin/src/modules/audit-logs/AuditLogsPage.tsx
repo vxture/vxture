@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input } from '@/components/ui/primitives';
+import { Badge, Button, Input } from '@vxture/design-system';
 import { fetchAuditLogs } from '@/api/admin-bff';
 import type { AuditLogRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';

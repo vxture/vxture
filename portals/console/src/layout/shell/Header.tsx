@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { useTheme, Icon } from '@vxture/design-system';
-import { Input } from '@/components/ui/primitives';
+import { Input } from '@vxture/design-system';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { usePortalEntry } from '@/contexts/PortalEntryContext';
 import { UserPanel } from './UserPanel';

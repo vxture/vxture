@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Avatar, AvatarFallback } from '@/components/ui/primitives';
+import { Avatar, AvatarFallback } from '@vxture/design-system';
 import { useTenant, type TenantType } from '@/features/tenant';
 import { CreateTenantDialog } from './create-tenant-dialog';
 import { TenantSwitcherPanel } from './tenant-switcher-panel';

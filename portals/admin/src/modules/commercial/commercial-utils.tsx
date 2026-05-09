@@ -1,6 +1,6 @@
 import type { IconName } from '@vxture/design-system';
 import { Icon } from '@vxture/design-system';
-import { Badge } from '@/components/ui/primitives';
+import { Badge } from '@vxture/design-system';
 
 export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
 export type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];

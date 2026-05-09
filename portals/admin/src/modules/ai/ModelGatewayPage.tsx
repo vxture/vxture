@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { CodeIcon, PlayIcon, PlugIcon, StopIcon, TrashIcon } from '@phosphor-icons/react';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input, Label } from '@/components/ui/primitives';
+import { Badge, Button, Input, Label } from '@vxture/design-system';
 import {
   createAiModel,
   deleteAiModel,

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
 import { fetchSupportTicketsStrict, fetchTenantOperationsStrict } from "@/api/admin-bff";
-import { Badge } from "@/components/ui/primitives";
+import { Badge } from "@vxture/design-system";
 import type { SupportTicketRecord, TenantOperationRecord } from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";

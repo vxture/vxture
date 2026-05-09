@@ -15,7 +15,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocale } from 'next-intl';
 import { Icon, Popover, PopoverContent, PopoverTrigger, useTheme } from '@vxture/design-system';
 import type { Density, IconName } from '@vxture/design-system';
-import { Avatar, AvatarFallback } from '@/components/ui/primitives';
+import { Avatar, AvatarFallback } from '@vxture/design-system';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { usePortalEntry } from '@/contexts/PortalEntryContext';
 import { useRouter, usePathname } from '@/lib/i18n/navigation';

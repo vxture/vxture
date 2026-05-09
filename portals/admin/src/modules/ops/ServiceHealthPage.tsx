@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button } from '@/components/ui/primitives';
+import { Badge, Button } from '@vxture/design-system';
 import { fetchDevServices } from '@/api/admin-bff';
 import type { DevServiceSnapshot } from '@/entities/console';
 import { EmptyState } from '@/modules/shared/EmptyState';

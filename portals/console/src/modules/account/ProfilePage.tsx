@@ -3,7 +3,7 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import { Icon, type IconName } from '@vxture/design-system';
 import { changeUserPassword, fetchUserProfile, updateUserProfile } from '@/api/console-bff';
-import { Avatar, Badge, Button, Input, Label } from '@/components/ui/primitives';
+import { Avatar, Badge, Button, Input, Label } from '@vxture/design-system';
 import type { ConsoleUserProfile } from '@/entities/console';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { useLocale, useTranslations } from 'next-intl';

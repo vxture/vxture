@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, AvatarFallback, Badge, Button, Input } from '@/components/ui/primitives';
+import { Avatar, AvatarFallback, Badge, Button, Input } from '@vxture/design-system';
 import { ConsolePreferenceControls } from '@/components/preferences';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { useTranslations } from 'next-intl';

@@ -9,31 +9,39 @@
  */
 
 import * as React from "react";
-import * as SwitchPrimitive from "@radix-ui/react-switch";
 import { cn } from "../../utils/cn";
 
-export interface SwitchProps extends React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root> {}
+export interface SwitchProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
+  readonly onCheckedChange?: (checked: boolean) => void;
+}
 
 export const Switch = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitive.Root>,
+  HTMLInputElement,
   SwitchProps
->(function Switch({ className, ...props }, ref) {
+>(function Switch(
+  { className, checked, defaultChecked, disabled, onChange, onCheckedChange, ...props },
+  ref,
+) {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange?.(event);
+    onCheckedChange?.(event.target.checked);
+  };
+
   return (
-    <SwitchPrimitive.Root
-      ref={ref}
-      className={cn(
-        "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vx-ring-strong focus-visible:ring-offset-2 focus-visible:ring-offset-vx-surface disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-vx-primary data-[state=unchecked]:bg-vx-border",
-        className,
-      )}
-      {...props}
-    >
-      <SwitchPrimitive.Thumb
-        className={cn(
-          "pointer-events-none block h-5 w-5 rounded-full bg-vx-surface shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
-        )}
+    <label className={cn("vx-switch", disabled && "cursor-not-allowed opacity-60", className)}>
+      <input
+        ref={ref}
+        type="checkbox"
+        className="vx-switch__input"
+        checked={checked}
+        defaultChecked={defaultChecked}
+        disabled={disabled}
+        onChange={handleChange}
+        {...props}
       />
-    </SwitchPrimitive.Root>
+      <span className="vx-switch__track" aria-hidden="true" />
+    </label>
   );
 });
 
-Switch.displayName = SwitchPrimitive.Root.displayName;
+Switch.displayName = "Switch";

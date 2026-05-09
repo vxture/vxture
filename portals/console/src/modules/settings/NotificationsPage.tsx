@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Icon, type IconName } from '@vxture/design-system';
-import { Badge } from '@/components/ui/primitives';
+import { Badge } from '@vxture/design-system';
 import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';

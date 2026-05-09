@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/primitives';
+import { Badge } from '@vxture/design-system';
 import { fetchBillingInvoices, fetchMySubscriptions, type ConsoleInvoice, type ConsoleSubscription } from '@/api/console-bff';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';

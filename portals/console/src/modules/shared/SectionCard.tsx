@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/primitives';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vxture/design-system';
 
 export function SectionCard({
   title,
