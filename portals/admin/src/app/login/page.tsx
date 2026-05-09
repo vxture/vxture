@@ -5,13 +5,10 @@ import { useEffect, useRef, useState, type FormEvent, type PointerEvent, type Re
 import {
   AuthChromeFooter,
   AuthChromeHeader,
-  AuthField,
-  AuthFlowForm,
-  AuthLoginLayout,
-  AuthLoginOptions,
-  AuthPrimaryButton,
+  AuthLoginTemplate,
+  AuthPasswordLoginPanel,
+  AuthPhoneLoginPanel,
   AuthTabs,
-  UnifiedAuthPage,
   useTheme,
   type AuthLoginTab,
 } from '@vxture/design-system';
@@ -438,9 +435,10 @@ function LoginScreen() {
   }
 
   return (
-    <UnifiedAuthPage
+    <AuthLoginTemplate
       className="vx-admin-auth-page"
       pageBackgroundImage={BG_SRC}
+      title={t('card.title')}
       visual={{
         title: t('hero.title'),
         description: t('hero.description'),
@@ -482,136 +480,103 @@ function LoginScreen() {
       header={<AuthHeader />}
       footer={<AuthFooter />}
     >
-      <AuthLoginLayout title={t('card.title')}>
-        <AuthFlowForm
-          onSubmit={handleSubmit}
-          input={
-            <div className="vx-auth-field-stack">
-              <AuthTabs
-                active={screen}
-                onChange={handleAuthTabChange}
-                passwordLabel={t('form.passwordLogin')}
-                phoneLabel={t('form.phoneLogin')}
-              />
-
-              {screen === 'login' ? (
-                <>
-                  <AuthField
-                    label={t('form.account')}
-                    name="username"
-                    type="text"
-                    placeholder={t('form.accountPlaceholder')}
-                    icon="user"
-                    value={identifier}
-                    autoComplete="username"
-                    autoFocus
-                    disabled={loading}
-                    onChange={(value) => {
-                      setIdentifier(value);
-                      setError('');
-                    }}
-                  />
-                  <AuthField
-                    label={t('form.password')}
-                    name="password"
-                    type="password"
-                    placeholder={t('form.passwordPlaceholder')}
-                    icon="lock"
-                    value={password}
-                    autoComplete="current-password"
-                    disabled={loading}
-                    onChange={(value) => {
-                      setPassword(value);
-                      setError('');
-                    }}
-                  />
-                </>
-              ) : (
-                <>
-                  <div className="vx-auth-phone-row">
-                    <AuthField
-                      label={t('form.phone')}
-                      name="phone"
-                      type="tel"
-                      placeholder={t('form.phonePlaceholder')}
-                      icon="phone"
-                      value={phone}
-                      error={phoneError}
-                      autoComplete="tel"
-                      autoFocus
-                      disabled={loading}
-                      onChange={(value) => {
-                        setPhone(value);
-                        setPhoneError('');
-                        setError('');
-                      }}
-                    />
-                  </div>
-                  <div className="vx-auth-code-row">
-                    <AuthField
-                      label={t('form.code')}
-                      name="phone-code"
-                      type="text"
-                      placeholder={t('form.codePlaceholder')}
-                      icon="shield"
-                      value={phoneCode}
-                      error={phoneCodeError}
-                      autoComplete="one-time-code"
-                      disabled={loading}
-                      onChange={(value) => {
-                        setPhoneCode(value.replace(/\D/g, '').slice(0, 6));
-                        setPhoneCodeError('');
-                        setError('');
-                      }}
-                    />
-                    <button
-                      type="button"
-                      className="vx-auth-send-code"
-                      onClick={handleSendPhoneCode}
-                      disabled={loading || codeSending || codeCountdown > 0}
-                    >
-                      {codeSending
-                        ? t('form.sendingCode')
-                        : codeCountdown > 0
-                          ? t('form.retryCode', { seconds: codeCountdown })
-                          : t('form.sendCode')}
-                    </button>
-                  </div>
-                </>
-              )}
-
-              <AuthLoginOptions
-                disabled={loading}
-                rememberChecked={rememberLogin}
-                agreementChecked={acceptedTerms}
-                rememberLabel={t('form.rememberLogin')}
-                agreementPrefix={t('form.acceptPrefix')}
-                termsLabel={t('form.terms')}
-                agreementJoiner={t('form.acceptJoiner')}
-                privacyLabel={t('form.privacy')}
-                forgotLabel={t('form.forgotPassword')}
-                forgotHref="#forgot-password"
-                forgetMeLabel={t('form.forgetMe')}
-                onRememberChange={handleRememberLoginChange}
-                onAgreementChange={(checked) => {
-                  setAcceptedTerms(checked);
-                  setError('');
-                }}
-                onForgetMe={handleForgetMe}
-              />
-            </div>
-          }
-          primary={
-            <>
-              {error ? <p className="vx-auth-error vx-auth-form-error">{error}</p> : null}
-              <AuthPrimaryButton loading={loading} label={t('form.submit')} loadingLabel={t('form.submitting')} />
-            </>
-          }
+      {screen === 'login' ? (
+        <AuthPasswordLoginPanel
+          tabs={<AuthTabs active={screen} onChange={handleAuthTabChange} passwordLabel={t('form.passwordLogin')} phoneLabel={t('form.phoneLogin')} />}
+          identifier={identifier}
+          password={password}
+          rememberChecked={rememberLogin}
+          agreementChecked={acceptedTerms}
+          errors={{ form: error }}
+          loading={loading}
+          identifierLabel={t('form.account')}
+          identifierPlaceholder={t('form.accountPlaceholder')}
+          passwordLabel={t('form.password')}
+          passwordPlaceholder={t('form.passwordPlaceholder')}
+          submitLabel={t('form.submit')}
+          submitLoadingLabel={t('form.submitting')}
+          options={{
+            rememberLabel: t('form.rememberLogin'),
+            agreementPrefix: t('form.acceptPrefix'),
+            termsLabel: t('form.terms'),
+            agreementJoiner: t('form.acceptJoiner'),
+            privacyLabel: t('form.privacy'),
+            forgotLabel: t('form.forgotPassword'),
+            forgotHref: '#forgot-password',
+            forgetMeLabel: t('form.forgetMe'),
+          }}
           reserveSocialSpace
           reserveFooterSpace
+          onChangeIdentifier={(value) => {
+            setIdentifier(value);
+            setError('');
+          }}
+          onChangePassword={(value) => {
+            setPassword(value);
+            setError('');
+          }}
+          onRememberChange={handleRememberLoginChange}
+          onAgreementChange={(checked) => {
+            setAcceptedTerms(checked);
+            setError('');
+          }}
+          onForgetMe={handleForgetMe}
+          onSubmit={handleSubmit}
         />
-      </AuthLoginLayout>
-    </UnifiedAuthPage>
+      ) : (
+        <AuthPhoneLoginPanel
+          tabs={<AuthTabs active={screen} onChange={handleAuthTabChange} passwordLabel={t('form.passwordLogin')} phoneLabel={t('form.phoneLogin')} />}
+          phone={phone}
+          code={phoneCode}
+          rememberChecked={rememberLogin}
+          agreementChecked={acceptedTerms}
+          errors={{ phone: phoneError, code: phoneCodeError, form: error }}
+          loading={loading}
+          codeSending={codeSending}
+          codeCountdown={codeCountdown}
+          phoneLabel={t('form.phone')}
+          phonePlaceholder={t('form.phonePlaceholder')}
+          codeLabel={t('form.code')}
+          codeName="phone-code"
+          codePlaceholder={t('form.codePlaceholder')}
+          sendCodeLabel={t('form.sendCode')}
+          sendingCodeLabel={t('form.sendingCode')}
+          retryCodeLabel={(seconds) => t('form.retryCode', { seconds })}
+          submitLabel={t('form.submit')}
+          submitLoadingLabel={t('form.submitting')}
+          options={{
+            rememberLabel: t('form.rememberLogin'),
+            agreementPrefix: t('form.acceptPrefix'),
+            termsLabel: t('form.terms'),
+            agreementJoiner: t('form.acceptJoiner'),
+            privacyLabel: t('form.privacy'),
+            forgotLabel: t('form.forgotPassword'),
+            forgotHref: '#forgot-password',
+            forgetMeLabel: t('form.forgetMe'),
+          }}
+          reserveSocialSpace
+          reserveFooterSpace
+          onChangePhone={(value) => {
+            setPhone(value);
+            setPhoneError('');
+            setError('');
+          }}
+          onChangeCode={(value) => {
+            setPhoneCode(value.replace(/\D/g, '').slice(0, 6));
+            setPhoneCodeError('');
+            setError('');
+          }}
+          onSendCode={handleSendPhoneCode}
+          onRememberChange={handleRememberLoginChange}
+          onAgreementChange={(checked) => {
+            setAcceptedTerms(checked);
+            setError('');
+          }}
+          onForgetMe={handleForgetMe}
+          onSubmit={handleSubmit}
+        />
+      )}
+    </AuthLoginTemplate>
   );
 }
 

@@ -192,6 +192,135 @@ export interface AuthLoginOptionsProps {
   onForgetMe?: () => void;
 }
 
+export interface AuthLoginTemplateProps extends Omit<UnifiedAuthPageProps, "children"> {
+  title?: string;
+  useLoginLayout?: boolean;
+  children: ReactNode;
+}
+
+export interface AuthLoginOptionOverrides
+  extends Pick<
+    AuthLoginOptionsProps,
+    | "rememberLabel"
+    | "agreementPrefix"
+    | "agreementJoiner"
+    | "termsLabel"
+    | "privacyLabel"
+    | "termsHref"
+    | "privacyHref"
+    | "forgotLabel"
+    | "forgotHref"
+    | "forgetMeLabel"
+    | "forgetMeTitle"
+  > {}
+
+export interface AuthPasswordLoginPanelProps {
+  tabs?: ReactNode;
+  identifier: string;
+  password: string;
+  rememberChecked: boolean;
+  agreementChecked: boolean;
+  errors?: {
+    identifier?: string;
+    password?: string;
+    form?: string;
+  };
+  loading: boolean;
+  turnstile?: ReactNode;
+  social?: ReactNode;
+  footer?: ReactNode;
+  reserveSocialSpace?: boolean;
+  reserveFooterSpace?: boolean;
+  primaryDisabled?: boolean;
+  primaryDisabledLabel?: string;
+  submitLabel?: string;
+  submitLoadingLabel?: string;
+  identifierLabel?: string;
+  identifierName?: string;
+  identifierPlaceholder?: string;
+  identifierAutoComplete?: string;
+  passwordLabel?: string;
+  passwordName?: string;
+  passwordPlaceholder?: string;
+  passwordAutoComplete?: string;
+  options?: AuthLoginOptionOverrides;
+  onChangeIdentifier: (value: string) => void;
+  onChangePassword: (value: string) => void;
+  onRememberChange: (checked: boolean) => void;
+  onAgreementChange: (checked: boolean) => void;
+  onForgot?: () => void;
+  onForgetMe?: () => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+export interface AuthPhoneLoginPanelProps {
+  tabs?: ReactNode;
+  phone: string;
+  code: string;
+  rememberChecked: boolean;
+  agreementChecked: boolean;
+  errors?: {
+    phone?: string;
+    code?: string;
+    form?: string;
+  };
+  loading: boolean;
+  codeSending?: boolean;
+  codeCountdown?: number;
+  sendCodeDisabled?: boolean;
+  turnstile?: ReactNode;
+  social?: ReactNode;
+  footer?: ReactNode;
+  reserveSocialSpace?: boolean;
+  reserveFooterSpace?: boolean;
+  primaryDisabled?: boolean;
+  primaryDisabledLabel?: string;
+  submitLabel?: string;
+  submitLoadingLabel?: string;
+  phoneLabel?: string;
+  phoneName?: string;
+  phonePlaceholder?: string;
+  codeLabel?: string;
+  codeName?: string;
+  codePlaceholder?: string;
+  sendCodeLabel?: string;
+  sendingCodeLabel?: string;
+  verificationPendingLabel?: string;
+  retryCodeLabel?: (seconds: number) => string;
+  options?: AuthLoginOptionOverrides;
+  onChangePhone: (value: string) => void;
+  onChangeCode: (value: string) => void;
+  onSendCode: () => void;
+  onRememberChange: (checked: boolean) => void;
+  onAgreementChange: (checked: boolean) => void;
+  onForgot?: () => void;
+  onForgetMe?: () => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+export interface AuthForgotPasswordPanelProps {
+  email: string;
+  error?: string;
+  loading: boolean;
+  resetSent?: boolean;
+  backLabel?: ReactNode;
+  title?: ReactNode;
+  description?: ReactNode;
+  sentTitle?: ReactNode;
+  sentDescription?: ReactNode;
+  sentHint?: ReactNode;
+  sentEmailFallback?: ReactNode;
+  sentActionLabel?: ReactNode;
+  emailLabel?: string;
+  emailName?: string;
+  emailPlaceholder?: string;
+  submitLabel?: string;
+  submitLoadingLabel?: string;
+  onBack: () => void;
+  onChangeEmail: (value: string) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
 const DEFAULT_PAGE_BACKGROUND = "/images/login-bg-light.jpg";
 const DEFAULT_AUTH_BRAND_LOGO = "/brand/vxture-logo-white.png";
 const DEFAULT_AUTH_BRAND_LABEL = "vxture.ai";
@@ -295,6 +424,19 @@ export function AuthLoginLayout({ title = "欢迎回来", children }: AuthLoginL
       </section>
       {children}
     </div>
+  );
+}
+
+export function AuthLoginTemplate({
+  title = "欢迎回来",
+  useLoginLayout = true,
+  children,
+  ...pageProps
+}: AuthLoginTemplateProps) {
+  return (
+    <UnifiedAuthPage {...pageProps}>
+      {useLoginLayout ? <AuthLoginLayout title={title}>{children}</AuthLoginLayout> : children}
+    </UnifiedAuthPage>
   );
 }
 
@@ -794,6 +936,320 @@ export function AuthLoginOptions({
         </span>
       </label>
     </div>
+  );
+}
+
+export function AuthPasswordLoginPanel({
+  tabs,
+  identifier,
+  password,
+  rememberChecked,
+  agreementChecked,
+  errors,
+  loading,
+  turnstile,
+  social,
+  footer,
+  reserveSocialSpace = false,
+  reserveFooterSpace = false,
+  primaryDisabled = false,
+  primaryDisabledLabel,
+  submitLabel = "登录",
+  submitLoadingLabel = "登录中...",
+  identifierLabel = "邮箱",
+  identifierName = "username",
+  identifierPlaceholder = "email / username / phone",
+  identifierAutoComplete = "username",
+  passwordLabel = "密码",
+  passwordName = "password",
+  passwordPlaceholder = "请输入密码",
+  passwordAutoComplete = "current-password",
+  options,
+  onChangeIdentifier,
+  onChangePassword,
+  onRememberChange,
+  onAgreementChange,
+  onForgot,
+  onForgetMe,
+  onSubmit,
+}: AuthPasswordLoginPanelProps) {
+  return (
+    <AuthFlowForm
+      onSubmit={onSubmit}
+      input={
+        <>
+          {tabs}
+          <div className="vx-auth-field-stack">
+            <AuthField
+              label={identifierLabel}
+              name={identifierName}
+              type="text"
+              placeholder={identifierPlaceholder}
+              icon="user"
+              value={identifier}
+              error={errors?.identifier}
+              autoComplete={identifierAutoComplete}
+              autoFocus
+              disabled={loading}
+              onChange={onChangeIdentifier}
+            />
+            <AuthField
+              label={passwordLabel}
+              name={passwordName}
+              type="password"
+              placeholder={passwordPlaceholder}
+              icon="lock"
+              value={password}
+              error={errors?.password}
+              autoComplete={passwordAutoComplete}
+              disabled={loading}
+              onChange={onChangePassword}
+            />
+
+            <AuthLoginOptions
+              {...options}
+              disabled={loading}
+              rememberChecked={rememberChecked}
+              agreementChecked={agreementChecked}
+              onRememberChange={onRememberChange}
+              onAgreementChange={onAgreementChange}
+              onForgot={onForgot}
+              onForgetMe={onForgetMe}
+            />
+          </div>
+        </>
+      }
+      primary={
+        <>
+          {turnstile}
+          {errors?.form ? <p className="vx-auth-error vx-auth-form-error">{errors.form}</p> : null}
+          <AuthPrimaryButton
+            loading={loading}
+            disabled={primaryDisabled}
+            label={submitLabel}
+            loadingLabel={submitLoadingLabel}
+            disabledLabel={primaryDisabledLabel}
+          />
+        </>
+      }
+      social={social}
+      footer={footer}
+      reserveSocialSpace={reserveSocialSpace}
+      reserveFooterSpace={reserveFooterSpace}
+    />
+  );
+}
+
+export function AuthPhoneLoginPanel({
+  tabs,
+  phone,
+  code,
+  rememberChecked,
+  agreementChecked,
+  errors,
+  loading,
+  codeSending = false,
+  codeCountdown = 0,
+  sendCodeDisabled = false,
+  turnstile,
+  social,
+  footer,
+  reserveSocialSpace = false,
+  reserveFooterSpace = false,
+  primaryDisabled = false,
+  primaryDisabledLabel,
+  submitLabel = "登录",
+  submitLoadingLabel = "登录中...",
+  phoneLabel = "手机号",
+  phoneName = "phone",
+  phonePlaceholder = "请输入手机号",
+  codeLabel = "验证码",
+  codeName = "code",
+  codePlaceholder = "请输入 6 位验证码",
+  sendCodeLabel = "获取验证码",
+  sendingCodeLabel = "发送中...",
+  verificationPendingLabel = "验证中...",
+  retryCodeLabel = (seconds) => `${seconds}s 后重试`,
+  options,
+  onChangePhone,
+  onChangeCode,
+  onSendCode,
+  onRememberChange,
+  onAgreementChange,
+  onForgot,
+  onForgetMe,
+  onSubmit,
+}: AuthPhoneLoginPanelProps) {
+  const resolvedSendCodeLabel =
+    codeCountdown > 0
+      ? retryCodeLabel(codeCountdown)
+      : codeSending
+        ? sendingCodeLabel
+        : sendCodeDisabled
+          ? verificationPendingLabel
+          : sendCodeLabel;
+
+  return (
+    <AuthFlowForm
+      onSubmit={onSubmit}
+      input={
+        <>
+          {tabs}
+          <div className="vx-auth-field-stack">
+            <div className="vx-auth-phone-row">
+              <AuthField
+                label={phoneLabel}
+                name={phoneName}
+                type="tel"
+                placeholder={phonePlaceholder}
+                icon="phone"
+                value={phone}
+                error={errors?.phone}
+                autoComplete="tel"
+                autoFocus
+                disabled={loading}
+                onChange={onChangePhone}
+              />
+            </div>
+
+            <div className="vx-auth-code-field-wrap">
+              <div className="vx-auth-code-row">
+                <AuthField
+                  label={codeLabel}
+                  name={codeName}
+                  type="text"
+                  placeholder={codePlaceholder}
+                  icon="shield"
+                  value={code}
+                  error={errors?.code}
+                  autoComplete="one-time-code"
+                  disabled={loading}
+                  onChange={onChangeCode}
+                />
+                <button
+                  type="button"
+                  className="vx-auth-send-code"
+                  onClick={onSendCode}
+                  disabled={loading || codeSending || codeCountdown > 0 || sendCodeDisabled}
+                >
+                  {resolvedSendCodeLabel}
+                </button>
+              </div>
+            </div>
+
+            <AuthLoginOptions
+              {...options}
+              disabled={loading}
+              rememberChecked={rememberChecked}
+              agreementChecked={agreementChecked}
+              onRememberChange={onRememberChange}
+              onAgreementChange={onAgreementChange}
+              onForgot={onForgot}
+              onForgetMe={onForgetMe}
+            />
+          </div>
+        </>
+      }
+      primary={
+        <>
+          {turnstile}
+          {errors?.form ? <p className="vx-auth-error vx-auth-form-error">{errors.form}</p> : null}
+          <AuthPrimaryButton
+            loading={loading}
+            disabled={primaryDisabled}
+            label={submitLabel}
+            loadingLabel={submitLoadingLabel}
+            disabledLabel={primaryDisabledLabel}
+          />
+        </>
+      }
+      social={social}
+      footer={footer}
+      reserveSocialSpace={reserveSocialSpace}
+      reserveFooterSpace={reserveFooterSpace}
+    />
+  );
+}
+
+export function AuthForgotPasswordPanel({
+  email,
+  error,
+  loading,
+  resetSent = false,
+  backLabel = "返回登录",
+  title = "重置密码",
+  description = "输入注册邮箱，获取重置链接",
+  sentTitle = "重置邮件已发送",
+  sentDescription,
+  sentHint = "未收到邮件？请检查垃圾邮件文件夹。",
+  sentEmailFallback = "您的邮箱",
+  sentActionLabel = "返回登录",
+  emailLabel = "邮箱",
+  emailName = "email",
+  emailPlaceholder = "you@company.com",
+  submitLabel = "获取重置链接",
+  submitLoadingLabel = "生成中...",
+  onBack,
+  onChangeEmail,
+  onSubmit,
+}: AuthForgotPasswordPanelProps) {
+  if (resetSent) {
+    return (
+      <>
+        <AuthBackButton onClick={onBack}>{backLabel}</AuthBackButton>
+        <div className="vx-auth-reset-done">
+          <div className="vx-auth-check">✓</div>
+          <h1>{sentTitle}</h1>
+          <p>
+            {sentDescription ?? (
+              <>
+                重置链接已发送至 <strong>{email || sentEmailFallback}</strong>，请在 15 分钟内查收并完成重置。
+              </>
+            )}
+          </p>
+          {sentHint ? <p className="vx-auth-reset-hint">{sentHint}</p> : null}
+          <button type="button" onClick={onBack}>
+            {sentActionLabel}
+          </button>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <AuthBackButton onClick={onBack}>{backLabel}</AuthBackButton>
+      <div className="vx-auth-panel-heading">
+        <h1>{title}</h1>
+        {description ? <p>{description}</p> : null}
+      </div>
+
+      <form onSubmit={onSubmit} autoComplete="on">
+        <AuthField
+          label={emailLabel}
+          name={emailName}
+          type="email"
+          placeholder={emailPlaceholder}
+          icon="mail"
+          value={email}
+          error={error}
+          autoComplete="email"
+          autoFocus
+          disabled={loading}
+          onChange={onChangeEmail}
+        />
+        <AuthPrimaryButton loading={loading} label={submitLabel} loadingLabel={submitLoadingLabel} />
+      </form>
+    </>
+  );
+}
+
+function AuthBackButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
+  return (
+    <button type="button" className="vx-auth-back" onClick={onClick}>
+      <span>←</span>
+      {children}
+    </button>
   );
 }
 

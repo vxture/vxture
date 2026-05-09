@@ -8,19 +8,17 @@
  * @date 2026-05-04
  */
 
-import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import {
   AuthChromeFooter,
   AuthChromeHeader,
-  AuthField,
-  AuthFlowForm,
-  AuthLoginLayout,
-  AuthLoginOptions,
-  AuthPrimaryButton,
+  AuthForgotPasswordPanel,
+  AuthLoginTemplate,
+  AuthPasswordLoginPanel,
+  AuthPhoneLoginPanel,
   AuthSocialButtons,
   AuthTabs,
   AuthTurnstile,
-  UnifiedAuthPage,
   useAuthVerificationCountdown,
   useTheme,
   type AuthLoginScreen,
@@ -314,6 +312,14 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
     }
   };
 
+  const handleRememberLoginChange = (checked: boolean) => {
+    setRememberLogin(checked);
+    if (!checked) {
+      window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
+      window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
+    }
+  };
+
   const handleForgotSubmit = async (event: FormEvent) => {
     event.preventDefault();
     if (!identifier.trim() || !identifier.includes('@')) {
@@ -334,416 +340,87 @@ export function LoginForm({ className = '', initialScreen = 'login' }: LoginForm
   };
 
   return (
-    <UnifiedAuthPage
+    <AuthLoginTemplate
       className={className}
       pageBackgroundImage={BG_SRC}
       header={<AuthHeader />}
       footer={<AuthFooter />}
+      title='欢迎回来'
+      useLoginLayout={screen !== 'forgot'}
     >
       {screen === 'forgot' ? (
-        <ForgotPanel
+        <AuthForgotPasswordPanel
           email={identifier}
           error={errors.identifier}
           loading={loading}
           resetSent={resetSent}
           onBack={() => openScreen('login')}
-          onChange={setIdentifier}
+          onChangeEmail={setIdentifier}
           onSubmit={handleForgotSubmit}
         />
       ) : (
-        <AuthLoginLayout title='欢迎回来'>
-          {screen === 'phone' ? (
-            <PhoneLoginPanel
-              tabs={<AuthTabs active={screen as AuthLoginTab} onChange={openScreen} />}
-              phone={phone}
-              code={phoneCode}
-              errors={phoneErrors}
-              loading={localLoading}
-              countdown={countdown}
-              codeSending={codeSending}
-              rememberLogin={rememberLogin}
-              acceptedTerms={acceptedTerms}
-              onRememberLoginChange={setRememberLogin}
-              onAcceptedTermsChange={handleAcceptedTermsChange}
-              onForgot={() => openScreen('forgot')}
-              onForgetMe={handleForgetMe}
-              onChangePhone={setPhone}
-              onChangeCode={setPhoneCode}
-              onSendCode={handleSendCode}
-              onSubmit={handlePhoneLogin}
-              onRegister={() => router.push('#register')}
-              turnstile={turnstileNode}
-              verificationPending={verificationPending}
-              verificationFailed={verificationFailed}
-              verificationCountdown={verificationCountdown}
-            />
-          ) : (
-            <LoginPanel
-              tabs={<AuthTabs active={screen as AuthLoginTab} onChange={openScreen} />}
-              identifier={identifier}
-              password={password}
-              rememberLogin={rememberLogin}
-              acceptedTerms={acceptedTerms}
-              errors={errors}
-              loading={loading}
-              onChangeIdentifier={setIdentifier}
-              onChangePassword={setPassword}
-              onRememberLoginChange={setRememberLogin}
-              onAcceptedTermsChange={handleAcceptedTermsChange}
-              onForgot={() => openScreen('forgot')}
-              onForgetMe={handleForgetMe}
-              onRegister={() => router.push('#register')}
-              onSubmit={handleSubmit}
-              turnstile={turnstileNode}
-              verificationPending={verificationPending}
-              verificationFailed={verificationFailed}
-              verificationCountdown={verificationCountdown}
-            />
-          )}
-        </AuthLoginLayout>
+        screen === 'phone' ? (
+          <AuthPhoneLoginPanel
+            tabs={<AuthTabs active={screen as AuthLoginTab} onChange={openScreen} />}
+            phone={phone}
+            code={phoneCode}
+            errors={phoneErrors}
+            loading={localLoading}
+            codeCountdown={countdown}
+            codeSending={codeSending}
+            rememberChecked={rememberLogin}
+            agreementChecked={acceptedTerms}
+            onRememberChange={handleRememberLoginChange}
+            onAgreementChange={handleAcceptedTermsChange}
+            onForgot={() => openScreen('forgot')}
+            onForgetMe={handleForgetMe}
+            onChangePhone={setPhone}
+            onChangeCode={setPhoneCode}
+            onSendCode={handleSendCode}
+            onSubmit={handlePhoneLogin}
+            turnstile={turnstileNode}
+            sendCodeDisabled={verificationPending || verificationFailed}
+            primaryDisabled={verificationPending || verificationFailed}
+            primaryDisabledLabel={verificationFailed ? '验证不可用' : `安全验证中... ${verificationCountdown}s`}
+            social={<SocialLoginButtons />}
+            footer={<RegisterLink onRegister={() => router.push('#register')} />}
+          />
+        ) : (
+          <AuthPasswordLoginPanel
+            tabs={<AuthTabs active={screen as AuthLoginTab} onChange={openScreen} />}
+            identifier={identifier}
+            password={password}
+            rememberChecked={rememberLogin}
+            agreementChecked={acceptedTerms}
+            errors={errors}
+            loading={loading}
+            onChangeIdentifier={setIdentifier}
+            onChangePassword={setPassword}
+            onRememberChange={handleRememberLoginChange}
+            onAgreementChange={handleAcceptedTermsChange}
+            onForgot={() => openScreen('forgot')}
+            onForgetMe={handleForgetMe}
+            onSubmit={handleSubmit}
+            turnstile={turnstileNode}
+            primaryDisabled={verificationPending || verificationFailed}
+            primaryDisabledLabel={verificationFailed ? '验证不可用' : `安全验证中... ${verificationCountdown}s`}
+            social={<SocialLoginButtons />}
+            footer={<RegisterLink onRegister={() => router.push('#register')} />}
+          />
+        )
       )}
-    </UnifiedAuthPage>
+    </AuthLoginTemplate>
   );
 }
 
-function LoginPanel({
-  tabs,
-  identifier,
-  password,
-  rememberLogin,
-  acceptedTerms,
-  errors,
-  loading,
-  onChangeIdentifier,
-  onChangePassword,
-  onRememberLoginChange,
-  onAcceptedTermsChange,
-  onForgot,
-  onForgetMe,
-  onRegister,
-  onSubmit,
-  turnstile,
-  verificationPending,
-  verificationFailed,
-  verificationCountdown,
-}: {
-  tabs: ReactNode;
-  identifier: string;
-  password: string;
-  rememberLogin: boolean;
-  acceptedTerms: boolean;
-  errors: Record<string, string>;
-  loading: boolean;
-  onChangeIdentifier: (value: string) => void;
-  onChangePassword: (value: string) => void;
-  onRememberLoginChange: (value: boolean) => void;
-  onAcceptedTermsChange: (value: boolean) => void;
-  onForgot: () => void;
-  onForgetMe: () => void;
-  onRegister: () => void;
-  onSubmit: (event: FormEvent) => void;
-  turnstile?: ReactNode;
-  verificationPending: boolean;
-  verificationFailed: boolean;
-  verificationCountdown: number;
-}) {
-  const handleRememberLoginChange = (checked: boolean) => {
-    onRememberLoginChange(checked);
-    if (!checked) {
-      window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
-      window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
-    }
-  };
-
+function RegisterLink({ onRegister }: { onRegister: () => void }) {
   return (
-    <AuthFlowForm
-      onSubmit={onSubmit}
-      input={
-        <>
-          {tabs}
-          <div className='vx-auth-field-stack'>
-            <AuthField
-              label='邮箱'
-              name='username'
-              type='text'
-              placeholder='email / username / phone'
-              icon='user'
-              value={identifier}
-              error={errors.identifier}
-              autoComplete='username'
-              autoFocus
-              disabled={loading}
-              onChange={onChangeIdentifier}
-            />
-            <AuthField
-              label='密码'
-              name='password'
-              type='password'
-              placeholder='请输入密码'
-              icon='lock'
-              value={password}
-              error={errors.password}
-              autoComplete='current-password'
-              disabled={loading}
-              onChange={onChangePassword}
-            />
-
-            <AuthLoginOptions
-              disabled={loading}
-              rememberChecked={rememberLogin}
-              agreementChecked={acceptedTerms}
-              onRememberChange={handleRememberLoginChange}
-              onAgreementChange={onAcceptedTermsChange}
-              onForgot={onForgot}
-              onForgetMe={onForgetMe}
-            />
-          </div>
-        </>
-      }
-      primary={
-        <>
-          {turnstile}
-          {errors.form ? <p className='vx-auth-error vx-auth-form-error'>{errors.form}</p> : null}
-          <AuthPrimaryButton
-            loading={loading}
-            disabled={verificationPending || verificationFailed}
-            label='登录'
-            loadingLabel='登录中...'
-            disabledLabel={verificationFailed ? '验证不可用' : `安全验证中... ${verificationCountdown}s`}
-          />
-        </>
-      }
-      social={<SocialLoginButtons />}
-      footer={
-        <p className='vx-auth-switch'>
-          还没有账号？
-          <button type='button' onClick={onRegister}>
-            注册账号
-          </button>
-        </p>
-      }
-    />
-  );
-}
-
-function PhoneLoginPanel({
-  tabs,
-  phone,
-  code,
-  errors,
-  loading,
-  countdown,
-  codeSending,
-  rememberLogin,
-  acceptedTerms,
-  onRememberLoginChange,
-  onAcceptedTermsChange,
-  onForgot,
-  onForgetMe,
-  onChangePhone,
-  onChangeCode,
-  onSendCode,
-  onSubmit,
-  onRegister,
-  turnstile,
-  verificationPending,
-  verificationFailed,
-  verificationCountdown,
-}: {
-  tabs: ReactNode;
-  phone: string;
-  code: string;
-  errors: Record<string, string>;
-  loading: boolean;
-  countdown: number;
-  codeSending: boolean;
-  rememberLogin: boolean;
-  acceptedTerms: boolean;
-  onRememberLoginChange: (value: boolean) => void;
-  onAcceptedTermsChange: (value: boolean) => void;
-  onForgot: () => void;
-  onForgetMe: () => void;
-  onChangePhone: (v: string) => void;
-  onChangeCode: (v: string) => void;
-  onSendCode: () => void;
-  onSubmit: (event: FormEvent) => void;
-  onRegister: () => void;
-  turnstile?: ReactNode;
-  verificationPending: boolean;
-  verificationFailed: boolean;
-  verificationCountdown: number;
-}) {
-  const handleRememberLoginChange = (checked: boolean) => {
-    onRememberLoginChange(checked);
-    if (!checked) {
-      window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
-      window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
-    }
-  };
-
-  return (
-    <AuthFlowForm
-      onSubmit={onSubmit}
-      input={
-        <>
-          {tabs}
-          <div className='vx-auth-field-stack'>
-            <div className='vx-auth-phone-row'>
-              <AuthField
-                label='手机号'
-                name='phone'
-                type='tel'
-                placeholder='请输入手机号'
-                icon='phone'
-                value={phone}
-                error={errors.phone}
-                autoComplete='tel'
-                autoFocus
-                disabled={loading}
-                onChange={onChangePhone}
-              />
-            </div>
-
-            <div className='vx-auth-code-field-wrap'>
-              <div className='vx-auth-code-row'>
-                <AuthField
-                  label='验证码'
-                  name='code'
-                  type='text'
-                  placeholder='请输入 6 位验证码'
-                  icon='shield'
-                  value={code}
-                  error={errors.code}
-                  autoComplete='one-time-code'
-                  disabled={loading}
-                  onChange={onChangeCode}
-                />
-                <button
-                  type='button'
-                  className='vx-auth-send-code'
-                  onClick={onSendCode}
-                  disabled={loading || codeSending || countdown > 0 || verificationPending || verificationFailed}
-                >
-                  {countdown > 0
-                    ? `${countdown}s 后重试`
-                    : codeSending
-                      ? '发送中...'
-                      : verificationPending
-                        ? '验证中...'
-                        : '获取验证码'}
-                </button>
-              </div>
-            </div>
-            <AuthLoginOptions
-              disabled={loading}
-              rememberChecked={rememberLogin}
-              agreementChecked={acceptedTerms}
-              onRememberChange={handleRememberLoginChange}
-              onAgreementChange={onAcceptedTermsChange}
-              onForgot={onForgot}
-              onForgetMe={onForgetMe}
-            />
-          </div>
-        </>
-      }
-      primary={
-        <>
-          {turnstile}
-          {errors.form ? <p className='vx-auth-error vx-auth-form-error'>{errors.form}</p> : null}
-          <AuthPrimaryButton
-            loading={loading}
-            disabled={verificationPending || verificationFailed}
-            label='登录'
-            loadingLabel='登录中...'
-            disabledLabel={verificationFailed ? '验证不可用' : `安全验证中... ${verificationCountdown}s`}
-          />
-        </>
-      }
-      social={<SocialLoginButtons />}
-      footer={
-        <p className='vx-auth-switch'>
-          还没有账号？
-          <button type='button' onClick={onRegister}>
-            注册账号
-          </button>
-        </p>
-      }
-    />
-  );
-}
-
-function ForgotPanel({
-  email,
-  error,
-  loading,
-  resetSent,
-  onBack,
-  onChange,
-  onSubmit,
-}: {
-  email: string;
-  error?: string;
-  loading: boolean;
-  resetSent: boolean;
-  onBack: () => void;
-  onChange: (value: string) => void;
-  onSubmit: (event: FormEvent) => void;
-}) {
-  if (resetSent) {
-    return (
-      <>
-        <BackButton onClick={onBack}>返回登录</BackButton>
-        <div className='vx-auth-reset-done'>
-          <div className='vx-auth-check'>✓</div>
-          <h1>重置邮件已发送</h1>
-          <p>
-            重置链接已发送至 <strong>{email || '您的邮箱'}</strong>，请在 15 分钟内查收并完成重置。
-          </p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--vx-color-text-muted)', marginTop: '0.5rem' }}>
-            未收到邮件？请检查垃圾邮件文件夹。
-          </p>
-          <button type='button' onClick={onBack} style={{ marginTop: '1rem' }}>
-            返回登录
-          </button>
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <BackButton onClick={onBack}>返回登录</BackButton>
-      <div className='vx-auth-panel-heading'>
-        <h1>重置密码</h1>
-        <p>输入注册邮箱，获取重置链接</p>
-      </div>
-
-      <form onSubmit={onSubmit} autoComplete='on'>
-        <AuthField
-          label='邮箱'
-          name='email'
-          type='email'
-          placeholder='you@company.com'
-          icon='mail'
-          value={email}
-          error={error}
-          autoComplete='email'
-          autoFocus
-          disabled={loading}
-          onChange={onChange}
-        />
-        <AuthPrimaryButton loading={loading} label='获取重置链接' loadingLabel='生成中...' />
-      </form>
-    </>
-  );
-}
-
-function BackButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
-  return (
-    <button type='button' className='vx-auth-back' onClick={onClick}>
-      <span>←</span>
-      {children}
-    </button>
+    <p className='vx-auth-switch'>
+      还没有账号？
+      <button type='button' onClick={onRegister}>
+        注册账号
+      </button>
+    </p>
   );
 }
 
