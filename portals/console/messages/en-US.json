@@ -22,6 +22,15 @@
     "settings": "Settings",
     "toggleTheme": "Toggle theme",
     "toggleLanguage": "Toggle language",
+    "fullscreen": {
+      "enter": "Enter fullscreen",
+      "exit": "Exit fullscreen"
+    },
+    "userMenu": {
+      "returnTo": "Back to {caller}",
+      "dismissReturn": "Dismiss return entry",
+      "signOut": "Sign out"
+    },
     "openNavigation": "Open navigation",
     "closeNavigation": "Close navigation",
     "collapseNavigation": "Collapse navigation",

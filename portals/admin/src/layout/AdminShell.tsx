@@ -3,31 +3,33 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { CaretDoubleDownIcon, CaretDoubleUpIcon, TextIndentIcon, TextOutdentIcon, TranslateIcon } from '@phosphor-icons/react';
+import { CaretDoubleDownIcon, CaretDoubleUpIcon, TextIndentIcon, TextOutdentIcon } from '@phosphor-icons/react';
 import type { ReactNode } from 'react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
   Icon,
   Popover,
   PopoverContent,
   PopoverTrigger,
+  ShellFullscreenToggle,
+  ShellIconButton,
+  ShellLocaleSwitcher,
+  ShellPreferencePanel,
+  ShellThemeToggle,
+  ShellUserMenu,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-  useFullscreen,
   useTheme,
 } from '@vxture/design-system';
-import type { Density, IconName } from '@vxture/design-system';
+import type { Density, IconName, ShellFontSizePreference, ShellThemePreference } from '@vxture/design-system';
 import {
   getGlobalUserPreferences,
   setGlobalDensityPreference,
   setGlobalLocalePreference,
   setGlobalThemePreference,
 } from '@vxture/platform-browser';
-import { DEFAULT_LOCALE, LOCALE_CONFIGS, SUPPORTED_LOCALES, type Locale, type Theme } from '@vxture/shared';
+import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale, type Theme } from '@vxture/shared';
 import {
   adminWorkspaces,
   getAdminNavigationItemByPath,
@@ -45,8 +47,6 @@ const ADMIN_SIDEBAR_TEXT_REVEAL_MS = 140;
 const ADMIN_SIDEBAR_AUTO_COLLAPSE_QUERY = '(max-width: 1360px)';
 const DEFAULT_AVATAR_SRC = '/assets/icon/avatar-default.png';
 const FONT_SIZE_PREFERENCE_KEY = 'vxture-font-size-preference';
-
-type FontSizePreference = 'small' | 'default' | 'large';
 
 function isActivePath(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
@@ -71,22 +71,6 @@ function getTranslatedLabel(t: ReturnType<typeof useConsoleTranslations>, key: s
   return translated === `navigation.${key}` ? fallback : translated;
 }
 
-function UserAvatar({ user, size = 'md' }: { user: ConsoleUser; size?: 'md' | 'lg' }) {
-  const dimension = size === 'lg' ? 'h-14 w-14' : 'h-10 w-10';
-  const displayName = getDisplayName(user, 'Admin');
-
-  return (
-    <Avatar className={`${dimension} border border-vx-brand-200/80 shadow-sm shadow-vx-brand-900/10 dark:border-vx-brand-400/30`}>
-      <AvatarImage
-        className="h-full w-full object-cover"
-        src={DEFAULT_AVATAR_SRC}
-        alt={displayName}
-      />
-      <AvatarFallback className="bg-vx-brand-50 text-transparent dark:bg-vx-gray-800" aria-hidden="true" />
-    </Avatar>
-  );
-}
-
 function getDisplayName(user: ConsoleUser, fallback: string): string {
   return user.displayName?.trim() || user.username?.trim() || user.name?.trim() || fallback;
 }
@@ -103,11 +87,11 @@ function isDensity(value: unknown): value is Density {
   return value === 'compact' || value === 'default' || value === 'comfortable';
 }
 
-function isFontSizePreference(value: unknown): value is FontSizePreference {
+function isFontSizePreference(value: unknown): value is ShellFontSizePreference {
   return value === 'small' || value === 'default' || value === 'large';
 }
 
-function getStoredFontSizePreference(): FontSizePreference {
+function getStoredFontSizePreference(): ShellFontSizePreference {
   if (typeof window === 'undefined') {
     return 'default';
   }
@@ -116,7 +100,7 @@ function getStoredFontSizePreference(): FontSizePreference {
   return isFontSizePreference(stored) ? stored : 'default';
 }
 
-function applyFontSizePreference(value: FontSizePreference) {
+function applyFontSizePreference(value: ShellFontSizePreference) {
   if (typeof document === 'undefined') {
     return;
   }
@@ -130,38 +114,6 @@ function getRoleLabel(user: ConsoleUser, t: ReturnType<typeof useConsoleTranslat
   const roleI18nKey = user.roleI18nKey?.trim() || user.roleLabel?.trim();
   const fallback = user.roleNameEn?.trim() || user.roleLabel?.trim() || 'Platform Architect';
   return roleI18nKey ? t(roleI18nKey, fallback) : fallback;
-}
-
-function UserBadge({ children }: { children: ReactNode }) {
-  return (
-    <span className="inline-flex max-w-full items-center truncate whitespace-nowrap rounded-full border border-vx-brand-100 bg-vx-brand-50/70 px-2.5 py-1 text-[11px] font-medium leading-4 text-vx-brand-700 dark:border-vx-brand-400/20 dark:bg-vx-brand-950/35 dark:text-vx-brand-200">
-      {children}
-    </span>
-  );
-}
-
-function SettingOption({
-  active,
-  children,
-  onClick,
-}: {
-  active: boolean;
-  children: ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`flex-1 rounded-md px-2 py-1.5 text-[12px] font-medium leading-4 transition-colors ${
-        active
-          ? 'bg-vx-white text-vx-brand-700 shadow-sm ring-1 ring-vx-brand-200 dark:bg-vx-gray-800 dark:text-vx-brand-200 dark:ring-vx-brand-400/30'
-          : 'text-vx-gray-500 hover:text-vx-gray-800 dark:text-vx-gray-400 dark:hover:text-vx-gray-200'
-      }`}
-    >
-      {children}
-    </button>
-  );
 }
 
 function SidebarTooltip({
@@ -187,53 +139,6 @@ function SidebarTooltip({
   );
 }
 
-function SettingRow({
-  icon,
-  label,
-  description,
-  children,
-}: {
-  icon: IconName;
-  label: string;
-  description: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="flex min-h-10 items-center gap-3">
-      <span
-        className="flex w-5 shrink-0 justify-center"
-        aria-label={`${label}: ${description}`}
-        title={description}
-      >
-        <Icon name={icon} className="h-4 w-4 text-vx-gray-400 dark:text-vx-gray-500" aria-hidden="true" />
-      </span>
-      <div className="flex min-w-0 flex-1 items-center justify-end">{children}</div>
-    </div>
-  );
-}
-
-function SegmentedOptions<T extends string>({
-  value,
-  options,
-  labels,
-  onChange,
-}: {
-  value: T;
-  options: readonly T[];
-  labels: Record<T, string>;
-  onChange: (value: T) => void;
-}) {
-  return (
-    <div className="flex w-full rounded-lg border border-vx-gray-200 bg-vx-gray-50/70 p-0.5 dark:border-vx-gray-700 dark:bg-vx-gray-900/40">
-      {options.map((option) => (
-        <SettingOption key={option} active={value === option} onClick={() => onChange(option)}>
-          {labels[option]}
-        </SettingOption>
-      ))}
-    </div>
-  );
-}
-
 function HeaderToolButton({
   icon,
   title,
@@ -246,16 +151,14 @@ function HeaderToolButton({
   active?: boolean;
 }) {
   return (
-    <button
-      type="button"
-      title={title}
-      aria-label={title}
-      aria-pressed={active || undefined}
+    <ShellIconButton
+      icon={icon}
+      label={title}
+      active={active}
+      className="admin-shell-icon-button admin-shell-icon-button--toolbar"
+      activeClassName="admin-shell-icon-button--active"
       onClick={onClick}
-      className={`admin-shell-icon-button admin-shell-icon-button--toolbar ${active ? 'admin-shell-icon-button--active' : ''}`}
-    >
-      <Icon name={icon} className="h-5 w-5" />
-    </button>
+    />
   );
 }
 
@@ -267,11 +170,12 @@ function HeaderThemeToggle() {
   const nextTheme: Theme = isDark ? 'light' : 'dark';
 
   return (
-    <HeaderToolButton
-      icon={isDark ? 'sun' : 'moon'}
-      title={t('switchTo', { theme: t(nextTheme) })}
-      active={isDark}
-      onClick={() => {
+    <ShellThemeToggle
+      currentTheme={currentTheme}
+      buttonLabel={t('switchTo', { theme: t(nextTheme) })}
+      className="admin-shell-icon-button admin-shell-icon-button--toolbar"
+      activeClassName="admin-shell-icon-button--active"
+      onThemeChange={(nextTheme) => {
         setTheme(nextTheme);
         setGlobalThemePreference(nextTheme);
       }}
@@ -280,81 +184,36 @@ function HeaderThemeToggle() {
 }
 
 function HeaderLocaleSelect() {
-  const [open, setOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
   const t = useConsoleTranslations('header');
   const currentLocale = useConsoleLocale();
   const locale = SUPPORTED_LOCALES.includes(currentLocale) ? currentLocale : DEFAULT_LOCALE;
 
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [open]);
-
   const handleLocaleChange = (nextLocale: Locale) => {
-    setOpen(false);
     setGlobalLocalePreference(nextLocale);
   };
 
   return (
-    <div ref={menuRef} className="relative">
-      <button
-        type="button"
-        title={t('language.title')}
-        aria-label={t('language.title')}
-        aria-pressed={open}
-        onClick={() => setOpen((value) => !value)}
-        className={`admin-shell-icon-button admin-shell-icon-button--toolbar ${open ? 'admin-shell-icon-button--active' : ''}`}
-      >
-        <TranslateIcon size={20} aria-hidden="true" />
-      </button>
-      {open ? (
-        <div className="admin-shell-locale-panel absolute left-0 top-full z-50 w-40">
-          {SUPPORTED_LOCALES.map((option) => (
-            <button
-              key={option}
-              type="button"
-              onClick={() => handleLocaleChange(option)}
-              className={`admin-shell-locale-option ${locale === option ? 'admin-shell-locale-option--active' : ''}`}
-            >
-              {LOCALE_CONFIGS[option].nativeName}
-            </button>
-          ))}
-        </div>
-      ) : null}
-    </div>
+    <ShellLocaleSwitcher
+      currentLocale={locale}
+      buttonLabel={t('language.title')}
+      align="start"
+      buttonClassName="admin-shell-icon-button admin-shell-icon-button--toolbar"
+      activeButtonClassName="admin-shell-icon-button--active"
+      popoverClassName="admin-shell-locale-panel"
+      onLocaleChange={handleLocaleChange}
+    />
   );
 }
 
 function HeaderFullscreenToggle() {
   const t = useConsoleTranslations('header.fullscreen');
-  const { enter, exit, isFullscreen, mode, targetId } = useFullscreen();
-  const isActive = isFullscreen && targetId === PAGE_FULLSCREEN_ID && mode === 'native';
-  const title = isActive ? t('exit') : t('enter');
-
   return (
-    <HeaderToolButton
-      icon={isActive ? 'minimize' : 'maximize'}
-      title={title}
-      active={isActive}
-      onClick={() => {
-        if (isActive) {
-          exit();
-          return;
-        }
-
-        enter(PAGE_FULLSCREEN_ID, document.documentElement, { mode: 'native', lockScroll: false });
-      }}
+    <ShellFullscreenToggle
+      targetId={PAGE_FULLSCREEN_ID}
+      enterLabel={t('enter')}
+      exitLabel={t('exit')}
+      className="admin-shell-icon-button admin-shell-icon-button--toolbar"
+      activeClassName="admin-shell-icon-button--active"
     />
   );
 }
@@ -365,13 +224,13 @@ function QuickSettings() {
   const { theme, setTheme, density, setDensity } = useTheme();
   const initialPrefs = useMemo(() => getGlobalUserPreferences(), []);
   const [selectedLocale, setSelectedLocale] = useState<Locale>(initialPrefs.locale || currentLocale || DEFAULT_LOCALE);
-  const [selectedTheme, setSelectedTheme] = useState<Theme>(
+  const [selectedTheme, setSelectedTheme] = useState<ShellThemePreference>(
     isThemePreference(initialPrefs.theme) ? initialPrefs.theme : isThemePreference(theme) ? theme : 'system',
   );
   const [selectedDensity, setSelectedDensity] = useState<Density>(
     isDensity(initialPrefs.density) ? initialPrefs.density : isDensity(density) ? density : 'default',
   );
-  const [selectedFontSize, setSelectedFontSize] = useState<FontSizePreference>(getStoredFontSizePreference);
+  const [selectedFontSize, setSelectedFontSize] = useState<ShellFontSizePreference>(getStoredFontSizePreference);
 
   useEffect(() => {
     setSelectedLocale(currentLocale);
@@ -386,10 +245,10 @@ function QuickSettings() {
     setGlobalLocalePreference(nextLocale);
   };
 
-  const handleThemeChange = (nextTheme: Theme) => {
+  const handleThemeChange = (nextTheme: ShellThemePreference) => {
     setSelectedTheme(nextTheme);
     setTheme(nextTheme);
-    setGlobalThemePreference(nextTheme);
+    setGlobalThemePreference(nextTheme as Theme);
   };
 
   const handleDensityChange = (nextDensity: Density) => {
@@ -398,7 +257,7 @@ function QuickSettings() {
     setGlobalDensityPreference(nextDensity);
   };
 
-  const handleFontSizeChange = (nextFontSize: FontSizePreference) => {
+  const handleFontSizeChange = (nextFontSize: ShellFontSizePreference) => {
     setSelectedFontSize(nextFontSize);
     if (typeof window !== 'undefined') {
       window.localStorage.setItem(FONT_SIZE_PREFERENCE_KEY, nextFontSize);
@@ -406,64 +265,38 @@ function QuickSettings() {
   };
 
   return (
-    <div className="space-y-2">
-      <p className="text-[11px] font-semibold uppercase leading-4 tracking-[0.08em] text-vx-gray-400 dark:text-vx-gray-500">{t('title')}</p>
-      <SettingRow icon="globe" label={t('labels.locale')} description={t('hints.locale')}>
-        <div className="relative w-full">
-          <select
-            value={selectedLocale}
-            onChange={(event) => handleLocaleChange(event.target.value as Locale)}
-            className="h-9 w-full appearance-none rounded-lg border border-vx-gray-200 bg-vx-white px-3 pr-8 text-[13px] font-normal leading-5 text-vx-gray-700 outline-none transition focus:border-vx-brand-300 focus:ring-2 focus:ring-vx-brand-100 dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-gray-100 dark:focus:border-vx-brand-500/60 dark:focus:ring-vx-brand-500/20"
-          >
-            {SUPPORTED_LOCALES.map((localeOption) => (
-              <option key={localeOption} value={localeOption}>
-                {LOCALE_CONFIGS[localeOption].nativeName}
-              </option>
-            ))}
-          </select>
-          <Icon name="chevron-down" className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -tranvx-gray-y-1/2 text-vx-gray-400" />
-        </div>
-      </SettingRow>
-
-      <SettingRow icon="sun" label={t('labels.theme')} description={t('hints.theme')}>
-        <SegmentedOptions
-          value={selectedTheme}
-          options={['system', 'light', 'dark'] as const}
-          labels={{
-            system: t('theme.system'),
-            light: t('theme.light'),
-            dark: t('theme.dark'),
-          }}
-          onChange={handleThemeChange}
-        />
-      </SettingRow>
-
-      <SettingRow icon="rows" label={t('labels.density')} description={t('hints.density')}>
-        <SegmentedOptions
-          value={selectedDensity}
-          options={['compact', 'default', 'comfortable'] as const}
-          labels={{
-            compact: t('density.compact'),
-            default: t('density.default'),
-            comfortable: t('density.comfortable'),
-          }}
-          onChange={handleDensityChange}
-        />
-      </SettingRow>
-
-      <SettingRow icon="settings" label={t('labels.fontSize')} description={t('hints.fontSize')}>
-        <SegmentedOptions
-          value={selectedFontSize}
-          options={['small', 'default', 'large'] as const}
-          labels={{
-            small: t('fontSize.small'),
-            default: t('fontSize.default'),
-            large: t('fontSize.large'),
-          }}
-          onChange={handleFontSizeChange}
-        />
-      </SettingRow>
-    </div>
+    <ShellPreferencePanel
+      locale={selectedLocale}
+      theme={selectedTheme}
+      density={selectedDensity}
+      fontSize={selectedFontSize}
+      labels={{
+        title: t('title'),
+        locale: t('labels.locale'),
+        theme: t('labels.theme'),
+        density: t('labels.density'),
+        fontSize: t('labels.fontSize'),
+        themeOptions: {
+          system: t('theme.system'),
+          light: t('theme.light'),
+          dark: t('theme.dark'),
+        },
+        densityOptions: {
+          compact: t('density.compact'),
+          default: t('density.default'),
+          comfortable: t('density.comfortable'),
+        },
+        fontSizeOptions: {
+          small: t('fontSize.small'),
+          default: t('fontSize.default'),
+          large: t('fontSize.large'),
+        },
+      }}
+      onLocaleChange={handleLocaleChange}
+      onThemeChange={handleThemeChange}
+      onDensityChange={handleDensityChange}
+      onFontSizeChange={handleFontSizeChange}
+    />
   );
 }
 
@@ -478,88 +311,31 @@ function UserMenu({
   onSwitchUser: () => Promise<void>;
   onSignOut: () => Promise<void>;
 }) {
-  const [open, setOpen] = useState(false);
   const t = useConsoleTranslations('header.userMenu');
   const tRoot = useConsoleTranslations();
   const displayName = getDisplayName(user, t('unnamed'));
   const uniqueLine = getUniqueLine(user);
   const roleLabel = getRoleLabel(user, tRoot);
 
-  const handleSwitchUser = async () => {
-    setOpen(false);
-    await onSwitchUser();
-  };
-
-  const handleSignOut = async () => {
-    setOpen(false);
-    await onSignOut();
-  };
-
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="relative flex h-10 w-10 items-center justify-center rounded-full outline-none transition duration-200 hover:ring-2 hover:ring-vx-brand-300 focus-visible:ring-2 focus-visible:ring-vx-brand-500 dark:hover:ring-vx-brand-500/60"
-          aria-label={t('open')}
-          title={t('open')}
-        >
-          <UserAvatar user={user} />
-          <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-vx-white bg-vx-success-400 dark:border-vx-gray-900" />
-        </button>
-      </PopoverTrigger>
-
-      <PopoverContent
-        align="end"
-        sideOffset={16}
-        className="w-80 overflow-hidden rounded-lg border-vx-brand-100 bg-vx-white p-0 text-[13px] font-normal leading-normal text-vx-gray-900 shadow-xl shadow-vx-brand-950/10 dark:border-vx-brand-400/20 dark:bg-vx-gray-900 dark:text-vx-gray-100"
-      >
-        <div className="px-4 py-4">
-          <div className="flex items-center gap-3">
-            <UserAvatar user={user} size="lg" />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-[15px] font-semibold leading-6 text-vx-gray-900 dark:text-vx-white">{displayName}</p>
-              <p className="mt-1 truncate text-[13px] font-normal leading-5 text-vx-gray-500 dark:text-vx-gray-400">{uniqueLine}</p>
-            </div>
-          </div>
-
-          <div className="ml-[68px] mt-3 flex flex-wrap gap-2">
-            <UserBadge>{roleLabel}</UserBadge>
-          </div>
-        </div>
-
-        <div className="mx-4 h-px bg-vx-gray-200/70 dark:bg-vx-gray-800" />
-
-        <div className="px-4 py-4">
-          <QuickSettings />
-        </div>
-
-        <div className="mx-4 h-px bg-vx-gray-100 dark:bg-vx-gray-800/70" />
-
-        <div className="px-4 py-4">
-          <div className="space-y-1">
-            <button
-              type="button"
-              onClick={handleSwitchUser}
-              disabled={disabled}
-              className="flex w-full items-center gap-3 rounded-md px-0 py-2.5 text-left text-[13px] font-medium leading-5 text-vx-gray-700 transition hover:text-vx-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-vx-gray-200 dark:hover:text-vx-brand-200"
-            >
-              <Icon name="user-switch" className="h-4 w-4 text-vx-gray-400 dark:text-vx-gray-500" />
-              {t('switchUser')}
-            </button>
-            <button
-              type="button"
-              onClick={handleSignOut}
-              disabled={disabled}
-              className="flex w-full items-center gap-3 rounded-md px-0 py-2.5 text-left text-[13px] font-medium leading-5 text-vx-gray-700 transition hover:text-vx-brand-700 disabled:cursor-not-allowed disabled:opacity-60 dark:text-vx-gray-200 dark:hover:text-vx-brand-200"
-            >
-              <Icon name="sign-out" className="h-4 w-4 text-vx-gray-400 dark:text-vx-gray-500" />
-              {t('signOut')}
-            </button>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+    <ShellUserMenu
+      user={{
+        displayName,
+        uniqueLine,
+        avatarSrc: DEFAULT_AVATAR_SRC,
+        avatarAlt: displayName,
+        avatarFallback: displayName.slice(0, 2).toUpperCase(),
+        badges: [{ key: 'role', label: roleLabel }],
+      }}
+      openLabel={t('open')}
+      settings={<QuickSettings />}
+      actions={[
+        { key: 'switch-user', label: t('switchUser'), icon: 'user-switch', disabled, onClick: onSwitchUser },
+        { key: 'sign-out', label: t('signOut'), icon: 'sign-out', disabled, onClick: onSignOut },
+      ]}
+      sideOffset={16}
+      statusClassName="dark:border-vx-gray-900"
+    />
   );
 }
 

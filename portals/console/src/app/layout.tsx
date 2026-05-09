@@ -15,7 +15,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Geist_Mono, Inter, Sora } from 'next/font/google';
 import { cookies } from 'next/headers';
-import { ThemeProvider } from '@vxture/design-system';
+import { FullscreenProvider, ThemeProvider } from '@vxture/design-system';
 import type { Density } from '@vxture/design-system';
 import { DEFAULT_LOCALE, PREFERENCE_CONSTANTS, THEME_CONSTANTS } from '@vxture/shared';
 import type { Theme } from '@vxture/shared';
@@ -59,7 +59,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
       <body className={`${sora.variable} ${inter.variable} ${geistMono.variable}`}>
         <ThemeProvider defaultTheme={initialTheme} defaultDensity={initialDensity}>
-          {children}
+          <FullscreenProvider defaultMode="native" defaultLockScroll={false}>
+            {children}
+          </FullscreenProvider>
         </ThemeProvider>
       </body>
     </html>

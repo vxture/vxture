@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
-import { DEFAULT_LOCALE, LOCALE_CONFIGS, SUPPORTED_LOCALES, type Locale, type Theme } from "@vxture/shared";
-import { Icon } from "../../icons";
+import { DEFAULT_LOCALE, type Locale, type Theme } from "@vxture/shared";
+import {
+  ShellBrand,
+  ShellLegalFooter,
+  ShellLocaleSwitcher,
+  ShellThemeToggle,
+  type LocaleSelectOption,
+  type ShellLegalFooterLink,
+} from "../shell";
 
 export type AuthLoginScreen = "login" | "phone" | "forgot";
 export type AuthLoginTab = Exclude<AuthLoginScreen, "forgot">;
@@ -115,19 +122,6 @@ export function useAuthVerificationCountdown(active: boolean, seconds = 5) {
   return remainingSeconds;
 }
 
-export interface LocaleSelectOption {
-  locale: Locale;
-  label?: string;
-  nativeName?: string;
-  flag?: string;
-}
-
-export interface LocaleSelectPanelProps {
-  activeLocale: Locale;
-  options?: LocaleSelectOption[];
-  onSelect: (locale: Locale) => void;
-}
-
 export interface AuthChromeHeaderProps {
   brandHref?: string;
   brandLogoSrc?: string;
@@ -145,14 +139,9 @@ export interface AuthChromeHeaderProps {
   onThemeChange?: (theme: "light" | "dark") => void;
 }
 
-export interface AuthChromeFooterLink {
-  href: string;
-  label: ReactNode;
-}
-
 export interface AuthChromeFooterProps {
   copyright?: ReactNode;
-  links?: AuthChromeFooterLink[];
+  links?: ShellLegalFooterLink[];
   legalLabel?: string;
 }
 
@@ -324,13 +313,6 @@ export interface AuthForgotPasswordPanelProps {
 const DEFAULT_PAGE_BACKGROUND = "/images/login-bg-light.jpg";
 const DEFAULT_AUTH_BRAND_LOGO = "/brand/vxture-logo-white.png";
 const DEFAULT_AUTH_BRAND_LABEL = "vxture.ai";
-
-const DEFAULT_LOCALE_OPTIONS: LocaleSelectOption[] = SUPPORTED_LOCALES.map((locale) => ({
-  locale,
-  nativeName: LOCALE_CONFIGS[locale].nativeName,
-  label: LOCALE_CONFIGS[locale].displayName,
-  flag: LOCALE_CONFIGS[locale].flag,
-}));
 
 const DEFAULT_AUTH_VISUAL: Required<Omit<AuthVisualConfig, "leftBackgroundImage" | "pageBackgroundImage">> = {
   title: "Build intelligence into everything.",
@@ -506,40 +488,13 @@ export function AuthTabs({ active, onChange, passwordLabel = "密码登录", pho
   );
 }
 
-export function LocaleSelectPanel({ activeLocale, options = DEFAULT_LOCALE_OPTIONS, onSelect }: LocaleSelectPanelProps) {
-  return (
-    <div className="vx-locale-panel" role="menu">
-      {options.map((option) => {
-        const active = option.locale === activeLocale;
-        return (
-          <button
-            key={option.locale}
-            type="button"
-            role="menuitemradio"
-            aria-checked={active}
-            className={`vx-locale-option${active ? " vx-locale-option--active" : ""}`}
-            onClick={() => onSelect(option.locale)}
-          >
-            {option.flag ? <span className="vx-locale-option__flag" aria-hidden="true">{option.flag}</span> : null}
-            <span className="vx-locale-option__text">
-              <strong>{option.nativeName ?? option.label ?? option.locale}</strong>
-              {option.label && option.label !== option.nativeName ? <small>{option.label}</small> : null}
-            </span>
-            {active ? <Icon name="check" size="sm" className="vx-locale-option__check" /> : null}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
 export function AuthChromeHeader({
   brandHref = "/",
   brandLogoSrc = DEFAULT_AUTH_BRAND_LOGO,
   brandLogoAlt = "",
   brandLabel = DEFAULT_AUTH_BRAND_LABEL,
   currentLocale = DEFAULT_LOCALE,
-  localeOptions = DEFAULT_LOCALE_OPTIONS,
+  localeOptions,
   localeButtonLabel = "选择语言",
   localePanelLabel = "语言选择",
   currentTheme = "light",
@@ -549,91 +504,44 @@ export function AuthChromeHeader({
   onLocaleChange,
   onThemeChange,
 }: AuthChromeHeaderProps) {
-  const [localeOpen, setLocaleOpen] = useState(false);
-  const localeRef = useRef<HTMLDivElement | null>(null);
-  const activeTheme = currentTheme === "dark" ? "dark" : "light";
-  const nextTheme = activeTheme === "dark" ? "light" : "dark";
-  const resolvedThemeLabel = themeButtonLabel ?? (nextTheme === "dark" ? darkThemeLabel : lightThemeLabel);
-
-  useEffect(() => {
-    if (!localeOpen) return undefined;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      if (!localeRef.current?.contains(event.target as Node)) {
-        setLocaleOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setLocaleOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [localeOpen]);
-
   return (
     <header className="vx-auth-header">
       <div className="vx-auth-header-inner">
-        <a href={brandHref} className="vx-auth-brand" aria-label={typeof brandLabel === "string" ? brandLabel : undefined}>
-          <img
-            src={brandLogoSrc}
-            alt={brandLogoAlt}
-            aria-hidden={brandLogoAlt ? undefined : true}
-            width={24}
-            height={24}
-            className="vx-auth-brand-logo"
-            draggable={false}
-          />
-          <span className="vx-auth-brand-title">{brandLabel}</span>
-        </a>
+        <ShellBrand
+          href={brandHref}
+          logoSrc={brandLogoSrc}
+          logoAlt={brandLogoAlt}
+          label={brandLabel}
+          className="vx-auth-brand"
+          logoClassName="vx-auth-brand-logo"
+          labelClassName="vx-auth-brand-title"
+        />
 
         <div className="vx-auth-header-actions">
           {onLocaleChange ? (
-            <div className="vx-auth-locale-control" ref={localeRef}>
-              <button
-                type="button"
-                className={`vx-auth-icon-button${localeOpen ? " vx-auth-icon-button--active" : ""}`}
-                aria-label={localeButtonLabel}
-                aria-expanded={localeOpen}
-                aria-haspopup="menu"
-                title={localeButtonLabel}
-                onClick={() => setLocaleOpen((open) => !open)}
-              >
-                <Icon name="globe" size="sm" />
-              </button>
-              {localeOpen ? (
-                <div className="vx-auth-locale-popover" aria-label={localePanelLabel}>
-                  <LocaleSelectPanel
-                    activeLocale={currentLocale}
-                    options={localeOptions}
-                    onSelect={(locale) => {
-                      setLocaleOpen(false);
-                      onLocaleChange(locale);
-                    }}
-                  />
-                </div>
-              ) : null}
-            </div>
+            <ShellLocaleSwitcher
+              currentLocale={currentLocale}
+              options={localeOptions}
+              buttonLabel={localeButtonLabel}
+              panelLabel={localePanelLabel}
+              className="vx-auth-locale-control"
+              buttonClassName="vx-auth-icon-button"
+              activeButtonClassName="vx-auth-icon-button--active"
+              popoverClassName="vx-auth-locale-popover"
+              onLocaleChange={onLocaleChange}
+            />
           ) : null}
 
           {onThemeChange ? (
-            <button
-              type="button"
+            <ShellThemeToggle
+              currentTheme={currentTheme}
+              buttonLabel={themeButtonLabel}
+              lightLabel={lightThemeLabel}
+              darkLabel={darkThemeLabel}
               className="vx-auth-icon-button"
-              aria-label={resolvedThemeLabel}
-              title={resolvedThemeLabel}
-              onClick={() => onThemeChange(nextTheme)}
-            >
-              <Icon name={activeTheme === "dark" ? "moon" : "sun"} size="sm" />
-            </button>
+              activeClassName="vx-auth-icon-button--active"
+              onThemeChange={onThemeChange}
+            />
           ) : null}
         </div>
       </div>
@@ -651,18 +559,14 @@ export function AuthChromeFooter({
   legalLabel = "Legal links",
 }: AuthChromeFooterProps) {
   return (
-    <footer className="vx-auth-footer">
-      <div className="vx-auth-footer-inner">
-        <span>{copyright}</span>
-        <nav className="vx-auth-footer-links" aria-label={legalLabel}>
-          {links.map((link) => (
-            <a key={link.href} href={link.href}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
-      </div>
-    </footer>
+    <ShellLegalFooter
+      copyright={copyright}
+      links={links}
+      legalLabel={legalLabel}
+      className="vx-auth-footer"
+      innerClassName="vx-auth-footer-inner"
+      linksClassName="vx-auth-footer-links"
+    />
   );
 }
 

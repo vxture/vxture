@@ -4,13 +4,21 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
-import { useTheme, Icon } from '@vxture/design-system';
+import {
+  Icon,
+  ShellFullscreenToggle,
+  ShellLocaleSwitcher,
+  ShellThemeToggle,
+  useTheme,
+} from '@vxture/design-system';
 import { Input } from '@vxture/design-system';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { usePortalEntry } from '@/contexts/PortalEntryContext';
 import { UserPanel } from './UserPanel';
-import { getGlobalUserPreferences, setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
-import type { Locale, Theme } from '@vxture/shared';
+import { setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
+import type { Locale } from '@vxture/shared';
+
+const PAGE_FULLSCREEN_ID = 'console-page-root-native';
 
 export function Header({
   assistantEnabled,
@@ -30,10 +38,7 @@ export function Header({
   const [launcherOpen, setLauncherOpen] = useState(false);
   const launcherRef = useRef<HTMLDivElement>(null);
   const t = useTranslations('header');
-  const currentTheme = (theme ?? getGlobalUserPreferences().theme) as Theme;
-  const nextTheme: Theme = currentTheme === 'dark' ? 'light' : 'dark';
-  const nextLocale: Locale = locale === 'zh-CN' ? 'en-US' : 'zh-CN';
-  const themeIconName = currentTheme === 'dark' ? 'moon' : 'sun';
+  const currentLocale = locale as Locale;
   const tenantLabel = session.tenant?.workspace ?? session.tenant?.name;
   const assistantLabel = assistantOpen ? t('closeAssistant') : t('openAssistant');
 
@@ -157,31 +162,35 @@ export function Header({
         </button>
 
         <div className="vx-shell-header__action-group" role="group" aria-label={t('quickPreferences')}>
-          <button
-            type="button"
+          <ShellThemeToggle
+            currentTheme={theme}
+            buttonLabel={t('toggleTheme')}
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
-            aria-label={t('toggleTheme')}
-            title={t('toggleTheme')}
-            onClick={() => {
+            activeClassName="vx-shell-icon-button--active"
+            onThemeChange={(nextTheme) => {
               setTheme(nextTheme);
               setGlobalThemePreference(nextTheme);
             }}
-          >
-            <Icon name={themeIconName} size="sm" fallback="sun" />
-          </button>
+          />
 
-          <button
-            type="button"
-            className="vx-shell-icon-button vx-shell-icon-button--toolbar"
-            aria-label={t('toggleLanguage')}
-            title={t('toggleLanguage')}
-            onClick={() => {
+          <ShellLocaleSwitcher
+            currentLocale={currentLocale}
+            buttonLabel={t('toggleLanguage')}
+            buttonClassName="vx-shell-icon-button vx-shell-icon-button--toolbar"
+            activeButtonClassName="vx-shell-icon-button--active"
+            onLocaleChange={(nextLocale) => {
               setGlobalLocalePreference(nextLocale);
               router.replace(pathname, { locale: nextLocale });
             }}
-          >
-            <Icon name="globe" size="sm" fallback="globe" />
-          </button>
+          />
+
+          <ShellFullscreenToggle
+            targetId={PAGE_FULLSCREEN_ID}
+            enterLabel={t('fullscreen.enter')}
+            exitLabel={t('fullscreen.exit')}
+            className="vx-shell-icon-button vx-shell-icon-button--toolbar"
+            activeClassName="vx-shell-icon-button--active"
+          />
         </div>
 
         <div className="vx-shell-header__action-group" role="group" aria-label={t('workspaceActions')}>
