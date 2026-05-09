@@ -20,8 +20,8 @@
 // ============================================================================
 
 import { HeroSection, FeaturesSection, SolutionSection, CaseSection, CTASection } from '@/components/marketing';
-import { ScrollToButton } from '@/components/ui';
-import { SnapDebugPanel, SnapChoicePanel } from '@/components/ui';
+import ScrollToButton from '@/components/marketing/ScrollToButton';
+import { SnapChoicePanel, SnapDebugPanel } from '@/components/marketing/debug';
 import { useWindowScrollSnap } from '@/hooks';
 
 // ============================================================================

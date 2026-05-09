@@ -19,7 +19,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/lib/i18n/routing';
 import { AuthSessionBootstrap } from '@/components/auth';
-import Notifications from '@/components/ui/Notifications';
+import Notifications from '@/components/feedback/Notifications';
 import type { Locale } from '@vxture/shared';
 import { buildMetadata } from '@/app/metadata';
 
