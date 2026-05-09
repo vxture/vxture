@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Input } from "@vxture/design-system";
+import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import {
   fetchInvoiceLedgerRecords,
   submitBillingInvoiceReceiptAction,
@@ -205,14 +205,15 @@ function PageSizePicker({
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? "secondary" : "ghost"}
+            size="sm"
             className={value === option ? "is-active" : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -243,19 +244,20 @@ function InvoiceActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className="vx-tenant-actions__trigger"
-        type="button"
         aria-label={`${invoice.invoiceNo} 发票操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -264,9 +266,9 @@ function InvoiceActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             账单详情
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -275,11 +277,11 @@ function InvoiceActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
+          </Button>
           {(["update_shipping", "finish", "red"] as const).map((action) => (
-            <button
+            <Button
               key={action}
-              type="button"
+              variant="ghost"
               role="menuitem"
               className={
                 action === "red"
@@ -307,7 +309,7 @@ function InvoiceActionsMenu({
                 fallback="placeholder"
               />
               {invoiceReceiptActionLabel(action)}
-            </button>
+            </Button>
           ))}
         </div>
       ) : null}
@@ -342,17 +344,9 @@ function InvoiceListRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = invoices.filter((invoice) =>
     selectedInvoiceIds.has(invoice.id),
   ).length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedOnPage > 0 && selectedOnPage < invoices.length;
-    }
-  }, [invoices.length, selectedOnPage]);
 
   return (
     <div
@@ -362,12 +356,10 @@ function InvoiceListRows({
     >
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页发票"
           />
         </span>
@@ -404,13 +396,10 @@ function InvoiceListRows({
             }}
           >
             <span className="vx-invoice-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onChange={(event) =>
-                  onToggleInvoice(invoice.id, event.target.checked)
-                }
+                onCheckedChange={(value) => onToggleInvoice(invoice.id, value === true)}
                 aria-label={`选择发票 ${invoice.invoiceNo}`}
               />
             </span>
@@ -419,8 +408,8 @@ function InvoiceListRows({
             </span>
             <span className="vx-invoice-row__invoice">
               <span className="vx-tenant-directory-row__title-line">
-                <button
-                  type="button"
+                <Button
+                  variant="link"
                   className="vx-model-name-button"
                   onClick={() =>
                     router.push(
@@ -429,7 +418,7 @@ function InvoiceListRows({
                   }
                 >
                   {invoice.invoiceNo}
-                </button>
+                </Button>
               </span>
               <small>
                 {invoice.invoiceTitle} · {taxTypeLabel(invoice.invoiceTaxType)}
@@ -953,7 +942,7 @@ export function InvoicesPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={statusFilter}
               onChange={(event) =>
@@ -969,8 +958,8 @@ export function InvoicesPage() {
               <option value="exception">异常发票</option>
               <option value="red">已红冲</option>
               <option value="rejected">已驳回</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={invoiceTypeFilter}
               onChange={(event) =>
@@ -984,8 +973,8 @@ export function InvoicesPage() {
               <option value="electronic">电子发票</option>
               <option value="paper">纸质发票</option>
               <option value="other">其他</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={taxFilter}
               onChange={(event) =>
@@ -998,8 +987,8 @@ export function InvoicesPage() {
               <option value="individual">个人</option>
               <option value="government">政府/事业单位</option>
               <option value="other">其他</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={deliveryFilter}
               onChange={(event) =>
@@ -1011,7 +1000,7 @@ export function InvoicesPage() {
               <option value="not_sent">未寄送</option>
               <option value="sent">已寄送</option>
               <option value="finished">已完成</option>
-            </select>
+            </NativeSelect>
           </div>
         </section>
 

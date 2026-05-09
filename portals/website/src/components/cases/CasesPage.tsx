@@ -19,6 +19,7 @@ import Image from 'next/image';
 import { Link } from '@/lib/i18n/navigation';
 import { debugLog } from '@vxture/shared';
 import { CASES_DATA } from '@/data/cases/cases.data';
+import { Button, Input } from '@vxture/design-system';
 
 // ============================================================================
 // 主组件
@@ -72,7 +73,7 @@ export default function CasesPage() {
         {/* 筛选与搜索 */}
         <div className='flex flex-col md:flex-row gap-6 mb-12'>
           <div className='flex-1'>
-            <input
+            <Input
               type='text'
               placeholder={t(CASES_DATA.ui.searchKey)}
               value={searchTerm}
@@ -81,7 +82,9 @@ export default function CasesPage() {
             />
           </div>
           <div className='flex flex-wrap gap-2'>
-            <button
+            <Button
+              variant={selectedCategory === 'all' ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setSelectedCategory('all')}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 selectedCategory === 'all'
@@ -90,10 +93,12 @@ export default function CasesPage() {
               }`}
             >
               {t('filters.all')}
-            </button>
+            </Button>
             {CASES_DATA.categories.map((category) => (
-              <button
+              <Button
                 key={category.id}
+                variant={selectedCategory === category.slug ? 'default' : 'outline'}
+                size="sm"
                 onClick={() => setSelectedCategory(category.slug)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                   selectedCategory === category.slug
@@ -102,7 +107,7 @@ export default function CasesPage() {
                 }`}
               >
                 {t(category.nameKey)}
-              </button>
+              </Button>
             ))}
           </div>
         </div>
@@ -157,12 +162,12 @@ export default function CasesPage() {
         {filteredCases.length === 0 && (
           <div className='text-center py-16'>
             <p className='text-vx-gray-500 text-lg'>{t(CASES_DATA.ui.noResultsKey)}</p>
-            <button
+            <Button
               onClick={() => { setSelectedCategory('all'); setSearchTerm(''); }}
               className='mt-4 px-6 py-2 bg-vx-brand-600 text-vx-white rounded-lg hover:bg-vx-brand-700 transition-colors'
             >
               {t(CASES_DATA.ui.clearFiltersKey)}
-            </button>
+            </Button>
           </div>
         )}
       </div>

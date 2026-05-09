@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Button, Input } from "@vxture/design-system";
+import { Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import { fetchPromotionRedemptionRecords } from "@/api/admin-bff";
 import type {
   BillingBillStatus,
@@ -117,19 +117,20 @@ function RedemptionActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className="vx-tenant-actions__trigger"
-        type="button"
         aria-label={`${record.redemptionNo} 核销操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -138,9 +139,9 @@ function RedemptionActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             账单详情
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -149,9 +150,9 @@ function RedemptionActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -160,9 +161,9 @@ function RedemptionActionsMenu({
           >
             <Icon name="table" size="xs" fallback="placeholder" />
             订单列表
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -171,7 +172,7 @@ function RedemptionActionsMenu({
           >
             <Icon name="sparkles" size="xs" fallback="placeholder" />
             优惠活动
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -200,17 +201,9 @@ function RedemptionRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = records.filter((record) =>
     selectedRecordIds.has(record.id),
   ).length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedOnPage > 0 && selectedOnPage < records.length;
-    }
-  }, [records.length, selectedOnPage]);
 
   return (
     <div
@@ -220,12 +213,10 @@ function RedemptionRows({
     >
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页核销记录"
           />
         </span>
@@ -262,13 +253,10 @@ function RedemptionRows({
             }}
           >
             <span className="vx-redemption-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onChange={(event) =>
-                  onToggleRecord(record.id, event.target.checked)
-                }
+                onCheckedChange={(value) => onToggleRecord(record.id, value === true)}
                 aria-label={`选择核销记录 ${record.redemptionNo}`}
               />
             </span>
@@ -276,15 +264,15 @@ function RedemptionRows({
               {formatNumber(startIndex + index + 1)}
             </span>
             <span className="vx-commercial-row__main">
-              <button
-                type="button"
+              <Button
+                variant="link"
                 className="vx-model-name-button"
                 onClick={() =>
                   router.push(`/billing/${encodeURIComponent(record.billId)}`)
                 }
               >
                 {record.redemptionNo}
-              </button>
+              </Button>
               <small>
                 {record.promotionCode} · {record.promotionName}
               </small>
@@ -625,7 +613,7 @@ export function PromotionRedemptionsPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={statusFilter}
               onChange={(event) =>
@@ -637,8 +625,8 @@ export function PromotionRedemptionsPage() {
               <option value="applied">已应用</option>
               <option value="redeemed">已核销</option>
               <option value="reversed">已退回</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={billStatusFilter}
               onChange={(event) =>
@@ -653,8 +641,8 @@ export function PromotionRedemptionsPage() {
               <option value="paid">已结清</option>
               <option value="overdue">逾期</option>
               <option value="cancelled">已作废</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={tierFilter}
               onChange={(event) =>
@@ -667,7 +655,7 @@ export function PromotionRedemptionsPage() {
               <option value="pro">Pro</option>
               <option value="enterprise">Enterprise</option>
               <option value="other">其他</option>
-            </select>
+            </NativeSelect>
           </div>
         </section>
 

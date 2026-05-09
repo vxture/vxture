@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Input, NativeSelect } from '@vxture/design-system';
 import { fetchProductPlans, fetchProductSolutions } from '@/api/admin-bff';
 import type {
   ProductPlanRecord,
@@ -153,14 +153,15 @@ function ServicePlanPageSizePicker({ value, onChange }: { value: PageSize; onCha
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? 'secondary' : 'ghost'}
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -182,27 +183,27 @@ function ServicePlanActionsMenu({
 }) {
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${item.solution.solutionName} ${item.tier.tierName} 操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${item.solution.solutionName} ${item.tier.tierName} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button type="button" role="menuitem" onClick={onViewDetails}>
+          <Button variant="ghost" role="menuitem" onClick={onViewDetails}>
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             查看详情
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="chart-bar" size="xs" fallback="placeholder" />
             配额配置
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="edit" size="xs" fallback="placeholder" />
             价格配置
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={item.tier.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
             {item.tier.status === 'active' ? '下架套餐' : '上架套餐'}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -485,29 +486,29 @@ export function ServicePlansPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="套餐状态">
+            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="套餐状态">
               <option value="all">全部状态</option>
               <option value="active">启用</option>
               <option value="draft">草稿</option>
               <option value="archived">归档</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={priceFilter} onChange={(event) => setPriceFilter(event.target.value as PriceFilter)} aria-label="价格类型">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={priceFilter} onChange={(event) => setPriceFilter(event.target.value as PriceFilter)} aria-label="价格类型">
               <option value="all">全部价格</option>
               <option value="free">免费</option>
               <option value="paid">标准付费</option>
               <option value="contract">合同报价</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={visibilityFilter} onChange={(event) => setVisibilityFilter(event.target.value as VisibilityFilter)} aria-label="适用范围">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={visibilityFilter} onChange={(event) => setVisibilityFilter(event.target.value as VisibilityFilter)} aria-label="适用范围">
               <option value="all">全部范围</option>
               <option value="public">公开</option>
               <option value="internal">内部</option>
-            </select>
-            <select className="vx-input vx-tenant-select vx-service-plan-select--industry" value={industryFilter} onChange={(event) => setIndustryFilter(event.target.value)} aria-label="业务方案">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select vx-service-plan-select--industry" value={industryFilter} onChange={(event) => setIndustryFilter(event.target.value)} aria-label="业务方案">
               <option value="all">全部行业</option>
               {industries.map((industry) => (
                 <option key={industry} value={industry}>{industry}</option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             新建套餐

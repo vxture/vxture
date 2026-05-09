@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import type { CSSProperties, ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import type { Locale } from '@vxture/shared';
 import {
@@ -682,9 +682,9 @@ function pulseTagToneClass(tone?: Tone) {
 function DetailTip({ detail }: { detail: string }) {
   return (
     <span className="admin-overview-tip">
-      <button type="button" aria-label={detail} title={detail}>
+      <Button variant="ghost" size="icon" aria-label={detail} title={detail}>
         <Icon name="help" size="xs" fallback="placeholder" />
-      </button>
+      </Button>
       <span role="tooltip">{detail}</span>
     </span>
   );
@@ -712,16 +712,17 @@ function PeriodSwitch({
   return (
     <div className="admin-overview-period" role="tablist" aria-label="统计周期" style={switchStyle}>
       {visibleOptions.map((option) => (
-        <button
+        <Button
           key={option.key}
-          type="button"
+          variant={value === option.key ? 'secondary' : 'ghost'}
+          size="sm"
           role="tab"
           aria-selected={value === option.key}
           className={value === option.key ? 'admin-overview-period__item admin-overview-period__item--active' : 'admin-overview-period__item'}
           onClick={() => onChange(option.key)}
         >
           {option.label}
-        </button>
+        </Button>
       ))}
     </div>
   );

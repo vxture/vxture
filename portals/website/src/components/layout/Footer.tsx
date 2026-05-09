@@ -17,7 +17,7 @@
 
 import { useState, useRef } from "react";
 import { useTranslations } from 'next-intl';
-import { useTheme, Icon } from "@vxture/design-system";
+import { Button, useTheme, Icon } from "@vxture/design-system";
 import { debugLog } from "@vxture/shared";
 import Image from 'next/image';
 import { FOOTER_DATA } from "@/data/layout/footer.data";
@@ -133,7 +133,9 @@ export default function Footer() {
               {FOOTER_DATA.social.map((social) => (
                 <div key={social.name} className="relative group">
                   {social.icon === "wechat" ? (
-                    <button
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       aria-label={t(social.ariaLabelKey)}
                       className="text-vx-gray-600 hover:text-vx-primary transition-colors"
                       onMouseEnter={() => setQrCodeVisible(true)}
@@ -141,7 +143,7 @@ export default function Footer() {
                       ref={setWechatIconRef}
                     >
                       <Icon name="wechat" className="w-5 h-5" />
-                    </button>
+                    </Button>
                   ) : (
                     <a
                       href={social.href}

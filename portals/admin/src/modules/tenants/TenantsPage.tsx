@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchTenantOperations } from '@/api/admin-bff';
 import type { TenantOperationRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -82,14 +82,15 @@ function TenantPageSizePicker({ value, onChange }: { value: PageSize; onChange: 
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? 'secondary' : 'ghost'}
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -111,13 +112,13 @@ function TenantActionsMenu({
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${tenant.displayName} 操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${tenant.displayName} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -126,19 +127,19 @@ function TenantActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             查看详情
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="edit" size="xs" fallback="placeholder" />
             编辑资料
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="star" size="xs" fallback="placeholder" />
             订阅处理
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={tenant.status === 'suspended' ? 'success' : 'warning'} size="xs" fallback="placeholder" />
             {tenant.status === 'suspended' ? '恢复租户' : '暂停租户'}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -167,26 +168,17 @@ function TenantListRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = tenants.filter((tenant) => selectedTenantIds.has(tenant.id)).length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < tenants.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-tenant-operation-directory-list" role="region" aria-label="租户清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : isPagePartiallySelected ? 'indeterminate' : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页租户"
           />
         </span>
@@ -219,12 +211,11 @@ function TenantListRows({
             }}
           >
             <span className="vx-tenant-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selectedTenantIds.has(tenant.id)}
                 onClick={(event) => event.stopPropagation()}
-                onChange={(event) => onToggleTenant(tenant.id, event.target.checked)}
+                onCheckedChange={(value) => onToggleTenant(tenant.id, value === true)}
                 aria-label={`选择 ${tenant.displayName}`}
               />
             </span>
@@ -233,13 +224,13 @@ function TenantListRows({
               <Icon name={tenant.tenantType === 'company' ? 'buildings' : 'user'} size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <button
-                    type="button"
+                  <Button
+                    variant="link"
                     className="vx-model-name-button"
                     onClick={() => router.push(`/tenants/${encodeURIComponent(tenant.id)}`)}
                   >
                     {tenant.displayName}
-                  </button>
+                  </Button>
                 </span>
                 <small>{tenant.tenantCode} · {tenant.region}</small>
               </span>
@@ -531,33 +522,33 @@ export function TenantsPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="租户状态">
+            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="租户状态">
               <option value="all">全部状态</option>
               <option value="active">正常</option>
               <option value="trial">试用</option>
               <option value="suspended">暂停</option>
               <option value="cancelled">注销</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as TypeFilter)} aria-label="租户类型">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as TypeFilter)} aria-label="租户类型">
               <option value="all">全部类型</option>
               <option value="company">企业租户</option>
               <option value="individual">个人租户</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={verificationFilter} onChange={(event) => setVerificationFilter(event.target.value as VerificationFilter)} aria-label="认证状态">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={verificationFilter} onChange={(event) => setVerificationFilter(event.target.value as VerificationFilter)} aria-label="认证状态">
               <option value="all">全部认证</option>
               <option value="verified">已认证</option>
               <option value="pending">待审核</option>
               <option value="unverified">未认证</option>
               <option value="rejected">已驳回</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={riskFilter} onChange={(event) => setRiskFilter(event.target.value as RiskFilter)} aria-label="风险等级">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={riskFilter} onChange={(event) => setRiskFilter(event.target.value as RiskFilter)} aria-label="风险等级">
               <option value="all">全部风险</option>
               {tenantRiskOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             新建租户

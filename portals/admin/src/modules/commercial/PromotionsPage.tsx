@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
-import { Button, Input } from "@vxture/design-system";
+import { Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import { fetchPromotionOperations } from "@/api/admin-bff";
 import type {
   PromotionOperationRecord,
@@ -90,19 +90,20 @@ function PromotionActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className="vx-tenant-actions__trigger"
-        type="button"
         aria-label={`${record.promotionName} 操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -111,9 +112,9 @@ function PromotionActionsMenu({
           >
             <Icon name="check" size="xs" fallback="placeholder" />
             查看核销
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -122,7 +123,7 @@ function PromotionActionsMenu({
           >
             <Icon name="star" size="xs" fallback="placeholder" />
             服务套餐
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -151,17 +152,9 @@ function PromotionRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = records.filter((record) =>
     selectedRecordIds.has(record.id),
   ).length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedOnPage > 0 && selectedOnPage < records.length;
-    }
-  }, [records.length, selectedOnPage]);
 
   return (
     <div
@@ -171,12 +164,10 @@ function PromotionRows({
     >
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页优惠活动"
           />
         </span>
@@ -213,13 +204,10 @@ function PromotionRows({
             }}
           >
             <span className="vx-promotion-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onChange={(event) =>
-                  onToggleRecord(record.id, event.target.checked)
-                }
+                onCheckedChange={(value) => onToggleRecord(record.id, value === true)}
                 aria-label={`选择优惠活动 ${record.promotionName}`}
               />
             </span>
@@ -227,13 +215,13 @@ function PromotionRows({
               {formatNumber(startIndex + index + 1)}
             </span>
             <span className="vx-commercial-row__main">
-              <button
-                type="button"
+              <Button
+                variant="link"
                 className="vx-model-name-button"
                 onClick={() => router.push("/promotion-redemptions")}
               >
                 {record.promotionName}
-              </button>
+              </Button>
               <small>
                 {record.promotionCode} · {typeLabel(record.promotionType)}
               </small>
@@ -529,7 +517,7 @@ export function PromotionsPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={statusFilter}
               onChange={(event) =>
@@ -542,8 +530,8 @@ export function PromotionsPage() {
               <option value="scheduled">待开始</option>
               <option value="paused">已暂停</option>
               <option value="expired">已结束</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={typeFilter}
               onChange={(event) =>
@@ -555,7 +543,7 @@ export function PromotionsPage() {
               <option value="discount">套餐折扣</option>
               <option value="coupon">优惠码</option>
               <option value="campaign">活动</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             新建优惠

@@ -17,7 +17,7 @@
 
 import { useState, memo, useCallback } from 'react';
 import Image from 'next/image';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import { useTranslations } from 'next-intl';
 import { debugLog } from '@vxture/shared';
 import { SOLUTIONS_DATA, type SolutionItem } from '@/data/home/home.solutions.data';
@@ -81,9 +81,8 @@ const SolutionCard = memo(function SolutionCard({
             <div className='relative flex items-center h-20 min-h-20'>
               {/* 背景数字 */}
               <span
-                className='absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-vx-brand-300 dark:text-vx-brand-500 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
+                className='vx-solution-index absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-vx-brand-300 dark:text-vx-brand-500 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
                 aria-hidden='true'
-                style={{ letterSpacing: '-0.05em' }}
               >
                 {idx + 1}
               </span>
@@ -138,22 +137,26 @@ const SolutionCard = memo(function SolutionCard({
               {/* 导航按钮 */}
               <div className='flex justify-center'>
                 <div className='flex gap-6'>
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     aria-label='Previous'
                     onClick={prev}
                     className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-vx-gray-100 dark:hover:bg-vx-gray-600 transition-all duration-300 hover:shadow-md'
                   >
                     <Icon name='caret-left-bold' className='w-4 h-4 text-vx-gray-400 dark:text-vx-gray-400' />
                     <span className='text-vx-gray-400 dark:text-vx-gray-400 font-medium text-sm'>{uiTexts.prev}</span>
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     aria-label='Next'
                     onClick={next}
                     className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-vx-gray-100 dark:hover:bg-vx-gray-600 transition-all duration-300 hover:shadow-md'
                   >
                     <span className='text-vx-gray-400 dark:text-vx-gray-400 font-medium text-sm'>{uiTexts.next}</span>
                     <Icon name='caret-right-bold' className='w-4 h-4 text-vx-gray-400 dark:text-vx-gray-400' />
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>
@@ -164,10 +167,7 @@ const SolutionCard = memo(function SolutionCard({
           <div className='relative flex items-center justify-center px-38'>
             <div className='relative w-full max-w-2xl h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300 py-6'>
               <div className='relative w-full pointer-events-none select-none'>
-                <div
-                  className='absolute flex items-center justify-center'
-                  style={{ top: '4%', right: '3%', bottom: '4.5%', left: '3%' }}
-                >
+                <div className='vx-solution-cover-frame absolute flex items-center justify-center'>
                   <div className='w-full h-full overflow-hidden z-10'>
                     <Image
                       src={solution.cover.url}
@@ -256,8 +256,10 @@ const SolutionSection = memo(function SolutionSection({
             <div className='flex justify-center mb-4'>
               <div className='flex items-center gap-2 sm:gap-4'>
                 {items.map((solution, idx) => (
-                  <button
+                  <Button
                     key={solution.id}
+                    variant={idx === current ? 'secondary' : 'ghost'}
+                    size="sm"
                     onClick={() => setCurrent(idx)}
                     className={`text-xs sm:text-sm transition-all duration-300 px-2 sm:px-3 py-1 rounded-full ${
                       idx === current
@@ -266,7 +268,7 @@ const SolutionSection = memo(function SolutionSection({
                     }`}
                   >
                     {t(`items.${solution.id}.title`)}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>

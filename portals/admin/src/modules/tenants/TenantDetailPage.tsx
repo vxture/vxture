@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Input, NativeSelect } from '@vxture/design-system';
 import { fetchTenantOperations } from '@/api/admin-bff';
 import type {
   TenantOperationMember,
@@ -266,7 +266,7 @@ function TenantInfoTab({
           <div className="vx-tenant-config-row vx-tenant-config-row--three">
             <TenantConfigItem label="租户类型">
               {editing ? (
-                <select
+                <NativeSelect
                   className="vx-input vx-tenant-select"
                   value={draft.tenantType}
                   onChange={(event) => onDraftChange('tenantType', event.target.value as TenantInfoDraft['tenantType'])}
@@ -274,7 +274,7 @@ function TenantInfoTab({
                   {tenantTypeOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
-                </select>
+                </NativeSelect>
               ) : (
                 <Badge className={`vx-tenant-pill vx-tenant-pill--${draft.tenantType}`}>
                   {tenantTypeOptions.find((option) => option.value === draft.tenantType)?.label}
@@ -283,7 +283,7 @@ function TenantInfoTab({
             </TenantConfigItem>
             <TenantConfigItem label="租户状态">
               {editing ? (
-                <select
+                <NativeSelect
                   className="vx-input vx-tenant-select"
                   value={draft.status}
                   onChange={(event) => onDraftChange('status', event.target.value as TenantInfoDraft['status'])}
@@ -291,7 +291,7 @@ function TenantInfoTab({
                   {tenantStatusOptions.map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
-                </select>
+                </NativeSelect>
               ) : (
                 <Badge className={`vx-tenant-pill vx-tenant-pill--${draft.status}`}>{statusLabel(draft.status)}</Badge>
               )}
@@ -373,27 +373,27 @@ function MemberActionsMenu({
 }) {
   return (
     <div className="vx-tenant-actions vx-tenant-member-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${member.name} 操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${member.name} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button type="button" role="menuitem" disabled>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="user-switch" size="xs" fallback="placeholder" />
             调整权限
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="key" size="xs" fallback="placeholder" />
             重置密码
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={member.status === 'suspended' ? 'success' : 'warning'} size="xs" fallback="placeholder" />
             {member.status === 'suspended' ? '恢复账号' : '停用账号'}
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="trash" size="xs" fallback="placeholder" />
             移除账号
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -580,7 +580,7 @@ function TenantMembersTab({ members }: { members: TenantOperationMember[] }) {
           aria-label="搜索账号"
         />
         <Button variant="outline" onClick={handleReset}>重置</Button>
-        <select
+        <NativeSelect
           className="vx-input vx-tenant-select vx-tenant-member-select"
           value={statusFilter}
           onChange={(event) => setStatusFilter(event.target.value as MemberStatusFilter)}
@@ -590,8 +590,8 @@ function TenantMembersTab({ members }: { members: TenantOperationMember[] }) {
           <option value="active">正常</option>
           <option value="invited">邀请中</option>
           <option value="suspended">停用</option>
-        </select>
-        <select
+        </NativeSelect>
+        <NativeSelect
           className="vx-input vx-tenant-select vx-tenant-member-select"
           value={roleFilter}
           onChange={(event) => setRoleFilter(event.target.value)}
@@ -601,7 +601,7 @@ function TenantMembersTab({ members }: { members: TenantOperationMember[] }) {
           {roleOptions.map((role) => (
             <option key={role} value={role}>{role}</option>
           ))}
-        </select>
+        </NativeSelect>
       </section>
 
       <section className="vx-tenant-directory vx-tenant-member-directory" aria-label="账号清单">
@@ -908,27 +908,29 @@ export function TenantDetailPage({ tenantId }: { tenantId: string }) {
             <div className="vx-tenant-detail__title">
               <div className="vx-tenant-title-line vx-tenant-title-line--name">
                 <h2>{tenant.displayName}</h2>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="vx-tenant-title-copy"
                   aria-label="复制租户名称"
                   title="复制租户名称"
                   onClick={() => void handleCopyText(tenant.displayName)}
                 >
                   <Icon name="copy" size="xs" fallback="placeholder" />
-                </button>
+                </Button>
               </div>
               <div className="vx-tenant-title-line vx-tenant-title-line--code">
                 <p>{tenant.tenantCode}</p>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="vx-tenant-title-copy"
                   aria-label="复制租户代码"
                   title="复制租户代码"
                   onClick={() => void handleCopyText(tenant.tenantCode)}
                 >
                   <Icon name="copy" size="xs" fallback="placeholder" />
-                </button>
+                </Button>
               </div>
               <div>
                 <Badge className={`vx-tenant-pill vx-tenant-pill--${tenant.status}`}>{statusLabel(tenant.status)}</Badge>
@@ -963,9 +965,10 @@ export function TenantDetailPage({ tenantId }: { tenantId: string }) {
           <div className="vx-tenant-detail__toolbar">
             <div className="vx-tenant-tabs" role="tablist" aria-label={`${tenant.displayName} 信息分区`}>
               {tenantTabs.map((tab) => (
-                <button
+                <Button
                   key={tab.id}
-                  type="button"
+                  variant={activeTab === tab.id ? 'secondary' : 'ghost'}
+                  size="sm"
                   role="tab"
                   aria-selected={activeTab === tab.id}
                   className={activeTab === tab.id ? 'is-active' : undefined}
@@ -973,7 +976,7 @@ export function TenantDetailPage({ tenantId }: { tenantId: string }) {
                 >
                   <Icon name={tab.icon} size="xs" fallback="placeholder" />
                   {tab.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>

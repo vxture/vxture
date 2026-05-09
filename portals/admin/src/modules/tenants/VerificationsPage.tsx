@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchTenantOperations } from '@/api/admin-bff';
 import type { TenantOperationRecord, TenantVerificationStatus } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -110,14 +110,15 @@ function VerificationPageSizePicker({ value, onChange }: { value: PageSize; onCh
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? 'secondary' : 'ghost'}
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -140,13 +141,13 @@ function VerificationActionsMenu({
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${tenant.displayName} 认证操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${tenant.displayName} 认证操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -155,19 +156,19 @@ function VerificationActionsMenu({
           >
             <Icon name={isPending ? 'medal' : 'arrow-right'} size="xs" fallback="placeholder" />
             {isPending ? '进入审核' : '查看详情'}
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="check" size="xs" fallback="placeholder" />
             通过认证
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="x" size="xs" fallback="placeholder" />
             驳回材料
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="info" size="xs" fallback="placeholder" />
             审核记录
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -196,26 +197,17 @@ function VerificationListRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = tenants.filter((tenant) => selectedTenantIds.has(tenant.id)).length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < tenants.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-verification-directory-list" role="region" aria-label="实名认证清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : isPagePartiallySelected ? 'indeterminate' : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页实名认证"
           />
         </span>
@@ -241,12 +233,11 @@ function VerificationListRows({
             }}
           >
             <span className="vx-verification-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selectedTenantIds.has(tenant.id)}
                 onClick={(event) => event.stopPropagation()}
-                onChange={(event) => onToggleTenant(tenant.id, event.target.checked)}
+                onCheckedChange={(value) => onToggleTenant(tenant.id, value === true)}
                 aria-label={`选择 ${tenant.displayName}`}
               />
             </span>
@@ -255,13 +246,13 @@ function VerificationListRows({
               <Icon name="buildings" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <button
-                    type="button"
+                  <Button
+                    variant="link"
                     className="vx-model-name-button"
                     onClick={() => router.push(`/tenants/${encodeURIComponent(tenant.id)}`)}
                   >
                     {tenant.displayName}
-                  </button>
+                  </Button>
                 </span>
                 <small>{tenant.tenantCode} · {tenant.region}</small>
               </span>
@@ -556,29 +547,29 @@ export function VerificationsPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={verificationFilter} onChange={(event) => setVerificationFilter(event.target.value as VerificationFilter)} aria-label="认证状态">
+            <NativeSelect className="vx-input vx-tenant-select" value={verificationFilter} onChange={(event) => setVerificationFilter(event.target.value as VerificationFilter)} aria-label="认证状态">
               <option value="all">全部认证</option>
               <option value="pending">待审核</option>
               <option value="verified">已认证</option>
               <option value="rejected">已驳回</option>
               <option value="unverified">未认证</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={riskFilter} onChange={(event) => setRiskFilter(event.target.value as RiskFilter)} aria-label="风险等级">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={riskFilter} onChange={(event) => setRiskFilter(event.target.value as RiskFilter)} aria-label="风险等级">
               <option value="all">全部风险</option>
               {tenantRiskOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
               ))}
-            </select>
-            <select className="vx-input vx-tenant-select" value={regionFilter} onChange={(event) => setRegionFilter(event.target.value)} aria-label="所属区域">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={regionFilter} onChange={(event) => setRegionFilter(event.target.value)} aria-label="所属区域">
               <option value="all">全部区域</option>
               {regionOptions.map((region) => (
                 <option key={region} value={region}>
                   {region}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="medal" disabled>
             批量审核

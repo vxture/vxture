@@ -1,7 +1,7 @@
 'use client';
 import { Link, usePathname } from '@/lib/i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import { TenantSwitcher } from '@/components/navigation/tenant-switcher';
 import { navigationSections } from '@/config/navigation';
 import { hasCapability } from '@/features/permissions/can';
@@ -22,8 +22,9 @@ export function Sidebar({
   return (
     <aside id="vx-console-sidebar" className={collapsed ? 'vx-shell-sidebar vx-shell-sidebar--collapsed' : 'vx-shell-sidebar'}>
       <div className={collapsed ? 'vx-shell-sidebar__topbar vx-shell-sidebar__topbar--collapsed' : 'vx-shell-sidebar__topbar'}>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="icon"
           className="vx-shell-icon-button vx-shell-icon-button--rail"
           aria-label={collapsed ? headerT('openNavigation') : headerT('collapseNavigation')}
           aria-expanded={collapsed ? 'false' : 'true'}
@@ -36,7 +37,7 @@ export function Sidebar({
             <span />
             <span />
           </span>
-        </button>
+        </Button>
       </div>
 
       <div className="vx-shell-sidebar__tenant-switcher">

@@ -41,7 +41,7 @@
 'use client';
 
 import { useNotificationStore } from '@/stores/notification.store';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 
 // ============================================================================
 // 主组件区 - Notifications 全局通知组件
@@ -85,13 +85,15 @@ export default function Notifications() {
         >
           <div className='flex justify-between items-start'>
             <p>{notification.message}</p>
-            <button
+            <Button
+              variant="ghost"
+              size="icon"
               onClick={() => removeNotification(notification.id)}
               className='text-vx-gray-500 hover:text-vx-gray-700'
               aria-label='关闭通知'
             >
               <Icon name='trash' className='w-4 h-4' />
-            </button>
+            </Button>
           </div>
         </div>
       ))}

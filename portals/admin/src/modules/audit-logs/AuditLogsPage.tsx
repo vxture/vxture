@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Icon, Input, NativeSelect } from '@vxture/design-system';
 import { fetchAuditLogs } from '@/api/admin-bff';
 import type { AuditLogRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -92,7 +91,7 @@ function AuditToolbar({
       />
       <Button variant="outline" onClick={onReset}>重置</Button>
       <div className="vx-tenant-filters">
-        <select
+        <NativeSelect
           className="vx-input vx-tenant-select"
           value={resultFilter}
           onChange={(e) => onResultFilterChange(e.target.value as ResultFilter)}
@@ -101,7 +100,7 @@ function AuditToolbar({
           <option value="all">全部结果</option>
           <option value="success">成功</option>
           <option value="failure">失败</option>
-        </select>
+        </NativeSelect>
       </div>
       <ActionButton icon="shield-check" variant="outline" disabled>导出审计</ActionButton>
     </section>

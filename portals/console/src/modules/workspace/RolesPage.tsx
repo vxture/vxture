@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input, Label } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, Label, NativeSelect } from '@vxture/design-system';
 import {
   createTenantRole,
   deleteTenantRole,
@@ -431,9 +431,10 @@ export function RolesPage() {
             </span>
             <div className="vx-segmented-control" role="tablist" aria-label={t('toolbar.filterAriaLabel')}>
               {roleFilters.map((item) => (
-                <button
+                <Button
                   key={item.value}
-                  type="button"
+                  variant={filter === item.value ? 'secondary' : 'ghost'}
+                  size="sm"
                   role="tab"
                   title={item.label}
                   aria-selected={filter === item.value}
@@ -445,7 +446,7 @@ export function RolesPage() {
                   onClick={() => setFilter(item.value)}
                 >
                   {item.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -453,14 +454,13 @@ export function RolesPage() {
 
         <div className="vx-role-list">
           <div className="vx-role-list__header">
-            <label className="vx-role-select vx-role-select--header" title={t('list.selectPage')}>
-              <input
-                type="checkbox"
+            <span className="vx-role-select vx-role-select--header" title={t('list.selectPage')}>
+              <Checkbox
                 checked={isPageSelected}
                 aria-label={t('list.selectPage')}
-                onChange={(event) => togglePageSelection(event.target.checked)}
+                onCheckedChange={(value) => togglePageSelection(value === true)}
               />
-            </label>
+            </span>
             <span>{t('list.columns.name')}</span>
             <span>{t('list.columns.code')}</span>
             <span>{t('list.columns.status')}</span>
@@ -487,14 +487,13 @@ export function RolesPage() {
                   className={openMenuId === role.id ? 'vx-role-row vx-role-row--active' : 'vx-role-row'}
                   title={roleTitle}
                 >
-                  <label className="vx-role-select" title={t('list.selectRole', { name: role.roleName })}>
-                    <input
-                      type="checkbox"
+                  <span className="vx-role-select" title={t('list.selectRole', { name: role.roleName })}>
+                    <Checkbox
                       checked={selectedIds.has(role.id)}
                       aria-label={t('list.selectRole', { name: role.roleName })}
-                      onChange={(event) => toggleRoleSelection(role.id, event.target.checked)}
+                      onCheckedChange={(value) => toggleRoleSelection(role.id, value === true)}
                     />
-                  </label>
+                  </span>
                   <div className="vx-role-row__identity">
                     <span
                       className={role.isSystem ? 'vx-role-avatar vx-role-avatar--system' : 'vx-role-avatar vx-role-avatar--custom'}
@@ -551,22 +550,22 @@ export function RolesPage() {
                     </Button>
                     {openMenuId === role.id ? (
                       <div className="vx-role-actions-menu" role="menu">
-                        <button type="button" role="menuitem" onClick={() => openEditDialog(role)}>
+                        <Button variant="ghost" role="menuitem" onClick={() => openEditDialog(role)}>
                           <Icon name="edit" size="xs" fallback="placeholder" />
                           <span>{t('actions.edit')}</span>
-                        </button>
-                        <button
-                          type="button"
+                        </Button>
+                        <Button
+                          variant="ghost"
                           role="menuitem"
                           disabled={submitting}
                           onClick={() => void handleToggleRoleStatus(role)}
                         >
                           <Icon name="shield-check" size="xs" fallback="placeholder" />
                           <span>{role.status === 'active' ? t('actions.disable') : t('actions.enable')}</span>
-                        </button>
+                        </Button>
                         {!role.isSystem ? (
-                          <button
-                            type="button"
+                          <Button
+                            variant="ghost"
                             role="menuitem"
                             className="vx-role-actions-menu__danger"
                             disabled={submitting}
@@ -574,7 +573,7 @@ export function RolesPage() {
                           >
                             <Icon name="trash" size="xs" fallback="placeholder" />
                             <span>{t('actions.delete')}</span>
-                          </button>
+                          </Button>
                         ) : null}
                       </div>
                     ) : null}
@@ -660,14 +659,14 @@ export function RolesPage() {
               </Label>
               <Label>
                 {t('dialog.fields.status')}
-                <select
+                <NativeSelect
                   className="vx-input"
                   value={form.status}
                   onChange={(event) => setForm((old) => ({ ...old, status: event.target.value as 'active' | 'disabled' }))}
                 >
                   <option value="active">{t('status.active')}</option>
                   <option value="disabled">{t('status.disabled')}</option>
-                </select>
+                </NativeSelect>
               </Label>
               <div className="vx-role-permission-picker">
                 <header>
@@ -676,9 +675,10 @@ export function RolesPage() {
                 </header>
                 <div className="vx-role-permission-picker__list">
                   {permissions.map((permission) => (
-                    <button
+                    <Button
                       key={permission.id}
-                      type="button"
+                      variant={form.permissionIds.includes(permission.id) ? 'secondary' : 'outline'}
+                      size="sm"
                       title={permission.description ?? permission.permissionName}
                       className={
                         form.permissionIds.includes(permission.id)
@@ -688,7 +688,7 @@ export function RolesPage() {
                       onClick={() => togglePermission(permission.id)}
                     >
                       {permission.permissionCode}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>

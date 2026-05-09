@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Avatar, Badge, Button, Input, Label } from '@vxture/design-system';
+import { Avatar, Badge, Button, Checkbox, Input, Label, NativeSelect } from '@vxture/design-system';
 import {
   createMember,
   disableMember,
@@ -488,9 +488,10 @@ export function MembersPage() {
             </span>
             <div className="vx-segmented-control" role="tablist" aria-label={t('table.filterAriaLabel')}>
               {statusFilters.map((filter) => (
-                <button
+                <Button
                   key={filter.value}
-                  type="button"
+                  variant={status === filter.value ? 'secondary' : 'ghost'}
+                  size="sm"
                   role="tab"
                   title={filter.label}
                   aria-selected={status === filter.value}
@@ -502,7 +503,7 @@ export function MembersPage() {
                   onClick={() => setStatus(filter.value)}
                 >
                   {filter.label}
-                </button>
+                </Button>
               ))}
             </div>
           </div>
@@ -510,14 +511,13 @@ export function MembersPage() {
 
         <div className="vx-member-list">
           <div className="vx-member-list__header">
-            <label className="vx-member-select vx-member-select--header" title={t('table.selectPage')}>
-              <input
-                type="checkbox"
+            <span className="vx-member-select vx-member-select--header" title={t('table.selectPage')}>
+              <Checkbox
                 checked={isPageSelected}
                 aria-label={t('table.selectPage')}
-                onChange={(event) => togglePageSelection(event.target.checked)}
+                onCheckedChange={(value) => togglePageSelection(value === true)}
               />
-            </label>
+            </span>
             <span>{t('table.columns.name')}</span>
             <span>{t('table.columns.phone')}</span>
             <span>{t('table.columns.email')}</span>
@@ -549,14 +549,13 @@ export function MembersPage() {
                   }
                   title={detailTitle}
                 >
-                  <label className="vx-member-select" title={t('table.selectMember', { name: member.name })}>
-                    <input
-                      type="checkbox"
+                  <span className="vx-member-select" title={t('table.selectMember', { name: member.name })}>
+                    <Checkbox
                       checked={selectedIds.has(member.id)}
                       aria-label={t('table.selectMember', { name: member.name })}
-                      onChange={(event) => toggleMemberSelection(member.id, event.target.checked)}
+                      onCheckedChange={(value) => toggleMemberSelection(member.id, value === true)}
                     />
-                  </label>
+                  </span>
                   <div className="vx-member-table__identity">
                     <Avatar
                       className="vx-member-table__avatar"
@@ -618,12 +617,12 @@ export function MembersPage() {
                     </Button>
                     {openMenuId === member.id ? (
                       <div className="vx-member-actions-menu" role="menu">
-                        <button type="button" role="menuitem" onClick={() => openEditDialog(member)}>
+                        <Button variant="ghost" role="menuitem" onClick={() => openEditDialog(member)}>
                           <Icon name="edit" size="xs" fallback="placeholder" />
                           <span>{t('actions.edit')}</span>
-                        </button>
-                        <button
-                          type="button"
+                        </Button>
+                        <Button
+                          variant="ghost"
                           role="menuitem"
                           disabled={submitting}
                           onClick={() => void handleToggleMemberStatus(member)}
@@ -634,15 +633,15 @@ export function MembersPage() {
                               ? t('actions.enableMember')
                               : member.status === 'Invited'
                                 ? t('actions.disableInvite')
-                                : t('actions.disableMember')}
+                              : t('actions.disableMember')}
                           </span>
-                        </button>
-                        <button type="button" role="menuitem" onClick={() => openResetDialog(member)}>
+                        </Button>
+                        <Button variant="ghost" role="menuitem" onClick={() => openResetDialog(member)}>
                           <Icon name="key" size="xs" fallback="placeholder" />
                           <span>{t('actions.resetPassword')}</span>
-                        </button>
-                        <button
-                          type="button"
+                        </Button>
+                        <Button
+                          variant="ghost"
                           role="menuitem"
                           className="vx-member-actions-menu__danger"
                           disabled={submitting}
@@ -650,7 +649,7 @@ export function MembersPage() {
                         >
                           <Icon name="user-switch" size="xs" fallback="placeholder" />
                           <span>{t('actions.unlink')}</span>
-                        </button>
+                        </Button>
                       </div>
                     ) : null}
                   </div>
@@ -734,7 +733,7 @@ export function MembersPage() {
               </Label>
               <Label>
                 {t('dialogs.fields.role')}
-                <select
+                <NativeSelect
                   className="vx-input"
                   value={memberForm.roleId}
                   onChange={(event) => setMemberForm((old) => ({ ...old, roleId: event.target.value }))}
@@ -745,7 +744,7 @@ export function MembersPage() {
                       {role.roleName}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </Label>
               <div className="vx-profile-dialog__actions">
                 <Button variant="outline" onClick={() => setCreateMode(null)}>
@@ -784,7 +783,7 @@ export function MembersPage() {
               </Label>
               <Label>
                 {t('dialogs.fields.role')}
-                <select
+                <NativeSelect
                   className="vx-input"
                   value={memberForm.roleId}
                   onChange={(event) => setMemberForm((old) => ({ ...old, roleId: event.target.value }))}
@@ -795,7 +794,7 @@ export function MembersPage() {
                       {role.roleName}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </Label>
               <div className="vx-profile-dialog__actions">
                 <Button variant="outline" onClick={() => setEditOpen(false)}>

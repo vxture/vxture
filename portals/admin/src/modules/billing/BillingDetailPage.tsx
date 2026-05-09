@@ -310,16 +310,17 @@ function BillingDetails({
                   )}
                 </span>
                 {(['update_shipping', 'finish', 'red'] as const).map((action) => (
-                  <button
+                  <Button
                     key={action}
-                    type="button"
+                    variant={action === 'red' ? 'destructive' : 'outline'}
+                    size="sm"
                     className={action === 'red' ? 'is-danger' : undefined}
                     disabled={!canRunInvoiceReceiptAction(action, receipt)}
                     title={invoiceReceiptActionDisabledReason(action, receipt) ?? undefined}
                     onClick={() => onReceiptAction(receipt, action)}
                   >
                     {invoiceReceiptActionLabel(action)}
-                  </button>
+                  </Button>
                 ))}
               </p>
             </div>

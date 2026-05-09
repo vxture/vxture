@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
 import { fetchSupportTicketsStrict, fetchTenantOperationsStrict } from "@/api/admin-bff";
-import { Badge } from "@vxture/design-system";
+import { Badge, Button, Checkbox } from "@vxture/design-system";
 import type { SupportTicketRecord, TenantOperationRecord } from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
@@ -293,19 +293,20 @@ function TodoActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className="vx-tenant-actions__trigger"
-        type="button"
         aria-label={`${item.title} 待办操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -314,9 +315,9 @@ function TodoActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             处理入口
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -325,7 +326,7 @@ function TodoActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -366,11 +367,10 @@ function TodoRow({
       }}
     >
       <span className="vx-ops-todo-operation-row__select">
-        <input
-          type="checkbox"
+        <Checkbox
           className="vx-model-select-checkbox"
           checked={selected}
-          onChange={(event) => onToggleSelected(event.target.checked)}
+          onCheckedChange={(value) => onToggleSelected(value === true)}
           aria-label={`选择待办 ${item.title}`}
         />
       </span>
@@ -380,13 +380,13 @@ function TodoRow({
       <span className="vx-tenant-directory-row__tenant">
         <Icon name={item.icon} size="sm" fallback="placeholder" />
         <span>
-          <button
-            type="button"
+          <Button
+            variant="link"
             className="vx-model-name-button"
             onClick={() => router.push(item.href)}
           >
             {item.title}
-          </button>
+          </Button>
           <small>{item.description}</small>
         </span>
       </span>
@@ -429,7 +429,6 @@ export function OpsTodosPage() {
     () => new Set(),
   );
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const urgentTodos = todos.filter((todo) => todo.severity === "rose");
   const verificationTodos = todos.filter(
     (todo) => todo.type === "verification",
@@ -487,13 +486,6 @@ export function OpsTodosPage() {
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedVisibleTodoCount > 0 && selectedVisibleTodoCount < todos.length;
-    }
-  }, [selectedVisibleTodoCount, todos.length]);
 
   function toggleTodoSelection(id: string, checked: boolean) {
     setSelectedTodoIds((current) => {
@@ -606,14 +598,10 @@ export function OpsTodosPage() {
               <div className="vx-tenant-directory-list vx-ops-todo-directory-list">
                 <div className="vx-tenant-directory-list__header">
                   <span>
-                    <input
-                      ref={pageSelectRef}
-                      type="checkbox"
+                    <Checkbox
                       className="vx-model-select-checkbox"
-                      checked={isTodoPageSelected}
-                      onChange={(event) =>
-                        toggleTodoPageSelection(event.target.checked)
-                      }
+                      checked={isTodoPageSelected ? true : selectedVisibleTodoCount > 0 ? "indeterminate" : false}
+                      onCheckedChange={(value) => toggleTodoPageSelection(value === true)}
                       aria-label="选择全部待办"
                     />
                   </span>

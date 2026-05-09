@@ -16,7 +16,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义
@@ -161,8 +161,9 @@ export default function ScrollToButton({
 
   return (
     <div className={`${positionClass} z-40`}>
-      <button
-        type='button'
+      <Button
+        variant="ghost"
+        size="icon"
         onClick={handleClick}
         aria-label={ariaLabel || text}
         className={`
@@ -173,7 +174,7 @@ export default function ScrollToButton({
         `}
       >
         <Icon name="chevron-up" className={iconSize} />
-      </button>
+      </Button>
     </div>
   );
 }

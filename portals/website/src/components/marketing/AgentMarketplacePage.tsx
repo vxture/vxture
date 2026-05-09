@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
 import { buildConsoleEntryUrl } from '@/lib/console-entry';
@@ -102,9 +102,10 @@ export default function AgentMarketplacePage() {
             {filters.map((filter) => {
               const active = activeIndustry === filter.id;
               return (
-                <button
+                <Button
                   key={filter.id}
-                  type='button'
+                  variant={active ? 'default' : 'outline'}
+                  size="sm"
                   onClick={() => setActiveIndustry(filter.id)}
                   className={`h-10 rounded-md border px-4 text-sm font-medium transition ${
                     active
@@ -113,7 +114,7 @@ export default function AgentMarketplacePage() {
                   }`}
                 >
                   {filter.label}
-                </button>
+                </Button>
               );
             })}
           </div>

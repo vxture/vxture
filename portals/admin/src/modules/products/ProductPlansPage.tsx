@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchProductPlans } from '@/api/admin-bff';
 import type { ProductPlanFeature, ProductPlanRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -123,14 +123,15 @@ function ProductPlanPageSizePicker({ value, onChange }: { value: PageSize; onCha
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? 'secondary' : 'ghost'}
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -150,27 +151,27 @@ function ProductPlanActionsMenu({
 }) {
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${plan.planName} 操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${plan.planName} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button type="button" role="menuitem" disabled>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             查看详情
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="chart-bar" size="xs" fallback="placeholder" />
             配额配置
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="edit" size="xs" fallback="placeholder" />
             价格配置
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={plan.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />
             {plan.isActive ? '下架套餐' : '上架套餐'}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -198,26 +199,17 @@ function ProductPlanListRows({
   onTogglePlan: (planId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = plans.filter((plan) => selectedPlanIds.has(plan.id)).length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < plans.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-product-plan-directory-list" role="region" aria-label="套餐清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : isPagePartiallySelected ? 'indeterminate' : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页套餐"
           />
         </span>
@@ -245,24 +237,23 @@ function ProductPlanListRows({
             }}
           >
             <span className="vx-product-plan-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selectedPlanIds.has(plan.id)}
                 onClick={(event) => event.stopPropagation()}
-                onChange={(event) => onTogglePlan(plan.id, event.target.checked)}
+                onCheckedChange={(value) => onTogglePlan(plan.id, value === true)}
                 aria-label={`选择 ${plan.planName}`}
               />
             </span>
             <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
             <span className="vx-tenant-directory-row__tenant vx-product-plan-row__identity">
               <Icon name="cube" size="sm" fallback="placeholder" />
-              <span>
-                <span className="vx-tenant-directory-row__title-line">
-                  <button type="button" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+            <span>
+              <span className="vx-tenant-directory-row__title-line">
+                  <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
                     {plan.planName}
-                  </button>
-                </span>
+                  </Button>
+              </span>
                 <small>{plan.planCode} · Level {formatNumber(plan.level)}</small>
               </span>
             </span>
@@ -541,26 +532,26 @@ export function ProductPlansPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="套餐状态">
+            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="套餐状态">
               <option value="all">全部状态</option>
               <option value="active">启用</option>
               <option value="inactive">停用</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={priceFilter} onChange={(event) => setPriceFilter(event.target.value as PriceFilter)} aria-label="价格类型">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={priceFilter} onChange={(event) => setPriceFilter(event.target.value as PriceFilter)} aria-label="价格类型">
               <option value="all">全部价格</option>
               <option value="free">Free</option>
               <option value="paid">Paid</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={visibilityFilter} onChange={(event) => setVisibilityFilter(event.target.value as VisibilityFilter)} aria-label="适用范围">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={visibilityFilter} onChange={(event) => setVisibilityFilter(event.target.value as VisibilityFilter)} aria-label="适用范围">
               <option value="all">全部范围</option>
               <option value="public">公开</option>
               <option value="private">内部</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={featureFilter} onChange={(event) => setFeatureFilter(event.target.value as FeatureFilter)} aria-label="权益类型">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={featureFilter} onChange={(event) => setFeatureFilter(event.target.value as FeatureFilter)} aria-label="权益类型">
               <option value="all">全部权益</option>
               <option value="quota">配额权益</option>
               <option value="function">功能权益</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             新建套餐

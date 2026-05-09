@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchPlatformGovernanceRecords } from '@/api/admin-bff';
 import type {
   PlatformGovernanceKind,
@@ -207,18 +207,18 @@ function GovernanceActionsMenu({
           role="menu"
           style={{ left: menuPosition.left, top: menuPosition.top }}
         >
-          <button type="button" role="menuitem" disabled>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="info" size="xs" fallback="placeholder" />
             {labels.detail}
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="edit" size="xs" fallback="placeholder" />
             {labels.edit}
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="shield-check" size="xs" fallback="placeholder" />
             {labels.audit}
-          </button>
+          </Button>
         </div>,
         document.body,
       )
@@ -226,9 +226,9 @@ function GovernanceActionsMenu({
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <button ref={triggerRef} className="vx-tenant-actions__trigger" type="button" aria-label={`${record.name} 操作`} title="操作" onClick={onToggle}>
+      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${record.name} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {menu}
     </div>
   );
@@ -244,7 +244,6 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
 
   const records = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -283,12 +282,6 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
   const selectedOnPage = records.filter((record) => selectedIds.has(record.id)).length;
   const isPageSelected = records.length > 0 && selectedOnPage === records.length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < records.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   useEffect(() => {
     setOpenMenuId(null);
@@ -365,13 +358,13 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
           <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={config.searchPlaceholder} className="vx-tenant-search" aria-label={`搜索${config.objectLabel}`} />
           <Button variant="outline" onClick={resetFilters}>重置</Button>
           <div className="vx-tenant-filters">
-            <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as PlatformGovernanceStatus | 'all')} className="vx-input vx-tenant-select" aria-label={`${config.objectLabel}状态`}>
+            <NativeSelect value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as PlatformGovernanceStatus | 'all')} className="vx-input vx-tenant-select" aria-label={`${config.objectLabel}状态`}>
               <option value="all">全部状态</option>
               <option value="normal">正常</option>
               <option value="warning">关注</option>
               <option value="blocked">阻断</option>
               <option value="pending">待处理</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton icon="shield-check" variant="outline" disabled={selectedIds.size === 0}>
             {config.batchAction}{selectedIds.size ? ` (${selectedIds.size})` : ''}
@@ -398,12 +391,10 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
             <div className="vx-tenant-directory-list vx-platform-governance-list" role="region" aria-label={`${config.title}清单`}>
               <div className="vx-tenant-directory-list__header">
                 <span>
-                  <input
-                    ref={pageSelectRef}
-                    type="checkbox"
+                  <Checkbox
                     className="vx-model-select-checkbox"
-                    checked={isPageSelected}
-                    onChange={(event) => togglePage(event.target.checked)}
+                    checked={isPageSelected ? true : isPagePartiallySelected ? 'indeterminate' : false}
+                    onCheckedChange={(value) => togglePage(value === true)}
                     aria-label={`选择当前页${config.objectLabel}`}
                   />
                 </span>
@@ -428,12 +419,11 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
                   }}
                 >
                   <span className="vx-platform-governance-row__select">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       className="vx-model-select-checkbox"
                       checked={selected}
                       onClick={(event) => event.stopPropagation()}
-                      onChange={(event) => toggleRecord(record.id, event.target.checked)}
+                      onCheckedChange={(value) => toggleRecord(record.id, value === true)}
                       aria-label={`选择 ${record.name}`}
                     />
                   </span>
@@ -442,9 +432,9 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
                     <Icon name={config.icon} size="sm" fallback="placeholder" />
                     <span>
                       <span className="vx-tenant-directory-row__title-line">
-                        <button type="button" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                        <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
                           {record.name}
-                        </button>
+                        </Button>
                       </span>
                       <small>{record.description}</small>
                     </span>

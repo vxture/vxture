@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Badge } from '@vxture/design-system';
+import { Badge, Button, Icon, Input, NativeSelect } from '@vxture/design-system';
 import { fetchAnnouncements } from '@/api/admin-bff';
 import type { AnnouncementRecord } from '@/entities/console';
 import { EmptyState } from '@/modules/shared/EmptyState';
@@ -114,7 +113,7 @@ function AnnouncementToolbar({
 }) {
   return (
     <div className="vx-models-toolbar">
-      <input
+      <Input
         className="vx-models-toolbar__search"
         type="search"
         placeholder="搜索标题、内容…"
@@ -122,7 +121,7 @@ function AnnouncementToolbar({
         onChange={(e) => onSearchChange(e.target.value)}
       />
       <div className="vx-models-toolbar__filters">
-        <select
+        <NativeSelect
           className="vx-admin-filter-select"
           value={typeFilter}
           onChange={(e) => onTypeFilterChange(e.target.value as AnnouncementTypeFilter)}
@@ -132,8 +131,8 @@ function AnnouncementToolbar({
           <option value="maintenance">维护</option>
           <option value="marketing">营销</option>
           <option value="security">安全</option>
-        </select>
-        <select
+        </NativeSelect>
+        <NativeSelect
           className="vx-admin-filter-select"
           value={statusFilter}
           onChange={(e) => onStatusFilterChange(e.target.value as AnnouncementStatusFilter)}
@@ -142,32 +141,34 @@ function AnnouncementToolbar({
           <option value="draft">草稿</option>
           <option value="published">已发布</option>
           <option value="archived">已归档</option>
-        </select>
+        </NativeSelect>
         <div className="vx-admin-view-toggle">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             className={joinClasses('vx-admin-view-toggle__btn', viewMode === 'list' ? 'vx-admin-view-toggle__btn--active' : '')}
             onClick={() => onViewModeChange('list')}
             title="列表视图"
           >
             <Icon name="rows" size="sm" fallback="placeholder" />
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
             className={joinClasses('vx-admin-view-toggle__btn', viewMode === 'cards' ? 'vx-admin-view-toggle__btn--active' : '')}
             onClick={() => onViewModeChange('cards')}
             title="卡片视图"
           >
             <Icon name="squares-four" size="sm" fallback="placeholder" />
-          </button>
+          </Button>
         </div>
       </div>
       <div className="vx-models-toolbar__spacer" />
       <span className="vx-models-toolbar__count">{total} 条</span>
-      <button type="button" className="vx-admin-action-btn" disabled title="新建公告（数据层待接入）">
+      <Button variant="default" size="sm" className="vx-admin-action-btn" disabled title="新建公告（数据层待接入）">
         <Icon name="plus" size="sm" fallback="placeholder" />
         新建公告
-      </button>
+      </Button>
     </div>
   );
 }
@@ -205,9 +206,9 @@ function AnnouncementList({ items, startIndex }: { items: AnnouncementRecord[]; 
             {item.expiresAt ? formatDate(item.expiresAt) : '-'}
           </span>
           <span className="vx-tenant-actions">
-            <button type="button" className="vx-tenant-actions__trigger" disabled title="操作（数据层待接入）">
+            <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" disabled title="操作（数据层待接入）">
               <Icon name="more-vertical" size="lg" fallback="placeholder" />
-            </button>
+            </Button>
           </span>
         </div>
       ))}
@@ -246,15 +247,15 @@ function AnnouncementPagination({ page, total, onPageChange }: { page: number; t
 
   return (
     <div className="vx-tenant-pagination">
-      <button type="button" className="vx-tenant-pagination__btn" disabled={page === 1} onClick={() => onPageChange(page - 1)}>
+      <Button variant="outline" size="sm" className="vx-tenant-pagination__btn" disabled={page === 1} onClick={() => onPageChange(page - 1)}>
         <Icon name="caret-left-bold" size="xs" fallback="placeholder" />
         上一页
-      </button>
+      </Button>
       <span className="vx-tenant-pagination__info">第 {page} / {totalPages} 页</span>
-      <button type="button" className="vx-tenant-pagination__btn" disabled={page === totalPages} onClick={() => onPageChange(page + 1)}>
+      <Button variant="outline" size="sm" className="vx-tenant-pagination__btn" disabled={page === totalPages} onClick={() => onPageChange(page + 1)}>
         下一页
         <Icon name="caret-right-bold" size="xs" fallback="placeholder" />
-      </button>
+      </Button>
     </div>
   );
 }

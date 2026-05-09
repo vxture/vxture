@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchProductCapabilities } from '@/api/admin-bff';
 import type {
   ProductCapabilityIntegrationStatus,
@@ -118,14 +118,15 @@ function ProductPageSizePicker({ value, onChange }: { value: PageSize; onChange:
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? 'secondary' : 'ghost'}
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -147,27 +148,27 @@ function ProductActionsMenu({
 }) {
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${product.productName} 操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${product.productName} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button type="button" role="menuitem" onClick={onViewDetails}>
+          <Button variant="ghost" role="menuitem" onClick={onViewDetails}>
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             查看详情
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="edit" size="xs" fallback="placeholder" />
             编辑能力
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="shield-check" size="xs" fallback="placeholder" />
             接入配置
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={product.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
             {product.status === 'active' ? '下线能力' : '上线能力'}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -197,26 +198,17 @@ function ProductListRows({
   onToggleProduct: (productCode: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = products.filter((product) => selectedProductCodes.has(product.productCode)).length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < products.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-product-directory-list" role="region" aria-label="产品能力清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : isPagePartiallySelected ? 'indeterminate' : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页产品能力"
           />
         </span>
@@ -239,12 +231,11 @@ function ProductListRows({
           }}
         >
           <span className="vx-product-operation-row__select">
-            <input
-              type="checkbox"
+            <Checkbox
               className="vx-model-select-checkbox"
               checked={selectedProductCodes.has(product.productCode)}
               onClick={(event) => event.stopPropagation()}
-              onChange={(event) => onToggleProduct(product.productCode, event.target.checked)}
+              onCheckedChange={(value) => onToggleProduct(product.productCode, value === true)}
               aria-label={`选择 ${product.productName}`}
             />
           </span>
@@ -253,9 +244,9 @@ function ProductListRows({
             <Icon name={productTypeIcon(product.productType)} size="sm" fallback="placeholder" />
             <span>
               <span className="vx-tenant-directory-row__title-line">
-                <button type="button" className="vx-model-name-button" onClick={() => onOpenDetails(product.productCode)}>
+                <Button variant="link" className="vx-model-name-button" onClick={() => onOpenDetails(product.productCode)}>
                   {product.productName}
-                </button>
+                </Button>
               </span>
               <small>{product.productCode} · {productRegionLabel(product.region)}</small>
             </span>
@@ -533,32 +524,32 @@ export function ProductsPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as TypeFilter)} aria-label="能力类型">
+            <NativeSelect className="vx-input vx-tenant-select" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as TypeFilter)} aria-label="能力类型">
               <option value="all">全部类型</option>
               <option value="platform">平台</option>
               <option value="agent">智能体</option>
               <option value="model">模型</option>
               <option value="data">数据</option>
               <option value="service">服务</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value as SourceFilter)} aria-label="产品来源">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value as SourceFilter)} aria-label="产品来源">
               <option value="all">全部来源</option>
               <option value="self">自建</option>
               <option value="partner">三方接入</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="产品状态">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="产品状态">
               <option value="all">全部状态</option>
               <option value="active">已上线</option>
               <option value="draft">草稿</option>
               <option value="archived">已归档</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={accessFilter} onChange={(event) => setAccessFilter(event.target.value as AccessFilter)} aria-label="接入状态">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={accessFilter} onChange={(event) => setAccessFilter(event.target.value as AccessFilter)} aria-label="接入状态">
               <option value="all">全部接入</option>
               <option value="connected">已接入</option>
               <option value="testing">联调中</option>
               <option value="config_required">待配置</option>
               <option value="not_required">无需接入</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             新建能力

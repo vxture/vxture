@@ -3,7 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchPlatformAdmins } from '@/api/admin-bff';
 import type { PlatformAdminRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -154,18 +154,18 @@ function PlatformUserActionsMenu({
           role="menu"
           style={{ left: menuPosition.left, top: menuPosition.top }}
         >
-          <button type="button" role="menuitem" disabled>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="user" size="xs" fallback="placeholder" />
             查看用户
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="shield-check" size="xs" fallback="placeholder" />
             调整角色
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={platformAdminStatusCode(admin) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
             {platformAdminStatusCode(admin) === 'active' ? '停用用户' : '启用用户'}
-          </button>
+          </Button>
         </div>,
         document.body,
       )
@@ -173,9 +173,9 @@ function PlatformUserActionsMenu({
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <button ref={triggerRef} className="vx-tenant-actions__trigger" type="button" aria-label={`${admin.displayName} 操作`} title="操作" onClick={onToggle}>
+      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${admin.displayName} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {menu}
     </div>
   );
@@ -202,27 +202,18 @@ function PlatformUsersList({
   onCloseMenu: () => void;
   t: ReturnType<typeof useConsoleTranslations>;
 }) {
-  const selectRef = useRef<HTMLInputElement | null>(null);
   const selectedCount = admins.filter((admin) => selectedIds.has(admin.id)).length;
   const pageSelected = admins.length > 0 && selectedCount === admins.length;
   const pagePartial = selectedCount > 0 && selectedCount < admins.length;
-
-  useEffect(() => {
-    if (selectRef.current) {
-      selectRef.current.indeterminate = pagePartial;
-    }
-  }, [pagePartial]);
 
   return (
     <div className="vx-tenant-directory-list vx-tenant-operation-directory-list vx-platform-user-directory-list" role="region" aria-label="平台用户清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={selectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={pageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={pageSelected ? true : pagePartial ? 'indeterminate' : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页平台用户"
           />
         </span>
@@ -246,12 +237,11 @@ function PlatformUsersList({
             }}
           >
             <span className="vx-tenant-operation-row__select vx-platform-user-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
                 onClick={(event) => event.stopPropagation()}
-                onChange={(event) => onToggleSelected(admin.id, event.target.checked)}
+                onCheckedChange={(value) => onToggleSelected(admin.id, value === true)}
                 aria-label={`选择 ${admin.displayName || admin.username}`}
               />
             </span>
@@ -260,9 +250,9 @@ function PlatformUsersList({
               <Icon name="user" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <button type="button" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                  <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
                     {admin.displayName || admin.username}
-                  </button>
+                  </Button>
                   {admin.isSystem ? <Badge className="vx-tenant-pill vx-tenant-pill--system">系统</Badge> : null}
                 </span>
                 <small>{admin.username ? `@${admin.username}` : EMPTY_MARK}</small>
@@ -350,14 +340,15 @@ function PlatformUserPageSizePicker({ value, onChange }: { value: PageSize; onCh
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? 'secondary' : 'ghost'}
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -526,19 +517,19 @@ export function PlatformUsersPage() {
           <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索用户名、显示名、邮箱、手机、角色" className="vx-tenant-search" aria-label="搜索平台用户" />
           <Button variant="outline" onClick={resetFilters}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="用户状态">
+            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="用户状态">
               <option value="all">全部状态</option>
               <option value="active">启用</option>
               <option value="disabled">停用</option>
               <option value="locked">锁定</option>
               <option value="pending">待激活</option>
               <option value="suspended">暂停</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as UserTypeFilter)} aria-label="用户类型">
+            </NativeSelect>
+            <NativeSelect className="vx-input vx-tenant-select" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as UserTypeFilter)} aria-label="用户类型">
               <option value="all">全部类型</option>
               <option value="system">系统用户</option>
               <option value="normal">普通用户</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>新建用户</ActionButton>
         </section>

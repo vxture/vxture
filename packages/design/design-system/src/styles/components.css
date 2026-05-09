@@ -617,7 +617,7 @@
 :where(.vx-switch) {
   position: relative;
   display: inline-flex;
-  width: 3.var(--vx-component-metric-1r);
+  width: var(--vx-component-metric-31r);
   height: var(--vx-component-metric-19r);
 }
 

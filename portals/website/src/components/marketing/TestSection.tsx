@@ -18,7 +18,7 @@
 interface SectionConfig {
   id: string;
   title: string;
-  backgroundColor?: string;
+  tone?: 'page' | 'odd' | 'even';
 }
 
 interface TestSectionProps {
@@ -32,8 +32,9 @@ export default function TestSection({ sections }: TestSectionProps) {
         <section
           key={section.id}
           id={section.id}
-          className='relative snap-section min-h-screen flex items-center justify-center'
-          style={{ backgroundColor: section.backgroundColor }}
+          className={`relative snap-section min-h-screen flex items-center justify-center ${
+            section.tone === 'page' ? 'vx-page-surface' : section.tone === 'even' ? 'vx-section-even' : 'vx-section-odd'
+          }`}
         >
           <div className='text-center'>
             <h2 className='font-display text-4xl font-bold text-vx-gray-800 mb-4'>{section.title}</h2>

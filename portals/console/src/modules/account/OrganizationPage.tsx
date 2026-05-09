@@ -315,8 +315,9 @@ export function OrganizationPage() {
       <div className="vx-account-profile-layout">
         <aside className="vx-account-profile-identity">
           <section className="vx-account-profile-avatar-card vx-organization-profile-card">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               className="vx-organization-logo-button"
               aria-label={t('logo.edit')}
               title={t('logo.edit')}
@@ -333,7 +334,7 @@ export function OrganizationPage() {
               <span className="vx-account-profile-avatar-button__edit" aria-hidden="true">
                 <Icon name="edit" size="xs" fallback="placeholder" />
               </span>
-            </button>
+            </Button>
 
             <div className="vx-account-profile-avatar-card__copy">
               <strong>{loading ? loadingText : displayName}</strong>
@@ -470,7 +471,7 @@ export function OrganizationPage() {
                   </div>
                 </Label>
                 <div className="vx-organization-logo-upload vx-account-profile-form-grid__wide">
-                  <input
+                  <Input
                     ref={logoFileInputRef}
                     type="file"
                     accept="image/*"

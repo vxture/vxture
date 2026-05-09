@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Input, NativeSelect } from '@vxture/design-system';
 import { fetchPlatformPermissions } from '@/api/admin-bff';
 import type { PlatformAdminPermissionRecord, PlatformPermissionType } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -402,8 +402,8 @@ function PermissionActionsMenu({
           role="menu"
           style={{ left: menuPosition.left, top: menuPosition.top }}
         >
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -412,19 +412,19 @@ function PermissionActionsMenu({
           >
             <Icon name="info" size="xs" fallback="placeholder" />
             权限详情
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="edit" size="xs" fallback="placeholder" />
             编辑权限
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="copy" size="xs" fallback="placeholder" />
             复制权限
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={permission.status ? 'x' : 'check'} size="xs" fallback="placeholder" />
             {permission.status ? '停用权限' : '启用权限'}
-          </button>
+          </Button>
         </div>,
         document.body,
       )
@@ -432,9 +432,9 @@ function PermissionActionsMenu({
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <button ref={triggerRef} className="vx-tenant-actions__trigger" type="button" aria-label={`${permissionDisplayName(permission)} 操作`} title="操作" onClick={onToggle}>
+      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${permissionDisplayName(permission)} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {menu}
     </div>
   );
@@ -460,9 +460,9 @@ function PermissionDetailDialog({
             <h2>{permissionDisplayName(permission)}</h2>
             <p>{permission.permCode}</p>
           </div>
-          <button type="button" className="vx-admin-role-permission-dialog__close" aria-label="关闭权限详情" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="vx-admin-role-permission-dialog__close" aria-label="关闭权限详情" onClick={onClose}>
             <Icon name="x" size="lg" fallback="placeholder" />
-          </button>
+          </Button>
         </header>
         <div className="vx-admin-role-permission-dialog__summary">
           <Badge className="vx-tenant-pill vx-tenant-pill--system">{permissionTypeMeta[permission.permType].label}</Badge>
@@ -601,9 +601,9 @@ function PermissionTreeNodeView({
           <span>{node.sequence || formatNumber(permission.sort)}</span>
         </span>
         <span className="vx-admin-permission-tree-node__name">
-          <button type="button" className="vx-admin-permission-tree-node__toggle" onClick={() => onToggle(permission.id)} disabled={!children.length} aria-label={expanded ? '收起权限子级' : '展开权限子级'}>
+          <Button variant="ghost" size="icon" className="vx-admin-permission-tree-node__toggle" onClick={() => onToggle(permission.id)} disabled={!children.length} aria-label={expanded ? '收起权限子级' : '展开权限子级'}>
             <Icon name={children.length ? (expanded ? 'chevron-down' : 'chevron-right') : 'chevron-right'} size="xs" fallback="chevron-right" />
-          </button>
+          </Button>
           <Icon name={meta.icon} size="sm" fallback="placeholder" />
           <span className={joinClasses('vx-admin-permission-tree-node__title', titleClassName)}>
             <strong>{permissionDisplayName(permission)}</strong>
@@ -714,22 +714,22 @@ function PermissionDomainSection({
         <Input value={filters.query} onChange={(event) => onFilterChange({ query: event.target.value })} placeholder="搜索权限 code、名称、路径、组件" className="vx-tenant-search" aria-label={`搜索${group.title}`} />
         <Button variant="outline" onClick={onResetFilters}>重置</Button>
         <div className="vx-tenant-filters">
-          <select className="vx-input vx-tenant-select" value={filters.typeFilter} onChange={(event) => onFilterChange({ typeFilter: event.target.value as PermissionFilter })} aria-label={`${group.title}权限类型`}>
+          <NativeSelect className="vx-input vx-tenant-select" value={filters.typeFilter} onChange={(event) => onFilterChange({ typeFilter: event.target.value as PermissionFilter })} aria-label={`${group.title}权限类型`}>
             <option value="all">全部类型</option>
             <option value="MENU">菜单权限</option>
             <option value="BUTTON">按钮权限</option>
             <option value="API">接口权限</option>
-          </select>
-          <select className="vx-input vx-tenant-select" value={filters.statusFilter} onChange={(event) => onFilterChange({ statusFilter: event.target.value as StatusFilter })} aria-label={`${group.title}权限状态`}>
+          </NativeSelect>
+          <NativeSelect className="vx-input vx-tenant-select" value={filters.statusFilter} onChange={(event) => onFilterChange({ statusFilter: event.target.value as StatusFilter })} aria-label={`${group.title}权限状态`}>
             <option value="all">全部状态</option>
             <option value="active">启用</option>
             <option value="disabled">停用</option>
-          </select>
-          <select className="vx-input vx-tenant-select" value={filters.sourceFilter} onChange={(event) => onFilterChange({ sourceFilter: event.target.value as SourceFilter })} aria-label={`${group.title}权限来源`}>
+          </NativeSelect>
+          <NativeSelect className="vx-input vx-tenant-select" value={filters.sourceFilter} onChange={(event) => onFilterChange({ sourceFilter: event.target.value as SourceFilter })} aria-label={`${group.title}权限来源`}>
             <option value="all">全部来源</option>
             <option value="system">系统预置</option>
             <option value="custom">自定义</option>
-          </select>
+          </NativeSelect>
         </div>
         <Button variant="outline" onClick={() => onExpand(domainPermissionIds)}>展开</Button>
         <Button variant="outline" onClick={() => onCollapse(domainPermissionIds)}>收起</Button>

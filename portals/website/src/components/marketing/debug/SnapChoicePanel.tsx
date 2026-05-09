@@ -16,6 +16,7 @@
  */
 
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
+import { Button } from '@vxture/design-system';
 
 // ============================================================================
 // 类型定义
@@ -194,16 +195,17 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
         const isActive = activeTarget?.id === id;
 
         return (
-          <button
+          <Button
             key={id}
+            variant={isActive ? 'default' : 'secondary'}
+            size="sm"
             onClick={() => handleButtonClick(id)}
-            className={`px-2 py-2 rounded transition text-left ${
+            className={`min-w-20 px-2 py-2 rounded transition text-left ${
               isActive ? 'bg-vx-primary/60 text-vx-white' : 'bg-vx-white/20 text-vx-white/70 hover:bg-vx-white/30'
             }`}
-            style={{ minWidth: 80 }}
           >
             {id} - {name}
-          </button>
+          </Button>
         );
       })}
     </div>

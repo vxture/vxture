@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Button, Input } from "@vxture/design-system";
+import { Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import { fetchUsageMeteringRecords } from "@/api/admin-bff";
 import type {
   UsageMeteringRecord,
@@ -104,19 +104,20 @@ function UsageActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className="vx-tenant-actions__trigger"
-        type="button"
         aria-label={`${record.tenantName} 用量操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -125,9 +126,9 @@ function UsageActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!record.subscriptionId}
             onClick={() => {
@@ -140,9 +141,9 @@ function UsageActionsMenu({
           >
             <Icon name="star" size="xs" fallback="placeholder" />
             查看订阅
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!record.subscriptionId}
             onClick={() => {
@@ -155,7 +156,7 @@ function UsageActionsMenu({
           >
             <Icon name="table" size="xs" fallback="placeholder" />
             查看订单
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -184,17 +185,9 @@ function UsageListRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = records.filter((record) =>
     selectedRecordIds.has(record.id),
   ).length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedOnPage > 0 && selectedOnPage < records.length;
-    }
-  }, [records.length, selectedOnPage]);
 
   return (
     <div
@@ -204,12 +197,10 @@ function UsageListRows({
     >
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页用量记录"
           />
         </span>
@@ -246,13 +237,10 @@ function UsageListRows({
             }}
           >
             <span className="vx-usage-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onChange={(event) =>
-                  onToggleRecord(record.id, event.target.checked)
-                }
+                onCheckedChange={(value) => onToggleRecord(record.id, value === true)}
                 aria-label={`选择用量记录 ${record.tenantName}`}
               />
             </span>
@@ -266,8 +254,8 @@ function UsageListRows({
                 fallback="placeholder"
               />
               <span>
-                <button
-                  type="button"
+                <Button
+                  variant="link"
                   className="vx-model-name-button"
                   onClick={() =>
                     router.push(
@@ -276,7 +264,7 @@ function UsageListRows({
                   }
                 >
                   {record.tenantName}
-                </button>
+                </Button>
                 <small>
                   {record.tenantCode} · {typeLabel(record.tenantType)}
                 </small>
@@ -599,7 +587,7 @@ export function UsageMeteringPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={riskFilter}
               onChange={(event) =>
@@ -612,8 +600,8 @@ export function UsageMeteringPage() {
               <option value="warning">接近上限</option>
               <option value="danger">超额</option>
               <option value="anomaly">计量异常</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={productTypeFilter}
               onChange={(event) =>
@@ -627,8 +615,8 @@ export function UsageMeteringPage() {
               <option value="大模型">大模型</option>
               <option value="三方接入">三方接入</option>
               <option value="产品能力">产品能力</option>
-            </select>
-            <select
+            </NativeSelect>
+            <NativeSelect
               className="vx-input vx-tenant-select"
               value={cycleFilter}
               onChange={(event) => setCycleFilter(event.target.value)}
@@ -640,7 +628,7 @@ export function UsageMeteringPage() {
                   {cycle}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
         </section>
 

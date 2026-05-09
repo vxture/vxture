@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Icon, type IconName } from '@vxture/design-system';
-import { Badge, Switch } from '@vxture/design-system';
+import { Badge, Icon, NativeSelect, Switch, type IconName } from '@vxture/design-system';
 import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
@@ -240,7 +239,7 @@ export function SettingsPage() {
                           onChange={(event) => updateBooleanSetting(row.key as BooleanSettingKey, event.target.checked)}
                         />
                       ) : (
-                        <select
+                        <NativeSelect
                           className="vx-input vx-tenant-settings-select"
                           value={String(settings[row.key])}
                           aria-label={t(`rows.${row.key}.title`)}
@@ -251,7 +250,7 @@ export function SettingsPage() {
                               {t(`options.${row.key}.${option}`)}
                             </option>
                           ))}
-                        </select>
+                        </NativeSelect>
                       )}
                     </div>
                   </div>

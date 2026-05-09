@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
 import { fetchSupportTicketsStrict } from "@/api/admin-bff";
-import { Badge, Button, Input } from "@vxture/design-system";
+import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import type { SupportTicketRecord, TenantOperationTicket } from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
@@ -113,19 +113,20 @@ function TicketActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
+        variant="ghost"
+        size="icon"
         className="vx-tenant-actions__trigger"
-        type="button"
         aria-label={`${ticket.title} 工单操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -134,9 +135,9 @@ function TicketActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -145,7 +146,7 @@ function TicketActionsMenu({
           >
             <Icon name="table" size="xs" fallback="placeholder" />
             运营待办
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -187,11 +188,10 @@ function TicketRow({
       }}
     >
       <span className="vx-ticket-operation-row__select">
-        <input
-          type="checkbox"
+        <Checkbox
           className="vx-model-select-checkbox"
           checked={selected}
-          onChange={(event) => onToggleSelected(event.target.checked)}
+          onCheckedChange={(value) => onToggleSelected(value === true)}
           aria-label={`选择工单 ${ticket.id}`}
         />
       </span>
@@ -199,15 +199,15 @@ function TicketRow({
         {String(index + 1).padStart(2, "0")}
       </span>
       <span className="vx-commercial-row__main">
-        <button
-          type="button"
+        <Button
+          variant="link"
           className="vx-model-name-button"
           onClick={() =>
             router.push(`/tenants/${encodeURIComponent(ticket.tenantId)}`)
           }
         >
           {ticket.title}
-        </button>
+        </Button>
         <small>
           {ticket.id} / {ticket.ownerName}
         </small>
@@ -276,7 +276,6 @@ export function TicketsPage() {
     () => new Set(),
   );
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -340,14 +339,6 @@ export function TicketsPage() {
   const isTicketPageSelected =
     visibleTicketIds.length > 0 &&
     selectedVisibleTicketCount === visibleTicketIds.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedVisibleTicketCount > 0 &&
-        selectedVisibleTicketCount < visibleTicketIds.length;
-    }
-  }, [selectedVisibleTicketCount, visibleTicketIds.length]);
 
   function resetFilters() {
     setQuery("");
@@ -425,7 +416,7 @@ export function TicketsPage() {
         />
         <div className="vx-tenant-toolbar__spacer" aria-hidden="true" />
         <label aria-label="状态筛选">
-          <select
+          <NativeSelect
             value={status}
             onChange={(event) =>
               setStatus(event.target.value as TicketStatusFilter)
@@ -436,10 +427,10 @@ export function TicketsPage() {
             <option value="processing">处理中</option>
             <option value="blocked">搁置</option>
             <option value="closed">完成</option>
-          </select>
+          </NativeSelect>
         </label>
         <label aria-label="优先级筛选">
-          <select
+          <NativeSelect
             value={priority}
             onChange={(event) =>
               setPriority(event.target.value as TicketPriorityFilter)
@@ -450,7 +441,7 @@ export function TicketsPage() {
             <option value="p1">P1</option>
             <option value="p2">P2</option>
             <option value="p3">P3</option>
-          </select>
+          </NativeSelect>
         </label>
         <Button variant="outline" size="sm" onClick={resetFilters}>
           重置
@@ -483,14 +474,10 @@ export function TicketsPage() {
           <div className="vx-tenant-directory-list vx-ticket-directory-list">
             <div className="vx-tenant-directory-list__header">
               <span>
-                <input
-                  ref={pageSelectRef}
-                  type="checkbox"
+                <Checkbox
                   className="vx-model-select-checkbox"
-                  checked={isTicketPageSelected}
-                  onChange={(event) =>
-                    toggleTicketPageSelection(event.target.checked)
-                  }
+                  checked={isTicketPageSelected ? true : selectedVisibleTicketCount > 0 ? "indeterminate" : false}
+                  onCheckedChange={(value) => toggleTicketPageSelection(value === true)}
                   aria-label="选择当前页工单"
                 />
               </span>

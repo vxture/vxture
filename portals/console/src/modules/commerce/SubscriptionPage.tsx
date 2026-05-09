@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Badge } from '@vxture/design-system';
+import { Badge, Button } from '@vxture/design-system';
 import { fetchBillingInvoices, fetchMySubscriptions, type ConsoleInvoice, type ConsoleSubscription } from '@/api/console-bff';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
@@ -143,15 +143,15 @@ export function SubscriptionPage() {
       <SummaryStrip items={summaryItems} />
 
       <div className="vx-tabs-list" role="tablist" aria-label="Subscription tabs">
-        <button type="button" className={tab === 'overview' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('overview')}>
+        <Button variant="ghost" size="sm" className={tab === 'overview' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('overview')}>
           Plan overview
-        </button>
-        <button type="button" className={tab === 'billing' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('billing')}>
+        </Button>
+        <Button variant="ghost" size="sm" className={tab === 'billing' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('billing')}>
           Recent billing
-        </button>
-        <button type="button" className={tab === 'payments' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('payments')}>
+        </Button>
+        <Button variant="ghost" size="sm" className={tab === 'payments' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('payments')}>
           Payment methods
-        </button>
+        </Button>
       </div>
 
       {tab === 'overview' ? (

@@ -159,25 +159,16 @@ export default function AnimatedHeroBg() {
   return (
     <div className='pointer-events-none absolute inset-0 overflow-hidden' aria-hidden='true'>
       {/* 渐变底色 */}
-      <div className='absolute inset-0' style={{ background: 'var(--vx-color-hero-bg)' }} />
+      <div className='vx-hero-bg-layer absolute inset-0' />
 
       {/* 节点连线动画层 */}
       <canvas ref={canvasRef} className='absolute inset-0 h-full w-full' />
 
       {/* 网格叠层 */}
-      <div
-        className='absolute inset-0'
-        style={{
-          backgroundImage: 'linear-gradient(var(--vx-color-hero-grid) 1px, transparent 1px), linear-gradient(90deg, var(--vx-color-hero-grid) 1px, transparent 1px)',
-          backgroundSize: '32px 32px',
-        }}
-      />
+      <div className='vx-hero-grid-layer absolute inset-0' />
 
       {/* 底部向下渐隐，与页面内容区平滑过渡 */}
-      <div
-        className='absolute bottom-0 left-0 right-0 h-28'
-        style={{ background: 'linear-gradient(transparent, var(--vx-color-hero-fade))' }}
-      />
+      <div className='vx-hero-fade-layer absolute bottom-0 left-0 right-0 h-28' />
     </div>
   );
 }

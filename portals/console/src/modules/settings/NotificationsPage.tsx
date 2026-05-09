@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Icon, type IconName } from '@vxture/design-system';
-import { Badge } from '@vxture/design-system';
+import { Badge, Checkbox, Icon, type IconName } from '@vxture/design-system';
 import { useTranslations } from 'next-intl';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
@@ -266,22 +265,21 @@ export function NotificationsPage() {
                           const checked = topic.channels[channel.key];
 
                           return (
-                            <label
+                            <span
                               key={channel.key}
                               className={channelLocked ? 'vx-notification-check vx-notification-check--locked' : 'vx-notification-check'}
                               title={channelLocked ? t('topics.policyLockedDescription') : t(`channels.short.${channel.key}`)}
                             >
-                              <input
-                                type="checkbox"
+                              <Checkbox
                                 checked={checked}
                                 disabled={channelLocked}
                                 aria-label={t('topics.toggleLabel', {
                                   topic: t(`topics.items.${topic.key}.title`),
                                   channel: t(`channels.items.${channel.key}.title`),
                                 })}
-                                onChange={(event) => toggleTopicChannel(topic.key, channel.key, event.target.checked)}
+                                onCheckedChange={(value) => toggleTopicChannel(topic.key, channel.key, value === true)}
                               />
-                            </label>
+                            </span>
                           );
                         })}
 

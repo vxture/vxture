@@ -272,20 +272,6 @@
    用法：首区块 → vx-section-odd，下一个 → vx-section-even，依此类推
    ═══════════════════════════════════════════════════════════════════════════ */
 
-:root {
-  --vx-page-bg: var(--vx-color-section-page-bg);
-  --vx-section-odd-bg: var(--vx-color-section-odd-bg);
-  --vx-section-even-bg: var(--vx-color-section-even-bg);
-  --vx-section-border: var(--vx-color-section-border);
-}
-
-.dark {
-  --vx-page-bg: var(--vx-color-section-page-bg);
-  --vx-section-odd-bg: var(--vx-color-section-odd-bg);
-  --vx-section-even-bg: var(--vx-color-section-even-bg);
-  --vx-section-border: var(--vx-color-section-border);
-}
-
 .vx-page-surface {
   min-height: 100vh;
   background: var(--vx-page-bg);

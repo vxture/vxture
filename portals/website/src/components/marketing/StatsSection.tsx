@@ -221,10 +221,7 @@ export default function StatsSection() {
                 {/* 渐变边框效果，hover 时显现, 用伪元素实现渐变边框 */}
 
                 <div
-                  className='absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10' // 关键：使用 -z-10 将其置于底层
-                  style={{
-                    background: `linear-gradient(to right, ${stat.color})`,
-                  }} // 使用行内样式设置渐变背景
+                  className={`absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 bg-linear-to-r ${stat.color}`} // 关键：使用 -z-10 将其置于底层
                 >
                   <div className='h-full w-full rounded-2xl bg-transparent'></div>
                 </div>

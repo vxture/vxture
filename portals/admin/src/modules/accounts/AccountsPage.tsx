@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchAccountOperations } from '@/api/admin-bff';
 import type { AccountOperationRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -189,14 +189,15 @@ function AccountPageSizePicker({ value, onChange }: { value: PageSize; onChange:
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant={value === option ? 'secondary' : 'ghost'}
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -216,23 +217,23 @@ function AccountActionsMenu({
 }) {
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${account.displayName} 操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${account.displayName} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button type="button" role="menuitem" disabled>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             查看详情
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="key" size="xs" fallback="placeholder" />
             重置密码
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={account.status === 'disabled' ? 'success' : account.status === 'locked' ? 'check' : 'warning'} size="xs" fallback="placeholder" />
             {account.status === 'disabled' ? '恢复账号' : account.status === 'locked' ? '解除锁定' : '停用账号'}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -262,26 +263,17 @@ function AccountListRows({
   onToggleAccount: (accountId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = accounts.filter((account) => selectedAccountIds.has(account.id)).length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < accounts.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   return (
     <div className={joinClasses('vx-tenant-directory-list vx-account-directory-list', !showTenantContext ? 'vx-account-directory-list--platform' : '')} role="region" aria-label="账号清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPageSelected ? true : isPagePartiallySelected ? 'indeterminate' : false}
+            onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页账号"
           />
         </span>
@@ -307,12 +299,11 @@ function AccountListRows({
             }}
           >
             <span className="vx-account-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selectedAccountIds.has(account.id)}
                 onClick={(event) => event.stopPropagation()}
-                onChange={(event) => onToggleAccount(account.id, event.target.checked)}
+                onCheckedChange={(value) => onToggleAccount(account.id, value === true)}
                 aria-label={`选择 ${account.displayName}`}
               />
             </span>
@@ -321,9 +312,9 @@ function AccountListRows({
               <Icon name="user" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <button type="button" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                  <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
                     {account.displayName}
-                  </button>
+                  </Button>
                 </span>
                 <small>{account.accountCode} · {account.email}</small>
               </span>
@@ -614,27 +605,27 @@ export function AccountsPage({
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label={pageCopy.statusAriaLabel}>
+            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label={pageCopy.statusAriaLabel}>
               <option value="all">全部状态</option>
               <option value="active">正常</option>
               <option value="invited">待激活</option>
               <option value="locked">已锁定</option>
               <option value="disabled">已停用</option>
-            </select>
+            </NativeSelect>
             {showTenantContext ? (
-              <select className="vx-input vx-tenant-select" value={tenantTypeFilter} onChange={(event) => setTenantTypeFilter(event.target.value as TenantTypeFilter)} aria-label={pageCopy.tenantTypeAriaLabel}>
+              <NativeSelect className="vx-input vx-tenant-select" value={tenantTypeFilter} onChange={(event) => setTenantTypeFilter(event.target.value as TenantTypeFilter)} aria-label={pageCopy.tenantTypeAriaLabel}>
                 <option value="all">全部租户</option>
                 <option value="individual">个人</option>
                 <option value="company">组织</option>
                 <option value="mixed">个人+组织</option>
-              </select>
+              </NativeSelect>
             ) : null}
-            <select className="vx-input vx-tenant-select" value={roleFilter} onChange={(event) => setRoleFilter(event.target.value as RoleFilter)} aria-label={pageCopy.roleAriaLabel}>
+            <NativeSelect className="vx-input vx-tenant-select" value={roleFilter} onChange={(event) => setRoleFilter(event.target.value as RoleFilter)} aria-label={pageCopy.roleAriaLabel}>
               <option value="all">全部权限</option>
               <option value="owner">Owner</option>
               <option value="admin">Admin</option>
               <option value="member">Member</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             {pageCopy.createActionLabel}

@@ -9,7 +9,11 @@ const SCAN_ROOTS = ["portals", "packages", "agent-studio", "business"];
 const SOURCE_EXTENSIONS = new Set([".css", ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx"]);
 const UPDATE_BASELINE = process.argv.includes("--update-baseline");
 const BASELINE_PATH = path.join(ROOT, "scripts/guardrails/design-system-baseline.json");
-const BASELINED_RULE_IDS = new Set(["ds/no-inline-design-style", "ds/no-native-primitive"]);
+const BASELINED_RULE_IDS = new Set([
+  "ds/no-inline-design-style",
+  "ds/no-native-primitive",
+  "ds/no-app-vx-token-definitions",
+]);
 const IGNORED_PARTS = new Set([
   ".git",
   ".next",
@@ -108,6 +112,23 @@ const rules = [
       if (!/^(portals|agent-studio|business)\/[^/]+\/tailwind\.config\.(js|mjs|ts)$/.test(normalized)) return null;
       if (/\b(colors|fontFamily|borderRadius|boxShadow)\s*:/.test(line)) {
         return violation(file, lineNumber, "把 token 定义迁移到 @vxture/design-system。");
+      }
+      return null;
+    },
+  },
+  {
+    id: "ds/no-app-vx-token-definitions",
+    description: "应用层不能新增 --vx-* token 定义；平台 token 和组件 token 必须回收到 DS。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return null;
+      const text = stripLineComment(line);
+      if (/^\s*--vx-[\w-]+\s*:/.test(text)) {
+        return violation(
+          file,
+          lineNumber,
+          "应用层不能定义新的 --vx-* token；把平台/组件语义 token 回收到 @vxture/design-system。",
+          line,
+        );
       }
       return null;
     },

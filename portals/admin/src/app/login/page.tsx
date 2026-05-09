@@ -9,6 +9,7 @@ import {
   AuthPasswordLoginPanel,
   AuthPhoneLoginPanel,
   AuthTabs,
+  Button,
   useTheme,
   type AuthLoginTab,
 } from '@vxture/design-system';
@@ -669,9 +670,9 @@ function AdminCaptchaOverlay({
     <div className="auth-captcha-modal" role="dialog" aria-modal="true" aria-label={dragLabel}>
       <div className="auth-captcha-modal__backdrop" />
       <div className="auth-captcha-modal__panel">
-        <button type="button" className="auth-captcha-modal__close" aria-label={closeLabel} onClick={onClose} disabled={loading}>
+        <Button variant="ghost" size="icon" className="auth-captcha-modal__close" aria-label={closeLabel} onClick={onClose} disabled={loading}>
           ×
-        </button>
+        </Button>
         <div className="auth-captcha-modal__header">
           <strong>{title}</strong>
           <span>{dragLabel}</span>
@@ -691,8 +692,9 @@ function AdminCaptchaOverlay({
           <div className="auth-captcha__slider" ref={sliderRef}>
             <div ref={progressRef} className="auth-captcha__progress" style={{ transform: `scaleX(${max ? offset / max : 0})` }} aria-hidden="true" />
             <span className="auth-captcha__hint">{solved ? solvedLabel : dragLabel}</span>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               ref={handleRef}
               className="auth-captcha__handle"
               style={{ transform: `translate3d(${offset}px, 0, 0)` }}
@@ -704,7 +706,7 @@ function AdminCaptchaOverlay({
               disabled={solved || loading}
             >
               <span aria-hidden="true" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>

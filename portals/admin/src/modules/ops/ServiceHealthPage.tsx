@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button } from '@vxture/design-system';
+import { Badge, Button, Icon, Input, NativeSelect } from '@vxture/design-system';
 import { fetchDevServices } from '@/api/admin-bff';
 import type { DevServiceSnapshot } from '@/entities/console';
 import { EmptyState } from '@/modules/shared/EmptyState';
@@ -419,7 +418,7 @@ export function ServiceHealthPage({
       <section className="vx-service-health-toolbar" aria-label="服务健康筛选">
         <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="服务健康展示方式" />
         <div className="vx-service-health-toolbar__spacer" aria-hidden="true" />
-        <input
+        <Input
           className="vx-service-health-search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
@@ -432,16 +431,16 @@ export function ServiceHealthPage({
 
         <div className="vx-service-health-filters">
           <label aria-label="状态筛选">
-            <select value={filters.status} onChange={(event) => updateFilter('status', event.target.value as StatusFilter)}>
+            <NativeSelect value={filters.status} onChange={(event) => updateFilter('status', event.target.value as StatusFilter)}>
               <option value="all">全部状态</option>
               <option value="healthy">健康</option>
               <option value="degraded">未就绪</option>
               <option value="offline">离线</option>
               <option value="stopping">停止中</option>
-            </select>
+            </NativeSelect>
           </label>
           <label aria-label="分层筛选">
-            <select value={filters.layer} onChange={(event) => updateFilter('layer', event.target.value as LayerFilter)}>
+            <NativeSelect value={filters.layer} onChange={(event) => updateFilter('layer', event.target.value as LayerFilter)}>
               <option value="all">全部分层</option>
               <option value="tooling">开发工具</option>
               <option value="ai">AI 服务</option>
@@ -450,31 +449,31 @@ export function ServiceHealthPage({
               <option value="bff">BFF</option>
               <option value="portal">门户</option>
               <option value="other">其他</option>
-            </select>
+            </NativeSelect>
           </label>
           <label aria-label="优先级筛选">
-            <select value={filters.priority} onChange={(event) => updateFilter('priority', event.target.value as PriorityFilter)}>
+            <NativeSelect value={filters.priority} onChange={(event) => updateFilter('priority', event.target.value as PriorityFilter)}>
               <option value="all">全部优先级</option>
               <option value="p0">P0</option>
               <option value="p1">P1</option>
               <option value="p2">P2</option>
               <option value="p3">P3</option>
-            </select>
+            </NativeSelect>
           </label>
           <label aria-label="探针筛选">
-            <select value={filters.probe} onChange={(event) => updateFilter('probe', event.target.value as ProbeFilter)}>
+            <NativeSelect value={filters.probe} onChange={(event) => updateFilter('probe', event.target.value as ProbeFilter)}>
               <option value="all">全部探针</option>
               <option value="http">HTTP</option>
               <option value="tcp">TCP</option>
               <option value="mixed">混合</option>
-            </select>
+            </NativeSelect>
           </label>
           <label aria-label="来源筛选">
-            <select value={filters.source} onChange={(event) => updateFilter('source', event.target.value as SourceFilter)}>
+            <NativeSelect value={filters.source} onChange={(event) => updateFilter('source', event.target.value as SourceFilter)}>
               <option value="all">全部来源</option>
               <option value="dev-tools">Dev Tools</option>
               <option value="dev-panel">Dev Panel</option>
-            </select>
+            </NativeSelect>
           </label>
         </div>
       </section>

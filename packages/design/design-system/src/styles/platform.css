@@ -1,0 +1,337 @@
+/**
+ * platform.css - Cross-application platform semantics
+ * @package @vxture/design-system
+ *
+ * These classes cover shared portal/application patterns that used to be
+ * maintained independently in admin and console globals.css.
+ */
+
+:where(.vx-models-page) {
+  --vx-models-text-size: var(--vx-component-metric-084r);
+  --vx-models-meta-size: var(--vx-component-metric-078r);
+}
+
+:where(.vx-account-profile-page) {
+  --vx-account-profile-text-size: var(--vx-component-metric-084r);
+  --vx-account-profile-meta-size: var(--vx-component-metric-078r);
+}
+
+:where(.vx-notifications-page) {
+  --vx-notification-text-size: var(--vx-component-metric-088r);
+  --vx-notification-meta-size: var(--vx-component-metric-078r);
+  --vx-notification-panel: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  --vx-notification-panel-strong: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
+  --vx-notification-line: var(--vx-color-auth-border);
+  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-auth-accent) 22%, transparent);
+}
+
+:where(.dark .vx-notifications-page) {
+  --vx-notification-panel: var(--vx-color-shell-panel);
+  --vx-notification-panel-strong: var(--vx-color-shell-panel-strong);
+  --vx-notification-line: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-primary) 28%, transparent);
+}
+
+:where(.vx-tenant-settings-page) {
+  --vx-tenant-settings-text-size: var(--vx-component-metric-084r);
+  --vx-tenant-settings-meta-size: var(--vx-component-metric-078r);
+  --vx-tenant-settings-line: color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
+}
+
+:where(.dark .vx-tenant-settings-page) {
+  --vx-tenant-settings-line: var(--vx-color-border);
+}
+
+:where(.vx-members-page) {
+  --vx-members-text-size: var(--vx-component-metric-084r);
+  --vx-members-meta-size: var(--vx-component-metric-078r);
+}
+
+:where(.vx-roles-page) {
+  --vx-roles-text-size: var(--vx-component-metric-084r);
+  --vx-roles-meta-size: var(--vx-component-metric-078r);
+}
+
+:where(.admin-shell) {
+  --vx-admin-header-height: 4rem;
+  --vx-admin-sidebar-width: 20rem;
+  --vx-admin-sidebar-collapsed-width: 4rem;
+  --vx-admin-sidebar-icon-size: 1.5rem;
+  --vx-admin-content-margin-x: 4rem;
+  --vx-admin-content-padding-x: 4rem;
+  --vx-admin-content-padding-top: 3rem;
+  --vx-admin-content-padding-bottom: 4rem;
+  --vx-admin-content-max-width: 92.5rem;
+  --vx-admin-sidebar-pad-x: var(--vx-shell-sidebar-content-inset);
+  --vx-admin-sidebar-pad-y: 1rem;
+  --vx-admin-sidebar-section-gap: 0.5rem;
+  --vx-admin-sidebar-control-inset: 8px;
+  --vx-admin-sidebar-transition: 420ms cubic-bezier(0.22, 1, 0.36, 1);
+  --vx-shell-sidebar-content-inset: 1.5rem;
+  --vx-shell-body-gap: 0;
+  --vx-shell-column-gap: 0;
+  --vx-shell-section-gap: 1rem;
+  --vx-shell-panel-radius: 1rem;
+  --vx-shell-header-height: var(--vx-admin-header-height);
+  --vx-shell-ink: var(--vx-color-brand-950);
+  --vx-shell-text: var(--vx-console-text);
+  --vx-shell-muted: var(--vx-color-text-secondary);
+  --vx-shell-subtle: var(--vx-color-shell-subtle);
+  --vx-shell-icon: var(--vx-color-shell-icon);
+  --vx-shell-icon-muted: var(--vx-color-text-muted);
+  --vx-shell-glass: color-mix(in srgb, var(--vx-color-white) 90%, transparent);
+  --vx-shell-surface: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  --vx-shell-surface-soft: var(--vx-color-shell-panel);
+  --vx-shell-hover: color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent);
+  --vx-shell-active: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  --vx-shell-active-subtle: color-mix(in srgb, var(--vx-color-auth-accent) 7%, transparent);
+  --vx-shell-line: var(--vx-color-border);
+  --vx-shell-line-soft: var(--vx-color-shell-line-soft);
+  --vx-shell-divider: var(--vx-color-shell-divider);
+  --vx-shell-focus-ring: color-mix(in srgb, var(--vx-color-auth-accent-light) 20%, transparent);
+  --vx-shell-title-size: 1rem;
+  --vx-shell-body-size: 0.875rem;
+  --vx-shell-item-size: 0.8125rem;
+  --vx-shell-caption-size: 0.75rem;
+  --vx-shell-tag-size: 0.625rem;
+  --vx-shell-header-text-size: var(--vx-shell-body-size);
+  --vx-shell-header-text-line: 1.25rem;
+  --vx-shell-header-control-size: 2rem;
+  --vx-shell-title-weight: 760;
+  --vx-shell-item-weight: 560;
+  --vx-shell-label-weight: 620;
+  --vx-shell-radius-panel: 1rem;
+  --vx-shell-radius-control: 0.75rem;
+  --vx-shell-radius-item: 0.75rem;
+  --vx-shell-radius-pill: 999px;
+  --vx-shell-header-shadow: 0 3px 4px color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  --vx-shell-assistant-line: var(--vx-color-neutral-border);
+  --vx-shell-assistant-shadow: -12px 0 24px -24px color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent);
+  --vx-shell-floating-shadow: 0 18px 48px -34px color-mix(in srgb, var(--vx-color-brand-800) 34%, transparent);
+}
+
+:where(.dark .admin-shell) {
+  --vx-shell-ink: var(--vx-color-brand-200);
+  --vx-shell-muted: var(--vx-color-text-muted);
+  --vx-shell-subtle: var(--vx-color-shell-subtle);
+  --vx-shell-icon: var(--vx-color-text-muted);
+  --vx-shell-icon-muted: var(--vx-color-text-muted);
+  --vx-shell-glass: color-mix(in srgb, var(--vx-color-shell-bg) 90%, transparent);
+  --vx-shell-surface: color-mix(in srgb, var(--vx-color-gray-900) 64%, transparent);
+  --vx-shell-surface-soft: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  --vx-shell-hover: var(--vx-color-shell-hover);
+  --vx-shell-active: var(--vx-color-primary-soft);
+  --vx-shell-active-subtle: var(--vx-color-shell-hover);
+  --vx-shell-line: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  --vx-shell-line-soft: color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent);
+  --vx-shell-divider: color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
+  --vx-shell-focus-ring: color-mix(in srgb, var(--vx-color-primary) 22%, transparent);
+  --vx-shell-header-shadow: 0 3px 4px color-mix(in srgb, var(--vx-color-black) 22%, transparent);
+  --vx-shell-assistant-line: color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
+  --vx-shell-assistant-shadow: -12px 0 24px -24px var(--vx-color-primary-soft);
+  --vx-shell-floating-shadow: 0 18px 48px -34px color-mix(in srgb, var(--vx-color-primary) 30%, transparent);
+}
+
+@media (max-width: 1180px) {
+  :where(.admin-shell) {
+    --vx-admin-content-margin-x: 0;
+    --vx-admin-content-padding-x: 2rem;
+    --vx-admin-content-padding-top: 2rem;
+    --vx-admin-content-padding-bottom: 3rem;
+    --vx-admin-content-max-width: none;
+  }
+}
+
+.vx-hero-bg-layer {
+  background: var(--vx-color-hero-bg);
+}
+
+.vx-hero-grid-layer {
+  background-image:
+    linear-gradient(var(--vx-color-hero-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--vx-color-hero-grid) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+
+.vx-hero-fade-layer {
+  background: linear-gradient(transparent, var(--vx-color-hero-fade));
+}
+
+.vx-solution-index {
+  letter-spacing: -0.05em;
+}
+
+.vx-solution-cover-frame {
+  top: 4%;
+  right: 3%;
+  bottom: 4.5%;
+  left: 3%;
+}
+
+.vx-tabs-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--vx-component-metric-05r);
+  padding: var(--vx-component-metric-035r);
+  border-radius: var(--vx-component-metric-14p);
+  background: color-mix(in srgb, var(--vx-color-white) 84%, transparent);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+
+.dark .vx-tabs-list {
+  background: var(--vx-color-gray-900);
+}
+
+.vx-tab {
+  height: auto;
+  min-height: 0;
+  border: 0;
+  border-radius: var(--vx-component-metric-10p);
+  background: transparent;
+  color: var(--vx-console-muted);
+  padding: var(--vx-component-metric-07r) var(--vx-component-metric-095r);
+  font-weight: 600;
+}
+
+.vx-tab:hover {
+  color: var(--vx-console-brand);
+}
+
+.vx-tab--active {
+  background: var(--vx-color-brand-50);
+  color: var(--vx-color-brand-700);
+}
+
+.dark .vx-tab--active {
+  background: var(--vx-color-brand-950);
+  color: var(--vx-color-brand-200);
+}
+
+.vx-table,
+.vx-member-table {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border: var(--vx-component-metric-1p) solid var(--vx-color-shell-line-soft);
+  border-radius: var(--vx-radius-xl);
+  background: var(--vx-color-white);
+}
+
+.dark .vx-table,
+.dark .vx-member-table {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 60%, transparent);
+}
+
+.vx-table__row,
+.vx-table__header {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--vx-component-metric-1r);
+  align-items: center;
+}
+
+.vx-table__header,
+.vx-member-table__header {
+  justify-items: center;
+  padding: var(--vx-component-metric-07r) 0;
+  background: var(--vx-color-brand-50);
+  color: var(--vx-color-shell-muted);
+  font-size: var(--vx-component-metric-078r);
+  font-weight: 740;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+}
+
+.dark .vx-table__header,
+.dark .vx-member-table__header {
+  background: color-mix(in srgb, var(--vx-color-gray-800) 48%, transparent);
+  color: var(--vx-color-text-muted);
+}
+
+.vx-table__row,
+.vx-member-table__row {
+  justify-items: start;
+  padding: var(--vx-component-metric-082r) 0;
+  border-bottom: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 7.5%, transparent);
+  text-align: left;
+}
+
+.vx-table__row:last-child,
+.vx-member-table__row:last-child {
+  border-bottom: 0;
+}
+
+.vx-table__row span,
+.vx-member-table__row span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-component-metric-086r);
+}
+
+.vx-member-table__header,
+.vx-member-table__row {
+  display: grid;
+  grid-template-columns: 1.3fr 1.5fr 1fr 0.8fr 1fr 56px;
+  gap: var(--vx-component-metric-1r);
+  align-items: center;
+}
+
+.vx-member-table__row {
+  cursor: pointer;
+}
+
+.vx-member-table__row:hover {
+  background: color-mix(in srgb, var(--vx-color-white) 65%, transparent);
+}
+
+.vx-member-table__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-component-metric-075r);
+}
+
+.vx-member-table__identity p {
+  margin: var(--vx-component-metric-018r) 0 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-component-metric-09r);
+}
+
+.vx-table-stack {
+  display: grid;
+  gap: var(--vx-component-metric-1r);
+}
+
+.vx-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-component-metric-075r);
+}
+
+.vx-toolbar--filters {
+  flex-wrap: wrap;
+}
+
+.vx-table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-component-metric-1r);
+  padding-bottom: var(--vx-component-metric-035r);
+}
+
+.vx-table-toolbar__copy {
+  display: grid;
+  gap: var(--vx-component-metric-02r);
+}
+
+.vx-table-toolbar__copy strong {
+  color: var(--vx-console-text);
+  font-size: var(--vx-component-metric-096r);
+  font-weight: 720;
+}
+
+.vx-table-toolbar__copy span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-component-metric-082r);
+}

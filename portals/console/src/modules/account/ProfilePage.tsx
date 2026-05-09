@@ -3,7 +3,7 @@
 import { useEffect, useState, type CSSProperties, type FormEvent } from 'react';
 import { Icon, type IconName } from '@vxture/design-system';
 import { changeUserPassword, fetchUserProfile, updateUserProfile } from '@/api/console-bff';
-import { Avatar, Badge, Button, Input, Label } from '@vxture/design-system';
+import { Avatar, Badge, Button, Input, Label, NativeSelect, Textarea } from '@vxture/design-system';
 import type { ConsoleUserProfile } from '@/entities/console';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { useLocale, useTranslations } from 'next-intl';
@@ -536,8 +536,9 @@ export function ProfilePage() {
       <div className="vx-account-profile-layout">
         <aside className="vx-account-profile-identity">
           <section className="vx-account-profile-avatar-card">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               className="vx-account-profile-avatar-button"
               aria-label={t('avatar.edit')}
               title={t('avatar.edit')}
@@ -550,7 +551,7 @@ export function ProfilePage() {
               <span className="vx-account-profile-avatar-button__edit" aria-hidden="true">
                 <Icon name="edit" size="xs" fallback="placeholder" />
               </span>
-            </button>
+            </Button>
 
             <div className="vx-account-profile-avatar-card__copy">
               <strong>{loading ? loadingText : displayName}</strong>
@@ -752,7 +753,7 @@ export function ProfilePage() {
                 </Label>
                 <Label className="vx-account-profile-form-grid__wide">
                   {t('fields.bio')}
-                  <textarea
+                  <Textarea
                     className="vx-profile-dialog__textarea"
                     rows={4}
                     value={profileForm.bio}
@@ -811,7 +812,7 @@ export function ProfilePage() {
             </Label>
             <Label>
               {t('fields.language')}
-              <select
+              <NativeSelect
                 className="vx-input"
                 value={contactForm.language}
                 onChange={(event) => setContactForm((old) => ({ ...old, language: event.target.value }))}
@@ -819,7 +820,7 @@ export function ProfilePage() {
                 <option value="">{t('common.empty')}</option>
                 <option value="zh-CN">{t('language.zhCN')}</option>
                 <option value="en-US">{t('language.enUS')}</option>
-              </select>
+              </NativeSelect>
             </Label>
             <div className="vx-profile-dialog__actions">
               <Button variant="outline" onClick={() => setContactDialogOpen(false)}>

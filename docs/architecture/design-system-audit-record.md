@@ -12,7 +12,8 @@
 - `lint:design` 已覆盖 `portals`、`packages`、`agent-studio`、`business`。
 - `website` / `console` 不再维护应用层 `.vx-auth-*` / `.vx-captcha-*` 样式源。
 - `console` / `admin` build 已恢复 lint/type 检查。
-- `lint:design` 已新增 inline design style / native primitive 检查，并通过 `scripts/guardrails/design-system-baseline.json` 锁住存量债务，禁止新增签名。
+- `lint:design` 已新增 inline design style / native primitive / app `--vx-*` token definition 检查，并通过 `scripts/guardrails/design-system-baseline.json` 锁住存量债务，禁止新增签名。
+- 当前 baseline 记录 0 个存量签名：应用层 `--vx-*` token 定义、业务源码原生基础控件、设计型 inline style 已全部清零；`pnpm lint:design` 进入零基线拦截模式。
 - `agent-studio/vela` 根布局已接入统一字体、ThemeProvider、FullscreenProvider；核心聊天组件已移除 inline design style 和原生基础控件。
 - 源码扫描未发现业务源码直接导入 `@vxture/design-system/src/**`。
 - 源码扫描未发现业务源码直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；`lint:design` 已用 `ds/no-direct-ui-engine-imports` 禁止新增。
@@ -24,6 +25,7 @@ pnpm lint:design
 rg -n "@vxture/design-system" portals agent-studio business packages --glob "!packages/design/design-system/**"
 rg -n "#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(" portals packages agent-studio business --glob "!packages/design/design-system/**" --glob "!**/public/**"
 rg -n "style=\{\{|<button|<input|<select|<textarea" portals/website/src portals/console/src portals/admin/src agent-studio/vela/src
+rg -n -- "--vx-[\w-]+\s*:" portals business agent-studio --glob "*.css"
 rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "*.ts" --glob "*.tsx"
 ```
 
@@ -161,20 +163,20 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 ### DS-USE-005：console/admin 全局 CSS 仍过大，平台样式没有完全回收 DS
 
 优先级：P1  
-证据：`portals/console/src/app/globals.css` 约 7810 行；`portals/admin/src/app/globals.css` 约 19449 行。  
+证据：`console/admin` shell、tabs、table、toolbar 与模块级尺寸/通知 token 已回收到 DS `platform.css` / `tokens.css`；应用层 `--vx-*` token 定义扫描为 0。  
 问题：全局 CSS 承载了大量 shell、表格、过滤器、弹窗、操作菜单、分页、业务模块样式，应用层仍在维护一套实际设计系统。  
 修复方向：按模块抽出 DS 组件和语义样式：PageHeader、Toolbar、FilterBar、DataTable、ActionMenu、Pagination、StatusBadge、MetricCard、DialogForm。  
 验收标准：portal globals.css 只保留业务页面级少量样式；通用控件样式进入 DS。
 
-### DS-USE-006：admin/console 大量使用原生控件而非 DS 组件
+### DS-USE-006：admin/console/website 原生基础控件迁移到 DS
 
 优先级：P1  
-状态：持续治理中；已补 DS NativeSelect 并迁移 admin 线下发票登记对话框。  
-证据：扫描到 `portals/admin/src/modules/**`、`portals/console/src/modules/**` 中大量 `<button>`、`<input>`、`<select>`、`<textarea>`；典型文件包括 `AccountsPage.tsx`、`TenantsPage.tsx`、`BillingPage.tsx`、`PaymentsPage.tsx`、`MembersPage.tsx`、`RolesPage.tsx`。  
+状态：已修复。  
+证据：`rg -n "<(button|input|select|textarea)\\b" portals/admin/src portals/console/src portals/website/src agent-studio/vela/src -g "*.tsx"` 无结果。  
 问题：DS 已有 Button/Input/Select/Checkbox/Badge/Card，但模块内仍手写原生控件和 class，交互状态、焦点、密度、禁用态不统一。  
 修复方向：优先迁移列表页工具栏、筛选器、分页、行操作菜单和弹窗表单。DS 不足时先补 DS 能力，再迁移应用。  
 验收标准：业务模块不再手写基础按钮/输入框样式；新增页面必须使用 DS primitives 或 DS 业务组件。  
-当前进展：`portals/admin/src/layout/AdminShell.tsx`、`portals/console/src/layout/shell/Header.tsx`、`AssistantPanel.tsx`、`portals/console/src/components/preferences/ConsolePreferenceControls.tsx`、`portals/console/src/components/navigation/tenant-switcher/*`、`portals/admin/src/modules/shared/ViewModeSwitch.tsx`、`portals/console/src/modules/shared/SectionNav.tsx`、`portals/admin/src/modules/commercial/commercial-utils.tsx`、`portals/admin/src/modules/admin-roles/AdminRolesPage.tsx`、`portals/admin/src/modules/billing/BillingPage.tsx`、`OfflineInvoiceDialog.tsx`、`BillingBillActionDialog.tsx`、`InvoiceReceiptActionDialog.tsx`、`portals/admin/src/modules/orders/OrdersPage.tsx`、`OrderOfflinePaymentDialog.tsx`、`portals/admin/src/modules/subscriptions/SubscriptionsPage.tsx`、`SubscriptionOperationDialog.tsx`、`portals/admin/src/modules/payments/PaymentsPage.tsx`、`portals/admin/src/modules/ai/ModelGatewayPage.tsx`、`portals/admin/src/modules/ai/ModelGrantsPage.tsx` 已改用 DS `Button` / `Checkbox` / `Input` / `NativeSelect` / `Textarea`，并从 guardrail baseline 中移除对应原生控件签名。
+当前验收：admin、console、website、agent-studio/vela 业务源码不再直接写原生 `button/input/select/textarea`；新增原生基础控件会被 `pnpm lint:design` 阻断。
 
 ### DS-USE-007：website 仍有若干 Tailwind 拼写错误/历史类
 
@@ -213,25 +215,25 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 修复方向：与 DS-SYS-001 合并处理，扩展扫描根后再迁移 Ruyin。  
 验收标准：扩展守卫后，未迁移的 Ruyin 会导致 `pnpm lint:design` 失败；迁移完成后通过。
 
-### DS-USE-011：应用侧仍有较多 inline style 例外，规则未分类
+### DS-USE-011：应用侧 inline style 规则分类与设计型收敛
 
 优先级：P2  
-状态：已建立分类守卫与存量基线；存量迁移随模块治理继续缩小。  
-修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-inline-design-style`，允许 CSS 变量、坐标、transform、背景图片等动态值，拦截颜色、字体、间距、圆角、阴影等设计值；现有签名记录在 `scripts/guardrails/design-system-baseline.json`。  
+状态：已修复。  
+修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-inline-design-style`，允许 CSS 变量、坐标、transform、背景图片等动态值，拦截颜色、字体、间距、圆角、阴影等设计值；存量设计型 inline style 已清零。  
 问题：部分 inline style 是合理动态值，部分是基础样式逃逸；当前没有白名单/黑名单区分。  
 修复方向：规则上只允许动态变量类 style，例如 CSS variable、坐标、百分比、背景图 URL；禁止颜色、字体、圆角、阴影、固定间距。  
 验收标准：guardrail 能区分合理动态 style 与样式逃逸。  
-当前验收：`pnpm lint:design` 通过；新增未入基线的 inline 设计值会失败。
+当前验收：`pnpm lint:design` 通过；`scripts/guardrails/design-system-baseline.json` baseline 为 0。
 
 ### DS-USE-012：DS usage 约束尚未覆盖 native primitive 使用
 
 优先级：P2  
-状态：已建立守卫与存量基线；存量迁移随模块治理继续缩小。  
-修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-native-primitive`，业务源码新增 `<button>`、`<input>`、`<select>`、`<textarea>` 会被拦截；现有签名记录在 `scripts/guardrails/design-system-baseline.json`。  
+状态：已修复。  
+修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-native-primitive`，业务源码新增 `<button>`、`<input>`、`<select>`、`<textarea>` 会被拦截；当前 baseline 为 0。  
 问题：应用可以绕过 DS 组件直接写原生控件，继续形成私有交互样式。  
 修复方向：新增 lint 规则：业务模块默认禁止原生表单控件，允许 DS 内部、极少数无样式语义控件、或带注释白名单。  
 验收标准：新增页面直接写原生基础控件会被拦截。  
-当前验收：`pnpm lint:design` 通过；新增未入基线的原生基础控件会失败。
+当前验收：`pnpm lint:design` 通过；新增原生基础控件会失败，且 baseline 为 0。
 
 ### DS-USE-013：应用层存在绕过 DS 的底层 UI 引擎直接导入风险
 
@@ -242,24 +244,34 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 修复方向：底层 UI 引擎只允许 DS 内部注册和封装，业务应用仅消费 `@vxture/design-system` 公共入口。  
 验收标准：`rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "*.ts" --glob "*.tsx"` 无结果；新增直接导入会被 `pnpm lint:design` 阻断。
 
-## 建议修复顺序
+### DS-USE-014：应用层 `--vx-*` 私有 token 清零
 
-1. P0：修复 website `tranvx` 拼写错误，避免当前页面视觉 bug。
-2. P0：扩展 `lint:design` 扫描根到 `agent-studio`、`business`，让治理覆盖完整工作区。
-3. P0：迁移 `business/ruyin` 到 DS，删除私有颜色/字体/按钮样式。
-4. P0：消除 DS 与 website/console 的 `.vx-auth-*` 重复样式源。
-5. P0：关闭或替代 console/admin build 的 lint/type ignore。
-6. P1：统一 DS token 单一数据源，生成 CSS 与 Tailwind `@theme`。
-7. P1：补齐 DS 业务组件：DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge。
-8. P1：分批迁移 admin/console 高频列表页和弹窗表单。
-9. P1：整理 DS 包导出与 dev alias 策略，消除 dist/source 混用。
-10. P1：更新 DS 架构文档和各 portal 目录说明。
+优先级：P0  
+状态：已修复。  
+修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-app-vx-token-definitions`，应用 CSS 新增 `--vx-*` token 定义会被拦截；存量应用层 `--vx-*` token 定义已迁移到 DS 或移除。  
+证据：`rg -n --glob "*.css" -- "--vx-[\\w-]+\\s*:" portals/admin/src portals/console/src portals/website/src business agent-studio` 无结果。  
+问题：应用层虽然大量使用 DS token 值，但仍通过 `--vx-console-*`、`--vx-admin-*`、`--vx-shell-*`、模块级 `--vx-*` 变量维护私有 token 层，等价于在应用内复制一套设计系统。  
+修复方向：把跨应用 shell、table、toolbar、pagination、action menu、dialog form、metric card 等变量回收到 DS semantic/component tokens；业务确有临时局部变量时不得使用 `--vx-*` 前缀。  
+验收标准：应用全局 CSS 不再新增 `--vx-*` token；baseline 中 `ds/no-app-vx-token-definitions` 数量保持为 0。
+
+## 下一轮任务清单
+
+1. P0：建立应用层 `--vx-*` token definition guardrail，用 baseline 锁住历史债务，禁止新增私有 token。状态：已完成。
+2. P0：把 shell/admin/console 根级 token 回收到 DS `tokens.css` 与 shell/component semantic tokens，先处理 `--vx-shell-*`、`--vx-console-*`、`--vx-admin-*`。状态：已完成。
+3. P0：补齐 DS 高频业务组件：DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard。状态：部分完成，当前以 DS primitives + platform semantic classes 承载，后续继续组件化。
+4. P0：优先迁移 admin 高频列表页和弹窗表单：Tenants、Accounts、Products、PlatformUsers、AdminPermissions。状态：已完成基础控件迁移。
+5. P1：迁移 console 高频模块：Workspace Members/Roles、Account Profile/Organization、Subscription tabs。状态：已完成基础控件迁移。
+6. P1：迁移 website 剩余 native primitive：Cases、Footer、AgentMarketplace、ScrollToButton、SolutionSection。状态：已完成。
+7. P1：收敛剩余 inline design style，确认动态 Canvas/坐标类例外是否可改为 DS utility 或 CSS class。状态：已完成设计型 inline 收敛；动态坐标/图片类 inline 继续允许。
+8. P1：补充 app CSS 尺度值治理，禁止应用新增硬编码 `px/rem/em` 设计尺度，允许布局算法和媒体查询白名单。状态：待执行。
+9. P1：每完成一个模块迁移，更新 `design-system-baseline.json` 并在本记录中同步数量。状态：已完成，当前 baseline 为 0。
 
 ## 后续验收清单
 
 - `pnpm lint:design` 扫描所有前端工作区并通过。
 - `rg -n "tranvx" portals/website/src` 无结果。
 - `rg -n "#[0-9a-fA-F]{3,8}\b|rgba?\(" business agent-studio portals --glob "!**/public/**"` 仅在 DS token owner 或允许位置出现。
+- `rg -n -- "--vx-[\w-]+\s*:" portals business agent-studio --glob "*.css"` 的新增命中会被 `pnpm lint:design` 阻断。
 - `rg -n "@/components/ui|components/primitives" portals business agent-studio` 无业务源码结果。
 - `rg -n "from ['\"]@vxture/design-system/src|@vxture/design-system/(?!styles/)" portals business agent-studio` 无未授权深层导入。
 - `website`、`console`、`admin`、`ruyin` 均通过各自 `type-check`、`lint`、`build`。

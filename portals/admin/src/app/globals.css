@@ -1,55 +1,5 @@
 @import "@vxture/design-system/styles/globals.css";
 
-:root {
-  color-scheme: light;
-  --vx-console-bg: var(--vx-color-shell-bg);
-  --vx-console-surface: var(--vx-color-shell-surface);
-  --vx-console-surface-muted: var(--vx-color-shell-surface-muted);
-  --vx-console-border: var(--vx-color-shell-border);
-  --vx-console-text: var(--vx-color-shell-text);
-  --vx-console-muted: var(--vx-color-shell-muted);
-  --vx-console-brand: var(--vx-color-shell-brand);
-  --vx-console-shadow: 0 12px 30px color-mix(in srgb, var(--vx-color-gray-900) 3.5%, transparent);
-  --vx-console-shadow-soft: 0 4px 12px color-mix(in srgb, var(--vx-color-gray-900) 2.5%, transparent);
-  --vx-admin-font-base: 1rem;
-  --vx-admin-page-title-size: 1.25rem;
-  --vx-admin-section-title-size: 1rem;
-  --vx-admin-card-title-size: 0.94rem;
-  --vx-admin-body-size: 0.875rem;
-  --vx-admin-meta-size: 0.8125rem;
-  --vx-admin-caption-size: 0.75rem;
-  --vx-admin-card-radius: var(--vx-radius-lg, 8px);
-  --vx-shell-sidebar-width: clamp(208px, 16vw, 232px);
-  --vx-shell-sidebar-collapsed-width: 3rem;
-  --vx-shell-sidebar-icon-size: 20px;
-  --vx-shell-sidebar-icon-inset: calc(
-    (
-        var(--vx-shell-sidebar-collapsed-width) -
-          var(--vx-shell-sidebar-icon-size)
-      ) /
-      2
-  );
-  --vx-shell-sidebar-content-inset: 1.5rem;
-  --vx-shell-assistant-width: 420px;
-  --vx-shell-body-gap: 1.25rem;
-  --vx-shell-column-gap: 0.6rem;
-  --vx-shell-section-gap: 1rem;
-  --vx-shell-panel-radius: 22px;
-  --vx-shell-header-height: 56px;
-  --vx-shell-rail-height: 2.75rem;
-}
-
-.dark {
-  color-scheme: dark;
-  --vx-console-bg: var(--vx-color-shell-bg);
-  --vx-console-surface: var(--vx-color-shell-surface);
-  --vx-console-border: var(--vx-color-shell-border);
-  --vx-console-text: var(--vx-color-shell-text);
-  --vx-console-muted: var(--vx-color-shell-muted);
-  --vx-console-brand: var(--vx-color-shell-brand);
-  --vx-console-shadow: 0 16px 36px color-mix(in srgb, var(--vx-color-black) 35%, transparent);
-}
-
 html,
 body {
   min-height: 100%;
@@ -72,15 +22,7 @@ body {
     "ss02" 1;
 }
 
-button,
-input,
-select {
-  font: inherit;
-}
-
 .vx-models-page {
-  --vx-models-text-size: var(--vx-admin-body-size);
-  --vx-models-meta-size: var(--vx-admin-meta-size);
   width: 100%;
   max-width: none;
   gap: 1rem;
@@ -775,8 +717,7 @@ a {
 .console-user-pill span,
 .vx-kpi-card p,
 .vx-action-item p,
-.vx-signal-list__item p,
-.vx-table__row span {
+.vx-signal-list__item p {
   color: var(--vx-console-muted);
 }
 
@@ -960,7 +901,7 @@ a {
 }
 
 .vx-assistant-panel--floating {
-  --vx-assistant-floating-height: calc(
+  --assistant-floating-height: calc(
     100dvh - var(--vx-admin-header-height, 4rem) - 2rem
   );
   position: fixed;
@@ -971,8 +912,8 @@ a {
   width: min(var(--vx-shell-assistant-width, 420px), calc(100dvw - 2rem));
   min-width: min(380px, calc(100dvw - 2rem));
   max-width: calc(100dvw - 2rem);
-  height: var(--vx-assistant-floating-height);
-  max-height: var(--vx-assistant-floating-height);
+  height: var(--assistant-floating-height);
+  max-height: var(--assistant-floating-height);
   min-height: 0;
   border: 1px solid var(--vx-shell-assistant-line, var(--vx-color-neutral-border));
   border-left: 2px solid
@@ -999,7 +940,7 @@ a {
 
 @media (max-width: 720px) {
   .vx-assistant-panel--floating {
-    --vx-assistant-floating-height: calc(
+    --assistant-floating-height: calc(
       100dvh - var(--vx-admin-header-height, 4rem) - 1rem
     );
     left: 0.5rem;
@@ -1856,39 +1797,6 @@ a {
   min-width: 0;
 }
 
-.vx-tabs-list {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.35rem;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--vx-color-white) 84%, transparent);
-  box-shadow: var(--vx-console-shadow-soft);
-}
-
-.dark .vx-tabs-list {
-  background: var(--vx-color-gray-900);
-}
-
-.vx-tab {
-  border: 0;
-  background: transparent;
-  color: var(--vx-console-muted);
-  font-weight: 600;
-  padding: 0.7rem 0.95rem;
-  border-radius: 10px;
-}
-
-.vx-tab--active {
-  background: var(--vx-color-brand-50);
-  color: var(--vx-color-brand-700);
-}
-
-.dark .vx-tab--active {
-  background: var(--vx-color-brand-950);
-  color: var(--vx-color-brand-200);
-}
-
 .vx-card-title {
   font-size: 1.1rem;
 }
@@ -2131,8 +2039,6 @@ a {
 }
 
 .vx-account-profile-page {
-  --vx-account-profile-text-size: 0.84rem;
-  --vx-account-profile-meta-size: 0.78rem;
   max-width: none;
   gap: 0.45rem;
 }
@@ -2823,20 +2729,7 @@ a {
 }
 
 .vx-notifications-page {
-  --vx-notification-text-size: 0.88rem;
-  --vx-notification-meta-size: 0.78rem;
-  --vx-notification-panel: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
-  --vx-notification-panel-strong: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
-  --vx-notification-line: var(--vx-color-auth-border);
-  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-auth-accent) 22%, transparent);
   gap: 1.05rem;
-}
-
-.dark .vx-notifications-page {
-  --vx-notification-panel: var(--vx-color-shell-panel);
-  --vx-notification-panel-strong: var(--vx-color-shell-panel-strong);
-  --vx-notification-line: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
-  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-primary) 28%, transparent);
 }
 
 .vx-notifications-page .vx-page-header {
@@ -3219,14 +3112,7 @@ a {
 }
 
 .vx-tenant-settings-page {
-  --vx-tenant-settings-text-size: 0.84rem;
-  --vx-tenant-settings-meta-size: 0.78rem;
-  --vx-tenant-settings-line: color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
   gap: 1.65rem;
-}
-
-.dark .vx-tenant-settings-page {
-  --vx-tenant-settings-line: var(--vx-color-border);
 }
 
 .vx-tenant-settings-page .vx-page-header {
@@ -3642,86 +3528,6 @@ a {
   color: var(--vx-console-muted);
 }
 
-.vx-table,
-.vx-member-table {
-  display: grid;
-  gap: 0.2rem;
-}
-
-.vx-table__row,
-.vx-table__header {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1rem;
-  align-items: center;
-}
-
-.vx-table__header,
-.vx-member-table__header {
-  padding: 0 0 0.75rem;
-  color: var(--vx-color-gray-400);
-  font-size: 0.82rem;
-  font-weight: 600;
-  justify-items: center;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.vx-table__row {
-  justify-items: start;
-  padding: 0.95rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
-  text-align: left;
-}
-
-.vx-member-table__header,
-.vx-member-table__row {
-  display: grid;
-  grid-template-columns: 1.3fr 1.5fr 1fr 0.8fr 1fr 56px;
-  gap: 1rem;
-  align-items: center;
-}
-
-.vx-member-table__row {
-  justify-items: start;
-  padding: 0.9rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
-  cursor: pointer;
-  text-align: left;
-}
-
-.vx-member-table__row:hover {
-  background: color-mix(in srgb, var(--vx-color-white) 65%, transparent);
-}
-
-.vx-member-table__identity {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.vx-member-table__identity p {
-  margin: 0.18rem 0 0;
-  color: var(--vx-console-muted);
-  font-size: 0.9rem;
-}
-
-.vx-table-stack {
-  display: grid;
-  gap: 1rem;
-}
-
-.vx-toolbar {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-}
-
-.vx-toolbar--filters {
-  flex-wrap: wrap;
-}
-
 .vx-search-input {
   min-width: 18rem;
 }
@@ -3840,24 +3646,6 @@ a {
   color: var(--vx-console-muted);
 }
 
-.vx-table-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 0 0 0.2rem;
-}
-
-.vx-table-toolbar__copy {
-  display: grid;
-  gap: 0.2rem;
-}
-
-.vx-table-toolbar__copy span {
-  color: var(--vx-console-muted);
-  font-size: 0.82rem;
-}
-
 .vx-role-permissions {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -3930,47 +3718,6 @@ a {
   background: var(--vx-color-success-surface);
   color: var(--vx-color-success-foreground);
   border: 1px solid var(--vx-color-success-border);
-}
-
-/* Console workspace UI refresh */
-:root {
-  --vx-console-bg: var(--vx-color-shell-bg);
-  --vx-console-surface: var(--vx-color-shell-surface);
-  --vx-console-surface-muted: var(--vx-color-shell-surface-muted);
-  --vx-console-border: var(--vx-color-shell-border);
-  --vx-console-text: var(--vx-color-shell-text);
-  --vx-console-muted: var(--vx-color-shell-muted);
-  --vx-console-brand: var(--vx-color-shell-brand);
-  --vx-console-brand-strong: var(--vx-color-primary-strong);
-  --vx-console-brand-soft: var(--vx-color-primary-soft);
-  --vx-console-cyan: var(--vx-color-cyan-600);
-  --vx-console-shadow: 0 18px 44px color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent);
-  --vx-console-shadow-soft: 0 8px 22px color-mix(in srgb, var(--vx-color-brand-800) 4.5%, transparent);
-  --vx-shell-sidebar-width: 252px;
-  --vx-shell-sidebar-collapsed-width: 4rem;
-  --vx-shell-sidebar-icon-size: 24px;
-  --vx-shell-sidebar-content-inset: 1.25rem;
-  --vx-shell-body-gap: 0;
-  --vx-shell-column-gap: 0;
-  --vx-shell-section-gap: 1rem;
-  --vx-shell-panel-radius: var(--vx-radius-xl, 12px);
-  --vx-shell-header-height: 64px;
-  --vx-shell-rail-height: 3.25rem;
-}
-
-.dark {
-  --vx-console-bg: var(--vx-color-shell-bg);
-  --vx-console-surface: var(--vx-color-shell-surface);
-  --vx-console-surface-muted: var(--vx-color-shell-surface-muted);
-  --vx-console-border: var(--vx-color-shell-border);
-  --vx-console-text: var(--vx-color-shell-text);
-  --vx-console-muted: var(--vx-color-shell-muted);
-  --vx-console-brand: var(--vx-color-shell-brand);
-  --vx-console-brand-strong: var(--vx-color-primary-strong);
-  --vx-console-brand-soft: var(--vx-color-primary-soft);
-  --vx-console-cyan: var(--vx-color-cyan-100);
-  --vx-console-shadow: 0 18px 44px color-mix(in srgb, var(--vx-color-black) 35%, transparent);
-  --vx-console-shadow-soft: 0 10px 26px color-mix(in srgb, var(--vx-color-black) 28%, transparent);
 }
 
 html,
@@ -4213,68 +3960,6 @@ body.dark {
 
 .vx-action-item__arrow {
   color: var(--vx-console-brand);
-}
-
-.vx-table-toolbar {
-  padding-bottom: 0.35rem;
-}
-
-.vx-table-toolbar__copy strong {
-  color: var(--vx-console-text);
-  font-size: 0.96rem;
-  font-weight: 720;
-}
-
-.vx-table,
-.vx-member-table {
-  gap: 0;
-  overflow: hidden;
-  border: 1px solid var(--vx-color-shell-line-soft);
-  border-radius: 12px;
-  background: var(--vx-color-white);
-}
-
-.dark .vx-table,
-.dark .vx-member-table {
-  background: color-mix(in srgb, var(--vx-color-gray-900) 60%, transparent);
-  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
-}
-
-.vx-table__header,
-.vx-member-table__header {
-  justify-items: center;
-  padding: 0.7rem 0;
-  background: var(--vx-color-brand-50);
-  color: var(--vx-color-shell-muted);
-  font-size: 0.78rem;
-  font-weight: 740;
-  letter-spacing: 0;
-  text-align: center;
-  text-transform: none;
-}
-
-.dark .vx-table__header,
-.dark .vx-member-table__header {
-  background: color-mix(in srgb, var(--vx-color-gray-800) 48%, transparent);
-  color: var(--vx-color-text-muted);
-}
-
-.vx-table__row,
-.vx-member-table__row {
-  justify-items: start;
-  padding: 0.82rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 7.5%, transparent);
-  text-align: left;
-}
-
-.vx-table__row:last-child,
-.vx-member-table__row:last-child {
-  border-bottom: 0;
-}
-
-.vx-table__row span,
-.vx-member-table__row span {
-  font-size: 0.86rem;
 }
 
 .auth-page {
@@ -4911,8 +4596,6 @@ body.dark {
 }
 
 .vx-members-page {
-  --vx-members-text-size: 0.84rem;
-  --vx-members-meta-size: 0.78rem;
   gap: 0.45rem;
 }
 
@@ -5413,8 +5096,6 @@ body.dark {
 }
 
 .vx-roles-page {
-  --vx-roles-text-size: 0.84rem;
-  --vx-roles-meta-size: 0.78rem;
   gap: 0.45rem;
 }
 
@@ -6174,61 +5855,6 @@ body.dark {
 }
 /* Admin template layout: 1rem = 16px; fixed layout sizes move in 0.5rem steps. */
 .admin-shell {
-  --vx-admin-header-height: 4rem;
-  --vx-admin-sidebar-width: 20rem;
-  --vx-admin-sidebar-collapsed-width: 4rem;
-  --vx-admin-sidebar-icon-size: 1.5rem;
-  --vx-shell-sidebar-content-inset: 1.5rem;
-  --vx-shell-body-gap: 0;
-  --vx-shell-column-gap: 0;
-  --vx-shell-section-gap: 1rem;
-  --vx-shell-panel-radius: 1rem;
-  --vx-shell-header-height: var(--vx-admin-header-height);
-  --vx-admin-content-margin-x: 4rem;
-  --vx-admin-content-padding-x: 4rem;
-  --vx-admin-content-padding-top: 3rem;
-  --vx-admin-content-padding-bottom: 4rem;
-  --vx-admin-content-max-width: 92.5rem;
-  --vx-admin-sidebar-pad-x: var(--vx-shell-sidebar-content-inset);
-  --vx-admin-sidebar-pad-y: 1rem;
-  --vx-admin-sidebar-section-gap: 0.5rem;
-  --vx-admin-sidebar-control-inset: 8px;
-  --vx-admin-sidebar-transition: 420ms cubic-bezier(0.22, 1, 0.36, 1);
-  --vx-shell-ink: var(--vx-color-brand-950);
-  --vx-shell-text: var(--vx-console-text);
-  --vx-shell-muted: var(--vx-color-text-secondary);
-  --vx-shell-subtle: var(--vx-color-shell-subtle);
-  --vx-shell-icon: var(--vx-color-shell-icon);
-  --vx-shell-icon-muted: var(--vx-color-text-muted);
-  --vx-shell-glass: color-mix(in srgb, var(--vx-color-white) 90%, transparent);
-  --vx-shell-surface: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
-  --vx-shell-surface-soft: var(--vx-color-shell-panel);
-  --vx-shell-hover: color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent);
-  --vx-shell-active: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
-  --vx-shell-active-subtle: color-mix(in srgb, var(--vx-color-auth-accent) 7%, transparent);
-  --vx-shell-line: var(--vx-color-border);
-  --vx-shell-line-soft: var(--vx-color-shell-line-soft);
-  --vx-shell-divider: var(--vx-color-shell-divider);
-  --vx-shell-focus-ring: color-mix(in srgb, var(--vx-color-auth-accent-light) 20%, transparent);
-  --vx-shell-title-size: 1rem;
-  --vx-shell-body-size: 0.875rem;
-  --vx-shell-item-size: 0.8125rem;
-  --vx-shell-caption-size: 0.75rem;
-  --vx-shell-tag-size: 0.625rem;
-  --vx-shell-header-text-size: var(--vx-shell-body-size);
-  --vx-shell-header-text-line: 1.25rem;
-  --vx-shell-header-control-size: 2rem;
-  --vx-shell-title-weight: 760;
-  --vx-shell-item-weight: 560;
-  --vx-shell-label-weight: 620;
-  --vx-shell-radius-panel: 1rem;
-  --vx-shell-radius-control: 0.75rem;
-  --vx-shell-radius-item: 0.75rem;
-  --vx-shell-radius-pill: 999px;
-  --vx-shell-header-shadow: 0 3px 4px color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  --vx-shell-assistant-line: var(--vx-color-neutral-border);
-  --vx-shell-assistant-shadow: -12px 0 24px -24px color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent);
-  --vx-shell-floating-shadow: 0 18px 48px -34px color-mix(in srgb, var(--vx-color-brand-800) 34%, transparent);
   min-width: 1180px;
   min-height: 100vh;
   display: grid;
@@ -6238,28 +5864,6 @@ body.dark {
   background: var(--vx-console-bg);
   color: var(--vx-console-text);
   letter-spacing: 0;
-}
-
-.dark .admin-shell {
-  --vx-shell-ink: var(--vx-color-brand-200);
-  --vx-shell-muted: var(--vx-color-text-muted);
-  --vx-shell-subtle: var(--vx-color-shell-subtle);
-  --vx-shell-icon: var(--vx-color-text-muted);
-  --vx-shell-icon-muted: var(--vx-color-text-muted);
-  --vx-shell-glass: color-mix(in srgb, var(--vx-color-shell-bg) 90%, transparent);
-  --vx-shell-surface: color-mix(in srgb, var(--vx-color-gray-900) 64%, transparent);
-  --vx-shell-surface-soft: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
-  --vx-shell-hover: var(--vx-color-shell-hover);
-  --vx-shell-active: var(--vx-color-primary-soft);
-  --vx-shell-active-subtle: var(--vx-color-shell-hover);
-  --vx-shell-line: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
-  --vx-shell-line-soft: color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent);
-  --vx-shell-divider: color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
-  --vx-shell-focus-ring: color-mix(in srgb, var(--vx-color-primary) 22%, transparent);
-  --vx-shell-header-shadow: 0 3px 4px color-mix(in srgb, var(--vx-color-black) 22%, transparent);
-  --vx-shell-assistant-line: color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
-  --vx-shell-assistant-shadow: -12px 0 24px -24px var(--vx-color-primary-soft);
-  --vx-shell-floating-shadow: 0 18px 48px -34px color-mix(in srgb, var(--vx-color-primary) 30%, transparent);
 }
 
 .vx-role-list__header > :first-child,
@@ -7093,14 +6697,6 @@ body.dark {
     overflow-x: hidden;
     overflow-y: auto;
     padding: 0 var(--vx-shell-sidebar-content-inset);
-  }
-
-  .admin-shell {
-    --vx-admin-content-margin-x: 0;
-    --vx-admin-content-padding-x: 2rem;
-    --vx-admin-content-padding-top: 2rem;
-    --vx-admin-content-padding-bottom: 3rem;
-    --vx-admin-content-max-width: none;
   }
 
   .admin-shell-nav__section {
@@ -18727,7 +18323,6 @@ body.dark {
 
 .vx-platform-governance-page {
   max-width: min(100%, 74rem);
-  --vx-page-text-size: var(--vx-admin-body-size);
 }
 
 .vx-platform-governance-directory {
@@ -19113,8 +18708,6 @@ body.dark {
    审计日志列表
    ============================================================ */
 
-.vx-audit-page { --vx-page-text-size: var(--vx-admin-body-size); }
-
 .vx-audit-directory-list {
   grid-template-columns:
     2.75rem minmax(12rem, 0.95fr) minmax(13rem, 1fr) minmax(12rem, 0.95fr)
@@ -19201,8 +18794,6 @@ body.dark {
    通知公告列表 / 卡片
    ============================================================ */
 
-.vx-announcement-page { --vx-page-text-size: var(--vx-admin-body-size); }
-
 .vx-announcement-directory-list {
   grid-template-columns: 3rem 1fr 6rem 7rem 7rem 10rem 10rem 4rem;
 }
@@ -19254,8 +18845,6 @@ body.dark {
 /* ============================================================
    技能接入列表 / 卡片
    ============================================================ */
-
-.vx-skills-page { --vx-page-text-size: var(--vx-admin-body-size); }
 
 .vx-skills-directory-list {
   grid-template-columns: 3rem 1fr 7rem 5rem 14rem 7rem 9rem 10rem 4rem;
