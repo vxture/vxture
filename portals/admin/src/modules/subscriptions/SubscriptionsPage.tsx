@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchSubscriptionOperations, submitSubscriptionOperation } from '@/api/admin-bff';
 import type {
   SubscriptionOperationAction,
@@ -122,14 +122,15 @@ function PageSizePicker({ value, onChange }: { value: PageSize; onChange: (value
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -154,13 +155,13 @@ function SubscriptionActionsMenu({
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <button className="vx-tenant-actions__trigger" type="button" aria-label={`${subscription.tenantName} 订阅操作`} title="操作" onClick={onToggle}>
+      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${subscription.tenantName} 订阅操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -169,9 +170,9 @@ function SubscriptionActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             查看详情
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -180,13 +181,13 @@ function SubscriptionActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="star" size="xs" fallback="placeholder" />
             调整套餐
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!canRunSubscriptionAction('renew', subscription)}
             title={subscriptionActionDisabledReason('renew', subscription) ?? undefined}
@@ -197,9 +198,9 @@ function SubscriptionActionsMenu({
           >
             <Icon name={subscriptionActionIcon('renew')} size="xs" fallback="placeholder" />
             {subscriptionActionLabel('renew')}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!canRunSubscriptionAction(toggleAction, subscription)}
             title={subscriptionActionDisabledReason(toggleAction, subscription) ?? undefined}
@@ -210,9 +211,9 @@ function SubscriptionActionsMenu({
           >
             <Icon name={subscriptionActionIcon(toggleAction)} size="xs" fallback="placeholder" />
             {subscriptionActionLabel(toggleAction)}
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             className="vx-subscription-menu-action--danger"
             disabled={!canRunSubscriptionAction('cancel', subscription)}
@@ -224,7 +225,7 @@ function SubscriptionActionsMenu({
           >
             <Icon name={subscriptionActionIcon('cancel')} size="xs" fallback="placeholder" />
             {subscriptionActionLabel('cancel')}
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -255,26 +256,17 @@ function SubscriptionListRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = subscriptions.filter((subscription) => selectedSubscriptionIds.has(subscription.id)).length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < subscriptions.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-subscription-directory-list" role="region" aria-label="租户订阅运营清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPagePartiallySelected ? 'indeterminate' : isPageSelected}
+            onCheckedChange={(checked) => onTogglePage(checked === true)}
             aria-label="选择当前页订阅"
           />
         </span>
@@ -297,12 +289,11 @@ function SubscriptionListRows({
           }}
         >
           <span className="vx-subscription-operation-row__select">
-            <input
-              type="checkbox"
+            <Checkbox
               className="vx-model-select-checkbox"
               checked={selectedSubscriptionIds.has(subscription.id)}
               onClick={(event) => event.stopPropagation()}
-              onChange={(event) => onToggleSubscription(subscription.id, event.target.checked)}
+              onCheckedChange={(checked) => onToggleSubscription(subscription.id, checked === true)}
               aria-label={`选择 ${subscription.tenantName}`}
             />
           </span>
@@ -311,9 +302,9 @@ function SubscriptionListRows({
             <Icon name={subscription.tenantType === 'company' ? 'buildings' : 'user'} size="sm" fallback="placeholder" />
             <span>
               <span className="vx-tenant-directory-row__title-line">
-                <button type="button" className="vx-model-name-button" onClick={() => router.push(`/subscriptions/${encodeURIComponent(subscription.id)}`)}>
+                <Button variant="link" className="vx-model-name-button" onClick={() => router.push(`/subscriptions/${encodeURIComponent(subscription.id)}`)}>
                   {subscription.tenantName}
-                </button>
+                </Button>
               </span>
               <small>{subscription.tenantCode} · {subscription.region}</small>
             </span>
@@ -630,7 +621,7 @@ export function SubscriptionsPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="订阅状态">
+            <NativeSelect className="vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="订阅状态">
               <option value="all">全部状态</option>
               <option value="trial">试用</option>
               <option value="active">已生效</option>
@@ -638,25 +629,25 @@ export function SubscriptionsPage() {
               <option value="overdue">逾期</option>
               <option value="suspended">暂停</option>
               <option value="cancelled">已取消</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={tierFilter} onChange={(event) => setTierFilter(event.target.value as TierFilter)} aria-label="套餐版本">
+            </NativeSelect>
+            <NativeSelect className="vx-tenant-select" value={tierFilter} onChange={(event) => setTierFilter(event.target.value as TierFilter)} aria-label="套餐版本">
               <option value="all">全部套餐</option>
               <option value="free">Free</option>
               <option value="pro">Pro</option>
               <option value="enterprise">Enterprise</option>
               <option value="other">其他</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={riskFilter} onChange={(event) => setRiskFilter(event.target.value as RiskFilter)} aria-label="配额风险">
+            </NativeSelect>
+            <NativeSelect className="vx-tenant-select" value={riskFilter} onChange={(event) => setRiskFilter(event.target.value as RiskFilter)} aria-label="配额风险">
               <option value="all">全部配额</option>
               <option value="normal">正常</option>
               <option value="warning">需关注</option>
               <option value="danger">高风险</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={renewFilter} onChange={(event) => setRenewFilter(event.target.value as RenewFilter)} aria-label="续期方式">
+            </NativeSelect>
+            <NativeSelect className="vx-tenant-select" value={renewFilter} onChange={(event) => setRenewFilter(event.target.value as RenewFilter)} aria-label="续期方式">
               <option value="all">全部续期</option>
               <option value="auto">自动续期</option>
               <option value="manual">人工跟进</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             开通订阅

@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Button } from '@vxture/design-system';
+import { Button, Icon, Input, NativeSelect, Textarea } from '@vxture/design-system';
 import type {
   OrderOfflinePaymentType,
   OrderOperationRecord,
@@ -127,36 +126,36 @@ export function OrderOfflinePaymentDialog({
         <div className="vx-order-payment-dialog__grid">
           <label className="vx-subscription-action-dialog__field">
             <span>确认金额</span>
-            <input value={paidAmount} onChange={(event) => setPaidAmount(event.target.value)} inputMode="decimal" />
+            <Input value={paidAmount} onChange={(event) => setPaidAmount(event.target.value)} inputMode="decimal" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>收款方式</span>
-            <select value={offlinePayType} onChange={(event) => setOfflinePayType(event.target.value as OrderOfflinePaymentType)}>
+            <NativeSelect value={offlinePayType} onChange={(event) => setOfflinePayType(event.target.value as OrderOfflinePaymentType)}>
               {(['bank_transfer', 'cash', 'other'] as const).map((type) => (
                 <option key={type} value={type}>{offlinePaymentTypeLabel(type)}</option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>付款方</span>
-            <input value={payerName} onChange={(event) => setPayerName(event.target.value)} />
+            <Input value={payerName} onChange={(event) => setPayerName(event.target.value)} />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>收款时间</span>
-            <input type="datetime-local" value={paidAt} onChange={(event) => setPaidAt(event.target.value)} />
+            <Input type="datetime-local" value={paidAt} onChange={(event) => setPaidAt(event.target.value)} />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>流水号</span>
-            <input value={transactionNo} onChange={(event) => setTransactionNo(event.target.value)} placeholder="可选" />
+            <Input value={transactionNo} onChange={(event) => setTransactionNo(event.target.value)} placeholder="可选" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>凭证地址</span>
-            <input value={evidenceUrl} onChange={(event) => setEvidenceUrl(event.target.value)} placeholder="可选" />
+            <Input value={evidenceUrl} onChange={(event) => setEvidenceUrl(event.target.value)} placeholder="可选" />
           </label>
         </div>
         <label className="vx-subscription-action-dialog__field">
           <span>确认原因</span>
-          <textarea
+          <Textarea
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             placeholder="例如：财务已核对银行回单，确认线下转账到账。"

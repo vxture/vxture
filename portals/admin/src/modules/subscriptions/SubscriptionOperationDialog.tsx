@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Button } from '@vxture/design-system';
+import { Button, Textarea } from '@vxture/design-system';
 import type {
   SubscriptionOperationAction,
   SubscriptionOperationCycle,
@@ -124,7 +124,7 @@ export function SubscriptionOperationDialog({
         <p className="vx-subscription-action-dialog__description">{subscriptionActionDescription(action)}</p>
         <label className="vx-subscription-action-dialog__field">
           <span>操作原因</span>
-          <textarea
+          <Textarea
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             placeholder={subscriptionActionPlaceholder(action)}

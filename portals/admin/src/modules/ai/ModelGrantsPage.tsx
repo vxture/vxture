@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { ClockCounterClockwiseIcon, PlayIcon, ShieldCheckIcon, StopIcon } from '@phosphor-icons/react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input, Label } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, Label, NativeSelect } from '@vxture/design-system';
+import type { IconName } from '@vxture/design-system';
 import {
   createAiModelGrant,
   fetchAiModelGrants,
@@ -133,13 +133,13 @@ function isInteractiveTarget(target: EventTarget | null) {
 }
 
 function ModelStrategySummaryItem({
-  icon: SummaryIcon,
+  icon,
   label,
   value,
   tags,
   tone = 'blue',
 }: {
-  icon: typeof ShieldCheckIcon;
+  icon: IconName;
   label: string;
   value: string;
   tags?: string[];
@@ -147,7 +147,7 @@ function ModelStrategySummaryItem({
 }) {
   return (
     <article className={`vx-tenant-summary__item vx-tenant-tone--${tone}`}>
-      <SummaryIcon size={24} aria-hidden="true" />
+      <Icon name={icon} size={24} fallback="placeholder" />
       <div>
         <span>{label}</span>
         <p>
@@ -179,8 +179,6 @@ export function ModelGrantsPage() {
   const [selectedGrantId, setSelectedGrantId] = useState<string | null>(null);
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
   const [grantForm, setGrantForm] = useState(defaultGrantForm);
-  const policySelectRef = useRef<HTMLInputElement | null>(null);
-  const grantSelectRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -301,18 +299,6 @@ export function ModelGrantsPage() {
     { value: 'undefined', label: t('filters.undefined') },
     { value: 'usable', label: t('filters.usable') },
   ] as const;
-
-  useEffect(() => {
-    if (policySelectRef.current) {
-      policySelectRef.current.indeterminate = isPolicyPagePartiallySelected;
-    }
-  }, [isPolicyPagePartiallySelected]);
-
-  useEffect(() => {
-    if (grantSelectRef.current) {
-      grantSelectRef.current.indeterminate = isGrantPagePartiallySelected;
-    }
-  }, [isGrantPagePartiallySelected]);
 
   function resetFeedback() {
     setFeedback(null);
@@ -482,20 +468,20 @@ export function ModelGrantsPage() {
 
       <section className="vx-tenant-summary vx-model-strategy-summary" aria-label={t('summary.ariaLabel')}>
         <ModelStrategySummaryItem
-          icon={ShieldCheckIcon}
+          icon="shield-check"
           label={t('summary.policies')}
           value={formatNumber(policies.length)}
           tags={[`${t('filters.usable')} ${formatNumber(usablePolicies)}`]}
         />
         <ModelStrategySummaryItem
-          icon={PlayIcon}
+          icon="play"
           label={t('overrides.title')}
           value={formatNumber(grants.length)}
           tags={[`${t('status.active')} ${formatNumber(grants.filter((grant) => grant.isActive).length)}`, `平台主体 ${formatNumber(platformPolicyCount)}`]}
           tone="green"
         />
         <ModelStrategySummaryItem
-          icon={ClockCounterClockwiseIcon}
+          icon="clock-counter-clockwise"
           label={t('summary.undefinedPolicies')}
           value={formatNumber(undefinedPolicies)}
           tags={[t('filters.undefined')]}
@@ -525,11 +511,11 @@ export function ModelGrantsPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select vx-model-strategy-filter" value={filter} onChange={(event) => setFilter(event.target.value as PolicyFilter)} aria-label={t('policyTable.filterAriaLabel')}>
+            <NativeSelect className="vx-tenant-select vx-model-strategy-filter" value={filter} onChange={(event) => setFilter(event.target.value as PolicyFilter)} aria-label={t('policyTable.filterAriaLabel')}>
               {filters.map((item) => (
                 <option key={item.value} value={item.value}>{item.label}</option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton icon="plus" onClick={openCreateGrantDialog}>{t('actions.addGrant')}</ActionButton>
         </section>
@@ -539,12 +525,10 @@ export function ModelGrantsPage() {
             <div className="vx-tenant-directory-list vx-model-strategy-directory-list" role="region" aria-label={t('policyTable.toolbarTitle', { count: filteredPolicies.length })}>
               <div className="vx-tenant-directory-list__header">
                 <span>
-                  <input
-                    ref={policySelectRef}
-                    type="checkbox"
+                  <Checkbox
                     className="vx-model-select-checkbox"
-                    checked={isPolicyPageSelected}
-                    onChange={(event) => togglePolicyPageSelection(event.target.checked)}
+                    checked={isPolicyPagePartiallySelected ? 'indeterminate' : isPolicyPageSelected}
+                    onCheckedChange={(checked) => togglePolicyPageSelection(checked === true)}
                     aria-label="选择当前页策略"
                   />
                 </span>
@@ -579,18 +563,17 @@ export function ModelGrantsPage() {
                     }}
                   >
                     <span className="vx-model-strategy-row__select">
-                      <input
-                        type="checkbox"
+                      <Checkbox
                         className="vx-model-select-checkbox"
                         checked={selectedPolicyIds.has(policy.id)}
                         onClick={(event) => event.stopPropagation()}
-                        onChange={(event) => togglePolicySelection(policy.id, event.target.checked)}
+                        onCheckedChange={(checked) => togglePolicySelection(policy.id, checked === true)}
                         aria-label={`选择 ${policy.scopeName}`}
                       />
                     </span>
                     <span className="vx-tenant-directory-row__index">{formatNumber(pageStart + index + 1)}</span>
                     <span className="vx-tenant-directory-row__tenant">
-                      <ShieldCheckIcon size={20} aria-hidden="true" />
+                      <Icon name="shield-check" size={20} fallback="placeholder" />
                       <span>
                         <span className="vx-tenant-directory-row__title-line">{policy.scopeName}</span>
                         <small>{subjectMeta} · {scopeMeta}</small>
@@ -612,22 +595,24 @@ export function ModelGrantsPage() {
                     <span className="vx-model-strategy-row__quota">{formatTokens(policy.quotaTokens, policy.isUnlimited, t('policyTable.unlimited'))}</span>
                     <span className="vx-model-strategy-row__priority">{policy.priority}</span>
                     <div className="vx-tenant-actions" onMouseLeave={() => setOpenPolicyMenuId(null)}>
-                      <button
+                      <Button
                         className="vx-tenant-actions__trigger"
                         type="button"
+                        variant="ghost"
+                        size="icon"
                         aria-label={`${policy.scopeName} 操作`}
                         aria-haspopup="menu"
                         aria-expanded={openPolicyMenuId === policy.id}
                         onClick={() => setOpenPolicyMenuId((current) => (current === policy.id ? null : policy.id))}
                       >
                         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-                      </button>
+                      </Button>
                       {openPolicyMenuId === policy.id ? (
                         <div className="vx-tenant-actions__menu" role="menu">
-                          <button type="button" role="menuitem" disabled>
+                          <Button variant="ghost" role="menuitem" disabled>
                             <Icon name="shield-check" size="xs" fallback="placeholder" />
                             <span>策略只读</span>
-                          </button>
+                          </Button>
                         </div>
                       ) : null}
                     </div>
@@ -646,7 +631,7 @@ export function ModelGrantsPage() {
                 return (
                   <article key={policy.id} className={`vx-tenant-directory-card vx-model-strategy-card vx-model-strategy-card--${status}`}>
                     <header>
-                      <ShieldCheckIcon size={24} aria-hidden="true" />
+                      <Icon name="shield-check" size={24} fallback="placeholder" />
                       <div>
                         <strong>{policy.scopeName}</strong>
                         <span>{policySubjectLabel(policy)} · {policy.scopeCode}</span>
@@ -724,12 +709,10 @@ export function ModelGrantsPage() {
         <div className="vx-tenant-directory-list vx-model-strategy-override-list" role="region" aria-label={t('overrides.title')}>
           <div className="vx-tenant-directory-list__header">
             <span>
-              <input
-                ref={grantSelectRef}
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
-                checked={isGrantPageSelected}
-                onChange={(event) => toggleGrantPageSelection(event.target.checked)}
+                checked={isGrantPagePartiallySelected ? 'indeterminate' : isGrantPageSelected}
+                onCheckedChange={(checked) => toggleGrantPageSelection(checked === true)}
                 aria-label="选择当前覆盖授权"
               />
             </span>
@@ -758,23 +741,22 @@ export function ModelGrantsPage() {
                   }}
                 >
                   <span className="vx-model-strategy-row__select">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       className="vx-model-select-checkbox"
                       checked={selectedGrantIds.has(grant.id)}
                       onClick={(event) => event.stopPropagation()}
-                      onChange={(event) => toggleGrantSelection(grant.id, event.target.checked)}
+                      onCheckedChange={(checked) => toggleGrantSelection(grant.id, checked === true)}
                       aria-label={`选择 ${modelName}`}
                     />
                   </span>
                   <span className="vx-tenant-directory-row__index">{formatNumber(index + 1)}</span>
                   <span className="vx-tenant-directory-row__tenant">
-                    {grant.isActive ? <PlayIcon size={20} aria-hidden="true" /> : <StopIcon size={20} aria-hidden="true" />}
+                    <Icon name={grant.isActive ? 'play' : 'stop'} size={20} fallback="placeholder" />
                     <span>
                       <span className="vx-tenant-directory-row__title-line">
-                        <button type="button" className="vx-model-name-button" onClick={() => openEditGrantDialog(grant)}>
+                        <Button variant="link" className="vx-model-name-button" onClick={() => openEditGrantDialog(grant)}>
                           {modelName}
-                        </button>
+                        </Button>
                       </span>
                       <small>{model?.modelCode ?? grant.modelId}</small>
                     </span>
@@ -789,26 +771,27 @@ export function ModelGrantsPage() {
                   <span className="vx-model-strategy-row__priority">{grant.priority}</span>
                   <span className="vx-model-strategy-row__expires">{grant.expiresAt ? grant.expiresAt.slice(0, 10) : t('table.permanent')}</span>
                   <div className="vx-tenant-actions" onMouseLeave={() => setOpenGrantMenuId(null)}>
-                    <button
+                    <Button
                       className="vx-tenant-actions__trigger"
-                      type="button"
+                      variant="ghost"
+                      size="icon"
                       aria-label={t('actions.grantMenu')}
                       aria-haspopup="menu"
                       aria-expanded={openGrantMenuId === grant.id}
                       onClick={() => setOpenGrantMenuId((current) => (current === grant.id ? null : grant.id))}
                     >
                       <Icon name="more-vertical" size="lg" fallback="placeholder" />
-                    </button>
+                    </Button>
                     {openGrantMenuId === grant.id ? (
                       <div className="vx-tenant-actions__menu" role="menu">
-                        <button type="button" role="menuitem" onClick={() => openEditGrantDialog(grant)}>
+                        <Button variant="ghost" role="menuitem" onClick={() => openEditGrantDialog(grant)}>
                           <Icon name="edit" size="xs" fallback="placeholder" />
                           <span>{t('actions.editGrant')}</span>
-                        </button>
-                        <button type="button" role="menuitem" disabled={submitting} onClick={() => void handleToggleGrant(grant)}>
+                        </Button>
+                        <Button variant="ghost" role="menuitem" disabled={submitting} onClick={() => void handleToggleGrant(grant)}>
                           <Icon name={grant.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />
                           <span>{grant.isActive ? t('actions.disableGrant') : t('actions.enableGrant')}</span>
-                        </button>
+                        </Button>
                       </div>
                     ) : null}
                   </div>
@@ -834,8 +817,7 @@ export function ModelGrantsPage() {
             <div className="vx-model-dialog__grid">
               <Label>
                 {t('dialogs.fields.grantModel')}
-                <select
-                  className="vx-input"
+                <NativeSelect
                   value={grantForm.modelId}
                   disabled={dialogMode === 'editGrant'}
                   onChange={(event) => setGrantForm((old) => ({ ...old, modelId: event.target.value }))}
@@ -844,7 +826,7 @@ export function ModelGrantsPage() {
                   {models.map((model) => (
                     <option key={model.id} value={model.id}>{model.modelName}</option>
                   ))}
-                </select>
+                </NativeSelect>
               </Label>
               <Label>
                 {t('dialogs.fields.tenantId')}
@@ -859,8 +841,7 @@ export function ModelGrantsPage() {
             <div className="vx-model-dialog__grid">
               <Label>
                 {t('dialogs.fields.agentId')}
-                <select
-                  className="vx-input"
+                <NativeSelect
                   value={grantForm.agentId}
                   onChange={(event) => setGrantForm((old) => ({ ...old, agentId: event.target.value }))}
                 >
@@ -868,7 +849,7 @@ export function ModelGrantsPage() {
                   {agents.map((agent) => (
                     <option key={agent.id} value={agent.id}>{agent.agentName}</option>
                   ))}
-                </select>
+                </NativeSelect>
               </Label>
               <Label>
                 {t('dialogs.fields.priority')}
@@ -885,10 +866,9 @@ export function ModelGrantsPage() {
                 <Input type="date" value={grantForm.expiresAt} onChange={(event) => setGrantForm((old) => ({ ...old, expiresAt: event.target.value }))} />
               </Label>
               <label className="vx-model-dialog__check">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={grantForm.isActive}
-                  onChange={(event) => setGrantForm((old) => ({ ...old, isActive: event.target.checked }))}
+                  onCheckedChange={(checked) => setGrantForm((old) => ({ ...old, isActive: checked === true }))}
                 />
                 {t('dialogs.fields.grantActive')}
               </label>

@@ -11,9 +11,9 @@
  */
 
 export const radius = {
-  sm: "4px",
-  md: "6px",
-  lg: "8px",
-  xl: "12px",
-  full: "9999px",
+  sm: "var(--vx-radius-sm)",
+  md: "var(--vx-radius-md)",
+  lg: "var(--vx-radius-lg)",
+  xl: "var(--vx-radius-xl)",
+  full: "var(--vx-radius-full)",
 } as const;

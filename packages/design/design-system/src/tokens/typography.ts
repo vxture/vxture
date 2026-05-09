@@ -27,12 +27,12 @@ export const typography = {
    * 支持 density 动态缩放 (compact/default/comfortable)
    */
   fontSize: {
-    xs: "var(--vx-font-size-xs, 12px)",
-    sm: "var(--vx-font-size-sm, 14px)",
-    md: "var(--vx-font-size-md, 16px)",
-    lg: "var(--vx-font-size-lg, 18px)",
-    xl: "var(--vx-font-size-xl, 20px)",
-    "2xl": "var(--vx-font-size-2xl, 24px)",
+    xs: "var(--vx-font-size-xs)",
+    sm: "var(--vx-font-size-sm)",
+    md: "var(--vx-font-size-md)",
+    lg: "var(--vx-font-size-lg)",
+    xl: "var(--vx-font-size-xl)",
+    "2xl": "var(--vx-font-size-2xl)",
   },
 
   fontWeight: {

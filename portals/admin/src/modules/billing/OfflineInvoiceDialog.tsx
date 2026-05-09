@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Button } from '@vxture/design-system';
+import { Button, Icon, Input, NativeSelect, Textarea } from '@vxture/design-system';
 import type {
   BillingInvoiceStatus,
   BillingInvoiceTaxType,
@@ -180,80 +179,80 @@ export function OfflineInvoiceDialog({
         <div className="vx-offline-invoice-dialog__grid">
           <label className="vx-subscription-action-dialog__field">
             <span>发票号码</span>
-            <input value={invoiceNo} onChange={(event) => setInvoiceNo(event.target.value)} />
+            <Input value={invoiceNo} onChange={(event) => setInvoiceNo(event.target.value)} />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>发票类型</span>
-            <select value={invoiceType} onChange={(event) => setInvoiceType(event.target.value as BillingInvoiceType)}>
+            <NativeSelect value={invoiceType} onChange={(event) => setInvoiceType(event.target.value as BillingInvoiceType)}>
               {(['special_vat', 'normal_vat', 'electronic', 'paper', 'other'] as const).map((type) => (
                 <option key={type} value={type}>{invoiceTypeLabel(type)}</option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>抬头类型</span>
-            <select value={invoiceTaxType} onChange={(event) => setInvoiceTaxType(event.target.value as BillingInvoiceTaxType)}>
+            <NativeSelect value={invoiceTaxType} onChange={(event) => setInvoiceTaxType(event.target.value as BillingInvoiceTaxType)}>
               {(['enterprise', 'individual', 'government', 'other'] as const).map((type) => (
                 <option key={type} value={type}>{taxTypeLabel(type)}</option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>发票状态</span>
-            <select value={invoiceStatus} onChange={(event) => setInvoiceStatus(event.target.value as Extract<BillingInvoiceStatus, 'issued' | 'sending' | 'finished'>)}>
+            <NativeSelect value={invoiceStatus} onChange={(event) => setInvoiceStatus(event.target.value as Extract<BillingInvoiceStatus, 'issued' | 'sending' | 'finished'>)}>
               {(['issued', 'sending', 'finished'] as const).map((status) => (
                 <option key={status} value={status}>{invoiceStatusLabel(status)}</option>
               ))}
-            </select>
+            </NativeSelect>
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>发票抬头</span>
-            <input value={invoiceTitle} onChange={(event) => setInvoiceTitle(event.target.value)} />
+            <Input value={invoiceTitle} onChange={(event) => setInvoiceTitle(event.target.value)} />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>税号</span>
-            <input value={taxNo} onChange={(event) => setTaxNo(event.target.value)} placeholder="可选" />
+            <Input value={taxNo} onChange={(event) => setTaxNo(event.target.value)} placeholder="可选" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>发票金额</span>
-            <input value={invoiceAmount} onChange={(event) => setInvoiceAmount(event.target.value)} inputMode="decimal" />
+            <Input value={invoiceAmount} onChange={(event) => setInvoiceAmount(event.target.value)} inputMode="decimal" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>税额</span>
-            <input value={taxAmount} onChange={(event) => setTaxAmount(event.target.value)} inputMode="decimal" />
+            <Input value={taxAmount} onChange={(event) => setTaxAmount(event.target.value)} inputMode="decimal" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>发票代码</span>
-            <input value={invoiceCode} onChange={(event) => setInvoiceCode(event.target.value)} placeholder="可选" />
+            <Input value={invoiceCode} onChange={(event) => setInvoiceCode(event.target.value)} placeholder="可选" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>电子票号</span>
-            <input value={invoiceElectronicNo} onChange={(event) => setInvoiceElectronicNo(event.target.value)} placeholder="可选" />
+            <Input value={invoiceElectronicNo} onChange={(event) => setInvoiceElectronicNo(event.target.value)} placeholder="可选" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>开票时间</span>
-            <input type="datetime-local" value={issuedAt} onChange={(event) => setIssuedAt(event.target.value)} />
+            <Input type="datetime-local" value={issuedAt} onChange={(event) => setIssuedAt(event.target.value)} />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>发票文件</span>
-            <input value={invoiceFileUrl} onChange={(event) => setInvoiceFileUrl(event.target.value)} placeholder="可选 URL" />
+            <Input value={invoiceFileUrl} onChange={(event) => setInvoiceFileUrl(event.target.value)} placeholder="可选 URL" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>快递公司</span>
-            <input value={expressCompany} onChange={(event) => setExpressCompany(event.target.value)} placeholder="可选" />
+            <Input value={expressCompany} onChange={(event) => setExpressCompany(event.target.value)} placeholder="可选" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>快递单号</span>
-            <input value={expressNo} onChange={(event) => setExpressNo(event.target.value)} placeholder="可选" />
+            <Input value={expressNo} onChange={(event) => setExpressNo(event.target.value)} placeholder="可选" />
           </label>
           <label className="vx-subscription-action-dialog__field">
             <span>寄送时间</span>
-            <input type="datetime-local" value={sendAt} onChange={(event) => setSendAt(event.target.value)} />
+            <Input type="datetime-local" value={sendAt} onChange={(event) => setSendAt(event.target.value)} />
           </label>
         </div>
         <label className="vx-subscription-action-dialog__field">
           <span>登记说明</span>
-          <textarea
+          <Textarea
             value={statusRemark}
             onChange={(event) => setStatusRemark(event.target.value)}
             placeholder="例如：财务已在线下开具发票，按发票系统结果同步登记。"

@@ -3,11 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
-import { CaretDoubleDownIcon, CaretDoubleUpIcon, TextIndentIcon, TextOutdentIcon } from '@phosphor-icons/react';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import {
+  Button,
   Icon,
+  Input,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -515,14 +516,16 @@ function ShellFrame({ children }: { children: ReactNode }) {
         <div className="admin-shell-header__left">
           <Popover open={workspacePanelOpen} onOpenChange={setWorkspacePanelOpen}>
             <PopoverTrigger asChild>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 className={`admin-shell-icon-button admin-shell-icon-button--launcher ${workspacePanelOpen ? 'admin-shell-icon-button--active' : ''}`}
                 aria-label={headerT('appLauncher')}
                 title={headerT('appLauncher')}
               >
                 <Icon name="app-grid" size="lg" fallback="placeholder" />
-              </button>
+              </Button>
             </PopoverTrigger>
             <PopoverContent
               align="start"
@@ -537,9 +540,9 @@ function ShellFrame({ children }: { children: ReactNode }) {
                   const active = workspace.id === activeWorkspace.id;
 
                   return (
-                    <button
+                    <Button
                       key={workspace.id}
-                      type="button"
+                      variant="ghost"
                       className="admin-workspace-switcher__item"
                       data-workspace={workspace.id}
                       aria-current={active ? 'page' : undefined}
@@ -556,7 +559,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
                       <span className="admin-workspace-switcher__copy">
                         <strong>{workspace.label}</strong>
                       </span>
-                    </button>
+                    </Button>
                   );
                 })}
               </div>
@@ -583,7 +586,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
           <span className="vx-shell-header__search-icon" aria-hidden="true">
             <Icon name="search" size="sm" fallback="search" />
           </span>
-          <input className="vx-shell-header__search-input" type="search" placeholder={headerT('searchPlaceholder')} />
+          <Input className="vx-shell-header__search-input" type="search" placeholder={headerT('searchPlaceholder')} />
         </label>
 
         <div className="admin-shell-header__actions">
@@ -611,28 +614,32 @@ function ShellFrame({ children }: { children: ReactNode }) {
       <div className="admin-shell__body">
         <aside id="vx-admin-sidebar" className="admin-shell-sidebar" aria-label={`${activeWorkspace.label}导航`}>
           <div className="admin-shell-sidebar__top">
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               className="admin-shell-icon-button admin-shell-icon-button--rail"
               aria-label={sidebarEffectiveCollapsed ? headerT('openNavigation') : headerT('collapseNavigation')}
               aria-expanded={!sidebarEffectiveCollapsed}
               aria-controls="vx-admin-sidebar"
               onClick={handleToggleSidebar}
             >
-              {sidebarEffectiveCollapsed ? <TextIndentIcon size={24} aria-hidden="true" /> : <TextOutdentIcon size={24} aria-hidden="true" />}
-            </button>
+              <Icon name={sidebarEffectiveCollapsed ? 'text-indent' : 'text-outdent'} size={24} fallback="placeholder" />
+            </Button>
             {sidebarTextMounted ? <strong className="admin-shell-sidebar__domain-title">{activeWorkspace.label}</strong> : null}
             {sidebarTextMounted ? (
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 className="admin-shell-sidebar__section-toggle-all"
                 aria-label={allSectionsCollapsed ? '展开全部导航分组' : '收起全部导航分组'}
                 title={allSectionsCollapsed ? '展开全部导航分组' : '收起全部导航分组'}
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={handleToggleAllNavSections}
               >
-                {allSectionsCollapsed ? <CaretDoubleDownIcon size={16} aria-hidden="true" /> : <CaretDoubleUpIcon size={16} aria-hidden="true" />}
-              </button>
+                <Icon name={allSectionsCollapsed ? 'caret-double-down' : 'caret-double-up'} size={16} fallback="placeholder" />
+              </Button>
             ) : null}
           </div>
 
@@ -652,8 +659,9 @@ function ShellFrame({ children }: { children: ReactNode }) {
                   ].filter(Boolean).join(' ')}
                 >
                   <SidebarTooltip label={sectionTitle} enabled={sidebarVisualCollapsed}>
-                    <button
+                    <Button
                       type="button"
+                      variant="ghost"
                       className="admin-shell-nav__section-trigger"
                       aria-label={sectionTitle}
                       aria-expanded={!sectionCollapsed}
@@ -666,7 +674,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
                       <span className="admin-shell-nav__section-icon admin-shell-nav__section-icon--collapsed" aria-hidden="true">
                         <Icon name={sectionCollapsed ? 'chevron-right' : 'chevron-down'} size="xs" fallback="chevron-down" />
                       </span>
-                    </button>
+                    </Button>
                   </SidebarTooltip>
                   {!sectionCollapsed ? (
                     <div className="admin-shell-nav__items">

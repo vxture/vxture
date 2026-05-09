@@ -1,7 +1,7 @@
 # Vxture Design System Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.2.2
+**Last Updated**: 2026-05-09
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -11,7 +11,7 @@ The Vxture design system provides **consistent UI components and visual language
 all portals and agent frontends.
 
 It follows a **token → system → components** architecture within a single package,
-shared by both `portals/` and `agent-studio/`.
+shared by `portals/`, `agent-studio/`, and `business/` frontends.
 
 ---
 
@@ -44,7 +44,10 @@ packages/design/design-system/
     ├── density/          # Density system (compact/default/comfortable)
     ├── icons/            # Icon system (Registry pattern)
     ├── components/
-    │   └── ui/           # UI components
+    │   ├── ui/           # UI primitives
+    │   ├── auth/         # Unified auth template and flows
+    │   ├── shell/        # Cross-application chrome primitives
+    │   └── layout/       # Layout primitives
     ├── hooks/            # Internal custom hooks
     ├── utils/            # Internal utility functions
     └── index.ts          # Unified export entry
@@ -54,7 +57,7 @@ packages/design/design-system/
 
 # 3. tokens/
 
-Raw design tokens. Implemented as TypeScript constants + CSS variables (`--vx-*` prefix).
+Raw design tokens. Runtime values live in CSS variables (`--vx-*` prefix); TypeScript tokens expose those variables for programmatic consumers and must not duplicate raw hex/px/shadow values.
 
 ```
 colors.ts
@@ -64,7 +67,7 @@ shadow.ts
 typography.ts
 ```
 
-Rules: Tokens must be readonly, contain only design values, no logic.
+Rules: CSS is the runtime value source. TS token files must be readonly variable references, contain no logic, and pass the token duplicate guardrail.
 
 ---
 
@@ -73,8 +76,12 @@ Rules: Tokens must be readonly, contain only design values, no logic.
 Global styles and CSS variables.
 
 ```
-globals.css      # Global reset
-variables.css    # CSS custom properties (--vx-* prefix)
+globals.css      # Single global entry consumed by applications
+tokens.css       # CSS custom properties and Tailwind @theme mapping
+typography.css   # Platform font variables and typography utilities
+components.css   # DS semantic component classes
+auth.css         # Unified auth/signup/captcha styles
+fullscreen.css   # Fullscreen shell styles
 tailwind.css     # Tailwind directives
 ```
 
@@ -148,12 +155,12 @@ Usage rule: Never import Phosphor Icons directly. Always use `<Icon name="user" 
 
 # 8. components/ui/
 
-Reusable UI components (current: 16 components):
+Reusable UI components (current: 18 components):
 
 ```
 Avatar, Badge, Breadcrumb, Button, Card, Checkbox,
-Dialog, DropdownMenu, Input, Label, Popover, Select,
-Separator, Tabs, Tooltip
+Dialog, DropdownMenu, Input, Label, NativeSelect, Popover,
+Select, Separator, Tabs, Textarea, Tooltip
 ```
 
 Built with:
@@ -201,6 +208,7 @@ Portal or agent internals
 
 - `portals/*` — all platform portals
 - `agent-studio/*` — all agent frontends
+- `business/*` — tenant/business applications
 - `packages/platform/*` — optionally, for platform SDK UI components
 
 It is **never imported by server-side code** (bff, services, agent-server, core).
@@ -222,11 +230,25 @@ import {
 } from '@vxture/design-system';
 ```
 
+Server-safe imports must use the explicit subentries:
+
+```ts
+import { colors, spacing } from '@vxture/design-system/tokens';
+import type { FullscreenMode } from '@vxture/design-system/types';
+```
+
 Never import from internal paths:
 
 ```ts
 import { Button } from '@vxture/design-system/src/components/ui/button'; // ❌
+import { Button } from '@/components/ui/button';                          // ❌
 import { Button } from '@vxture/design-system';                           // ✅
+```
+
+Applications import global DS styles once from their root layout CSS:
+
+```css
+@import "@vxture/design-system/styles/globals.css";
 ```
 
 ---
@@ -264,12 +286,43 @@ component count exceeds 50, or separate team ownership becomes necessary.
 AI must:
 
 - Use existing components — never create duplicate components
-- Respect design tokens — no hardcoded color or spacing values
+- Respect design tokens — no hardcoded color, font, radius, shadow, or spacing values
 - Import only from `@vxture/design-system` — never from internal paths
+- If DS is missing a primitive or reusable pattern, add it to DS first; do not create app-local primitives
+- Application `components/` directories must be semantic business/layout areas, not `components/ui` or `components/primitives`
 - Never add `@vxture/core-*`, `service-*`, or `ai-sdk` dependencies
 - Never use Phosphor icons directly — always use `<Icon name="..." />`
 - Follow component rules: `forwardRef`, `cn()`, default variants
 - No `any` types
+
+---
+
+# 15. Guardrails
+
+The repository enforces DS usage with:
+
+```bash
+pnpm lint:design
+```
+
+The guardrail scans `portals/`, `agent-studio/`, `business/`, and `packages/` and blocks:
+
+- app-local `components/ui` or `components/primitives`
+- app imports from local UI primitive folders
+- raw hex/rgb/hsl colors outside DS token owners
+- illegal `font-family` definitions and `next/font` usage outside app layouts
+- app Tailwind token definitions for colors, font families, radius, and shadows
+- token duplicate files outside DS
+- known invalid Tailwind class typos such as `tranvx-*`
+- inline design values and native primitives not already recorded in the DS baseline
+
+Existing inline-style/native-primitive debt is tracked in:
+
+```txt
+scripts/guardrails/design-system-baseline.json
+```
+
+When a module is migrated to DS components, remove its signatures from the baseline. New signatures are not allowed.
 
 ---
 

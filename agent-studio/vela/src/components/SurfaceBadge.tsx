@@ -8,6 +8,7 @@
  * @date 2026-04-30
  */
 
+import { Badge } from '@vxture/design-system';
 import type { VelaSurface } from '../types/vela.types';
 
 // ============================================================================
@@ -29,19 +30,8 @@ interface Props {
 
 export function SurfaceBadge({ surface }: Props) {
   return (
-    <span
-      style={{
-        display:        'inline-block',
-        padding:        '2px 8px',
-        borderRadius:   '9999px',
-        fontSize:       '11px',
-        fontWeight:     600,
-        background:     surface === 'admin' ? 'var(--vx-color-info-surface)' : 'var(--vx-color-success-surface)',
-        color:          surface === 'admin' ? 'var(--vx-color-info-foreground)' : 'var(--vx-color-success-foreground)',
-        letterSpacing:  '0.02em',
-      }}
-    >
+    <Badge variant="secondary" className={`vx-vela-surface-badge--${surface}`}>
       {LABEL[surface]}
-    </span>
+    </Badge>
   );
 }

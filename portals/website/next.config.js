@@ -55,15 +55,15 @@ loadRootEnv();
 //   internalAliases → 绝对路径，供 Webpack（next build）使用
 //   turboAliases    → 相对路径，供 Turbopack（next dev --turbo）使用
 //
-// shared / core-locale / platform-browser 直接指向 src。
-// design-system 指向 dist 入口，沿用现有 dist 产物策略。
+// shared / core-locale / platform-browser / design-system 直接指向 src。
+// design-system 主入口自身声明 "use client"，server-safe 能力走 /tokens /types /server 子入口。
 
 // Webpack 用：绝对路径
 // 只保留 portal 层允许引用的包（shared / core-locale / design-system）
 const internalAliases = {
   '@vxture/shared':        join(__dirname, '../../packages/shared/shared/src'),
   '@vxture/core-locale':   join(__dirname, '../../packages/core/locale/src'),
-  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/dist/index.mjs'),
+  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/src/client.ts'),
   '@vxture/platform-browser': join(__dirname, '../../packages/platform/browser/src'),
 };
 
@@ -72,12 +72,14 @@ const internalAliases = {
 const turboAliases = {
   '@vxture/shared':        '../../packages/shared/shared/src',
   '@vxture/core-locale':   '../../packages/core/locale/src',
-  '@vxture/design-system': '../../packages/design/design-system/dist/index.mjs',
+  '@vxture/design-system': '../../packages/design/design-system/src/client.ts',
   '@vxture/platform-browser': '../../packages/platform/browser/src',
 };
 
 const nextConfig = {
   typedRoutes: true,
+
+  transpilePackages: ['@vxture/design-system'],
 
   output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
 

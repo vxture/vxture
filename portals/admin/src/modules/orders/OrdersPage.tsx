@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Input } from "@vxture/design-system";
+import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import {
   confirmOrderOfflinePayment,
   fetchOrderOperations,
@@ -161,14 +161,15 @@ function PageSizePicker({
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={value === option ? "is-active" : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -196,19 +197,20 @@ function OrderActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
         className="vx-tenant-actions__trigger"
-        type="button"
+        variant="ghost"
+        size="icon"
         aria-label={`${order.orderNo} 订单操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -217,9 +219,9 @@ function OrderActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             订单详情
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -228,9 +230,9 @@ function OrderActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!canConfirmOrderOfflinePayment(order)}
             title={confirmOfflinePaymentDisabledReason(order) ?? undefined}
@@ -241,9 +243,9 @@ function OrderActionsMenu({
           >
             <Icon name="check" size="xs" fallback="placeholder" />
             确认收款
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -254,7 +256,7 @@ function OrderActionsMenu({
           >
             <Icon name="star" size="xs" fallback="placeholder" />
             查看订阅
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -285,17 +287,10 @@ function OrderListRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = orders.filter((order) =>
     selectedOrderIds.has(order.id),
   ).length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedOnPage > 0 && selectedOnPage < orders.length;
-    }
-  }, [orders.length, selectedOnPage]);
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < orders.length;
 
   return (
     <div
@@ -305,12 +300,10 @@ function OrderListRows({
     >
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPagePartiallySelected ? "indeterminate" : isPageSelected}
+            onCheckedChange={(checked) => onTogglePage(checked === true)}
             aria-label="选择当前页订单"
           />
         </span>
@@ -347,13 +340,10 @@ function OrderListRows({
             }}
           >
             <span className="vx-order-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onChange={(event) =>
-                  onToggleOrder(order.id, event.target.checked)
-                }
+                onCheckedChange={(checked) => onToggleOrder(order.id, checked === true)}
                 aria-label={`选择订单 ${order.orderNo}`}
               />
             </span>
@@ -362,15 +352,15 @@ function OrderListRows({
             </span>
             <span className="vx-order-row__order">
               <span className="vx-tenant-directory-row__title-line">
-                <button
-                  type="button"
+                <Button
+                  variant="link"
                   className="vx-model-name-button"
                   onClick={() =>
                     router.push(`/orders/${encodeURIComponent(order.id)}`)
                   }
                 >
                   {order.orderNo}
-                </button>
+                </Button>
               </span>
               <small>
                 {order.billNo ?? "未生成账单"} · {formatDate(order.createdAt)}
@@ -831,8 +821,8 @@ export function OrdersPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select
-              className="vx-input vx-tenant-select"
+            <NativeSelect
+              className="vx-tenant-select"
               value={statusFilter}
               onChange={(event) =>
                 setStatusFilter(event.target.value as OrderStatusFilter)
@@ -846,9 +836,9 @@ export function OrdersPage() {
               <option value="overdue">逾期</option>
               <option value="closed">已关闭</option>
               <option value="abnormal">异常</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={paymentFilter}
               onChange={(event) =>
                 setPaymentFilter(event.target.value as PaymentStatusFilter)
@@ -865,9 +855,9 @@ export function OrdersPage() {
               <option value="failed">支付失败</option>
               <option value="closed">已关闭</option>
               <option value="refunding">退款中</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={paySourceFilter}
               onChange={(event) =>
                 setPaySourceFilter(event.target.value as PaySourceFilter)
@@ -878,9 +868,9 @@ export function OrdersPage() {
               <option value="online">线上</option>
               <option value="offline">线下</option>
               <option value="none">无</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={tierFilter}
               onChange={(event) =>
                 setTierFilter(event.target.value as TierFilter)
@@ -892,7 +882,7 @@ export function OrdersPage() {
               <option value="pro">Pro</option>
               <option value="enterprise">Enterprise</option>
               <option value="other">其他</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             补录订单

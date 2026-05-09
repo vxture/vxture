@@ -3,7 +3,7 @@
  * @package @vxture/design-system
  *
  * 功能：提供统一的图标渲染组件，支持尺寸、粗细、颜色等自定义配置
- *       "use client" 由 dist 构建产物首行统一注入，源文件保持纯净
+ *       由 @vxture/design-system 客户端入口提供 "use client" 边界
  *
  * @copyright Vxture Team
  * @license MIT

@@ -11,6 +11,18 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "paths": {
+      "@vxture/design-system": [
+        "../../packages/design/design-system/src/client.ts"
+      ],
+      "@vxture/design-system/tokens": [
+        "../../packages/design/design-system/src/tokens-entry.ts"
+      ],
+      "@vxture/design-system/types": [
+        "../../packages/design/design-system/src/types-entry.ts"
+      ],
+      "@vxture/design-system/server": [
+        "../../packages/design/design-system/src/server.ts"
+      ],
       "@/*": [
         "./src/*"
       ]

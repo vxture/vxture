@@ -1,6 +1,6 @@
 import type { IconName } from '@vxture/design-system';
 import { Icon } from '@vxture/design-system';
-import { Badge } from '@vxture/design-system';
+import { Badge, Button } from '@vxture/design-system';
 
 export const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
 export type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
@@ -34,14 +34,15 @@ export function PageSizePicker({ value, onChange }: { value: PageSize; onChange:
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>

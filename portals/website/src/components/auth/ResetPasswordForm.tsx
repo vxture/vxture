@@ -15,6 +15,7 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Button, Input } from '@vxture/design-system';
 import { AuthFooter, AuthHeader } from '@/components/auth/AuthChrome';
 import { resetPassword } from '@/api/auth.api';
 import { useRouter } from '@/lib/i18n/navigation';
@@ -68,10 +69,7 @@ export function ResetPasswordForm() {
   // ─── 渲染 ─────────────────────────────────────────────────────────────────────
 
   return (
-    <section
-      className='vx-auth-page'
-      style={{ '--vx-auth-bg': 'url(/images/login-bg-light.jpg)' } as React.CSSProperties}
-    >
+    <section className='vx-auth-page vx-auth-page--default-bg'>
       <AuthHeader />
 
       <main className='vx-auth-main'>
@@ -132,7 +130,7 @@ function FormStep({
       <form onSubmit={onSubmit} autoComplete='off'>
         <div className='vx-auth-field'>
           <label>新密码</label>
-          <input
+          <Input
             type='password'
             value={newPassword}
             placeholder='至少 8 位字符'
@@ -145,7 +143,7 @@ function FormStep({
         </div>
         <div className='vx-auth-field'>
           <label>确认密码</label>
-          <input
+          <Input
             type='password'
             value={confirmPassword}
             placeholder='再次输入新密码'
@@ -158,7 +156,7 @@ function FormStep({
 
         {error ? <p className='vx-auth-error'>{error}</p> : null}
 
-        <button type='submit' className='vx-auth-primary' disabled={loading}>
+        <Button type='submit' className='vx-auth-primary' disabled={loading}>
           {loading ? (
             <>
               <span className='vx-auth-spinner' />
@@ -167,7 +165,7 @@ function FormStep({
           ) : (
             '确认重置密码'
           )}
-        </button>
+        </Button>
       </form>
     </>
   );
@@ -179,9 +177,9 @@ function DoneStep({ onSignIn }: { onSignIn: () => void }) {
       <div className='vx-auth-check'>✓</div>
       <h1>密码已重置</h1>
       <p>您的密码已成功更新，请使用新密码登录。</p>
-      <button type='button' className='vx-auth-primary' onClick={onSignIn}>
+      <Button className='vx-auth-primary' onClick={onSignIn}>
         去登录
-      </button>
+      </Button>
     </div>
   );
 }
@@ -189,12 +187,12 @@ function DoneStep({ onSignIn }: { onSignIn: () => void }) {
 function InvalidStep({ onRetry }: { onRetry: () => void }) {
   return (
     <div className='vx-auth-reset-done'>
-      <div className='vx-auth-check' style={{ background: 'var(--vx-color-error)' }}>✕</div>
+      <div className='vx-auth-check vx-auth-check--error'>✕</div>
       <h1>链接已失效</h1>
       <p>该重置链接已过期或已使用。请重新申请密码重置。</p>
-      <button type='button' className='vx-auth-primary' onClick={onRetry}>
+      <Button className='vx-auth-primary' onClick={onRetry}>
         重新申请
-      </button>
+      </Button>
     </div>
   );
 }

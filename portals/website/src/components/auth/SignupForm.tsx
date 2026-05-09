@@ -12,9 +12,9 @@
 
 'use client';
 
-import { useState, type CSSProperties, type FormEvent } from 'react';
+import { useState, type FormEvent } from 'react';
 import { AuthFooter, AuthHeader } from '@/components/auth/AuthChrome';
-import { AuthTurnstile, useAuthVerificationCountdown } from '@vxture/design-system';
+import { AuthTurnstile, Button, Input, useAuthVerificationCountdown } from '@vxture/design-system';
 import { useAuth } from '@/hooks/useAuth';
 import { useNotificationStore } from '@/stores/notification.store';
 import { Link, useRouter } from '@/lib/i18n/navigation';
@@ -31,7 +31,6 @@ type SignupErrors = {
 
 // ─── 常量 ──────────────────────────────────────────────────────────────────────
 
-const BG_SRC = '/images/login-bg-light.jpg';
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? '';
 const TURNSTILE_ACTION = 'tenant_auth';
 type TurnstileStatus = 'pending' | 'ready' | 'failed';
@@ -138,10 +137,7 @@ export function SignupForm({ className = '' }: SignupFormProps) {
   // ─── 渲染 ─────────────────────────────────────────────────────────────────────
 
   return (
-    <section
-      className={`vx-auth-page vx-signup-page ${className}`}
-      style={{ '--vx-auth-bg': `url(${BG_SRC})` } as CSSProperties}
-    >
+    <section className={`vx-auth-page vx-auth-page--default-bg vx-signup-page ${className}`}>
       <AuthHeader />
 
       <main className='vx-signup-main'>
@@ -217,7 +213,7 @@ export function SignupForm({ className = '' }: SignupFormProps) {
             />
             {errors.form ? <p className='vx-auth-error vx-auth-form-error'>{errors.form}</p> : null}
 
-            <button
+            <Button
               type='submit'
               className='vx-auth-primary vx-signup-primary'
               disabled={isLoading || verificationPending || turnstileStatus === 'failed'}
@@ -234,7 +230,7 @@ export function SignupForm({ className = '' }: SignupFormProps) {
               ) : (
                 '注册账号'
               )}
-            </button>
+            </Button>
           </form>
 
           <SocialRegisterButtons onSocialLogin={handleSocialLogin} />
@@ -282,7 +278,7 @@ function SignupField({
   return (
     <div className='vx-signup-field'>
       <label>{label}</label>
-      <input
+      <Input
         name={name}
         type={type}
         value={value}
@@ -327,10 +323,10 @@ function SocialButton({
   onClick: () => void;
 }) {
   return (
-    <button type='button' className={`vx-auth-social ${className}`} onClick={onClick}>
+    <Button variant='ghost' className={`vx-auth-social ${className}`} onClick={onClick}>
       {icon}
       {label}
-    </button>
+    </Button>
   );
 }
 

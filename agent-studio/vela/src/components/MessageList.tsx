@@ -29,14 +29,14 @@ export function MessageList() {
 
   if (!messages.length) {
     return (
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--vx-color-text-muted)', fontSize: '14px' }}>
+      <div className="vx-vela-messages vx-vela-messages--empty">
         你好！有什么可以帮助你的？
       </div>
     );
   }
 
   return (
-    <div style={{ flex: 1, overflowY: 'auto', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+    <div className="vx-vela-messages">
       {messages.map((msg) => (
         <MessageBubble key={msg.id} message={msg} />
       ))}

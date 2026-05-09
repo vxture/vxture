@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Button } from '@vxture/design-system';
+import { Button, Icon, Input, Textarea } from '@vxture/design-system';
 import type { BillingBillAction, BillingDetailRecord } from '@/entities/console';
 
 type BillingBillActionPayload = {
@@ -179,7 +178,7 @@ export function BillingBillActionDialog({
           <div className="vx-billing-bill-action-dialog__grid">
             <label className="vx-subscription-action-dialog__field">
               <span>减免金额</span>
-              <input
+              <Input
                 type="number"
                 min="0.01"
                 step="0.01"
@@ -191,7 +190,7 @@ export function BillingBillActionDialog({
             </label>
             <label className="vx-subscription-action-dialog__field">
               <span>减免后应收</span>
-              <input value={formatCurrency(Math.max(0, bill.payableAmount - (Number.isFinite(normalizedDiscountAmount) ? normalizedDiscountAmount : 0)), bill.currency)} readOnly />
+              <Input value={formatCurrency(Math.max(0, bill.payableAmount - (Number.isFinite(normalizedDiscountAmount) ? normalizedDiscountAmount : 0)), bill.currency)} readOnly />
             </label>
           </div>
         ) : null}
@@ -200,11 +199,11 @@ export function BillingBillActionDialog({
           <div className="vx-billing-bill-action-dialog__grid">
             <label className="vx-subscription-action-dialog__field">
               <span>账单项目</span>
-              <input value={itemName} onChange={(event) => setItemName(event.target.value)} maxLength={128} />
+              <Input value={itemName} onChange={(event) => setItemName(event.target.value)} maxLength={128} />
             </label>
             <label className="vx-subscription-action-dialog__field">
               <span>账单金额</span>
-              <input
+              <Input
                 type="number"
                 min="0.01"
                 step="0.01"
@@ -215,18 +214,18 @@ export function BillingBillActionDialog({
             </label>
             <label className="vx-subscription-action-dialog__field">
               <span>账期开始</span>
-              <input type="date" value={cycleStartDate} onChange={(event) => setCycleStartDate(event.target.value)} />
+              <Input type="date" value={cycleStartDate} onChange={(event) => setCycleStartDate(event.target.value)} />
             </label>
             <label className="vx-subscription-action-dialog__field">
               <span>账期结束</span>
-              <input type="date" value={cycleEndDate} onChange={(event) => setCycleEndDate(event.target.value)} />
+              <Input type="date" value={cycleEndDate} onChange={(event) => setCycleEndDate(event.target.value)} />
             </label>
           </div>
         ) : null}
 
         <label className="vx-subscription-action-dialog__field">
           <span>{action === 'mark_overdue' ? '跟进原因' : '处理说明'}</span>
-          <textarea
+          <Textarea
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             placeholder={action === 'mark_overdue' ? '例如：客户预算审批延期，预计下周完成线下付款。' : '请填写线下审批依据、处理原因或财务备注。'}

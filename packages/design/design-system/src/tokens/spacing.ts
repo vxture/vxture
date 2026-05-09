@@ -11,10 +11,10 @@
  */
 
 export const spacing = {
-  xs: "4px",
-  sm: "8px",
-  md: "12px",
-  lg: "16px",
-  xl: "24px",
-  "2xl": "32px",
+  xs: "var(--vx-space-xs)",
+  sm: "var(--vx-space-sm)",
+  md: "var(--vx-space-md)",
+  lg: "var(--vx-space-lg)",
+  xl: "var(--vx-space-xl)",
+  "2xl": "var(--vx-space-2xl)",
 } as const;

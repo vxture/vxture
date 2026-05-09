@@ -69,9 +69,9 @@ export function CreateTenantDialog({
             <p>Workspace</p>
             <h2 id="tenant-dialog-title">{title}</h2>
           </div>
-          <button type="button" className="vx-tenant-dialog__close" aria-label="Close" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="vx-tenant-dialog__close" aria-label="Close" onClick={onClose}>
             x
-          </button>
+          </Button>
         </div>
 
         <div className="vx-tenant-dialog__fields">

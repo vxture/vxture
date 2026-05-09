@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { CodeIcon, PlayIcon, PlugIcon, StopIcon, TrashIcon } from '@phosphor-icons/react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Input, Label } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, Label, NativeSelect, Textarea } from '@vxture/design-system';
+import type { IconName } from '@vxture/design-system';
 import {
   createAiModel,
   deleteAiModel,
@@ -102,13 +102,13 @@ function isInteractiveTarget(target: EventTarget | null) {
 }
 
 function ModelSummaryItem({
-  icon: SummaryIcon,
+  icon,
   label,
   value,
   tags,
   tone = 'blue',
 }: {
-  icon: typeof PlugIcon;
+  icon: IconName;
   label: string;
   value: string;
   tags?: string[];
@@ -116,7 +116,7 @@ function ModelSummaryItem({
 }) {
   return (
     <article className={`vx-tenant-summary__item vx-tenant-tone--${tone}`}>
-      <SummaryIcon size={24} aria-hidden="true" />
+      <Icon name={icon} size={24} fallback="placeholder" />
       <div>
         <span>{label}</span>
         <p>
@@ -133,14 +133,15 @@ function ModelPageSizePicker({ value, onChange }: { value: PageSize; onChange: (
     <div className="vx-tenant-page-size" aria-label="page size">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`Page size ${option}`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -162,15 +163,15 @@ function ModelOperationButtons({
 }) {
   return (
     <div className="vx-model-operation-buttons" aria-label={`${model.modelName} 操作`}>
-      <button type="button" title="启用" aria-label={`启用 ${model.modelName}`} disabled={submitting || model.isActive} onClick={() => onEnable(model)}>
-        <PlayIcon size={24} aria-hidden="true" />
-      </button>
-      <button type="button" title="停用" aria-label={`停用 ${model.modelName}`} disabled={submitting || !model.isActive} onClick={() => onDisable(model)}>
-        <StopIcon size={24} aria-hidden="true" />
-      </button>
-      <button type="button" title={model.isActive ? '启用状态不可删除' : '删除'} aria-label={`删除 ${model.modelName}`} className="vx-model-operation-buttons__danger" disabled={submitting || model.isActive} onClick={() => onDelete(model)}>
-        <TrashIcon size={24} aria-hidden="true" />
-      </button>
+      <Button variant="ghost" size="icon" title="启用" aria-label={`启用 ${model.modelName}`} disabled={submitting || model.isActive} onClick={() => onEnable(model)}>
+        <Icon name="play" size={24} fallback="placeholder" />
+      </Button>
+      <Button variant="ghost" size="icon" title="停用" aria-label={`停用 ${model.modelName}`} disabled={submitting || !model.isActive} onClick={() => onDisable(model)}>
+        <Icon name="stop" size={24} fallback="placeholder" />
+      </Button>
+      <Button variant="ghost" size="icon" title={model.isActive ? '启用状态不可删除' : '删除'} aria-label={`删除 ${model.modelName}`} className="vx-model-operation-buttons__danger" disabled={submitting || model.isActive} onClick={() => onDelete(model)}>
+        <Icon name="trash" size={24} fallback="placeholder" />
+      </Button>
     </div>
   );
 }
@@ -194,15 +195,15 @@ function ModelBatchOperationButtons({
 }) {
   return (
     <div className="vx-model-operation-buttons vx-model-batch-actions" aria-label="批量操作">
-      <button type="button" title="批量启用" aria-label="批量启用" disabled={submitting || !canEnable} onClick={onEnable}>
-        <PlayIcon size={24} weight={canEnable && !submitting ? 'fill' : 'regular'} aria-hidden="true" />
-      </button>
-      <button type="button" title="批量停用" aria-label="批量停用" disabled={submitting || !canDisable} onClick={onDisable}>
-        <StopIcon size={24} weight={canDisable && !submitting ? 'fill' : 'regular'} aria-hidden="true" />
-      </button>
-      <button type="button" title="批量删除" aria-label="批量删除" className="vx-model-operation-buttons__danger" disabled={submitting || !canDelete} onClick={onDelete}>
-        <TrashIcon size={24} weight={canDelete && !submitting ? 'fill' : 'regular'} aria-hidden="true" />
-      </button>
+      <Button variant="ghost" size="icon" title="批量启用" aria-label="批量启用" disabled={submitting || !canEnable} onClick={onEnable}>
+        <Icon name="play" size={24} weight={canEnable && !submitting ? 'fill' : 'regular'} fallback="placeholder" />
+      </Button>
+      <Button variant="ghost" size="icon" title="批量停用" aria-label="批量停用" disabled={submitting || !canDisable} onClick={onDisable}>
+        <Icon name="stop" size={24} weight={canDisable && !submitting ? 'fill' : 'regular'} fallback="placeholder" />
+      </Button>
+      <Button variant="ghost" size="icon" title="批量删除" aria-label="批量删除" className="vx-model-operation-buttons__danger" disabled={submitting || !canDelete} onClick={onDelete}>
+        <Icon name="trash" size={24} weight={canDelete && !submitting ? 'fill' : 'regular'} fallback="placeholder" />
+      </Button>
     </div>
   );
 }
@@ -226,7 +227,6 @@ export function ModelGatewayPage() {
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
   const [modelForm, setModelForm] = useState(defaultModelForm);
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -307,12 +307,6 @@ export function ModelGatewayPage() {
     { value: 'online', label: t('filters.online') },
     { value: 'private', label: t('filters.private') },
   ] as const;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   function resetFeedback() {
     setFeedback(null);
@@ -584,13 +578,13 @@ export function ModelGatewayPage() {
 
       <section className="vx-tenant-summary vx-model-gateway-summary" aria-label={t('summary.ariaLabel')}>
         <ModelSummaryItem
-          icon={PlugIcon}
+          icon="plug"
           label={t('summary.models')}
           value={formatNumber(models.length)}
           tags={[`${t('filters.online')} ${formatNumber(onlineModels)}`, `${t('filters.private')} ${formatNumber(privateModels)}`]}
         />
-        <ModelSummaryItem icon={PlayIcon} label={t('filters.active')} value={formatNumber(activeModels)} tags={['可调度']} tone={activeModels ? 'green' : 'amber'} />
-        <ModelSummaryItem icon={CodeIcon} label={t('status.inactive')} value={formatNumber(inactiveModels)} tags={inactiveModels ? ['需复核'] : ['无停用']} tone={inactiveModels ? 'amber' : 'green'} />
+        <ModelSummaryItem icon="play" label={t('filters.active')} value={formatNumber(activeModels)} tags={['可调度']} tone={activeModels ? 'green' : 'amber'} />
+        <ModelSummaryItem icon="code" label={t('status.inactive')} value={formatNumber(inactiveModels)} tags={inactiveModels ? ['需复核'] : ['无停用']} tone={inactiveModels ? 'amber' : 'green'} />
       </section>
 
       <div className="vx-tenant-list-shell">
@@ -607,16 +601,16 @@ export function ModelGatewayPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as ModelStatusFilter)} aria-label="模型状态">
+            <NativeSelect className="vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as ModelStatusFilter)} aria-label="模型状态">
               {statusFilters.map((item) => (
                 <option key={item.value} value={item.value}>{item.label}</option>
               ))}
-            </select>
-            <select className="vx-input vx-tenant-select" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value as ModelSourceFilter)} aria-label="模型来源">
+            </NativeSelect>
+            <NativeSelect className="vx-tenant-select" value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value as ModelSourceFilter)} aria-label="模型来源">
               {sourceFilters.map((item) => (
                 <option key={item.value} value={item.value}>{item.label}</option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
           <ModelBatchOperationButtons
             canEnable={canBatchEnable}
@@ -644,12 +638,10 @@ export function ModelGatewayPage() {
             <div className="vx-tenant-directory-list vx-model-gateway-directory-list" role="region" aria-label={t('table.toolbarTitle', { count: filteredModels.length })}>
               <div className="vx-tenant-directory-list__header">
                 <span>
-                  <input
-                    ref={pageSelectRef}
-                    type="checkbox"
+                  <Checkbox
                     className="vx-model-select-checkbox"
-                    checked={isPageSelected}
-                    onChange={(event) => togglePageSelection(event.target.checked)}
+                    checked={isPagePartiallySelected ? 'indeterminate' : isPageSelected}
+                    onCheckedChange={(checked) => togglePageSelection(checked === true)}
                     aria-label="选择当前页模型"
                   />
                 </span>
@@ -672,23 +664,22 @@ export function ModelGatewayPage() {
                   }}
                 >
                   <span className="vx-model-gateway-row__select">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       className="vx-model-select-checkbox"
                       checked={selectedModelIds.has(model.id)}
                       onClick={(event) => event.stopPropagation()}
-                      onChange={(event) => toggleModelSelection(model.id, event.target.checked)}
+                      onCheckedChange={(checked) => toggleModelSelection(model.id, checked === true)}
                       aria-label={`选择 ${model.modelName}`}
                     />
                   </span>
                   <span className="vx-tenant-directory-row__index">{formatNumber(pageStart + index + 1)}</span>
                   <span className="vx-tenant-directory-row__tenant">
-                    {isPrivateProvider(model.provider) ? <CodeIcon size={20} aria-hidden="true" /> : <PlugIcon size={20} aria-hidden="true" />}
+                    <Icon name={isPrivateProvider(model.provider) ? 'code' : 'plug'} size={20} fallback="placeholder" />
                     <span>
                       <span className="vx-tenant-directory-row__title-line">
-                        <button type="button" className="vx-model-name-button" onClick={() => openEditModelDialog(model)}>
+                        <Button variant="link" className="vx-model-name-button" onClick={() => openEditModelDialog(model)}>
                           {model.modelName}
-                        </button>
+                        </Button>
                       </span>
                       <small>{model.modelCode}</small>
                     </span>
@@ -725,34 +716,35 @@ export function ModelGatewayPage() {
                     </span>
                   </span>
                   <div className="vx-tenant-actions" onMouseLeave={() => setOpenModelMenuId(null)}>
-                    <button
+                    <Button
                       className="vx-tenant-actions__trigger"
-                      type="button"
+                      variant="ghost"
+                      size="icon"
                       aria-label={t('actions.modelMenu', { name: model.modelName })}
                       aria-haspopup="menu"
                       aria-expanded={openModelMenuId === model.id}
                       onClick={() => setOpenModelMenuId((current) => (current === model.id ? null : model.id))}
                     >
                       <Icon name="more-vertical" size="lg" fallback="placeholder" />
-                    </button>
+                    </Button>
                     {openModelMenuId === model.id ? (
                       <div className="vx-tenant-actions__menu" role="menu">
-                        <button type="button" role="menuitem" onClick={() => openEditModelDialog(model)}>
+                        <Button variant="ghost" role="menuitem" onClick={() => openEditModelDialog(model)}>
                           <Icon name="edit" size="xs" fallback="placeholder" />
                           <span>{t('actions.editModel')}</span>
-                        </button>
-                        <button type="button" role="menuitem" disabled={submitting || model.isActive} onClick={() => void handleToggleModel(model)}>
-                          <PlayIcon size={16} weight="fill" aria-hidden="true" />
+                        </Button>
+                        <Button variant="ghost" role="menuitem" disabled={submitting || model.isActive} onClick={() => void handleToggleModel(model)}>
+                          <Icon name="play" size={16} weight="fill" fallback="placeholder" />
                           <span>{t('actions.enableModel')}</span>
-                        </button>
-                        <button type="button" role="menuitem" disabled={submitting || !model.isActive} onClick={() => void handleToggleModel(model)}>
-                          <StopIcon size={16} weight="fill" aria-hidden="true" />
+                        </Button>
+                        <Button variant="ghost" role="menuitem" disabled={submitting || !model.isActive} onClick={() => void handleToggleModel(model)}>
+                          <Icon name="stop" size={16} weight="fill" fallback="placeholder" />
                           <span>{t('actions.disableModel')}</span>
-                        </button>
-                        <button type="button" role="menuitem" className="vx-model-actions-menu__danger" disabled={submitting || model.isActive} onClick={() => void handleDeleteModel(model)}>
-                          <TrashIcon size={16} aria-hidden="true" />
+                        </Button>
+                        <Button variant="ghost" role="menuitem" className="vx-model-actions-menu__danger" disabled={submitting || model.isActive} onClick={() => void handleDeleteModel(model)}>
+                          <Icon name="trash" size={16} fallback="placeholder" />
                           <span>{t('actions.deleteModel')}</span>
-                        </button>
+                        </Button>
                       </div>
                     ) : null}
                   </div>
@@ -764,11 +756,11 @@ export function ModelGatewayPage() {
               {pagedModels.map((model) => (
                 <article key={model.id} className={`vx-tenant-directory-card vx-model-gateway-card vx-model-gateway-card--${modelTone(model)}`}>
                   <header>
-                    {isPrivateProvider(model.provider) ? <CodeIcon size={24} aria-hidden="true" /> : <PlugIcon size={24} aria-hidden="true" />}
+                    <Icon name={isPrivateProvider(model.provider) ? 'code' : 'plug'} size={24} fallback="placeholder" />
                     <div>
-                      <button type="button" className="vx-model-name-button" onClick={() => openEditModelDialog(model)}>
+                      <Button variant="link" className="vx-model-name-button" onClick={() => openEditModelDialog(model)}>
                         {model.modelName}
-                      </button>
+                      </Button>
                       <span>{model.modelCode}</span>
                     </div>
                     <ModelOperationButtons
@@ -850,19 +842,19 @@ export function ModelGatewayPage() {
               </Label>
               <Label>
                 {t('dialogs.fields.provider')}
-                <select className="vx-input" value={modelForm.provider} onChange={(event) => setModelForm((old) => ({ ...old, provider: event.target.value }))}>
+                <NativeSelect value={modelForm.provider} onChange={(event) => setModelForm((old) => ({ ...old, provider: event.target.value }))}>
                   {PROVIDER_OPTIONS.map((provider) => (
                     <option key={provider} value={provider}>{providerLabel(provider)}</option>
                   ))}
-                </select>
+                </NativeSelect>
               </Label>
               <Label>
                 {t('dialogs.fields.protocol')}
-                <select className="vx-input" value={modelForm.protocol} onChange={(event) => setModelForm((old) => ({ ...old, protocol: event.target.value }))}>
+                <NativeSelect value={modelForm.protocol} onChange={(event) => setModelForm((old) => ({ ...old, protocol: event.target.value }))}>
                   {PROTOCOL_OPTIONS.map((protocol) => (
                     <option key={protocol} value={protocol}>{protocol}</option>
                   ))}
-                </select>
+                </NativeSelect>
               </Label>
             </div>
             <Label>
@@ -881,7 +873,7 @@ export function ModelGatewayPage() {
             </div>
             <Label>
               {t('dialogs.fields.config')}
-              <textarea
+              <Textarea
                 className="vx-input vx-model-dialog__textarea"
                 value={modelForm.configText}
                 onChange={(event) => setModelForm((old) => ({ ...old, configText: event.target.value }))}

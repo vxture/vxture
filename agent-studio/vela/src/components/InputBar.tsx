@@ -11,6 +11,7 @@
 'use client';
 
 import { useState, useRef, type KeyboardEvent } from 'react';
+import { Button, Textarea } from '@vxture/design-system';
 import { useVelaChat } from '../hooks/useVelaChat';
 import { useVelaStore } from '../stores/vela.store';
 
@@ -44,17 +45,8 @@ export function InputBar() {
   };
 
   return (
-    <div
-      style={{
-        display:      'flex',
-        alignItems:   'flex-end',
-        gap:          '8px',
-        padding:      '12px 16px',
-        borderTop:    '1px solid var(--vx-color-border)',
-        background:   'var(--vx-color-surface)',
-      }}
-    >
-      <textarea
+    <div className="vx-vela-inputbar">
+      <Textarea
         ref={textareaRef}
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -62,40 +54,15 @@ export function InputBar() {
         placeholder={pendingConfirm ? '请先处理上方的确认请求…' : '输入消息… (Enter 发送，Shift+Enter 换行)'}
         disabled={isDisabled}
         rows={1}
-        style={{
-          flex:        1,
-          resize:      'none',
-          border:      '1px solid var(--vx-color-border)',
-          borderRadius: '8px',
-          padding:     '8px 12px',
-          fontSize:    '14px',
-          lineHeight:  '1.5',
-          outline:     'none',
-          maxHeight:   '120px',
-          overflowY:   'auto',
-          background:  isDisabled ? 'var(--vx-color-surface-muted)' : 'var(--vx-color-surface)',
-          color:       'var(--vx-color-text-primary)',
-          fontFamily:  'inherit',
-        }}
+        className="vx-vela-inputbar__textarea"
       />
-      <button
+      <Button
         onClick={() => void handleSend()}
         disabled={!text.trim() || isDisabled}
-        style={{
-          padding:      '8px 16px',
-          borderRadius: '8px',
-          border:       'none',
-          background:   !text.trim() || isDisabled ? 'var(--vx-color-surface-muted)' : 'var(--vx-color-primary)',
-          color:        !text.trim() || isDisabled ? 'var(--vx-color-text-disabled)' : 'var(--vx-color-text-inverse)',
-          fontSize:     '14px',
-          fontWeight:   600,
-          cursor:       !text.trim() || isDisabled ? 'not-allowed' : 'pointer',
-          whiteSpace:   'nowrap',
-          transition:   'background 0.15s',
-        }}
+        className="vx-vela-inputbar__send"
       >
         {isStreaming ? '…' : '发送'}
-      </button>
+      </Button>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Input } from "@vxture/design-system";
+import { Badge, Button, Checkbox, Input, NativeSelect, Textarea } from "@vxture/design-system";
 import { AdminBffError, fetchPaymentOperations, rejectPayment, verifyPayment } from "@/api/admin-bff";
 import type {
   OrderOfflinePaymentType,
@@ -198,14 +198,15 @@ function PageSizePicker({
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={value === option ? "is-active" : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -242,9 +243,9 @@ function PaymentRemarkDialog({
       >
         <header className="vx-dialog__header">
           <h2 className="vx-dialog__title">{title}</h2>
-          <button type="button" className="vx-dialog__close" onClick={onCancel} aria-label="关闭">
+          <Button variant="ghost" size="icon" className="vx-dialog__close" onClick={onCancel} aria-label="关闭">
             <Icon name="x" size="sm" fallback="placeholder" />
-          </button>
+          </Button>
         </header>
         <div className="vx-dialog__body">
           <p className="vx-dialog__desc">
@@ -254,7 +255,7 @@ function PaymentRemarkDialog({
           <label className="vx-dialog__label" htmlFor="vx-payment-remark">
             操作备注 <small>（必填，最少 4 字）</small>
           </label>
-          <textarea
+          <Textarea
             id="vx-payment-remark"
             className="vx-dialog__textarea"
             value={remark}
@@ -300,39 +301,40 @@ function PaymentActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
         className="vx-tenant-actions__trigger"
-        type="button"
+        variant="ghost"
+        size="icon"
         aria-label={`${payment.paymentNo} 收款操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
           {isPendingVerify ? (
             <>
-              <button
-                type="button"
+              <Button
+                variant="ghost"
                 role="menuitem"
                 onClick={() => { onClose(); onVerify(payment); }}
               >
                 <Icon name="check" size="xs" fallback="placeholder" />
                 核销确认
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
+                variant="ghost"
                 role="menuitem"
                 onClick={() => { onClose(); onReject(payment); }}
               >
                 <Icon name="x" size="xs" fallback="placeholder" />
                 驳回退回
-              </button>
+              </Button>
             </>
           ) : null}
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!payment.billId}
             onClick={() => {
@@ -343,9 +345,9 @@ function PaymentActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             账单详情
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!payment.subscriptionId}
             onClick={() => {
@@ -358,9 +360,9 @@ function PaymentActionsMenu({
           >
             <Icon name="table" size="xs" fallback="placeholder" />
             订单详情
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -369,9 +371,9 @@ function PaymentActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!payment.offlineEvidenceUrl}
             onClick={() => {
@@ -386,7 +388,7 @@ function PaymentActionsMenu({
           >
             <Icon name="key" size="xs" fallback="placeholder" />
             查看凭证
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -419,17 +421,10 @@ function PaymentListRows({
   onReject: (payment: PaymentOperationRecord) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = payments.filter((payment) =>
     selectedPaymentIds.has(payment.id),
   ).length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedOnPage > 0 && selectedOnPage < payments.length;
-    }
-  }, [payments.length, selectedOnPage]);
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < payments.length;
 
   return (
     <div
@@ -439,12 +434,10 @@ function PaymentListRows({
     >
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPagePartiallySelected ? "indeterminate" : isPageSelected}
+            onCheckedChange={(checked) => onTogglePage(checked === true)}
             aria-label="选择当前页收款"
           />
         </span>
@@ -481,13 +474,10 @@ function PaymentListRows({
             }}
           >
             <span className="vx-payment-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onChange={(event) =>
-                  onTogglePayment(payment.id, event.target.checked)
-                }
+                onCheckedChange={(checked) => onTogglePayment(payment.id, checked === true)}
                 aria-label={`选择收款 ${payment.paymentNo}`}
               />
             </span>
@@ -496,13 +486,13 @@ function PaymentListRows({
             </span>
             <span className="vx-payment-row__payment">
               <span className="vx-tenant-directory-row__title-line">
-                <button
-                  type="button"
+                <Button
+                  variant="link"
                   className="vx-model-name-button"
                   onClick={() => router.push(paymentTargetHref(payment))}
                 >
                   {payment.paymentNo}
-                </button>
+                </Button>
               </span>
               <small>
                 {paySourceLabel(payment.paySource)} ·{" "}
@@ -1020,8 +1010,8 @@ export function PaymentsPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select
-              className="vx-input vx-tenant-select"
+            <NativeSelect
+              className="vx-tenant-select"
               value={paymentStatusFilter}
               onChange={(event) =>
                 setPaymentStatusFilter(
@@ -1038,9 +1028,9 @@ export function PaymentsPage() {
               <option value="failed">支付失败</option>
               <option value="closed">已关闭</option>
               <option value="refunding">退款中</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={paySourceFilter}
               onChange={(event) =>
                 setPaySourceFilter(event.target.value as PaySourceFilter)
@@ -1051,9 +1041,9 @@ export function PaymentsPage() {
               <option value="offline">线下</option>
               <option value="online">线上</option>
               <option value="none">无</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={reconciliationFilter}
               onChange={(event) =>
                 setReconciliationFilter(
@@ -1071,9 +1061,9 @@ export function PaymentsPage() {
               <option value="bill_cancelled">账单作废</option>
               <option value="failed">支付异常</option>
               <option value="unlinked">未关联</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={offlineTypeFilter}
               onChange={(event) =>
                 setOfflineTypeFilter(event.target.value as OfflineTypeFilter)
@@ -1086,7 +1076,7 @@ export function PaymentsPage() {
               <option value="other">其他线下</option>
               <option value="online">线上</option>
               <option value="none">无</option>
-            </select>
+            </NativeSelect>
           </div>
         </section>
 

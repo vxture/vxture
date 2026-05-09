@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from '@vxture/design-system';
 
 type SessionState =
   | { status: 'loading' }
@@ -104,58 +105,72 @@ export function RuyinHome() {
   const active = session.status === 'active';
 
   return (
-    <main className="page-shell">
-      <section className="panel">
-        <div className="brand-row">
-          <span className="brand-mark">R</span>
-          <div>
-            <h1>Ruyin</h1>
-            <p>Tenant agent workspace</p>
-          </div>
-        </div>
-
-        <div className={`status-card ${active ? 'is-active' : ''}`}>
-          <span className="status-dot" />
-          <div>
-            <span className="label">登录状态</span>
-            <strong>{statusText}</strong>
-          </div>
-        </div>
-
-        {active ? (
-          <div className="user-card">
+    <main className="grid min-h-screen place-items-center bg-vx-background px-6 py-10 text-vx-text-primary">
+      <Card className="w-full max-w-xl border-vx-border bg-vx-surface shadow-lg">
+        <CardHeader className="gap-4">
+          <div className="flex items-center gap-4">
+            <span className="grid h-11 w-11 place-items-center rounded-lg bg-vx-primary text-lg font-bold text-vx-text-inverse">
+              R
+            </span>
             <div>
-              <span className="label">Account</span>
-              <strong>{session.user.email || session.user.id}</strong>
-            </div>
-            <div>
-              <span className="label">Tenant</span>
-              <strong>{session.user.tenantId || '-'}</strong>
-            </div>
-            <div>
-              <span className="label">Role</span>
-              <strong>{session.user.role || 'member'}</strong>
+              <CardTitle className="text-2xl">Ruyin</CardTitle>
+              <CardDescription>Tenant agent workspace</CardDescription>
             </div>
           </div>
-        ) : null}
+        </CardHeader>
 
-        <div className="actions">
+        <CardContent className="grid gap-5">
+          <section
+            className={
+              active
+                ? 'flex items-center justify-between gap-4 rounded-lg border border-vx-success-border bg-vx-success-surface p-4'
+                : 'flex items-center justify-between gap-4 rounded-lg border border-vx-border bg-vx-surface-muted p-4'
+            }
+          >
+            <div>
+              <span className="block text-xs font-semibold uppercase tracking-normal text-vx-text-muted">登录状态</span>
+              <strong className="mt-1 block text-xl text-vx-text-primary">{statusText}</strong>
+            </div>
+            <Badge variant={active ? 'default' : 'secondary'}>{active ? 'Active' : 'Guest'}</Badge>
+          </section>
+
           {active ? (
-            <button type="button" className="secondary-button" disabled={busy} onClick={handleLogout}>
-              {busy ? '处理中' : '登出'}
-            </button>
-          ) : (
-            <button type="button" className="primary-button" disabled={busy} onClick={handleLogin}>
-              {busy ? '同步中' : '登录'}
-            </button>
-          )}
-          <button type="button" className="ghost-button" disabled={busy} onClick={() => refreshSession()}>
-            刷新状态
-          </button>
-        </div>
+            <section className="grid gap-3 rounded-lg border border-vx-border bg-vx-surface-muted p-4">
+              <div>
+                <span className="block text-xs font-semibold uppercase tracking-normal text-vx-text-muted">Account</span>
+                <strong className="mt-1 block break-words text-vx-text-primary">
+                  {session.user.email || session.user.id}
+                </strong>
+              </div>
+              <div>
+                <span className="block text-xs font-semibold uppercase tracking-normal text-vx-text-muted">Tenant</span>
+                <strong className="mt-1 block text-vx-text-primary">{session.user.tenantId || '-'}</strong>
+              </div>
+              <div>
+                <span className="block text-xs font-semibold uppercase tracking-normal text-vx-text-muted">Role</span>
+                <strong className="mt-1 block text-vx-text-primary">{session.user.role || 'member'}</strong>
+              </div>
+            </section>
+          ) : null}
 
-        {message ? <p className="message">{message}</p> : null}
-      </section>
+          <div className="flex flex-wrap gap-3">
+            {active ? (
+              <Button type="button" variant="secondary" disabled={busy} onClick={handleLogout}>
+                {busy ? '处理中' : '登出'}
+              </Button>
+            ) : (
+              <Button type="button" disabled={busy} onClick={handleLogin}>
+                {busy ? '同步中' : '登录'}
+              </Button>
+            )}
+            <Button type="button" variant="outline" disabled={busy} onClick={() => refreshSession()}>
+              刷新状态
+            </Button>
+          </div>
+
+          {message ? <p className="text-sm text-vx-text-muted">{message}</p> : null}
+        </CardContent>
+      </Card>
     </main>
   );
 }

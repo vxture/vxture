@@ -2,7 +2,7 @@
 
 import { Icon } from '@vxture/design-system';
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { Button, Badge } from '@vxture/design-system';
+import { Badge, Button, Textarea } from '@vxture/design-system';
 import { useTranslations } from 'next-intl';
 
 const ASSISTANT_BAR_HEIGHT = 44;
@@ -192,8 +192,8 @@ export function AssistantPanel({
       aria-label={t('title')}
     >
       {!fullscreen ? (
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           className={`vx-assistant-panel__resize-edge ${dragHandle === 'width' ? 'vx-assistant-panel__resize-edge--active' : ''}`}
           aria-label={t('resizeWidth')}
           onPointerDown={handleDividerPointerDown('width')}
@@ -211,8 +211,9 @@ export function AssistantPanel({
           <h2>{t('title')}</h2>
 
           <div className="vx-assistant-panel__bar-actions">
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               className="vx-shell-icon-button vx-shell-icon-button--toolbar"
               aria-label={fullscreen ? t('exitFullscreen') : t('enterFullscreen')}
               title={fullscreen ? t('exitFullscreen') : t('enterFullscreen')}
@@ -221,17 +222,18 @@ export function AssistantPanel({
               }}
             >
               <Icon name={fullscreen ? 'minimize' : 'maximize'} size="sm" fallback="maximize" />
-            </button>
+            </Button>
 
-            <button
-              type="button"
+            <Button
+              variant="ghost"
+              size="icon"
               className="vx-shell-icon-button vx-shell-icon-button--toolbar"
               aria-label={t('close')}
               title={t('close')}
               onClick={onClose}
             >
               <Icon name="x" size="sm" fallback="x" />
-            </button>
+            </Button>
           </div>
         </header>
 
@@ -248,15 +250,15 @@ export function AssistantPanel({
                   <h3>{t('suggestions.title')}</h3>
                 </div>
                 <div className="vx-assistant-actions">
-                  <button type="button" className="vx-assistant-action" onClick={() => insertPrompt(summaryPrompt)}>
+                  <Button variant="ghost" className="vx-assistant-action" onClick={() => insertPrompt(summaryPrompt)}>
                     {t('suggestions.summary')}
-                  </button>
-                  <button type="button" className="vx-assistant-action" onClick={() => insertPrompt(risksPrompt)}>
+                  </Button>
+                  <Button variant="ghost" className="vx-assistant-action" onClick={() => insertPrompt(risksPrompt)}>
                     {t('suggestions.risks')}
-                  </button>
-                  <button type="button" className="vx-assistant-action" onClick={() => insertPrompt(nextPrompt)}>
+                  </Button>
+                  <Button variant="ghost" className="vx-assistant-action" onClick={() => insertPrompt(nextPrompt)}>
                     {t('suggestions.next')}
-                  </button>
+                  </Button>
                 </div>
               </section>
 
@@ -273,26 +275,26 @@ export function AssistantPanel({
               <section className="vx-assistant-block">
                 <h3>{t('drafts.title')}</h3>
                 <div className="vx-assistant-drafts">
-                  <button type="button" className="vx-assistant-draft" onClick={() => insertPrompt(draftOnePrompt)}>
+                  <Button variant="ghost" className="vx-assistant-draft" onClick={() => insertPrompt(draftOnePrompt)}>
                     {t('drafts.one')}
-                  </button>
-                  <button type="button" className="vx-assistant-draft" onClick={() => insertPrompt(draftTwoPrompt)}>
+                  </Button>
+                  <Button variant="ghost" className="vx-assistant-draft" onClick={() => insertPrompt(draftTwoPrompt)}>
                     {t('drafts.two')}
-                  </button>
+                  </Button>
                 </div>
               </section>
             </div>
           </div>
         </section>
 
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           className={`vx-assistant-panel__divider ${dragHandle === 'bottom' ? 'vx-assistant-panel__divider--active' : ''}`}
           aria-label={t('resizeBottom')}
           onPointerDown={handleDividerPointerDown('bottom')}
         >
           <span aria-hidden="true" />
-        </button>
+        </Button>
 
         <section className="vx-assistant-panel__composer">
           <div className="vx-assistant-panel__composer-head">
@@ -300,7 +302,7 @@ export function AssistantPanel({
             <Badge className="vx-badge-neutral">{routeLabel}</Badge>
           </div>
 
-          <textarea
+          <Textarea
             className="vx-assistant-panel__composer-input"
             value={draft}
             placeholder={t('composer.placeholder', { page: routeLabel })}

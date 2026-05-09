@@ -17,6 +17,8 @@ export * from "./avatar";
 export * from "./card";
 export * from "./separator";
 export * from "./input";
+export * from "./native-select";
+export * from "./textarea";
 export * from "./label";
 export * from "./checkbox";
 export * from "./select";

@@ -124,17 +124,20 @@ Recommended import order for module pages:
 
 1. `@/layout`
 2. `@/modules/shared`
-3. `@/components/ui/primitives`
-4. module-local data and helpers
+3. `@vxture/design-system`
+4. semantic business components
+5. module-local data and helpers
 
 Recommended examples:
 
 ```ts
 import { DashboardSplit, PageSection, SummaryStrip } from '@/layout';
 import { DetailDrawer, EmptyState, PageHeader, TableToolbar } from '@/modules/shared';
+import { Button, Input, Icon } from '@vxture/design-system';
 ```
 
 Avoid importing deep shell files directly from module pages when a barrel export exists.
+Do not create or import app-local `components/ui` or `components/primitives`; reusable primitives must be added to `@vxture/design-system` first.
 
 ---
 

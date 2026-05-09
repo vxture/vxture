@@ -16,7 +16,7 @@ import { VelaChat } from '../components/VelaChat';
  */
 export default function VelaPage() {
   return (
-    <div style={{ height: '100vh', display: 'flex', background: 'var(--vx-color-background)' }}>
+    <div className="vx-vela-preview">
       <VelaChat surface="admin" position="sidebar" />
     </div>
   );

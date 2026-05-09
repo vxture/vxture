@@ -14,6 +14,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@vxture/design-system';
 import { AuthFooter, AuthHeader } from '@/components/auth/AuthChrome';
 import { useRouter } from '@/lib/i18n/navigation';
 import { initTenant } from '@/api/auth.api';
@@ -54,10 +55,7 @@ export function VerifyForm({ className = '' }: VerifyFormProps) {
   };
 
   return (
-    <section
-      className='vx-auth-page vx-verify-page'
-      style={{ '--vx-auth-bg': 'url(/images/login-bg-light.jpg)' } as React.CSSProperties}
-    >
+    <section className='vx-auth-page vx-auth-page--default-bg vx-verify-page'>
       <AuthHeader />
 
       <main className={`vx-signup-main ${className}`}>
@@ -68,14 +66,14 @@ export function VerifyForm({ className = '' }: VerifyFormProps) {
           </div>
 
           {error && (
-            <p role='alert' className='vx-form-error' style={{ marginBottom: '1rem', textAlign: 'center' }}>
+            <p role='alert' className='vx-form-error vx-form-error--centered'>
               {error}
             </p>
           )}
 
           <div className='vx-verify-choices'>
-            <button
-              type='button'
+            <Button
+              variant='ghost'
               className='vx-verify-choice'
               disabled={selecting !== null}
               onClick={() => handleChoose('individual')}
@@ -83,10 +81,10 @@ export function VerifyForm({ className = '' }: VerifyFormProps) {
               <span className='vx-verify-choice__icon' aria-hidden='true'>👤</span>
               <strong>个人使用</strong>
               <span>个人开发者、独立创作者、自由职业者</span>
-            </button>
+            </Button>
 
-            <button
-              type='button'
+            <Button
+              variant='ghost'
               className='vx-verify-choice'
               disabled={selecting !== null}
               onClick={() => handleChoose('organization')}
@@ -94,17 +92,17 @@ export function VerifyForm({ className = '' }: VerifyFormProps) {
               <span className='vx-verify-choice__icon' aria-hidden='true'>🏢</span>
               <strong>企业 / 团队使用</strong>
               <span>公司、机构、政府单位、研究团队</span>
-            </button>
+            </Button>
           </div>
 
-          <button
-            type='button'
+          <Button
+            variant='ghost'
             className='vx-verify-skip'
             disabled={selecting !== null}
             onClick={handleSkip}
           >
             跳过，稍后再设置
-          </button>
+          </Button>
         </div>
       </main>
 

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Input } from "@vxture/design-system";
+import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import { fetchBillingRecords, syncOfflineInvoice } from "@/api/admin-bff";
 import type {
   BillingBillStatus,
@@ -251,14 +251,15 @@ function PageSizePicker({
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={value === option ? "is-active" : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -286,19 +287,20 @@ function BillingActionsMenu({
       onClick={(event) => event.stopPropagation()}
       onMouseLeave={onClose}
     >
-      <button
+      <Button
         className="vx-tenant-actions__trigger"
-        type="button"
+        variant="ghost"
+        size="icon"
         aria-label={`${bill.billNo} 账单操作`}
         title="操作"
         onClick={onToggle}
       >
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {open ? (
         <div className="vx-tenant-actions__menu" role="menu">
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -307,9 +309,9 @@ function BillingActionsMenu({
           >
             <Icon name="arrow-right" size="xs" fallback="placeholder" />
             账单详情
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -318,9 +320,9 @@ function BillingActionsMenu({
           >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             查看租户
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!bill.subscriptionId}
             onClick={() => {
@@ -333,9 +335,9 @@ function BillingActionsMenu({
           >
             <Icon name="star" size="xs" fallback="placeholder" />
             查看订阅
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!bill.subscriptionId}
             onClick={() => {
@@ -346,9 +348,9 @@ function BillingActionsMenu({
           >
             <Icon name="table" size="xs" fallback="placeholder" />
             查看订单
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             disabled={!canSyncOfflineInvoice(bill)}
             title={offlineInvoiceDisabledReason(bill) ?? undefined}
@@ -359,7 +361,7 @@ function BillingActionsMenu({
           >
             <Icon name="key" size="xs" fallback="placeholder" />
             登记发票
-          </button>
+          </Button>
         </div>
       ) : null}
     </div>
@@ -390,17 +392,10 @@ function BillingListRows({
   onTogglePage: (checked: boolean) => void;
 }) {
   const router = useRouter();
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = bills.filter((bill) =>
     selectedBillIds.has(bill.id),
   ).length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate =
-        selectedOnPage > 0 && selectedOnPage < bills.length;
-    }
-  }, [bills.length, selectedOnPage]);
+  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < bills.length;
 
   return (
     <div
@@ -410,12 +405,10 @@ function BillingListRows({
     >
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPagePartiallySelected ? "indeterminate" : isPageSelected}
+            onCheckedChange={(checked) => onTogglePage(checked === true)}
             aria-label="选择当前页账单"
           />
         </span>
@@ -453,13 +446,10 @@ function BillingListRows({
             }}
           >
             <span className="vx-billing-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onChange={(event) =>
-                  onToggleBill(bill.id, event.target.checked)
-                }
+                onCheckedChange={(checked) => onToggleBill(bill.id, checked === true)}
                 aria-label={`选择账单 ${bill.billNo}`}
               />
             </span>
@@ -468,15 +458,15 @@ function BillingListRows({
             </span>
             <span className="vx-billing-row__bill">
               <span className="vx-tenant-directory-row__title-line">
-                <button
-                  type="button"
+                <Button
+                  variant="link"
                   className="vx-model-name-button"
                   onClick={() =>
                     router.push(`/billing/${encodeURIComponent(bill.id)}`)
                   }
                 >
                   {bill.billNo}
-                </button>
+                </Button>
               </span>
               <small>
                 {cycleLabel(bill.billCycle)} · {formatDate(bill.cycleStartDate)}{" "}
@@ -1015,8 +1005,8 @@ export function BillingPage() {
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <select
-              className="vx-input vx-tenant-select"
+            <NativeSelect
+              className="vx-tenant-select"
               value={billStatusFilter}
               onChange={(event) =>
                 setBillStatusFilter(event.target.value as BillStatusFilter)
@@ -1030,9 +1020,9 @@ export function BillingPage() {
               <option value="paid">已结清</option>
               <option value="overdue">逾期</option>
               <option value="cancelled">已取消</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={invoiceStatusFilter}
               onChange={(event) =>
                 setInvoiceStatusFilter(
@@ -1050,9 +1040,9 @@ export function BillingPage() {
               <option value="finished">已完成</option>
               <option value="rejected">已驳回</option>
               <option value="red">已红冲</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={billTypeFilter}
               onChange={(event) =>
                 setBillTypeFilter(event.target.value as BillTypeFilter)
@@ -1064,9 +1054,9 @@ export function BillingPage() {
               <option value="adjust">调整单</option>
               <option value="supplement">补录单</option>
               <option value="prepaid">预付费</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={exceptionFilter}
               onChange={(event) =>
                 setExceptionFilter(event.target.value as BillingExceptionFilter)
@@ -1081,9 +1071,9 @@ export function BillingPage() {
               <option value="supplement">补录单</option>
               <option value="cancelled">已作废</option>
               <option value="invoice_exception">发票异常</option>
-            </select>
-            <select
-              className="vx-input vx-tenant-select"
+            </NativeSelect>
+            <NativeSelect
+              className="vx-tenant-select"
               value={tierFilter}
               onChange={(event) =>
                 setTierFilter(event.target.value as TierFilter)
@@ -1095,7 +1085,7 @@ export function BillingPage() {
               <option value="pro">Pro</option>
               <option value="enterprise">Enterprise</option>
               <option value="other">其他</option>
-            </select>
+            </NativeSelect>
           </div>
         </section>
 

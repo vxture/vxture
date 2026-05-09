@@ -423,10 +423,10 @@ layout/       ← 全局布局（Header、Footer、Sidebar）
 marketing/    ← 营销页区块组件
 cases/        ← 🆕 案例页专属组件
 auth/         ← 认证页专属组件
-ui/           ← 应用级 UI 扩展（对 @vxture/design-system 的业务封装）
+feedback/     ← 通知、反馈等语义业务组件
 ```
 
-`ui/` 是对 `@vxture/design-system` 的业务封装，不重复实现基础组件。
+应用层不再建立 `ui/` 或 `primitives/` 基础组件目录。基础控件、可复用布局、外壳、认证模板必须优先使用 `@vxture/design-system`；如果 DS 能力不足，先补充 DS，再在应用中组合使用。
 
 ### `stores/` — 只存 UI 状态
 

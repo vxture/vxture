@@ -1,4 +1,4 @@
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 
 export type ViewModeSwitchValue = 'list' | 'cards';
 
@@ -13,24 +13,26 @@ export function ViewModeSwitch({
 }) {
   return (
     <div className="vx-view-mode-switch" role="group" aria-label={ariaLabel}>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="icon"
         className={value === 'list' ? 'is-active' : undefined}
         onClick={() => onChange('list')}
         aria-label="列表"
         title="列表"
       >
         <Icon name="list" size="lg" fallback="placeholder" />
-      </button>
-      <button
-        type="button"
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
         className={value === 'cards' ? 'is-active' : undefined}
         onClick={() => onChange('cards')}
         aria-label="卡片"
         title="卡片"
       >
         <Icon name="squares-four" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
     </div>
   );
 }

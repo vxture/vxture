@@ -5,7 +5,7 @@ import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input } from '@vxture/design-system';
+import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchPlatformPermissions, fetchPlatformRoles, replacePlatformRolePermissions } from '@/api/admin-bff';
 import type { PlatformAdminPermissionRecord, PlatformPermissionType, PlatformRoleRecord } from '@/entities/console';
 import { useConsoleTranslations } from '@/lib/console-intl';
@@ -181,14 +181,15 @@ function AdminRolePageSizePicker({ value, onChange }: { value: PageSize; onChang
     <div className="vx-tenant-page-size" aria-label="每页条数">
       {PAGE_SIZE_OPTIONS.map((option) => (
         <span key={option}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             className={value === option ? 'is-active' : undefined}
             onClick={() => onChange(option)}
             aria-label={`每页 ${option} 条`}
           >
             {option}
-          </button>
+          </Button>
         </span>
       ))}
     </div>
@@ -258,8 +259,8 @@ function AdminRoleActionsMenu({
           role="menu"
           style={{ left: menuPosition.left, top: menuPosition.top }}
         >
-          <button
-            type="button"
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -268,9 +269,9 @@ function AdminRoleActionsMenu({
           >
             <Icon name="key" size="xs" fallback="placeholder" />
             角色授权
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
+            variant="ghost"
             role="menuitem"
             onClick={() => {
               onClose();
@@ -279,19 +280,19 @@ function AdminRoleActionsMenu({
           >
             <Icon name="table" size="xs" fallback="placeholder" />
             权限详情
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="edit" size="xs" fallback="placeholder" />
             编辑角色
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name="copy" size="xs" fallback="placeholder" />
             复制角色
-          </button>
-          <button type="button" role="menuitem" disabled>
+          </Button>
+          <Button variant="ghost" role="menuitem" disabled>
             <Icon name={roleStatusCode(role) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
             {roleStatusCode(role) === 'active' ? '停用角色' : '启用角色'}
-          </button>
+          </Button>
         </div>,
         document.body,
       )
@@ -299,9 +300,9 @@ function AdminRoleActionsMenu({
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <button ref={triggerRef} className="vx-tenant-actions__trigger" type="button" aria-label={`${roleLabel} 操作`} title="操作" onClick={onToggle}>
+      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${roleLabel} 操作`} title="操作" onClick={onToggle}>
         <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </button>
+      </Button>
       {menu}
     </div>
   );
@@ -347,9 +348,9 @@ function AdminRolePermissionDialog({
             <h2 id="admin-role-permission-dialog-title">{roleLabel}</h2>
             <p>{role.roleCode}</p>
           </div>
-          <button type="button" className="vx-admin-role-permission-dialog__close" aria-label="关闭权限详情" onClick={onClose}>
+          <Button variant="ghost" size="icon" className="vx-admin-role-permission-dialog__close" aria-label="关闭权限详情" onClick={onClose}>
             <Icon name="x" size="sm" fallback="placeholder" />
-          </button>
+          </Button>
         </header>
         <div className="vx-admin-role-permission-dialog__summary">
           <Badge className="vx-tenant-pill vx-admin-role-pill--menu">菜单 {formatNumber(role.menuPermissionCount)}</Badge>
@@ -393,29 +394,20 @@ function PermissionAuthorizationNode({
   permissionById: Map<string, PlatformAdminPermissionRecord>;
   onToggle: (node: PermissionTreeNode, checked: boolean) => void;
 }) {
-  const checkboxRef = useRef<HTMLInputElement | null>(null);
   const descendantIds = useMemo(() => collectDescendantPermissionIds(node), [node]);
   const selectedDescendantCount = descendantIds.filter((permissionId) => selectedIds.has(permissionId)).length;
   const checked = selectedIds.has(node.permission.id);
   const indeterminate = selectedDescendantCount > 0 && selectedDescendantCount < descendantIds.length;
   const parent = node.permission.parentId ? permissionById.get(node.permission.parentId) : null;
 
-  useEffect(() => {
-    if (checkboxRef.current) {
-      checkboxRef.current.indeterminate = indeterminate;
-    }
-  }, [indeterminate]);
-
   return (
     <article className="vx-admin-role-auth-node" style={{ '--permission-depth': node.depth } as CSSProperties}>
       <label>
-        <input
-          ref={checkboxRef}
-          type="checkbox"
+        <Checkbox
           className="vx-model-select-checkbox"
-          checked={checked}
+          checked={indeterminate ? 'indeterminate' : checked}
           disabled={!node.permission.status}
-          onChange={(event) => onToggle(node, event.target.checked)}
+          onCheckedChange={(nextChecked) => onToggle(node, nextChecked === true)}
         />
         <span className="vx-admin-role-auth-node__main">
           <strong>{permissionLabel(node.permission)}</strong>
@@ -529,9 +521,9 @@ function AdminRoleAuthorizationDialog({
             <h2 id="admin-role-auth-dialog-title">角色授权</h2>
             <p>{roleLabel} / {role.roleCode}</p>
           </div>
-          <button type="button" className="vx-admin-role-permission-dialog__close" aria-label="关闭角色授权" disabled={saving} onClick={onClose}>
+          <Button variant="ghost" size="icon" className="vx-admin-role-permission-dialog__close" aria-label="关闭角色授权" disabled={saving} onClick={onClose}>
             <Icon name="x" size="sm" fallback="placeholder" />
-          </button>
+          </Button>
         </header>
         <div className="vx-admin-role-permission-dialog__summary">
           <Badge className="vx-tenant-pill vx-admin-role-pill--menu">菜单 {formatNumber(selectedMenuCount)}</Badge>
@@ -604,26 +596,17 @@ function AdminRoleListRows({
   onOpenPermissions: (role: PlatformRoleRecord) => void;
   onOpenAuthorization: (role: PlatformRoleRecord) => void;
 }) {
-  const pageSelectRef = useRef<HTMLInputElement | null>(null);
   const selectedOnPage = roles.filter((role) => selectedRoleIds.has(role.id)).length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < roles.length;
-
-  useEffect(() => {
-    if (pageSelectRef.current) {
-      pageSelectRef.current.indeterminate = isPagePartiallySelected;
-    }
-  }, [isPagePartiallySelected]);
 
   return (
     <div className="vx-tenant-directory-list vx-admin-role-directory-list" role="region" aria-label="平台角色清单">
       <div className="vx-tenant-directory-list__header">
         <span>
-          <input
-            ref={pageSelectRef}
-            type="checkbox"
+          <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected}
-            onChange={(event) => onTogglePage(event.target.checked)}
+            checked={isPagePartiallySelected ? 'indeterminate' : isPageSelected}
+            onCheckedChange={(checked) => onTogglePage(checked === true)}
             aria-label="选择当前页角色"
           />
         </span>
@@ -654,12 +637,11 @@ function AdminRoleListRows({
             }}
           >
             <span className="vx-admin-role-operation-row__select">
-              <input
-                type="checkbox"
+              <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selectedRoleIds.has(role.id)}
                 onClick={(event) => event.stopPropagation()}
-                onChange={(event) => onToggleRole(role.id, event.target.checked)}
+                onCheckedChange={(checked) => onToggleRole(role.id, checked === true)}
                 aria-label={`选择 ${roleLabel}`}
               />
             </span>
@@ -668,9 +650,9 @@ function AdminRoleListRows({
               <Icon name="role" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <button type="button" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                  <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
                     {roleLabel}
-                  </button>
+                  </Button>
                   {role.isSystem ? <Badge className="vx-tenant-pill vx-tenant-pill--system">系统</Badge> : null}
                 </span>
                 <small>{role.roleCode}</small>
@@ -982,24 +964,24 @@ export function AdminRolesPage() {
           />
           <Button variant="outline" onClick={handleReset}>重置</Button>
           <div className="vx-tenant-filters">
-            <select className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="角色状态">
+            <NativeSelect className="vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="角色状态">
               <option value="all">全部状态</option>
               <option value="active">启用</option>
               <option value="disabled">停用</option>
               <option value="archived">归档</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={roleKindFilter} onChange={(event) => setRoleKindFilter(event.target.value as RoleKindFilter)} aria-label="角色类型">
+            </NativeSelect>
+            <NativeSelect className="vx-tenant-select" value={roleKindFilter} onChange={(event) => setRoleKindFilter(event.target.value as RoleKindFilter)} aria-label="角色类型">
               <option value="all">全部类型</option>
               <option value="system">系统角色</option>
               <option value="custom">自定义角色</option>
-            </select>
-            <select className="vx-input vx-tenant-select" value={permissionFilter} onChange={(event) => setPermissionFilter(event.target.value as PermissionFilter)} aria-label="权限类型">
+            </NativeSelect>
+            <NativeSelect className="vx-tenant-select" value={permissionFilter} onChange={(event) => setPermissionFilter(event.target.value as PermissionFilter)} aria-label="权限类型">
               <option value="all">全部权限</option>
               <option value="MENU">菜单</option>
               <option value="BUTTON">按钮</option>
               <option value="API">接口</option>
               <option value="empty">未授权</option>
-            </select>
+            </NativeSelect>
           </div>
           <ActionButton variant="outline" icon="plus" disabled>
             新建角色

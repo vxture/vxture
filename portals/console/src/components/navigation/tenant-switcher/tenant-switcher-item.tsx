@@ -1,6 +1,6 @@
 'use client';
 
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import { Avatar, AvatarFallback } from '@vxture/design-system';
 import type { TenantListItem } from '@/features/tenant';
 
@@ -20,8 +20,8 @@ export function TenantSwitcherItem({
   const typeLabel = tenant.type === 'personal' ? 'Personal' : 'Organization';
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
       className={
         tenant.isCurrent
           ? 'vx-tenant-switcher__item vx-tenant-switcher__item--current'
@@ -47,6 +47,6 @@ export function TenantSwitcherItem({
           <Icon name="check" size="xs" fallback="check" />
         </span>
       ) : null}
-    </button>
+    </Button>
   );
 }

@@ -11,7 +11,7 @@
  */
 
 export const shadow = {
-  sm: "0 1px 2px rgba(0,0,0,0.05)",
-  md: "0 4px 6px rgba(0,0,0,0.1)",
-  lg: "0 10px 15px rgba(0,0,0,0.15)",
+  sm: "var(--vx-shadow-sm)",
+  md: "var(--vx-shadow-md)",
+  lg: "var(--vx-shadow-lg)",
 } as const;

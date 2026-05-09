@@ -86,7 +86,7 @@ export default function CTASection({ id, name = 'CTA' }: CTASectionProps) {
                 {action.variant === 'primary' && (
                   <Icon
                     name='arrow-right'
-                    className='w-5 h-5 group-hover:tranvx-gray-x-1 transition-transform duration-300'
+                    className='w-5 h-5 group-hover:translate-x-1 transition-transform duration-300'
                   />
                 )}
               </span>

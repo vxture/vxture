@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Button } from '@vxture/design-system';
+import { Button, Icon, Input, Textarea } from '@vxture/design-system';
 import type {
   BillingInvoiceReceiptAction,
   BillingInvoiceReceiptRecord,
@@ -115,21 +114,21 @@ export function InvoiceReceiptActionDialog({
           <div className="vx-invoice-receipt-action-dialog__grid">
             <label className="vx-subscription-action-dialog__field">
               <span>快递公司{requiresShipping ? '' : '（可选）'}</span>
-              <input value={expressCompany} onChange={(event) => setExpressCompany(event.target.value)} />
+              <Input value={expressCompany} onChange={(event) => setExpressCompany(event.target.value)} />
             </label>
             <label className="vx-subscription-action-dialog__field">
               <span>快递单号{requiresShipping ? '' : '（可选）'}</span>
-              <input value={expressNo} onChange={(event) => setExpressNo(event.target.value)} />
+              <Input value={expressNo} onChange={(event) => setExpressNo(event.target.value)} />
             </label>
             <label className="vx-subscription-action-dialog__field">
               <span>寄送时间{requiresShipping ? '' : '（可选）'}</span>
-              <input type="datetime-local" value={sendAt} onChange={(event) => setSendAt(event.target.value)} />
+              <Input type="datetime-local" value={sendAt} onChange={(event) => setSendAt(event.target.value)} />
             </label>
           </div>
         ) : null}
         <label className="vx-subscription-action-dialog__field">
           <span>{action === 'red' ? '红冲/作废说明' : '操作说明'}</span>
-          <textarea
+          <Textarea
             value={statusRemark}
             onChange={(event) => setStatusRemark(event.target.value)}
             placeholder={action === 'red' ? '例如：财务系统已完成红冲，按线下结果同步登记。' : '例如：财务已完成线下处理，按结果同步登记。'}

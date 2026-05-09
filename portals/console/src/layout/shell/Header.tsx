@@ -11,7 +11,7 @@ import {
   ShellThemeToggle,
   useTheme,
 } from '@vxture/design-system';
-import { Input } from '@vxture/design-system';
+import { Button, Input } from '@vxture/design-system';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
 import { usePortalEntry } from '@/contexts/PortalEntryContext';
 import { UserPanel } from './UserPanel';
@@ -72,8 +72,9 @@ export function Header({
     <header className="vx-shell-header">
       <div className="vx-shell-header__left">
         <div className="vx-shell-launcher" ref={launcherRef}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             className="vx-shell-icon-button vx-shell-icon-button--launcher"
             aria-label={t('featureOverview')}
             aria-haspopup="dialog"
@@ -81,7 +82,7 @@ export function Header({
             onClick={() => setLauncherOpen((open) => !open)}
           >
             <Icon name="app-grid" size="lg" fallback="placeholder" />
-          </button>
+          </Button>
 
           {launcherOpen ? (
             <div className="vx-shell-launcher__panel" role="dialog" aria-label={t('featureOverview')}>
@@ -140,8 +141,8 @@ export function Header({
       </label>
 
       <div className="vx-shell-header__actions">
-        <button
-          type="button"
+        <Button
+          variant="ghost"
           className={`vx-shell-agent-button ${assistantOpen ? 'vx-shell-agent-button--active' : ''}`}
           aria-pressed={assistantEnabled ? assistantOpen : undefined}
           aria-expanded={assistantEnabled ? assistantOpen : undefined}
@@ -159,7 +160,7 @@ export function Header({
             height={32}
             unoptimized
           />
-        </button>
+        </Button>
 
         <div className="vx-shell-header__action-group" role="group" aria-label={t('quickPreferences')}>
           <ShellThemeToggle
@@ -194,23 +195,25 @@ export function Header({
         </div>
 
         <div className="vx-shell-header__action-group" role="group" aria-label={t('workspaceActions')}>
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
             aria-label={t('help')}
             title={t('help')}
           >
             <Icon name="help" size="sm" fallback="placeholder" />
-          </button>
+          </Button>
 
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="icon"
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
             aria-label={t('notifications')}
             title={t('notifications')}
           >
             <Icon name="bell" size="sm" fallback="placeholder" />
-          </button>
+          </Button>
 
           <Link
             href="/settings"

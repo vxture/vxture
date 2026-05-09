@@ -36,25 +36,20 @@ loadRootEnv();
 
 const internalAliases = {
   '@vxture/shared': join(__dirname, '../../packages/shared/shared/src'),
-  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/dist/index.mjs'),
+  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/src/client.ts'),
   '@vxture/platform-browser': join(__dirname, '../../packages/platform/browser/src'),
 };
 
 const turboAliases = {
   '@vxture/shared': '../../packages/shared/shared/src',
-  '@vxture/design-system': '../../packages/design/design-system/dist/index.mjs',
+  '@vxture/design-system': '../../packages/design/design-system/src/client.ts',
   '@vxture/platform-browser': '../../packages/platform/browser/src',
 };
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  transpilePackages: ['@vxture/design-system'],
   experimental: {
     webpackBuildWorker: false,
   },

@@ -10,13 +10,13 @@
 :where(.vx-btn) {
   display: inline-flex;
   align-items: center;
-  gap: 0.56rem;
+  gap: var(--vx-component-metric-056r);
   justify-content: center;
-  min-height: 2.25rem;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  padding: 0.56rem 0.88rem;
-  font-size: 0.84rem;
+  min-height: var(--vx-component-metric-225r);
+  border-radius: var(--vx-component-metric-10p);
+  border: var(--vx-component-metric-1p) solid transparent;
+  padding: var(--vx-component-metric-056r) var(--vx-component-metric-088r);
+  font-size: var(--vx-component-metric-084r);
   line-height: 1;
   font-weight: 600;
   transition:
@@ -66,18 +66,18 @@
 }
 
 :where(.vx-btn--sm) {
-  min-height: 2rem;
-  padding: 0.46rem 0.74rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
+  min-height: var(--vx-component-metric-2r);
+  padding: var(--vx-component-metric-046r) var(--vx-component-metric-074r);
+  border-radius: var(--vx-component-metric-8p);
+  font-size: var(--vx-component-metric-08r);
 }
 
 :where(.vx-btn--icon) {
-  width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
+  width: var(--vx-component-metric-2r);
+  height: var(--vx-component-metric-2r);
+  min-height: var(--vx-component-metric-2r);
   padding: 0;
-  border-radius: 999px;
+  border-radius: var(--vx-radius-full);
 }
 
 :where(.vx-btn__icon) {
@@ -87,10 +87,10 @@
 :where(.vx-input),
 :where(.vx-select-trigger) {
   width: 100%;
-  min-height: 2.75rem;
-  padding: 0.74rem 0.95rem;
-  border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  border-radius: 14px;
+  min-height: var(--vx-component-metric-275r);
+  padding: var(--vx-component-metric-074r) var(--vx-component-metric-095r);
+  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  border-radius: var(--vx-component-metric-14p);
   background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
   color: var(--vx-console-text, var(--vx-color-shell-text));
 }
@@ -102,7 +102,7 @@
 
 :where(.vx-input:focus),
 :where(.vx-select-trigger:focus) {
-  outline: 2px solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  outline: var(--vx-component-metric-2p) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
   outline-offset: 0;
   border-color: var(--vx-color-brand-300);
 }
@@ -110,49 +110,49 @@
 :where(select.vx-input),
 :where(select.vx-select-trigger) {
   box-sizing: border-box;
-  height: 2.25rem;
-  min-height: 2.25rem;
+  height: var(--vx-component-metric-225r);
+  min-height: var(--vx-component-metric-225r);
   padding-block: 0;
-  padding-inline: 0.85rem 2rem;
+  padding-inline: var(--vx-component-metric-085r) var(--vx-component-metric-2r);
   line-height: normal;
 }
 
 :where(.vx-label) {
-  font-size: 0.95rem;
+  font-size: var(--vx-component-metric-095r);
   color: var(--vx-console-muted, var(--vx-color-shell-muted));
 }
 
 :where(.vx-badge) {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  min-height: 1.8rem;
-  padding: 0.2rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.82rem;
+  gap: var(--vx-component-metric-035r);
+  min-height: var(--vx-component-metric-18r);
+  padding: var(--vx-component-metric-02r) var(--vx-component-metric-065r);
+  border-radius: var(--vx-radius-full);
+  font-size: var(--vx-component-metric-082r);
   font-weight: 600;
 }
 
 :where(.vx-card) {
-  border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
-  border-radius: 20px;
+  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
+  border-radius: var(--vx-component-metric-20p);
   background: color-mix(in srgb, var(--vx-color-white) 88%, transparent);
   box-shadow: var(--vx-console-shadow, var(--vx-shadow-sm));
 }
 
 :where(.vx-card__header) {
   display: grid;
-  gap: 0.4rem;
-  padding: 1.15rem 1.15rem 0;
+  gap: var(--vx-component-metric-04r);
+  padding: var(--vx-component-metric-115r) var(--vx-component-metric-115r) 0;
 }
 
 :where(.vx-card__content) {
-  padding: 1.15rem;
+  padding: var(--vx-component-metric-115r);
 }
 
 :where(.vx-card__title) {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: var(--vx-component-metric-105r);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -163,11 +163,11 @@
 }
 
 :where(.vx-avatar) {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--vx-component-metric-225r);
+  height: var(--vx-component-metric-225r);
   display: grid;
   place-items: center;
-  border-radius: 999px;
+  border-radius: var(--vx-radius-full);
   background: var(--vx-color-gray-200);
   color: var(--vx-color-gray-900);
   overflow: hidden;
@@ -179,23 +179,23 @@
 }
 
 :where(.vx-avatar__fallback) {
-  font-size: 0.82rem;
+  font-size: var(--vx-component-metric-082r);
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--vx-component-metric-004e);
 }
 
 :where(.vx-shell-brand) {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--vx-component-metric-05r);
   min-width: 0;
   color: var(--vx-console-text, var(--vx-color-shell-text));
   font-weight: 760;
 }
 
 :where(.vx-shell-brand__logo) {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--vx-component-metric-15r);
+  height: var(--vx-component-metric-15r);
   flex: 0 0 auto;
   object-fit: contain;
 }
@@ -210,12 +210,12 @@
 
 :where(.vx-shell-tool-button) {
   display: inline-flex;
-  width: 2rem;
-  height: 2rem;
+  width: var(--vx-component-metric-2r);
+  height: var(--vx-component-metric-2r);
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--vx-component-metric-8p);
   background: transparent;
   color: var(--vx-console-muted, var(--vx-color-shell-muted));
   cursor: pointer;
@@ -238,8 +238,8 @@
 
 :where(.vx-shell-tool-button:focus-visible),
 :where(.vx-shell-user-trigger:focus-visible) {
-  outline: 2px solid var(--vx-color-ring);
-  outline-offset: 2px;
+  outline: var(--vx-component-metric-2p) solid var(--vx-color-ring);
+  outline-offset: var(--vx-component-metric-2p);
 }
 
 :where(.vx-shell-locale-switcher) {
@@ -249,9 +249,9 @@
 
 :where(.vx-shell-locale-popover) {
   position: absolute;
-  top: calc(100% + 0.5rem);
+  top: calc(100% + var(--vx-component-metric-05r));
   z-index: 50;
-  min-width: 10rem;
+  min-width: var(--vx-component-metric-10r);
 }
 
 :where(.vx-shell-locale-popover--start) {
@@ -265,27 +265,27 @@
 :where(.vx-shell-preferences) {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--vx-component-metric-05r);
 }
 
 :where(.vx-shell-preferences__title) {
-  margin: 0 0 0.15rem;
+  margin: 0 0 var(--vx-component-metric-015r);
   color: var(--vx-color-text-primary);
-  font-size: 0.85rem;
+  font-size: var(--vx-component-metric-085r);
   font-weight: 700;
 }
 
 :where(.vx-shell-preferences__row) {
   display: flex;
-  min-height: 2.5rem;
+  min-height: var(--vx-component-metric-25r);
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--vx-component-metric-075r);
 }
 
 :where(.vx-shell-preferences__icon) {
   display: inline-flex;
-  width: 1.25rem;
-  flex: 0 0 1.25rem;
+  width: var(--vx-component-metric-125r);
+  flex: 0 0 var(--vx-component-metric-125r);
   justify-content: center;
   color: var(--vx-color-gray-400);
 }
@@ -301,14 +301,14 @@
 
 :where(.vx-shell-preferences__select) {
   width: 100%;
-  height: 2.25rem;
+  height: var(--vx-component-metric-225r);
   appearance: none;
-  border: 1px solid var(--vx-color-border);
-  border-radius: 8px;
+  border: var(--vx-component-metric-1p) solid var(--vx-color-border);
+  border-radius: var(--vx-component-metric-8p);
   background: var(--vx-color-surface);
   color: var(--vx-color-text-secondary);
-  padding: 0 2rem 0 0.75rem;
-  font-size: 0.82rem;
+  padding: 0 var(--vx-component-metric-2r) 0 var(--vx-component-metric-075r);
+  font-size: var(--vx-component-metric-082r);
   outline: none;
   transition:
     border-color 180ms ease,
@@ -317,15 +317,15 @@
 
 :where(.vx-shell-preferences__select:focus) {
   border-color: var(--vx-color-brand-300);
-  box-shadow: 0 0 0 2px var(--vx-color-ring);
+  box-shadow: 0 0 0 var(--vx-component-metric-2p) var(--vx-color-ring);
 }
 
 :where(.vx-shell-preferences__select-icon) {
   position: absolute;
   top: 50%;
-  right: 0.65rem;
-  width: 1rem;
-  height: 1rem;
+  right: var(--vx-component-metric-065r);
+  width: var(--vx-component-metric-1r);
+  height: var(--vx-component-metric-1r);
   transform: translateY(-50%);
   color: var(--vx-color-gray-400);
   pointer-events: none;
@@ -334,22 +334,22 @@
 :where(.vx-shell-segmented) {
   display: flex;
   width: 100%;
-  border: 1px solid var(--vx-color-border);
-  border-radius: 8px;
+  border: var(--vx-component-metric-1p) solid var(--vx-color-border);
+  border-radius: var(--vx-component-metric-8p);
   background: color-mix(in srgb, var(--vx-color-surface-muted) 78%, transparent);
-  padding: 0.125rem;
+  padding: var(--vx-component-metric-0125r);
 }
 
 :where(.vx-shell-segmented__item) {
   flex: 1 1 0;
   min-width: 0;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--vx-component-metric-6p);
   background: transparent;
   color: var(--vx-color-text-muted);
   cursor: pointer;
-  padding: 0.42rem 0.5rem;
-  font-size: 0.76rem;
+  padding: var(--vx-component-metric-042r) var(--vx-component-metric-05r);
+  font-size: var(--vx-component-metric-076r);
   font-weight: 650;
   line-height: 1;
   transition:
@@ -365,7 +365,7 @@
 :where(.vx-shell-segmented__item--active) {
   background: var(--vx-color-surface);
   color: var(--vx-color-brand-700);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+  box-shadow: 0 var(--vx-component-metric-1p) var(--vx-component-metric-3p) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
 }
 
 :where(.dark .vx-shell-segmented__item--active) {
@@ -375,12 +375,12 @@
 :where(.vx-shell-user-trigger) {
   position: relative;
   display: inline-flex;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: var(--vx-component-metric-25r);
+  height: var(--vx-component-metric-25r);
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--vx-radius-full);
   background: transparent;
   cursor: pointer;
   outline: none;
@@ -388,30 +388,30 @@
 }
 
 :where(.vx-shell-user-trigger:hover) {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--vx-color-brand-300) 70%, transparent);
+  box-shadow: 0 0 0 var(--vx-component-metric-2p) color-mix(in srgb, var(--vx-color-brand-300) 70%, transparent);
 }
 
 :where(.vx-shell-user-trigger__status) {
   position: absolute;
-  right: -0.125rem;
-  bottom: -0.125rem;
-  width: 0.75rem;
-  height: 0.75rem;
-  border: 2px solid var(--vx-color-surface);
-  border-radius: 999px;
+  right: -var(--vx-component-metric-0125r);
+  bottom: -var(--vx-component-metric-0125r);
+  width: var(--vx-component-metric-075r);
+  height: var(--vx-component-metric-075r);
+  border: var(--vx-component-metric-2p) solid var(--vx-color-surface);
+  border-radius: var(--vx-radius-full);
   background: var(--vx-color-success-400);
 }
 
 :where(.vx-shell-user-avatar) {
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
-  box-shadow: 0 2px 6px color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+  width: var(--vx-component-metric-25r);
+  height: var(--vx-component-metric-25r);
+  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
+  box-shadow: 0 var(--vx-component-metric-2p) var(--vx-component-metric-6p) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
 }
 
 :where(.vx-shell-user-avatar--lg) {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: var(--vx-component-metric-35r);
+  height: var(--vx-component-metric-35r);
 }
 
 :where(.vx-shell-user-avatar__image) {
@@ -431,21 +431,21 @@
 }
 
 :where(.vx-shell-user-menu) {
-  width: 20rem;
+  width: var(--vx-component-metric-20r);
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--vx-color-brand-200) 65%, transparent);
-  border-radius: 10px;
+  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-200) 65%, transparent);
+  border-radius: var(--vx-component-metric-10p);
   background: var(--vx-color-surface);
   color: var(--vx-color-text-primary);
   padding: 0;
-  box-shadow: 0 18px 45px color-mix(in srgb, var(--vx-color-brand-950) 12%, transparent);
+  box-shadow: 0 var(--vx-component-metric-18p) var(--vx-component-metric-45p) color-mix(in srgb, var(--vx-color-brand-950) 12%, transparent);
 }
 
 :where(.vx-shell-user-menu__profile) {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: var(--vx-component-metric-075r);
+  padding: var(--vx-component-metric-1r);
 }
 
 :where(.vx-shell-user-menu__identity) {
@@ -464,39 +464,39 @@
 :where(.vx-shell-user-menu__name) {
   margin: 0;
   color: var(--vx-color-text-primary);
-  font-size: 0.96rem;
+  font-size: var(--vx-component-metric-096r);
   font-weight: 720;
 }
 
 :where(.vx-shell-user-menu__line) {
-  margin: 0.2rem 0 0;
+  margin: var(--vx-component-metric-02r) 0 0;
   color: var(--vx-color-text-muted);
-  font-size: 0.84rem;
+  font-size: var(--vx-component-metric-084r);
 }
 
 :where(.vx-shell-user-menu__meta) {
-  margin: 0.12rem 0 0;
+  margin: var(--vx-component-metric-012r) 0 0;
   color: var(--vx-color-text-muted);
-  font-size: 0.76rem;
+  font-size: var(--vx-component-metric-076r);
 }
 
 :where(.vx-shell-user-menu__badges) {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0 1rem 1rem 4.25rem;
+  gap: var(--vx-component-metric-05r);
+  padding: 0 var(--vx-component-metric-1r) var(--vx-component-metric-1r) var(--vx-component-metric-425r);
 }
 
 :where(.vx-shell-user-badge) {
   display: inline-flex;
   max-width: 100%;
   align-items: center;
-  border: 1px solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
-  border-radius: 999px;
+  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
+  border-radius: var(--vx-radius-full);
   background: color-mix(in srgb, var(--vx-color-brand-50) 72%, transparent);
   color: var(--vx-color-brand-700);
-  padding: 0.25rem 0.62rem;
-  font-size: 0.75rem;
+  padding: var(--vx-component-metric-025r) var(--vx-component-metric-062r);
+  font-size: var(--vx-component-metric-075r);
   font-weight: 650;
 }
 
@@ -506,28 +506,28 @@
 }
 
 :where(.vx-shell-user-menu__separator) {
-  height: 1px;
-  margin: 0 1rem;
+  height: var(--vx-component-metric-1p);
+  margin: 0 var(--vx-component-metric-1r);
   background: var(--vx-color-border);
 }
 
 :where(.vx-shell-user-menu__section) {
-  padding: 0.75rem 1rem;
+  padding: var(--vx-component-metric-075r) var(--vx-component-metric-1r);
 }
 
 :where(.vx-shell-user-menu__action) {
   display: flex;
   width: 100%;
   align-items: center;
-  gap: 0.65rem;
+  gap: var(--vx-component-metric-065r);
   border: 0;
-  border-radius: 8px;
+  border-radius: var(--vx-component-metric-8p);
   background: transparent;
   color: var(--vx-color-text-secondary);
   cursor: pointer;
-  padding: 0.62rem 0.75rem;
+  padding: var(--vx-component-metric-062r) var(--vx-component-metric-075r);
   text-align: left;
-  font-size: 0.85rem;
+  font-size: var(--vx-component-metric-085r);
   font-weight: 650;
   transition:
     background 180ms ease,
@@ -550,8 +550,8 @@
 }
 
 :where(.vx-shell-user-menu__action-icon) {
-  width: 1rem;
-  height: 1rem;
+  width: var(--vx-component-metric-1r);
+  height: var(--vx-component-metric-1r);
   flex: 0 0 auto;
   color: var(--vx-color-gray-400);
 }
@@ -563,7 +563,7 @@
 :where(.vx-shell-user-menu__return) {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: var(--vx-component-metric-04r);
 }
 
 :where(.vx-shell-user-menu__return .vx-shell-user-menu__action) {
@@ -574,12 +574,12 @@
 :where(.vx-shell-user-menu__dismiss) {
   margin-left: auto;
   display: inline-flex;
-  width: 1.25rem;
-  height: 1.25rem;
+  width: var(--vx-component-metric-125r);
+  height: var(--vx-component-metric-125r);
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--vx-component-metric-6p);
   background: transparent;
   color: var(--vx-color-text-muted);
   cursor: pointer;
@@ -599,7 +599,7 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--vx-component-metric-1r);
 }
 
 :where(.vx-shell-legal-footer__links) {
@@ -607,7 +607,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.85rem;
+  gap: var(--vx-component-metric-085r);
 }
 
 :where(.vx-shell-legal-footer__links a:hover) {
@@ -617,8 +617,8 @@
 :where(.vx-switch) {
   position: relative;
   display: inline-flex;
-  width: 3.1rem;
-  height: 1.9rem;
+  width: 3.var(--vx-component-metric-1r);
+  height: var(--vx-component-metric-19r);
 }
 
 :where(.vx-switch__input) {
@@ -631,7 +631,7 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--vx-radius-full);
   background: var(--vx-color-gray-300);
   transition: background 180ms ease;
 }
@@ -639,13 +639,13 @@
 :where(.vx-switch__track::after) {
   content: "";
   position: absolute;
-  top: 0.2rem;
-  left: 0.2rem;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-radius: 999px;
+  top: var(--vx-component-metric-02r);
+  left: var(--vx-component-metric-02r);
+  width: var(--vx-component-metric-15r);
+  height: var(--vx-component-metric-15r);
+  border-radius: var(--vx-radius-full);
   background: var(--vx-color-white);
-  box-shadow: 0 1px 3px color-mix(in srgb, var(--vx-color-gray-900) 15%, transparent);
+  box-shadow: 0 var(--vx-component-metric-1p) var(--vx-component-metric-3p) color-mix(in srgb, var(--vx-color-gray-900) 15%, transparent);
   transition: transform 180ms ease;
 }
 
@@ -654,5 +654,5 @@
 }
 
 :where(.vx-switch__input:checked + .vx-switch__track::after) {
-  transform: translateX(1.2rem);
+  transform: translateX(var(--vx-component-metric-12r));
 }

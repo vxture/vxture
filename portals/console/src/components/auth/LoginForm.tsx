@@ -19,6 +19,7 @@ import {
   AuthSocialButtons,
   AuthTabs,
   AuthTurnstile,
+  Button,
   useAuthVerificationCountdown,
   useTheme,
   type AuthLoginScreen,
@@ -417,9 +418,9 @@ function RegisterLink({ onRegister }: { onRegister: () => void }) {
   return (
     <p className='vx-auth-switch'>
       还没有账号？
-      <button type='button' onClick={onRegister}>
+      <Button variant='link' onClick={onRegister}>
         注册账号
-      </button>
+      </Button>
     </p>
   );
 }

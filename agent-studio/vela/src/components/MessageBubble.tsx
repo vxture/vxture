@@ -27,29 +27,17 @@ export function MessageBubble({ message }: Props) {
   const isUser = message.role === 'user';
 
   return (
-    <div
-      style={{
-        display:        'flex',
-        justifyContent: isUser ? 'flex-end' : 'flex-start',
-        margin:         '4px 0',
-      }}
-    >
+    <div className={isUser ? 'vx-vela-message vx-vela-message--user' : 'vx-vela-message vx-vela-message--assistant'}>
       <div
-        style={{
-          maxWidth:     '80%',
-          padding:      '8px 12px',
-          borderRadius: isUser ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-          background:   isUser ? 'var(--vx-color-primary)' : 'var(--vx-color-surface-muted)',
-          color:        isUser ? 'var(--vx-color-text-inverse)' : 'var(--vx-color-text-primary)',
-          fontSize:     '14px',
-          lineHeight:   '1.5',
-          whiteSpace:   'pre-wrap',
-          wordBreak:    'break-word',
-        }}
+        className={
+          isUser
+            ? 'vx-vela-message__bubble vx-vela-message__bubble--user'
+            : 'vx-vela-message__bubble vx-vela-message__bubble--assistant'
+        }
       >
         {message.content || (
           // 助手消息占位符（流式接收中）
-          <span style={{ opacity: 0.4 }}>▍</span>
+          <span className="vx-vela-message__cursor">▍</span>
         )}
       </div>
     </div>

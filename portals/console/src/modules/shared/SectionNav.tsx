@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Button } from '@vxture/design-system';
 
 export interface SectionNavItem {
   key: string;
@@ -22,9 +23,9 @@ export function SectionNav({
         const isActive = item.key === activeKey;
 
         return (
-          <button
+          <Button
             key={item.key}
-            type="button"
+            variant="ghost"
             className={isActive ? 'vx-section-nav__item vx-section-nav__item--active' : 'vx-section-nav__item'}
             onClick={() => onSelect?.(item.key)}
           >
@@ -33,7 +34,7 @@ export function SectionNav({
               {item.description ? <span>{item.description}</span> : null}
             </div>
             {item.meta ? <div className="vx-section-nav__meta">{item.meta}</div> : null}
-          </button>
+          </Button>
         );
       })}
     </nav>

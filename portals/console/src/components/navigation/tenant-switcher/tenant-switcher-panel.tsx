@@ -25,9 +25,9 @@ export function TenantSwitcherPanel({
     <div className="vx-tenant-switcher__panel" role="menu" aria-label="Switch workspace">
       <div className="vx-tenant-switcher__panel-header">
         <strong>Switch workspace</strong>
-        <button type="button" className="vx-tenant-switcher__close" aria-label="Close workspace switcher" onClick={onClose}>
+        <Button variant="ghost" size="icon" className="vx-tenant-switcher__close" aria-label="Close workspace switcher" onClick={onClose}>
           x
-        </button>
+        </Button>
       </div>
 
       {currentTenant ? (

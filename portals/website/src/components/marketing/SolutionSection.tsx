@@ -81,7 +81,7 @@ const SolutionCard = memo(function SolutionCard({
             <div className='relative flex items-center h-20 min-h-20'>
               {/* 背景数字 */}
               <span
-                className='absolute left-0 top-1/2 -tranvx-gray-y-1/2 text-[48px] font-semibold text-vx-brand-300 dark:text-vx-brand-500 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
+                className='absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-vx-brand-300 dark:text-vx-brand-500 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
                 aria-hidden='true'
                 style={{ letterSpacing: '-0.05em' }}
               >

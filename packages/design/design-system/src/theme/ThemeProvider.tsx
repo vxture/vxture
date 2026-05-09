@@ -3,7 +3,7 @@
  * @package @vxture/design-system
  *
  * 功能：提供主题上下文，统一管理 light/dark/system 主题和 UI 密度
- *       "use client" 由 dist 构建产物首行统一注入，源文件保持纯净
+ *       由 @vxture/design-system 客户端入口提供 "use client" 边界
  *
  * @copyright Vxture Team
  * @license MIT

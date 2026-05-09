@@ -25,6 +25,8 @@ import {
   CaretRightIcon,
   CaretUpIcon,
   CaretDownIcon,
+  CaretDoubleUpIcon,
+  CaretDoubleDownIcon,
   SquaresFourIcon,
 
   // ==========================================================================
@@ -42,6 +44,10 @@ import {
   XIcon,
   CheckIcon,
   CopyIcon,
+  PlayIcon,
+  StopIcon,
+  TextIndentIcon,
+  TextOutdentIcon,
 
   // ==========================================================================
   // 通用交互 - 状态
@@ -58,6 +64,7 @@ import {
   TimerIcon,
   DatabaseIcon,
   CloudIcon,
+  PlugIcon,
   EraserIcon,
   CubeIcon,
   BuildingIcon,
@@ -100,6 +107,7 @@ import {
   // ==========================================================================
   CalendarIcon,
   ClockIcon,
+  ClockCounterClockwiseIcon,
 
   // ==========================================================================
   // 地图/位置
@@ -158,6 +166,8 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   "chevron-right":    CaretRightIcon,
   "chevron-up":       CaretUpIcon,
   "chevron-down":     CaretDownIcon,
+  "caret-double-up":   CaretDoubleUpIcon,
+  "caret-double-down": CaretDoubleDownIcon,
   "squares-four":     SquaresFourIcon,
 
   // ==========================================================================
@@ -176,6 +186,10 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   x:         XIcon,
   check:     CheckIcon,
   copy:      CopyIcon,
+  play:      PlayIcon,
+  stop:      StopIcon,
+  "text-indent": TextIndentIcon,
+  "text-outdent": TextOutdentIcon,
 
   // ==========================================================================
   // 通用交互 - 状态
@@ -193,6 +207,7 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   trigger:            TimerIcon,
   database:           DatabaseIcon,
   cloud:              CloudIcon,
+  plug:               PlugIcon,
   server:             EraserIcon,
   cube:               CubeIcon,
   "building-library": BuildingIcon,
@@ -236,6 +251,7 @@ export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
   // ==========================================================================
   calendar: CalendarIcon,
   clock:    ClockIcon,
+  "clock-counter-clockwise": ClockCounterClockwiseIcon,
 
   // ==========================================================================
   // 地图/位置

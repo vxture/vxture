@@ -4,7 +4,7 @@ import { startTransition, useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import { useTheme } from '@vxture/design-system';
-import { Button } from '@vxture/design-system';
+import { Button, NativeSelect } from '@vxture/design-system';
 import {
   getGlobalUserPreferences,
   setGlobalDensityPreference,
@@ -44,7 +44,7 @@ export function ConsolePreferenceControls() {
     <div className="console-preferences" aria-label={t('title')}>
       <label className="console-preferences__field">
         <span>{t('locale.label')}</span>
-        <select
+        <NativeSelect
           className="vx-select-trigger"
           value={locale}
           onChange={(event) => {
@@ -55,12 +55,12 @@ export function ConsolePreferenceControls() {
         >
           <option value="zh-CN">{t('locale.zh-CN')}</option>
           <option value="en-US">{t('locale.en-US')}</option>
-        </select>
+        </NativeSelect>
       </label>
 
       <label className="console-preferences__field">
         <span>{t('density.label')}</span>
-        <select
+        <NativeSelect
           className="vx-select-trigger"
           value={mounted ? density : getGlobalUserPreferences().density}
           onChange={(event) => {
@@ -74,7 +74,7 @@ export function ConsolePreferenceControls() {
               {t(`density.${option}`)}
             </option>
           ))}
-        </select>
+        </NativeSelect>
       </label>
 
       <Button

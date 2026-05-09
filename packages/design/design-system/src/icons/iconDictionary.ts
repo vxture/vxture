@@ -26,6 +26,8 @@ export const iconDictionary = [
   "chevron-right",
   "chevron-up",
   "chevron-down",
+  "caret-double-up",
+  "caret-double-down",
   "squares-four",
 
   // ==========================================================================
@@ -44,6 +46,10 @@ export const iconDictionary = [
   "x",
   "check",
   "copy",
+  "play",
+  "stop",
+  "text-indent",
+  "text-outdent",
 
   // ==========================================================================
   // 通用交互 - 状态
@@ -61,6 +67,7 @@ export const iconDictionary = [
   "trigger",
   "database",
   "cloud",
+  "plug",
   "server",
   "cube",
   "building-library",
@@ -104,6 +111,7 @@ export const iconDictionary = [
   // ==========================================================================
   "calendar",   // 日历（原 calendar-days 已合并）
   "clock",
+  "clock-counter-clockwise",
 
   // ==========================================================================
   // 地图/位置

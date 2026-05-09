@@ -1,12 +1,15 @@
 #!/usr/bin/env node
 
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
 
 const ROOT = process.cwd();
-const SCAN_ROOTS = ["portals", "packages"];
+const SCAN_ROOTS = ["portals", "packages", "agent-studio", "business"];
 const SOURCE_EXTENSIONS = new Set([".css", ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx"]);
+const UPDATE_BASELINE = process.argv.includes("--update-baseline");
+const BASELINE_PATH = path.join(ROOT, "scripts/guardrails/design-system-baseline.json");
+const BASELINED_RULE_IDS = new Set(["ds/no-inline-design-style", "ds/no-native-primitive"]);
 const IGNORED_PARTS = new Set([
   ".git",
   ".next",
@@ -26,6 +29,10 @@ const DS_TOKEN_PATHS = [
 const FONT_LOADER_ALLOWLIST = [
   /^portals\/[^/]+\/src\/app\/layout\.tsx$/,
   /^portals\/[^/]+\/src\/app\/layout\.ts$/,
+  /^agent-studio\/[^/]+\/src\/app\/layout\.tsx$/,
+  /^agent-studio\/[^/]+\/src\/app\/layout\.ts$/,
+  /^business\/[^/]+\/src\/app\/layout\.tsx$/,
+  /^business\/[^/]+\/src\/app\/layout\.ts$/,
 ];
 
 const rules = [
@@ -33,7 +40,7 @@ const rules = [
     id: "ds/no-app-components-ui",
     description: "应用层不能创建 components/ui 或 components/primitives 基础组件目录；基础 UI 必须进入 DS。",
     checkFile(file) {
-      if (!isPortalSource(file)) return [];
+      if (!isFrontendSource(file)) return [];
       const normalized = normalize(file);
       if (/\/src\/components\/(ui|primitives)\//.test(normalized)) {
         return [violation(file, 1, "移动到语义业务目录，或补充到 @vxture/design-system。")];
@@ -45,9 +52,20 @@ const rules = [
     id: "ds/no-app-ui-imports",
     description: "应用层不能从本地 components/ui 或 components/primitives 导入基础组件。",
     checkLine(file, line, lineNumber) {
-      if (!isPortalSource(file)) return null;
+      if (!isFrontendSource(file)) return null;
       if (/from\s+['"](?:@\/components\/(?:ui|primitives)|.*\/components\/(?:ui|primitives)|.*\/(?:ui|primitives))/.test(line)) {
         return violation(file, lineNumber, "改为从 @vxture/design-system 导入基础组件，业务组件使用语义目录。");
+      }
+      return null;
+    },
+  },
+  {
+    id: "ds/no-direct-ui-engine-imports",
+    description: "应用层不能直接导入 DS 底层图标库或 UI 引擎；必须通过 @vxture/design-system 公共入口。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file)) return null;
+      if (/from\s+['"](?:@phosphor-icons\/react|lucide-react|react-icons(?:\/[^'"]*)?|@radix-ui\/[^'"]+)['"]/.test(line)) {
+        return violation(file, lineNumber, "改为从 @vxture/design-system 导入 Icon、Popover、Tooltip 等 DS 公共组件。");
       }
       return null;
     },
@@ -87,7 +105,7 @@ const rules = [
     description: "应用层 Tailwind 配置不能自建 colors/fontFamily/radius/shadow tokens。",
     checkLine(file, line, lineNumber) {
       const normalized = normalize(file);
-      if (!/^portals\/[^/]+\/tailwind\.config\.(js|mjs|ts)$/.test(normalized)) return null;
+      if (!/^(portals|agent-studio|business)\/[^/]+\/tailwind\.config\.(js|mjs|ts)$/.test(normalized)) return null;
       if (/\b(colors|fontFamily|borderRadius|boxShadow)\s*:/.test(line)) {
         return violation(file, lineNumber, "把 token 定义迁移到 @vxture/design-system。");
       }
@@ -104,6 +122,49 @@ const rules = [
         return [violation(file, 1, "token 文件只能维护在 packages/design/design-system/src/tokens。")];
       }
       return [];
+    },
+  },
+  {
+    id: "ds/no-token-runtime-value-duplicates",
+    description: "DS TS token 文件不能重复维护运行时颜色、间距、圆角、阴影、字号值。",
+    checkLine(file, line, lineNumber) {
+      const normalized = normalize(file);
+      if (!/^packages\/design\/design-system\/src\/tokens\/(colors|spacing|radius|shadow|typography)\.ts$/.test(normalized)) {
+        return null;
+      }
+      const text = stripLineComment(line);
+      if (/["'][^"']*(?:#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(|\b\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%)\b)/.test(text)) {
+        return violation(file, lineNumber, "运行时 token 值只能定义在 styles/tokens.css；TS token 只暴露 var(--vx-*) 引用。", line);
+      }
+      return null;
+    },
+  },
+  {
+    id: "ds/no-known-tailwind-typo",
+    description: "禁止已知 Tailwind class 拼写错误进入源码。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file)) return null;
+      if (line.includes("tranvx")) {
+        return violation(file, lineNumber, "疑似 translate-* 被误替换为 tranvx-*，请修正为有效 Tailwind class。");
+      }
+      return null;
+    },
+  },
+  {
+    id: "ds/no-inline-design-style",
+    description: "应用层 inline style 只能承载动态变量或坐标，不能承载颜色、字体、间距、圆角、阴影等设计值。",
+    checkContent(file, content) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return [];
+      return findInlineStyleViolations(file, content);
+    },
+  },
+  {
+    id: "ds/no-native-primitive",
+    description: "业务源码默认不能直接写 button/input/select/textarea，应使用 DS 组件或补充 DS 能力。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return null;
+      if (!/<(?:button|input|select|textarea)\b/.test(line)) return null;
+      return violation(file, lineNumber, "使用 @vxture/design-system 的 Button/Input/Select 等组件；DS 不足时先补 DS。", line);
     },
   },
 ];
@@ -124,6 +185,13 @@ for (const file of files) {
   }
 
   const content = readFileSync(file, "utf8");
+  for (const rule of rules) {
+    if (!rule.checkContent) continue;
+    for (const item of rule.checkContent(file, content)) {
+      violations.push({ rule, ...item });
+    }
+  }
+
   const lines = content.split(/\r?\n/);
   lines.forEach((line, index) => {
     const lineNumber = index + 1;
@@ -135,9 +203,17 @@ for (const file of files) {
   });
 }
 
-if (violations.length > 0) {
+if (UPDATE_BASELINE) {
+  updateBaseline(violations);
+  process.exit(0);
+}
+
+const baseline = readBaseline();
+const activeViolations = violations.filter((item) => !isBaselineAllowed(item, baseline));
+
+if (activeViolations.length > 0) {
   console.error("\nDesign System guardrails failed:\n");
-  for (const item of violations) {
+  for (const item of activeViolations) {
     console.error(`- ${item.rule.id}: ${item.file}:${item.line}`);
     console.error(`  ${item.message}`);
   }
@@ -145,7 +221,12 @@ if (violations.length > 0) {
   process.exit(1);
 }
 
-console.log("Design System guardrails passed.");
+const baselineCount = violations.length - activeViolations.length;
+console.log(
+  baselineCount > 0
+    ? `Design System guardrails passed. Existing inline/native debt locked by baseline: ${baselineCount}.`
+    : "Design System guardrails passed.",
+);
 
 function collectFiles(target) {
   if (!exists(target)) return [];
@@ -180,8 +261,8 @@ function stripLineComment(line) {
   return commentIndex >= 0 ? line.slice(0, commentIndex) : line;
 }
 
-function isPortalSource(file) {
-  return normalize(file).startsWith("portals/");
+function isFrontendSource(file) {
+  return /^(portals|agent-studio|business)\//.test(normalize(file));
 }
 
 function isDsTokenOwner(file) {
@@ -194,11 +275,102 @@ function isGeneratedOrAsset(file) {
   return /\/(dist|build|\.next|public|assets)\//.test(normalized);
 }
 
-function violation(file, line, message) {
+function findInlineStyleViolations(file, content) {
+  const lines = content.split(/\r?\n/);
+  const items = [];
+  let block = null;
+
+  lines.forEach((line, index) => {
+    const lineNumber = index + 1;
+    if (!block && /style=\{\{/.test(line)) {
+      block = {
+        line: lineNumber,
+        lines: [line],
+      };
+      if (line.includes("}}")) {
+        pushInlineStyleViolation(file, block, items);
+        block = null;
+      }
+      return;
+    }
+
+    if (!block) return;
+    block.lines.push(line);
+    if (line.includes("}}") || block.lines.length >= 80) {
+      pushInlineStyleViolation(file, block, items);
+      block = null;
+    }
+  });
+
+  return items;
+}
+
+function pushInlineStyleViolation(file, block, items) {
+  const text = block.lines.join("\n");
+  if (!hasInlineDesignValue(text)) return;
+  items.push(
+    violation(
+      file,
+      block.line,
+      "inline style 只能用于 CSS 变量、坐标、transform、背景图片等动态值；颜色/字体/间距/圆角/阴影进入 DS。",
+      text,
+    ),
+  );
+}
+
+function hasInlineDesignValue(text) {
+  const compact = stripQuotedTemplateExpressions(text);
+  if (/['"]--vx-[\w-]+['"]\s*:/.test(compact) && !hasUnsafeInlineStyleProperty(compact)) return false;
+  return hasUnsafeInlineStyleProperty(compact);
+}
+
+function hasUnsafeInlineStyleProperty(text) {
+  return /(?:^|[,{;\s])(?:background|backgroundColor|border|borderColor|borderRadius|boxShadow|color|display|alignItems|justifyContent|gap|fontFamily|fontSize|fontWeight|letterSpacing|lineHeight|margin|marginTop|marginRight|marginBottom|marginLeft|padding|paddingTop|paddingRight|paddingBottom|paddingLeft|minWidth|maxWidth|minHeight|maxHeight)\s*:/.test(
+    text,
+  );
+}
+
+function stripQuotedTemplateExpressions(text) {
+  return text.replace(/`[^`]*`/g, "``").replace(/"[^"]*"/g, '""').replace(/'[^']*'/g, "''");
+}
+
+function readBaseline() {
+  if (!exists(BASELINE_PATH)) return new Set();
+  const data = JSON.parse(readFileSync(BASELINE_PATH, "utf8"));
+  return new Set(Array.isArray(data.allowed) ? data.allowed : []);
+}
+
+function updateBaseline(allViolations) {
+  const allowed = [...new Set(allViolations.filter((item) => BASELINED_RULE_IDS.has(item.rule.id)).map(signatureFor))].sort();
+  const payload = {
+    version: 1,
+    description:
+      "Existing DS inline-style/native-primitive debt. The guardrail blocks new signatures; shrink this file as modules migrate to DS.",
+    allowed,
+  };
+  writeFileSync(BASELINE_PATH, `${JSON.stringify(payload, null, 2)}\n`);
+  console.log(`Design System baseline updated: ${allowed.length} existing violations recorded.`);
+}
+
+function isBaselineAllowed(item, baseline) {
+  return BASELINED_RULE_IDS.has(item.rule.id) && baseline.has(signatureFor(item));
+}
+
+function signatureFor(item) {
+  const source = item.source ? normalizeSnippet(item.source) : `${item.file}:${item.line}`;
+  return `${item.rule.id}|${item.file}|${source}`;
+}
+
+function normalizeSnippet(value) {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function violation(file, line, message, source = "") {
   return {
     file: normalize(path.relative(ROOT, file)),
     line,
     message,
+    source,
   };
 }
 

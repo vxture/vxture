@@ -6,14 +6,14 @@ const __dirname = dirname(__filename);
 
 const internalAliases = {
   '@vxture/shared': join(__dirname, '../../packages/shared/shared/src'),
-  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/dist/index.mjs'),
+  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/src/client.ts'),
   '@vxture/platform-browser': join(__dirname, '../../packages/platform/browser/src'),
   '@vxture/agent-studio-vela': join(__dirname, '../../agent-studio/vela/src'),
 };
 
 const turboAliases = {
   '@vxture/shared': '../../packages/shared/shared/src',
-  '@vxture/design-system': '../../packages/design/design-system/dist/index.mjs',
+  '@vxture/design-system': '../../packages/design/design-system/src/client.ts',
   '@vxture/platform-browser': '../../packages/platform/browser/src',
   '@vxture/agent-studio-vela': '../../agent-studio/vela/src',
 };
@@ -21,16 +21,10 @@ const turboAliases = {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   experimental: {
     webpackBuildWorker: false,
   },
-  transpilePackages: ['@vxture/agent-studio-vela'],
+  transpilePackages: ['@vxture/design-system', '@vxture/agent-studio-vela'],
   turbopack: {
     resolveAlias: turboAliases,
   },

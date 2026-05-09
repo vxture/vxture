@@ -17,6 +17,7 @@
 
 'use client';
 
+import { Badge, Button } from '@vxture/design-system';
 import { useVelaConfirm } from '../hooks/useVelaConfirm';
 
 // ============================================================================
@@ -32,13 +33,13 @@ export function ConfirmActionDialog() {
   // ---- 执行成功状态
   if (confirmResult && confirmResult.success !== false && !confirmResult.cancelled) {
     return (
-      <div style={containerStyle('var(--vx-color-success-surface)', 'var(--vx-color-success-border)')}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+      <div className="vx-vela-confirm vx-vela-confirm--success">
+        <div className="vx-vela-confirm__header vx-vela-confirm__header--compact">
           <span>✅</span>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--vx-color-success-foreground)' }}>执行成功</span>
-          <code style={badgeStyle('var(--vx-color-success-100)', 'var(--vx-color-success-foreground)')}>{pendingConfirm.toolId}</code>
+          <span className="vx-vela-confirm__title">执行成功</span>
+          <Badge variant="outline">{pendingConfirm.toolId}</Badge>
         </div>
-        <p style={{ margin: '6px 0 0', fontSize: '12px', color: 'var(--vx-color-success-foreground)' }}>操作已完成，结果已记录。</p>
+        <p className="vx-vela-confirm__message">操作已完成，结果已记录。</p>
       </div>
     );
   }
@@ -46,15 +47,15 @@ export function ConfirmActionDialog() {
   // ---- 错误状态
   if (confirmError) {
     return (
-      <div style={containerStyle('var(--vx-color-error-surface)', 'var(--vx-color-error-border)')}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+      <div className="vx-vela-confirm vx-vela-confirm--error">
+        <div className="vx-vela-confirm__header">
           <span>❌</span>
-          <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--vx-color-error-foreground)' }}>执行失败</span>
-          <code style={badgeStyle('var(--vx-color-error-100)', 'var(--vx-color-error-foreground)')}>{pendingConfirm.toolId}</code>
+          <span className="vx-vela-confirm__title">执行失败</span>
+          <Badge variant="outline">{pendingConfirm.toolId}</Badge>
         </div>
-        <p style={{ margin: '0 0 10px', fontSize: '13px', color: 'var(--vx-color-error-foreground)' }}>{confirmError}</p>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <button onClick={dismiss} style={btnStyle('var(--vx-color-text-muted)', 'var(--vx-color-text-inverse)')}>关闭</button>
+        <p className="vx-vela-confirm__summary">{confirmError}</p>
+        <div className="vx-vela-confirm__actions">
+          <Button onClick={dismiss} variant="secondary" size="sm">关闭</Button>
         </div>
       </div>
     );
@@ -62,71 +63,32 @@ export function ConfirmActionDialog() {
 
   // ---- 待确认状态
   return (
-    <div style={containerStyle('var(--vx-color-warning-surface)', 'var(--vx-color-warning-border)')}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
-        <span style={{ fontSize: '14px' }}>⚠️</span>
-        <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--vx-color-warning-foreground)' }}>需要确认</span>
-        <code style={badgeStyle('var(--vx-color-warning-border)', 'var(--vx-color-warning-900)')}>{pendingConfirm.toolId}</code>
+    <div className="vx-vela-confirm vx-vela-confirm--warning">
+      <div className="vx-vela-confirm__header">
+        <span>⚠️</span>
+        <span className="vx-vela-confirm__title">需要确认</span>
+        <Badge variant="outline">{pendingConfirm.toolId}</Badge>
       </div>
-      <p style={{ margin: '0 0 12px', fontSize: '13px', color: 'var(--vx-color-warning-900)', lineHeight: '1.5' }}>
+      <p className="vx-vela-confirm__summary">
         {pendingConfirm.summary}
       </p>
-      <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
-        <button
+      <div className="vx-vela-confirm__actions">
+        <Button
           onClick={() => void handleConfirm(false)}
           disabled={isConfirming}
-          style={btnStyle('var(--vx-color-text-muted)', 'var(--vx-color-text-inverse)', isConfirming)}
+          variant="secondary"
+          size="sm"
         >
           取消
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={() => void handleConfirm(true)}
           disabled={isConfirming}
-          style={btnStyle('var(--vx-color-warning)', 'var(--vx-color-text-inverse)', isConfirming)}
+          size="sm"
         >
           {isConfirming ? '执行中…' : '确认执行'}
-        </button>
+        </Button>
       </div>
     </div>
   );
-}
-
-// ============================================================================
-// 样式辅助
-// ============================================================================
-
-function containerStyle(bg: string, border: string): React.CSSProperties {
-  return {
-    margin:       '0 12px 8px',
-    padding:      '14px 16px',
-    borderRadius: '12px',
-    border:       `1.5px solid ${border}`,
-    background:   bg,
-    flexShrink:   0,
-  };
-}
-
-function badgeStyle(bg: string, color: string): React.CSSProperties {
-  return {
-    fontSize:     '11px',
-    background:   bg,
-    borderRadius: '4px',
-    padding:      '1px 6px',
-    color,
-    marginLeft:   '2px',
-  };
-}
-
-function btnStyle(bg: string, color: string, disabled = false): React.CSSProperties {
-  return {
-    padding:      '6px 14px',
-    borderRadius: '6px',
-    border:       'none',
-    background:   disabled ? 'var(--vx-color-surface-muted)' : bg,
-    color:        disabled ? 'var(--vx-color-text-disabled)' : color,
-    fontSize:     '13px',
-    fontWeight:   600,
-    cursor:       disabled ? 'not-allowed' : 'pointer',
-    transition:   'background 0.15s',
-  };
 }

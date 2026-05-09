@@ -7,9 +7,8 @@ import { defineConfig } from 'tsup';
  * 改用 buildEnd 钩子（所有 renderChunk 完成、文件已写入磁盘后）直接修改产物文件，
  * 保证 "use client" 指令稳定前置在 ESM/CJS 产物首行。
  *
- * 这是 shadcn/Radix 等 React 组件库的标准做法：
- * Next.js App Router 通过 dist 入口识别整个包为 Client 边界，
- * 无需在每个源文件里单独声明。
+ * 只对主组件入口 index 注入。tokens/types/server 子入口保持 server-safe，
+ * 供 Next Server Component 或后端工具安全读取类型和 token 引用。
  *
  * 注：tsup 会将 config 文件 bundle 成临时 .mjs，顶层 import 'fs' 会被 esbuild
  * 转换为 require('fs') 并在 ESM 上下文中失败。使用动态 import() 可绕过此问题。
@@ -21,7 +20,8 @@ const useClientPlugin = {
     const { readFileSync, writeFileSync } = await import('node:fs');
 
     for (const file of writtenFiles) {
-      if (/\.(mjs|cjs)$/.test(file.name)) {
+      const normalized = file.name.replaceAll('\\', '/');
+      if (/\/index\.(mjs|cjs)$/.test(normalized)) {
         const content = readFileSync(file.name, 'utf8');
         if (!content.startsWith('"use client"')) {
           writeFileSync(file.name, `"use client";\n${content}`);
@@ -32,7 +32,12 @@ const useClientPlugin = {
 };
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: {
+    index: 'src/index.ts',
+    tokens: 'src/tokens-entry.ts',
+    types: 'src/types-entry.ts',
+    server: 'src/server.ts',
+  },
   format: ['esm', 'cjs'],
   outExtension({ format }) {
     return { js: format === 'esm' ? '.mjs' : '.cjs' };

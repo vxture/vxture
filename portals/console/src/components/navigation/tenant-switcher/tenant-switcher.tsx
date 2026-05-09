@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import { Avatar, AvatarFallback } from '@vxture/design-system';
 import { useTenant, type TenantType } from '@/features/tenant';
 import { CreateTenantDialog } from './create-tenant-dialog';
@@ -47,8 +47,8 @@ export function TenantSwitcher() {
 
   return (
     <div className="vx-tenant-switcher" ref={rootRef}>
-      <button
-        type="button"
+      <Button
+        variant="ghost"
         className={panelOpen ? 'vx-tenant-switcher__trigger vx-tenant-switcher__trigger--open' : 'vx-tenant-switcher__trigger'}
         aria-haspopup="menu"
         aria-expanded={panelOpen}
@@ -62,7 +62,7 @@ export function TenantSwitcher() {
           <small>{tenantType}</small>
         </span>
         <Icon name="chevron-down" size="xs" fallback="arrow-down" className="vx-tenant-switcher__trigger-caret" />
-      </button>
+      </Button>
 
       {panelOpen ? (
         <TenantSwitcherPanel

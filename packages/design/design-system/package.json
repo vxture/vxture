@@ -11,6 +11,21 @@
       "import":  "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./tokens": {
+      "types":   "./dist/tokens.d.ts",
+      "import":  "./dist/tokens.mjs",
+      "require": "./dist/tokens.cjs"
+    },
+    "./types": {
+      "types":   "./dist/types.d.ts",
+      "import":  "./dist/types.mjs",
+      "require": "./dist/types.cjs"
+    },
+    "./server": {
+      "types":   "./dist/server.d.ts",
+      "import":  "./dist/server.mjs",
+      "require": "./dist/server.cjs"
+    },
     "./styles/auth.css": "./src/styles/auth.css",
     "./styles/components.css": "./src/styles/components.css",
     "./styles/fullscreen.css": "./src/styles/fullscreen.css",

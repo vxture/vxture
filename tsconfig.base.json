@@ -32,10 +32,10 @@
       "@vxture/core-auth/*": ["./packages/core/auth/src/*"],
       "@vxture/core-utils": ["./packages/core/utils/src"],
       "@vxture/core-utils/*": ["./packages/core/utils/src/*"],
-      // design-system 指向 dist 是有意为之：React 组件库需要 bundle 产物，
-      // 消费前必须先执行 pnpm build:design，不同于其他指向 src 的包
-      "@vxture/design-system": ["./packages/design/design-system/dist/index.d.ts"],
-      "@vxture/design-system/*": ["./packages/design/design-system/dist/*"],
+      "@vxture/design-system": ["./packages/design/design-system/src/client.ts"],
+      "@vxture/design-system/tokens": ["./packages/design/design-system/src/tokens-entry.ts"],
+      "@vxture/design-system/types": ["./packages/design/design-system/src/types-entry.ts"],
+      "@vxture/design-system/server": ["./packages/design/design-system/src/server.ts"],
 
       "@vxture/ai-sdk": ["./packages/ai/ai-sdk/src"],
       "@vxture/ai-sdk/*": ["./packages/ai/ai-sdk/src/*"],

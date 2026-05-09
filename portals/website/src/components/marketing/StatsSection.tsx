@@ -192,7 +192,7 @@ export default function StatsSection() {
       <div className='absolute inset-0 z-0 pointer-events-none'>
         <div className='absolute top-0 left-1/4 w-96 h-96 bg-vx-brand-100/10 dark:bg-vx-brand-900/10 rounded-full blur-3xl'></div>
         <div className='absolute bottom-0 right-1/4 w-96 h-96 bg-vx-info-100/10 dark:bg-vx-brand-900/10 rounded-full blur-3xl'></div>
-        <div className='absolute top-1/2 left-1/2 transform -tranvx-gray-x-1/2 -tranvx-gray-y-1/2 w-150 h-150 bg-linear-to-r from-vx-brand-100/5 to-vx-info-100/5 rounded-full blur-3xl'></div>
+        <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-linear-to-r from-vx-brand-100/5 to-vx-info-100/5 rounded-full blur-3xl'></div>
       </div>
 
       {/* 内容容器（z-10） */}
