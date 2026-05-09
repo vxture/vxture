@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { FilterBar } from '@vxture/design-system';
 
 export function TableToolbar({
   title,
@@ -10,12 +11,6 @@ export function TableToolbar({
   action?: ReactNode;
 }) {
   return (
-    <div className="vx-table-toolbar">
-      <div className="vx-table-toolbar__copy">
-        <strong>{title}</strong>
-        {hint ? <span>{hint}</span> : null}
-      </div>
-      {action ? <div>{action}</div> : null}
-    </div>
+    <FilterBar className="vx-table-toolbar" title={title} description={hint} actions={action} />
   );
 }

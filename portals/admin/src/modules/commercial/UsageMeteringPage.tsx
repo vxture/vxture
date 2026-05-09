@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
+import { ActionMenu, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
 import { fetchUsageMeteringRecords } from "@/api/admin-bff";
 import type {
   UsageMeteringRecord,
@@ -87,78 +87,46 @@ function formatUsageValue(value: number, unit: string) {
 
 function UsageActionsMenu({
   record,
-  open,
-  onToggle,
-  onClose,
 }: {
   record: UsageMeteringRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="vx-tenant-actions__trigger"
-        aria-label={`${record.tenantName} 用量操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(record.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!record.subscriptionId}
-            onClick={() => {
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${record.tenantName} 用量操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(record.tenantId)}`),
+          },
+          {
+            id: "subscription",
+            label: "查看订阅",
+            icon: <Icon name="star" size="xs" fallback="placeholder" />,
+            disabled: !record.subscriptionId,
+            onSelect: () => {
               if (!record.subscriptionId) return;
-              onClose();
-              router.push(
-                `/subscriptions/${encodeURIComponent(record.subscriptionId)}`,
-              );
-            }}
-          >
-            <Icon name="star" size="xs" fallback="placeholder" />
-            查看订阅
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!record.subscriptionId}
-            onClick={() => {
+              router.push(`/subscriptions/${encodeURIComponent(record.subscriptionId)}`);
+            },
+          },
+          {
+            id: "order",
+            label: "查看订单",
+            icon: <Icon name="table" size="xs" fallback="placeholder" />,
+            disabled: !record.subscriptionId,
+            onSelect: () => {
               if (!record.subscriptionId) return;
-              onClose();
-              router.push(
-                `/orders/${encodeURIComponent(record.subscriptionId)}`,
-              );
-            }}
-          >
-            <Icon name="table" size="xs" fallback="placeholder" />
-            查看订单
-          </Button>
-        </div>
-      ) : null}
+              router.push(`/orders/${encodeURIComponent(record.subscriptionId)}`);
+            },
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -166,9 +134,6 @@ function UsageActionsMenu({
 function UsageListRows({
   records,
   startIndex,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   selectedRecordIds,
   isPageSelected,
   onToggleRecord,
@@ -176,9 +141,6 @@ function UsageListRows({
 }: {
   records: UsageMeteringRecord[];
   startIndex: number;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   selectedRecordIds: Set<string>;
   isPageSelected: boolean;
   onToggleRecord: (id: string, checked: boolean) => void;
@@ -314,14 +276,7 @@ function UsageListRows({
               <strong>{record.cycleMonth}</strong>
               <small>{formatDate(record.lastSyncedAt)}</small>
             </span>
-            <UsageActionsMenu
-              record={record}
-              open={openMenuId === record.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === record.id ? "" : record.id)
-              }
-              onClose={onCloseMenu}
-            />
+            <UsageActionsMenu record={record} />
           </div>
         );
       })}
@@ -331,14 +286,8 @@ function UsageListRows({
 
 function UsageCards({
   records,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   records: UsageMeteringRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
 }) {
   const router = useRouter();
 
@@ -368,14 +317,7 @@ function UsageCards({
                 {record.productName} · {record.metricName}
               </span>
             </div>
-            <UsageActionsMenu
-              record={record}
-              open={openMenuId === record.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === record.id ? "" : record.id)
-              }
-              onClose={onCloseMenu}
-            />
+            <UsageActionsMenu record={record} />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Tag tone={riskTone(record.risk)}>{riskLabel(record.risk)}</Tag>
@@ -414,7 +356,6 @@ function UsageCards({
 export function UsageMeteringPage() {
   const [records, setRecords] = useState<UsageMeteringRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [riskFilter, setRiskFilter] = useState<RiskFilter>("all");
   const [productTypeFilter, setProductTypeFilter] =
@@ -496,7 +437,6 @@ export function UsageMeteringPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [cycleFilter, pageSize, productTypeFilter, query, riskFilter, viewMode]);
 
   function handleReset() {
@@ -643,21 +583,13 @@ export function UsageMeteringPage() {
               <UsageListRows
                 records={visibleRecords}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
-                onOpenMenu={(id) => setOpenMenuId(id || null)}
-                onCloseMenu={() => setOpenMenuId(null)}
                 selectedRecordIds={selectedRecordIds}
                 isPageSelected={isRecordPageSelected}
                 onToggleRecord={toggleRecordSelection}
                 onTogglePage={toggleRecordPageSelection}
               />
             ) : (
-              <UsageCards
-                records={visibleRecords}
-                openMenuId={openMenuId}
-                onOpenMenu={(id) => setOpenMenuId(id || null)}
-                onCloseMenu={() => setOpenMenuId(null)}
-              />
+              <UsageCards records={visibleRecords} />
             )
           ) : (
             <section className="vx-tenant-empty">
@@ -686,25 +618,7 @@ export function UsageMeteringPage() {
             </span>
             <div className="vx-tenant-pagination__actions">
               <PageSizePicker value={pageSize} onChange={setPageSize} />
-              <div className="vx-tenant-pagination__pager">
-                <Button
-                  variant="outline"
-                  disabled={activePage <= 1}
-                  onClick={() => setCurrentPage(activePage - 1)}
-                >
-                  上一页
-                </Button>
-                <strong>
-                  {activePage} / {pageCount}
-                </strong>
-                <Button
-                  variant="outline"
-                  disabled={activePage >= pageCount}
-                  onClick={() => setCurrentPage(activePage + 1)}
-                >
-                  下一页
-                </Button>
-              </div>
+              <DsPagination className="vx-tenant-pagination__pager" page={activePage} pageCount={pageCount} onPageChange={setCurrentPage} />
             </div>
           </footer>
         </section>

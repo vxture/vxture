@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, Label, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect, Pagination } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import {
   createAiModelGrant,
@@ -172,8 +171,6 @@ export function ModelGrantsPage() {
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<PolicyFilter>('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [openPolicyMenuId, setOpenPolicyMenuId] = useState<string | null>(null);
-  const [openGrantMenuId, setOpenGrantMenuId] = useState<string | null>(null);
   const [selectedPolicyIds, setSelectedPolicyIds] = useState<Set<string>>(() => new Set());
   const [selectedGrantIds, setSelectedGrantIds] = useState<Set<string>>(() => new Set());
   const [selectedGrantId, setSelectedGrantId] = useState<string | null>(null);
@@ -196,8 +193,6 @@ export function ModelGrantsPage() {
         setGrants(grantRecords);
         setAgents(agentRecords);
         setPolicies(policyRecords);
-        setOpenPolicyMenuId(null);
-        setOpenGrantMenuId(null);
         setSelectedGrantId(null);
         setSelectedPolicyIds(new Set());
         setSelectedGrantIds(new Set());
@@ -220,8 +215,6 @@ export function ModelGrantsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenPolicyMenuId(null);
-    setOpenGrantMenuId(null);
   }, [query, filter, viewMode]);
 
   const modelById = useMemo(
@@ -317,7 +310,6 @@ export function ModelGrantsPage() {
     const records = await fetchAiModelGrants();
     setGrants(records);
     setSelectedGrantId(nextGrantId ?? null);
-    setOpenGrantMenuId(null);
     setSelectedGrantIds((current) => {
       const availableIds = new Set(records.map((grant) => grant.id));
       return new Set([...current].filter((id) => availableIds.has(id)));
@@ -332,7 +324,6 @@ export function ModelGrantsPage() {
 
   function openEditGrantDialog(grant: AiModelGrantRecord) {
     setSelectedGrantId(grant.id);
-    setOpenGrantMenuId(null);
     setGrantForm({
       modelId: grant.modelId,
       tenantId: grant.tenantId,
@@ -385,7 +376,6 @@ export function ModelGrantsPage() {
   async function handleToggleGrant(grant: AiModelGrantRecord) {
     setSubmitting(true);
     resetFeedback();
-    setOpenGrantMenuId(null);
 
     try {
       const updated = await setAiModelGrantActive(grant.id, !grant.isActive);
@@ -594,27 +584,20 @@ export function ModelGrantsPage() {
                     </span>
                     <span className="vx-model-strategy-row__quota">{formatTokens(policy.quotaTokens, policy.isUnlimited, t('policyTable.unlimited'))}</span>
                     <span className="vx-model-strategy-row__priority">{policy.priority}</span>
-                    <div className="vx-tenant-actions" onMouseLeave={() => setOpenPolicyMenuId(null)}>
-                      <Button
-                        className="vx-tenant-actions__trigger"
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        aria-label={`${policy.scopeName} 操作`}
-                        aria-haspopup="menu"
-                        aria-expanded={openPolicyMenuId === policy.id}
-                        onClick={() => setOpenPolicyMenuId((current) => (current === policy.id ? null : policy.id))}
-                      >
-                        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-                      </Button>
-                      {openPolicyMenuId === policy.id ? (
-                        <div className="vx-tenant-actions__menu" role="menu">
-                          <Button variant="ghost" role="menuitem" disabled>
-                            <Icon name="shield-check" size="xs" fallback="placeholder" />
-                            <span>策略只读</span>
-                          </Button>
-                        </div>
-                      ) : null}
+                    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+                      <ActionMenu
+                        label={`${policy.scopeName} 操作`}
+                        triggerClassName="vx-tenant-actions__trigger"
+                        triggerProps={{ title: '操作' }}
+                        items={[
+                          {
+                            id: 'readonly',
+                            label: '策略只读',
+                            icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+                            disabled: true,
+                          },
+                        ]}
+                      />
                     </div>
                   </div>
                 );
@@ -686,15 +669,7 @@ export function ModelGrantsPage() {
           <footer className="vx-tenant-pagination">
             <span className="vx-tenant-pagination__total">{t('pagination.policySummary', { page: safeCurrentPage, totalPages, total: filteredPolicies.length })}</span>
             <div className="vx-tenant-pagination__actions">
-              <div className="vx-tenant-pagination__pager">
-                <Button variant="outline" disabled={safeCurrentPage <= 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>
-                  {t('pagination.previous')}
-                </Button>
-                <strong>{safeCurrentPage} / {totalPages}</strong>
-                <Button variant="outline" disabled={safeCurrentPage >= totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}>
-                  {t('pagination.next')}
-                </Button>
-              </div>
+              <Pagination className="vx-tenant-pagination__pager" page={safeCurrentPage} pageCount={totalPages} onPageChange={setCurrentPage} />
             </div>
           </footer>
         </section>
@@ -733,7 +708,7 @@ export function ModelGrantsPage() {
               return (
                 <div
                   key={grant.id}
-                  className={`vx-tenant-directory-row vx-model-strategy-override-row ${openGrantMenuId === grant.id ? 'vx-model-strategy-override-row--active' : ''} ${selectedGrantIds.has(grant.id) ? 'vx-model-strategy-override-row--selected' : ''}`}
+                  className={`vx-tenant-directory-row vx-model-strategy-override-row ${selectedGrantIds.has(grant.id) ? 'vx-model-strategy-override-row--selected' : ''}`}
                   title={`${grant.tenantId} · ${modelName}`}
                   onClick={(event) => {
                     if (isInteractiveTarget(event.target)) return;
@@ -770,30 +745,27 @@ export function ModelGrantsPage() {
                   <span className="vx-model-strategy-row__agent">{agentLabel(grant.agentId)}</span>
                   <span className="vx-model-strategy-row__priority">{grant.priority}</span>
                   <span className="vx-model-strategy-row__expires">{grant.expiresAt ? grant.expiresAt.slice(0, 10) : t('table.permanent')}</span>
-                  <div className="vx-tenant-actions" onMouseLeave={() => setOpenGrantMenuId(null)}>
-                    <Button
-                      className="vx-tenant-actions__trigger"
-                      variant="ghost"
-                      size="icon"
-                      aria-label={t('actions.grantMenu')}
-                      aria-haspopup="menu"
-                      aria-expanded={openGrantMenuId === grant.id}
-                      onClick={() => setOpenGrantMenuId((current) => (current === grant.id ? null : grant.id))}
-                    >
-                      <Icon name="more-vertical" size="lg" fallback="placeholder" />
-                    </Button>
-                    {openGrantMenuId === grant.id ? (
-                      <div className="vx-tenant-actions__menu" role="menu">
-                        <Button variant="ghost" role="menuitem" onClick={() => openEditGrantDialog(grant)}>
-                          <Icon name="edit" size="xs" fallback="placeholder" />
-                          <span>{t('actions.editGrant')}</span>
-                        </Button>
-                        <Button variant="ghost" role="menuitem" disabled={submitting} onClick={() => void handleToggleGrant(grant)}>
-                          <Icon name={grant.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />
-                          <span>{grant.isActive ? t('actions.disableGrant') : t('actions.enableGrant')}</span>
-                        </Button>
-                      </div>
-                    ) : null}
+                  <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+                    <ActionMenu
+                      label={t('actions.grantMenu')}
+                      triggerClassName="vx-tenant-actions__trigger"
+                      triggerProps={{ title: t('actions.grantMenu') }}
+                      items={[
+                        {
+                          id: 'edit',
+                          label: t('actions.editGrant'),
+                          icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+                          onSelect: () => openEditGrantDialog(grant),
+                        },
+                        {
+                          id: 'toggle',
+                          label: grant.isActive ? t('actions.disableGrant') : t('actions.enableGrant'),
+                          icon: <Icon name={grant.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+                          disabled: submitting,
+                          onSelect: () => void handleToggleGrant(grant),
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
               );
@@ -810,10 +782,18 @@ export function ModelGrantsPage() {
       </section>
 
       {dialogMode === 'createGrant' || dialogMode === 'editGrant' ? (
-        <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t(`dialogs.${dialogMode}.title`)}>
-          <div className="vx-profile-dialog__backdrop" onClick={() => setDialogMode(null)} />
-          <form className="vx-profile-dialog__content vx-model-dialog" onSubmit={(event) => void submitGrant(event)}>
-            <h3>{t(`dialogs.${dialogMode}.title`)}</h3>
+        <DialogForm
+          open
+          title={t(`dialogs.${dialogMode}.title`)}
+          submitLabel={t('dialogs.actions.save')}
+          cancelLabel={t('dialogs.actions.cancel')}
+          submitting={submitting}
+          contentClassName="max-w-3xl"
+          onOpenChange={(open) => {
+            if (!open) setDialogMode(null);
+          }}
+          onSubmit={(event) => void submitGrant(event)}
+        >
             <div className="vx-model-dialog__grid">
               <Label>
                 {t('dialogs.fields.grantModel')}
@@ -873,16 +853,7 @@ export function ModelGrantsPage() {
                 {t('dialogs.fields.grantActive')}
               </label>
             </div>
-            <div className="vx-profile-dialog__actions">
-              <Button variant="outline" onClick={() => setDialogMode(null)}>
-                {t('dialogs.actions.cancel')}
-              </Button>
-              <Button type="submit" disabled={submitting}>
-                {t('dialogs.actions.save')}
-              </Button>
-            </div>
-          </form>
-        </div>
+        </DialogForm>
       ) : null}
     </div>
   );

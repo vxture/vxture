@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Avatar, Badge, Button, Checkbox, Input, Label, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Avatar, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect } from '@vxture/design-system';
 import {
   createMember,
   disableMember,
@@ -60,7 +59,6 @@ export function MembersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [createMode, setCreateMode] = useState<'create' | 'invite' | null>(null);
   const [editOpen, setEditOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
@@ -90,7 +88,6 @@ export function MembersPage() {
         setRoles(roleRecords.filter((role) => role.status === 'active'));
         setSelectedIds(new Set());
         setSelectedId(null);
-        setOpenMenuId(null);
       })
       .finally(() => {
         if (active) {
@@ -105,7 +102,6 @@ export function MembersPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [query, status]);
 
   function resetFeedback() {
@@ -130,7 +126,6 @@ export function MembersPage() {
 
   function openEditDialog(member: MemberRecord) {
     setSelectedId(member.id);
-    setOpenMenuId(null);
     resetMemberForm(member);
     resetFeedback();
     setEditOpen(true);
@@ -138,7 +133,6 @@ export function MembersPage() {
 
   function openResetDialog(member: MemberRecord) {
     setSelectedId(member.id);
-    setOpenMenuId(null);
     setPasswordForm({ nextPassword: '' });
     resetFeedback();
     setResetOpen(true);
@@ -146,7 +140,6 @@ export function MembersPage() {
 
   function openUnlinkDialog(member: MemberRecord) {
     setSelectedId(member.id);
-    setOpenMenuId(null);
     resetFeedback();
     setUnlinkOpen(true);
   }
@@ -156,7 +149,6 @@ export function MembersPage() {
     setMembers(records);
     setSelectedIds(new Set());
     setSelectedId(nextSelectedId ?? null);
-    setOpenMenuId(null);
   }
 
   async function submitCreate(event: FormEvent<HTMLFormElement>) {
@@ -250,7 +242,6 @@ export function MembersPage() {
     const nextStatus = member.status === 'Suspended' ? 'active' : 'banned';
     setSubmitting(true);
     resetFeedback();
-    setOpenMenuId(null);
 
     try {
       const updated =
@@ -273,7 +264,6 @@ export function MembersPage() {
 
     setSubmitting(true);
     resetFeedback();
-    setOpenMenuId(null);
 
     try {
       await unlinkMember(selected.id);
@@ -299,7 +289,6 @@ export function MembersPage() {
 
     setSubmitting(true);
     resetFeedback();
-    setOpenMenuId(null);
 
     try {
       await Promise.all(
@@ -326,7 +315,6 @@ export function MembersPage() {
 
     setSubmitting(true);
     resetFeedback();
-    setOpenMenuId(null);
 
     try {
       await Promise.all(targets.map((member) => unlinkMember(member.id)));
@@ -542,11 +530,7 @@ export function MembersPage() {
               return (
                 <div
                   key={member.id}
-                  className={
-                    openMenuId === member.id
-                      ? 'vx-member-table__row vx-member-table__row--active'
-                      : 'vx-member-table__row'
-                  }
+                  className="vx-member-table__row"
                   title={detailTitle}
                 >
                   <span className="vx-member-select" title={t('table.selectMember', { name: member.name })}>
@@ -593,65 +577,45 @@ export function MembersPage() {
                   <span className="vx-member-table__muted" title={member.lastActive}>
                     {member.lastActive}
                   </span>
-                  <div
-                    className="vx-member-table__menu"
-                    onBlur={(event) => {
-                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                        setOpenMenuId(null);
-                      }
-                    }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label={t('actions.menuLabel', { name: member.name })}
-                      title={t('actions.menuLabel', { name: member.name })}
-                      aria-haspopup="menu"
-                      aria-expanded={openMenuId === member.id}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setOpenMenuId((current) => (current === member.id ? null : member.id));
-                      }}
-                    >
-                      <Icon name="more-vertical" size="xs" fallback="placeholder" />
-                    </Button>
-                    {openMenuId === member.id ? (
-                      <div className="vx-member-actions-menu" role="menu">
-                        <Button variant="ghost" role="menuitem" onClick={() => openEditDialog(member)}>
-                          <Icon name="edit" size="xs" fallback="placeholder" />
-                          <span>{t('actions.edit')}</span>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          role="menuitem"
-                          disabled={submitting}
-                          onClick={() => void handleToggleMemberStatus(member)}
-                        >
-                          <Icon name="shield-check" size="xs" fallback="placeholder" />
-                          <span>
-                            {member.status === 'Suspended'
+                  <div className="vx-member-table__menu">
+                    <ActionMenu
+                      label={t('actions.menuLabel', { name: member.name })}
+                      triggerProps={{ title: t('actions.menuLabel', { name: member.name }) }}
+                      items={[
+                        {
+                          id: 'edit',
+                          label: t('actions.edit'),
+                          icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+                          onSelect: () => openEditDialog(member),
+                        },
+                        {
+                          id: 'toggle-status',
+                          label:
+                            member.status === 'Suspended'
                               ? t('actions.enableMember')
                               : member.status === 'Invited'
                                 ? t('actions.disableInvite')
-                              : t('actions.disableMember')}
-                          </span>
-                        </Button>
-                        <Button variant="ghost" role="menuitem" onClick={() => openResetDialog(member)}>
-                          <Icon name="key" size="xs" fallback="placeholder" />
-                          <span>{t('actions.resetPassword')}</span>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          role="menuitem"
-                          className="vx-member-actions-menu__danger"
-                          disabled={submitting}
-                          onClick={() => openUnlinkDialog(member)}
-                        >
-                          <Icon name="user-switch" size="xs" fallback="placeholder" />
-                          <span>{t('actions.unlink')}</span>
-                        </Button>
-                      </div>
-                    ) : null}
+                                : t('actions.disableMember'),
+                          icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+                          disabled: submitting,
+                          onSelect: () => void handleToggleMemberStatus(member),
+                        },
+                        {
+                          id: 'reset-password',
+                          label: t('actions.resetPassword'),
+                          icon: <Icon name="key" size="xs" fallback="placeholder" />,
+                          onSelect: () => openResetDialog(member),
+                        },
+                        {
+                          id: 'unlink',
+                          label: t('actions.unlink'),
+                          icon: <Icon name="user-switch" size="xs" fallback="placeholder" />,
+                          disabled: submitting,
+                          danger: true,
+                          onSelect: () => openUnlinkDialog(member),
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
               );
@@ -699,15 +663,17 @@ export function MembersPage() {
         </div>
 
         {createMode ? (
-          <div
-            className="vx-profile-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label={createMode === 'invite' ? t('dialogs.invite.title') : t('dialogs.create.title')}
+          <DialogForm
+            open
+            title={createMode === 'invite' ? t('dialogs.invite.title') : t('dialogs.create.title')}
+            submitLabel={createMode === 'invite' ? t('dialogs.actions.sendInvite') : t('dialogs.actions.create')}
+            cancelLabel={t('dialogs.actions.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setCreateMode(null);
+            }}
+            onSubmit={(event) => void submitCreate(event)}
           >
-            <div className="vx-profile-dialog__backdrop" onClick={() => setCreateMode(null)} />
-            <form className="vx-profile-dialog__content" onSubmit={(event) => void submitCreate(event)}>
-              <h3>{createMode === 'invite' ? t('dialogs.invite.title') : t('dialogs.create.title')}</h3>
               <Label>
                 {t('dialogs.fields.email')}
                 <Input
@@ -746,23 +712,21 @@ export function MembersPage() {
                   ))}
                 </NativeSelect>
               </Label>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setCreateMode(null)}>
-                  {t('dialogs.actions.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {createMode === 'invite' ? t('dialogs.actions.sendInvite') : t('dialogs.actions.create')}
-                </Button>
-              </div>
-            </form>
-          </div>
+          </DialogForm>
         ) : null}
 
         {editOpen && selected ? (
-          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialogs.edit.title')}>
-            <div className="vx-profile-dialog__backdrop" onClick={() => setEditOpen(false)} />
-            <form className="vx-profile-dialog__content" onSubmit={(event) => void submitEdit(event)}>
-              <h3>{t('dialogs.edit.title')}</h3>
+          <DialogForm
+            open
+            title={t('dialogs.edit.title')}
+            submitLabel={t('dialogs.actions.save')}
+            cancelLabel={t('dialogs.actions.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setEditOpen(false);
+            }}
+            onSubmit={(event) => void submitEdit(event)}
+          >
               <Label>
                 {t('dialogs.fields.email')}
                 <Input value={selected.email} disabled />
@@ -796,24 +760,22 @@ export function MembersPage() {
                   ))}
                 </NativeSelect>
               </Label>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setEditOpen(false)}>
-                  {t('dialogs.actions.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {t('dialogs.actions.save')}
-                </Button>
-              </div>
-            </form>
-          </div>
+          </DialogForm>
         ) : null}
 
         {resetOpen && selected ? (
-          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialogs.reset.title')}>
-            <div className="vx-profile-dialog__backdrop" onClick={() => setResetOpen(false)} />
-            <form className="vx-profile-dialog__content" onSubmit={(event) => void submitResetPassword(event)}>
-              <h3>{t('dialogs.reset.title')}</h3>
-              <p className="vx-profile-dialog__hint">{t('dialogs.reset.description', { name: selected.name })}</p>
+          <DialogForm
+            open
+            title={t('dialogs.reset.title')}
+            description={t('dialogs.reset.description', { name: selected.name })}
+            submitLabel={t('dialogs.actions.resetPassword')}
+            cancelLabel={t('dialogs.actions.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setResetOpen(false);
+            }}
+            onSubmit={(event) => void submitResetPassword(event)}
+          >
               <Label>
                 {t('dialogs.fields.nextPassword')}
                 <Input
@@ -824,58 +786,45 @@ export function MembersPage() {
                   required
                 />
               </Label>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setResetOpen(false)}>
-                  {t('dialogs.actions.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {t('dialogs.actions.resetPassword')}
-                </Button>
-              </div>
-            </form>
-          </div>
+          </DialogForm>
         ) : null}
 
         {unlinkOpen && selected ? (
-          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialogs.unlink.title')}>
-            <div className="vx-profile-dialog__backdrop" onClick={() => setUnlinkOpen(false)} />
-            <form className="vx-profile-dialog__content" onSubmit={(event) => {
+          <DialogForm
+            open
+            title={t('dialogs.unlink.title')}
+            description={t('dialogs.unlink.description', { name: selected.name })}
+            submitLabel={t('dialogs.actions.unlink')}
+            submitVariant="destructive"
+            cancelLabel={t('dialogs.actions.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setUnlinkOpen(false);
+            }}
+            onSubmit={(event) => {
               event.preventDefault();
               void handleUnlinkMember();
-            }}>
-              <h3>{t('dialogs.unlink.title')}</h3>
-              <p className="vx-profile-dialog__hint">{t('dialogs.unlink.description', { name: selected.name })}</p>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setUnlinkOpen(false)}>
-                  {t('dialogs.actions.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {t('dialogs.actions.unlink')}
-                </Button>
-              </div>
-            </form>
-          </div>
+            }}
+          />
         ) : null}
 
         {bulkUnlinkOpen ? (
-          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialogs.bulkUnlink.title')}>
-            <div className="vx-profile-dialog__backdrop" onClick={() => setBulkUnlinkOpen(false)} />
-            <form className="vx-profile-dialog__content" onSubmit={(event) => {
+          <DialogForm
+            open
+            title={t('dialogs.bulkUnlink.title')}
+            description={t('dialogs.bulkUnlink.description', { count: selectedCount })}
+            submitLabel={t('dialogs.actions.unlink')}
+            submitVariant="destructive"
+            cancelLabel={t('dialogs.actions.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setBulkUnlinkOpen(false);
+            }}
+            onSubmit={(event) => {
               event.preventDefault();
               void handleBulkUnlink();
-            }}>
-              <h3>{t('dialogs.bulkUnlink.title')}</h3>
-              <p className="vx-profile-dialog__hint">{t('dialogs.bulkUnlink.description', { count: selectedCount })}</p>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setBulkUnlinkOpen(false)}>
-                  {t('dialogs.actions.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {t('dialogs.actions.unlink')}
-                </Button>
-              </div>
-            </form>
-          </div>
+            }}
+          />
         ) : null}
       </div>
     </div>

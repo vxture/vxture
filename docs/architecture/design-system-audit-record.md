@@ -12,8 +12,8 @@
 - `lint:design` 已覆盖 `portals`、`packages`、`agent-studio`、`business`。
 - `website` / `console` 不再维护应用层 `.vx-auth-*` / `.vx-captcha-*` 样式源。
 - `console` / `admin` build 已恢复 lint/type 检查。
-- `lint:design` 已新增 inline design style / native primitive / app `--vx-*` token definition 检查，并通过 `scripts/guardrails/design-system-baseline.json` 锁住存量债务，禁止新增签名。
-- 当前 baseline 记录 0 个存量签名：应用层 `--vx-*` token 定义、业务源码原生基础控件、设计型 inline style 已全部清零；`pnpm lint:design` 进入零基线拦截模式。
+- `lint:design` 已新增 inline design style / native primitive / app `--vx-*` token definition / app hardcoded scale 检查，并通过 `scripts/guardrails/design-system-baseline.json` 锁住存量债务，禁止新增签名。
+- 当前 baseline 记录 2866 个存量尺度签名：应用层 `--vx-*` token 定义、业务源码原生基础控件、设计型 inline style 已全部清零；`px/rem/em` 应用尺度债务进入新增拦截和逐步缩减模式。
 - `agent-studio/vela` 根布局已接入统一字体、ThemeProvider、FullscreenProvider；核心聊天组件已移除 inline design style 和原生基础控件。
 - 源码扫描未发现业务源码直接导入 `@vxture/design-system/src/**`。
 - 源码扫描未发现业务源码直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；`lint:design` 已用 `ds/no-direct-ui-engine-imports` 禁止新增。
@@ -163,10 +163,12 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 ### DS-USE-005：console/admin 全局 CSS 仍过大，平台样式没有完全回收 DS
 
 优先级：P1  
-证据：`console/admin` shell、tabs、table、toolbar 与模块级尺寸/通知 token 已回收到 DS `platform.css` / `tokens.css`；应用层 `--vx-*` token 定义扫描为 0。  
+状态：进行中。  
+证据：`console/admin` shell、tabs、table、toolbar 与模块级尺寸/通知 token 已回收到 DS `platform.css` / `tokens.css`；应用层 `--vx-*` token 定义扫描为 0。DS 已补齐 `DataTable`、`FilterBar`、`ActionMenu`、`Pagination`、`DialogForm`、`StatusBadge`、`MetricCard` 并从公共入口导出。  
 问题：全局 CSS 承载了大量 shell、表格、过滤器、弹窗、操作菜单、分页、业务模块样式，应用层仍在维护一套实际设计系统。  
 修复方向：按模块抽出 DS 组件和语义样式：PageHeader、Toolbar、FilterBar、DataTable、ActionMenu、Pagination、StatusBadge、MetricCard、DialogForm。  
 验收标准：portal globals.css 只保留业务页面级少量样式；通用控件样式进入 DS。
+当前进展：console `MetricGrid` 已迁移到 DS `MetricCard`，`TableToolbar` 已迁移到 DS `FilterBar`，Billing/Dashboard 发票表格已迁移到 DS `DataTable`，Members/Roles 行操作已迁移到 DS `ActionMenu` 并删除旧菜单面板 CSS；Members/Roles 新建/编辑/删除/解绑等工作流弹窗已迁移到 DS `DialogForm`，应用侧不再自建这些弹窗 overlay/form。admin 高频列表和交易/AI/commercial 分页已统一使用 DS `Pagination`，Tenants/Verifications/Accounts/Products/ProductPlans/ProductSolutions/ServicePlans/PlatformUsers 行操作已迁移到 DS `ActionMenu`；Billing/Orders/Payments/Invoices/Subscriptions 交易域、Promotions/PromotionRedemptions/UsageMetering 商业运营域、Tickets/OpsTodos 运营支持域、TenantDetail 成员操作、AdminRoles/AdminPermissions/PlatformGovernance 权限治理操作、ModelGateway/ModelGrants AI 操作已迁移到 DS `ActionMenu`，应用侧不再维护这些页面的菜单展开状态；ModelGateway/ModelGrants 配置弹窗和 Payments 备注确认弹窗已迁移到 DS `DialogForm`；ServiceHealth 和 agent-studio/vela 工具调用结果表格已迁移到 DS `DataTable`；`portals/admin/src/modules` 已无 `vx-tenant-actions__menu` 手写菜单残留，admin/console/website/agent-studio/vela 业务源码已无原生 table 残留。
 
 ### DS-USE-006：admin/console/website 原生基础控件迁移到 DS
 
@@ -223,17 +225,17 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 问题：部分 inline style 是合理动态值，部分是基础样式逃逸；当前没有白名单/黑名单区分。  
 修复方向：规则上只允许动态变量类 style，例如 CSS variable、坐标、百分比、背景图 URL；禁止颜色、字体、圆角、阴影、固定间距。  
 验收标准：guardrail 能区分合理动态 style 与样式逃逸。  
-当前验收：`pnpm lint:design` 通过；`scripts/guardrails/design-system-baseline.json` baseline 为 0。
+当前验收：`pnpm lint:design` 通过；inline design style 存量签名为 0，baseline 仅保留应用 CSS 尺度债务。
 
 ### DS-USE-012：DS usage 约束尚未覆盖 native primitive 使用
 
 优先级：P2  
 状态：已修复。  
-修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-native-primitive`，业务源码新增 `<button>`、`<input>`、`<select>`、`<textarea>` 会被拦截；当前 baseline 为 0。  
+修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-native-primitive` 与 `ds/no-native-table`，业务源码新增 `<button>`、`<input>`、`<select>`、`<textarea>`、`<table>`、`<thead>`、`<tbody>`、`<tr>`、`<th>`、`<td>` 会被拦截；native primitive 存量签名为 0。  
 问题：应用可以绕过 DS 组件直接写原生控件，继续形成私有交互样式。  
 修复方向：新增 lint 规则：业务模块默认禁止原生表单控件，允许 DS 内部、极少数无样式语义控件、或带注释白名单。  
 验收标准：新增页面直接写原生基础控件会被拦截。  
-当前验收：`pnpm lint:design` 通过；新增原生基础控件会失败，且 baseline 为 0。
+当前验收：`pnpm lint:design` 通过；新增原生基础控件和原生表格会失败，native primitive 存量签名为 0。
 
 ### DS-USE-013：应用层存在绕过 DS 的底层 UI 引擎直接导入风险
 
@@ -254,17 +256,28 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 修复方向：把跨应用 shell、table、toolbar、pagination、action menu、dialog form、metric card 等变量回收到 DS semantic/component tokens；业务确有临时局部变量时不得使用 `--vx-*` 前缀。  
 验收标准：应用全局 CSS 不再新增 `--vx-*` token；baseline 中 `ds/no-app-vx-token-definitions` 数量保持为 0。
 
+### DS-USE-015：应用 CSS 硬编码尺度缺少新增拦截
+
+优先级：P1  
+状态：已修复，存量逐步缩减。  
+修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-app-hardcoded-scale`，应用 CSS 新增硬编码 `px/rem/em` 设计尺度会被拦截；媒体查询、grid/minmax 等布局算法和 1px hairline 已按白名单处理。  
+问题：应用全局 CSS 仍存在大量 `px/rem/em` 尺寸、间距、字号、圆角、阴影等设计尺度，容易绕过 DS token 和组件语义样式。  
+修复方向：存量先通过 baseline 锁定，后续按模块迁移到 DS spacing/radius/typography/shadow token 或 DS 组件语义样式。  
+验收标准：`pnpm lint:design` 能阻断新增硬编码尺度签名；baseline 中 `ds/no-app-hardcoded-scale` 数量随模块迁移持续下降。  
+当前验收：`pnpm lint:design` 通过；`design-system-baseline.json` 当前记录 1011 个唯一存量尺度签名。
+
 ## 下一轮任务清单
 
 1. P0：建立应用层 `--vx-*` token definition guardrail，用 baseline 锁住历史债务，禁止新增私有 token。状态：已完成。
 2. P0：把 shell/admin/console 根级 token 回收到 DS `tokens.css` 与 shell/component semantic tokens，先处理 `--vx-shell-*`、`--vx-console-*`、`--vx-admin-*`。状态：已完成。
-3. P0：补齐 DS 高频业务组件：DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard。状态：部分完成，当前以 DS primitives + platform semantic classes 承载，后续继续组件化。
-4. P0：优先迁移 admin 高频列表页和弹窗表单：Tenants、Accounts、Products、PlatformUsers、AdminPermissions。状态：已完成基础控件迁移。
-5. P1：迁移 console 高频模块：Workspace Members/Roles、Account Profile/Organization、Subscription tabs。状态：已完成基础控件迁移。
+3. P0：补齐 DS 高频业务组件：DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard。状态：已完成，组件已从 `@vxture/design-system` 公共入口导出；后续应用迁移按 P1 全局 CSS 压缩继续推进。
+4. P0：优先迁移 admin 高频列表页和弹窗表单：Tenants、Accounts、Products、PlatformUsers、AdminPermissions。状态：已完成基础控件迁移；本轮已把相关分页控件收敛到 DS `Pagination`，并迁移 Tenants/Verifications/Accounts/Products/ProductPlans/ProductSolutions/ServicePlans/PlatformUsers 行操作到 DS `ActionMenu`。
+5. P1：迁移 console 高频模块：Workspace Members/Roles、Account Profile/Organization、Subscription tabs。状态：已完成基础控件迁移；本轮已迁移共享统计卡、工具栏、发票表格、Members/Roles 行操作菜单和 Members/Roles 工作流弹窗到 DS 组合组件。
 6. P1：迁移 website 剩余 native primitive：Cases、Footer、AgentMarketplace、ScrollToButton、SolutionSection。状态：已完成。
 7. P1：收敛剩余 inline design style，确认动态 Canvas/坐标类例外是否可改为 DS utility 或 CSS class。状态：已完成设计型 inline 收敛；动态坐标/图片类 inline 继续允许。
-8. P1：补充 app CSS 尺度值治理，禁止应用新增硬编码 `px/rem/em` 设计尺度，允许布局算法和媒体查询白名单。状态：待执行。
-9. P1：每完成一个模块迁移，更新 `design-system-baseline.json` 并在本记录中同步数量。状态：已完成，当前 baseline 为 0。
+8. P1：补充 app CSS 尺度值治理，禁止应用新增硬编码 `px/rem/em` 设计尺度，允许布局算法和媒体查询白名单。状态：已完成，当前锁定 1011 个唯一存量尺度签名。
+9. P1：每完成一个模块迁移，更新 `design-system-baseline.json` 并在本记录中同步数量。状态：进行中，当前 baseline 仅承载尺度债务，inline/native/app token 维度为 0。
+10. P1：继续压缩 admin/console 模块级表格、工具栏、弹窗表单和行操作菜单 CSS，优先迁移仍依赖业务全局 class 的列表页。状态：进行中；admin 高频行操作菜单已完成，console Workspace Members/Roles、admin AI 配置弹窗和 Payments 备注确认弹窗已迁移到 DS `DialogForm`。
 
 ## 后续验收清单
 

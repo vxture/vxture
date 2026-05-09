@@ -3,9 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Checkbox, Input, NativeSelect, Textarea } from "@vxture/design-system";
+import { ActionMenu, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect, Pagination as DsPagination, Textarea } from "@vxture/design-system";
 import { AdminBffError, fetchPaymentOperations, rejectPayment, verifyPayment } from "@/api/admin-bff";
 import type {
   OrderOfflinePaymentType,
@@ -233,62 +232,49 @@ function PaymentRemarkDialog({
   onCancel: () => void;
 }) {
   return (
-    <div className="vx-dialog-overlay" onClick={onCancel}>
-      <div
-        className="vx-dialog"
-        role="dialog"
-        aria-modal="true"
-        aria-label={title}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <header className="vx-dialog__header">
-          <h2 className="vx-dialog__title">{title}</h2>
-          <Button variant="ghost" size="icon" className="vx-dialog__close" onClick={onCancel} aria-label="关闭">
-            <Icon name="x" size="sm" fallback="placeholder" />
-          </Button>
-        </header>
-        <div className="vx-dialog__body">
-          <p className="vx-dialog__desc">
-            流水号：<strong>{payment.paymentNo}</strong>
-            {payment.tenantName ? `  ·  ${payment.tenantName}` : ''}
-          </p>
-          <label className="vx-dialog__label" htmlFor="vx-payment-remark">
-            操作备注 <small>（必填，最少 4 字）</small>
-          </label>
-          <Textarea
-            id="vx-payment-remark"
-            className="vx-dialog__textarea"
-            value={remark}
-            onChange={(e) => onRemarkChange(e.target.value)}
-            rows={3}
-            placeholder="请输入操作备注…"
-            autoFocus
-          />
-          {error ? <p className="vx-dialog__error">{error}</p> : null}
-        </div>
-        <footer className="vx-dialog__footer">
-          <Button variant="outline" onClick={onCancel} disabled={loading}>取消</Button>
-          <Button onClick={onConfirm} disabled={loading || remark.trim().length < 4}>
-            {loading ? '处理中…' : '确认'}
-          </Button>
-        </footer>
-      </div>
-    </div>
+    <DialogForm
+      open
+      title={title}
+      description={(
+        <>
+          流水号：<strong>{payment.paymentNo}</strong>
+          {payment.tenantName ? `  ·  ${payment.tenantName}` : ''}
+        </>
+      )}
+      submitLabel="确认"
+      cancelLabel="取消"
+      submitting={loading}
+      submitDisabled={remark.trim().length < 4}
+      onOpenChange={(open) => {
+        if (!open) onCancel();
+      }}
+      onSubmit={(event) => {
+        event.preventDefault();
+        onConfirm();
+      }}
+    >
+      <Label htmlFor="vx-payment-remark">
+        操作备注 <small>（必填，最少 4 字）</small>
+      </Label>
+      <Textarea
+        id="vx-payment-remark"
+        value={remark}
+        onChange={(e) => onRemarkChange(e.target.value)}
+        rows={3}
+        placeholder="请输入操作备注…"
+        autoFocus
+      />
+      {error ? <p className="text-sm text-vx-danger">{error}</p> : null}
+    </DialogForm>
   );
 }
 
 function PaymentActionsMenu({
   payment,
-  open,
-  onToggle,
-  onClose,
   onVerify,
   onReject,
 }: {
   payment: PaymentOperationRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onVerify: (payment: PaymentOperationRecord) => void;
   onReject: (payment: PaymentOperationRecord) => void;
 }) {
@@ -296,101 +282,70 @@ function PaymentActionsMenu({
   const isPendingVerify = payment.paymentStatus === "pending_verify";
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        className="vx-tenant-actions__trigger"
-        variant="ghost"
-        size="icon"
-        aria-label={`${payment.paymentNo} 收款操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          {isPendingVerify ? (
-            <>
-              <Button
-                variant="ghost"
-                role="menuitem"
-                onClick={() => { onClose(); onVerify(payment); }}
-              >
-                <Icon name="check" size="xs" fallback="placeholder" />
-                核销确认
-              </Button>
-              <Button
-                variant="ghost"
-                role="menuitem"
-                onClick={() => { onClose(); onReject(payment); }}
-              >
-                <Icon name="x" size="xs" fallback="placeholder" />
-                驳回退回
-              </Button>
-            </>
-          ) : null}
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!payment.billId}
-            onClick={() => {
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${payment.paymentNo} 收款操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          ...(isPendingVerify
+            ? [
+                {
+                  id: "verify",
+                  label: "核销确认",
+                  icon: <Icon name="check" size="xs" fallback="placeholder" />,
+                  onSelect: () => onVerify(payment),
+                },
+                {
+                  id: "reject",
+                  label: "驳回退回",
+                  icon: <Icon name="x" size="xs" fallback="placeholder" />,
+                  onSelect: () => onReject(payment),
+                },
+              ]
+            : []),
+          {
+            id: "bill",
+            label: "账单详情",
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            disabled: !payment.billId,
+            onSelect: () => {
               if (!payment.billId) return;
-              onClose();
               router.push(`/billing/${encodeURIComponent(payment.billId)}`);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            账单详情
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!payment.subscriptionId}
-            onClick={() => {
+            },
+          },
+          {
+            id: "order",
+            label: "订单详情",
+            icon: <Icon name="table" size="xs" fallback="placeholder" />,
+            disabled: !payment.subscriptionId,
+            onSelect: () => {
               if (!payment.subscriptionId) return;
-              onClose();
-              router.push(
-                `/orders/${encodeURIComponent(payment.subscriptionId)}`,
-              );
-            }}
-          >
-            <Icon name="table" size="xs" fallback="placeholder" />
-            订单详情
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(payment.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!payment.offlineEvidenceUrl}
-            onClick={() => {
+              router.push(`/orders/${encodeURIComponent(payment.subscriptionId)}`);
+            },
+          },
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(payment.tenantId)}`),
+          },
+          {
+            id: "evidence",
+            label: "查看凭证",
+            icon: <Icon name="key" size="xs" fallback="placeholder" />,
+            disabled: !payment.offlineEvidenceUrl,
+            onSelect: () => {
               if (!payment.offlineEvidenceUrl) return;
-              onClose();
               globalThis.open(
                 payment.offlineEvidenceUrl,
                 "_blank",
                 "noopener,noreferrer",
               );
-            }}
-          >
-            <Icon name="key" size="xs" fallback="placeholder" />
-            查看凭证
-          </Button>
-        </div>
-      ) : null}
+            },
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -398,9 +353,6 @@ function PaymentActionsMenu({
 function PaymentListRows({
   payments,
   startIndex,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   selectedPaymentIds,
   isPageSelected,
   onTogglePayment,
@@ -410,9 +362,6 @@ function PaymentListRows({
 }: {
   payments: PaymentOperationRecord[];
   startIndex: number;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   selectedPaymentIds: Set<string>;
   isPageSelected: boolean;
   onTogglePayment: (id: string, checked: boolean) => void;
@@ -583,11 +532,6 @@ function PaymentListRows({
             </span>
             <PaymentActionsMenu
               payment={payment}
-              open={openMenuId === payment.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === payment.id ? "" : payment.id)
-              }
-              onClose={onCloseMenu}
               onVerify={onVerify}
               onReject={onReject}
             />
@@ -600,16 +544,10 @@ function PaymentListRows({
 
 function PaymentCards({
   payments,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onVerify,
   onReject,
 }: {
   payments: PaymentOperationRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onVerify: (payment: PaymentOperationRecord) => void;
   onReject: (payment: PaymentOperationRecord) => void;
 }) {
@@ -645,11 +583,6 @@ function PaymentCards({
             </div>
             <PaymentActionsMenu
               payment={payment}
-              open={openMenuId === payment.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === payment.id ? "" : payment.id)
-              }
-              onClose={onCloseMenu}
               onVerify={onVerify}
               onReject={onReject}
             />
@@ -728,25 +661,7 @@ function Pagination({
       </span>
       <div className="vx-tenant-pagination__actions">
         <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button
-            variant="outline"
-            disabled={currentPage <= 1}
-            onClick={() => onPageChange(currentPage - 1)}
-          >
-            上一页
-          </Button>
-          <strong>
-            {currentPage} / {pageCount}
-          </strong>
-          <Button
-            variant="outline"
-            disabled={currentPage >= pageCount}
-            onClick={() => onPageChange(currentPage + 1)}
-          >
-            下一页
-          </Button>
-        </div>
+        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -755,7 +670,6 @@ function Pagination({
 export function PaymentsPage() {
   const [payments, setPayments] = useState<PaymentOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [paymentStatusFilter, setPaymentStatusFilter] =
     useState<PaymentStatusFilter>("all");
@@ -860,7 +774,6 @@ export function PaymentsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [
     offlineTypeFilter,
     pageSize,
@@ -914,10 +827,6 @@ export function PaymentsPage() {
     } finally {
       setActionLoading(false);
     }
-  }
-
-  function handleOpenMenu(id: string) {
-    setOpenMenuId(id || null);
   }
 
   function togglePaymentSelection(id: string, checked: boolean) {
@@ -1092,9 +1001,6 @@ export function PaymentsPage() {
               <PaymentListRows
                 payments={visiblePayments}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 selectedPaymentIds={selectedPaymentIds}
                 isPageSelected={isPaymentPageSelected}
                 onTogglePayment={togglePaymentSelection}
@@ -1105,9 +1011,6 @@ export function PaymentsPage() {
             ) : (
               <PaymentCards
                 payments={visiblePayments}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onVerify={handleOpenVerify}
                 onReject={handleOpenReject}
               />

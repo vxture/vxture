@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from '@vxture/design-system';
 import { fetchSubscriptionOperations, submitSubscriptionOperation } from '@/api/admin-bff';
 import type {
   SubscriptionOperationAction,
@@ -139,95 +139,66 @@ function PageSizePicker({ value, onChange }: { value: PageSize; onChange: (value
 
 function SubscriptionActionsMenu({
   subscription,
-  open,
-  onToggle,
-  onClose,
   onAction,
 }: {
   subscription: SubscriptionOperationRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onAction: (subscription: SubscriptionOperationRecord, action: SubscriptionOperationAction) => void;
 }) {
   const router = useRouter();
   const toggleAction = subscriptionToggleAction(subscription.status);
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${subscription.tenantName} 订阅操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/subscriptions/${encodeURIComponent(subscription.id)}`);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            查看详情
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(subscription.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="star" size="xs" fallback="placeholder" />
-            调整套餐
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!canRunSubscriptionAction('renew', subscription)}
-            title={subscriptionActionDisabledReason('renew', subscription) ?? undefined}
-            onClick={() => {
-              onClose();
-              onAction(subscription, 'renew');
-            }}
-          >
-            <Icon name={subscriptionActionIcon('renew')} size="xs" fallback="placeholder" />
-            {subscriptionActionLabel('renew')}
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!canRunSubscriptionAction(toggleAction, subscription)}
-            title={subscriptionActionDisabledReason(toggleAction, subscription) ?? undefined}
-            onClick={() => {
-              onClose();
-              onAction(subscription, toggleAction);
-            }}
-          >
-            <Icon name={subscriptionActionIcon(toggleAction)} size="xs" fallback="placeholder" />
-            {subscriptionActionLabel(toggleAction)}
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            className="vx-subscription-menu-action--danger"
-            disabled={!canRunSubscriptionAction('cancel', subscription)}
-            title={subscriptionActionDisabledReason('cancel', subscription) ?? undefined}
-            onClick={() => {
-              onClose();
-              onAction(subscription, 'cancel');
-            }}
-          >
-            <Icon name={subscriptionActionIcon('cancel')} size="xs" fallback="placeholder" />
-            {subscriptionActionLabel('cancel')}
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${subscription.tenantName} 订阅操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'details',
+            label: '查看详情',
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/subscriptions/${encodeURIComponent(subscription.id)}`),
+          },
+          {
+            id: 'tenant',
+            label: '查看租户',
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(subscription.tenantId)}`),
+          },
+          {
+            id: 'plan',
+            label: '调整套餐',
+            icon: <Icon name="star" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'renew',
+            label: subscriptionActionLabel('renew'),
+            icon: <Icon name={subscriptionActionIcon('renew')} size="xs" fallback="placeholder" />,
+            disabled: !canRunSubscriptionAction('renew', subscription),
+            title: subscriptionActionDisabledReason('renew', subscription) ?? undefined,
+            onSelect: () => onAction(subscription, 'renew'),
+          },
+          {
+            id: toggleAction,
+            label: subscriptionActionLabel(toggleAction),
+            icon: <Icon name={subscriptionActionIcon(toggleAction)} size="xs" fallback="placeholder" />,
+            disabled: !canRunSubscriptionAction(toggleAction, subscription),
+            title: subscriptionActionDisabledReason(toggleAction, subscription) ?? undefined,
+            onSelect: () => onAction(subscription, toggleAction),
+          },
+          {
+            id: 'cancel',
+            label: subscriptionActionLabel('cancel'),
+            icon: <Icon name={subscriptionActionIcon('cancel')} size="xs" fallback="placeholder" />,
+            disabled: !canRunSubscriptionAction('cancel', subscription),
+            title: subscriptionActionDisabledReason('cancel', subscription) ?? undefined,
+            danger: true,
+            onSelect: () => onAction(subscription, 'cancel'),
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -235,22 +206,16 @@ function SubscriptionActionsMenu({
 function SubscriptionListRows({
   subscriptions,
   startIndex,
-  openMenuId,
   selectedSubscriptionIds,
   isPageSelected,
-  onOpenMenu,
-  onCloseMenu,
   onAction,
   onToggleSubscription,
   onTogglePage,
 }: {
   subscriptions: SubscriptionOperationRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedSubscriptionIds: Set<string>;
   isPageSelected: boolean;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onAction: (subscription: SubscriptionOperationRecord, action: SubscriptionOperationAction) => void;
   onToggleSubscription: (id: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
@@ -339,9 +304,6 @@ function SubscriptionListRows({
           </span>
           <SubscriptionActionsMenu
             subscription={subscription}
-            open={openMenuId === subscription.id}
-            onToggle={() => onOpenMenu(openMenuId === subscription.id ? '' : subscription.id)}
-            onClose={onCloseMenu}
             onAction={onAction}
           />
         </div>
@@ -352,15 +314,9 @@ function SubscriptionListRows({
 
 function SubscriptionCards({
   subscriptions,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onAction,
 }: {
   subscriptions: SubscriptionOperationRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onAction: (subscription: SubscriptionOperationRecord, action: SubscriptionOperationAction) => void;
 }) {
   const router = useRouter();
@@ -386,9 +342,6 @@ function SubscriptionCards({
             </div>
             <SubscriptionActionsMenu
               subscription={subscription}
-              open={openMenuId === subscription.id}
-              onToggle={() => onOpenMenu(openMenuId === subscription.id ? '' : subscription.id)}
-              onClose={onCloseMenu}
               onAction={onAction}
             />
           </header>
@@ -442,15 +395,7 @@ function Pagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条订阅记录</span>
       <div className="vx-tenant-pagination__actions">
         <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -459,7 +404,6 @@ function Pagination({
 export function SubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<SubscriptionOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedSubscriptionIds, setSelectedSubscriptionIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -519,7 +463,6 @@ export function SubscriptionsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [pageSize, query, renewFilter, riskFilter, statusFilter, tierFilter, viewMode]);
 
   function handleReset() {
@@ -530,12 +473,7 @@ export function SubscriptionsPage() {
     setRenewFilter('all');
   }
 
-  function handleOpenMenu(id: string) {
-    setOpenMenuId(id || null);
-  }
-
   function requestSubscriptionAction(subscription: SubscriptionOperationRecord, action: SubscriptionOperationAction) {
-    setOpenMenuId(null);
     setOperationError(null);
     setOperationFeedback(null);
     setActionTarget({ subscription, action });
@@ -666,11 +604,8 @@ export function SubscriptionsPage() {
               <SubscriptionListRows
                 subscriptions={visibleSubscriptions}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedSubscriptionIds={selectedSubscriptionIds}
                 isPageSelected={isSubscriptionPageSelected}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onAction={requestSubscriptionAction}
                 onToggleSubscription={toggleSubscriptionSelection}
                 onTogglePage={toggleSubscriptionPageSelection}
@@ -678,9 +613,6 @@ export function SubscriptionsPage() {
             ) : (
               <SubscriptionCards
                 subscriptions={visibleSubscriptions}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onAction={requestSubscriptionAction}
               />
             )

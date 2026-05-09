@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchPlatformPermissions, fetchPlatformRoles, replacePlatformRolePermissions } from '@/api/admin-bff';
 import type { PlatformAdminPermissionRecord, PlatformPermissionType, PlatformRoleRecord } from '@/entities/console';
 import { useConsoleTranslations } from '@/lib/console-intl';
@@ -198,112 +198,54 @@ function AdminRolePageSizePicker({ value, onChange }: { value: PageSize; onChang
 
 function AdminRoleActionsMenu({
   role,
-  open,
-  onToggle,
-  onClose,
   roleLabel,
   onOpenPermissions,
   onOpenAuthorization,
 }: {
   role: PlatformRoleRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   roleLabel: string;
   onOpenPermissions: (role: PlatformRoleRecord) => void;
   onOpenAuthorization: (role: PlatformRoleRecord) => void;
 }) {
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
-
-  useLayoutEffect(() => {
-    if (!open || !triggerRef.current) return;
-    const updatePosition = () => {
-      const rect = triggerRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const menuWidth = 160;
-      const menuHeight = menuRef.current?.offsetHeight ?? 176;
-      const left = Math.max(8, Math.min(window.innerWidth - menuWidth - 8, rect.right - menuWidth));
-      const belowTop = rect.bottom + 4;
-      const top = belowTop + menuHeight > window.innerHeight - 8 ? Math.max(8, rect.top - menuHeight - 4) : belowTop;
-      setMenuPosition({ left, top });
-    };
-
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) return;
-      if (triggerRef.current?.contains(target) || menuRef.current?.contains(target)) return;
-      onClose();
-    };
-    document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [onClose, open]);
-
-  const menu = open
-    ? createPortal(
-        <div
-          ref={menuRef}
-          className="vx-tenant-actions__menu vx-tenant-actions__menu--portal"
-          role="menu"
-          style={{ left: menuPosition.left, top: menuPosition.top }}
-        >
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              onOpenAuthorization(role);
-            }}
-          >
-            <Icon name="key" size="xs" fallback="placeholder" />
-            角色授权
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              onOpenPermissions(role);
-            }}
-          >
-            <Icon name="table" size="xs" fallback="placeholder" />
-            权限详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            编辑角色
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="copy" size="xs" fallback="placeholder" />
-            复制角色
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={roleStatusCode(role) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
-            {roleStatusCode(role) === 'active' ? '停用角色' : '启用角色'}
-          </Button>
-        </div>,
-        document.body,
-      )
-    : null;
-
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${roleLabel} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {menu}
+      <ActionMenu
+        label={`${roleLabel} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'authorization',
+            label: '角色授权',
+            icon: <Icon name="key" size="xs" fallback="placeholder" />,
+            onSelect: () => onOpenAuthorization(role),
+          },
+          {
+            id: 'permissions',
+            label: '权限详情',
+            icon: <Icon name="table" size="xs" fallback="placeholder" />,
+            onSelect: () => onOpenPermissions(role),
+          },
+          {
+            id: 'edit',
+            label: '编辑角色',
+            icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'copy',
+            label: '复制角色',
+            icon: <Icon name="copy" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'toggle',
+            label: roleStatusCode(role) === 'active' ? '停用角色' : '启用角色',
+            icon: <Icon name={roleStatusCode(role) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -570,11 +512,8 @@ function PermissionTags({ role }: { role: PlatformRoleRecord }) {
 function AdminRoleListRows({
   roles,
   startIndex,
-  openMenuId,
   selectedRoleIds,
   isPageSelected,
-  onOpenMenu,
-  onCloseMenu,
   onToggleRole,
   onTogglePage,
   roleLabels,
@@ -584,11 +523,8 @@ function AdminRoleListRows({
 }: {
   roles: PlatformRoleRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedRoleIds: Set<string>;
   isPageSelected: boolean;
-  onOpenMenu: (roleId: string) => void;
-  onCloseMenu: () => void;
   onToggleRole: (roleId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
   roleLabels: Map<string, string>;
@@ -680,9 +616,6 @@ function AdminRoleListRows({
             <AdminRoleActionsMenu
               role={role}
               roleLabel={roleLabel}
-              open={openMenuId === role.id}
-              onToggle={() => onOpenMenu(openMenuId === role.id ? '' : role.id)}
-              onClose={onCloseMenu}
               onOpenPermissions={onOpenPermissions}
               onOpenAuthorization={onOpenAuthorization}
             />
@@ -695,18 +628,12 @@ function AdminRoleListRows({
 
 function AdminRoleCards({
   roles,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   roleLabels,
   t,
   onOpenPermissions,
   onOpenAuthorization,
 }: {
   roles: PlatformRoleRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (roleId: string) => void;
-  onCloseMenu: () => void;
   roleLabels: Map<string, string>;
   t: ReturnType<typeof useConsoleTranslations>;
   onOpenPermissions: (role: PlatformRoleRecord) => void;
@@ -725,9 +652,6 @@ function AdminRoleCards({
             <AdminRoleActionsMenu
               role={role}
               roleLabel={roleLabels.get(role.id) ?? role.nameEn ?? role.roleCode ?? EMPTY_MARK}
-              open={openMenuId === role.id}
-              onToggle={() => onOpenMenu(openMenuId === role.id ? '' : role.id)}
-              onClose={onCloseMenu}
               onOpenPermissions={onOpenPermissions}
               onOpenAuthorization={onOpenAuthorization}
             />
@@ -782,15 +706,7 @@ function AdminRolePagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <AdminRolePageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -801,7 +717,6 @@ export function AdminRolesPage() {
   const [roles, setRoles] = useState<PlatformRoleRecord[]>([]);
   const [permissions, setPermissions] = useState<PlatformAdminPermissionRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedRoleIds, setSelectedRoleIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -871,7 +786,6 @@ export function AdminRolesPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [pageSize, permissionFilter, query, roleKindFilter, statusFilter, viewMode]);
 
   function handleReset() {
@@ -879,10 +793,6 @@ export function AdminRolesPage() {
     setStatusFilter('all');
     setRoleKindFilter('all');
     setPermissionFilter('all');
-  }
-
-  function handleOpenMenu(roleId: string) {
-    setOpenMenuId(roleId || null);
   }
 
   function toggleRoleSelection(roleId: string, checked: boolean) {
@@ -1000,11 +910,8 @@ export function AdminRolesPage() {
               <AdminRoleListRows
                 roles={visibleRoles}
                 startIndex={(Math.min(currentPage, pageCount) - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedRoleIds={selectedRoleIds}
                 isPageSelected={isRolePageSelected}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onToggleRole={toggleRoleSelection}
                 onTogglePage={toggleRolePageSelection}
                 roleLabels={roleLabels}
@@ -1018,9 +925,6 @@ export function AdminRolesPage() {
             ) : (
               <AdminRoleCards
                 roles={visibleRoles}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 roleLabels={roleLabels}
                 t={t}
                 onOpenPermissions={(role) => setPermissionDialogRoleId(role.id)}

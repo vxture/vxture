@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, Label, NativeSelect, Textarea } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect, Pagination, Textarea } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import {
   createAiModel,
@@ -222,7 +221,6 @@ export function ModelGatewayPage() {
   const [sourceFilter, setSourceFilter] = useState<ModelSourceFilter>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
-  const [openModelMenuId, setOpenModelMenuId] = useState<string | null>(null);
   const [selectedModelIds, setSelectedModelIds] = useState<Set<string>>(() => new Set());
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
@@ -237,7 +235,6 @@ export function ModelGatewayPage() {
         if (!active) return;
         setModels(records);
         setLinkStatusByModelId(Object.fromEntries(records.map((model) => [model.id, detectModelLinkStatus(model)])));
-        setOpenModelMenuId(null);
         setSelectedModelId(null);
       })
       .catch(() => {
@@ -254,7 +251,6 @@ export function ModelGatewayPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenModelMenuId(null);
   }, [pageSize, query, sourceFilter, statusFilter, viewMode]);
 
   const modelById = useMemo(() => new Map(models.map((model) => [model.id, model])), [models]);
@@ -328,7 +324,6 @@ export function ModelGatewayPage() {
     setModels(records);
     setLinkStatusByModelId(Object.fromEntries(records.map((model) => [model.id, detectModelLinkStatus(model)])));
     setSelectedModelId(nextModelId ?? null);
-    setOpenModelMenuId(null);
     setSelectedModelIds((current) => {
       const availableIds = new Set(records.map((model) => model.id));
       return new Set([...current].filter((id) => availableIds.has(id)));
@@ -343,7 +338,6 @@ export function ModelGatewayPage() {
 
   function openEditModelDialog(model: AiModelRecord) {
     setSelectedModelId(model.id);
-    setOpenModelMenuId(null);
     setModelForm({
       modelCode: model.modelCode,
       modelName: model.modelName,
@@ -715,38 +709,42 @@ export function ModelGatewayPage() {
                       {model.capabilities.length > 3 ? <Badge className="vx-tenant-pill vx-tenant-pill--quota">+{model.capabilities.length - 3}</Badge> : null}
                     </span>
                   </span>
-                  <div className="vx-tenant-actions" onMouseLeave={() => setOpenModelMenuId(null)}>
-                    <Button
-                      className="vx-tenant-actions__trigger"
-                      variant="ghost"
-                      size="icon"
-                      aria-label={t('actions.modelMenu', { name: model.modelName })}
-                      aria-haspopup="menu"
-                      aria-expanded={openModelMenuId === model.id}
-                      onClick={() => setOpenModelMenuId((current) => (current === model.id ? null : model.id))}
-                    >
-                      <Icon name="more-vertical" size="lg" fallback="placeholder" />
-                    </Button>
-                    {openModelMenuId === model.id ? (
-                      <div className="vx-tenant-actions__menu" role="menu">
-                        <Button variant="ghost" role="menuitem" onClick={() => openEditModelDialog(model)}>
-                          <Icon name="edit" size="xs" fallback="placeholder" />
-                          <span>{t('actions.editModel')}</span>
-                        </Button>
-                        <Button variant="ghost" role="menuitem" disabled={submitting || model.isActive} onClick={() => void handleToggleModel(model)}>
-                          <Icon name="play" size={16} weight="fill" fallback="placeholder" />
-                          <span>{t('actions.enableModel')}</span>
-                        </Button>
-                        <Button variant="ghost" role="menuitem" disabled={submitting || !model.isActive} onClick={() => void handleToggleModel(model)}>
-                          <Icon name="stop" size={16} weight="fill" fallback="placeholder" />
-                          <span>{t('actions.disableModel')}</span>
-                        </Button>
-                        <Button variant="ghost" role="menuitem" className="vx-model-actions-menu__danger" disabled={submitting || model.isActive} onClick={() => void handleDeleteModel(model)}>
-                          <Icon name="trash" size={16} fallback="placeholder" />
-                          <span>{t('actions.deleteModel')}</span>
-                        </Button>
-                      </div>
-                    ) : null}
+                  <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+                    <ActionMenu
+                      label={t('actions.modelMenu', { name: model.modelName })}
+                      triggerClassName="vx-tenant-actions__trigger"
+                      triggerProps={{ title: t('actions.modelMenu', { name: model.modelName }) }}
+                      items={[
+                        {
+                          id: 'edit',
+                          label: t('actions.editModel'),
+                          icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+                          onSelect: () => openEditModelDialog(model),
+                        },
+                        {
+                          id: 'enable',
+                          label: t('actions.enableModel'),
+                          icon: <Icon name="play" size={16} weight="fill" fallback="placeholder" />,
+                          disabled: submitting || model.isActive,
+                          onSelect: () => void handleToggleModel(model),
+                        },
+                        {
+                          id: 'disable',
+                          label: t('actions.disableModel'),
+                          icon: <Icon name="stop" size={16} weight="fill" fallback="placeholder" />,
+                          disabled: submitting || !model.isActive,
+                          onSelect: () => void handleToggleModel(model),
+                        },
+                        {
+                          id: 'delete',
+                          label: t('actions.deleteModel'),
+                          icon: <Icon name="trash" size={16} fallback="placeholder" />,
+                          disabled: submitting || model.isActive,
+                          danger: true,
+                          onSelect: () => void handleDeleteModel(model),
+                        },
+                      ]}
+                    />
                   </div>
                 </div>
               ))}
@@ -812,25 +810,25 @@ export function ModelGatewayPage() {
             <span className="vx-tenant-pagination__total">{t('pagination.summary', { page: safeCurrentPage, totalPages, total: filteredModels.length })}</span>
             <div className="vx-tenant-pagination__actions">
               <ModelPageSizePicker value={pageSize} onChange={setPageSize} />
-              <div className="vx-tenant-pagination__pager">
-                <Button variant="outline" disabled={safeCurrentPage <= 1} onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}>
-                  {t('pagination.previous')}
-                </Button>
-                <strong>{safeCurrentPage} / {totalPages}</strong>
-                <Button variant="outline" disabled={safeCurrentPage >= totalPages} onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}>
-                  {t('pagination.next')}
-                </Button>
-              </div>
+              <Pagination className="vx-tenant-pagination__pager" page={safeCurrentPage} pageCount={totalPages} onPageChange={setCurrentPage} />
             </div>
           </footer>
         </section>
       </div>
 
       {dialogMode === 'createModel' || dialogMode === 'editModel' ? (
-        <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t(`dialogs.${dialogMode}.title`)}>
-          <div className="vx-profile-dialog__backdrop" onClick={() => setDialogMode(null)} />
-          <form className="vx-profile-dialog__content vx-model-dialog" onSubmit={(event) => void submitModel(event)}>
-            <h3>{t(`dialogs.${dialogMode}.title`)}</h3>
+        <DialogForm
+          open
+          title={t(`dialogs.${dialogMode}.title`)}
+          submitLabel={t('dialogs.actions.save')}
+          cancelLabel={t('dialogs.actions.cancel')}
+          submitting={submitting}
+          contentClassName="max-w-3xl"
+          onOpenChange={(open) => {
+            if (!open) setDialogMode(null);
+          }}
+          onSubmit={(event) => void submitModel(event)}
+        >
             <div className="vx-model-dialog__grid">
               <Label>
                 {t('dialogs.fields.modelName')}
@@ -880,16 +878,7 @@ export function ModelGatewayPage() {
                 placeholder='{"anthropicVersion":"2023-06-01"}'
               />
             </Label>
-            <div className="vx-profile-dialog__actions">
-              <Button variant="outline" onClick={() => setDialogMode(null)}>
-                {t('dialogs.actions.cancel')}
-              </Button>
-              <Button type="submit" disabled={submitting}>
-                {t('dialogs.actions.save')}
-              </Button>
-            </div>
-          </form>
-        </div>
+        </DialogForm>
       ) : null}
     </div>
   );

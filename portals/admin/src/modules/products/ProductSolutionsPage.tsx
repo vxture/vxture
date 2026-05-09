@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchProductSolutions } from '@/api/admin-bff';
 import type {
   ProductSolutionCapability,
@@ -125,42 +125,29 @@ function ProductSolutionPageSizePicker({ value, onChange }: { value: PageSize; o
 
 function ProductSolutionActionsMenu({
   solution,
-  open,
-  onToggle,
-  onClose,
   onViewDetails,
 }: {
   solution: ProductSolutionRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onViewDetails: () => void;
 }) {
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${solution.solutionName} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button variant="ghost" role="menuitem" onClick={onViewDetails}>
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            查看详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            编辑方案
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="cube" size="xs" fallback="placeholder" />
-            配置产品
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={solution.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
-            {solution.status === 'active' ? '停用方案' : '启用方案'}
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${solution.solutionName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          { id: 'details', label: '查看详情', icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />, onSelect: onViewDetails },
+          { id: 'edit', label: '编辑方案', icon: <Icon name="edit" size="xs" fallback="placeholder" />, disabled: true },
+          { id: 'products', label: '配置产品', icon: <Icon name="cube" size="xs" fallback="placeholder" />, disabled: true },
+          {
+            id: 'toggle-status',
+            label: solution.status === 'active' ? '停用方案' : '启用方案',
+            icon: <Icon name={solution.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -188,22 +175,16 @@ function CapabilityTags({ products, maxVisible = 3 }: { products: ProductSolutio
 function ProductSolutionListRows({
   solutions,
   startIndex,
-  openMenuId,
   selectedSolutionIds,
   isPageSelected,
-  onOpenMenu,
-  onCloseMenu,
   onOpenDetails,
   onToggleSolution,
   onTogglePage,
 }: {
   solutions: ProductSolutionRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedSolutionIds: Set<string>;
   isPageSelected: boolean;
-  onOpenMenu: (solutionId: string) => void;
-  onCloseMenu: () => void;
   onOpenDetails: (solutionCode: string) => void;
   onToggleSolution: (solutionId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
@@ -294,9 +275,6 @@ function ProductSolutionListRows({
             </span>
             <ProductSolutionActionsMenu
               solution={solution}
-              open={openMenuId === solution.id}
-              onToggle={() => onOpenMenu(openMenuId === solution.id ? '' : solution.id)}
-              onClose={onCloseMenu}
               onViewDetails={() => onOpenDetails(solution.solutionCode)}
             />
           </div>
@@ -308,15 +286,9 @@ function ProductSolutionListRows({
 
 function ProductSolutionCards({
   solutions,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onOpenDetails,
 }: {
   solutions: ProductSolutionRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (solutionId: string) => void;
-  onCloseMenu: () => void;
   onOpenDetails: (solutionCode: string) => void;
 }) {
   return (
@@ -340,9 +312,6 @@ function ProductSolutionCards({
             </div>
             <ProductSolutionActionsMenu
               solution={solution}
-              open={openMenuId === solution.id}
-              onToggle={() => onOpenMenu(openMenuId === solution.id ? '' : solution.id)}
-              onClose={onCloseMenu}
               onViewDetails={() => onOpenDetails(solution.solutionCode)}
             />
           </header>
@@ -403,15 +372,7 @@ function ProductSolutionPagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <ProductSolutionPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -421,7 +382,6 @@ export function ProductSolutionsPage() {
   const router = useRouter();
   const [solutions, setSolutions] = useState<ProductSolutionRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedSolutionIds, setSelectedSolutionIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -479,7 +439,6 @@ export function ProductSolutionsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [industryFilter, pageSize, query, sourceFilter, statusFilter, visibilityFilter, viewMode]);
 
   function handleReset() {
@@ -488,10 +447,6 @@ export function ProductSolutionsPage() {
     setVisibilityFilter('all');
     setIndustryFilter('all');
     setSourceFilter('all');
-  }
-
-  function handleOpenMenu(solutionId: string) {
-    setOpenMenuId(solutionId || null);
   }
 
   function handleOpenDetails(solutionCode: string) {
@@ -593,11 +548,8 @@ export function ProductSolutionsPage() {
               <ProductSolutionListRows
                 solutions={visibleSolutions}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedSolutionIds={selectedSolutionIds}
                 isPageSelected={isSolutionPageSelected}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onOpenDetails={handleOpenDetails}
                 onToggleSolution={toggleSolutionSelection}
                 onTogglePage={toggleSolutionPageSelection}
@@ -605,9 +557,6 @@ export function ProductSolutionsPage() {
             ) : (
               <ProductSolutionCards
                 solutions={visibleSolutions}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onOpenDetails={handleOpenDetails}
               />
             )

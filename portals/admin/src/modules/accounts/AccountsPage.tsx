@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchAccountOperations } from '@/api/admin-bff';
 import type { AccountOperationRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -206,36 +206,36 @@ function AccountPageSizePicker({ value, onChange }: { value: PageSize; onChange:
 
 function AccountActionsMenu({
   account,
-  open,
-  onToggle,
-  onClose,
 }: {
   account: AccountOperationRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${account.displayName} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            查看详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="key" size="xs" fallback="placeholder" />
-            重置密码
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={account.status === 'disabled' ? 'success' : account.status === 'locked' ? 'check' : 'warning'} size="xs" fallback="placeholder" />
-            {account.status === 'disabled' ? '恢复账号' : account.status === 'locked' ? '解除锁定' : '停用账号'}
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${account.displayName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'details',
+            label: '查看详情',
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'reset-password',
+            label: '重置密码',
+            icon: <Icon name="key" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'toggle-status',
+            label: account.status === 'disabled' ? '恢复账号' : account.status === 'locked' ? '解除锁定' : '停用账号',
+            icon: <Icon name={account.status === 'disabled' ? 'success' : account.status === 'locked' ? 'check' : 'warning'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -243,23 +243,17 @@ function AccountActionsMenu({
 function AccountListRows({
   accounts,
   startIndex,
-  openMenuId,
   selectedAccountIds,
   isPageSelected,
   showTenantContext,
-  onOpenMenu,
-  onCloseMenu,
   onToggleAccount,
   onTogglePage,
 }: {
   accounts: AccountOperationRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedAccountIds: Set<string>;
   isPageSelected: boolean;
   showTenantContext: boolean;
-  onOpenMenu: (accountId: string) => void;
-  onCloseMenu: () => void;
   onToggleAccount: (accountId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
@@ -353,12 +347,7 @@ function AccountListRows({
               </span>
               <small>{formatDate(account.lastActiveAt)} · {formatNumber(account.loginCount30d)} 次</small>
             </span>
-            <AccountActionsMenu
-              account={account}
-              open={openMenuId === account.id}
-              onToggle={() => onOpenMenu(openMenuId === account.id ? '' : account.id)}
-              onClose={onCloseMenu}
-            />
+            <AccountActionsMenu account={account} />
           </div>
         );
       })}
@@ -368,16 +357,10 @@ function AccountListRows({
 
 function AccountCards({
   accounts,
-  openMenuId,
   showTenantContext,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   accounts: AccountOperationRecord[];
-  openMenuId: string | null;
   showTenantContext: boolean;
-  onOpenMenu: (accountId: string) => void;
-  onCloseMenu: () => void;
 }) {
   return (
     <div className="vx-tenant-directory-cards" aria-label="账号卡片">
@@ -389,12 +372,7 @@ function AccountCards({
               <strong>{account.displayName}</strong>
               <span>{account.accountCode} · {account.email}</span>
             </div>
-            <AccountActionsMenu
-              account={account}
-              open={openMenuId === account.id}
-              onToggle={() => onOpenMenu(openMenuId === account.id ? '' : account.id)}
-              onClose={onCloseMenu}
-            />
+            <AccountActionsMenu account={account} />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Badge className={accountStatusPillClass(account.status)}>{accountStatusLabel(account.status)}</Badge>
@@ -458,15 +436,7 @@ function AccountPagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <AccountPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -484,7 +454,6 @@ export function AccountsPage({
   const pageCopy = { ...defaultAccountsPageCopy, ...copy };
   const [accounts, setAccounts] = useState<AccountOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedAccountIds, setSelectedAccountIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -535,7 +504,6 @@ export function AccountsPage({
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [pageSize, query, roleFilter, statusFilter, tenantTypeFilter, viewMode]);
 
   function handleReset() {
@@ -543,10 +511,6 @@ export function AccountsPage({
     setStatusFilter('all');
     setTenantTypeFilter('all');
     setRoleFilter('all');
-  }
-
-  function handleOpenMenu(accountId: string) {
-    setOpenMenuId(accountId || null);
   }
 
   function toggleAccountSelection(accountId: string, checked: boolean) {
@@ -644,22 +608,16 @@ export function AccountsPage({
               <AccountListRows
                 accounts={visibleAccounts}
                 startIndex={(Math.min(currentPage, pageCount) - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedAccountIds={selectedAccountIds}
                 isPageSelected={isAccountPageSelected}
                 showTenantContext={showTenantContext}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onToggleAccount={toggleAccountSelection}
                 onTogglePage={toggleAccountPageSelection}
               />
             ) : (
               <AccountCards
                 accounts={visibleAccounts}
-                openMenuId={openMenuId}
                 showTenantContext={showTenantContext}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
               />
             )
           ) : (

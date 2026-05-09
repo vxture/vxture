@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchProductCapabilities } from '@/api/admin-bff';
 import type {
   ProductCapabilityIntegrationStatus,
@@ -135,42 +135,44 @@ function ProductPageSizePicker({ value, onChange }: { value: PageSize; onChange:
 
 function ProductActionsMenu({
   product,
-  open,
-  onToggle,
-  onClose,
   onViewDetails,
 }: {
   product: ProductCapabilityRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onViewDetails: () => void;
 }) {
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${product.productName} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button variant="ghost" role="menuitem" onClick={onViewDetails}>
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            查看详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            编辑能力
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="shield-check" size="xs" fallback="placeholder" />
-            接入配置
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={product.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
-            {product.status === 'active' ? '下线能力' : '上线能力'}
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${product.productName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'details',
+            label: '查看详情',
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: onViewDetails,
+          },
+          {
+            id: 'edit',
+            label: '编辑能力',
+            icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'integration',
+            label: '接入配置',
+            icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'toggle-status',
+            label: product.status === 'active' ? '下线能力' : '上线能力',
+            icon: <Icon name={product.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -178,22 +180,16 @@ function ProductActionsMenu({
 function ProductListRows({
   products,
   startIndex,
-  openMenuId,
   selectedProductCodes,
   isPageSelected,
-  onOpenMenu,
-  onCloseMenu,
   onOpenDetails,
   onToggleProduct,
   onTogglePage,
 }: {
   products: ProductCapabilityRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedProductCodes: Set<string>;
   isPageSelected: boolean;
-  onOpenMenu: (productCode: string) => void;
-  onCloseMenu: () => void;
   onOpenDetails: (productCode: string) => void;
   onToggleProduct: (productCode: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
@@ -275,9 +271,6 @@ function ProductListRows({
           </span>
           <ProductActionsMenu
             product={product}
-            open={openMenuId === product.productCode}
-            onToggle={() => onOpenMenu(openMenuId === product.productCode ? '' : product.productCode)}
-            onClose={onCloseMenu}
             onViewDetails={() => onOpenDetails(product.productCode)}
           />
         </div>
@@ -288,15 +281,9 @@ function ProductListRows({
 
 function ProductCards({
   products,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onOpenDetails,
 }: {
   products: ProductCapabilityRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (productCode: string) => void;
-  onCloseMenu: () => void;
   onOpenDetails: (productCode: string) => void;
 }) {
   return (
@@ -320,9 +307,6 @@ function ProductCards({
             </div>
             <ProductActionsMenu
               product={product}
-              open={openMenuId === product.productCode}
-              onToggle={() => onOpenMenu(openMenuId === product.productCode ? '' : product.productCode)}
-              onClose={onCloseMenu}
               onViewDetails={() => onOpenDetails(product.productCode)}
             />
           </header>
@@ -375,15 +359,7 @@ function ProductPagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <ProductPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -393,7 +369,6 @@ export function ProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<ProductCapabilityRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedProductCodes, setSelectedProductCodes] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
@@ -450,7 +425,6 @@ export function ProductsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [accessFilter, pageSize, query, sourceFilter, statusFilter, typeFilter, viewMode]);
 
   function handleReset() {
@@ -459,10 +433,6 @@ export function ProductsPage() {
     setSourceFilter('all');
     setStatusFilter('all');
     setAccessFilter('all');
-  }
-
-  function handleOpenMenu(productCode: string) {
-    setOpenMenuId(productCode || null);
   }
 
   function handleOpenDetails(productCode: string) {
@@ -568,11 +538,8 @@ export function ProductsPage() {
               <ProductListRows
                 products={visibleProducts}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedProductCodes={selectedProductCodes}
                 isPageSelected={isProductPageSelected}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onOpenDetails={handleOpenDetails}
                 onToggleProduct={toggleProductSelection}
                 onTogglePage={toggleProductPageSelection}
@@ -580,9 +547,6 @@ export function ProductsPage() {
             ) : (
               <ProductCards
                 products={visibleProducts}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onOpenDetails={handleOpenDetails}
               />
             )

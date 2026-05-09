@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
 import {
   confirmOrderOfflinePayment,
   fetchOrderOperations,
@@ -178,87 +178,48 @@ function PageSizePicker({
 
 function OrderActionsMenu({
   order,
-  open,
-  onToggle,
-  onClose,
   onConfirmPayment,
 }: {
   order: OrderOperationRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onConfirmPayment: (order: OrderOperationRecord) => void;
 }) {
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        className="vx-tenant-actions__trigger"
-        variant="ghost"
-        size="icon"
-        aria-label={`${order.orderNo} 订单操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/orders/${encodeURIComponent(order.id)}`);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            订单详情
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(order.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!canConfirmOrderOfflinePayment(order)}
-            title={confirmOfflinePaymentDisabledReason(order) ?? undefined}
-            onClick={() => {
-              onClose();
-              onConfirmPayment(order);
-            }}
-          >
-            <Icon name="check" size="xs" fallback="placeholder" />
-            确认收款
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(
-                `/subscriptions/${encodeURIComponent(order.subscriptionId)}`,
-              );
-            }}
-          >
-            <Icon name="star" size="xs" fallback="placeholder" />
-            查看订阅
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${order.orderNo} 订单操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "details",
+            label: "订单详情",
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/orders/${encodeURIComponent(order.id)}`),
+          },
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(order.tenantId)}`),
+          },
+          {
+            id: "confirm-payment",
+            label: "确认收款",
+            icon: <Icon name="check" size="xs" fallback="placeholder" />,
+            disabled: !canConfirmOrderOfflinePayment(order),
+            title: confirmOfflinePaymentDisabledReason(order) ?? undefined,
+            onSelect: () => onConfirmPayment(order),
+          },
+          {
+            id: "subscription",
+            label: "查看订阅",
+            icon: <Icon name="star" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/subscriptions/${encodeURIComponent(order.subscriptionId)}`),
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -266,9 +227,6 @@ function OrderActionsMenu({
 function OrderListRows({
   orders,
   startIndex,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onConfirmPayment,
   selectedOrderIds,
   isPageSelected,
@@ -277,9 +235,6 @@ function OrderListRows({
 }: {
   orders: OrderOperationRecord[];
   startIndex: number;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onConfirmPayment: (order: OrderOperationRecord) => void;
   selectedOrderIds: Set<string>;
   isPageSelected: boolean;
@@ -430,11 +385,6 @@ function OrderListRows({
             </span>
             <OrderActionsMenu
               order={order}
-              open={openMenuId === order.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === order.id ? "" : order.id)
-              }
-              onClose={onCloseMenu}
               onConfirmPayment={onConfirmPayment}
             />
           </div>
@@ -446,15 +396,9 @@ function OrderListRows({
 
 function OrderCards({
   orders,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onConfirmPayment,
 }: {
   orders: OrderOperationRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onConfirmPayment: (order: OrderOperationRecord) => void;
 }) {
   const router = useRouter();
@@ -489,11 +433,6 @@ function OrderCards({
             </div>
             <OrderActionsMenu
               order={order}
-              open={openMenuId === order.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === order.id ? "" : order.id)
-              }
-              onClose={onCloseMenu}
               onConfirmPayment={onConfirmPayment}
             />
           </header>
@@ -561,25 +500,7 @@ function Pagination({
       </span>
       <div className="vx-tenant-pagination__actions">
         <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button
-            variant="outline"
-            disabled={currentPage <= 1}
-            onClick={() => onPageChange(currentPage - 1)}
-          >
-            上一页
-          </Button>
-          <strong>
-            {currentPage} / {pageCount}
-          </strong>
-          <Button
-            variant="outline"
-            disabled={currentPage >= pageCount}
-            onClick={() => onPageChange(currentPage + 1)}
-          >
-            下一页
-          </Button>
-        </div>
+        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -588,7 +509,6 @@ function Pagination({
 export function OrdersPage() {
   const [orders, setOrders] = useState<OrderOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<OrderStatusFilter>("all");
   const [paymentFilter, setPaymentFilter] =
@@ -677,7 +597,6 @@ export function OrdersPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [
     pageSize,
     paymentFilter,
@@ -694,10 +613,6 @@ export function OrdersPage() {
     setPaymentFilter("all");
     setPaySourceFilter("all");
     setTierFilter("all");
-  }
-
-  function handleOpenMenu(id: string) {
-    setOpenMenuId(id || null);
   }
 
   function toggleOrderSelection(id: string, checked: boolean) {
@@ -721,7 +636,6 @@ export function OrdersPage() {
   }
 
   function requestConfirmPayment(order: OrderOperationRecord) {
-    setOpenMenuId(null);
     setOperationError(null);
     setOperationFeedback(null);
     setPaymentTarget(order);
@@ -901,9 +815,6 @@ export function OrdersPage() {
               <OrderListRows
                 orders={visibleOrders}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onConfirmPayment={requestConfirmPayment}
                 selectedOrderIds={selectedOrderIds}
                 isPageSelected={isOrderPageSelected}
@@ -913,9 +824,6 @@ export function OrdersPage() {
             ) : (
               <OrderCards
                 orders={visibleOrders}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onConfirmPayment={requestConfirmPayment}
               />
             )

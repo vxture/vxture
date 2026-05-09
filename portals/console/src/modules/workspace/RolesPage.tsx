@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Icon } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, Label, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect } from '@vxture/design-system';
 import {
   createTenantRole,
   deleteTenantRole,
@@ -53,7 +52,6 @@ export function RolesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [dialogMode, setDialogMode] = useState<'create' | 'edit' | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false);
@@ -80,7 +78,6 @@ export function RolesPage() {
         setRoles(roleRecords);
         setPermissions(permissionRecords);
         setSelectedIds(new Set());
-        setOpenMenuId(null);
         setSelectedId(null);
         setFeedback(null);
       })
@@ -102,7 +99,6 @@ export function RolesPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [query, filter]);
 
   function resetFeedback() {
@@ -127,7 +123,6 @@ export function RolesPage() {
 
   function openEditDialog(role: TenantRoleRecord) {
     setSelectedId(role.id);
-    setOpenMenuId(null);
     resetForm(role);
     resetFeedback();
     setDialogMode('edit');
@@ -139,7 +134,6 @@ export function RolesPage() {
     }
 
     setSelectedId(role.id);
-    setOpenMenuId(null);
     resetFeedback();
     setDeleteOpen(true);
   }
@@ -149,7 +143,6 @@ export function RolesPage() {
     setRoles(roleRecords);
     setSelectedIds(new Set());
     setSelectedId(nextSelectedId ?? null);
-    setOpenMenuId(null);
   }
 
   async function submitRole(event: FormEvent<HTMLFormElement>) {
@@ -195,7 +188,6 @@ export function RolesPage() {
     const nextStatus = role.status === 'active' ? 'disabled' : 'active';
     setSubmitting(true);
     resetFeedback();
-    setOpenMenuId(null);
 
     try {
       const updated = await updateTenantRole(role.id, { status: nextStatus });
@@ -236,7 +228,6 @@ export function RolesPage() {
 
     setSubmitting(true);
     resetFeedback();
-    setOpenMenuId(null);
 
     try {
       await Promise.all(targets.map((role) => updateTenantRole(role.id, { status: nextStatus })));
@@ -261,7 +252,6 @@ export function RolesPage() {
 
     setSubmitting(true);
     resetFeedback();
-    setOpenMenuId(null);
 
     try {
       await Promise.all(targets.map((role) => deleteTenantRole(role.id)));
@@ -484,7 +474,7 @@ export function RolesPage() {
               return (
                 <div
                   key={role.id}
-                  className={openMenuId === role.id ? 'vx-role-row vx-role-row--active' : 'vx-role-row'}
+                  className="vx-role-row"
                   title={roleTitle}
                 >
                   <span className="vx-role-select" title={t('list.selectRole', { name: role.roleName })}>
@@ -526,57 +516,38 @@ export function RolesPage() {
                   <span className="vx-role-row__muted" title={role.description || t('list.noDescription')}>
                     {role.description || t('list.noDescription')}
                   </span>
-                  <div
-                    className="vx-role-row__menu"
-                    onBlur={(event) => {
-                      if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                        setOpenMenuId(null);
-                      }
-                    }}
-                  >
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label={t('actions.menuLabel', { name: role.roleName })}
-                      title={t('actions.menuLabel', { name: role.roleName })}
-                      aria-haspopup="menu"
-                      aria-expanded={openMenuId === role.id}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        setOpenMenuId((current) => (current === role.id ? null : role.id));
-                      }}
-                    >
-                      <Icon name="more-vertical" size="xs" fallback="placeholder" />
-                    </Button>
-                    {openMenuId === role.id ? (
-                      <div className="vx-role-actions-menu" role="menu">
-                        <Button variant="ghost" role="menuitem" onClick={() => openEditDialog(role)}>
-                          <Icon name="edit" size="xs" fallback="placeholder" />
-                          <span>{t('actions.edit')}</span>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          role="menuitem"
-                          disabled={submitting}
-                          onClick={() => void handleToggleRoleStatus(role)}
-                        >
-                          <Icon name="shield-check" size="xs" fallback="placeholder" />
-                          <span>{role.status === 'active' ? t('actions.disable') : t('actions.enable')}</span>
-                        </Button>
-                        {!role.isSystem ? (
-                          <Button
-                            variant="ghost"
-                            role="menuitem"
-                            className="vx-role-actions-menu__danger"
-                            disabled={submitting}
-                            onClick={() => openDeleteDialog(role)}
-                          >
-                            <Icon name="trash" size="xs" fallback="placeholder" />
-                            <span>{t('actions.delete')}</span>
-                          </Button>
-                        ) : null}
-                      </div>
-                    ) : null}
+                  <div className="vx-role-row__menu">
+                    <ActionMenu
+                      label={t('actions.menuLabel', { name: role.roleName })}
+                      triggerProps={{ title: t('actions.menuLabel', { name: role.roleName }) }}
+                      items={[
+                        {
+                          id: 'edit',
+                          label: t('actions.edit'),
+                          icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+                          onSelect: () => openEditDialog(role),
+                        },
+                        {
+                          id: 'toggle-status',
+                          label: role.status === 'active' ? t('actions.disable') : t('actions.enable'),
+                          icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+                          disabled: submitting,
+                          onSelect: () => void handleToggleRoleStatus(role),
+                        },
+                        ...(!role.isSystem
+                          ? [
+                              {
+                                id: 'delete',
+                                label: t('actions.delete'),
+                                icon: <Icon name="trash" size="xs" fallback="placeholder" />,
+                                disabled: submitting,
+                                danger: true,
+                                onSelect: () => openDeleteDialog(role),
+                              },
+                            ]
+                          : []),
+                      ]}
+                    />
                   </div>
                 </div>
               );
@@ -624,15 +595,17 @@ export function RolesPage() {
         </div>
 
         {dialogMode ? (
-          <div
-            className="vx-profile-dialog"
-            role="dialog"
-            aria-modal="true"
-            aria-label={dialogMode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}
+          <DialogForm
+            open
+            title={dialogMode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}
+            submitLabel={dialogMode === 'create' ? t('dialog.create') : t('dialog.save')}
+            cancelLabel={t('dialog.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setDialogMode(null);
+            }}
+            onSubmit={(event) => void submitRole(event)}
           >
-            <div className="vx-profile-dialog__backdrop" onClick={() => setDialogMode(null)} />
-            <form className="vx-profile-dialog__content" onSubmit={(event) => void submitRole(event)}>
-              <h3>{dialogMode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}</h3>
               <Label>
                 {t('dialog.fields.code')}
                 <Input
@@ -692,64 +665,46 @@ export function RolesPage() {
                   ))}
                 </div>
               </div>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setDialogMode(null)}>
-                  {t('dialog.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {dialogMode === 'create' ? t('dialog.create') : t('dialog.save')}
-                </Button>
-              </div>
-            </form>
-          </div>
+          </DialogForm>
         ) : null}
 
         {deleteOpen && selected ? (
-          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialog.deleteTitle')}>
-            <div className="vx-profile-dialog__backdrop" onClick={() => setDeleteOpen(false)} />
-            <form
-              className="vx-profile-dialog__content"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void handleDeleteRole();
-              }}
-            >
-              <h3>{t('dialog.deleteTitle')}</h3>
-              <p className="vx-profile-dialog__hint">{t('dialog.deleteDescription', { name: selected.roleName })}</p>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setDeleteOpen(false)}>
-                  {t('dialog.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting}>
-                  {t('dialog.delete')}
-                </Button>
-              </div>
-            </form>
-          </div>
+          <DialogForm
+            open
+            title={t('dialog.deleteTitle')}
+            description={t('dialog.deleteDescription', { name: selected.roleName })}
+            submitLabel={t('dialog.delete')}
+            submitVariant="destructive"
+            cancelLabel={t('dialog.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setDeleteOpen(false);
+            }}
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleDeleteRole();
+            }}
+          />
         ) : null}
 
         {bulkDeleteOpen ? (
-          <div className="vx-profile-dialog" role="dialog" aria-modal="true" aria-label={t('dialog.bulkDeleteTitle')}>
-            <div className="vx-profile-dialog__backdrop" onClick={() => setBulkDeleteOpen(false)} />
-            <form
-              className="vx-profile-dialog__content"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void handleBulkDeleteRoles();
-              }}
-            >
-              <h3>{t('dialog.bulkDeleteTitle')}</h3>
-              <p className="vx-profile-dialog__hint">{t('dialog.bulkDeleteDescription', { count: bulkDeleteCount })}</p>
-              <div className="vx-profile-dialog__actions">
-                <Button variant="outline" onClick={() => setBulkDeleteOpen(false)}>
-                  {t('dialog.cancel')}
-                </Button>
-                <Button type="submit" disabled={submitting || !bulkDeleteCount}>
-                  {t('dialog.delete')}
-                </Button>
-              </div>
-            </form>
-          </div>
+          <DialogForm
+            open
+            title={t('dialog.bulkDeleteTitle')}
+            description={t('dialog.bulkDeleteDescription', { count: bulkDeleteCount })}
+            submitLabel={t('dialog.delete')}
+            submitVariant="destructive"
+            submitDisabled={!bulkDeleteCount}
+            cancelLabel={t('dialog.cancel')}
+            submitting={submitting}
+            onOpenChange={(open) => {
+              if (!open) setBulkDeleteOpen(false);
+            }}
+            onSubmit={(event) => {
+              event.preventDefault();
+              void handleBulkDeleteRoles();
+            }}
+          />
         ) : null}
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Icon, Input, NativeSelect } from '@vxture/design-system';
+import { Badge, Button, DataTable, Icon, Input, NativeSelect } from '@vxture/design-system';
 import { fetchDevServices } from '@/api/admin-bff';
 import type { DevServiceSnapshot } from '@/entities/console';
 import { EmptyState } from '@/modules/shared/EmptyState';
@@ -210,60 +210,80 @@ function ServiceHealthCard({ service }: { service: DevServiceSnapshot }) {
 }
 
 function ServiceHealthList({ services }: { services: DevServiceSnapshot[] }) {
+  const columns = [
+    {
+      id: 'service',
+      header: '服务',
+      cell: (service: DevServiceSnapshot) => {
+        const layer = serviceLayer(service);
+        return (
+          <div className="vx-service-health-list__service">
+            <Icon name={layerIcon(layer)} size="sm" fallback="placeholder" />
+            <div>
+              <strong>{service.name}</strong>
+              <span>{service.id}</span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'status',
+      header: '状态',
+      cell: (service: DevServiceSnapshot) => {
+        const status = serviceStatus(service);
+        return (
+          <Badge className="vx-service-health-status-badge">
+            <Icon name={statusIcon(status)} size="xs" fallback="placeholder" />
+            {statusLabel(status)}
+          </Badge>
+        );
+      },
+    },
+    {
+      id: 'layer',
+      header: '分层',
+      cell: (service: DevServiceSnapshot) => layerLabel(serviceLayer(service)),
+    },
+    {
+      id: 'port',
+      header: '端口',
+      cell: (service: DevServiceSnapshot) => service.port,
+    },
+    {
+      id: 'checks',
+      header: '探针',
+      cell: (service: DevServiceSnapshot) => (
+        <div className="vx-service-health-list__checks">
+          {service.health.map((check) => (
+            <span key={`${service.id}-${check.label}`} className={check.ok ? 'vx-service-health-check vx-service-health-check--ok' : 'vx-service-health-check vx-service-health-check--bad'}>
+              {check.label}
+            </span>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: 'duration',
+      header: '响应',
+      cell: (service: DevServiceSnapshot) => `${maxDuration(service)}ms`,
+    },
+    {
+      id: 'uptime',
+      header: '运行',
+      cell: (service: DevServiceSnapshot) => service.uptime || '—',
+    },
+  ];
+
   return (
-    <div className="vx-service-health-list" role="region" aria-label="服务健康列表">
-      <table>
-        <thead>
-          <tr>
-            <th>服务</th>
-            <th>状态</th>
-            <th>分层</th>
-            <th>端口</th>
-            <th>探针</th>
-            <th>响应</th>
-            <th>运行</th>
-          </tr>
-        </thead>
-        <tbody>
-          {services.map((service) => {
-            const status = serviceStatus(service);
-            const layer = serviceLayer(service);
-            return (
-              <tr key={service.id} className={`vx-service-health-list__row vx-service-health-status--${status}`}>
-                <td>
-                  <div className="vx-service-health-list__service">
-                    <Icon name={layerIcon(layer)} size="sm" fallback="placeholder" />
-                    <div>
-                      <strong>{service.name}</strong>
-                      <span>{service.id}</span>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <Badge className="vx-service-health-status-badge">
-                    <Icon name={statusIcon(status)} size="xs" fallback="placeholder" />
-                    {statusLabel(status)}
-                  </Badge>
-                </td>
-                <td>{layerLabel(layer)}</td>
-                <td>{service.port}</td>
-                <td>
-                  <div className="vx-service-health-list__checks">
-                    {service.health.map((check) => (
-                      <span key={`${service.id}-${check.label}`} className={check.ok ? 'vx-service-health-check vx-service-health-check--ok' : 'vx-service-health-check vx-service-health-check--bad'}>
-                        {check.label}
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <td>{maxDuration(service)}ms</td>
-                <td>{service.uptime || '—'}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
+    <DataTable
+      className="vx-service-health-list"
+      columns={columns}
+      rows={services}
+      rowKey={(service) => service.id}
+      getRowClassName={(service) => `vx-service-health-list__row vx-service-health-status--${serviceStatus(service)}`}
+      aria-label="服务健康列表"
+    />
   );
 }
 

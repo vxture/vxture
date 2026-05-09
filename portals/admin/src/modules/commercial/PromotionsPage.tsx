@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
-import { Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
+import { ActionMenu, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
 import { fetchPromotionOperations } from "@/api/admin-bff";
 import type {
   PromotionOperationRecord,
@@ -73,59 +73,32 @@ function promotionSearchText(record: PromotionOperationRecord) {
 
 function PromotionActionsMenu({
   record,
-  open,
-  onToggle,
-  onClose,
 }: {
   record: PromotionOperationRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="vx-tenant-actions__trigger"
-        aria-label={`${record.promotionName} 操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push("/promotion-redemptions");
-            }}
-          >
-            <Icon name="check" size="xs" fallback="placeholder" />
-            查看核销
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push("/service-plans");
-            }}
-          >
-            <Icon name="star" size="xs" fallback="placeholder" />
-            服务套餐
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${record.promotionName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "redemptions",
+            label: "查看核销",
+            icon: <Icon name="check" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push("/promotion-redemptions"),
+          },
+          {
+            id: "service-plans",
+            label: "服务套餐",
+            icon: <Icon name="star" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push("/service-plans"),
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -133,9 +106,6 @@ function PromotionActionsMenu({
 function PromotionRows({
   records,
   startIndex,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   selectedRecordIds,
   isPageSelected,
   onToggleRecord,
@@ -143,9 +113,6 @@ function PromotionRows({
 }: {
   records: PromotionOperationRecord[];
   startIndex: number;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   selectedRecordIds: Set<string>;
   isPageSelected: boolean;
   onToggleRecord: (id: string, checked: boolean) => void;
@@ -261,14 +228,7 @@ function PromotionRows({
                 {record.endsAt ? formatDate(record.endsAt) : "长期"}
               </small>
             </span>
-            <PromotionActionsMenu
-              record={record}
-              open={openMenuId === record.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === record.id ? "" : record.id)
-              }
-              onClose={onCloseMenu}
-            />
+            <PromotionActionsMenu record={record} />
           </div>
         );
       })}
@@ -278,14 +238,8 @@ function PromotionRows({
 
 function PromotionCards({
   records,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   records: PromotionOperationRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
 }) {
   return (
     <div
@@ -308,14 +262,7 @@ function PromotionCards({
                 {record.promotionCode} · {record.scopeLabel}
               </span>
             </div>
-            <PromotionActionsMenu
-              record={record}
-              open={openMenuId === record.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === record.id ? "" : record.id)
-              }
-              onClose={onCloseMenu}
-            />
+            <PromotionActionsMenu record={record} />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Tag tone={statusTone(record.status)}>
@@ -356,7 +303,6 @@ function PromotionCards({
 export function PromotionsPage() {
   const [records, setRecords] = useState<PromotionOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
@@ -426,7 +372,6 @@ export function PromotionsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [pageSize, query, statusFilter, typeFilter, viewMode]);
 
   function handleReset() {
@@ -560,21 +505,13 @@ export function PromotionsPage() {
               <PromotionRows
                 records={visibleRecords}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
-                onOpenMenu={(id) => setOpenMenuId(id || null)}
-                onCloseMenu={() => setOpenMenuId(null)}
                 selectedRecordIds={selectedRecordIds}
                 isPageSelected={isRecordPageSelected}
                 onToggleRecord={toggleRecordSelection}
                 onTogglePage={toggleRecordPageSelection}
               />
             ) : (
-              <PromotionCards
-                records={visibleRecords}
-                openMenuId={openMenuId}
-                onOpenMenu={(id) => setOpenMenuId(id || null)}
-                onCloseMenu={() => setOpenMenuId(null)}
-              />
+              <PromotionCards records={visibleRecords} />
             )
           ) : (
             <section className="vx-tenant-empty">
@@ -603,25 +540,7 @@ export function PromotionsPage() {
             </span>
             <div className="vx-tenant-pagination__actions">
               <PageSizePicker value={pageSize} onChange={setPageSize} />
-              <div className="vx-tenant-pagination__pager">
-                <Button
-                  variant="outline"
-                  disabled={activePage <= 1}
-                  onClick={() => setCurrentPage(activePage - 1)}
-                >
-                  上一页
-                </Button>
-                <strong>
-                  {activePage} / {pageCount}
-                </strong>
-                <Button
-                  variant="outline"
-                  disabled={activePage >= pageCount}
-                  onClick={() => setCurrentPage(activePage + 1)}
-                >
-                  下一页
-                </Button>
-              </div>
+              <DsPagination className="vx-tenant-pagination__pager" page={activePage} pageCount={pageCount} onPageChange={setCurrentPage} />
             </div>
           </footer>
         </section>

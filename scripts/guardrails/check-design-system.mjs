@@ -13,6 +13,7 @@ const BASELINED_RULE_IDS = new Set([
   "ds/no-inline-design-style",
   "ds/no-native-primitive",
   "ds/no-app-vx-token-definitions",
+  "ds/no-app-hardcoded-scale",
 ]);
 const IGNORED_PARTS = new Set([
   ".git",
@@ -188,6 +189,37 @@ const rules = [
       return violation(file, lineNumber, "使用 @vxture/design-system 的 Button/Input/Select 等组件；DS 不足时先补 DS。", line);
     },
   },
+  {
+    id: "ds/no-native-table",
+    description: "业务源码默认不能直接写 table/thead/tbody/tr/th/td，应使用 DS DataTable 或补充 DS 表格能力。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return null;
+      if (!/<(?:table|thead|tbody|tr|th|td)\b/.test(line)) return null;
+      return violation(file, lineNumber, "使用 @vxture/design-system 的 DataTable；DS 不足时先补 DS 表格能力。", line);
+    },
+  },
+  {
+    id: "ds/no-app-hardcoded-scale",
+    description: "应用层 CSS 不能新增硬编码 px/rem/em 设计尺度；尺寸、间距、字号、圆角、阴影应进入 DS token 或组件语义样式。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return null;
+      if (isAllowlistedScaleLine(line)) return null;
+
+      const match = line.match(/^\s*([\w-]+)\s*:\s*([^;]+);?/);
+      if (!match) return null;
+
+      const property = match[1] ?? "";
+      const value = match[2] ?? "";
+      if (!hasHardcodedScale(value) || isAllowlistedScaleDeclaration(property, value)) return null;
+
+      return violation(
+        file,
+        lineNumber,
+        "应用 CSS 不能新增硬编码 px/rem/em 设计尺度；使用 DS spacing/radius/typography/shadow token，或迁移为 DS 组件语义样式。",
+        line,
+      );
+    },
+  },
 ];
 
 const files = SCAN_ROOTS.flatMap((root) => collectFiles(path.join(ROOT, root))).filter((file) =>
@@ -245,7 +277,7 @@ if (activeViolations.length > 0) {
 const baselineCount = violations.length - activeViolations.length;
 console.log(
   baselineCount > 0
-    ? `Design System guardrails passed. Existing inline/native debt locked by baseline: ${baselineCount}.`
+    ? `Design System guardrails passed. Existing DS debt locked by baseline: ${baselineCount}.`
     : "Design System guardrails passed.",
 );
 
@@ -275,6 +307,44 @@ function hasRawColor(line) {
   if (/#(?:[0-9a-fA-F]{3,8})\b/.test(text)) return true;
   if (/\b(?:rgb|rgba|hsl|hsla)\(\s*(?:\d|#)/i.test(text)) return true;
   return false;
+}
+
+function hasHardcodedScale(value) {
+  return /(?:^|[\s(,])[-+]?\d+(?:\.\d+)?(?:px|rem|em)\b/.test(value);
+}
+
+function isAllowlistedScaleLine(line) {
+  const text = stripLineComment(line).trim();
+  if (!text) return true;
+  if (text.startsWith("@media")) return true;
+  return false;
+}
+
+function isAllowlistedScaleDeclaration(property, value) {
+  const normalizedProperty = property.toLowerCase();
+  const normalizedValue = value.trim();
+  if (normalizedProperty.startsWith("--")) return true;
+  if (/^(grid-template-columns|grid-template-rows|grid-auto-columns|grid-auto-rows)$/.test(normalizedProperty)) {
+    return true;
+  }
+  if (
+    /^(border|border-top|border-right|border-bottom|border-left|outline)$/.test(normalizedProperty) &&
+    isHairlineOnly(normalizedValue)
+  ) {
+    return true;
+  }
+  if (
+    /^(width|min-width|max-width|height|min-height|max-height)$/.test(normalizedProperty) &&
+    /\b(?:calc|min|max)\(/.test(normalizedValue)
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function isHairlineOnly(value) {
+  const scaleValues = value.match(/[-+]?\d+(?:\.\d+)?(?:px|rem|em)\b/g) ?? [];
+  return scaleValues.length > 0 && scaleValues.every((item) => item === "1px" || item === "0px");
 }
 
 function stripLineComment(line) {
@@ -366,7 +436,7 @@ function updateBaseline(allViolations) {
   const payload = {
     version: 1,
     description:
-      "Existing DS inline-style/native-primitive debt. The guardrail blocks new signatures; shrink this file as modules migrate to DS.",
+      "Existing DS inline-style/native-primitive/scale debt. The guardrail blocks new signatures; shrink this file as modules migrate to DS.",
     allowed,
   };
   writeFileSync(BASELINE_PATH, `${JSON.stringify(payload, null, 2)}\n`);

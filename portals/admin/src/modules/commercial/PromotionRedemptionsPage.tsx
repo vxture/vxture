@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
+import { ActionMenu, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
 import { fetchPromotionRedemptionRecords } from "@/api/admin-bff";
 import type {
   BillingBillStatus,
@@ -100,81 +100,44 @@ function redemptionSearchText(record: PromotionRedemptionRecord) {
 
 function RedemptionActionsMenu({
   record,
-  open,
-  onToggle,
-  onClose,
 }: {
   record: PromotionRedemptionRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="vx-tenant-actions__trigger"
-        aria-label={`${record.redemptionNo} 核销操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/billing/${encodeURIComponent(record.billId)}`);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            账单详情
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(record.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push("/orders");
-            }}
-          >
-            <Icon name="table" size="xs" fallback="placeholder" />
-            订单列表
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push("/promotions");
-            }}
-          >
-            <Icon name="sparkles" size="xs" fallback="placeholder" />
-            优惠活动
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${record.redemptionNo} 核销操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "bill",
+            label: "账单详情",
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/billing/${encodeURIComponent(record.billId)}`),
+          },
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(record.tenantId)}`),
+          },
+          {
+            id: "orders",
+            label: "订单列表",
+            icon: <Icon name="table" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push("/orders"),
+          },
+          {
+            id: "promotions",
+            label: "优惠活动",
+            icon: <Icon name="sparkles" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push("/promotions"),
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -182,9 +145,6 @@ function RedemptionActionsMenu({
 function RedemptionRows({
   records,
   startIndex,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   selectedRecordIds,
   isPageSelected,
   onToggleRecord,
@@ -192,9 +152,6 @@ function RedemptionRows({
 }: {
   records: PromotionRedemptionRecord[];
   startIndex: number;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   selectedRecordIds: Set<string>;
   isPageSelected: boolean;
   onToggleRecord: (id: string, checked: boolean) => void;
@@ -335,14 +292,7 @@ function RedemptionRows({
               <strong>{formatDate(record.redeemedAt)}</strong>
               <small>{record.remark ?? "系统记录"}</small>
             </span>
-            <RedemptionActionsMenu
-              record={record}
-              open={openMenuId === record.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === record.id ? "" : record.id)
-              }
-              onClose={onCloseMenu}
-            />
+            <RedemptionActionsMenu record={record} />
           </div>
         );
       })}
@@ -352,14 +302,8 @@ function RedemptionRows({
 
 function RedemptionCards({
   records,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   records: PromotionRedemptionRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
 }) {
   const router = useRouter();
 
@@ -393,14 +337,7 @@ function RedemptionCards({
                 {record.tenantName} · {record.promotionName}
               </span>
             </div>
-            <RedemptionActionsMenu
-              record={record}
-              open={openMenuId === record.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === record.id ? "" : record.id)
-              }
-              onClose={onCloseMenu}
-            />
+            <RedemptionActionsMenu record={record} />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Tag tone={redemptionStatusTone(record.status)}>
@@ -444,7 +381,6 @@ function RedemptionCards({
 export function PromotionRedemptionsPage() {
   const [records, setRecords] = useState<PromotionRedemptionRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [billStatusFilter, setBillStatusFilter] =
@@ -522,7 +458,6 @@ export function PromotionRedemptionsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [billStatusFilter, pageSize, query, statusFilter, tierFilter, viewMode]);
 
   function handleReset() {
@@ -670,21 +605,13 @@ export function PromotionRedemptionsPage() {
               <RedemptionRows
                 records={visibleRecords}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
-                onOpenMenu={(id) => setOpenMenuId(id || null)}
-                onCloseMenu={() => setOpenMenuId(null)}
                 selectedRecordIds={selectedRecordIds}
                 isPageSelected={isRecordPageSelected}
                 onToggleRecord={toggleRecordSelection}
                 onTogglePage={toggleRecordPageSelection}
               />
             ) : (
-              <RedemptionCards
-                records={visibleRecords}
-                openMenuId={openMenuId}
-                onOpenMenu={(id) => setOpenMenuId(id || null)}
-                onCloseMenu={() => setOpenMenuId(null)}
-              />
+              <RedemptionCards records={visibleRecords} />
             )
           ) : (
             <section className="vx-tenant-empty">
@@ -713,25 +640,7 @@ export function PromotionRedemptionsPage() {
             </span>
             <div className="vx-tenant-pagination__actions">
               <PageSizePicker value={pageSize} onChange={setPageSize} />
-              <div className="vx-tenant-pagination__pager">
-                <Button
-                  variant="outline"
-                  disabled={activePage <= 1}
-                  onClick={() => setCurrentPage(activePage - 1)}
-                >
-                  上一页
-                </Button>
-                <strong>
-                  {activePage} / {pageCount}
-                </strong>
-                <Button
-                  variant="outline"
-                  disabled={activePage >= pageCount}
-                  onClick={() => setCurrentPage(activePage + 1)}
-                >
-                  下一页
-                </Button>
-              </div>
+              <DsPagination className="vx-tenant-pagination__pager" page={activePage} pageCount={pageCount} onPageChange={setCurrentPage} />
             </div>
           </footer>
         </section>

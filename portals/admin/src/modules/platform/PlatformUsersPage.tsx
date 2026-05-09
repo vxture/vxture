@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchPlatformAdmins } from '@/api/admin-bff';
 import type { PlatformAdminRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -99,84 +98,26 @@ function platformAdminStatusPillClass(admin: PlatformAdminRecord) {
 
 function PlatformUserActionsMenu({
   admin,
-  open,
-  onToggle,
-  onClose,
 }: {
   admin: PlatformAdminRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
-
-  useLayoutEffect(() => {
-    if (!open || !triggerRef.current) return;
-    const updatePosition = () => {
-      const rect = triggerRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const menuWidth = 160;
-      const menuHeight = menuRef.current?.offsetHeight ?? 136;
-      const left = Math.max(8, Math.min(window.innerWidth - menuWidth - 8, rect.right - menuWidth));
-      const belowTop = rect.bottom + 4;
-      const top = belowTop + menuHeight > window.innerHeight - 8 ? Math.max(8, rect.top - menuHeight - 4) : belowTop;
-      setMenuPosition({ left, top });
-    };
-
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) return;
-      if (triggerRef.current?.contains(target) || menuRef.current?.contains(target)) return;
-      onClose();
-    };
-    document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [onClose, open]);
-
-  const menu = open
-    ? createPortal(
-        <div
-          ref={menuRef}
-          className="vx-tenant-actions__menu vx-tenant-actions__menu--portal"
-          role="menu"
-          style={{ left: menuPosition.left, top: menuPosition.top }}
-        >
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="user" size="xs" fallback="placeholder" />
-            查看用户
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="shield-check" size="xs" fallback="placeholder" />
-            调整角色
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={platformAdminStatusCode(admin) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
-            {platformAdminStatusCode(admin) === 'active' ? '停用用户' : '启用用户'}
-          </Button>
-        </div>,
-        document.body,
-      )
-    : null;
-
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${admin.displayName} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {menu}
+      <ActionMenu
+        label={`${admin.displayName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          { id: 'profile', label: '查看用户', icon: <Icon name="user" size="xs" fallback="placeholder" />, disabled: true },
+          { id: 'role', label: '调整角色', icon: <Icon name="shield-check" size="xs" fallback="placeholder" />, disabled: true },
+          {
+            id: 'toggle-status',
+            label: platformAdminStatusCode(admin) === 'active' ? '停用用户' : '启用用户',
+            icon: <Icon name={platformAdminStatusCode(admin) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -185,21 +126,15 @@ function PlatformUsersList({
   admins,
   startIndex,
   selectedIds,
-  openMenuId,
   onToggleSelected,
   onTogglePage,
-  onOpenMenu,
-  onCloseMenu,
   t,
 }: {
   admins: PlatformAdminRecord[];
   startIndex: number;
   selectedIds: Set<string>;
-  openMenuId: string | null;
   onToggleSelected: (id: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   t: ReturnType<typeof useConsoleTranslations>;
 }) {
   const selectedCount = admins.filter((admin) => selectedIds.has(admin.id)).length;
@@ -280,12 +215,7 @@ function PlatformUsersList({
               <strong>{admin.email || EMPTY_MARK}</strong>
               <small>{admin.phone || EMPTY_MARK}</small>
             </span>
-            <PlatformUserActionsMenu
-              admin={admin}
-              open={openMenuId === admin.id}
-              onToggle={() => onOpenMenu(openMenuId === admin.id ? '' : admin.id)}
-              onClose={onCloseMenu}
-            />
+            <PlatformUserActionsMenu admin={admin} />
           </div>
         );
       })}
@@ -375,15 +305,7 @@ function PlatformUserPagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <PlatformUserPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -399,7 +321,6 @@ export function PlatformUsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
@@ -467,7 +388,6 @@ export function PlatformUsersPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [pageSize, query, statusFilter, typeFilter, viewMode]);
 
   function resetFilters() {
@@ -547,11 +467,8 @@ export function PlatformUsersPage() {
                 admins={visibleAdmins}
                 startIndex={(clampedCurrentPage - 1) * pageSize}
                 selectedIds={selectedIds}
-                openMenuId={openMenuId}
                 onToggleSelected={toggleSelected}
                 onTogglePage={togglePage}
-                onOpenMenu={(id) => setOpenMenuId(id || null)}
-                onCloseMenu={() => setOpenMenuId(null)}
                 t={t}
               />
             ) : (

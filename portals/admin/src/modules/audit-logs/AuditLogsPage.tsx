@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Badge, Button, Icon, Input, NativeSelect } from '@vxture/design-system';
+import { Badge, Button, Icon, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchAuditLogs } from '@/api/admin-bff';
 import type { AuditLogRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -165,34 +165,6 @@ function AuditList({ logs, startIndex }: { logs: AuditLogRecord[]; startIndex: n
   );
 }
 
-// ─── 子组件：分页 ──────────────────────────────────────────────────────────────
-
-function AuditPagination({
-  page,
-  total,
-  onPageChange,
-}: {
-  page: number;
-  total: number;
-  onPageChange: (p: number) => void;
-}) {
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-  if (totalPages <= 1) return null;
-
-  return (
-    <footer className="vx-tenant-pagination">
-      <span className="vx-tenant-pagination__total">第 {page} / {totalPages} 页，共 {total} 条记录</span>
-      <div className="vx-tenant-pagination__actions">
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={page === 1} onClick={() => onPageChange(page - 1)}>上一页</Button>
-          <strong>{page} / {totalPages}</strong>
-          <Button variant="outline" disabled={page === totalPages} onClick={() => onPageChange(page + 1)}>下一页</Button>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 // ─── 主组件 ───────────────────────────────────────────────────────────────────
 
 export function AuditLogsPage() {
@@ -222,6 +194,7 @@ export function AuditLogsPage() {
     const start = (page - 1) * PAGE_SIZE;
     return filtered.slice(start, start + PAGE_SIZE);
   }, [filtered, page]);
+  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
 
   const handleSearch = (v: string) => { setSearch(v); setPage(1); };
   const handleResultFilter = (v: ResultFilter) => { setResultFilter(v); setPage(1); };
@@ -265,7 +238,16 @@ export function AuditLogsPage() {
           ) : filtered.length ? (
             <>
               <AuditList logs={pageLogs} startIndex={(page - 1) * PAGE_SIZE} />
-              <AuditPagination page={page} total={filtered.length} onPageChange={setPage} />
+              {pageCount > 1 ? (
+                <Pagination
+                  className="vx-tenant-pagination"
+                  page={page}
+                  pageCount={pageCount}
+                  total={filtered.length}
+                  pageSize={PAGE_SIZE}
+                  onPageChange={setPage}
+                />
+              ) : null}
             </>
           ) : null}
         </section>

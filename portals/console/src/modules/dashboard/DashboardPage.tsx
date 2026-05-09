@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from '@/lib/i18n/navigation';
-import { Icon, type IconName } from '@vxture/design-system';
-import { Badge } from '@vxture/design-system';
+import { Badge, DataTable, Icon, type DataTableColumn, type IconName } from '@vxture/design-system';
 import { fetchBillingInvoices, type ConsoleInvoice } from '@/api/console-bff';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { PageHeader } from '@/modules/shared/PageHeader';
@@ -36,6 +35,16 @@ function buildInvoiceRows(invoices: ConsoleInvoice[]): string[][] {
     inv.status.charAt(0).toUpperCase() + inv.status.slice(1),
     formatAmount(inv.totalAmount, inv.currency),
   ]);
+}
+
+function invoiceColumns(t: ReturnType<typeof useTranslations>): DataTableColumn<string[]>[] {
+  return [
+    { id: 'invoice', header: t('invoices.headers.invoice'), cell: (row) => row[0] },
+    { id: 'date', header: t('invoices.headers.date'), cell: (row) => row[1] },
+    { id: 'scope', header: t('invoices.headers.scope'), cell: (row) => row[2] },
+    { id: 'status', header: t('invoices.headers.status'), cell: (row) => row[3] },
+    { id: 'amount', header: t('invoices.headers.amount'), cell: (row) => row[4], align: 'right' },
+  ];
 }
 
 // ============================================================================
@@ -94,6 +103,7 @@ export function DashboardPage() {
   ];
 
   const invoiceRows = buildInvoiceRows(invoices);
+  const invoiceTableColumns = invoiceColumns(t);
 
   return (
     <div className="vx-page-stack">
@@ -150,28 +160,14 @@ export function DashboardPage() {
             </ActionButton>
           }
         />
-        {invoicesLoading ? (
-          <p className="vx-empty-hint">Loading invoices…</p>
-        ) : invoiceRows.length > 0 ? (
-          <div className="vx-table">
-            <div className="vx-table__header vx-table__row">
-              <span>{t('invoices.headers.invoice')}</span>
-              <span>{t('invoices.headers.date')}</span>
-              <span>{t('invoices.headers.scope')}</span>
-              <span>{t('invoices.headers.status')}</span>
-              <span>{t('invoices.headers.amount')}</span>
-            </div>
-            {invoiceRows.map((row) => (
-              <div key={row[0]} className="vx-table__row">
-                {row.map((cell, idx) => (
-                  <span key={idx}>{cell}</span>
-                ))}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="vx-empty-hint">No invoices found.</p>
-        )}
+        <DataTable
+          columns={invoiceTableColumns}
+          rows={invoiceRows}
+          rowKey={(row, index) => row[0] ?? index}
+          loading={invoicesLoading}
+          loadingLabel="Loading invoices…"
+          empty="No invoices found."
+        />
       </PageSection>
 
       <PageSection title={t('quotas.title')} description={t('quotas.description')} tone="muted">

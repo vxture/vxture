@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Input, NativeSelect } from '@vxture/design-system';
 import { fetchPlatformPermissions } from '@/api/admin-bff';
 import type { PlatformAdminPermissionRecord, PlatformPermissionType } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -345,97 +345,44 @@ function buildPermissionDomainGroups(
 
 function PermissionActionsMenu({
   permission,
-  open,
-  onToggle,
-  onClose,
   onOpenDetail,
 }: {
   permission: PlatformAdminPermissionRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onOpenDetail: (permission: PlatformAdminPermissionRecord) => void;
 }) {
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
-
-  useLayoutEffect(() => {
-    if (!open || !triggerRef.current) return;
-    const updatePosition = () => {
-      const rect = triggerRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const menuWidth = 160;
-      const menuHeight = menuRef.current?.offsetHeight ?? 176;
-      const left = Math.max(8, Math.min(window.innerWidth - menuWidth - 8, rect.right - menuWidth));
-      const belowTop = rect.bottom + 4;
-      const top = belowTop + menuHeight > window.innerHeight - 8 ? Math.max(8, rect.top - menuHeight - 4) : belowTop;
-      setMenuPosition({ left, top });
-    };
-
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) return;
-      if (triggerRef.current?.contains(target) || menuRef.current?.contains(target)) return;
-      onClose();
-    };
-    document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [onClose, open]);
-
-  const menu = open
-    ? createPortal(
-        <div
-          ref={menuRef}
-          className="vx-tenant-actions__menu vx-tenant-actions__menu--portal"
-          role="menu"
-          style={{ left: menuPosition.left, top: menuPosition.top }}
-        >
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              onOpenDetail(permission);
-            }}
-          >
-            <Icon name="info" size="xs" fallback="placeholder" />
-            权限详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            编辑权限
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="copy" size="xs" fallback="placeholder" />
-            复制权限
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={permission.status ? 'x' : 'check'} size="xs" fallback="placeholder" />
-            {permission.status ? '停用权限' : '启用权限'}
-          </Button>
-        </div>,
-        document.body,
-      )
-    : null;
-
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${permissionDisplayName(permission)} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {menu}
+      <ActionMenu
+        label={`${permissionDisplayName(permission)} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'detail',
+            label: '权限详情',
+            icon: <Icon name="info" size="xs" fallback="placeholder" />,
+            onSelect: () => onOpenDetail(permission),
+          },
+          {
+            id: 'edit',
+            label: '编辑权限',
+            icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'copy',
+            label: '复制权限',
+            icon: <Icon name="copy" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'toggle',
+            label: permission.status ? '停用权限' : '启用权限',
+            icon: <Icon name={permission.status ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -518,15 +465,9 @@ function PermissionDomainStats({ group }: { group: PermissionDomainGroup }) {
 
 function PermissionCardGrid({
   nodes,
-  openActionMenuId,
-  onToggleActionMenu,
-  onCloseActionMenu,
   onOpenDetail,
 }: {
   nodes: PermissionTreeNode[];
-  openActionMenuId: string | null;
-  onToggleActionMenu: (permissionId: string) => void;
-  onCloseActionMenu: () => void;
   onOpenDetail: (permission: PlatformAdminPermissionRecord) => void;
 }) {
   const flattenedNodes = flattenTreeNodes(nodes);
@@ -549,9 +490,6 @@ function PermissionCardGrid({
               </div>
               <PermissionActionsMenu
                 permission={permission}
-                open={openActionMenuId === permission.id}
-                onToggle={() => onToggleActionMenu(permission.id)}
-                onClose={onCloseActionMenu}
                 onOpenDetail={onOpenDetail}
               />
             </header>
@@ -574,18 +512,12 @@ function PermissionTreeNodeView({
   expandedIds,
   onToggle,
   permissionById,
-  openActionMenuId,
-  onToggleActionMenu,
-  onCloseActionMenu,
   onOpenDetail,
 }: {
   node: PermissionTreeNode;
   expandedIds: Set<string>;
   onToggle: (id: string) => void;
   permissionById: Map<string, PlatformAdminPermissionRecord>;
-  openActionMenuId: string | null;
-  onToggleActionMenu: (permissionId: string) => void;
-  onCloseActionMenu: () => void;
   onOpenDetail: (permission: PlatformAdminPermissionRecord) => void;
 }) {
   const { permission, children, depth } = node;
@@ -632,9 +564,6 @@ function PermissionTreeNodeView({
         <span className="vx-admin-permission-tree-node__actions">
           <PermissionActionsMenu
             permission={permission}
-            open={openActionMenuId === permission.id}
-            onToggle={() => onToggleActionMenu(permission.id)}
-            onClose={onCloseActionMenu}
             onOpenDetail={onOpenDetail}
           />
         </span>
@@ -648,9 +577,6 @@ function PermissionTreeNodeView({
               expandedIds={expandedIds}
               onToggle={onToggle}
               permissionById={permissionById}
-              openActionMenuId={openActionMenuId}
-              onToggleActionMenu={onToggleActionMenu}
-              onCloseActionMenu={onCloseActionMenu}
               onOpenDetail={onOpenDetail}
             />
           ))}
@@ -686,14 +612,9 @@ function PermissionDomainSection({
   onViewModeChange: (mode: ViewModeSwitchValue) => void;
 }) {
   const domainPermissionIds = useMemo(() => collectPermissionIds(group.nodes), [group.nodes]);
-  const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null);
   const [detailPermissionId, setDetailPermissionId] = useState<string | null>(null);
   const detailPermission = detailPermissionId ? permissionById.get(detailPermissionId) ?? null : null;
   const detailParentPermission = detailPermission?.parentId ? permissionById.get(detailPermission.parentId) ?? null : null;
-
-  function toggleActionMenu(permissionId: string) {
-    setOpenActionMenuId((current) => (current === permissionId ? null : permissionId));
-  }
 
   return (
     <section className="vx-admin-permission-domain" aria-labelledby={`permission-domain-${group.key}`}>
@@ -754,11 +675,7 @@ function PermissionDomainSection({
                 expandedIds={expandedIds}
                 onToggle={onToggle}
                 permissionById={permissionById}
-                openActionMenuId={openActionMenuId}
-                onToggleActionMenu={toggleActionMenu}
-                onCloseActionMenu={() => setOpenActionMenuId(null)}
                 onOpenDetail={(permission) => {
-                  setOpenActionMenuId(null);
                   setDetailPermissionId(permission.id);
                 }}
               />
@@ -767,11 +684,7 @@ function PermissionDomainSection({
         ) : (
           <PermissionCardGrid
             nodes={group.nodes}
-            openActionMenuId={openActionMenuId}
-            onToggleActionMenu={toggleActionMenu}
-            onCloseActionMenu={() => setOpenActionMenuId(null)}
             onOpenDetail={(permission) => {
-              setOpenActionMenuId(null);
               setDetailPermissionId(permission.id);
             }}
           />

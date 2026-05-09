@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Input, NativeSelect } from '@vxture/design-system';
 import { fetchTenantOperations } from '@/api/admin-bff';
 import type {
   TenantOperationMember,
@@ -362,40 +362,43 @@ function TenantInfoTab({
 
 function MemberActionsMenu({
   member,
-  open,
-  onToggle,
-  onClose,
 }: {
   member: TenantOperationMember;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   return (
-    <div className="vx-tenant-actions vx-tenant-member-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${member.name} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="user-switch" size="xs" fallback="placeholder" />
-            调整权限
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="key" size="xs" fallback="placeholder" />
-            重置密码
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={member.status === 'suspended' ? 'success' : 'warning'} size="xs" fallback="placeholder" />
-            {member.status === 'suspended' ? '恢复账号' : '停用账号'}
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="trash" size="xs" fallback="placeholder" />
-            移除账号
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions vx-tenant-member-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${member.name} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'role',
+            label: '调整权限',
+            icon: <Icon name="user-switch" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'password',
+            label: '重置密码',
+            icon: <Icon name="key" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'status',
+            label: member.status === 'suspended' ? '恢复账号' : '停用账号',
+            icon: <Icon name={member.status === 'suspended' ? 'success' : 'warning'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'remove',
+            label: '移除账号',
+            icon: <Icon name="trash" size="xs" fallback="placeholder" />,
+            disabled: true,
+            danger: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -440,14 +443,8 @@ function TenantMemberActiveAt({ member }: { member: TenantOperationMember }) {
 
 function TenantMemberList({
   members,
-  openMenuId,
-  onToggleMenu,
-  onCloseMenu,
 }: {
   members: TenantOperationMember[];
-  openMenuId: string | null;
-  onToggleMenu: (memberId: string) => void;
-  onCloseMenu: () => void;
 }) {
   return (
     <div className="vx-tenant-member-list" role="region" aria-label="账号列表">
@@ -468,7 +465,7 @@ function TenantMemberList({
           </span>
           <TenantMemberStatus member={member} />
           <TenantMemberActiveAt member={member} />
-          <MemberActionsMenu member={member} open={openMenuId === member.id} onToggle={() => onToggleMenu(member.id)} onClose={onCloseMenu} />
+          <MemberActionsMenu member={member} />
         </div>
       ))}
     </div>
@@ -477,14 +474,8 @@ function TenantMemberList({
 
 function TenantMemberCards({
   members,
-  openMenuId,
-  onToggleMenu,
-  onCloseMenu,
 }: {
   members: TenantOperationMember[];
-  openMenuId: string | null;
-  onToggleMenu: (memberId: string) => void;
-  onCloseMenu: () => void;
 }) {
   return (
     <div className="vx-tenant-member-cards" aria-label="账号卡片">
@@ -501,7 +492,7 @@ function TenantMemberCards({
                 <small>{getMemberAccountCode(member)}</small>
                 <small>{member.email}</small>
               </div>
-              <MemberActionsMenu member={member} open={openMenuId === member.id} onToggle={() => onToggleMenu(member.id)} onClose={onCloseMenu} />
+              <MemberActionsMenu member={member} />
             </header>
             <div className="vx-tenant-member-card__badges">
               <Badge className="vx-tenant-pill vx-tenant-pill--permission">{member.role}</Badge>
@@ -526,7 +517,6 @@ function TenantMemberCards({
 
 function TenantMembersTab({ members }: { members: TenantOperationMember[] }) {
   const [viewMode, setViewMode] = useState<MemberViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<MemberStatusFilter>('all');
   const [roleFilter, setRoleFilter] = useState<MemberRoleFilter>('all');
@@ -554,11 +544,6 @@ function TenantMembersTab({ members }: { members: TenantOperationMember[] }) {
     setQuery('');
     setStatusFilter('all');
     setRoleFilter('all');
-    setOpenMenuId(null);
-  }
-
-  function handleToggleMenu(memberId: string) {
-    setOpenMenuId((current) => (current === memberId ? null : memberId));
   }
 
   return (
@@ -607,9 +592,9 @@ function TenantMembersTab({ members }: { members: TenantOperationMember[] }) {
       <section className="vx-tenant-directory vx-tenant-member-directory" aria-label="账号清单">
         {filteredMembers.length ? (
           viewMode === 'list' ? (
-            <TenantMemberList members={filteredMembers} openMenuId={openMenuId} onToggleMenu={handleToggleMenu} onCloseMenu={() => setOpenMenuId(null)} />
+            <TenantMemberList members={filteredMembers} />
           ) : (
-            <TenantMemberCards members={filteredMembers} openMenuId={openMenuId} onToggleMenu={handleToggleMenu} onCloseMenu={() => setOpenMenuId(null)} />
+            <TenantMemberCards members={filteredMembers} />
           )
         ) : (
           <section className="vx-tenant-empty">

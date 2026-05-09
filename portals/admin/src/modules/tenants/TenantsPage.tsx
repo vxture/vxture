@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchTenantOperations } from '@/api/admin-bff';
 import type { TenantOperationRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -99,49 +99,44 @@ function TenantPageSizePicker({ value, onChange }: { value: PageSize; onChange: 
 
 function TenantActionsMenu({
   tenant,
-  open,
-  onToggle,
-  onClose,
 }: {
   tenant: TenantOperationRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${tenant.displayName} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(tenant.id)}`);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            查看详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            编辑资料
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="star" size="xs" fallback="placeholder" />
-            订阅处理
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={tenant.status === 'suspended' ? 'success' : 'warning'} size="xs" fallback="placeholder" />
-            {tenant.status === 'suspended' ? '恢复租户' : '暂停租户'}
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${tenant.displayName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'details',
+            label: '查看详情',
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(tenant.id)}`),
+          },
+          {
+            id: 'edit',
+            label: '编辑资料',
+            icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'subscription',
+            label: '订阅处理',
+            icon: <Icon name="star" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'toggle-status',
+            label: tenant.status === 'suspended' ? '恢复租户' : '暂停租户',
+            icon: <Icon name={tenant.status === 'suspended' ? 'success' : 'warning'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -149,21 +144,15 @@ function TenantActionsMenu({
 function TenantListRows({
   tenants,
   startIndex,
-  openMenuId,
   selectedTenantIds,
   isPageSelected,
-  onOpenMenu,
-  onCloseMenu,
   onToggleTenant,
   onTogglePage,
 }: {
   tenants: TenantOperationRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedTenantIds: Set<string>;
   isPageSelected: boolean;
-  onOpenMenu: (tenantId: string) => void;
-  onCloseMenu: () => void;
   onToggleTenant: (tenantId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
@@ -266,12 +255,7 @@ function TenantListRows({
               </span>
               <small>总工单 {formatNumber(ticketTotal)} | 待处理 {formatNumber(tenant.ticketOpenCount)}</small>
             </span>
-            <TenantActionsMenu
-              tenant={tenant}
-              open={openMenuId === tenant.id}
-              onToggle={() => onOpenMenu(openMenuId === tenant.id ? '' : tenant.id)}
-              onClose={onCloseMenu}
-            />
+            <TenantActionsMenu tenant={tenant} />
           </div>
         );
       })}
@@ -281,14 +265,8 @@ function TenantListRows({
 
 function TenantCards({
   tenants,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   tenants: TenantOperationRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (tenantId: string) => void;
-  onCloseMenu: () => void;
 }) {
   const router = useRouter();
 
@@ -311,12 +289,7 @@ function TenantCards({
               <strong>{tenant.displayName}</strong>
               <span>{tenant.tenantCode} · {typeLabel(tenant.tenantType)}</span>
             </div>
-            <TenantActionsMenu
-              tenant={tenant}
-              open={openMenuId === tenant.id}
-              onToggle={() => onOpenMenu(openMenuId === tenant.id ? '' : tenant.id)}
-              onClose={onCloseMenu}
-            />
+            <TenantActionsMenu tenant={tenant} />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Badge className={`vx-tenant-pill vx-tenant-pill--${tenant.status}`}>{statusLabel(tenant.status)}</Badge>
@@ -367,15 +340,7 @@ function TenantPagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <TenantPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -384,7 +349,6 @@ function TenantPagination({
 export function TenantsPage() {
   const [tenants, setTenants] = useState<TenantOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedTenantIds, setSelectedTenantIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -440,7 +404,6 @@ export function TenantsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [pageSize, query, riskFilter, statusFilter, typeFilter, verificationFilter, viewMode]);
 
   function handleReset() {
@@ -449,10 +412,6 @@ export function TenantsPage() {
     setTypeFilter('all');
     setRiskFilter('all');
     setVerificationFilter('all');
-  }
-
-  function handleOpenMenu(tenantId: string) {
-    setOpenMenuId(tenantId || null);
   }
 
   function toggleTenantSelection(tenantId: string, checked: boolean) {
@@ -567,21 +526,13 @@ export function TenantsPage() {
               <TenantListRows
                 tenants={visibleTenants}
                 startIndex={(Math.min(currentPage, pageCount) - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedTenantIds={selectedTenantIds}
                 isPageSelected={isTenantPageSelected}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onToggleTenant={toggleTenantSelection}
                 onTogglePage={toggleTenantPageSelection}
               />
             ) : (
-              <TenantCards
-                tenants={visibleTenants}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
-              />
+              <TenantCards tenants={visibleTenants} />
             )
           ) : (
             <section className="vx-tenant-empty">

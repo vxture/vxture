@@ -9,6 +9,7 @@
  */
 
 import type { VelaToolMessage } from '../types/vela.types';
+import { DataTable } from '@vxture/design-system';
 
 // ============================================================================
 // 子渲染：按 displayHint 选择展示形式
@@ -25,30 +26,16 @@ function renderData(data: unknown, hint?: string) {
     if (!rows.length) return <span className="vx-vela-tool__muted">暂无数据</span>;
     const keys = Object.keys(rows[0]!);
     return (
-      <div className="vx-vela-tool__table-wrap">
-        <table className="vx-vela-tool__table">
-          <thead>
-            <tr>
-              {keys.map((k) => (
-                <th key={k}>
-                  {k}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((row, i) => (
-              <tr key={i}>
-                {keys.map((k) => (
-                  <td key={k}>
-                    {String(row[k] ?? '')}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        className="vx-vela-tool__table-wrap"
+        columns={keys.map((key) => ({
+          id: key,
+          header: key,
+          cell: (row: Record<string, unknown>) => String(row[key] ?? ''),
+        }))}
+        rows={rows}
+        rowKey={(_row, index) => index}
+      />
     );
   }
 

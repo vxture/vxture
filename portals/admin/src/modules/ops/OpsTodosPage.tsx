@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
 import { fetchSupportTicketsStrict, fetchTenantOperationsStrict } from "@/api/admin-bff";
-import { Badge, Button, Checkbox } from "@vxture/design-system";
+import { ActionMenu, Badge, Button, Checkbox } from "@vxture/design-system";
 import type { SupportTicketRecord, TenantOperationRecord } from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
@@ -276,59 +276,32 @@ function TodoTypeSummary({ type, count }: { type: TodoType; count: number }) {
 
 function TodoActionsMenu({
   item,
-  open,
-  onToggle,
-  onClose,
 }: {
   item: OpsTodoItem;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="vx-tenant-actions__trigger"
-        aria-label={`${item.title} 待办操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(item.href);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            处理入口
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(item.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${item.title} 待办操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "entry",
+            label: "处理入口",
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(item.href),
+          },
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(item.tenantId)}`),
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -337,18 +310,12 @@ function TodoRow({
   item,
   index,
   selected,
-  menuOpen,
   onToggleSelected,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   item: OpsTodoItem;
   index: number;
   selected: boolean;
-  menuOpen: boolean;
   onToggleSelected: (checked: boolean) => void;
-  onOpenMenu: () => void;
-  onCloseMenu: () => void;
 }) {
   const router = useRouter();
 
@@ -408,12 +375,7 @@ function TodoRow({
           </Badge>
         ))}
       </span>
-      <TodoActionsMenu
-        item={item}
-        open={menuOpen}
-        onToggle={onOpenMenu}
-        onClose={onCloseMenu}
-      />
+      <TodoActionsMenu item={item} />
     </div>
   );
 }
@@ -428,7 +390,6 @@ export function OpsTodosPage() {
   const [selectedTodoIds, setSelectedTodoIds] = useState<Set<string>>(
     () => new Set(),
   );
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const urgentTodos = todos.filter((todo) => todo.severity === "rose");
   const verificationTodos = todos.filter(
     (todo) => todo.type === "verification",
@@ -618,16 +579,9 @@ export function OpsTodosPage() {
                     item={item}
                     index={index}
                     selected={selectedTodoIds.has(item.id)}
-                    menuOpen={openMenuId === item.id}
                     onToggleSelected={(checked) =>
                       toggleTodoSelection(item.id, checked)
                     }
-                    onOpenMenu={() =>
-                      setOpenMenuId((current) =>
-                        current === item.id ? null : item.id,
-                      )
-                    }
-                    onCloseMenu={() => setOpenMenuId(null)}
                   />
                 ))}
               </div>

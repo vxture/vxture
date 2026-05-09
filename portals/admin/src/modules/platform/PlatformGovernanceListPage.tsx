@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
 import { fetchPlatformGovernanceRecords } from '@/api/admin-bff';
 import type {
   PlatformGovernanceKind,
@@ -151,85 +150,37 @@ function isInteractiveTarget(target: EventTarget | null) {
 function GovernanceActionsMenu({
   record,
   labels,
-  open,
-  onToggle,
-  onClose,
 }: {
   record: PlatformGovernanceRecord;
   labels: GovernanceConfig['actions'];
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
-  const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const [menuPosition, setMenuPosition] = useState({ left: 0, top: 0 });
-
-  useLayoutEffect(() => {
-    if (!open || !triggerRef.current) return;
-    const updatePosition = () => {
-      const rect = triggerRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const menuWidth = 160;
-      const menuHeight = menuRef.current?.offsetHeight ?? 136;
-      const left = Math.max(8, Math.min(window.innerWidth - menuWidth - 8, rect.right - menuWidth));
-      const belowTop = rect.bottom + 4;
-      const top = belowTop + menuHeight > window.innerHeight - 8 ? Math.max(8, rect.top - menuHeight - 4) : belowTop;
-      setMenuPosition({ left, top });
-    };
-
-    updatePosition();
-    window.addEventListener('resize', updatePosition);
-    window.addEventListener('scroll', updatePosition, true);
-    return () => {
-      window.removeEventListener('resize', updatePosition);
-      window.removeEventListener('scroll', updatePosition, true);
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (!(target instanceof Node)) return;
-      if (triggerRef.current?.contains(target) || menuRef.current?.contains(target)) return;
-      onClose();
-    };
-    document.addEventListener('pointerdown', handlePointerDown);
-    return () => document.removeEventListener('pointerdown', handlePointerDown);
-  }, [onClose, open]);
-
-  const menu = open
-    ? createPortal(
-        <div
-          ref={menuRef}
-          className="vx-tenant-actions__menu vx-tenant-actions__menu--portal"
-          role="menu"
-          style={{ left: menuPosition.left, top: menuPosition.top }}
-        >
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="info" size="xs" fallback="placeholder" />
-            {labels.detail}
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            {labels.edit}
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="shield-check" size="xs" fallback="placeholder" />
-            {labels.audit}
-          </Button>
-        </div>,
-        document.body,
-      )
-    : null;
-
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
-      <Button ref={triggerRef} variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${record.name} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {menu}
+      <ActionMenu
+        label={`${record.name} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'detail',
+            label: labels.detail,
+            icon: <Icon name="info" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'edit',
+            label: labels.edit,
+            icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: 'audit',
+            label: labels.audit,
+            icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -243,7 +194,6 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
   const [statusFilter, setStatusFilter] = useState<PlatformGovernanceStatus | 'all'>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('list');
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const records = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -282,10 +232,6 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
   const selectedOnPage = records.filter((record) => selectedIds.has(record.id)).length;
   const isPageSelected = records.length > 0 && selectedOnPage === records.length;
   const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < records.length;
-
-  useEffect(() => {
-    setOpenMenuId(null);
-  }, [query, statusFilter, viewMode]);
 
   function toggleRecord(recordId: string, checked: boolean) {
     setSelectedIds((current) => {
@@ -459,9 +405,6 @@ export function PlatformGovernanceListPage({ kind }: { kind: PlatformGovernanceK
                   <GovernanceActionsMenu
                     record={record}
                     labels={config.actions}
-                    open={openMenuId === record.id}
-                    onToggle={() => setOpenMenuId(openMenuId === record.id ? null : record.id)}
-                    onClose={() => setOpenMenuId(null)}
                   />
                 </div>
               );

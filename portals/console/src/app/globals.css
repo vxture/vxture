@@ -5437,60 +5437,6 @@ body.dark {
   color: var(--vx-console-brand);
 }
 
-.vx-member-actions-menu {
-  position: absolute;
-  top: calc(100% + 0.22rem);
-  right: 0;
-  z-index: 2400;
-  min-width: 10.5rem;
-  display: grid;
-  gap: 0.15rem;
-  padding: 0.32rem;
-  border: 1px solid var(--vx-console-border);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
-}
-
-.dark .vx-member-actions-menu {
-  background: color-mix(in srgb, var(--vx-color-shell-surface) 98%, transparent);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-black) 36%, transparent);
-}
-
-.vx-member-actions-menu button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  border: 0;
-  border-radius: 8px;
-  padding: 0.54rem 0.62rem;
-  background: transparent;
-  color: var(--vx-console-text);
-  font-size: var(--vx-members-text-size);
-  font-weight: 620;
-  text-align: left;
-  cursor: pointer;
-}
-
-.vx-member-actions-menu button:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
-  color: var(--vx-console-brand);
-}
-
-.vx-member-actions-menu button:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
-.vx-member-actions-menu__danger {
-  color: var(--vx-color-warning-700) !important;
-}
-
-.vx-member-actions-menu__danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--vx-color-warning) 12%, transparent) !important;
-}
-
 .vx-member-status {
   border-radius: 999px;
   padding: 0.22rem 0.52rem;
@@ -5951,60 +5897,6 @@ body.dark {
 .vx-role-row__menu .vx-btn:hover {
   background: transparent;
   color: var(--vx-console-brand);
-}
-
-.vx-role-actions-menu {
-  position: absolute;
-  top: calc(100% + 0.22rem);
-  right: 0;
-  z-index: 2400;
-  min-width: 10.5rem;
-  display: grid;
-  gap: 0.15rem;
-  padding: 0.32rem;
-  border: 1px solid var(--vx-console-border);
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
-}
-
-.dark .vx-role-actions-menu {
-  background: color-mix(in srgb, var(--vx-color-shell-surface) 98%, transparent);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-black) 36%, transparent);
-}
-
-.vx-role-actions-menu button {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  border: 0;
-  border-radius: 8px;
-  padding: 0.54rem 0.62rem;
-  background: transparent;
-  color: var(--vx-console-text);
-  font-size: var(--vx-roles-text-size);
-  font-weight: 620;
-  text-align: left;
-  cursor: pointer;
-}
-
-.vx-role-actions-menu button:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
-  color: var(--vx-console-brand);
-}
-
-.vx-role-actions-menu button:disabled {
-  cursor: not-allowed;
-  opacity: 0.55;
-}
-
-.vx-role-actions-menu__danger {
-  color: var(--vx-color-warning-700) !important;
-}
-
-.vx-role-actions-menu__danger:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--vx-color-warning) 12%, transparent) !important;
 }
 
 .vx-roles-pagination {

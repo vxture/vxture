@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
 import {
   fetchInvoiceLedgerRecords,
   submitBillingInvoiceReceiptAction,
@@ -222,15 +222,9 @@ function PageSizePicker({
 
 function InvoiceActionsMenu({
   invoice,
-  open,
-  onToggle,
-  onClose,
   onReceiptAction,
 }: {
   invoice: BillingInvoiceLedgerRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onReceiptAction: (
     invoice: BillingInvoiceLedgerRecord,
     action: BillingInvoiceReceiptAction,
@@ -239,80 +233,41 @@ function InvoiceActionsMenu({
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="vx-tenant-actions__trigger"
-        aria-label={`${invoice.invoiceNo} 发票操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/billing/${encodeURIComponent(invoice.billId)}`);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            账单详情
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(invoice.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          {(["update_shipping", "finish", "red"] as const).map((action) => (
-            <Button
-              key={action}
-              variant="ghost"
-              role="menuitem"
-              className={
-                action === "red"
-                  ? "vx-subscription-menu-action--danger"
-                  : undefined
-              }
-              disabled={!canRunInvoiceReceiptAction(action, invoice)}
-              title={
-                invoiceReceiptActionDisabledReason(action, invoice) ?? undefined
-              }
-              onClick={() => {
-                onClose();
-                onReceiptAction(invoice, action);
-              }}
-            >
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${invoice.invoiceNo} 发票操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "bill",
+            label: "账单详情",
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/billing/${encodeURIComponent(invoice.billId)}`),
+          },
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(invoice.tenantId)}`),
+          },
+          ...(["update_shipping", "finish", "red"] as const).map((action) => ({
+            id: action,
+            label: invoiceReceiptActionLabel(action),
+            icon: (
               <Icon
-                name={
-                  action === "red"
-                    ? "warning"
-                    : action === "finish"
-                      ? "check"
-                      : "table"
-                }
+                name={action === "red" ? "warning" : action === "finish" ? "check" : "table"}
                 size="xs"
                 fallback="placeholder"
               />
-              {invoiceReceiptActionLabel(action)}
-            </Button>
-          ))}
-        </div>
-      ) : null}
+            ),
+            disabled: !canRunInvoiceReceiptAction(action, invoice),
+            title: invoiceReceiptActionDisabledReason(action, invoice) ?? undefined,
+            danger: action === "red",
+            onSelect: () => onReceiptAction(invoice, action),
+          })),
+        ]}
+      />
     </div>
   );
 }
@@ -320,9 +275,6 @@ function InvoiceActionsMenu({
 function InvoiceListRows({
   invoices,
   startIndex,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onReceiptAction,
   selectedInvoiceIds,
   isPageSelected,
@@ -331,9 +283,6 @@ function InvoiceListRows({
 }: {
   invoices: BillingInvoiceLedgerRecord[];
   startIndex: number;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onReceiptAction: (
     invoice: BillingInvoiceLedgerRecord,
     action: BillingInvoiceReceiptAction,
@@ -497,11 +446,6 @@ function InvoiceListRows({
             </span>
             <InvoiceActionsMenu
               invoice={invoice}
-              open={openMenuId === invoice.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === invoice.id ? "" : invoice.id)
-              }
-              onClose={onCloseMenu}
               onReceiptAction={onReceiptAction}
             />
           </div>
@@ -513,15 +457,9 @@ function InvoiceListRows({
 
 function InvoiceCards({
   invoices,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onReceiptAction,
 }: {
   invoices: BillingInvoiceLedgerRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onReceiptAction: (
     invoice: BillingInvoiceLedgerRecord,
     action: BillingInvoiceReceiptAction,
@@ -561,11 +499,6 @@ function InvoiceCards({
             </div>
             <InvoiceActionsMenu
               invoice={invoice}
-              open={openMenuId === invoice.id}
-              onToggle={() =>
-                onOpenMenu(openMenuId === invoice.id ? "" : invoice.id)
-              }
-              onClose={onCloseMenu}
               onReceiptAction={onReceiptAction}
             />
           </header>
@@ -650,25 +583,7 @@ function Pagination({
       </span>
       <div className="vx-tenant-pagination__actions">
         <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button
-            variant="outline"
-            disabled={currentPage <= 1}
-            onClick={() => onPageChange(currentPage - 1)}
-          >
-            上一页
-          </Button>
-          <strong>
-            {currentPage} / {pageCount}
-          </strong>
-          <Button
-            variant="outline"
-            disabled={currentPage >= pageCount}
-            onClick={() => onPageChange(currentPage + 1)}
-          >
-            下一页
-          </Button>
-        </div>
+        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -677,7 +592,6 @@ function Pagination({
 export function InvoicesPage() {
   const [invoices, setInvoices] = useState<BillingInvoiceLedgerRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<InvoiceStatusFilter>("all");
   const [invoiceTypeFilter, setInvoiceTypeFilter] =
@@ -782,7 +696,6 @@ export function InvoicesPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [
     deliveryFilter,
     invoiceTypeFilter,
@@ -799,10 +712,6 @@ export function InvoicesPage() {
     setInvoiceTypeFilter("all");
     setTaxFilter("all");
     setDeliveryFilter("all");
-  }
-
-  function handleOpenMenu(id: string) {
-    setOpenMenuId(id || null);
   }
 
   function toggleInvoiceSelection(id: string, checked: boolean) {
@@ -829,7 +738,6 @@ export function InvoicesPage() {
     invoice: BillingInvoiceLedgerRecord,
     action: BillingInvoiceReceiptAction,
   ) {
-    setOpenMenuId(null);
     setOperationError(null);
     setOperationFeedback(null);
     setReceiptActionTarget({ invoice, action });
@@ -1016,9 +924,6 @@ export function InvoicesPage() {
               <InvoiceListRows
                 invoices={visibleInvoices}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onReceiptAction={requestReceiptAction}
                 selectedInvoiceIds={selectedInvoiceIds}
                 isPageSelected={isInvoicePageSelected}
@@ -1028,9 +933,6 @@ export function InvoicesPage() {
             ) : (
               <InvoiceCards
                 invoices={visibleInvoices}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onReceiptAction={requestReceiptAction}
               />
             )

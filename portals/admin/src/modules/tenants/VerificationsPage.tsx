@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchTenantOperations } from '@/api/admin-bff';
 import type { TenantOperationRecord, TenantVerificationStatus } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -127,50 +127,30 @@ function VerificationPageSizePicker({ value, onChange }: { value: PageSize; onCh
 
 function VerificationActionsMenu({
   tenant,
-  open,
-  onToggle,
-  onClose,
 }: {
   tenant: TenantOperationRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   const router = useRouter();
   const isPending = tenant.verifiedStatus === 'pending';
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${tenant.displayName} 认证操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(tenant.id)}`);
-            }}
-          >
-            <Icon name={isPending ? 'medal' : 'arrow-right'} size="xs" fallback="placeholder" />
-            {isPending ? '进入审核' : '查看详情'}
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="check" size="xs" fallback="placeholder" />
-            通过认证
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="x" size="xs" fallback="placeholder" />
-            驳回材料
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="info" size="xs" fallback="placeholder" />
-            审核记录
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${tenant.displayName} 认证操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          {
+            id: 'review',
+            label: isPending ? '进入审核' : '查看详情',
+            icon: <Icon name={isPending ? 'medal' : 'arrow-right'} size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(tenant.id)}`),
+          },
+          { id: 'approve', label: '通过认证', icon: <Icon name="check" size="xs" fallback="placeholder" />, disabled: true },
+          { id: 'reject', label: '驳回材料', icon: <Icon name="x" size="xs" fallback="placeholder" />, disabled: true },
+          { id: 'history', label: '审核记录', icon: <Icon name="info" size="xs" fallback="placeholder" />, disabled: true },
+        ]}
+      />
     </div>
   );
 }
@@ -178,21 +158,15 @@ function VerificationActionsMenu({
 function VerificationListRows({
   tenants,
   startIndex,
-  openMenuId,
   selectedTenantIds,
   isPageSelected,
-  onOpenMenu,
-  onCloseMenu,
   onToggleTenant,
   onTogglePage,
 }: {
   tenants: TenantOperationRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedTenantIds: Set<string>;
   isPageSelected: boolean;
-  onOpenMenu: (tenantId: string) => void;
-  onCloseMenu: () => void;
   onToggleTenant: (tenantId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
@@ -281,12 +255,7 @@ function VerificationListRows({
               <strong>{tenant.verificationSubmittedAt ? formatDate(tenant.verificationSubmittedAt) : '未提交'}</strong>
               <small>{verificationTimeText(tenant)}</small>
             </span>
-            <VerificationActionsMenu
-              tenant={tenant}
-              open={openMenuId === tenant.id}
-              onToggle={() => onOpenMenu(openMenuId === tenant.id ? '' : tenant.id)}
-              onClose={onCloseMenu}
-            />
+            <VerificationActionsMenu tenant={tenant} />
           </div>
         );
       })}
@@ -296,14 +265,8 @@ function VerificationListRows({
 
 function VerificationCards({
   tenants,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   tenants: TenantOperationRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (tenantId: string) => void;
-  onCloseMenu: () => void;
 }) {
   const router = useRouter();
 
@@ -329,12 +292,7 @@ function VerificationCards({
                 <strong>{tenant.displayName}</strong>
                 <span>{tenant.tenantCode} · {tenant.region}</span>
               </div>
-              <VerificationActionsMenu
-                tenant={tenant}
-                open={openMenuId === tenant.id}
-                onToggle={() => onOpenMenu(openMenuId === tenant.id ? '' : tenant.id)}
-                onClose={onCloseMenu}
-              />
+              <VerificationActionsMenu tenant={tenant} />
             </header>
             <div className="vx-tenant-directory-card__badges">
               <Badge className={`vx-tenant-pill vx-verification-pill--${tenant.verifiedStatus}`}>{verifiedLabel(tenant.verifiedStatus)}</Badge>
@@ -385,15 +343,7 @@ function VerificationPagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <VerificationPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -402,7 +352,6 @@ function VerificationPagination({
 export function VerificationsPage() {
   const [tenants, setTenants] = useState<TenantOperationRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedTenantIds, setSelectedTenantIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [verificationFilter, setVerificationFilter] = useState<VerificationFilter>('all');
@@ -478,7 +427,6 @@ export function VerificationsPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [pageSize, query, regionFilter, riskFilter, verificationFilter, viewMode]);
 
   function handleReset() {
@@ -486,10 +434,6 @@ export function VerificationsPage() {
     setVerificationFilter('all');
     setRiskFilter('all');
     setRegionFilter('all');
-  }
-
-  function handleOpenMenu(tenantId: string) {
-    setOpenMenuId(tenantId || null);
   }
 
   function toggleTenantSelection(tenantId: string, checked: boolean) {
@@ -588,21 +532,13 @@ export function VerificationsPage() {
               <VerificationListRows
                 tenants={visibleTenants}
                 startIndex={(Math.min(currentPage, pageCount) - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedTenantIds={selectedTenantIds}
                 isPageSelected={isTenantPageSelected}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onToggleTenant={toggleTenantSelection}
                 onTogglePage={toggleTenantPageSelection}
               />
             ) : (
-              <VerificationCards
-                tenants={visibleTenants}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
-              />
+              <VerificationCards tenants={visibleTenants} />
             )
           ) : (
             <section className="vx-tenant-empty">

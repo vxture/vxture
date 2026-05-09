@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
 import { fetchSupportTicketsStrict } from "@/api/admin-bff";
-import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
 import type { SupportTicketRecord, TenantOperationTicket } from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
@@ -96,59 +96,32 @@ function SummaryItem({
 
 function TicketActionsMenu({
   ticket,
-  open,
-  onToggle,
-  onClose,
 }: {
   ticket: SupportTicketRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="vx-tenant-actions__trigger"
-        aria-label={`${ticket.title} 工单操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(ticket.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push("/ops-todos");
-            }}
-          >
-            <Icon name="table" size="xs" fallback="placeholder" />
-            运营待办
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${ticket.title} 工单操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(ticket.tenantId)}`),
+          },
+          {
+            id: "ops-todos",
+            label: "运营待办",
+            icon: <Icon name="table" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push("/ops-todos"),
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -157,18 +130,12 @@ function TicketRow({
   ticket,
   index,
   selected,
-  menuOpen,
   onToggleSelected,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   ticket: SupportTicketRecord;
   index: number;
   selected: boolean;
-  menuOpen: boolean;
   onToggleSelected: (checked: boolean) => void;
-  onOpenMenu: () => void;
-  onCloseMenu: () => void;
 }) {
   const tone = ticketTone(ticket);
   const router = useRouter();
@@ -255,12 +222,7 @@ function TicketRow({
         <strong>{formatDateTime(ticket.updatedAt)}</strong>
         <small>{ticket.region}</small>
       </span>
-      <TicketActionsMenu
-        ticket={ticket}
-        open={menuOpen}
-        onToggle={onOpenMenu}
-        onClose={onCloseMenu}
-      />
+      <TicketActionsMenu ticket={ticket} />
     </div>
   );
 }
@@ -275,7 +237,6 @@ export function TicketsPage() {
   const [selectedTicketIds, setSelectedTicketIds] = useState<Set<string>>(
     () => new Set(),
   );
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -498,16 +459,9 @@ export function TicketsPage() {
                   ticket={ticket}
                   index={index}
                   selected={selectedTicketIds.has(ticketKey)}
-                  menuOpen={openMenuId === ticketKey}
                   onToggleSelected={(checked) =>
                     toggleTicketSelection(ticketKey, checked)
                   }
-                  onOpenMenu={() =>
-                    setOpenMenuId((current) =>
-                      current === ticketKey ? null : ticketKey,
-                    )
-                  }
-                  onCloseMenu={() => setOpenMenuId(null)}
                 />
               );
             })}

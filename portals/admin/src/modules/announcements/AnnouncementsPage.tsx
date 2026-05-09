@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Badge, Button, Icon, Input, NativeSelect } from '@vxture/design-system';
+import { Badge, Button, Icon, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchAnnouncements } from '@/api/admin-bff';
 import type { AnnouncementRecord } from '@/entities/console';
 import { EmptyState } from '@/modules/shared/EmptyState';
@@ -239,27 +239,6 @@ function AnnouncementCards({ items }: { items: AnnouncementRecord[] }) {
   );
 }
 
-// ─── 子组件：分页 ──────────────────────────────────────────────────────────────
-
-function AnnouncementPagination({ page, total, onPageChange }: { page: number; total: number; onPageChange: (p: number) => void }) {
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-  if (totalPages <= 1) return null;
-
-  return (
-    <div className="vx-tenant-pagination">
-      <Button variant="outline" size="sm" className="vx-tenant-pagination__btn" disabled={page === 1} onClick={() => onPageChange(page - 1)}>
-        <Icon name="caret-left-bold" size="xs" fallback="placeholder" />
-        上一页
-      </Button>
-      <span className="vx-tenant-pagination__info">第 {page} / {totalPages} 页</span>
-      <Button variant="outline" size="sm" className="vx-tenant-pagination__btn" disabled={page === totalPages} onClick={() => onPageChange(page + 1)}>
-        下一页
-        <Icon name="caret-right-bold" size="xs" fallback="placeholder" />
-      </Button>
-    </div>
-  );
-}
-
 // ─── 主组件 ───────────────────────────────────────────────────────────────────
 
 export function AnnouncementsPage() {
@@ -292,6 +271,7 @@ export function AnnouncementsPage() {
     const start = (page - 1) * PAGE_SIZE;
     return filtered.slice(start, start + PAGE_SIZE);
   }, [filtered, page]);
+  const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
 
   const handleSearch = (v: string) => { setSearch(v); setPage(1); };
   const handleTypeFilter = (v: AnnouncementTypeFilter) => { setTypeFilter(v); setPage(1); };
@@ -330,7 +310,16 @@ export function AnnouncementsPage() {
           ) : (
             <AnnouncementCards items={pageItems} />
           )}
-          <AnnouncementPagination page={page} total={filtered.length} onPageChange={setPage} />
+          {pageCount > 1 ? (
+            <Pagination
+              className="vx-tenant-pagination"
+              page={page}
+              pageCount={pageCount}
+              total={filtered.length}
+              pageSize={PAGE_SIZE}
+              onPageChange={setPage}
+            />
+          ) : null}
         </>
       )}
     </div>

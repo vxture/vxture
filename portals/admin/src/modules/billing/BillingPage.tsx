@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
 import { fetchBillingRecords, syncOfflineInvoice } from "@/api/admin-bff";
 import type {
   BillingBillStatus,
@@ -268,102 +268,62 @@ function PageSizePicker({
 
 function BillingActionsMenu({
   bill,
-  open,
-  onToggle,
-  onClose,
   onSyncInvoice,
 }: {
   bill: BillingRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onSyncInvoice: (bill: BillingRecord) => void;
 }) {
   const router = useRouter();
 
   return (
-    <div
-      className="vx-tenant-actions"
-      onClick={(event) => event.stopPropagation()}
-      onMouseLeave={onClose}
-    >
-      <Button
-        className="vx-tenant-actions__trigger"
-        variant="ghost"
-        size="icon"
-        aria-label={`${bill.billNo} 账单操作`}
-        title="操作"
-        onClick={onToggle}
-      >
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/billing/${encodeURIComponent(bill.id)}`);
-            }}
-          >
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            账单详情
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            onClick={() => {
-              onClose();
-              router.push(`/tenants/${encodeURIComponent(bill.tenantId)}`);
-            }}
-          >
-            <Icon name="buildings" size="xs" fallback="placeholder" />
-            查看租户
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!bill.subscriptionId}
-            onClick={() => {
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${bill.billNo} 账单操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: "操作" }}
+        items={[
+          {
+            id: "details",
+            label: "账单详情",
+            icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/billing/${encodeURIComponent(bill.id)}`),
+          },
+          {
+            id: "tenant",
+            label: "查看租户",
+            icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
+            onSelect: () => router.push(`/tenants/${encodeURIComponent(bill.tenantId)}`),
+          },
+          {
+            id: "subscription",
+            label: "查看订阅",
+            icon: <Icon name="star" size="xs" fallback="placeholder" />,
+            disabled: !bill.subscriptionId,
+            onSelect: () => {
               if (!bill.subscriptionId) return;
-              onClose();
-              router.push(
-                `/subscriptions/${encodeURIComponent(bill.subscriptionId)}`,
-              );
-            }}
-          >
-            <Icon name="star" size="xs" fallback="placeholder" />
-            查看订阅
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!bill.subscriptionId}
-            onClick={() => {
+              router.push(`/subscriptions/${encodeURIComponent(bill.subscriptionId)}`);
+            },
+          },
+          {
+            id: "order",
+            label: "查看订单",
+            icon: <Icon name="table" size="xs" fallback="placeholder" />,
+            disabled: !bill.subscriptionId,
+            onSelect: () => {
               if (!bill.subscriptionId) return;
-              onClose();
               router.push(`/orders/${encodeURIComponent(bill.subscriptionId)}`);
-            }}
-          >
-            <Icon name="table" size="xs" fallback="placeholder" />
-            查看订单
-          </Button>
-          <Button
-            variant="ghost"
-            role="menuitem"
-            disabled={!canSyncOfflineInvoice(bill)}
-            title={offlineInvoiceDisabledReason(bill) ?? undefined}
-            onClick={() => {
-              onClose();
-              onSyncInvoice(bill);
-            }}
-          >
-            <Icon name="key" size="xs" fallback="placeholder" />
-            登记发票
-          </Button>
-        </div>
-      ) : null}
+            },
+          },
+          {
+            id: "invoice",
+            label: "登记发票",
+            icon: <Icon name="key" size="xs" fallback="placeholder" />,
+            disabled: !canSyncOfflineInvoice(bill),
+            title: offlineInvoiceDisabledReason(bill) ?? undefined,
+            onSelect: () => onSyncInvoice(bill),
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -371,9 +331,6 @@ function BillingActionsMenu({
 function BillingListRows({
   bills,
   startIndex,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onSyncInvoice,
   selectedBillIds,
   isPageSelected,
@@ -382,9 +339,6 @@ function BillingListRows({
 }: {
   bills: BillingRecord[];
   startIndex: number;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onSyncInvoice: (bill: BillingRecord) => void;
   selectedBillIds: Set<string>;
   isPageSelected: boolean;
@@ -566,9 +520,6 @@ function BillingListRows({
             </span>
             <BillingActionsMenu
               bill={bill}
-              open={openMenuId === bill.id}
-              onToggle={() => onOpenMenu(openMenuId === bill.id ? "" : bill.id)}
-              onClose={onCloseMenu}
               onSyncInvoice={onSyncInvoice}
             />
           </div>
@@ -580,15 +531,9 @@ function BillingListRows({
 
 function BillingCards({
   bills,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onSyncInvoice,
 }: {
   bills: BillingRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onSyncInvoice: (bill: BillingRecord) => void;
 }) {
   const router = useRouter();
@@ -623,9 +568,6 @@ function BillingCards({
             </div>
             <BillingActionsMenu
               bill={bill}
-              open={openMenuId === bill.id}
-              onToggle={() => onOpenMenu(openMenuId === bill.id ? "" : bill.id)}
-              onClose={onCloseMenu}
               onSyncInvoice={onSyncInvoice}
             />
           </header>
@@ -702,25 +644,7 @@ function Pagination({
       </span>
       <div className="vx-tenant-pagination__actions">
         <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button
-            variant="outline"
-            disabled={currentPage <= 1}
-            onClick={() => onPageChange(currentPage - 1)}
-          >
-            上一页
-          </Button>
-          <strong>
-            {currentPage} / {pageCount}
-          </strong>
-          <Button
-            variant="outline"
-            disabled={currentPage >= pageCount}
-            onClick={() => onPageChange(currentPage + 1)}
-          >
-            下一页
-          </Button>
-        </div>
+        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -729,7 +653,6 @@ function Pagination({
 export function BillingPage() {
   const [bills, setBills] = useState<BillingRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [billStatusFilter, setBillStatusFilter] =
     useState<BillStatusFilter>("all");
@@ -850,7 +773,6 @@ export function BillingPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [
     billStatusFilter,
     billTypeFilter,
@@ -869,10 +791,6 @@ export function BillingPage() {
     setBillTypeFilter("all");
     setTierFilter("all");
     setExceptionFilter("all");
-  }
-
-  function handleOpenMenu(id: string) {
-    setOpenMenuId(id || null);
   }
 
   function toggleBillSelection(id: string, checked: boolean) {
@@ -896,7 +814,6 @@ export function BillingPage() {
   }
 
   function requestInvoiceSync(bill: BillingRecord) {
-    setOpenMenuId(null);
     setOperationError(null);
     setOperationFeedback(null);
     setInvoiceTarget(bill);
@@ -1101,9 +1018,6 @@ export function BillingPage() {
               <BillingListRows
                 bills={visibleBills}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onSyncInvoice={requestInvoiceSync}
                 selectedBillIds={selectedBillIds}
                 isPageSelected={isBillPageSelected}
@@ -1113,9 +1027,6 @@ export function BillingPage() {
             ) : (
               <BillingCards
                 bills={visibleBills}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onSyncInvoice={requestInvoiceSync}
               />
             )

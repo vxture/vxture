@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchProductPlans, fetchProductSolutions } from '@/api/admin-bff';
 import type {
   ProductPlanRecord,
@@ -170,42 +170,29 @@ function ServicePlanPageSizePicker({ value, onChange }: { value: PageSize; onCha
 
 function ServicePlanActionsMenu({
   item,
-  open,
-  onToggle,
-  onClose,
   onViewDetails,
 }: {
   item: ServicePlanTierItem;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onViewDetails: () => void;
 }) {
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${item.solution.solutionName} ${item.tier.tierName} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button variant="ghost" role="menuitem" onClick={onViewDetails}>
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            查看详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="chart-bar" size="xs" fallback="placeholder" />
-            配额配置
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            价格配置
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={item.tier.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />
-            {item.tier.status === 'active' ? '下架套餐' : '上架套餐'}
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${item.solution.solutionName} ${item.tier.tierName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          { id: 'details', label: '查看详情', icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />, onSelect: onViewDetails },
+          { id: 'quota', label: '配额配置', icon: <Icon name="chart-bar" size="xs" fallback="placeholder" />, disabled: true },
+          { id: 'price', label: '价格配置', icon: <Icon name="edit" size="xs" fallback="placeholder" />, disabled: true },
+          {
+            id: 'toggle-status',
+            label: item.tier.status === 'active' ? '下架套餐' : '上架套餐',
+            icon: <Icon name={item.tier.status === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -213,16 +200,10 @@ function ServicePlanActionsMenu({
 function ServicePlanTier({
   item,
   viewMode,
-  open,
-  onToggle,
-  onClose,
   onViewDetails,
 }: {
   item: ServicePlanTierItem;
   viewMode: ViewMode;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
   onViewDetails: () => void;
 }) {
   const priceKind = tierPriceKind(item.tier);
@@ -276,7 +257,7 @@ function ServicePlanTier({
         <small>{priceKind === 'free' ? '试用版本' : priceKind === 'contract' ? '专属商务' : '标准定价'}</small>
       </div>
 
-      <ServicePlanActionsMenu item={item} open={open} onToggle={onToggle} onClose={onClose} onViewDetails={onViewDetails} />
+      <ServicePlanActionsMenu item={item} onViewDetails={onViewDetails} />
     </article>
   );
 }
@@ -284,16 +265,10 @@ function ServicePlanTier({
 function ServicePlanGroupBlock({
   group,
   viewMode,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
   onOpenDetails,
 }: {
   group: ServicePlanGroup;
   viewMode: ViewMode;
-  openMenuId: string | null;
-  onOpenMenu: (id: string) => void;
-  onCloseMenu: () => void;
   onOpenDetails: (solutionCode: string, tierCode: ProductSolutionTier['tierCode']) => void;
 }) {
   const partnerProductCount = group.solution.products.filter((product) => product.source === 'partner').length;
@@ -329,9 +304,6 @@ function ServicePlanGroupBlock({
             key={item.id}
             item={item}
             viewMode={viewMode}
-            open={openMenuId === item.id}
-            onToggle={() => onOpenMenu(openMenuId === item.id ? '' : item.id)}
-            onClose={onCloseMenu}
             onViewDetails={() => onOpenDetails(item.solution.solutionCode, item.tier.tierCode)}
           />
         ))}
@@ -364,15 +336,7 @@ function ServicePlanPagination({
       </span>
       <div className="vx-tenant-pagination__actions">
         <ServicePlanPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -383,7 +347,6 @@ export function ServicePlansPage() {
   const [solutions, setSolutions] = useState<ProductSolutionRecord[]>([]);
   const [plans, setPlans] = useState<ProductPlanRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [visibilityFilter, setVisibilityFilter] = useState<VisibilityFilter>('all');
@@ -438,7 +401,6 @@ export function ServicePlansPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [industryFilter, pageSize, priceFilter, query, statusFilter, visibilityFilter, viewMode]);
 
   function handleReset() {
@@ -447,10 +409,6 @@ export function ServicePlansPage() {
     setVisibilityFilter('all');
     setPriceFilter('all');
     setIndustryFilter('all');
-  }
-
-  function handleOpenMenu(id: string) {
-    setOpenMenuId(id || null);
   }
 
   function handleOpenDetails(solutionCode: string, tierCode: ProductSolutionTier['tierCode']) {
@@ -529,9 +487,6 @@ export function ServicePlansPage() {
                   key={group.solution.id}
                   group={group}
                   viewMode={viewMode}
-                  openMenuId={openMenuId}
-                  onOpenMenu={handleOpenMenu}
-                  onCloseMenu={() => setOpenMenuId(null)}
                   onOpenDetails={handleOpenDetails}
                 />
               ))}

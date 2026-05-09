@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
-import { Badge, Button, Checkbox, Input, NativeSelect } from '@vxture/design-system';
+import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
 import { fetchProductPlans } from '@/api/admin-bff';
 import type { ProductPlanFeature, ProductPlanRecord } from '@/entities/console';
 import { ActionButton } from '@/modules/shared/ActionButton';
@@ -140,40 +140,27 @@ function ProductPlanPageSizePicker({ value, onChange }: { value: PageSize; onCha
 
 function ProductPlanActionsMenu({
   plan,
-  open,
-  onToggle,
-  onClose,
 }: {
   plan: ProductPlanRecord;
-  open: boolean;
-  onToggle: () => void;
-  onClose: () => void;
 }) {
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()} onMouseLeave={onClose}>
-      <Button variant="ghost" size="icon" className="vx-tenant-actions__trigger" aria-label={`${plan.planName} 操作`} title="操作" onClick={onToggle}>
-        <Icon name="more-vertical" size="lg" fallback="placeholder" />
-      </Button>
-      {open ? (
-        <div className="vx-tenant-actions__menu" role="menu">
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="arrow-right" size="xs" fallback="placeholder" />
-            查看详情
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="chart-bar" size="xs" fallback="placeholder" />
-            配额配置
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name="edit" size="xs" fallback="placeholder" />
-            价格配置
-          </Button>
-          <Button variant="ghost" role="menuitem" disabled>
-            <Icon name={plan.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />
-            {plan.isActive ? '下架套餐' : '上架套餐'}
-          </Button>
-        </div>
-      ) : null}
+    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+      <ActionMenu
+        label={`${plan.planName} 操作`}
+        triggerClassName="vx-tenant-actions__trigger"
+        triggerProps={{ title: '操作' }}
+        items={[
+          { id: 'details', label: '查看详情', icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />, disabled: true },
+          { id: 'quota', label: '配额配置', icon: <Icon name="chart-bar" size="xs" fallback="placeholder" />, disabled: true },
+          { id: 'price', label: '价格配置', icon: <Icon name="edit" size="xs" fallback="placeholder" />, disabled: true },
+          {
+            id: 'toggle-status',
+            label: plan.isActive ? '下架套餐' : '上架套餐',
+            icon: <Icon name={plan.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+        ]}
+      />
     </div>
   );
 }
@@ -181,21 +168,15 @@ function ProductPlanActionsMenu({
 function ProductPlanListRows({
   plans,
   startIndex,
-  openMenuId,
   selectedPlanIds,
   isPageSelected,
-  onOpenMenu,
-  onCloseMenu,
   onTogglePlan,
   onTogglePage,
 }: {
   plans: ProductPlanRecord[];
   startIndex: number;
-  openMenuId: string | null;
   selectedPlanIds: Set<string>;
   isPageSelected: boolean;
-  onOpenMenu: (planId: string) => void;
-  onCloseMenu: () => void;
   onTogglePlan: (planId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
@@ -296,12 +277,7 @@ function ProductPlanListRows({
               <strong>{formatNumber(plan.subscriptionCount)}</strong>
               <small>{formatDate(plan.updatedAt)} 更新</small>
             </span>
-            <ProductPlanActionsMenu
-              plan={plan}
-              open={openMenuId === plan.id}
-              onToggle={() => onOpenMenu(openMenuId === plan.id ? '' : plan.id)}
-              onClose={onCloseMenu}
-            />
+            <ProductPlanActionsMenu plan={plan} />
           </div>
         );
       })}
@@ -311,14 +287,8 @@ function ProductPlanListRows({
 
 function ProductPlanCards({
   plans,
-  openMenuId,
-  onOpenMenu,
-  onCloseMenu,
 }: {
   plans: ProductPlanRecord[];
-  openMenuId: string | null;
-  onOpenMenu: (planId: string) => void;
-  onCloseMenu: () => void;
 }) {
   return (
     <div className="vx-tenant-directory-cards vx-product-plan-cards" aria-label="套餐卡片">
@@ -330,12 +300,7 @@ function ProductPlanCards({
               <strong>{plan.planName}</strong>
               <span>{plan.planCode} · {planTypeLabel(plan.planType)}</span>
             </div>
-            <ProductPlanActionsMenu
-              plan={plan}
-              open={openMenuId === plan.id}
-              onToggle={() => onOpenMenu(openMenuId === plan.id ? '' : plan.id)}
-              onClose={onCloseMenu}
-            />
+            <ProductPlanActionsMenu plan={plan} />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Badge className={`vx-tenant-pill vx-product-plan-pill--${plan.isActive ? 'active' : 'inactive'}`}>{planStatusLabel(plan)}</Badge>
@@ -387,15 +352,7 @@ function ProductPlanPagination({
       <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
       <div className="vx-tenant-pagination__actions">
         <ProductPlanPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <div className="vx-tenant-pagination__pager">
-          <Button variant="outline" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-            上一页
-          </Button>
-          <strong>{currentPage} / {pageCount}</strong>
-          <Button variant="outline" disabled={currentPage >= pageCount} onClick={() => onPageChange(currentPage + 1)}>
-            下一页
-          </Button>
-        </div>
+        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
       </div>
     </footer>
   );
@@ -404,7 +361,6 @@ function ProductPlanPagination({
 export function ProductPlansPage() {
   const [plans, setPlans] = useState<ProductPlanRecord[]>([]);
   const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [selectedPlanIds, setSelectedPlanIds] = useState<Set<string>>(() => new Set());
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -462,7 +418,6 @@ export function ProductPlansPage() {
 
   useEffect(() => {
     setCurrentPage(1);
-    setOpenMenuId(null);
   }, [featureFilter, pageSize, priceFilter, query, statusFilter, visibilityFilter, viewMode]);
 
   function handleReset() {
@@ -471,10 +426,6 @@ export function ProductPlansPage() {
     setPriceFilter('all');
     setVisibilityFilter('all');
     setFeatureFilter('all');
-  }
-
-  function handleOpenMenu(planId: string) {
-    setOpenMenuId(planId || null);
   }
 
   function togglePlanSelection(planId: string, checked: boolean) {
@@ -570,21 +521,13 @@ export function ProductPlansPage() {
               <ProductPlanListRows
                 plans={visiblePlans}
                 startIndex={(activePage - 1) * pageSize}
-                openMenuId={openMenuId}
                 selectedPlanIds={selectedPlanIds}
                 isPageSelected={isPlanPageSelected}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
                 onTogglePlan={togglePlanSelection}
                 onTogglePage={togglePlanPageSelection}
               />
             ) : (
-              <ProductPlanCards
-                plans={visiblePlans}
-                openMenuId={openMenuId}
-                onOpenMenu={handleOpenMenu}
-                onCloseMenu={() => setOpenMenuId(null)}
-              />
+              <ProductPlanCards plans={visiblePlans} />
             )
           ) : (
             <section className="vx-tenant-empty">

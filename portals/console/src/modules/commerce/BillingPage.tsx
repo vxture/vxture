@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { DataTable, type DataTableColumn } from '@vxture/design-system';
 import { fetchBillingInvoices, fetchBillingOverview, type ConsoleBillingOverview, type ConsoleInvoice } from '@/api/console-bff';
 import { ActionButton } from '@/modules/shared/ActionButton';
 import { MetricGrid } from '@/modules/shared/MetricGrid';
@@ -69,6 +70,14 @@ function buildInvoiceRows(invoices: ConsoleInvoice[]): string[][] {
     formatAmount(inv.totalAmount, inv.currency),
   ]);
 }
+
+const invoiceColumns: DataTableColumn<string[]>[] = [
+  { id: 'invoice', header: 'Invoice', cell: (row) => row[0] },
+  { id: 'date', header: 'Date', cell: (row) => row[1] },
+  { id: 'scope', header: 'Scope', cell: (row) => row[2] },
+  { id: 'status', header: 'Status', cell: (row) => row[3] },
+  { id: 'amount', header: 'Amount', cell: (row) => row[4], align: 'right' },
+];
 
 // ============================================================================
 // BillingPage
@@ -150,28 +159,14 @@ export function BillingPage() {
           description="Keep the table focused on the most recent invoice and overage records."
           action={<ActionButton variant="outline" icon="arrow-right">View all invoices</ActionButton>}
         >
-          {loading ? (
-            <p className="vx-empty-hint">Loading invoices…</p>
-          ) : invoiceRows.length > 0 ? (
-            <div className="vx-table">
-              <div className="vx-table__header vx-table__row">
-                <span>Invoice</span>
-                <span>Date</span>
-                <span>Scope</span>
-                <span>Status</span>
-                <span>Amount</span>
-              </div>
-              {invoiceRows.map((row) => (
-                <div key={row[0]} className="vx-table__row">
-                  {row.map((cell, idx) => (
-                    <span key={idx}>{cell}</span>
-                  ))}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="vx-empty-hint">No invoices found.</p>
-          )}
+          <DataTable
+            columns={invoiceColumns}
+            rows={invoiceRows}
+            rowKey={(row, index) => row[0] ?? index}
+            loading={loading}
+            loadingLabel="Loading invoices…"
+            empty="No invoices found."
+          />
         </PageSection>
 
         <PageSection title="Billing notes" description="Use concise operational context instead of pushing more columns into the table." tone="muted">
