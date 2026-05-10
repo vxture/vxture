@@ -6,7 +6,7 @@ import process from "node:process";
 
 const ROOT = process.cwd();
 const SCAN_ROOTS = ["portals", "packages", "agent-studio", "business"];
-const SOURCE_EXTENSIONS = new Set([".css", ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx"]);
+const SOURCE_EXTENSIONS = new Set([".css", ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".json"]);
 const UPDATE_BASELINE = process.argv.includes("--update-baseline");
 const BASELINE_PATH = path.join(ROOT, "scripts/guardrails/design-system-baseline.json");
 const BASELINED_RULE_IDS = new Set([
@@ -38,6 +38,12 @@ const FONT_LOADER_ALLOWLIST = [
   /^agent-studio\/[^/]+\/src\/app\/layout\.ts$/,
   /^business\/[^/]+\/src\/app\/layout\.tsx$/,
   /^business\/[^/]+\/src\/app\/layout\.ts$/,
+];
+const DIRECT_UI_ENGINE_DEPENDENCIES = [
+  "@phosphor-icons/react",
+  "lucide-react",
+  "react-icons",
+  /^@radix-ui\//,
 ];
 
 const rules = [
@@ -73,6 +79,33 @@ const rules = [
         return violation(file, lineNumber, "改为从 @vxture/design-system 导入 Icon、Popover、Tooltip 等 DS 公共组件。");
       }
       return null;
+    },
+  },
+  {
+    id: "ds/no-app-ui-engine-dependencies",
+    description: "应用 package.json 不能声明 DS 底层图标库或 UI 引擎依赖；底层 UI 引擎只能由 DS 持有。",
+    checkContent(file, content) {
+      if (!isFrontendPackageManifest(file)) return [];
+      const manifest = JSON.parse(content);
+      const sections = ["dependencies", "devDependencies", "peerDependencies", "optionalDependencies"];
+      const items = [];
+
+      for (const section of sections) {
+        const dependencies = manifest[section];
+        if (!dependencies || typeof dependencies !== "object") continue;
+        for (const dependency of Object.keys(dependencies)) {
+          if (!isDirectUiEngineDependency(dependency)) continue;
+          items.push(
+            violation(
+              file,
+              findLineNumber(content, `"${dependency}"`),
+              `应用 package.json 不能声明 ${dependency}；通过 @vxture/design-system 公共入口消费图标和 UI 引擎能力。`,
+            ),
+          );
+        }
+      }
+
+      return items;
     },
   },
   {
@@ -356,6 +389,16 @@ function isFrontendSource(file) {
   return /^(portals|agent-studio|business)\//.test(normalize(file));
 }
 
+function isFrontendPackageManifest(file) {
+  return /^(portals|agent-studio|business)\/[^/]+\/package\.json$/.test(normalize(file));
+}
+
+function isDirectUiEngineDependency(dependency) {
+  return DIRECT_UI_ENGINE_DEPENDENCIES.some((item) =>
+    typeof item === "string" ? item === dependency : item.test(dependency),
+  );
+}
+
 function isDsTokenOwner(file) {
   const normalized = normalize(file);
   return DS_TOKEN_PATHS.some((tokenPath) => normalized === tokenPath || normalized.startsWith(`${tokenPath}/`));
@@ -454,6 +497,12 @@ function signatureFor(item) {
 
 function normalizeSnippet(value) {
   return value.replace(/\s+/g, " ").trim();
+}
+
+function findLineNumber(content, pattern) {
+  const index = content.indexOf(pattern);
+  if (index < 0) return 1;
+  return content.slice(0, index).split(/\r?\n/).length;
 }
 
 function violation(file, line, message, source = "") {

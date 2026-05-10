@@ -133,8 +133,9 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 ### DS-SYS-011：DS 守卫只管源码 import，尚未约束应用依赖清单
 
 优先级：P1
-状态：待处理。
-证据：业务源码未直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`，但 `portals/admin/package.json` 与 `portals/console/package.json` 仍声明 `@phosphor-icons/react`。
+状态：已修复。
+修复证据：`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-app-ui-engine-dependencies`，扫描应用 `package.json` 并禁止声明 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；`portals/admin` 与 `portals/console` 已移除 `@phosphor-icons/react` 直依赖。
+原证据：业务源码未直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`，但 `portals/admin/package.json` 与 `portals/console/package.json` 曾声明 `@phosphor-icons/react`。
 问题：源码 import 已收敛到 DS `Icon`，但依赖层没有封口；后续页面仍可绕过 DS 重新直接使用底层图标库，且依赖关系无法表达“底层 UI 引擎只属于 DS 内部”。
 修复方向：扩展 `scripts/guardrails/check-design-system.mjs`，扫描 `portals/*`、`business/*`、`agent-studio/*` 的 `package.json`，禁止应用声明底层 UI 引擎依赖；`@phosphor-icons/react`、Radix、图标库等只能出现在 `@vxture/design-system`。
 验收标准：`rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"` 无结果；新增应用依赖会被 `pnpm lint:design` 阻断。
@@ -289,8 +290,9 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 ### DS-USE-016：应用依赖清单仍可绕过 DS 引入底层 UI 引擎
 
 优先级：P1
-状态：待处理。
-证据：`portals/admin/package.json` 与 `portals/console/package.json` 仍声明 `@phosphor-icons/react`；当前源码没有直接 import，但依赖清单仍暴露绕过 DS 的入口。
+状态：已修复。
+修复证据：`portals/admin/package.json`、`portals/console/package.json` 和 `pnpm-lock.yaml` 已移除应用层 `@phosphor-icons/react` 依赖；`pnpm lint:design` 已能阻断应用重新声明底层 UI 引擎依赖。
+原证据：`portals/admin/package.json` 与 `portals/console/package.json` 曾声明 `@phosphor-icons/react`；当前源码没有直接 import，但依赖清单仍暴露绕过 DS 的入口。
 问题：DS 使用合规不能只看源码 import，也要看依赖边界。应用一旦直接依赖图标库或 Radix 等底层 UI 引擎，就会削弱 DS 对图标命名、尺寸、可访问性、主题和替换策略的控制。
 修复方向：删除应用层底层 UI 引擎依赖；需要图标、弹层、选择器、Tooltip、Popover 等能力时，统一通过 `@vxture/design-system` 公共入口消费。DS 不足时先补 DS，再迁移应用调用。
 验收标准：应用 `package.json` 不再声明 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；应用源码只从 `@vxture/design-system`、`@vxture/design-system/tokens`、`@vxture/design-system/types`、`@vxture/design-system/server` 和允许的 `styles/*` 入口消费 DS。
@@ -334,8 +336,8 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 ## 本轮任务清单（2026-05-10）
 
 1. P2：降低 DS 文档同步任务优先级，标记为等待文档体系规划统一处理。状态：已完成，准备提交。
-2. P1：扩展 `lint:design`，扫描应用 `package.json`，禁止应用声明底层 UI 引擎依赖。状态：待执行。
-3. P1：移除 admin/console 对 `@phosphor-icons/react` 的直接依赖，保持图标能力只通过 DS `Icon` 暴露。状态：待执行。
+2. P1：扩展 `lint:design`，扫描应用 `package.json`，禁止应用声明底层 UI 引擎依赖。状态：已完成，准备提交。
+3. P1：移除 admin/console 对 `@phosphor-icons/react` 的直接依赖，保持图标能力只通过 DS `Icon` 暴露。状态：已完成，准备提交。
 4. P1：为 `agent-studio/vela` 接入真实 ESLint 门禁。状态：待执行。
 5. P1：把 DS 允许入口白名单固化到守卫脚本，阻断未授权 `@vxture/design-system/*` 深层导入。状态：待执行。
 6. P1：继续压缩 admin/console 全局 CSS 尺度债务；每完成一个模块迁移就更新 baseline。状态：待执行。
