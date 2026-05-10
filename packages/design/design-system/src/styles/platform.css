@@ -1201,6 +1201,50 @@
   text-overflow: ellipsis;
 }
 
+.vx-tenant-settings-workspace {
+  display: grid;
+  gap: 1.9rem;
+  min-width: 0;
+}
+
+.vx-tenant-settings-section {
+  display: grid;
+  gap: 0.78rem;
+  min-width: 0;
+}
+
+.vx-tenant-settings-section__title {
+  display: flex;
+  align-items: center;
+  gap: 0.58rem;
+  padding: 0 1rem;
+}
+
+.vx-tenant-settings-section__title > svg {
+  width: 1.95rem;
+  height: 1.95rem;
+  padding: 0.42rem;
+  border: 1px solid var(--vx-color-border);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-tenant-settings-section__title h2 {
+  margin: 0;
+  color: var(--vx-console-text);
+  font-size: var(--vx-tenant-settings-text-size);
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.vx-tenant-settings-section__title span {
+  display: block;
+  margin-top: 0.08rem;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-tenant-settings-meta-size);
+}
+
 :where(.vx-members-page) {
   --vx-members-text-size: var(--vx-component-metric-084r);
   --vx-members-meta-size: var(--vx-component-metric-078r);
