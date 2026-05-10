@@ -12,7 +12,7 @@
     "build": "next build",
     "start": "next start -p 3120",
     "type-check": "tsc --noEmit",
-    "lint": "echo \"No lint yet\""
+    "lint": "eslint ."
   },
   "dependencies": {
     "@vxture/design-system": "workspace:*",
@@ -23,9 +23,13 @@
     "zustand": "^5.0.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.39.3",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.3",
+    "eslint-config-next": "^15.5.6",
     "typescript": "^5.9.3"
   },
   "engines": {
