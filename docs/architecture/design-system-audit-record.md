@@ -13,7 +13,7 @@
 - `website` / `console` 不再维护应用层 `.vx-auth-*` / `.vx-captcha-*` 样式源。
 - `console` / `admin` build 已恢复 lint/type 检查。
 - `lint:design` 已新增 inline design style / native primitive / app `--vx-*` token definition / app hardcoded scale 检查，并通过 `scripts/guardrails/design-system-baseline.json` 锁住存量债务，禁止新增签名。
-- 当前 baseline 记录 2866 个存量尺度签名：应用层 `--vx-*` token 定义、业务源码原生基础控件、设计型 inline style 已全部清零；`px/rem/em` 应用尺度债务进入新增拦截和逐步缩减模式。
+- 当前 `pnpm lint:design` 输出锁定 2866 个存量尺度命中；`scripts/guardrails/design-system-baseline.json` 记录 1011 个唯一存量尺度签名。应用层 `--vx-*` token 定义、业务源码原生基础控件、设计型 inline style 已全部清零；`px/rem/em` 应用尺度债务进入新增拦截和逐步缩减模式。
 - `agent-studio/vela` 根布局已接入统一字体、ThemeProvider、FullscreenProvider；核心聊天组件已移除 inline design style 和原生基础控件。
 - 源码扫描未发现业务源码直接导入 `@vxture/design-system/src/**`。
 - 源码扫描未发现业务源码直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；`lint:design` 已用 `ds/no-direct-ui-engine-imports` 禁止新增。
@@ -23,10 +23,12 @@
 ```bash
 pnpm lint:design
 rg -n "@vxture/design-system" portals agent-studio business packages --glob "!packages/design/design-system/**"
+rg -n "@vxture/design-system/" portals business agent-studio packages --glob "*.ts" --glob "*.tsx" --glob "*.css"
 rg -n "#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(" portals packages agent-studio business --glob "!packages/design/design-system/**" --glob "!**/public/**"
 rg -n "style=\{\{|<button|<input|<select|<textarea" portals/website/src portals/console/src portals/admin/src agent-studio/vela/src
 rg -n -- "--vx-[\w-]+\s*:" portals business agent-studio --glob "*.css"
 rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "*.ts" --glob "*.tsx"
+rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"
 ```
 
 ## 维度一：DS 系统自身规范性
@@ -118,6 +120,24 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 问题：文档无法作为开发约束依据，AI/人工开发会根据旧结构生成错误代码。  
 修复方向：更新架构文档，并把 guardrail 规则、禁止项、允许项写入文档。  
 验收标准：文档结构、包版本、导出入口、样式入口和实际文件一致。
+
+### DS-SYS-010：DS 二级文档与包实现再次出现漂移
+
+优先级：P2
+状态：暂缓，等待文档体系规划统一处理。
+证据：`packages/design/design-system/README.md` 仍写 `版本：3.0.0`、`最后更新：2026-03-12`、基础 UI 组件 `16个`；`docs/architecture/08-design-system.md` 写 `current: 18 components`；实际 `@vxture/design-system` 包版本为 `1.2.2`，`src/components/ui` 当前有 25 个 `.tsx` 组件。
+问题：架构文档已基本对齐，但包 README 和组件数量说明会继续误导 AI/人工开发，尤其会弱化“DS 不足先补 DS”的执行依据。
+修复方向：不在本轮单独修正文档内容，等待文档体系规划确定唯一文档源、同步规则和验收口径后统一处理；届时以 `package.json`、公共导出入口和 `src/components/ui` 实际清单为准，更新 `packages/design/design-system/README.md` 与 `docs/architecture/08-design-system.md`。
+验收标准：DS README、架构文档、包版本、组件数量、公共导出清单一致；仓库中不再出现旧口径 `版本：3.0.0`、`16个`、`current: 18 components`。
+
+### DS-SYS-011：DS 守卫只管源码 import，尚未约束应用依赖清单
+
+优先级：P1
+状态：待处理。
+证据：业务源码未直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`，但 `portals/admin/package.json` 与 `portals/console/package.json` 仍声明 `@phosphor-icons/react`。
+问题：源码 import 已收敛到 DS `Icon`，但依赖层没有封口；后续页面仍可绕过 DS 重新直接使用底层图标库，且依赖关系无法表达“底层 UI 引擎只属于 DS 内部”。
+修复方向：扩展 `scripts/guardrails/check-design-system.mjs`，扫描 `portals/*`、`business/*`、`agent-studio/*` 的 `package.json`，禁止应用声明底层 UI 引擎依赖；`@phosphor-icons/react`、Radix、图标库等只能出现在 `@vxture/design-system`。
+验收标准：`rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"` 无结果；新增应用依赖会被 `pnpm lint:design` 阻断。
 
 ## 维度二：DS 使用规范性
 
@@ -266,6 +286,33 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 验收标准：`pnpm lint:design` 能阻断新增硬编码尺度签名；baseline 中 `ds/no-app-hardcoded-scale` 数量随模块迁移持续下降。  
 当前验收：`pnpm lint:design` 通过；`design-system-baseline.json` 当前记录 1011 个唯一存量尺度签名。
 
+### DS-USE-016：应用依赖清单仍可绕过 DS 引入底层 UI 引擎
+
+优先级：P1
+状态：待处理。
+证据：`portals/admin/package.json` 与 `portals/console/package.json` 仍声明 `@phosphor-icons/react`；当前源码没有直接 import，但依赖清单仍暴露绕过 DS 的入口。
+问题：DS 使用合规不能只看源码 import，也要看依赖边界。应用一旦直接依赖图标库或 Radix 等底层 UI 引擎，就会削弱 DS 对图标命名、尺寸、可访问性、主题和替换策略的控制。
+修复方向：删除应用层底层 UI 引擎依赖；需要图标、弹层、选择器、Tooltip、Popover 等能力时，统一通过 `@vxture/design-system` 公共入口消费。DS 不足时先补 DS，再迁移应用调用。
+验收标准：应用 `package.json` 不再声明 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；应用源码只从 `@vxture/design-system`、`@vxture/design-system/tokens`、`@vxture/design-system/types`、`@vxture/design-system/server` 和允许的 `styles/*` 入口消费 DS。
+
+### DS-USE-017：DS 消费者质量门禁没有覆盖所有前端应用
+
+优先级：P1
+状态：待处理。
+证据：`website` / `console` / `admin` 的 lint 与 type-check 已通过；`agent-studio/vela` 的 `lint` 脚本当前只是 `echo "No lint yet"`，无法提供真实源码检查。
+问题：agent-studio 已成为 DS 消费者并被 `lint:design` 扫描，但常规 lint 门禁缺失会让 React、可访问性、未使用代码、Hook 规则等问题绕过应用级质量门。
+修复方向：为 `@vxture/agent-studio-vela` 接入与 portal 一致的 ESLint 配置和 lint 脚本；CI/本地验收统一执行 `type-check`、`lint`、`build` 与 `pnpm lint:design`。
+验收标准：`pnpm --filter @vxture/agent-studio-vela lint` 执行真实 ESLint 检查并通过；所有 DS 消费者都具备一致的 `type-check` / `lint` / `build` 门禁。
+
+### DS-USE-018：DS 应用调用合规需要形成允许入口白名单
+
+优先级：P1
+状态：待处理。
+证据：当前扫描未发现未授权 DS 深层导入，应用样式只从 `@vxture/design-system/styles/globals.css` 引入；但规则仍主要依赖正则扫描，缺少明确白名单文档和 package export 对照。
+问题：随着 `/tokens`、`/types`、`/server`、`styles/*` 子入口增加，应用侧容易把“允许的公共子入口”和“禁止的内部深层路径”混淆。
+修复方向：在 DS 文档和 guardrail 中固化允许入口白名单：`@vxture/design-system`、`/tokens`、`/types`、`/server`、`/styles/globals.css` 以及经 package exports 明确暴露的样式入口；其他 `@vxture/design-system/*` 默认禁止。
+验收标准：新增 `@vxture/design-system/src/**` 或未列入白名单的 `@vxture/design-system/*` 导入会失败；文档、package exports、tsconfig alias 与守卫脚本三者保持一致。
+
 ## 下一轮任务清单
 
 1. P0：建立应用层 `--vx-*` token definition guardrail，用 baseline 锁住历史债务，禁止新增私有 token。状态：已完成。
@@ -278,6 +325,20 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 8. P1：补充 app CSS 尺度值治理，禁止应用新增硬编码 `px/rem/em` 设计尺度，允许布局算法和媒体查询白名单。状态：已完成，当前锁定 1011 个唯一存量尺度签名。
 9. P1：每完成一个模块迁移，更新 `design-system-baseline.json` 并在本记录中同步数量。状态：进行中，当前 baseline 仅承载尺度债务，inline/native/app token 维度为 0。
 10. P1：继续压缩 admin/console 模块级表格、工具栏、弹窗表单和行操作菜单 CSS，优先迁移仍依赖业务全局 class 的列表页。状态：进行中；admin 高频行操作菜单已完成，console Workspace Members/Roles、admin AI 配置弹窗和 Payments 备注确认弹窗已迁移到 DS `DialogForm`。
+11. P2：更新 DS README 与架构文档组件清单，修正旧版本号、旧组件数量和过期目录说明。状态：暂缓，等待文档体系规划统一处理。
+12. P1：扩展 `lint:design` 到应用 `package.json` 依赖清单，禁止应用声明底层 UI 引擎依赖。状态：新增待处理。
+13. P1：删除 admin/console 对 `@phosphor-icons/react` 的直接依赖，确保图标能力只通过 DS `Icon` 暴露。状态：新增待处理。
+14. P1：为 `agent-studio/vela` 补真实 ESLint 门禁，纳入 DS 消费者统一 `type-check` / `lint` / `build` 验收。状态：新增待处理。
+15. P1：把 DS 允许入口白名单写入文档和守卫脚本，统一 package exports、tsconfig alias 与应用导入规则。状态：新增待处理。
+
+## 本轮任务清单（2026-05-10）
+
+1. P2：降低 DS 文档同步任务优先级，标记为等待文档体系规划统一处理。状态：已完成，准备提交。
+2. P1：扩展 `lint:design`，扫描应用 `package.json`，禁止应用声明底层 UI 引擎依赖。状态：待执行。
+3. P1：移除 admin/console 对 `@phosphor-icons/react` 的直接依赖，保持图标能力只通过 DS `Icon` 暴露。状态：待执行。
+4. P1：为 `agent-studio/vela` 接入真实 ESLint 门禁。状态：待执行。
+5. P1：把 DS 允许入口白名单固化到守卫脚本，阻断未授权 `@vxture/design-system/*` 深层导入。状态：待执行。
+6. P1：继续压缩 admin/console 全局 CSS 尺度债务；每完成一个模块迁移就更新 baseline。状态：待执行。
 
 ## 后续验收清单
 
@@ -286,5 +347,8 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 - `rg -n "#[0-9a-fA-F]{3,8}\b|rgba?\(" business agent-studio portals --glob "!**/public/**"` 仅在 DS token owner 或允许位置出现。
 - `rg -n -- "--vx-[\w-]+\s*:" portals business agent-studio --glob "*.css"` 的新增命中会被 `pnpm lint:design` 阻断。
 - `rg -n "@/components/ui|components/primitives" portals business agent-studio` 无业务源码结果。
-- `rg -n "from ['\"]@vxture/design-system/src|@vxture/design-system/(?!styles/)" portals business agent-studio` 无未授权深层导入。
-- `website`、`console`、`admin`、`ruyin` 均通过各自 `type-check`、`lint`、`build`。
+- `rg -n "@vxture/design-system/" portals business agent-studio packages --glob "*.ts" --glob "*.tsx" --glob "*.css"` 的结果仅允许 `/tokens`、`/types`、`/server` 和 package exports 暴露的 `styles/*`；无 `src/**` 或其他未授权深层导入。
+- `rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"` 无应用依赖清单结果。
+- `packages/design/design-system/README.md`、`docs/architecture/08-design-system.md`、`packages/design/design-system/package.json` 的版本、组件数量、导出入口一致。
+- `agent-studio/vela` 提供真实 lint 脚本，并通过 `pnpm --filter @vxture/agent-studio-vela lint`。
+- `website`、`console`、`admin`、`ruyin`、`agent-studio/vela` 均通过各自适用的 `type-check`、`lint`、`build`。
