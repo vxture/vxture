@@ -1075,6 +1075,132 @@
   --vx-tenant-settings-line: var(--vx-color-border);
 }
 
+.vx-tenant-settings-page {
+  gap: 1.65rem;
+}
+
+.vx-tenant-settings-page .vx-page-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.vx-tenant-settings-page .vx-page-header__copy {
+  gap: 0.58rem;
+}
+
+.vx-tenant-settings-page .vx-page-header__description {
+  max-width: 48rem;
+  font-size: var(--vx-tenant-settings-meta-size);
+}
+
+.vx-tenant-settings-page .vx-page-header__title-row .vx-badge,
+.vx-tenant-settings-row__policy .vx-badge,
+.vx-tenant-settings-danger-row .vx-badge {
+  border-color: var(--vx-color-auth-border);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+  font-size: var(--vx-tenant-settings-meta-size);
+  font-weight: 720;
+}
+
+.vx-tenant-settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.vx-tenant-settings-title,
+.vx-tenant-settings-general,
+.vx-tenant-settings-danger {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.vx-tenant-settings-general,
+.vx-tenant-settings-danger {
+  padding-top: 0.2rem;
+}
+
+.vx-tenant-settings-danger {
+  margin-top: 0.55rem;
+  border-top: 0;
+  padding-top: 0.95rem;
+}
+
+.vx-tenant-settings-block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.vx-tenant-settings-block-header h2 {
+  margin: 0;
+  color: var(--vx-console-text);
+  font-size: 0.98rem;
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.vx-tenant-settings-block-header span {
+  display: block;
+  margin-top: 0.08rem;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-tenant-settings-meta-size);
+}
+
+.vx-tenant-settings-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.72rem;
+  padding-bottom: 0.32rem;
+}
+
+.vx-tenant-settings-summary__item {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 0.72fr) minmax(0, 1fr);
+  gap: 0.54rem;
+  align-items: center;
+  min-width: 0;
+  padding: 0.72rem 0;
+  border-top: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+}
+
+.dark .vx-tenant-settings-summary__item {
+  border-top-color: var(--vx-color-border);
+}
+
+.vx-tenant-settings-summary__item svg {
+  width: 2rem;
+  height: 2rem;
+  padding: 0.46rem;
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-tenant-settings-summary__item span {
+  overflow: hidden;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-tenant-settings-meta-size);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-tenant-settings-summary__item strong {
+  overflow: hidden;
+  color: var(--vx-console-text);
+  font-size: var(--vx-tenant-settings-text-size);
+  font-weight: 740;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 :where(.vx-members-page) {
   --vx-members-text-size: var(--vx-component-metric-084r);
   --vx-members-meta-size: var(--vx-component-metric-078r);
