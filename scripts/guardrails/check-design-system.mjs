@@ -45,6 +45,18 @@ const DIRECT_UI_ENGINE_DEPENDENCIES = [
   "react-icons",
   /^@radix-ui\//,
 ];
+const ALLOWED_DS_IMPORTS = new Set([
+  "@vxture/design-system",
+  "@vxture/design-system/tokens",
+  "@vxture/design-system/types",
+  "@vxture/design-system/server",
+  "@vxture/design-system/styles/auth.css",
+  "@vxture/design-system/styles/components.css",
+  "@vxture/design-system/styles/fullscreen.css",
+  "@vxture/design-system/styles/globals.css",
+  "@vxture/design-system/styles/tokens.css",
+  "@vxture/design-system/styles/typography.css",
+]);
 
 const rules = [
   {
@@ -68,6 +80,21 @@ const rules = [
         return violation(file, lineNumber, "改为从 @vxture/design-system 导入基础组件，业务组件使用语义目录。");
       }
       return null;
+    },
+  },
+  {
+    id: "ds/no-unauthorized-design-system-subpath",
+    description: "应用和普通包只能使用 @vxture/design-system 公共入口与白名单子入口，禁止内部深层导入。",
+    checkLine(file, line, lineNumber) {
+      if (!isDesignSystemConsumerSource(file)) return null;
+      const specifiers = findDesignSystemSpecifiers(line);
+      const unauthorized = specifiers.find((specifier) => !ALLOWED_DS_IMPORTS.has(specifier));
+      if (!unauthorized) return null;
+      return violation(
+        file,
+        lineNumber,
+        `${unauthorized} 不是允许的 DS 公共入口；只允许根入口、/tokens、/types、/server 和 package exports 暴露的 styles/*。`,
+      );
     },
   },
   {
@@ -389,6 +416,12 @@ function isFrontendSource(file) {
   return /^(portals|agent-studio|business)\//.test(normalize(file));
 }
 
+function isDesignSystemConsumerSource(file) {
+  const normalized = normalize(file);
+  if (normalized.startsWith(`${DS_ROOT}/`)) return false;
+  return /^(portals|agent-studio|business|packages)\//.test(normalized);
+}
+
 function isFrontendPackageManifest(file) {
   return /^(portals|agent-studio|business)\/[^/]+\/package\.json$/.test(normalize(file));
 }
@@ -397,6 +430,25 @@ function isDirectUiEngineDependency(dependency) {
   return DIRECT_UI_ENGINE_DEPENDENCIES.some((item) =>
     typeof item === "string" ? item === dependency : item.test(dependency),
   );
+}
+
+function findDesignSystemSpecifiers(line) {
+  const specifiers = [];
+  const patterns = [
+    /from\s+["'](@vxture\/design-system(?:\/[^"']+)?)["']/g,
+    /import\s+["'](@vxture\/design-system(?:\/[^"']+)?)["']/g,
+    /@import\s+["'](@vxture\/design-system(?:\/[^"']+)?)["']/g,
+  ];
+
+  for (const pattern of patterns) {
+    let match = pattern.exec(line);
+    while (match) {
+      if (match[1]) specifiers.push(match[1]);
+      match = pattern.exec(line);
+    }
+  }
+
+  return specifiers;
 }
 
 function isDsTokenOwner(file) {
