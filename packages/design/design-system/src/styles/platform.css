@@ -197,6 +197,104 @@
   text-overflow: ellipsis;
 }
 
+.vx-account-profile-main {
+  display: grid;
+  gap: 0.92rem;
+  min-width: 0;
+}
+
+.vx-account-profile-section {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+}
+
+.dark .vx-account-profile-section {
+  border-top-color: var(--vx-color-border);
+}
+
+.vx-account-profile-section__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.02rem 0 0.76rem;
+}
+
+.vx-account-profile-section__header h2 {
+  margin: 0;
+  color: var(--vx-console-text);
+  font-size: 0.98rem;
+  font-weight: 740;
+  letter-spacing: 0;
+}
+
+.vx-account-profile-section__header p {
+  margin: 0.28rem 0 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+}
+
+.vx-account-profile-field-list {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+.vx-account-profile-field {
+  display: grid;
+  grid-template-columns: 2rem minmax(7.2rem, 0.24fr) minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: center;
+  min-height: 3.05rem;
+  padding: 0.72rem 0;
+  border-top: 1px dashed var(--vx-color-border);
+}
+
+.dark .vx-account-profile-field {
+  border-top-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-account-profile-field--multiline {
+  align-items: start;
+}
+
+.vx-account-profile-field__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-account-profile-field__label {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+  font-weight: 650;
+}
+
+.vx-account-profile-field__value {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--vx-console-text);
+  font-size: var(--vx-account-profile-text-size);
+  font-weight: 660;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+}
+
+.vx-account-profile-field:not(.vx-account-profile-field--multiline) .vx-account-profile-field__value {
+  white-space: nowrap;
+}
+
+.vx-account-profile-field__value--empty {
+  color: var(--vx-console-muted);
+  font-weight: 560;
+}
+
 :where(.vx-notifications-page) {
   --vx-notification-text-size: var(--vx-component-metric-088r);
   --vx-notification-meta-size: var(--vx-component-metric-078r);
