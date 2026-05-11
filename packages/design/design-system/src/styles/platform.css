@@ -7,13 +7,13 @@
  */
 
 :where(.vx-models-page) {
-  --vx-models-text-size: var(--vx-component-metric-084r);
-  --vx-models-meta-size: var(--vx-component-metric-078r);
+  --vx-models-text-size: var(--vx-platform-text-size-md);
+  --vx-models-meta-size: var(--vx-platform-text-size-xs);
 }
 
 :where(.vx-account-profile-page) {
-  --vx-account-profile-text-size: var(--vx-component-metric-084r);
-  --vx-account-profile-meta-size: var(--vx-component-metric-078r);
+  --vx-account-profile-text-size: var(--vx-platform-text-size-md);
+  --vx-account-profile-meta-size: var(--vx-platform-text-size-xs);
   --vx-account-profile-title-size: clamp(1.08rem, 1.28vw, 1.32rem);
   --vx-account-profile-title-line-height: 1.28;
   --vx-account-profile-title-weight: 760;
@@ -138,7 +138,7 @@
   display: grid;
   gap: 0.35rem;
   padding: 1rem 1.05rem;
-  border-radius: var(--vx-component-metric-18p);
+  border-radius: var(--vx-platform-radius-lg);
   background: color-mix(in srgb, var(--vx-color-white) 74%, transparent);
   box-shadow: var(--vx-console-shadow-soft);
 }
@@ -430,7 +430,7 @@
   gap: 0.82rem;
   padding: 1rem;
   border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 10%, transparent);
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-radius-sm);
   background: var(--vx-color-white);
   box-shadow: 0 24px 68px color-mix(in srgb, var(--vx-color-gray-900) 16%, transparent);
 }
@@ -809,7 +809,7 @@
   justify-content: center;
   width: 2.4rem;
   height: 2.4rem;
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-radius-sm);
   border: 1px solid var(--vx-color-shell-line-soft);
   background: var(--vx-color-shell-panel);
   color: var(--vx-console-brand-strong);
@@ -1148,8 +1148,8 @@
 }
 
 :where(.vx-notifications-page) {
-  --vx-notification-text-size: var(--vx-component-metric-088r);
-  --vx-notification-meta-size: var(--vx-component-metric-078r);
+  --vx-notification-text-size: var(--vx-platform-text-size-lg);
+  --vx-notification-meta-size: var(--vx-platform-text-size-xs);
   --vx-notification-panel: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
   --vx-notification-panel-strong: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
   --vx-notification-line: var(--vx-color-auth-border);
@@ -1553,8 +1553,8 @@
 }
 
 :where(.vx-tenant-settings-page) {
-  --vx-tenant-settings-text-size: var(--vx-component-metric-084r);
-  --vx-tenant-settings-meta-size: var(--vx-component-metric-078r);
+  --vx-tenant-settings-text-size: var(--vx-platform-text-size-md);
+  --vx-tenant-settings-meta-size: var(--vx-platform-text-size-xs);
   --vx-tenant-settings-line: color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
   --vx-tenant-settings-title-size: clamp(1.08rem, 1.28vw, 1.32rem);
   --vx-tenant-settings-title-line-height: 1.28;
@@ -2070,7 +2070,7 @@
   min-height: 8.25rem;
   padding: 1.05rem;
   border: 1px solid var(--vx-console-border);
-  border-radius: var(--vx-component-metric-14p);
+  border-radius: var(--vx-platform-radius-md);
   background: linear-gradient(180deg, var(--vx-color-white) 0%, var(--vx-color-brand-50) 100%);
   box-shadow: none;
 }
@@ -2099,7 +2099,7 @@
   height: 2rem;
   display: inline-grid;
   place-items: center;
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-radius-sm);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
 }
@@ -2198,7 +2198,7 @@
 .vx-action-item__icon {
   width: 2.35rem;
   height: 2.35rem;
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-radius-sm);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
 }
@@ -2256,7 +2256,7 @@
   width: 100%;
   padding: 0.85rem 0.95rem;
   border: 0;
-  border-radius: var(--vx-component-metric-14p);
+  border-radius: var(--vx-platform-radius-md);
   background: transparent;
   color: var(--vx-console-text);
   text-align: left;
@@ -2462,7 +2462,7 @@
   --vx-shell-icon-button-rail-width: 2.5rem;
   --vx-shell-icon-button-rail-height: 2.5rem;
   --vx-shell-icon-button-rail-flex-basis: 2.5rem;
-  --vx-shell-icon-button-rail-radius: var(--vx-component-metric-10p);
+  --vx-shell-icon-button-rail-radius: var(--vx-platform-radius-sm);
   --vx-shell-icon-button-rail-justify: center;
   --vx-shell-icon-button-rail-padding-left: 0;
   --vx-shell-icon-button-rail-color: color-mix(in srgb, var(--vx-color-shell-text) 46%, transparent);
@@ -2552,7 +2552,7 @@
   gap: var(--vx-models-summary-item-gap, 0.62rem);
   min-width: 0;
   border: 1px solid var(--vx-color-border);
-  border-radius: var(--vx-models-summary-item-radius, var(--vx-component-metric-10p));
+  border-radius: var(--vx-models-summary-item-radius, var(--vx-platform-radius-sm));
   background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 68%, transparent);
   padding: var(--vx-models-summary-item-padding, 0.62rem 0.78rem);
 }
@@ -2843,7 +2843,7 @@
   width: var(--vx-model-icon-size, 2.25rem);
   height: var(--vx-model-icon-size, 2.25rem);
   flex: 0 0 auto;
-  border-radius: var(--vx-model-icon-radius, var(--vx-component-metric-10p));
+  border-radius: var(--vx-model-icon-radius, var(--vx-platform-radius-sm));
   color: var(--vx-color-brand-700);
   background: color-mix(in srgb, var(--vx-color-auth-accent-light) 12%, transparent);
 }
@@ -2971,7 +2971,7 @@
   min-width: var(--vx-model-actions-menu-min-width, 10.8rem);
   gap: var(--vx-model-actions-menu-gap, 0.15rem);
   border: 1px solid var(--vx-console-border);
-  border-radius: var(--vx-model-actions-menu-radius, var(--vx-component-metric-10p));
+  border-radius: var(--vx-model-actions-menu-radius, var(--vx-platform-radius-sm));
   background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
   box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
   padding: var(--vx-model-actions-menu-padding, 0.32rem);
@@ -3698,7 +3698,7 @@
   gap: 0.15rem;
   padding: 0.32rem;
   border: 1px solid var(--vx-console-border);
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-radius-sm);
   background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
   box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
 }
@@ -3932,7 +3932,7 @@
   flex-wrap: wrap;
   gap: 0.35rem;
   padding: 0.25rem;
-  border-radius: var(--vx-component-metric-14p);
+  border-radius: var(--vx-platform-radius-md);
   background: color-mix(in srgb, var(--vx-color-gray-50) 92%, transparent);
   border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
 }
@@ -3942,7 +3942,7 @@
   background: transparent;
   color: var(--vx-console-muted);
   padding: 0.62rem 0.9rem;
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-radius-sm);
   font-weight: 600;
 }
 
@@ -4043,7 +4043,7 @@
 
 .vx-role-permissions span {
   padding: 0.6rem 0.75rem;
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-radius-sm);
   background: var(--vx-color-gray-50);
   border: 1px solid var(--vx-console-border);
   color: var(--vx-console-muted);
@@ -4112,13 +4112,13 @@
 }
 
 :where(.vx-members-page) {
-  --vx-members-text-size: var(--vx-component-metric-084r);
-  --vx-members-meta-size: var(--vx-component-metric-078r);
+  --vx-members-text-size: var(--vx-platform-text-size-md);
+  --vx-members-meta-size: var(--vx-platform-text-size-xs);
 }
 
 :where(.vx-roles-page) {
-  --vx-roles-text-size: var(--vx-component-metric-084r);
-  --vx-roles-meta-size: var(--vx-component-metric-078r);
+  --vx-roles-text-size: var(--vx-platform-text-size-md);
+  --vx-roles-meta-size: var(--vx-platform-text-size-xs);
 }
 
 :where(.admin-shell) {
@@ -4347,7 +4347,7 @@
   justify-content: var(--vx-shell-icon-button-rail-justify, flex-start);
   margin-left: var(--vx-shell-icon-button-rail-margin-left, 0);
   padding-left: var(--vx-shell-icon-button-rail-padding-left, var(--vx-shell-sidebar-icon-inset));
-  border-radius: var(--vx-shell-icon-button-rail-radius, var(--vx-component-metric-14p));
+  border-radius: var(--vx-shell-icon-button-rail-radius, var(--vx-platform-radius-md));
   background: transparent;
   box-shadow: none;
   color: var(--vx-shell-icon-button-rail-color, color-mix(in srgb, var(--vx-color-shell-text) 46%, transparent));
@@ -4677,9 +4677,9 @@
 .vx-tabs-list {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: var(--vx-component-metric-05r);
-  padding: var(--vx-component-metric-035r);
-  border-radius: var(--vx-component-metric-14p);
+  gap: var(--vx-platform-tabs-gap);
+  padding: var(--vx-platform-tabs-padding);
+  border-radius: var(--vx-platform-tabs-radius);
   background: color-mix(in srgb, var(--vx-color-white) 84%, transparent);
   box-shadow: var(--vx-console-shadow-soft);
 }
@@ -4692,10 +4692,10 @@
   height: auto;
   min-height: 0;
   border: 0;
-  border-radius: var(--vx-component-metric-10p);
+  border-radius: var(--vx-platform-tab-radius);
   background: transparent;
   color: var(--vx-console-muted);
-  padding: var(--vx-component-metric-07r) var(--vx-component-metric-095r);
+  padding: var(--vx-platform-tab-padding);
   font-weight: 600;
 }
 
@@ -4718,7 +4718,7 @@
   display: grid;
   gap: 0;
   overflow: hidden;
-  border: var(--vx-component-metric-1p) solid var(--vx-color-shell-line-soft);
+  border: var(--vx-platform-border-width) solid var(--vx-color-shell-line-soft);
   border-radius: var(--vx-radius-xl);
   background: var(--vx-color-white);
 }
@@ -4733,17 +4733,17 @@
 .vx-table__header {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--vx-component-metric-1r);
+  gap: var(--vx-platform-table-gap);
   align-items: center;
 }
 
 .vx-table__header,
 .vx-member-table__header {
   justify-items: center;
-  padding: var(--vx-component-metric-07r) 0;
+  padding: var(--vx-platform-table-header-padding);
   background: var(--vx-color-brand-50);
   color: var(--vx-color-shell-muted);
-  font-size: var(--vx-component-metric-078r);
+  font-size: var(--vx-platform-table-header-size);
   font-weight: 740;
   letter-spacing: 0;
   text-align: center;
@@ -4759,8 +4759,8 @@
 .vx-table__row,
 .vx-member-table__row {
   justify-items: start;
-  padding: var(--vx-component-metric-082r) 0;
-  border-bottom: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 7.5%, transparent);
+  padding: var(--vx-platform-table-row-padding);
+  border-bottom: var(--vx-platform-border-width) solid color-mix(in srgb, var(--vx-color-brand-800) 7.5%, transparent);
   text-align: left;
 }
 
@@ -4772,14 +4772,14 @@
 .vx-table__row span,
 .vx-member-table__row span {
   color: var(--vx-console-muted);
-  font-size: var(--vx-component-metric-086r);
+  font-size: var(--vx-platform-table-row-size);
 }
 
 .vx-member-table__header,
 .vx-member-table__row {
   display: grid;
   grid-template-columns: 1.3fr 1.5fr 1fr 0.8fr 1fr 56px;
-  gap: var(--vx-component-metric-1r);
+  gap: var(--vx-platform-table-gap);
   align-items: center;
 }
 
@@ -4794,24 +4794,24 @@
 .vx-member-table__identity {
   display: flex;
   align-items: center;
-  gap: var(--vx-component-metric-075r);
+  gap: var(--vx-platform-table-identity-gap);
 }
 
 .vx-member-table__identity p {
-  margin: var(--vx-component-metric-018r) 0 0;
+  margin: var(--vx-platform-table-identity-margin-top) 0 0;
   color: var(--vx-console-muted);
-  font-size: var(--vx-component-metric-09r);
+  font-size: var(--vx-platform-table-identity-size);
 }
 
 .vx-table-stack {
   display: grid;
-  gap: var(--vx-component-metric-1r);
+  gap: var(--vx-platform-table-stack-gap);
 }
 
 .vx-toolbar {
   display: flex;
   align-items: center;
-  gap: var(--vx-component-metric-075r);
+  gap: var(--vx-platform-toolbar-gap);
 }
 
 .vx-toolbar--filters {
@@ -4822,24 +4822,24 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--vx-component-metric-1r);
-  padding-bottom: var(--vx-component-metric-035r);
+  gap: var(--vx-platform-table-toolbar-gap);
+  padding-bottom: var(--vx-platform-table-toolbar-padding-bottom);
 }
 
 .vx-table-toolbar__copy {
   display: grid;
-  gap: var(--vx-component-metric-02r);
+  gap: var(--vx-platform-table-toolbar-copy-gap);
 }
 
 .vx-table-toolbar__copy strong {
   color: var(--vx-console-text);
-  font-size: var(--vx-component-metric-096r);
+  font-size: var(--vx-platform-table-toolbar-title-size);
   font-weight: 720;
 }
 
 .vx-table-toolbar__copy span {
   color: var(--vx-console-muted);
-  font-size: var(--vx-component-metric-082r);
+  font-size: var(--vx-platform-table-toolbar-meta-size);
 }
 
 @media (max-width: 720px) {

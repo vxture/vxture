@@ -33,6 +33,10 @@ const DS_TOKEN_PATHS = [
   normalize("packages/design/design-system/src/tokens"),
   normalize("packages/design/design-system/src/styles/tokens.css"),
 ];
+const DS_SEMANTIC_STYLE_PATHS = new Set([
+  normalize("packages/design/design-system/src/styles/components.css"),
+  normalize("packages/design/design-system/src/styles/platform.css"),
+]);
 const FONT_LOADER_ALLOWLIST = [
   /^portals\/[^/]+\/src\/app\/layout\.tsx$/,
   /^portals\/[^/]+\/src\/app\/layout\.ts$/,
@@ -238,15 +242,16 @@ const rules = [
     },
   },
   {
-    id: "ds/no-component-metric-in-ds-components-css",
-    description: "DS 基础组件语义类必须使用语义组件 token，不能直接消费兜底 metric token。",
+    id: "ds/no-component-metric-in-ds-semantic-css",
+    description: "DS 语义样式必须使用语义 token，不能直接消费兜底 metric token。",
     checkLine(file, line, lineNumber) {
-      if (normalize(file) !== "packages/design/design-system/src/styles/components.css") return null;
+      const normalized = normalize(file);
+      if (!DS_SEMANTIC_STYLE_PATHS.has(normalized)) return null;
       if (!/var\(--vx-component-metric-/.test(line)) return null;
       return violation(
         file,
         lineNumber,
-        "components.css 只能使用 --vx-button-*、--vx-field-*、--vx-shell-* 等语义 token；兜底 metric token 只允许在 token 层维护。",
+        "DS 语义样式只能使用 --vx-button-*、--vx-field-*、--vx-platform-*、--vx-shell-* 等语义 token；兜底 metric token 只允许在 token 层维护。",
         line,
       );
     },
