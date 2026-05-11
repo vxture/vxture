@@ -75,8 +75,8 @@ a {
   right: var(--vx-component-metric-1r);
   bottom: auto;
   z-index: 3100;
-  width: min(var(--vx-shell-assistant-width, 420px), calc(100dvw - var(--vx-component-metric-2r)));
-  min-width: min(var(--vx-component-metric-380p), calc(100dvw - var(--vx-component-metric-2r)));
+  width: var(--vx-admin-floating-assistant-width);
+  min-width: var(--vx-admin-floating-assistant-min-width);
   max-width: calc(100dvw - var(--vx-component-metric-2r));
   height: var(--assistant-floating-height);
   max-height: var(--assistant-floating-height);
@@ -689,7 +689,7 @@ body.dark {
 .auth-captcha-modal__panel {
   position: relative;
   z-index: 1;
-  width: min(25rem, 100%);
+  width: var(--vx-admin-captcha-modal-panel-width);
   display: grid;
   gap: var(--vx-component-metric-125r);
   padding: var(--vx-component-metric-135r);
@@ -1100,7 +1100,7 @@ body.dark {
 }
 
 .admin-shell__header .vx-shell-header__search-shell {
-  width: min(32.5rem, 100%);
+  width: var(--vx-admin-header-search-width);
   justify-self: stretch;
 }
 
@@ -4071,7 +4071,7 @@ body.dark {
 
 .vx-ops-todo-directory-list .vx-tenant-directory-list__header,
 .vx-ops-todo-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.45fr) minmax(0, 0.78fr)
     minmax(0, 0.68fr) minmax(0, 0.86fr) var(--vx-component-metric-5r);
@@ -4107,7 +4107,7 @@ body.dark {
 
 .vx-ticket-directory-list .vx-tenant-directory-list__header,
 .vx-ticket-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.08fr) minmax(0, 0.92fr)
     minmax(0, 0.56fr) minmax(0, 0.78fr) minmax(0, 0.62fr) var(--vx-component-metric-5r);
@@ -4892,7 +4892,7 @@ body.dark {
 
 .vx-tenant-directory-list__header,
 .vx-tenant-directory-row {
-  min-width: min(100%, 64rem);
+  min-width: var(--vx-admin-directory-row-min-width-compact);
   display: grid;
   grid-template-columns:
     var(--vx-component-metric-275r) minmax(0, 1.8fr) minmax(0, 0.5fr) minmax(0, 0.85fr)
@@ -4904,7 +4904,7 @@ body.dark {
 
 .vx-tenant-operation-directory-list .vx-tenant-directory-list__header,
 .vx-tenant-operation-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.55fr) minmax(0, 0.42fr)
     minmax(0, 0.82fr) minmax(0, 1.05fr) minmax(0, 0.96fr) var(--vx-component-metric-5r);
@@ -4977,7 +4977,7 @@ body.dark {
 
 .vx-account-directory-list .vx-tenant-directory-list__header,
 .vx-account-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.45fr) minmax(0, 0.95fr)
     minmax(0, 0.9fr) minmax(0, 0.74fr) minmax(0, 0.9fr) var(--vx-component-metric-5r);
@@ -5053,7 +5053,7 @@ body.dark {
 
 .vx-platform-user-directory-list .vx-tenant-directory-list__header,
 .vx-platform-user-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(15rem, 1.45fr) minmax(var(--vx-component-metric-5r), 0.48fr)
     minmax(var(--vx-component-metric-10r), 0.9fr) minmax(var(--vx-component-metric-10r), 0.9fr) minmax(var(--vx-component-metric-10r), 0.9fr) var(--vx-component-metric-5r);
@@ -5204,7 +5204,7 @@ body.dark {
 
 .vx-admin-role-directory-list .vx-tenant-directory-list__header,
 .vx-admin-role-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(15rem, 1.45fr) minmax(var(--vx-component-metric-5r), 0.48fr)
     minmax(var(--vx-component-metric-10r), 0.9fr) minmax(var(--vx-component-metric-10r), 0.9fr) minmax(var(--vx-component-metric-10r), 0.9fr) var(--vx-component-metric-5r);
@@ -5356,7 +5356,7 @@ body.dark {
 
 .vx-product-directory-list .vx-tenant-directory-list__header,
 .vx-product-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.34fr) minmax(0, 0.86fr)
     minmax(0, 0.66fr) minmax(0, 0.78fr) minmax(0, 0.72fr)
@@ -5440,7 +5440,7 @@ body.dark {
 
 .vx-product-plan-directory-list .vx-tenant-directory-list__header,
 .vx-product-plan-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.14fr) minmax(0, 0.74fr)
     minmax(0, 0.66fr) minmax(0, 1.5fr) minmax(0, 1.04fr)
@@ -5530,7 +5530,7 @@ body.dark {
 
 .vx-product-solution-directory-list .vx-tenant-directory-list__header,
 .vx-product-solution-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.15fr) minmax(0, 0.82fr)
     minmax(0, 1.2fr) minmax(0, 0.95fr) minmax(0, 0.72fr) var(--vx-component-metric-5r);
@@ -5538,7 +5538,7 @@ body.dark {
 
 .vx-subscription-directory-list .vx-tenant-directory-list__header,
 .vx-subscription-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.12fr) minmax(0, 0.88fr)
     minmax(0, 0.84fr) minmax(0, 0.78fr) minmax(0, 0.64fr)
@@ -5610,7 +5610,7 @@ body.dark {
 
 .vx-order-directory-list .vx-tenant-directory-list__header,
 .vx-order-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.02fr) minmax(0, 1.02fr)
     minmax(0, 0.84fr) minmax(0, 0.84fr) minmax(0, 0.66fr)
@@ -5619,7 +5619,7 @@ body.dark {
 
 .vx-billing-directory-list .vx-tenant-directory-list__header,
 .vx-billing-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1fr) minmax(0, 1fr)
     minmax(0, 0.84fr) minmax(0, 0.64fr) minmax(0, 0.68fr)
@@ -5628,7 +5628,7 @@ body.dark {
 
 .vx-invoice-directory-list .vx-tenant-directory-list__header,
 .vx-invoice-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.04fr) minmax(0, 0.94fr)
     minmax(0, 0.76fr) minmax(0, 0.64fr) minmax(0, 0.62fr)
@@ -5637,7 +5637,7 @@ body.dark {
 
 .vx-payment-directory-list .vx-tenant-directory-list__header,
 .vx-payment-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.04fr) minmax(0, 0.94fr)
     minmax(0, 0.84fr) minmax(0, 0.64fr) minmax(0, 0.62fr)
@@ -5646,7 +5646,7 @@ body.dark {
 
 .vx-usage-directory-list .vx-tenant-directory-list__header,
 .vx-usage-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1fr) minmax(0, 0.9fr)
     minmax(0, 0.82fr) minmax(0, 0.68fr) minmax(0, 0.62fr)
@@ -5655,7 +5655,7 @@ body.dark {
 
 .vx-promotion-directory-list .vx-tenant-directory-list__header,
 .vx-promotion-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.04fr) minmax(0, 0.92fr)
     minmax(0, 0.74fr) minmax(0, 0.66fr) minmax(0, 0.62fr)
@@ -5664,7 +5664,7 @@ body.dark {
 
 .vx-redemption-directory-list .vx-tenant-directory-list__header,
 .vx-redemption-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.04fr) minmax(0, 0.94fr)
     minmax(0, 0.88fr) minmax(0, 0.74fr) minmax(0, 0.62fr)
@@ -6101,7 +6101,7 @@ body.dark {
 
 .vx-verification-directory-list .vx-tenant-directory-list__header,
 .vx-verification-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.45fr) minmax(0, 0.8fr)
     minmax(0, 1.25fr) minmax(0, 0.86fr) minmax(0, 0.8fr) var(--vx-component-metric-5r);
@@ -6186,7 +6186,7 @@ body.dark {
 
 .vx-model-gateway-directory-list .vx-tenant-directory-list__header,
 .vx-model-gateway-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.25fr) minmax(0, 0.5fr)
     minmax(0, 0.5fr) minmax(0, 0.68fr) minmax(0, 0.9fr) var(--vx-component-metric-5r);
@@ -6335,7 +6335,7 @@ body.dark {
 
 .vx-model-strategy-directory-list .vx-tenant-directory-list__header,
 .vx-model-strategy-directory-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.25fr) minmax(0, 0.52fr)
     minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.58fr) minmax(0, 0.48fr) var(--vx-component-metric-5r);
@@ -6343,7 +6343,7 @@ body.dark {
 
 .vx-model-strategy-override-list .vx-tenant-directory-list__header,
 .vx-model-strategy-override-list .vx-tenant-directory-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.25fr) minmax(0, 0.52fr)
     minmax(0, 0.9fr) minmax(0, 1fr) minmax(0, 0.48fr)
@@ -7582,7 +7582,7 @@ body.dark {
 }
 
 .vx-subscription-action-dialog__panel {
-  width: min(100%, 34rem);
+  width: var(--vx-admin-dialog-width-sm);
   display: grid;
   gap: var(--vx-component-metric-1r);
   padding: var(--vx-component-metric-125r);
@@ -7703,7 +7703,7 @@ body.dark {
 }
 
 .vx-order-payment-dialog__panel {
-  width: min(100%, 42rem);
+  width: var(--vx-admin-dialog-width-lg);
 }
 
 .vx-order-payment-dialog__grid {
@@ -7723,7 +7723,7 @@ body.dark {
 }
 
 .vx-invoice-receipt-action-dialog__panel {
-  width: min(100%, 40rem);
+  width: var(--vx-admin-dialog-width-md);
 }
 
 .vx-invoice-receipt-action-dialog__grid {
@@ -7733,7 +7733,7 @@ body.dark {
 }
 
 .vx-billing-bill-action-dialog__panel {
-  width: min(100%, 42rem);
+  width: var(--vx-admin-dialog-width-lg);
 }
 
 .vx-billing-bill-action-dialog__grid {
@@ -10501,7 +10501,7 @@ body.dark {
 
 .vx-tenant-member-list__header,
 .vx-tenant-member-row {
-  min-width: min(58rem, 100%);
+  min-width: var(--vx-admin-dialog-width-xl);
   display: grid;
   grid-template-columns:
     var(--vx-component-metric-275r) minmax(var(--vx-component-metric-17r), 1.8fr) minmax(var(--vx-component-metric-8r), 0.7fr)
@@ -11746,7 +11746,7 @@ body.dark {
 }
 
 .vx-admin-role-auth-dialog__panel {
-  width: min(58rem, calc(100vw - var(--vx-component-metric-2r)));
+  width: var(--vx-admin-dialog-max-width-xl);
   max-height: min(44rem, calc(100vh - var(--vx-component-metric-2r)));
 }
 
@@ -13091,7 +13091,7 @@ body.dark {
 }
 
 .platform-autonomy-page {
-  max-width: min(100%, 74rem);
+  max-width: var(--vx-admin-directory-row-max-width);
 }
 
 .platform-autonomy-metrics {
@@ -13432,7 +13432,7 @@ body.dark {
 }
 
 .vx-platform-governance-page {
-  max-width: min(100%, 74rem);
+  max-width: var(--vx-admin-directory-row-max-width);
 }
 
 .vx-platform-governance-directory {
@@ -13447,7 +13447,7 @@ body.dark {
 
 .vx-platform-governance-list .vx-tenant-directory-list__header,
 .vx-platform-governance-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.25fr) minmax(0, 0.5fr)
     minmax(0, 0.68fr) minmax(0, 0.68fr) minmax(0, 0.9fr) var(--vx-component-metric-5r);
@@ -13825,7 +13825,7 @@ body.dark {
 }
 .vx-audit-directory-list .vx-tenant-directory-list__header,
 .vx-audit-row {
-  min-width: min(100%, 74rem);
+  min-width: var(--vx-admin-directory-row-min-width);
   grid-template-columns:
     var(--vx-component-metric-275r) minmax(var(--vx-component-metric-12r-large), 0.95fr) minmax(var(--vx-component-metric-13r), 1fr) minmax(var(--vx-component-metric-12r-large), 0.95fr)
     minmax(7rem, 0.48fr) minmax(7rem, 0.48fr) minmax(var(--vx-component-metric-8r), 0.56fr) minmax(var(--vx-component-metric-10r), 0.72fr);

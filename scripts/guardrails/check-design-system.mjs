@@ -13,7 +13,9 @@ const BASELINED_RULE_IDS = new Set([
   "ds/no-inline-design-style",
   "ds/no-native-primitive",
   "ds/no-app-vx-token-definitions",
+  "ds/no-app-component-metric-token",
   "ds/no-app-hardcoded-scale",
+  "ds/no-app-hardcoded-layout-scale",
 ]);
 const IGNORED_PARTS = new Set([
   ".git",
@@ -195,6 +197,20 @@ const rules = [
     },
   },
   {
+    id: "ds/no-app-component-metric-token",
+    description: "应用层不能直接消费 --vx-component-metric-* 兜底尺度 token；必须使用 DS 语义 token 或组件类。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return null;
+      if (!/var\(--vx-component-metric-/.test(line)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "应用 CSS 不能直接消费 --vx-component-metric-*；抽成 --vx-<domain>-* / --vx-<component>-* 语义 token，或迁移为 DS 组件样式。",
+        line,
+      );
+    },
+  },
+  {
     id: "ds/no-token-duplicates",
     description: "颜色、字号、圆角等 token 文件只能存在于 DS token 包。",
     checkFile(file) {
@@ -290,6 +306,24 @@ const rules = [
         file,
         lineNumber,
         "应用 CSS 不能新增硬编码 px/rem/em 设计尺度；使用 DS spacing/radius/typography/shadow token，或迁移为 DS 组件语义样式。",
+        line,
+      );
+    },
+  },
+  {
+    id: "ds/no-app-hardcoded-layout-scale",
+    description: "应用层布局算法不能新增硬编码设计尺度；min/max/clamp/minmax 中的具体尺度应提升为 DS 语义 token。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return null;
+      const text = stripLineComment(line);
+      if (!hasHardcodedScale(text)) return null;
+      if (!/\b(?:calc|min|max|clamp|minmax)\(/.test(text) && !/^\s*grid-template-(?:columns|rows)\s*:/.test(text)) {
+        return null;
+      }
+      return violation(
+        file,
+        lineNumber,
+        "应用 CSS 布局算法不能新增硬编码 px/rem/em 设计尺度；把列宽、弹窗宽度、断点内尺寸等提升为 DS 语义 token。",
         line,
       );
     },

@@ -730,6 +730,20 @@
   --vx-switch-thumb-shadow-y: var(--vx-component-metric-1p);
   --vx-switch-thumb-shadow-blur: var(--vx-component-metric-3p);
   --vx-switch-checked-translate: var(--vx-component-metric-12r);
+
+  /* Platform layout semantic scales - preferred contract for portal shells and dense lists. */
+  --vx-admin-floating-assistant-width: min(var(--vx-shell-assistant-width, 420px), calc(100dvw - var(--vx-component-metric-2r)));
+  --vx-admin-floating-assistant-min-width: min(var(--vx-component-metric-380p), calc(100dvw - var(--vx-component-metric-2r)));
+  --vx-admin-captcha-modal-panel-width: min(25rem, 100%);
+  --vx-admin-header-search-width: min(32.5rem, 100%);
+  --vx-admin-directory-row-min-width: min(100%, 74rem);
+  --vx-admin-directory-row-max-width: min(100%, 74rem);
+  --vx-admin-directory-row-min-width-compact: min(100%, 64rem);
+  --vx-admin-dialog-width-sm: min(100%, 34rem);
+  --vx-admin-dialog-width-md: min(100%, 40rem);
+  --vx-admin-dialog-width-lg: min(100%, 42rem);
+  --vx-admin-dialog-width-xl: min(58rem, 100%);
+  --vx-admin-dialog-max-width-xl: min(58rem, calc(100vw - var(--vx-component-metric-2r)));
 }
 
 .dark {
