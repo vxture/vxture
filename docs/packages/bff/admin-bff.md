@@ -50,8 +50,7 @@ src/
 
 ## 关键约束
 
-- middleware 执行顺序：auth → tenant → router
-- 每个 router 独立 try/catch，错误不冒泡
-- 响应做字段投影，不透传后端原始结构
+通用 BFF 约束见 [bff/index.md](index.md)。Admin-bff 专有：
+
 - 禁止 `any`，响应 DTO 类型明确
 - 新增业务域在 `routers/` 新增 `{domain}.router.ts`，不新建 BFF 包

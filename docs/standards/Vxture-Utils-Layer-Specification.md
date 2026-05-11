@@ -40,13 +40,17 @@ design
 
 ---
 
-# 3. Shared Utils
+# 3. Pure Utils（`@vxture/core-utils`）
 
 ## 包
 
 ```
 @vxture/core-utils
 ```
+
+> 注意：此层名为"Pure Utils"以区分 `@vxture/shared` 包。
+> `@vxture/shared` 包含平台级类型、常量与 locale 格式化工具；
+> `@vxture/core-utils` 提供通用纯函数工具（不含业务语义）。
 
 ## 作用
 
@@ -57,20 +61,12 @@ design
 - 不依赖 DOM
 - 不依赖 React
 - 不依赖 Node API
-- 可以运行在任何环境
+- 可以运行在任何环境（Node / Browser / Edge / Serverless / AI Agent）
 
-包括：
-
-- Node
-- Browser
-- Edge Runtime
-- Serverless
-- AI Agent
-
-## 示例
+## 目录
 
 ```
-packages/vxture-foundation/core-utils/src/
+packages/core/utils/src/
   array/
   object/
   string/

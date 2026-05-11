@@ -17,8 +17,8 @@ It is intended for developers and AI tools to ensure readability, maintainabilit
 
 > **Project-wide constraints:**
 >
-> - Comment language: **English** (internal standard; identifiers remain in English).
-> - Every core file must declare a `@package` tag in its file header — see Section 2.
+> - Comment language: **中文（Chinese）** — all code comments must be written in Chinese; identifiers remain in English.
+> - Every file must declare `@package`, `@layer`, `@category` in its file header — see Section 2.
 
 ---
 
@@ -30,12 +30,14 @@ Core files support two header styles:
 
 ```typescript
 /**
- * filename.ts - Short description
- * @package @vxture/[package-name]
+ * filename.ts - 简短描述（中文）
+ * @package  @vxture/[package-name]
+ * @layer    Infrastructure | Application | Domain | Presentation | Shared
+ * @category utils | service | router | component | types | module | ...
  * @description
- *   Detailed explanation of the file's functionality and responsibilities
+ *   详细说明文件功能和职责（中文）
  *
- * @author ${USER}           // AI-generated files: use "AI-Generated"
+ * @author ${USER}           // AI 生成文件使用 "AI-Generated"
  * @date ${DATE} ${TIME}
  */
 ```
@@ -44,8 +46,10 @@ Core files support two header styles:
 
 ```typescript
 /**
- * filename.ts - Very Short description
- * @package @vxture/[package-name]
+ * filename.ts - 简短描述（中文）
+ * @package  @vxture/[package-name]
+ * @layer    Infrastructure
+ * @category utils
  */
 ```
 
@@ -120,17 +124,35 @@ export enum EExample {
 
 ---
 
-## 7. AI Usage Notes
+## 7. 跨层引用注释
+
+任何跨越架构层的 import 必须在当行添加 `// ⚠️ 跨层引用` 并说明原因：
+
+```typescript
+// ⚠️ 跨层引用：仅引入类型，不引入运行时依赖
+import type { SomeType } from '@vxture/bff-website'
+
+// ⚠️ 跨层引用：设计系统内部模块共享，已在 CLAUDE.md G2 说明
+import { tokens } from '../design-tokens'
+```
+
+无理由的跨层引用视为架构违规，会被 dep-cruiser 拦截。
+
+---
+
+## 8. AI Usage Notes
 
 ### Mandatory
 
 - Set `@author` to `AI-Generated` and `@date` to the actual generation date.
 - All exported functions require JSDoc with `@param` and `@returns`; add `@throws` when exceptions exist.
-- Files longer than 80 lines must use section comments.
+- Files longer than 80 lines must use section comments (see Section 3).
+- All comments in Chinese; identifiers in English.
 - When modifying existing code, update all affected comments.
 
 ### Prohibited
 
-- Do not generate comments that merely restate the code (e.g. `// loop`, `// define variable`).
+- Do not generate comments that merely restate the code (e.g. `// 循环`, `// 定义变量`).
 - Do not omit `@throws` when a function has known exception paths.
-- Do not use a `@layer` value that does not match the file's actual position in the Monorepo.
+- Do not use a `@layer` value that does not match the file's actual layer in the monorepo.
+- Do not write cross-layer imports without `// ⚠️ 跨层引用` and a reason.

@@ -18,12 +18,12 @@
 | 文件 | 内容 |
 |------|------|
 | [`audit/index.md`](audit/index.md) | 审计规则入口 |
-| [`audit/scope.md`](audit/scope.md) | 审计范围定义 |
-| [`audit/prompt.md`](audit/prompt.md) | 审计 Prompt 模板 |
-| [`audit/ci-gate.md`](audit/ci-gate.md) | CI 门控配置 |
-| [`audit/report-template.md`](audit/report-template.md) | 报告模板 |
-| [`audit/severity.md`](audit/severity.md) | 问题严重级别定义 |
-| [`audit/run.md`](audit/run.md) | 运行审计操作手册 |
+| [`audit/ai-audit-scope.md`](audit/ai-audit-scope.md) | 审计范围定义 |
+| [`audit/ai-audit-prompt.md`](audit/ai-audit-prompt.md) | 审计 Prompt 模板 |
+| [`audit/ai-audit-ci-gate.md`](audit/ai-audit-ci-gate.md) | CI 门控配置 |
+| [`audit/ai-audit-report-template.md`](audit/ai-audit-report-template.md) | 报告模板 |
+| [`audit/ai-issue-severity.md`](audit/ai-issue-severity.md) | 问题严重级别定义 |
+| [`audit/run-ai-audit.md`](audit/run-ai-audit.md) | 运行审计操作手册 |
 | `audit/rules/` | 10 个具体规则检查文件（01-10） |
 
 ---

@@ -357,77 +357,17 @@ ai-sdk         →  shared
 
 ---
 
-# 9. Dependency Rules — One Page Summary
+# 9. Dependency Rules
 
-```
-FRONTEND (portals/*, agent-studio/*)
-  ✅ → BFF (HTTP only, never package import)
-  ✅ → design-system, platform-*, shared
-  ❌ → service-*, core-*, ai-sdk, agent-server/*
-
-BFF (bff/*)
-  ✅ → agent-server/*, service-*, core-*, shared
-  ❌ → other bff-*, design-system, platform-*, ai-sdk
-
-AGENT SERVER (agent-server/*)
-  ✅ → ai-sdk, service-*, core-*, shared
-  ❌ → other agent-server/*, bff-*, design-system, platform-*
-
-SERVICES (service-*)
-  ✅ → core-*, shared
-  ❌ → other service-*, bff-*, ai-sdk, UI
-
-CORE (core-*)
-  ✅ → shared
-  ❌ → everything else
-
-AI SDK (ai-sdk)
-  ✅ → shared
-  ❌ → service-*, bff-*, UI, platform-*
-
-PLATFORM SDK (platform-*)
-  ✅ → shared, design-system (optional)
-  ❌ → core-*, service-*, ai-sdk, bff-*
-
-DESIGN SYSTEM (design-system)
-  ✅ → shared
-  ❌ → everything else
-
-SHARED
-  ✅ → third-party utility libs only
-  ❌ → all internal packages
-```
+完整依赖边界规则见 [`02-package-boundaries.md`](02-package-boundaries.md)。
 
 ---
 
 # 10. Agent Lifecycle
 
-Agent-server logic follows a **promote-when-ready** path toward the platform:
+Agent-server 逻辑遵循"成熟后晋升"路径：`agent-server/{agent}/` → `services/{domain}/{name}/`，经 BFF 后供全平台使用。AI 能力成熟后作为模块加入 `@vxture/ai-sdk`。
 
-```
-agent-server/{agent}/          Fast, private, experimental
-        │
-        │  (proven reusable across 2+ agents or portals,
-        │   stable, domain boundary clearly defined)
-        ▼
-services/{domain}/{name}/      Shared, stable, platform-owned
-        │
-        ▼
-Consumed by any BFF            Available to all portals and agents
-```
-
-AI capabilities follow a parallel path inside `@vxture/ai-sdk`:
-
-```
-agent-server uses ai-sdk modules selectively
-        │
-        │  (new AI capability needed by multiple agents)
-        ▼
-New module added to @vxture/ai-sdk
-        │
-        ▼
-All agents can import the module independently
-```
+详见 [`07-service-layer.md`](07-service-layer.md)。
 
 ---
 
@@ -514,44 +454,7 @@ are kept apart by design. Different governance, deployment cadence, and dependen
 
 ## Appendix: Portal Internal Architecture Notes
 
-### portals/website — 重构至 v2.0 后的架构要点
-
-#### 路由结构
-
-```
-[locale]/
-  (public)/layout.tsx         ⭐ Header + Footer 唯一实例
-  (marketing)/                透传布局（TODO：未来移入 (public)）
-  (content)/                  Content Registry 通配路由（TODO：未来移入 (public)）
-  (auth)/                     无 Header/Footer，居中卡片布局
-```
-
-#### Content Registry 系统
-
-website 通过 `(content)/[...slug]/page.tsx` 通配路由统一接管所有内容类页面（legal / blog / faq / support / ...），
-通过 Loader 模式将路由层与数据源解耦：
-
-```
-CONTENT_REGISTRY = {
-  legal:  { loader: legalLoader,  staticParams: legalStaticParams },
-  blog:   { loader: blogLoader,   staticParams: blogStaticParams },
-  faq:    { loader: createStubLoader('faq') },
-  // ... 其他 stub 区段
-}
-```
-
-新增内容区段只需三步：`types.ts` 追加 key → 实现 Loader → registry.ts 注册。
-
-#### 关键架构决策
-
-| 决策                       | 说明                                                      |
-| -------------------------- | --------------------------------------------------------- |
-| Header/Footer 唯一实例     | 在 `(public)/layout.tsx` 渲染，子路由组透传               |
-| 结构数据与翻译分离         | `data/` 只存 href、图片路径、i18n key，文本在 `messages/` |
-| 组件按职责分层             | `layout/` / `marketing/` / `cases/` / `auth/` / `ui/`     |
-| Store 只存 UI 状态         | auth.store 存 `{user, isAuthenticated}`，不存 token       |
-| Middleware 三关注点        | 认证重定向 → intl → x-pathname                            |
-| 所有组件通过 index.ts 导出 | 各组件目录均有统一导出                                    |
+portals/website v2.0 架构要点（Content Registry、路由分组、Middleware 策略）见 [`docs/packages/portals/website.md`](../packages/portals/website.md)。
 
 ---
 

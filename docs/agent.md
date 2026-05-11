@@ -24,7 +24,7 @@ Vxture 是基于 **pnpm workspace monorepo** 的企业 SaaS 平台（TypeScript 
 
 ## 当前实施状态
 
-> 详细进度见 → [`docs/context/status.md`](context/status.md)
+> 详细进度见 → [`docs/status.md`](status.md)
 
 | 模块 | 状态 |
 |------|------|
@@ -40,41 +40,22 @@ Vxture 是基于 **pnpm workspace monorepo** 的企业 SaaS 平台（TypeScript 
 
 ```
 docs/
-├── agent.md                ← 本文件，T0 入口
+├── agent.md              ← 本文件，T0 入口
+├── status.md             ← 平台实施状态（实时更新）
 │
-├── architecture/           ← 层级结构 / 依赖边界（慢变化，权威参考）
-│   └── index.md            ← 从这里开始
-│
-├── ai/                     ← AI 工作规范（编码规则、注释、审计）
-│   └── index.md
-│
-├── design/                 ← 跨包能力域技术设计（auth / locale / 权限 / 多租户）
-│   └── index.md
-│
-├── packages/               ← 各包实现上下文（迁移自各包 CLAUDE.md，待重构）
-│   └── index.md
-│
-├── product/                ← 产品规格（Vela 规格、Admin 设计、路线图）
-│   └── index.md
-│
-├── standards/              ← 工程规范（Git / Locale / Utils）
-│   └── index.md
-│
-├── context/                ← 当前状态 / 任务进度（快速变化）
-│   └── status.md
-│
-├── deployment/             ← 部署方案（容器 / 环境变量 / 基础设施）
-│   └── index.md
-│
-└── db/                     ← 数据库设计（Schema / 迁移记录）
-    └── index.md
+├── architecture/         ← 层级结构 / 依赖边界（权威，慢变化）
+├── ai/                   ← AI 工作规范：编码规则、注释、审计清单
+├── design/               ← 跨包能力域设计（auth / locale / 权限 / 多租户）
+├── packages/             ← 各包实现上下文（AI 编码时的主要参考）
+├── product/              ← 产品规格（Vela / Ruyin / Admin 设计）
+├── standards/            ← 工程规范（Git / Locale / Utils）
+├── db/                   ← 数据库 Schema 设计与迁移
+└── deployment/           ← 部署方案（基础设施 / 环境变量 / CI-CD）
 ```
 
 ---
 
 ## 任务路由表
-
-在开始任何任务前，按任务类型读取对应文档：
 
 | 任务类型 | 必读文档 |
 |---------|---------|
@@ -92,6 +73,9 @@ docs/
 | 部署 / 环境配置 | `deployment/index.md` |
 | 端口分配 | `ai/port-allocation.md` |
 | AI 编码规则 | `ai/coding-rules.md` |
+| Core 包架构审计 | `ai/audit/checklist-core.md` |
+| Design System 合规审计 | `ai/audit/checklist-ds.md` |
+| 平台当前进度 | `status.md` |
 
 ---
 
@@ -106,4 +90,4 @@ docs/
 
 ---
 
-_版本：1.0.0 | 2026-05-08_
+_版本：2.0.0 | 2026-05-10_

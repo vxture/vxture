@@ -129,6 +129,8 @@ core-* → platform-*      ❌
 core-* → React / Next.js ❌
 ```
 
+**例外**：`core-auth` 允许引入 `core-config` 以读取 JWT 密钥等平台级配置。此为 core 层内部唯一被允许的跨包引用。
+
 Core must remain **framework-agnostic** where possible. `core-mail` is the sole NestJS-specific
 exception — it ships a `@Global() @Module()` wrapper and is only consumed by server-side BFFs.
 All other core packages remain runnable in both Node.js and browser.

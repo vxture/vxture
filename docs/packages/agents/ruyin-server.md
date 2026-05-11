@@ -36,8 +36,23 @@
 - 其他 `agent-server/*`（ruyin 独立治理）
 - `bff-*` / `design-system` / `platform-*` / React / Next.js
 
-## 待核查
+## 架构设计
 
-- [ ] 确认 ruyin-server 已实现的核心功能模块
-- [ ] 确认与 AI Gateway 的接口协议
-- [ ] 确认 Prisma schema 范围
+**异步任务模式**（区别于 vela-server 的同步 Tool Use Loop）：
+
+```
+ruyin-bff → Redis BullMQ → ruyin-server（Worker）
+                                │
+                        ai-gateway（LLM 调用）
+                                │
+                        ruyin-postgres（结果持久化）
+```
+
+- BullMQ Worker 消费队列任务，完成后 ruyin-bff 轮询结果
+- AI Gateway 调用走 HTTP，地址从 `core-config` 读取（`AI_GATEWAY_URL`）
+- Prisma schema 与 platform_main 完全隔离，独立数据库实例
+
+## 待补充（需代码核查）
+
+- 已实现的核心任务类型（JobType 枚举）
+- AI Gateway 接口协议（请求/响应格式）

@@ -100,6 +100,7 @@ services/{domain}/{name}/
 ├── package.json
 ├── tsconfig.json
 └── src/
+    ├── module/         # NestJS 模块定义 (*.module.ts)
     ├── service/        # Business logic and use cases (*.service.ts)
     ├── repository/     # Data access layer (*.repository.ts)
     ├── types/          # Domain types (*.types.ts)

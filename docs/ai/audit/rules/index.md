@@ -12,7 +12,7 @@ The rules enforce:
 
 All rules are located in:
 
-docs/ai-rules-check/
+docs/ai/audit/rules/
 
 # Rule Execution Order
 
@@ -152,10 +152,10 @@ The audit runner loads rules in this order:
 
 AI Audit System
 
-docs/ai-audit/run-ai-audit.md
-docs/ai-audit/ai-audit-scope.md
-docs/ai-audit/ai-issue-severity.md
-docs/ai-audit/ai-audit-report-template.md
+docs/ai/audit/run-ai-audit.md
+docs/ai/audit/ai-audit-scope.md
+docs/ai/audit/ai-issue-severity.md
+docs/ai/audit/ai-audit-report-template.md
 
 Architecture Documentation
 

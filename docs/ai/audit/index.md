@@ -2,6 +2,13 @@
 
 > 迁移自 `docs/ai-audit/` + `docs/ai-audit-rules/`。原目录已弃用。
 
+## 审计清单
+
+| 文件 | 内容 |
+|------|------|
+| [`checklist-core.md`](checklist-core.md) | Core 层包检查清单（依赖边界 / 导出结构 / NestJS 规范 / TS 严格模式） |
+| [`checklist-ds.md`](checklist-ds.md) | Design System 合规审计记录（存量债务 / 已收敛基线） |
+
 ## 操作文档
 
 | 文件 | 内容 |

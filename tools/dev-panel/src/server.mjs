@@ -693,7 +693,7 @@ function pageHtml() {
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: var(--ink); background: var(--bg); }
     button { font: inherit; cursor: pointer; border: none; border-radius: var(--radius-sm); transition: background .12s, box-shadow .12s, opacity .12s, transform .1s; }
-    button:disabled { cursor: not-allowed; opacity: .44; }
+    button:disabled { cursor: not-allowed; opacity: .44; pointer-events: none; }
     button:hover:not(:disabled) { transform: translateY(-1px); }
     a { color: inherit; text-decoration: none; }
     code { font-family: Consolas, "SFMono-Regular", monospace; }
@@ -872,6 +872,44 @@ function pageHtml() {
       box-shadow: 0 4px 24px rgba(79,117,255,.14);
     }
     .card.selected .card-head { background: #c8d6ff; }
+    .card.is-busy {
+      background: #fff1b8;
+      border-color: #f59e0b;
+      box-shadow: 0 0 0 2px rgba(245,158,11,.26), 0 10px 30px rgba(180,83,9,.18);
+    }
+    .card.is-busy:hover {
+      background: #ffec99;
+      border-color: #ea580c;
+      box-shadow: 0 0 0 2px rgba(234,88,12,.32), 0 14px 34px rgba(180,83,9,.24);
+    }
+    .card.is-busy .card-head,
+    .card.is-busy:hover .card-head,
+    .card.is-busy.selected .card-head {
+      background: #f97316;
+      border-bottom-color: #ea580c;
+    }
+    .card.is-busy .card-head .svc-name { color: #ffffff; }
+    .card.is-busy .card-head .badge-p,
+    .card.is-busy .card-head .svc-port {
+      background: rgba(255,255,255,.9);
+      color: #7c2d12;
+      border-color: rgba(255,255,255,.65);
+    }
+    .busy-label {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 900;
+      white-space: nowrap;
+      box-shadow: 0 1px 5px rgba(17,24,39,.22);
+    }
+    .busy-label:empty { display: none; }
 
     /* 第一行：优先级 + 名称 + 端口 + 状态 */
     .card-head {
@@ -1206,7 +1244,8 @@ function pageHtml() {
     let autoScroll      = true;
     let pollBusy        = false;
     let bulkBusy        = false;
-    const pendingOps    = new Set();
+    let bulkCurrentServiceId = null;
+    const pendingOps    = new Map();
 
     const GROUP_LABELS = { 0: 'P0 · 后端基础', 1: 'P1 · 网关聚合', 2: 'P2 · 前端应用' };
 
@@ -1269,6 +1308,22 @@ function pageHtml() {
       return '已停止';
     }
 
+    function actionLabel(action) {
+      if (action === 'start') return '启动中';
+      if (action === 'stop') return '停止中';
+      if (action === 'restart') return '重启中';
+      return '操作中';
+    }
+
+    function busyLabel(s) {
+      const pendingAction = pendingOps.get(s.id);
+      if (pendingAction) return actionLabel(pendingAction);
+      if (bulkCurrentServiceId === s.id) return '启动中';
+      if (s.stopping) return '停止中';
+      if (s.running && (!s.listening || !s.healthy)) return '启动中';
+      return '';
+    }
+
     function probeCols(health) {
       return Math.max(1, Math.ceil((health?.length ?? 0) / 2));
     }
@@ -1292,16 +1347,19 @@ function pageHtml() {
       const canStart  = !s.listening && !s.running && !s.stopping;
       const canStop   = s.listening || s.running || s.stopping;
       const sel = selectedId === s.id ? ' selected' : '';
+      const busy = busyLabel(s);
+      const busyCls = busy ? ' is-busy' : '';
       const pid = s.pid ? \`PID <b>\${s.pid}</b>\` : '';
       const up  = s.uptime ? \`运行 <b>\${s.uptime}</b>\` : '';
       const meta = [pid, up].filter(Boolean).join(' · ');
 
       return \`
-        <div class="card\${sel}" id="card-\${esc(s.id)}" onclick="select('\${esc(s.id)}')">
+        <div class="card\${sel}\${busyCls}" id="card-\${esc(s.id)}" onclick="select('\${esc(s.id)}')">
           <div class="card-head">
             <span class="badge-p p\${s.priority}">P\${s.priority}</span>
             <span class="svc-name">\${esc(s.name)}</span>
             <span class="svc-port">:\${s.port}</span>
+            <span class="busy-label">\${esc(busy)}</span>
             <span class="status-badge \${cls}">\${txt}</span>
           </div>
           <div class="card-content">
@@ -1311,9 +1369,9 @@ function pageHtml() {
             </div>
             <div class="command-row">
               <code class="svc-cmd" title="\${esc(s.command)}">\${esc(s.command)}</code>
-              <button type="button" class="btn-copy" onclick="event.stopPropagation(); copyCmd('\${esc(s.id)}')" title="复制命令">⎘</button>
+              <button type="button" class="btn-copy" onclick="copyCmd('\${esc(s.id)}')" title="复制命令">⎘</button>
             </div>
-            <div class="card-actions" onclick="event.stopPropagation()">
+            <div class="card-actions">
               <button type="button" class="btn-start"
                 \${canStart ? '' : 'disabled'}
                 onclick="svcAction('\${esc(s.id)}','start')">启动</button>
@@ -1358,6 +1416,10 @@ function pageHtml() {
       if (!card) return;
 
       card.classList.toggle('selected', selectedId === s.id);
+      const busy = busyLabel(s);
+      card.classList.toggle('is-busy', Boolean(busy));
+      const busyEl = card.querySelector('.busy-label');
+      if (busyEl) busyEl.textContent = busy;
 
       const badge = card.querySelector('.status-badge');
       if (badge) { badge.className = 'status-badge ' + statusCls(s); badge.textContent = statusTxt(s); }
@@ -1375,7 +1437,7 @@ function pageHtml() {
         metaEl.innerHTML = [pid, up].filter(Boolean).join(' · ');
       }
 
-      if (!card.dataset.busy) {
+      if (!pendingOps.has(s.id)) {
         const canStart = !s.listening && !s.running && !s.stopping;
         const canStop  = s.listening || s.running || s.stopping;
         const startBtn   = card.querySelector('.btn-start');
@@ -1438,10 +1500,6 @@ function pageHtml() {
 
     function select(id) {
       const workspace = document.getElementById('workspace');
-      if (selectedId === id && workspace?.classList.contains('log-open')) {
-        closeLog();
-        return;
-      }
       selectedId = id;
       workspace?.classList.add('log-open');
       document.querySelectorAll('.card').forEach((c) => c.classList.toggle('selected', c.id === 'card-' + id));
@@ -1520,9 +1578,12 @@ function pageHtml() {
           const name = latestServices.find((s) => s.id === status.currentService)?.name ?? status.currentService ?? '';
           prog.textContent = \`正在启动: \${name}\`;
           prog.classList.add('visible');
+          bulkCurrentServiceId = status.currentService ?? null;
         } else {
           prog.classList.remove('visible');
+          bulkCurrentServiceId = null;
         }
+        latestServices.forEach(patchCard);
       } catch { /* ignore */ }
     }
 
@@ -1532,12 +1593,14 @@ function pageHtml() {
 
     /* ── 单个服务操作 ── */
     async function svcAction(id, action) {
-      const key = id + ':' + action;
-      if (pendingOps.has(key)) return;
-      pendingOps.add(key);
+      if (pendingOps.has(id)) return;
+      pendingOps.set(id, action);
+      select(id);
       const card = document.getElementById('card-' + id);
       if (card) {
-        card.dataset.busy = '1';
+        card.classList.add('is-busy');
+        const busyEl = card.querySelector('.busy-label');
+        if (busyEl) busyEl.textContent = actionLabel(action);
         card.querySelectorAll('.btn-start,.btn-stop,.btn-restart').forEach((b) => b.disabled = true);
       }
       try {
@@ -1545,8 +1608,7 @@ function pageHtml() {
       } catch (err) {
         console.warn('[panel] svcAction error:', err);
       } finally {
-        pendingOps.delete(key);
-        if (card) delete card.dataset.busy;
+        pendingOps.delete(id);
         await refreshOnce();
       }
     }

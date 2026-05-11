@@ -1,7 +1,7 @@
 # Architecture Documentation Index
 
-**Version**: 1.5.0
-**Last Updated**: 2026-05-06
+**Version**: 1.6.0
+**Last Updated**: 2026-05-11
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -35,14 +35,12 @@
 | ------------------ | ----------------------------------- |
 | `12-typescript.md` | TypeScript 配置标准与工程规范       |
 | `13-tech-stack.md` | 技术栈选型 — 当前基准版本与升级路径 |
+| `14-ai-gateway.md` | AI Gateway — 模型路由与计量架构     |
+| `15-control-plane-overview.md` | 平台控制面与业务数据面架构总览 |
 
 ## Coding 规范
 
-| 文件                        | 内容            |
-| --------------------------- | --------------- |
-| `claude-coding-comments.md` | 注释规范        |
-| `claude-coding-rules.md`    | AI 编码行为规则 |
-| `claude-coding-style.md`    | 代码风格规范    |
+见 [`docs/ai/index.md`](../ai/index.md) — 注释规范、编码规则、代码风格。
 
 ## Agent 实例
 
@@ -52,6 +50,15 @@
 | vela  | agent-studio/vela  | agent-server/vela  | bff/vela-bff  | ✅ 三端运行中（嵌入 admin / console） |
 
 ## Changelog
+
+### v1.6.0 — 2026-05-11
+
+- `index.md`：Coding 规范章节改为指向 `docs/ai/index.md`（原链接 claude-coding-*.md 已失效）
+- `00-overview.md`：删除 §9 依赖规则摘要（指向 02-package-boundaries.md）、精简 §10 Agent 生命周期、website 附录改为指针
+- `01-monorepo.md`：删除 §11 依赖方向（指向 02）、§17 AI 开发规范（指向 02）、§18 架构目标、website Appendix A 改为指针
+- `05-core-layer.md`：§3 补充 core-auth → core-config 例外说明
+- `07-service-layer.md`：§4 补充 `module/` 目录层
+- `15-control-plane-overview.md`：容器命名更新为 `vx-*`、删除 §9/§10 Docker Compose/CI-CD（指向 deployment/）
 
 ### v1.5.0 — 2026-05-06
 

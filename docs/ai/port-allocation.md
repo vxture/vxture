@@ -48,7 +48,8 @@
 | **3021** | console-bff | `@vxture/bff-console` | `CONSOLE_BFF_PORT` |
 | **3030** | admin-portal | `@vxture/admin` | — |
 | **3031** | admin-bff | `@vxture/bff-admin` | `ADMIN_BFF_PORT` |
-| 3040~3091 | 预留（最多 6 个新 portal） | — | — |
+| **3090** | auth-bff | `@vxture/bff-auth` | `AUTH_BFF_PORT` |
+| 3040~3089 | 预留（最多 5 个新 portal） | — | — |
 
 ---
 
@@ -95,6 +96,7 @@
 3021   console-bff（NestJS）
 3030   admin-portal（Next.js）
 3031   admin-bff（NestJS）
+3090   auth-bff（NestJS，JWT 唯一签发源）
 
 3100   AI Gateway（固定）
 

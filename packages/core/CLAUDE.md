@@ -1,60 +1,14 @@
-# CLAUDE.md — packages/core (@vxture/core-*)
+# @vxture/core-* 层
 
-> 继承根 `CLAUDE.md` 全部规则。本文件只记录 Core 层专属约束。
+> 上下文导航指针 | 完整文档在 `docs/` 体系
 
----
+## 工作前必读
 
-## 层定位
+| 步骤 | 文档 |
+|------|------|
+| 1. 全局规则 | 根目录 `CLAUDE.md`（G1–G6） |
+| 2. 任务路由 | [`docs/agent.md`](../../docs/agent.md) |
+| 3. 层架构规范 | [`docs/architecture/05-core-layer.md`](../../docs/architecture/05-core-layer.md) |
+| 4. 包实现上下文 | `docs/packages/core/{包名}.md` |
 
-**@layer**: `Infrastructure`
-**包名前缀**: `@vxture/core-*`
-**变更频率**: Very Slow — Core 是平台基础设施，错误修改影响所有上层
-
-Core 层提供**平台基础设施原语**：认证、API 客户端、租户解析、配置、本地化、通用工具。
-它不包含任何业务逻辑，业务逻辑属于 `service-*`。
-
----
-
-## 现有 Core 包职责
-
-| 包 | 职责 | 不允许做的事 |
-|----|------|-------------|
-| `core-api` | HTTP 客户端基础设施，请求 / 响应拦截 | 不包含具体业务接口 |
-| `core-auth` | 认证 token 管理，session 基础设施 | 不处理业务权限逻辑 |
-| `core-tenant` | 租户上下文解析与传播 | 不包含租户业务规则 |
-| `core-config` | 环境变量读取，配置 schema 验证 | 不包含业务配置逻辑 |
-| `core-locale` | i18n 基础设施，语言包加载 | 不包含业务文本内容 |
-| `core-utils` | 平台级工具（日志、错误处理基础） | 不重复 shared 的纯工具 |
-
----
-
-## ✅ / ❌ 边界规则
-
-```
-core-*
-  ✅ → @vxture/shared
-  ✅ → 第三方库
-  ❌ → 其他 core-* 包（core 包之间不得互相依赖）
-  ❌ → service-*, ai-sdk, bff-*, UI 相关包
-```
-
-> **core 包之间禁止互相依赖**。如有共用需求，下沉到 `@vxture/shared`。
-
----
-
-## 修改 Core 包的额外要求
-
-1. **修改前评估影响范围**：列出所有依赖该 core 包的上层包
-2. **接口变更必须向后兼容**，或提供迁移方案
-3. **不得删除已导出的公共接口**，只允许废弃（`@deprecated` 标注）
-4. 每次重大变更后 `@version` 递增
-
----
-
-## 新建 Core 包的判断标准
-
-满足以下**全部条件**才考虑新建：
-- [ ] 该能力被 3 个以上不同层的包需要
-- [ ] 与业务逻辑完全解耦
-- [ ] 无法通过扩展现有 core 包实现
-- [ ] 在 `shared` 层中放置不合适（有副作用或平台耦合）
+> Core 层极低变更频率。修改前务必确认无更简单的替代方案。

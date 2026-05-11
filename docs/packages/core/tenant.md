@@ -31,12 +31,7 @@ src/
 
 ## 依赖约束
 
-**允许：** `@vxture/shared`
-
-**禁止：**
-- NestJS（本包是 framework-agnostic 原语）
-- Prisma / Redis（不持久化状态）
-- `@vxture/service-*` / `bff-*` / `ai-sdk` / `design-system` / `platform-*`
+**允许：** `@vxture/shared` · framework-agnostic，层级通用约束见 [core/index.md](index.md)
 
 ## 核心设计约束
 

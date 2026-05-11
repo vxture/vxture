@@ -9,34 +9,30 @@ Follow the architecture and coding standards defined in the documentation.
 Architecture Docs
 
 docs/architecture/01-monorepo.md
-docs/architecture/05-core-layer.md
-docs/architecture/06-shared-layer.md
-docs/architecture/07-service-layer.md
 docs/architecture/02-package-boundaries.md
 docs/architecture/03-package-graph.json
-docs/architecture/09-typescript.md
+docs/architecture/04-shared-layer.md
+docs/architecture/05-core-layer.md
+docs/architecture/07-service-layer.md
+docs/architecture/10-bff-layer.md
+docs/architecture/11-agent-server.md
+docs/architecture/12-typescript.md
 
 AI Standards
 
-docs/ai/ai-context.md
-docs/ai/ai-template.md
-docs/ai/claude-coding-comments.md
-docs/ai/claude-coding-rules.md
-docs/ai/claude-coding-style.md
-
-Technical Standards
-
-docs/standards/vx-TsconfigConfig.md
+docs/ai/coding-comments.md
+docs/ai/coding-rules.md
+docs/ai/coding-style.md
 
 Audit Scope
 
-docs/ai-audit/ai-audit-scope.md
+docs/ai/audit/ai-audit-scope.md
 
 ## Objective
 
 Execute a full repository audit using all rule prompts located in:
 
-docs/ai-rules-check/
+docs/ai/audit/rules/
 
 Rules include:
 
@@ -69,7 +65,7 @@ You must NOT:
 
 Completed packages are defined in:
 
-docs/ai-audit/ai-audit-scope.md
+docs/ai/audit/ai-audit-scope.md
 
 Do NOT audit packages not listed there.
 
@@ -78,7 +74,7 @@ Do NOT audit packages not listed there.
 Layer rules are defined in:
 
 docs/architecture/02-package-boundaries.md
-docs/architecture/package-graph.json
+docs/architecture/03-package-graph.json
 
 ## Output Requirements
 
@@ -90,7 +86,7 @@ ai-rules-audit-YYYY-MM-DD.md
 
 Use the report template defined in:
 
-docs/ai-audit/ai-audit-report-template.md
+docs/ai/audit/ai-audit-report-template.md
 
 ## Execution Steps
 

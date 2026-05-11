@@ -1,89 +1,14 @@
-# CLAUDE.md — @vxture/bff-website
+# @vxture/website-bff
 
-> 包级 AI 编码指南。全局规范见根目录 CLAUDE.md，本文件只描述本包特有约束。
+> 上下文导航指针 | 完整文档在 `docs/` 体系
 
----
+## 工作前必读
 
-## 包信息
+| 步骤 | 文档 |
+|------|------|
+| 1. 全局规则 | 根目录 `CLAUDE.md`（G1–G6） |
+| 2. 任务路由 | [`docs/agent.md`](../../../docs/agent.md) |
+| 3. 层架构规范 | [`docs/architecture/10-bff-layer.md`](../../../docs/architecture/10-bff-layer.md) |
+| 4. 包实现上下文 | [`docs/packages/bff/website-bff.md`](../../../docs/packages/bff/website-bff.md) |
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/bff-website` |
-| 路径 | `bff/website-bff/` |
-| @layer | `Application` |
-| 服务对象 | `portals/website` |
-
----
-
-## 职责
-
-服务 portals/website 的 BFF：认证、租户解析、数据聚合、响应塑形。
-主要对接 @vxture/service-* 平台服务，以公开营销站点为主。
-
-### JWT 认证架构（重构 v1.3）
-
-本 BFF **不签发 JWT**。所有认证端点（login / signup / logout / refresh / send-phone-code / login-with-phone）
-均通过 HTTP 透传至 `@vxture/bff-auth`，转发 Cookie 和 set-cookie 头。
-本 BFF 仅保留 JWT **验证**能力（`JwtService.verify`），供 auth middleware 使用；中间件必须检查 `tenant_user` / `tenant-console`、jti 黑名单与用户级撤销水位。
-
----
-
-## 目录结构
-
-```
-src/
-├── routers/        # *.router.ts
-├── aggregators/    # *.aggregator.ts
-├── middleware/     # auth.middleware.ts / tenant.middleware.ts
-├── types/          # *.types.ts（面向前端 DTO）
-└── index.ts
-```
-
----
-
-## 允许的依赖
-
-- `@vxture/core-auth` / `@vxture/core-tenant` / `@vxture/core-*`
-- `@vxture/shared`
-- `@vxture/service-*`
-- NestJS / Passport.js / class-validator / @nestjs/swagger
-
-## 严格禁止
-
-- `@vxture/ai-sdk`
-- `@vxture/design-system` / `platform-*`
-- 跨 BFF 导入
-- React / Next.js / 浏览器 API
-- 业务逻辑（属于 service 层）
-
----
-
-## 文件头模板
-
-```typescript
-/**
- * filename.ts - 简短描述
- * @package @vxture/bff-website
- *
- * Description: 详细说明
- *
- * @author AI-Generated
- * @date YYYY-MM-DD
- * @version 1.0
- *
- * @copyright Vxture Team
- * @license MIT
- *
- * @layer Application
- * @category Router | Aggregator | Middleware | Types
- */
-```
-
----
-
-## 关键约束
-
-- 每个 router 独立 try/catch，错误不冒泡
-- middleware 执行顺序：auth → tenant → router
-- 响应做字段投影，不透传后端原始结构
-- 禁止 any，响应 DTO 类型明确
+> 职责：官网 BFF，仅验证 JWT，代理 auth-bff

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Type Check · Lint · Boundaries
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # shared 和 core 的 .d.ts 是其他包类型检查的前提
+      - name: Build shared & core packages
+        run: pnpm build:backend-deps
+
+      - name: Type check (all packages)
+        run: pnpm type-check:all
+
+      - name: Lint (all packages)
+        run: pnpm --recursive --if-present lint
+
+      - name: Design system guardrail
+        run: pnpm lint:design
+
+      - name: Package boundary check (dep-cruiser)
+        run: pnpm lint:boundaries

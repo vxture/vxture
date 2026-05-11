@@ -27,9 +27,7 @@
 
 ## 依赖约束
 
-**允许：** `@vxture/shared`
-
-**禁止：** NestJS / Next.js / React / Prisma / Redis / 浏览器专用 API
+**允许：** `@vxture/shared` · 层级通用约束见 [core/index.md](index.md)
 
 ## 核心约束
 

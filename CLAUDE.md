@@ -1,8 +1,9 @@
 # CLAUDE.md — Vxture Monorepo AI 指令入口
 
 > **使用说明**：这是根目录指令文件。所有 AI 操作必须先读完本文件，
-> 再读取目标包目录下的子级 `CLAUDE.md`。
-> 子级文件只记录差异化规则，根文件规则**全局生效**。
+> 再读 [`docs/agent.md`](docs/agent.md)（任务路由入口），
+> 再读取目标包目录下的子级 `CLAUDE.md`（导航指针）。
+> 子级文件只保留导航指针，详细上下文在 `docs/packages/` 体系。根文件规则**全局生效**。
 
 ---
 
@@ -12,10 +13,10 @@
 
 | 文档         | 内容                                           | 路径                                |
 | ------------ | ---------------------------------------------- | ----------------------------------- |
-| **注释规范** | 文件头模板、JSDoc 格式、分区注释、中文注释要求 | `docs/ai/claude-coding-comments.md` |
-| **编码规则** | 包边界约束、层职责、AI 行为规范                | `docs/ai/claude-coding-rules.md`    |
-| **代码风格** | TypeScript 约定、命名规则、导出风格            | `docs/ai/claude-coding-style.md`    |
-| **端口分配** | 全局端口表、3NNX 规则、新 Agent 登记流程       | `docs/ai/port-allocation.md`        |
+| **注释规范** | 文件头模板、JSDoc 格式、分区注释、中文注释要求 | `docs/ai/coding-comments.md` |
+| **编码规则** | 包边界约束、层职责、AI 行为规范                | `docs/ai/coding-rules.md`    |
+| **代码风格** | TypeScript 约定、命名规则、导出风格            | `docs/ai/coding-style.md`    |
+| **端口分配** | 全局端口表、3NNX 规则、新 Agent 登记流程       | `docs/ai/port-allocation.md` |
 
 > 三份文档与本文件如有冲突，**以本文件为准**。
 
@@ -117,15 +118,17 @@ portals/* / agent-studio/*
 
 进入对应目录工作时，**必须**读取子级文件以获取层专属规则：
 
-| 目录               | 子级文件    | 核心约束摘要                      |
-| ------------------ | ----------- | --------------------------------- |
-| `packages/shared/` | `CLAUDE.md` | 零业务逻辑，纯工具 / 类型 / 常量  |
-| `packages/core/`   | `CLAUDE.md` | 极低变更，平台基础设施原语        |
-| `services/*/*`     | `CLAUDE.md` | promote-when-ready，跨 agent 共享 |
-| `bff/`             | `CLAUDE.md` | 只做聚合 + 鉴权，无业务逻辑       |
-| `portals/`         | `CLAUDE.md` | 平台管理 UI，CRUD 向，慢迭代      |
-| `agent-studio/`    | `CLAUDE.md` | Agent 前端，AI 交互向，快迭代     |
-| `agent-server/`    | `CLAUDE.md` | Agent 私有后端，独立治理，实验性  |
+所有包的 `CLAUDE.md` 已统一改为**导航指针**，完整上下文在 `docs/packages/` 体系：
+
+| 目录               | 指针目标                              |
+| ------------------ | ------------------------------------- |
+| `packages/shared/` | `docs/packages/shared.md`             |
+| `packages/core/`   | `docs/packages/core/{包名}.md`        |
+| `packages/platform/` | `docs/packages/platform/{包名}.md`  |
+| `services/*/*`     | `docs/packages/services/{包名}.md`    |
+| `bff/*`            | `docs/packages/bff/{bff名}.md`        |
+| `portals/*`        | `docs/packages/portals/{包名}.md`     |
+| `agent-server/*`   | `docs/packages/agents/{agent名}.md`   |
 
 ---
 
@@ -146,4 +149,4 @@ portals/* / agent-studio/*
 
 ---
 
-_版本：1.2.0 | 2026-03-11_
+_版本：2.0.0 | 2026-05-10_
