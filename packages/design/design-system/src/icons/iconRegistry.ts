@@ -140,6 +140,7 @@ import {
   QuestionIcon,
 } from "@phosphor-icons/react";
 
+import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
 import type { IconName } from "./iconDictionary";
 
 // ============================================================================
@@ -152,7 +153,7 @@ import type { IconName } from "./iconDictionary";
  * 这是设计系统中唯一直接依赖 Phosphor Icons 的地方。
  * 每个语义 key 对应唯一的图标组件，无同义重复 key。
  */
-export const iconRegistry: Record<IconName, React.ComponentType<any>> = {
+export const iconRegistry: Record<IconName, PhosphorIcon> = {
   // ==========================================================================
   // 通用交互 - 导航
   // ==========================================================================

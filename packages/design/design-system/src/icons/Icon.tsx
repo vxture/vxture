@@ -32,8 +32,14 @@ const sizeMap: Record<IconSize, number> = {
 /**
  * 占位符组件 - 当图标名称不匹配时使用
  */
-const Placeholder = () => (
-  <span style={{ width: 16, height: 16, display: "inline-block" }} />
+const Placeholder = ({
+  size = 16,
+  className = "",
+}: {
+  readonly size?: number | string;
+  readonly className?: string;
+}) => (
+  <span style={{ width: size, height: size, display: "inline-block" }} className={className} />
 );
 
 // ============================================================================

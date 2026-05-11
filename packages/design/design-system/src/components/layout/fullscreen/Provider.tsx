@@ -26,6 +26,21 @@ const FullscreenContext = createContext<FullscreenContextValue | undefined>(unde
 const DEFAULT_MODE: FullscreenMode = "pseudo";
 const DEFAULT_LOCK_SCROLL = true;
 
+interface VendorFullscreenElement extends HTMLElement {
+  readonly webkitRequestFullscreen?: () => Promise<void> | void;
+  readonly mozRequestFullScreen?: () => Promise<void> | void;
+  readonly msRequestFullscreen?: () => Promise<void> | void;
+}
+
+interface VendorFullscreenDocument extends Document {
+  readonly webkitFullscreenElement?: Element | null;
+  readonly mozFullScreenElement?: Element | null;
+  readonly msFullscreenElement?: Element | null;
+  readonly webkitExitFullscreen?: () => Promise<void> | void;
+  readonly mozCancelFullScreen?: () => Promise<void> | void;
+  readonly msExitFullscreen?: () => Promise<void> | void;
+}
+
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
 export function FullscreenProvider({
@@ -47,26 +62,28 @@ export function FullscreenProvider({
   // ─── 原生全屏能力检测 ──────────────────────────────────────────────────────
 
   const isNativeSupported = useCallback((): boolean => {
+    const element = document.documentElement as VendorFullscreenElement;
     return !!(
-      document.documentElement.requestFullscreen ||
-      (document.documentElement as any).webkitRequestFullscreen ||
-      (document.documentElement as any).mozRequestFullScreen ||
-      (document.documentElement as any).msRequestFullscreen
+      element.requestFullscreen ||
+      element.webkitRequestFullscreen ||
+      element.mozRequestFullScreen ||
+      element.msRequestFullscreen
     );
   }, []);
 
   // ─── 原生全屏操作 ──────────────────────────────────────────────────────────
 
   const enterNativeFullscreen = useCallback(async (element: HTMLElement) => {
+    const target = element as VendorFullscreenElement;
     try {
-      if (element.requestFullscreen) {
-        await element.requestFullscreen();
-      } else if ((element as any).webkitRequestFullscreen) {
-        await (element as any).webkitRequestFullscreen();
-      } else if ((element as any).mozRequestFullScreen) {
-        await (element as any).mozRequestFullScreen();
-      } else if ((element as any).msRequestFullscreen) {
-        await (element as any).msRequestFullscreen();
+      if (target.requestFullscreen) {
+        await target.requestFullscreen();
+      } else if (target.webkitRequestFullscreen) {
+        await target.webkitRequestFullscreen();
+      } else if (target.mozRequestFullScreen) {
+        await target.mozRequestFullScreen();
+      } else if (target.msRequestFullscreen) {
+        await target.msRequestFullscreen();
       }
     } catch (error) {
       console.warn("Failed to enter native fullscreen, falling back to pseudo:", error);
@@ -74,15 +91,16 @@ export function FullscreenProvider({
   }, []);
 
   const exitNativeFullscreen = useCallback(async () => {
+    const fullscreenDocument = document as VendorFullscreenDocument;
     try {
-      if (document.exitFullscreen) {
-        await document.exitFullscreen();
-      } else if ((document as any).webkitExitFullscreen) {
-        await (document as any).webkitExitFullscreen();
-      } else if ((document as any).mozCancelFullScreen) {
-        await (document as any).mozCancelFullScreen();
-      } else if ((document as any).msExitFullscreen) {
-        await (document as any).msExitFullscreen();
+      if (fullscreenDocument.exitFullscreen) {
+        await fullscreenDocument.exitFullscreen();
+      } else if (fullscreenDocument.webkitExitFullscreen) {
+        await fullscreenDocument.webkitExitFullscreen();
+      } else if (fullscreenDocument.mozCancelFullScreen) {
+        await fullscreenDocument.mozCancelFullScreen();
+      } else if (fullscreenDocument.msExitFullscreen) {
+        await fullscreenDocument.msExitFullscreen();
       }
     } catch (error) {
       console.warn("Failed to exit native fullscreen:", error);
@@ -171,11 +189,12 @@ export function FullscreenProvider({
   /** 监听浏览器原生全屏退出（用户按 ESC 触发的原生退出） */
   useEffect(() => {
     const handleFullscreenChange = () => {
+      const fullscreenDocument = document as VendorFullscreenDocument;
       const isInNativeFullscreen = !!(
-        document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).mozFullScreenElement ||
-        (document as any).msFullscreenElement
+        fullscreenDocument.fullscreenElement ||
+        fullscreenDocument.webkitFullscreenElement ||
+        fullscreenDocument.mozFullScreenElement ||
+        fullscreenDocument.msFullscreenElement
       );
 
       if (!isInNativeFullscreen && state.isFullscreen && state.mode === "native") {
