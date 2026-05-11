@@ -744,6 +744,65 @@
   --vx-admin-dialog-width-lg: min(100%, 42rem);
   --vx-admin-dialog-width-xl: min(58rem, 100%);
   --vx-admin-dialog-max-width-xl: min(58rem, calc(100vw - var(--vx-component-metric-2r)));
+
+  /* Agent Studio semantic scales. */
+  --vx-vela-sidebar-width: var(--vx-component-metric-360p);
+  --vx-vela-border-width: var(--vx-component-metric-1p);
+  --vx-vela-float-bottom: var(--vx-component-metric-80p);
+  --vx-vela-float-width: var(--vx-component-metric-380p);
+  --vx-vela-float-height: var(--vx-component-metric-560p);
+  --vx-vela-float-button-size: var(--vx-component-metric-48p);
+  --vx-vela-input-min-height: var(--vx-component-metric-40p);
+  --vx-vela-input-max-height: var(--vx-component-metric-120p);
+  --vx-vela-confirm-border-width: var(--vx-component-metric-15p);
+  --vx-vela-tool-label-letter-spacing: var(--vx-component-metric-005e);
+  --vx-vela-tool-code-padding: var(--vx-component-metric-1p) var(--vx-space-sm);
+
+  /* Website semantic scales. */
+  --vx-website-legal-container-width: min(1120px, calc(100% - var(--vx-component-metric-40p)));
+  --vx-website-legal-container-padding: var(--vx-component-metric-88p) 0 var(--vx-component-metric-96p);
+  --vx-website-legal-hero-max-width: var(--vx-component-metric-780p);
+  --vx-website-legal-hero-margin-bottom: var(--vx-component-metric-36p);
+  --vx-website-legal-label-size: var(--vx-component-metric-078r);
+  --vx-website-legal-label-letter-spacing: var(--vx-component-metric-008e);
+  --vx-website-legal-heading-margin: var(--vx-component-metric-12p) 0 var(--vx-component-metric-16p);
+  --vx-website-legal-heading-size: clamp(var(--vx-component-metric-23r), 4vw, var(--vx-component-metric-425r));
+  --vx-website-legal-copy-max-width: var(--vx-component-metric-720p);
+  --vx-website-legal-copy-size: var(--vx-component-metric-102r);
+  --vx-website-legal-meta-margin-top: var(--vx-component-metric-18p);
+  --vx-website-legal-grid-gap: var(--vx-component-metric-16p);
+  --vx-website-legal-card-min-height: var(--vx-component-metric-220p);
+  --vx-website-legal-card-gap: var(--vx-component-metric-12p);
+  --vx-website-legal-card-padding: var(--vx-component-metric-22p);
+  --vx-website-legal-border-width: var(--vx-component-metric-1p);
+  --vx-website-legal-card-radius: var(--vx-component-metric-8p);
+  --vx-website-legal-card-shadow: 0 var(--vx-component-metric-12p) var(--vx-component-metric-32p) color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  --vx-website-legal-card-hover-translate: calc(var(--vx-component-metric-3p) * -1);
+  --vx-website-legal-card-hover-shadow: 0 var(--vx-component-metric-18p) var(--vx-component-metric-44p) color-mix(in srgb, var(--vx-color-gray-900) 10%, transparent);
+  --vx-website-legal-card-title-size: var(--vx-component-metric-105r);
+  --vx-website-legal-document-max-width: var(--vx-component-metric-920p);
+  --vx-website-legal-breadcrumb-gap: var(--vx-component-metric-10p);
+  --vx-website-legal-breadcrumb-margin-bottom: var(--vx-component-metric-28p);
+  --vx-website-legal-document-hero-margin-bottom: var(--vx-component-metric-24p);
+  --vx-website-legal-notice-margin: var(--vx-component-metric-24p) 0 var(--vx-component-metric-36p);
+  --vx-website-legal-notice-padding: var(--vx-component-metric-18p) var(--vx-component-metric-20p);
+  --vx-website-legal-notice-border-width: var(--vx-component-metric-4p);
+  --vx-website-legal-sections-gap: var(--vx-component-metric-18p);
+  --vx-website-legal-section-padding: var(--vx-component-metric-28p);
+  --vx-website-legal-section-title-margin: 0 0 var(--vx-component-metric-14p);
+  --vx-website-legal-section-title-size: var(--vx-component-metric-135r);
+  --vx-website-legal-section-paragraph-gap: var(--vx-component-metric-12p);
+  --vx-website-legal-container-width-mobile: min(100% - var(--vx-component-metric-28p), 1120px);
+  --vx-website-legal-container-padding-mobile: var(--vx-component-metric-56p) 0 var(--vx-component-metric-72p);
+  --vx-website-legal-card-min-height-mobile: var(--vx-component-metric-180p);
+  --vx-website-hero-section-min-height: var(--vx-component-metric-540p);
+  --vx-website-hero-section-padding-top: var(--vx-component-metric-80p);
+  --vx-website-hero-content-max-width: var(--vx-component-metric-1280p);
+  --vx-website-hero-content-padding: var(--vx-component-metric-80p) var(--vx-component-metric-24p) var(--vx-component-metric-48p);
+  --vx-website-hero-content-padding-x-lg: var(--vx-component-metric-32p);
+  --vx-website-hero-content-max-width-xl: var(--vx-component-metric-1536p);
+  --vx-website-section-padding-y: var(--vx-component-metric-64p);
+  --vx-website-section-border-width: var(--vx-component-metric-1p);
 }
 
 .dark {
