@@ -222,6 +222,20 @@ const rules = [
     },
   },
   {
+    id: "ds/no-component-metric-in-ds-components-css",
+    description: "DS 基础组件语义类必须使用语义组件 token，不能直接消费兜底 metric token。",
+    checkLine(file, line, lineNumber) {
+      if (normalize(file) !== "packages/design/design-system/src/styles/components.css") return null;
+      if (!/var\(--vx-component-metric-/.test(line)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "components.css 只能使用 --vx-button-*、--vx-field-*、--vx-shell-* 等语义 token；兜底 metric token 只允许在 token 层维护。",
+        line,
+      );
+    },
+  },
+  {
     id: "ds/no-known-tailwind-typo",
     description: "禁止已知 Tailwind class 拼写错误进入源码。",
     checkLine(file, line, lineNumber) {

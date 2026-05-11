@@ -10,13 +10,13 @@
 :where(.vx-btn) {
   display: inline-flex;
   align-items: center;
-  gap: var(--vx-component-metric-056r);
+  gap: var(--vx-button-gap);
   justify-content: center;
-  min-height: var(--vx-component-metric-225r);
-  border-radius: var(--vx-component-metric-10p);
-  border: var(--vx-component-metric-1p) solid transparent;
-  padding: var(--vx-component-metric-056r) var(--vx-component-metric-088r);
-  font-size: var(--vx-component-metric-084r);
+  min-height: var(--vx-button-height);
+  border-radius: var(--vx-button-radius);
+  border: var(--vx-control-border-width) solid transparent;
+  padding: var(--vx-button-padding-y) var(--vx-button-padding-x);
+  font-size: var(--vx-button-font-size);
   line-height: 1;
   font-weight: 600;
   transition:
@@ -66,16 +66,16 @@
 }
 
 :where(.vx-btn--sm) {
-  min-height: var(--vx-component-metric-2r);
-  padding: var(--vx-component-metric-046r) var(--vx-component-metric-074r);
-  border-radius: var(--vx-component-metric-8p);
-  font-size: var(--vx-component-metric-08r);
+  min-height: var(--vx-button-sm-height);
+  padding: var(--vx-button-sm-padding-y) var(--vx-button-sm-padding-x);
+  border-radius: var(--vx-button-sm-radius);
+  font-size: var(--vx-button-sm-font-size);
 }
 
 :where(.vx-btn--icon) {
-  width: var(--vx-component-metric-2r);
-  height: var(--vx-component-metric-2r);
-  min-height: var(--vx-component-metric-2r);
+  width: var(--vx-button-icon-size);
+  height: var(--vx-button-icon-size);
+  min-height: var(--vx-button-icon-size);
   padding: 0;
   border-radius: var(--vx-radius-full);
 }
@@ -87,10 +87,10 @@
 :where(.vx-input),
 :where(.vx-select-trigger) {
   width: 100%;
-  min-height: var(--vx-component-metric-275r);
-  padding: var(--vx-component-metric-074r) var(--vx-component-metric-095r);
-  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  border-radius: var(--vx-component-metric-14p);
+  min-height: var(--vx-field-height);
+  padding: var(--vx-field-padding-y) var(--vx-field-padding-x);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  border-radius: var(--vx-field-radius);
   background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
   color: var(--vx-console-text, var(--vx-color-shell-text));
 }
@@ -102,7 +102,7 @@
 
 :where(.vx-input:focus),
 :where(.vx-select-trigger:focus) {
-  outline: var(--vx-component-metric-2p) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  outline: var(--vx-control-focus-ring-width) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
   outline-offset: 0;
   border-color: var(--vx-color-brand-300);
 }
@@ -110,49 +110,49 @@
 :where(select.vx-input),
 :where(select.vx-select-trigger) {
   box-sizing: border-box;
-  height: var(--vx-component-metric-225r);
-  min-height: var(--vx-component-metric-225r);
+  height: var(--vx-select-height);
+  min-height: var(--vx-select-height);
   padding-block: 0;
-  padding-inline: var(--vx-component-metric-085r) var(--vx-component-metric-2r);
+  padding-inline: var(--vx-select-padding-start) var(--vx-select-padding-end);
   line-height: normal;
 }
 
 :where(.vx-label) {
-  font-size: var(--vx-component-metric-095r);
+  font-size: var(--vx-label-font-size);
   color: var(--vx-console-muted, var(--vx-color-shell-muted));
 }
 
 :where(.vx-badge) {
   display: inline-flex;
   align-items: center;
-  gap: var(--vx-component-metric-035r);
-  min-height: var(--vx-component-metric-18r);
-  padding: var(--vx-component-metric-02r) var(--vx-component-metric-065r);
+  gap: var(--vx-badge-gap);
+  min-height: var(--vx-badge-height);
+  padding: var(--vx-badge-padding-y) var(--vx-badge-padding-x);
   border-radius: var(--vx-radius-full);
-  font-size: var(--vx-component-metric-082r);
+  font-size: var(--vx-badge-font-size);
   font-weight: 600;
 }
 
 :where(.vx-card) {
-  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
-  border-radius: var(--vx-component-metric-20p);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
+  border-radius: var(--vx-card-radius);
   background: color-mix(in srgb, var(--vx-color-white) 88%, transparent);
   box-shadow: var(--vx-console-shadow, var(--vx-shadow-sm));
 }
 
 :where(.vx-card__header) {
   display: grid;
-  gap: var(--vx-component-metric-04r);
-  padding: var(--vx-component-metric-115r) var(--vx-component-metric-115r) 0;
+  gap: var(--vx-card-header-gap);
+  padding: var(--vx-card-padding) var(--vx-card-padding) 0;
 }
 
 :where(.vx-card__content) {
-  padding: var(--vx-component-metric-115r);
+  padding: var(--vx-card-padding);
 }
 
 :where(.vx-card__title) {
   margin: 0;
-  font-size: var(--vx-component-metric-105r);
+  font-size: var(--vx-card-title-size);
   font-weight: 700;
   letter-spacing: 0;
 }
@@ -163,8 +163,8 @@
 }
 
 :where(.vx-avatar) {
-  width: var(--vx-component-metric-225r);
-  height: var(--vx-component-metric-225r);
+  width: var(--vx-avatar-size);
+  height: var(--vx-avatar-size);
   display: grid;
   place-items: center;
   border-radius: var(--vx-radius-full);
@@ -179,23 +179,23 @@
 }
 
 :where(.vx-avatar__fallback) {
-  font-size: var(--vx-component-metric-082r);
+  font-size: var(--vx-avatar-fallback-size);
   font-weight: 700;
-  letter-spacing: var(--vx-component-metric-004e);
+  letter-spacing: var(--vx-avatar-fallback-letter-spacing);
 }
 
 :where(.vx-shell-brand) {
   display: inline-flex;
   align-items: center;
-  gap: var(--vx-component-metric-05r);
+  gap: var(--vx-shell-brand-gap);
   min-width: 0;
   color: var(--vx-console-text, var(--vx-color-shell-text));
   font-weight: 760;
 }
 
 :where(.vx-shell-brand__logo) {
-  width: var(--vx-component-metric-15r);
-  height: var(--vx-component-metric-15r);
+  width: var(--vx-shell-brand-logo-size);
+  height: var(--vx-shell-brand-logo-size);
   flex: 0 0 auto;
   object-fit: contain;
 }
@@ -210,12 +210,12 @@
 
 :where(.vx-shell-tool-button) {
   display: inline-flex;
-  width: var(--vx-component-metric-2r);
-  height: var(--vx-component-metric-2r);
+  width: var(--vx-shell-tool-button-size);
+  height: var(--vx-shell-tool-button-size);
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: var(--vx-component-metric-8p);
+  border-radius: var(--vx-shell-tool-button-radius);
   background: transparent;
   color: var(--vx-console-muted, var(--vx-color-shell-muted));
   cursor: pointer;
@@ -238,8 +238,8 @@
 
 :where(.vx-shell-tool-button:focus-visible),
 :where(.vx-shell-user-trigger:focus-visible) {
-  outline: var(--vx-component-metric-2p) solid var(--vx-color-ring);
-  outline-offset: var(--vx-component-metric-2p);
+  outline: var(--vx-control-focus-ring-width) solid var(--vx-color-ring);
+  outline-offset: var(--vx-control-focus-ring-offset);
 }
 
 :where(.vx-shell-locale-switcher) {
@@ -249,9 +249,9 @@
 
 :where(.vx-shell-locale-popover) {
   position: absolute;
-  top: calc(100% + var(--vx-component-metric-05r));
+  top: calc(100% + var(--vx-shell-locale-popover-offset));
   z-index: 50;
-  min-width: var(--vx-component-metric-10r);
+  min-width: var(--vx-shell-locale-popover-min-width);
 }
 
 :where(.vx-shell-locale-popover--start) {
@@ -265,27 +265,27 @@
 :where(.vx-shell-preferences) {
   display: flex;
   flex-direction: column;
-  gap: var(--vx-component-metric-05r);
+  gap: var(--vx-shell-preferences-gap);
 }
 
 :where(.vx-shell-preferences__title) {
-  margin: 0 0 var(--vx-component-metric-015r);
+  margin: 0 0 var(--vx-shell-preferences-title-margin-bottom);
   color: var(--vx-color-text-primary);
-  font-size: var(--vx-component-metric-085r);
+  font-size: var(--vx-shell-preferences-title-size);
   font-weight: 700;
 }
 
 :where(.vx-shell-preferences__row) {
   display: flex;
-  min-height: var(--vx-component-metric-25r);
+  min-height: var(--vx-shell-preferences-row-height);
   align-items: center;
-  gap: var(--vx-component-metric-075r);
+  gap: var(--vx-shell-preferences-row-gap);
 }
 
 :where(.vx-shell-preferences__icon) {
   display: inline-flex;
-  width: var(--vx-component-metric-125r);
-  flex: 0 0 var(--vx-component-metric-125r);
+  width: var(--vx-shell-preferences-icon-size);
+  flex: 0 0 var(--vx-shell-preferences-icon-size);
   justify-content: center;
   color: var(--vx-color-gray-400);
 }
@@ -301,14 +301,14 @@
 
 :where(.vx-shell-preferences__select) {
   width: 100%;
-  height: var(--vx-component-metric-225r);
+  height: var(--vx-shell-preferences-select-height);
   appearance: none;
-  border: var(--vx-component-metric-1p) solid var(--vx-color-border);
-  border-radius: var(--vx-component-metric-8p);
+  border: var(--vx-control-border-width) solid var(--vx-color-border);
+  border-radius: var(--vx-shell-preferences-select-radius);
   background: var(--vx-color-surface);
   color: var(--vx-color-text-secondary);
-  padding: 0 var(--vx-component-metric-2r) 0 var(--vx-component-metric-075r);
-  font-size: var(--vx-component-metric-082r);
+  padding: 0 var(--vx-shell-preferences-select-padding-end) 0 var(--vx-shell-preferences-select-padding-start);
+  font-size: var(--vx-shell-preferences-select-size);
   outline: none;
   transition:
     border-color 180ms ease,
@@ -317,15 +317,15 @@
 
 :where(.vx-shell-preferences__select:focus) {
   border-color: var(--vx-color-brand-300);
-  box-shadow: 0 0 0 var(--vx-component-metric-2p) var(--vx-color-ring);
+  box-shadow: 0 0 0 var(--vx-control-focus-ring-width) var(--vx-color-ring);
 }
 
 :where(.vx-shell-preferences__select-icon) {
   position: absolute;
   top: 50%;
-  right: var(--vx-component-metric-065r);
-  width: var(--vx-component-metric-1r);
-  height: var(--vx-component-metric-1r);
+  right: var(--vx-shell-preferences-select-icon-inset);
+  width: var(--vx-shell-preferences-select-icon-size);
+  height: var(--vx-shell-preferences-select-icon-size);
   transform: translateY(-50%);
   color: var(--vx-color-gray-400);
   pointer-events: none;
@@ -334,22 +334,22 @@
 :where(.vx-shell-segmented) {
   display: flex;
   width: 100%;
-  border: var(--vx-component-metric-1p) solid var(--vx-color-border);
-  border-radius: var(--vx-component-metric-8p);
+  border: var(--vx-control-border-width) solid var(--vx-color-border);
+  border-radius: var(--vx-shell-segmented-radius);
   background: color-mix(in srgb, var(--vx-color-surface-muted) 78%, transparent);
-  padding: var(--vx-component-metric-0125r);
+  padding: var(--vx-shell-segmented-padding);
 }
 
 :where(.vx-shell-segmented__item) {
   flex: 1 1 0;
   min-width: 0;
   border: 0;
-  border-radius: var(--vx-component-metric-6p);
+  border-radius: var(--vx-shell-segmented-item-radius);
   background: transparent;
   color: var(--vx-color-text-muted);
   cursor: pointer;
-  padding: var(--vx-component-metric-042r) var(--vx-component-metric-05r);
-  font-size: var(--vx-component-metric-076r);
+  padding: var(--vx-shell-segmented-item-padding-y) var(--vx-shell-segmented-item-padding-x);
+  font-size: var(--vx-shell-segmented-item-size);
   font-weight: 650;
   line-height: 1;
   transition:
@@ -365,7 +365,7 @@
 :where(.vx-shell-segmented__item--active) {
   background: var(--vx-color-surface);
   color: var(--vx-color-brand-700);
-  box-shadow: 0 var(--vx-component-metric-1p) var(--vx-component-metric-3p) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+  box-shadow: 0 var(--vx-shell-segmented-active-shadow-y) var(--vx-shell-segmented-active-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
 }
 
 :where(.dark .vx-shell-segmented__item--active) {
@@ -375,8 +375,8 @@
 :where(.vx-shell-user-trigger) {
   position: relative;
   display: inline-flex;
-  width: var(--vx-component-metric-25r);
-  height: var(--vx-component-metric-25r);
+  width: var(--vx-shell-user-trigger-size);
+  height: var(--vx-shell-user-trigger-size);
   align-items: center;
   justify-content: center;
   border: 0;
@@ -388,30 +388,30 @@
 }
 
 :where(.vx-shell-user-trigger:hover) {
-  box-shadow: 0 0 0 var(--vx-component-metric-2p) color-mix(in srgb, var(--vx-color-brand-300) 70%, transparent);
+  box-shadow: 0 0 0 var(--vx-shell-user-trigger-hover-ring) color-mix(in srgb, var(--vx-color-brand-300) 70%, transparent);
 }
 
 :where(.vx-shell-user-trigger__status) {
   position: absolute;
-  right: -var(--vx-component-metric-0125r);
-  bottom: -var(--vx-component-metric-0125r);
-  width: var(--vx-component-metric-075r);
-  height: var(--vx-component-metric-075r);
-  border: var(--vx-component-metric-2p) solid var(--vx-color-surface);
+  right: calc(var(--vx-shell-user-status-offset) * -1);
+  bottom: calc(var(--vx-shell-user-status-offset) * -1);
+  width: var(--vx-shell-user-status-size);
+  height: var(--vx-shell-user-status-size);
+  border: var(--vx-shell-user-status-border-width) solid var(--vx-color-surface);
   border-radius: var(--vx-radius-full);
   background: var(--vx-color-success-400);
 }
 
 :where(.vx-shell-user-avatar) {
-  width: var(--vx-component-metric-25r);
-  height: var(--vx-component-metric-25r);
-  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
-  box-shadow: 0 var(--vx-component-metric-2p) var(--vx-component-metric-6p) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+  width: var(--vx-shell-user-avatar-size);
+  height: var(--vx-shell-user-avatar-size);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
+  box-shadow: 0 var(--vx-shell-user-avatar-shadow-y) var(--vx-shell-user-avatar-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
 }
 
 :where(.vx-shell-user-avatar--lg) {
-  width: var(--vx-component-metric-35r);
-  height: var(--vx-component-metric-35r);
+  width: var(--vx-shell-user-avatar-lg-size);
+  height: var(--vx-shell-user-avatar-lg-size);
 }
 
 :where(.vx-shell-user-avatar__image) {
@@ -431,21 +431,21 @@
 }
 
 :where(.vx-shell-user-menu) {
-  width: var(--vx-component-metric-20r);
+  width: var(--vx-shell-user-menu-width);
   overflow: hidden;
-  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-200) 65%, transparent);
-  border-radius: var(--vx-component-metric-10p);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-brand-200) 65%, transparent);
+  border-radius: var(--vx-shell-user-menu-radius);
   background: var(--vx-color-surface);
   color: var(--vx-color-text-primary);
   padding: 0;
-  box-shadow: 0 var(--vx-component-metric-18p) var(--vx-component-metric-45p) color-mix(in srgb, var(--vx-color-brand-950) 12%, transparent);
+  box-shadow: 0 var(--vx-shell-user-menu-shadow-y) var(--vx-shell-user-menu-shadow-blur) color-mix(in srgb, var(--vx-color-brand-950) 12%, transparent);
 }
 
 :where(.vx-shell-user-menu__profile) {
   display: flex;
   align-items: center;
-  gap: var(--vx-component-metric-075r);
-  padding: var(--vx-component-metric-1r);
+  gap: var(--vx-shell-user-menu-profile-gap);
+  padding: var(--vx-shell-user-menu-padding);
 }
 
 :where(.vx-shell-user-menu__identity) {
@@ -464,39 +464,39 @@
 :where(.vx-shell-user-menu__name) {
   margin: 0;
   color: var(--vx-color-text-primary);
-  font-size: var(--vx-component-metric-096r);
+  font-size: var(--vx-shell-user-menu-name-size);
   font-weight: 720;
 }
 
 :where(.vx-shell-user-menu__line) {
-  margin: var(--vx-component-metric-02r) 0 0;
+  margin: var(--vx-shell-user-menu-line-margin-top) 0 0;
   color: var(--vx-color-text-muted);
-  font-size: var(--vx-component-metric-084r);
+  font-size: var(--vx-shell-user-menu-line-size);
 }
 
 :where(.vx-shell-user-menu__meta) {
-  margin: var(--vx-component-metric-012r) 0 0;
+  margin: var(--vx-shell-user-menu-meta-margin-top) 0 0;
   color: var(--vx-color-text-muted);
-  font-size: var(--vx-component-metric-076r);
+  font-size: var(--vx-shell-user-menu-meta-size);
 }
 
 :where(.vx-shell-user-menu__badges) {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--vx-component-metric-05r);
-  padding: 0 var(--vx-component-metric-1r) var(--vx-component-metric-1r) var(--vx-component-metric-425r);
+  gap: var(--vx-shell-user-menu-badge-gap);
+  padding: 0 var(--vx-shell-user-menu-padding) var(--vx-shell-user-menu-padding) var(--vx-shell-user-menu-badge-indent);
 }
 
 :where(.vx-shell-user-badge) {
   display: inline-flex;
   max-width: 100%;
   align-items: center;
-  border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
   border-radius: var(--vx-radius-full);
   background: color-mix(in srgb, var(--vx-color-brand-50) 72%, transparent);
   color: var(--vx-color-brand-700);
-  padding: var(--vx-component-metric-025r) var(--vx-component-metric-062r);
-  font-size: var(--vx-component-metric-075r);
+  padding: var(--vx-shell-user-badge-padding-y) var(--vx-shell-user-badge-padding-x);
+  font-size: var(--vx-shell-user-badge-size);
   font-weight: 650;
 }
 
@@ -506,28 +506,28 @@
 }
 
 :where(.vx-shell-user-menu__separator) {
-  height: var(--vx-component-metric-1p);
-  margin: 0 var(--vx-component-metric-1r);
+  height: var(--vx-control-border-width);
+  margin: 0 var(--vx-shell-user-menu-padding);
   background: var(--vx-color-border);
 }
 
 :where(.vx-shell-user-menu__section) {
-  padding: var(--vx-component-metric-075r) var(--vx-component-metric-1r);
+  padding: var(--vx-shell-user-menu-profile-gap) var(--vx-shell-user-menu-padding);
 }
 
 :where(.vx-shell-user-menu__action) {
   display: flex;
   width: 100%;
   align-items: center;
-  gap: var(--vx-component-metric-065r);
+  gap: var(--vx-shell-user-menu-action-gap);
   border: 0;
-  border-radius: var(--vx-component-metric-8p);
+  border-radius: var(--vx-shell-user-menu-action-radius);
   background: transparent;
   color: var(--vx-color-text-secondary);
   cursor: pointer;
-  padding: var(--vx-component-metric-062r) var(--vx-component-metric-075r);
+  padding: var(--vx-shell-user-menu-action-padding-y) var(--vx-shell-user-menu-action-padding-x);
   text-align: left;
-  font-size: var(--vx-component-metric-085r);
+  font-size: var(--vx-shell-user-menu-action-size);
   font-weight: 650;
   transition:
     background 180ms ease,
@@ -550,8 +550,8 @@
 }
 
 :where(.vx-shell-user-menu__action-icon) {
-  width: var(--vx-component-metric-1r);
-  height: var(--vx-component-metric-1r);
+  width: var(--vx-shell-user-menu-action-icon-size);
+  height: var(--vx-shell-user-menu-action-icon-size);
   flex: 0 0 auto;
   color: var(--vx-color-gray-400);
 }
@@ -563,7 +563,7 @@
 :where(.vx-shell-user-menu__return) {
   display: flex;
   align-items: center;
-  gap: var(--vx-component-metric-04r);
+  gap: var(--vx-shell-user-menu-return-gap);
 }
 
 :where(.vx-shell-user-menu__return .vx-shell-user-menu__action) {
@@ -574,12 +574,12 @@
 :where(.vx-shell-user-menu__dismiss) {
   margin-left: auto;
   display: inline-flex;
-  width: var(--vx-component-metric-125r);
-  height: var(--vx-component-metric-125r);
+  width: var(--vx-shell-user-menu-dismiss-size);
+  height: var(--vx-shell-user-menu-dismiss-size);
   align-items: center;
   justify-content: center;
   border: 0;
-  border-radius: var(--vx-component-metric-6p);
+  border-radius: var(--vx-shell-user-menu-dismiss-radius);
   background: transparent;
   color: var(--vx-color-text-muted);
   cursor: pointer;
@@ -599,7 +599,7 @@
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  gap: var(--vx-component-metric-1r);
+  gap: var(--vx-shell-legal-footer-gap);
 }
 
 :where(.vx-shell-legal-footer__links) {
@@ -607,7 +607,7 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--vx-component-metric-085r);
+  gap: var(--vx-shell-legal-footer-link-gap);
 }
 
 :where(.vx-shell-legal-footer__links a:hover) {
@@ -617,8 +617,8 @@
 :where(.vx-switch) {
   position: relative;
   display: inline-flex;
-  width: var(--vx-component-metric-31r);
-  height: var(--vx-component-metric-19r);
+  width: var(--vx-switch-width);
+  height: var(--vx-switch-height);
 }
 
 :where(.vx-switch__input) {
@@ -639,13 +639,13 @@
 :where(.vx-switch__track::after) {
   content: "";
   position: absolute;
-  top: var(--vx-component-metric-02r);
-  left: var(--vx-component-metric-02r);
-  width: var(--vx-component-metric-15r);
-  height: var(--vx-component-metric-15r);
+  top: var(--vx-switch-thumb-inset);
+  left: var(--vx-switch-thumb-inset);
+  width: var(--vx-switch-thumb-size);
+  height: var(--vx-switch-thumb-size);
   border-radius: var(--vx-radius-full);
   background: var(--vx-color-white);
-  box-shadow: 0 var(--vx-component-metric-1p) var(--vx-component-metric-3p) color-mix(in srgb, var(--vx-color-gray-900) 15%, transparent);
+  box-shadow: 0 var(--vx-switch-thumb-shadow-y) var(--vx-switch-thumb-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 15%, transparent);
   transition: transform 180ms ease;
 }
 
@@ -654,5 +654,5 @@
 }
 
 :where(.vx-switch__input:checked + .vx-switch__track::after) {
-  transform: translateX(var(--vx-component-metric-12r));
+  transform: translateX(var(--vx-switch-checked-translate));
 }
