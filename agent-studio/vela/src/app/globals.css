@@ -20,7 +20,7 @@
 }
 
 .vx-vela-chat--sidebar {
-  width: 360px;
+  width: var(--vx-component-metric-360p);
   height: 100%;
   border-left: var(--vx-component-metric-1p) solid var(--vx-color-border);
   flex-shrink: 0;
@@ -29,10 +29,10 @@
 .vx-vela-chat--float {
   position: fixed;
   right: var(--vx-space-xl);
-  bottom: 80px;
+  bottom: var(--vx-component-metric-80p);
   z-index: 9999;
-  width: 380px;
-  height: 560px;
+  width: var(--vx-component-metric-380p);
+  height: var(--vx-component-metric-560p);
   overflow: hidden;
   border: var(--vx-component-metric-1p) solid var(--vx-color-border);
   border-radius: var(--vx-radius-xl);
@@ -44,8 +44,8 @@
   right: var(--vx-space-xl);
   bottom: var(--vx-space-xl);
   z-index: 9999;
-  width: 48px;
-  height: 48px;
+  width: var(--vx-component-metric-48p);
+  height: var(--vx-component-metric-48p);
   border-radius: var(--vx-radius-full);
   box-shadow: var(--vx-shadow-md);
 }
@@ -150,8 +150,8 @@
 }
 
 .vx-vela-inputbar__textarea {
-  min-height: 40px;
-  max-height: 120px;
+  min-height: var(--vx-component-metric-40p);
+  max-height: var(--vx-component-metric-120p);
   resize: none;
   overflow-y: auto;
 }
@@ -164,7 +164,7 @@
   flex-shrink: 0;
   margin: 0 var(--vx-space-md) var(--vx-space-sm);
   padding: var(--vx-space-md) var(--vx-space-lg);
-  border-width: 1.5px;
+  border-width: var(--vx-component-metric-15p);
   border-style: solid;
   border-radius: var(--vx-radius-xl);
 }
@@ -239,7 +239,7 @@
 .vx-vela-tool__label {
   font-size: var(--vx-font-size-xs);
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: var(--vx-component-metric-005e);
   text-transform: uppercase;
   color: var(--vx-color-text-muted);
 }

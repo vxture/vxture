@@ -33,7 +33,7 @@ a {
 .eyebrow {
   margin: 0 0 var(--vx-component-metric-05r);
   font-size: var(--vx-component-metric-072r);
-  letter-spacing: 0.18em;
+  letter-spacing: var(--vx-component-metric-018e);
   text-transform: uppercase;
   color: var(--vx-console-muted);
 }
@@ -53,7 +53,7 @@ a {
 }
 
 .console-loading__card {
-  max-width: 540px;
+  max-width: var(--vx-component-metric-540p);
   padding: var(--vx-component-metric-2r);
 }
 
@@ -133,7 +133,7 @@ a {
 .vx-shell-sidebar {
   display: grid;
   grid-template-rows: auto auto 1fr auto;
-  gap: 0.48rem;
+  gap: var(--vx-component-metric-048r);
   min-width: 0;
   height: calc(100dvh - var(--vx-shell-header-height));
   max-height: calc(100dvh - var(--vx-shell-header-height));
@@ -172,7 +172,7 @@ a {
 
 .vx-shell-sidebar__tenant-switcher {
   min-width: 0;
-  padding: 0 var(--vx-component-metric-055r) 0.05rem var(--vx-shell-sidebar-content-inset);
+  padding: 0 var(--vx-component-metric-055r) var(--vx-component-metric-005r) var(--vx-shell-sidebar-content-inset);
   transition:
     opacity 140ms ease,
     transform 220ms ease;
@@ -190,7 +190,7 @@ a {
   scrollbar-width: thin;
   scrollbar-color: var(--vx-color-scrollbar) transparent;
   padding-top: var(--vx-component-metric-012r);
-  padding-right: 0.28rem;
+  padding-right: var(--vx-component-metric-028r);
   transition:
     opacity 140ms ease,
     transform 220ms ease;
@@ -230,23 +230,23 @@ a {
 .vx-shell-nav__group-title {
   margin: 0;
   padding: 0 var(--vx-component-metric-075r) 0 var(--vx-shell-sidebar-content-inset);
-  font-size: 0.64rem;
+  font-size: var(--vx-component-metric-064r);
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: var(--vx-component-metric-01e);
   text-transform: uppercase;
   color: var(--vx-color-shell-subtle);
 }
 
 .vx-shell-nav__items {
   display: grid;
-  gap: 0.24rem;
+  gap: var(--vx-component-metric-024r);
 }
 
 .vx-shell-nav__item {
   display: inline-flex;
   align-items: center;
-  gap: 0.68rem;
-  min-height: 2.28rem;
+  gap: var(--vx-component-metric-068r);
+  min-height: var(--vx-component-metric-228r);
   padding: 0 var(--vx-component-metric-082r) 0 var(--vx-shell-sidebar-content-inset);
   border-radius: var(--vx-component-metric-10p);
   color: var(--vx-console-muted);
@@ -279,7 +279,7 @@ a {
   justify-content: space-between;
   align-items: center;
   gap: var(--vx-component-metric-1r);
-  min-height: 3.25rem;
+  min-height: var(--vx-component-metric-325r);
   padding: var(--vx-component-metric-045r) var(--vx-component-metric-075r) 0 var(--vx-shell-sidebar-content-inset);
   border-top: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
   transition:
@@ -317,13 +317,13 @@ a {
   min-width: 0;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  max-width: min(28rem, 42vw);
+  gap: var(--vx-component-metric-06r);
+  max-width: min(var(--vx-component-metric-28r-large), 42vw);
 }
 
 .vx-shell-header__brand-mark {
-  width: 1.85rem;
-  height: 1.85rem;
+  width: var(--vx-component-metric-185r);
+  height: var(--vx-component-metric-185r);
   flex: 0 0 auto;
   display: grid;
   place-items: center;
@@ -349,7 +349,7 @@ a {
   min-height: var(--vx-component-metric-1r);
   font-size: var(--vx-component-metric-096r);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: calc(var(--vx-component-metric-002e) * -1);
   color: var(--vx-console-text);
 }
 
@@ -369,12 +369,12 @@ a {
   display: inline-flex;
   align-items: center;
   gap: var(--vx-component-metric-042r);
-  min-height: 1.28rem;
+  min-height: var(--vx-component-metric-128r);
   padding: 0 var(--vx-component-metric-056r);
   border-radius: var(--vx-radius-sm);
   background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
   color: color-mix(in srgb, var(--vx-color-shell-brand) 92%, transparent);
-  font-size: 0.67rem;
+  font-size: var(--vx-component-metric-067r);
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
@@ -383,7 +383,7 @@ a {
 .vx-shell-header__tenant-tag-icon {
   color: currentColor;
   opacity: 0.9;
-  margin-right: 0.02rem;
+  margin-right: var(--vx-component-metric-002r);
 }
 
 .vx-shell-header__workspace-name {
@@ -404,7 +404,7 @@ a {
   align-items: center;
   min-width: 0;
   width: 100%;
-  max-width: min(18rem, 32vw);
+  max-width: min(var(--vx-component-metric-18r-large), 32vw);
   height: var(--vx-component-metric-225r);
   gap: var(--vx-component-metric-062r);
   padding: var(--vx-component-metric-02r) var(--vx-component-metric-055r) var(--vx-component-metric-02r) 0;
@@ -422,7 +422,7 @@ a {
 
 .vx-shell-sidebar__tenant-switcher .vx-tenant-switcher__panel {
   left: 0;
-  width: min(360px, calc(100vw - var(--vx-component-metric-15r)));
+  width: min(var(--vx-component-metric-360p), calc(100vw - var(--vx-component-metric-15r)));
 }
 
 .vx-tenant-switcher__trigger:hover,
@@ -441,14 +441,14 @@ a {
 
 .vx-tenant-switcher__trigger-avatar .vx-avatar__fallback,
 .vx-tenant-switcher__avatar .vx-avatar__fallback {
-  font-size: 0.68rem;
+  font-size: var(--vx-component-metric-068r);
   letter-spacing: 0;
 }
 
 .vx-tenant-switcher__trigger-copy {
   display: grid;
   min-width: 0;
-  gap: 0.08rem;
+  gap: var(--vx-component-metric-008r);
   text-align: left;
 }
 
@@ -463,7 +463,7 @@ a {
 
 .vx-tenant-switcher__trigger-copy small {
   color: var(--vx-console-muted);
-  font-size: 0.66rem;
+  font-size: var(--vx-component-metric-066r);
   font-weight: 600;
   line-height: 1;
 }
@@ -478,7 +478,7 @@ a {
   z-index: 60;
   top: calc(100% + var(--vx-component-metric-055r));
   left: 0;
-  width: min(360px, calc(100vw - var(--vx-component-metric-2r)));
+  width: min(var(--vx-component-metric-360p), calc(100vw - var(--vx-component-metric-2r)));
   max-height: min(620px, calc(100vh - var(--vx-shell-header-height) - var(--vx-component-metric-1r)));
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
@@ -487,9 +487,9 @@ a {
   border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-600) 12%, transparent);
   border-radius: var(--vx-component-metric-16p);
   background:
-    radial-gradient(circle at top right, color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent), transparent 12rem),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent), transparent var(--vx-component-metric-12r-large)),
     color-mix(in srgb, var(--vx-color-white) 97%, transparent);
-  box-shadow: 0 22px 56px color-mix(in srgb, var(--vx-color-brand-950) 16%, transparent);
+  box-shadow: 0 var(--vx-component-metric-22p) var(--vx-component-metric-56p) color-mix(in srgb, var(--vx-color-brand-950) 16%, transparent);
   backdrop-filter: blur(var(--vx-component-metric-18p));
 }
 
@@ -498,19 +498,19 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: var(--vx-component-metric-1r);
-  padding: var(--vx-component-metric-015r) var(--vx-component-metric-015r) 0.05rem var(--vx-component-metric-025r);
+  padding: var(--vx-component-metric-015r) var(--vx-component-metric-015r) var(--vx-component-metric-005r) var(--vx-component-metric-025r);
 }
 
 .vx-tenant-switcher__panel-header strong {
   font-size: var(--vx-component-metric-09r);
-  letter-spacing: -0.01em;
+  letter-spacing: calc(var(--vx-component-metric-001e) * -1);
 }
 
 .vx-tenant-switcher__close,
 .vx-tenant-dialog__close {
   display: inline-grid;
-  width: 1.85rem;
-  height: 1.85rem;
+  width: var(--vx-component-metric-185r);
+  height: var(--vx-component-metric-185r);
   place-items: center;
   border: 0;
   border-radius: var(--vx-radius-full);
@@ -536,17 +536,17 @@ a {
 .vx-tenant-switcher__current p {
   margin: 0;
   color: var(--vx-console-muted);
-  font-size: 0.68rem;
+  font-size: var(--vx-component-metric-068r);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--vx-component-metric-008e);
   text-transform: uppercase;
 }
 
 .vx-tenant-switcher__status {
   display: inline-flex;
   align-items: center;
-  gap: 0.34rem;
-  padding-left: 2.22rem;
+  gap: var(--vx-component-metric-034r);
+  padding-left: var(--vx-component-metric-222r);
   color: var(--vx-console-brand);
   font-size: var(--vx-component-metric-072r);
   font-weight: 650;
@@ -607,7 +607,7 @@ a {
 .vx-tenant-switcher__item-copy {
   display: grid;
   min-width: 0;
-  gap: 0.24rem;
+  gap: var(--vx-component-metric-024r);
 }
 
 .vx-tenant-switcher__item-copy strong {
@@ -623,13 +623,13 @@ a {
   align-items: center;
   gap: var(--vx-component-metric-045r);
   color: var(--vx-console-muted);
-  font-size: 0.68rem;
+  font-size: var(--vx-component-metric-068r);
   line-height: 1;
 }
 
 .vx-tenant-switcher__item-copy small {
   padding: var(--vx-component-metric-012r) var(--vx-component-metric-035r);
-  border-radius: 5px;
+  border-radius: var(--vx-component-metric-5p);
   background: color-mix(in srgb, var(--vx-color-shell-muted) 10%, transparent);
   color: color-mix(in srgb, var(--vx-color-gray-600) 90%, transparent);
   font-size: var(--vx-component-metric-062r);
@@ -644,7 +644,7 @@ a {
 
 .vx-tenant-switcher__actions {
   display: grid;
-  gap: 0.3rem;
+  gap: var(--vx-component-metric-03r);
   padding-top: var(--vx-component-metric-035r);
 }
 
@@ -652,7 +652,7 @@ a {
 .vx-tenant-switcher__action-link {
   width: 100%;
   justify-content: flex-start;
-  min-height: 2.1rem;
+  min-height: var(--vx-component-metric-21r);
   border-radius: var(--vx-component-metric-10p);
   background: transparent;
   color: var(--vx-console-text);
@@ -703,7 +703,7 @@ a {
   border: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-600) 12%, transparent);
   border-radius: var(--vx-component-metric-18p);
   background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
-  box-shadow: 0 28px 68px color-mix(in srgb, var(--vx-color-brand-950) 18%, transparent);
+  box-shadow: 0 var(--vx-component-metric-28p) var(--vx-component-metric-68p) color-mix(in srgb, var(--vx-color-brand-950) 18%, transparent);
 }
 
 .vx-tenant-dialog__header {
@@ -714,18 +714,18 @@ a {
 }
 
 .vx-tenant-dialog__header p {
-  margin: 0 0 0.3rem;
+  margin: 0 0 var(--vx-component-metric-03r);
   color: var(--vx-console-brand);
   font-size: var(--vx-component-metric-072r);
   font-weight: 750;
-  letter-spacing: 0.08em;
+  letter-spacing: var(--vx-component-metric-008e);
   text-transform: uppercase;
 }
 
 .vx-tenant-dialog__header h2 {
   margin: 0;
   font-size: var(--vx-component-metric-105r);
-  letter-spacing: -0.02em;
+  letter-spacing: calc(var(--vx-component-metric-002e) * -1);
 }
 
 .vx-tenant-dialog__fields {
@@ -735,14 +735,14 @@ a {
 
 .vx-tenant-dialog__fields .vx-label {
   display: grid;
-  gap: 0.36rem;
+  gap: var(--vx-component-metric-036r);
   color: var(--vx-console-muted);
   font-size: var(--vx-component-metric-076r);
   font-weight: 650;
 }
 
 .vx-tenant-dialog__fields .vx-input {
-  min-height: 2.45rem;
+  min-height: var(--vx-component-metric-245r);
   border-radius: var(--vx-component-metric-10p);
 }
 
@@ -768,7 +768,7 @@ a {
   min-width: var(--vx-shell-sidebar-icon-size);
   height: var(--vx-shell-sidebar-icon-size);
   display: inline-grid;
-  gap: 0.22rem;
+  gap: var(--vx-component-metric-022r);
   align-items: center;
   justify-items: center;
   transform: translateY(0);
@@ -777,7 +777,7 @@ a {
 .vx-shell-sidebar__toggle-icon span {
   display: block;
   width: 100%;
-  height: 1.5px;
+  height: var(--vx-component-metric-15p);
   border-radius: var(--vx-radius-full);
   background: currentColor;
 }
@@ -794,7 +794,7 @@ a {
 .vx-shell-sidebar--collapsed .vx-shell-nav,
 .vx-shell-sidebar--collapsed .vx-shell-sidebar__footer {
   opacity: 0;
-  transform: translateX(-10px);
+  transform: translateX(calc(var(--vx-component-metric-10p) * -1));
   pointer-events: none;
 }
 
@@ -812,9 +812,9 @@ a {
 
 .vx-assistant-block h3 {
   margin: 0;
-  font-size: 0.92rem;
+  font-size: var(--vx-component-metric-092r);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: calc(var(--vx-component-metric-002e) * -1);
 }
 
 .vx-assistant-panel__divider {
@@ -833,7 +833,7 @@ a {
 .vx-assistant-panel__divider::before {
   content: "";
   position: absolute;
-  inset: calc(50% - 0.5px) 0 auto;
+  inset: calc(50% - var(--vx-component-metric-05p)) 0 auto;
   height: var(--vx-component-metric-1p);
   background: var(--vx-color-border-muted);
 }
@@ -876,7 +876,7 @@ a {
 .vx-assistant-block {
   display: grid;
   gap: var(--vx-component-metric-075r);
-  padding: 0.1rem 0 var(--vx-component-metric-095r);
+  padding: var(--vx-component-metric-01r) 0 var(--vx-component-metric-095r);
   border-bottom: var(--vx-component-metric-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
 }
 
@@ -938,7 +938,7 @@ a {
 }
 
 .vx-assistant-panel__composer-hint {
-  flex: 1 1 11rem;
+  flex: 1 1 var(--vx-component-metric-11r-large);
 }
 
 .vx-assistant-panel__composer-input {
@@ -1007,9 +1007,9 @@ body.dark {
 .vx-shell-header {
   min-height: var(--vx-shell-header-height);
   height: var(--vx-shell-header-height);
-  grid-template-columns: minmax(0, auto) minmax(18rem, 34rem) auto;
-  padding: 0 clamp(var(--vx-component-metric-065r), 1.1vw, 1.1rem) 0 var(--vx-component-metric-065r);
-  gap: clamp(1.3rem, 2.4vw, var(--vx-component-metric-25r));
+  grid-template-columns: minmax(0, auto) minmax(var(--vx-component-metric-18r-large), 34rem) auto;
+  padding: 0 clamp(var(--vx-component-metric-065r), 1.1vw, var(--vx-component-metric-11r)) 0 var(--vx-component-metric-065r);
+  gap: clamp(var(--vx-component-metric-13r-small), 2.4vw, var(--vx-component-metric-25r));
   border-bottom: 0;
   background: transparent;
 }
@@ -1039,8 +1039,8 @@ body.dark {
   top: calc(100% + var(--vx-component-metric-055r));
   left: 0;
   z-index: 40;
-  width: 10.5rem;
-  height: 8rem;
+  width: var(--vx-component-metric-105r-large);
+  height: var(--vx-component-metric-8r);
   display: grid;
   place-items: center;
   border: var(--vx-component-metric-1p) solid var(--vx-console-border);
@@ -1079,7 +1079,7 @@ body.dark {
 
 .vx-shell-header__brand-copy {
   display: grid;
-  gap: 0.08rem;
+  gap: var(--vx-component-metric-008r);
 }
 
 .vx-shell-header__brand-kicker {
@@ -1108,13 +1108,13 @@ body.dark {
 
 .vx-shell-header__workspace-label {
   color: var(--vx-console-text);
-  font-size: 0.94rem;
+  font-size: var(--vx-component-metric-094r);
   font-weight: 780;
   line-height: 1;
 }
 
 .vx-shell-header__context {
-  max-width: 12rem;
+  max-width: var(--vx-component-metric-12r-large);
   overflow: hidden;
   color: var(--vx-console-muted);
   font-size: var(--vx-component-metric-082r);
@@ -1143,7 +1143,7 @@ body.dark {
 
 .vx-shell-sidebar__topbar,
 .vx-shell-sidebar__rail {
-  min-height: 2.4rem;
+  min-height: var(--vx-component-metric-24r);
   padding-left: var(--vx-component-metric-065r);
 }
 
@@ -1170,7 +1170,7 @@ body.dark {
   padding-bottom: 0;
   opacity: 0;
   pointer-events: none;
-  transform: translateX(-8px);
+  transform: translateX(calc(var(--vx-component-metric-8p) * -1));
 }
 
 .vx-shell-sidebar--collapsed .vx-shell-nav {
@@ -1194,7 +1194,7 @@ body.dark {
 }
 
 .vx-shell-sidebar--collapsed .vx-shell-nav__item {
-  width: 2.55rem;
+  width: var(--vx-component-metric-255r);
   justify-content: center;
   gap: 0;
   padding: 0;
@@ -1208,11 +1208,11 @@ body.dark {
 }
 
 .vx-shell-sidebar--collapsed .vx-shell-nav__item--active::before {
-  left: -0.42rem;
+  left: calc(var(--vx-component-metric-042r) * -1);
 }
 
 .vx-shell-nav__group {
-  gap: 0.36rem;
+  gap: var(--vx-component-metric-036r);
 }
 
 .vx-shell-nav__group-title {
@@ -1225,12 +1225,12 @@ body.dark {
 }
 
 .vx-shell-nav__items {
-  gap: 0.16rem;
+  gap: var(--vx-component-metric-016r);
 }
 
 .vx-shell-nav__item {
   position: relative;
-  min-height: 2.28rem;
+  min-height: var(--vx-component-metric-228r);
   gap: var(--vx-component-metric-065r);
   padding: 0 var(--vx-component-metric-072r);
   border-radius: var(--vx-component-metric-10p);
@@ -1250,9 +1250,9 @@ body.dark {
 .vx-shell-nav__item--active::before {
   content: '';
   position: absolute;
-  left: -0.62rem;
-  top: 0.48rem;
-  bottom: 0.48rem;
+  left: calc(var(--vx-component-metric-062r) * -1);
+  top: var(--vx-component-metric-048r);
+  bottom: var(--vx-component-metric-048r);
   width: var(--vx-component-metric-3p);
   border-radius: var(--vx-radius-full);
   background: linear-gradient(180deg, var(--vx-console-brand), var(--vx-console-cyan));
@@ -1272,12 +1272,12 @@ body.dark {
 .vx-assistant-panel {
   border-left: var(--vx-component-metric-1p) solid var(--vx-console-border);
   background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
-  box-shadow: -20px 0 44px -36px color-mix(in srgb, var(--vx-color-brand-800) 24%, transparent);
+  box-shadow: calc(var(--vx-component-metric-20p) * -1) 0 var(--vx-component-metric-44p) calc(var(--vx-component-metric-36p) * -1) color-mix(in srgb, var(--vx-color-brand-800) 24%, transparent);
 }
 
 .dark .vx-assistant-panel {
   background: color-mix(in srgb, var(--vx-color-background) 96%, transparent);
-  box-shadow: -20px 0 44px -36px color-mix(in srgb, var(--vx-color-primary) 22%, transparent);
+  box-shadow: calc(var(--vx-component-metric-20p) * -1) 0 var(--vx-component-metric-44p) calc(var(--vx-component-metric-36p) * -1) color-mix(in srgb, var(--vx-color-primary) 22%, transparent);
 }
 
 @media (max-width: 1100px) {
@@ -1358,7 +1358,7 @@ body.dark {
   }
 
   .vx-shell-header {
-    grid-template-columns: max-content minmax(12rem, 1fr) max-content;
+    grid-template-columns: max-content minmax(var(--vx-component-metric-12r-large), 1fr) max-content;
     height: var(--vx-shell-header-height);
     min-height: var(--vx-shell-header-height);
     gap: var(--vx-component-metric-075r);
