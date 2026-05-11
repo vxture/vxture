@@ -48,21 +48,24 @@
 ### worker-01（平台控制面）
 
 ```bash
-# 1. 拉取最新镜像或重新构建
-docker compose -f docker-compose.worker01.yml pull
+cd deploy/worker-01
+
+# 1. 拉取最新镜像
+docker compose -f compose.platform.yml pull
 
 # 2. 运行数据库迁移（若有 schema 变更）
-docker exec vx-platform-pg psql -U postgres -d vxture -f /migrations/latest.sql
+docker exec vx-platform-pg psql -U vxture -d platform_main -f /migrations/latest.sql
 # 或 Prisma migrate deploy（在 BFF 容器内）
+pnpm --filter @vxture/core-database migrate:deploy
 
 # 3. 滚动重启平台服务（逐个，避免全量停机）
-docker compose -f docker-compose.worker01.yml up -d --no-deps vx-auth-bff
-docker compose -f docker-compose.worker01.yml up -d --no-deps vx-website-bff
-docker compose -f docker-compose.worker01.yml up -d --no-deps vx-console-bff
-docker compose -f docker-compose.worker01.yml up -d --no-deps vx-admin-bff
-docker compose -f docker-compose.worker01.yml up -d --no-deps vx-website
-docker compose -f docker-compose.worker01.yml up -d --no-deps vx-console
-docker compose -f docker-compose.worker01.yml up -d --no-deps vx-admin
+docker compose -f compose.platform.yml up -d --no-deps auth-bff
+docker compose -f compose.platform.yml up -d --no-deps website-bff
+docker compose -f compose.platform.yml up -d --no-deps console-bff
+docker compose -f compose.platform.yml up -d --no-deps admin-bff
+docker compose -f compose.platform.yml up -d --no-deps website
+docker compose -f compose.platform.yml up -d --no-deps console
+docker compose -f compose.platform.yml up -d --no-deps admin
 
 # 4. 重载 Nginx（仅在配置有变更时）
 docker exec vx-nginx nginx -s reload
@@ -74,13 +77,15 @@ docker exec vx-nginx nginx -s reload
 # 通过 Tailscale SSH 连接 worker-02
 ssh vxture-worker-02
 
+cd deploy/worker-02
+
 # Vela 相关
-docker compose -f docker-compose.worker02.yml up -d --no-deps vx-vela-bff-prod
-docker compose -f docker-compose.worker02.yml up -d --no-deps vx-vela-server-prod
+docker compose -f compose.vela.prod.yml up -d --no-deps vela-bff
+docker compose -f compose.vela.prod.yml up -d --no-deps vela-server
 
 # Ruyin 相关（如有更新）
-docker compose -f docker-compose.worker02.yml up -d --no-deps vx-ruyin-bff-prod
-docker compose -f docker-compose.worker02.yml up -d --no-deps vx-ruyin-server-prod
+docker compose -f compose.ruyin.prod.yml up -d --no-deps ruyin-bff
+docker compose -f compose.ruyin.prod.yml up -d --no-deps ruyin-server
 ```
 
 ---
