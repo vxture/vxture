@@ -2507,6 +2507,17 @@
   --vx-assistant-panel-bar-title-letter-spacing: -0.02em;
   --vx-assistant-panel-bar-title-weight: inherit;
   --vx-assistant-panel-bar-actions-gap: 0.25rem;
+  --vx-assistant-panel-output-gap: 0.85rem;
+  --vx-assistant-panel-output-padding: 0.7rem 0.95rem 0.75rem 1rem;
+  --vx-assistant-panel-output-scrollbar-width: thin;
+  --vx-assistant-panel-output-scrollbar-color: var(--vx-color-scrollbar) transparent;
+  --vx-assistant-panel-output-scroll-padding-right: 0.1rem;
+  --vx-assistant-panel-stack-min-height: auto;
+  --vx-assistant-panel-stack-align-content: normal;
+  --vx-assistant-panel-composer-display: grid;
+  --vx-assistant-panel-composer-rows: auto minmax(0, 1fr) auto;
+  --vx-assistant-panel-composer-gap: 0.75rem;
+  --vx-assistant-panel-composer-padding: 0.75rem 0.95rem 0.95rem 1rem;
 }
 
 .vx-models-page {
@@ -4186,6 +4197,15 @@
   --vx-assistant-panel-bar-title-weight: var(--vx-shell-title-weight, 760);
   --vx-assistant-panel-bar-title-color: var(--vx-shell-ink, var(--vx-color-brand-950));
   --vx-assistant-panel-bar-actions-gap: 0.5rem;
+  --vx-assistant-panel-output-gap: 0.5rem;
+  --vx-assistant-panel-output-padding: 1rem;
+  --vx-assistant-panel-output-scrollbar-width: none;
+  --vx-assistant-panel-output-scrollbar-color: auto;
+  --vx-assistant-panel-output-scroll-padding-right: 0;
+  --vx-assistant-panel-stack-min-height: 100%;
+  --vx-assistant-panel-stack-align-content: stretch;
+  --vx-assistant-panel-composer-display: block;
+  --vx-assistant-panel-composer-padding: 1rem;
 }
 
 :where(.dark .admin-shell) {
@@ -4567,6 +4587,55 @@
   align-items: center;
   flex: 0 0 auto;
   gap: var(--vx-assistant-panel-bar-actions-gap, 0.25rem);
+}
+
+.vx-assistant-panel__output,
+.vx-assistant-panel__composer {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.vx-assistant-panel__output {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--vx-assistant-panel-output-gap, 0.85rem);
+  padding: var(--vx-assistant-panel-output-padding, 1rem);
+}
+
+.vx-assistant-panel__output--clean {
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
+  padding-top: 1rem;
+}
+
+.vx-assistant-panel__output--with-toolbar {
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: var(--vx-assistant-panel-output-gap, 0.5rem);
+}
+
+.vx-assistant-panel__output-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: var(--vx-assistant-panel-output-scrollbar-width, thin);
+  scrollbar-color: var(--vx-assistant-panel-output-scrollbar-color, var(--vx-color-scrollbar) transparent);
+  padding-right: var(--vx-assistant-panel-output-scroll-padding-right, 0);
+}
+
+.vx-assistant-panel__stack {
+  display: grid;
+  min-height: var(--vx-assistant-panel-stack-min-height, auto);
+  align-content: var(--vx-assistant-panel-stack-align-content, normal);
+  gap: 0.75rem;
+}
+
+.vx-assistant-panel__composer {
+  display: var(--vx-assistant-panel-composer-display, grid);
+  grid-template-rows: var(--vx-assistant-panel-composer-rows, auto minmax(0, 1fr) auto);
+  gap: var(--vx-assistant-panel-composer-gap, 0.75rem);
+  padding: var(--vx-assistant-panel-composer-padding, 1rem);
 }
 
 @media (max-width: 1180px) {
