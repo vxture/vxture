@@ -66,73 +66,6 @@ a {
   color: var(--vx-console-muted);
 }
 
-.vx-assistant-panel {
-  align-self: start;
-  position: sticky;
-  top: var(--vx-shell-header-height);
-  min-width: 0;
-  width: 100%;
-  height: calc(100dvh - var(--vx-shell-header-height));
-  max-height: calc(100dvh - var(--vx-shell-header-height));
-  min-height: calc(100dvh - var(--vx-shell-header-height));
-  padding: 0;
-  border-radius: 0;
-  border-left: 2px solid
-    var(--vx-shell-assistant-line, var(--vx-color-neutral-border));
-  background: transparent;
-  box-shadow: var(
-    --vx-shell-assistant-shadow,
-    -12px 0 24px -24px color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent)
-  );
-  overflow: hidden;
-  opacity: 1;
-  transform: translateX(0);
-  transition:
-    opacity 220ms ease,
-    transform var(--vx-admin-sidebar-transition);
-  will-change: opacity, transform;
-}
-
-.dark .vx-assistant-panel {
-  border-left-color: var(--vx-shell-assistant-line, color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent));
-  box-shadow: var(
-    --vx-shell-assistant-shadow,
-    -12px 0 24px -24px var(--vx-color-primary-soft)
-  );
-}
-
-.vx-assistant-panel--closed {
-  pointer-events: none;
-  opacity: 0;
-  transform: translateX(1rem);
-}
-
-.vx-assistant-panel--fullscreen,
-.vx-assistant-panel--max {
-  position: fixed;
-  inset: var(--vx-shell-header-height) 1rem 0;
-  z-index: 2600;
-  width: auto;
-  min-width: 0;
-  height: calc(100dvh - var(--vx-shell-header-height));
-  max-height: calc(100dvh - var(--vx-shell-header-height));
-  min-height: calc(100dvh - var(--vx-shell-header-height));
-  border-left: 0;
-  background:
-    radial-gradient(
-      circle at top left,
-      var(--vx-shell-hover, color-mix(in srgb, var(--vx-color-shell-brand) 4%, transparent)),
-      transparent 24rem
-    ),
-    linear-gradient(180deg, var(--vx-color-gray-50) 0%, var(--vx-color-shell-bg) 100%);
-  box-shadow: none;
-}
-
-.dark .vx-assistant-panel--fullscreen,
-.dark .vx-assistant-panel--max {
-  background: var(--vx-console-bg);
-}
-
 .vx-assistant-panel--floating {
   --assistant-floating-height: calc(
     100dvh - var(--vx-admin-header-height, 4rem) - 2rem
@@ -185,83 +118,9 @@ a {
   }
 }
 
-.vx-assistant-panel__inner {
-  display: grid;
-  height: 100%;
-  max-height: 100%;
-  min-height: 100%;
-  padding: 0;
-  overflow: hidden;
-  opacity: 1;
-  transform: translateX(0);
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease;
-}
-
 .admin-shell--assistant-content-hidden .vx-assistant-panel__inner {
   opacity: 0;
   transform: translateX(0.35rem);
-}
-
-.vx-assistant-panel__resize-edge {
-  position: absolute;
-  inset: 0 auto 0 0;
-  z-index: 2;
-  width: 0.8rem;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: col-resize;
-  touch-action: none;
-}
-
-.vx-assistant-panel__resize-edge::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 1px;
-  background: transparent;
-  transition: background 180ms ease;
-}
-
-.vx-assistant-panel__resize-edge:hover::after,
-.vx-assistant-panel__resize-edge--active::after {
-  background: color-mix(in srgb, var(--vx-console-brand) 24%, transparent);
-}
-
-.vx-assistant-panel__bar {
-  min-width: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  height: var(--vx-shell-rail-height);
-  min-height: var(--vx-shell-rail-height);
-  padding: 0 1rem;
-}
-
-.vx-assistant-panel__bar h2 {
-  min-width: 0;
-  margin: 0;
-  overflow: hidden;
-  color: var(--vx-shell-ink, var(--vx-color-brand-950));
-  font-size: var(--vx-shell-title-size, 1rem);
-  font-weight: var(--vx-shell-title-weight, 760);
-  line-height: 1.2;
-  letter-spacing: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.vx-assistant-panel__bar-actions {
-  min-width: 0;
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-  gap: 0.5rem;
 }
 
 .vx-assistant-panel__mode-group {
