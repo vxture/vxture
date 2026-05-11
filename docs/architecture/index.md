@@ -1,7 +1,7 @@
 # Architecture Documentation Index
 
-**Version**: 1.6.0
-**Last Updated**: 2026-05-11
+**Version**: 1.7.0
+**Last Updated**: 2026-05-12
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -50,6 +50,15 @@
 | vela  | agent-studio/vela  | agent-server/vela  | bff/vela-bff  | ✅ 三端运行中（嵌入 admin / console） |
 
 ## Changelog
+
+### v1.7.0 — 2026-05-12
+
+- `00-overview.md` v1.4.0：SERVICE LAYER ASCII 框展开为 9 个服务 / 5 个域；CORE LAYER 补充 `@vxture/core-database`；§8 包架构表补全 core-database、platform-browser
+- `01-monorepo.md` v1.4.0：仓库结构树补充 auth-bff、gateway-bff、ruyin-bff；服务树展开至 5 域 9 服务；core 补 database/、mail/；platform 补 browser/；新增 `business/` 目录；§9/§10 包名与分组列表同步补全
+- `02-package-boundaries.md`：Core §3 补充 `@vxture/core-database`、`@vxture/core-mail`；Service §5 展开为 5 域完整树；BFF §6 补充 `@vxture/bff-auth`（唯一 JWT 签发者）、`@vxture/bff-gateway`、`@vxture/bff-ruyin`
+- `05-core-layer.md` v1.4.0：新增 `core-database` 包描述（Prisma DDL 管理，server-side only）；§1 树、§7 用法、§8 消费者表格同步更新
+- `07-service-layer.md` v1.3.0：§1 树展开至 5 域 9 服务（新增 ai、identity、notification、tenant 域）；§2 命名示例补全；§3 域分组表扩充
+- `10-bff-layer.md` v1.4.0：§1 包树补充 auth-bff、gateway-bff、ruyin-bff；新增 「auth-bff — 唯一 JWT 签发者」说明章节
 
 ### v1.6.0 — 2026-05-11
 

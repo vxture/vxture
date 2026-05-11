@@ -1,7 +1,7 @@
 # Vxture Platform Architecture Overview
 
-**Version**: 1.3.0
-**Last Updated**: 2026-05-06
+**Version**: 1.4.0
+**Last Updated**: 2026-05-12
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -70,12 +70,15 @@ Both surfaces share the same platform infrastructure and are governed independen
 │  SERVICE LAYER                                                  │
 |                                                                 |
 |   services/                                                     |
-|      commerce/                                                  |
-|       billing            (@vxture/service-billing)              |
-|        subscription       (@vxture/service-subscription)        |
-|                                                                 |
-|      support/                                                   |
-|        ticket             (@vxture/service-ticket)              |
+|      ai/         gateway       (@vxture/service-ai-gateway)     |
+|      commerce/   billing       (@vxture/service-billing)        |
+|                  subscription  (@vxture/service-subscription)   |
+|      identity/   iam           (@vxture/service-iam)            |
+|      notification/ mail        (@vxture/service-mail)           |
+|                  sms           (@vxture/service-sms)            |
+|      support/    ticket        (@vxture/service-ticket)         |
+|                  workers       (@vxture/workers)                |
+|      tenant/     organization  (@vxture/service-organization)   |
 |                                                                 |
 │   Promoted from agent-server when proven reusable               │
 └──────────────────────────┬──────────────────────────────────────┘
@@ -83,13 +86,13 @@ Both surfaces share the same platform infrastructure and are governed independen
 ┌─────────────────────────────────────────────────────────────────┐
 │  CORE LAYER                                                     │
 │                                                                 │
-│   @vxture/core-api      @vxture/core-auth                      │
-│   @vxture/core-config   @vxture/core-locale   Mostly           │
-│   @vxture/core-tenant   @vxture/core-utils    framework-       │
-│   @vxture/core-mail                           agnostic*        │
+│   @vxture/core-api        @vxture/core-auth                    │
+│   @vxture/core-config     @vxture/core-locale   Mostly         │
+│   @vxture/core-tenant     @vxture/core-utils    framework-     │
+│   @vxture/core-mail       @vxture/core-database agnostic*      │
 │                                                                 │
 │   Platform infrastructure primitives                           │
-│   * core-mail is NestJS-specific (server-side BFF only)        │
+│   * core-mail / core-database are NestJS-specific (server BFF) │
 └──────────────────────────┬──────────────────────────────────────┘
                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -341,9 +344,9 @@ packages/{group}/{name}/   →   @vxture/{group}-{name}
 | Group      | Purpose                              | Key packages                                                                                    |
 | ---------- | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
 | `shared`   | Cross-cutting utilities and types    | `@vxture/shared`                                                                                |
-| `core`     | Platform infrastructure primitives   | `core-api`, `core-auth`, `core-tenant`, `core-locale`, `core-config`, `core-utils`, `core-mail` |
+| `core`     | Platform infrastructure primitives   | `core-api`, `core-auth`, `core-tenant`, `core-locale`, `core-config`, `core-utils`, `core-mail`, `core-database` |
 | `ai`       | Shared AI capabilities (server-side) | `@vxture/ai-sdk` (llm, rag, embedding, workflow)                                                |
-| `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`                                                              |
+| `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`, `platform-browser`                                          |
 | `design`   | UI design system                     | `@vxture/design-system`                                                                         |
 
 Dependency direction within packages is strict:

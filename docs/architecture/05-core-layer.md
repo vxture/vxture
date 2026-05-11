@@ -1,7 +1,7 @@
 # Vxture Core Layer Architecture
 
-**Version**: 1.3.0
-**Last Updated**: 2026-05-03
+**Version**: 1.4.0
+**Last Updated**: 2026-05-12
 
 ## Overview
 
@@ -29,6 +29,7 @@ packages/core/
 ├── api/        # @vxture/core-api
 ├── auth/       # @vxture/core-auth
 ├── config/     # @vxture/core-config
+├── database/   # @vxture/core-database
 ├── locale/     # @vxture/core-locale
 ├── mail/       # @vxture/core-mail
 ├── tenant/     # @vxture/core-tenant
@@ -99,6 +100,20 @@ General-purpose platform helpers:
 
 Supports both server and browser environments.
 
+## core-database — Database Infrastructure
+
+NestJS-based Prisma database module for platform-level persistence.
+
+- Provides `PrismaModule` / `PrismaService` for PostgreSQL access via Prisma Client
+- Manages DDL migrations under `packages/core/database/prisma/`
+- **Server-side only**: not consumable by frontend or browser code
+- **Global NestJS module**: import `PrismaModule` once in `AppModule`; `PrismaService` is injectable anywhere
+- Exposes typed Prisma Client generated from the platform schema
+
+> **Cross-dependency constraint**: `core-database` reads `DATABASE_URL` directly from
+> `process.env`. Consumer BFFs call `VxConfigModule.register()` at startup to load `.env`
+> files before any service constructs — same pattern as `core-mail`.
+
 ## core-mail — Transactional Email
 
 NestJS-based transactional email service built on nodemailer.
@@ -131,9 +146,9 @@ core-* → React / Next.js ❌
 
 **例外**：`core-auth` 允许引入 `core-config` 以读取 JWT 密钥等平台级配置。此为 core 层内部唯一被允许的跨包引用。
 
-Core must remain **framework-agnostic** where possible. `core-mail` is the sole NestJS-specific
-exception — it ships a `@Global() @Module()` wrapper and is only consumed by server-side BFFs.
-All other core packages remain runnable in both Node.js and browser.
+Core must remain **framework-agnostic** where possible. `core-mail` and `core-database` are the
+NestJS-specific exceptions — both ship `@Global() @Module()` wrappers and are only consumed by
+server-side BFFs and services. All other core packages remain runnable in both Node.js and browser.
 
 ---
 
@@ -200,6 +215,7 @@ import { apiClient } from '@vxture/core-api/src/client/api-client';  // ❌
 import { apiClient } from '@vxture/core-api';
 import { validateToken } from '@vxture/core-auth';
 import { getConfig } from '@vxture/core-config';
+import { PrismaModule, PrismaService } from '@vxture/core-database';
 import { translate } from '@vxture/core-locale';
 import { MailModule, MailService } from '@vxture/core-mail';
 import { getTenantId } from '@vxture/core-tenant';
@@ -227,14 +243,15 @@ await mailService.send({
 
 Core packages are consumed by:
 
-| Consumer         | Core packages used                                              |
-| ---------------- | --------------------------------------------------------------- |
-| `bff/*`          | `core-auth`, `core-config`, `core-tenant`, `core-mail`         |
-| `agent-server/*` | `core-config`, `core-tenant`, `core-api`                       |
-| `services/*`     | `core-config`                                                   |
+| Consumer         | Core packages used                                                             |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `bff/*`          | `core-auth`, `core-config`, `core-tenant`, `core-mail`, `core-database`        |
+| `agent-server/*` | `core-config`, `core-tenant`, `core-api`                                       |
+| `services/*`     | `core-config`, `core-database`                                                 |
 
 `core-mail` is consumed exclusively by Portal BFFs (`admin-bff`, `console-bff`) for
-server-side transactional email notifications. It is not available to frontend code
+server-side transactional email notifications. `core-database` is consumed by BFFs and
+services that require direct database access. Neither is available to frontend code
 (`portals/`, `agent-studio/`) — those layers communicate with BFFs over HTTP.
 
 Core packages are **not** consumed directly by frontend code (`portals/`, `agent-studio/`).

@@ -1,7 +1,7 @@
 # Vxture Monorepo Architecture
 
-**Version**: 1.3.0
-**Last Updated**: 2026-05-06
+**Version**: 1.4.0
+**Last Updated**: 2026-05-12
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -39,19 +39,34 @@ vxture/
 │   └── agent{N}/
 │
 ├── bff/                        # Backend For Frontend — all BFFs in one place
-│   ├── website-bff/
-│   ├── admin-bff/
-│   ├── console-bff/
-│   ├── vela-bff/
-│   ├── agent01-bff/
+│   ├── auth-bff/               # @vxture/bff-auth  (唯一 JWT 签发者)
+│   ├── gateway-bff/            # @vxture/bff-gateway
+│   ├── website-bff/            # @vxture/bff-website
+│   ├── admin-bff/              # @vxture/bff-admin
+│   ├── console-bff/            # @vxture/bff-console
+│   ├── vela-bff/               # @vxture/bff-vela
+│   ├── ruyin-bff/              # @vxture/bff-ruyin
 │   └── agent{N}-bff/
 │
 ├── services/                   # Shared platform domain services (stable, promoted from agent-server)
-│   ├── commerce/               # Commerce domain
+│   ├── ai/
+│   │   └── gateway/            # @vxture/service-ai-gateway
+│   ├── commerce/
 │   │   ├── billing/            # @vxture/service-billing
 │   │   └── subscription/       # @vxture/service-subscription
-│   └── support/                # Support domain
-│       └── ticket/             # @vxture/service-ticket
+│   ├── identity/
+│   │   └── iam/                # @vxture/service-iam
+│   ├── notification/
+│   │   ├── mail/               # @vxture/service-mail
+│   │   └── sms/                # @vxture/service-sms
+│   ├── support/
+│   │   ├── ticket/             # @vxture/service-ticket
+│   │   └── workers/            # @vxture/workers
+│   └── tenant/
+│       └── organization/       # @vxture/service-organization
+│
+├── business/                   # 业务扩展层（预留，当前含 ruyin 业务域）
+│   └── ruyin/
 │
 ├── packages/                   # Shared platform packages
 │   ├── shared/
@@ -60,13 +75,16 @@ vxture/
 │   │   ├── api/                # @vxture/core-api
 │   │   ├── auth/               # @vxture/core-auth
 │   │   ├── config/             # @vxture/core-config
+│   │   ├── database/           # @vxture/core-database (Prisma DDL 管理)
 │   │   ├── locale/             # @vxture/core-locale
+│   │   ├── mail/               # @vxture/core-mail
 │   │   ├── tenant/             # @vxture/core-tenant
 │   │   └── utils/              # @vxture/core-utils
 │   ├── ai/
 │   │   └── ai-sdk/             # @vxture/ai-sdk
 │   ├── platform/
 │   │   ├── amap/               # @vxture/platform-amap
+│   │   ├── browser/            # @vxture/platform-browser
 │   │   ├── cesium/             # @vxture/platform-cesium
 │   │   └── {name}/             # @vxture/platform-{name}
 │   └── design/
@@ -301,11 +319,21 @@ The `services` directory contains **shared platform domain services**.
 
 ```
 services/
-├── commerce/               # Commerce domain
+├── ai/            # AI 基础设施域
+│   └── gateway/            # @vxture/service-ai-gateway
+├── commerce/      # 商务域
 │   ├── billing/            # @vxture/service-billing
 │   └── subscription/       # @vxture/service-subscription
-└── support/                # Support domain
-    └── ticket/             # @vxture/service-ticket
+├── identity/      # 身份域
+│   └── iam/                # @vxture/service-iam
+├── notification/  # 通知域
+│   ├── mail/               # @vxture/service-mail
+│   └── sms/                # @vxture/service-sms
+├── support/       # 支持域
+│   ├── ticket/             # @vxture/service-ticket
+│   └── workers/            # @vxture/workers
+└── tenant/        # 租户域
+    └── organization/       # @vxture/service-organization
 ```
 
 **Directory structure**: Two-level domain grouping `services/{domain}/{name}/`.
@@ -351,7 +379,9 @@ packages/
 │   ├── api/                     # @vxture/core-api
 │   ├── auth/                    # @vxture/core-auth
 │   ├── config/                  # @vxture/core-config
+│   ├── database/                # @vxture/core-database (Prisma DDL 管理)
 │   ├── locale/                  # @vxture/core-locale
+│   ├── mail/                    # @vxture/core-mail
 │   ├── tenant/                  # @vxture/core-tenant
 │   └── utils/                   # @vxture/core-utils
 │
@@ -360,6 +390,7 @@ packages/
 │
 ├── platform/                    # Third-party client SDK wrappers (browser-only)
 │   ├── amap/                    # @vxture/platform-amap
+│   ├── browser/                 # @vxture/platform-browser
 │   ├── cesium/                  # @vxture/platform-cesium
 │   └── {name}/                  # @vxture/platform-{name}
 │
@@ -389,20 +420,31 @@ Examples:
 @vxture/core-api
 @vxture/core-auth
 @vxture/core-config
+@vxture/core-database
 @vxture/core-locale
+@vxture/core-mail
 @vxture/core-tenant
 @vxture/core-utils
 
 @vxture/ai-sdk
 
+@vxture/service-ai-gateway
 @vxture/service-billing
+@vxture/service-iam
+@vxture/service-mail
+@vxture/service-organization
+@vxture/service-sms
 @vxture/service-subscription
 @vxture/service-ticket
+@vxture/workers
 
+@vxture/bff-auth
+@vxture/bff-gateway
 @vxture/bff-website
 @vxture/bff-admin
 @vxture/bff-console
 @vxture/bff-vela
+@vxture/bff-ruyin
 @vxture/bff-agent01
 @vxture/bff-agent{N}
 
@@ -430,7 +472,8 @@ Generic utilities. Domain-agnostic. No internal dependencies.
 Platform infrastructure. Framework-agnostic. Depends on `shared` only.
 
 ```
-@vxture/core-api, core-auth, core-config, core-locale, core-tenant, core-utils
+@vxture/core-api, core-auth, core-config, core-database,
+         core-locale, core-mail, core-tenant, core-utils
 ```
 
 ## ai
@@ -451,8 +494,12 @@ Shared platform domain services. Organized by business domain in the directory t
 Package names remain `@vxture/service-{name}` regardless of domain grouping.
 
 ```
-commerce domain:  @vxture/service-billing, service-subscription
-support domain:   @vxture/service-ticket
+ai domain:           @vxture/service-ai-gateway
+commerce domain:     @vxture/service-billing, service-subscription
+identity domain:     @vxture/service-iam
+notification domain: @vxture/service-mail, service-sms
+support domain:      @vxture/service-ticket, @vxture/workers
+tenant domain:       @vxture/service-organization
 ```
 
 ## bff
@@ -460,7 +507,9 @@ support domain:   @vxture/service-ticket
 Backend For Frontend. One per consumer. Domain-split internally via router modules.
 
 ```
-@vxture/bff-website, bff-admin, bff-console, bff-vela, bff-agent01, bff-agent{N}
+@vxture/bff-auth (唯一 JWT 签发者)
+@vxture/bff-gateway, bff-website, bff-admin, bff-console,
+         bff-vela, bff-ruyin, bff-agent{N}
 ```
 
 ## platform
@@ -468,7 +517,7 @@ Backend For Frontend. One per consumer. Domain-split internally via router modul
 Third-party client SDK wrappers. Browser-only.
 
 ```
-@vxture/platform-amap, platform-cesium, platform-{name}
+@vxture/platform-amap, platform-browser, platform-cesium, platform-{name}
 ```
 
 ## design

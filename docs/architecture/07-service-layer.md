@@ -1,7 +1,7 @@
 # Vxture Service Layer Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.3.0
+**Last Updated**: 2026-05-12
 
 ## Overview
 
@@ -35,11 +35,21 @@ Package name:
 
 ```
 services/
+├── ai/                     # AI domain
+│   └── gateway/            # @vxture/service-ai-gateway
 ├── commerce/               # Commerce domain
 │   ├── billing/            # @vxture/service-billing
 │   └── subscription/       # @vxture/service-subscription
-└── support/                # Support domain
-    └── ticket/             # @vxture/service-ticket
+├── identity/               # Identity domain
+│   └── iam/                # @vxture/service-iam
+├── notification/           # Notification domain
+│   ├── mail/               # @vxture/service-mail
+│   └── sms/                # @vxture/service-sms
+├── support/                # Support domain
+│   ├── ticket/             # @vxture/service-ticket
+│   └── workers/            # @vxture/workers
+└── tenant/                 # Tenant domain
+    └── organization/       # @vxture/service-organization
 ```
 
 Services live at the top level of the monorepo, not inside `packages/`,
@@ -61,9 +71,15 @@ This makes domain ownership and navigability clear as the number of services gro
 Examples:
 
 ```
+@vxture/service-ai-gateway
 @vxture/service-billing
 @vxture/service-subscription
+@vxture/service-iam
+@vxture/service-mail
+@vxture/service-sms
 @vxture/service-ticket
+@vxture/workers
+@vxture/service-organization
 ```
 
 The domain directory (`commerce/`, `support/`) is for **organization only**.
@@ -73,10 +89,14 @@ It does not appear in the package name. Consumers always import using `@vxture/s
 
 # 3. Current Domain Groups
 
-| Domain     | Directory            | Services                                          |
-| ---------- | -------------------- | ------------------------------------------------- |
-| `commerce` | `services/commerce/` | `@vxture/service-billing`, `service-subscription` |
-| `support`  | `services/support/`  | `@vxture/service-ticket`                          |
+| Domain         | Directory                | Services                                                                  |
+| -------------- | ------------------------ | ------------------------------------------------------------------------- |
+| `ai`           | `services/ai/`           | `@vxture/service-ai-gateway`                                              |
+| `commerce`     | `services/commerce/`     | `@vxture/service-billing`, `@vxture/service-subscription`                 |
+| `identity`     | `services/identity/`     | `@vxture/service-iam`                                                     |
+| `notification` | `services/notification/` | `@vxture/service-mail`, `@vxture/service-sms`                             |
+| `support`      | `services/support/`      | `@vxture/service-ticket`, `@vxture/workers`                               |
+| `tenant`       | `services/tenant/`       | `@vxture/service-organization`                                            |
 
 **Adding a new service**:
 

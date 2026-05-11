@@ -1,7 +1,7 @@
 # Vxture BFF Layer Architecture
 
-**Version**: 1.3.0
-**Last Updated**: 2026-05-03
+**Version**: 1.4.0
+**Last Updated**: 2026-05-12
 **TypeScript**: 5.9.3
 
 ## Overview
@@ -28,11 +28,13 @@ The BFF contains **no business logic**. Business logic belongs in `services/` or
 
 ```
 bff/
+├── auth-bff/          # @vxture/bff-auth      → 平台唯一 JWT 签发者（所有 BFF 委托此服务签发 token）
+├── gateway-bff/       # @vxture/bff-gateway   → 统一入口层（可选，路由分发 / 限流 / 灰度）
 ├── website-bff/       # @vxture/bff-website   → serves portals/website
 ├── admin-bff/         # @vxture/bff-admin     → serves portals/admin
 ├── console-bff/       # @vxture/bff-console   → serves portals/console
+├── ruyin-bff/         # @vxture/bff-ruyin     → serves agent-studio/ruyin ↔ agent-server/ruyin
 ├── vela-bff/          # @vxture/bff-vela      → serves embedded Vela surfaces
-├── agent01-bff/       # @vxture/bff-agent01   → serves agent-studio/agent01 ↔ agent-server/agent01
 └── agent{N}-bff/      # @vxture/bff-agent{N}  → serves agent-studio/agent{N} ↔ agent-server/agent{N}
 ```
 
@@ -40,6 +42,25 @@ bff/
 
 **一对一原则**：每个 BFF 精确服务一个前端消费者。
 前端永远不知道数据来自 `agent-server/` 还是 `services/` — BFF 是统一的数据出口。
+
+### auth-bff — 唯一 JWT 签发者
+
+`@vxture/bff-auth` 是**平台唯一有权签发 JWT 的服务**。
+
+其他所有 BFF 不持有 JWT 签名密钥，登录成功后通过内部调用委托 auth-bff 签发：
+
+```
+POST /auth/internal/sign   →   auth-bff 验证凭据并返回 signed JWT
+```
+
+**设计意图**：
+- 集中化密钥管理，私钥只存在于 auth-bff 的环境变量中
+- 其他 BFF 仅验证（verify）JWT，不签发（sign）
+- 第三方 OAuth（DingTalk、Feishu）回调统一在 auth-bff 中处理
+
+**约束**：
+- admin-bff 禁止配置第三方 OAuth — 运营后台仅支持邮箱密码登录
+- website-bff 支持第三方 OAuth（DingTalk）通过 auth-bff 处理回调
 
 ---
 

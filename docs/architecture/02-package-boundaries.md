@@ -73,12 +73,14 @@ import { debug } from '@vxture/shared';
 **Packages**:
 
 ```
-@vxture/core-api      # packages/core/api/
-@vxture/core-auth     # packages/core/auth/
-@vxture/core-config   # packages/core/config/
-@vxture/core-locale   # packages/core/locale/
-@vxture/core-tenant   # packages/core/tenant/
-@vxture/core-utils    # packages/core/utils/
+@vxture/core-api        # packages/core/api/
+@vxture/core-auth       # packages/core/auth/
+@vxture/core-config     # packages/core/config/
+@vxture/core-database   # packages/core/database/  (Prisma DDL 管理，server-side only)
+@vxture/core-locale     # packages/core/locale/
+@vxture/core-mail       # packages/core/mail/      (nodemailer 封装，server-side only)
+@vxture/core-tenant     # packages/core/tenant/
+@vxture/core-utils      # packages/core/utils/
 ```
 
 **Responsibilities**:
@@ -88,6 +90,8 @@ import { debug } from '@vxture/shared';
 - Localization / i18n
 - API base / infrastructure (request handling, interceptors, error normalization)
 - Authentication primitives (token validation, session helpers)
+- Database schema management and Prisma client (`core-database`)
+- Transactional email sending (`core-mail`)
 
 **Allowed dependencies**: `@vxture/shared` only.
 
@@ -155,11 +159,15 @@ The domain directory is for organization and team ownership — it does not appe
 
 ```
 services/
-├── commerce/
-│   ├── billing/        → @vxture/service-billing
-│   └── subscription/   → @vxture/service-subscription
-└── support/
-    └── ticket/         → @vxture/service-ticket
+├── ai/            gateway/        → @vxture/service-ai-gateway
+├── commerce/      billing/        → @vxture/service-billing
+│                  subscription/   → @vxture/service-subscription
+├── identity/      iam/            → @vxture/service-iam
+├── notification/  mail/           → @vxture/service-mail
+│                  sms/            → @vxture/service-sms
+├── support/       ticket/         → @vxture/service-ticket
+│                  workers/        → @vxture/workers
+└── tenant/        organization/   → @vxture/service-organization
 ```
 
 **Package naming**: Always `@vxture/service-{name}`. Never `@vxture/commerce-billing` or similar.
@@ -192,11 +200,13 @@ import { getBillingStatus } from '@vxture/service-billing';
 **Packages**:
 
 ```
+@vxture/bff-auth           # 唯一 JWT 签发者（所有 BFF 委托此包签发 Cookie）
+@vxture/bff-gateway        # 浏览器侧统一 API 入口网关
 @vxture/bff-website        # Serves portals/website
 @vxture/bff-admin          # Serves portals/admin
 @vxture/bff-console        # Serves portals/console
 @vxture/bff-vela           # Serves embedded agent-studio/vela ↔ agent-server/vela
-@vxture/bff-agent01        # Serves agent-studio/agent01 ↔ agent-server/agent01
+@vxture/bff-ruyin          # Serves agent-studio/ruyin ↔ agent-server/ruyin
 @vxture/bff-agent{N}       # Serves agent-studio/agent{N} ↔ agent-server/agent{N}
 ```
 
