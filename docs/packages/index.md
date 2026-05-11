@@ -44,6 +44,16 @@
 | [`bff/ruyin.md`](bff/ruyin.md) | `@vxture/bff-ruyin` | Ruyin Agent |
 | [`bff/vela.md`](bff/vela.md) | `@vxture/bff-vela` | Vela 智能助手 |
 
+**BFF 层通用约束：**
+
+**只有 `@vxture/bff-auth` 签发 JWT。** 其他 BFF 的认证流程：验证凭证 → 委托 auth-bff `POST /auth/internal/sign` 签发 Cookie → 本地只保留 `JwtService.verify`。
+
+- **middleware 执行顺序**：`auth` → `tenant` → `router`（console-bff 额外加 `permission`）
+- **错误隔离**：每个 router 独立 try/catch，不冒泡
+- **响应投影**：做字段投影，不透传后端原始结构
+- **auth-bff 调用路径**：平台 BFF（worker-01）容器直连 `http://vx-auth-bff:3090`；Agent BFF（worker-02）走 Tailscale `http://100.100.197.42:3090`
+- **禁止**：直接签发 JWT / 跨 BFF 代码引用 / 引入 `@vxture/ai-sdk` / BFF 层实现业务逻辑
+
 ## Service 层（Domain）
 
 | 文件 | 包名 | 业务域 |

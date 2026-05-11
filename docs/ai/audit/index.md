@@ -22,15 +22,4 @@
 
 ## 规则检查文件（rules/）
 
-| 文件 | 检查项 |
-|------|--------|
-| `rules/01-monorepo.md` | Monorepo 结构检查 |
-| `rules/02-folder-structure.md` | 目录结构检查 |
-| `rules/03-architecture.md` | 架构层级检查 |
-| `rules/04-dependency.md` | 包依赖检查 |
-| `rules/05-import-rules.md` | Import 规则检查 |
-| `rules/06-shared-layer.md` | Shared 层检查 |
-| `rules/07-core-layer.md` | Core 层检查 |
-| `rules/08-tsconfig.md` | TypeScript 配置检查 |
-| `rules/09-code-style.md` | 代码风格检查 |
-| `rules/10-comments.md` | 注释规范检查 |
+> 规则列表、执行顺序、加载逻辑见 → [`rules/index.md`](rules/index.md)
