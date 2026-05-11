@@ -758,99 +758,9 @@ a {
   gap: 0.55rem;
 }
 
-.vx-shell-header__search-shell {
-  position: relative;
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  width: 280px;
-  max-width: 100%;
-  justify-self: end;
-}
-
-.vx-shell-header__search-icon {
-  position: absolute;
-  top: 50%;
-  left: 0.72rem;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--vx-color-shell-icon-muted);
-  pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.vx-shell-header__search-input {
-  min-width: 0;
-  width: 100%;
-  min-height: 32px;
-  height: 32px;
-  padding: 0.3rem 0.75rem 0.3rem 2rem;
-  border-radius: var(--vx-component-metric-10p);
-  border-color: color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  background: color-mix(in srgb, var(--vx-color-white) 90%, transparent);
-  box-shadow: none;
-}
-
-.vx-shell-header__search-input::placeholder {
-  font-size: 0.8rem;
-  color: var(--vx-color-shell-subtle);
-}
-
 .vx-shell__content {
   min-width: 0;
   min-height: calc(100dvh - var(--vx-shell-header-height));
-}
-
-.vx-shell-icon-button {
-  width: 2.2rem;
-  height: 2.2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: var(--vx-component-metric-10p);
-  background: transparent;
-  color: var(--vx-color-text-muted);
-  transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms ease;
-}
-
-.vx-shell-icon-button:hover {
-  background: color-mix(in srgb, var(--vx-color-white) 78%, transparent);
-  color: var(--vx-console-text);
-}
-
-.vx-shell-icon-button--plain {
-  background: transparent;
-  box-shadow: none;
-}
-
-.vx-shell-icon-button--plain:hover {
-  background: transparent;
-  color: var(--vx-console-brand);
-}
-
-.vx-shell-icon-button--rail {
-  width: var(--vx-shell-sidebar-collapsed-width);
-  flex: 0 0 var(--vx-shell-sidebar-collapsed-width);
-  height: var(--vx-shell-rail-height);
-  border-radius: var(--vx-component-metric-14p);
-  background: transparent;
-  box-shadow: none;
-  margin-left: 0;
-  justify-content: flex-start;
-  padding-left: var(--vx-shell-sidebar-icon-inset);
-  color: color-mix(in srgb, var(--vx-color-shell-text) 46%, transparent);
-  appearance: none;
-}
-
-.vx-shell-icon-button--rail:hover {
-  background: color-mix(in srgb, var(--vx-color-white) 36%, transparent);
-  color: color-mix(in srgb, var(--vx-color-shell-text) 64%, transparent);
 }
 
 .vx-shell-sidebar__toggle-icon {
@@ -898,34 +808,6 @@ a {
   padding-top: 0;
   padding-bottom: 0;
   border-top-color: transparent;
-}
-
-.vx-shell-icon-button--utility {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
-.vx-shell-icon-button--toolbar {
-  width: 2.15rem;
-  height: 2.15rem;
-  border-radius: 9px;
-}
-
-.vx-shell-icon-button--toolbar:hover {
-  color: var(--vx-console-text);
-}
-
-.vx-shell-icon-button--assistant {
-  width: 2.4rem;
-  height: 2.15rem;
-  border-radius: var(--vx-component-metric-10p);
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
-  color: var(--vx-console-brand);
-}
-
-.vx-shell-icon-button--active {
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 10%, transparent);
-  color: var(--vx-console-brand);
 }
 
 .vx-shell-header__actions {
@@ -1396,25 +1278,6 @@ body.dark {
   line-height: 1;
 }
 
-.vx-shell-header__search-shell {
-  width: min(520px, 100%);
-  justify-self: stretch;
-}
-
-.vx-shell-header__search-input {
-  height: 2.25rem;
-  min-height: 2.25rem;
-  border: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
-  border-radius: var(--vx-radius-full);
-  background: var(--vx-color-shell-panel);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent);
-}
-
-.dark .vx-shell-header__search-input {
-  background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
-  border-color: var(--vx-color-border);
-}
-
 .vx-shell-header__actions {
   gap: 0.9rem;
 }
@@ -1459,28 +1322,6 @@ body.dark {
   white-space: nowrap;
 }
 
-.vx-shell-icon-button {
-  color: var(--vx-color-shell-icon);
-  cursor: pointer;
-}
-
-.dark .vx-shell-icon-button {
-  color: var(--vx-color-text-muted);
-}
-
-.vx-shell-icon-button:hover {
-  background: var(--vx-console-brand-soft);
-  color: var(--vx-console-brand-strong);
-  transform: none;
-}
-
-.vx-shell-icon-button--toolbar,
-.vx-shell-icon-button--assistant {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 9px;
-}
-
 .vx-shell-user {
   width: 2rem;
   height: 2rem;
@@ -1510,35 +1351,6 @@ body.dark {
   border-radius: var(--vx-radius-full);
 }
 
-.vx-shell-agent-button {
-  width: 2rem;
-  height: 2rem;
-  display: inline-grid;
-  place-items: center;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  padding: 0;
-  cursor: pointer;
-  transition: opacity 180ms ease;
-}
-
-.vx-shell-agent-button:hover,
-.vx-shell-agent-button--active {
-  background: transparent;
-  opacity: 0.84;
-}
-
-.dark .vx-shell-agent-button {
-  background: transparent;
-}
-
-.vx-shell-agent-button__icon {
-  display: block;
-  width: 2rem;
-  height: 2rem;
-}
-
 .vx-shell__body {
   gap: 0;
 }
@@ -1561,15 +1373,6 @@ body.dark {
 .vx-shell-sidebar__rail {
   min-height: 2.4rem;
   padding-left: 0.65rem;
-}
-
-.vx-shell-icon-button--rail {
-  width: 2.5rem;
-  height: 2.5rem;
-  flex-basis: 2.5rem;
-  justify-content: center;
-  padding: 0;
-  border-radius: var(--vx-component-metric-10p);
 }
 
 .vx-shell-sidebar__tenant-switcher {

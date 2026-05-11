@@ -2437,6 +2437,45 @@
   --vx-directory-header-text-align: left;
   --vx-directory-edge-justify: auto;
   --vx-directory-edge-text-align: inherit;
+  --vx-shell-search-width: min(520px, 100%);
+  --vx-shell-search-justify: stretch;
+  --vx-shell-search-icon-color: var(--vx-color-shell-icon-muted);
+  --vx-shell-search-height: 2.25rem;
+  --vx-shell-search-border: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  --vx-shell-search-radius: var(--vx-radius-full);
+  --vx-shell-search-background: var(--vx-color-shell-panel);
+  --vx-shell-search-shadow: inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent);
+  --vx-shell-search-placeholder-size: var(--vx-shell-item-size, 0.8rem);
+  --vx-shell-search-placeholder-color: var(--vx-color-shell-subtle);
+  --vx-shell-search-dark-border-color: var(--vx-color-border);
+  --vx-shell-search-dark-background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  --vx-shell-icon-button-size: 2rem;
+  --vx-shell-icon-button-radius: var(--vx-shell-radius-control, 9px);
+  --vx-shell-icon-button-color: var(--vx-color-shell-icon);
+  --vx-shell-icon-button-dark-color: var(--vx-color-text-muted);
+  --vx-shell-icon-button-hover-background: var(--vx-console-brand-soft);
+  --vx-shell-icon-button-hover-color: var(--vx-console-brand-strong);
+  --vx-shell-icon-button-toolbar-size: 2rem;
+  --vx-shell-icon-button-toolbar-radius: 9px;
+  --vx-shell-icon-button-active-background: color-mix(in srgb, var(--vx-color-shell-brand) 10%, transparent);
+  --vx-shell-icon-button-active-color: var(--vx-console-brand);
+  --vx-shell-icon-button-rail-width: 2.5rem;
+  --vx-shell-icon-button-rail-height: 2.5rem;
+  --vx-shell-icon-button-rail-flex-basis: 2.5rem;
+  --vx-shell-icon-button-rail-radius: var(--vx-component-metric-10p);
+  --vx-shell-icon-button-rail-justify: center;
+  --vx-shell-icon-button-rail-padding-left: 0;
+  --vx-shell-icon-button-rail-color: color-mix(in srgb, var(--vx-color-shell-text) 46%, transparent);
+  --vx-shell-icon-button-rail-hover-background: color-mix(in srgb, var(--vx-color-white) 36%, transparent);
+  --vx-shell-icon-button-rail-hover-color: color-mix(in srgb, var(--vx-color-shell-text) 64%, transparent);
+  --vx-shell-icon-button-utility-size: 2.5rem;
+  --vx-shell-icon-button-assistant-size: 2rem;
+  --vx-shell-icon-button-assistant-radius: 9px;
+  --vx-shell-icon-button-assistant-background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  --vx-shell-icon-button-assistant-color: var(--vx-console-brand);
+  --vx-shell-agent-button-size: 2rem;
+  --vx-shell-agent-button-icon-size: 2rem;
+  --vx-shell-agent-button-hover-opacity: 0.84;
 }
 
 .vx-models-page {
@@ -4096,6 +4135,9 @@
   --vx-shell-assistant-line: var(--vx-color-neutral-border);
   --vx-shell-assistant-shadow: -12px 0 24px -24px color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent);
   --vx-shell-floating-shadow: 0 18px 48px -34px color-mix(in srgb, var(--vx-color-brand-800) 34%, transparent);
+  --vx-shell-agent-button-size: 2.5rem;
+  --vx-shell-agent-button-icon-size: 2.25rem;
+  --vx-shell-agent-button-hover-opacity: 0.86;
 }
 
 :where(.dark .admin-shell) {
@@ -4118,6 +4160,164 @@
   --vx-shell-assistant-line: color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
   --vx-shell-assistant-shadow: -12px 0 24px -24px var(--vx-color-primary-soft);
   --vx-shell-floating-shadow: 0 18px 48px -34px color-mix(in srgb, var(--vx-color-primary) 30%, transparent);
+}
+
+.vx-shell-header__search-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: var(--vx-shell-search-width, min(520px, 100%));
+  max-width: 100%;
+  justify-self: var(--vx-shell-search-justify, stretch);
+}
+
+.vx-shell-header__search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.72rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vx-shell-search-icon-color, var(--vx-shell-icon-muted, var(--vx-color-shell-icon-muted)));
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.vx-shell-header__search-input {
+  min-width: 0;
+  width: 100%;
+  min-height: var(--vx-shell-search-height, 2.25rem);
+  height: var(--vx-shell-search-height, 2.25rem);
+  padding: 0.3rem 0.75rem 0.3rem 2rem;
+  border: var(--vx-shell-search-border, 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent));
+  border-radius: var(--vx-shell-search-radius, var(--vx-shell-radius-pill, var(--vx-radius-full)));
+  background: var(--vx-shell-search-background, var(--vx-color-shell-panel));
+  box-shadow: var(--vx-shell-search-shadow, inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent));
+}
+
+.vx-shell-header__search-input::placeholder {
+  color: var(--vx-shell-search-placeholder-color, var(--vx-shell-subtle, var(--vx-color-shell-subtle)));
+  font-size: var(--vx-shell-search-placeholder-size, var(--vx-shell-item-size, 0.8rem));
+}
+
+.dark .vx-shell-header__search-input {
+  border-color: var(--vx-shell-search-dark-border-color, var(--vx-color-border));
+  background: var(--vx-shell-search-dark-background, color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent));
+}
+
+.vx-shell-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--vx-shell-icon-button-size, 2rem);
+  height: var(--vx-shell-icon-button-size, 2rem);
+  border: 0;
+  border-radius: var(--vx-shell-icon-button-radius, var(--vx-shell-radius-control, 9px));
+  background: transparent;
+  color: var(--vx-shell-icon-button-color, var(--vx-shell-icon, var(--vx-color-shell-icon)));
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
+}
+
+.dark .vx-shell-icon-button {
+  color: var(--vx-shell-icon-button-dark-color, var(--vx-shell-icon, var(--vx-color-text-muted)));
+}
+
+.vx-shell-icon-button:hover {
+  background: var(--vx-shell-icon-button-hover-background, var(--vx-console-brand-soft));
+  color: var(--vx-shell-icon-button-hover-color, var(--vx-console-brand-strong));
+  transform: none;
+}
+
+.vx-shell-icon-button--plain {
+  background: transparent;
+  box-shadow: none;
+}
+
+.vx-shell-icon-button--plain:hover {
+  background: transparent;
+  color: var(--vx-console-brand);
+}
+
+.vx-shell-icon-button--toolbar {
+  width: var(--vx-shell-icon-button-toolbar-size, 2rem);
+  height: var(--vx-shell-icon-button-toolbar-size, 2rem);
+  border-radius: var(--vx-shell-icon-button-toolbar-radius, var(--vx-shell-radius-control, 9px));
+}
+
+.vx-shell-icon-button--toolbar:hover {
+  color: var(--vx-shell-icon-button-toolbar-hover-color, var(--vx-shell-icon-button-hover-color, var(--vx-console-brand-strong)));
+}
+
+.vx-shell-icon-button--active {
+  background: var(--vx-shell-icon-button-active-background, color-mix(in srgb, var(--vx-color-shell-brand) 10%, transparent));
+  color: var(--vx-shell-icon-button-active-color, var(--vx-console-brand));
+}
+
+.vx-shell-icon-button--utility {
+  width: var(--vx-shell-icon-button-utility-size, 2.5rem);
+  height: var(--vx-shell-icon-button-utility-size, 2.5rem);
+}
+
+.vx-shell-icon-button--assistant {
+  width: var(--vx-shell-icon-button-assistant-size, 2rem);
+  height: var(--vx-shell-icon-button-assistant-size, 2rem);
+  border-radius: var(--vx-shell-icon-button-assistant-radius, var(--vx-shell-icon-button-toolbar-radius, 9px));
+  background: var(--vx-shell-icon-button-assistant-background, transparent);
+  color: var(--vx-shell-icon-button-assistant-color, var(--vx-shell-icon-button-color, var(--vx-console-brand)));
+}
+
+.vx-shell-icon-button--rail {
+  width: var(--vx-shell-icon-button-rail-width, var(--vx-shell-sidebar-collapsed-width));
+  height: var(--vx-shell-icon-button-rail-height, var(--vx-shell-rail-height));
+  flex: 0 0 var(--vx-shell-icon-button-rail-flex-basis, var(--vx-shell-sidebar-collapsed-width));
+  justify-content: var(--vx-shell-icon-button-rail-justify, flex-start);
+  margin-left: var(--vx-shell-icon-button-rail-margin-left, 0);
+  padding-left: var(--vx-shell-icon-button-rail-padding-left, var(--vx-shell-sidebar-icon-inset));
+  border-radius: var(--vx-shell-icon-button-rail-radius, var(--vx-component-metric-14p));
+  background: transparent;
+  box-shadow: none;
+  color: var(--vx-shell-icon-button-rail-color, color-mix(in srgb, var(--vx-color-shell-text) 46%, transparent));
+  appearance: none;
+}
+
+.vx-shell-icon-button--rail:hover {
+  background: var(--vx-shell-icon-button-rail-hover-background, color-mix(in srgb, var(--vx-color-white) 36%, transparent));
+  color: var(--vx-shell-icon-button-rail-hover-color, color-mix(in srgb, var(--vx-color-shell-text) 64%, transparent));
+}
+
+.vx-shell-agent-button {
+  display: inline-grid;
+  place-items: center;
+  width: var(--vx-shell-agent-button-size, 2rem);
+  height: var(--vx-shell-agent-button-size, 2rem);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  transition: opacity 180ms ease;
+}
+
+.vx-shell-agent-button:hover,
+.vx-shell-agent-button--active {
+  background: transparent;
+  opacity: var(--vx-shell-agent-button-hover-opacity, 0.84);
+}
+
+.dark .vx-shell-agent-button {
+  background: transparent;
+}
+
+.vx-shell-agent-button__icon {
+  display: block;
+  width: var(--vx-shell-agent-button-icon-size, 2rem);
+  height: var(--vx-shell-agent-button-icon-size, 2rem);
 }
 
 @media (max-width: 1180px) {
