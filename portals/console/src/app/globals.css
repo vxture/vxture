@@ -1256,57 +1256,6 @@ a {
   background: var(--vx-color-gray-900);
 }
 
-.vx-account-profile-page {
-  max-width: none;
-  gap: 0.45rem;
-}
-
-.vx-account-profile-page .vx-page-header {
-  grid-template-columns: 1fr;
-  align-items: start;
-  gap: 1rem;
-  margin-bottom: 1.55rem;
-}
-
-.vx-account-profile-page .vx-page-header__copy {
-  gap: 0.62rem;
-}
-
-.vx-account-profile-page .vx-page-header h1 {
-  font-size: clamp(1.08rem, 1.28vw, 1.32rem);
-  line-height: 1.28;
-  font-weight: 760;
-}
-
-.vx-notifications-page .vx-page-header h1 {
-  font-size: clamp(1.1rem, 1.2vw, 1.28rem);
-  line-height: 1.25;
-  font-weight: 760;
-}
-
-.vx-notification-table__header {
-  padding: 0 1rem 0.35rem;
-}
-
-.vx-notification-table__row {
-  padding: 0.72rem 1rem;
-}
-
-.vx-tenant-settings-page .vx-page-header h1 {
-  font-size: clamp(1.08rem, 1.28vw, 1.32rem);
-  line-height: 1.28;
-  font-weight: 760;
-}
-
-.vx-tenant-settings-list__header {
-  padding: 0 1rem 0.35rem;
-}
-
-.vx-tenant-settings-row,
-.vx-tenant-settings-danger-row {
-  padding: 0.72rem 1rem;
-}
-
 html,
 body {
   background: var(--vx-console-bg);

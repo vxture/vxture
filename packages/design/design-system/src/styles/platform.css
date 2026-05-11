@@ -14,6 +14,9 @@
 :where(.vx-account-profile-page) {
   --vx-account-profile-text-size: var(--vx-component-metric-084r);
   --vx-account-profile-meta-size: var(--vx-component-metric-078r);
+  --vx-account-profile-title-size: clamp(1.08rem, 1.28vw, 1.32rem);
+  --vx-account-profile-title-line-height: 1.28;
+  --vx-account-profile-title-weight: 760;
 }
 
 .console-preferences {
@@ -284,6 +287,28 @@
 
 .vx-profile-page {
   max-width: 980px;
+}
+
+.vx-account-profile-page {
+  max-width: none;
+  gap: 0.45rem;
+}
+
+.vx-account-profile-page .vx-page-header {
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 1rem;
+  margin-bottom: 1.55rem;
+}
+
+.vx-account-profile-page .vx-page-header__copy {
+  gap: 0.62rem;
+}
+
+.vx-account-profile-page .vx-page-header h1 {
+  font-size: var(--vx-account-profile-title-size);
+  line-height: var(--vx-account-profile-title-line-height);
+  font-weight: var(--vx-account-profile-title-weight);
 }
 
 .vx-profile-message,
@@ -1129,6 +1154,9 @@
   --vx-notification-panel-strong: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
   --vx-notification-line: var(--vx-color-auth-border);
   --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-auth-accent) 22%, transparent);
+  --vx-notification-title-size: clamp(1.1rem, 1.2vw, 1.28rem);
+  --vx-notification-title-line-height: 1.25;
+  --vx-notification-title-weight: 760;
 }
 
 :where(.dark .vx-notifications-page) {
@@ -1155,6 +1183,12 @@
 
 .vx-notifications-page .vx-page-header__description {
   display: none;
+}
+
+.vx-notifications-page .vx-page-header h1 {
+  font-size: var(--vx-notification-title-size);
+  line-height: var(--vx-notification-title-line-height);
+  font-weight: var(--vx-notification-title-weight);
 }
 
 .vx-notifications-page .vx-page-header__title-row .vx-badge {
@@ -1340,9 +1374,12 @@
 }
 
 .vx-notification-table__header {
+  justify-items: var(--vx-notification-table-header-justify, stretch);
+  padding: var(--vx-notification-table-header-padding, 0 1rem 0.35rem);
   color: var(--vx-color-text-muted);
   font-size: var(--vx-notification-meta-size);
   font-weight: 740;
+  text-align: var(--vx-notification-table-header-text-align, left);
 }
 
 .dark .vx-notification-table__header {
@@ -1361,8 +1398,11 @@
 
 .vx-notification-table__row {
   min-height: 3.82rem;
+  justify-items: var(--vx-notification-table-row-justify, stretch);
+  padding: var(--vx-notification-table-row-padding, 0.72rem 1rem);
   border-bottom: 1px dashed color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
   background: transparent;
+  text-align: var(--vx-notification-table-row-text-align, left);
   transition:
     background 160ms ease,
     border-color 160ms ease,
@@ -1429,6 +1469,18 @@
 .vx-notification-check--locked {
   cursor: not-allowed;
   opacity: 0.62;
+}
+
+.vx-notification-check input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  accent-color: var(--vx-console-brand);
+  cursor: pointer;
+}
+
+.vx-notification-check input:disabled {
+  cursor: not-allowed;
 }
 
 .vx-notification-status {
@@ -1504,6 +1556,9 @@
   --vx-tenant-settings-text-size: var(--vx-component-metric-084r);
   --vx-tenant-settings-meta-size: var(--vx-component-metric-078r);
   --vx-tenant-settings-line: color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
+  --vx-tenant-settings-title-size: clamp(1.08rem, 1.28vw, 1.32rem);
+  --vx-tenant-settings-title-line-height: 1.28;
+  --vx-tenant-settings-title-weight: 760;
 }
 
 :where(.dark .vx-tenant-settings-page) {
@@ -1528,6 +1583,12 @@
 .vx-tenant-settings-page .vx-page-header__description {
   max-width: 48rem;
   font-size: var(--vx-tenant-settings-meta-size);
+}
+
+.vx-tenant-settings-page .vx-page-header h1 {
+  font-size: var(--vx-tenant-settings-title-size);
+  line-height: var(--vx-tenant-settings-title-line-height);
+  font-weight: var(--vx-tenant-settings-title-weight);
 }
 
 .vx-tenant-settings-page .vx-page-header__title-row .vx-badge,
@@ -1697,9 +1758,12 @@
 }
 
 .vx-tenant-settings-list__header {
+  justify-items: var(--vx-tenant-settings-list-header-justify, stretch);
+  padding: var(--vx-tenant-settings-list-header-padding, 0 1rem 0.35rem);
   color: var(--vx-color-text-muted);
   font-size: var(--vx-tenant-settings-meta-size);
   font-weight: 740;
+  text-align: var(--vx-tenant-settings-list-header-text-align, left);
 }
 
 .dark .vx-tenant-settings-list__header {
@@ -1713,8 +1777,11 @@
 .vx-tenant-settings-row,
 .vx-tenant-settings-danger-row {
   min-height: 4.05rem;
+  justify-items: var(--vx-tenant-settings-row-justify, stretch);
+  padding: var(--vx-tenant-settings-row-padding, 0.72rem 1rem);
   border-bottom: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 7%, transparent);
   background: transparent;
+  text-align: var(--vx-tenant-settings-row-text-align, left);
   transition:
     background 160ms ease,
     border-color 160ms ease,
@@ -2228,6 +2295,27 @@
   --vx-directory-header-text-align: center;
   --vx-directory-edge-justify: center;
   --vx-directory-edge-text-align: center;
+  --vx-account-profile-title-size: var(--vx-admin-page-title-size);
+  --vx-account-profile-title-line-height: 1.24;
+  --vx-account-profile-title-weight: 740;
+  --vx-notification-title-size: var(--vx-admin-page-title-size);
+  --vx-notification-title-line-height: 1.24;
+  --vx-notification-title-weight: 740;
+  --vx-notification-table-header-justify: center;
+  --vx-notification-table-header-padding: 0 0 0.35rem;
+  --vx-notification-table-header-text-align: center;
+  --vx-notification-table-row-justify: start;
+  --vx-notification-table-row-padding: 0.72rem 0;
+  --vx-notification-table-row-text-align: left;
+  --vx-tenant-settings-title-size: var(--vx-admin-page-title-size);
+  --vx-tenant-settings-title-line-height: 1.24;
+  --vx-tenant-settings-title-weight: 740;
+  --vx-tenant-settings-list-header-justify: center;
+  --vx-tenant-settings-list-header-padding: 0 0 0.35rem;
+  --vx-tenant-settings-list-header-text-align: center;
+  --vx-tenant-settings-row-justify: start;
+  --vx-tenant-settings-row-padding: 0.72rem 0;
+  --vx-tenant-settings-row-text-align: left;
   --vx-models-page-width: 100%;
   --vx-models-page-gap: 1rem;
   --vx-models-page-header-margin-bottom: 1rem;
