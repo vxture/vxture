@@ -2,7 +2,7 @@
 
 > 范围：`portals/admin/src/`
 > 更新：2026-05-03
-> 路由与菜单规格见 [`admin-menu.md`](admin-menu.md)
+> 路由与菜单规格见 [`menu.md`](menu.md)
 
 ---
 

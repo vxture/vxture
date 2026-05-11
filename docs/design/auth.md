@@ -131,6 +131,42 @@ https://auth.vxture.com/oauth/wecom/callback
 
 一个 Vxture 账号可绑定多个平台，任意一个平台登录均可进入同一个账号。
 
+### 钉钉配置参考
+
+**使用范围**：钉钉三方授权只用于 `website + console` 的同一套租户用户账号体系。禁止用于 `admin`（不在 admin-bff 配置钉钉 OAuth，不允许钉钉账号签发平台管理员 token）。
+
+**环境变量**（配置于根目录 `.env.local` / `bff/website-bff/.env.example`）：
+
+```env
+DINGTALK_APP_KEY=
+DINGTALK_APP_SECRET=
+DINGTALK_SUITE_KEY=
+DINGTALK_SUITE_SECRET=
+DINGTALK_CALLBACK_TOKEN=
+DINGTALK_CALLBACK_AES_KEY=
+DINGTALK_REDIRECT_URI=
+```
+
+企业内部应用填 `DINGTALK_APP_KEY / DINGTALK_APP_SECRET`；第三方企业应用填 `DINGTALK_SUITE_KEY / DINGTALK_SUITE_SECRET`。`CALLBACK_TOKEN` 和 `CALLBACK_AES_KEY` 用于事件回调加解密。
+
+**回调地址**：
+
+```
+生产：https://auth.vxture.com/auth/oauth/dingtalk/callback
+本地：http://localhost:3090/auth/oauth/dingtalk/callback
+```
+
+钉钉开放平台配置的回调地址必须与 `DINGTALK_REDIRECT_URI` 完全一致。
+
+**后端路由入口**（经 gateway 暴露）：
+
+```
+GET /auth-api/auth/oauth/dingtalk/start
+GET /auth-api/auth/oauth/dingtalk/callback
+```
+
+callback 只允许签发 `userType = tenant_user`、`authScope = tenant_console` 的会话；`state.returnTo` 只接受 `website` / `console`，禁止 `admin`。
+
 ---
 
 ## 4. JWT 设计
