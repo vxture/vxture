@@ -29,7 +29,7 @@ middleware 顺序与其他 BFF 不同，加了第三级：`auth → tenant → p
 | `billing.router.ts` | `/api/billing` | 账单查询 |
 | `subscription.router.ts` | `/api/subscription` | 订阅状态、feature 开关查询 |
 | `capabilities.router.ts` | `/api/capabilities` | 租户功能能力列表 |
-| `tenant-context.router.ts` | `/api/tenant` | 租户上下文信息 |
+| `tenant-context.router.ts` | `/api/tenant-context` | 租户上下文信息 |
 | `phone-auth.router.ts` | `/api/phone` | 手机号验证码认证 |
 | `health.router.ts` | `/health` | 健康检查 |
 

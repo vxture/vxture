@@ -2,7 +2,7 @@
 
 > 版本：1.0.0 | 更新：2026-05-11
 > 技术实现：[`docs/packages/portals/console.md`](../../../packages/portals/console.md)
-> BFF：[`docs/packages/bff/console-bff.md`](../../../packages/bff/console-bff.md)
+> BFF：[`docs/packages/bff/console.md`](../../../packages/bff/console.md)
 
 ---
 

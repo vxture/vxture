@@ -7,6 +7,6 @@
 
 | 文件 | 内容 |
 |------|------|
-| [`git-workflow.md`](Vxture-Git-Workflow-Specification.md) | Git 工作流规范：分支策略、提交格式、PR 流程 |
-| [`locale-layer.md`](Vxture-Locale-Layer-Specification.md) | Locale 层规范：i18n key 命名、翻译文件结构 |
-| [`utils-layer.md`](Vxture-Utils-Layer-Specification.md) | Utils 层规范：工具函数分层、命名约定 |
+| [`git-workflow.md`](git-workflow.md) | Git 工作流规范：分支策略、提交格式、PR 流程 |
+| [`locale-layer.md`](locale-layer.md) | Locale 层规范：i18n key 命名、翻译文件结构 |
+| [`utils-layer.md`](utils-layer.md) | Utils 层规范：工具函数分层、命名约定 |

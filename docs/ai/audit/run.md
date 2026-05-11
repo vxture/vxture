@@ -11,26 +11,26 @@
 |------|------|
 | PR 合并前（新增包 / 重构层边界） | 手动触发 |
 | 大版本发布前 | 手动触发 |
-| CI 流水线（可选门控） | 见 [ai-audit-ci-gate.md](ai-audit-ci-gate.md) |
+| CI 流水线（可选门控） | 见 [ci-gate.md](ci-gate.md) |
 
 ## 执行方式
 
 向 Claude Code 发送以下指令：
 
 ```
-请读取 docs/ai/audit/ai-audit-prompt.md，然后对以下包执行完整的合规审计：
-[包名列表，或写"所有已完成包（见 ai-audit-scope.md）"]
+请读取 docs/ai/audit/prompt.md，然后对以下包执行完整的合规审计：
+[包名列表，或写"所有已完成包（见 scope.md）"]
 ```
 
 Claude 将：
-1. 读取 `ai-audit-scope.md` 确认审计范围
+1. 读取 `scope.md` 确认审计范围
 2. 按 `rules/index.md` 顺序依次执行 01–10 规则
 3. 生成报告，文件名格式 `ai-rules-audit-YYYY-MM-DD.md`
-4. 按 `ai-issue-severity.md` 分级（P0–P3）
+4. 按 `severity.md` 分级（P0–P3）
 
 ## 审计范围
 
-已完成包（必须审计）的定义见 [ai-audit-scope.md](ai-audit-scope.md)。
+已完成包（必须审计）的定义见 [scope.md](scope.md)。
 
 未完成包（⚠️ 标注的）跳过审计，直到标记为完成。
 
@@ -45,4 +45,4 @@ Claude 将：
 | P2 | 代码规范问题 | ❌ 否（警告） |
 | P3 | 注释 / 风格建议 | ❌ 否（提示） |
 
-详见 [ai-issue-severity.md](ai-issue-severity.md)。
+详见 [severity.md](severity.md)。

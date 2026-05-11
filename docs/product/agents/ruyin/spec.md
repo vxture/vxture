@@ -2,7 +2,7 @@
 
 > 版本：0.1.0 | 更新：2026-05-11
 > 状态：🟡 server 端运行中，agent-studio 待建设
-> 技术文档：[`docs/packages/agents/ruyin-server.md`](../../../packages/agents/ruyin-server.md) · [`docs/packages/bff/ruyin-bff.md`](../../../packages/bff/ruyin-bff.md)
+> 技术文档：[`docs/packages/agents/ruyin/server.md`](../../../packages/agents/ruyin/server.md) · [`docs/packages/bff/ruyin.md`](../../../packages/bff/ruyin.md)
 
 ---
 

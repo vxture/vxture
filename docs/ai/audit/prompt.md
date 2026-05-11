@@ -26,7 +26,7 @@ docs/ai/coding-style.md
 
 Audit Scope
 
-docs/ai/audit/ai-audit-scope.md
+docs/ai/audit/scope.md
 
 ## Objective
 
@@ -65,7 +65,7 @@ You must NOT:
 
 Completed packages are defined in:
 
-docs/ai/audit/ai-audit-scope.md
+docs/ai/audit/scope.md
 
 Do NOT audit packages not listed there.
 
@@ -86,7 +86,7 @@ ai-rules-audit-YYYY-MM-DD.md
 
 Use the report template defined in:
 
-docs/ai/audit/ai-audit-report-template.md
+docs/ai/audit/report-template.md
 
 ## Execution Steps
 

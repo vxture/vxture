@@ -36,13 +36,13 @@
 
 | 文件 | 包名 | 服务对象 |
 |------|------|---------|
-| [`bff/auth-bff.md`](bff/auth-bff.md) | `@vxture/bff-auth` | 统一认证网关（唯一 JWT 签发者） |
-| [`bff/gateway-bff.md`](bff/gateway-bff.md) | `@vxture/bff-gateway` | 浏览器侧统一 API 入口网关 |
-| [`bff/admin-bff.md`](bff/admin-bff.md) | `@vxture/bff-admin` | 运营后台 |
-| [`bff/console-bff.md`](bff/console-bff.md) | `@vxture/bff-console` | 租户工作台 |
-| [`bff/website-bff.md`](bff/website-bff.md) | `@vxture/bff-website` | 营销站点 |
-| [`bff/ruyin-bff.md`](bff/ruyin-bff.md) | `@vxture/bff-ruyin` | Ruyin Agent |
-| [`bff/vela-bff.md`](bff/vela-bff.md) | `@vxture/bff-vela` | Vela 智能助手 |
+| [`bff/auth.md`](bff/auth.md) | `@vxture/bff-auth` | 统一认证网关（唯一 JWT 签发者） |
+| [`bff/gateway.md`](bff/gateway.md) | `@vxture/bff-gateway` | 浏览器侧统一 API 入口网关 |
+| [`bff/admin.md`](bff/admin.md) | `@vxture/bff-admin` | 运营后台 |
+| [`bff/console.md`](bff/console.md) | `@vxture/bff-console` | 租户工作台 |
+| [`bff/website.md`](bff/website.md) | `@vxture/bff-website` | 营销站点 |
+| [`bff/ruyin.md`](bff/ruyin.md) | `@vxture/bff-ruyin` | Ruyin Agent |
+| [`bff/vela.md`](bff/vela.md) | `@vxture/bff-vela` | Vela 智能助手 |
 
 ## Service 层（Domain）
 
@@ -61,15 +61,15 @@
 
 | 文件 | 名称 | 职责摘要 |
 |------|------|---------|
-| [`agents/vela-server.md`](agents/vela-server.md) | `vela-server` | Vela Tool Use Loop / SSE / 会话持久化 |
-| [`agents/ruyin-server.md`](agents/ruyin-server.md) | `ruyin-server` | Ruyin Agent 私有后端 |
+| [`agents/vela/server.md`](agents/vela/server.md) | `vela-server` | Vela Tool Use Loop / SSE / 会话持久化 |
+| [`agents/ruyin/server.md`](agents/ruyin/server.md) | `ruyin-server` | Ruyin Agent 私有后端 |
 
 ## Agent Studio 层（Presentation）
 
 | 文件 | 包名 | 职责摘要 |
 |------|------|---------|
-| [`agents/vela-studio.md`](agents/vela-studio.md) | `@vxture/agent-studio-vela` | Vela 智能助手前端（嵌入式微前端） |
-| [`agents/ruyin-studio.md`](agents/ruyin-studio.md) | `@vxture/ruyin` | Ruyin 智能体独立应用（Next.js） |
+| [`agents/vela/studio.md`](agents/vela/studio.md) | `@vxture/agent-studio-vela` | Vela 智能助手前端（嵌入式微前端） |
+| [`agents/ruyin/studio.md`](agents/ruyin/studio.md) | `@vxture/ruyin` | Ruyin 智能体独立应用（Next.js） |
 
 ## Portal 层（Presentation）
 

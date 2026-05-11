@@ -133,4 +133,4 @@ svc:rl:{scope}:1d:{phone}     ← 1 天限流计数（TTL 86400s）
 - `docs/status.md` → T01（邮件系统）实施状态
 - `docs/packages/services/mail.md` — service-mail 包约束
 - `docs/packages/services/sms.md` — service-sms 包约束
-- `docs/packages/bff/console-bff.md` — phone-auth.router.ts 入口
+- `docs/packages/bff/console.md` — phone-auth.router.ts 入口

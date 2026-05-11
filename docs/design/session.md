@@ -119,5 +119,5 @@ TTL 30s + GETDEL 原子操作确保令牌单次有效，防止重放。
 ## 参考文档
 
 - `docs/design/auth.md` — 完整认证体系设计
-- `docs/packages/bff/auth-bff.md` — auth-bff 关键约束
+- `docs/packages/bff/auth.md` — auth-bff 关键约束
 - `packages/shared/shared/src/constants/auth.constants.ts` — Cookie 常量定义

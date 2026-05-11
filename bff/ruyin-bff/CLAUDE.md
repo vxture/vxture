@@ -9,6 +9,6 @@
 | 1. 全局规则 | 根目录 `CLAUDE.md`（G1–G6） |
 | 2. 任务路由 | [`docs/agent.md`](../../../docs/agent.md) |
 | 3. 层架构规范 | [`docs/architecture/10-bff-layer.md`](../../../docs/architecture/10-bff-layer.md) |
-| 4. 包实现上下文 | [`docs/packages/bff/ruyin-bff.md`](../../../docs/packages/bff/ruyin-bff.md) |
+| 4. 包实现上下文 | [`docs/packages/bff/ruyin.md`](../../../docs/packages/bff/ruyin.md) |
 
 > 职责：Ruyin Agent BFF，跨域 SSO via auth-bff，BullMQ 状态查询

@@ -22,16 +22,16 @@ This order ensures that foundational structural issues are detected before code-
 
 | Order | Rule                     | File                         |
 | ----- | ------------------------ | ---------------------------- |
-| 01    | Monorepo Structure Check | 01-monorepo-check.md         |
-| 02    | Folder Structure Check   | 02-folder-structure-check.md |
-| 03    | Architecture Layer Check | 03-architecture-check.md     |
-| 04    | Dependency Rules Check   | 04-dependency-check.md       |
-| 05    | Import Rules Check       | 05-import-rules-check.md     |
-| 06    | Shared Layer Check       | 06-shared-layer-check.md     |
-| 07    | Core Layer Check         | 07-core-layer-check.md       |
-| 08    | TypeScript Config Check  | 08-tsconfig-check.md         |
-| 09    | Code Style Check         | 09-code-style-check.md       |
-| 10    | Comments Standard Check  | 10-comments-check.md         |
+| 01    | Monorepo Structure Check | 01-monorepo.md         |
+| 02    | Folder Structure Check   | 02-folder-structure.md |
+| 03    | Architecture Layer Check | 03-architecture.md     |
+| 04    | Dependency Rules Check   | 04-dependency.md       |
+| 05    | Import Rules Check       | 05-import-rules.md     |
+| 06    | Shared Layer Check       | 06-shared-layer.md     |
+| 07    | Core Layer Check         | 07-core-layer.md       |
+| 08    | TypeScript Config Check  | 08-tsconfig.md         |
+| 09    | Code Style Check         | 09-code-style.md       |
+| 10    | Comments Standard Check  | 10-comments.md         |
 
 # Rule Descriptions
 
@@ -143,7 +143,7 @@ Each file must include:
 
 The audit runner loads rules in this order:
 
-1. run-ai-audit.md
+1. run.md
 2. load this index
 3. execute rules sequentially
 4. generate audit report
@@ -152,10 +152,10 @@ The audit runner loads rules in this order:
 
 AI Audit System
 
-docs/ai/audit/run-ai-audit.md
-docs/ai/audit/ai-audit-scope.md
-docs/ai/audit/ai-issue-severity.md
-docs/ai/audit/ai-audit-report-template.md
+docs/ai/audit/run.md
+docs/ai/audit/scope.md
+docs/ai/audit/severity.md
+docs/ai/audit/report-template.md
 
 Architecture Documentation
 

@@ -12,6 +12,7 @@
  * @category Service
  */
 
+import { Injectable } from '@nestjs/common';
 import type {
   Plan,
   Subscription,
@@ -28,6 +29,7 @@ import { planRepository } from '../repository/plan.repository';
 import { subscriptionRepository } from '../repository/subscription.repository';
 
 // 订阅服务类
+@Injectable()
 export class SubscriptionService {
   /**
    * 获取套餐列表

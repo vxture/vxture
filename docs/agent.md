@@ -64,8 +64,8 @@ docs/
 | 修改 Core 包 | `architecture/05-core-layer.md` + `packages/core/{name}.md` |
 | 修改 Service | `architecture/07-service-layer.md` + `packages/services/{name}.md` |
 | 新建 Agent（server + studio + bff） | `architecture/11-agent-server.md` + `product/agents/` |
-| Vela 功能开发 | `product/agents/vela/spec.md` + `packages/agents/vela-server.md` |
-| Auth / JWT / Cookie 相关 | `design/auth.md` + `packages/bff/auth-bff.md` |
+| Vela 功能开发 | `product/agents/vela/spec.md` + `packages/agents/vela/server.md` |
+| Auth / JWT / Cookie 相关 | `design/auth.md` + `packages/bff/auth.md` |
 | 权限 / RBAC | `design/permissions.md` |
 | 多租户逻辑 | `design/tenant.md` + `packages/core/tenant.md` |
 | i18n / Locale | `design/locale.md` + `packages/core/locale.md` |

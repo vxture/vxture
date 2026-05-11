@@ -12,6 +12,7 @@
  * @category Service
  */
 
+import { Injectable } from '@nestjs/common';
 import type {
   Invoice,
   Payment,
@@ -29,6 +30,7 @@ import { InvoiceStatus, PaymentStatus } from '../types/billing.types';
 import { billingRepository } from '../repository/billing.repository';
 
 // 计费服务类
+@Injectable()
 export class BillingService {
   /**
    * 创建发票

@@ -2,7 +2,7 @@
 
 > 版本：1.0.0 | 更新：2026-05-11
 > 技术实现：[`docs/packages/portals/website.md`](../../../packages/portals/website.md)
-> BFF：[`docs/packages/bff/website-bff.md`](../../../packages/bff/website-bff.md)
+> BFF：[`docs/packages/bff/website.md`](../../../packages/bff/website.md)
 
 ---
 

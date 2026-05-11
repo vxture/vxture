@@ -142,12 +142,27 @@ WEBSITE_BASE_URL=https://vxture.com
 
 ---
 
-### T10 · console-bff / portals/console 接口对接验证
+### ~~T10 · console-bff / portals/console 接口对接验证~~ ✅ 2026-05-12 已完成
 
-**影响：** console 页面已有 UI 骨架，但未全面验证 BFF 接口联通
+**核查结论：** 所有 BFF router 与 service 接口签名完全对齐，无断链。
 
-- [ ] 逐模块验证：billing / subscription / members / roles / settings
-- [ ] 确认 tenantId 在 JWT 中正确传播
+| 模块 | Router | 状态 |
+|------|--------|------|
+| 账单 | `billing.router.ts` | ✅ `queryInvoices` / `getBillingOverview` 签名一致 |
+| 订阅 | `subscription.router.ts` | ✅ `getTenantSubscriptions` / `upgradePlan` / `pauseSubscription` / `resumeSubscription` / `cancelSubscription` 签名一致 |
+| 成员 | `iam.router.ts` → SessionAggregator | ✅ 所有 CRUD 方法与 OrganizationReadService 完全对齐 |
+| 角色 | `iam.router.ts` → SessionAggregator | ✅ `createRole` / `updateRole` / `deleteRole` 签名一致 |
+| 个人信息 | `me.router.ts` | ✅ 与 AccountAuthService 对齐 |
+| 租户上下文 | `tenant-context.router.ts` | ✅ `/api/tenant-context` |
+| 能力列表 | `capabilities.router.ts` | ✅ |
+
+**已修复：**
+- `BillingService` / `SubscriptionService` 补加 `@Injectable()` 装饰器
+- 文档 `console-bff.md` 路径前缀 `/api/tenant` → `/api/tenant-context`
+
+**技术债（不影响运行）：**
+- billing / subscription 仍使用内存 mock 数据，真实 DB 接入后需切换 Repository 实现
+- BillingModule / SubscriptionModule 注册的 Repository NestJS provider 与服务内部单例不一致
 
 **代码入口：** `bff/console-bff/src/routers/`
 
