@@ -44,7 +44,7 @@ export default function BestPracticePage() {
         <AnimatedHeroBg />
         <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-vx-brand-600 dark:text-vx-info-200'>{t('page.hero.eyebrow')}</p>
+            <p className='vx-website-hero-eyebrow mb-3 text-sm font-semibold uppercase text-vx-brand-600 dark:text-vx-info-200'>{t('page.hero.eyebrow')}</p>
             <h1 className='font-brand text-4xl font-bold leading-tight text-vx-gray-900 dark:text-vx-white md:text-6xl'>{t('page.hero.title')}</h1>
             <p className='mt-5 max-w-2xl text-sm leading-6 text-vx-gray-700 dark:text-vx-gray-200'>{t('page.hero.description')}</p>
             <div className='mt-6 flex flex-wrap gap-3'>
@@ -111,7 +111,7 @@ export default function BestPracticePage() {
       </section>
 
       <section className='vx-section-even'>
-        <div className='mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[32%_1fr] lg:px-8 xl:max-w-screen-2xl'>
+        <div className='vx-website-split-grid vx-website-split-grid--32 mx-auto grid max-w-7xl gap-8 px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div>
             <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>
               {t('page.dimensions.eyebrow')}
@@ -158,9 +158,9 @@ export default function BestPracticePage() {
             {practices.map((practice) => (
               <article
                 key={practice.title}
-                className='grid overflow-hidden rounded-lg border border-vx-gray-200 bg-vx-white shadow-sm dark:border-vx-gray-800 dark:bg-vx-gray-900 lg:grid-cols-[36%_1fr]'
+                className='vx-website-split-grid vx-website-split-grid--36 grid overflow-hidden rounded-lg border border-vx-gray-200 bg-vx-white shadow-sm dark:border-vx-gray-800 dark:bg-vx-gray-900'
               >
-                <div className='relative min-h-[280px]'>
+                <div className='vx-best-practice-media relative'>
                   <Image
                     src={practice.image}
                     alt={practice.imageAlt}

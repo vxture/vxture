@@ -52,7 +52,7 @@ export default function AgentMarketplacePage() {
         <AnimatedHeroBg />
         <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
+            <p className='vx-website-hero-eyebrow mb-3 text-sm font-semibold uppercase text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
             <h1 className='font-brand text-4xl font-bold leading-tight text-vx-gray-900 dark:text-vx-white md:text-6xl'>{t('hero.title')}</h1>
             <p className='mt-5 max-w-2xl text-sm leading-6 text-vx-gray-700 dark:text-vx-gray-200'>{t('hero.description')}</p>
             <div className='mt-6 flex flex-wrap gap-3'>
@@ -123,7 +123,7 @@ export default function AgentMarketplacePage() {
             {visibleAgents.map((agent) => (
               <article
                 key={agent.name}
-                className='flex min-h-[360px] flex-col rounded-lg border border-vx-gray-200 bg-vx-white p-5 shadow-sm transition hover:border-vx-brand-200 hover:shadow-md dark:border-vx-gray-800 dark:bg-vx-gray-900 dark:hover:border-vx-brand-500/30'
+                className='vx-agent-marketplace-card flex flex-col rounded-lg border border-vx-gray-200 bg-vx-white p-5 shadow-sm transition hover:border-vx-brand-200 hover:shadow-md dark:border-vx-gray-800 dark:bg-vx-gray-900 dark:hover:border-vx-brand-500/30'
               >
                 <div className='flex items-start justify-between gap-4'>
                   <div className='flex items-start gap-4'>

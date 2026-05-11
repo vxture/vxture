@@ -39,7 +39,7 @@ export default function AboutUsPage() {
 
         <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
+            <p className='vx-website-hero-eyebrow mb-4 text-sm font-semibold uppercase text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
             <h1 className='font-brand text-4xl font-bold leading-tight text-vx-gray-900 dark:text-vx-white md:text-6xl'>{t('hero.title')}</h1>
             <p className='mt-5 max-w-2xl text-sm leading-6 text-vx-gray-700 dark:text-vx-gray-200'>{t('hero.description')}</p>
             <div className='mt-6 flex flex-wrap gap-3'>
@@ -101,7 +101,7 @@ export default function AboutUsPage() {
       </section>
 
       <section className='vx-section-even'>
-        <div className='mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[34%_1fr] lg:px-8 xl:max-w-screen-2xl'>
+        <div className='vx-website-split-grid vx-website-split-grid--34 mx-auto grid max-w-7xl gap-10 px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div>
             <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('method.eyebrow')}</p>
             <h2 className='font-display mt-2 text-3xl font-bold text-vx-gray-900 dark:text-vx-white'>{t('method.title')}</h2>
@@ -159,7 +159,7 @@ export default function AboutUsPage() {
       </section>
 
       <section className='vx-section-even'>
-        <div className='mx-auto grid max-w-7xl gap-8 px-6 lg:grid-cols-[34%_1fr] lg:px-8 xl:max-w-screen-2xl'>
+        <div className='vx-website-split-grid vx-website-split-grid--34 mx-auto grid max-w-7xl gap-8 px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div>
             <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('principles.eyebrow')}</p>
             <h2 className='font-display mt-2 text-3xl font-bold text-vx-gray-900 dark:text-vx-white'>{t('principles.title')}</h2>

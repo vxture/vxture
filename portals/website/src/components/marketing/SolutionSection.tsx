@@ -73,7 +73,7 @@ const SolutionCard = memo(function SolutionCard({
 
   return (
     <div className='w-full transition-all duration-500'>
-      <div className='grid grid-cols-1 lg:grid-cols-[38%_62%] h-full rounded-2xl shadow-lg overflow-hidden'>
+      <div className='vx-solution-card-grid grid h-full overflow-hidden rounded-2xl shadow-lg'>
         {/* 左侧文本内容 */}
         <div className='relative flex h-full items-center justify-start px-4 py-4 bg-vx-white dark:bg-vx-gray-700'>
           <div className='relative w-full h-full flex flex-col gap-4 justify-items-start'>
@@ -81,7 +81,7 @@ const SolutionCard = memo(function SolutionCard({
             <div className='relative flex items-center h-20 min-h-20'>
               {/* 背景数字 */}
               <span
-                className='vx-solution-index absolute left-0 top-1/2 -translate-y-1/2 text-[48px] font-semibold text-vx-brand-300 dark:text-vx-brand-500 opacity-70 select-none pointer-events-none z-0 drop-shadow-lg'
+                className='vx-solution-index absolute left-0 top-1/2 z-0 -translate-y-1/2 select-none font-semibold text-vx-brand-300 opacity-70 drop-shadow-lg pointer-events-none dark:text-vx-brand-500'
                 aria-hidden='true'
               >
                 {idx + 1}

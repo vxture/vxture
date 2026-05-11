@@ -54,7 +54,7 @@ export default function CTASection({ id, name = 'CTA' }: CTASectionProps) {
     <section
       id={id}
       data-name={name}
-      className='vx-section-even relative snap-section min-h-[65vh] flex flex-col justify-center'
+      className='vx-section-even vx-website-cta-section relative snap-section flex flex-col justify-center'
     >
       {/* ===== 主内容区 ===== */}
       <div className='flex flex-col justify-center w-full h-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16'>
@@ -74,7 +74,7 @@ export default function CTASection({ id, name = 'CTA' }: CTASectionProps) {
         <div className='w-full flex flex-col sm:flex-row gap-8 justify-center items-center py-6'>
           {CTA_DATA.actions.map((action, index) => {
             const isExternal = action.href.startsWith('http');
-            const buttonClass = `group px-8 py-4 font-semibold rounded-xl transition-all duration-300 hover:scale-105 min-w-[200px] ${
+            const buttonClass = `vx-website-cta-action group px-8 py-4 font-semibold rounded-xl transition-all duration-300 hover:scale-105 ${
               action.variant === 'primary'
                 ? 'bg-gradient-to-r from-vx-brand-600 to-vx-info-500 text-vx-white hover:from-vx-brand-700 hover:to-vx-info-600 hover:shadow-2xl'
                 : 'border-2 border-vx-brand-200 dark:border-vx-gray-500 text-vx-brand-700 dark:text-vx-gray-200 hover:border-vx-brand-500 hover:text-vx-brand-600 dark:hover:border-vx-brand-400 dark:hover:text-vx-brand-200 hover:shadow-lg'

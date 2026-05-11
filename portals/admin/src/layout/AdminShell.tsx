@@ -530,7 +530,7 @@ function ShellFrame({ children }: { children: ReactNode }) {
             <PopoverContent
               align="start"
               sideOffset={20}
-              className="admin-workspace-switcher w-[320px] rounded-lg border border-vx-gray-200 bg-vx-white p-5 text-vx-gray-900 shadow-xl shadow-vx-brand-950/10 dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-gray-100"
+              className="admin-workspace-switcher rounded-lg border border-vx-gray-200 bg-vx-white p-5 text-vx-gray-900 shadow-xl shadow-vx-brand-950/10 dark:border-vx-gray-700 dark:bg-vx-gray-900 dark:text-vx-gray-100"
             >
               <div className="admin-workspace-switcher__header">
                 <strong>工作域</strong>

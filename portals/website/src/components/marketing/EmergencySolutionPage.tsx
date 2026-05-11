@@ -54,7 +54,7 @@ export default function EmergencySolutionPage() {
         <AnimatedHeroBg />
         <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-4 text-sm font-semibold uppercase tracking-[0.16em] text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
+            <p className='vx-website-hero-eyebrow mb-4 text-sm font-semibold uppercase text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
             <h1 className='font-brand text-4xl font-bold leading-tight text-vx-gray-900 dark:text-vx-white md:text-6xl'>{t('hero.title')}</h1>
             <p className='mt-5 max-w-2xl text-sm leading-6 text-vx-gray-700 dark:text-vx-gray-200'>{t('hero.description')}</p>
             <div className='mt-6 flex flex-wrap gap-3'>
@@ -132,7 +132,7 @@ export default function EmergencySolutionPage() {
       </section>
 
       <section className='vx-section-even'>
-        <div className='mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[30%_1fr] lg:px-8 xl:max-w-screen-2xl'>
+        <div className='vx-website-split-grid vx-website-split-grid--30 mx-auto grid max-w-7xl gap-10 px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div>
             <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('flow.eyebrow')}</p>
             <h2 className='font-display mt-2 text-3xl font-bold text-vx-gray-900 dark:text-vx-white'>{t('flow.title')}</h2>
@@ -194,7 +194,7 @@ export default function EmergencySolutionPage() {
       </section>
 
       <section className='vx-section-even'>
-        <div className='mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[38%_1fr] lg:px-8 xl:max-w-screen-2xl'>
+        <div className='vx-website-split-grid vx-website-split-grid--38 mx-auto grid max-w-7xl gap-10 px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div>
             <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('scenarios.eyebrow')}</p>
             <h2 className='font-display mt-2 text-3xl font-bold text-vx-gray-900 dark:text-vx-white'>{t('scenarios.title')}</h2>
@@ -219,8 +219,8 @@ export default function EmergencySolutionPage() {
       </section>
 
       <section className='vx-section-odd'>
-        <div className='mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[42%_1fr] lg:px-8 xl:max-w-screen-2xl'>
-          <div className='relative min-h-[420px] overflow-hidden rounded-lg'>
+        <div className='vx-website-split-grid vx-website-split-grid--42 mx-auto grid max-w-7xl gap-10 px-6 lg:px-8 xl:max-w-screen-2xl'>
+          <div className='vx-emergency-practice-media relative overflow-hidden rounded-lg'>
             <Image
               src={PRACTICE_IMAGE}
               alt={t('practice.imageAlt')}

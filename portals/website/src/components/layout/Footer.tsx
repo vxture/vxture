@@ -46,14 +46,14 @@ export default function Footer() {
 
   // 渲染 Footer UI
   return (
-    <footer className={`flex flex-col min-h-[35vh] w-full ${
+    <footer className={`vx-website-footer flex w-full flex-col ${
       isDarkMode ? 'text-vx-gray-200 bg-vx-gray-900' : 'text-vx-gray-800 bg-vx-gray-100'
     }`}>
       <div className="flex flex-1 flex-col w-full max-w-7xl xl:max-w-screen-2xl mx-auto pt-8 px-4 sm:px-6 lg:px-8">
         {/* 主要内容区域：品牌 + 联系 + 社交 / 链接区 */}
         <div className="flex flex-1 flex-col md:flex-row gap-8 items-start">
           {/* 左侧：品牌信息 + 联系方式 */}
-          <div className="flex flex-col basis-[30%] min-w-50">
+          <div className="vx-website-footer-brand flex min-w-50 flex-col">
             {/* 品牌标识 */}
             <span className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-vx-white' : 'text-vx-gray-700'}`}>
               {t(FOOTER_DATA.brand.nameKey)}
@@ -99,7 +99,7 @@ export default function Footer() {
           </div>
 
           {/* 右侧：链接区（分区块展示） */}
-          <div className="flex flex-1 flex-col md:flex-row basis-[70%] gap-8 justify-between">
+          <div className="vx-website-footer-links flex flex-1 flex-col justify-between gap-8 md:flex-row">
             {FOOTER_DATA.sections.map((section) => (
               <div key={section.id} className="flex-1">
                 <h3 className={`text-lg font-semibold mb-4 ${

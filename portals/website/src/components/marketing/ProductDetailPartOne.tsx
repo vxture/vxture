@@ -34,7 +34,7 @@ export default function ProductDetailPartOne() {
         <AnimatedHeroBg />
         <div className='vx-hero-content'>
           <div className='max-w-3xl'>
-            <p className='mb-3 text-sm font-semibold uppercase tracking-[0.18em] text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
+            <p className='vx-website-hero-eyebrow vx-website-hero-eyebrow--wide mb-3 text-sm font-semibold uppercase text-vx-brand-600 dark:text-vx-info-200'>{t('hero.eyebrow')}</p>
             <h1 className='font-brand text-4xl font-bold leading-tight text-vx-gray-900 dark:text-vx-white md:text-6xl'>{t('hero.title')}</h1>
             <p className='mt-5 max-w-2xl text-sm leading-6 text-vx-gray-700 dark:text-vx-gray-200'>{t('hero.description')}</p>
             <div className='mt-6 flex flex-wrap gap-3'>
@@ -106,7 +106,7 @@ export default function ProductDetailPartOne() {
       </section>
 
       <section className='vx-section-even'>
-        <div className='mx-auto grid max-w-7xl gap-10 px-6 lg:grid-cols-[34%_1fr] lg:px-8 xl:max-w-screen-2xl'>
+        <div className='vx-website-split-grid vx-website-split-grid--34 mx-auto grid max-w-7xl gap-10 px-6 lg:px-8 xl:max-w-screen-2xl'>
           <div>
             <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('workflow.eyebrow')}</p>
             <h2 className='font-display mt-2 text-3xl font-bold text-vx-gray-900 dark:text-vx-white'>{t('workflow.title')}</h2>
@@ -131,7 +131,7 @@ export default function ProductDetailPartOne() {
 
       <section className='vx-section-odd'>
         <div className='mx-auto max-w-7xl px-6 lg:px-8 xl:max-w-screen-2xl'>
-          <div className='grid gap-10 lg:grid-cols-[36%_1fr]'>
+          <div className='vx-website-split-grid vx-website-split-grid--36 grid gap-10'>
             <div>
               <p className='text-sm font-semibold text-vx-brand-600 dark:text-vx-brand-300'>{t('scenarios.eyebrow')}</p>
               <h2 className='font-display mt-2 text-3xl font-bold text-vx-gray-900 dark:text-vx-white'>{t('scenarios.title')}</h2>

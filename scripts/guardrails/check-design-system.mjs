@@ -215,6 +215,20 @@ const rules = [
     },
   },
   {
+    id: "ds/no-app-portal-scale-token",
+    description: "应用层不能消费 admin/console scale 兜底 token；必须使用按语义角色拆分后的 DS token。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return null;
+      if (!/var\(--vx-(?:admin|console)-scale-/.test(line)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "应用 CSS 不能消费 --vx-admin-scale-* / --vx-console-scale-*；改用 --vx-<portal>-space/size/radius/text/effect/track-* 语义 token。",
+        line,
+      );
+    },
+  },
+  {
     id: "ds/no-token-duplicates",
     description: "颜色、字号、圆角等 token 文件只能存在于 DS token 包。",
     checkFile(file) {
@@ -265,6 +279,20 @@ const rules = [
         return violation(file, lineNumber, "疑似 translate-* 被误替换为 tranvx-*，请修正为有效 Tailwind class。");
       }
       return null;
+    },
+  },
+  {
+    id: "ds/no-app-tailwind-arbitrary-scale",
+    description: "应用层不能新增 Tailwind 任意尺度值；页面尺度必须进入 DS token 或 portal 语义 CSS。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return null;
+      if (!hasTailwindArbitraryScale(line)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "Tailwind arbitrary 尺度会绕过 DS 约束；迁移为 DS token、portal 语义 CSS 类或 Tailwind/DS 已暴露的标准 token。",
+        line,
+      );
     },
   },
   {
@@ -424,6 +452,11 @@ function hasRawColor(line) {
 
 function hasHardcodedScale(value) {
   return /(?:^|[\s(,])[-+]?\d+(?:\.\d+)?(?:px|rem|em)\b/.test(value);
+}
+
+function hasTailwindArbitraryScale(line) {
+  const text = stripLineComment(line);
+  return /(?:^|[\s"'`{])!?[A-Za-z0-9:/_-]+-\[[^\]]*\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%)[^\]]*\]/.test(text);
 }
 
 function isAllowlistedScaleLine(line) {
