@@ -2476,6 +2476,18 @@
   --vx-shell-agent-button-size: 2rem;
   --vx-shell-agent-button-icon-size: 2rem;
   --vx-shell-agent-button-hover-opacity: 0.84;
+  --vx-shell-header-actions-gap: 0.9rem;
+  --vx-shell-header-action-group-gap: 0.18rem;
+  --vx-shell-header-action-group-padding: 0.16rem;
+  --vx-shell-header-action-group-radius: var(--vx-radius-xl);
+  --vx-shell-header-action-group-hover-border: var(--vx-color-border);
+  --vx-shell-header-action-group-hover-background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  --vx-shell-header-action-group-dark-hover-border: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  --vx-shell-header-action-group-dark-hover-background: color-mix(in srgb, var(--vx-color-gray-900) 64%, transparent);
+  --vx-shell-user-size: 2rem;
+  --vx-shell-user-max-width: 11rem;
+  --vx-shell-user-radius: var(--vx-radius-full);
+  --vx-shell-user-hover-opacity: 0.86;
 }
 
 .vx-models-page {
@@ -4318,6 +4330,79 @@
   display: block;
   width: var(--vx-shell-agent-button-icon-size, 2rem);
   height: var(--vx-shell-agent-button-icon-size, 2rem);
+}
+
+.vx-shell-header__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-self: end;
+  justify-content: flex-end;
+  gap: var(--vx-shell-header-actions-gap, 0.9rem);
+}
+
+.vx-shell-header__action-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-shell-header-action-group-gap, 0.18rem);
+  padding: var(--vx-shell-header-action-group-padding, 0.16rem);
+  border: 1px solid transparent;
+  border-radius: var(--vx-shell-header-action-group-radius, var(--vx-radius-xl));
+  background: transparent;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.vx-shell-header__action-group:hover,
+.vx-shell-header__action-group:focus-within {
+  border-color: var(--vx-shell-header-action-group-hover-border, var(--vx-color-border));
+  background: var(--vx-shell-header-action-group-hover-background, color-mix(in srgb, var(--vx-color-white) 72%, transparent));
+}
+
+.dark .vx-shell-header__action-group {
+  border-color: transparent;
+  background: transparent;
+}
+
+.dark .vx-shell-header__action-group:hover,
+.dark .vx-shell-header__action-group:focus-within {
+  border-color: var(--vx-shell-header-action-group-dark-hover-border, color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent));
+  background: var(--vx-shell-header-action-group-dark-hover-background, color-mix(in srgb, var(--vx-color-gray-900) 64%, transparent));
+}
+
+.vx-shell-user {
+  display: inline-grid;
+  place-items: center;
+  width: var(--vx-shell-user-size, 2rem);
+  height: var(--vx-shell-user-size, 2rem);
+  max-width: var(--vx-shell-user-max-width, 11rem);
+  min-height: var(--vx-shell-user-size, 2rem);
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vx-shell-user-radius, var(--vx-radius-full));
+  background: transparent;
+  cursor: pointer;
+  line-height: 0;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.vx-shell-user:hover {
+  background: transparent;
+  opacity: var(--vx-shell-user-hover-opacity, 0.86);
+}
+
+.dark .vx-shell-user {
+  background: transparent;
+}
+
+.vx-shell-user .vx-avatar {
+  width: var(--vx-shell-user-size, 2rem);
+  height: var(--vx-shell-user-size, 2rem);
+  flex: 0 0 var(--vx-shell-user-size, 2rem);
+  border-radius: var(--vx-radius-full);
 }
 
 @media (max-width: 1180px) {

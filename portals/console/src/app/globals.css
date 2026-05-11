@@ -810,43 +810,6 @@ a {
   border-top-color: transparent;
 }
 
-.vx-shell-header__actions {
-  display: inline-flex;
-  align-items: center;
-  justify-self: end;
-  gap: 0.32rem;
-}
-
-.vx-shell-user {
-  max-width: 11rem;
-  min-height: 2.2rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
-  padding: 0 0.35rem 0 0;
-  border: 0;
-  border-radius: var(--vx-radius-full);
-  background: transparent;
-  transition:
-    background 180ms ease,
-    transform 180ms ease;
-}
-
-.vx-shell-user:hover {
-  background: color-mix(in srgb, var(--vx-color-white) 78%, transparent);
-}
-
-.vx-shell-user__name {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 0.84rem;
-  line-height: 1;
-  color: var(--vx-console-text);
-}
-
 .vx-assistant-panel {
   align-self: start;
   position: sticky;
@@ -1278,40 +1241,6 @@ body.dark {
   line-height: 1;
 }
 
-.vx-shell-header__actions {
-  gap: 0.9rem;
-}
-
-.vx-shell-header__action-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.18rem;
-  padding: 0.16rem;
-  border: 1px solid transparent;
-  border-radius: var(--vx-radius-xl);
-  background: transparent;
-  transition:
-    border-color 180ms ease,
-    background 180ms ease;
-}
-
-.vx-shell-header__action-group:hover,
-.vx-shell-header__action-group:focus-within {
-  border-color: var(--vx-color-border);
-  background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
-}
-
-.dark .vx-shell-header__action-group {
-  background: transparent;
-  border-color: transparent;
-}
-
-.dark .vx-shell-header__action-group:hover,
-.dark .vx-shell-header__action-group:focus-within {
-  background: color-mix(in srgb, var(--vx-color-gray-900) 64%, transparent);
-  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
-}
-
 .vx-shell-header__context {
   max-width: 12rem;
   overflow: hidden;
@@ -1320,35 +1249,6 @@ body.dark {
   font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.vx-shell-user {
-  width: 2rem;
-  height: 2rem;
-  min-height: 2rem;
-  display: inline-grid;
-  place-items: center;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  line-height: 0;
-}
-
-.vx-shell-user:hover {
-  background: transparent;
-  opacity: 0.86;
-}
-
-.dark .vx-shell-user {
-  background: transparent;
-}
-
-.vx-shell-user .vx-avatar {
-  width: 2rem;
-  height: 2rem;
-  flex: 0 0 2rem;
-  border-radius: var(--vx-radius-full);
 }
 
 .vx-shell__body {
