@@ -27,7 +27,7 @@
 
 ## 依赖约束
 
-**允许：** `@vxture/shared` · 层级通用约束见 [core/index.md](index.md)
+**允许：** `@vxture/shared` · 层级通用约束见 [packages/index.md § Core 层通用约束](../index.md)
 
 ## 核心约束
 

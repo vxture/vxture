@@ -167,4 +167,7 @@ htmlcov/
 # Optional cache / local-only files
 .cache/
 
+# Generated architecture diagrams (local tooling output, not versioned)
+docs/architecture/package-architecture.html
+
 # End of additional ignores

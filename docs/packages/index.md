@@ -84,3 +84,69 @@
 | 文件 | 包名 | 职责摘要 |
 |------|------|---------|
 | [`tools/dev-panel.md`](tools/dev-panel.md) | `@vxture/dev-panel` | 本地可视化服务控制面板（:8090） |
+
+---
+
+## Core 层通用约束
+
+> `@layer Infrastructure` — 适用于所有 `packages/core/*` 包
+
+Core 层是 framework-agnostic 的基础设施原语，为 BFF、Service、Agent Server 提供可复用的底层能力。
+
+**禁止的依赖（全层适用）：**
+
+| 禁止 | 原因 |
+|------|------|
+| NestJS / Passport.js | 属于 BFF/Application 层 |
+| Next.js / React / 浏览器专用 API | 属于 Presentation 层（platform-browser 例外） |
+| Prisma / Redis / HTTP 客户端 | 属于 Service/Domain 层 |
+| `@vxture/service-*` / `bff-*` / `ai-sdk` / `design-system` / `platform-*` | 属于上层包 |
+
+**允许的内部依赖：**
+- 所有 core 包可以引用 `@vxture/shared`
+- `@vxture/core-auth` 可额外引用 `@vxture/core-config`
+- 禁止 core 包之间的循环引用
+
+**其他约束：**
+- 不持久化任何状态（无 Redis 连接，无 DB 连接）
+- 需要双端兼容（Node.js + 浏览器），除非包名明确标注 browser-only
+- 不包含任何业务逻辑（角色权限判断、价格计算等属于 Service 层）
+
+---
+
+## Service 层通用约束
+
+> `@layer Domain` — 适用于所有 `services/*/*` 包
+
+**包结构模板：**
+
+```
+src/
+├── module/       ← NestJS Module 定义（对外注册点）
+├── service/      ← 业务逻辑
+├── repository/   ← Prisma / pg.Pool 数据访问
+├── tokens.ts     ← DI Symbol tokens（跨包注入用）
+├── types/        ← 类型定义
+└── index.ts      ← 公共出口（只导出 module / service / types，不导出 repository）
+```
+
+**跨包引用规则：**
+- 服务间禁止直接 import（cross-service 通信只走 BFF/Server 层 HTTP）
+- 禁止被 `portals/*` / `agent-studio/*` / `business/*` 直接引用
+- 可以被 `bff/*` / `agent-server/*` 以 NestJS Module 形式组合使用
+
+**Barrel Export 约束：**
+
+```typescript
+// ✅ src/index.ts 只导出这些
+export { XxxModule } from './module/xxx.module'
+export { XxxService } from './service/xxx.service'
+export type { XxxDto, XxxResult } from './types/xxx.types'
+
+// ❌ 禁止导出 Repository（实现细节，不属于公共契约）
+```
+
+**其他约束：**
+- 服务是 NestJS Module 库，不是独立应用，不监听端口
+- 所有 Prisma 操作封装在 repository 层，service 不直接调用 `prisma.*`
+- 禁止 React / Next.js / 浏览器 API

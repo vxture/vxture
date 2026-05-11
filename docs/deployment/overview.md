@@ -243,25 +243,4 @@ worker-02（业务执行面）
 
 ## 九、待完成事项
 
-### 🔴 基础设施整理（优先）
-- [ ] worker-01：按规范重建 `/data/platform/` 目录结构
-- [ ] worker-01：`vxture-pg-prod` → 迁至 `/data/platform/db/postgres/`，重命名容器
-- [ ] worker-01：`vxture-redis-prod` → 迁至 `/data/platform/db/redis/`，重命名容器
-- [ ] worker-01：清理 `vxture-pg-beta`、`vxture-redis-beta`、`ruyin-8443-test`
-- [ ] worker-02：按规范创建 `/data/{business}/` 目录树（vela / ruyin / ai-gateway）
-- [ ] worker-02：清理 `test-web`
-
-### 🟠 平台服务部署（worker-01）
-- [ ] 部署 website-bff / console-bff / admin-bff（对接平台数据库）
-- [ ] Nginx 补充子域名：admin、console、api
-- [ ] Cloudflare SSL 模式确认为 Full Strict
-
-### 🟠 业务服务部署（worker-02）
-- [ ] Vela：vela-bff + vela-server + postgres + redis（prod + beta）
-- [ ] Ruyin：ruyin-bff + ruyin-server + postgres + redis（prod + beta）
-- [ ] ai-gateway：独立 postgres（ai_gateway schema）
-
-### 🟡 运维
-- [ ] worker-01 `/data/platform/backups/` 自动备份脚本（cron pg_dump → 同步阿里云 OSS）
-- [ ] worker-01 开启 2G swap（缓解内存压力）
-- [ ] `ruyin.ai` Cloudflare Geo 路由（国内重定向至 ruyin.vxture.com）
+> 部署任务跟踪见 [`docs/status.md § 部署待完成事项`](../status.md)。

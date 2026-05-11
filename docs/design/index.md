@@ -16,7 +16,7 @@
 | [`auth.md`](auth.md) | 账号体系 / JWT 签发 / Cookie / 跨域 SSO / OAuth / 统一登录体验 / Turnstile / 会话同步 | ✅ 已有（v1.3.0） |
 | [`permissions.md`](permissions.md) | RBAC / 权限模型 / 功能开关 | ✅ 已有（迁移自 product-design/） |
 | [`locale.md`](locale.md) | i18n 解析链路 / locale 系统重构 | ✅ 已有（迁移自 product-design/） |
-| [`font-system.md`](font-system.md) | 字体系统 / Virtual Nature Studio 字体规范 | ✅ 已有（迁移自 docs 根目录） |
+| [`docs/standards/font-system.md`](../standards/font-system.md) | 字体系统 / Virtual Nature Studio 字体规范 | ✅ 已移至 standards/ |
 | [`tenant.md`](tenant.md) | 多租户解析 / PLG 租户模型 / 隔离原则 | ✅ 已编制 |
 | [`session.md`](session.md) | Session 管理 / Cookie 生命周期 / 黑名单 | ✅ 已编制 |
 | [`notification.md`](notification.md) | 邮件 / 短信通知流程 | ✅ 已编制 |
