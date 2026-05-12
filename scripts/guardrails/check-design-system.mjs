@@ -229,6 +229,22 @@ const rules = [
     },
   },
   {
+    id: "ds/no-extracted-style-role-dimension-token",
+    description: "应用 src/styles 抽出模块不能消费数字后缀角色尺度 token；模块样式必须使用组件语义 token。",
+    checkLine(file, line, lineNumber) {
+      if (!isExtractedPortalStyleModule(file) || isGeneratedOrAsset(file)) return null;
+      if (!/var\(--vx-(?:admin|console|website|vela)-(?:space|size|track|radius|line-width|text-size|text-line|effect|pattern|motion)-[0-9]/.test(line)) {
+        return null;
+      }
+      return violation(
+        file,
+        lineNumber,
+        "抽出到 src/styles 的模块样式不能直接消费数字后缀角色 token；请在 DS token 层补 --vx-<domain>-<component>-* 语义 token。",
+        line,
+      );
+    },
+  },
+  {
     id: "ds/no-token-duplicates",
     description: "颜色、字号、圆角等 token 文件只能存在于 DS token 包。",
     checkFile(file) {
@@ -500,6 +516,10 @@ function stripLineComment(line) {
 
 function isFrontendSource(file) {
   return /^(portals|agent-studio|business)\//.test(normalize(file));
+}
+
+function isExtractedPortalStyleModule(file) {
+  return /^(portals|agent-studio|business)\/[^/]+\/src\/styles\/.+\.css$/.test(normalize(file));
 }
 
 function isDesignSystemConsumerSource(file) {
