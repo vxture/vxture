@@ -230,18 +230,40 @@ const rules = [
   },
   {
     id: "ds/no-extracted-style-role-dimension-token",
-    description: "应用 src/styles 抽出模块不能消费数字后缀角色尺度 token；模块样式必须使用组件语义 token。",
+    description: "应用 src/styles 抽出模块不能消费角色尺度/布局 token；模块样式必须使用组件语义 token。",
     checkLine(file, line, lineNumber) {
       if (!isExtractedPortalStyleModule(file) || isGeneratedOrAsset(file)) return null;
-      if (!/var\(--vx-(?:admin|console|website|vela)-(?:space|size|track|radius|line-width|text-size|text-line|effect|pattern|motion)-[0-9]/.test(line)) {
+      if (!/var\(--vx-(?:admin|console|website|vela)-(?:space|size|track|radius|line-width|text-size|text-line|text-tracking|effect|pattern|motion|grid-column|panel-max-height|dialog-max-width|dialog-width|layout|shadow-spread|shadow-blur|status-cutout|pattern-dot)-/.test(line)) {
         return null;
       }
       return violation(
         file,
         lineNumber,
-        "抽出到 src/styles 的模块样式不能直接消费数字后缀角色 token；请在 DS token 层补 --vx-<domain>-<component>-* 语义 token。",
+        "抽出到 src/styles 的模块样式不能直接消费角色尺度/布局 token；请在 DS token 层补 --vx-<domain>-<component>-* 语义 token。",
         line,
       );
+    },
+  },
+  {
+    id: "ds/no-admin-globals-rules",
+    description: "admin globals.css 只能编排样式 import，页面/组件规则必须进入 src/styles 模块。",
+    checkContent(file, content) {
+      if (normalize(file) !== "portals/admin/src/app/globals.css") return [];
+      const items = [];
+      const lines = content.split(/\r?\n/);
+      lines.forEach((line, index) => {
+        const text = line.trim();
+        if (!text || /^@import\s+["'][^"']+["'];$/.test(text)) return;
+        items.push(
+          violation(
+            file,
+            index + 1,
+            "portals/admin/src/app/globals.css 只能保留 @import；规则应迁入 admin-base/admin-management/admin-operations 等 src/styles 模块。",
+            line,
+          ),
+        );
+      });
+      return items;
     },
   },
   {
