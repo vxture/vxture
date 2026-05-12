@@ -7,7 +7,8 @@
 
 | 文件 | 内容 |
 |------|------|
-| [`git-workflow.md`](git-workflow.md) | Git 工作流规范：分支策略、提交格式、PR 流程 |
+| [`design-system.md`](design-system.md) | DS 使用规范：应用侧禁止自建样式·组件·图标 / AI 行为约束 / 存量债务策略 |
+| [`font-system.md`](font-system.md) | 字体体系：品牌字体 / 产品字体 / CJK / Mono 分层规范 |
 | [`locale-layer.md`](locale-layer.md) | Locale 层规范：i18n key 命名、翻译文件结构 |
 | [`utils-layer.md`](utils-layer.md) | Utils 层规范：工具函数分层、命名约定 |
-| [`font-system.md`](font-system.md) | 字体体系：品牌字体 / 产品字体 / CJK / Mono 分层规范 |
+| [`git-workflow.md`](git-workflow.md) | Git 工作流规范：分支策略、提交格式、PR 流程 |

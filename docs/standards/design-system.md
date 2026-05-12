@@ -116,6 +116,5 @@ AI 在修改 `portals/*` 或 `agent-studio/*` 时，**必须**遵守：
 
 ## 7. 关联文档
 
-- `docs/packages/design-system.md` — DS 包技术实现约束
-- `docs/architecture/08-design-system.md` — DS 架构层级规范
+- `docs/architecture/08-design-system.md` — DS 包结构 / 内部实现 / 技术栈
 - `packages/design/design-system/` — DS 源码

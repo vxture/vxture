@@ -26,11 +26,19 @@
 |------|------|---------|
 | [`ai/ai-sdk.md`](ai/ai-sdk.md) | `@vxture/ai-sdk` | AI Gateway HTTP 客户端（LLM / Embedding / RAG / Workflow） |
 
+## SDK 适配层（Infrastructure）
+
+> 第三方平台适配库（浏览器 API / 地图 / 三维），代码路径 `packages/platform/*`
+
+| 文件 | 包名 | 职责摘要 |
+|------|------|---------|
+| [`sdk/browser.md`](sdk/browser.md) | `@vxture/platform-browser` | 浏览器端通用工具（偏好存储 / 滚动 / 入口初始化） |
+
 ## Shared 层
 
 | 文件 | 包名 | 职责摘要 |
 |------|------|---------|
-| [`shared.md`](shared.md) | `@vxture/shared` | 纯工具 / 类型 / 常量（零业务逻辑） |
+| [`shared/index.md`](shared/index.md) | `@vxture/shared` | 纯工具 / 类型 / 常量（零业务逻辑） |
 
 ## BFF 层（Application）
 

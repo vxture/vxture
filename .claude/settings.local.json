@@ -85,7 +85,21 @@
       "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\app\\\\[locale]\" -name \"layout.tsx\" -type f)",
       "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\components\\\\layout\" -type f)",
       "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\data\" -type f -name \"*.ts\")",
-      "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\types\" -type f -name \"*.ts\")"
+      "Bash(Find \"D:\\\\MyWebSite\\\\vxture\\\\portals\\\\website\\\\src\\\\types\" -type f -name \"*.ts\")",
+      "PowerShell(Get-ChildItem -Path D:\\\\MyWebSite\\\\vxture -Directory -ErrorAction SilentlyContinue | Where-Object {$_.Name -in @\\('portals', 'agent-studio', 'agent-server', 'bff', 'services', 'packages', 'business', 'tools'\\)} | Select-Object -ExpandProperty Name)",
+      "Bash(xargs -I{} dirname {})",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('name:', d.get\\('name'\\)\\); print\\('desc:', d.get\\('description',''\\)\\)\")",
+      "Bash(Move-Item -Path \"D:\\\\MyWebSite\\\\vxture\\\\docs\\\\deployment\\\\vxture-infra-summary.md\" -Destination \"D:\\\\MyWebSite\\\\vxture\\\\docs\\\\deployment\\\\overview.md\")",
+      "Bash(Move-Item -Path \"D:\\\\MyWebSite\\\\vxture\\\\docs\\\\deployment\\\\platform-deployment-plan.md\" -Destination \"D:\\\\MyWebSite\\\\vxture\\\\docs\\\\deployment\\\\containers.md\")",
+      "PowerShell(Move-Item *)",
+      "PowerShell(Get-ChildItem -Recurse \"D:\\\\MyWebSite\\\\vxture\\\\docs\\\\packages\\\\\" | Where-Object { -not $_.PSIsContainer } | Select-Object FullName, Length | Sort-Object FullName | Format-Table -AutoSize)",
+      "Bash([ ! -f \"D:/MyWebSite/vxture/docs/packages/services/$svc.md\" ])",
+      "Bash([ ! -f \"D:/MyWebSite/vxture/docs/packages/core/$pkg.md\" ])",
+      "Bash([ ! -f \"D:/MyWebSite/vxture/docs/packages/platform/$pkg.md\" ])",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name','?'\\), d.get\\('description',''\\)\\)\")",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(xargs -I{} sh -c 'echo \"$\\(dirname {}\\)\"; cat {} | python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(\\\\\"  name:\\\\\", d.get\\(\\\\\"name\\\\\",\\\\\"?\\\\\"\\)\\)\" 2>/dev/null || true')",
+      "PowerShell(Get-Content *)"
     ]
   }
 }

@@ -17,9 +17,9 @@
 | [`session.md`](session.md) | Session 管理 / Cookie 生命周期 / 黑名单 | ✅ 已编制 |
 | [`tenant.md`](tenant.md) | 多租户解析 / PLG 租户模型 / 隔离原则 | ✅ 已编制 |
 | [`notification.md`](notification.md) | 邮件 / 短信通知流程 | ✅ 已编制 |
-| [`design-system.md`](design-system.md) | DS 使用规范 / 应用侧禁止自建样式·组件·图标 / AI 行为约束 / 存量债务策略 | ✅ 新建 v1.0.0 |
 | [`permissions.md`](permissions.md) | RBAC 模型 / 跨包权限流 / BFF 守卫 / menu code 映射 / 两套权限域 | ✅ v1.0.0 |
 | [`locale.md`](locale.md) | i18n 解析链路 / BCP47 locale 系统重构 | ✅ 已有 |
+| [`docs/standards/design-system.md`](../standards/design-system.md) | DS 使用规范 / 应用侧禁止自建样式·组件·图标 / AI 行为约束 | ✅ 在 standards/ |
 | [`docs/standards/font-system.md`](../standards/font-system.md) | 字体系统 / Virtual Nature Studio 字体规范 | ✅ 在 standards/ |
 
 ---
