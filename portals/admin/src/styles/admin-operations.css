@@ -1,0 +1,387 @@
+/* Admin audit, announcement, skill, and dialog styles. Component dimensions are owned by DS tokens. */
+.vx-admin-filter-select {
+  height: var(--vx-admin-operations-control-height);
+  padding: 0 var(--vx-admin-operations-control-padding-x);
+  border: var(--vx-admin-operations-control-border-width) solid var(--vx-color-auth-border);
+  border-radius: var(--vx-radius-lg);
+  background: transparent;
+  color: var(--vx-console-text);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+  cursor: pointer;
+}
+.dark .vx-admin-filter-select {
+  border-color: var(--vx-color-border);
+  background: transparent;
+  color: var(--vx-console-text);
+}
+
+.vx-admin-view-toggle {
+  display: flex;
+  align-items: center;
+  border: var(--vx-admin-operations-control-border-width) solid var(--vx-color-auth-border);
+  border-radius: var(--vx-radius-lg);
+  overflow: hidden;
+}
+.dark .vx-admin-view-toggle {
+  border-color: var(--vx-color-border);
+}
+.vx-admin-view-toggle__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--vx-admin-operations-view-toggle-button-size);
+  height: var(--vx-admin-operations-view-toggle-button-size);
+  background: transparent;
+  border: 0;
+  color: var(--vx-console-muted);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.vx-admin-view-toggle__btn:hover {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent);
+  color: var(--vx-console-brand);
+}
+.vx-admin-view-toggle__btn--active {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  color: var(--vx-console-brand);
+}
+
+.vx-admin-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-operations-action-button-gap);
+  height: var(--vx-admin-operations-action-button-height);
+  padding: 0 var(--vx-admin-operations-action-button-padding-x);
+  border: var(--vx-admin-operations-control-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 20%, transparent);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 7%, transparent);
+  color: var(--vx-console-brand);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 640;
+  cursor: pointer;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+.vx-admin-action-btn:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 14%, transparent);
+}
+.vx-admin-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.vx-audit-directory-list {
+  grid-template-columns: var(--vx-admin-operations-audit-grid);
+}
+.vx-audit-directory-list .vx-tenant-directory-list__header,
+.vx-audit-row {
+  min-width: var(--vx-admin-operations-audit-row-min-width);
+  grid-template-columns: var(--vx-admin-operations-audit-grid);
+}
+
+.vx-audit-row {
+  min-height: var(--vx-admin-operations-audit-row-min-height);
+}
+
+.vx-audit-directory-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-audit-row__operator,
+.vx-audit-row__action,
+.vx-audit-row__target {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-operations-audit-row-copy-gap);
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-audit-row__operator-name,
+.vx-audit-row__action-label,
+.vx-audit-row__target-label {
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+  line-height: var(--vx-admin-operations-audit-row-title-line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-audit-row__operator-email,
+.vx-audit-row__action-code,
+.vx-audit-row__target-type {
+  overflow: hidden;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+  line-height: var(--vx-admin-operations-audit-row-meta-line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-audit-row__target-empty { color: var(--vx-console-muted); }
+.vx-audit-row__result {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vx-admin-operations-audit-result-gap);
+}
+.vx-audit-row__error { display: flex; align-items: center; color: var(--vx-console-muted); cursor: help; }
+.vx-audit-row__index,
+.vx-audit-row__module,
+.vx-audit-row__ip,
+.vx-audit-row__time {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.vx-audit-row__module,
+.vx-audit-row__ip {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vx-announcement-directory-list {
+  grid-template-columns: var(--vx-admin-operations-announcement-grid);
+}
+.vx-announcement-directory-list .vx-tenant-directory-list__header,
+.vx-announcement-row {
+  grid-template-columns: var(--vx-admin-operations-announcement-grid);
+}
+
+.vx-announcement-row__title { font-weight: 640; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-announcement-row__index,
+.vx-announcement-row__scope,
+.vx-announcement-row__published,
+.vx-announcement-row__expires { font-size: var(--vx-admin-meta-size); color: var(--vx-console-muted); white-space: nowrap; }
+
+.vx-announcement-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--vx-admin-operations-announcement-card-grid-min-width), 1fr));
+  gap: var(--vx-admin-operations-announcement-card-grid-gap);
+}
+.vx-announcement-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-admin-operations-announcement-card-gap);
+  padding: var(--vx-admin-operations-announcement-card-padding);
+  border: var(--vx-admin-operations-announcement-card-border-width) solid var(--vx-console-border);
+  border-radius: var(--vx-admin-card-radius);
+  background: var(--vx-console-surface);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+.vx-announcement-card__header { display: flex; gap: var(--vx-admin-operations-announcement-card-header-gap); }
+.vx-announcement-card__title { font-size: var(--vx-admin-card-title-size); font-weight: 700; margin: 0; }
+.vx-announcement-card__content {
+  font-size: var(--vx-admin-body-size);
+  color: var(--vx-console-muted);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.vx-announcement-card__meta {
+  display: flex;
+  gap: var(--vx-admin-operations-announcement-card-meta-gap);
+  font-size: var(--vx-admin-meta-size);
+  color: var(--vx-console-muted);
+  margin-top: auto;
+}
+
+.vx-skills-directory-list {
+  grid-template-columns: var(--vx-admin-operations-skill-grid);
+}
+.vx-skills-directory-list .vx-tenant-directory-list__header,
+.vx-skill-row {
+  grid-template-columns: var(--vx-admin-operations-skill-grid);
+}
+
+.vx-skill-row__info { display: flex; flex-direction: column; gap: var(--vx-admin-operations-skill-row-info-gap); min-width: 0; }
+.vx-skill-row__name { font-weight: 640; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-skill-row__code { color: var(--vx-console-muted); font-size: var(--vx-admin-meta-size); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-skill-row__endpoint { color: var(--vx-console-muted); font-size: var(--vx-admin-meta-size); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vx-skill-row__index,
+.vx-skill-row__category,
+.vx-skill-row__version,
+.vx-skill-row__invocations,
+.vx-skill-row__updated { font-size: var(--vx-admin-meta-size); color: var(--vx-console-muted); white-space: nowrap; }
+.vx-skill-row__status { display: flex; align-items: center; gap: var(--vx-admin-operations-skill-row-status-gap); flex-wrap: wrap; }
+
+.vx-skills-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--vx-admin-operations-skill-card-grid-min-width), 1fr));
+  gap: var(--vx-admin-operations-skill-card-grid-gap);
+}
+.vx-skill-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-admin-operations-skill-card-gap);
+  padding: var(--vx-admin-operations-skill-card-padding);
+  border: var(--vx-admin-operations-skill-card-border-width) solid var(--vx-console-border);
+  border-radius: var(--vx-admin-card-radius);
+  background: var(--vx-console-surface);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+.vx-skill-card__header { display: flex; align-items: center; justify-content: space-between; }
+.vx-skill-card__icon { color: var(--vx-console-brand); display: flex; }
+.vx-skill-card__badges { display: flex; gap: var(--vx-admin-operations-skill-card-badges-gap); flex-wrap: wrap; }
+.vx-skill-card__name { font-size: var(--vx-admin-card-title-size); font-weight: 700; margin: 0; }
+.vx-skill-card__code { font-size: var(--vx-admin-meta-size); color: var(--vx-console-muted); margin: 0; }
+.vx-skill-card__description {
+  font-size: var(--vx-admin-body-size);
+  color: var(--vx-console-muted);
+  margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.vx-skill-card__meta {
+  display: flex;
+  gap: var(--vx-admin-operations-skill-card-meta-gap);
+  font-size: var(--vx-admin-meta-size);
+  color: var(--vx-console-muted);
+  margin-top: auto;
+}
+
+@media (max-width: 1200px) {
+  .vx-audit-directory-list,
+  .vx-audit-directory-list .vx-tenant-directory-list__header,
+  .vx-audit-row {
+    grid-template-columns: var(--vx-admin-operations-audit-grid-compact);
+  }
+  .vx-skills-directory-list,
+  .vx-skills-directory-list .vx-tenant-directory-list__header,
+  .vx-skill-row {
+    grid-template-columns: var(--vx-admin-operations-skill-grid-compact);
+  }
+  .vx-skill-row__endpoint { display: none; }
+}
+
+.vx-dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: var(--vx-color-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--vx-admin-operations-dialog-overlay-padding);
+  backdrop-filter: blur(var(--vx-admin-operations-dialog-overlay-blur));
+}
+
+.vx-dialog {
+  background: var(--vx-console-surface);
+  border: var(--vx-admin-operations-dialog-border-width) solid var(--vx-console-border);
+  border-radius: var(--vx-admin-card-radius);
+  box-shadow: var(--vx-admin-operations-dialog-shadow);
+  width: 100%;
+  max-width: var(--vx-admin-operations-dialog-max-width);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.vx-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--vx-admin-operations-dialog-header-padding);
+  border-bottom: var(--vx-admin-operations-dialog-border-width) solid var(--vx-console-border);
+}
+
+.vx-dialog__title {
+  margin: 0;
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.vx-dialog__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--vx-admin-operations-dialog-close-size);
+  height: var(--vx-admin-operations-dialog-close-size);
+  border: 0;
+  background: transparent;
+  color: var(--vx-console-muted);
+  border-radius: var(--vx-radius-md);
+  cursor: pointer;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.vx-dialog__close:hover {
+  background: var(--vx-shell-hover, color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent));
+  color: var(--vx-console-text);
+}
+
+.vx-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-admin-operations-dialog-body-gap);
+  padding: var(--vx-admin-operations-dialog-body-padding);
+}
+
+.vx-dialog__desc {
+  margin: 0;
+  font-size: var(--vx-admin-body-size);
+  color: var(--vx-console-muted);
+}
+
+.vx-dialog__label {
+  font-size: var(--vx-admin-body-size);
+  font-weight: 500;
+  color: var(--vx-console-text);
+}
+
+.vx-dialog__label small {
+  font-weight: 400;
+  color: var(--vx-console-muted);
+}
+
+.vx-dialog__textarea {
+  width: 100%;
+  min-height: var(--vx-admin-operations-dialog-textarea-min-height);
+  resize: vertical;
+  padding: var(--vx-admin-operations-dialog-textarea-padding);
+  border: var(--vx-admin-operations-dialog-border-width) solid var(--vx-console-border);
+  border-radius: var(--vx-radius-md);
+  background: var(--vx-console-bg);
+  color: var(--vx-console-text);
+  font: inherit;
+  font-size: var(--vx-admin-body-size);
+  line-height: 1.5;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+  box-sizing: border-box;
+}
+
+.vx-dialog__textarea:focus {
+  outline: none;
+  border-color: var(--vx-console-brand);
+  box-shadow: 0 0 0 var(--vx-admin-operations-dialog-textarea-focus-shadow-width) color-mix(in srgb, var(--vx-console-brand) 18%, transparent);
+}
+
+.vx-dialog__error {
+  margin: 0;
+  font-size: var(--vx-admin-meta-size);
+  color: var(--vx-admin-rose-fg, var(--vx-color-danger));
+}
+
+.vx-dialog__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vx-admin-operations-dialog-footer-gap);
+  padding: var(--vx-admin-operations-dialog-footer-padding);
+  border-top: var(--vx-admin-operations-dialog-border-width) solid var(--vx-console-border);
+}
