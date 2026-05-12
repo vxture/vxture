@@ -30,13 +30,16 @@ REDIS_URL=redis://localhost:6379
 WEBSITE_BASE_URL=https://vxture.com
 ```
 
-**待完善（P1）：**
+**已完成所有接入点：**
 - [x] `requestPasswordReset` 已接入 `MailService.sendPasswordReset`（`bff/website-bff/src/auth/auth.service.ts:81`）
-- [ ] 后续接入 `console-bff`（账单通知）、`admin-bff`（公告）
+- [x] `console-bff` 订阅变更通知（升级 / 暂停 / 恢复 / 取消）→ 收件人 `req.user.email`
+- [x] `admin-bff` 离线付款核销确认 / 驳回通知 → 收件人 `org.contact_email`
 
 **代码入口：**
 - `services/notification/mail/src/` — 核心服务
-- `bff/website-bff/src/routers/verifycode.router.ts` — API 路由
+- `bff/website-bff/src/routers/verifycode.router.ts` — 验证码 API 路由
+- `bff/console-bff/src/routers/subscription.router.ts:117` — 订阅变更邮件（fire-and-forget）
+- `bff/admin-bff/src/routers/payments.router.ts:134` — 付款核销/驳回邮件（fire-and-forget）
 
 ---
 
