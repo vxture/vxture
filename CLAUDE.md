@@ -125,6 +125,7 @@ portals/* / agent-studio/*
 | `packages/shared/` | `docs/packages/shared/index.md`       |
 | `packages/core/`   | `docs/packages/core/{包名}.md`        |
 | `packages/platform/` | `docs/packages/sdk/{包名}.md`       |
+| `packages/design/` | `docs/packages/design/{包名}.md`      |
 | `services/*/*`     | `docs/packages/services/{包名}.md`    |
 | `bff/*`            | `docs/packages/bff/{bff名}.md`        |
 | `portals/*`        | `docs/packages/portals/{包名}.md`     |

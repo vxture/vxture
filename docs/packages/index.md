@@ -34,6 +34,12 @@
 |------|------|---------|
 | [`sdk/browser.md`](sdk/browser.md) | `@vxture/platform-browser` | 浏览器端通用工具（偏好存储 / 滚动 / 入口初始化） |
 
+## Design System（Presentation）
+
+| 文件 | 包名 | 职责摘要 |
+|------|------|---------|
+| [`design/design-system.md`](design/design-system.md) | `@vxture/design-system` | UI 组件 / Token / 图标 / 主题 / 布局原语 |
+
 ## Shared 层
 
 | 文件 | 包名 | 职责摘要 |

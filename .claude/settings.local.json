@@ -99,7 +99,9 @@
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('name','?'\\), d.get\\('description',''\\)\\)\")",
       "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
       "Bash(xargs -I{} sh -c 'echo \"$\\(dirname {}\\)\"; cat {} | python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(\\\\\"  name:\\\\\", d.get\\(\\\\\"name\\\\\",\\\\\"?\\\\\"\\)\\)\" 2>/dev/null || true')",
-      "PowerShell(Get-Content *)"
+      "PowerShell(Get-Content *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(xargs -I {} basename {})"
     ]
   }
 }
