@@ -203,25 +203,7 @@ callback 只允许签发 `userType = tenant_user`、`authScope = tenant_console`
 }
 ```
 
-### Token 策略
-
-| Token | 有效期 | 存储位置 | 说明 |
-|-------|--------|----------|------|
-| access token | 15 分钟 | HttpOnly Cookie | 无状态，BFF 直接验证签名 |
-| refresh token | 7 天 | Redis + HttpOnly Cookie | 有状态，支持主动吊销 |
-
-### Redis Key 规范
-
-```
-refresh:operator:{userId}          → 运营人员 refresh token
-refresh:tenant:platform:{userId}   → .vxture.com 租户 refresh token
-refresh:tenant:ruyin:{userId}      → ruyin.ai 租户 refresh token
-blacklist:{jti}                 → 已吊销的 access token（TTL = 剩余有效期）
-revoked-before:tenant:{userId}   → 租户账号用户级 access token 撤销水位
-revoked-before:operator:{userId} → 运营账号用户级 access token 撤销水位
-crossdomain:{oneTimeToken}      → 跨域一次性 token（TTL = 30 秒）
-oauth:state:{state}             → OAuth 授权流程防 CSRF 的 state 值（TTL = 10 分钟）
-```
+> Token 策略（有效期 / 存储位置）、Redis Key 规范及 Cookie 命名详见 [`docs/design/session.md`](session.md)。
 
 ---
 
@@ -234,21 +216,7 @@ ruyin.ai            →  ruyin-agent     →  ruyin-bff    租户账号专用
 auth.vxture.com     →  统一认证服务     →  auth-bff     两套账号统一入口
 ```
 
-### Cookie Domain 与 Cookie Key 规划
-
-```
-.vxture.com   →  website · console · admin · auth 共享父域，但使用不同认证 Cookie key 隔离身份
-ruyin.ai      →  ruyin 独立 Cookie domain，承载同一租户逻辑会话的本域 Cookie
-```
-
-| 安全域 | 产品 | Cookie key | 账号体系 | 说明 |
-|--------|------|------------|----------|------|
-| 租户端 | website · console | `vx_tenant_access_token` · `vx_tenant_refresh_token` | tenant_user | website 和 console 是同一租户登录态，应使用同一组租户 Cookie |
-| 运营端 | admin | `vx_admin_access_token` · `vx_admin_refresh_token` | operator | admin 是内部运营平台，必须与租户端登录态隔离 |
-| 租户端独立域 | ruyin.ai | `ry_access_token` · `ry_refresh_token` | tenant_user | 与 website / console 属于同一租户逻辑登录态；因浏览器域名隔离，需通过一次性 token 换取 ruyin.ai 本域 Cookie |
-| 历史兼容 | website · console | `vx_access_token` · `vx_refresh_token` · `vx_console_access_token` · `vx_console_refresh_token` | tenant_user | 仅用于迁移期读取和清理，不再作为新写入目标 |
-
-原则：website、console、ruyin 都属于租户用户安全域，逻辑上同登录、同登出；`.vxture.com` 与 `ruyin.ai` 不能直接共享浏览器 Cookie，所以物理 Cookie 按域分开，登录与登出通过 auth-bff 的跨域一次性 token 和前端/后端 logout 编排保持一致。admin 属于运营账号安全域，即使与 console 同在 `.vxture.com` 下，也必须通过独立 Cookie key、JWT `userType`、refresh token namespace 和 BFF guard 隔离。
+> Cookie Domain / Cookie Key 命名规范详见 [`docs/design/session.md`](session.md) — §Cookie 命名规范。
 
 ---
 
@@ -300,31 +268,7 @@ POST /auth/crossdomain/verify
   校验 userType / authScope / targetDomain，返回用户信息和 tenantId，由目标域 BFF 签发自己的 Cookie
 ```
 
-### 登出边界
-
-- `logout` 是当前浏览器、当前安全域登出：租户端 logout 应覆盖 website、console、ruyin 的租户登录态，但不会清除 admin Cookie；admin logout 只清运营登录态。
-- ruyin.ai 与 .vxture.com 分属不同站点，单个响应不能同时清两个域的 Cookie；当前浏览器同登出必须通过前端跳转或后端回调编排，分别命中 `.vxture.com` 和 `ruyin.ai` 的本域 logout 端点。
-- `logout_all` 不与 admin 混用。它应定位为租户端全局登出：从所有业务应用、所有设备、所有 refresh session 登出。
-- `logout_all` 需要独立 session registry 设计，例如 `refresh:tenant:{userId}:{sessionId}` 与用户 session 索引；该能力可作为后续安全迭代实现，不能用“清 Cookie”临时代替。
-
----
-
-## 7. 跨域登录流程（vxture.com ↔ ruyin.ai）
-
-### vxture.com → ruyin.ai
-
-```
-① 用户在 console.vxture.com 已登录，触发跳转 ruyin.ai 的操作
-② 前端请求 GET auth.vxture.com/auth/crossdomain/token
-   验证 .vxture.com Cookie → 生成一次性 token（TTL 30s）→ 返回 token
-③ 前端跳转 ruyin.ai/auth/callback?token={oneTimeToken}
-④ ruyin-bff 调用 POST auth.vxture.com/auth/crossdomain/verify
-   原子取出并删除 token → 校验 userType 必须为 tenant_user
-   在 ruyin.ai domain 下签发新 Cookie
-⑤ 用户在 ruyin.ai 直接已登录
-```
-
-反向流程（ruyin.ai → vxture.com）相同，方向相反。
+> 登出边界（单域 / 跨域 / logout_all 边界规则）及跨域 SSO 完整流程详见 [`docs/design/session.md`](session.md) — §登出与 Token 吊销 / §跨域 SSO。
 
 ---
 
