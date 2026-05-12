@@ -7,6 +7,8 @@
 @import "../styles/admin-overview.css";
 @import "../styles/admin-products.css";
 @import "../styles/admin-management.css";
+@import "../styles/admin-tenant-detail.css";
+@import "../styles/admin-management-pills.css";
 @import "../styles/admin-placeholder.css";
 @import "../styles/admin-permissions.css";
 @import "../styles/admin-roles.css";

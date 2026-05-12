@@ -8,6 +8,7 @@
     "dev": "next dev --turbo -p 3110",
     "build": "next build",
     "start": "next start -p 3110",
+    "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "clean": "rimraf .next"
   },
@@ -18,9 +19,13 @@
     "react-dom": "^19.2.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.39.3",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.3",
+    "eslint-config-next": "^15.5.6",
     "rimraf": "^6.0.1",
     "typescript": "^5.9.3"
   },

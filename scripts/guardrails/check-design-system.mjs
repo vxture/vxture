@@ -58,6 +58,7 @@ const ALLOWED_DS_IMPORTS = new Set([
   "@vxture/design-system/server",
   "@vxture/design-system/styles/auth.css",
   "@vxture/design-system/styles/components.css",
+  "@vxture/design-system/styles/console.css",
   "@vxture/design-system/styles/fullscreen.css",
   "@vxture/design-system/styles/globals.css",
   "@vxture/design-system/styles/tokens.css",

@@ -8,15 +8,19 @@
   "description": "Agent01 前端应用",
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "echo \"No lint yet\"",
-    "lint:fix": "echo \"No lint:fix yet\"",
-    "build": "echo \"No build yet\""
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
+    "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix --no-error-on-unmatched-pattern",
+    "build": "tsc --noEmit"
   },
   "dependencies": {
     "@vxture/design-system": "workspace:*",
     "@vxture/shared": "workspace:*"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9.39.3",
     "typescript": "^5.9.3"
   },
   "engines": {
