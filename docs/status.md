@@ -119,16 +119,23 @@ WEBSITE_BASE_URL=https://vxture.com
 
 ---
 
-### T08 · 社交登录接入
+### ~~T08 · 社交登录接入~~ ✅ 钉钉/飞书已完成，微信待接入
 
-**影响：** 注册/登录页「微信 / 钉钉 / 飞书」按钮当前为 stub
-
+- [x] 接入钉钉 OAuth2（`bff/auth-bff/src/providers/dingtalk.provider.ts`）
+- [x] 接入飞书 OAuth2（`bff/auth-bff/src/providers/feishu.provider.ts`）
+- [x] auth-bff 新增 OAuth 路由（`GET /auth/oauth/:provider/start` + `/auth/oauth/:provider/callback`）
 - [ ] 接入微信 OAuth2
-- [ ] 接入钉钉 OAuth2
-- [ ] 接入飞书 OAuth2
-- [ ] website-bff 新增对应回调端点
 
-**代码入口：** `portals/website/src/components/auth/LoginForm.tsx` → `SocialLoginButtons`
+**已完成架构：**
+- `GET /auth-api/auth/oauth/:provider/start` — 生成 state 存 Redis（10 分钟 TTL），重定向至第三方授权页
+- `GET /auth-api/auth/oauth/:provider/callback` — 验证 CSRF state，exchangeCode 换 token，getUserInfo 获取用户信息，loginWithOAuth 签发 JWT，写 HttpOnly Cookie，重定向回原页面
+
+**代码入口：**
+- `bff/auth-bff/src/routers/oauth.router.ts` — 路由（`startOAuth` L120 / `handleCallback` L145）
+- `bff/auth-bff/src/providers/dingtalk.provider.ts` — 钉钉 API 封装（exchangeCode / getUserInfo）
+- `bff/auth-bff/src/providers/feishu.provider.ts` — 飞书 API 封装（exchangeCode / getUserInfo）
+- `bff/auth-bff/src/auth/auth.service.ts:298` — `loginWithOAuth`（查询/自动注册用户，签发 JWT）
+- `portals/website/src/components/auth/LoginForm.tsx:403` — `SocialLoginButtons`（前端跳转入口）
 
 ---
 

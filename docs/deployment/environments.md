@@ -7,16 +7,22 @@
 
 ## 一、worker-01 — 平台层
 
-### auth-bff（JWT 唯一签发源）
+### auth-bff（JWT 唯一签发源 + OAuth 回调处理）
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
 | `JWT_SECRET` | ✅ | 签名密钥，所有服务共享同一个值 |
 | `JWT_ACCESS_EXPIRES_IN` | ⚪ | Access Token 过期时长（默认 15m） |
 | `JWT_REFRESH_EXPIRES_IN` | ⚪ | Refresh Token 过期时长（默认 7d） |
-| `REDIS_URL` | ✅ | 指向 vx-platform-redis（内部容器名） |
+| `REDIS_URL` | ✅ | 指向 vx-platform-redis（OAuth state 存储 + Token 黑名单） |
 | `AUTH_BFF_PORT` | ⚪ | 默认 3090 |
 | `AUTH_COOKIE_DOMAIN` | ✅ | `.vxture.com`（平台域）或 `.ruyin.ai`（业务域） |
+| `DINGTALK_APP_KEY` | ✅ | 钉钉 OAuth 应用 Key |
+| `DINGTALK_APP_SECRET` | ✅ | 钉钉 OAuth 密钥 |
+| `DINGTALK_REDIRECT_URI` | ✅ | `https://vxture.com/auth-api/auth/oauth/dingtalk/callback` |
+| `FEISHU_APP_ID` | ✅ | 飞书 OAuth 应用 ID |
+| `FEISHU_APP_SECRET` | ✅ | 飞书 OAuth 密钥 |
+| `FEISHU_REDIRECT_URI` | ✅ | `https://vxture.com/auth-api/auth/oauth/feishu/callback` |
 
 ### website-bff
 
@@ -34,12 +40,6 @@
 | `SMTP_USER` | ✅ | 发件地址 |
 | `SMTP_PASS` | ✅ | SMTP 密码 |
 | `SMTP_FROM` | ⚪ | 发件人名称，默认同 SMTP_USER |
-| `FEISHU_APP_ID` | ✅ | 飞书 OAuth 应用 ID |
-| `FEISHU_APP_SECRET` | ✅ | 飞书 OAuth 密钥 |
-| `FEISHU_REDIRECT_URI` | ✅ | `https://vxture.com/auth/callback/feishu` |
-| `DINGTALK_APP_KEY` | ✅ | 钉钉 OAuth 应用 Key |
-| `DINGTALK_APP_SECRET` | ✅ | 钉钉 OAuth 密钥 |
-| `DINGTALK_REDIRECT_URI` | ✅ | `https://vxture.com/auth/callback/dingtalk` |
 
 ### console-bff
 
