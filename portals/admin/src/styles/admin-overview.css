@@ -707,7 +707,7 @@
   min-width: 0;
   min-height: var(--vx-admin-overview-size-65r);
   display: grid;
-  grid-template-columns: var(--vx-admin-overview-track-25r) minmax(0, 1fr) minmax(var(--vx-admin-grid-column-sm), max-content);
+  grid-template-columns: var(--vx-admin-overview-track-25r) minmax(0, 1fr) minmax(var(--vx-admin-overview-grid-column-sm), max-content);
   align-items: center;
   gap: var(--vx-admin-overview-space-1r);
   padding: var(--vx-admin-overview-space-135r) 0;
@@ -1570,7 +1570,7 @@
 }
 
 .admin-overview-two-column {
-  grid-template-columns: minmax(0, 0.72fr) minmax(var(--vx-admin-grid-column-xl), 1fr);
+  grid-template-columns: minmax(0, 0.72fr) minmax(var(--vx-admin-overview-grid-column-xl), 1fr);
   align-items: start;
 }
 
@@ -1611,7 +1611,7 @@
 }
 
 .admin-overview-model-row {
-  grid-template-columns: minmax(var(--vx-admin-grid-column-md), 0.28fr) minmax(0, 1fr);
+  grid-template-columns: minmax(var(--vx-admin-overview-grid-column-md), 0.28fr) minmax(0, 1fr);
   align-items: start;
 }
 

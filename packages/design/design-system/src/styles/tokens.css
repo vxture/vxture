@@ -1196,6 +1196,9 @@
   --vx-admin-overview-effect-1r: var(--vx-admin-effect-1r);
   --vx-admin-overview-effect-2r: var(--vx-admin-effect-2r);
   --vx-admin-overview-effect-42p: var(--vx-admin-effect-42p);
+  --vx-admin-overview-grid-column-md: var(--vx-admin-grid-column-md);
+  --vx-admin-overview-grid-column-sm: var(--vx-admin-grid-column-sm);
+  --vx-admin-overview-grid-column-xl: var(--vx-admin-grid-column-xl);
   --vx-admin-overview-line-width-1p: var(--vx-admin-line-width-1p);
   --vx-admin-overview-line-width-2p: var(--vx-admin-line-width-2p);
   --vx-admin-overview-motion-05r: var(--vx-admin-motion-05r);
