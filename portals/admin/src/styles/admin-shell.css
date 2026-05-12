@@ -943,3 +943,14 @@
   color: var(--vx-console-brand-strong);
 }
 
+/* Compact shell header behavior. */
+@media (max-width: 960px) {
+  .admin-shell__header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--vx-admin-shell-header-responsive-gap);
+  }
+
+  .admin-shell-header__action-group {
+    display: none;
+  }
+}
