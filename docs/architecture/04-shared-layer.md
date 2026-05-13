@@ -1,7 +1,7 @@
 # Vxture Shared Layer Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.2.1
+**Last Updated**: 2026-05-13
 
 ## Overview
 

@@ -106,10 +106,9 @@ Both surfaces share the same platform infrastructure and are governed independen
 
 FRONTEND-ONLY BRANCHES (parallel, not in server chain)
 
-portals/* and agent-studio/*
-   ├──► @vxture/design-system  (UI components, tokens, theme, icons)
-   ├──► @vxture/platform-amap  (Amap SDK wrapper)
-   └──► @vxture/platform-cesium (Cesium 3D wrapper)
+portals/* / agent-studio/* / business/*
+   ├──► @vxture/design-system     (UI components, tokens, theme, icons)
+   └──► @vxture/platform-browser  (browser utilities; platform-amap / platform-cesium 计划中)
 
 
 SERVER-ONLY BRANCH (agent backends)

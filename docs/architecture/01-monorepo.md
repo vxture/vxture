@@ -28,25 +28,27 @@ vxture/
 │   ├── admin/
 │   └── console/
 │
-├── agent-studio/               # Agent frontend applications (fast-changing, customer-facing)
-│   ├── ruyin/
-│   ├── vela/
-│   └── agent{N}/
+├── agent-studio/               # Agent 内嵌前端（嵌入 portals 的微前端，fast-changing）
+│   ├── vela/                   # @vxture/agent-studio-vela
+│   └── agent-template/         # @vxture/agent-studio-agent01（新 Agent 分叉模板）
 │
-├── agent-server/               # Agent backend services (fast-changing, private per agent)
-│   ├── ruyin/
-│   ├── vela/
-│   └── agent{N}/
+├── agent-server/               # Agent 私有后端（fast-changing, private per agent）
+│   ├── ruyin/                  # @vxture/agent-server-ruyin
+│   ├── vela/                   # vela-server
+│   └── agent-template/         # @vxture/agent-server-agent01（新 Agent 分叉模板）
+│
+├── business/                   # 独立商业应用层（独立部署，独立治理）
+│   └── ruyin/                  # @vxture/ruyin（Ruyin Agent 独立前端，standalone Next.js）
 │
 ├── bff/                        # Backend For Frontend — all BFFs in one place
-│   ├── auth-bff/               # @vxture/bff-auth  (唯一 JWT 签发者)
+│   ├── auth-bff/               # @vxture/bff-auth          (唯一 JWT 签发者)
 │   ├── gateway-bff/            # @vxture/bff-gateway
 │   ├── website-bff/            # @vxture/bff-website
 │   ├── admin-bff/              # @vxture/bff-admin
 │   ├── console-bff/            # @vxture/bff-console
 │   ├── vela-bff/               # @vxture/bff-vela
 │   ├── ruyin-bff/              # @vxture/bff-ruyin
-│   └── agent{N}-bff/
+│   └── agent-template-bff/     # @vxture/bff-agent01       (新 Agent BFF 模板)
 │
 ├── services/                   # Shared platform domain services (stable, promoted from agent-server)
 │   ├── ai/
@@ -65,8 +67,8 @@ vxture/
 │   └── tenant/
 │       └── organization/       # @vxture/service-organization
 │
-├── business/                   # 业务扩展层（预留，当前含 ruyin 业务域）
-│   └── ruyin/
+├── business/                   # 独立商业应用层（独立部署，独立治理）
+│   └── ruyin/                  # @vxture/ruyin（Ruyin Agent 独立前端）
 │
 ├── packages/                   # Shared platform packages
 │   ├── shared/
@@ -83,10 +85,10 @@ vxture/
 │   ├── ai/
 │   │   └── ai-sdk/             # @vxture/ai-sdk
 │   ├── platform/
-│   │   ├── amap/               # @vxture/platform-amap
-│   │   ├── browser/            # @vxture/platform-browser
-│   │   ├── cesium/             # @vxture/platform-cesium
-│   │   └── {name}/             # @vxture/platform-{name}
+│   │   ├── browser/            # @vxture/platform-browser（浏览器工具，已实现）
+│   │   ├── amap/               # @vxture/platform-amap（计划中）
+│   │   ├── cesium/             # @vxture/platform-cesium（计划中）
+│   │   └── {name}/             # @vxture/platform-{name}（扩展槽）
 │   └── design/
 │       └── design-system/      # @vxture/design-system
 │

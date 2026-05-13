@@ -1,7 +1,7 @@
 # Vxture Agent Server Layer Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.3.0
+**Last Updated**: 2026-05-13
 
 ## Overview
 
@@ -14,9 +14,9 @@ They are fast-moving by design — stability is not a requirement at this layer.
 The Agent Server Layer sits between the BFF Layer and the AI / Service / Core layers:
 
 ```
-bff/agent{N}-bff
+bff/{name}-bff
        ↓
-agent-server/agent{N}
+agent-server/{name}
        ↓
 @vxture/ai-sdk, @vxture/service-*, @vxture/core-*
 ```
@@ -27,9 +27,9 @@ agent-server/agent{N}
 
 ```
 agent-server/
-├── ruyin/
-├── vela/
-└── agent{N}/
+├── ruyin/          # Ruyin Agent 后端
+├── vela/           # Vela 嵌入式助手后端
+└── agent-template/ # 新 Agent 后端模板（从此分叉创建新 Agent）
 ```
 
 Each directory is an independent backend application, not a shared package.
@@ -143,14 +143,16 @@ Any frontend code
 Each agent backend is consumed exclusively by its paired BFF:
 
 ```
-bff/agent{N}-bff  →  agent-server/agent{N}
+bff/ruyin-bff          →  agent-server/ruyin
+bff/vela-bff           →  agent-server/vela
+bff/agent-template-bff →  agent-server/agent-template  （模板，分叉后使用）
 ```
 
 The agent backend exposes an internal API (REST or tRPC).
 The BFF calls this API and aggregates it with other data sources
 (`@vxture/service-*`, `@vxture/core-*`) before responding to the frontend.
 
-The frontend (`agent-studio/{N}`) never communicates directly with the agent backend.
+The frontend never communicates directly with the agent backend.
 All frontend ↔ backend communication goes through the BFF.
 
 ---

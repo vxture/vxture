@@ -155,7 +155,7 @@ Usage rule: Never import Phosphor Icons directly. Always use `<Icon name="user" 
 
 # 8. components/ui/
 
-Reusable UI components (current: 18 components):
+Reusable UI components (current: 25 components):
 
 ```
 Avatar, Badge, Breadcrumb, Button, Card, Checkbox,

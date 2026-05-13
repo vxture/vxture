@@ -33,9 +33,9 @@ bff/
 ├── website-bff/       # @vxture/bff-website   → serves portals/website
 ├── admin-bff/         # @vxture/bff-admin     → serves portals/admin
 ├── console-bff/       # @vxture/bff-console   → serves portals/console
-├── ruyin-bff/         # @vxture/bff-ruyin     → serves agent-studio/ruyin ↔ agent-server/ruyin
-├── vela-bff/          # @vxture/bff-vela      → serves embedded Vela surfaces
-└── agent{N}-bff/      # @vxture/bff-agent{N}  → serves agent-studio/agent{N} ↔ agent-server/agent{N}
+├── ruyin-bff/           # @vxture/bff-ruyin     → serves business/ruyin ↔ agent-server/ruyin
+├── vela-bff/            # @vxture/bff-vela      → serves embedded Vela surfaces
+└── agent-template-bff/  # @vxture/bff-agent01   → 新 Agent BFF 模板（从此分叉）
 ```
 
 命名规范：`@vxture/bff-{consumer-name}`

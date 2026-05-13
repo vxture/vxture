@@ -304,13 +304,14 @@ own BFF over **HTTP only**.
 **Packages**:
 
 ```
-@vxture/platform-amap      # packages/platform/amap/
-@vxture/platform-cesium    # packages/platform/cesium/
-@vxture/platform-{name}    # packages/platform/{name}/
+@vxture/platform-browser   # packages/platform/browser/（已实现）
+@vxture/platform-amap      # packages/platform/amap/（计划中，尚未实现）
+@vxture/platform-cesium    # packages/platform/cesium/（计划中，尚未实现）
+@vxture/platform-{name}    # packages/platform/{name}/（扩展槽）
 ```
 
 **Responsibilities**: encapsulate third-party client SDKs, typed React hooks and components,
-coordinate system utilities (GCJ-02 ↔ WGS-84), version isolation.
+browser utilities, version isolation.
 
 **Allowed dependencies**: `@vxture/shared`, `@vxture/design-system` (optional).
 
@@ -319,8 +320,7 @@ coordinate system utilities (GCJ-02 ↔ WGS-84), version isolation.
 **Critical constraint**: Browser-only. Must not be imported in any server environment.
 
 ```ts
-import { useAmap, AmapContainer } from '@vxture/platform-amap';
-import { CesiumViewer, useEntity } from '@vxture/platform-cesium';
+import { resetScrollTop, getPreference } from '@vxture/platform-browser';
 ```
 
 ---

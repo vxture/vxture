@@ -1,7 +1,7 @@
 # Architecture Documentation Index
 
-**Version**: 1.7.0
-**Last Updated**: 2026-05-12
+**Version**: 1.8.0
+**Last Updated**: 2026-05-13
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -44,12 +44,23 @@
 
 ## Agent 实例
 
-| 实例  | 前端               | 后端               | BFF           | 状态                                  |
-| ----- | ------------------ | ------------------ | ------------- | ------------------------------------- |
-| ruyin | agent-studio/ruyin | agent-server/ruyin | bff/ruyin-bff | 🟡 server 运行中，studio/bff 建设中   |
-| vela  | agent-studio/vela  | agent-server/vela  | bff/vela-bff  | ✅ 三端运行中（嵌入 admin / console） |
+| 实例    | 前端                        | 后端                        | BFF                    | 状态                                  |
+| ------- | --------------------------- | --------------------------- | ---------------------- | ------------------------------------- |
+| ruyin   | business/ruyin              | agent-server/ruyin          | bff/ruyin-bff          | ✅ 三端运行中                         |
+| vela    | agent-studio/vela           | agent-server/vela           | bff/vela-bff           | ✅ 三端运行中（嵌入 admin / console） |
+| agent01 | agent-studio/agent-template | agent-server/agent-template | bff/agent-template-bff | ✅ 模板（从此分叉新建 Agent）         |
 
 ## Changelog
+
+### v1.8.0 — 2026-05-13
+
+- `00-overview.md` v1.5.0：前端分支移除未实现的 `@vxture/platform-amap`/`platform-cesium`；补充 `business/*` 层
+- `01-monorepo.md` v1.5.0：agent-studio 移除 ruyin（实际在 business/）；补充 `agent-template` 模板包；agent-server/bff 同步补全具体实例名；business/ 标注 `@vxture/ruyin`
+- `02-package-boundaries.md`：Platform SDK §9 将 amap/cesium 标注为"计划中，尚未实现"；示例导入改用 browser
+- `08-design-system.md`：组件数量 18 → 25
+- `09-platform-sdk.md` v1.3.0：完整重写；browser 作为唯一已实现包；amap/cesium 移至"计划中"章节；消费者补充 `business/*`
+- `10-bff-layer.md` v1.4.0→v1.4.1：ruyin 消费者由 `agent-studio/ruyin` 改为 `business/ruyin`；`agent{N}-bff` 替换为 `agent-template-bff → @vxture/bff-agent01`
+- Agent 实例表：ruyin 前端更正为 `business/ruyin`，状态更新为 ✅；新增 agent01 模板行
 
 ### v1.7.0 — 2026-05-12
 
