@@ -1,0 +1,68 @@
+/* Tenant member identity, status, and actions styles. */
+
+.vx-tenant-member-row__identity {
+  display: grid;
+  grid-template-columns: var(--vx-admin-management-track-2r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-member-row__identity > span {
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-tenant-member-row__identity svg {
+  color: var(--tenant-member-tone);
+}
+
+.vx-tenant-member-row__name {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-0375r);
+}
+
+.vx-tenant-member-row__name strong,
+.vx-tenant-member-row__name small {
+  margin-top: 0;
+}
+
+.vx-tenant-member-row__name small {
+  min-width: 0;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 520;
+}
+
+.vx-tenant-member-status-pill {
+  font-weight: 620;
+}
+
+.vx-tenant-member-row__permission {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.vx-tenant-member-row__status {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+  justify-items: start;
+}
+
+.vx-tenant-member-row__status small {
+  display: block;
+  font-weight: 520;
+  white-space: nowrap;
+}
+
+.vx-tenant-member-actions {
+  justify-self: center;
+}
+
+.vx-tenant-member-actions .vx-tenant-actions__menu {
+  top: 50%;
+  transform: translateY(-50%);
+}

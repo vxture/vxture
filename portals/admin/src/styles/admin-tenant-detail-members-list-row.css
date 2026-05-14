@@ -1,0 +1,63 @@
+/* Tenant member row state and base copy styles. */
+
+.vx-tenant-member-row {
+  --tenant-member-tone: var(--tenant-blue);
+  position: relative;
+  overflow: visible;
+  justify-items: start;
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--vx-color-auth-border);
+  background: transparent;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 720;
+  text-align: left;
+}
+
+.vx-tenant-member-row:hover {
+  background: color-mix(in srgb, var(--vx-color-brand-50) 50%, transparent);
+}
+
+.vx-tenant-member-row--active {
+  --tenant-member-tone: var(--tenant-green);
+}
+
+.vx-tenant-member-row--invited {
+  --tenant-member-tone: var(--tenant-amber);
+}
+
+.vx-tenant-member-row--suspended {
+  --tenant-member-tone: var(--tenant-rose);
+}
+
+.vx-tenant-member-row > span,
+.vx-tenant-member-row__identity span {
+  min-width: 0;
+}
+
+.vx-tenant-member-row strong,
+.vx-tenant-member-row small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-tenant-member-row strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+}
+
+.vx-tenant-member-row small {
+  margin-top: var(--vx-admin-management-space-05r);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 520;
+}
+
+.vx-tenant-member-row__index {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  text-align: center;
+}

@@ -1,0 +1,51 @@
+/* Model strategy directory alignment styles. */
+
+.vx-model-strategy-directory-list .vx-tenant-directory-list__header > span,
+.vx-model-strategy-override-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant,
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__model,
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__agent,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__tenant,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__agent,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__expires {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__status,
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__quota,
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__priority,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__status,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__priority {
+  justify-self: center;
+  text-align: center;
+}
