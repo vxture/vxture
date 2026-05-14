@@ -14,3 +14,5 @@
 | [`git-workflow.md`](git-workflow.md) | Git 工作流规范：分支策略、提交格式、PR 流程 |
 | [`testing.md`](testing.md) | 测试策略：各层测试类型、禁止 mock DB、E2E 范围 |
 | [`security.md`](security.md) | 安全规范：Secrets 管理、JWT 约束、各层安全边界、CORS |
+| [`error-handling.md`](error-handling.md) | 错误处理：统一响应格式、错误码命名、各层异常传播规则 |
+| [`logging.md`](logging.md) | 日志规范：日志级别、结构化格式、敏感字段过滤、各层约定 |
