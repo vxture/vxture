@@ -1,0 +1,32 @@
+/* Admin overview service rating styles. */
+
+.admin-overview-rating {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-admin-overview-space-2r);
+}
+
+.admin-overview-stars {
+  display: inline-flex;
+  gap: var(--vx-admin-overview-space-05r);
+  color: var(--vx-color-gray-300);
+  font-size: var(--vx-admin-overview-text-size-1r);
+  line-height: 1;
+}
+
+.admin-overview-stars__item--active {
+  color: var(--vx-color-warning);
+}
+
+.admin-overview-service-metrics--rating
+  .admin-overview-service-metric__rating-line
+  .admin-overview-stars {
+  gap: var(--vx-admin-overview-space-025r);
+  font-size: var(--vx-admin-overview-text-size-15r);
+}
+
+.admin-overview-service-metrics--rating
+  .admin-overview-service-metric__rating-line
+  .admin-overview-stars__item {
+  font-size: inherit;
+  line-height: 1;
+}

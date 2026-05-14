@@ -1,0 +1,30 @@
+/* Model gateway directory layout and row state styles. */
+
+.vx-model-gateway-directory-list .vx-tenant-directory-list__header,
+.vx-model-gateway-directory-list .vx-tenant-directory-row {
+  min-width: var(--vx-admin-directory-row-min-width);
+  grid-template-columns:
+    var(--vx-admin-management-track-25r) var(--vx-admin-management-track-275r) minmax(0, 1.25fr) minmax(0, 0.5fr)
+    minmax(0, 0.5fr) minmax(0, 0.68fr) minmax(0, 0.9fr) var(--vx-admin-management-track-5r);
+}
+
+.vx-model-gateway-page .vx-tenant-directory-row {
+  cursor: default;
+}
+
+.vx-model-gateway-page .vx-model-gateway-row {
+  cursor: pointer;
+}
+
+.vx-model-gateway-page .vx-model-gateway-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-model-gateway-card {
+  cursor: default;
+}
+
+.vx-model-gateway-directory-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}

@@ -1,0 +1,26 @@
+/* Admin overview page header action styles. */
+
+.vx-page-header__actions {
+  min-width: 0;
+  min-height: var(--vx-admin-overview-size-25r);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
+  gap: var(--vx-admin-overview-space-1r);
+  flex-wrap: wrap;
+  margin: var(--vx-admin-overview-space-0125r) 0 0;
+}
+
+.vx-page-header__actions .vx-btn {
+  min-height: var(--vx-admin-overview-size-25r);
+}
+
+.vx-page-header__actions .vx-badge {
+  min-height: var(--vx-admin-overview-size-175r);
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--vx-color-auth-accent);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 760;
+}
