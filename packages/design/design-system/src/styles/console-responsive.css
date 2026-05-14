@@ -1,0 +1,114 @@
+/**
+ * console-responsive.css - Console responsive shell adjustments.
+ */
+@media (max-width: 1100px) {
+  .vx-shell__body,
+  .vx-shell--assistant-open .vx-shell__body,
+  .vx-shell--end-panel-open .vx-shell__body,
+  .vx-shell--sidebar-collapsed .vx-shell__body,
+  .vx-shell--sidebar-collapsed.vx-shell--assistant-open .vx-shell__body,
+  .vx-shell--sidebar-collapsed.vx-shell--end-panel-open .vx-shell__body,
+  .vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body,
+  .vx-shell--sidebar-collapsed.vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body,
+  .vx-settings-layout,
+  .vx-settings-split-page,
+  .vx-dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-shell-sidebar,
+  .vx-shell__end-panel,
+  .vx-assistant-panel {
+    position: static;
+    height: auto;
+    max-height: none;
+    min-height: auto;
+  }
+
+  .vx-assistant-panel {
+    border-left: 0;
+    border-top: var(--vx-control-border-width) solid var(--vx-console-border);
+    width: auto;
+    min-width: 0;
+    box-shadow: none;
+  }
+
+  .vx-assistant-panel--fullscreen {
+    position: fixed;
+    inset: var(--vx-shell-header-height) var(--vx-console-space-1r) 0;
+    z-index: 24;
+    height: calc(100dvh - var(--vx-shell-header-height));
+    max-height: calc(100dvh - var(--vx-shell-header-height));
+    min-height: calc(100dvh - var(--vx-shell-header-height));
+    border-top: 0;
+  }
+
+  .vx-assistant-panel__resize-edge {
+    display: none;
+  }
+
+  .vx-kpi-grid,
+  .vx-summary-strip,
+  .vx-dashboard-grid,
+  .vx-settings-grid,
+  .vx-card-grid,
+  .vx-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-account-profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-account-profile-identity {
+    position: static;
+  }
+
+}
+@media (max-width: 720px) {
+  .vx-shell__header-slot {
+    padding: 0;
+  }
+
+  .vx-shell__body {
+    padding: 0;
+  }
+
+  .vx-shell-sidebar {
+    padding: 0;
+  }
+
+  .vx-shell-header {
+    grid-template-columns: max-content minmax(var(--vx-console-track-12r-large), 1fr) max-content;
+    height: var(--vx-shell-header-height);
+    min-height: var(--vx-shell-header-height);
+    gap: var(--vx-console-space-075r);
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 var(--vx-console-space-1r);
+  }
+
+  .vx-shell-header__brand {
+    max-width: none;
+  }
+
+  .vx-shell-header__brand-copy {
+    flex-wrap: wrap;
+  }
+
+  .vx-shell-header__actions {
+    width: auto;
+    justify-self: end;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .auth-provider-label {
+    display: none;
+  }
+
+  .auth-social__button {
+    gap: 0;
+  }
+
+}

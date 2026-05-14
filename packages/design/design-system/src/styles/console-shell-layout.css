@@ -1,0 +1,332 @@
+/**
+ * console-shell-layout.css - Console shell grid, navigation, and header layout.
+ */
+.vx-shell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--vx-color-shell-brand) 5%, transparent), transparent var(--vx-console-shell-radial-size)),
+    linear-gradient(180deg, var(--vx-color-brand-50) 0%, var(--vx-color-shell-bg) 100%);
+  gap: 0;
+}
+
+.vx-shell__header-slot {
+  min-width: 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 0;
+  backdrop-filter: blur(var(--vx-console-effect-14p));
+}
+
+.vx-shell__body {
+  min-width: 0;
+  min-height: calc(100dvh - var(--vx-shell-header-height));
+  display: grid;
+  grid-template-columns: var(--vx-shell-sidebar-width) minmax(0, 1fr);
+  gap: var(--vx-shell-body-gap);
+  padding: 0;
+  align-items: start;
+}
+
+.vx-shell--sidebar-collapsed .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-collapsed-width) minmax(0, 1fr);
+}
+
+.vx-shell--assistant-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-width) minmax(0, 1fr) var(--vx-shell-assistant-width);
+}
+
+.vx-shell--sidebar-collapsed.vx-shell--assistant-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-collapsed-width) minmax(0, 1fr) var(--vx-shell-assistant-width);
+}
+
+.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-width) minmax(0, 1fr) var(--vx-shell-end-panel-width);
+}
+
+.vx-shell--sidebar-collapsed.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-collapsed-width) minmax(0, 1fr) var(--vx-shell-end-panel-width);
+}
+
+.vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-width) minmax(0, 1fr) var(--vx-shell-end-panel-width) var(--vx-shell-assistant-width);
+}
+
+.vx-shell--sidebar-collapsed.vx-shell--assistant-open.vx-shell--end-panel-open .vx-shell__body {
+  grid-template-columns: var(--vx-shell-sidebar-collapsed-width) minmax(0, 1fr) var(--vx-shell-end-panel-width) var(--vx-shell-assistant-width);
+}
+
+.vx-shell__end-panel {
+  min-width: 0;
+  height: calc(100dvh - var(--vx-shell-header-height));
+  max-height: calc(100dvh - var(--vx-shell-header-height));
+  min-height: calc(100dvh - var(--vx-shell-header-height));
+  align-self: start;
+  overflow: hidden;
+}
+
+.vx-shell-sidebar {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: var(--vx-console-space-048r);
+  min-width: 0;
+  height: calc(100dvh - var(--vx-shell-header-height));
+  max-height: calc(100dvh - var(--vx-shell-header-height));
+  min-height: calc(100dvh - var(--vx-shell-header-height));
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+  align-self: start;
+  position: sticky;
+  top: var(--vx-shell-header-height);
+}
+
+.vx-shell-sidebar--collapsed {
+  gap: var(--vx-shell-column-gap);
+}
+
+.vx-shell-sidebar__topbar,
+.vx-shell-sidebar__rail {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--vx-console-space-045r);
+  min-height: var(--vx-shell-rail-height);
+  padding-left: 0;
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.vx-shell-sidebar__rail {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.vx-shell-sidebar__tenant-switcher {
+  min-width: 0;
+  padding: 0 var(--vx-console-space-055r) var(--vx-console-space-005r) var(--vx-shell-sidebar-content-inset);
+  transition:
+    opacity 140ms ease,
+    transform 220ms ease;
+}
+
+.vx-shell-nav {
+  display: grid;
+  gap: var(--vx-console-space-082r);
+  align-content: start;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vx-color-scrollbar) transparent;
+  padding-top: var(--vx-console-space-012r);
+  padding-right: var(--vx-console-space-028r);
+  transition:
+    opacity 140ms ease,
+    transform 220ms ease;
+}
+
+.vx-shell-nav::-webkit-scrollbar,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar,
+.vx-assistant-panel__composer-input::-webkit-scrollbar {
+  width: var(--vx-console-size-4p);
+  height: var(--vx-console-size-4p);
+}
+
+.vx-shell-nav::-webkit-scrollbar-track,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar-track,
+.vx-assistant-panel__composer-input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vx-shell-nav::-webkit-scrollbar-thumb,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar-thumb,
+.vx-assistant-panel__composer-input::-webkit-scrollbar-thumb {
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-scrollbar);
+}
+
+.vx-shell-nav::-webkit-scrollbar-thumb:hover,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar-thumb:hover,
+.vx-assistant-panel__composer-input::-webkit-scrollbar-thumb:hover {
+  background: var(--vx-color-scrollbar-hover);
+}
+
+.vx-shell-nav__group {
+  display: grid;
+  gap: var(--vx-console-space-042r);
+}
+
+.vx-shell-nav__group-title {
+  margin: 0;
+  padding: 0 var(--vx-console-space-075r) 0 var(--vx-shell-sidebar-content-inset);
+  font-size: var(--vx-console-text-size-064r);
+  font-weight: 700;
+  letter-spacing: var(--vx-console-text-tracking-01e);
+  text-transform: uppercase;
+  color: var(--vx-color-shell-subtle);
+}
+
+.vx-shell-nav__items {
+  display: grid;
+  gap: var(--vx-console-space-024r);
+}
+
+.vx-shell-nav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-068r);
+  min-height: var(--vx-console-size-228r);
+  padding: 0 var(--vx-console-space-082r) 0 var(--vx-shell-sidebar-content-inset);
+  border-radius: var(--vx-console-radius-10p);
+  color: var(--vx-console-muted);
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.vx-shell-nav__icon {
+  width: var(--vx-shell-sidebar-icon-size);
+  height: var(--vx-shell-sidebar-icon-size);
+  flex: 0 0 var(--vx-shell-sidebar-icon-size);
+}
+
+.vx-shell-nav__item:hover {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 5.5%, transparent);
+  color: var(--vx-console-text);
+}
+
+.vx-shell-nav__item--active {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8.5%, transparent);
+  color: var(--vx-console-brand);
+}
+
+.vx-shell-nav__item span {
+  font-size: var(--vx-console-text-size-084r);
+  font-weight: 600;
+}
+
+.vx-shell-sidebar__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--vx-console-space-1r);
+  min-height: var(--vx-console-size-325r);
+  padding: var(--vx-console-space-045r) var(--vx-console-space-075r) 0 var(--vx-shell-sidebar-content-inset);
+  border-top: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
+  transition:
+    opacity 140ms ease,
+    transform 220ms ease;
+}
+
+.vx-shell-sidebar__footer div {
+  display: grid;
+  gap: var(--vx-console-space-018r);
+}
+
+.vx-shell-sidebar__footer span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-console-text-size-078r);
+}
+
+.vx-shell-sidebar__footer strong {
+  font-size: var(--vx-console-text-size-082r);
+}
+
+.vx-shell-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vx-console-space-1r);
+  min-height: var(--vx-shell-header-height);
+  padding: 0 var(--vx-console-space-1r);
+  border-bottom: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  background: transparent;
+  box-shadow: none;
+}
+
+.vx-shell-header__brand {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-06r);
+  max-width: min(var(--vx-console-size-28r-large), 42vw);
+}
+
+.vx-shell-header__brand-mark {
+  width: var(--vx-console-size-185r);
+  height: var(--vx-console-size-185r);
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: var(--vx-console-radius-07r);
+  background: linear-gradient(135deg, var(--vx-color-shell-brand), var(--vx-color-brand-300));
+  color: var(--vx-color-white);
+  font-size: var(--vx-console-text-size-088r);
+  font-weight: 700;
+}
+
+.vx-shell-header__brand-copy {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-045r);
+  flex-wrap: nowrap;
+}
+
+.vx-shell-header__brand-title,
+.vx-shell-header__workspace-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--vx-console-size-1r);
+  font-size: var(--vx-console-text-size-096r);
+  line-height: 1;
+  letter-spacing: calc(var(--vx-console-text-tracking-002e) * -1);
+  color: var(--vx-console-text);
+}
+
+.vx-shell-header__brand-title {
+  font-family: var(--font-brand);
+  font-weight: 700;
+}
+
+.vx-shell-header__brand-divider {
+  color: color-mix(in srgb, var(--vx-color-shell-muted) 50%, transparent);
+  font-size: var(--vx-console-text-size-08r);
+  line-height: 1;
+  user-select: none;
+}
+
+.vx-shell-header__tenant-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-042r);
+  min-height: var(--vx-console-size-128r);
+  padding: 0 var(--vx-console-space-056r);
+  border-radius: var(--vx-radius-sm);
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  color: color-mix(in srgb, var(--vx-color-shell-brand) 92%, transparent);
+  font-size: var(--vx-console-text-size-067r);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.vx-shell-header__tenant-tag-icon {
+  color: currentColor;
+  opacity: 0.9;
+  margin-right: var(--vx-console-space-002r);
+}
+
+.vx-shell-header__workspace-name {
+  min-width: 0;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
