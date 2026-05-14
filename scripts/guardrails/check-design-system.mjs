@@ -58,6 +58,8 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("portals/admin/src/styles/admin-management-products.css"), "admin management products.css"],
   [normalize("portals/admin/src/styles/admin-management-products-capability.css"), "admin management products capability.css"],
   [normalize("portals/admin/src/styles/admin-overview.css"), "admin overview.css"],
+  [normalize("portals/admin/src/styles/admin-overview-core.css"), "admin overview core.css"],
+  [normalize("portals/admin/src/styles/admin-overview-service.css"), "admin overview service.css"],
   [normalize("portals/admin/src/styles/admin-operations.css"), "admin operations.css"],
   [normalize("portals/admin/src/styles/admin-permissions.css"), "admin permissions.css"],
   [normalize("portals/admin/src/styles/admin-platform-autonomy.css"), "admin platform autonomy.css"],
