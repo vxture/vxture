@@ -1,7 +1,7 @@
 # Architecture Documentation Index
 
-**Version**: 1.8.0
-**Last Updated**: 2026-05-13
+**Version**: 1.9.0
+**Last Updated**: 2026-05-14
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
 
@@ -14,33 +14,35 @@
 | `00-overview.md`           | 平台架构总览 — 层级关系、原则、依赖规则一页总结 |
 | `01-monorepo.md`           | Monorepo 结构、工作区配置、各层目录规范         |
 | `02-package-boundaries.md` | 各层依赖边界的权威参考                          |
-| `03-package-graph.json`    | 机器可读的包依赖图                              |
 
 ### 层级文档（依赖链由下至上）
 
-| 文件                  | 内容                                               |
-| --------------------- | -------------------------------------------------- |
-| `04-shared-layer.md`  | Shared 层 — 工具函数、类型、常量                   |
-| `05-core-layer.md`    | Core 层 — 平台基础设施原语                         |
-| `06-ai-sdk.md`        | AI SDK — LLM / RAG / Embedding / Workflow 模块架构 |
-| `07-service-layer.md` | Service 层 — 共享域服务与晋升生命周期              |
-| `08-design-system.md` | Design System — UI 组件、主题、图标、设计令牌      |
-| `09-platform-sdk.md`  | Platform SDK — 第三方客户端 SDK 封装（浏览器专用） |
-| `10-bff-layer.md`     | BFF 层 — 认证、聚合、路由、响应塑形                |
-| `11-agent-server.md`  | Agent Server 层 — Agent 私有后端架构               |
+| 文件                  | 内容                                          |
+| --------------------- | --------------------------------------------- |
+| `05-core-layer.md`    | Core 层 — 平台基础设施原语                    |
+| `07-service-layer.md` | Service 层 — 共享域服务与晋升生命周期         |
+| `10-bff-layer.md`     | BFF 层 — 认证、聚合、路由、响应塑形           |
+| `11-agent-server.md`  | Agent Server 层 — Agent 私有后端架构          |
 
-### 横切关注点
+> Shared / AI SDK / Design System / Platform SDK 的实现约束见 [`docs/packages/`](../packages/index.md)
+
+### 技术选型
 
 | 文件               | 内容                                |
 | ------------------ | ----------------------------------- |
-| `12-typescript.md` | TypeScript 配置标准与工程规范       |
 | `13-tech-stack.md` | 技术栈选型 — 当前基准版本与升级路径 |
-| `14-ai-gateway.md` | AI Gateway — 模型路由与计量架构     |
-| `15-control-plane-overview.md` | 平台控制面与业务数据面架构总览 |
 
 ## Coding 规范
 
-见 [`docs/ai/index.md`](../ai/index.md) — 注释规范、编码规则、代码风格。
+见 [`docs/ai/index.md`](../ai/index.md) — 注释规范、编码规则、代码风格、TypeScript 配置。
+
+## 能力域设计
+
+见 [`docs/design/index.md`](../design/index.md) — 跨包能力域端到端设计（AI Gateway、控制面、auth、tenant 等）。
+
+## 工程合规审计
+
+见 [`docs/audit/index.md`](../audit/index.md) — 审计规则、CI 门控、检查清单。
 
 ## Agent 实例
 
@@ -51,6 +53,14 @@
 | agent01 | agent-studio/agent-template | agent-server/agent-template | bff/agent-template-bff | ✅ 模板（从此分叉新建 Agent）         |
 
 ## Changelog
+
+### v1.9.0 — 2026-05-14
+
+- 删除与 `docs/packages/` 完全重复的层级文档：04-shared-layer、06-ai-sdk、08-design-system、09-platform-sdk
+- 迁移定位错误的文件：12-typescript → `docs/ai/coding-typescript.md`；14-ai-gateway → `docs/design/`；15-control-plane-overview → `docs/design/`
+- 删除机器生成产物：03-package-graph.json
+- `docs/ai/audit/` 提升为 `docs/audit/`（工程合规审计，不限于 AI 代码）
+- 架构文档从 16 个精简为 8 个，消除维护两处的负担
 
 ### v1.8.0 — 2026-05-13
 
