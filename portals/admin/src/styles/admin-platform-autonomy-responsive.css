@@ -1,0 +1,10 @@
+@media (max-width: 1180px) {
+  .platform-autonomy-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .platform-autonomy-domains,
+  .platform-autonomy-grid {
+    grid-template-columns: 1fr;
+  }
+}
