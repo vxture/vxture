@@ -1,0 +1,6 @@
+.auth-captcha--solved .auth-captcha__piece {
+  background:
+    radial-gradient(circle at 100% 50%, transparent var(--vx-admin-captcha-status-cutout-size), var(--vx-color-success-600) var(--vx-admin-captcha-pattern-cutout)),
+    var(--vx-color-success-600);
+  opacity: 0.24;
+}

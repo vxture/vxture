@@ -1,0 +1,9 @@
+.vx-verification-row__status .vx-tenant-directory-row__status-line,
+.vx-verification-row__subject .vx-tenant-directory-row__tag-line,
+.vx-admin-role-row__status .vx-tenant-directory-row__status-line,
+.vx-admin-role-permission-tags,
+.vx-product-row__type .vx-tenant-directory-row__tag-line,
+.vx-product-plan-row__status .vx-tenant-directory-row__tag-line,
+.vx-product-solution-row__scenario .vx-tenant-directory-row__tag-line {
+  justify-content: flex-start;
+}

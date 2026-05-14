@@ -1,0 +1,7 @@
+.admin-overview-pulse__line {
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-075r);
+  flex-wrap: nowrap;
+}

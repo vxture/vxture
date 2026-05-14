@@ -1,0 +1,27 @@
+.vx-assistant-message__loader {
+  flex: 0 0 auto;
+  width: var(--vx-admin-assistant-loader-size);
+  height: var(--vx-admin-assistant-loader-size);
+  display: inline-block;
+  box-sizing: border-box;
+  border: var(--vx-admin-assistant-border-width-strong) solid color-mix(in srgb, var(--vx-console-brand) 18%, transparent);
+  border-top-color: var(--vx-console-brand);
+  border-right-color: color-mix(
+    in srgb,
+    var(--vx-console-brand) 46%,
+    transparent
+  );
+  border-radius: var(--vx-radius-full);
+  background: transparent;
+  animation: vx-assistant-loader-spin 880ms linear infinite;
+}
+
+.dark .vx-assistant-message__loader {
+  border-color: color-mix(in srgb, var(--vx-console-brand) 22%, transparent);
+  border-top-color: var(--vx-console-brand-strong);
+  border-right-color: color-mix(
+    in srgb,
+    var(--vx-console-brand-strong) 58%,
+    transparent
+  );
+}

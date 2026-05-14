@@ -1,0 +1,21 @@
+.vx-service-health-list th,
+.vx-service-health-list td {
+  padding: var(--vx-admin-service-health-table-cell-padding-y) var(--vx-admin-service-health-table-cell-padding-x);
+  border-bottom: var(--vx-admin-service-health-border-width) dashed color-mix(in srgb, var(--vx-color-auth-accent) 14%, transparent);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.vx-service-health-list th {
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  text-align: center;
+}
+
+.vx-service-health-list td {
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 720;
+  text-align: left;
+}

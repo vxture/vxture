@@ -1,0 +1,6 @@
+/* Management responsive verification fallback styles. */
+
+.vx-verification-cards .vx-tenant-directory-card__metrics b {
+  font-size: var(--vx-admin-body-size);
+  white-space: normal;
+}

@@ -1,0 +1,11 @@
+.vx-payment-row__tenant {
+  justify-self: start;
+  grid-template-columns: var(--vx-admin-management-track-2r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+  text-align: left;
+}
+
+.vx-payment-row__tenant svg {
+  color: var(--tenant-row-tone);
+}

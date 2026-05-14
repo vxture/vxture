@@ -1,0 +1,12 @@
+/* Payment transaction row base styles. */
+
+.vx-payment-row__payment,
+.vx-payment-row__tenant,
+.vx-payment-row__bill,
+.vx-payment-row__amount,
+.vx-payment-row__status,
+.vx-payment-row__reconcile {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}

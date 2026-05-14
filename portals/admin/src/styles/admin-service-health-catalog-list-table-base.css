@@ -1,0 +1,5 @@
+.vx-service-health-list table {
+  width: 100%;
+  min-width: var(--vx-admin-service-health-table-min-width);
+  border-collapse: collapse;
+}

@@ -1,0 +1,11 @@
+.vx-assistant-message__thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-assistant-space-4xl);
+  color: var(--vx-shell-muted, var(--vx-color-text-muted));
+  font-weight: 640;
+}
+
+.dark .vx-assistant-message__thinking {
+  color: var(--vx-shell-icon-muted, var(--vx-color-text-muted));
+}

@@ -1,0 +1,5 @@
+@keyframes vx-assistant-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

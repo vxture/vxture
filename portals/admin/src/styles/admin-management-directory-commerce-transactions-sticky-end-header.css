@@ -1,0 +1,6 @@
+.vx-order-directory-list .vx-tenant-directory-list__header > span:last-child,
+.vx-billing-directory-list .vx-tenant-directory-list__header > span:last-child,
+.vx-invoice-directory-list .vx-tenant-directory-list__header > span:last-child,
+.vx-payment-directory-list .vx-tenant-directory-list__header > span:last-child {
+  z-index: 4;
+}

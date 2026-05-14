@@ -1,0 +1,19 @@
+.vx-model-row__identity p,
+.vx-model-grant-row__model p,
+.vx-model-row__muted,
+.vx-tenant-directory-row small,
+.vx-tenant-directory-card small,
+.vx-tenant-list-card__meta small,
+.vx-tenant-list-card__metrics small,
+.vx-tenant-table__row small,
+.vx-tenant-member-row small,
+.vx-tenant-member-row__name small,
+.vx-tenant-member-row__status small,
+.vx-tenant-member-card small,
+.vx-tenant-usage__numbers small,
+.vx-tenant-audit-list__item small,
+.vx-tenant-audit-list__item em,
+.vx-tenant-ticket small,
+.vx-tenant-ticket em {
+  font-weight: 400;
+}

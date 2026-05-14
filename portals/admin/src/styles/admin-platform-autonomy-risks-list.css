@@ -1,0 +1,4 @@
+.platform-autonomy-risk-list {
+  display: grid;
+  gap: var(--vx-admin-platform-autonomy-gap-md);
+}

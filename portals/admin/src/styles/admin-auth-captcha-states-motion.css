@@ -1,0 +1,11 @@
+.auth-captcha--dragging .auth-captcha__handle,
+.auth-captcha--dragging .auth-captcha__piece,
+.auth-captcha--dragging .auth-captcha__progress {
+  transition: none;
+}
+
+.auth-captcha--returning .auth-captcha__handle,
+.auth-captcha--returning .auth-captcha__piece,
+.auth-captcha--returning .auth-captcha__progress {
+  transition: transform var(--vx-admin-captcha-return-duration) cubic-bezier(0.22, 1, 0.36, 1);
+}

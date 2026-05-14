@@ -1,0 +1,17 @@
+.vx-invoice-pill--none,
+.vx-invoice-pill--bill-cancelled,
+.vx-invoice-pill--type-normal,
+.vx-invoice-pill--type-adjust,
+.vx-invoice-pill--type-supplement,
+.vx-invoice-pill--type-prepaid,
+.vx-invoice-pill--type-special_vat,
+.vx-invoice-pill--type-normal_vat,
+.vx-invoice-pill--type-electronic,
+.vx-invoice-pill--type-paper,
+.vx-invoice-pill--type-other,
+.vx-invoice-pill--tax-individual,
+.vx-invoice-pill--tax-government,
+.vx-invoice-pill--tax-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}

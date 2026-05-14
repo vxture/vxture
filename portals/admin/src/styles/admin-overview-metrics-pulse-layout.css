@@ -1,41 +1,5 @@
-/* Admin overview pulse layout styles. */
-
-.admin-overview-pulse {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--vx-admin-overview-space-2r);
-}
-
-.admin-overview-pulse__item {
-  min-width: 0;
-  min-height: var(--vx-admin-overview-size-6r);
-  display: grid;
-  align-content: start;
-  gap: var(--vx-admin-overview-space-1r);
-  padding: var(--vx-admin-overview-space-15r);
-  border: var(--vx-admin-overview-line-width-1p) solid color-mix(in srgb, var(--vx-color-brand-400) 16%, transparent);
-  border-top: var(--vx-admin-overview-line-width-2p) solid var(--overview-tone);
-  border-radius: var(--admin-overview-card-radius);
-  background: color-mix(in srgb, var(--vx-color-white) 68%, transparent);
-}
-
-.admin-overview-pulse__label,
-.admin-overview-mini span,
-.admin-overview-model-total span,
-.admin-overview-rating__item span {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--vx-admin-overview-space-05r);
-  color: var(--vx-color-text-muted);
-  font-size: var(--vx-admin-caption-size);
-  font-weight: 780;
-}
-
-.admin-overview-pulse__line {
-  min-width: 0;
-  display: flex;
-  align-items: flex-end;
-  gap: var(--vx-admin-overview-space-075r);
-  flex-wrap: nowrap;
-}
+@import "./admin-overview-metrics-pulse-layout-grid.css";
+@import "./admin-overview-metrics-pulse-layout-item.css";
+@import "./admin-overview-metrics-pulse-layout-copy.css";
+@import "./admin-overview-metrics-pulse-layout-line.css";
 
