@@ -505,7 +505,7 @@ vx-ai-gateway, vx-ai-gateway-pg
 
 不同业务相互隔离，一个业务崩溃不影响平台控制面。
 
-详见 [`docs/deployment/services.md`](../../deployment/services.md)。
+详见 [`docs/deployment/04-services.md`](../../deployment/04-services.md)。
 
 ---
 

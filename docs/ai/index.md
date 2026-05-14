@@ -8,10 +8,10 @@
 
 | 文件 | 内容 | 优先级 |
 |------|------|--------|
-| [`coding-rules.md`](coding-rules.md) | AI 编码行为规则（操作范围 / 层边界 / 输出质量） | 必读 |
-| [`coding-style.md`](coding-style.md) | TypeScript 约定 / 命名规则 / 导出风格 | 必读 |
-| [`coding-comments.md`](coding-comments.md) | 文件头模板 / JSDoc 格式 / 分区注释 / 中文注释要求 | 必读 |
-| [`coding-typescript.md`](coding-typescript.md) | TypeScript 配置标准 / tsconfig 继承结构 / 严格模式策略 | 必读 |
+| [`01-coding-rules.md`](01-coding-rules.md) | AI 编码行为规则（操作范围 / 层边界 / 输出质量） | 必读 |
+| [`02-coding-style.md`](02-coding-style.md) | TypeScript 约定 / 命名规则 / 导出风格 | 必读 |
+| [`03-coding-comments.md`](03-coding-comments.md) | 文件头模板 / JSDoc 格式 / 分区注释 / 中文注释要求 | 必读 |
+| [`04-coding-typescript.md`](04-coding-typescript.md) | TypeScript 配置标准 / tsconfig 继承结构 / 严格模式策略 | 必读 |
 | [`port-allocation.md`](port-allocation.md) | 全局端口表 / 3NNX 规则 / 新服务登记流程 | 按需 |
 
 ## 工程合规审计
@@ -26,10 +26,10 @@
 根目录 CLAUDE.md（全局强制规则，G1-G6）
     │
     └── docs/ai/（详细规范文档）
-            ├── coding-rules.md（AI 行为约束细则）
-            ├── coding-style.md（代码风格细则）
-            ├── coding-comments.md（注释格式细则）
-            └── coding-typescript.md（TypeScript 配置规范）
+            ├── 01-coding-rules.md（AI 行为约束细则）
+            ├── 02-coding-style.md（代码风格细则）
+            ├── 03-coding-comments.md（注释格式细则）
+            └── 04-coding-typescript.md（TypeScript 配置规范）
 ```
 
 规则冲突时，以根目录 `CLAUDE.md` 为准。

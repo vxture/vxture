@@ -5,7 +5,7 @@
 
 ---
 
-> 节点规格与 Tailscale IP 见 [`docs/deployment/overview.md` § 节点信息](overview.md)。
+> 节点规格与 Tailscale IP 见 [`docs/deployment/00-overview.md` § 节点信息](overview.md)。
 
 ---
 
@@ -314,6 +314,6 @@ sudo sysctl -p
 
 ## 参考文档
 
-- `docs/deployment/overview.md` — 架构总览（AI Coding 参考）
-- `docs/deployment/services.md` — Docker Compose 编排
-- `docs/deployment/ci-cd.md` — CI/CD 流水线
+- `docs/deployment/00-overview.md` — 架构总览（AI Coding 参考）
+- `docs/deployment/04-services.md` — Docker Compose 编排
+- `docs/deployment/05-ci-cd.md` — CI/CD 流水线

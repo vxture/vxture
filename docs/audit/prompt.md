@@ -20,9 +20,9 @@ docs/architecture/12-typescript.md
 
 AI Standards
 
-docs/ai/coding-comments.md
-docs/ai/coding-rules.md
-docs/ai/coding-style.md
+docs/ai/03-coding-comments.md
+docs/ai/01-coding-rules.md
+docs/ai/02-coding-style.md
 
 Audit Scope
 

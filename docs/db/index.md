@@ -74,7 +74,7 @@ npx prisma migrate resolve --applied "0000_baseline" \
 
 ## 完整部署架构
 
-见 [`docs/deployment/services.md`](../deployment/services.md) — 包含各 PostgreSQL 容器的 Compose 配置、网络隔离和资源规格。
+见 [`docs/deployment/04-services.md`](../deployment/04-services.md) — 包含各 PostgreSQL 容器的 Compose 配置、网络隔离和资源规格。
 
 ---
 

@@ -63,7 +63,7 @@ It ensures consistent, high-quality, and maintainable code generation.
 
 ## 6. Comment and Documentation Standards
 
-- Follow **claude-coding-comments.md** strictly.
+- Follow **claude-03-coding-comments.md** strictly.
 - All files must include:
   - `@package` – package name
   - `@layer` – layer (Presentation, Application, Domain, Infrastructure, Shared)
@@ -82,7 +82,7 @@ It ensures consistent, high-quality, and maintainable code generation.
 3. **Respect file and folder structure** as outlined in architecture docs.
 4. **Preserve all existing documentation and prompt files**.
 5. **Provide example import statements** for other layers if relevant.
-6. **Follow Claude code style** (`claude-coding-style.md`) and TypeScript best practices.
+6. **Follow Claude code style** (`claude-02-coding-style.md`) and TypeScript best practices.
 
 ---
 

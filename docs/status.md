@@ -226,7 +226,7 @@ WEBSITE_BASE_URL=https://vxture.com
 
 ## 附：部署待完成事项
 
-> 架构背景见 [`docs/deployment/overview.md`](deployment/overview.md)。
+> 架构背景见 [`docs/deployment/00-overview.md`](deployment/00-overview.md)。
 
 ### 🔴 基础设施整理（优先）
 - [ ] worker-01：按规范重建 `/data/platform/` 目录结构

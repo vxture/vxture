@@ -62,7 +62,7 @@
 ### v1.9.0 — 2026-05-14
 
 - 删除与 `docs/packages/` 完全重复的层级文档：Shared、AI SDK、Design System、Platform SDK 专项文档
-- 迁移定位错误的文件：12-typescript → `docs/ai/coding-typescript.md`；14-ai-gateway → `docs/design/`；15-control-plane-overview → `docs/design/`
+- 迁移定位错误的文件：12-typescript → `docs/ai/04-coding-typescript.md`；14-ai-gateway → `docs/design/`；15-control-plane-overview → `docs/design/`
 - 删除机器生成产物：03-package-graph.json
 - `docs/ai/audit/` 提升为 `docs/audit/`（工程合规审计，不限于 AI 代码）
 - 架构文档从 16 个精简为 8 个，消除维护两处的负担

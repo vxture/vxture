@@ -72,7 +72,7 @@ docs/
 | 数据库 Schema 变更 | `db/index.md` + `packages/core/database.md` |
 | 部署 / 环境配置 | `deployment/index.md` |
 | 端口分配 | `ai/port-allocation.md` |
-| AI 编码规则 | `ai/coding-rules.md` |
+| AI 编码规则 | `ai/01-coding-rules.md` |
 | Core 包架构审计 | `ai/audit/checklist-core.md` |
 | Design System 合规审计 | `ai/audit/checklist-ds.md` |
 | 平台当前进度 | `status.md` |
@@ -84,9 +84,9 @@ docs/
 | 规则类型 | 文件 |
 |---------|------|
 | 操作范围 / 层边界 / TypeScript / 注释规范 | 根目录 `CLAUDE.md`（G1-G6） |
-| 详细编码规则 | `docs/ai/coding-rules.md` |
-| 注释格式 | `docs/ai/coding-comments.md` |
-| 代码风格 | `docs/ai/coding-style.md` |
+| 详细编码规则 | `docs/ai/01-coding-rules.md` |
+| 注释格式 | `docs/ai/03-coding-comments.md` |
+| 代码风格 | `docs/ai/02-coding-style.md` |
 
 ---
 

@@ -75,7 +75,7 @@ Required tags:
 
 Follow:
 
-docs/ai/claude-coding-comments.md
+docs/ai/claude-03-coding-comments.md
 
 5. Do Not Introduce Framework Dependencies in Core
 

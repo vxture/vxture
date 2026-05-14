@@ -533,6 +533,6 @@ docker compose -f compose.ruyin.prod.yml up -d
 
 ## 参考文档
 
-- `docs/deployment/infrastructure.md` — 数据目录与底层配置
-- `docs/deployment/environments.md` — 环境变量矩阵
+- `docs/deployment/02-infrastructure.md` — 数据目录与底层配置
+- `docs/deployment/01-environments.md` — 环境变量矩阵
 - `docs/ai/port-allocation.md` — 端口分配规范
