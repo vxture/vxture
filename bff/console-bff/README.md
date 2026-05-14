@@ -1,21 +1,13 @@
-# Console BFF
+# @vxture/bff-console
 
-MVP scaffold for the unified `console` application.
+租户工作台专属 BFF，聚合 console 页面所需数据，委托 auth-bff 完成 JWT 签发。
 
-## Exposed routes
+完整接口契约与架构约束见 [`docs/packages/bff/console.md`](../../docs/packages/bff/console.md)。
 
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `POST /api/auth/tenant/switch`
-- `GET /api/auth/session`
-- `GET /api/me`
-- `GET /api/capabilities`
-- `GET /api/tenant-context`
-- `GET /api/iam/summary`
-- `GET /api/subscription/overview`
+---
 
-## Notes
+## 关键约束
 
-- Password login and tenant switching are delegated to auth-bff; console-bff verifies JWT only.
-- Console session cookies now use platform-scoped names so the auth contract is not console-private.
-- Tenant context is selected by the signed console token. Console APIs must not accept `tenantId` query parameters for tenant-scoped reads or writes.
+- 密码登录 / 租户切换均委托 auth-bff 执行，console-bff 只做 JWT 校验
+- Session Cookie 使用平台级命名（`vx_tenant_access_token`），非 console 私有
+- 租户范围的读写必须从 JWT 解析 tenantId，禁止接受 `?tenantId=` query 参数

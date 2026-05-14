@@ -1,6 +1,6 @@
 # @vxture/service-ticket
 
-> ⚠️ 待大版本重构 | 迁移自 `services/support/ticket/CLAUDE.md`
+> ⚠️ 待大版本重构 | 迁移自 `services/support/ticket/AGENTS.md`
 > 架构层参考：[`docs/architecture/04-service-layer.md`](../../architecture/04-service-layer.md)
 
 ---

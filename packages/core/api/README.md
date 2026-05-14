@@ -2,7 +2,7 @@
 
 > **Usage documentation for developers/AI**
 > This document details how to use the features and methods of the @vxture/core-api package.
-> For development constraints and specifications, please see `CLAUDE.md`.
+> For development constraints and specifications, please see `AGENTS.md`.
 
 ---
 
@@ -281,7 +281,7 @@ packages/core/api/
 │   │   └── index.ts
 │   └── index.ts             # Single public export
 ├── README.md                # Usage documentation (this file)
-├── CLAUDE.md                # AI coding guidelines
+├── AGENTS.md                # AI coding guidelines
 └── package.json             # Package configuration
 ```
 

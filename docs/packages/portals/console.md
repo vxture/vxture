@@ -62,6 +62,36 @@ app/
 | `tenant-context.router.ts` | 租户上下文 |
 | `phone-auth.router.ts` | 手机号认证 |
 
+## UI 分层框架
+
+| 层 | 路径 | 职责 |
+|----|------|------|
+| Shell | `src/layout/shell/` | AppShell / Header / Sidebar / AssistantPanel / 跨页面布局 |
+| Page Layout | `src/layout/page/` | ConsolePage / PageCluster / PageActions / EntityListPage / SettingsSplitPage |
+| Shared Module UI | `src/modules/shared/` | PageHeader / MetricGrid / TableToolbar / EmptyState / EntityTableSection / DetailDrawer / SectionNav |
+| Module | `src/modules/{domain}/` | 业务组合，路由级装配，仅消费上层原语 |
+
+导入顺序：`@/layout` → `@/modules/shared` → `@vxture/design-system` → 语义业务组件 → 模块本地。
+
+禁止在 `portals/*` 内创建 `components/ui` 或 `components/primitives`；可跨模块复用的原语须先纳入 `@vxture/design-system`。
+
+---
+
+## 模块规划
+
+| 一级模块 | 二级页面 | 权限要求 |
+|---------|---------|---------|
+| Overview | Dashboard、关键指标 | — |
+| Workspace | Members / Roles / Organization / Access Control | `tenant.user.manage` / `tenant.role.manage` |
+| Commerce | Subscription / Billing / Quotas | `tenant.subscription.read` / `tenant.billing.read` |
+| Platform | Tenants / Products / Pricing / Models | `platform.*` 系列能力 |
+| Usage | 用量概览 / 消耗记录 | `tenant.quota.read` |
+| Settings | 租户设置 / 通知 / 个人偏好 | — |
+
+设计规范见 [`docs/design/console.md`](../../design/console.md)。
+
+---
+
 ## 依赖约束
 
 ```typescript

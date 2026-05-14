@@ -1,6 +1,6 @@
 # @vxture/core-utils — Platform-level Utilities
 
-> Usage documentation for developers. Development specifications can be found in `CLAUDE.md`.
+> Usage documentation for developers. Development specifications can be found in `AGENTS.md`.
 
 ---
 

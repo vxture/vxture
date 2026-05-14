@@ -1,6 +1,6 @@
 # @vxture/shared
 
-> ⚠️ 待大版本重构 | 迁移自 `packages/shared/shared/CLAUDE.md`
+> ⚠️ 待大版本重构 | 迁移自 `packages/shared/shared/AGENTS.md`
 > 架构层：`Shared`（见 `docs/architecture/02-package-boundaries.md`）
 
 ---

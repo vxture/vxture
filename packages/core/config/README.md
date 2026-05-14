@@ -1,7 +1,7 @@
 # @vxture/core-config — Configuration Management Infrastructure
 
 > **Usage documentation for developers/AI**
-> For development constraints and specifications, see `CLAUDE.md`.
+> For development constraints and specifications, see `AGENTS.md`.
 
 ---
 
@@ -231,7 +231,7 @@ packages/core/config/
 │   ├── types/        # VxConfig, CONFIG_TOKEN
 │   ├── utils/        # Object utilities (deepMerge, deepClone, isPlainObject)
 │   └── index.ts      # Public entry point
-├── CLAUDE.md         # AI coding guidelines
+├── AGENTS.md         # AI coding guidelines
 └── README.md         # Usage documentation (this file)
 ```
 
@@ -239,4 +239,4 @@ packages/core/config/
 
 ## Adding New Configuration Domains
 
-See "Adding New Configuration Domains (Standard Process)" in `CLAUDE.md`.
+See "Adding New Configuration Domains (Standard Process)" in `AGENTS.md`.

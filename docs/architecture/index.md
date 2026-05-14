@@ -1,6 +1,6 @@
 # Architecture Documentation Index
 
-**Version**: 1.10.0
+**Version**: 1.11.0
 **Last Updated**: 2026-05-14
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
@@ -53,6 +53,10 @@
 | agent01 | agent-studio/agent-template | agent-server/agent-template | bff/agent-template-bff | ✅ 模板（从此分叉新建 Agent）         |
 
 ## Changelog
+
+### v1.11.0 — 2026-05-14
+
+- `04-service-layer.md` v1.4.0：新增 §12 Repository 层约束（数据访问隔离规则、领域类型与 Prisma 类型隔离、变更影响面规则）、§13 BFF 响应契约稳定性（契约演进规则、破坏性变更流程）、§14 数据库迁移安全规则
 
 ### v1.10.0 — 2026-05-14
 

@@ -1,6 +1,6 @@
 # @vxture/bff-website
 
-> ⚠️ 待大版本重构 | 迁移自 `bff/website-bff/CLAUDE.md`
+> ⚠️ 待大版本重构 | 迁移自 `bff/website-bff/AGENTS.md`
 > 架构层参考：[`docs/architecture/05-bff-layer.md`](../../architecture/05-bff-layer.md)
 
 ---

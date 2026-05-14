@@ -2,7 +2,7 @@
 
 > **读取协议**：这是 AI agent 工作前的 T0 入口文件。
 > 每次进入任务前必读，< 150 行，快速定位后按需深入。
-> 全局编码规则见根目录 `CLAUDE.md`。
+> 全局编码规则见根目录 `AGENTS.md`。
 
 ---
 
@@ -93,7 +93,7 @@ docs/
 
 | 规则类型 | 文件 |
 |---------|------|
-| 操作范围 / 层边界 / TypeScript / 注释规范 | 根目录 `CLAUDE.md`（G1-G6） |
+| 操作范围 / 层边界 / TypeScript / 注释规范 | 根目录 `AGENTS.md`（G1-G6） |
 | 详细编码规则 | `docs/ai/01-coding-rules.md` |
 | 注释格式 | `docs/ai/03-coding-comments.md` |
 | 代码风格 | `docs/ai/02-coding-style.md` |

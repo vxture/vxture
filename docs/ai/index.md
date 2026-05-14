@@ -23,7 +23,7 @@
 ## 文档层级关系
 
 ```
-根目录 CLAUDE.md（全局强制规则，G1-G6）
+根目录 AGENTS.md（全局强制规则，G1-G6）
     │
     └── docs/ai/（详细规范文档）
             ├── 01-coding-rules.md（AI 行为约束细则）
@@ -32,4 +32,4 @@
             └── 04-coding-typescript.md（TypeScript 配置规范）
 ```
 
-规则冲突时，以根目录 `CLAUDE.md` 为准。
+规则冲突时，以根目录 `AGENTS.md` 为准。

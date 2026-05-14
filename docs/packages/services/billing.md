@@ -1,6 +1,6 @@
 # @vxture/service-billing
 
-> ⚠️ 待大版本重构 | 迁移自 `services/commerce/billing/CLAUDE.md`
+> ⚠️ 待大版本重构 | 迁移自 `services/commerce/billing/AGENTS.md`
 > 架构层参考：[`docs/architecture/04-service-layer.md`](../../architecture/04-service-layer.md)
 
 ---

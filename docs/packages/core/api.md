@@ -1,6 +1,6 @@
 # @vxture/core-api
 
-> ⚠️ 待大版本重构 | 迁移自 `packages/core/api/CLAUDE.md`
+> ⚠️ 待大版本重构 | 迁移自 `packages/core/api/AGENTS.md`
 > 架构层参考：[`docs/architecture/03-core-layer.md`](../../architecture/03-core-layer.md)
 
 ---

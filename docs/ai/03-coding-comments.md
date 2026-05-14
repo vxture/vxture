@@ -132,7 +132,7 @@ export enum EExample {
 // ⚠️ 跨层引用：仅引入类型，不引入运行时依赖
 import type { SomeType } from '@vxture/bff-website'
 
-// ⚠️ 跨层引用：设计系统内部模块共享，已在 CLAUDE.md G2 说明
+// ⚠️ 跨层引用：设计系统内部模块共享，已在 AGENTS.md G2 说明
 import { tokens } from '../design-tokens'
 ```
 

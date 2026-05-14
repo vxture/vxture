@@ -1,6 +1,6 @@
 # vela-server
 
-> ⚠️ 待大版本重构 | 迁移自 `agent-server/vela/CLAUDE.md`
+> ⚠️ 待大版本重构 | 迁移自 `agent-server/vela/AGENTS.md`
 > 架构层参考：[`docs/architecture/06-agent-server.md`](../../architecture/06-agent-server.md)
 > 产品规格：[`docs/product/agents/vela/spec.md`](../../product/agents/vela/spec.md)
 

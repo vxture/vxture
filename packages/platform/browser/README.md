@@ -2,7 +2,7 @@
 
 > **面向开发人员/AI 的使用文档**
 > 本文档详细说明如何使用 @vxture/platform-browser 包的功能和方法。
-> 如需了解开发该包的约束和规范，请查看 `CLAUDE.md`。
+> 如需了解开发该包的约束和规范，请查看 `AGENTS.md`。
 
 ---
 
@@ -109,7 +109,7 @@ packages/platform/browser/
 │   │   └── resetScrollTop.utils.ts    # 滚动工具函数
 │   └── index.ts               # 单一公共出口
 ├── README.md                  # 使用文档（本文档）
-├── CLAUDE.md                  # AI 编码指南
+├── AGENTS.md                  # AI 编码指南
 └── package.json               # 包配置
 ```
 
