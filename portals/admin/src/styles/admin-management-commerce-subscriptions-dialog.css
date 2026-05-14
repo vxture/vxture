@@ -1,6 +1,10 @@
 /* Subscription action dialog style entry. Keep concrete rules in admin-management-commerce-subscriptions-dialog-* modules. */
 
 @import "./admin-management-commerce-subscriptions-dialog-surface.css";
-@import "./admin-management-commerce-subscriptions-dialog-header.css";
-@import "./admin-management-commerce-subscriptions-dialog-fields.css";
+@import "./admin-management-commerce-subscriptions-dialog-header-layout.css";
+@import "./admin-management-commerce-subscriptions-dialog-header-icons.css";
+@import "./admin-management-commerce-subscriptions-dialog-header-copy.css";
+@import "./admin-management-commerce-subscriptions-dialog-fields-structure.css";
+@import "./admin-management-commerce-subscriptions-dialog-fields-controls.css";
+@import "./admin-management-commerce-subscriptions-dialog-fields-state.css";
 @import "./admin-management-commerce-subscriptions-dialog-footer.css";

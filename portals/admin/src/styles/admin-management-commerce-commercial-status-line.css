@@ -1,7 +1,0 @@
-.vx-commercial-status-line {
-  min-width: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--vx-admin-management-space-05r);
-}

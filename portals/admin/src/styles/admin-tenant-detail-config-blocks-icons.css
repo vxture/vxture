@@ -1,9 +1,0 @@
-.vx-tenant-risk-panel > header,
-.vx-tenant-audit-list > header {
-  justify-content: flex-start;
-}
-
-.vx-tenant-risk-panel > header svg,
-.vx-tenant-audit-list > header svg {
-  color: var(--tenant-blue);
-}

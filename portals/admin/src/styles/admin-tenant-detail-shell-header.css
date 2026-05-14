@@ -1,5 +1,6 @@
 /* Tenant detail header style entry. Keep concrete rules in admin-tenant-detail-shell-header-* modules. */
 
-@import "./admin-tenant-detail-shell-header-layout.css";
+@import "./admin-tenant-detail-shell-header-layout-root.css";
+@import "./admin-tenant-detail-shell-header-layout-identity.css";
 @import "./admin-tenant-detail-shell-header-title.css";
 @import "./admin-tenant-detail-shell-header-metrics.css";

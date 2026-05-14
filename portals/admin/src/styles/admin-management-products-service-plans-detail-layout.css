@@ -1,8 +1,0 @@
-.vx-service-plan-tier__identity,
-.vx-service-plan-tier__status,
-.vx-service-plan-tier__summary,
-.vx-service-plan-tier__price {
-  min-width: 0;
-  display: grid;
-  gap: var(--vx-admin-management-space-05r);
-}

@@ -1,5 +1,8 @@
 /* Product capability summary style entry. Keep concrete rules in admin-management-products-capability-summary-* modules. */
 
-@import "./admin-management-products-capability-summary-shell.css";
-@import "./admin-management-products-capability-summary-identity.css";
-@import "./admin-management-products-capability-summary-metrics.css";
+@import "./admin-management-products-capability-summary-shell-page.css";
+@import "./admin-management-products-capability-summary-shell-panel.css";
+@import "./admin-management-products-capability-summary-identity-layout.css";
+@import "./admin-management-products-capability-summary-identity-content.css";
+@import "./admin-management-products-capability-summary-metrics-layout.css";
+@import "./admin-management-products-capability-summary-metrics-content.css";

@@ -1,6 +1,0 @@
-.vx-admin-role-permission-dialog__panel header {
-  display: grid;
-  grid-template-columns: var(--vx-admin-roles-track-275r) minmax(0, 1fr) var(--vx-admin-roles-track-25r);
-  align-items: center;
-  gap: var(--vx-admin-roles-space-0875r);
-}

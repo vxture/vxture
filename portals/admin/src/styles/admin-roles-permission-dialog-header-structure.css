@@ -1,0 +1,16 @@
+.vx-admin-role-permission-dialog__panel header {
+  display: grid;
+  grid-template-columns: var(--vx-admin-roles-track-275r) minmax(0, 1fr) var(--vx-admin-roles-track-25r);
+  align-items: center;
+  gap: var(--vx-admin-roles-space-0875r);
+}
+
+.vx-admin-role-permission-dialog__icon {
+  width: var(--vx-admin-roles-size-275r);
+  height: var(--vx-admin-roles-size-275r);
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-400);
+}

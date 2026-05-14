@@ -1,5 +1,4 @@
-@import "./admin-assistant-messages-bubbles-tones-user.css";
-@import "./admin-assistant-messages-bubbles-tones-assistant.css";
+@import "./admin-assistant-messages-bubbles-tones-structure.css";
 @import "./admin-assistant-messages-bubbles-tones-states.css";
 @import "./admin-assistant-messages-bubbles-tones-dark.css";
 

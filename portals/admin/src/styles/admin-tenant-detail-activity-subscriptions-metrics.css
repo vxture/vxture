@@ -1,5 +1,0 @@
-.vx-tenant-subscription__metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--vx-admin-management-space-1r);
-}

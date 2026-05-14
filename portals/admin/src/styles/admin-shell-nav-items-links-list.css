@@ -1,4 +1,0 @@
-.admin-shell-nav__items {
-  display: grid;
-  gap: var(--vx-admin-shell-nav-section-gap);
-}

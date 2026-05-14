@@ -1,7 +1,0 @@
-.vx-product-capability-related-list,
-.vx-product-capability-metric-rules {
-  min-width: 0;
-  display: grid;
-  gap: 0;
-  border-top: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
-}

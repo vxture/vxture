@@ -1,8 +1,0 @@
-.vx-service-plan-tier__identity {
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-}
-
-.vx-service-plan-tier__identity svg {
-  color: var(--service-plan-tone);
-}

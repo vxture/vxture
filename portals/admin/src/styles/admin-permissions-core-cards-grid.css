@@ -1,8 +1,0 @@
-/* Admin permission card grid styles. */
-
-.vx-admin-permission-card-grid {
-  min-width: 0;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--vx-admin-permission-space-075r);
-}

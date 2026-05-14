@@ -1,2 +1,5 @@
-@import "./admin-management-models-rows-shared-copy.css";
-@import "./admin-management-models-rows-shared-controls.css";
+@import "./admin-management-models-rows-shared-copy-small.css";
+@import "./admin-management-models-rows-shared-copy-icons.css";
+@import "./admin-management-models-rows-shared-copy-tags.css";
+@import "./admin-management-models-rows-shared-controls-search.css";
+@import "./admin-management-models-rows-shared-controls-products.css";

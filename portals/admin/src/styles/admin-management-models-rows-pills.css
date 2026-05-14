@@ -1,4 +1,2 @@
-@import "./admin-management-models-rows-pills-provider.css";
-@import "./admin-management-models-rows-pills-state-icon.css";
-@import "./admin-management-models-rows-pills-gateway-status.css";
-@import "./admin-management-models-rows-pills-link.css";
+@import "./admin-management-models-rows-pills-structure.css";
+@import "./admin-management-models-rows-pills-states.css";

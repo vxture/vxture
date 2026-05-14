@@ -1,7 +1,0 @@
-/* Admin product entry styles. Dimensions must resolve through DS product tokens. */
-
-.vx-products-summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--vx-admin-products-space-1r);
-}

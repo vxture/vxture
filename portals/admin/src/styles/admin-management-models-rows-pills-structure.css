@@ -1,0 +1,24 @@
+.vx-model-provider-pill--online {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-model-provider-pill--private {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-model-link-pill--normal {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-model-link-pill--abnormal {
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-model-link-pill--checking {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}

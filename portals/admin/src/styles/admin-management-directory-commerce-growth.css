@@ -1,5 +1,7 @@
 /* Commerce growth directory style entry. Keep concrete rules in admin-management-directory-commerce-growth-* modules. */
 
-@import "./admin-management-directory-commerce-growth-alignment.css";
+@import "./admin-management-directory-commerce-growth-alignment-primary.css";
+@import "./admin-management-directory-commerce-growth-alignment-default.css";
+@import "./admin-management-directory-commerce-growth-alignment-rows.css";
 @import "./admin-management-directory-commerce-growth-sticky.css";
 @import "./admin-management-directory-commerce-growth-selection.css";

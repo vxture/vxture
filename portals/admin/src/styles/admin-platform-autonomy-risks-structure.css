@@ -1,0 +1,22 @@
+.platform-autonomy-risk-list {
+  display: grid;
+  gap: var(--vx-admin-platform-autonomy-gap-md);
+}
+
+.platform-autonomy-risk {
+  min-height: var(--vx-admin-platform-autonomy-risk-min-height);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vx-admin-platform-autonomy-gap-lg);
+  padding: var(--vx-admin-platform-autonomy-gap-lg);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-shell-surface-soft);
+  text-decoration: none;
+}
+
+.platform-autonomy-risk span {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-platform-autonomy-gap-xs);
+}

@@ -1,5 +1,8 @@
 /* Model strategy list style entry. Keep concrete rules in admin-management-models-strategy-lists-* modules. */
 
 @import "./admin-management-models-strategy-lists-layout.css";
-@import "./admin-management-models-strategy-lists-alignment.css";
-@import "./admin-management-models-strategy-lists-sticky.css";
+@import "./admin-management-models-strategy-lists-alignment-header.css";
+@import "./admin-management-models-strategy-lists-alignment-start.css";
+@import "./admin-management-models-strategy-lists-alignment-center.css";
+@import "./admin-management-models-strategy-lists-sticky-start.css";
+@import "./admin-management-models-strategy-lists-sticky-end.css";

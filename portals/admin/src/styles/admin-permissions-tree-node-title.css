@@ -1,4 +1,4 @@
-@import "./admin-permissions-tree-node-title-shell.css";
-@import "./admin-permissions-tree-node-title-row.css";
+@import "./admin-permissions-tree-node-title-structure.css";
+@import "./admin-permissions-tree-node-title-row-layout.css";
+@import "./admin-permissions-tree-node-title-row-toggle.css";
 @import "./admin-permissions-tree-node-title-copy.css";
-@import "./admin-permissions-tree-node-title-tags.css";

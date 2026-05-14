@@ -1,0 +1,34 @@
+.vx-model-strategy-row__model strong,
+.vx-model-strategy-row__agent strong {
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 760;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-model-strategy-row__model small,
+.vx-model-strategy-row__agent small,
+.vx-model-strategy-row__expires {
+  overflow: hidden;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 500;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-model-strategy-row__quota,
+.vx-model-strategy-row__priority,
+.vx-model-strategy-row__tenant {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

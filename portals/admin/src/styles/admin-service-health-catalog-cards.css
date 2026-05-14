@@ -1,4 +1,5 @@
 @import "./admin-service-health-catalog-cards-shell.css";
-@import "./admin-service-health-catalog-cards-header.css";
+@import "./admin-service-health-catalog-cards-header-layout.css";
+@import "./admin-service-health-catalog-cards-header-copy.css";
 @import "./admin-service-health-catalog-cards-status.css";
 @import "./admin-service-health-catalog-cards-meta.css";

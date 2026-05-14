@@ -1,5 +1,6 @@
 /* Payment transaction style entry. Keep concrete rules in admin-management-commerce-transactions-payments-* modules. */
 
-@import "./admin-management-commerce-transactions-payments-rows.css";
+@import "./admin-management-commerce-transactions-payments-rows-structure.css";
+@import "./admin-management-commerce-transactions-payments-rows-content.css";
 @import "./admin-management-commerce-transactions-payments-status.css";
 @import "./admin-management-commerce-transactions-payments-cards.css";

@@ -1,3 +1,4 @@
 @import "./admin-management-directory-roles-layout-grid.css";
-@import "./admin-management-directory-roles-layout-identity.css";
+@import "./admin-management-directory-roles-layout-identity-row.css";
+@import "./admin-management-directory-roles-layout-identity-copy.css";
 @import "./admin-management-directory-roles-layout-cells.css";

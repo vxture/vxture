@@ -1,4 +1,6 @@
-@import "./admin-management-products-capability-lists-rows-shell.css";
+@import "./admin-management-products-capability-lists-rows-shell-list.css";
+@import "./admin-management-products-capability-lists-rows-shell-row.css";
+@import "./admin-management-products-capability-lists-rows-shell-entitlements.css";
 @import "./admin-management-products-capability-lists-rows-cells.css";
 @import "./admin-management-products-capability-lists-rows-copy.css";
 @import "./admin-management-products-capability-lists-rows-tones.css";

@@ -1,5 +1,3 @@
-@import "./admin-roles-permission-dialog-header-layout.css";
-@import "./admin-roles-permission-dialog-header-icon.css";
-@import "./admin-roles-permission-dialog-header-copy.css";
+@import "./admin-roles-permission-dialog-header-structure.css";
+@import "./admin-roles-permission-dialog-header-content.css";
 @import "./admin-roles-permission-dialog-header-close.css";
-@import "./admin-roles-permission-dialog-header-summary.css";

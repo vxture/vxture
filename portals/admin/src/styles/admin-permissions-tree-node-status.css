@@ -1,4 +1,4 @@
-@import "./admin-permissions-tree-node-status-alignment.css";
+@import "./admin-permissions-tree-node-status-structure.css";
 @import "./admin-permissions-tree-node-status-actions.css";
-@import "./admin-permissions-tree-node-status-role.css";
-@import "./admin-permissions-tree-node-status-layers.css";
+@import "./admin-permissions-tree-node-status-layers-root-l1.css";
+@import "./admin-permissions-tree-node-status-layers-l2-l3.css";

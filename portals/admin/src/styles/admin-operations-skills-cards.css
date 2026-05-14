@@ -1,5 +1,2 @@
-@import "./admin-operations-skills-cards-grid.css";
-@import "./admin-operations-skills-cards-card.css";
-@import "./admin-operations-skills-cards-header.css";
-@import "./admin-operations-skills-cards-copy.css";
-@import "./admin-operations-skills-cards-meta.css";
+@import "./admin-operations-skills-cards-structure.css";
+@import "./admin-operations-skills-cards-content.css";

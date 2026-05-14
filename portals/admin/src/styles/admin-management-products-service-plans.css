@@ -1,7 +1,11 @@
 /* Admin management products service plans style entry. Keep concrete rules in admin-management-products-service-plans-* modules. */
 
 @import "./admin-management-products-service-plans-controls.css";
-@import "./admin-management-products-service-plans-groups.css";
+@import "./admin-management-products-service-plans-groups-shell.css";
+@import "./admin-management-products-service-plans-groups-header.css";
+@import "./admin-management-products-service-plans-groups-identity.css";
+@import "./admin-management-products-service-plans-groups-meta.css";
 @import "./admin-management-products-service-plans-rows.css";
 @import "./admin-management-products-service-plans-cards.css";
-@import "./admin-management-products-service-plans-detail.css";
+@import "./admin-management-products-service-plans-detail-structure.css";
+@import "./admin-management-products-service-plans-detail-content.css";

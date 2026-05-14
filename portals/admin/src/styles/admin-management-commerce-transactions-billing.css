@@ -1,6 +1,8 @@
 /* Billing transaction style entry. Keep concrete rules in admin-management-commerce-transactions-billing-* modules. */
 
-@import "./admin-management-commerce-transactions-billing-rows.css";
+@import "./admin-management-commerce-transactions-billing-rows-structure.css";
+@import "./admin-management-commerce-transactions-billing-rows-content.css";
 @import "./admin-management-commerce-transactions-billing-exceptions.css";
-@import "./admin-management-commerce-transactions-billing-status.css";
+@import "./admin-management-commerce-transactions-billing-status-structure.css";
+@import "./admin-management-commerce-transactions-billing-status-tones.css";
 @import "./admin-management-commerce-transactions-billing-cards.css";

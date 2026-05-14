@@ -1,3 +1,6 @@
-@import "./admin-service-health-catalog-list-table.css";
+@import "./admin-service-health-catalog-list-table-shell.css";
+@import "./admin-service-health-catalog-list-table-base.css";
+@import "./admin-service-health-catalog-list-table-cells.css";
+@import "./admin-service-health-catalog-list-table-rows.css";
 @import "./admin-service-health-catalog-list-service.css";
 @import "./admin-service-health-catalog-list-empty.css";

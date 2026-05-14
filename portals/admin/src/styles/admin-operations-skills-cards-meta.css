@@ -1,7 +1,0 @@
-.vx-skill-card__meta {
-  display: flex;
-  gap: var(--vx-admin-operations-skill-card-meta-gap);
-  margin-top: auto;
-  color: var(--vx-console-muted);
-  font-size: var(--vx-admin-meta-size);
-}

@@ -1,4 +1,2 @@
 @import "./admin-management-pills-base-status-base.css";
-@import "./admin-management-pills-base-status-success.css";
-@import "./admin-management-pills-base-status-warning.css";
-@import "./admin-management-pills-base-status-danger.css";
+@import "./admin-management-pills-base-status-states.css";

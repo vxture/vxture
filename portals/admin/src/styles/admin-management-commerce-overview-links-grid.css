@@ -1,5 +1,0 @@
-.vx-commerce-link-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0;
-  border-top: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
-}

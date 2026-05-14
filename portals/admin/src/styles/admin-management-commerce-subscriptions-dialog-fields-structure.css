@@ -1,0 +1,26 @@
+/* Subscription action dialog field shell styles. */
+
+.vx-subscription-action-dialog__field {
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-subscription-action-dialog__field span,
+.vx-subscription-action-dialog__error {
+  margin: 0;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}
+
+.vx-subscription-action-dialog__field span {
+  color: var(--tenant-muted);
+}
+
+.vx-subscription-action-dialog__field select {
+  appearance: none;
+  padding-right: var(--vx-admin-management-space-225r);
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 5.25L7 8.75L10.5 5.25' stroke='%2394A3B8' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--vx-admin-management-pattern-075r) center;
+  background-size: var(--vx-admin-management-pattern-0875r);
+}

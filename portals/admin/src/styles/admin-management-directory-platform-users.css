@@ -1,5 +1,10 @@
 /* Platform user directory style entry. Keep concrete rules in admin-management-directory-platform-users-* modules. */
 
-@import "./admin-management-directory-platform-users-layout.css";
-@import "./admin-management-directory-platform-users-sticky.css";
-@import "./admin-management-directory-platform-users-rows.css";
+@import "./admin-management-directory-platform-users-layout-grid.css";
+@import "./admin-management-directory-platform-users-layout-rows.css";
+@import "./admin-management-directory-platform-users-sticky-start.css";
+@import "./admin-management-directory-platform-users-sticky-end.css";
+@import "./admin-management-directory-platform-users-rows-selection.css";
+@import "./admin-management-directory-platform-users-rows-copy.css";
+@import "./admin-management-directory-platform-users-rows-role.css";
+@import "./admin-management-directory-platform-users-rows-directory.css";

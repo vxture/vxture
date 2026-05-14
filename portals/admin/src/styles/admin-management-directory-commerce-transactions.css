@@ -1,6 +1,10 @@
 /* Admin management directory commerce transactions style entry. Keep concrete rules in admin-management-directory-commerce-transactions-* modules. */
 
-@import "./admin-management-directory-commerce-transactions-headers.css";
+@import "./admin-management-directory-commerce-transactions-headers-order.css";
+@import "./admin-management-directory-commerce-transactions-headers-billing.css";
+@import "./admin-management-directory-commerce-transactions-headers-invoice.css";
+@import "./admin-management-directory-commerce-transactions-headers-payment.css";
+@import "./admin-management-directory-commerce-transactions-headers-default.css";
 @import "./admin-management-directory-commerce-transactions-rows.css";
 @import "./admin-management-directory-commerce-transactions-sticky.css";
 @import "./admin-management-directory-commerce-transactions-selection.css";

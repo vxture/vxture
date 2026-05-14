@@ -1,5 +1,0 @@
-.vx-assistant-message--assistant {
-  justify-self: start;
-  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent));
-  background: color-mix(in srgb, var(--vx-color-white) 68%, transparent);
-}

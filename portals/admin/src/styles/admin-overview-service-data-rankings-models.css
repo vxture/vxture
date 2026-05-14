@@ -1,9 +1,0 @@
-.admin-overview-model-row {
-  grid-template-columns: minmax(var(--vx-admin-overview-grid-column-md), 0.28fr) minmax(0, 1fr);
-  align-items: start;
-}
-
-.admin-overview-category-grid {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--vx-admin-overview-space-2r);
-}

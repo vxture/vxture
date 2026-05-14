@@ -1,0 +1,15 @@
+.admin-overview-model-category__row strong {
+  overflow: hidden;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-overview-model-category__empty {
+  padding: var(--vx-admin-overview-space-1r) 0;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 700;
+}

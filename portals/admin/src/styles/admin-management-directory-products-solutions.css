@@ -1,4 +1,5 @@
 @import "./admin-management-directory-products-solutions-layout.css";
 @import "./admin-management-directory-products-solutions-alignment.css";
-@import "./admin-management-directory-products-solutions-sticky.css";
+@import "./admin-management-directory-products-solutions-sticky-start.css";
+@import "./admin-management-directory-products-solutions-sticky-end.css";
 @import "./admin-management-directory-products-solutions-selection.css";

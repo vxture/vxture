@@ -1,4 +1,5 @@
 @import "./admin-management-models-rows-actions-base.css";
 @import "./admin-management-models-rows-actions-batch.css";
-@import "./admin-management-models-rows-actions-danger.css";
+@import "./admin-management-models-rows-actions-danger-disabled.css";
+@import "./admin-management-models-rows-actions-danger-tone.css";
 @import "./admin-management-models-rows-actions-layout.css";

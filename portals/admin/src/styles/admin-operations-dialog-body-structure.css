@@ -1,0 +1,30 @@
+.vx-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-admin-operations-dialog-body-gap);
+  padding: var(--vx-admin-operations-dialog-body-padding);
+}
+
+.vx-dialog__textarea {
+  width: 100%;
+  min-height: var(--vx-admin-operations-dialog-textarea-min-height);
+  box-sizing: border-box;
+  padding: var(--vx-admin-operations-dialog-textarea-padding);
+  border: var(--vx-admin-operations-dialog-border-width) solid var(--vx-console-border);
+  border-radius: var(--vx-radius-md);
+  background: var(--vx-console-bg);
+  color: var(--vx-console-text);
+  font: inherit;
+  font-size: var(--vx-admin-body-size);
+  line-height: 1.5;
+  resize: vertical;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.vx-dialog__textarea:focus {
+  border-color: var(--vx-console-brand);
+  outline: none;
+  box-shadow: 0 0 0 var(--vx-admin-operations-dialog-textarea-focus-shadow-width) color-mix(in srgb, var(--vx-console-brand) 18%, transparent);
+}

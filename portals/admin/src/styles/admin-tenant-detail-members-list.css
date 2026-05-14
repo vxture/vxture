@@ -1,5 +1,13 @@
 /* Tenant member list style entry. Keep concrete rules in admin-tenant-detail-members-list-* modules. */
 
-@import "./admin-tenant-detail-members-list-shell.css";
-@import "./admin-tenant-detail-members-list-row.css";
-@import "./admin-tenant-detail-members-list-identity.css";
+@import "./admin-tenant-detail-members-list-shell-container.css";
+@import "./admin-tenant-detail-members-list-shell-grid.css";
+@import "./admin-tenant-detail-members-list-shell-header.css";
+@import "./admin-tenant-detail-members-list-shell-alignment.css";
+@import "./admin-tenant-detail-members-list-row-shell.css";
+@import "./admin-tenant-detail-members-list-row-tones.css";
+@import "./admin-tenant-detail-members-list-row-copy.css";
+@import "./admin-tenant-detail-members-list-identity-layout.css";
+@import "./admin-tenant-detail-members-list-identity-copy.css";
+@import "./admin-tenant-detail-members-list-identity-status.css";
+@import "./admin-tenant-detail-members-list-identity-actions.css";

@@ -1,9 +1,0 @@
-.vx-tenant-pill--active,
-.vx-tenant-pill--normal,
-.vx-tenant-pill--verified,
-.vx-tenant-pill--effective,
-.vx-tenant-pill--success,
-.vx-tenant-pill--closed {
-  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
-  color: var(--tenant-green);
-}

@@ -1,0 +1,31 @@
+.admin-overview-model-metric__icon {
+  width: var(--vx-admin-overview-size-25r);
+  height: var(--vx-admin-overview-size-25r);
+  display: inline-grid;
+  place-items: center;
+  color: var(--overview-tone);
+}
+
+.admin-overview-model-metric__main {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-model-metric__line {
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-075r);
+  flex-wrap: nowrap;
+}
+
+.admin-overview-model-metric__value {
+  overflow: hidden;
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-overview-text-size-15r);
+  font-weight: 760;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

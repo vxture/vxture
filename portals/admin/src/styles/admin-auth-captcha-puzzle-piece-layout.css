@@ -1,9 +1,0 @@
-.auth-captcha__piece {
-  position: absolute;
-  top: calc(var(--vx-admin-captcha-target-top) - var(--vx-admin-captcha-piece-offset-y));
-  left: 0;
-  width: var(--vx-admin-captcha-piece-size);
-  height: var(--vx-admin-captcha-piece-size);
-  border: var(--vx-admin-captcha-border-width) solid color-mix(in srgb, var(--vx-color-shell-brand) 32%, transparent);
-  border-radius: var(--vx-radius-lg);
-}
