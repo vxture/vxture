@@ -42,6 +42,7 @@ Vxture 是基于 **pnpm workspace monorepo** 的企业 SaaS 平台（TypeScript 
 docs/
 ├── agent.md              ← 本文件，T0 入口
 ├── glossary.md           ← 核心术语表（30 个概念权威定义）
+├── tech-debt.md          ← 技术债登记表（TD-NNN 机制、当前债务清单）
 ├── status.md             ← 平台实施状态（实时更新）
 │
 ├── architecture/         ← 层级结构 / 依赖边界（权威，慢变化）
