@@ -1,3 +1,52 @@
-@import "./admin-governance-list-sticky-header.css";
-@import "./admin-governance-list-sticky-start.css";
-@import "./admin-governance-list-sticky-end.css";
+/* Admin platform governance sticky header styles. */
+
+.vx-platform-governance-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:first-child,
+.vx-platform-governance-list
+  .vx-tenant-directory-row
+  > .vx-platform-governance-row__select {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: var(--vx-admin-governance-sticky-shadow-width) 0 0 color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent);
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:first-child {
+  z-index: 4;
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:last-child,
+.vx-platform-governance-list .vx-tenant-directory-row > .vx-tenant-actions {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: calc(var(--vx-admin-governance-sticky-shadow-width) * -1) 0 0 color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+}
+
+.vx-platform-governance-list
+  .vx-tenant-directory-list__header
+  > span:last-child {
+  z-index: 4;
+}

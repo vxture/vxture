@@ -1,9 +1,0 @@
-.dark .admin-workspace-switcher__item {
-  border-color: color-mix(in srgb, currentColor 26%, var(--vx-shell-line));
-  background:
-    linear-gradient(180deg, color-mix(in srgb, currentColor 18%, var(--vx-color-gray-900)), color-mix(in srgb, currentColor 10%, var(--vx-color-background))),
-    var(--vx-color-gray-900);
-  box-shadow:
-    inset 0 var(--vx-admin-workspace-switcher-item-highlight-width) 0 color-mix(in srgb, var(--vx-color-white) 5%, transparent),
-    0 var(--vx-admin-workspace-switcher-item-shadow-y) var(--vx-admin-workspace-switcher-item-dark-shadow-blur) var(--vx-admin-workspace-switcher-item-dark-shadow-spread) color-mix(in srgb, var(--vx-color-black) 75%, transparent);
-}

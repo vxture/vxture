@@ -1,6 +1,0 @@
-.vx-invoice-pill--finished,
-.vx-invoice-pill--bill-paid,
-.vx-invoice-pill--tax-enterprise {
-  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
-  color: var(--tenant-green);
-}

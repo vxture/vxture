@@ -1,4 +1,0 @@
-.vx-tenant-detail-summary--collapsed .vx-tenant-detail__header {
-  grid-template-columns: 1fr;
-  padding-right: var(--vx-admin-management-space-3r);
-}

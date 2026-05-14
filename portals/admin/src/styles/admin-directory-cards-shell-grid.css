@@ -1,7 +1,0 @@
-.vx-tenant-directory-cards {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--vx-admin-directory-card-grid-gap);
-  padding: var(--vx-admin-directory-card-grid-padding-top) 0 var(--vx-admin-directory-card-grid-padding-bottom);
-  border-top: var(--vx-admin-directory-list-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
-}

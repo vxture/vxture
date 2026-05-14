@@ -1,7 +1,0 @@
-.auth-captcha__image {
-  position: relative;
-  height: var(--vx-admin-captcha-image-height);
-  overflow: hidden;
-  border: var(--vx-admin-captcha-border-width) solid color-mix(in srgb, var(--vx-color-shell-brand) 14%, transparent);
-  border-radius: var(--vx-admin-captcha-image-radius);
-}

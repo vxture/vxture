@@ -1,2 +1,28 @@
-@import "./admin-overview-models-rows-medals-base.css";
-@import "./admin-overview-models-rows-medals-tones.css";
+/* Admin overview product ranking medal styles. */
+
+.admin-overview-model-category__row
+  > span.admin-overview-product-ranking__medal {
+  width: var(--vx-admin-overview-size-235r);
+  height: var(--vx-admin-overview-size-235r);
+  border-radius: 0;
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  color: transparent;
+}
+
+.admin-overview-model-category__row
+  > span.admin-overview-product-ranking__medal--1 {
+  background-image: url("https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/1st%20place%20medal/Color/1st_place_medal_color.svg");
+}
+
+.admin-overview-model-category__row
+  > span.admin-overview-product-ranking__medal--2 {
+  background-image: url("https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/2nd%20place%20medal/Color/2nd_place_medal_color.svg");
+}
+
+.admin-overview-model-category__row
+  > span.admin-overview-product-ranking__medal--3 {
+  background-image: url("https://raw.githubusercontent.com/microsoft/fluentui-emoji/main/assets/3rd%20place%20medal/Color/3rd_place_medal_color.svg");
+}

@@ -1,6 +1,0 @@
-.vx-payment-pill--paid,
-.vx-payment-pill--reconcile-normal,
-.vx-payment-pill--bill-paid {
-  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
-  color: var(--tenant-green);
-}

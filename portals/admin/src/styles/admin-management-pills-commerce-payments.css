@@ -1,4 +1,39 @@
-@import "./admin-management-pills-commerce-payments-success.css";
-@import "./admin-management-pills-commerce-payments-warning.css";
-@import "./admin-management-pills-commerce-payments-danger.css";
-@import "./admin-management-pills-commerce-payments-neutral.css";
+.vx-payment-pill--paid,
+.vx-payment-pill--reconcile-normal,
+.vx-payment-pill--bill-paid {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-payment-pill--pending,
+.vx-payment-pill--pending_verify,
+.vx-payment-pill--partial,
+.vx-payment-pill--reconcile-pending_verify,
+.vx-payment-pill--reconcile-partial,
+.vx-payment-pill--bill-unpaid,
+.vx-payment-pill--bill-paying,
+.vx-payment-pill--bill-partial,
+.vx-payment-pill--bill-overdue {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-payment-pill--failed,
+.vx-payment-pill--refunding,
+.vx-payment-pill--reconcile-overpaid,
+.vx-payment-pill--reconcile-bill_cancelled,
+.vx-payment-pill--reconcile-failed {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-payment-pill--closed,
+.vx-payment-pill--unpaid,
+.vx-payment-pill--not_required,
+.vx-payment-pill--reconcile-unlinked,
+.vx-payment-pill--bill-cancelled,
+.vx-payment-pill--bill-none,
+.vx-payment-pill--source {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}

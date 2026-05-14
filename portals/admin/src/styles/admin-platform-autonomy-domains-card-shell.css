@@ -1,9 +1,0 @@
-.platform-autonomy-domain {
-  min-width: 0;
-  display: grid;
-  gap: var(--vx-admin-platform-autonomy-gap-2xl);
-  padding: var(--vx-admin-platform-autonomy-card-padding);
-  border: var(--vx-admin-platform-autonomy-border-width) solid var(--vx-shell-line-soft);
-  border-radius: var(--vx-radius-lg);
-  background: var(--vx-shell-surface);
-}

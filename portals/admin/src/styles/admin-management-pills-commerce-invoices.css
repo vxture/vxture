@@ -1,3 +1,42 @@
-@import "./admin-management-pills-commerce-invoices-success.css";
-@import "./admin-management-pills-commerce-invoices-warning.css";
-@import "./admin-management-pills-commerce-invoices-neutral.css";
+.vx-invoice-pill--finished,
+.vx-invoice-pill--bill-paid,
+.vx-invoice-pill--tax-enterprise {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-invoice-pill--issued,
+.vx-invoice-pill--sending,
+.vx-invoice-pill--applying,
+.vx-invoice-pill--auditing,
+.vx-invoice-pill--bill-unpaid,
+.vx-invoice-pill--bill-paying,
+.vx-invoice-pill--bill-partial,
+.vx-invoice-pill--bill-overdue {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-invoice-pill--red,
+.vx-invoice-pill--rejected {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-invoice-pill--none,
+.vx-invoice-pill--bill-cancelled,
+.vx-invoice-pill--type-normal,
+.vx-invoice-pill--type-adjust,
+.vx-invoice-pill--type-supplement,
+.vx-invoice-pill--type-prepaid,
+.vx-invoice-pill--type-special_vat,
+.vx-invoice-pill--type-normal_vat,
+.vx-invoice-pill--type-electronic,
+.vx-invoice-pill--type-paper,
+.vx-invoice-pill--type-other,
+.vx-invoice-pill--tax-individual,
+.vx-invoice-pill--tax-government,
+.vx-invoice-pill--tax-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}

@@ -1,6 +1,0 @@
-.dark .admin-workspace-switcher__item[data-workspace='platform-autonomy'] {
-  color: var(--vx-color-success-300);
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--vx-color-success-300) 18%, var(--vx-color-gray-900)), color-mix(in srgb, var(--vx-color-success-300) 10%, var(--vx-color-background))),
-    var(--vx-color-gray-900);
-}

@@ -1,9 +1,0 @@
-.vx-product-plan-row--active,
-.vx-product-plan-card--active {
-  --tenant-row-tone: var(--tenant-green);
-}
-
-.vx-product-plan-row--inactive,
-.vx-product-plan-card--inactive {
-  --tenant-row-tone: var(--vx-color-gray-400);
-}

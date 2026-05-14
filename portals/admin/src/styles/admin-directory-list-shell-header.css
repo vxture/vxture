@@ -1,8 +1,0 @@
-.vx-tenant-directory-list__header {
-  justify-items: center;
-  border-bottom: var(--vx-admin-directory-list-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
-  color: var(--tenant-muted);
-  font-size: var(--vx-admin-caption-size);
-  font-weight: 820;
-  text-align: center;
-}

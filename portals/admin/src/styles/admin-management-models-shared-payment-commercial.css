@@ -1,2 +1,45 @@
-@import "./admin-management-models-shared-payment-commercial-payments.css";
-@import "./admin-management-models-shared-payment-commercial-risks.css";
+.vx-payment-row--normal,
+.vx-payment-card--normal {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-payment-row--pending_verify,
+.vx-payment-card--pending_verify,
+.vx-payment-row--partial,
+.vx-payment-card--partial {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-payment-row--overpaid,
+.vx-payment-card--overpaid,
+.vx-payment-row--bill_cancelled,
+.vx-payment-card--bill_cancelled,
+.vx-payment-row--failed,
+.vx-payment-card--failed {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-payment-row--unlinked,
+.vx-payment-card--unlinked {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}
+
+.vx-commercial-row--normal,
+.vx-commercial-card--normal {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-commercial-row--warning,
+.vx-commercial-card--warning {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-commercial-row--danger,
+.vx-commercial-card--danger {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-commercial-row--muted,
+.vx-commercial-card--muted {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}

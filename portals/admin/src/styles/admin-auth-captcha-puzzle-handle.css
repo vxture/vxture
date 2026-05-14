@@ -1,2 +1,31 @@
-@import "./admin-auth-captcha-puzzle-handle-base.css";
-@import "./admin-auth-captcha-puzzle-handle-states.css";
+.auth-captcha__handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--vx-admin-captcha-handle-width);
+  height: var(--vx-admin-captcha-handle-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-right: var(--vx-admin-captcha-border-width) solid color-mix(in srgb, var(--vx-color-shell-brand) 16%, transparent);
+  background: linear-gradient(180deg, var(--vx-color-white), var(--vx-color-brand-50));
+  color: var(--vx-console-brand);
+  cursor: grab;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  box-shadow: 0 var(--vx-admin-captcha-handle-shadow-y) var(--vx-admin-captcha-handle-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+}
+
+.auth-captcha__handle:active {
+  cursor: grabbing;
+}
+
+.auth-captcha__handle span {
+  width: var(--vx-admin-captcha-handle-glyph-size);
+  height: var(--vx-admin-captcha-handle-glyph-size);
+  border-top: var(--vx-admin-captcha-handle-glyph-border-width) solid currentColor;
+  border-right: var(--vx-admin-captcha-handle-glyph-border-width) solid currentColor;
+  transform: rotate(45deg);
+}

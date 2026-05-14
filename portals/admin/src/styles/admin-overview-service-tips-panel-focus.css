@@ -1,5 +1,0 @@
-.admin-overview-tip:hover > span,
-.admin-overview-tip:focus-within > span {
-  opacity: 1;
-  transform: translateY(0);
-}

@@ -1,3 +1,65 @@
-@import "./admin-tenant-detail-activity-usage-structure.css";
-@import "./admin-tenant-detail-activity-usage-copy.css";
-@import "./admin-tenant-detail-activity-usage-tones.css";
+/* Tenant detail usage activity layout styles. */
+
+.vx-tenant-usage {
+  display: grid;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-usage > header,
+.vx-tenant-usage__numbers,
+.vx-tenant-ticket {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-usage__bar {
+  height: var(--vx-admin-management-size-05r);
+  overflow: hidden;
+  border-radius: var(--vx-radius-full);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+}
+
+.vx-tenant-usage__bar span {
+  height: 100%;
+  display: block;
+  border-radius: inherit;
+  background: var(--usage-tone);
+}
+
+.vx-tenant-usage > header strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 800;
+}
+
+.vx-tenant-usage > header span {
+  color: var(--tenant-blue);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+}
+
+.vx-tenant-usage__numbers b {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-page-title-size);
+}
+
+.vx-tenant-usage__numbers small {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 760;
+}
+
+.vx-tenant-usage--normal {
+  --usage-tone: var(--tenant-green);
+}
+
+.vx-tenant-usage--warning {
+  --usage-tone: var(--tenant-amber);
+}
+
+.vx-tenant-usage--danger {
+  --usage-tone: var(--tenant-rose);
+}

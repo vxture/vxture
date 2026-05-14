@@ -1,5 +1,64 @@
-@import "./admin-management-models-shared-tenant-product-tenant.css";
-@import "./admin-management-models-shared-tenant-product-role.css";
-@import "./admin-management-models-shared-tenant-product-product.css";
-@import "./admin-management-models-shared-tenant-product-plan.css";
-@import "./admin-management-models-shared-tenant-product-solution.css";
+.vx-tenant-directory-row--normal,
+.vx-tenant-directory-card--normal {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}
+
+.vx-tenant-directory-row--follow_up,
+.vx-tenant-directory-card--follow_up {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-tenant-directory-row--high,
+.vx-tenant-directory-card--high {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-admin-role-row--active,
+.vx-admin-role-card--active {
+  --tenant-row-tone: var(--tenant-blue);
+}
+
+.vx-admin-role-row--disabled,
+.vx-admin-role-card--disabled {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}
+
+.vx-product-row--active,
+.vx-product-card--active {
+  --tenant-row-tone: var(--tenant-blue);
+}
+
+.vx-product-row--draft,
+.vx-product-card--draft {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-product-row--archived,
+.vx-product-card--archived {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}
+
+.vx-product-plan-row--active,
+.vx-product-plan-card--active {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-product-plan-row--inactive,
+.vx-product-plan-card--inactive {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}
+
+.vx-product-solution-row--active,
+.vx-product-solution-card--active {
+  --tenant-row-tone: var(--tenant-blue);
+}
+
+.vx-product-solution-row--draft,
+.vx-product-solution-card--draft {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-product-solution-row--archived,
+.vx-product-solution-card--archived {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}

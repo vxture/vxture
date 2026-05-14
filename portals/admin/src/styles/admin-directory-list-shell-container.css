@@ -1,8 +1,0 @@
-.vx-tenant-directory-list {
-  min-width: 0;
-  max-width: 100%;
-  overflow-x: auto;
-  overflow-y: visible;
-  border-top: var(--vx-admin-directory-list-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
-  background: transparent;
-}

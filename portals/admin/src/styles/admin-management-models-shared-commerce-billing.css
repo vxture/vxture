@@ -1,2 +1,46 @@
-@import "./admin-management-models-shared-commerce-billing-bills.css";
-@import "./admin-management-models-shared-commerce-billing-invoices.css";
+.vx-billing-row--paid,
+.vx-billing-card--paid {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-billing-row--unpaid,
+.vx-billing-card--unpaid,
+.vx-billing-row--paying,
+.vx-billing-card--paying,
+.vx-billing-row--partial,
+.vx-billing-card--partial {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-billing-row--overdue,
+.vx-billing-card--overdue {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-billing-row--cancelled,
+.vx-billing-card--cancelled {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}
+
+.vx-invoice-row--finished,
+.vx-invoice-card--finished {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-invoice-row--issued,
+.vx-invoice-card--issued,
+.vx-invoice-row--sending,
+.vx-invoice-card--sending,
+.vx-invoice-row--applying,
+.vx-invoice-card--applying,
+.vx-invoice-row--auditing,
+.vx-invoice-card--auditing {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-invoice-row--red,
+.vx-invoice-card--red,
+.vx-invoice-row--rejected,
+.vx-invoice-card--rejected {
+  --tenant-row-tone: var(--tenant-rose);
+}

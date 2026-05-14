@@ -1,9 +1,0 @@
-.admin-overview-tone--rose {
-  --overview-tone: var(--admin-overview-rose);
-  --overview-tone-soft: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
-}
-
-.admin-overview-tone--indigo {
-  --overview-tone: var(--admin-overview-indigo);
-  --overview-tone-soft: color-mix(in srgb, var(--vx-color-indigo-600) 8%, transparent);
-}

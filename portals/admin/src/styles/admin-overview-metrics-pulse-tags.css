@@ -1,2 +1,33 @@
-@import "./admin-overview-metrics-pulse-tags-list.css";
-@import "./admin-overview-metrics-pulse-tags-states.css";
+/* Admin overview pulse tag styles. */
+
+.admin-overview-pulse__tags {
+  min-width: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-pulse__tags em {
+  min-height: var(--vx-admin-overview-size-15r);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-overview-space-05r);
+  border-radius: var(--admin-overview-card-radius);
+  background: var(--overview-tone-soft);
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.admin-overview-pulse__tags em.admin-overview-pulse__tag--blue {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  color: var(--vx-color-auth-accent);
+}
+
+.admin-overview-pulse__tags em.admin-overview-pulse__tag--rose {
+  background: color-mix(in srgb, var(--vx-color-danger) 13%, transparent);
+  color: var(--vx-color-danger-700);
+  box-shadow: inset 0 0 0 var(--vx-admin-overview-effect-1p) color-mix(in srgb, var(--vx-color-danger) 16%, transparent);
+}

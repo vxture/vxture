@@ -1,3 +1,42 @@
-@import "./admin-tenant-detail-shell-collapsed-header.css";
-@import "./admin-tenant-detail-shell-collapsed-identity.css";
-@import "./admin-tenant-detail-shell-collapsed-title.css";
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__header {
+  grid-template-columns: 1fr;
+  padding-right: var(--vx-admin-management-space-3r);
+}
+
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__identity {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-0625r);
+}
+
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__icon {
+  width: var(--vx-admin-management-size-175r);
+  height: var(--vx-admin-management-size-175r);
+  display: inline-grid;
+  flex: 0 0 auto;
+}
+
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__icon svg {
+  width: var(--vx-admin-management-size-15r);
+  height: var(--vx-admin-management-size-15r);
+}
+
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__title {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-075r);
+}
+
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__title p,
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__title > div {
+  flex: 0 0 auto;
+}
+
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__title h2 {
+  min-width: 0;
+  font-size: var(--vx-admin-card-title-size);
+}
+
+.vx-tenant-detail-summary--collapsed .vx-tenant-detail__title > div {
+  flex-wrap: nowrap;
+}

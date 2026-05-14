@@ -1,4 +1,48 @@
-@import "./admin-directory-list-shell-container.css";
-@import "./admin-directory-list-shell-grid.css";
-@import "./admin-directory-list-shell-header.css";
-@import "./admin-directory-list-shell-rows.css";
+.vx-tenant-directory-list {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  border-top: var(--vx-admin-directory-list-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  background: transparent;
+}
+
+.vx-tenant-directory-list__header,
+.vx-tenant-directory-row {
+  min-width: var(--vx-admin-directory-row-min-width-compact);
+  display: grid;
+  grid-template-columns: var(--vx-admin-directory-row-default-grid);
+  align-items: center;
+  gap: var(--vx-admin-directory-row-gap);
+  padding: var(--vx-admin-directory-row-padding-y) 0;
+}
+
+.vx-tenant-directory-list__header {
+  justify-items: center;
+  border-bottom: var(--vx-admin-directory-list-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  text-align: center;
+}
+
+.vx-tenant-directory-row {
+  position: relative;
+  justify-items: center;
+  border-bottom: var(--vx-admin-directory-list-border-width) dashed var(--vx-color-auth-border);
+  background: transparent;
+  color: var(--vx-color-text-secondary);
+  cursor: pointer;
+  font-size: var(--vx-admin-body-size);
+  font-weight: 720;
+  text-align: left;
+}
+
+.vx-tenant-directory-row:hover {
+  background: color-mix(in srgb, var(--vx-color-brand-50) 50%, transparent);
+}
+
+.vx-tenant-directory-row:has(.vx-tenant-actions__menu),
+.vx-tenant-directory-card:has(.vx-tenant-actions__menu) {
+  z-index: 2400;
+}
