@@ -1,0 +1,11 @@
+.vx-tenant-pill--permission,
+.vx-tenant-pill--member,
+.vx-tenant-pill--product {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill--quota {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}

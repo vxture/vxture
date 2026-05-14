@@ -1,0 +1,23 @@
+.vx-order-directory-list .vx-tenant-directory-list__header > span,
+.vx-billing-directory-list .vx-tenant-directory-list__header > span,
+.vx-invoice-directory-list .vx-tenant-directory-list__header > span,
+.vx-payment-directory-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-order-directory-list
+  .vx-tenant-directory-list__header
+  > span:not(:first-child):not(:nth-child(2)):not(:last-child),
+.vx-billing-directory-list
+  .vx-tenant-directory-list__header
+  > span:not(:first-child):not(:nth-child(2)):not(:last-child),
+.vx-invoice-directory-list
+  .vx-tenant-directory-list__header
+  > span:not(:first-child):not(:nth-child(2)):not(:last-child),
+.vx-payment-directory-list
+  .vx-tenant-directory-list__header
+  > span:not(:first-child):not(:nth-child(2)):not(:last-child) {
+  justify-self: start;
+  text-align: left;
+}

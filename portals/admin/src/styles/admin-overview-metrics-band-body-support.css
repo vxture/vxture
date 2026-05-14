@@ -1,0 +1,22 @@
+.admin-overview-band__support {
+  display: grid;
+  gap: var(--vx-admin-overview-space-1r);
+}
+
+.admin-overview-band__support > div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-05r);
+  padding-top: var(--vx-admin-overview-space-1r);
+  border-top: var(--vx-admin-overview-line-width-1p) solid color-mix(in srgb, var(--vx-color-brand-400) 14%, transparent);
+}
+
+.admin-overview-band__support strong {
+  overflow: hidden;
+  color: var(--overview-tone, var(--vx-color-brand-950));
+  font-size: var(--vx-admin-overview-text-size-094r);
+  font-weight: 780;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,25 @@
+.vx-tenant-member-card strong,
+.vx-tenant-member-card small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-tenant-member-card strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+}
+
+.vx-tenant-member-card small {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 520;
+}
+
+.vx-tenant-member-card__badges {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  flex-wrap: wrap;
+}

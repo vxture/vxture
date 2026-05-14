@@ -1,0 +1,18 @@
+.vx-usage-directory-list
+  .vx-tenant-directory-row
+  > span:not(.vx-tenant-directory-row__index):not(
+    .vx-usage-operation-row__select
+  ):not(.vx-tenant-actions),
+.vx-promotion-directory-list
+  .vx-tenant-directory-row
+  > span:not(.vx-tenant-directory-row__index):not(
+    .vx-promotion-operation-row__select
+  ):not(.vx-tenant-actions),
+.vx-redemption-directory-list
+  .vx-tenant-directory-row
+  > span:not(.vx-tenant-directory-row__index):not(
+    .vx-redemption-operation-row__select
+  ):not(.vx-tenant-actions) {
+  justify-self: start;
+  text-align: left;
+}

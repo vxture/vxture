@@ -1,0 +1,12 @@
+.admin-overview-service-metric__rating-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-service-metric__rating-line .admin-overview-stars {
+  padding-bottom: var(--vx-admin-overview-space-00625r);
+  gap: var(--vx-admin-overview-space-025r);
+  font-size: var(--vx-admin-overview-text-size-15r);
+}

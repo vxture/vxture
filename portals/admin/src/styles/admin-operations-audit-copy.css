@@ -1,0 +1,37 @@
+.vx-audit-row__operator,
+.vx-audit-row__action,
+.vx-audit-row__target {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-operations-audit-row-copy-gap);
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-audit-row__operator-name,
+.vx-audit-row__action-label,
+.vx-audit-row__target-label {
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+  line-height: var(--vx-admin-operations-audit-row-title-line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-audit-row__operator-email,
+.vx-audit-row__action-code,
+.vx-audit-row__target-type {
+  overflow: hidden;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+  line-height: var(--vx-admin-operations-audit-row-meta-line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-audit-row__target-empty {
+  color: var(--vx-console-muted);
+}

@@ -1,0 +1,7 @@
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(2),
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(3),
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(4),
+.vx-order-directory-list .vx-tenant-directory-list__header > span:nth-child(5) {
+  justify-self: start;
+  text-align: left;
+}

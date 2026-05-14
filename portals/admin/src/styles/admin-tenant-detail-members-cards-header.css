@@ -1,0 +1,17 @@
+.vx-tenant-member-card header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-management-track-25r) minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-member-card header > svg {
+  color: var(--tenant-member-tone);
+}
+
+.vx-tenant-member-card header > div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}

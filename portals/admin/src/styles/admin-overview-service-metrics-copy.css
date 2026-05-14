@@ -1,0 +1,31 @@
+.admin-overview-service-metric__main {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-service-metric__main > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-overview-space-05r);
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+}
+
+.admin-overview-service-metric__main strong {
+  overflow: hidden;
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-page-title-size);
+  font-weight: 780;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-overview-service-metric > small {
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  white-space: nowrap;
+}

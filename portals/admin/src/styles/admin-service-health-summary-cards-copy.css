@@ -1,0 +1,14 @@
+.vx-service-health-summary__item > div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-copy-gap);
+}
+
+.vx-service-health-summary__item div > span {
+  overflow: hidden;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

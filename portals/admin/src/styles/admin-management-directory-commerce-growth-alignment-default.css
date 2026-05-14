@@ -1,0 +1,19 @@
+.vx-usage-directory-list .vx-tenant-directory-list__header > span,
+.vx-promotion-directory-list .vx-tenant-directory-list__header > span,
+.vx-redemption-directory-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-usage-directory-list
+  .vx-tenant-directory-list__header
+  > span:not(:first-child):not(:nth-child(2)):not(:last-child),
+.vx-promotion-directory-list
+  .vx-tenant-directory-list__header
+  > span:not(:first-child):not(:nth-child(2)):not(:last-child),
+.vx-redemption-directory-list
+  .vx-tenant-directory-list__header
+  > span:not(:first-child):not(:nth-child(2)):not(:last-child) {
+  justify-self: start;
+  text-align: left;
+}

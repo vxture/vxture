@@ -1,0 +1,28 @@
+.vx-service-health-summary__value-line {
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-service-health-value-gap);
+  flex-wrap: nowrap;
+}
+
+.vx-service-health-summary__value-line strong {
+  color: var(--service-tone);
+  font-size: var(--vx-admin-service-health-value-size);
+  font-weight: 760;
+  line-height: 1;
+}
+
+.vx-service-health-summary__value-line em {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-service-health-pill-padding-x);
+  border-radius: var(--vx-radius-lg);
+  background: var(--service-soft);
+  color: var(--service-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 820;
+  white-space: nowrap;
+}
