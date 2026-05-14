@@ -1,0 +1,18 @@
+.vx-tenant-detail__title > div,
+.vx-tenant-detail__actions,
+.vx-tenant-block__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  flex-wrap: wrap;
+}
+
+.vx-tenant-detail__actions,
+.vx-tenant-block__actions {
+  justify-content: flex-end;
+}
+
+.vx-tenant-block__actions {
+  min-width: 0;
+  flex: 0 0 auto;
+}

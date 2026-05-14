@@ -1,0 +1,10 @@
+.admin-overview-card__icon {
+  width: var(--vx-admin-overview-size-25r);
+  height: var(--vx-admin-overview-size-25r);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--vx-admin-card-radius);
+  background: var(--vx-color-brand-100);
+  color: var(--vx-color-brand-600);
+}

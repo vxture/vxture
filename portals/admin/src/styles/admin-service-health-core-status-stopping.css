@@ -1,0 +1,10 @@
+.vx-service-health-status--stopping {
+  --service-tone: var(--service-indigo);
+  --service-soft: color-mix(in srgb, var(--vx-color-indigo-600) 10%, transparent);
+  --service-border: color-mix(in srgb, var(--vx-color-indigo-600) 22%, transparent);
+  --service-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vx-color-brand-100) 78%, transparent),
+    color-mix(in srgb, var(--vx-color-white) 54%, transparent)
+  );
+}

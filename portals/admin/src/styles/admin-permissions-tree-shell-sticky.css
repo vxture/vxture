@@ -1,0 +1,12 @@
+.vx-admin-permission-tree__header > span:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: calc(var(--vx-admin-permission-effect-1p) * -1) 0 0 color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+}

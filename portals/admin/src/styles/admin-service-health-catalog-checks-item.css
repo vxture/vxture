@@ -1,0 +1,18 @@
+.vx-service-health-check {
+  min-height: var(--vx-admin-service-health-check-min-height);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-check-gap);
+  padding: 0 var(--vx-admin-service-health-check-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid transparent;
+  border-radius: var(--vx-radius-lg);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+  white-space: nowrap;
+}
+
+.vx-service-health-check b,
+.vx-service-health-check small {
+  font-size: inherit;
+  font-weight: 820;
+}

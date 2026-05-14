@@ -1,0 +1,24 @@
+.vx-product-pill--platform {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-product-pill--agent {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-product-pill--model {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-product-pill--data {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-pill--service {
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--tenant-rose);
+}

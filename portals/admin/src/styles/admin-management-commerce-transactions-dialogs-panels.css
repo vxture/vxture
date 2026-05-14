@@ -1,0 +1,12 @@
+.vx-order-payment-dialog__panel,
+.vx-billing-bill-action-dialog__panel {
+  width: var(--vx-admin-management-dialog-width-lg);
+}
+
+.vx-offline-invoice-dialog__panel {
+  width: min(100%, var(--vx-admin-management-size-48r-large));
+}
+
+.vx-invoice-receipt-action-dialog__panel {
+  width: var(--vx-admin-management-dialog-width-md);
+}

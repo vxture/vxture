@@ -1,0 +1,13 @@
+.vx-tenant-unsaved {
+  color: var(--tenant-rose);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.vx-tenant-save-alert:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-danger) 36%, transparent);
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+  box-shadow: 0 0 0 var(--vx-admin-management-effect-3p) color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+}

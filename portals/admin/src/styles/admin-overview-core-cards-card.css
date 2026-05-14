@@ -1,0 +1,12 @@
+.admin-overview-card {
+  min-height: var(--vx-admin-overview-size-8r);
+  display: flex;
+  gap: var(--vx-admin-overview-space-1r);
+  padding: var(--vx-admin-overview-space-15r);
+  border: var(--vx-admin-overview-line-width-1p) solid color-mix(in srgb, var(--vx-color-brand-400) 16%, transparent);
+  border-radius: var(--vx-admin-card-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  color: var(--vx-color-text-secondary);
+  text-decoration: none;
+  box-shadow: 0 var(--vx-admin-overview-effect-18p) var(--vx-admin-overview-effect-42p) color-mix(in srgb, var(--vx-color-brand-500) 8%, transparent);
+}

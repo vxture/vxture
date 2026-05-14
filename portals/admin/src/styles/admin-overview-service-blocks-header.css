@@ -1,0 +1,15 @@
+.admin-overview-service-block__header {
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--vx-admin-overview-space-15r);
+  padding-bottom: var(--vx-admin-overview-space-1r);
+  border-bottom: var(--vx-admin-overview-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+}
+
+.admin-overview-service-block__header div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-05r);
+}

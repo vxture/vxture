@@ -1,0 +1,10 @@
+.vx-service-health-status--healthy {
+  --service-tone: var(--service-green);
+  --service-soft: color-mix(in srgb, var(--vx-color-success) 10%, transparent);
+  --service-border: color-mix(in srgb, var(--vx-color-success) 22%, transparent);
+  --service-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vx-color-success-surface) 72%, transparent),
+    color-mix(in srgb, var(--vx-color-white) 54%, transparent)
+  );
+}

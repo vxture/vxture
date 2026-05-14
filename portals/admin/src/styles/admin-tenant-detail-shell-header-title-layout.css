@@ -1,0 +1,32 @@
+.vx-tenant-detail__title {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-0375r);
+}
+
+.vx-tenant-title-line {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-tenant-detail__title p {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-tenant-detail__title h2 {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-page-title-size);
+  font-weight: 740;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

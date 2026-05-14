@@ -1,0 +1,9 @@
+.vx-tenant-detail__toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-management-space-15r);
+  padding-bottom: var(--vx-admin-management-space-0375r);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+}

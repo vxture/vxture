@@ -1,0 +1,25 @@
+.vx-product-pill--active,
+.vx-product-pill--access-ready,
+.vx-product-pill--access-connected,
+.vx-product-pill--access-not_required {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-pill--draft,
+.vx-product-pill--access-draft,
+.vx-product-pill--access-testing {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-product-pill--archived {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-product-pill--access-policy_missing,
+.vx-product-pill--access-config_required {
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+}
