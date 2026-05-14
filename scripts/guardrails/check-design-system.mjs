@@ -88,6 +88,8 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("portals/admin/src/styles/admin-tenant-detail-shell.css"), "admin tenant detail shell.css"],
   [normalize("portals/admin/src/styles/admin-shell-core.css"), "admin shell core.css"],
   [normalize("portals/admin/src/styles/admin-shell-nav.css"), "admin shell nav.css"],
+  [normalize("portals/admin/src/styles/admin-shell-sidebar.css"), "admin shell sidebar.css"],
+  [normalize("portals/admin/src/styles/admin-workspace-switcher.css"), "admin workspace switcher.css"],
   [normalize("portals/admin/src/styles/admin-permissions-tree-node.css"), "admin permissions tree node.css"],
   [normalize("portals/website/src/app/globals.css"), "website globals.css"],
   [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],

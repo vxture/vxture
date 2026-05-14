@@ -1,0 +1,48 @@
+.admin-workspace-switcher__item {
+  position: relative;
+  width: 100%;
+  min-height: var(--vx-admin-workspace-switcher-item-min-height);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: var(--vx-admin-workspace-switcher-item-gap);
+  overflow: hidden;
+  padding: var(--vx-admin-workspace-switcher-item-padding-y) var(--vx-admin-workspace-switcher-item-padding-x) var(--vx-admin-workspace-switcher-item-padding-y) var(--vx-admin-workspace-switcher-item-padding-start);
+  border: var(--vx-admin-workspace-switcher-item-border-width) solid color-mix(in srgb, currentColor 24%, var(--vx-shell-line-soft));
+  border-radius: var(--vx-admin-workspace-switcher-item-radius);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, currentColor 11%, var(--vx-color-white)), color-mix(in srgb, currentColor 6%, var(--vx-color-gray-50))),
+    var(--vx-color-brand-50);
+  color: var(--vx-console-brand-strong);
+  cursor: pointer;
+  text-align: left;
+  box-shadow:
+    inset 0 var(--vx-admin-workspace-switcher-item-highlight-width) 0 color-mix(in srgb, var(--vx-color-white) 82%, transparent),
+    0 var(--vx-admin-workspace-switcher-item-shadow-y) var(--vx-admin-workspace-switcher-item-shadow-blur) var(--vx-admin-workspace-switcher-item-shadow-spread) color-mix(in srgb, var(--vx-color-brand-800) 34%, transparent);
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.admin-workspace-switcher__item[data-workspace='platform-autonomy'] {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--vx-color-success-700) 12%, var(--vx-color-white)), color-mix(in srgb, var(--vx-color-success-700) 7%, var(--vx-color-gray-50))),
+    var(--vx-color-success-surface);
+  color: var(--vx-color-success-700);
+}
+
+.admin-workspace-switcher__item:hover {
+  border-color: color-mix(in srgb, currentColor 24%, var(--vx-shell-line));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, currentColor 15%, var(--vx-color-white)), color-mix(in srgb, currentColor 8%, var(--vx-color-gray-50))),
+    var(--vx-color-white);
+  box-shadow:
+    inset 0 var(--vx-admin-workspace-switcher-item-highlight-width) 0 color-mix(in srgb, var(--vx-color-white) 86%, transparent),
+    0 var(--vx-admin-workspace-switcher-item-hover-shadow-y) var(--vx-admin-workspace-switcher-item-hover-shadow-blur) var(--vx-admin-workspace-switcher-item-hover-shadow-spread) color-mix(in srgb, currentColor 42%, transparent);
+  transform: translateY(calc(var(--vx-admin-workspace-switcher-item-hover-translate) * -1));
+}
+

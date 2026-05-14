@@ -1,0 +1,36 @@
+.admin-workspace-switcher__icon {
+  width: var(--vx-admin-workspace-switcher-icon-size);
+  height: var(--vx-admin-workspace-switcher-icon-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--vx-admin-workspace-switcher-item-radius);
+  background: transparent;
+  color: currentColor;
+  box-shadow: none;
+}
+
+.admin-workspace-switcher__icon svg {
+  width: var(--vx-admin-workspace-switcher-icon-glyph-size);
+  height: var(--vx-admin-workspace-switcher-icon-glyph-size);
+}
+
+.admin-workspace-switcher__copy {
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.admin-workspace-switcher__copy strong {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  color: currentColor;
+  font-size: var(--vx-admin-workspace-switcher-copy-title-size);
+  font-weight: 800;
+  line-height: var(--vx-admin-workspace-switcher-copy-title-line);
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
