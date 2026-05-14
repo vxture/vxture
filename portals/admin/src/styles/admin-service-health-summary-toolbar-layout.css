@@ -1,0 +1,30 @@
+/* Service health toolbar layout styles. */
+
+.vx-service-health-toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-toolbar-gap);
+  padding: var(--vx-admin-service-health-toolbar-padding-top) 0 var(--vx-admin-service-health-toolbar-padding-bottom);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vx-service-health-toolbar__spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.vx-service-health-filters {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-filter-gap);
+  flex: 0 1 auto;
+}
+
+.vx-service-health-filters label {
+  min-width: 0;
+  display: block;
+}
