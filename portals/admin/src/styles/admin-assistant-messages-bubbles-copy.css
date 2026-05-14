@@ -1,0 +1,16 @@
+/* Assistant message bubble copy styles. */
+
+.vx-assistant-message p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: var(--vx-shell-body-size, var(--vx-admin-assistant-text-body));
+  line-height: 1.55;
+}
+
+.vx-assistant-message small {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-shell-caption-size, var(--vx-admin-assistant-text-caption));
+  font-weight: 680;
+}
+

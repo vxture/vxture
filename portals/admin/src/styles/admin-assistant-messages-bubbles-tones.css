@@ -1,0 +1,65 @@
+/* Assistant message bubble tone styles. */
+
+.vx-assistant-message--user {
+  justify-self: end;
+  border-color: var(--vx-shell-line, color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent));
+  background: var(--vx-shell-active-subtle, color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent));
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-assistant-message--assistant {
+  justify-self: start;
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent));
+  background: color-mix(in srgb, var(--vx-color-white) 68%, transparent);
+}
+
+.dark .vx-assistant-message--assistant {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  background: color-mix(
+    in srgb,
+    var(--vx-shell-surface, color-mix(in srgb, var(--vx-color-gray-900) 56%, transparent)) 88%,
+    transparent
+  );
+}
+
+.vx-assistant-message--error {
+  border-color: color-mix(in srgb, var(--vx-color-error-700) 18%, transparent);
+  background: color-mix(in srgb, var(--vx-color-error-surface) 86%, transparent);
+  color: var(--vx-color-error-800);
+}
+
+.vx-assistant-message--pending {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent));
+  background: color-mix(in srgb, var(--vx-color-white) 54%, transparent);
+  color: var(--vx-console-muted);
+}
+
+.dark .vx-assistant-message--pending {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  background: color-mix(
+    in srgb,
+    var(--vx-shell-surface, var(--vx-color-shell-panel)) 78%,
+    transparent
+  );
+}
+
+.vx-assistant-message--stopped {
+  border-color: color-mix(
+    in srgb,
+    var(--vx-shell-muted, var(--vx-color-gray-500)) 16%,
+    transparent
+  );
+  background: color-mix(in srgb, var(--vx-color-gray-50) 64%, transparent);
+  color: var(--vx-shell-muted, var(--vx-color-gray-500));
+}
+
+.dark .vx-assistant-message--stopped {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  background: color-mix(
+    in srgb,
+    var(--vx-shell-surface, color-mix(in srgb, var(--vx-color-gray-900) 44%, transparent)) 72%,
+    transparent
+  );
+  color: var(--vx-shell-muted, var(--vx-color-text-muted));
+}
+

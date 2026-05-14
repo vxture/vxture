@@ -1,0 +1,49 @@
+/* Subscription list row styles. */
+
+.vx-subscription-row__tenant,
+.vx-subscription-row__solution,
+.vx-subscription-row__plan,
+.vx-subscription-row__status,
+.vx-subscription-row__quota,
+.vx-subscription-row__revenue {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-subscription-row__tenant {
+  justify-self: start;
+  grid-template-columns: var(--vx-admin-management-track-2r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+  text-align: left;
+}
+
+.vx-subscription-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-subscription-row__solution,
+.vx-subscription-row__plan {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-subscription-row__status,
+.vx-subscription-row__quota,
+.vx-subscription-row__revenue {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-subscription-row__solution small,
+.vx-subscription-row__plan small,
+.vx-subscription-row__status small,
+.vx-subscription-row__quota small,
+.vx-subscription-row__revenue small {
+  margin-top: 0;
+  font-weight: 400;
+}
+

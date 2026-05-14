@@ -1,0 +1,61 @@
+/* Billing transaction row styles. */
+
+.vx-billing-row__bill,
+.vx-billing-row__tenant,
+.vx-billing-row__plan,
+.vx-billing-row__amount,
+.vx-billing-row__exception,
+.vx-billing-row__payment,
+.vx-billing-row__invoice {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-billing-row__tenant {
+  justify-self: start;
+  grid-template-columns: var(--vx-admin-management-track-2r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+  text-align: left;
+}
+
+.vx-billing-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-billing-row__bill,
+.vx-billing-row__plan {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-billing-row__amount,
+.vx-billing-row__exception,
+.vx-billing-row__payment,
+.vx-billing-row__invoice {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-billing-row__bill small,
+.vx-billing-row__tenant small,
+.vx-billing-row__plan small,
+.vx-billing-row__amount small,
+.vx-billing-row__exception small,
+.vx-billing-row__payment small,
+.vx-billing-row__invoice small {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.vx-billing-row__exception small {
+  max-width: var(--vx-admin-management-size-10r);
+  overflow: hidden;
+  color: var(--tenant-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

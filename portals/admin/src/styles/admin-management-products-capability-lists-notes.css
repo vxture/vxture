@@ -1,0 +1,32 @@
+/* Product capability detail note styles. */
+
+.vx-product-detail-notes {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+  border-top: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+}
+
+.vx-product-detail-notes article {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: var(--vx-admin-management-space-0625r);
+  padding: var(--vx-admin-management-space-09r) 0;
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--vx-color-gray-600);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.vx-product-detail-notes article:last-child {
+  border-bottom: 0;
+}
+
+.vx-product-detail-notes svg {
+  margin-top: var(--vx-admin-management-space-035r);
+  color: var(--tenant-blue);
+}
+
