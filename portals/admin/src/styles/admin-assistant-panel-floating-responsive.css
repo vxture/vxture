@@ -1,0 +1,14 @@
+@media (max-width: 720px) {
+  .vx-assistant-panel--floating {
+    --assistant-floating-height: calc(
+      100dvh - var(--vx-admin-header-height, var(--vx-admin-shell-header-height)) - var(--vx-admin-assistant-floating-mobile-viewport-gap)
+    );
+    left: var(--vx-admin-assistant-floating-mobile-offset);
+    right: var(--vx-admin-assistant-floating-mobile-offset);
+    top: calc(var(--vx-admin-header-height, var(--vx-admin-shell-header-height)) + var(--vx-admin-assistant-floating-mobile-offset));
+    width: auto;
+    min-width: 0;
+    max-width: none;
+  }
+}
+

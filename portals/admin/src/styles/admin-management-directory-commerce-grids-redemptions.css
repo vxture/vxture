@@ -1,0 +1,9 @@
+.vx-redemption-directory-list .vx-tenant-directory-list__header,
+.vx-redemption-directory-list .vx-tenant-directory-row {
+  min-width: var(--vx-admin-directory-row-min-width);
+  grid-template-columns:
+    var(--vx-admin-management-track-25r) var(--vx-admin-management-track-275r) minmax(0, 1.04fr) minmax(0, 0.94fr)
+    minmax(0, 0.88fr) minmax(0, 0.74fr) minmax(0, 0.62fr)
+    minmax(0, 0.62fr) var(--vx-admin-management-track-5r);
+}
+

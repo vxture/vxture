@@ -1,0 +1,32 @@
+.platform-autonomy-resource-row {
+  min-height: var(--vx-admin-platform-autonomy-resource-row-min-height);
+  border-bottom: var(--vx-admin-platform-autonomy-border-width) solid var(--vx-shell-line-soft);
+  color: var(--vx-shell-muted);
+  font-size: var(--vx-admin-platform-autonomy-text-body);
+  line-height: var(--vx-admin-platform-autonomy-line-body);
+}
+
+.platform-autonomy-resource-row:last-child {
+  border-bottom: 0;
+}
+
+.platform-autonomy-resource-row strong {
+  color: var(--vx-shell-ink);
+  font-weight: 720;
+}
+
+.platform-autonomy-resource-row span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.platform-autonomy-resource-row em {
+  font-style: normal;
+  color: var(--vx-console-brand-strong);
+  font-weight: 720;
+}
+
+.platform-autonomy-resource-row--error em {
+  color: var(--vx-status-danger-fg, var(--vx-color-danger-700));
+}
+

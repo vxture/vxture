@@ -1,0 +1,17 @@
+.platform-autonomy-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(var(--vx-admin-platform-autonomy-grid-aside-min-width), 0.55fr);
+  gap: var(--vx-admin-platform-autonomy-gap-2xl);
+}
+
+.platform-autonomy-panel {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: var(--vx-admin-platform-autonomy-gap-2xl);
+  padding: var(--vx-admin-platform-autonomy-card-padding);
+  border: var(--vx-admin-platform-autonomy-border-width) solid var(--vx-shell-line-soft);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-shell-surface);
+}
+

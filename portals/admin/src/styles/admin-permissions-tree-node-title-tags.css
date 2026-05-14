@@ -1,0 +1,16 @@
+.vx-admin-permission-tree-node__title-tags {
+  width: fit-content;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-permission-space-05r);
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  font-family: inherit;
+}
+
+.vx-admin-permission-tree-node__title-tags .vx-tenant-pill {
+  width: fit-content;
+  flex: 0 0 auto;
+}
+
