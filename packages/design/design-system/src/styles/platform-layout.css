@@ -1,0 +1,551 @@
+/**
+ * platform-layout.css - Shared portal layout, page, settings, and section semantics.
+ */
+:where(.admin-shell) {
+  --vx-platform-page-eyebrow-size: var(--vx-admin-caption-size);
+  --vx-platform-page-title-size: var(--vx-admin-page-title-size);
+  --vx-platform-page-title-line-height: 1.24;
+  --vx-platform-page-title-weight: 740;
+  --vx-platform-page-description-size: var(--vx-admin-body-size);
+  --vx-platform-section-title-size: var(--vx-admin-section-title-size);
+  --vx-platform-section-description-size: var(--vx-admin-meta-size);
+}
+
+:where(.vx-shell) {
+  --vx-platform-page-eyebrow-size: 0.78rem;
+  --vx-platform-page-title-size: clamp(1.45rem, 2vw, 1.9rem);
+  --vx-platform-page-title-line-height: 1.15;
+  --vx-platform-page-title-weight: 760;
+  --vx-platform-page-description-size: 0.94rem;
+  --vx-platform-section-title-size: 1rem;
+  --vx-platform-section-description-size: 0.86rem;
+}
+
+.console-page__body {
+  width: 100%;
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1.35rem, 3.2vw, 3.25rem) 3rem;
+}
+
+.vx-page-stack,
+.vx-dashboard-grid,
+.vx-settings-grid,
+.vx-kpi-grid,
+.vx-metric-grid,
+.vx-card-grid {
+  gap: 1rem;
+}
+
+.console-page__body > .vx-page-stack::after {
+  content: "";
+  display: block;
+  min-height: var(--vx-page-bottom-safe-space, 4.5rem);
+  pointer-events: none;
+}
+
+.vx-page-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: flex-end;
+  margin-bottom: 0.25rem;
+}
+
+.vx-page-header__copy {
+  display: grid;
+  gap: 0.38rem;
+  min-width: 0;
+}
+
+.vx-page-header__eyebrow {
+  margin: 0;
+  color: var(--vx-console-brand-strong);
+  font-size: var(--vx-platform-page-eyebrow-size);
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.vx-page-header__title-row {
+  min-height: 0;
+  gap: 0.6rem;
+}
+
+.vx-page-header h1 {
+  color: var(--vx-console-text);
+  font-size: var(--vx-platform-page-title-size);
+  line-height: var(--vx-platform-page-title-line-height);
+  font-weight: var(--vx-platform-page-title-weight);
+  letter-spacing: 0;
+}
+
+.vx-page-header__description {
+  max-width: 74ch;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-platform-page-description-size);
+}
+
+.vx-page-header__actions {
+  margin-left: 0;
+}
+
+.vx-summary-strip {
+  gap: 0.9rem;
+}
+
+.vx-summary-strip__item {
+  position: relative;
+  overflow: hidden;
+  gap: 0.42rem;
+  min-height: 8.25rem;
+  padding: 1.05rem;
+  border: 1px solid var(--vx-console-border);
+  border-radius: var(--vx-platform-radius-md);
+  background: linear-gradient(180deg, var(--vx-color-white) 0%, var(--vx-color-brand-50) 100%);
+  box-shadow: none;
+}
+
+.dark .vx-summary-strip__item {
+  background: linear-gradient(180deg, var(--vx-color-shell-surface-muted) 0%, var(--vx-color-shell-surface) 100%);
+}
+
+.vx-summary-strip__top {
+  align-items: center;
+}
+
+.vx-summary-strip__item span,
+.vx-summary-strip__item p {
+  font-size: 0.84rem;
+}
+
+.vx-summary-strip__item strong {
+  color: var(--vx-console-text);
+  font-size: 1.62rem;
+  letter-spacing: 0;
+}
+
+.vx-summary-strip__item .vx-summary-strip__icon {
+  width: 2rem;
+  height: 2rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--vx-platform-radius-sm);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-dashboard-layout {
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  gap: 1rem;
+}
+
+.vx-page-section,
+.vx-section-card,
+.vx-metric-card,
+.vx-kpi-card,
+.vx-settings-card,
+.vx-section-nav {
+  border: 1px solid var(--vx-console-border);
+  border-radius: var(--vx-shell-panel-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  box-shadow: none;
+}
+
+.dark .vx-page-section,
+.dark .vx-section-card,
+.dark .vx-metric-card,
+.dark .vx-kpi-card,
+.dark .vx-settings-card,
+.dark .vx-section-nav {
+  background: color-mix(in srgb, var(--vx-color-shell-surface) 92%, transparent);
+}
+
+.vx-page-section {
+  gap: 0.95rem;
+  padding: 1.05rem;
+}
+
+.vx-page-section--muted {
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
+}
+
+.dark .vx-page-section--muted {
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
+}
+
+.vx-page-section__header {
+  align-items: center;
+}
+
+.vx-page-section__title {
+  font-size: var(--vx-platform-section-title-size);
+  font-weight: 740;
+  letter-spacing: 0;
+}
+
+.vx-page-section__description {
+  margin-top: 0.28rem;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-platform-section-description-size);
+  line-height: 1.45;
+}
+
+.vx-action-list,
+.vx-signal-list,
+.vx-toggle-list {
+  gap: 0.58rem;
+}
+
+.vx-action-item,
+.vx-signal-list__item,
+.vx-toggle-list__item {
+  align-items: center;
+  padding: 0.82rem;
+  border: 1px solid var(--vx-color-shell-line-soft);
+  border-radius: var(--vx-radius-xl);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 72%, transparent);
+}
+
+.vx-action-item:last-child,
+.vx-signal-list__item:last-child,
+.vx-toggle-list__item:last-child {
+  padding-bottom: 0.82rem;
+  border-bottom: 1px solid var(--vx-color-shell-line-soft);
+}
+
+.vx-action-item:hover {
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 18%, transparent);
+  background: var(--vx-color-brand-50);
+}
+
+.dark .vx-action-item,
+.dark .vx-signal-list__item,
+.dark .vx-toggle-list__item {
+  background: color-mix(in srgb, var(--vx-color-gray-900) 58%, transparent);
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-action-item__icon {
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: var(--vx-platform-radius-sm);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-action-item strong,
+.vx-signal-list__item strong {
+  color: var(--vx-console-text);
+  font-size: 0.92rem;
+  font-weight: 720;
+}
+
+.vx-action-item p,
+.vx-signal-list__item p {
+  margin-top: 0.18rem;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.vx-action-item__arrow {
+  color: var(--vx-console-brand);
+}
+
+.vx-settings-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 1rem;
+}
+
+.vx-settings-split-page {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: var(--vx-shell-section-gap);
+  align-items: flex-start;
+}
+
+.vx-settings-split-page__nav,
+.vx-settings-split-page__content {
+  min-width: 0;
+}
+
+.vx-section-nav {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.35rem;
+  border-radius: var(--vx-shell-panel-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+
+.vx-section-nav__item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 0;
+  border-radius: var(--vx-platform-radius-md);
+  background: transparent;
+  color: var(--vx-console-text);
+  text-align: left;
+}
+
+.vx-section-nav__item--active {
+  background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+
+.vx-section-nav__copy {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.vx-section-nav__copy span,
+.vx-section-nav__meta {
+  color: var(--vx-console-muted);
+  font-size: 0.84rem;
+}
+
+.vx-settings-column {
+  display: grid;
+}
+
+.vx-settings-card {
+  background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+}
+
+:where(.admin-shell) {
+  --vx-directory-page-title-size: var(--vx-admin-page-title-size);
+  --vx-directory-page-title-line-height: 1.24;
+  --vx-directory-page-title-weight: 740;
+  --vx-directory-row-padding-x: 0;
+  --vx-directory-header-justify: center;
+  --vx-directory-header-text-align: center;
+  --vx-directory-edge-justify: center;
+  --vx-directory-edge-text-align: center;
+  --vx-account-profile-title-size: var(--vx-admin-page-title-size);
+  --vx-account-profile-title-line-height: 1.24;
+  --vx-account-profile-title-weight: 740;
+  --vx-notification-title-size: var(--vx-admin-page-title-size);
+  --vx-notification-title-line-height: 1.24;
+  --vx-notification-title-weight: 740;
+  --vx-notification-table-header-justify: center;
+  --vx-notification-table-header-padding: 0 0 0.35rem;
+  --vx-notification-table-header-text-align: center;
+  --vx-notification-table-row-justify: start;
+  --vx-notification-table-row-padding: 0.72rem 0;
+  --vx-notification-table-row-text-align: left;
+  --vx-tenant-settings-title-size: var(--vx-admin-page-title-size);
+  --vx-tenant-settings-title-line-height: 1.24;
+  --vx-tenant-settings-title-weight: 740;
+  --vx-tenant-settings-list-header-justify: center;
+  --vx-tenant-settings-list-header-padding: 0 0 0.35rem;
+  --vx-tenant-settings-list-header-text-align: center;
+  --vx-tenant-settings-row-justify: start;
+  --vx-tenant-settings-row-padding: 0.72rem 0;
+  --vx-tenant-settings-row-text-align: left;
+  --vx-models-page-width: 100%;
+  --vx-models-page-gap: 1rem;
+  --vx-models-page-header-margin-bottom: 1rem;
+  --vx-models-page-title-size: var(--vx-admin-page-title-size);
+  --vx-models-page-title-line-height: 1.24;
+  --vx-models-page-title-weight: 740;
+  --vx-models-summary-gap: 1rem;
+  --vx-models-summary-margin-bottom: 1rem;
+  --vx-models-summary-item-gap: 1rem;
+  --vx-models-summary-item-radius: 1rem;
+  --vx-models-summary-item-padding: 1rem;
+  --vx-models-workspace-gap: 1rem;
+  --vx-models-header-actions-gap: 1rem;
+  --vx-models-header-primary-gap: 0.5rem;
+  --vx-models-toolbar-justify: flex-start;
+  --vx-models-toolbar-gap: 1rem;
+  --vx-models-toolbar-padding: 1rem 0 0.85rem;
+  --vx-models-toolbar-search-width: clamp(13rem, 18vw, 22rem);
+  --vx-models-toolbar-search-flex: 0 0 clamp(13rem, 18vw, 22rem);
+  --vx-models-toolbar-search-min-width: 0;
+  --vx-models-toolbar-search-height: 2.5rem;
+  --vx-models-toolbar-search-padding: 0 1rem;
+  --vx-models-toolbar-search-radius: var(--vx-radius-lg);
+  --vx-models-toolbar-search-border: 1px solid var(--vx-color-auth-border);
+  --vx-models-toolbar-search-background: transparent;
+  --vx-models-toolbar-search-background-dark: transparent;
+  --vx-models-toolbar-search-color: var(--vx-color-text-secondary);
+  --vx-models-toolbar-search-font-size: var(--vx-admin-meta-size);
+  --vx-models-toolbar-search-font-weight: 400;
+  --vx-models-toolbar-filters-gap: 1rem;
+  --vx-models-toolbar-filters-wrap: wrap;
+  --vx-models-toolbar-count-padding: 0 0 0 0.5rem;
+  --vx-models-toolbar-count-color: var(--vx-color-text-secondary);
+  --vx-models-toolbar-count-background: transparent;
+  --vx-models-toolbar-count-background-dark: transparent;
+  --vx-models-toolbar-count-border: 0;
+  --vx-models-toolbar-count-font-size: var(--vx-admin-body-size);
+  --vx-models-toolbar-count-font-weight: 800;
+  --vx-models-segmented-min-height: 2.5rem;
+  --vx-models-segmented-padding: 0;
+  --vx-models-segmented-gap: 0.5rem;
+  --vx-models-segmented-radius: 0;
+  --vx-models-segmented-background: transparent;
+  --vx-models-segmented-background-dark: transparent;
+  --vx-models-segmented-border: 0;
+  --vx-models-segmented-border-dark: 0;
+  --vx-models-segmented-item-min-height: 2.5rem;
+  --vx-models-segmented-item-padding: 0 0.9rem;
+  --vx-models-segmented-item-border: 1px solid var(--vx-color-auth-border);
+  --vx-models-segmented-item-radius: var(--vx-radius-lg);
+  --vx-models-segmented-item-background: transparent;
+  --vx-models-segmented-item-color: var(--vx-color-text-secondary);
+  --vx-models-segmented-item-font-size: var(--vx-admin-meta-size);
+  --vx-models-segmented-item-font-weight: 400;
+  --vx-models-segmented-item-active-background: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  --vx-models-segmented-item-active-color: var(--vx-color-auth-accent);
+  --vx-models-segmented-item-active-font-weight: 800;
+  --vx-model-list-columns: minmax(220px, 1.05fr) minmax(96px, 0.42fr) minmax(150px, 0.62fr) minmax(220px, 1fr) minmax(130px, 0.56fr) minmax(86px, 0.34fr) 3rem;
+  --vx-model-grant-list-columns: minmax(220px, 1.1fr) minmax(170px, 0.85fr) minmax(180px, 0.85fr) minmax(180px, 0.85fr) minmax(115px, 0.58fr) minmax(92px, 0.44fr) 3rem;
+  --vx-model-policy-list-columns: minmax(210px, 0.96fr) minmax(190px, 0.9fr) minmax(220px, 1.04fr) minmax(120px, 0.5fr) minmax(82px, 0.32fr) minmax(100px, 0.42fr);
+  --vx-model-row-gap: 1rem;
+  --vx-model-header-padding: 0 0 0.35rem;
+  --vx-model-header-justify: center;
+  --vx-model-header-text-align: center;
+  --vx-model-row-min-height: 4.5rem;
+  --vx-model-row-padding: 1rem 0;
+  --vx-model-row-justify: start;
+  --vx-model-row-text-align: left;
+  --vx-model-row-active-shadow: inset 0.5rem 0 0 var(--vx-console-brand);
+  --vx-model-identity-gap: 1rem;
+  --vx-model-grant-model-gap: 0.5rem;
+  --vx-model-icon-size: 2.5rem;
+  --vx-model-icon-radius: 1rem;
+  --vx-model-copy-margin-top: 0.5rem;
+  --vx-model-chip-gap: 0.5rem;
+  --vx-model-chip-padding: 0.5rem;
+  --vx-model-status-padding: 0.5rem;
+  --vx-model-menu-justify: center;
+  --vx-model-menu-justify-self: center;
+  --vx-model-menu-button-size: 2.5rem;
+  --vx-model-menu-button-radius: 1rem;
+  --vx-model-menu-button-color: var(--vx-color-text-secondary);
+  --vx-model-menu-button-hover-background: color-mix(in srgb, var(--vx-color-shell-brand) 6%, transparent);
+  --vx-model-menu-button-hover-color: var(--vx-console-brand-strong);
+  --vx-model-menu-icon-size: 1.5rem;
+  --vx-model-actions-menu-top: calc(100% + 0.5rem);
+  --vx-model-actions-menu-min-width: 11rem;
+  --vx-model-actions-menu-gap: 0.5rem;
+  --vx-model-actions-menu-radius: 1rem;
+  --vx-model-actions-menu-padding: 0.5rem;
+  --vx-model-actions-menu-button-radius: 1rem;
+  --vx-model-actions-menu-button-font-size: var(--vx-admin-meta-size);
+  --vx-model-actions-menu-button-font-weight: 400;
+  --vx-model-actions-menu-button-padding: 0.5rem 1rem;
+  --vx-models-pagination-justify: space-between;
+  --vx-models-pagination-padding: 0.75rem 0 0.95rem;
+  --vx-models-pagination-border-top: 1px dashed var(--vx-color-auth-border);
+  --vx-models-pagination-font-size: var(--vx-admin-meta-size);
+  --vx-models-pagination-actions-gap: 1rem;
+  --vx-models-pagination-actions-margin-left: auto;
+  --vx-model-grants-margin-top: 1.5rem;
+  --vx-model-grants-header-padding: 0.5rem 0;
+  --vx-model-dialog-grid-gap: 1rem;
+  --vx-model-dialog-check-gap: 0.5rem;
+  --vx-models-toolbar-tablet-wrap: wrap;
+  --vx-models-toolbar-filters-tablet-flex: 1 1 100%;
+  --vx-models-row-mobile-gap: 0.5rem;
+  --vx-models-toolbar-mobile-direction: row;
+  --vx-models-pagination-actions-mobile-width: 100%;
+  --vx-models-pagination-actions-mobile-justify: flex-end;
+}
+
+:where(.vx-shell) {
+  --vx-directory-page-title-size: clamp(1.08rem, 1.28vw, 1.32rem);
+  --vx-directory-page-title-line-height: 1.28;
+  --vx-directory-page-title-weight: 760;
+  --vx-directory-row-padding-x: 1rem;
+  --vx-directory-header-justify: stretch;
+  --vx-directory-header-text-align: left;
+  --vx-directory-edge-justify: auto;
+  --vx-directory-edge-text-align: inherit;
+  --vx-shell-search-width: min(520px, 100%);
+  --vx-shell-search-justify: stretch;
+  --vx-shell-search-icon-color: var(--vx-color-shell-icon-muted);
+  --vx-shell-search-height: 2.25rem;
+  --vx-shell-search-border: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  --vx-shell-search-radius: var(--vx-radius-full);
+  --vx-shell-search-background: var(--vx-color-shell-panel);
+  --vx-shell-search-shadow: inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent);
+  --vx-shell-search-placeholder-size: var(--vx-shell-item-size, 0.8rem);
+  --vx-shell-search-placeholder-color: var(--vx-color-shell-subtle);
+  --vx-shell-search-dark-border-color: var(--vx-color-border);
+  --vx-shell-search-dark-background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  --vx-shell-icon-button-size: 2rem;
+  --vx-shell-icon-button-radius: var(--vx-shell-radius-control, 9px);
+  --vx-shell-icon-button-color: var(--vx-color-shell-icon);
+  --vx-shell-icon-button-dark-color: var(--vx-color-text-muted);
+  --vx-shell-icon-button-hover-background: var(--vx-console-brand-soft);
+  --vx-shell-icon-button-hover-color: var(--vx-console-brand-strong);
+  --vx-shell-icon-button-toolbar-size: 2rem;
+  --vx-shell-icon-button-toolbar-radius: 9px;
+  --vx-shell-icon-button-active-background: color-mix(in srgb, var(--vx-color-shell-brand) 10%, transparent);
+  --vx-shell-icon-button-active-color: var(--vx-console-brand);
+  --vx-shell-icon-button-rail-width: 2.5rem;
+  --vx-shell-icon-button-rail-height: 2.5rem;
+  --vx-shell-icon-button-rail-flex-basis: 2.5rem;
+  --vx-shell-icon-button-rail-radius: var(--vx-platform-radius-sm);
+  --vx-shell-icon-button-rail-justify: center;
+  --vx-shell-icon-button-rail-padding-left: 0;
+  --vx-shell-icon-button-rail-color: color-mix(in srgb, var(--vx-color-shell-text) 46%, transparent);
+  --vx-shell-icon-button-rail-hover-background: color-mix(in srgb, var(--vx-color-white) 36%, transparent);
+  --vx-shell-icon-button-rail-hover-color: color-mix(in srgb, var(--vx-color-shell-text) 64%, transparent);
+  --vx-shell-icon-button-utility-size: 2.5rem;
+  --vx-shell-icon-button-assistant-size: 2rem;
+  --vx-shell-icon-button-assistant-radius: 9px;
+  --vx-shell-icon-button-assistant-background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  --vx-shell-icon-button-assistant-color: var(--vx-console-brand);
+  --vx-shell-agent-button-size: 2rem;
+  --vx-shell-agent-button-icon-size: 2rem;
+  --vx-shell-agent-button-hover-opacity: 0.84;
+  --vx-shell-header-actions-gap: 0.9rem;
+  --vx-shell-header-action-group-gap: 0.18rem;
+  --vx-shell-header-action-group-padding: 0.16rem;
+  --vx-shell-header-action-group-radius: var(--vx-radius-xl);
+  --vx-shell-header-action-group-hover-border: var(--vx-color-border);
+  --vx-shell-header-action-group-hover-background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  --vx-shell-header-action-group-dark-hover-border: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  --vx-shell-header-action-group-dark-hover-background: color-mix(in srgb, var(--vx-color-gray-900) 64%, transparent);
+  --vx-shell-user-size: 2rem;
+  --vx-shell-user-max-width: 11rem;
+  --vx-shell-user-radius: var(--vx-radius-full);
+  --vx-shell-user-hover-opacity: 0.86;
+  --vx-assistant-panel-width: var(--vx-shell-assistant-width);
+  --vx-assistant-panel-min-width: 380px;
+  --vx-assistant-panel-border-left: 1px solid var(--vx-console-border);
+  --vx-assistant-panel-background: transparent;
+  --vx-assistant-panel-shadow: -18px 0 24px -24px color-mix(in srgb, var(--vx-color-gray-900) 18%, transparent);
+  --vx-assistant-panel-shadow-dark: -18px 0 24px -24px var(--vx-color-border);
+  --vx-assistant-panel-transition: none;
+  --vx-assistant-panel-will-change: auto;
+  --vx-assistant-panel-fullscreen-z: 24;
+  --vx-assistant-panel-fullscreen-background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--vx-color-shell-brand) 4%, transparent), transparent 24rem),
+    linear-gradient(180deg, var(--vx-color-gray-50) 0%, var(--vx-color-shell-bg) 100%);
+  --vx-assistant-panel-resize-hover-background: color-mix(in srgb, var(--vx-color-shell-brand) 18%, transparent);
+  --vx-assistant-panel-bar-padding: 0 0.95rem 0 1rem;
+  --vx-assistant-panel-bar-title-size: 0.92rem;
+  --vx-assistant-panel-bar-title-line-height: 1;
+  --vx-assistant-panel-bar-title-letter-spacing: -0.02em;
+  --vx-assistant-panel-bar-title-weight: inherit;
+  --vx-assistant-panel-bar-actions-gap: 0.25rem;
+  --vx-assistant-panel-output-gap: 0.85rem;
+  --vx-assistant-panel-output-padding: 0.7rem 0.95rem 0.75rem 1rem;
+  --vx-assistant-panel-output-scrollbar-width: thin;
+  --vx-assistant-panel-output-scrollbar-color: var(--vx-color-scrollbar) transparent;
+  --vx-assistant-panel-output-scroll-padding-right: 0.1rem;
+  --vx-assistant-panel-stack-min-height: auto;
+  --vx-assistant-panel-stack-align-content: normal;
+  --vx-assistant-panel-composer-display: grid;
+  --vx-assistant-panel-composer-rows: auto minmax(0, 1fr) auto;
+  --vx-assistant-panel-composer-gap: 0.75rem;
+  --vx-assistant-panel-composer-padding: 0.75rem 0.95rem 0.95rem 1rem;
+}

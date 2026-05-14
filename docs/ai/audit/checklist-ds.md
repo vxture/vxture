@@ -17,6 +17,7 @@
 - `agent-studio/vela` 根布局已接入统一字体、ThemeProvider、FullscreenProvider；核心聊天组件已移除 inline design style 和原生基础控件。
 - 源码扫描未发现业务源码直接导入 `@vxture/design-system/src/**`。
 - 源码扫描未发现业务源码直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；`lint:design` 已用 `ds/no-direct-ui-engine-imports` 禁止新增。
+- DS `platform.css` 已拆分为稳定聚合入口和 `platform-*` 分层模块，后续可按 L2/L3/L4 边界逐模块收敛。
 
 ## 审计命令
 
@@ -73,7 +74,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 ## 六批次执行计划（2026-05-14）
 
 1. P0：固化分层模型与验收口径。范围：本审计清单、DS-USE 状态修正、六批次任务定义。验收：`git diff --check`、`pnpm lint:design` 通过；提交独立 commit。
-2. P1：拆分 DS `platform.css`。范围：把 L2 平台模式按 shell/data/form/status/account 等模块拆分，`platform.css` 保持聚合入口；把可命名的 `--vx-component-metric-*` 直用升级为语义 token。验收：DS build/lint 通过；`platform.css` 不再混入强业务实体选择器；通用模式仍从 DS globals 生效。
+2. P1：拆分 DS `platform.css`。状态：已完成机械拆分；`platform.css` 保持稳定聚合入口，具体规则分布到 core/account/notifications/tenant-settings/layout/models/access/shell/content 模块。后续继续逐模块判断 L2 留 DS、L3/L4 回 portal/domain。验收：DS lint/build、`pnpm lint:design`、admin build、console build 通过。
 3. P1：重整 Console 样式边界。范围：区分 console portal chrome、workspace 组装和可回收平台模式；应用 `globals.css` 保持入口职责，页面模块只做 L3/L4 组装。验收：console lint/type-check/build 通过；console CSS 不新增 `--vx-*`、硬编码尺度、原生基础控件。
 4. P1：继续收敛 Admin 管理域。范围：以 `admin-management.css`、目录/治理/运营域为重点，抽离真正跨域复用的列表、状态、摘要、动作模式；保留 admin 特有的信息架构。验收：admin lint/type-check/build 通过；`admin-management.css` 降到 3000 行以下或完成可验证的模块拆分；不新增 DS 违规 baseline。
 5. P1：补强分层 guardrail。范围：增加 DS L2/L3/L4 边界检查，例如应用禁止定义 `--vx-*`、禁止底层 UI 引擎依赖、禁止原生基础控件、禁止 DS `platform.css` 混入 portal/domain 专属命名。验收：`pnpm lint:design` 通过；新增违规样例能被对应规则阻断；baseline 仍为空。
@@ -116,9 +117,9 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 优先级：P1  
 状态：已闭合，进入持续收敛。  
 修复证据：`packages/design/design-system/src/styles/tokens.css` 已新增 `--vx-button-*`、`--vx-field-*`、`--vx-card-*`、`--vx-shell-*`、`--vx-switch-*` 等语义组件尺度 token；`packages/design/design-system/src/styles/components.css` 已清除对 `var(--vx-component-metric-*)` 的直接消费；`scripts/guardrails/check-design-system.mjs` 已新增 `ds/no-component-metric-in-ds-components-css`，禁止 DS 基础组件语义类绕过语义 token 层。  
-问题：`--vx-component-metric-*` 现在只应作为 DS token 层的尺度兜底池，不应成为组件 CSS 或应用侧的直接使用契约；`platform.css` 中仍存在少量过渡性直用，后续需要按业务域逐步提升为 `--vx-<domain>-*` / `--vx-<component>-*` 语义 token。  
-修复方向：保持 `raw value -> component metric fallback -> semantic component token -> semantic class/component` 的分层关系。新增或修改 DS 组件时，必须先补语义 token，再在组件样式中消费；治理 `platform.css` 时按模块拆分迁移，优先把重复 radius、font-size、gap、padding、shadow 抽成域语义 token。  
-验收标准：`components.css` 中 `var(--vx-component-metric-*)` 命中数持续为 0；新增 DS 语义类不得直接消费兜底 metric token；每轮 `platform.css` 治理都减少直接 metric token 命中或把命中提升为更明确的域语义 token。  
+问题：`--vx-component-metric-*` 现在只应作为 DS token 层的尺度兜底池，不应成为组件 CSS 或应用侧的直接使用契约；`platform-*` 分层模块中仍存在少量过渡性直用，后续需要按业务域逐步提升为 `--vx-<domain>-*` / `--vx-<component>-*` 语义 token。
+修复方向：保持 `raw value -> component metric fallback -> semantic component token -> semantic class/component` 的分层关系。新增或修改 DS 组件时，必须先补语义 token，再在组件样式中消费；治理 `platform-*` 模块时按 L2/L3/L4 边界迁移，优先把重复 radius、font-size、gap、padding、shadow 抽成域语义 token。
+验收标准：`components.css` 中 `var(--vx-component-metric-*)` 命中数持续为 0；新增 DS 语义类不得直接消费兜底 metric token；每轮 `platform-*` 治理都减少直接 metric token 命中或把命中提升为更明确的域语义 token。
 当前验收：`rg -n -- "var\\(--vx-component-metric" packages/design/design-system/src/styles/components.css` 无结果；`pnpm lint:design`、`@vxture/design-system` type-check/build、website/console/admin/agent-studio-vela build 均通过。
 
 ### DS-SYS-005：包导出与应用别名策略混用 dist/src

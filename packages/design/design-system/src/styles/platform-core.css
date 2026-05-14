@@ -1,0 +1,282 @@
+/**
+ * platform-core.css - Shared platform page, card, section, and list semantics.
+ */
+
+:where(.vx-models-page) {
+  --vx-models-text-size: var(--vx-platform-text-size-md);
+  --vx-models-meta-size: var(--vx-platform-text-size-xs);
+}
+
+:where(.vx-account-profile-page) {
+  --vx-account-profile-text-size: var(--vx-platform-text-size-md);
+  --vx-account-profile-meta-size: var(--vx-platform-text-size-xs);
+  --vx-account-profile-title-size: clamp(1.08rem, 1.28vw, 1.32rem);
+  --vx-account-profile-title-line-height: 1.28;
+  --vx-account-profile-title-weight: 760;
+}
+
+.console-preferences {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.console-preferences__field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.console-preferences__field span {
+  font-size: 0.75rem;
+  color: var(--vx-console-muted);
+}
+
+.console-preferences .vx-select-trigger {
+  min-width: 7.5rem;
+  min-height: 2.45rem;
+  padding-block: 0;
+}
+
+.console-page {
+  min-width: 0;
+  align-content: start;
+}
+
+.console-page__body {
+  min-width: 0;
+  padding: 24px 32px 0;
+}
+
+.vx-page-stack,
+.vx-dashboard-grid,
+.vx-settings-grid,
+.vx-kpi-grid,
+.vx-metric-grid,
+.vx-card-grid {
+  display: grid;
+  gap: var(--vx-shell-section-gap);
+}
+
+.vx-page-header {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  margin-bottom: 0.1rem;
+}
+
+.vx-page-header__title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  min-height: var(--vx-shell-rail-height);
+}
+
+.vx-page-header h1 {
+  margin: 0;
+  font-size: var(--vx-admin-page-title-size);
+  line-height: 1.24;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.vx-page-header__description {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-body-size);
+  line-height: 1.5;
+}
+
+.vx-page-header__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.vx-page-header__actions .vx-btn {
+  min-height: 2rem;
+}
+
+.vx-kpi-grid,
+.vx-metric-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.vx-dashboard-grid,
+.vx-settings-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vx-card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.vx-kpi-card,
+.vx-section-card,
+.vx-metric-card,
+.vx-login-card {
+  border-color: var(--vx-console-border);
+  box-shadow: none;
+}
+
+.vx-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.vx-summary-strip__item {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.05rem;
+  border-radius: var(--vx-platform-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 74%, transparent);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+
+.vx-summary-strip__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.vx-summary-strip__aside {
+  display: inline-flex;
+  align-items: center;
+}
+
+.vx-summary-strip__item span {
+  color: var(--vx-console-muted);
+  font-size: 0.84rem;
+}
+
+.vx-summary-strip__item strong {
+  font-size: 1.45rem;
+  letter-spacing: -0.03em;
+}
+
+.vx-summary-strip__item p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: 0.92rem;
+}
+
+.vx-dashboard-layout {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: var(--vx-shell-section-gap);
+}
+
+.vx-page-section {
+  display: grid;
+  gap: var(--vx-shell-section-gap);
+  padding: 1.1rem 1.15rem;
+  border-radius: var(--vx-shell-panel-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 84%, transparent);
+  box-shadow: var(--vx-console-shadow);
+}
+
+.vx-page-section--muted {
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 96%, transparent);
+}
+
+.vx-page-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.vx-page-section__title {
+  margin: 0;
+  font-size: var(--vx-admin-section-title-size);
+  letter-spacing: 0;
+}
+
+.vx-page-section__description {
+  margin: 0.35rem 0 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-meta-size);
+}
+
+.vx-page-section__body {
+  min-width: 0;
+}
+
+.vx-card-title {
+  font-size: 1.1rem;
+}
+
+.vx-inline-between {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.vx-inline-meta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.8rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--vx-radius-full);
+  background: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  color: var(--vx-console-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.vx-stack-sm {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.vx-action-list,
+.vx-signal-list,
+.vx-toggle-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.vx-action-item,
+.vx-signal-list__item,
+.vx-toggle-list__item {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+}
+
+.vx-action-item:last-child,
+.vx-signal-list__item:last-child,
+.vx-toggle-list__item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.vx-settings-card--danger {
+  border-color: color-mix(in srgb, var(--vx-color-error-700) 16%, transparent);
+  background: color-mix(in srgb, var(--vx-color-error-surface) 86%, transparent);
+}
+
+.vx-danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vx-danger-zone p {
+  margin: 0;
+  color: var(--vx-color-error-800);
+  font-size: 0.84rem;
+}

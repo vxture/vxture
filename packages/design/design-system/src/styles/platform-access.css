@@ -1,0 +1,941 @@
+/**
+ * platform-access.css - Members, roles, detail, and shared access semantics.
+ */
+.vx-members-page,
+.vx-roles-page {
+  gap: 0.45rem;
+}
+
+.vx-members-page .vx-page-header,
+.vx-roles-page .vx-page-header {
+  grid-template-columns: 1fr;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.55rem;
+}
+
+.vx-members-page .vx-page-header__copy,
+.vx-roles-page .vx-page-header__copy {
+  gap: 0.62rem;
+}
+
+.vx-members-page .vx-page-header h1,
+.vx-roles-page .vx-page-header h1 {
+  font-size: var(--vx-directory-page-title-size);
+  line-height: var(--vx-directory-page-title-line-height);
+  font-weight: var(--vx-directory-page-title-weight);
+}
+
+.vx-members-header-actions,
+.vx-roles-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding-top: 0.05rem;
+}
+
+.vx-members-actionbar,
+.vx-roles-actionbar {
+  display: block;
+  padding-bottom: 0.05rem;
+}
+
+.vx-members-header-primary,
+.vx-roles-header-primary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  margin-left: auto;
+}
+
+.vx-members-header-selection,
+.vx-roles-header-selection {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.vx-members-header-selection span,
+.vx-roles-header-selection span {
+  color: var(--vx-console-brand-strong);
+  font-size: var(--vx-members-meta-size);
+  font-weight: 740;
+  white-space: nowrap;
+}
+
+.vx-roles-header-selection span {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-members-workspace,
+.vx-roles-workspace {
+  display: grid;
+  gap: 0.72rem;
+  overflow: visible;
+}
+
+.vx-members-toolbar,
+.vx-roles-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.1rem 0 0.45rem;
+  border: 0;
+  background: transparent;
+}
+
+.dark .vx-members-toolbar,
+.dark .vx-roles-toolbar {
+  background: transparent;
+}
+
+.vx-members-toolbar__search,
+.vx-roles-toolbar__search {
+  width: min(28rem, 100%);
+  min-width: 18rem;
+  height: 2.25rem;
+  min-height: 2.25rem;
+  border: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-shell-panel);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent);
+  padding: 0.3rem 0.85rem;
+  font-size: var(--vx-members-text-size);
+}
+
+.vx-roles-toolbar__search {
+  font-size: var(--vx-roles-text-size);
+}
+
+.dark .vx-members-toolbar__search,
+.dark .vx-roles-toolbar__search {
+  background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  border-color: var(--vx-color-border);
+}
+
+.vx-members-toolbar__search::placeholder,
+.vx-roles-toolbar__search::placeholder {
+  color: var(--vx-color-shell-subtle);
+  font-size: var(--vx-members-meta-size);
+}
+
+.vx-roles-toolbar__search::placeholder {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-members-toolbar__filters,
+.vx-roles-toolbar__filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.9rem;
+  min-width: 0;
+}
+
+.vx-members-toolbar__count,
+.vx-roles-toolbar__count {
+  display: inline-flex;
+  align-items: center;
+  height: 2.25rem;
+  min-height: 2.25rem;
+  white-space: nowrap;
+  border-radius: var(--vx-radius-full);
+  padding: 0 0.8rem;
+  color: var(--vx-console-muted);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 88%, transparent);
+  border: 1px solid var(--vx-color-border);
+  font-size: var(--vx-members-meta-size);
+  font-weight: 680;
+}
+
+.vx-roles-toolbar__count {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.dark .vx-members-toolbar__count,
+.dark .vx-roles-toolbar__count {
+  background: color-mix(in srgb, var(--vx-color-gray-900) 58%, transparent);
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-members-page .vx-segmented-control,
+.vx-roles-page .vx-segmented-control {
+  min-height: 2.25rem;
+  padding: 0.16rem;
+  gap: 0.12rem;
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-shell-panel);
+  border-color: var(--vx-color-border);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 68%, transparent);
+}
+
+.dark .vx-members-page .vx-segmented-control,
+.dark .vx-roles-page .vx-segmented-control {
+  background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  border-color: var(--vx-color-border);
+  box-shadow: none;
+}
+
+.vx-members-page .vx-segmented-control__item,
+.vx-roles-page .vx-segmented-control__item {
+  min-height: 1.88rem;
+  padding: 0 0.72rem;
+  border-radius: var(--vx-radius-full);
+  font-size: var(--vx-members-text-size);
+  line-height: 1;
+}
+
+.vx-roles-page .vx-segmented-control__item {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-members-page .vx-segmented-control__item--active,
+.vx-roles-page .vx-segmented-control__item--active {
+  box-shadow: none;
+}
+
+.vx-member-list,
+.vx-role-list {
+  display: grid;
+  gap: 0;
+  overflow: visible;
+}
+
+.vx-member-list__header,
+.vx-member-list .vx-member-table__row,
+.vx-role-list__header,
+.vx-role-row {
+  display: grid;
+  gap: 0.72rem;
+  align-items: center;
+}
+
+.vx-member-list__header,
+.vx-member-list .vx-member-table__row {
+  grid-template-columns:
+    2rem
+    minmax(210px, 1.12fr)
+    minmax(120px, 0.68fr)
+    minmax(220px, 1.18fr)
+    minmax(130px, 0.75fr)
+    minmax(105px, 0.56fr)
+    minmax(116px, 0.66fr)
+    2.5rem;
+}
+
+.vx-role-list__header,
+.vx-role-row {
+  grid-template-columns:
+    2rem
+    minmax(210px, 1.12fr)
+    minmax(140px, 0.76fr)
+    minmax(100px, 0.56fr)
+    minmax(110px, 0.62fr)
+    minmax(120px, 0.66fr)
+    minmax(220px, 1.18fr)
+    2.5rem;
+}
+
+.vx-member-list__header,
+.vx-role-list__header {
+  justify-items: var(--vx-directory-header-justify);
+  padding: 0 var(--vx-directory-row-padding-x) 0.35rem;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-members-meta-size);
+  font-weight: 740;
+  text-align: var(--vx-directory-header-text-align);
+}
+
+.vx-role-list__header {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.dark .vx-member-list__header,
+.dark .vx-role-list__header {
+  color: var(--vx-color-shell-subtle);
+}
+
+.vx-member-list__header > :first-child,
+.vx-member-list__header > :last-child,
+.vx-member-list .vx-member-table__row > :first-child,
+.vx-member-list .vx-member-table__row > :last-child,
+.vx-role-list__header > :first-child,
+.vx-role-list__header > :last-child,
+.vx-role-row > :first-child,
+.vx-role-row > :last-child {
+  justify-self: var(--vx-directory-edge-justify);
+  text-align: var(--vx-directory-edge-text-align);
+}
+
+.vx-member-list .vx-member-table__row,
+.vx-role-row {
+  position: relative;
+  z-index: 1;
+  min-height: 4.05rem;
+  overflow: visible;
+  justify-items: start;
+  padding: 0.72rem var(--vx-directory-row-padding-x);
+  border: 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: left;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.dark .vx-member-list .vx-member-table__row,
+.dark .vx-role-row {
+  border-bottom-color: var(--vx-color-border);
+  background: transparent;
+}
+
+.vx-member-list .vx-member-table__row:hover,
+.vx-role-row:hover {
+  border-bottom-color: color-mix(in srgb, var(--vx-color-shell-brand) 20%, transparent);
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 2.5%, transparent);
+}
+
+.vx-member-table__row--active,
+.vx-role-row--active {
+  z-index: 1200 !important;
+  border-bottom-color: color-mix(in srgb, var(--vx-color-shell-brand) 26%, transparent) !important;
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 3.5%, transparent);
+  box-shadow: inset 3px 0 0 var(--vx-console-brand);
+}
+
+.dark .vx-member-list .vx-member-table__row:hover,
+.dark .vx-member-table__row--active,
+.dark .vx-role-row:hover,
+.dark .vx-role-row--active {
+  background: color-mix(in srgb, var(--vx-color-primary) 5.5%, transparent);
+}
+
+.vx-member-select,
+.vx-role-select {
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 140ms ease;
+}
+
+.vx-members-page--selecting .vx-member-select,
+.vx-member-list__header:hover .vx-member-select,
+.vx-member-list__header:focus-within .vx-member-select,
+.vx-member-list .vx-member-table__row:hover .vx-member-select,
+.vx-member-list .vx-member-table__row:focus-within .vx-member-select,
+.vx-roles-page--selecting .vx-role-select,
+.vx-role-list__header:hover .vx-role-select,
+.vx-role-list__header:focus-within .vx-role-select,
+.vx-role-row:hover .vx-role-select,
+.vx-role-row:focus-within .vx-role-select {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vx-member-select input,
+.vx-role-select input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0;
+  accent-color: var(--vx-console-brand);
+  cursor: pointer;
+}
+
+.vx-member-select--header input,
+.vx-role-select--header input {
+  width: 1rem;
+  height: 1rem;
+}
+
+.vx-member-table__avatar {
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: var(--vx-radius-full);
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px var(--vx-color-shell-line-soft);
+}
+
+.vx-member-table__avatar-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.vx-member-table__person,
+.vx-role-row__identity-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.18rem;
+}
+
+.vx-member-table__person-line,
+.vx-role-row__identity {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.vx-member-table__person-line {
+  gap: 0.42rem;
+}
+
+.vx-role-row__identity {
+  gap: 0.68rem;
+}
+
+.vx-member-table__person-line strong,
+.vx-member-table__person p,
+.vx-member-table__text,
+.vx-member-table__muted,
+.vx-role-row__identity strong,
+.vx-role-row__identity p,
+.vx-role-row__text,
+.vx-role-row__muted {
+  overflow: hidden;
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-member-table__person-line strong,
+.vx-role-row__identity strong {
+  color: var(--vx-console-text);
+  font-size: var(--vx-members-text-size);
+  font-weight: 730;
+}
+
+.vx-role-row__identity strong {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-member-table__person-line span {
+  flex: 0 0 auto;
+  border-radius: var(--vx-radius-full);
+  padding: 0.16rem 0.44rem;
+  color: var(--vx-console-brand-strong);
+  background: var(--vx-console-brand-soft);
+  font-size: var(--vx-members-meta-size);
+  font-weight: 720;
+}
+
+.vx-member-table__person p,
+.vx-role-row__identity p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-members-meta-size);
+  line-height: 1.2;
+}
+
+.vx-role-row__identity p {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-member-table__text,
+.vx-member-table__muted,
+.vx-role-row__text,
+.vx-role-row__muted {
+  font-size: var(--vx-members-text-size);
+}
+
+.vx-role-row__text,
+.vx-role-row__muted {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-member-table__text,
+.vx-role-row__text {
+  color: var(--vx-console-text);
+}
+
+.vx-member-table__muted,
+.vx-role-row__muted {
+  color: var(--vx-console-muted);
+}
+
+.vx-member-table__menu,
+.vx-role-row__menu {
+  position: relative;
+  z-index: 1300;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.vx-member-table__menu .vx-btn,
+.vx-role-row__menu .vx-btn {
+  width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  border: 0;
+  background: transparent;
+  color: var(--vx-console-text);
+  padding: 0;
+  box-shadow: none;
+}
+
+.vx-member-table__menu .vx-btn svg,
+.vx-role-row__menu .vx-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.vx-member-table__menu .vx-btn:hover,
+.vx-role-row__menu .vx-btn:hover {
+  background: transparent;
+  color: var(--vx-console-brand);
+}
+
+.vx-member-actions-menu,
+.vx-role-actions-menu {
+  position: absolute;
+  top: calc(100% + 0.22rem);
+  right: 0;
+  z-index: 2400;
+  min-width: 10.5rem;
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.32rem;
+  border: 1px solid var(--vx-console-border);
+  border-radius: var(--vx-platform-radius-sm);
+  background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
+}
+
+.dark .vx-member-actions-menu,
+.dark .vx-role-actions-menu {
+  background: color-mix(in srgb, var(--vx-color-shell-surface) 98%, transparent);
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-black) 36%, transparent);
+}
+
+.vx-member-actions-menu button,
+.vx-role-actions-menu button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  border: 0;
+  border-radius: var(--vx-radius-lg);
+  padding: 0.54rem 0.62rem;
+  background: transparent;
+  color: var(--vx-console-text);
+  font-size: var(--vx-members-text-size);
+  font-weight: 620;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vx-role-actions-menu button {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-member-actions-menu button:hover:not(:disabled),
+.vx-role-actions-menu button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  color: var(--vx-console-brand);
+}
+
+.vx-member-actions-menu button:disabled,
+.vx-role-actions-menu button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.vx-member-actions-menu__danger,
+.vx-role-actions-menu__danger {
+  color: var(--vx-color-warning-700) !important;
+}
+
+.vx-member-actions-menu__danger:hover:not(:disabled),
+.vx-role-actions-menu__danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vx-color-warning) 12%, transparent) !important;
+}
+
+.vx-member-status,
+.vx-role-status {
+  border-radius: var(--vx-radius-full);
+  padding: 0.22rem 0.52rem;
+  font-size: var(--vx-members-meta-size);
+  font-weight: 720;
+}
+
+.vx-role-status {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-member-status--active,
+.vx-role-status--active {
+  color: var(--vx-color-success-700);
+  background: color-mix(in srgb, var(--vx-color-success) 12%, transparent);
+}
+
+.vx-member-status--invited {
+  color: var(--vx-color-brand-700);
+  background: color-mix(in srgb, var(--vx-color-auth-accent-light) 12%, transparent);
+}
+
+.vx-member-status--suspended,
+.vx-role-status--disabled {
+  color: var(--vx-color-warning-700);
+  background: color-mix(in srgb, var(--vx-color-warning) 15%, transparent);
+}
+
+.dark .vx-member-status--active,
+.dark .vx-role-status--active {
+  color: var(--vx-color-success-300);
+  background: color-mix(in srgb, var(--vx-color-success) 14%, transparent);
+}
+
+.dark .vx-member-status--invited {
+  color: var(--vx-color-brand-300);
+  background: color-mix(in srgb, var(--vx-color-auth-accent-light) 16%, transparent);
+}
+
+.dark .vx-member-status--suspended,
+.dark .vx-role-status--disabled {
+  color: var(--vx-color-warning-400);
+  background: color-mix(in srgb, var(--vx-color-warning) 16%, transparent);
+}
+
+.vx-member-detail-actions {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.vx-member-detail-actions .vx-btn {
+  justify-content: flex-start;
+}
+
+.vx-members-pagination,
+.vx-roles-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.2rem;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-members-meta-size);
+}
+
+.vx-roles-pagination {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-members-pagination__actions,
+.vx-roles-pagination__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vx-members-pagination__actions span,
+.vx-roles-pagination__actions span {
+  padding-right: 0.25rem;
+  white-space: nowrap;
+}
+
+.vx-profile-dialog__hint {
+  margin: -0.1rem 0 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-members-meta-size);
+  line-height: 1.5;
+}
+
+.vx-role-avatar {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: var(--vx-radius-full);
+  box-shadow: inset 0 0 0 1px var(--vx-color-shell-line-soft);
+}
+
+.vx-role-avatar svg {
+  width: 18px;
+  height: 18px;
+}
+
+.vx-role-avatar--system {
+  color: var(--vx-console-brand-strong);
+  background: var(--vx-console-brand-soft);
+}
+
+.vx-role-avatar--custom {
+  color: var(--vx-color-teal-700);
+  background: var(--vx-color-teal-surface);
+}
+
+.dark .vx-role-avatar--custom {
+  color: var(--vx-color-teal-300);
+  background: color-mix(in srgb, var(--vx-color-teal-500) 16%, transparent);
+}
+
+.vx-role-permission-picker {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.vx-role-permission-picker header {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.vx-role-permission-picker h2 {
+  margin: 0;
+  color: var(--vx-console-text);
+  font-size: var(--vx-roles-text-size);
+  font-weight: 740;
+}
+
+.vx-role-permission-picker p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-role-permission-picker__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+}
+
+.vx-role-permission-chip {
+  border: 1px solid var(--vx-color-border);
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-shell-panel);
+  color: var(--vx-console-muted);
+  padding: 0.4rem 0.68rem;
+  font-size: var(--vx-roles-meta-size);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.vx-role-permission-chip--active {
+  border-color: color-mix(in srgb, var(--vx-color-shell-brand) 26%, transparent);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-search-input {
+  min-width: 18rem;
+}
+
+.vx-select-trigger {
+  min-width: 10rem;
+}
+
+.vx-segmented-control {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.25rem;
+  border-radius: var(--vx-platform-radius-md);
+  background: color-mix(in srgb, var(--vx-color-gray-50) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
+}
+
+.vx-segmented-control__item {
+  border: 0;
+  background: transparent;
+  color: var(--vx-console-muted);
+  padding: 0.62rem 0.9rem;
+  border-radius: var(--vx-platform-radius-sm);
+  font-weight: 600;
+}
+
+.vx-segmented-control__item--active {
+  background: var(--vx-color-shell-panel-strong);
+  color: var(--vx-console-text);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+
+.vx-drawer-like {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: auto;
+  height: 100vh;
+  width: min(32rem, 100vw);
+  max-width: 32rem;
+  transform: none;
+  border-radius: 0;
+  border-left: 0;
+  box-shadow: -18px 0 48px color-mix(in srgb, var(--vx-color-gray-900) 12%, transparent);
+  z-index: 30;
+}
+
+.vx-drawer-like__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.vx-overlay {
+  position: fixed;
+  inset: 0;
+  background: color-mix(in srgb, var(--vx-color-gray-900) 12%, transparent);
+  z-index: 20;
+}
+
+.vx-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.vx-detail-grid span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--vx-console-muted);
+  font-size: 0.85rem;
+}
+
+.vx-detail-actions,
+.vx-role-permissions,
+.vx-permission-map,
+.vx-subscription-panel,
+.vx-form-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.vx-detail-panel,
+.vx-detail-drawer__content {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.vx-detail-panel__header,
+.vx-detail-panel__body,
+.vx-detail-panel__actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.vx-detail-drawer__content {
+  padding: 0;
+}
+
+.vx-entity-table-section__filters {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.vx-empty-state {
+  display: grid;
+  gap: 0.65rem;
+  justify-items: start;
+  padding: 1.2rem 0 0.2rem;
+}
+
+.vx-empty-state p {
+  margin: 0;
+  color: var(--vx-console-muted);
+}
+
+.vx-role-permissions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vx-role-permissions span {
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--vx-platform-radius-sm);
+  background: var(--vx-color-gray-50);
+  border: 1px solid var(--vx-console-border);
+  color: var(--vx-console-muted);
+  font-size: 0.9rem;
+}
+
+.dark .vx-role-permissions span {
+  background: var(--vx-color-gray-900);
+}
+
+.vx-role-table__row--active,
+.vx-role-table__row--active:hover {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 8%, transparent);
+}
+
+.vx-role-table__header,
+.vx-role-table__row {
+  grid-template-columns: 1.15fr 1.1fr 0.8fr 0.8fr 1.55fr 0.9fr;
+}
+
+.vx-role-table__header span:last-child,
+.vx-role-table__row span:last-child {
+  white-space: nowrap;
+}
+
+.vx-role-table__description {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vx-metric-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.vx-metric-card__content strong {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.vx-badge-neutral,
+.vx-badge-warning {
+  border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-50) 92%, transparent);
+  color: var(--vx-console-muted);
+}
+
+.dark .vx-badge-neutral {
+  background: var(--vx-color-gray-900);
+}
+
+.vx-badge-warning {
+  background: var(--vx-color-warning-surface);
+  color: var(--vx-color-warning-foreground);
+  border-color: var(--vx-color-warning-border);
+}
+
+.vx-badge-positive {
+  background: var(--vx-color-success-surface);
+  color: var(--vx-color-success-foreground);
+  border: 1px solid var(--vx-color-success-border);
+}
+
+:where(.vx-members-page) {
+  --vx-members-text-size: var(--vx-platform-text-size-md);
+  --vx-members-meta-size: var(--vx-platform-text-size-xs);
+}
+
+:where(.vx-roles-page) {
+  --vx-roles-text-size: var(--vx-platform-text-size-md);
+  --vx-roles-meta-size: var(--vx-platform-text-size-xs);
+}
