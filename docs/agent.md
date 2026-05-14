@@ -31,7 +31,7 @@ Vxture 是基于 **pnpm workspace monorepo** 的企业 SaaS 平台（TypeScript 
 | auth-bff（JWT 统一签发） | ✅ 运行中 |
 | website + console + admin | ✅ 运行中 |
 | Vela（智能助手） | ✅ 三端运行中，嵌入 admin / console |
-| Ruyin（Agent） | 🟡 server 运行中，studio/bff 建设中 |
+| Ruyin（Agent） | ✅ 三端运行中 |
 | 支付系统 | ⏳ 待接入 |
 
 ---
@@ -44,7 +44,8 @@ docs/
 ├── status.md             ← 平台实施状态（实时更新）
 │
 ├── architecture/         ← 层级结构 / 依赖边界（权威，慢变化）
-├── ai/                   ← AI 工作规范：编码规则、注释、审计清单
+├── ai/                   ← AI 工作规范：编码规则、注释、代码风格、TypeScript 配置
+├── audit/                ← 工程合规审计：规则、CI 门控、检查清单
 ├── design/               ← 跨包能力域设计（auth / locale / 权限 / 多租户）
 ├── packages/             ← 各包实现上下文（AI 编码时的主要参考）
 ├── product/              ← 产品规格（Vela / Ruyin / Admin 设计）
@@ -73,8 +74,8 @@ docs/
 | 部署 / 环境配置 | `deployment/index.md` |
 | 端口分配 | `ai/port-allocation.md` |
 | AI 编码规则 | `ai/01-coding-rules.md` |
-| Core 包架构审计 | `ai/audit/checklist-core.md` |
-| Design System 合规审计 | `ai/audit/checklist-ds.md` |
+| Core 包架构审计 | `audit/checklist-core.md` |
+| Design System 合规审计 | `audit/checklist-ds.md` |
 | 平台当前进度 | `status.md` |
 
 ---
@@ -90,4 +91,4 @@ docs/
 
 ---
 
-_版本：2.0.0 | 2026-05-10_
+_版本：2.1.0 | 2026-05-14_
