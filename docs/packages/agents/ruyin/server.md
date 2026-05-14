@@ -1,7 +1,7 @@
 # ruyin-server（@vxture/agent-server-ruyin）
 
 > ⚠️ 待大版本重构 | 内容待核查补充
-> 架构层参考：[`docs/architecture/11-agent-server.md`](../../architecture/11-agent-server.md)
+> 架构层参考：[`docs/architecture/06-agent-server.md`](../../architecture/06-agent-server.md)
 > 产品规格：[`docs/product/agents/ruyin/spec.md`](../../product/agents/ruyin/spec.md)
 
 ---

@@ -1,7 +1,7 @@
 # @vxture/core-mail
 
 > 更新：2026-05-12
-> 架构层参考：[`docs/architecture/05-core-layer.md`](../../architecture/05-core-layer.md)
+> 架构层参考：[`docs/architecture/03-core-layer.md`](../../architecture/03-core-layer.md)
 > 消费方文档：[`docs/packages/bff/website.md`](../bff/website.md)
 
 ---

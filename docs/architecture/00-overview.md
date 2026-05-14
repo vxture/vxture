@@ -369,7 +369,7 @@ ai-sdk         →  shared
 
 Agent-server 逻辑遵循"成熟后晋升"路径：`agent-server/{agent}/` → `services/{domain}/{name}/`，经 BFF 后供全平台使用。AI 能力成熟后作为模块加入 `@vxture/ai-sdk`。
 
-详见 [`07-service-layer.md`](07-service-layer.md)。
+详见 [`04-service-layer.md`](04-service-layer.md)。
 
 ---
 
@@ -443,13 +443,13 @@ are kept apart by design. Different governance, deployment cadence, and dependen
 | `02-package-boundaries.md` | 各层依赖边界的权威参考                  |
 | `03-package-graph.json`    | 机器可读包依赖图                        |
 | `04-shared-layer.md`       | Shared 层架构                           |
-| `05-core-layer.md`         | Core 层架构与职责                       |
+| `03-core-layer.md`         | Core 层架构与职责                       |
 | `06-ai-sdk.md`             | AI SDK 模块架构                         |
-| `07-service-layer.md`      | Service 层架构与晋升生命周期            |
+| `04-service-layer.md`      | Service 层架构与晋升生命周期            |
 | `08-design-system.md`      | Design System 架构                      |
 | `09-platform-sdk.md`       | Platform SDK 架构                       |
-| `10-bff-layer.md`          | BFF 层架构                              |
-| `11-agent-server.md`       | Agent Server 层架构                     |
+| `05-bff-layer.md`          | BFF 层架构                              |
+| `06-agent-server.md`       | Agent Server 层架构                     |
 | `12-typescript.md`         | TypeScript 配置标准                     |
 
 ---

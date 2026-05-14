@@ -1,6 +1,6 @@
 # Architecture Documentation Index
 
-**Version**: 1.9.0
+**Version**: 1.10.0
 **Last Updated**: 2026-05-14
 **TypeScript**: 5.9.3
 **ECMAScript**: ES2023
@@ -19,10 +19,10 @@
 
 | 文件                  | 内容                                          |
 | --------------------- | --------------------------------------------- |
-| `05-core-layer.md`    | Core 层 — 平台基础设施原语                    |
-| `07-service-layer.md` | Service 层 — 共享域服务与晋升生命周期         |
-| `10-bff-layer.md`     | BFF 层 — 认证、聚合、路由、响应塑形           |
-| `11-agent-server.md`  | Agent Server 层 — Agent 私有后端架构          |
+| `03-core-layer.md`    | Core 层 — 平台基础设施原语                    |
+| `04-service-layer.md` | Service 层 — 共享域服务与晋升生命周期         |
+| `05-bff-layer.md`     | BFF 层 — 认证、聚合、路由、响应塑形           |
+| `06-agent-server.md`  | Agent Server 层 — Agent 私有后端架构          |
 
 > Shared / AI SDK / Design System / Platform SDK 的实现约束见 [`docs/packages/`](../packages/index.md)
 
@@ -30,7 +30,7 @@
 
 | 文件               | 内容                                |
 | ------------------ | ----------------------------------- |
-| `13-tech-stack.md` | 技术栈选型 — 当前基准版本与升级路径 |
+| `07-tech-stack.md` | 技术栈选型 — 当前基准版本与升级路径 |
 
 ## Coding 规范
 
@@ -54,6 +54,11 @@
 
 ## Changelog
 
+### v1.10.0 — 2026-05-14
+
+- 重新编排文件序号，消除因删除产生的空洞（05→03, 07→04, 10→05, 11→06, 13→07）
+- 同步更新所有引用旧序号的文档（30 个文件）
+
 ### v1.9.0 — 2026-05-14
 
 - 删除与 `docs/packages/` 完全重复的层级文档：04-shared-layer、06-ai-sdk、08-design-system、09-platform-sdk
@@ -69,7 +74,7 @@
 - `02-package-boundaries.md`：Platform SDK §9 将 amap/cesium 标注为"计划中，尚未实现"；示例导入改用 browser
 - `08-design-system.md`：组件数量 18 → 25
 - `09-platform-sdk.md` v1.3.0：完整重写；browser 作为唯一已实现包；amap/cesium 移至"计划中"章节；消费者补充 `business/*`
-- `10-bff-layer.md` v1.4.0→v1.4.1：ruyin 消费者由 `agent-studio/ruyin` 改为 `business/ruyin`；`agent{N}-bff` 替换为 `agent-template-bff → @vxture/bff-agent01`
+- `05-bff-layer.md` v1.4.0→v1.4.1：ruyin 消费者由 `agent-studio/ruyin` 改为 `business/ruyin`；`agent{N}-bff` 替换为 `agent-template-bff → @vxture/bff-agent01`
 - Agent 实例表：ruyin 前端更正为 `business/ruyin`，状态更新为 ✅；新增 agent01 模板行
 
 ### v1.7.0 — 2026-05-12
@@ -77,17 +82,17 @@
 - `00-overview.md` v1.4.0：SERVICE LAYER ASCII 框展开为 9 个服务 / 5 个域；CORE LAYER 补充 `@vxture/core-database`；§8 包架构表补全 core-database、platform-browser
 - `01-monorepo.md` v1.4.0：仓库结构树补充 auth-bff、gateway-bff、ruyin-bff；服务树展开至 5 域 9 服务；core 补 database/、mail/；platform 补 browser/；新增 `business/` 目录；§9/§10 包名与分组列表同步补全
 - `02-package-boundaries.md`：Core §3 补充 `@vxture/core-database`、`@vxture/core-mail`；Service §5 展开为 5 域完整树；BFF §6 补充 `@vxture/bff-auth`（唯一 JWT 签发者）、`@vxture/bff-gateway`、`@vxture/bff-ruyin`
-- `05-core-layer.md` v1.4.0：新增 `core-database` 包描述（Prisma DDL 管理，server-side only）；§1 树、§7 用法、§8 消费者表格同步更新
-- `07-service-layer.md` v1.3.0：§1 树展开至 5 域 9 服务（新增 ai、identity、notification、tenant 域）；§2 命名示例补全；§3 域分组表扩充
-- `10-bff-layer.md` v1.4.0：§1 包树补充 auth-bff、gateway-bff、ruyin-bff；新增 「auth-bff — 唯一 JWT 签发者」说明章节
+- `03-core-layer.md` v1.4.0：新增 `core-database` 包描述（Prisma DDL 管理，server-side only）；§1 树、§7 用法、§8 消费者表格同步更新
+- `04-service-layer.md` v1.3.0：§1 树展开至 5 域 9 服务（新增 ai、identity、notification、tenant 域）；§2 命名示例补全；§3 域分组表扩充
+- `05-bff-layer.md` v1.4.0：§1 包树补充 auth-bff、gateway-bff、ruyin-bff；新增 「auth-bff — 唯一 JWT 签发者」说明章节
 
 ### v1.6.0 — 2026-05-11
 
 - `index.md`：Coding 规范章节改为指向 `docs/ai/index.md`（原链接 claude-coding-*.md 已失效）
 - `00-overview.md`：删除 §9 依赖规则摘要（指向 02-package-boundaries.md）、精简 §10 Agent 生命周期、website 附录改为指针
 - `01-monorepo.md`：删除 §11 依赖方向（指向 02）、§17 AI 开发规范（指向 02）、§18 架构目标、website Appendix A 改为指针
-- `05-core-layer.md`：§3 补充 core-auth → core-config 例外说明
-- `07-service-layer.md`：§4 补充 `module/` 目录层
+- `03-core-layer.md`：§3 补充 core-auth → core-config 例外说明
+- `04-service-layer.md`：§4 补充 `module/` 目录层
 - `15-control-plane-overview.md`：容器命名更新为 `vx-*`、删除 §9/§10 Docker Compose/CI-CD（指向 deployment/）
 
 ### v1.5.0 — 2026-05-06
@@ -99,24 +104,24 @@
 ### v1.4.0 — 2026-05-03
 
 - 新增 `@vxture/core-mail`：事务邮件包，nodemailer 封装，无 SMTP 时自动 no-op
-- `05-core-layer.md` v1.3.0：补充 `core-mail` 包描述、跨依赖约束说明、消费者表格
-- `10-bff-layer.md` v1.3.0：新增"事务邮件"章节，记录 Portal BFF fire-and-forget 邮件模式
+- `03-core-layer.md` v1.3.0：补充 `core-mail` 包描述、跨依赖约束说明、消费者表格
+- `05-bff-layer.md` v1.3.0：新增"事务邮件"章节，记录 Portal BFF fire-and-forget 邮件模式
 - `00-overview.md`：ASCII 图和包表格补充 `@vxture/core-mail`
 - Agent 实例表补充 Vela（三端运行中，嵌入式部署）
 
 ### v1.3.0 — 2026-03-11
 
-- 新增 `13-tech-stack.md`：技术栈选型文档，含当前基准版本与升级路径
+- 新增 `07-tech-stack.md`：技术栈选型文档，含当前基准版本与升级路径
 - 补充 Agent 实例索引表（ruyin）
 
 ### v1.2.0 — 2026-03-10
 
 - 新增 `06-ai-sdk.md`：AI SDK 模块架构专项文档
 - 新增 `09-platform-sdk.md`：Platform SDK 专项文档
-- 新增 `10-bff-layer.md`：BFF 层专项文档
+- 新增 `05-bff-layer.md`：BFF 层专项文档
 - 文档重编号：按依赖链底层→高层排列
   - `06-shared-layer.md` → `04-shared-layer.md`
-  - `09-agent-server.md` → `11-agent-server.md`
+  - `09-agent-server.md` → `06-agent-server.md`
   - `10-typescript.md` → `12-typescript.md`
 - `00-overview.md` Document Map 同步更新
 

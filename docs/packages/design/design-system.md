@@ -1,72 +1,103 @@
 # @vxture/design-system
 
-> 架构层参考：[`docs/architecture/08-design-system.md`](../../architecture/08-design-system.md)
 > 使用规范：[`docs/standards/design-system.md`](../../standards/design-system.md)
-
----
+> 审计记录：[`docs/audit/checklist-ds.md`](../../audit/checklist-ds.md)
 
 ## 包信息
 
 | 项 | 值 |
 |----|-----|
 | 包名 | `@vxture/design-system` |
+| 版本 | `1.2.2` |
 | 路径 | `packages/design/design-system/` |
 | @layer | `Presentation` |
-| 消费方 | `portals/*` · `agent-studio/*` · `business/*` |
+| 消费方 | `portals/*` · `business/*` · `agent-studio/*` |
+
+## 公共入口
+
+| 入口 | 用途 |
+|------|------|
+| `@vxture/design-system` | 客户端组件、Icon、主题、密度、hooks、utils |
+| `@vxture/design-system/tokens` | server-safe token 引用 |
+| `@vxture/design-system/types` | server-safe 类型 |
+| `@vxture/design-system/server` | server-safe 工具入口 |
+| `@vxture/design-system/styles/globals.css` | 标准全局样式入口 |
+| `@vxture/design-system/styles/auth.css` | 认证模板样式 |
+| `@vxture/design-system/styles/components.css` | 基础组件语义类 |
+| `@vxture/design-system/styles/console.css` | Console portal style pack |
+| `@vxture/design-system/styles/fullscreen.css` | 全屏基础设施样式 |
+| `@vxture/design-system/styles/tokens.css` | token 运行时值源 |
+| `@vxture/design-system/styles/typography.css` | 字体和排版基线 |
+
+其他 `@vxture/design-system/*` 路径默认禁止。
 
 ## 目录结构
 
 ```
 src/
-├── tokens/       ← CSS 变量 + TS 常量（颜色/间距/圆角/阴影/字体）
-├── styles/       ← globals.css / tokens.css / auth.css / fullscreen.css
-├── theme/        ← ThemeProvider / useTheme（亮色/暗色/系统）
-├── density/      ← DensityProvider（compact/default/comfortable）
-├── icons/        ← Icon Registry（Phosphor 隔离层）
+├── tokens/       # TS token 引用，运行时值源在 styles/tokens.css
+├── styles/       # globals/tokens/components/platform/console/auth/fullscreen
+├── theme/        # ThemeProvider / useTheme
+├── density/      # density 配置、类型与导出
+├── icons/        # Icon 组件、字典和注册表
 ├── components/
-│   ├── ui/       ← 基础 UI 原语（Button/Input/Dialog 等）
-│   ├── auth/     ← 统一认证模板组件
-│   ├── shell/    ← 跨应用 Chrome 原语（Shell/Sidebar/Header）
-│   └── layout/   ← 布局原语
-└── index.ts      ← 唯一公共出口
+│   ├── ui/       # 25 个 UI primitive 和平台 pattern
+│   ├── auth/     # 统一认证模板组件
+│   ├── shell/    # ShellChrome
+│   └── layout/   # Container / Stack / Grid / Fullscreen
+├── layers/       # z-index
+├── hooks/        # 通用前端 hooks
+├── utils/        # cn 等工具
+├── types/        # 公共类型
+├── index.ts      # 客户端公共入口
+├── tokens-entry.ts
+├── types-entry.ts
+└── server.ts
 ```
+
+## UI 组件清单
+
+当前 `src/components/ui` 有 25 个 `.tsx` 组件：
+
+`ActionMenu`、`Avatar`、`Badge`、`Breadcrumb`、`Button`、`Card`、`Checkbox`、`DataTable`、`Dialog`、`DialogForm`、`DropdownMenu`、`FilterBar`、`Input`、`Label`、`MetricCard`、`NativeSelect`、`Pagination`、`Popover`、`Select`、`Separator`、`StatusBadge`、`Switch`、`Tabs`、`Textarea`、`Tooltip`。
+
+## CSS 分层
+
+- `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。
+- `console.css` 是 Console portal style pack 稳定入口，只聚合 `console-*` 模块。
+- `globals.css` 是标准消费者入口，聚合 DS 全局基线。
+- 应用端样式入口和大 CSS 文件应保持 import-only，具体规则放入分层模块。
 
 ## 依赖约束
 
-```typescript
-✅ @vxture/shared（类型 / 常量）
-❌ @vxture/core-*（服务端专用，禁止引入）
-❌ @vxture/service-* / bff-* / ai-sdk
-❌ @vxture/platform-*（platform-browser 等运行时适配层不属于 DS）
-❌ 任何 Portal / Agent Studio 内部模块
-```
+允许：
+
+- `@vxture/shared`
+- Radix UI、Phosphor、next-themes、Tailwind 等 DS 内部 UI 引擎依赖
+
+禁止：
+
+- `@vxture/core-*`
+- `@vxture/service-*`
+- `@vxture/bff-*`
+- `@vxture/platform-*`
+- 任意 portal、business、agent-studio 内部模块
 
 ## 开发约束
 
-**图标系统**：
-- 所有图标通过 `<Icon name="..." />` 使用，禁止直接 `import @phosphor-icons/react`
-- 新图标必须先加入 `icon-dictionary.ts` 白名单，再在 `icon-registry.ts` 注册
-
-**Token 系统**：
-- CSS 变量是运行时唯一值源（`--vx-*` 前缀）
-- TS token 文件是 CSS 变量的只读引用，禁止包含原始 hex/px/shadow 值
-- 禁止在 DS 内部组件中直接消费 `--vx-component-metric-*`（必须先提升为语义 token）
-
-**组件开发**：
-- 所有组件使用 `forwardRef`
-- class 合并统一用 `cn()`
-- 默认 `variant="default"` / `size="default"`
-
-**出口管理**：
-- 所有公共符号通过 `src/index.ts` 导出，禁止从内部路径导入
-- 服务端安全符号通过子入口导出（`@vxture/design-system/tokens` / `/types`）
+- 所有图标通过 `<Icon name="..." />` 使用；应用不得直接导入底层图标库。
+- CSS 变量运行时值只在 `styles/tokens.css` 维护；TS token 文件只暴露 `var(--vx-*)`。
+- DS semantic CSS 不直接消费 `--vx-component-metric-*` 兜底 token。
+- 新增公共能力必须同步 `package.json` exports、guardrail 白名单和使用文档。
+- 基础组件和跨应用 pattern 从 DS 导出；应用侧只做业务组装。
 
 ## 验收门控
 
 ```bash
-pnpm lint:design          # 检查应用侧违规：内联样式 / 自建 UI / 直接色值
-pnpm --filter @vxture/design-system build
+pnpm lint:design
+pnpm --filter @vxture/design-system lint
 pnpm --filter @vxture/design-system type-check
+pnpm --filter @vxture/design-system build
 ```
 
-存量债务基线：`scripts/guardrails/design-system-baseline.json`，迁移后从基线移除，禁止新增。
+消费者变更追加对应应用的 `lint` / `type-check` / `build`。

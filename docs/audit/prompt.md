@@ -12,10 +12,10 @@ docs/architecture/01-monorepo.md
 docs/architecture/02-package-boundaries.md
 docs/architecture/03-package-graph.json
 docs/architecture/04-shared-layer.md
-docs/architecture/05-core-layer.md
-docs/architecture/07-service-layer.md
-docs/architecture/10-bff-layer.md
-docs/architecture/11-agent-server.md
+docs/architecture/03-core-layer.md
+docs/architecture/04-service-layer.md
+docs/architecture/05-bff-layer.md
+docs/architecture/06-agent-server.md
 docs/architecture/12-typescript.md
 
 AI Standards

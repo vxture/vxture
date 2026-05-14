@@ -18,6 +18,9 @@
 - 源码扫描未发现业务源码直接导入 `@vxture/design-system/src/**`。
 - 源码扫描未发现业务源码直接导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`；`lint:design` 已用 `ds/no-direct-ui-engine-imports` 禁止新增。
 - DS `platform.css` 已拆分为稳定聚合入口和 `platform-*` 分层模块，后续可按 L2/L3/L4 边界逐模块收敛。
+- DS `console.css` 已拆分为稳定 Console portal style pack 入口和 `console-*` 模块。
+- admin `admin-management.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
+- `lint:design` 已用 `ds/no-style-entry-rules` 约束 `platform.css` / `console.css` / `admin-management.css` 保持 import-only。
 
 ## 审计命令
 
@@ -75,10 +78,10 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 1. P0：固化分层模型与验收口径。范围：本审计清单、DS-USE 状态修正、六批次任务定义。验收：`git diff --check`、`pnpm lint:design` 通过；提交独立 commit。
 2. P1：拆分 DS `platform.css`。状态：已完成机械拆分；`platform.css` 保持稳定聚合入口，具体规则分布到 core/account/notifications/tenant-settings/layout/models/access/shell/content 模块。后续继续逐模块判断 L2 留 DS、L3/L4 回 portal/domain。验收：DS lint/build、`pnpm lint:design`、admin build、console build 通过。
-3. P1：重整 Console 样式边界。范围：区分 console portal chrome、workspace 组装和可回收平台模式；应用 `globals.css` 保持入口职责，页面模块只做 L3/L4 组装。验收：console lint/type-check/build 通过；console CSS 不新增 `--vx-*`、硬编码尺度、原生基础控件。
-4. P1：继续收敛 Admin 管理域。范围：以 `admin-management.css`、目录/治理/运营域为重点，抽离真正跨域复用的列表、状态、摘要、动作模式；保留 admin 特有的信息架构。验收：admin lint/type-check/build 通过；`admin-management.css` 降到 3000 行以下或完成可验证的模块拆分；不新增 DS 违规 baseline。
-5. P1：补强分层 guardrail。范围：增加 DS L2/L3/L4 边界检查，例如应用禁止定义 `--vx-*`、禁止底层 UI 引擎依赖、禁止原生基础控件、禁止 DS `platform.css` 混入 portal/domain 专属命名。验收：`pnpm lint:design` 通过；新增违规样例能被对应规则阻断；baseline 仍为空。
-6. P2：文档与模板同步。范围：在文档体系确定唯一源后，同步 DS README、架构文档、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
+3. P1：重整 Console 样式边界。状态：已完成机械拆分；`console.css` 保持稳定公开入口，具体规则分布到 base/shell-layout/tenant-switcher/assistant/shell-chrome/responsive 模块。后续继续逐模块判定哪些是 Console L3 portal 体验，哪些可升级为 DS L2 平台模式。验收：DS lint/build、`pnpm lint:design`、console build 通过。
+4. P1：继续收敛 Admin 管理域。状态：已完成机械拆分；`admin-management.css` 保持稳定聚合入口，具体规则分布到 core/directory/models/commerce/products/tenant-workspace 模块。验收：admin build、`pnpm lint:design` 通过；入口降为 8 行。
+5. P1：补强分层 guardrail。状态：已完成；`ds/no-style-entry-rules` 已约束 DS/platform、DS/console 和 admin management 大入口保持 import-only，`platform-*` 模块继续纳入 DS semantic CSS 约束。验收：`pnpm lint:design` 通过；baseline 仍为空。
+6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性
 
@@ -165,19 +168,19 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 优先级：P1  
 状态：已修复。  
-修复证据：`docs/architecture/08-design-system.md` 已更新到 `Version 1.2.2`，样式入口、目录结构、消费者范围、AI 规则和 guardrail 禁止项与当前实现对齐。  
+修复证据：`docs/packages/design/design-system.md` 与 `docs/standards/design-system.md` 已承接 DS 包说明和使用规范；样式入口、目录结构、消费者范围、AI 规则和 guardrail 禁止项与当前实现对齐。  
 问题：文档无法作为开发约束依据，AI/人工开发会根据旧结构生成错误代码。  
-修复方向：更新架构文档，并把 guardrail 规则、禁止项、允许项写入文档。  
+修复方向：更新包说明、使用规范与审计记录，并把 guardrail 规则、禁止项、允许项写入文档。  
 验收标准：文档结构、包版本、导出入口、样式入口和实际文件一致。
 
 ### DS-SYS-010：DS 二级文档与包实现再次出现漂移
 
 优先级：P2
-状态：暂缓，等待文档体系规划统一处理。
-证据：`packages/design/design-system/README.md` 仍写 `版本：3.0.0`、`最后更新：2026-03-12`、基础 UI 组件 `16个`；`docs/architecture/08-design-system.md` 写 `current: 18 components`；实际 `@vxture/design-system` 包版本为 `1.2.2`，`src/components/ui` 当前有 25 个 `.tsx` 组件。
-问题：架构文档已基本对齐，但包 README 和组件数量说明会继续误导 AI/人工开发，尤其会弱化“DS 不足先补 DS”的执行依据。
-修复方向：不在本轮单独修正文档内容，等待文档体系规划确定唯一文档源、同步规则和验收口径后统一处理；届时以 `package.json`、公共导出入口和 `src/components/ui` 实际清单为准，更新 `packages/design/design-system/README.md` 与 `docs/architecture/08-design-system.md`。
-验收标准：DS README、架构文档、包版本、组件数量、公共导出清单一致；仓库中不再出现旧口径 `版本：3.0.0`、`16个`、`current: 18 components`。
+状态：已修复，进入持续同步。
+证据：`packages/design/design-system/README.md`、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 已同步到包版本 `1.2.2`、25 个 UI 组件、当前 package exports 和 CSS 分层入口；旧 `docs/architecture/08-design-system.md` 已由文档体系迁移移除。
+问题：包 README、包说明和使用规范一旦与实际实现漂移，会继续误导 AI/人工开发，尤其会弱化“DS 不足先补 DS”的执行依据。
+修复方向：以 `package.json`、公共导出入口和 `src/components/ui` 实际清单为准；新增 DS export、style entry、组件或 guardrail 时同步 README、`docs/packages/design/design-system.md`、`docs/standards/design-system.md`、`docs/audit/checklist-ds.md`。
+验收标准：DS README、包说明、使用规范、包版本、组件数量、公共导出清单一致；仓库中不再出现旧口径 `版本：3.0.0`、`16个`、`current: 18 components`。
 
 ### DS-SYS-011：DS 守卫只管源码 import，尚未约束应用依赖清单
 
@@ -372,7 +375,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 4. P1：应用通用 UI 组合能力回收到 DS。状态：已完成主要高频路径；DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard 已公共导出并被 admin/console/agent-studio/website 高频场景消费。
 5. P1：DS 消费者质量门禁一致化。状态：已完成；website/admin/console/agent-studio/vela/business/ruyin/agent-studio/agent-template/@vxture/design-system 均有真实 lint，新增消费者继续按同口径巡检。
 6. P1：持续巡检新增页面。状态：进行中；新增列表、表单、弹窗、菜单、分页、表格必须先复用 DS，不足时先补 DS 再落应用。
-7. P2：DS README 与架构文档组件清单同步。状态：暂缓，等待文档体系规划统一处理。
+7. P2：DS README 与包说明组件清单同步。状态：已完成；README、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 与包版本、25 个 UI 组件、公共导出入口一致。
 
 ## 本轮梳理（2026-05-12）
 
@@ -392,7 +395,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 - `rg -n "@/components/ui|components/primitives" portals business agent-studio` 无业务源码结果。
 - `rg -n "@vxture/design-system/" portals business agent-studio packages --glob "*.ts" --glob "*.tsx" --glob "*.css"` 的结果仅允许 `/tokens`、`/types`、`/server` 和 package exports 暴露的 `styles/*`；无 `src/**` 或其他未授权深层导入。
 - `rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"` 无应用依赖清单结果。
-- `packages/design/design-system/README.md`、`docs/architecture/08-design-system.md`、`packages/design/design-system/package.json` 的版本、组件数量、导出入口一致。
+- `packages/design/design-system/README.md`、`docs/packages/design/design-system.md`、`docs/standards/design-system.md`、`packages/design/design-system/package.json` 的版本、组件数量、导出入口一致。
 - `agent-studio/vela` 提供真实 lint 脚本，并通过 `pnpm --filter @vxture/agent-studio-vela lint`。
 - `business/ruyin`、`agent-studio/agent-template` 与其他 DS 消费者均通过各自适用的 `type-check`、`lint`、`build`。
 - 每批迁移后，变更范围对应的 DS/portal/domain package 必须独立验证并独立 commit。

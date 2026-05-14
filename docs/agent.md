@@ -60,10 +60,10 @@ docs/
 | 任务类型 | 必读文档 |
 |---------|---------|
 | 理解层级结构 / 依赖规则 | `architecture/index.md` → `architecture/00-overview.md` |
-| 修改或新建 BFF | `architecture/10-bff-layer.md` + `packages/bff/{name}.md` |
-| 修改 Core 包 | `architecture/05-core-layer.md` + `packages/core/{name}.md` |
-| 修改 Service | `architecture/07-service-layer.md` + `packages/services/{name}.md` |
-| 新建 Agent（server + studio + bff） | `architecture/11-agent-server.md` + `product/agents/` |
+| 修改或新建 BFF | `architecture/05-bff-layer.md` + `packages/bff/{name}.md` |
+| 修改 Core 包 | `architecture/03-core-layer.md` + `packages/core/{name}.md` |
+| 修改 Service | `architecture/04-service-layer.md` + `packages/services/{name}.md` |
+| 新建 Agent（server + studio + bff） | `architecture/06-agent-server.md` + `product/agents/` |
 | Vela 功能开发 | `product/agents/vela/spec.md` + `packages/agents/vela/server.md` |
 | Auth / JWT / Cookie 相关 | `design/auth.md` + `packages/bff/auth.md` |
 | 权限 / RBAC | `design/permissions.md` |

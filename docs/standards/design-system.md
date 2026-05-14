@@ -1,120 +1,89 @@
 # Design System 使用规范
 
-**版本**：1.0.0
-**日期**：2026-05-12
-**范围**：所有应用层代码（`portals/*` · `agent-studio/*`）
+版本：1.2.2
+日期：2026-05-14
+范围：`portals/*`、`business/*`、`agent-studio/*` 以及其他前端消费者
 
-> Design System 当前处于收敛与规范化阶段。本文档记录治理原则，约束 AI 生成代码和人工开发行为。
+Design System 是平台 UI 的规则层、基准层和通用能力层。应用端负责业务语义组装，不负责重新定义基础控件、底层 UI 引擎、设计 token 或通用模式。
 
----
+## 1. 分层原则
 
-## 1. 核心原则
+| 层级 | 归属 | 允许内容 |
+|------|------|----------|
+| L0 Foundation | DS | token、字体、主题、密度、Tailwind `@theme` 映射 |
+| L1 Primitive | DS | Button/Input/Card/Dialog/Icon 等基础组件 |
+| L2 Platform Pattern | DS | DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard、通用 shell/page/table 模式 |
+| L3 Portal Experience | Portal | 导航、门户 chrome、工作区体验、产品气质 |
+| L4 Domain Assembly | 业务模块 | 业务实体页面的语义布局和状态组装 |
+| L5 Runtime Dynamic | 调用现场 | 坐标、进度、背景图 URL、动画延迟等运行时值 |
 
-**应用侧所有 UI 必须且只能基于 `@vxture/design-system`。**
+应用可以组装 DS 能力，但不能把组装写成新的基础定义。
 
-应用层（`portals/`、`agent-studio/`）禁止：
+## 2. 合法使用方式
 
-- 自建任何样式（CSS / CSS-in-JS / Tailwind class / inline style）
-- 自建任何组件（Button、Modal、Table、Form 等，无论大小）
-- 自建任何图标（SVG inline、自定义 icon 组件、字体图标）
-- 复制或变体化 DS 组件（修改一两个属性后重新封装）
-- 绕过 DS token 直接写颜色、间距、字体等视觉值
+```tsx
+import { Button, DataTable, DialogForm, Icon } from "@vxture/design-system";
+import "@vxture/design-system/styles/globals.css";
 
----
-
-## 2. 合法的使用方式
-
-```ts
-// ✅ 从 DS 导入组件
-import { Button, Table, Modal } from '@vxture/design-system';
-
-// ✅ 从 DS 导入 token（用于极少数需要动态计算的场景）
-import { tokens } from '@vxture/design-system/tokens';
-
-// ✅ 从 DS 导入图标
-import { IconUser, IconSettings } from '@vxture/design-system/icons';
-
-// ✅ 组合 DS 提供的原子组件实现业务布局
-// ✅ 通过 DS 组件的 props/variant/size 控制视觉差异
+<Button>
+  <Icon name="search" size="sm" />
+  搜索
+</Button>;
 ```
 
-```ts
-// ❌ 自建按钮
-const MyButton = styled.button`background: #1677ff; ...`;
+允许的 DS 子入口只有：
 
-// ❌ 自建图标
-const ArrowIcon = () => <svg>...</svg>;
+- `@vxture/design-system`
+- `@vxture/design-system/tokens`
+- `@vxture/design-system/types`
+- `@vxture/design-system/server`
+- package exports 明确暴露的 `@vxture/design-system/styles/*`
 
-// ❌ 绕过 DS 写样式
-<div style={{ color: '#666', fontSize: 14 }}>
+## 3. 禁止事项
 
-// ❌ 复制 DS 组件后修改
-// （哪怕只改了 borderRadius 一个属性）
-```
+应用层禁止：
 
----
+- 从 `@vxture/design-system/src/**` 或未授权子路径导入。
+- 直接依赖或导入 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`。
+- 手写 `button`、`input`、`select`、`textarea`、`table` 等基础控件。
+- 定义 `--vx-*` CSS custom property。
+- 新增硬编码颜色、字号、间距、圆角、阴影等设计值。
+- 用 inline style 承载设计值。
+- 在聚合入口文件里继续写具体规则，例如 `platform.css`、`console.css`、`admin-management.css`。
 
-## 3. DS 当前提供的能力边界
+允许的应用 CSS 只表达业务组装语义，例如布局排列、状态组合、实体信息密度。若某个结构具备跨应用复用价值，先补 DS，再迁移应用调用。
 
-| 类别 | 提供内容 | 应用侧操作 |
-|------|---------|-----------|
-| 组件 | 基础 UI 组件（Button / Input / Table / Modal 等） | 直接使用，传 props |
-| 图标 | 统一图标库（`@vxture/design-system/icons`） | 直接导入，不得自建 |
-| Token | 颜色 / 间距 / 字体 / 圆角等设计变量 | 引用 token，不得硬编码 |
-| 主题 | 亮色 / 暗色 / 品牌色覆盖 | 通过 ThemeProvider 设置 |
-| 布局 | 页面壳（Shell / Sidebar / Header）等容器 | 直接使用 |
+## 4. DS 不足时的处理
 
-> DS 正在收敛阶段，上表内容随 DS 版本更新。如某个能力 DS 尚未提供，走第 4 节流程请求添加，**不得在应用侧临时自建**。
+1. 确认 DS 没有对应 primitive、pattern 或 token。
+2. 在 `packages/design/design-system/` 中补齐能力。
+3. 从公共入口导出，必要时同步 style entry 和 guardrail 白名单。
+4. 应用端改为消费 DS 能力。
+5. 运行 `pnpm lint:design` 和受影响 package 的 `lint` / `type-check` / `build`。
 
----
-
-## 4. DS 未覆盖场景的处理流程
-
-当业务需要 DS 尚未提供的组件或样式时：
-
-```
-1. 确认 DS 确实没有对应组件 / token
-      ↓
-2. 在 packages/design/design-system/ 中新增
-      ↓
-3. 在 DS 包内实现并通过 index.ts 导出
-      ↓
-4. 应用层从 DS 导入使用
-```
-
-**禁止的捷径**：在应用层临时实现，"等以后再提到 DS"。这条路径历史上已造成大量样式债务，是本规范要消灭的根本原因。
-
----
+禁止在应用端先临时实现，再计划以后回收。
 
 ## 5. AI 行为约束
 
-AI 在修改 `portals/*` 或 `agent-studio/*` 时，**必须**遵守：
+AI 修改前端代码时必须：
 
-1. 生成的所有 JSX 只能使用 `@vxture/design-system` 导出的组件
-2. 生成的代码不得包含任何 `style={{...}}` 属性（极少数动画计算除外，需注释说明原因）
-3. 生成的代码不得包含 `className` 属性（DS 组件内部管理样式）
-4. 生成的代码不得包含任何 `<svg>` 元素或自定义 icon 函数
-5. 生成的代码不得包含任何 CSS 文件或 CSS Module 文件
-6. 如需某个 DS 中不存在的组件，**在回复中明确告知用户**，并建议走第 4 节流程，不得自行实现
+- 优先从 `@vxture/design-system` 选择组件、Icon、token 和样式入口。
+- 遇到 DS 不足时先补 DS 或明确记录缺口。
+- 保持业务 class 为组装语义，不把基础控件、颜色、尺度写回应用层。
+- 运行或记录对应验收命令。
 
-违反上述规则的代码不得提交，AI 必须主动识别并拒绝生成。
+## 6. 守卫命令
 
----
+```bash
+pnpm lint:design
+pnpm --filter @vxture/design-system lint
+pnpm --filter @vxture/design-system build
+```
 
-## 6. 存量债务处理原则
-
-当前代码库中存在一定量的应用侧自建样式和组件（历史遗留）。
-
-处理策略：
-
-- **不要在存量债务旁边继续堆叠新债务**
-- 修改某个页面时，若该页面有自建样式，原地替换为 DS 等价实现
-- 不做大规模批量重写——在功能迭代中逐步收敛
-- 每次 PR 只负责本次改动涉及的模块，不跨模块清理
-
----
+消费者变更还要运行对应应用的 `lint` / `type-check` / `build`。
 
 ## 7. 关联文档
 
-- `docs/architecture/08-design-system.md` — DS 包结构 / 内部实现 / 技术栈
-- `packages/design/design-system/` — DS 源码
+- `packages/design/design-system/README.md`
+- `docs/packages/design/design-system.md`
+- `docs/audit/checklist-ds.md`

@@ -1,7 +1,7 @@
 # @vxture/bff-vela
 
 > ⚠️ 待大版本重构 | 迁移自 `bff/vela-bff/CLAUDE.md`
-> 架构层参考：[`docs/architecture/10-bff-layer.md`](../../architecture/10-bff-layer.md)
+> 架构层参考：[`docs/architecture/05-bff-layer.md`](../../architecture/05-bff-layer.md)
 > 产品规格：[`docs/product/agents/vela/spec.md`](../../product/agents/vela/spec.md)
 
 ---

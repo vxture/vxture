@@ -1,6 +1,6 @@
 # @vxture/ruyin（Agent Studio）
 
-> 架构层参考：[`docs/architecture/11-agent-server.md`](../../architecture/11-agent-server.md)
+> 架构层参考：[`docs/architecture/06-agent-server.md`](../../architecture/06-agent-server.md)
 
 ---
 

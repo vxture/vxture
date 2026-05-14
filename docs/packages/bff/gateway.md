@@ -1,6 +1,6 @@
 # @vxture/bff-gateway
 
-> 架构层参考：[`docs/architecture/10-bff-layer.md`](../../architecture/10-bff-layer.md)
+> 架构层参考：[`docs/architecture/05-bff-layer.md`](../../architecture/05-bff-layer.md)
 
 ---
 

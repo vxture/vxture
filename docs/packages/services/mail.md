@@ -1,6 +1,6 @@
 # @vxture/service-mail
 
-> 架构层参考：[`docs/architecture/07-service-layer.md`](../../architecture/07-service-layer.md)
+> 架构层参考：[`docs/architecture/04-service-layer.md`](../../architecture/04-service-layer.md)
 
 ---
 
