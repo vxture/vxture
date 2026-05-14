@@ -196,7 +196,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    第二阶段第七批：已将剩余 45 个 depth=3 应用域入口转为叶子模块，删除 166 个冗余子叶子，并从 `ds/no-style-entry-rules` 回收对应入口约束；admin CSS 文件数由 242 收敛到 76，import-only 入口由 56 收敛到 11，仅保留 top-level 聚合边界。
    第二阶段第八批：已将 `globals.css` 直接导入的 7 个具体规则入口补成稳定 wrapper，具体规则迁入 `*-content.css`；admin CSS 文件数由 76 调整到 83，import-only 入口由 11 调整到 18，所有 admin globals 本地样式入口均受 `ds/no-style-entry-rules` 约束。
    第二阶段第九批：已将 website、Vela、Ruyin 的 `globals.css` 本地样式导入统一补成稳定 wrapper，具体规则迁入 `*-content.css`；新增 5 个 wrapper 入口约束，并将 globals 本地 concrete import 守卫从 admin 泛化到所有前端应用。
-   第二阶段第十批：已对 admin 7 个 12KB+ 大型具体规则叶子做语义重平衡，拆成 31 个粗粒度业务模块；admin CSS 文件数由 83 调整到 117，import-only 入口由 18 调整到 26，具体规则叶子最大值降到 12KB 以下。
+   第二阶段第十批：已对 admin 7 个 12KB+ 大型具体规则叶子做语义重平衡，拆成 34 个粗粒度业务模块；admin CSS 文件数由 83 调整到 117，import-only 入口由 18 调整到 26，具体规则叶子最大值降到 12KB 以下。
    第二阶段第十一批：已继续对全应用剩余 13 个 8KB+ 具体规则叶子做语义拆分，拆成 49 个更小业务模块；admin CSS 文件数由 117 调整到 166，import-only 入口由 26 调整到 39，具体规则叶子最大值降到 8KB 以下。
 5. P1：补强分层 guardrail。状态：已完成并持续收敛；`ds/no-style-entry-rules` 约束 DS style pack、各应用 globals 和 admin 当前保留的高层聚合入口保持 import-only；低/中层语义模块在完成机械拆分后按批次回收为可承载本域规则的叶子模块。验收：`pnpm lint:design` 通过；baseline 仍为空。
    本轮增量：`ds/no-style-entry-rules` 已新增约束 admin assistant messages bubbles、admin service health core、admin management commerce subscriptions list、admin management commerce transactions billing/payments、admin management products capability lists、admin overview models metrics、admin overview metrics pulse 入口保持 import-only。
