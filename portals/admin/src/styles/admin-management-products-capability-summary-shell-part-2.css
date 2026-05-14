@@ -1,0 +1,10 @@
+.vx-product-capability-summary {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(var(--vx-admin-management-track-18r-large), 1.1fr) minmax(var(--vx-admin-management-track-22r), 1.4fr);
+  align-items: stretch;
+  gap: var(--vx-admin-management-space-2r);
+  padding: var(--vx-admin-management-space-15r) 0 var(--vx-admin-management-space-175r);
+  border-top: var(--vx-admin-management-line-width-2p) solid color-mix(in srgb, var(--vx-color-auth-accent) 22%, transparent);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--vx-color-auth-border);
+}

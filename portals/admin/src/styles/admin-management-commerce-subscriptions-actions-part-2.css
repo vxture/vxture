@@ -1,0 +1,15 @@
+.vx-subscription-action-button--danger:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-danger) 32%, transparent) !important;
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent) !important;
+  color: var(--tenant-rose) !important;
+}
+
+.vx-tenant-actions__menu button.vx-subscription-menu-action--danger {
+  color: var(--tenant-rose);
+}
+
+.vx-tenant-actions__menu
+  button.vx-subscription-menu-action--danger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--tenant-rose);
+}

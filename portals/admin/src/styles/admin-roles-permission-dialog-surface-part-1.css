@@ -1,0 +1,12 @@
+/* Admin role permission dialog surface styles. */
+
+.vx-admin-role-permission-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: var(--vx-admin-roles-space-15r);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 22%, transparent);
+  backdrop-filter: blur(var(--vx-admin-roles-effect-8p));
+}

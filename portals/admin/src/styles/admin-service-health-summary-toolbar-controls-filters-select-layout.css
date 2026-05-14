@@ -1,0 +1,9 @@
+.vx-service-health-filters select {
+  width: var(--vx-admin-service-health-filter-select-width);
+  min-width: 0;
+  height: var(--vx-admin-service-health-control-height);
+  padding: 0 var(--vx-admin-service-health-filter-select-padding-end) 0 var(--vx-admin-service-health-control-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--vx-color-auth-border);
+  border-radius: var(--vx-radius-lg);
+  appearance: none;
+}

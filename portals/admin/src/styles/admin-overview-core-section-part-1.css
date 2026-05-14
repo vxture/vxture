@@ -1,0 +1,25 @@
+.admin-overview-section {
+  display: grid;
+  gap: var(--vx-admin-overview-space-15r);
+  padding-top: var(--vx-admin-overview-space-2r);
+  border-top: var(--vx-admin-overview-line-width-1p) solid color-mix(in srgb, var(--vx-color-brand-400) 16%, transparent);
+}
+
+.admin-overview-section__header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--vx-admin-overview-space-15r);
+  align-items: start;
+}
+
+.admin-overview-section__header div {
+  display: grid;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-section__header h2 {
+  color: var(--vx-color-brand-950);
+  font-size: var(--vx-admin-section-title-size);
+  font-weight: 760;
+}

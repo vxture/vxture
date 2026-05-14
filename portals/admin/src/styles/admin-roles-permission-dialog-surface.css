@@ -1,25 +1,2 @@
-/* Admin role permission dialog surface styles. */
-
-.vx-admin-role-permission-dialog {
-  position: fixed;
-  inset: 0;
-  z-index: 5000;
-  display: grid;
-  place-items: center;
-  padding: var(--vx-admin-roles-space-15r);
-  background: color-mix(in srgb, var(--vx-color-gray-900) 22%, transparent);
-  backdrop-filter: blur(var(--vx-admin-roles-effect-8p));
-}
-
-.vx-admin-role-permission-dialog__panel {
-  width: min(100%, var(--vx-admin-roles-size-56r));
-  max-height: min(var(--vx-admin-roles-panel-max-height-md), calc(100vh - var(--vx-admin-roles-size-3r)));
-  display: grid;
-  grid-template-rows: auto auto minmax(0, 1fr);
-  gap: var(--vx-admin-roles-space-1r);
-  padding: var(--vx-admin-roles-space-125r);
-  border: var(--vx-admin-roles-line-width-1p) solid color-mix(in srgb, var(--vx-color-auth-accent) 14%, transparent);
-  border-radius: var(--tenant-card-radius);
-  background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
-  box-shadow: 0 var(--vx-admin-roles-effect-24p) var(--vx-admin-roles-effect-64p) color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
-}
+@import "./admin-roles-permission-dialog-surface-part-1.css";
+@import "./admin-roles-permission-dialog-surface-part-2.css";

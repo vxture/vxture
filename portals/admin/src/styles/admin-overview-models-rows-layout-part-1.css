@@ -1,0 +1,23 @@
+/* Admin overview model category row layout styles. */
+
+.admin-overview-model-category__rows {
+  display: grid;
+  gap: 0;
+}
+
+.admin-overview-model-category__row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-overview-track-25r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-overview-space-15r);
+  padding: var(--vx-admin-overview-space-125r) 0;
+}
+
+.admin-overview-model-category__row + .admin-overview-model-category__row {
+  border-top: var(--vx-admin-overview-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 14%, transparent);
+}
+
+.admin-overview-model-category__row--placeholder {
+  opacity: 0.48;
+}

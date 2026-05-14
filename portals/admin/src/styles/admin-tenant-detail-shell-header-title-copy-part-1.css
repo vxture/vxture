@@ -1,0 +1,28 @@
+.vx-tenant-title-copy {
+  flex: 0 0 auto;
+  opacity: 0;
+  width: var(--vx-admin-management-size-1375r);
+  height: var(--vx-admin-management-size-1375r);
+  min-height: var(--vx-admin-management-size-1375r);
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vx-radius-sm);
+  background: transparent;
+  color: var(--tenant-muted);
+  cursor: pointer;
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 760;
+  line-height: 1;
+  pointer-events: none;
+  transition:
+    opacity 160ms ease,
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.vx-tenant-title-copy svg {
+  width: var(--vx-admin-management-size-0875r);
+  height: var(--vx-admin-management-size-0875r);
+}

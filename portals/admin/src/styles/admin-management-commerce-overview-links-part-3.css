@@ -1,0 +1,8 @@
+.vx-commerce-panel__empty {
+  min-height: var(--vx-admin-management-size-6r);
+  display: grid;
+  place-items: center;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}

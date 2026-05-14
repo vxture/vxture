@@ -1,0 +1,17 @@
+.vx-order-pill--confirmed,
+.vx-order-pill--payment-paid,
+.vx-order-pill--payment-not_required,
+.vx-order-pill--tier-free {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-order-pill--pending,
+.vx-order-pill--pending_verify,
+.vx-order-pill--payment-pending,
+.vx-order-pill--payment-pending_verify,
+.vx-order-pill--payment-partial,
+.vx-order-pill--tier-pro {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}

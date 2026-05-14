@@ -1,0 +1,11 @@
+.vx-subscription-pill--cancelled,
+.vx-subscription-pill--cycle,
+.vx-subscription-pill--tier-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-subscription-pill--tier-enterprise {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}

@@ -1,0 +1,5 @@
+.vx-service-health-filters select {
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}

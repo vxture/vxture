@@ -1,0 +1,9 @@
+.vx-admin-permission-tree-node__title-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-permission-track-175r) var(--vx-admin-permission-track-175r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-permission-space-05r);
+  padding: var(--vx-admin-permission-space-08125r) var(--vx-admin-permission-space-0875r) var(--vx-admin-permission-space-025r);
+  padding-left: calc(var(--vx-admin-permission-space-0875r) + var(--permission-depth, 0) * var(--vx-admin-permission-space-15r));
+}

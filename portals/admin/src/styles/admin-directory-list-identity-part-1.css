@@ -1,0 +1,30 @@
+/* Tenant directory identity and badge styles. */
+
+.vx-tenant-directory-row__tenant {
+  justify-self: start;
+  display: grid;
+  grid-template-columns: var(--vx-admin-directory-row-identity-track) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-directory-row-identity-gap);
+}
+
+.vx-tenant-directory-row__tenant strong {
+  font-size: var(--vx-admin-font-base);
+}
+
+.vx-tenant-directory-row__title-line,
+.vx-tenant-directory-row__tag-line {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-directory-row-inline-gap);
+  flex-wrap: wrap;
+}
+
+.vx-tenant-directory-row__tag-line {
+  justify-content: center;
+}
+
+.vx-tenant-directory-row__tenant svg {
+  color: var(--tenant-row-tone);
+}

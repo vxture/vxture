@@ -1,0 +1,15 @@
+/* Service health toolbar control styles. */
+
+.vx-service-health-search {
+  width: clamp(var(--vx-admin-service-health-control-width-min), 18vw, var(--vx-admin-service-health-control-width-max));
+  flex: 0 0 clamp(var(--vx-admin-service-health-control-width-min), 18vw, var(--vx-admin-service-health-control-width-max));
+  min-width: 0;
+  height: var(--vx-admin-service-health-control-height);
+  padding: 0 var(--vx-admin-service-health-control-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--vx-color-auth-border);
+  border-radius: var(--vx-radius-lg);
+  background: transparent;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}

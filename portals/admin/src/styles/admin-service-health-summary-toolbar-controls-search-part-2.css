@@ -1,0 +1,10 @@
+.vx-service-health-search::placeholder {
+  color: var(--vx-color-gray-400);
+  font-weight: 400;
+}
+
+.vx-service-health-search:focus {
+  outline: var(--vx-admin-service-health-focus-ring-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  outline-offset: 0;
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 32%, transparent);
+}

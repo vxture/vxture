@@ -1,0 +1,16 @@
+.vx-admin-permission-tree__workspace > header > span {
+  width: var(--vx-admin-permission-size-175r);
+  height: var(--vx-admin-permission-size-175r);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--vx-admin-permission-radius-04375r);
+  background: transparent;
+  color: var(--vx-color-gray-600);
+}
+
+.vx-admin-permission-tree__workspace > header div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-permission-space-01875r);
+}

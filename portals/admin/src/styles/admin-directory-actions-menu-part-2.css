@@ -1,0 +1,14 @@
+.vx-tenant-actions__menu--portal {
+  position: fixed;
+  right: auto;
+  z-index: 5000;
+}
+
+.vx-tenant-actions__menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--vx-admin-directory-actions-menu-gap) * -1);
+  height: var(--vx-admin-directory-actions-menu-hit-area-height);
+}

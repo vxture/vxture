@@ -1,0 +1,21 @@
+.vx-subscription-pill--active,
+.vx-subscription-pill--tier-free,
+.vx-subscription-pill--quota-normal {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-subscription-pill--trial,
+.vx-subscription-pill--expiring,
+.vx-subscription-pill--tier-pro,
+.vx-subscription-pill--quota-warning {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-subscription-pill--overdue,
+.vx-subscription-pill--suspended,
+.vx-subscription-pill--quota-danger {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}

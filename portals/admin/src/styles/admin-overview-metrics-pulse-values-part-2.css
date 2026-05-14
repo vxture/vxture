@@ -1,0 +1,23 @@
+.admin-overview-pulse__value,
+.admin-overview-pulse__rating strong {
+  overflow: hidden;
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-overview-text-size-15r);
+  font-weight: 760;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-overview-pulse__rating {
+  min-width: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-pulse__rating .admin-overview-stars {
+  padding-bottom: var(--vx-admin-overview-space-00625r);
+  gap: var(--vx-admin-overview-space-025r);
+  font-size: var(--vx-admin-overview-text-size-15r);
+}

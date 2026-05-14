@@ -1,0 +1,25 @@
+.vx-tenant-detail-summary__toggle {
+  position: absolute;
+  top: var(--vx-admin-management-space-075r);
+  right: var(--vx-admin-management-space-075r);
+  z-index: 1;
+}
+
+.vx-tenant-detail-summary--collapsed {
+  gap: 0;
+  padding-block: var(--vx-admin-management-space-075r);
+}
+
+.vx-tenant-detail {
+  gap: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vx-tenant-detail__form {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-15r);
+}

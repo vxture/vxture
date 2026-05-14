@@ -1,0 +1,23 @@
+.vx-subscription-row__solution,
+.vx-subscription-row__plan {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-subscription-row__status,
+.vx-subscription-row__quota,
+.vx-subscription-row__revenue {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-subscription-row__solution small,
+.vx-subscription-row__plan small,
+.vx-subscription-row__status small,
+.vx-subscription-row__quota small,
+.vx-subscription-row__revenue small {
+  margin-top: 0;
+  font-weight: 400;
+}

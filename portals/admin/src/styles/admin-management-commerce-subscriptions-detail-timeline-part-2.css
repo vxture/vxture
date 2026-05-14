@@ -1,0 +1,9 @@
+.vx-subscription-timeline__item > span {
+  width: var(--vx-admin-management-size-135r);
+  height: var(--vx-admin-management-size-135r);
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--vx-radius-full);
+  background: var(--subscription-timeline-bg, var(--vx-color-neutral-surface));
+  color: var(--subscription-timeline-color, var(--vx-color-gray-500));
+}

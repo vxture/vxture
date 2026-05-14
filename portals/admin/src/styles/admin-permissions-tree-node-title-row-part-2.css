@@ -1,0 +1,25 @@
+.vx-admin-permission-tree-node__toggle {
+  width: var(--vx-admin-permission-size-175r);
+  height: var(--vx-admin-permission-size-175r);
+  display: inline-grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--vx-radius-md);
+  background: transparent;
+  color: var(--vx-color-gray-500);
+  cursor: pointer;
+}
+
+.vx-admin-permission-tree-node__toggle:disabled {
+  opacity: 0.18;
+  cursor: default;
+}
+
+.vx-admin-permission-tree-node__toggle:not(:disabled):hover {
+  background: transparent;
+  color: var(--vx-color-gray-700);
+}
+
+.vx-admin-permission-tree-node__title-row > svg {
+  color: var(--vx-color-gray-500);
+}

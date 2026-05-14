@@ -1,0 +1,18 @@
+.vx-order-row--pending,
+.vx-order-card--pending,
+.vx-order-row--pending_verify,
+.vx-order-card--pending_verify {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-order-row--overdue,
+.vx-order-card--overdue,
+.vx-order-row--abnormal,
+.vx-order-card--abnormal {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-order-row--closed,
+.vx-order-card--closed {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}

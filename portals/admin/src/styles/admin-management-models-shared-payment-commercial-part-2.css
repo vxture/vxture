@@ -1,0 +1,14 @@
+.vx-commercial-row--warning,
+.vx-commercial-card--warning {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-commercial-row--danger,
+.vx-commercial-card--danger {
+  --tenant-row-tone: var(--tenant-rose);
+}
+
+.vx-commercial-row--muted,
+.vx-commercial-card--muted {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}

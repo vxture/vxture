@@ -1,0 +1,22 @@
+/* Tenant workspace list card styles. */
+
+.vx-tenant-list-card {
+  --tenant-list-tone: var(--tenant-blue);
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-management-track-25r) minmax(0, 1fr);
+  gap: var(--vx-admin-management-space-1r);
+  padding: var(--vx-admin-management-space-1r);
+  border: var(--vx-admin-management-line-width-1p) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  border-left: var(--vx-admin-management-line-width-2p) solid var(--tenant-list-tone);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 58%, transparent);
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}

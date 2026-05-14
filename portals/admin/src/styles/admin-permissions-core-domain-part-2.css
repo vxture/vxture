@@ -1,0 +1,16 @@
+.vx-admin-permission-domain__badges .vx-badge {
+  min-height: var(--vx-admin-permission-size-175r);
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--vx-color-auth-accent);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 760;
+}
+
+.vx-admin-permission-domain__stats {
+  margin: 0;
+}
+
+.vx-admin-permission-domain__toolbar {
+  margin: 0;
+}

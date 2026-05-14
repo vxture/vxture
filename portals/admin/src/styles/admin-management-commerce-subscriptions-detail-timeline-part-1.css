@@ -1,0 +1,20 @@
+.vx-subscription-timeline {
+  min-width: 0;
+  display: grid;
+  gap: 0;
+  border-top: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+}
+
+.vx-subscription-timeline__item {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-management-track-175r) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--vx-admin-management-space-0875r);
+  padding: var(--vx-admin-management-space-1r) 0;
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+}
+
+.vx-subscription-timeline__item:last-child {
+  border-bottom: 0;
+}

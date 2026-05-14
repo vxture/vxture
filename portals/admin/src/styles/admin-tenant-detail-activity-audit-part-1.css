@@ -1,0 +1,26 @@
+/* Tenant detail audit and ticket activity styles. */
+
+.vx-tenant-audit-list__item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+  padding-bottom: var(--vx-admin-management-space-1r);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--tenant-line);
+}
+
+.vx-tenant-audit-list__item span {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-tenant-audit-list__item strong,
+.vx-tenant-ticket strong {
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

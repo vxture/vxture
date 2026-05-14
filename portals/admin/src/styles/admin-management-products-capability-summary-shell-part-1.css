@@ -1,0 +1,19 @@
+/* Product capability page and summary shell styles. */
+
+.vx-product-capability-page {
+  min-width: 0;
+}
+
+.vx-product-capability-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-075r);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.vx-product-capability-actions .vx-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-0375r);
+}

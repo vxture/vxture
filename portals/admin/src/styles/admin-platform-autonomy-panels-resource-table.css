@@ -1,27 +1,2 @@
-.platform-autonomy-resource-table {
-  min-width: 0;
-  overflow-x: auto;
-  border: var(--vx-admin-platform-autonomy-border-width) solid var(--vx-shell-line-soft);
-  border-radius: var(--vx-radius-lg);
-}
-
-.platform-autonomy-resource-table__header,
-.platform-autonomy-resource-row {
-  min-width: var(--vx-admin-platform-autonomy-resource-min-width);
-  display: grid;
-  grid-template-columns: var(--vx-admin-platform-autonomy-resource-grid);
-  align-items: center;
-  gap: var(--vx-admin-platform-autonomy-gap-md);
-  padding: 0 var(--vx-admin-platform-autonomy-resource-padding-x);
-}
-
-.platform-autonomy-resource-table__header {
-  min-height: var(--vx-admin-platform-autonomy-resource-header-min-height);
-  border-bottom: var(--vx-admin-platform-autonomy-border-width) solid var(--vx-shell-line-soft);
-  background: var(--vx-shell-surface-soft);
-  color: var(--vx-shell-subtle);
-  font-size: var(--vx-admin-platform-autonomy-text-caption);
-  font-weight: 720;
-  line-height: var(--vx-admin-platform-autonomy-line-caption);
-}
-
+@import "./admin-platform-autonomy-panels-resource-table-part-1.css";
+@import "./admin-platform-autonomy-panels-resource-table-part-2.css";
