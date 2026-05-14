@@ -1,0 +1,31 @@
+@media (max-width: 1100px) {
+  .vx-assistant-panel--sidebar {
+    position: static;
+    height: auto;
+    max-height: none;
+    min-height: auto;
+  }
+
+  .vx-assistant-panel--sidebar {
+    border-left: 0;
+    border-top: var(--vx-admin-assistant-border-width) solid var(--vx-console-border);
+    width: auto;
+    min-width: 0;
+    box-shadow: none;
+  }
+
+  .vx-assistant-panel--fullscreen,
+  .vx-assistant-panel--max {
+    position: fixed;
+    inset: var(--vx-shell-header-height) var(--vx-admin-assistant-space-panel-lg) 0;
+    z-index: 2600;
+    height: calc(100dvh - var(--vx-shell-header-height));
+    max-height: calc(100dvh - var(--vx-shell-header-height));
+    min-height: calc(100dvh - var(--vx-shell-header-height));
+    border-top: 0;
+  }
+
+  .vx-assistant-panel__resize-edge {
+    display: none;
+  }
+}
