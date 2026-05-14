@@ -37,6 +37,11 @@ const DS_SEMANTIC_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/components.css"),
   normalize("packages/design/design-system/src/styles/platform.css"),
 ]);
+const IMPORT_ONLY_STYLE_ENTRIES = new Map([
+  [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
+  [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
+  [normalize("portals/admin/src/styles/admin-management.css"), "admin management.css"],
+]);
 const FONT_LOADER_ALLOWLIST = [
   /^portals\/[^/]+\/src\/app\/layout\.tsx$/,
   /^portals\/[^/]+\/src\/app\/layout\.ts$/,
@@ -268,6 +273,40 @@ const rules = [
     },
   },
   {
+    id: "ds/no-style-entry-rules",
+    description: "大型样式入口只能作为 @import 聚合入口，具体规则必须进入分层模块。",
+    checkContent(file, content) {
+      const label = IMPORT_ONLY_STYLE_ENTRIES.get(normalize(file));
+      if (!label) return [];
+
+      const items = [];
+      let inBlockComment = false;
+      const lines = content.split(/\r?\n/);
+      lines.forEach((line, index) => {
+        const text = line.trim();
+        if (!text) return;
+        if (inBlockComment) {
+          if (text.includes("*/")) inBlockComment = false;
+          return;
+        }
+        if (text.startsWith("/*")) {
+          if (!text.includes("*/")) inBlockComment = true;
+          return;
+        }
+        if (/^@import\s+["'][^"']+["'];$/.test(text)) return;
+        items.push(
+          violation(
+            file,
+            index + 1,
+            `${label} 只能保留 @import 聚合；具体选择器和规则应进入同目录分层模块。`,
+            line,
+          ),
+        );
+      });
+      return items;
+    },
+  },
+  {
     id: "ds/no-token-duplicates",
     description: "颜色、字号、圆角等 token 文件只能存在于 DS token 包。",
     checkFile(file) {
@@ -299,7 +338,7 @@ const rules = [
     description: "DS 语义样式必须使用语义 token，不能直接消费兜底 metric token。",
     checkLine(file, line, lineNumber) {
       const normalized = normalize(file);
-      if (!DS_SEMANTIC_STYLE_PATHS.has(normalized)) return null;
+      if (!isDsSemanticStyleFile(normalized)) return null;
       if (!/var\(--vx-component-metric-/.test(line)) return null;
       return violation(
         file,
@@ -558,6 +597,13 @@ function isFrontendPackageManifest(file) {
 function isDirectUiEngineDependency(dependency) {
   return DIRECT_UI_ENGINE_DEPENDENCIES.some((item) =>
     typeof item === "string" ? item === dependency : item.test(dependency),
+  );
+}
+
+function isDsSemanticStyleFile(normalized) {
+  return (
+    DS_SEMANTIC_STYLE_PATHS.has(normalized) ||
+    /^packages\/design\/design-system\/src\/styles\/platform-[\w-]+\.css$/.test(normalized)
   );
 }
 
