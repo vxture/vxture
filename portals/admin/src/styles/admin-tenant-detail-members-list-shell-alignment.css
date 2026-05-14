@@ -1,0 +1,7 @@
+.vx-tenant-member-list__header > span:first-child,
+.vx-tenant-member-list__header > span:last-child,
+.vx-tenant-member-row__index,
+.vx-tenant-member-actions {
+  justify-self: center;
+  text-align: center;
+}

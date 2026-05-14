@@ -1,0 +1,21 @@
+/* Product capability summary identity layout styles. */
+
+.vx-product-capability-summary__identity {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-management-track-3r) minmax(0, 1fr);
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-product-capability-summary__icon {
+  width: var(--vx-admin-management-size-3r);
+  height: var(--vx-admin-management-size-3r);
+  display: inline-grid;
+  place-items: center;
+  color: var(--tenant-blue);
+}
+
+.vx-product-capability-summary__icon svg {
+  width: var(--vx-admin-management-size-25r);
+  height: var(--vx-admin-management-size-25r);
+}

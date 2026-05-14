@@ -1,0 +1,22 @@
+@media (max-width: 1280px) {
+  .vx-service-health-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vx-service-health-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vx-service-health-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .vx-service-health-filters {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+
+  .vx-service-health-filters select {
+    width: var(--vx-admin-service-health-filter-select-width-compact);
+  }
+}

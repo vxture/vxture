@@ -1,0 +1,13 @@
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > span:not(.vx-tenant-directory-row__index):not(.vx-tenant-actions) {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-admin-role-row__identity {
+  justify-self: start;
+  text-align: left;
+}

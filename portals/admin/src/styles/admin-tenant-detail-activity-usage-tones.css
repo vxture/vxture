@@ -1,0 +1,11 @@
+.vx-tenant-usage--normal {
+  --usage-tone: var(--tenant-green);
+}
+
+.vx-tenant-usage--warning {
+  --usage-tone: var(--tenant-amber);
+}
+
+.vx-tenant-usage--danger {
+  --usage-tone: var(--tenant-rose);
+}

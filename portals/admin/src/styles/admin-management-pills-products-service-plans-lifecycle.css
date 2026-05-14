@@ -1,0 +1,20 @@
+.vx-service-plan-pill--active,
+.vx-service-plan-pill--public,
+.vx-service-plan-pill--solution-active {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-service-plan-pill--draft,
+.vx-service-plan-pill--solution-draft {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-service-plan-pill--archived,
+.vx-service-plan-pill--internal,
+.vx-service-plan-pill--more,
+.vx-service-plan-pill--solution-archived {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}

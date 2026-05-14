@@ -1,0 +1,27 @@
+.vx-order-directory-list .vx-tenant-directory-list__header > span:first-child,
+.vx-order-directory-list
+  .vx-tenant-directory-row
+  > .vx-order-operation-row__select,
+.vx-billing-directory-list .vx-tenant-directory-list__header > span:first-child,
+.vx-billing-directory-list
+  .vx-tenant-directory-row
+  > .vx-billing-operation-row__select,
+.vx-invoice-directory-list .vx-tenant-directory-list__header > span:first-child,
+.vx-invoice-directory-list
+  .vx-tenant-directory-row
+  > .vx-invoice-operation-row__select,
+.vx-payment-directory-list .vx-tenant-directory-list__header > span:first-child,
+.vx-payment-directory-list
+  .vx-tenant-directory-row
+  > .vx-payment-operation-row__select {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: var(--vx-admin-management-effect-1p) 0 0 color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent);
+}

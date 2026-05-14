@@ -1,0 +1,11 @@
+.admin-shell--nav-collapsed .admin-shell-nav {
+  width: calc(
+    var(--vx-admin-sidebar-collapsed-width) - var(--vx-admin-sidebar-pad-x)
+  );
+  box-sizing: content-box;
+  padding: 0 0 0 var(--vx-admin-sidebar-pad-x);
+  overflow: auto;
+  scrollbar-gutter: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}

@@ -1,0 +1,12 @@
+.vx-product-capability-summary__badges,
+.vx-product-capability-tags {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  flex-wrap: wrap;
+}
+
+.vx-product-capability-summary__badges {
+  margin-top: var(--vx-admin-management-space-075r);
+}

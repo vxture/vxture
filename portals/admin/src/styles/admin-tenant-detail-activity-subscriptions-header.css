@@ -1,0 +1,18 @@
+.vx-tenant-subscription {
+  display: grid;
+  gap: var(--vx-admin-management-space-15r);
+}
+
+.vx-tenant-subscription > header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-subscription > header div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}

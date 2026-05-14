@@ -1,0 +1,22 @@
+.vx-tenant-usage > header strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 800;
+}
+
+.vx-tenant-usage > header span {
+  color: var(--tenant-blue);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+}
+
+.vx-tenant-usage__numbers b {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-page-title-size);
+}
+
+.vx-tenant-usage__numbers small {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 760;
+}

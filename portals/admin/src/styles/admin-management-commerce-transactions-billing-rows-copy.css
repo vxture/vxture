@@ -1,0 +1,18 @@
+.vx-billing-row__bill small,
+.vx-billing-row__tenant small,
+.vx-billing-row__plan small,
+.vx-billing-row__amount small,
+.vx-billing-row__exception small,
+.vx-billing-row__payment small,
+.vx-billing-row__invoice small {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+.vx-billing-row__exception small {
+  max-width: var(--vx-admin-management-size-10r);
+  overflow: hidden;
+  color: var(--tenant-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

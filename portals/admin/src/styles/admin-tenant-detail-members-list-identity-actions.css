@@ -1,0 +1,8 @@
+.vx-tenant-member-actions {
+  justify-self: center;
+}
+
+.vx-tenant-member-actions .vx-tenant-actions__menu {
+  top: 50%;
+  transform: translateY(-50%);
+}
