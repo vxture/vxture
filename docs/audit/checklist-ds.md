@@ -21,6 +21,7 @@
 - DS `console.css` 已拆分为稳定 Console portal style pack 入口和 `console-*` 模块。
 - admin `admin-management.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
 - admin `admin-management-commerce.css`、`admin-management-directory.css`、`admin-tenant-detail.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
+- admin `admin-management-models.css`、`admin-management-pills.css`、`admin-management-products.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
 - admin `admin-overview.css` 已拆分为稳定聚合入口和 overview domain 模块；入口仅保留 `@import`。
 - website `globals.css` 已拆分为稳定聚合入口和 `website-*` 模块。
 - Vela `globals.css` 已拆分为稳定聚合入口和 `vela-*` 模块。
@@ -84,7 +85,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 1. P0：固化分层模型与验收口径。范围：本审计清单、DS-USE 状态修正、六批次任务定义。验收：`git diff --check`、`pnpm lint:design` 通过；提交独立 commit。
 2. P1：拆分 DS `platform.css`。状态：已完成机械拆分；`platform.css` 保持稳定聚合入口，具体规则分布到 core/account/notifications/tenant-settings/layout/models/access/shell/content 模块。后续继续逐模块判断 L2 留 DS、L3/L4 回 portal/domain。验收：DS lint/build、`pnpm lint:design`、admin build、console build 通过。
 3. P1：重整 Console 样式边界。状态：已完成机械拆分；`console.css` 保持稳定公开入口，具体规则分布到 base/shell-layout/tenant-switcher/assistant/shell-chrome/responsive 模块。后续继续逐模块判定哪些是 Console L3 portal 体验，哪些可升级为 DS L2 平台模式。验收：DS lint/build、`pnpm lint:design`、console build 通过。
-4. P1：继续收敛 Admin 管理域。状态：已完成机械拆分；`admin-management.css` 保持稳定聚合入口，具体规则分布到 core/directory/models/commerce/products/tenant-workspace 模块；`admin-overview.css` 已拆成 core/metrics/business/products/models/service/responsive 模块；`admin-management-commerce.css`、`admin-management-directory.css`、`admin-tenant-detail.css` 已按交易、目录、租户详情域拆分。验收：admin build、`pnpm lint:design` 通过；大入口保持 import-only。
+4. P1：继续收敛 Admin 管理域。状态：已完成机械拆分；`admin-management.css` 保持稳定聚合入口，具体规则分布到 core/directory/models/commerce/products/tenant-workspace 模块；`admin-overview.css` 已拆成 core/metrics/business/products/models/service/responsive 模块；`admin-management-commerce.css`、`admin-management-directory.css`、`admin-tenant-detail.css` 已按交易、目录、租户详情域拆分；`admin-management-models.css`、`admin-management-pills.css`、`admin-management-products.css` 已按模型、状态标识、产品服务域拆分。验收：admin build、`pnpm lint:design` 通过；大入口保持 import-only。
 5. P1：补强分层 guardrail。状态：已完成；`ds/no-style-entry-rules` 已约束 DS/platform、DS/console、admin/console/website/ruyin/Vela globals、admin management 系列、admin overview 和 tenant detail 大入口保持 import-only，`platform-*` 模块继续纳入 DS semantic CSS 约束。验收：`pnpm lint:design` 通过；baseline 仍为空。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
@@ -246,7 +247,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 问题：历史上全局 CSS 承载了 shell、表格、过滤器、弹窗、操作菜单、分页等实际设计系统能力；当前主要风险已从存量违规转为新增页面重新自建控件、尺度或私有 token。  
 修复方向：通用结构一律先补 DS，再迁移应用调用；应用 CSS 仅保留业务语义布局、状态编排和必要动态变量，不得定义 `--vx-*` token、不得写基础控件样式、不得新增硬编码设计尺度。  
 验收标准：`pnpm lint:design` 通过且 baseline 为空；portal globals.css 不承担通用控件实现；新增列表、工具栏、弹窗、菜单、分页、表格必须优先使用 DS 组合组件。  
-当前进展：console `MetricGrid` / `TableToolbar` / 发票表格 / Members-Roles 行操作与工作流弹窗已迁移到 DS；admin 高频列表、交易域、商业运营域、运营支持域、权限治理域、AI 配置域已迁移到 DS `ActionMenu` / `Pagination` / `DialogForm`；admin overview、commerce、directory、tenant detail 样式入口已拆为 import-only 聚合入口和分层 domain 模块；ServiceHealth 和 agent-studio/vela 工具调用结果表格已迁移到 DS `DataTable`。
+当前进展：console `MetricGrid` / `TableToolbar` / 发票表格 / Members-Roles 行操作与工作流弹窗已迁移到 DS；admin 高频列表、交易域、商业运营域、运营支持域、权限治理域、AI 配置域已迁移到 DS `ActionMenu` / `Pagination` / `DialogForm`；admin overview、commerce、directory、tenant detail、models、pills、products 样式入口已拆为 import-only 聚合入口和分层 domain 模块；ServiceHealth 和 agent-studio/vela 工具调用结果表格已迁移到 DS `DataTable`。
 
 ### DS-USE-006：admin/console/website/ruyin/agent-studio 原生基础控件迁移到 DS
 
