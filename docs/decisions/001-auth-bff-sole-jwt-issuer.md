@@ -7,83 +7,104 @@
 
 ## 背景
 
-平台有 7 个 BFF 服务（auth / gateway / website / console / admin / ruyin / vela）。每个 BFF 在用户完成认证后都有签发 JWT 的潜在需求（如 OAuth 回调后签发、内部跨域 token）。
+平台 BFF 层按认证方式分为三类：
+
+| 类型 | BFF | 登录方式 |
+|------|-----|---------|
+| **Platform（控制面）** | website-bff / admin-bff / console-bff | 有独立 login 页，auth-bff 直接签发 JWT |
+| **Business（应用层）** | ruyin-bff / vela-bff / agent-template-bff | 无独立登录页，跳转 console 登录，凭已有 JWT 访问 |
+| **功能型** | auth-bff / gateway-bff | 独立职责，不参与上述分类 |
 
 如果每个 BFF 独立持有签发逻辑，会导致：
 
-- JWT claims schema 分散在多个服务，任何字段变更（如新增 `tenantId` 字段）需要同步改动多处
-- JWT 签发密钥（`JWT_ACCESS_SECRET`）需在多个服务中持有，密钥泄露面增大
-- 黑名单/吊销逻辑（Redis jti 黑名单）需在每个签发者处实现，一致性无法保证
-- OAuth 回调处理高度相似，代码重复
+- JWT claims schema 分散，字段变更需同步多处
+- 签发密钥（`JWT_ACCESS_SECRET`）在多个服务中持有，泄露面扩大
+- 黑名单/吊销逻辑重复实现，一致性无法保证
+- OAuth 回调处理代码重复
 
 ## 决策选项
 
 ### 选项 A：每个 BFF 独立签发
 
-各 BFF 持有自己的 JWT 密钥和签发逻辑。
-
-**优点**：服务解耦，无跨服务调用。
-**缺点**：密钥分散，claims schema 难统一，黑名单逻辑重复，审计困难。
+**缺点**：密钥分散，schema 难统一，黑名单逻辑重复，审计困难。
 
 ### 选项 B：独立 Auth 微服务
 
-新建独立的 Auth 微服务，所有 BFF 通过 RPC 调用签发。
-
-**优点**：职责最纯粹，Auth 可独立扩缩。
-**缺点**：引入新的服务层级和通信协议；登录流程本身就是 BFF 的职责范围，再分层是过度工程化。
+**缺点**：引入额外服务层级；登录流程本身是 BFF 职责范围，再分层过度工程化。
 
 ### 选项 C：auth-bff 作为唯一签发者，其他 BFF 委托
 
-`auth-bff` 负责所有 JWT 签发。其他 BFF 在需要签发 token 时，通过内部接口 `POST /auth/internal/sign` 委托，该接口用 `x-vxture-internal-auth` 头保护。
+auth-bff 负责所有 JWT 签发。其他 BFF 需要签发时通过内部接口 `POST /auth/internal/sign` 委托，用 `x-vxture-internal-auth` 头保护。
 
-**优点**：签发逻辑和密钥集中，黑名单唯一实现，claims schema 改一处即全局生效，auth-bff 职责边界清晰。
-**缺点**：其他 BFF 的 OAuth 回调后多一次内部 HTTP 跳；auth-bff 成为认证关键路径上的单点。
+**优点**：签发逻辑和密钥集中，黑名单唯一实现，claims schema 改一处即全局生效。
+**缺点**：auth-bff 成为认证关键路径上的单点；OAuth 回调后多一次内部 HTTP 跳。
 
 ## 决策
 
-采用**选项 C**。
+采用**选项 C**，auth-bff 为唯一 JWT 签发者。
 
-对单点风险的应对：auth-bff 以容器形式部署，可配置多副本；Redis 不可用时 fail-closed（禁止退化为无状态 token），保证安全优先。
+### 实施范围
 
-### 附加安全机制：会话空闲超时（⏳ 初步方案，4h，待实施）
+| 类型 | 状态 |
+|------|------|
+| Platform BFF（website / admin / console） | ✅ 已实施 |
+| Business BFF（ruyin / vela / agent-template） | 🔲 规划中（跳转 console 登录，凭已有 JWT 访问） |
 
-在 access token 过期（15min）和 refresh token 过期（7d）之外，引入**空闲超时**机制：用户连续 4 小时无操作，会话自动失效，下次请求强制重新登录。
+Business BFF 无需独立签发——用户在 console 完成登录后，JWT 由 auth-bff 统一签发，Business BFF 只做验证。
+
+### Redis 依赖的 fail 策略
+
+auth-bff 对 Redis 有三种用途，不同场景采用不同的 fail 策略：
+
+| Redis 用途 | 故障策略 | 理由 |
+|-----------|---------|------|
+| jti 黑名单（logout 吊销） | **fail-open** | access token 15min 自然过期，故障窗口风险可控；fail-closed 会导致所有在线用户被踢 |
+| refresh token 验证 | **fail-closed** | 无法验证刷新凭证真实性，不可发放新 token |
+| 空闲超时检查 | **fail-open** | 不因基础设施故障踢用户下线，可用性优先 |
+
+> JWT 签名验证为纯加密运算，不依赖 Redis，始终可用。
+
+### 附加安全机制：会话空闲超时（🔲 规划中，目标 4h）
+
+在 access token（15min）和 refresh token（7d）之外，引入**空闲超时**：用户连续 4 小时无操作，会话自动失效。
 
 **实现方式（Redis 滑动窗口）：**
 
 ```
 每次认证通过的请求 → auth 中间件更新 Redis key
   key:  session:activity:{userId}:{surface}
-  TTL:  4h（每次请求自动续期，滑动窗口）
+  TTL:  4h（每次请求自动续期）
 
 验证时：
-  key 存在 → 用户活跃，放行并续期 TTL
-  key 不存在（超时）→ 拒绝请求，返回 401 SESSION_IDLE_TIMEOUT，前端跳登录
+  key 存在 → 活跃，放行并续期 TTL
+  key 不存在 → 401 SESSION_IDLE_TIMEOUT，前端跳登录页
+  Redis 不可用 → fail-open，跳过超时检查，不踢用户
 ```
+
+**适用范围**：Platform BFF 全部启用；Business BFF 继承 console 会话，不独立计时。
 
 **配置项：**
 ```bash
-SESSION_IDLE_TIMEOUT=14400  # 秒，默认 4h，可按产品需求调整
+SESSION_IDLE_TIMEOUT=14400  # 秒，默认 4h
 ```
 
-**适用范围**：operator（admin）和 tenant_user（console）会话均启用；`/auth/*` 和 `/health` 端点豁免。
+豁免端点：`/auth/*`、`/health`。
 
 ## 后果
 
 **正面：**
-- JWT claims schema 改一处即全局生效（如新增字段、修改过期时间）
+- JWT claims schema 改一处即全局生效
 - 黑名单/吊销逻辑唯一实现，logout 一致性有保证
-- JWT 签发密钥只在 auth-bff 的环境变量中持有，Secret rotation 只改一处
-- 所有登录审计日志集中在 auth-bff
-- 空闲超时有效防范 stolen token 和无人值守终端的安全风险
+- 签发密钥只在 auth-bff 持有，Secret rotation 只改一处
+- 登录审计日志集中在 auth-bff
+- 空闲超时有效防范 stolen token 和无人值守终端风险
 
 **负面：**
-- 其他 BFF 的 OAuth 回调需要额外调用一次 auth-bff 内部接口（同 Docker 网络，延迟 < 1ms）
-- auth-bff 不可用时，所有新登录均失败（已有 JWT 的存量用户不受影响）
-- 内部接口需要维护 `AUTH_INTERNAL_TOKEN` 密钥并在调用方 BFF 中配置
-- 空闲超时依赖 Redis：每次认证请求增加一次 Redis 读写（延迟可忽略，~0.1ms）
-- 滑动窗口实现需要在所有 BFF 的 auth 中间件中统一接入（集中在 auth-bff 中间件工厂中维护）
+- OAuth 回调后需额外调用一次 auth-bff 内部接口（同 Docker 网络，延迟 < 1ms）
+- auth-bff 不可用时，所有新登录失败（已有 JWT 的存量用户不受影响）
+- 空闲超时每次认证请求增加一次 Redis 读写（延迟 ~0.1ms，可忽略）
+- 滑动窗口需在所有 Platform BFF 的 auth 中间件统一接入
 
 ---
 
-_决策人：架构组 | 实施于：`bff/auth-bff/` 和所有其他 BFF 中间件_
+_决策人：架构组 | Platform BFF 已实施；Business BFF 和空闲超时待实施_
