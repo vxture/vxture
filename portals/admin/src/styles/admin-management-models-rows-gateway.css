@@ -1,0 +1,28 @@
+.vx-model-gateway-row__source,
+.vx-model-gateway-row__capabilities,
+.vx-model-gateway-row__link,
+.vx-model-gateway-row__status {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-model-gateway-row__capabilities .vx-tenant-directory-row__tag-line,
+.vx-model-gateway-row__status .vx-tenant-directory-row__status-line {
+  justify-content: flex-start;
+}
+
+.vx-model-gateway-row__source,
+.vx-model-gateway-row__link,
+.vx-model-gateway-row__status {
+  justify-items: center;
+}
+
+.vx-model-gateway-row__source .vx-tenant-directory-row__tag-line,
+.vx-model-gateway-row__link .vx-tenant-directory-row__status-line,
+.vx-model-gateway-row__status .vx-tenant-directory-row__status-line {
+  justify-content: center;
+}
+
