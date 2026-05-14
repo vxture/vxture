@@ -1,2 +1,2 @@
-@import "./admin-workspace-switcher-dark-part-1.css";
-@import "./admin-workspace-switcher-dark-part-2.css";
+@import "./admin-workspace-switcher-dark-base.css";
+@import "./admin-workspace-switcher-dark-platform.css";

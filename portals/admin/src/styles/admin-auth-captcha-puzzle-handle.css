@@ -1,2 +1,2 @@
-@import "./admin-auth-captcha-puzzle-handle-part-1.css";
-@import "./admin-auth-captcha-puzzle-handle-part-2.css";
+@import "./admin-auth-captcha-puzzle-handle-base.css";
+@import "./admin-auth-captcha-puzzle-handle-states.css";

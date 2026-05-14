@@ -591,6 +591,32 @@ const rules = [
     },
   },
   {
+    id: "ds/no-style-part-leaf",
+    description: "抽出的 CSS 叶子必须使用语义命名，不能继续新增 *-part-N.css 机械文件。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return [];
+      if (!/\/src\/styles\/[^/]+-part-\d+\.css$/.test(normalized)) return [];
+      return [
+        violation(
+          file,
+          1,
+          "CSS 叶子文件不能使用 *-part-N.css 机械命名；请按 layout/copy/states/tones/cells/header 等职责命名。",
+        ),
+      ];
+    },
+    checkLine(file, line, lineNumber) {
+      if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return null;
+      if (!/@import\s+["'][^"']*-part-\d+\.css["']/.test(line)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "CSS 入口不能 import *-part-N.css 机械叶子；请改为语义叶子文件名。",
+        line,
+      );
+    },
+  },
+  {
     id: "ds/no-style-entry-rules",
     description: "大型样式入口只能作为 @import 聚合入口，具体规则必须进入分层模块。",
     checkContent(file, content) {

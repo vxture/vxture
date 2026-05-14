@@ -1,2 +1,2 @@
-@import "./admin-tenant-detail-shell-header-layout-part-1.css";
-@import "./admin-tenant-detail-shell-header-layout-part-2.css";
+@import "./admin-tenant-detail-shell-header-layout-root.css";
+@import "./admin-tenant-detail-shell-header-layout-identity.css";

@@ -1,2 +1,2 @@
-@import "./admin-roles-permission-dialog-surface-part-1.css";
-@import "./admin-roles-permission-dialog-surface-part-2.css";
+@import "./admin-roles-permission-dialog-surface-root.css";
+@import "./admin-roles-permission-dialog-surface-panel.css";
