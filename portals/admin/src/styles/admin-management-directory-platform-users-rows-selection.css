@@ -1,9 +1,0 @@
-/* Platform user directory row selection styles. */
-
-.vx-platform-user-row {
-  cursor: pointer;
-}
-
-.vx-platform-user-row--selected {
-  background: var(--vx-color-brand-50);
-}

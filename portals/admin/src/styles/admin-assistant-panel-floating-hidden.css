@@ -1,5 +1,0 @@
-.admin-shell--assistant-content-hidden .vx-assistant-panel__inner {
-  opacity: 0;
-  transform: translateX(var(--vx-admin-assistant-hidden-offset));
-}
-

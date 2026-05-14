@@ -1,9 +1,0 @@
-.vx-tenant-list-card:hover,
-.vx-tenant-list-card.is-active {
-  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 24%, transparent);
-  background: color-mix(in srgb, var(--vx-color-brand-50) 76%, transparent);
-}
-
-.vx-tenant-list-card.is-active {
-  transform: translateX(var(--vx-admin-management-motion-05r));
-}

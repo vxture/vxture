@@ -1,6 +1,0 @@
-.vx-admin-role-auth-dialog__footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--vx-admin-roles-space-075r);
-}

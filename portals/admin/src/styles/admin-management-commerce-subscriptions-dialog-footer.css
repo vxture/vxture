@@ -1,7 +1,0 @@
-/* Subscription action dialog footer styles. */
-
-.vx-subscription-action-dialog__panel footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--vx-admin-management-space-075r);
-}

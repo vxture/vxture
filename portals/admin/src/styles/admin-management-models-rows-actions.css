@@ -1,5 +1,82 @@
-@import "./admin-management-models-rows-actions-base.css";
-@import "./admin-management-models-rows-actions-batch.css";
-@import "./admin-management-models-rows-actions-danger-disabled.css";
-@import "./admin-management-models-rows-actions-danger-tone.css";
-@import "./admin-management-models-rows-actions-layout.css";
+.vx-model-operation-buttons {
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vx-admin-management-space-05r);
+  min-width: 0;
+}
+
+.vx-model-operation-buttons button {
+  width: var(--vx-admin-management-size-40p);
+  height: var(--vx-admin-management-size-40p);
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: var(--vx-admin-management-line-width-1p) solid color-mix(in srgb, var(--vx-color-gray-500) 12%, transparent);
+  border-radius: var(--vx-radius-lg);
+  background: transparent;
+  color: var(--vx-color-text-muted);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.vx-model-batch-actions button:not(:disabled) {
+  border-color: var(--tenant-blue);
+  background: var(--tenant-blue);
+  color: var(--vx-color-white);
+}
+
+.vx-model-operation-buttons:not(.vx-model-batch-actions)
+  button:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-gray-500) 18%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-500) 8%, transparent);
+  color: var(--vx-color-text-muted);
+}
+
+.vx-model-batch-actions button:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--tenant-blue) 88%, var(--vx-color-black));
+  background: color-mix(in srgb, var(--tenant-blue) 88%, var(--vx-color-black));
+  color: var(--vx-color-white);
+}
+
+.vx-model-operation-buttons button:disabled {
+  border-color: color-mix(in srgb, var(--vx-color-gray-500) 14%, transparent);
+  background: transparent;
+  cursor: default;
+  color: var(--vx-color-text-muted);
+  opacity: 1;
+}
+
+.vx-model-operation-buttons__danger:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-danger) 24%, transparent) !important;
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent) !important;
+  color: var(--tenant-rose) !important;
+}
+
+.vx-model-operation-buttons .vx-model-operation-buttons__danger:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-gray-500) 12%, transparent);
+  background: transparent;
+  color: var(--vx-color-text-muted);
+}
+
+.vx-model-batch-actions .vx-model-operation-buttons__danger:not(:disabled) {
+  border-color: var(--tenant-rose);
+  background: var(--tenant-rose);
+  color: var(--vx-color-white);
+}
+
+.vx-model-batch-actions
+  .vx-model-operation-buttons__danger:hover:not(:disabled) {
+  border-color: var(--tenant-rose) !important;
+  background: var(--tenant-rose) !important;
+  color: var(--vx-color-white) !important;
+}
+
+.vx-model-batch-actions {
+  min-height: var(--vx-admin-management-size-40p);
+  padding: 0;
+}

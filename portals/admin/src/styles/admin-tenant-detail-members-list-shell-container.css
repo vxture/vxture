@@ -1,8 +1,0 @@
-/* Tenant member list shell container styles. */
-
-.vx-tenant-member-list {
-  min-width: 0;
-  overflow: visible;
-  border-top: var(--vx-admin-management-line-width-1p) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
-  background: transparent;
-}

@@ -1,4 +1,0 @@
-/* Service health toolbar style entry. Keep concrete rules in admin-service-health-summary-toolbar-* modules. */
-
-@import "./admin-service-health-summary-toolbar-layout.css";
-@import "./admin-service-health-summary-toolbar-controls.css";

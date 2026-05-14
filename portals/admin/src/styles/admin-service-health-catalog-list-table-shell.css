@@ -1,7 +1,0 @@
-.vx-service-health-list {
-  overflow-x: auto;
-  border: var(--vx-admin-service-health-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
-  border-top: var(--vx-admin-service-health-border-width-strong) solid color-mix(in srgb, var(--vx-color-auth-accent) 36%, transparent);
-  border-radius: var(--vx-radius-lg);
-  background: color-mix(in srgb, var(--vx-color-white) 62%, transparent);
-}

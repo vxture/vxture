@@ -1,6 +1,162 @@
-/* Admin management status pill style entry. Keep concrete rules in admin-management-pills-base-* modules. */
+.vx-tenant-pill {
+  min-height: var(--vx-admin-management-size-15r);
+  padding: 0 var(--vx-admin-management-space-05r);
+  border-color: transparent;
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  white-space: nowrap;
+}
 
-@import "./admin-management-pills-base-status.css";
-@import "./admin-management-pills-base-account.css";
-@import "./admin-management-pills-base-workflow.css";
-@import "./admin-management-pills-base-verification.css";
+.vx-tenant-pill--active,
+.vx-tenant-pill--normal,
+.vx-tenant-pill--verified,
+.vx-tenant-pill--effective,
+.vx-tenant-pill--success,
+.vx-tenant-pill--closed {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-tenant-pill--trial,
+.vx-tenant-pill--attention,
+.vx-tenant-pill--pending,
+.vx-tenant-pill--invited,
+.vx-tenant-pill--limited,
+.vx-tenant-pill--warning,
+.vx-tenant-pill--open,
+.vx-tenant-pill--processing {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-tenant-pill--suspended,
+.vx-tenant-pill--locked,
+.vx-tenant-pill--cancelled,
+.vx-tenant-pill--rejected,
+.vx-tenant-pill--unverified,
+.vx-tenant-pill--past_due,
+.vx-tenant-pill--disabled,
+.vx-tenant-pill--undefined,
+.vx-tenant-pill--danger,
+.vx-tenant-pill--blocked {
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--tenant-rose);
+}
+
+/* Admin management account-specific pill styles. */
+
+.vx-tenant-pill.vx-account-status-pill--active {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-tenant-pill.vx-account-status-pill--invited {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill.vx-account-status-pill--locked {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 12%, transparent);
+  color: var(--tenant-amber);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+}
+
+.vx-tenant-pill.vx-account-status-pill--disabled {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-account-management-page .vx-tenant-pill.vx-account-muted-pill {
+  background: color-mix(in srgb, var(--vx-color-gray-500) 8%, transparent);
+  color: var(--vx-color-gray-600);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) var(--vx-color-neutral-surface);
+}
+
+/* Admin management risk pill styles. */
+
+.vx-tenant-pill--risk-normal {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 10%, transparent);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-tenant-pill--risk-follow_up {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-tenant-pill--risk-high {
+  background: color-mix(in srgb, var(--vx-color-danger) 18%, transparent);
+  color: var(--vx-color-danger-700);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-danger) 18%, transparent);
+}
+
+.vx-tenant-pill--permission,
+.vx-tenant-pill--member,
+.vx-tenant-pill--product {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill--quota {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-tenant-pill--ticket {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill--ticket-normal {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 10%, transparent);
+  color: var(--vx-color-gray-500);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-tenant-pill--ticket-follow_up {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+  color: var(--tenant-amber);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-warning-600) 16%, transparent);
+}
+
+.vx-tenant-pill--ticket-high {
+  background: color-mix(in srgb, var(--vx-color-danger) 18%, transparent);
+  color: var(--vx-color-danger-700);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-danger) 20%, transparent);
+}
+
+/* Admin management verification and tenant identity pill styles. */
+
+.vx-tenant-pill--company {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill--individual {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-verification-pill--verified {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-verification-pill--pending {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-verification-pill--rejected {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-verification-pill--unverified,
+.vx-verification-muted-pill {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 10%, transparent);
+  color: var(--vx-color-gray-500);
+}
