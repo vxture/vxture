@@ -40,8 +40,11 @@ const DS_SEMANTIC_STYLE_PATHS = new Set([
 const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
+  [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],
+  [normalize("portals/console/src/app/globals.css"), "console globals.css"],
   [normalize("portals/admin/src/styles/admin-management.css"), "admin management.css"],
   [normalize("portals/website/src/app/globals.css"), "website globals.css"],
+  [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],
   [normalize("agent-studio/vela/src/app/globals.css"), "Vela globals.css"],
 ]);
 const FONT_LOADER_ALLOWLIST = [
@@ -250,28 +253,6 @@ const rules = [
         "抽出到 src/styles 的模块样式不能直接消费角色尺度/布局 token；请在 DS token 层补 --vx-<domain>-<component>-* 语义 token。",
         line,
       );
-    },
-  },
-  {
-    id: "ds/no-admin-globals-rules",
-    description: "admin globals.css 只能编排样式 import，页面/组件规则必须进入 src/styles 模块。",
-    checkContent(file, content) {
-      if (normalize(file) !== "portals/admin/src/app/globals.css") return [];
-      const items = [];
-      const lines = content.split(/\r?\n/);
-      lines.forEach((line, index) => {
-        const text = line.trim();
-        if (!text || /^@import\s+["'][^"']+["'];$/.test(text)) return;
-        items.push(
-          violation(
-            file,
-            index + 1,
-            "portals/admin/src/app/globals.css 只能保留 @import；规则应迁入 admin-base/admin-management/admin-operations 等 src/styles 模块。",
-            line,
-          ),
-        );
-      });
-      return items;
     },
   },
   {

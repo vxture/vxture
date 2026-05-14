@@ -8,7 +8,7 @@
 
 - `pnpm lint:design` 当前通过。
 - `portals/website/src/components/ui` 已清理，业务组件迁移到语义目录。
-- `website` / `console` / `admin` / `ruyin` 均已通过 `@vxture/design-system/styles/globals.css` 引入 DS 全局样式。
+- `website` / `console` / `admin` / `ruyin` / `agent-studio/vela` 均已通过 `@vxture/design-system/styles/globals.css` 引入 DS 全局样式。
 - `lint:design` 已覆盖 `portals`、`packages`、`agent-studio`、`business`。
 - `website` / `console` 不再维护应用层 `.vx-auth-*` / `.vx-captcha-*` 样式源。
 - `console` / `admin` build 已恢复 lint/type 检查。
@@ -22,7 +22,8 @@
 - admin `admin-management.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
 - website `globals.css` 已拆分为稳定聚合入口和 `website-*` 模块。
 - Vela `globals.css` 已拆分为稳定聚合入口和 `vela-*` 模块。
-- `lint:design` 已用 `ds/no-style-entry-rules` 约束 `platform.css` / `console.css` / `admin-management.css` / website `globals.css` / Vela `globals.css` 保持 import-only。
+- Ruyin `globals.css` 已拆分为稳定聚合入口和 `ruyin-*` 模块。
+- `lint:design` 已用 `ds/no-style-entry-rules` 约束 DS style pack、admin management 和应用 `globals.css` 大入口保持 import-only。
 
 ## 审计命令
 
@@ -82,7 +83,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 2. P1：拆分 DS `platform.css`。状态：已完成机械拆分；`platform.css` 保持稳定聚合入口，具体规则分布到 core/account/notifications/tenant-settings/layout/models/access/shell/content 模块。后续继续逐模块判断 L2 留 DS、L3/L4 回 portal/domain。验收：DS lint/build、`pnpm lint:design`、admin build、console build 通过。
 3. P1：重整 Console 样式边界。状态：已完成机械拆分；`console.css` 保持稳定公开入口，具体规则分布到 base/shell-layout/tenant-switcher/assistant/shell-chrome/responsive 模块。后续继续逐模块判定哪些是 Console L3 portal 体验，哪些可升级为 DS L2 平台模式。验收：DS lint/build、`pnpm lint:design`、console build 通过。
 4. P1：继续收敛 Admin 管理域。状态：已完成机械拆分；`admin-management.css` 保持稳定聚合入口，具体规则分布到 core/directory/models/commerce/products/tenant-workspace 模块。验收：admin build、`pnpm lint:design` 通过；入口降为 8 行。
-5. P1：补强分层 guardrail。状态：已完成；`ds/no-style-entry-rules` 已约束 DS/platform、DS/console、admin management、website globals 和 Vela globals 大入口保持 import-only，`platform-*` 模块继续纳入 DS semantic CSS 约束。验收：`pnpm lint:design` 通过；baseline 仍为空。
+5. P1：补强分层 guardrail。状态：已完成；`ds/no-style-entry-rules` 已约束 DS/platform、DS/console、admin/console/website/ruyin/Vela globals 和 admin management 大入口保持 import-only，`platform-*` 模块继续纳入 DS semantic CSS 约束。验收：`pnpm lint:design` 通过；baseline 仍为空。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性
@@ -200,7 +201,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 优先级：P0  
 状态：已修复。  
-修复证据：`business/ruyin` 已加入 `@vxture/design-system`，根布局接入 `ThemeProvider` / `FullscreenProvider`，全局样式改为 DS globals，主页改用 DS Button/Card/Badge。  
+修复证据：`business/ruyin` 已加入 `@vxture/design-system`，根布局接入 `ThemeProvider` / `FullscreenProvider`，全局入口改为 DS globals + `ruyin-base.css` 组合，主页改用 DS Button/Card/Badge。
 问题：Ruyin 作为租户侧业务应用，应与 website/console 同登录态、同视觉系统，但当前 UI 完全独立。  
 修复方向：为 `@vxture/ruyin` 增加 DS 依赖，引入 DS globals，删除私有颜色变量和按钮样式，使用 DS Button/Card/Badge/Layout。  
 验收标准：`business/ruyin/src/app/globals.css` 不再定义颜色、字体、按钮基础样式；页面使用 DS 组件。  
@@ -287,7 +288,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 优先级：P0  
 状态：已修复。  
-修复证据：`business/ruyin/src/app/globals.css` 已改为导入 DS globals，不再维护私有颜色/字体/按钮样式。  
+修复证据：`business/ruyin/src/app/globals.css` 已改为 import-only；Ruyin 应用级 body 基线移入 `business/ruyin/src/styles/ruyin-base.css`，仅消费 DS token，不再维护私有颜色/字体/按钮样式。
 问题：这正是 DS 守卫要禁止的内容，但当前脚本未扫描 `business`。  
 修复方向：与 DS-SYS-001 合并处理，扩展扫描根后再迁移 Ruyin。  
 验收标准：扩展守卫后，未迁移的 Ruyin 会导致 `pnpm lint:design` 失败；迁移完成后通过。
@@ -364,7 +365,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 优先级：P1
 状态：已修复，需随 DS exports 持续同步。
-证据：`scripts/guardrails/check-design-system.mjs` 已固化 `ALLOWED_DS_IMPORTS`：`@vxture/design-system`、`/tokens`、`/types`、`/server` 和明确允许的 `styles/*`；当前扫描未发现未授权 DS 深层导入，应用样式只从 `@vxture/design-system/styles/globals.css` 引入。
+证据：`scripts/guardrails/check-design-system.mjs` 已固化 `ALLOWED_DS_IMPORTS`：`@vxture/design-system`、`/tokens`、`/types`、`/server` 和明确允许的 `styles/*`；当前扫描未发现未授权 DS 深层导入，应用侧 DS 样式只从 `@vxture/design-system/styles/globals.css` 引入，本地样式通过应用 `globals.css` 聚合到分层模块。
 问题：随着 `/tokens`、`/types`、`/server`、`styles/*` 子入口增加，应用侧容易把“允许的公共子入口”和“禁止的内部深层路径”混淆。
 修复方向：每次新增 DS package export 时，同步更新 package exports、守卫白名单、消费者文档和 tsconfig alias 策略；其他 `@vxture/design-system/*` 默认禁止。
 验收标准：新增 `@vxture/design-system/src/**` 或未列入白名单的 `@vxture/design-system/*` 导入会失败；文档、package exports、tsconfig alias 与守卫脚本三者保持一致。
@@ -381,7 +382,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 ## 本轮梳理（2026-05-12）
 
-1. 已确认：应用源码未发现未授权 DS 深层导入；样式入口集中在 `@vxture/design-system/styles/globals.css`。
+1. 已确认：应用源码未发现未授权 DS 深层导入；DS 样式入口集中在 `@vxture/design-system/styles/globals.css`，应用 `globals.css` 只做 import 聚合。
 2. 已确认：应用源码和应用 `package.json` 未发现底层 UI 引擎直接导入或直接依赖。
 3. 已确认：应用侧 `--vx-*` token 定义、原生基础控件、原生表格扫描无结果。
 4. 已确认：设计型 inline style 由 guardrail 区分，当前只保留坐标、进度、CSS 变量、背景图、动画延迟等动态值。

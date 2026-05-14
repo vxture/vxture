@@ -1,6 +1,2 @@
 @import "@vxture/design-system/styles/globals.css";
-
-body {
-  background: var(--vx-color-background);
-  color: var(--vx-color-text-primary);
-}
+@import "../styles/ruyin-base.css";
