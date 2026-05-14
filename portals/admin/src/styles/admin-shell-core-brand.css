@@ -1,0 +1,70 @@
+.admin-shell-header__left {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-shell-header-left-gap);
+  white-space: nowrap;
+}
+
+.admin-shell-header__brand {
+  min-height: var(--vx-admin-shell-control-size);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-shell-brand-gap);
+  color: var(--vx-console-text);
+  text-decoration: none;
+}
+
+.admin-shell-header__brand-logo {
+  width: var(--vx-admin-shell-compact-icon-box-size);
+  height: var(--vx-admin-shell-compact-icon-box-size);
+  display: block;
+  flex: 0 0 auto;
+  object-fit: contain;
+  filter: drop-shadow(0 var(--vx-admin-shell-brand-logo-shadow-y) var(--vx-admin-shell-brand-logo-shadow-blur) var(--vx-shell-active));
+}
+
+.admin-shell-header__brand strong {
+  color: var(--vx-console-brand);
+  font-family: var(--font-brand);
+  font-size: var(--vx-admin-shell-brand-title-size);
+  font-weight: 700;
+  line-height: var(--vx-admin-shell-brand-title-line);
+}
+
+.admin-shell-header__brand:hover strong {
+  color: var(--vx-console-brand-strong);
+}
+
+.admin-shell-header__divider {
+  width: var(--vx-admin-shell-footer-divider-height);
+  height: var(--vx-admin-shell-compact-icon-box-size);
+  flex: 0 0 var(--vx-admin-shell-footer-divider-height);
+  background: var(--vx-shell-divider);
+}
+
+.admin-shell-header__workspace,
+.admin-shell-header__context {
+  min-height: var(--vx-shell-header-text-line);
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  font-family: inherit;
+  font-size: var(--vx-shell-header-text-size);
+  font-weight: 680;
+  line-height: var(--vx-shell-header-text-line);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-shell-header__workspace {
+  color: var(--vx-console-text);
+  font-size: var(--vx-admin-shell-workspace-title-size);
+  font-weight: 720;
+}
+
+.admin-shell-header__context {
+  max-width: var(--vx-admin-shell-context-max-width);
+  color: var(--vx-console-muted);
+}
+
