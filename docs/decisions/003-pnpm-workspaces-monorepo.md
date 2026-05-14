@@ -27,19 +27,23 @@
 
 **缺点**：Nx 有较高的学习和配置成本，它的代码生成器和插件生态是主要价值，但当前团队规模和项目阶段不需要这一复杂度。
 
-### 选项 D：pnpm workspaces
+### 选项 D：pnpm workspaces + Turborepo
 
-pnpm 原生的 workspace 协议（`workspace:*`），配合 `pnpm-workspace.yaml` 定义包边界。
+pnpm 原生的 workspace 协议（`workspace:*`），配合 `pnpm-workspace.yaml` 定义包边界；Turborepo 负责任务编排、构建缓存和增量构建。
 
 **优点**：
 - 零配置本地包链接，改一个包立即在消费者中生效
 - pnpm 的严格 symlink 策略：禁止引用未声明的包（杜绝幽灵依赖）
 - Content-addressable store 节省磁盘空间
-- `pnpm -F <package>` 过滤器精确运行单包命令
+- Turborepo 的 Pipeline 定义依赖拓扑，自动并行执行无依赖的任务
+- Turborepo 远程缓存：CI 构建结果共享，避免重复构建未变更的包
 
 ## 决策
 
-采用**选项 D（pnpm workspaces）**，不引入 Nx 或 Turborepo 等额外构建编排层（简单 `pnpm -F` 过滤器已足够当前规模）。
+采用**选项 D（pnpm workspaces + Turborepo）**，不引入 Nx（学习成本高，生成器能力对当前规模过重）。
+
+- pnpm 负责包管理和本地包链接
+- Turborepo 负责构建任务编排（`turbo build`、`turbo test`）和 CI 缓存加速
 
 ## 后果
 
@@ -47,13 +51,14 @@ pnpm 原生的 workspace 协议（`workspace:*`），配合 `pnpm-workspace.yaml
 - 修改 `@vxture/shared` 后，所有消费者立即感知，无需发版
 - TypeScript project references 和路径别名（`@vxture/*`）自动工作
 - 严格的依赖声明：每个包只能使用自己 `package.json` 中显式声明的依赖
-- CI 可以通过 `pnpm -F <changed>...` 只构建变更包的下游
+- Turborepo 自动识别变更包及其下游，CI 只重新构建受影响的包
+- Turborepo 远程缓存（Remote Cache）可显著缩短 CI 时间
 
 **负面：**
 - 所有开发者和 CI 必须安装 pnpm（不兼容 npm/yarn 直接安装）
-- `pnpm install` 比 npm 稍慢（首次，因为构建链接图）
+- Turborepo `turbo.json` pipeline 配置需要随包结构变化维护
 - 部分 npm 生态工具对 pnpm symlink 有兼容性问题（需要 `.npmrc` 中配置 `node-linker=hoisted` 临时绕过）
 
 ---
 
-_决策人：架构组 | 实施于：根目录 `pnpm-workspace.yaml`、所有包 `package.json`_
+_决策人：架构组 | 实施于：根目录 `pnpm-workspace.yaml`、`turbo.json`、所有包 `package.json`_

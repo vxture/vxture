@@ -45,6 +45,29 @@
 
 对单点风险的应对：auth-bff 以容器形式部署，可配置多副本；Redis 不可用时 fail-closed（禁止退化为无状态 token），保证安全优先。
 
+### 附加安全机制：会话空闲超时（⏳ 初步方案，4h，待实施）
+
+在 access token 过期（15min）和 refresh token 过期（7d）之外，引入**空闲超时**机制：用户连续 4 小时无操作，会话自动失效，下次请求强制重新登录。
+
+**实现方式（Redis 滑动窗口）：**
+
+```
+每次认证通过的请求 → auth 中间件更新 Redis key
+  key:  session:activity:{userId}:{surface}
+  TTL:  4h（每次请求自动续期，滑动窗口）
+
+验证时：
+  key 存在 → 用户活跃，放行并续期 TTL
+  key 不存在（超时）→ 拒绝请求，返回 401 SESSION_IDLE_TIMEOUT，前端跳登录
+```
+
+**配置项：**
+```bash
+SESSION_IDLE_TIMEOUT=14400  # 秒，默认 4h，可按产品需求调整
+```
+
+**适用范围**：operator（admin）和 tenant_user（console）会话均启用；`/auth/*` 和 `/health` 端点豁免。
+
 ## 后果
 
 **正面：**
@@ -52,11 +75,14 @@
 - 黑名单/吊销逻辑唯一实现，logout 一致性有保证
 - JWT 签发密钥只在 auth-bff 的环境变量中持有，Secret rotation 只改一处
 - 所有登录审计日志集中在 auth-bff
+- 空闲超时有效防范 stolen token 和无人值守终端的安全风险
 
 **负面：**
 - 其他 BFF 的 OAuth 回调需要额外调用一次 auth-bff 内部接口（同 Docker 网络，延迟 < 1ms）
 - auth-bff 不可用时，所有新登录均失败（已有 JWT 的存量用户不受影响）
 - 内部接口需要维护 `AUTH_INTERNAL_TOKEN` 密钥并在调用方 BFF 中配置
+- 空闲超时依赖 Redis：每次认证请求增加一次 Redis 读写（延迟可忽略，~0.1ms）
+- 滑动窗口实现需要在所有 BFF 的 auth 中间件中统一接入（集中在 auth-bff 中间件工厂中维护）
 
 ---
 
