@@ -1,6 +1,6 @@
 # @vxture/platform-browser
 
-> 架构层参考：[`docs/architecture/09-platform-sdk.md`](../../architecture/09-platform-sdk.md)
+> 架构层：`Infrastructure`（浏览器端专用，见 `docs/architecture/03-core-layer.md`）
 
 ---
 

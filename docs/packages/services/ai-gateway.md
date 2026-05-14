@@ -1,6 +1,6 @@
 # @vxture/service-ai-gateway
 
-> 架构层参考：[`docs/architecture/14-ai-gateway.md`](../../architecture/14-ai-gateway.md)
+> 能力域设计：[`docs/design/ai-gateway.md`](../../design/ai-gateway.md)
 
 ---
 

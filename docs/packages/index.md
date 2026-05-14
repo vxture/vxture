@@ -7,7 +7,7 @@
 
 ---
 
-## Core 层（Infrastructure）
+## Core 层（Infrastructure）→ [`core/index.md`](core/index.md)
 
 | 文件 | 包名 | 职责摘要 |
 |------|------|---------|
@@ -46,7 +46,7 @@
 |------|------|---------|
 | [`shared/index.md`](shared/index.md) | `@vxture/shared` | 纯工具 / 类型 / 常量（零业务逻辑） |
 
-## BFF 层（Application）
+## BFF 层（Application）→ [`bff/index.md`](bff/index.md)
 
 | 文件 | 包名 | 服务对象 |
 |------|------|---------|
@@ -68,7 +68,7 @@
 - **auth-bff 调用路径**：平台 BFF（worker-01）容器直连 `http://vx-auth-bff:3090`；Agent BFF（worker-02）走 Tailscale `http://100.100.197.42:3090`
 - **禁止**：直接签发 JWT / 跨 BFF 代码引用 / 引入 `@vxture/ai-sdk` / BFF 层实现业务逻辑
 
-## Service 层（Domain）
+## Service 层（Domain）→ [`services/index.md`](services/index.md)
 
 | 文件 | 包名 | 业务域 |
 |------|------|-------|
@@ -81,21 +81,18 @@
 | [`services/ticket.md`](services/ticket.md) | `@vxture/service-ticket` | 工单支持 |
 | [`services/organization.md`](services/organization.md) | `@vxture/service-organization` | 租户组织只读服务 |
 
-## Agent Server 层
+## Agent 层 → [`agents/index.md`](agents/index.md)
 
-| 文件 | 名称 | 职责摘要 |
-|------|------|---------|
-| [`agents/vela/server.md`](agents/vela/server.md) | `vela-server` | Vela Tool Use Loop / SSE / 会话持久化 |
-| [`agents/ruyin/server.md`](agents/ruyin/server.md) | `ruyin-server` | Ruyin Agent 私有后端 |
+| 文件 | 名称 | 部署模式 | 职责摘要 |
+|------|------|---------|---------|
+| [`agents/vela/server.md`](agents/vela/server.md) | `vela-server` | 嵌入式 | Vela Tool Use Loop / SSE / 会话持久化 |
+| [`agents/vela/studio.md`](agents/vela/studio.md) | `@vxture/agent-studio-vela` | 嵌入式 | Vela 前端（微前端，载入 admin/console） |
+| [`agents/ruyin/server.md`](agents/ruyin/server.md) | `ruyin-server` | 独立部署 | Ruyin Agent 私有后端，BullMQ 工作流 |
+| [`agents/ruyin/studio.md`](agents/ruyin/studio.md) | `@vxture/ruyin` | 独立部署 | Ruyin 独立前端（Next.js，类 claude.ai） |
+| [`agents/agent-template/server.md`](agents/agent-template/server.md) | `agent-template-server` | fork 起点 | 新 Agent 后端 fork 模板 |
+| [`agents/agent-template/studio.md`](agents/agent-template/studio.md) | `@vxture/agent-studio-agent01` | fork 起点 | 新 Agent 前端 fork 模板 |
 
-## Agent Studio 层（Presentation）
-
-| 文件 | 包名 | 职责摘要 |
-|------|------|---------|
-| [`agents/vela/studio.md`](agents/vela/studio.md) | `@vxture/agent-studio-vela` | Vela 智能助手前端（嵌入式微前端） |
-| [`agents/ruyin/studio.md`](agents/ruyin/studio.md) | `@vxture/ruyin` | Ruyin 智能体独立应用（Next.js） |
-
-## Portal 层（Presentation）
+## Portal 层（Presentation）→ [`portals/index.md`](portals/index.md)
 
 | 文件 | 包名 | 职责摘要 |
 |------|------|---------|

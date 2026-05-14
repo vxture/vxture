@@ -1,7 +1,7 @@
 # @vxture/ai-sdk
 
-> 更新：2026-05-12
-> 架构层参考：[`docs/architecture/06-ai-sdk.md`](../../architecture/06-ai-sdk.md)
+> 更新：2026-05-14
+> 架构层：`Infrastructure`（见 `docs/architecture/03-core-layer.md`）
 > 依赖网关：[`docs/packages/services/ai-gateway.md`](../services/ai-gateway.md)
 
 ---
