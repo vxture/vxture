@@ -61,7 +61,7 @@
 
 ### v1.9.0 — 2026-05-14
 
-- 删除与 `docs/packages/` 完全重复的层级文档：04-shared-layer、06-ai-sdk、08-design-system、09-platform-sdk
+- 删除与 `docs/packages/` 完全重复的层级文档：Shared、AI SDK、Design System、Platform SDK 专项文档
 - 迁移定位错误的文件：12-typescript → `docs/ai/coding-typescript.md`；14-ai-gateway → `docs/design/`；15-control-plane-overview → `docs/design/`
 - 删除机器生成产物：03-package-graph.json
 - `docs/ai/audit/` 提升为 `docs/audit/`（工程合规审计，不限于 AI 代码）
@@ -72,7 +72,7 @@
 - `00-overview.md` v1.5.0：前端分支移除未实现的 `@vxture/platform-amap`/`platform-cesium`；补充 `business/*` 层
 - `01-monorepo.md` v1.5.0：agent-studio 移除 ruyin（实际在 business/）；补充 `agent-template` 模板包；agent-server/bff 同步补全具体实例名；business/ 标注 `@vxture/ruyin`
 - `02-package-boundaries.md`：Platform SDK §9 将 amap/cesium 标注为"计划中，尚未实现"；示例导入改用 browser
-- `08-design-system.md`：组件数量 18 → 25
+- Design System 专项文档：组件数量同步为 25，后续迁移到 `docs/packages/design/design-system.md`
 - `09-platform-sdk.md` v1.3.0：完整重写；browser 作为唯一已实现包；amap/cesium 移至"计划中"章节；消费者补充 `business/*`
 - `05-bff-layer.md` v1.4.0→v1.4.1：ruyin 消费者由 `agent-studio/ruyin` 改为 `business/ruyin`；`agent{N}-bff` 替换为 `agent-template-bff → @vxture/bff-agent01`
 - Agent 实例表：ruyin 前端更正为 `business/ruyin`，状态更新为 ✅；新增 agent01 模板行

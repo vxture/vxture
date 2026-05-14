@@ -441,16 +441,13 @@ are kept apart by design. Different governance, deployment cadence, and dependen
 | `00-overview.md`           | 本文档 — 平台架构总览                   |
 | `01-monorepo.md`           | Monorepo 结构、工作区配置、各层目录规范 |
 | `02-package-boundaries.md` | 各层依赖边界的权威参考                  |
-| `03-package-graph.json`    | 机器可读包依赖图                        |
-| `04-shared-layer.md`       | Shared 层架构                           |
 | `03-core-layer.md`         | Core 层架构与职责                       |
-| `06-ai-sdk.md`             | AI SDK 模块架构                         |
 | `04-service-layer.md`      | Service 层架构与晋升生命周期            |
-| `08-design-system.md`      | Design System 架构                      |
-| `09-platform-sdk.md`       | Platform SDK 架构                       |
 | `05-bff-layer.md`          | BFF 层架构                              |
 | `06-agent-server.md`       | Agent Server 层架构                     |
-| `12-typescript.md`         | TypeScript 配置标准                     |
+| `07-tech-stack.md`         | 技术栈选型与版本基线                    |
+
+包级实现约束见 `docs/packages/`，其中 Design System 说明见 [`docs/packages/design/design-system.md`](../packages/design/design-system.md)。编码和 TypeScript 规范见 `docs/ai/`，能力域设计见 `docs/design/`，工程合规审计见 `docs/audit/`。
 
 ---
 

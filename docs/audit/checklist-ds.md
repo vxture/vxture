@@ -177,10 +177,10 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 优先级：P2
 状态：已修复，进入持续同步。
-证据：`packages/design/design-system/README.md`、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 已同步到包版本 `1.2.2`、25 个 UI 组件、当前 package exports 和 CSS 分层入口；旧 `docs/architecture/08-design-system.md` 已由文档体系迁移移除。
+证据：`packages/design/design-system/README.md`、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 已同步到包版本 `1.2.2`、25 个 UI 组件、当前 package exports 和 CSS 分层入口；旧架构层 DS 专项文档已由文档体系迁移移除。
 问题：包 README、包说明和使用规范一旦与实际实现漂移，会继续误导 AI/人工开发，尤其会弱化“DS 不足先补 DS”的执行依据。
 修复方向：以 `package.json`、公共导出入口和 `src/components/ui` 实际清单为准；新增 DS export、style entry、组件或 guardrail 时同步 README、`docs/packages/design/design-system.md`、`docs/standards/design-system.md`、`docs/audit/checklist-ds.md`。
-验收标准：DS README、包说明、使用规范、包版本、组件数量、公共导出清单一致；仓库中不再出现旧口径 `版本：3.0.0`、`16个`、`current: 18 components`。
+验收标准：DS README、包说明、使用规范、包版本、组件数量、公共导出清单一致；仓库中不再出现旧版本号、旧组件数量或已删除架构文档口径。
 
 ### DS-SYS-011：DS 守卫只管源码 import，尚未约束应用依赖清单
 
