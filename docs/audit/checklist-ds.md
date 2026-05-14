@@ -21,6 +21,7 @@
 - DS `console.css` 已拆分为稳定 Console portal style pack 入口和 `console-*` 模块。
 - admin `admin-shell.css` 已拆分为稳定聚合入口和 shell 模块；入口仅保留 `@import`。
 - admin `admin-assistant.css`、`admin-permissions.css` 已拆分为稳定聚合入口和 domain 模块；`admin-assistant-messages.css`、`admin-assistant-composer.css`、`admin-assistant-conversation.css` 已继续拆成 assistant 二级域模块；入口仅保留 `@import`。
+- admin `admin-assistant-conversation-suggestions.css` 已按 layout/buttons/dark 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-assistant-messages-bubbles.css` 已按 base/tones/copy 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-assistant-panel.css` 已按 floating/mode 拆分为二级聚合入口；入口仅保留 `@import`。
 - admin `admin-assistant-panel-floating.css` 已按 surface/responsive/hidden 拆分为三级聚合入口；入口仅保留 `@import`。
@@ -30,12 +31,15 @@
 - admin `admin-shell-core.css`、`admin-shell-nav.css`、`admin-permissions-tree-node.css` 已拆分为稳定二级聚合入口和 shell/permissions 子模块；入口仅保留 `@import`。
 - admin `admin-shell-core-actions.css` 已按 layout/search/group 拆分；`admin-permissions-tree-node-title.css` 已按 shell/row/copy/tags 拆分；入口仅保留 `@import`。
 - admin `admin-shell-nav-items.css` 已按 sections/links/visibility/state 拆分为三级聚合入口；入口仅保留 `@import`。
+- admin `admin-shell-nav-collapsed.css` 已按 sidebar/nav 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-shell-sidebar.css`、`admin-workspace-switcher.css` 已拆分为稳定二级聚合入口和 shell/workspace 子模块；入口仅保留 `@import`。
+- admin `admin-workspace-switcher-items.css` 已按 base/platform/hover 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-service-health.css`、`admin-operations.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
 - admin `admin-service-health-core.css` 已按 page/status 拆分为二级聚合入口；入口仅保留 `@import`。
 - admin `admin-service-health-summary-toolbar-controls.css` 已按 search/filters/buttons 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-operations-tickets.css` 已按 types/rows/alignment/sticky/selection 拆分为二级聚合入口；入口仅保留 `@import`。
 - admin `admin-operations-skills.css` 已按 list/rows/cards/responsive 拆分为二级聚合入口；入口仅保留 `@import`。
+- admin `admin-operations-controls.css` 已按 filter/view-toggle/actions 拆分为二级聚合入口；入口仅保留 `@import`。
 - admin `admin-operations-dialog.css` 已按 surface/header/body/footer 拆分为二级聚合入口；入口仅保留 `@import`。
 - admin `admin-directory.css`、`admin-platform-autonomy.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
 - admin `admin-platform-autonomy-domains.css` 已按 layout/card/links 拆分；`admin-platform-autonomy-panels.css` 已按 shell/header/resource-table/resource-rows 拆分；入口仅保留 `@import`。
@@ -52,7 +56,9 @@
 - admin `admin-management-commerce.css`、`admin-management-directory.css`、`admin-tenant-detail.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
 - admin `admin-management-directory-commerce.css`、`admin-management-commerce-transactions.css` 已拆分为稳定二级聚合入口和 L4 子域模块；入口仅保留 `@import`。
 - admin `admin-management-directory-commerce-grids.css` 已按 orders-billing/invoices-payments/usage-promotions/redemptions 拆分为三级聚合入口；入口仅保留 `@import`。
+- admin `admin-management-directory-commerce-transactions-sticky.css` 已按 start/end sticky columns 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-management-commerce-commercial.css` 已按 layout/status/pills 拆分为二级聚合入口；入口仅保留 `@import`。
+- admin `admin-management-commerce-overview-risks.css` 已按 lists/items/tones/copy 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-management-commerce-subscriptions.css`、`admin-management-products-capability.css` 已拆分为稳定二级聚合入口和 L4 子域模块；入口仅保留 `@import`。
 - admin `admin-management-commerce-subscriptions-list.css` 已按 search/rows/status/cards 拆分；`admin-management-commerce-transactions-billing.css` 已按 rows/exceptions/status/cards 拆分；`admin-management-commerce-transactions-payments.css` 已按 rows/status/cards 拆分；入口仅保留 `@import`。
 - admin `admin-management-commerce-transactions-invoices.css` 已按 rows/status/cards 拆分为三级聚合入口；入口仅保留 `@import`。
@@ -71,10 +77,13 @@
 - admin `admin-management-models-gateway.css` 已按 layout/sticky/rows 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-overview-metrics.css`、`admin-overview-products.css`、`admin-service-health-summary.css`、`admin-service-health-catalog.css` 已拆分为稳定二级聚合入口和概览/服务健康子域模块；入口仅保留 `@import`。
 - admin `admin-overview-products-rows.css` 已按 layout/medals/copy/value 拆分为三级聚合入口；`admin-service-health-catalog-list.css` 已按 table/service/empty 拆分为三级聚合入口；入口仅保留 `@import`。
+- admin `admin-service-health-catalog-cards.css` 已按 shell/header/status/meta 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-service-health-summary-toolbar.css` 已按 layout/controls 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-management-models-strategy.css`、`admin-management-models-shared.css`、`admin-management-products-service-plans.css` 已拆分为稳定二级聚合入口和模型/服务方案子域模块；入口仅保留 `@import`。
 - admin `admin-management-models-strategy-lists.css`、`admin-management-directory-roles.css` 已拆分为稳定三级聚合入口和模型策略/角色目录子域模块；入口仅保留 `@import`。
+- admin `admin-management-directory-roles-layout.css` 已按 grid/identity/cells 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-management-core.css`、`admin-overview-business.css`、`admin-management-commerce-overview.css` 已拆分为稳定二级聚合入口和管理/概览子域模块；入口仅保留 `@import`。
+- admin `admin-management-core-toolbar.css` 已按 shell/controls/filters 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-management-tenant-workspace.css`、`admin-management-directory-products.css` 已拆分为稳定二级聚合入口和租户工作台/产品目录子域模块；入口仅保留 `@import`。
 - admin `admin-management-tenant-workspace-cards.css` 已按 shell/tones/body/meta 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-management-commerce-subscriptions-dialog.css`、`admin-management-directory-commerce-growth.css` 已拆分为稳定三级聚合入口和订阅弹窗/增长目录子域模块；入口仅保留 `@import`。
@@ -82,6 +91,7 @@
 - admin `admin-tenant-detail-members-list.css` 已按 shell/row/identity 拆分为三级聚合入口；入口仅保留 `@import`。
 - admin `admin-management-directory-commerce-transactions.css`、`admin-management-pills-responsive.css` 已拆分为稳定二级聚合入口和交易目录/响应式子域模块；入口仅保留 `@import`。
 - admin `admin-management-models.css`、`admin-management-pills.css`、`admin-management-products.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
+- admin `admin-management-models-rows-actions.css` 已按 base/batch/danger/layout 拆分；`admin-management-models-rows-shared.css` 已按 copy/controls 拆分；`admin-management-pills-responsive-tenant.css` 已按 grids/toolbar/detail/config 拆分；入口仅保留 `@import`。
 - admin `admin-management-pills-base.css` 已按 status/account/workflow/verification 拆分为二级聚合入口；入口仅保留 `@import`。
 - admin `admin-overview.css` 已拆分为稳定聚合入口和 overview domain 模块；入口仅保留 `@import`。
 - website `globals.css` 已拆分为稳定聚合入口和 `website-*` 模块。
@@ -150,10 +160,12 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    本轮增量：`admin-assistant-messages-bubbles.css`、`admin-service-health-core.css`、`admin-management-commerce-subscriptions-list.css`、`admin-management-commerce-transactions-billing.css`、`admin-management-commerce-transactions-payments.css`、`admin-management-products-capability-lists.css`、`admin-overview-models-metrics.css`、`admin-overview-metrics-pulse.css` 已继续拆分为更细 L4 子域模块；入口仅保留 `@import`。
    第二轮增量：`admin-operations-skills.css`、`admin-platform-autonomy-domains.css`、`admin-platform-autonomy-panels.css`、`admin-auth-captcha-puzzle.css`、`admin-shell-core-actions.css`、`admin-management-directory-commerce-grids.css`、`admin-service-health-summary-toolbar-controls.css`、`admin-assistant-panel-floating.css`、`admin-management-commerce-transactions-invoices.css`、`admin-permissions-tree-node-title.css`、`admin-management-tenant-workspace-cards.css` 已继续拆分为更细 L4/L3 子模块；入口仅保留 `@import`。
    第三轮增量：`admin-permissions-core-cards.css`、`admin-roles-auth-dialog.css`、`admin-management-commerce-transactions-orders.css`、`admin-overview-products-rows.css`、`admin-management-products-capability-detail.css`、`admin-directory-cards.css`、`admin-tenant-detail-config-review.css`、`admin-service-health-catalog-list.css`、`admin-products-summary-toolbar.css` 已继续拆分为更细 L3/L4 子模块；入口仅保留 `@import`。
+   第四轮增量：`admin-management-pills-responsive-tenant.css`、`admin-management-models-rows-actions.css`、`admin-management-models-rows-shared.css`、`admin-workspace-switcher-items.css`、`admin-management-directory-commerce-transactions-sticky.css`、`admin-shell-nav-collapsed.css`、`admin-management-core-toolbar.css`、`admin-service-health-catalog-cards.css`、`admin-management-commerce-overview-risks.css`、`admin-operations-controls.css`、`admin-management-directory-roles-layout.css`、`admin-assistant-conversation-suggestions.css` 已继续拆分为更细 L3/L4 子模块；入口仅保留 `@import`。
 5. P1：补强分层 guardrail。状态：已完成；`ds/no-style-entry-rules` 已约束 DS/platform、DS/console、admin/console/website/ruyin/Vela globals、admin shell、admin shell core、admin shell nav、admin shell nav items、admin shell sidebar、admin workspace switcher、admin assistant、admin assistant composer、admin assistant conversation、admin assistant messages、admin assistant panel、admin auth captcha、admin directory、admin directory list、admin governance、admin governance list、admin permissions、admin permissions core、admin permissions tree、admin permissions tree node、admin platform autonomy、admin products、admin roles、admin roles permission dialog、admin service health、admin service health catalog、admin service health summary、admin service health summary toolbar、admin operations、admin operations dialog、admin operations tickets、admin management 系列、admin management core、admin management commerce commercial、admin management commerce overview、admin management commerce subscriptions、admin management commerce subscriptions dialog、admin management commerce transactions、admin management directory commerce、admin management directory commerce growth、admin management directory commerce transactions、admin management directory platform users、admin management directory roles、admin management directory products、admin management models gateway、admin management models rows、admin management models shared、admin management models strategy、admin management models strategy lists、admin management pills base、admin management pills commerce、admin management pills products、admin management pills responsive、admin management products capability、admin management products capability summary、admin management products service plans、admin management tenant workspace、admin overview、admin overview business、admin overview core、admin overview core header、admin overview metrics、admin overview models、admin overview models rows、admin overview products、admin overview service、admin overview service data、tenant detail、tenant detail activity、tenant detail config、tenant detail shell、tenant detail shell header 和 tenant detail members、tenant detail members list 大入口保持 import-only，`platform-*` 模块继续纳入 DS semantic CSS 约束。验收：`pnpm lint:design` 通过；baseline 仍为空。
    本轮增量：`ds/no-style-entry-rules` 已新增约束 admin assistant messages bubbles、admin service health core、admin management commerce subscriptions list、admin management commerce transactions billing/payments、admin management products capability lists、admin overview models metrics、admin overview metrics pulse 入口保持 import-only。
    第二轮增量：`ds/no-style-entry-rules` 已新增约束 admin operations skills、admin platform autonomy domains/panels、admin auth captcha puzzle、admin shell core actions、admin management directory commerce grids、admin service health summary toolbar controls、admin assistant panel floating、admin management commerce transactions invoices、admin permissions tree node title、admin management tenant workspace cards 入口保持 import-only。
    第三轮增量：`ds/no-style-entry-rules` 已新增约束 admin permissions core cards、admin roles auth dialog、admin management commerce transactions orders、admin overview products rows、admin management products capability detail、admin directory cards、admin tenant detail config review、admin service health catalog list、admin products summary toolbar 入口保持 import-only。
+   第四轮增量：`ds/no-style-entry-rules` 已新增约束 admin management pills responsive tenant、admin management models rows actions/shared、admin workspace switcher items、admin management directory commerce transactions sticky、admin shell nav collapsed、admin management core toolbar、admin service health catalog cards、admin management commerce overview risks、admin operations controls、admin management directory roles layout、admin assistant conversation suggestions 入口保持 import-only。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性

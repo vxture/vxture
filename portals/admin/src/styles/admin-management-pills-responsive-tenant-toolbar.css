@@ -1,0 +1,42 @@
+@media (max-width: 960px) {
+  .vx-tenant-toolbar {
+    align-items: stretch;
+  }
+
+  .vx-tenant-filters {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+
+  .vx-tenant-search,
+  .vx-tenant-select,
+  .vx-tenant-toolbar .vx-btn {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  .vx-tenant-page-size {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .vx-tenant-toolbar__spacer {
+    display: none;
+  }
+
+  .vx-tenant-view-count {
+    margin-right: auto;
+  }
+
+  .vx-tenant-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vx-tenant-pagination__actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+}

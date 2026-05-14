@@ -1,0 +1,10 @@
+.vx-service-health-status-badge {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  padding: 0 var(--vx-admin-service-health-pill-padding-x);
+  border-color: var(--service-border);
+  background: var(--service-soft);
+  color: var(--service-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  white-space: nowrap;
+}

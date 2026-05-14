@@ -1,0 +1,32 @@
+.vx-model-operation-buttons button:disabled {
+  border-color: color-mix(in srgb, var(--vx-color-gray-500) 14%, transparent);
+  background: transparent;
+  cursor: default;
+  color: var(--vx-color-text-muted);
+  opacity: 1;
+}
+
+.vx-model-operation-buttons__danger:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-danger) 24%, transparent) !important;
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent) !important;
+  color: var(--tenant-rose) !important;
+}
+
+.vx-model-operation-buttons .vx-model-operation-buttons__danger:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-gray-500) 12%, transparent);
+  background: transparent;
+  color: var(--vx-color-text-muted);
+}
+
+.vx-model-batch-actions .vx-model-operation-buttons__danger:not(:disabled) {
+  border-color: var(--tenant-rose);
+  background: var(--tenant-rose);
+  color: var(--vx-color-white);
+}
+
+.vx-model-batch-actions
+  .vx-model-operation-buttons__danger:hover:not(:disabled) {
+  border-color: var(--tenant-rose) !important;
+  background: var(--tenant-rose) !important;
+  color: var(--vx-color-white) !important;
+}

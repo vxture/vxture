@@ -1,0 +1,31 @@
+.vx-commerce-risk-item > span,
+.vx-commerce-plan-row__main,
+.vx-commerce-plan-row__amounts span,
+.vx-commerce-link-card {
+  min-width: 0;
+}
+
+.vx-commerce-risk-item strong,
+.vx-commerce-plan-row strong,
+.vx-commerce-link-card strong {
+  display: block;
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-commerce-risk-item small,
+.vx-commerce-plan-row small,
+.vx-commerce-link-card small {
+  display: block;
+  overflow: hidden;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+  line-height: 1.55;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

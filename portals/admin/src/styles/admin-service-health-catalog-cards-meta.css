@@ -1,0 +1,19 @@
+.vx-service-health-card__meta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-meta-gap);
+  flex-wrap: wrap;
+}
+
+.vx-service-health-card__meta span {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-service-health-pill-padding-x);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  color: var(--vx-color-gray-600);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+}

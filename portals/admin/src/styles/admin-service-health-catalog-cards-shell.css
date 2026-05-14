@@ -1,0 +1,16 @@
+.vx-service-health-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--vx-admin-service-health-grid-gap);
+}
+
+.vx-service-health-card {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-card-gap);
+  padding: var(--vx-admin-service-health-card-padding-y) var(--vx-admin-service-health-card-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--service-border);
+  border-top: var(--vx-admin-service-health-border-width-strong) solid var(--service-tone);
+  border-radius: var(--vx-radius-lg);
+  background: var(--service-bg);
+}

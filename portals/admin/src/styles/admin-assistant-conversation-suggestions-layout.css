@@ -1,0 +1,7 @@
+.vx-assistant-empty__suggestions {
+  width: min(100%, var(--vx-admin-assistant-suggestions-max-width));
+  display: grid;
+  gap: var(--vx-admin-assistant-space-xl);
+  margin-top: var(--vx-admin-assistant-space-md);
+  counter-reset: assistant-suggestion;
+}

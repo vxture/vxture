@@ -1,0 +1,15 @@
+.dark .vx-assistant-empty__suggestions button {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  background: color-mix(
+    in srgb,
+    var(--vx-shell-surface, var(--vx-color-shell-panel-soft)) 78%,
+    transparent
+  );
+  color: var(--vx-shell-icon-muted, var(--vx-color-text-muted));
+}
+
+.dark .vx-assistant-empty__suggestions button:hover {
+  border-color: color-mix(in srgb, var(--vx-console-brand) 26%, transparent);
+  background: var(--vx-shell-hover, var(--vx-color-shell-hover));
+  color: var(--vx-shell-ink, var(--vx-color-brand-200));
+}
