@@ -1,0 +1,7 @@
+.vx-assistant-composer-box:focus-within {
+  border-color: color-mix(in srgb, var(--vx-console-brand) 48%, transparent);
+  background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
+  box-shadow:
+    inset 0 var(--vx-admin-assistant-effect-hairline) 0 color-mix(in srgb, var(--vx-color-white) 76%, transparent),
+    0 0 0 var(--vx-admin-assistant-effect-focus-ring) var(--vx-shell-focus-ring, color-mix(in srgb, var(--vx-color-auth-accent-light) 14%, transparent));
+}

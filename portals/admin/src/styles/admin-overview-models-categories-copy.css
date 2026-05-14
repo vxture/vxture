@@ -1,0 +1,24 @@
+.admin-overview-model-category__header h3 {
+  color: var(--overview-tone, var(--vx-color-brand-950));
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 780;
+}
+
+.admin-overview-model-category__header p {
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.admin-overview-model-category__header a {
+  flex: 0 0 auto;
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+  text-decoration: none;
+}
+
+.admin-overview-model-category__header a:hover {
+  text-decoration: underline;
+}

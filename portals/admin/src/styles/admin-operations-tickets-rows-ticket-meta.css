@@ -1,0 +1,10 @@
+.vx-ticket-row > span:last-child {
+  display: grid;
+  gap: var(--vx-admin-operations-space-02r);
+}
+
+.vx-ticket-row > span:last-child small {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 700;
+}

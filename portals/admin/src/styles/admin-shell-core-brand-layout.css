@@ -1,0 +1,7 @@
+.admin-shell-header__left {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-shell-header-left-gap);
+  white-space: nowrap;
+}

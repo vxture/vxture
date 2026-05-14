@@ -1,0 +1,11 @@
+.admin-overview-band-grid,
+.admin-overview-two-column,
+.admin-overview-model-row {
+  display: grid;
+  gap: var(--vx-admin-overview-space-4r);
+}
+
+.admin-overview-band-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-admin-overview-space-2r);
+}

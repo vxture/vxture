@@ -1,0 +1,4 @@
+.vx-product-release-list {
+  display: grid;
+  gap: var(--vx-admin-products-space-15r);
+}

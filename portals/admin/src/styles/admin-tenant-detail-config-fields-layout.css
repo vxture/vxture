@@ -1,0 +1,22 @@
+.vx-tenant-config-stack {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-config-row {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-1r) var(--vx-admin-management-space-15r);
+}
+
+.vx-tenant-config-row--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.vx-tenant-config-row--contact {
+  grid-template-columns:
+    minmax(var(--vx-admin-management-track-10r), 0.8fr) minmax(var(--vx-admin-management-grid-column-md), 1.15fr) minmax(var(--vx-admin-management-track-9r), 0.7fr)
+    minmax(var(--vx-admin-management-track-16r), auto);
+  align-items: stretch;
+}

@@ -1,0 +1,14 @@
+.vx-tenant-config-item .vx-input {
+  min-height: var(--vx-admin-management-size-24r);
+  height: var(--vx-admin-management-size-24r);
+  border-radius: var(--vx-radius-lg);
+}
+
+.vx-tenant-config-item select.vx-input {
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 760;
+}
+
+.vx-tenant-config-item select.vx-input option {
+  font-size: var(--vx-admin-caption-size);
+}

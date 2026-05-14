@@ -1,0 +1,10 @@
+.admin-overview-band {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-15r);
+  padding: var(--vx-admin-overview-space-15r);
+  border: var(--vx-admin-overview-line-width-1p) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  border-top: var(--vx-admin-overview-line-width-2p) solid var(--overview-tone);
+  border-radius: var(--admin-overview-card-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 58%, transparent);
+}

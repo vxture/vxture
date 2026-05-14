@@ -1,0 +1,15 @@
+.vx-announcement-row__title {
+  overflow: hidden;
+  font-weight: 640;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-announcement-row__index,
+.vx-announcement-row__scope,
+.vx-announcement-row__published,
+.vx-announcement-row__expires {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-meta-size);
+  white-space: nowrap;
+}

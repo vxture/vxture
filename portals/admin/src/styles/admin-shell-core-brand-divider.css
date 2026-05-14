@@ -1,0 +1,6 @@
+.admin-shell-header__divider {
+  width: var(--vx-admin-shell-footer-divider-height);
+  height: var(--vx-admin-shell-compact-icon-box-size);
+  flex: 0 0 var(--vx-admin-shell-footer-divider-height);
+  background: var(--vx-shell-divider);
+}

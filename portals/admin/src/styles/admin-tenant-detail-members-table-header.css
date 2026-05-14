@@ -1,0 +1,7 @@
+.vx-tenant-table__header {
+  justify-items: center;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  text-align: center;
+}

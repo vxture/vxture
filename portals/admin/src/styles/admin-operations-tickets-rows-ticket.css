@@ -1,0 +1,11 @@
+.vx-ticket-directory-list .vx-tenant-directory-list__header,
+.vx-ticket-row {
+  min-width: var(--vx-admin-operations-audit-row-min-width);
+  grid-template-columns:
+    var(--vx-admin-operations-track-25r) var(--vx-admin-operations-track-275r) minmax(0, 1.08fr) minmax(0, 0.92fr)
+    minmax(0, 0.56fr) minmax(0, 0.78fr) minmax(0, 0.62fr) var(--vx-admin-operations-track-5r);
+}
+
+.vx-ticket-row {
+  text-decoration: none;
+}

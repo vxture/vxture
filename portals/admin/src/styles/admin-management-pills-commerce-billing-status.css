@@ -1,0 +1,29 @@
+.vx-billing-pill--paid,
+.vx-billing-pill--invoice-issued,
+.vx-billing-pill--invoice-finished {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-billing-pill--unpaid,
+.vx-billing-pill--paying,
+.vx-billing-pill--partial,
+.vx-billing-pill--invoice-applying,
+.vx-billing-pill--invoice-auditing,
+.vx-billing-pill--invoice-sending {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-pill--overdue,
+.vx-billing-pill--invoice-rejected,
+.vx-billing-pill--invoice-red {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-pill--cancelled,
+.vx-billing-pill--invoice-none {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}

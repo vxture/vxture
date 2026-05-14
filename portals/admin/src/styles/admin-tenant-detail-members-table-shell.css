@@ -1,0 +1,14 @@
+.vx-tenant-table {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.vx-tenant-table__header,
+.vx-tenant-table__row {
+  min-width: var(--vx-admin-management-size-48r-large);
+  display: grid;
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+  padding: var(--vx-admin-management-space-1r) 0;
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--tenant-line);
+}

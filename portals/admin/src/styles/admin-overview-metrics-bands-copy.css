@@ -1,0 +1,6 @@
+.admin-overview-band h3,
+.admin-overview-ranking h3 {
+  color: var(--overview-tone, var(--vx-color-text-secondary));
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 760;
+}
