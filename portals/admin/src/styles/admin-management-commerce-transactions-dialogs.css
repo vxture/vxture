@@ -1,0 +1,60 @@
+.vx-order-payment-dialog__panel {
+  width: var(--vx-admin-management-dialog-width-lg);
+}
+
+.vx-order-payment-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-offline-invoice-dialog__panel {
+  width: min(100%, var(--vx-admin-management-size-48r-large));
+}
+
+.vx-offline-invoice-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-invoice-receipt-action-dialog__panel {
+  width: var(--vx-admin-management-dialog-width-md);
+}
+
+.vx-invoice-receipt-action-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-billing-bill-action-dialog__panel {
+  width: var(--vx-admin-management-dialog-width-lg);
+}
+
+.vx-billing-bill-action-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-order-search {
+  width: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+  flex-basis: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+}
+
+.vx-billing-search {
+  width: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+  flex-basis: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+}
+
+.vx-invoice-search {
+  width: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+  flex-basis: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+}
+
+.vx-payment-search {
+  width: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+  flex-basis: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+}
+
