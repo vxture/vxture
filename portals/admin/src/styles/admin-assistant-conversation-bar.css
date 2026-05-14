@@ -1,0 +1,57 @@
+.vx-assistant-conversation-bar {
+  min-width: 0;
+  min-height: var(--vx-admin-assistant-control-size-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-assistant-space-panel);
+  padding: 0 var(--vx-admin-assistant-space-3xs);
+  color: var(--vx-console-muted);
+}
+
+.vx-assistant-conversation-bar span {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--vx-admin-assistant-text-caption);
+  font-weight: 680;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-assistant-conversation-bar__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-assistant-space-md);
+  flex: 0 0 auto;
+}
+
+.vx-assistant-conversation-bar__actions button {
+  border: 0;
+  border-radius: var(--vx-shell-radius-pill, var(--vx-radius-full));
+  background: transparent;
+  color: var(--vx-shell-muted, var(--vx-color-gray-500));
+  padding: var(--vx-admin-assistant-space-sm) var(--vx-admin-assistant-space-2xl);
+  font-size: var(--vx-shell-caption-size, var(--vx-admin-assistant-text-caption));
+  font-weight: 680;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.vx-assistant-conversation-bar__actions button:hover {
+  background: var(--vx-shell-hover, color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent));
+  color: var(--vx-console-brand-strong);
+}
+
+.dark .vx-assistant-conversation-bar__actions button {
+  color: var(--vx-shell-muted, var(--vx-color-text-muted));
+}
+
+.dark .vx-assistant-conversation-bar__actions button:hover {
+  background: var(--vx-shell-hover, var(--vx-color-shell-hover));
+  color: var(--vx-shell-ink, var(--vx-color-brand-200));
+}
+

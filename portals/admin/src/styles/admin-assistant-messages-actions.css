@@ -1,0 +1,29 @@
+.vx-assistant-message__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--vx-admin-assistant-space-xl);
+  margin-top: var(--vx-admin-assistant-space-2xs);
+}
+
+.vx-assistant-message__actions button {
+  border: 0;
+  border-radius: var(--vx-shell-radius-pill, var(--vx-radius-full));
+  background: transparent;
+  color: var(--vx-console-brand-strong);
+  padding: var(--vx-admin-assistant-space-xs) 0;
+  font-size: var(--vx-shell-caption-size, var(--vx-admin-assistant-text-caption));
+  font-weight: 720;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.vx-assistant-message__actions button:hover:not(:disabled) {
+  color: var(--vx-console-brand);
+}
+
+.vx-assistant-message__actions button:disabled {
+  cursor: default;
+  opacity: 0.46;
+}
+
