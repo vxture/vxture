@@ -1,0 +1,28 @@
+.vx-tenant-note {
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.vx-tenant-tags,
+.vx-tenant-risk-panel__level {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  flex-wrap: wrap;
+}
+
+.vx-tenant-tags span,
+.vx-tenant-risk-panel__level span {
+  min-height: var(--vx-admin-management-size-15r);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-management-space-05r);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 760;
+}
+

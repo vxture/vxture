@@ -1,0 +1,50 @@
+.vx-tenant-block,
+.vx-tenant-risk-panel,
+.vx-tenant-audit-list {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-15r);
+}
+
+.vx-tenant-block--wide {
+  grid-column: 1 / -1;
+  padding-top: var(--vx-admin-management-space-05r);
+}
+
+.vx-tenant-block > header,
+.vx-tenant-risk-panel > header,
+.vx-tenant-audit-list > header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-15r);
+  flex-wrap: wrap;
+  padding-bottom: var(--vx-admin-management-space-1r);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+}
+
+.vx-tenant-block > header {
+  justify-content: space-between;
+}
+
+.vx-tenant-block > header > .admin-overview-heading {
+  flex: 1 1 auto;
+}
+
+.vx-tenant-block > .vx-tenant-config-stack,
+.vx-tenant-block > .vx-tenant-config-row,
+.vx-tenant-block > .vx-tenant-note,
+.vx-tenant-block > .vx-tenant-tags {
+  margin-left: var(--vx-admin-management-space-45r);
+}
+
+.vx-tenant-risk-panel > header,
+.vx-tenant-audit-list > header {
+  justify-content: flex-start;
+}
+
+.vx-tenant-risk-panel > header svg,
+.vx-tenant-audit-list > header svg {
+  color: var(--tenant-blue);
+}
+
