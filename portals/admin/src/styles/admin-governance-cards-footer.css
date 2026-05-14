@@ -1,0 +1,15 @@
+.vx-platform-governance-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-governance-card-footer-gap);
+  padding-top: var(--vx-admin-governance-card-footer-padding-top);
+  border-top: var(--vx-admin-governance-card-border-width) solid var(--vx-shell-line-soft);
+}
+
+.vx-platform-governance-card footer strong {
+  color: var(--vx-shell-ink);
+  font-size: var(--vx-admin-governance-card-footer-value-size);
+  font-weight: 720;
+  white-space: nowrap;
+}

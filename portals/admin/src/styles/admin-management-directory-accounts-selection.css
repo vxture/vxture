@@ -1,0 +1,11 @@
+.vx-account-operation-row {
+  cursor: pointer;
+}
+
+.vx-account-operation-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-account-operation-row__select {
+  justify-self: center;
+}

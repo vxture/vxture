@@ -1,0 +1,23 @@
+.vx-account-directory-list .vx-tenant-directory-list__header,
+.vx-account-directory-list .vx-tenant-directory-row {
+  min-width: var(--vx-admin-directory-row-min-width);
+  grid-template-columns:
+    var(--vx-admin-management-track-25r) var(--vx-admin-management-track-275r) minmax(0, 1.45fr) minmax(0, 0.95fr)
+    minmax(0, 0.9fr) minmax(0, 0.74fr) minmax(0, 0.9fr) var(--vx-admin-management-track-5r);
+}
+
+.vx-account-directory-list--platform .vx-tenant-directory-list__header,
+.vx-account-directory-list--platform .vx-tenant-directory-row {
+  grid-template-columns:
+    var(--vx-admin-management-track-25r) var(--vx-admin-management-track-275r) minmax(0, 1.65fr) minmax(0, 0.8fr)
+    minmax(0, 0.8fr) minmax(0, 0.95fr) var(--vx-admin-management-track-5r);
+}
+
+.vx-account-management-page .vx-tenant-directory-row {
+  cursor: default;
+}
+
+.vx-account-directory-list .vx-tenant-directory-list__header > span {
+  justify-self: center;
+  text-align: center;
+}

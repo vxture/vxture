@@ -1,0 +1,15 @@
+.vx-tenant-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-platform-users-summary,
+.vx-admin-roles-summary,
+.vx-admin-permissions-summary,
+.vx-model-gateway-summary,
+.vx-model-strategy-summary,
+.vx-platform-governance-summary,
+.vx-audit-summary {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}

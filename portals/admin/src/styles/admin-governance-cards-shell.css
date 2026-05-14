@@ -1,0 +1,15 @@
+.vx-platform-governance-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-admin-governance-card-grid-gap);
+}
+
+.vx-platform-governance-card {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-governance-card-gap);
+  padding: var(--vx-admin-governance-card-padding);
+  border: var(--vx-admin-governance-card-border-width) solid var(--vx-shell-line-soft);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-shell-surface);
+}

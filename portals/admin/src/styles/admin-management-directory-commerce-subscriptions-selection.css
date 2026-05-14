@@ -1,0 +1,11 @@
+.vx-subscription-operation-row {
+  cursor: pointer;
+}
+
+.vx-subscription-operation-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-subscription-operation-row__select {
+  justify-self: center;
+}

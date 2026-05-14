@@ -1,0 +1,11 @@
+.platform-autonomy-metric {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-platform-autonomy-card-grid);
+  align-items: start;
+  gap: var(--vx-admin-platform-autonomy-gap-lg);
+  padding: var(--vx-admin-platform-autonomy-card-padding);
+  border: var(--vx-admin-platform-autonomy-border-width) solid var(--vx-shell-line-soft);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-shell-surface);
+}

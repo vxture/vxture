@@ -1,0 +1,25 @@
+.vx-tenant-actions__menu button {
+  min-height: var(--vx-admin-directory-actions-menu-button-height);
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-directory-actions-menu-button-gap);
+  padding: 0 var(--vx-admin-directory-actions-menu-button-padding-x);
+  border: 0;
+  border-radius: var(--vx-radius-lg);
+  background: transparent;
+  color: var(--vx-color-text-secondary);
+  cursor: pointer;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+  text-align: left;
+}
+
+.vx-tenant-actions__menu button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-actions__menu button:disabled {
+  cursor: default;
+  opacity: 0.48;
+}

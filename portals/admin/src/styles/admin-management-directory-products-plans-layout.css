@@ -1,0 +1,14 @@
+/* Product plan directory row layout styles. */
+
+.vx-product-plan-directory-list .vx-tenant-directory-list__header,
+.vx-product-plan-directory-list .vx-tenant-directory-row {
+  min-width: var(--vx-admin-directory-row-min-width);
+  grid-template-columns:
+    var(--vx-admin-management-track-25r) var(--vx-admin-management-track-275r) minmax(0, 1.14fr) minmax(0, 0.74fr)
+    minmax(0, 0.66fr) minmax(0, 1.5fr) minmax(0, 1.04fr)
+    minmax(0, 0.6fr) var(--vx-admin-management-track-5r);
+}
+
+.vx-product-plans-page .vx-tenant-directory-row {
+  cursor: default;
+}
