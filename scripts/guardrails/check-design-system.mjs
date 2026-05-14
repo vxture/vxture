@@ -42,6 +42,7 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
   [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],
   [normalize("portals/console/src/app/globals.css"), "console globals.css"],
+  [normalize("portals/admin/src/styles/admin-shell.css"), "admin shell.css"],
   [normalize("portals/admin/src/styles/admin-management.css"), "admin management.css"],
   [normalize("portals/admin/src/styles/admin-management-commerce.css"), "admin management commerce.css"],
   [normalize("portals/admin/src/styles/admin-management-directory.css"), "admin management directory.css"],

@@ -1,0 +1,37 @@
+.admin-content {
+  min-width: 0;
+  min-height: calc(100dvh - var(--vx-admin-header-height));
+  margin: 0 var(--vx-admin-content-margin-x);
+  padding: var(--vx-admin-content-padding-top) var(--vx-admin-content-padding-x)
+    var(--vx-admin-content-padding-bottom);
+  transition:
+    margin var(--vx-admin-sidebar-transition),
+    padding var(--vx-admin-sidebar-transition);
+  will-change: margin, padding;
+}
+
+.admin-content__core,
+.admin-content__visual-space {
+  width: 100%;
+  max-width: var(--vx-admin-content-max-width);
+  margin: 0 auto;
+}
+
+.admin-content__visual-space {
+  min-height: var(--vx-admin-shell-content-visual-min-height);
+  pointer-events: none;
+}
+
+
+.admin-shell > .admin-shell__header {
+  background: var(--vx-shell-glass);
+  border-bottom: 0;
+  box-shadow: var(--vx-shell-header-shadow);
+}
+
+.dark .admin-shell > .admin-shell__header {
+  background: var(--vx-shell-glass);
+  border-bottom: 0;
+  box-shadow: var(--vx-shell-header-shadow);
+}
+
