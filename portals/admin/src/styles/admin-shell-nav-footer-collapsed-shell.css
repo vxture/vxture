@@ -1,0 +1,70 @@
+.admin-shell-sidebar__footer {
+  position: relative;
+  min-height: var(--vx-admin-shell-rail-size);
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border-top: var(--vx-admin-shell-border-width) solid transparent;
+}
+
+.admin-shell-sidebar__footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: calc(
+    var(--vx-admin-sidebar-pad-x) + var(--vx-admin-sidebar-control-inset)
+  );
+  right: calc(
+    var(--vx-admin-sidebar-pad-x) + var(--vx-admin-sidebar-control-inset)
+  );
+  height: var(--vx-admin-shell-footer-divider-height);
+  background: var(--vx-shell-line-soft);
+  pointer-events: none;
+}
+
+.admin-shell-sidebar__footer .admin-shell-sidebar__assistant-button {
+  padding: 0 var(--vx-admin-sidebar-pad-x);
+}
+
+.admin-shell--nav-collapsed .admin-shell-sidebar__top {
+  width: calc(
+    var(--vx-admin-sidebar-collapsed-width) - var(--vx-admin-sidebar-pad-x)
+  );
+  box-sizing: content-box;
+  grid-template-columns: var(--vx-admin-shell-rail-track);
+  gap: 0;
+  padding: 0 0 0 var(--vx-admin-sidebar-pad-x);
+}
+
+.admin-shell--nav-collapsed .admin-shell-sidebar__domain-title,
+.admin-shell--nav-collapsed .admin-shell-sidebar__section-toggle-all,
+.admin-shell--nav-collapsed .admin-shell-sidebar__assistant-copy {
+  display: none;
+}
+
+.admin-shell--nav-collapsed .admin-shell-sidebar__footer {
+  max-height: none;
+  min-height: var(--vx-admin-shell-rail-size);
+  margin: 0;
+  opacity: 1;
+  pointer-events: auto;
+  border-top-color: transparent;
+}
+
+.admin-shell--nav-collapsed .admin-shell-sidebar__footer::before {
+  left: var(--vx-admin-sidebar-pad-x);
+  right: 0;
+}
+
+.admin-shell--nav-collapsed .admin-shell-sidebar__assistant-button {
+  width: calc(
+    var(--vx-admin-sidebar-collapsed-width) - var(--vx-admin-sidebar-pad-x)
+  );
+  box-sizing: content-box;
+  grid-template-columns: var(--vx-admin-shell-rail-track);
+  justify-content: flex-start;
+  gap: 0;
+  padding: 0 0 0 var(--vx-admin-sidebar-pad-x);
+}

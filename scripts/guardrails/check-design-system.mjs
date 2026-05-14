@@ -329,7 +329,7 @@ const rules = [
     description: "应用 src/styles 中承载具体规则的叶子文件不能继续膨胀为大入口。",
     checkFile(file) {
       if (!isExtractedPortalStyleModule(file) || isGeneratedOrAsset(file)) return [];
-      if (statSync(file).size <= 12000) return [];
+      if (statSync(file).size <= 8000) return [];
       const content = readFileSync(file, "utf8");
       if (isImportOnlyStyleContent(content)) return [];
       return [
