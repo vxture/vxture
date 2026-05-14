@@ -42,8 +42,26 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
   [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
-  [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],  [normalize("portals/admin/src/styles/admin-assistant.css"), "admin assistant.css"],  [normalize("portals/admin/src/styles/admin-base.css"), "admin base.css"],  [normalize("portals/admin/src/styles/admin-directory.css"), "admin directory.css"],  [normalize("portals/admin/src/styles/admin-governance.css"), "admin governance.css"],  [normalize("portals/admin/src/styles/admin-management.css"), "admin management.css"],  [normalize("portals/admin/src/styles/admin-operations.css"), "admin operations.css"],  [normalize("portals/admin/src/styles/admin-overview.css"), "admin overview.css"],  [normalize("portals/admin/src/styles/admin-permissions.css"), "admin permissions.css"],  [normalize("portals/admin/src/styles/admin-products.css"), "admin products.css"],
-  [normalize("portals/admin/src/styles/admin-roles.css"), "admin roles.css"],  [normalize("portals/admin/src/styles/admin-shell.css"), "admin shell.css"],  [normalize("portals/console/src/app/globals.css"), "console globals.css"],
+  [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],
+  [normalize("portals/admin/src/styles/admin-assistant.css"), "admin assistant.css"],
+  [normalize("portals/admin/src/styles/admin-auth-captcha.css"), "admin auth captcha.css"],
+  [normalize("portals/admin/src/styles/admin-base.css"), "admin base.css"],
+  [normalize("portals/admin/src/styles/admin-directory.css"), "admin directory.css"],
+  [normalize("portals/admin/src/styles/admin-governance.css"), "admin governance.css"],
+  [normalize("portals/admin/src/styles/admin-management-pills.css"), "admin management pills.css"],
+  [normalize("portals/admin/src/styles/admin-management.css"), "admin management.css"],
+  [normalize("portals/admin/src/styles/admin-operations.css"), "admin operations.css"],
+  [normalize("portals/admin/src/styles/admin-overview.css"), "admin overview.css"],
+  [normalize("portals/admin/src/styles/admin-permissions.css"), "admin permissions.css"],
+  [normalize("portals/admin/src/styles/admin-placeholder.css"), "admin placeholder.css"],
+  [normalize("portals/admin/src/styles/admin-platform-autonomy.css"), "admin platform autonomy.css"],
+  [normalize("portals/admin/src/styles/admin-products.css"), "admin products.css"],
+  [normalize("portals/admin/src/styles/admin-roles.css"), "admin roles.css"],
+  [normalize("portals/admin/src/styles/admin-service-health.css"), "admin service health.css"],
+  [normalize("portals/admin/src/styles/admin-shell.css"), "admin shell.css"],
+  [normalize("portals/admin/src/styles/admin-tenant-detail.css"), "admin tenant detail.css"],
+  [normalize("portals/admin/src/styles/admin-workspace-switcher.css"), "admin workspace switcher.css"],
+  [normalize("portals/console/src/app/globals.css"), "console globals.css"],
   [normalize("portals/website/src/app/globals.css"), "website globals.css"],
 ]);
 const FONT_LOADER_ALLOWLIST = [
@@ -276,6 +294,24 @@ const rules = [
         file,
         lineNumber,
         "CSS 入口不能 import *-part-N.css 机械叶子；请改为语义叶子文件名。",
+        line,
+      );
+    },
+  },
+  {
+    id: "ds/no-admin-global-concrete-style-import",
+    description: "Admin globals 只能导入受入口约束的稳定样式入口，不能直接导入具体规则叶子。",
+    checkLine(file, line, lineNumber) {
+      if (normalize(file) !== "portals/admin/src/app/globals.css") return null;
+      const match = line.match(/@import\s+["']\.\.\/styles\/([^"']+\.css)["'];/);
+      if (!match) return null;
+
+      const entry = normalize(`portals/admin/src/styles/${match[1]}`);
+      if (IMPORT_ONLY_STYLE_ENTRIES.has(entry)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "admin globals 只能导入受 ds/no-style-entry-rules 约束的稳定样式入口；请先创建 import-only wrapper。",
         line,
       );
     },

@@ -1,0 +1,914 @@
+.vx-tenant-pill {
+  min-height: var(--vx-admin-management-size-15r);
+  padding: 0 var(--vx-admin-management-space-05r);
+  border-color: transparent;
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.vx-tenant-pill--active,
+.vx-tenant-pill--normal,
+.vx-tenant-pill--verified,
+.vx-tenant-pill--effective,
+.vx-tenant-pill--success,
+.vx-tenant-pill--closed {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-tenant-pill--trial,
+.vx-tenant-pill--attention,
+.vx-tenant-pill--pending,
+.vx-tenant-pill--invited,
+.vx-tenant-pill--limited,
+.vx-tenant-pill--warning,
+.vx-tenant-pill--open,
+.vx-tenant-pill--processing {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-tenant-pill--suspended,
+.vx-tenant-pill--locked,
+.vx-tenant-pill--cancelled,
+.vx-tenant-pill--rejected,
+.vx-tenant-pill--unverified,
+.vx-tenant-pill--past_due,
+.vx-tenant-pill--disabled,
+.vx-tenant-pill--undefined,
+.vx-tenant-pill--danger,
+.vx-tenant-pill--blocked {
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--tenant-rose);
+}
+
+/* Admin management account-specific pill styles. */
+
+.vx-tenant-pill.vx-account-status-pill--active {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-tenant-pill.vx-account-status-pill--invited {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill.vx-account-status-pill--locked {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 12%, transparent);
+  color: var(--tenant-amber);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+}
+
+.vx-tenant-pill.vx-account-status-pill--disabled {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-account-management-page .vx-tenant-pill.vx-account-muted-pill {
+  background: color-mix(in srgb, var(--vx-color-gray-500) 8%, transparent);
+  color: var(--vx-color-gray-600);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) var(--vx-color-neutral-surface);
+}
+
+/* Admin management risk pill styles. */
+
+.vx-tenant-pill--risk-normal {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 10%, transparent);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-tenant-pill--risk-follow_up {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-tenant-pill--risk-high {
+  background: color-mix(in srgb, var(--vx-color-danger) 18%, transparent);
+  color: var(--vx-color-danger-700);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-danger) 18%, transparent);
+}
+
+.vx-tenant-pill--permission,
+.vx-tenant-pill--member,
+.vx-tenant-pill--product {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill--quota {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-tenant-pill--ticket {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill--ticket-normal {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 10%, transparent);
+  color: var(--vx-color-gray-500);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-tenant-pill--ticket-follow_up {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+  color: var(--tenant-amber);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-warning-600) 16%, transparent);
+}
+
+.vx-tenant-pill--ticket-high {
+  background: color-mix(in srgb, var(--vx-color-danger) 18%, transparent);
+  color: var(--vx-color-danger-700);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) color-mix(in srgb, var(--vx-color-danger) 20%, transparent);
+}
+
+/* Admin management verification and tenant identity pill styles. */
+
+.vx-tenant-pill--company {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-pill--individual {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-verification-pill--verified {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-verification-pill--pending {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-verification-pill--rejected {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-verification-pill--unverified,
+.vx-verification-muted-pill {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 10%, transparent);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-admin-role-muted-pill,
+.vx-tenant-pill--system {
+  background: color-mix(in srgb, var(--vx-color-gray-500) 8%, transparent);
+  color: var(--vx-color-gray-600);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) var(--vx-color-neutral-surface);
+}
+
+.vx-account-management-page .vx-tenant-directory-row__tenant svg,
+.vx-account-management-page .vx-tenant-directory-card header > svg,
+.vx-platform-users-page .vx-tenant-directory-row__tenant svg,
+.vx-platform-users-page .vx-tenant-directory-card header > svg,
+.vx-admin-roles-page .vx-admin-role-row__identity svg,
+.vx-admin-roles-page .vx-tenant-directory-card header > svg {
+  color: var(--vx-color-gray-400);
+}
+
+.vx-admin-role-status-pill--enabled {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-admin-role-status-pill--disabled {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-platform-user-status-pill--pending {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-platform-user-status-pill--attention {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-admin-role-pill--menu {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-admin-role-pill--button {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-admin-role-pill--api {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-product-pill--platform {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-product-pill--agent {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-product-pill--model {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-product-pill--data {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-pill--service {
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-product-pill--self {
+  background: color-mix(in srgb, var(--vx-color-gray-500) 8%, transparent);
+  color: var(--vx-color-gray-600);
+  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) var(--vx-color-neutral-surface);
+}
+
+.vx-product-pill--partner,
+.vx-product-pill--access-partner_config {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-product-pill--active,
+.vx-product-pill--access-ready,
+.vx-product-pill--access-connected,
+.vx-product-pill--access-not_required {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-pill--draft,
+.vx-product-pill--access-draft,
+.vx-product-pill--access-testing {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-product-pill--archived {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-product-pill--access-policy_missing,
+.vx-product-pill--access-config_required {
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-product-capability-pill--mode {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-product-capability-pill--tag {
+  background: color-mix(in srgb, var(--vx-color-gray-500) 8%, transparent);
+  color: var(--vx-color-gray-600);
+}
+
+.vx-product-plan-pill--active {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-plan-pill--inactive,
+.vx-product-plan-pill--empty {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-product-plan-pill--free {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-product-plan-pill--paid {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-product-plan-pill--public {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-plan-pill--private {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-product-plan-pill--quota {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-product-plan-pill--function {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-product-plan-pill--agent {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-product-solution-pill--active,
+.vx-product-solution-pill--public {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-solution-pill--draft,
+.vx-product-solution-pill--tier-pro {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-product-solution-pill--archived,
+.vx-product-solution-pill--internal,
+.vx-product-solution-pill--more {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-product-solution-pill--platform,
+.vx-product-solution-pill--tier-free {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-product-solution-pill--agent {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-product-solution-pill--model,
+.vx-product-solution-pill--tier-enterprise {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-product-solution-pill--data {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-product-solution-pill--service,
+.vx-product-solution-pill--tier-custom {
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-service-plan-pill--active,
+.vx-service-plan-pill--public,
+.vx-service-plan-pill--solution-active {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-service-plan-pill--draft,
+.vx-service-plan-pill--solution-draft {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-service-plan-pill--archived,
+.vx-service-plan-pill--internal,
+.vx-service-plan-pill--more,
+.vx-service-plan-pill--solution-archived {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-service-plan-pill--product-platform {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-service-plan-pill--product-agent {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}
+
+.vx-service-plan-pill--product-model {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-service-plan-pill--product-data {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-service-plan-pill--product-service {
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-subscription-pill--active,
+.vx-subscription-pill--tier-free,
+.vx-subscription-pill--quota-normal {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-subscription-pill--trial,
+.vx-subscription-pill--expiring,
+.vx-subscription-pill--tier-pro,
+.vx-subscription-pill--quota-warning {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-subscription-pill--overdue,
+.vx-subscription-pill--suspended,
+.vx-subscription-pill--quota-danger {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-subscription-pill--cancelled,
+.vx-subscription-pill--cycle,
+.vx-subscription-pill--tier-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-subscription-pill--tier-enterprise {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-order-pill--confirmed,
+.vx-order-pill--payment-paid,
+.vx-order-pill--payment-not_required,
+.vx-order-pill--tier-free {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-order-pill--pending,
+.vx-order-pill--pending_verify,
+.vx-order-pill--payment-pending,
+.vx-order-pill--payment-pending_verify,
+.vx-order-pill--payment-partial,
+.vx-order-pill--tier-pro {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-order-pill--overdue,
+.vx-order-pill--abnormal,
+.vx-order-pill--payment-failed,
+.vx-order-pill--payment-refunding {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-order-pill--closed,
+.vx-order-pill--payment-unpaid,
+.vx-order-pill--payment-closed,
+.vx-order-pill--source,
+.vx-order-pill--tier-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-order-pill--tier-enterprise {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-billing-pill--paid,
+.vx-billing-pill--invoice-issued,
+.vx-billing-pill--invoice-finished {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-billing-pill--unpaid,
+.vx-billing-pill--paying,
+.vx-billing-pill--partial,
+.vx-billing-pill--invoice-applying,
+.vx-billing-pill--invoice-auditing,
+.vx-billing-pill--invoice-sending {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-pill--overdue,
+.vx-billing-pill--invoice-rejected,
+.vx-billing-pill--invoice-red {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-pill--cancelled,
+.vx-billing-pill--invoice-none {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-billing-pill--tier-free {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-billing-pill--tier-pro {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-pill--type-normal,
+.vx-billing-pill--type-adjust,
+.vx-billing-pill--type-supplement,
+.vx-billing-pill--type-prepaid,
+.vx-billing-pill--tier-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-billing-pill--tier-enterprise {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-billing-exception-pill--adjust {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-billing-exception-pill--supplement {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-billing-exception-pill--discount {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-exception-pill--overdue,
+.vx-billing-exception-pill--invoice {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-exception-pill--cancelled {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-invoice-pill--finished,
+.vx-invoice-pill--bill-paid,
+.vx-invoice-pill--tax-enterprise {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-invoice-pill--issued,
+.vx-invoice-pill--sending,
+.vx-invoice-pill--applying,
+.vx-invoice-pill--auditing,
+.vx-invoice-pill--bill-unpaid,
+.vx-invoice-pill--bill-paying,
+.vx-invoice-pill--bill-partial,
+.vx-invoice-pill--bill-overdue {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-invoice-pill--red,
+.vx-invoice-pill--rejected {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-invoice-pill--none,
+.vx-invoice-pill--bill-cancelled,
+.vx-invoice-pill--type-normal,
+.vx-invoice-pill--type-adjust,
+.vx-invoice-pill--type-supplement,
+.vx-invoice-pill--type-prepaid,
+.vx-invoice-pill--type-special_vat,
+.vx-invoice-pill--type-normal_vat,
+.vx-invoice-pill--type-electronic,
+.vx-invoice-pill--type-paper,
+.vx-invoice-pill--type-other,
+.vx-invoice-pill--tax-individual,
+.vx-invoice-pill--tax-government,
+.vx-invoice-pill--tax-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-payment-pill--paid,
+.vx-payment-pill--reconcile-normal,
+.vx-payment-pill--bill-paid {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-payment-pill--pending,
+.vx-payment-pill--pending_verify,
+.vx-payment-pill--partial,
+.vx-payment-pill--reconcile-pending_verify,
+.vx-payment-pill--reconcile-partial,
+.vx-payment-pill--bill-unpaid,
+.vx-payment-pill--bill-paying,
+.vx-payment-pill--bill-partial,
+.vx-payment-pill--bill-overdue {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-payment-pill--failed,
+.vx-payment-pill--refunding,
+.vx-payment-pill--reconcile-overpaid,
+.vx-payment-pill--reconcile-bill_cancelled,
+.vx-payment-pill--reconcile-failed {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-payment-pill--closed,
+.vx-payment-pill--unpaid,
+.vx-payment-pill--not_required,
+.vx-payment-pill--reconcile-unlinked,
+.vx-payment-pill--bill-cancelled,
+.vx-payment-pill--bill-none,
+.vx-payment-pill--source {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+/* Management responsive verification fallback styles. */
+
+.vx-verification-cards .vx-tenant-directory-card__metrics b {
+  font-size: var(--vx-admin-body-size);
+  white-space: normal;
+}
+
+.vx-tenant-empty {
+  min-height: var(--vx-admin-management-size-18r-large);
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  padding: var(--vx-admin-management-space-2r);
+  border: var(--vx-admin-management-line-width-1p) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 58%, transparent);
+}
+
+.vx-tenant-empty .vx-empty-state {
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-model-row__identity p,
+.vx-model-grant-row__model p,
+.vx-model-row__muted,
+.vx-tenant-directory-row small,
+.vx-tenant-directory-card small,
+.vx-tenant-list-card__meta small,
+.vx-tenant-list-card__metrics small,
+.vx-tenant-table__row small,
+.vx-tenant-member-row small,
+.vx-tenant-member-row__name small,
+.vx-tenant-member-row__status small,
+.vx-tenant-member-card small,
+.vx-tenant-usage__numbers small,
+.vx-tenant-audit-list__item small,
+.vx-tenant-audit-list__item em,
+.vx-tenant-ticket small,
+.vx-tenant-ticket em {
+  font-weight: 400;
+}
+
+@media (max-width: 1280px) {
+  .vx-tenant-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vx-platform-users-summary,
+  .vx-admin-roles-summary,
+  .vx-admin-permissions-summary,
+  .vx-model-gateway-summary,
+  .vx-model-strategy-summary,
+  .vx-platform-governance-summary,
+  .vx-audit-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vx-tenant-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .vx-tenant-filters {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+
+  .vx-tenant-directory-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vx-tenant-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-tenant-list {
+    position: static;
+  }
+
+  .vx-tenant-list > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .vx-tenant-summary,
+  .vx-tenant-directory-cards,
+  .vx-tenant-directory-card__metrics,
+  .vx-tenant-list > div,
+  .vx-tenant-detail__metrics,
+  .vx-tenant-readonly-grid,
+  .vx-tenant-admin-row,
+  .vx-tenant-config-row--three,
+  .vx-tenant-config-row--contact,
+  .vx-tenant-tab-grid--two,
+  .vx-tenant-tab-grid--risk,
+  .vx-tenant-subscription__metrics,
+  .vx-tenant-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-platform-users-summary,
+  .vx-admin-roles-summary,
+  .vx-admin-permissions-summary,
+  .vx-model-gateway-summary,
+  .vx-model-strategy-summary,
+  .vx-platform-governance-summary,
+  .vx-audit-summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .vx-tenant-toolbar {
+    align-items: stretch;
+  }
+
+  .vx-tenant-filters {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+
+  .vx-tenant-search,
+  .vx-tenant-select,
+  .vx-tenant-toolbar .vx-btn {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  .vx-tenant-page-size {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .vx-tenant-toolbar__spacer {
+    display: none;
+  }
+
+  .vx-tenant-view-count {
+    margin-right: auto;
+  }
+
+  .vx-tenant-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .vx-tenant-pagination__actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 960px) {
+  .vx-tenant-detail-summary {
+    padding: var(--vx-admin-management-space-15r);
+  }
+
+  .vx-tenant-detail {
+    padding: 0;
+  }
+
+  .vx-tenant-detail-summary--collapsed {
+    padding-block: var(--vx-admin-management-space-1r);
+  }
+
+  .vx-tenant-detail__header {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-tenant-detail__header > section:not(:last-child) {
+    padding-right: 0;
+    padding-bottom: var(--vx-admin-management-space-1r);
+    border-right: 0;
+    border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--tenant-line);
+  }
+
+  .vx-tenant-block__actions {
+    justify-content: flex-end;
+  }
+
+  .vx-tenant-detail__toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    gap: var(--vx-admin-management-space-075r);
+  }
+}
+
+@media (max-width: 960px) {
+  .vx-tenant-block > .vx-tenant-config-stack,
+  .vx-tenant-block > .vx-tenant-config-row,
+  .vx-tenant-block > .vx-tenant-note,
+  .vx-tenant-block > .vx-tenant-tags {
+    margin-left: 0;
+  }
+
+  .vx-tenant-admin-row {
+    align-items: stretch;
+  }
+
+  .vx-tenant-config-row--contact {
+    align-items: stretch;
+  }
+
+  .vx-tenant-admin-actions {
+    justify-content: flex-start;
+  }
+
+  .vx-tenant-admin-actions .vx-btn {
+    width: fit-content;
+  }
+
+  .vx-tenant-risk-panel {
+    padding-right: 0;
+    padding-bottom: var(--vx-admin-management-space-15r);
+    border-right: 0;
+    border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--tenant-line);
+  }
+}
+
+@media (max-width: 960px) {
+  .vx-view-mode-switch {
+    justify-content: flex-start;
+  }
+
+  .vx-product-capability-summary,
+  .vx-product-capability-summary__metrics,
+  .vx-product-capability-fields,
+  .vx-product-capability-fields--compact,
+  .vx-product-detail-list__row,
+  .vx-product-detail-list--entitlements .vx-product-detail-list__row,
+  .vx-offline-invoice-dialog__grid,
+  .vx-invoice-receipt-action-dialog__grid,
+  .vx-billing-bill-action-dialog__grid,
+  .vx-service-plan-tier-row,
+  .vx-service-plan-tier-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-product-capability-summary {
+    gap: var(--vx-admin-management-space-125r);
+  }
+
+  .vx-product-detail-list__row,
+  .vx-service-plan-tier-row {
+    align-items: start;
+    gap: var(--vx-admin-management-space-05r);
+  }
+}
