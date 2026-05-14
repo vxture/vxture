@@ -43,6 +43,7 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],
   [normalize("portals/console/src/app/globals.css"), "console globals.css"],
   [normalize("portals/admin/src/styles/admin-management.css"), "admin management.css"],
+  [normalize("portals/admin/src/styles/admin-overview.css"), "admin overview.css"],
   [normalize("portals/website/src/app/globals.css"), "website globals.css"],
   [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],
   [normalize("agent-studio/vela/src/app/globals.css"), "Vela globals.css"],
