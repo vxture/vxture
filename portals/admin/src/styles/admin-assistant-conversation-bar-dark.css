@@ -1,0 +1,8 @@
+.dark .vx-assistant-conversation-bar__actions button {
+  color: var(--vx-shell-muted, var(--vx-color-text-muted));
+}
+
+.dark .vx-assistant-conversation-bar__actions button:hover {
+  background: var(--vx-shell-hover, var(--vx-color-shell-hover));
+  color: var(--vx-shell-ink, var(--vx-color-brand-200));
+}

@@ -1,0 +1,9 @@
+.vx-admin-role-permission-dialog__icon {
+  width: var(--vx-admin-roles-size-275r);
+  height: var(--vx-admin-roles-size-275r);
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-400);
+}

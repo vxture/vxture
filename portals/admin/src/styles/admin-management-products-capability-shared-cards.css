@@ -1,0 +1,6 @@
+.vx-product-plan-card__description,
+.vx-product-solution-card__description {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  line-height: 1.6;
+}

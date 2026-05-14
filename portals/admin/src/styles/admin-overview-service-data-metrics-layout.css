@@ -1,0 +1,21 @@
+.admin-overview-inline,
+.admin-overview-rankings,
+.admin-overview-category-grid,
+.admin-overview-rating {
+  display: grid;
+  gap: var(--vx-admin-overview-space-1r);
+}
+
+.admin-overview-inline {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-admin-overview-space-2r);
+}
+
+.admin-overview-inline--wrap {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.admin-overview-two-column {
+  grid-template-columns: minmax(0, 0.72fr) minmax(var(--vx-admin-overview-grid-column-xl), 1fr);
+  align-items: start;
+}

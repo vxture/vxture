@@ -1,0 +1,18 @@
+.vx-admin-role-permission-dialog__body {
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  gap: var(--vx-admin-roles-space-1r);
+  padding-right: var(--vx-admin-roles-space-025r);
+}
+
+.vx-admin-role-permission-dialog__group {
+  display: grid;
+  gap: var(--vx-admin-roles-space-075r);
+}
+
+.vx-admin-role-permission-dialog__group h3 {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 760;
+}

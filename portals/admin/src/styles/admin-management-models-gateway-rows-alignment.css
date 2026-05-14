@@ -1,0 +1,22 @@
+.vx-model-gateway-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant,
+.vx-model-gateway-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-gateway-row__capabilities {
+  justify-self: start;
+  text-align: left;
+}
+
+.vx-model-gateway-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-gateway-row__status,
+.vx-model-gateway-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-gateway-row__link,
+.vx-model-gateway-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-gateway-row__source {
+  justify-self: center;
+  text-align: center;
+}

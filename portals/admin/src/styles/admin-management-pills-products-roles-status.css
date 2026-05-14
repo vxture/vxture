@@ -1,0 +1,19 @@
+.vx-admin-role-status-pill--enabled {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-admin-role-status-pill--disabled {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-platform-user-status-pill--pending {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-platform-user-status-pill--attention {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}

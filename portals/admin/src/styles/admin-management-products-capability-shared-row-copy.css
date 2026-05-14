@@ -1,0 +1,6 @@
+.vx-product-plan-row__price strong,
+.vx-product-plan-row__subscriptions strong,
+.vx-product-solution-row__subscriptions strong,
+.vx-product-solution-row__updated strong {
+  font-size: var(--vx-admin-body-size);
+}

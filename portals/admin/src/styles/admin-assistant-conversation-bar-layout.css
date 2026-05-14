@@ -1,0 +1,20 @@
+.vx-assistant-conversation-bar {
+  min-width: 0;
+  min-height: var(--vx-admin-assistant-control-size-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-assistant-space-panel);
+  padding: 0 var(--vx-admin-assistant-space-3xs);
+  color: var(--vx-console-muted);
+}
+
+.vx-assistant-conversation-bar span {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--vx-admin-assistant-text-caption);
+  font-weight: 680;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

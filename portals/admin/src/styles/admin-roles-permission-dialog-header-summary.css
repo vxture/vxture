@@ -1,0 +1,12 @@
+.vx-admin-role-permission-dialog__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-roles-space-05r);
+  flex-wrap: wrap;
+}
+
+.vx-admin-role-permission-dialog__summary .vx-tenant-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-roles-space-03125r);
+}

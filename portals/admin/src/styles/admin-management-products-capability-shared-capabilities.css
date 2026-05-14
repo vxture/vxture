@@ -1,0 +1,22 @@
+.vx-product-solution-card__capabilities {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r) var(--vx-admin-management-space-075r);
+  flex-wrap: wrap;
+}
+
+.vx-product-solution-card__capabilities span {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-0375r);
+  color: var(--vx-color-gray-700);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+}
+
+.vx-product-solution-card__capabilities svg {
+  flex: 0 0 auto;
+  color: var(--tenant-blue);
+}

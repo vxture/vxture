@@ -1,0 +1,21 @@
+.vx-admin-permission-tree__workspace > header strong,
+.vx-admin-permission-tree__workspace > header p {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-admin-permission-tree__workspace > header strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 820;
+  line-height: 1.35;
+}
+
+.vx-admin-permission-tree__workspace > header p {
+  margin: 0;
+  color: var(--vx-color-gray-500);
+  font-size: var(--vx-admin-caption-size);
+  line-height: 1.35;
+}

@@ -1,0 +1,21 @@
+.vx-subscription-status-dot--active {
+  --subscription-status-dot: var(--tenant-green);
+  --subscription-status-halo: color-mix(in srgb, var(--vx-color-success) 12%, transparent);
+}
+
+.vx-subscription-status-dot--trial,
+.vx-subscription-status-dot--expiring {
+  --subscription-status-dot: var(--tenant-amber);
+  --subscription-status-halo: color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+}
+
+.vx-subscription-status-dot--overdue,
+.vx-subscription-status-dot--suspended {
+  --subscription-status-dot: var(--tenant-rose);
+  --subscription-status-halo: color-mix(in srgb, var(--vx-color-danger) 14%, transparent);
+}
+
+.vx-subscription-status-dot--cancelled {
+  --subscription-status-dot: var(--vx-color-gray-400);
+  --subscription-status-halo: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
