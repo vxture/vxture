@@ -20,7 +20,8 @@
 - DS `platform.css` 已拆分为稳定聚合入口和 `platform-*` 分层模块，后续可按 L2/L3/L4 边界逐模块收敛。
 - DS `console.css` 已拆分为稳定 Console portal style pack 入口和 `console-*` 模块。
 - admin `admin-management.css` 已拆分为稳定聚合入口和 domain 模块；入口仅保留 `@import`。
-- `lint:design` 已用 `ds/no-style-entry-rules` 约束 `platform.css` / `console.css` / `admin-management.css` 保持 import-only。
+- website `globals.css` 已拆分为稳定聚合入口和 `website-*` 模块。
+- `lint:design` 已用 `ds/no-style-entry-rules` 约束 `platform.css` / `console.css` / `admin-management.css` / website `globals.css` 保持 import-only。
 
 ## 审计命令
 
@@ -80,7 +81,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 2. P1：拆分 DS `platform.css`。状态：已完成机械拆分；`platform.css` 保持稳定聚合入口，具体规则分布到 core/account/notifications/tenant-settings/layout/models/access/shell/content 模块。后续继续逐模块判断 L2 留 DS、L3/L4 回 portal/domain。验收：DS lint/build、`pnpm lint:design`、admin build、console build 通过。
 3. P1：重整 Console 样式边界。状态：已完成机械拆分；`console.css` 保持稳定公开入口，具体规则分布到 base/shell-layout/tenant-switcher/assistant/shell-chrome/responsive 模块。后续继续逐模块判定哪些是 Console L3 portal 体验，哪些可升级为 DS L2 平台模式。验收：DS lint/build、`pnpm lint:design`、console build 通过。
 4. P1：继续收敛 Admin 管理域。状态：已完成机械拆分；`admin-management.css` 保持稳定聚合入口，具体规则分布到 core/directory/models/commerce/products/tenant-workspace 模块。验收：admin build、`pnpm lint:design` 通过；入口降为 8 行。
-5. P1：补强分层 guardrail。状态：已完成；`ds/no-style-entry-rules` 已约束 DS/platform、DS/console 和 admin management 大入口保持 import-only，`platform-*` 模块继续纳入 DS semantic CSS 约束。验收：`pnpm lint:design` 通过；baseline 仍为空。
+5. P1：补强分层 guardrail。状态：已完成；`ds/no-style-entry-rules` 已约束 DS/platform、DS/console、admin management 和 website globals 大入口保持 import-only，`platform-*` 模块继续纳入 DS semantic CSS 约束。验收：`pnpm lint:design` 通过；baseline 仍为空。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性
@@ -374,7 +375,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 3. P0：应用侧私有 token / 原生控件 / 原生表格 / 设计型 inline style / 硬编码尺度。状态：已完成；`design-system-baseline.json` 为空 baseline，新增违规由 `pnpm lint:design` 阻断。
 4. P1：应用通用 UI 组合能力回收到 DS。状态：已完成主要高频路径；DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard 已公共导出并被 admin/console/agent-studio/website 高频场景消费。
 5. P1：DS 消费者质量门禁一致化。状态：已完成；website/admin/console/agent-studio/vela/business/ruyin/agent-studio/agent-template/@vxture/design-system 均有真实 lint，新增消费者继续按同口径巡检。
-6. P1：持续巡检新增页面。状态：进行中；新增列表、表单、弹窗、菜单、分页、表格必须先复用 DS，不足时先补 DS 再落应用。
+6. P1：持续巡检新增页面。状态：进行中；新增列表、表单、弹窗、菜单、分页、表格必须先复用 DS，不足时先补 DS 再落应用；portal 全局入口只做 import 聚合。
 7. P2：DS README 与包说明组件清单同步。状态：已完成；README、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 与包版本、25 个 UI 组件、公共导出入口一致。
 
 ## 本轮梳理（2026-05-12）

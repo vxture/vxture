@@ -41,6 +41,7 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
   [normalize("portals/admin/src/styles/admin-management.css"), "admin management.css"],
+  [normalize("portals/website/src/app/globals.css"), "website globals.css"],
 ]);
 const FONT_LOADER_ALLOWLIST = [
   /^portals\/[^/]+\/src\/app\/layout\.tsx$/,
