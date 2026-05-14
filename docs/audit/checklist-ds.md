@@ -195,6 +195,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    第二阶段第六批：已将 depth>=4 的 14 个业务子域入口转为叶子模块，删除 70 个冗余子叶子，并从 `ds/no-style-entry-rules` 回收对应中层入口约束；admin CSS 文件数由 312 收敛到 242，import-only 入口由 70 收敛到 56，depth>=4 的全叶子单父候选已清零。
    第二阶段第七批：已将剩余 45 个 depth=3 应用域入口转为叶子模块，删除 166 个冗余子叶子，并从 `ds/no-style-entry-rules` 回收对应入口约束；admin CSS 文件数由 242 收敛到 76，import-only 入口由 56 收敛到 11，仅保留 top-level 聚合边界。
    第二阶段第八批：已将 `globals.css` 直接导入的 7 个具体规则入口补成稳定 wrapper，具体规则迁入 `*-content.css`；admin CSS 文件数由 76 调整到 83，import-only 入口由 11 调整到 18，所有 admin globals 本地样式入口均受 `ds/no-style-entry-rules` 约束。
+   第二阶段第九批：已将 website、Vela、Ruyin 的 `globals.css` 本地样式导入统一补成稳定 wrapper，具体规则迁入 `*-content.css`；新增 5 个 wrapper 入口约束，并将 globals 本地 concrete import 守卫从 admin 泛化到所有前端应用。
 5. P1：补强分层 guardrail。状态：已完成并持续收敛；`ds/no-style-entry-rules` 约束 DS style pack、各应用 globals 和 admin 当前保留的高层聚合入口保持 import-only；低/中层语义模块在完成机械拆分后按批次回收为可承载本域规则的叶子模块。验收：`pnpm lint:design` 通过；baseline 仍为空。
    本轮增量：`ds/no-style-entry-rules` 已新增约束 admin assistant messages bubbles、admin service health core、admin management commerce subscriptions list、admin management commerce transactions billing/payments、admin management products capability lists、admin overview models metrics、admin overview metrics pulse 入口保持 import-only。
    第二轮增量：`ds/no-style-entry-rules` 已新增约束 admin operations skills、admin platform autonomy domains/panels、admin auth captcha puzzle、admin shell core actions、admin management directory commerce grids、admin service health summary toolbar controls、admin assistant panel floating、admin management commerce transactions invoices、admin permissions tree node title、admin management tenant workspace cards 入口保持 import-only。
@@ -216,6 +217,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    第二阶段第六批：已继续把 depth>=4 的业务子域聚合入口回收为叶子模块，并补回 7 个仍需保留的高层聚合入口 guardrail；当前保留的 import-only 入口与 `ds/no-style-entry-rules` 完全对齐。
    第二阶段第七批：已继续把 depth=3 应用域聚合入口回收为叶子模块；当前 `ds/no-style-entry-rules` 只约束 11 个 admin top-level 聚合入口，admin CSS 依赖图无缺失 import、无陈旧 guardrail。
    第二阶段第八批：已新增 `ds/no-admin-global-concrete-style-import`，要求 admin `globals.css` 只能导入受 `ds/no-style-entry-rules` 约束的稳定入口；新增的 `*-content.css` 承载具体规则，入口层保持 import-only。
+   第二阶段第九批：已将守卫升级为 `ds/no-global-concrete-style-import`，覆盖 `portals/*`、`agent-studio/*`、`business/*` 的 `globals.css` 本地样式导入；website、Vela、Ruyin 的本地入口层已对齐 import-only；同时新增 `ds/no-stale-style-entry-rules`，防止 import-only 入口约束指向不存在文件。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性

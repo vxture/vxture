@@ -39,7 +39,10 @@ const DS_SEMANTIC_STYLE_PATHS = new Set([
 ]);
 const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("agent-studio/vela/src/app/globals.css"), "Vela globals.css"],
+  [normalize("agent-studio/vela/src/styles/vela-chat.css"), "Vela chat.css"],
+  [normalize("agent-studio/vela/src/styles/vela-tool.css"), "Vela tool.css"],
   [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],
+  [normalize("business/ruyin/src/styles/ruyin-base.css"), "Ruyin base.css"],
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
   [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
   [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],
@@ -63,6 +66,8 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("portals/admin/src/styles/admin-workspace-switcher.css"), "admin workspace switcher.css"],
   [normalize("portals/console/src/app/globals.css"), "console globals.css"],
   [normalize("portals/website/src/app/globals.css"), "website globals.css"],
+  [normalize("portals/website/src/styles/website-legal.css"), "website legal.css"],
+  [normalize("portals/website/src/styles/website-marketing.css"), "website marketing.css"],
 ]);
 const FONT_LOADER_ALLOWLIST = [
   /^portals\/[^/]+\/src\/app\/layout\.tsx$/,
@@ -299,19 +304,22 @@ const rules = [
     },
   },
   {
-    id: "ds/no-admin-global-concrete-style-import",
-    description: "Admin globals 只能导入受入口约束的稳定样式入口，不能直接导入具体规则叶子。",
+    id: "ds/no-global-concrete-style-import",
+    description: "前端 globals 只能导入受入口约束的稳定样式入口，不能直接导入具体规则叶子。",
     checkLine(file, line, lineNumber) {
-      if (normalize(file) !== "portals/admin/src/app/globals.css") return null;
+      const normalizedFile = normalize(file);
+      const globalsMatch = normalizedFile.match(/^(portals|agent-studio|business)\/([^/]+)\/src\/app\/globals\.css$/);
+      if (!globalsMatch) return null;
+
       const match = line.match(/@import\s+["']\.\.\/styles\/([^"']+\.css)["'];/);
       if (!match) return null;
 
-      const entry = normalize(`portals/admin/src/styles/${match[1]}`);
+      const entry = normalize(`${globalsMatch[1]}/${globalsMatch[2]}/src/styles/${match[1]}`);
       if (IMPORT_ONLY_STYLE_ENTRIES.has(entry)) return null;
       return violation(
         file,
         lineNumber,
-        "admin globals 只能导入受 ds/no-style-entry-rules 约束的稳定样式入口；请先创建 import-only wrapper。",
+        "前端 globals 只能导入受 ds/no-style-entry-rules 约束的稳定样式入口；请先创建 import-only wrapper。",
         line,
       );
     },
@@ -516,6 +524,22 @@ for (const file of files) {
       const item = rule.checkLine(file, line, lineNumber);
       if (item) violations.push({ rule, ...item });
     }
+  });
+}
+
+const staleStyleEntryRule = {
+  id: "ds/no-stale-style-entry-rules",
+  description: "import-only 样式入口约束不能指向不存在的文件。",
+};
+for (const entry of IMPORT_ONLY_STYLE_ENTRIES.keys()) {
+  const target = path.join(ROOT, entry);
+  if (exists(target)) continue;
+  violations.push({
+    rule: staleStyleEntryRule,
+    file: entry,
+    line: 1,
+    message: "从 IMPORT_ONLY_STYLE_ENTRIES 移除陈旧入口，或恢复对应 import-only 样式文件。",
+    source: entry,
   });
 }
 
