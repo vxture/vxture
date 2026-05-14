@@ -1,0 +1,47 @@
+.vx-order-row__order,
+.vx-order-row__tenant,
+.vx-order-row__solution,
+.vx-order-row__plan,
+.vx-order-row__amount,
+.vx-order-row__status {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-order-row__tenant {
+  justify-self: start;
+  grid-template-columns: var(--vx-admin-management-track-2r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+  text-align: left;
+}
+
+.vx-order-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-order-row__order,
+.vx-order-row__solution,
+.vx-order-row__plan {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-order-row__amount,
+.vx-order-row__status {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.vx-order-row__order small,
+.vx-order-row__tenant small,
+.vx-order-row__solution small,
+.vx-order-row__plan small,
+.vx-order-row__amount small,
+.vx-order-row__status small {
+  margin-top: 0;
+  font-weight: 400;
+}

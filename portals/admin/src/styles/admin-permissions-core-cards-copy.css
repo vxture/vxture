@@ -1,0 +1,33 @@
+.vx-admin-permission-card p,
+.vx-admin-permission-card dd {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-admin-permission-card strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 800;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.vx-admin-permission-card code {
+  color: var(--vx-color-gray-500);
+  font-family: var(--font-mono);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 680;
+}
+
+.vx-admin-permission-card p {
+  margin: 0;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  line-height: 1.45;
+}

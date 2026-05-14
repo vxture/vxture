@@ -1,0 +1,8 @@
+.vx-tenant-directory-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-directory-card-footer-gap);
+  padding-top: var(--vx-admin-directory-card-footer-padding-top);
+  border-top: var(--vx-admin-directory-list-border-width) dashed var(--vx-color-auth-border);
+}

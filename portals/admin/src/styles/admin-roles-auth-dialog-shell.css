@@ -1,0 +1,21 @@
+.vx-admin-role-auth-dialog__panel {
+  width: var(--vx-admin-roles-dialog-max-width-xl);
+  max-height: min(var(--vx-admin-roles-panel-max-height-lg), calc(100vh - var(--vx-admin-roles-size-2r)));
+}
+
+.vx-admin-role-auth-dialog__toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vx-admin-roles-space-075r);
+}
+
+.vx-admin-role-auth-dialog__error {
+  margin: 0;
+  padding: var(--vx-admin-roles-space-0625r) var(--vx-admin-roles-space-075r);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--vx-color-danger-700);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+}

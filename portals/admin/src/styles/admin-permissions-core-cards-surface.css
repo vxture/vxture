@@ -1,0 +1,14 @@
+.vx-admin-permission-card {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-permission-space-075r);
+  padding: var(--vx-admin-permission-space-0875r);
+  border: var(--vx-admin-permission-line-width-1p) solid color-mix(in srgb, var(--vx-color-gray-500) 14%, transparent);
+  border-top: var(--vx-admin-permission-line-width-2p) solid var(--tenant-row-tone, var(--vx-color-auth-accent));
+  border-radius: var(--vx-admin-permission-card-radius);
+  background: transparent;
+}
+
+.vx-admin-permission-card--disabled {
+  opacity: 0.66;
+}

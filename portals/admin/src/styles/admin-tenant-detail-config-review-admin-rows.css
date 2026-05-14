@@ -1,0 +1,28 @@
+.vx-tenant-admin-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns:
+    minmax(var(--vx-admin-management-track-9r), 0.85fr) minmax(var(--vx-admin-management-grid-column-md), 1.2fr) minmax(var(--vx-admin-management-track-8r), 0.7fr)
+    auto;
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-admin-row__cell {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-0375r);
+}
+
+.vx-tenant-admin-row__cell strong {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  overflow: hidden;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

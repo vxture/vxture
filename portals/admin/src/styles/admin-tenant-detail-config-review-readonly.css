@@ -1,0 +1,19 @@
+.vx-tenant-readonly-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-readonly-field {
+  padding-bottom: var(--vx-admin-management-space-075r);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--vx-color-auth-border);
+}
+
+.vx-tenant-readonly-field strong {
+  overflow: hidden;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

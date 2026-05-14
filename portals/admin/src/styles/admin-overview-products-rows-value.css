@@ -1,0 +1,28 @@
+.admin-overview-product-ranking__value-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vx-admin-overview-space-05r);
+  white-space: nowrap;
+}
+
+.admin-overview-product-ranking__row b {
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.admin-overview-product-ranking__value-line em {
+  min-height: var(--vx-admin-overview-size-135r);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-overview-space-045r);
+  border-radius: var(--admin-overview-card-radius);
+  background: var(--overview-tone-soft);
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 800;
+}

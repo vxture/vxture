@@ -1,0 +1,21 @@
+.admin-overview-product-ranking__row div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-product-ranking__row strong {
+  overflow: hidden;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-overview-product-ranking__row small {
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 700;
+  white-space: nowrap;
+}

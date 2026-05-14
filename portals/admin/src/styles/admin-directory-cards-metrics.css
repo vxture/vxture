@@ -1,0 +1,15 @@
+.vx-tenant-directory-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-admin-directory-card-metrics-gap);
+}
+
+.vx-tenant-directory-card__metrics span {
+  display: grid;
+  gap: var(--vx-admin-directory-card-metric-gap);
+}
+
+.vx-tenant-directory-card__metrics b {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-card-title-size);
+}
