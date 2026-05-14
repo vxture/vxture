@@ -1,0 +1,11 @@
+.vx-verification-operation-row {
+  cursor: pointer;
+}
+
+.vx-verification-operation-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-verification-operation-row__select {
+  justify-self: center;
+}

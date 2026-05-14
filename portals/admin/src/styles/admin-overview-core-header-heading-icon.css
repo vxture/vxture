@@ -1,0 +1,29 @@
+.admin-overview-heading__icon {
+  width: var(--vx-admin-overview-size-2r);
+  height: var(--vx-admin-overview-size-2r);
+  display: inline-grid;
+  place-items: center;
+  margin-top: var(--vx-admin-overview-space-0125r);
+  color: var(--vx-color-auth-accent);
+}
+
+.vx-page-header--icon-user .admin-overview-heading__icon,
+.vx-page-header--icon-role .admin-overview-heading__icon {
+  color: var(--vx-color-gray-400);
+}
+
+.admin-overview-heading--page .admin-overview-heading__icon {
+  width: var(--vx-admin-overview-size-25r);
+  height: var(--vx-admin-overview-size-25r);
+  margin-top: 0;
+}
+
+.admin-overview-heading__icon svg {
+  width: var(--vx-admin-overview-size-2r);
+  height: var(--vx-admin-overview-size-2r);
+}
+
+.admin-overview-heading--page .admin-overview-heading__icon svg {
+  width: var(--vx-admin-overview-size-25r);
+  height: var(--vx-admin-overview-size-25r);
+}

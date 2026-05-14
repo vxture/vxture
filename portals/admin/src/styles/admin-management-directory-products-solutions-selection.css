@@ -1,0 +1,11 @@
+.vx-product-operation-row {
+  cursor: pointer;
+}
+
+.vx-product-operation-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-product-operation-row__select {
+  justify-self: center;
+}

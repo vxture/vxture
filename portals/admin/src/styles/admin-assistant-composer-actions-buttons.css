@@ -1,0 +1,30 @@
+.vx-assistant-composer-button,
+.vx-assistant-send-button {
+  width: var(--vx-admin-assistant-control-size-md);
+  height: var(--vx-admin-assistant-control-size-md);
+  min-width: var(--vx-admin-assistant-control-size-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--vx-shell-radius-pill, var(--vx-radius-full));
+  background: transparent;
+  color: var(--vx-shell-muted, var(--vx-color-text-secondary));
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.vx-assistant-composer-button:hover {
+  background: var(--vx-shell-hover, color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent));
+  color: var(--vx-console-brand-strong);
+}
+
+.dark .vx-assistant-composer-button,
+.dark .vx-assistant-send-button {
+  color: var(--vx-shell-muted, var(--vx-color-text-muted));
+}

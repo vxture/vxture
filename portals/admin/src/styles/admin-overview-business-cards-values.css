@@ -1,0 +1,35 @@
+.admin-overview-business-card__value-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-05r);
+  flex-wrap: nowrap;
+}
+
+.admin-overview-business-card__main strong {
+  overflow: hidden;
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-page-title-size);
+  font-weight: 780;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-overview-business-card__main strong.admin-overview-metric-value--danger {
+  color: var(--vx-color-danger);
+}
+
+.admin-overview-business-card__value-line em {
+  min-height: var(--vx-admin-overview-size-15r);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-overview-space-05r);
+  border-radius: var(--admin-overview-card-radius);
+  background: var(--overview-tone-soft);
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+}

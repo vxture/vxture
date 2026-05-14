@@ -1,0 +1,6 @@
+.auth-captcha-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--vx-color-gray-900) 28%, transparent);
+  backdrop-filter: blur(var(--vx-admin-captcha-modal-backdrop-blur));
+}

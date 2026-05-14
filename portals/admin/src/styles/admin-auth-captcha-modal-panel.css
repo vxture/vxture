@@ -1,0 +1,12 @@
+.auth-captcha-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: var(--vx-admin-captcha-modal-panel-width);
+  display: grid;
+  gap: var(--vx-admin-captcha-panel-gap);
+  padding: var(--vx-admin-captcha-panel-padding);
+  border: var(--vx-admin-captcha-panel-border-width) solid color-mix(in srgb, var(--vx-color-shell-brand) 16%, transparent);
+  border-radius: var(--vx-radius-xl);
+  background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
+  box-shadow: 0 var(--vx-admin-captcha-panel-shadow-y) var(--vx-admin-captcha-panel-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 20%, transparent);
+}

@@ -1,0 +1,11 @@
+.auth-captcha__slider {
+  position: relative;
+  height: var(--vx-admin-captcha-slider-height);
+  overflow: hidden;
+  border: var(--vx-admin-captcha-panel-border-width) solid color-mix(in srgb, var(--vx-color-shell-brand) 16%, transparent);
+  border-radius: var(--vx-radius-lg);
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--vx-color-shell-brand) 6%, transparent), color-mix(in srgb, var(--vx-color-shell-brand) 1.8%, transparent)),
+    var(--vx-color-white);
+  box-shadow: inset 0 var(--vx-admin-captcha-surface-highlight-width) 0 color-mix(in srgb, var(--vx-color-white) 80%, transparent);
+}

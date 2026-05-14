@@ -1,0 +1,21 @@
+.vx-assistant-message--error {
+  border-color: color-mix(in srgb, var(--vx-color-error-700) 18%, transparent);
+  background: color-mix(in srgb, var(--vx-color-error-surface) 86%, transparent);
+  color: var(--vx-color-error-800);
+}
+
+.vx-assistant-message--pending {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent));
+  background: color-mix(in srgb, var(--vx-color-white) 54%, transparent);
+  color: var(--vx-console-muted);
+}
+
+.vx-assistant-message--stopped {
+  border-color: color-mix(
+    in srgb,
+    var(--vx-shell-muted, var(--vx-color-gray-500)) 16%,
+    transparent
+  );
+  background: color-mix(in srgb, var(--vx-color-gray-50) 64%, transparent);
+  color: var(--vx-shell-muted, var(--vx-color-gray-500));
+}

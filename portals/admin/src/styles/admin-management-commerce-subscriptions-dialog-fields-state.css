@@ -1,0 +1,11 @@
+.vx-subscription-action-dialog__field textarea:focus,
+.vx-subscription-action-dialog__field input:focus,
+.vx-subscription-action-dialog__field select:focus {
+  outline: var(--vx-admin-management-line-width-2p) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  outline-offset: 0;
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 32%, transparent);
+}
+
+.vx-subscription-action-dialog__error {
+  color: var(--tenant-rose);
+}

@@ -1,0 +1,27 @@
+.dark .vx-assistant-message--assistant {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  background: color-mix(
+    in srgb,
+    var(--vx-shell-surface, color-mix(in srgb, var(--vx-color-gray-900) 56%, transparent)) 88%,
+    transparent
+  );
+}
+
+.dark .vx-assistant-message--pending {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  background: color-mix(
+    in srgb,
+    var(--vx-shell-surface, var(--vx-color-shell-panel)) 78%,
+    transparent
+  );
+}
+
+.dark .vx-assistant-message--stopped {
+  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  background: color-mix(
+    in srgb,
+    var(--vx-shell-surface, color-mix(in srgb, var(--vx-color-gray-900) 44%, transparent)) 72%,
+    transparent
+  );
+  color: var(--vx-shell-muted, var(--vx-color-text-muted));
+}

@@ -1,0 +1,8 @@
+/* Assistant message bubble user tone styles. */
+
+.vx-assistant-message--user {
+  justify-self: end;
+  border-color: var(--vx-shell-line, color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent));
+  background: var(--vx-shell-active-subtle, color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent));
+  color: var(--vx-console-brand-strong);
+}

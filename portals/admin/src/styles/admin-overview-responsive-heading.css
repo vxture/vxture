@@ -1,0 +1,20 @@
+@media (max-width: 960px) {
+  .admin-overview-heading {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .vx-page-header.admin-overview-heading,
+  .vx-models-page .vx-page-header.admin-overview-heading {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .vx-page-header__actions {
+    grid-column: 2 / -1;
+    justify-self: start;
+  }
+
+  .admin-overview-heading > .admin-overview-period {
+    grid-column: 2 / -1;
+    justify-self: start;
+  }
+}

@@ -1,0 +1,19 @@
+/* Admin login captcha component styles. Dimensions must resolve through DS captcha tokens. */
+
+.auth-captcha {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-captcha-gap);
+  touch-action: none;
+  user-select: none;
+}
+
+.auth-captcha-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: var(--vx-admin-captcha-modal-padding);
+}

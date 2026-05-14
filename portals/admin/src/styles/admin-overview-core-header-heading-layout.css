@@ -1,0 +1,13 @@
+/* Admin overview heading layout styles. */
+
+.admin-overview-heading {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--vx-admin-overview-space-15r);
+}
+
+.admin-overview-heading--page {
+  gap: var(--vx-admin-overview-space-2r);
+}

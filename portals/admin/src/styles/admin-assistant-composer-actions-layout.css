@@ -1,0 +1,17 @@
+.vx-assistant-composer-controls,
+.vx-assistant-composer-actions {
+  display: flex;
+  align-items: center;
+}
+
+.vx-assistant-composer-controls {
+  justify-content: space-between;
+  gap: var(--vx-admin-assistant-space-3xl);
+  width: 100%;
+}
+
+.vx-assistant-composer-actions {
+  margin-left: auto;
+  justify-content: flex-end;
+  gap: var(--vx-admin-assistant-space-3xl);
+}
