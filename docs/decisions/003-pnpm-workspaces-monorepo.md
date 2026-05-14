@@ -29,35 +29,32 @@
 
 ### 选项 D：pnpm workspaces + Turborepo
 
-pnpm 原生的 workspace 协议（`workspace:*`），配合 `pnpm-workspace.yaml` 定义包边界；Turborepo 负责任务编排、构建缓存和增量构建。
+pnpm 管包（依赖隔离、本地链接），Turborepo 管速度（构建缓存、并行加速）。两者职责不重叠。
 
-**优点**：
-- 零配置本地包链接，改一个包立即在消费者中生效
-- pnpm 的严格 symlink 策略：禁止引用未声明的包（杜绝幽灵依赖）
-- Content-addressable store 节省磁盘空间
-- Turborepo 的 Pipeline 定义依赖拓扑，自动并行执行无依赖的任务
-- Turborepo 远程缓存：CI 构建结果共享，避免重复构建未变更的包
+**pnpm 的核心价值**：
+- 严格 symlink：禁止引用未声明的包（杜绝幽灵依赖）
+- `workspace:*` 协议：本地包链接，改一个包立即在消费者中生效
+
+**Turborepo 的核心价值（构建加速）**：
+- **缓存**：输入文件未变化则直接复用上次构建输出，跳过重新编译
+- **远程缓存**：CI 跨次共享构建结果，PR 构建复用 main 分支的缓存
+- **并行**：无依赖关系的包同时构建，不排队等待
 
 ## 决策
 
-采用**选项 D（pnpm workspaces + Turborepo）**，不引入 Nx（学习成本高，生成器能力对当前规模过重）。
-
-- pnpm 负责包管理和本地包链接
-- Turborepo 负责构建任务编排（`turbo build`、`turbo test`）和 CI 缓存加速
+采用**选项 D（pnpm workspaces + Turborepo）**，不引入 Nx（生成器能力对当前规模过重）。
 
 ## 后果
 
 **正面：**
-- 修改 `@vxture/shared` 后，所有消费者立即感知，无需发版
-- TypeScript project references 和路径别名（`@vxture/*`）自动工作
-- 严格的依赖声明：每个包只能使用自己 `package.json` 中显式声明的依赖
-- Turborepo 自动识别变更包及其下游，CI 只重新构建受影响的包
-- Turborepo 远程缓存（Remote Cache）可显著缩短 CI 时间
+- 本地开发：`turbo build` 在输入不变时近乎瞬时完成（命中本地缓存）
+- CI：远程缓存显著缩短 PR 流水线时间，未变更的包不重新构建
+- 依赖声明严格：幽灵依赖在 pnpm 安装阶段即暴露，不等到运行时
 
 **负面：**
-- 所有开发者和 CI 必须安装 pnpm（不兼容 npm/yarn 直接安装）
-- Turborepo `turbo.json` pipeline 配置需要随包结构变化维护
-- 部分 npm 生态工具对 pnpm symlink 有兼容性问题（需要 `.npmrc` 中配置 `node-linker=hoisted` 临时绕过）
+- 所有开发者和 CI 必须安装 pnpm
+- `turbo.json` pipeline 配置需随包结构变化维护
+- 部分工具对 pnpm symlink 有兼容性问题（`.npmrc` 配置 `node-linker=hoisted` 可临时绕过）
 
 ---
 
