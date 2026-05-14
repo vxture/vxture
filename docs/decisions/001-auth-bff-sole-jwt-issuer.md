@@ -50,7 +50,19 @@ auth-bff 负责所有 JWT 签发。其他 BFF 需要签发时通过内部接口 
 | Platform BFF（website / admin / console） | ✅ 已实施 |
 | Business BFF（ruyin / vela / agent-template） | 🔲 规划中（跳转 console 登录，凭已有 JWT 访问） |
 
-Business BFF 无需独立签发——用户在 console 完成登录后，JWT 由 auth-bff 统一签发，Business BFF 只做验证。
+Business BFF 无需独立签发——认证流程如下：
+
+```
+请求到达 Business BFF
+    │
+    ▼
+读取浏览器已有 Cookie（由 console 登录时 auth-bff 签发）
+    │── Cookie 有效 → 验证 JWT → 正常处理请求
+    └── Cookie 缺失 / 无效 / 过期 → 302 跳转 console 登录页
+                                      （携带 redirect 参数，登录后回跳）
+```
+
+Business BFF 只做验证，不签发，不持有签发密钥。
 
 ### Redis 依赖的 fail 策略
 
