@@ -1,0 +1,8 @@
+.vx-assistant-empty__suggestions button::before {
+  counter-increment: assistant-suggestion;
+  content: counter(assistant-suggestion, decimal-leading-zero);
+  color: var(--vx-shell-icon-muted, var(--vx-color-text-muted));
+  font-size: var(--vx-admin-assistant-text-counter);
+  font-weight: 720;
+  line-height: 1;
+}

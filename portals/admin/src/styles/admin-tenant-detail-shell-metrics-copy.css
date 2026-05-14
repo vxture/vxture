@@ -1,0 +1,27 @@
+.vx-tenant-key-metric span {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 760;
+}
+
+.vx-tenant-key-metric strong {
+  overflow: hidden;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 820;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-tenant-key-metric strong.is-danger {
+  color: var(--tenant-rose);
+}
+
+.vx-tenant-key-metric em {
+  min-width: 0;
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 760;
+  white-space: nowrap;
+}

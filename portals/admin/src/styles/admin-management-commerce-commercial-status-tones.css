@@ -1,0 +1,19 @@
+.vx-commercial-status-dot--normal {
+  --commercial-status-dot: var(--tenant-green);
+  --commercial-status-halo: color-mix(in srgb, var(--vx-color-success) 12%, transparent);
+}
+
+.vx-commercial-status-dot--warning {
+  --commercial-status-dot: var(--tenant-amber);
+  --commercial-status-halo: color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+}
+
+.vx-commercial-status-dot--danger {
+  --commercial-status-dot: var(--tenant-rose);
+  --commercial-status-halo: color-mix(in srgb, var(--vx-color-danger) 14%, transparent);
+}
+
+.vx-commercial-status-dot--muted {
+  --commercial-status-dot: var(--vx-color-gray-400);
+  --commercial-status-halo: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}

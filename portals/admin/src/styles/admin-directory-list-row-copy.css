@@ -1,0 +1,20 @@
+.vx-tenant-directory-row strong,
+.vx-tenant-directory-row small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-tenant-directory-row strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+}
+
+.vx-tenant-directory-row small {
+  margin-top: var(--vx-admin-directory-row-cell-gap);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+}

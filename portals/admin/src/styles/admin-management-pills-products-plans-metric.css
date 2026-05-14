@@ -1,0 +1,14 @@
+.vx-product-plan-pill--quota {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-product-plan-pill--function {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-product-plan-pill--agent {
+  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
+  color: var(--tenant-cyan);
+}

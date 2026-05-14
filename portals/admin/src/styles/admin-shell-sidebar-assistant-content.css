@@ -1,0 +1,30 @@
+.admin-shell-sidebar__assistant-icon {
+  width: var(--vx-admin-sidebar-icon-size);
+  height: var(--vx-admin-sidebar-icon-size);
+  flex: 0 0 var(--vx-admin-sidebar-icon-size);
+  justify-self: center;
+  object-fit: contain;
+}
+
+.admin-shell-sidebar__assistant-copy {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--vx-admin-shell-assistant-copy-gap);
+}
+
+.admin-shell-sidebar__assistant-label {
+  min-width: 0;
+  overflow: hidden;
+  line-height: 1.15;
+  text-align: left;
+  text-overflow: ellipsis;
+}
+
+.admin-shell-sidebar__assistant-tags {
+  display: inline-flex;
+  align-self: center;
+  gap: var(--vx-admin-shell-assistant-tag-gap);
+  transform: translateY(calc(var(--vx-admin-shell-badge-offset) * -1));
+}

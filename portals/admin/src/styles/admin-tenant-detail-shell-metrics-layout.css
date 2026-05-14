@@ -1,0 +1,22 @@
+.vx-tenant-detail__metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+  padding: var(--vx-admin-management-space-1r) 0;
+  border-top: var(--vx-admin-management-line-width-1p) dashed var(--tenant-line);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed var(--tenant-line);
+}
+
+.vx-tenant-key-metric {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-tenant-key-metric p {
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--vx-admin-management-space-05r);
+}

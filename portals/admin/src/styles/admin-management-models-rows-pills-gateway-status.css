@@ -1,0 +1,9 @@
+.vx-model-gateway-row__status .vx-tenant-pill--active {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-model-gateway-row__status .vx-tenant-pill--disabled {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}

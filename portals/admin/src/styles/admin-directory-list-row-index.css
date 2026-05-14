@@ -1,0 +1,18 @@
+.vx-tenant-directory-row__index {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  text-align: center;
+}
+
+.vx-tenant-directory-list__header > span:first-child {
+  text-align: center;
+}
+
+.vx-tenant-directory-list__header > span:first-child,
+.vx-tenant-directory-list__header > span:last-child,
+.vx-tenant-directory-row__index,
+.vx-tenant-directory-row > .vx-tenant-actions {
+  justify-self: center;
+  text-align: center;
+}

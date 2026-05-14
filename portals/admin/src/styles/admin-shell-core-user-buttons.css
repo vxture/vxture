@@ -1,0 +1,33 @@
+.admin-shell-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: var(--vx-shell-radius-control);
+  background: transparent;
+  color: var(--vx-shell-icon);
+  cursor: pointer;
+  line-height: 1;
+  transition:
+    background 160ms ease,
+    color 160ms ease,
+    opacity 160ms ease;
+}
+
+.admin-shell-icon-button:hover,
+.admin-shell-icon-button--active {
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.admin-shell-icon-button:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 var(--vx-admin-shell-header-search-focus-ring-width) var(--vx-shell-focus-ring);
+}
+
+.admin-shell-icon-button--launcher,
+.admin-shell-icon-button--toolbar {
+  width: var(--vx-shell-header-control-size);
+  height: var(--vx-shell-header-control-size);
+}

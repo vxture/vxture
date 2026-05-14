@@ -1,0 +1,11 @@
+.admin-shell {
+  min-width: var(--vx-admin-shell-min-width);
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: var(--vx-admin-header-height) minmax(0, 1fr);
+  overflow-x: hidden;
+  overflow-x: clip;
+  background: var(--vx-console-bg);
+  color: var(--vx-console-text);
+  letter-spacing: 0;
+}

@@ -1,0 +1,24 @@
+.admin-shell-sidebar__assistant-button {
+  width: 100%;
+  min-width: 0;
+  height: var(--vx-admin-shell-rail-size);
+  display: grid;
+  grid-template-columns: var(--vx-admin-shell-rail-track) minmax(0, 1fr);
+  align-items: center;
+  justify-content: flex-start;
+  justify-self: stretch;
+  gap: var(--vx-admin-shell-assistant-gap);
+  padding: 0;
+  border: 0;
+  border-radius: var(--vx-shell-radius-item);
+  background: transparent;
+  color: var(--vx-shell-muted);
+  cursor: pointer;
+  font-size: var(--vx-shell-item-size);
+  font-weight: 660;
+  line-height: 1.15;
+  transition:
+    background 160ms ease,
+    color 160ms ease;
+  white-space: nowrap;
+}

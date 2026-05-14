@@ -1,0 +1,18 @@
+.vx-assistant-panel__mode-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-assistant-space-3xs);
+  padding: var(--vx-admin-assistant-space-3xs);
+  border: var(--vx-admin-assistant-border-width) solid transparent;
+  border-radius: var(--vx-shell-radius-control, var(--vx-admin-assistant-radius-control));
+  background: transparent;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease;
+}
+
+.vx-assistant-panel__mode-group:hover,
+.vx-assistant-panel__mode-group:focus-within {
+  border-color: var(--vx-shell-line, var(--vx-color-border));
+  background: var(--vx-shell-surface, color-mix(in srgb, var(--vx-color-white) 58%, transparent));
+}
