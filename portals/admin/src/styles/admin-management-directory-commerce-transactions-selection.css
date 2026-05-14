@@ -1,0 +1,20 @@
+.vx-order-operation-row,
+.vx-billing-operation-row,
+.vx-invoice-operation-row,
+.vx-payment-operation-row {
+  cursor: pointer;
+}
+
+.vx-order-operation-row--selected,
+.vx-billing-operation-row--selected,
+.vx-invoice-operation-row--selected,
+.vx-payment-operation-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-order-operation-row__select,
+.vx-billing-operation-row__select,
+.vx-invoice-operation-row__select,
+.vx-payment-operation-row__select {
+  justify-self: center;
+}

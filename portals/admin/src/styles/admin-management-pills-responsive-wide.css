@@ -1,0 +1,40 @@
+@media (max-width: 1280px) {
+  .vx-tenant-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vx-platform-users-summary,
+  .vx-admin-roles-summary,
+  .vx-admin-permissions-summary,
+  .vx-model-gateway-summary,
+  .vx-model-strategy-summary,
+  .vx-platform-governance-summary,
+  .vx-audit-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vx-tenant-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .vx-tenant-filters {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+
+  .vx-tenant-directory-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vx-tenant-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-tenant-list {
+    position: static;
+  }
+
+  .vx-tenant-list > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
