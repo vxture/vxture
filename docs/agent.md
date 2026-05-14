@@ -41,15 +41,18 @@ Vxture 是基于 **pnpm workspace monorepo** 的企业 SaaS 平台（TypeScript 
 ```
 docs/
 ├── agent.md              ← 本文件，T0 入口
+├── glossary.md           ← 核心术语表（30 个概念权威定义）
 ├── status.md             ← 平台实施状态（实时更新）
 │
 ├── architecture/         ← 层级结构 / 依赖边界（权威，慢变化）
+├── decisions/            ← 架构决策记录 ADR（记录重大设计的"为什么"）
 ├── ai/                   ← AI 工作规范：编码规则、注释、代码风格、TypeScript 配置
 ├── audit/                ← 工程合规审计：规则、CI 门控、检查清单
 ├── design/               ← 跨包能力域设计（auth / locale / 权限 / 多租户）
+├── development/          ← 本地开发：环境搭建、服务启动、常见问题
 ├── packages/             ← 各包实现上下文（AI 编码时的主要参考）
 ├── product/              ← 产品规格（Vela / Ruyin / Admin 设计）
-├── standards/            ← 工程规范（Git / Locale / Utils）
+├── standards/            ← 工程规范（Git / 测试 / 安全 / Locale / Utils）
 ├── db/                   ← 数据库 Schema 设计与迁移
 └── deployment/           ← 部署方案（基础设施 / 环境变量 / CI-CD）
 ```
@@ -76,6 +79,11 @@ docs/
 | AI 编码规则 | `ai/01-coding-rules.md` |
 | Core 包架构审计 | `audit/checklist-core.md` |
 | Design System 合规审计 | `audit/checklist-ds.md` |
+| 概念不理解 / 术语查找 | `glossary.md` |
+| 为什么这样设计（架构决策） | `decisions/index.md` |
+| 本地开发环境启动 | `development/setup.md` |
+| 测试策略 / 各层测试规范 | `standards/testing.md` |
+| 安全规范 / Secrets 管理 | `standards/security.md` |
 | 平台当前进度 | `status.md` |
 
 ---

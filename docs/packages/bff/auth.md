@@ -21,22 +21,127 @@
 
 其他 BFF 不持有 JWT 签发逻辑，通过 HTTP 调用 `POST /auth/internal/sign` 委托签发。
 
-## 核心接口
+## 接口契约
 
-| 端点 | 方法 | 说明 |
-|------|------|------|
-| `/auth/login` | POST | 邮箱密码登录（source 区分运营/租户） |
-| `/auth/signup` | POST | 邮箱注册 |
-| `/auth/logout` | POST | 登出，吊销 refresh token |
-| `/auth/refresh` | POST | 基于 refresh token 续期 |
-| `/auth/session` | GET | 获取当前登录态 |
-| `/auth/send-phone-code` | POST | 发送手机验证码 |
-| `/auth/login-with-phone` | POST | 手机验证码登录 |
-| `/auth/internal/sign` | POST | **内部接口**：为其他 BFF 签发 JWT Cookie |
-| `/auth/oauth/{provider}/start` | GET | 启动 OAuth 授权跳转 |
-| `/auth/oauth/{provider}/callback` | GET | OAuth 回调处理 |
-| `/auth/crossdomain/token` | GET | 生成跨域一次性 token（30s TTL） |
-| `/auth/crossdomain/verify` | POST | 验证并消费跨域 token（原子 GETDEL） |
+### 公开接口
+
+**POST `/auth/login`** — 邮箱密码登录
+
+```typescript
+// Request
+{ email: string; password: string; source: 'operator' | 'tenant' }
+
+// Response 200
+{ userId: string; userType: 'operator' | 'tenant_user'; tenantId?: string }
+// 同时设置 HttpOnly Cookie：vx_admin_access_token / vx_tenant_access_token
+
+// Error
+{ code: 'INVALID_CREDENTIALS' | 'ACCOUNT_LOCKED'; message: string }
+```
+
+**POST `/auth/signup`** — 邮箱注册
+
+```typescript
+// Request
+{ email: string; password: string; displayName: string }
+
+// Response 201：自动创建 Personal Tenant，返回与 login 相同结构
+// Error
+{ code: 'EMAIL_ALREADY_EXISTS'; message: string }
+```
+
+**POST `/auth/logout`** — 登出
+
+```typescript
+// Request：无 body，读取 Cookie 中的 token
+// Response 200：{ ok: true }
+// 副作用：Redis 黑名单写入 jti，删除 refresh token
+```
+
+**POST `/auth/refresh`** — 续期
+
+```typescript
+// Request：无 body，读取 Cookie 中的 refresh token
+// Response 200：重新签发 access token，写入 Cookie
+// Error
+{ code: 'REFRESH_TOKEN_EXPIRED' | 'REFRESH_TOKEN_INVALID'; message: string }
+```
+
+**GET `/auth/session`** — 获取当前登录态
+
+```typescript
+// Response 200
+{
+  userId: string;
+  userType: 'operator' | 'tenant_user';
+  tenantId?: string;
+  roles: string[];
+  expiresAt: number; // Unix timestamp
+}
+// Response 401（未登录或 token 过期）
+{ code: 'UNAUTHORIZED' }
+```
+
+**GET `/auth/crossdomain/token`** — 跨域一次性 token
+
+```typescript
+// Response 200
+{ token: string; expiresAt: number } // 30s TTL
+```
+
+**POST `/auth/crossdomain/verify`** — 验证跨域 token
+
+```typescript
+// Request
+{ token: string; targetDomain: string }
+
+// Response 200：在目标域设置 Cookie，返回用户信息
+// Error
+{ code: 'TOKEN_EXPIRED' | 'TOKEN_NOT_FOUND'; message: string }
+```
+
+### 内部接口（仅限同网络 BFF 调用）
+
+**POST `/auth/internal/sign`**
+
+```typescript
+// Header：x-vxture-internal-auth: {AUTH_INTERNAL_TOKEN}（必须）
+
+// Request
+{
+  userId: string;
+  userType: 'operator' | 'tenant_user';
+  tenantId?: string;
+  cookieName: string;        // e.g. 'ry_access_token'
+  cookieDomain: string;      // e.g. 'ruyin.ai'
+}
+
+// Response 200
+{ jti: string; expiresAt: number }
+// 副作用：在 Response 中设置对应的 HttpOnly Cookie
+
+// Error
+{ code: 'INVALID_INTERNAL_TOKEN' | 'SIGN_FAILED'; message: string }
+```
+
+### OAuth 接口
+
+```
+GET  /auth/oauth/{provider}/start     → 302 跳转到第三方授权页
+GET  /auth/oauth/{provider}/callback  → 处理回调，签发 JWT，302 跳转到目标页
+
+provider: 'dingtalk' | 'feishu' | 'wecom'
+```
+
+### 统一错误响应格式
+
+```typescript
+{
+  code: string;     // 机器可读错误码
+  message: string;  // 人类可读描述（中文）
+  requestId?: string;
+}
+```
 
 ## 目录结构
 

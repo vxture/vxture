@@ -52,6 +52,41 @@ src/
 └── index.ts
 ```
 
+## 接口契约
+
+**POST `/vela/chat`** — 发起对话（SSE 流式）
+
+```typescript
+// Request Header
+// Cookie: vx_admin_access_token=... 或 vx_tenant_access_token=...（必须）
+// X-Vela-Surface: 'admin' | 'console'（必须）
+
+// Request Body
+{
+  sessionId?: string;   // 不传则创建新会话
+  message: string;      // 用户消息内容
+}
+
+// Response：Content-Type: text/event-stream
+// SSE 事件格式：
+data: { type: 'text_delta'; delta: string }
+data: { type: 'tool_use'; toolName: string; input: Record<string, unknown> }
+data: { type: 'tool_result'; toolName: string; output: unknown }
+data: { type: 'done'; sessionId: string; messageId: string }
+data: { type: 'error'; code: string; message: string }
+
+// HTTP Error（流开始前）
+// 401: { code: 'UNAUTHORIZED' }
+// 403: { code: 'SURFACE_FORBIDDEN'; message: '...' }
+```
+
+**GET `/health`** — 健康检查（无鉴权）
+
+```typescript
+// Response 200
+{ status: 'ok'; version: string }
+```
+
 ## 核心约束（违反破坏安全隔离）
 
 1. Surface 校验**只在 `surface.middleware.ts`** 做，router 不得重复校验

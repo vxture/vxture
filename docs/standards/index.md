@@ -12,3 +12,5 @@
 | [`locale-layer.md`](locale-layer.md) | Locale 层规范：i18n key 命名、翻译文件结构 |
 | [`utils-layer.md`](utils-layer.md) | Utils 层规范：工具函数分层、命名约定 |
 | [`git-workflow.md`](git-workflow.md) | Git 工作流规范：分支策略、提交格式、PR 流程 |
+| [`testing.md`](testing.md) | 测试策略：各层测试类型、禁止 mock DB、E2E 范围 |
+| [`security.md`](security.md) | 安全规范：Secrets 管理、JWT 约束、各层安全边界、CORS |
