@@ -1,5 +1,0 @@
-/* Admin service health catalog style entry. Keep concrete rules in admin-service-health-catalog-* modules. */
-
-@import "./admin-service-health-catalog-cards.css";
-@import "./admin-service-health-catalog-checks.css";
-@import "./admin-service-health-catalog-list.css";

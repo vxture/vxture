@@ -1,8 +1,0 @@
-/* Admin management models rows style entry. Keep concrete rules in admin-management-models-rows-* modules. */
-
-@import "./admin-management-models-rows-gateway.css";
-@import "./admin-management-models-rows-name.css";
-@import "./admin-management-models-rows-role-directory.css";
-@import "./admin-management-models-rows-actions.css";
-@import "./admin-management-models-rows-pills.css";
-@import "./admin-management-models-rows-shared.css";

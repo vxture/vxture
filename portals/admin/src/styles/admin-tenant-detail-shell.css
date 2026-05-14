@@ -1,7 +1,0 @@
-/* Admin tenant detail shell style entry. Keep concrete rules in admin-tenant-detail-shell-* modules. */
-
-@import "./admin-tenant-detail-shell-summary.css";
-@import "./admin-tenant-detail-shell-header.css";
-@import "./admin-tenant-detail-shell-collapsed.css";
-@import "./admin-tenant-detail-shell-actions.css";
-@import "./admin-tenant-detail-shell-metrics.css";

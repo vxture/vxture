@@ -1,7 +1,0 @@
-/* Admin management commerce transactions style entry. Keep concrete rules in admin-management-commerce-transactions-* modules. */
-
-@import "./admin-management-commerce-transactions-dialogs.css";
-@import "./admin-management-commerce-transactions-orders.css";
-@import "./admin-management-commerce-transactions-billing.css";
-@import "./admin-management-commerce-transactions-invoices.css";
-@import "./admin-management-commerce-transactions-payments.css";

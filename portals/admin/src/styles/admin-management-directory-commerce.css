@@ -1,8 +1,0 @@
-/* Admin management directory commerce style entry. Keep concrete rules in admin-management-directory-commerce-* modules. */
-
-@import "./admin-management-directory-commerce-subscriptions.css";
-@import "./admin-management-directory-commerce-grids.css";
-@import "./admin-management-directory-commerce-solutions.css";
-@import "./admin-management-directory-commerce-subscription-alignment.css";
-@import "./admin-management-directory-commerce-transactions.css";
-@import "./admin-management-directory-commerce-growth.css";

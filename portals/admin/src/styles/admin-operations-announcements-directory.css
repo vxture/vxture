@@ -1,8 +1,0 @@
-.vx-announcement-directory-list {
-  grid-template-columns: var(--vx-admin-operations-announcement-grid);
-}
-
-.vx-announcement-directory-list .vx-tenant-directory-list__header,
-.vx-announcement-row {
-  grid-template-columns: var(--vx-admin-operations-announcement-grid);
-}

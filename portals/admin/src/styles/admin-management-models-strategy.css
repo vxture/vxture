@@ -1,7 +1,0 @@
-/* Admin management models strategy style entry. Keep concrete rules in admin-management-models-strategy-* modules. */
-
-@import "./admin-management-models-strategy-lists.css";
-@import "./admin-management-models-strategy-rows.css";
-@import "./admin-management-models-strategy-pills.css";
-@import "./admin-management-models-strategy-cards.css";
-@import "./admin-management-models-strategy-overrides.css";

@@ -1,7 +1,0 @@
-/* Admin management commerce pills style entry. Keep concrete rules in admin-management-pills-commerce-* modules. */
-
-@import "./admin-management-pills-commerce-subscriptions.css";
-@import "./admin-management-pills-commerce-orders.css";
-@import "./admin-management-pills-commerce-billing.css";
-@import "./admin-management-pills-commerce-invoices.css";
-@import "./admin-management-pills-commerce-payments.css";

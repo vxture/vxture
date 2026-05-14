@@ -1,6 +1,0 @@
-/* Admin management products capability style entry. Keep concrete rules in admin-management-products-capability-* modules. */
-
-@import "./admin-management-products-capability-shared.css";
-@import "./admin-management-products-capability-summary.css";
-@import "./admin-management-products-capability-detail.css";
-@import "./admin-management-products-capability-lists.css";

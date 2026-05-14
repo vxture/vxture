@@ -1,7 +1,0 @@
-/* Admin management product pills style entry. Keep concrete rules in admin-management-pills-products-* modules. */
-
-@import "./admin-management-pills-products-roles.css";
-@import "./admin-management-pills-products-product-types.css";
-@import "./admin-management-pills-products-plans.css";
-@import "./admin-management-pills-products-solutions.css";
-@import "./admin-management-pills-products-service-plans.css";

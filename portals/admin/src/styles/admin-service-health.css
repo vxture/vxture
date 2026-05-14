@@ -1,6 +1,574 @@
-/* Admin service health style entry. Keep concrete rules in admin-service-health-* modules. */
+.vx-service-health-page {
+  --service-blue: var(--vx-color-auth-accent);
+  --service-green: var(--vx-color-success-600);
+  --service-amber: var(--vx-color-warning-600);
+  --service-rose: var(--vx-color-danger);
+  --service-indigo: var(--vx-color-indigo-600);
+  width: 100%;
+  max-width: none;
+  gap: var(--vx-admin-service-health-page-gap);
+  cursor: default;
+}
 
-@import "./admin-service-health-core.css";
-@import "./admin-service-health-summary.css";
-@import "./admin-service-health-catalog.css";
-@import "./admin-service-health-responsive.css";
+.vx-service-health-page * {
+  cursor: default;
+}
+
+.vx-service-health-page button,
+.vx-service-health-page select {
+  cursor: pointer;
+}
+
+.vx-service-health-page input {
+  cursor: text;
+}
+
+.vx-service-health-page .vx-page-header.admin-overview-heading {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--vx-admin-service-health-header-gap);
+  margin-bottom: 0;
+}
+
+.vx-service-health-page .vx-page-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--vx-admin-service-health-page-header-gap);
+}
+
+.vx-service-health-page .vx-page-header__title-row .vx-badge {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--vx-color-auth-accent);
+}
+
+.vx-service-health-status--healthy {
+  --service-tone: var(--service-green);
+  --service-soft: color-mix(in srgb, var(--vx-color-success) 10%, transparent);
+  --service-border: color-mix(in srgb, var(--vx-color-success) 22%, transparent);
+  --service-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vx-color-success-surface) 72%, transparent),
+    color-mix(in srgb, var(--vx-color-white) 54%, transparent)
+  );
+}
+
+.vx-service-health-status--degraded {
+  --service-tone: var(--service-amber);
+  --service-soft: color-mix(in srgb, var(--vx-color-warning-600) 12%, transparent);
+  --service-border: color-mix(in srgb, var(--vx-color-warning-600) 24%, transparent);
+  --service-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vx-color-warning-surface) 78%, transparent),
+    color-mix(in srgb, var(--vx-color-white) 54%, transparent)
+  );
+}
+
+.vx-service-health-status--offline {
+  --service-tone: var(--service-rose);
+  --service-soft: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  --service-border: color-mix(in srgb, var(--vx-color-danger) 22%, transparent);
+  --service-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vx-color-danger-surface) 78%, transparent),
+    color-mix(in srgb, var(--vx-color-white) 54%, transparent)
+  );
+}
+
+.vx-service-health-status--stopping {
+  --service-tone: var(--service-indigo);
+  --service-soft: color-mix(in srgb, var(--vx-color-indigo-600) 10%, transparent);
+  --service-border: color-mix(in srgb, var(--vx-color-indigo-600) 22%, transparent);
+  --service-bg: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--vx-color-brand-100) 78%, transparent),
+    color-mix(in srgb, var(--vx-color-white) 54%, transparent)
+  );
+}
+
+.vx-service-health-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--vx-admin-service-health-summary-gap);
+}
+
+.vx-service-health-summary__item {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-service-health-summary-item-grid);
+  align-items: center;
+  gap: var(--vx-admin-service-health-summary-item-gap);
+  padding: var(--vx-admin-service-health-summary-item-padding-y) var(--vx-admin-service-health-summary-item-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--service-border);
+  border-top: var(--vx-admin-service-health-border-width-strong) solid var(--service-tone);
+  border-radius: var(--vx-radius-lg);
+  background: var(--service-bg);
+}
+
+.vx-service-health-summary__icon {
+  width: var(--vx-admin-service-health-icon-size);
+  height: var(--vx-admin-service-health-icon-size);
+  display: inline-grid;
+  place-items: center;
+  color: var(--service-tone);
+}
+
+.vx-service-health-summary__item > div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-copy-gap);
+}
+
+.vx-service-health-summary__item div > span {
+  overflow: hidden;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-service-health-summary__value-line {
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-service-health-value-gap);
+  flex-wrap: nowrap;
+}
+
+.vx-service-health-summary__value-line strong {
+  color: var(--service-tone);
+  font-size: var(--vx-admin-service-health-value-size);
+  font-weight: 760;
+  line-height: 1;
+}
+
+.vx-service-health-summary__value-line em {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-service-health-pill-padding-x);
+  border-radius: var(--vx-radius-lg);
+  background: var(--service-soft);
+  color: var(--service-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+/* Service health toolbar layout styles. */
+
+.vx-service-health-toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-toolbar-gap);
+  padding: var(--vx-admin-service-health-toolbar-padding-top) 0 var(--vx-admin-service-health-toolbar-padding-bottom);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vx-service-health-toolbar__spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.vx-service-health-filters {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-filter-gap);
+  flex: 0 1 auto;
+}
+
+.vx-service-health-filters label {
+  min-width: 0;
+  display: block;
+}
+
+/* Service health toolbar control styles. */
+
+.vx-service-health-search {
+  width: clamp(var(--vx-admin-service-health-control-width-min), 18vw, var(--vx-admin-service-health-control-width-max));
+  flex: 0 0 clamp(var(--vx-admin-service-health-control-width-min), 18vw, var(--vx-admin-service-health-control-width-max));
+  min-width: 0;
+  height: var(--vx-admin-service-health-control-height);
+  padding: 0 var(--vx-admin-service-health-control-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--vx-color-auth-border);
+  border-radius: var(--vx-radius-lg);
+  background: transparent;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}
+
+.vx-service-health-search::placeholder {
+  color: var(--vx-color-gray-400);
+  font-weight: 400;
+}
+
+.vx-service-health-search:focus {
+  outline: var(--vx-admin-service-health-focus-ring-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  outline-offset: 0;
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 32%, transparent);
+}
+
+.vx-service-health-filters select {
+  width: var(--vx-admin-service-health-filter-select-width);
+  min-width: 0;
+  height: var(--vx-admin-service-health-control-height);
+  padding: 0 var(--vx-admin-service-health-filter-select-padding-end) 0 var(--vx-admin-service-health-control-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--vx-color-auth-border);
+  border-radius: var(--vx-radius-lg);
+  appearance: none;
+}
+
+.vx-service-health-filters select {
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3.5 5.25L7 8.75L10.5 5.25' stroke='%2394A3B8' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--vx-admin-service-health-filter-select-icon-offset) center;
+  background-size: var(--vx-admin-service-health-filter-select-icon-size);
+}
+
+.vx-service-health-filters select {
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}
+
+.vx-service-health-filters select:focus {
+  outline: var(--vx-admin-service-health-focus-ring-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+  outline-offset: 0;
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 32%, transparent);
+}
+
+.vx-service-health-toolbar > .vx-btn {
+  min-height: var(--vx-admin-service-health-control-height);
+  height: var(--vx-admin-service-health-control-height);
+  padding-block: 0;
+  border-color: var(--vx-color-auth-border);
+  background: transparent;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}
+
+.vx-service-health-toolbar > .vx-btn:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-auth-accent) 28%, transparent);
+  background: transparent;
+  color: var(--vx-color-auth-accent);
+}
+
+.vx-service-health-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--vx-admin-service-health-grid-gap);
+}
+
+.vx-service-health-card {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-card-gap);
+  padding: var(--vx-admin-service-health-card-padding-y) var(--vx-admin-service-health-card-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--service-border);
+  border-top: var(--vx-admin-service-health-border-width-strong) solid var(--service-tone);
+  border-radius: var(--vx-radius-lg);
+  background: var(--service-bg);
+}
+
+.vx-service-health-card__header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-service-health-card-header-grid);
+  align-items: start;
+  gap: var(--vx-admin-service-health-card-header-gap);
+}
+
+.vx-service-health-card__icon {
+  width: var(--vx-admin-service-health-icon-size);
+  height: var(--vx-admin-service-health-icon-size);
+  display: inline-grid;
+  place-items: center;
+  color: var(--service-tone);
+}
+
+.vx-service-health-card__header div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-card-copy-gap);
+}
+
+.vx-service-health-card__header p,
+.vx-service-health-card__header h2 {
+  overflow: hidden;
+  margin: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-service-health-card__header p {
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+}
+
+.vx-service-health-card__header h2 {
+  color: var(--vx-color-brand-950);
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 780;
+}
+
+.vx-service-health-status-badge {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  padding: 0 var(--vx-admin-service-health-pill-padding-x);
+  border-color: var(--service-border);
+  background: var(--service-soft);
+  color: var(--service-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.vx-service-health-card__meta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-meta-gap);
+  flex-wrap: wrap;
+}
+
+.vx-service-health-card__meta span {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-service-health-pill-padding-x);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  color: var(--vx-color-gray-600);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+}
+
+.vx-service-health-card__checks,
+.vx-service-health-list__checks {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-meta-gap);
+  flex-wrap: wrap;
+}
+
+.vx-service-health-check {
+  min-height: var(--vx-admin-service-health-check-min-height);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-service-health-check-gap);
+  padding: 0 var(--vx-admin-service-health-check-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid transparent;
+  border-radius: var(--vx-radius-lg);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+  white-space: nowrap;
+}
+
+.vx-service-health-check b,
+.vx-service-health-check small {
+  font-size: inherit;
+  font-weight: 820;
+}
+
+.vx-service-health-check--ok {
+  border-color: color-mix(in srgb, var(--vx-color-success) 18%, transparent);
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--vx-color-success-700);
+}
+
+.vx-service-health-check--bad {
+  border-color: color-mix(in srgb, var(--vx-color-danger) 20%, transparent);
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--vx-color-danger-700);
+}
+
+.vx-service-health-card__footer {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-footer-gap);
+  padding-top: var(--vx-admin-service-health-footer-padding-top);
+  border-top: var(--vx-admin-service-health-border-width) dashed color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+}
+
+.vx-service-health-card__footer span,
+.vx-service-health-card__footer strong {
+  overflow: hidden;
+  font-size: var(--vx-admin-caption-size);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-service-health-card__footer span {
+  color: var(--vx-color-text-muted);
+  font-weight: 700;
+}
+
+.vx-service-health-card__footer strong {
+  color: var(--service-tone);
+  font-weight: 820;
+}
+
+.vx-service-health-list {
+  overflow-x: auto;
+  border: var(--vx-admin-service-health-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  border-top: var(--vx-admin-service-health-border-width-strong) solid color-mix(in srgb, var(--vx-color-auth-accent) 36%, transparent);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 62%, transparent);
+}
+
+.vx-service-health-list table {
+  width: 100%;
+  min-width: var(--vx-admin-service-health-table-min-width);
+  border-collapse: collapse;
+}
+
+.vx-service-health-list th,
+.vx-service-health-list td {
+  padding: var(--vx-admin-service-health-table-cell-padding-y) var(--vx-admin-service-health-table-cell-padding-x);
+  border-bottom: var(--vx-admin-service-health-border-width) dashed color-mix(in srgb, var(--vx-color-auth-accent) 14%, transparent);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.vx-service-health-list th {
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  text-align: center;
+}
+
+.vx-service-health-list td {
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 720;
+  text-align: left;
+}
+
+.vx-service-health-list__row {
+  background: var(--service-bg);
+}
+
+.vx-service-health-list__service {
+  min-width: 0;
+  display: inline-grid;
+  grid-template-columns: var(--vx-admin-service-health-list-service-grid);
+  align-items: center;
+  gap: var(--vx-admin-service-health-list-service-gap);
+}
+
+.vx-service-health-list__service svg {
+  color: var(--service-tone);
+}
+
+.vx-service-health-list__service div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-list-copy-gap);
+}
+
+.vx-service-health-list__service strong,
+.vx-service-health-list__service span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-service-health-list__service strong {
+  color: var(--vx-color-brand-950);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 800;
+}
+
+.vx-service-health-list__service span {
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 700;
+}
+
+.vx-service-health-empty {
+  padding: var(--vx-admin-service-health-empty-padding);
+  border: var(--vx-admin-service-health-border-width) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 62%, transparent);
+}
+
+.vx-service-health-card__header p,
+.vx-service-health-card__footer span,
+.vx-service-health-check small,
+.vx-service-health-list__service span {
+  font-weight: 400;
+}
+
+@media (max-width: 1280px) {
+  .vx-service-health-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .vx-service-health-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vx-service-health-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .vx-service-health-filters {
+    flex: 1 1 100%;
+    justify-content: flex-end;
+  }
+
+  .vx-service-health-filters select {
+    width: var(--vx-admin-service-health-filter-select-width-compact);
+  }
+}
+
+@media (max-width: 960px) {
+  .vx-service-health-page .vx-page-header,
+  .vx-service-health-summary,
+  .vx-service-health-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .vx-service-health-toolbar {
+    align-items: stretch;
+  }
+
+  .vx-service-health-toolbar__spacer {
+    display: none;
+  }
+
+  .vx-service-health-search {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .vx-service-health-filters {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+  }
+
+  .vx-service-health-filters select {
+    width: 100%;
+  }
+
+  .vx-service-health-summary__item,
+  .vx-service-health-card {
+    padding: var(--vx-admin-service-health-compact-padding);
+  }
+
+  .vx-service-health-page .vx-page-header.admin-overview-heading {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+}

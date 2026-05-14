@@ -1,7 +1,0 @@
-/* Admin tenant detail config style entry. Keep concrete rules in admin-tenant-detail-config-* modules. */
-
-@import "./admin-tenant-detail-config-blocks.css";
-@import "./admin-tenant-detail-config-fields.css";
-@import "./admin-tenant-detail-config-review.css";
-@import "./admin-tenant-detail-config-kv.css";
-@import "./admin-tenant-detail-config-notes.css";

@@ -1,6 +1,0 @@
-/* Admin management commerce subscriptions style entry. Keep concrete rules in admin-management-commerce-subscriptions-* modules. */
-
-@import "./admin-management-commerce-subscriptions-list.css";
-@import "./admin-management-commerce-subscriptions-detail.css";
-@import "./admin-management-commerce-subscriptions-actions.css";
-@import "./admin-management-commerce-subscriptions-dialog.css";

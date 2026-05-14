@@ -1,6 +1,0 @@
-/* Admin tenant detail members style entry. Keep concrete rules in admin-tenant-detail-members-* modules. */
-
-@import "./admin-tenant-detail-members-table.css";
-@import "./admin-tenant-detail-members-toolbar.css";
-@import "./admin-tenant-detail-members-list.css";
-@import "./admin-tenant-detail-members-cards.css";

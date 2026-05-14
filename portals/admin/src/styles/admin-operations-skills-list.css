@@ -1,8 +1,0 @@
-.vx-skills-directory-list {
-  grid-template-columns: var(--vx-admin-operations-skill-grid);
-}
-.vx-skills-directory-list .vx-tenant-directory-list__header,
-.vx-skill-row {
-  grid-template-columns: var(--vx-admin-operations-skill-grid);
-}
-
