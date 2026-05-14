@@ -1,0 +1,21 @@
+.vx-order-status-dot--confirmed {
+  --order-status-dot: var(--tenant-green);
+  --order-status-halo: color-mix(in srgb, var(--vx-color-success) 12%, transparent);
+}
+
+.vx-order-status-dot--pending,
+.vx-order-status-dot--pending_verify {
+  --order-status-dot: var(--tenant-amber);
+  --order-status-halo: color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+}
+
+.vx-order-status-dot--overdue,
+.vx-order-status-dot--abnormal {
+  --order-status-dot: var(--tenant-rose);
+  --order-status-halo: color-mix(in srgb, var(--vx-color-danger) 14%, transparent);
+}
+
+.vx-order-status-dot--closed {
+  --order-status-dot: var(--vx-color-gray-400);
+  --order-status-halo: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}

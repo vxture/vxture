@@ -1,0 +1,14 @@
+.vx-tenant-directory-row--normal,
+.vx-tenant-directory-card--normal {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}
+
+.vx-tenant-directory-row--follow_up,
+.vx-tenant-directory-card--follow_up {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-tenant-directory-row--high,
+.vx-tenant-directory-card--high {
+  --tenant-row-tone: var(--tenant-rose);
+}

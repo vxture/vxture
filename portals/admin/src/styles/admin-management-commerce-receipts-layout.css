@@ -1,0 +1,16 @@
+.vx-product-detail-list__row .vx-billing-receipt-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  flex-wrap: wrap;
+  overflow: visible;
+  white-space: normal;
+}
+
+.vx-billing-receipt-actions > span {
+  min-width: min(100%, var(--vx-admin-management-size-8r));
+  overflow: hidden;
+  color: var(--tenant-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

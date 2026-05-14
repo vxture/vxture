@@ -1,0 +1,6 @@
+.vx-subscription-action-dialog__panel header {
+  display: grid;
+  grid-template-columns: var(--vx-admin-management-track-275r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-management-space-0875r);
+}

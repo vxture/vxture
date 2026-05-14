@@ -1,0 +1,14 @@
+.admin-workspace-switcher__item {
+  position: relative;
+  width: 100%;
+  min-height: var(--vx-admin-workspace-switcher-item-min-height);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: var(--vx-admin-workspace-switcher-item-gap);
+  overflow: hidden;
+  padding: var(--vx-admin-workspace-switcher-item-padding-y) var(--vx-admin-workspace-switcher-item-padding-x) var(--vx-admin-workspace-switcher-item-padding-y) var(--vx-admin-workspace-switcher-item-padding-start);
+  cursor: pointer;
+  text-align: left;
+}

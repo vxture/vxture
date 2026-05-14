@@ -1,0 +1,18 @@
+.vx-invoice-status-dot--finished {
+  --invoice-status-dot: var(--tenant-green);
+  --invoice-status-halo: color-mix(in srgb, var(--vx-color-success) 12%, transparent);
+}
+
+.vx-invoice-status-dot--issued,
+.vx-invoice-status-dot--sending,
+.vx-invoice-status-dot--applying,
+.vx-invoice-status-dot--auditing {
+  --invoice-status-dot: var(--tenant-amber);
+  --invoice-status-halo: color-mix(in srgb, var(--vx-color-warning-600) 14%, transparent);
+}
+
+.vx-invoice-status-dot--red,
+.vx-invoice-status-dot--rejected {
+  --invoice-status-dot: var(--tenant-rose);
+  --invoice-status-halo: color-mix(in srgb, var(--vx-color-danger) 14%, transparent);
+}

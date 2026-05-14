@@ -1,0 +1,13 @@
+.vx-tenant-pill--suspended,
+.vx-tenant-pill--locked,
+.vx-tenant-pill--cancelled,
+.vx-tenant-pill--rejected,
+.vx-tenant-pill--unverified,
+.vx-tenant-pill--past_due,
+.vx-tenant-pill--disabled,
+.vx-tenant-pill--undefined,
+.vx-tenant-pill--danger,
+.vx-tenant-pill--blocked {
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--tenant-rose);
+}

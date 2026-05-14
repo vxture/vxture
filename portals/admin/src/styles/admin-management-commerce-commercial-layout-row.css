@@ -1,0 +1,31 @@
+.vx-commercial-row__tenant,
+.vx-commercial-row__main,
+.vx-commercial-row__center {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}
+
+.vx-commercial-row__tenant {
+  justify-self: start;
+  grid-template-columns: var(--vx-admin-management-track-2r) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--vx-admin-management-space-1r);
+  text-align: left;
+}
+
+.vx-commercial-row__tenant svg {
+  color: var(--tenant-row-tone);
+}
+
+.vx-commercial-row__main {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-commercial-row__center {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}

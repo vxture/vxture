@@ -1,0 +1,25 @@
+.vx-subscription-action-dialog__icon {
+  width: var(--vx-admin-management-size-275r);
+  height: var(--vx-admin-management-size-275r);
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-subscription-action-dialog__icon--suspend,
+.vx-subscription-action-dialog__icon--cancel {
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-subscription-action-dialog__icon--renew {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-subscription-action-dialog__icon--resume {
+  background: color-mix(in srgb, var(--vx-color-success-500) 10%, transparent);
+  color: var(--tenant-green);
+}

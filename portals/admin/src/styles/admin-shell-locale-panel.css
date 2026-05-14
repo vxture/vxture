@@ -1,0 +1,17 @@
+.admin-shell-locale-panel,
+.admin-shell-locale-option {
+  font-family: inherit;
+}
+
+.admin-shell-locale-panel {
+  margin-top: var(--vx-admin-shell-locale-panel-offset);
+  display: grid;
+  gap: var(--vx-admin-shell-locale-panel-gap);
+  padding: var(--vx-admin-shell-locale-panel-padding);
+  border: var(--vx-admin-shell-locale-panel-border-width) solid var(--vx-shell-line);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-shell-glass) 94%, var(--vx-color-white));
+  box-shadow: var(--vx-console-shadow);
+  backdrop-filter: blur(var(--vx-admin-shell-locale-panel-blur)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--vx-admin-shell-locale-panel-blur)) saturate(150%);
+}

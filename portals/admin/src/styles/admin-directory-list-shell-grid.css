@@ -1,0 +1,9 @@
+.vx-tenant-directory-list__header,
+.vx-tenant-directory-row {
+  min-width: var(--vx-admin-directory-row-min-width-compact);
+  display: grid;
+  grid-template-columns: var(--vx-admin-directory-row-default-grid);
+  align-items: center;
+  gap: var(--vx-admin-directory-row-gap);
+  padding: var(--vx-admin-directory-row-padding-y) 0;
+}

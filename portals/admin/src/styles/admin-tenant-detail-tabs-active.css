@@ -1,0 +1,15 @@
+.vx-tenant-tabs button.is-active {
+  background: transparent;
+  color: var(--tenant-blue);
+}
+
+.vx-tenant-tabs button.is-active::after {
+  position: absolute;
+  right: var(--vx-admin-management-space-025r);
+  bottom: 0;
+  left: var(--vx-admin-management-space-025r);
+  height: var(--vx-admin-management-size-2p);
+  border-radius: var(--vx-radius-full);
+  background: var(--tenant-blue);
+  content: "";
+}

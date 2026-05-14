@@ -1,0 +1,14 @@
+.vx-product-solution-row--active,
+.vx-product-solution-card--active {
+  --tenant-row-tone: var(--tenant-blue);
+}
+
+.vx-product-solution-row--draft,
+.vx-product-solution-card--draft {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-product-solution-row--archived,
+.vx-product-solution-card--archived {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}

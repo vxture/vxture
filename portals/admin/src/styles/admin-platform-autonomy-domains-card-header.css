@@ -1,0 +1,24 @@
+.platform-autonomy-domain header {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-platform-autonomy-card-grid);
+  align-items: start;
+  gap: var(--vx-admin-platform-autonomy-gap-xl);
+}
+
+.platform-autonomy-domain header > span {
+  width: var(--vx-admin-platform-autonomy-icon-size);
+  height: var(--vx-admin-platform-autonomy-icon-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.platform-autonomy-domain header div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-platform-autonomy-gap-sm);
+}

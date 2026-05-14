@@ -1,0 +1,18 @@
+.platform-autonomy-domain__links strong {
+  overflow: hidden;
+  color: var(--vx-shell-ink);
+  font-size: var(--vx-admin-platform-autonomy-text-body);
+  font-weight: 720;
+  line-height: var(--vx-admin-platform-autonomy-line-link);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.platform-autonomy-domain__links small {
+  overflow: hidden;
+  color: var(--vx-shell-muted);
+  font-size: var(--vx-admin-platform-autonomy-text-caption);
+  line-height: var(--vx-admin-platform-autonomy-line-caption);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

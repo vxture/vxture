@@ -1,0 +1,16 @@
+.vx-model-strategy-row--usable,
+.vx-model-strategy-card--usable {
+  --tenant-row-tone: var(--tenant-green);
+}
+
+.vx-model-strategy-row--zeroQuota,
+.vx-model-strategy-card--zeroQuota,
+.vx-model-strategy-row--undefined,
+.vx-model-strategy-card--undefined {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-model-strategy-row--inactive,
+.vx-model-strategy-card--inactive {
+  --tenant-row-tone: var(--vx-color-gray-400);
+}

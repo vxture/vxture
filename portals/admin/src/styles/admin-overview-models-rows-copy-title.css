@@ -1,0 +1,8 @@
+.admin-overview-model-category__row strong {
+  overflow: hidden;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

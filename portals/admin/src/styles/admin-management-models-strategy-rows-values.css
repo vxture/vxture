@@ -1,0 +1,11 @@
+.vx-model-strategy-row__quota,
+.vx-model-strategy-row__priority,
+.vx-model-strategy-row__tenant {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--vx-color-text-secondary);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

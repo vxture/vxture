@@ -1,0 +1,22 @@
+.vx-dialog__desc {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-body-size);
+}
+
+.vx-dialog__label {
+  color: var(--vx-console-text);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 500;
+}
+
+.vx-dialog__label small {
+  color: var(--vx-console-muted);
+  font-weight: 400;
+}
+
+.vx-dialog__error {
+  margin: 0;
+  color: var(--vx-admin-rose-fg, var(--vx-color-danger));
+  font-size: var(--vx-admin-meta-size);
+}

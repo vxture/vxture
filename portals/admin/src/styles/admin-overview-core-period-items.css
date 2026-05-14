@@ -1,0 +1,18 @@
+.admin-overview-period__item {
+  position: relative;
+  z-index: 1;
+  min-width: var(--vx-admin-overview-size-3r);
+  min-height: var(--vx-admin-overview-size-15r);
+  padding: 0 var(--vx-admin-overview-space-05r);
+  border: 0;
+  border-radius: var(--admin-overview-card-radius);
+  background: transparent;
+  color: var(--vx-color-text-muted);
+  cursor: pointer;
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 760;
+}
+
+.admin-overview-period__item--active {
+  color: var(--vx-color-auth-accent);
+}

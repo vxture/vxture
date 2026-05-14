@@ -1,0 +1,24 @@
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant,
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__model,
+.vx-model-strategy-directory-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__agent,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-tenant-directory-row__tenant,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__tenant,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__agent,
+.vx-model-strategy-override-list
+  .vx-tenant-directory-row
+  > .vx-model-strategy-row__expires {
+  justify-self: start;
+  text-align: left;
+}

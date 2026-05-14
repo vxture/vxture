@@ -1,0 +1,10 @@
+.vx-skill-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-admin-operations-skill-card-gap);
+  padding: var(--vx-admin-operations-skill-card-padding);
+  border: var(--vx-admin-operations-skill-card-border-width) solid var(--vx-console-border);
+  border-radius: var(--vx-admin-card-radius);
+  background: var(--vx-console-surface);
+  box-shadow: var(--vx-console-shadow-soft);
+}

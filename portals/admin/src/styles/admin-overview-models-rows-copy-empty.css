@@ -1,0 +1,6 @@
+.admin-overview-model-category__empty {
+  padding: var(--vx-admin-overview-space-1r) 0;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 700;
+}

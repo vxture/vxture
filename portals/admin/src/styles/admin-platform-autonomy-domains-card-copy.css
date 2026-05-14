@@ -1,0 +1,16 @@
+.platform-autonomy-domain h2,
+.platform-autonomy-panel h2 {
+  margin: 0;
+  color: var(--vx-shell-ink);
+  font-size: var(--vx-admin-platform-autonomy-text-title);
+  font-weight: 760;
+  line-height: var(--vx-admin-platform-autonomy-line-body);
+}
+
+.platform-autonomy-domain p,
+.platform-autonomy-panel p {
+  margin: 0;
+  color: var(--vx-shell-muted);
+  font-size: var(--vx-admin-platform-autonomy-text-body);
+  line-height: var(--vx-admin-platform-autonomy-line-body);
+}
