@@ -1,0 +1,18 @@
+.vx-commerce-overview-footer {
+  min-height: var(--vx-admin-management-size-2r);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-management-space-1r);
+  padding: var(--vx-admin-management-space-075r) 0 var(--vx-admin-management-space-095r);
+  border-top: var(--vx-admin-management-line-width-1p) dashed var(--vx-color-auth-border);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+}
+
+.vx-commerce-overview-footer strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 760;
+}
+
