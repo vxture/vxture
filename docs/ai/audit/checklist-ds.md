@@ -31,6 +31,54 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"
 ```
 
+## DS/CSS 分层分级治理模型（2026-05-14）
+
+### 治理目标
+
+- DS 负责规则、基准、通用能力和可复用模式；应用端负责业务语义组装，不把所有页面细节下沉到 DS。
+- “组装不是定义”：应用可以用业务 class 编排 DS 组件和语义类，但不得重新定义 DS primitive、底层 UI 引擎、`--vx-*` token 或基础视觉尺度。
+- CSS 收敛以边界清晰为第一优先级，其次才是减少行数；行数下降必须来自分层和复用，不来自隐藏重复实现。
+
+### 分层职责
+
+1. L0 Foundation：归属 DS。包含 `tokens.css`、`typography.css`、`tailwind.css`、theme/density/font 基线。只定义平台级 token、字体、密度、主题变量。应用只能消费，不得定义 `--vx-*`。
+2. L1 Primitive：归属 DS。包含 Button、Input、Select、Checkbox、Card、Badge、Icon、Dialog、基础表单控件等 React primitive 与 `.vx-*` 基础语义类。应用不得手写原生基础控件替代，也不得直接依赖图标库、Radix 等底层 UI 引擎。
+3. L2 Platform Pattern：归属 DS。包含跨两个及以上应用复用的结构模式，例如 DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard、通用 page header/table toolbar/shell chrome 模式。命名必须保持平台语义，不能携带具体业务实体。
+4. L3 Portal Experience：归属 portal。包含 admin/console/website/ruyin/agent-studio 的导航、工作区切换、门户 chrome、响应式布局和产品气质。可以组装 DS L1/L2，但不能新增基础 token、基础控件或通用 pattern 的第二实现。
+5. L4 Domain Assembly：归属业务模块。包含租户、账单、权限、模型网关、运营治理等实体页面的业务语义布局、状态组合和局部信息密度。业务 class 只能表达语义编排，不能承载通用控件能力。
+6. L5 Runtime Dynamic：归属调用现场。仅允许动态坐标、进度、CSS 变量赋值、背景图 URL、动画延迟等运行时值。设计型颜色、字号、间距、圆角、阴影不得以内联样式出现。
+
+### 下沉判定
+
+- 进入 DS：同一结构被两个及以上 portal/domain 复用；或它承载可访问性、主题、密度、焦点、键盘交互、图标规范等平台规则；或它是基础控件/表格/菜单/弹窗/分页/筛选器。
+- 保留在 Portal：只体现某个应用的 chrome、信息架构、导航密度、工作区体验、品牌入口或首屏布局，且不应成为其他应用默认规范。
+- 保留在 Domain：只与具体实体、权限、状态机、业务指标和数据组织有关；可使用 DS primitive/pattern，但不定义新的基础样式。
+- 保留为 Runtime：值必须来自运行时数据或布局计算；如能提前写成 CSS token/class，就不应以内联方式存在。
+
+### 命名与引用边界
+
+- CSS custom property `--vx-*` 只由 DS 定义；应用 CSS 可以消费，但不得声明。
+- DS 公共调用只允许 `@vxture/design-system`、`/tokens`、`/types`、`/server` 和 package exports 明确暴露的 `styles/*`；其他深层路径默认禁止。
+- 应用 class 可以带门户/业务前缀表达组装语义，例如 `admin-*`、`console-*` 或历史 `vx-admin-*`，但这些 class 不构成 DS 公共契约。
+- DS 中的 `platform.css` 只承载 L2 平台模式；若选择器出现强业务实体、单 portal 专属语义或页面级布局，应回退到 L3/L4。
+
+### 全局验收规则
+
+- `pnpm lint:design` 必须通过，且 `scripts/guardrails/design-system-baseline.json` 的 `allowed` 保持为空。
+- 新增应用 CSS 不得定义 `--vx-*`，不得新增硬编码颜色、字号、间距、圆角、阴影等设计尺度。
+- 新增业务源码不得直接写原生基础控件或原生表格；DS 不足时先补 DS，再迁移应用调用。
+- 新增应用依赖不得声明 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*` 等底层 UI 引擎。
+- 每批次必须至少执行 `pnpm lint:design`、受影响 package 的 `lint` / `type-check` / `build`，并记录未执行项原因。
+
+## 六批次执行计划（2026-05-14）
+
+1. P0：固化分层模型与验收口径。范围：本审计清单、DS-USE 状态修正、六批次任务定义。验收：`git diff --check`、`pnpm lint:design` 通过；提交独立 commit。
+2. P1：拆分 DS `platform.css`。范围：把 L2 平台模式按 shell/data/form/status/account 等模块拆分，`platform.css` 保持聚合入口；把可命名的 `--vx-component-metric-*` 直用升级为语义 token。验收：DS build/lint 通过；`platform.css` 不再混入强业务实体选择器；通用模式仍从 DS globals 生效。
+3. P1：重整 Console 样式边界。范围：区分 console portal chrome、workspace 组装和可回收平台模式；应用 `globals.css` 保持入口职责，页面模块只做 L3/L4 组装。验收：console lint/type-check/build 通过；console CSS 不新增 `--vx-*`、硬编码尺度、原生基础控件。
+4. P1：继续收敛 Admin 管理域。范围：以 `admin-management.css`、目录/治理/运营域为重点，抽离真正跨域复用的列表、状态、摘要、动作模式；保留 admin 特有的信息架构。验收：admin lint/type-check/build 通过；`admin-management.css` 降到 3000 行以下或完成可验证的模块拆分；不新增 DS 违规 baseline。
+5. P1：补强分层 guardrail。范围：增加 DS L2/L3/L4 边界检查，例如应用禁止定义 `--vx-*`、禁止底层 UI 引擎依赖、禁止原生基础控件、禁止 DS `platform.css` 混入 portal/domain 专属命名。验收：`pnpm lint:design` 通过；新增违规样例能被对应规则阻断；baseline 仍为空。
+6. P2：文档与模板同步。范围：在文档体系确定唯一源后，同步 DS README、架构文档、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
+
 ## 维度一：DS 系统自身规范性
 
 ### DS-SYS-001：守卫脚本覆盖范围不足
@@ -300,11 +348,11 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 ### DS-USE-017：DS 消费者质量门禁尚未完全一致
 
 优先级：P1
-状态：部分修复，剩余消费者一致性待补。
-证据：`website` / `console` / `admin` / `agent-studio/vela` 均已提供真实 `eslint .` lint 脚本；`business/ruyin` 仍缺少 lint 脚本，`agent-studio/agent-template` 仍为 `echo "No lint yet"`。
-问题：`pnpm lint:design` 已覆盖 DS 规则，但常规 lint 门禁不一致会让 React、可访问性、未使用代码、Hook 规则等应用级质量问题绕过部分 DS 消费者。
-修复方向：为 `@vxture/ruyin` 和 `agent-studio/agent-template` 接入与 portal 一致的 ESLint 配置和 lint 脚本；CI/本地验收统一执行 `type-check`、`lint`、`build` 与 `pnpm lint:design`。
-验收标准：所有 DS 消费者都具备一致的 `type-check` / `lint` / `build` 门禁；`pnpm --filter @vxture/ruyin lint` 和 agent template lint 执行真实 ESLint 检查并通过。
+状态：已修复，进入新增消费者持续巡检。
+证据：`website` / `console` / `admin` / `agent-studio/vela` / `business/ruyin` / `agent-studio/agent-template` / `@vxture/design-system` 均已提供真实 lint 脚本；`agent-studio/agent-template` 的 `build` 已改为 `tsc --noEmit`，不再使用占位命令。
+问题：历史上 `pnpm lint:design` 已覆盖 DS 规则，但常规 lint 门禁不一致会让 React、可访问性、未使用代码、Hook 规则等应用级质量问题绕过部分 DS 消费者。
+修复方向：保持所有 DS 消费者具备 `type-check` / `lint` / `build` 门禁；新增前端应用或模板时，必须同步接入 ESLint、TypeScript、DS globals、ThemeProvider 与 `pnpm lint:design`。
+验收标准：所有 DS 消费者的 lint 脚本都执行真实 ESLint 检查；`pnpm lint:design` 与受影响消费者的 `lint` / `type-check` / `build` 均可作为独立批次验收门禁。
 
 ### DS-USE-018：DS 应用调用入口白名单
 
@@ -321,7 +369,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 2. P0：应用侧底层 UI 引擎隔离。状态：已完成；源码 import 和 `package.json` 依赖清单均禁止直接使用 `@phosphor-icons/react`、`lucide-react`、`react-icons`、`@radix-ui/*`。
 3. P0：应用侧私有 token / 原生控件 / 原生表格 / 设计型 inline style / 硬编码尺度。状态：已完成；`design-system-baseline.json` 为空 baseline，新增违规由 `pnpm lint:design` 阻断。
 4. P1：应用通用 UI 组合能力回收到 DS。状态：已完成主要高频路径；DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard 已公共导出并被 admin/console/agent-studio/website 高频场景消费。
-5. P1：DS 消费者质量门禁一致化。状态：部分完成；website/admin/console/agent-studio/vela 已有真实 lint，待为 business/ruyin 和 agent-studio/agent-template 补齐。
+5. P1：DS 消费者质量门禁一致化。状态：已完成；website/admin/console/agent-studio/vela/business/ruyin/agent-studio/agent-template/@vxture/design-system 均有真实 lint，新增消费者继续按同口径巡检。
 6. P1：持续巡检新增页面。状态：进行中；新增列表、表单、弹窗、菜单、分页、表格必须先复用 DS，不足时先补 DS 再落应用。
 7. P2：DS README 与架构文档组件清单同步。状态：暂缓，等待文档体系规划统一处理。
 
@@ -332,7 +380,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 3. 已确认：应用侧 `--vx-*` token 定义、原生基础控件、原生表格扫描无结果。
 4. 已确认：设计型 inline style 由 guardrail 区分，当前只保留坐标、进度、CSS 变量、背景图、动画延迟等动态值。
 5. 已确认：`pnpm lint:design` 通过，`design-system-baseline.json` 为空 baseline。
-6. 待补：为 `business/ruyin` 和 `agent-studio/agent-template` 接入真实 lint，使 DS 消费者质量门禁一致。
+6. 已完成：`business/ruyin` 和 `agent-studio/agent-template` 已接入真实 lint，DS 消费者质量门禁进入新增消费者巡检。
 
 ## 后续验收清单
 
@@ -345,4 +393,5 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 - `rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"` 无应用依赖清单结果。
 - `packages/design/design-system/README.md`、`docs/architecture/08-design-system.md`、`packages/design/design-system/package.json` 的版本、组件数量、导出入口一致。
 - `agent-studio/vela` 提供真实 lint 脚本，并通过 `pnpm --filter @vxture/agent-studio-vela lint`。
-- `business/ruyin` 和 `agent-studio/agent-template` 补齐真实 lint 后，所有 DS 消费者均通过各自适用的 `type-check`、`lint`、`build`。
+- `business/ruyin`、`agent-studio/agent-template` 与其他 DS 消费者均通过各自适用的 `type-check`、`lint`、`build`。
+- 每批迁移后，变更范围对应的 DS/portal/domain package 必须独立验证并独立 commit。
