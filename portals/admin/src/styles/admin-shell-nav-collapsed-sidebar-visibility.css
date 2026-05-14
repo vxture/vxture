@@ -1,0 +1,5 @@
+.admin-shell--nav-collapsed .admin-shell-sidebar__domain-title,
+.admin-shell--nav-collapsed .admin-shell-sidebar__section-toggle-all,
+.admin-shell--nav-collapsed .admin-shell-sidebar__assistant-copy {
+  display: none;
+}

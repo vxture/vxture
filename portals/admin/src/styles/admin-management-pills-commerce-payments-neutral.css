@@ -1,0 +1,10 @@
+.vx-payment-pill--closed,
+.vx-payment-pill--unpaid,
+.vx-payment-pill--not_required,
+.vx-payment-pill--reconcile-unlinked,
+.vx-payment-pill--bill-cancelled,
+.vx-payment-pill--bill-none,
+.vx-payment-pill--source {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}

@@ -1,0 +1,6 @@
+.vx-tenant-block > .vx-tenant-config-stack,
+.vx-tenant-block > .vx-tenant-config-row,
+.vx-tenant-block > .vx-tenant-note,
+.vx-tenant-block > .vx-tenant-tags {
+  margin-left: var(--vx-admin-management-space-45r);
+}

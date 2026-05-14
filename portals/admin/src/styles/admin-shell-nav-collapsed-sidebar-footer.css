@@ -1,0 +1,13 @@
+.admin-shell--nav-collapsed .admin-shell-sidebar__footer {
+  max-height: none;
+  min-height: var(--vx-admin-shell-rail-size);
+  margin: 0;
+  opacity: 1;
+  pointer-events: auto;
+  border-top-color: transparent;
+}
+
+.admin-shell--nav-collapsed .admin-shell-sidebar__footer::before {
+  left: var(--vx-admin-sidebar-pad-x);
+  right: 0;
+}

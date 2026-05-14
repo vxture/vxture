@@ -1,0 +1,8 @@
+.vx-payment-pill--failed,
+.vx-payment-pill--refunding,
+.vx-payment-pill--reconcile-overpaid,
+.vx-payment-pill--reconcile-bill_cancelled,
+.vx-payment-pill--reconcile-failed {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}

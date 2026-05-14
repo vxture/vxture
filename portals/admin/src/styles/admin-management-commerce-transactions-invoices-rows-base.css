@@ -1,0 +1,10 @@
+.vx-invoice-row__invoice,
+.vx-invoice-row__tenant,
+.vx-invoice-row__bill,
+.vx-invoice-row__amount,
+.vx-invoice-row__status,
+.vx-invoice-row__delivery {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-05r);
+}

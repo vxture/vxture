@@ -1,0 +1,14 @@
+.vx-invoice-row__invoice,
+.vx-invoice-row__bill {
+  justify-self: start;
+  justify-items: start;
+  text-align: left;
+}
+
+.vx-invoice-row__amount,
+.vx-invoice-row__status,
+.vx-invoice-row__delivery {
+  justify-self: center;
+  justify-items: center;
+  text-align: center;
+}

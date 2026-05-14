@@ -1,0 +1,10 @@
+.admin-shell--nav-collapsed .admin-shell-sidebar__assistant-button {
+  width: calc(
+    var(--vx-admin-sidebar-collapsed-width) - var(--vx-admin-sidebar-pad-x)
+  );
+  box-sizing: content-box;
+  grid-template-columns: var(--vx-admin-shell-rail-track);
+  justify-content: flex-start;
+  gap: 0;
+  padding: 0 0 0 var(--vx-admin-sidebar-pad-x);
+}

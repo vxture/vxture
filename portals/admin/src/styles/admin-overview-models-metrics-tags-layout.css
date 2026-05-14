@@ -1,0 +1,8 @@
+/* Admin overview model metric tag layout styles. */
+
+.admin-overview-model-metric__tags {
+  min-width: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-05r);
+}

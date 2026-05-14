@@ -1,0 +1,19 @@
+.vx-tenant-block > header,
+.vx-tenant-risk-panel > header,
+.vx-tenant-audit-list > header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-15r);
+  flex-wrap: wrap;
+  padding-bottom: var(--vx-admin-management-space-1r);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+}
+
+.vx-tenant-block > header {
+  justify-content: space-between;
+}
+
+.vx-tenant-block > header > .admin-overview-heading {
+  flex: 1 1 auto;
+}

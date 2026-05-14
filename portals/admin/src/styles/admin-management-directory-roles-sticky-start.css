@@ -1,0 +1,25 @@
+/* Admin role directory sticky start column styles. */
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-list__header
+  > span:first-child,
+.vx-admin-role-directory-list
+  .vx-tenant-directory-row
+  > .vx-admin-role-operation-row__select {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  align-self: stretch;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  box-shadow: var(--vx-admin-management-effect-1p) 0 0 color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent);
+}
+
+.vx-admin-role-directory-list
+  .vx-tenant-directory-list__header
+  > span:first-child {
+  z-index: 4;
+}

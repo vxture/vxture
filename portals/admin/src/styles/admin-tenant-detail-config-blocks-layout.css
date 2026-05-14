@@ -1,0 +1,12 @@
+.vx-tenant-block,
+.vx-tenant-risk-panel,
+.vx-tenant-audit-list {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-15r);
+}
+
+.vx-tenant-block--wide {
+  grid-column: 1 / -1;
+  padding-top: var(--vx-admin-management-space-05r);
+}
