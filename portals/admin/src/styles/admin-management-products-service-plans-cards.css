@@ -1,0 +1,30 @@
+.vx-service-plan-tier-grid {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-service-plan-tier-card {
+  position: relative;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--vx-admin-management-space-1r);
+  align-content: start;
+  padding: var(--vx-admin-management-space-1r) 0;
+  border-top: var(--vx-admin-management-line-width-2p) solid var(--service-plan-tone);
+}
+
+.vx-service-plan-tier--active {
+  --service-plan-tone: var(--tenant-green);
+}
+
+.vx-service-plan-tier--draft {
+  --service-plan-tone: var(--tenant-amber);
+}
+
+.vx-service-plan-tier--archived {
+  --service-plan-tone: var(--vx-color-gray-400);
+}
+

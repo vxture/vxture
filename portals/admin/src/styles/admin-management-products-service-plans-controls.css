@@ -1,0 +1,14 @@
+.vx-service-plan-tier-row[role="button"],
+.vx-service-plan-tier-card[role="button"] {
+  cursor: pointer;
+}
+
+.vx-service-plan-search {
+  width: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+  flex-basis: clamp(var(--vx-admin-management-size-13r), 16vw, var(--vx-admin-management-size-20r));
+}
+
+.vx-service-plan-select--industry {
+  width: var(--vx-admin-management-size-10r);
+}
+
