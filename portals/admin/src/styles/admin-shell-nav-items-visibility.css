@@ -1,0 +1,18 @@
+/* Admin shell nav visibility transition styles. */
+
+.admin-shell--nav-text-hidden .admin-shell-nav__title,
+.admin-shell--nav-text-hidden .admin-shell-nav__item span,
+.admin-shell--nav-text-hidden .admin-shell-sidebar__domain-title,
+.admin-shell--nav-text-hidden .admin-shell-sidebar__assistant-copy {
+  opacity: 0;
+  transform: translateX(calc(var(--vx-admin-shell-hidden-offset) * -1));
+}
+
+.admin-shell--nav-text-hidden:not(.admin-shell--nav-collapsed)
+  .admin-shell-nav__section-icon--expanded {
+  opacity: 0;
+}
+
+.admin-shell--nav-transitioning .admin-shell-nav__section-icon {
+  opacity: 0;
+}
