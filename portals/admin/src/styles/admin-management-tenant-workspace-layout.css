@@ -1,0 +1,42 @@
+/* Tenant workspace list layout styles. */
+
+.vx-tenant-workspace {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(var(--vx-admin-management-track-18r-large), var(--vx-admin-management-track-22r)) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--vx-admin-management-space-2r);
+}
+
+.vx-tenant-list {
+  position: sticky;
+  top: calc(var(--vx-admin-management-header-height) + var(--vx-admin-management-space-15r));
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-list > header {
+  min-height: var(--vx-admin-management-size-25r);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-list > header strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 780;
+}
+
+.vx-tenant-list > header span {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 760;
+}
+
+.vx-tenant-list > div {
+  display: grid;
+  gap: var(--vx-admin-management-space-1r);
+}

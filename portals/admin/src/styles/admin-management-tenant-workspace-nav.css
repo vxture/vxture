@@ -1,0 +1,13 @@
+/* Tenant workspace navigation styles. */
+
+.vx-tenant-back-link {
+  width: fit-content;
+  min-height: var(--vx-admin-management-size-25r);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  color: var(--tenant-blue);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 800;
+  text-decoration: none;
+}

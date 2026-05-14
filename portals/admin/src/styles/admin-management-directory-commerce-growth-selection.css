@@ -1,0 +1,19 @@
+/* Commerce growth directory selection styles. */
+
+.vx-usage-operation-row,
+.vx-promotion-operation-row,
+.vx-redemption-operation-row {
+  cursor: pointer;
+}
+
+.vx-usage-operation-row--selected,
+.vx-promotion-operation-row--selected,
+.vx-redemption-operation-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-usage-operation-row__select,
+.vx-promotion-operation-row__select,
+.vx-redemption-operation-row__select {
+  justify-self: center;
+}
