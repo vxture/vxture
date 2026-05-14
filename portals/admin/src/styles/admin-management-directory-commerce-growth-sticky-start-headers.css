@@ -1,9 +1,0 @@
-.vx-usage-directory-list .vx-tenant-directory-list__header > span:first-child,
-.vx-promotion-directory-list
-  .vx-tenant-directory-list__header
-  > span:first-child,
-.vx-redemption-directory-list
-  .vx-tenant-directory-list__header
-  > span:first-child {
-  z-index: 4;
-}

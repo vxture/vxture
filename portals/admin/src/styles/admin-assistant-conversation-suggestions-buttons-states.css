@@ -1,9 +1,0 @@
-.vx-assistant-empty__suggestions button:hover {
-  border-color: color-mix(in srgb, var(--vx-console-brand) 22%, transparent);
-  background: var(--vx-shell-hover, color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent));
-  color: var(--vx-console-brand-strong);
-}
-
-.vx-assistant-empty__suggestions button:hover::before {
-  color: var(--vx-console-brand);
-}

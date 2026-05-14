@@ -1,3 +1,60 @@
-@import "./admin-directory-list-row-index.css";
-@import "./admin-directory-list-row-cells.css";
-@import "./admin-directory-list-row-copy.css";
+.vx-tenant-directory-row__index {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  text-align: center;
+}
+
+.vx-tenant-directory-list__header > span:first-child {
+  text-align: center;
+}
+
+.vx-tenant-directory-list__header > span:first-child,
+.vx-tenant-directory-list__header > span:last-child,
+.vx-tenant-directory-row__index,
+.vx-tenant-directory-row > .vx-tenant-actions {
+  justify-self: center;
+  text-align: center;
+}
+
+.vx-tenant-directory-row > span,
+.vx-tenant-directory-row__tenant span {
+  min-width: 0;
+}
+
+.vx-tenant-directory-row
+  > span:not(.vx-tenant-directory-row__tenant):not(
+    .vx-tenant-directory-row__status
+  ):not(.vx-tenant-directory-row__service):not(
+    .vx-tenant-directory-row__active
+  ):not(.vx-tenant-directory-row__member):not(
+    .vx-tenant-directory-row__subscription
+  ):not(.vx-commercial-row__tenant):not(.vx-commercial-row__main):not(
+    .vx-commercial-row__center
+  ) {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-directory-row-cell-gap);
+  justify-items: center;
+}
+
+.vx-tenant-directory-row strong,
+.vx-tenant-directory-row small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-tenant-directory-row strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 800;
+}
+
+.vx-tenant-directory-row small {
+  margin-top: var(--vx-admin-directory-row-cell-gap);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 720;
+}

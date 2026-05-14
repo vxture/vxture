@@ -1,5 +1,0 @@
-.vx-product-detail-list--entitlements .vx-product-detail-list__row {
-  grid-template-columns:
-    minmax(var(--vx-admin-management-grid-column-md), 1.05fr) minmax(var(--vx-admin-management-track-11r-large), 0.8fr) minmax(var(--vx-admin-management-track-13r), 0.95fr)
-    minmax(var(--vx-admin-management-track-18r-large), 1.25fr);
-}

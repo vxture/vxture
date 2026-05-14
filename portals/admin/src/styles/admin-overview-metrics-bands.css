@@ -1,4 +1,70 @@
-@import "./admin-overview-metrics-bands-layout.css";
-@import "./admin-overview-metrics-bands-card.css";
-@import "./admin-overview-metrics-bands-content.css";
-@import "./admin-overview-metrics-bands-link.css";
+.admin-overview-band-grid,
+.admin-overview-two-column,
+.admin-overview-model-row {
+  display: grid;
+  gap: var(--vx-admin-overview-space-4r);
+}
+
+.admin-overview-band-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-admin-overview-space-2r);
+}
+
+.admin-overview-band {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-15r);
+  padding: var(--vx-admin-overview-space-15r);
+  border: var(--vx-admin-overview-line-width-1p) solid color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  border-top: var(--vx-admin-overview-line-width-2p) solid var(--overview-tone);
+  border-radius: var(--admin-overview-card-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 58%, transparent);
+}
+
+.admin-overview-band__header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-overview-space-1r);
+}
+
+.admin-overview-band__title {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-band__icon {
+  width: var(--vx-admin-overview-size-2r);
+  height: var(--vx-admin-overview-size-2r);
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 var(--vx-admin-overview-size-2r);
+  border-radius: var(--admin-overview-card-radius);
+  background: var(--overview-tone-soft);
+  color: var(--overview-tone);
+}
+
+.admin-overview-band h3,
+.admin-overview-ranking h3 {
+  color: var(--overview-tone, var(--vx-color-text-secondary));
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 760;
+}
+
+.admin-overview-band__chart-link {
+  min-height: var(--vx-admin-overview-size-2r);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-overview-space-05r);
+  padding: 0 var(--vx-admin-overview-space-05r);
+  border-radius: var(--admin-overview-card-radius);
+  background: var(--overview-tone-soft);
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}

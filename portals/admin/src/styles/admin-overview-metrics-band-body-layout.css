@@ -1,6 +1,0 @@
-.admin-overview-band__body {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(var(--vx-admin-overview-track-8r), 0.76fr);
-  gap: var(--vx-admin-overview-space-15r);
-  align-items: stretch;
-}

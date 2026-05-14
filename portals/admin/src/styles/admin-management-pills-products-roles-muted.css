@@ -1,6 +1,0 @@
-.vx-admin-role-muted-pill,
-.vx-tenant-pill--system {
-  background: color-mix(in srgb, var(--vx-color-gray-500) 8%, transparent);
-  color: var(--vx-color-gray-600);
-  box-shadow: inset 0 0 0 var(--vx-admin-management-effect-1p) var(--vx-color-neutral-surface);
-}

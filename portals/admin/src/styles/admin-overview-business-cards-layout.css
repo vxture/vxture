@@ -1,7 +1,0 @@
-.admin-overview-business-panel__cards {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(3, minmax(var(--vx-admin-overview-track-65r), auto));
-  gap: 0;
-  height: 100%;
-}

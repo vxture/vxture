@@ -1,6 +1,0 @@
-.vx-admin-role-row__identity svg,
-.vx-product-row__identity svg,
-.vx-product-plan-row__identity svg,
-.vx-product-solution-row__identity svg {
-  color: var(--tenant-row-tone);
-}

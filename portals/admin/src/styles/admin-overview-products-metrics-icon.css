@@ -1,7 +1,0 @@
-.admin-overview-product-metric__icon {
-  width: var(--vx-admin-overview-size-25r);
-  height: var(--vx-admin-overview-size-25r);
-  display: inline-grid;
-  place-items: center;
-  color: var(--overview-tone);
-}

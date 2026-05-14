@@ -1,7 +1,0 @@
-.vx-product-detail-list__row em.is-included {
-  color: var(--tenant-green);
-}
-
-.vx-product-detail-list__row em.is-excluded {
-  color: var(--tenant-rose);
-}

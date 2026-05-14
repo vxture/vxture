@@ -1,4 +1,59 @@
-@import "./admin-tenant-detail-shell-actions-layout.css";
-@import "./admin-tenant-detail-shell-actions-toolbar.css";
-@import "./admin-tenant-detail-shell-actions-unsaved.css";
-@import "./admin-tenant-detail-shell-actions-review.css";
+.vx-tenant-detail__title > div,
+.vx-tenant-detail__actions,
+.vx-tenant-block__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  flex-wrap: wrap;
+}
+
+.vx-tenant-detail__actions,
+.vx-tenant-block__actions {
+  justify-content: flex-end;
+}
+
+.vx-tenant-block__actions {
+  min-width: 0;
+  flex: 0 0 auto;
+}
+
+.vx-tenant-detail__toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-management-space-15r);
+  padding-bottom: var(--vx-admin-management-space-0375r);
+  border-bottom: var(--vx-admin-management-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+}
+
+.vx-tenant-unsaved {
+  color: var(--tenant-rose);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 820;
+  white-space: nowrap;
+}
+
+.vx-tenant-save-alert:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-danger) 36%, transparent);
+  background: color-mix(in srgb, var(--vx-color-danger) 10%, transparent);
+  color: var(--tenant-rose);
+  box-shadow: 0 0 0 var(--vx-admin-management-effect-3p) color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+}
+
+.vx-tenant-review-action {
+  min-height: var(--vx-admin-management-size-2r);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vx-admin-management-space-05r);
+  padding: 0 var(--vx-admin-management-space-074r);
+  border: var(--vx-admin-management-line-width-1p) solid color-mix(in srgb, var(--vx-color-warning-600) 26%, transparent);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 780;
+  text-decoration: none;
+  white-space: nowrap;
+}

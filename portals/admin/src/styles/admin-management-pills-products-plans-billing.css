@@ -1,9 +1,0 @@
-.vx-product-plan-pill--free {
-  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
-  color: var(--tenant-blue);
-}
-
-.vx-product-plan-pill--paid {
-  background: color-mix(in srgb, var(--vx-color-cyan-600) 8%, transparent);
-  color: var(--tenant-cyan);
-}

@@ -1,8 +1,0 @@
-.vx-service-health-card__checks,
-.vx-service-health-list__checks {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: var(--vx-admin-service-health-meta-gap);
-  flex-wrap: wrap;
-}

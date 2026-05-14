@@ -1,5 +1,83 @@
-@import "./admin-overview-business-cards-layout.css";
-@import "./admin-overview-business-cards-shell.css";
-@import "./admin-overview-business-cards-icon.css";
-@import "./admin-overview-business-cards-copy.css";
-@import "./admin-overview-business-cards-values.css";
+.admin-overview-business-panel__cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, minmax(var(--vx-admin-overview-track-65r), auto));
+  gap: 0;
+  height: 100%;
+}
+
+.admin-overview-business-card {
+  min-width: 0;
+  min-height: var(--vx-admin-overview-size-65r);
+  display: grid;
+  grid-template-columns: var(--vx-admin-overview-track-25r) minmax(0, 1fr) minmax(var(--vx-admin-overview-grid-column-sm), max-content);
+  align-items: center;
+  gap: var(--vx-admin-overview-space-1r);
+  padding: var(--vx-admin-overview-space-135r) 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.admin-overview-business-card + .admin-overview-business-card {
+  border-top: var(--vx-admin-overview-line-width-1p) dashed color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent);
+}
+
+.admin-overview-business-card__icon {
+  width: var(--vx-admin-overview-size-25r);
+  height: var(--vx-admin-overview-size-25r);
+  display: inline-grid;
+  place-items: center;
+  color: var(--overview-tone);
+}
+
+.admin-overview-business-card__main {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-overview-space-05r);
+}
+
+.admin-overview-business-card__main span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-admin-overview-space-05r);
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+}
+
+.admin-overview-business-card__value-line {
+  min-width: 0;
+  display: inline-flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-overview-space-05r);
+  flex-wrap: nowrap;
+}
+
+.admin-overview-business-card__main strong {
+  overflow: hidden;
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-page-title-size);
+  font-weight: 780;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-overview-business-card__main strong.admin-overview-metric-value--danger {
+  color: var(--vx-color-danger);
+}
+
+.admin-overview-business-card__value-line em {
+  min-height: var(--vx-admin-overview-size-15r);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-overview-space-05r);
+  border-radius: var(--admin-overview-card-radius);
+  background: var(--overview-tone-soft);
+  color: var(--overview-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 800;
+  white-space: nowrap;
+}

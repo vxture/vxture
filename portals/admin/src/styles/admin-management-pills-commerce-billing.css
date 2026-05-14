@@ -1,3 +1,79 @@
-@import "./admin-management-pills-commerce-billing-status.css";
-@import "./admin-management-pills-commerce-billing-kinds.css";
-@import "./admin-management-pills-commerce-billing-exceptions.css";
+.vx-billing-pill--paid,
+.vx-billing-pill--invoice-issued,
+.vx-billing-pill--invoice-finished {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-billing-pill--unpaid,
+.vx-billing-pill--paying,
+.vx-billing-pill--partial,
+.vx-billing-pill--invoice-applying,
+.vx-billing-pill--invoice-auditing,
+.vx-billing-pill--invoice-sending {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-pill--overdue,
+.vx-billing-pill--invoice-rejected,
+.vx-billing-pill--invoice-red {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-pill--cancelled,
+.vx-billing-pill--invoice-none {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-billing-pill--tier-free {
+  background: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  color: var(--tenant-green);
+}
+
+.vx-billing-pill--tier-pro {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-pill--type-normal,
+.vx-billing-pill--type-adjust,
+.vx-billing-pill--type-supplement,
+.vx-billing-pill--type-prepaid,
+.vx-billing-pill--tier-other {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}
+
+.vx-billing-pill--tier-enterprise {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-billing-exception-pill--adjust {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  color: var(--tenant-blue);
+}
+
+.vx-billing-exception-pill--supplement {
+  background: color-mix(in srgb, var(--vx-color-purple-600) 8%, transparent);
+  color: var(--vx-color-purple-600);
+}
+
+.vx-billing-exception-pill--discount {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-billing-exception-pill--overdue,
+.vx-billing-exception-pill--invoice {
+  background: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  color: var(--tenant-rose);
+}
+
+.vx-billing-exception-pill--cancelled {
+  background: var(--vx-color-neutral-surface);
+  color: var(--vx-color-gray-500);
+}

@@ -1,3 +1,70 @@
-@import "./admin-service-health-summary-cards-structure.css";
-@import "./admin-service-health-summary-cards-copy.css";
-@import "./admin-service-health-summary-cards-value.css";
+.vx-service-health-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--vx-admin-service-health-summary-gap);
+}
+
+.vx-service-health-summary__item {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: var(--vx-admin-service-health-summary-item-grid);
+  align-items: center;
+  gap: var(--vx-admin-service-health-summary-item-gap);
+  padding: var(--vx-admin-service-health-summary-item-padding-y) var(--vx-admin-service-health-summary-item-padding-x);
+  border: var(--vx-admin-service-health-border-width) solid var(--service-border);
+  border-top: var(--vx-admin-service-health-border-width-strong) solid var(--service-tone);
+  border-radius: var(--vx-radius-lg);
+  background: var(--service-bg);
+}
+
+.vx-service-health-summary__icon {
+  width: var(--vx-admin-service-health-icon-size);
+  height: var(--vx-admin-service-health-icon-size);
+  display: inline-grid;
+  place-items: center;
+  color: var(--service-tone);
+}
+
+.vx-service-health-summary__item > div {
+  min-width: 0;
+  display: grid;
+  gap: var(--vx-admin-service-health-copy-gap);
+}
+
+.vx-service-health-summary__item div > span {
+  overflow: hidden;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 780;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-service-health-summary__value-line {
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--vx-admin-service-health-value-gap);
+  flex-wrap: nowrap;
+}
+
+.vx-service-health-summary__value-line strong {
+  color: var(--service-tone);
+  font-size: var(--vx-admin-service-health-value-size);
+  font-weight: 760;
+  line-height: 1;
+}
+
+.vx-service-health-summary__value-line em {
+  min-height: var(--vx-admin-service-health-pill-min-height);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--vx-admin-service-health-pill-padding-x);
+  border-radius: var(--vx-radius-lg);
+  background: var(--service-soft);
+  color: var(--service-tone);
+  font-size: var(--vx-admin-caption-size);
+  font-style: normal;
+  font-weight: 820;
+  white-space: nowrap;
+}

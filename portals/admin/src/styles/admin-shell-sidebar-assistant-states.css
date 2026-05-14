@@ -1,6 +1,0 @@
-.admin-shell-sidebar__assistant-button:hover,
-.admin-shell-sidebar__assistant-button:focus-visible {
-  background: transparent;
-  color: var(--vx-console-brand-strong);
-  outline: none;
-}
