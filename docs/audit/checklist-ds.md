@@ -222,6 +222,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    第二阶段第九批：已将守卫升级为 `ds/no-global-concrete-style-import`，覆盖 `portals/*`、`agent-studio/*`、`business/*` 的 `globals.css` 本地样式导入；website、Vela、Ruyin 的本地入口层已对齐 import-only；同时新增 `ds/no-stale-style-entry-rules`，防止 import-only 入口约束指向不存在文件。
    第二阶段第十批：已新增 `ds/no-large-extracted-style-leaf`，应用 `src/styles` 中承载具体规则的叶子文件超过 12KB 会失败；import-only 聚合入口不受该阈值限制。
    第二阶段第十一批：`ds/no-large-extracted-style-leaf` 阈值已从 12KB 收紧到 8KB；全应用当前没有超过 8KB 的具体规则叶子，import-only 聚合入口继续豁免。
+   第二阶段第十二批：已新增 CSS 图谱守卫，`ds/no-missing-css-import` 拦截断链相对 `@import`，`ds/no-unreachable-app-style-module` 要求应用 `src/styles/*.css` 必须能从对应 `src/app/globals.css` 图谱到达。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性
@@ -536,6 +537,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 - `rg -n "@/components/ui|components/primitives" portals business agent-studio` 无业务源码结果。
 - `rg -n "@vxture/design-system/" portals business agent-studio packages --glob "*.ts" --glob "*.tsx" --glob "*.css"` 的结果仅允许 `/tokens`、`/types`、`/server` 和 package exports 暴露的 `styles/*`；无 `src/**` 或其他未授权深层导入。
 - `rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"` 无应用依赖清单结果。
+- CSS 图谱无断链相对 `@import`，应用 `src/styles/*.css` 无不可达模块；新增断链或陈旧样式文件会被 `pnpm lint:design` 阻断。
 - `packages/design/design-system/README.md`、`docs/packages/design/design-system.md`、`docs/standards/design-system.md`、`packages/design/design-system/package.json` 的版本、组件数量、导出入口一致。
 - `agent-studio/vela` 提供真实 lint 脚本，并通过 `pnpm --filter @vxture/agent-studio-vela lint`。
 - `business/ruyin`、`agent-studio/agent-template` 与其他 DS 消费者均通过各自适用的 `type-check`、`lint`、`build`。

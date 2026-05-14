@@ -336,7 +336,7 @@ const rules = [
         violation(
           file,
           1,
-          "具体规则 CSS 叶子超过 12KB；请按业务语义拆成少量模块，并让当前文件保持 @import 聚合。",
+          "具体规则 CSS 叶子超过 8KB；请按业务语义拆成少量模块，并让当前文件保持 @import 聚合。",
         ),
       ];
     },
@@ -560,6 +560,22 @@ for (const entry of IMPORT_ONLY_STYLE_ENTRIES.keys()) {
   });
 }
 
+const missingCssImportRule = {
+  id: "ds/no-missing-css-import",
+  description: "CSS 相对 @import 必须指向真实文件，防止样式图谱断链。",
+};
+for (const item of collectMissingCssImportViolations(files)) {
+  violations.push({ rule: missingCssImportRule, ...item });
+}
+
+const unreachableAppStyleRule = {
+  id: "ds/no-unreachable-app-style-module",
+  description: "应用 src/styles 下的样式模块必须能从对应 app/globals.css 的 @import 图谱到达。",
+};
+for (const item of collectUnreachableAppStyleViolations(files)) {
+  violations.push({ rule: unreachableAppStyleRule, ...item });
+}
+
 if (UPDATE_BASELINE) {
   updateBaseline(violations);
   process.exit(0);
@@ -686,6 +702,104 @@ function isImportOnlyStyleContent(content) {
     }
     return /^@import\s+["'][^"']+["'];$/.test(text);
   });
+}
+
+function collectMissingCssImportViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) continue;
+    const content = readFileSync(file, "utf8");
+    for (const item of findCssImports(content)) {
+      if (!item.specifier.startsWith(".")) continue;
+      const target = path.resolve(path.dirname(file), item.specifier);
+      if (exists(target)) continue;
+      items.push(
+        violation(
+          file,
+          item.line,
+          `${item.specifier} 指向的 CSS 文件不存在；请修正 @import 或恢复对应模块。`,
+          item.source,
+        ),
+      );
+    }
+  }
+  return items;
+}
+
+function collectUnreachableAppStyleViolations(sourceFiles) {
+  const fileByPath = new Map(sourceFiles.map((file) => [normalize(path.relative(ROOT, file)), file]));
+  const stylesByApp = new Map();
+
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    const match = normalized.match(/^(portals|agent-studio|business)\/([^/]+)\/src\/styles\/.+\.css$/);
+    if (!match) continue;
+    const appRoot = `${match[1]}/${match[2]}`;
+    const items = stylesByApp.get(appRoot) ?? [];
+    items.push(normalized);
+    stylesByApp.set(appRoot, items);
+  }
+
+  const items = [];
+  for (const [appRoot, styleFiles] of stylesByApp.entries()) {
+    const globals = `${appRoot}/src/app/globals.css`;
+    const globalsFile = fileByPath.get(globals);
+    if (!globalsFile) continue;
+
+    const reachable = collectReachableCssFiles(globals, fileByPath);
+    for (const styleFile of styleFiles) {
+      if (reachable.has(styleFile)) continue;
+      items.push(
+        violation(
+          fileByPath.get(styleFile),
+          1,
+          "该应用样式模块无法从 src/app/globals.css 的 @import 图谱到达；请接入稳定入口或移除陈旧文件。",
+          styleFile,
+        ),
+      );
+    }
+  }
+
+  return items;
+}
+
+function collectReachableCssFiles(entry, fileByPath) {
+  const reachable = new Set();
+  const stack = [entry];
+  while (stack.length > 0) {
+    const current = stack.pop();
+    if (!current || reachable.has(current)) continue;
+    const file = fileByPath.get(current);
+    if (!file) continue;
+
+    reachable.add(current);
+    const content = readFileSync(file, "utf8");
+    for (const item of findCssImports(content)) {
+      if (!item.specifier.startsWith(".")) continue;
+      const target = normalize(path.relative(ROOT, path.resolve(path.dirname(file), item.specifier)));
+      if (!fileByPath.has(target)) continue;
+      stack.push(target);
+    }
+  }
+  return reachable;
+}
+
+function findCssImports(content) {
+  const imports = [];
+  const lines = content.split(/\r?\n/);
+  lines.forEach((line, index) => {
+    const pattern = /@import\s+(?:url\()?["']([^"']+)["']/g;
+    let match = pattern.exec(line);
+    while (match) {
+      imports.push({
+        line: index + 1,
+        source: line,
+        specifier: match[1] ?? "",
+      });
+      match = pattern.exec(line);
+    }
+  });
+  return imports;
 }
 
 function isDesignSystemConsumerSource(file) {
