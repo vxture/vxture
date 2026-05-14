@@ -1,7 +1,7 @@
 # 部署检查清单
 
-> 更新：2026-05-11
-> 依赖文档：[`overview.md`](overview.md) · [`services.md`](services.md) · [`environments.md`](environments.md)
+> 更新：2026-05-14
+> 依赖文档：[`00-overview.md`](00-overview.md) · [`04-services.md`](04-services.md) · [`01-environments.md`](01-environments.md)
 
 ---
 
@@ -98,7 +98,7 @@ docker compose -f compose.ruyin.prod.yml up -d --no-deps ruyin-server
 - [ ] `GET https://console.vxture.com/` → 重定向到登录页
 - [ ] `GET https://admin.vxture.com/` → 重定向到登录页
 - [ ] `GET https://vxture.com/api/health` → `{ status: 'ok' }`（gateway-bff）
-- [ ] `POST https://vxture.com/auth-api/auth/signin` → 正常响应（不报 500）
+- [ ] `POST https://api.vxture.com/auth-api/auth/signin` → 正常响应（不报 500）
 
 ### 3.2 核心流程验证
 

@@ -11,18 +11,20 @@
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
-| `JWT_SECRET` | ✅ | 签名密钥，所有服务共享同一个值 |
+| `JWT_SECRET` | ✅ | JWT 签名密钥，≥ 32 位随机字符串，所有服务共享同一个值 |
 | `JWT_ACCESS_EXPIRES_IN` | ⚪ | Access Token 过期时长（默认 15m） |
 | `JWT_REFRESH_EXPIRES_IN` | ⚪ | Refresh Token 过期时长（默认 7d） |
+| `SESSION_IDLE_TIMEOUT` | ⚪ | 空闲超时秒数（默认 14400，即 4h；0 表示禁用）|
 | `REDIS_URL` | ✅ | 指向 vx-platform-redis（OAuth state 存储 + Token 黑名单） |
 | `AUTH_BFF_PORT` | ⚪ | 默认 3090 |
 | `AUTH_COOKIE_DOMAIN` | ✅ | `.vxture.com`（平台域）或 `.ruyin.ai`（业务域） |
+| `AUTH_INTERNAL_TOKEN` | ✅ | 内部服务调用凭证（`x-vxture-internal-auth` 请求头值） |
 | `DINGTALK_APP_KEY` | ✅ | 钉钉 OAuth 应用 Key |
 | `DINGTALK_APP_SECRET` | ✅ | 钉钉 OAuth 密钥 |
-| `DINGTALK_REDIRECT_URI` | ✅ | `https://vxture.com/auth-api/auth/oauth/dingtalk/callback` |
+| `DINGTALK_REDIRECT_URI` | ✅ | `https://api.vxture.com/auth-api/auth/oauth/dingtalk/callback` |
 | `FEISHU_APP_ID` | ✅ | 飞书 OAuth 应用 ID |
 | `FEISHU_APP_SECRET` | ✅ | 飞书 OAuth 密钥 |
-| `FEISHU_REDIRECT_URI` | ✅ | `https://vxture.com/auth-api/auth/oauth/feishu/callback` |
+| `FEISHU_REDIRECT_URI` | ✅ | `https://api.vxture.com/auth-api/auth/oauth/feishu/callback` |
 
 ### website-bff
 
@@ -65,10 +67,11 @@
 | 变量 | 必填 | 说明 |
 |------|------|------|
 | `GATEWAY_PORT` | ⚪ | 默认 8000 |
-| `WEBSITE_BFF_ORIGIN` | ✅ | `http://vx-website-bff:3011` |
-| `CONSOLE_BFF_ORIGIN` | ✅ | `http://vx-console-bff:3021` |
-| `ADMIN_BFF_ORIGIN` | ✅ | `http://vx-admin-bff:3031` |
-| `GATEWAY_ALLOWED_ORIGINS` | ✅ | 逗号分隔的允许 Origin 列表 |
+| `AUTH_BFF_ORIGIN` | ✅ | `http://vx-auth-bff:3090`（`/auth-api/*` 路由目标） |
+| `WEBSITE_BFF_ORIGIN` | ✅ | `http://vx-website-bff:3011`（`/website-api/*` 路由目标） |
+| `CONSOLE_BFF_ORIGIN` | ✅ | `http://vx-console-bff:3021`（`/console-api/*` 路由目标） |
+| `ADMIN_BFF_ORIGIN` | ✅ | `http://vx-admin-bff:3031`（`/admin-api/*` 路由目标） |
+| `GATEWAY_ALLOWED_ORIGINS` | ✅ | 逗号分隔的允许 Origin（`https://vxture.com,https://console.vxture.com,https://admin.vxture.com`） |
 
 ### Next.js 门户（website / console / admin）
 

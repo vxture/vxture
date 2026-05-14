@@ -5,7 +5,7 @@
 
 ---
 
-> 节点规格与 Tailscale IP 见 [`docs/deployment/00-overview.md` § 节点信息](overview.md)。
+> 节点规格与 Tailscale IP 见 [`docs/deployment/00-overview.md` § 节点信息](00-overview.md)。
 
 ---
 
@@ -63,6 +63,25 @@ server {
     location / {
         include snippets/proxy-params.conf;
         proxy_pass http://vx-website:3010;
+    }
+}
+
+# /data/nginx/conf/sites-enabled/api.conf
+# api.vxture.com → gateway-bff（所有前端 API 统一入口）
+server {
+    listen 443 ssl;
+    server_name api.vxture.com;
+    include snippets/ssl-params.conf;
+    ssl_certificate     /etc/nginx/ssl/vxture.com.crt;
+    ssl_certificate_key /etc/nginx/ssl/vxture.com.key;
+    location / {
+        include snippets/proxy-params.conf;
+        proxy_pass http://vx-gateway-bff:8000;
+        # gateway-bff 按路径前缀转发到各 BFF
+        # /website-api/* → vx-website-bff:3011
+        # /console-api/* → vx-console-bff:3021
+        # /admin-api/*   → vx-admin-bff:3031
+        # /auth-api/*    → vx-auth-bff:3090
     }
 }
 
