@@ -24,7 +24,39 @@ No business-domain data is stored in AI Gateway. Business records stay in their 
 
 ---
 
-## 2. Runtime Flow
+## 2. 隔离模型
+
+平台使用统一的 Provider API Key，但必须保证不同租户、不同应用、不同会话的内容完全隔离，互不可见。
+
+### 隔离维度
+
+| 维度 | 隔离由谁保证 | 机制 |
+|------|------------|------|
+| **租户（Tenant）** | ai-gateway | `ai_model_grant` 鉴权：每次调用必须通过租户级技术授权 + `tenant_subscription_quota` 配额校验；计量数据以 `tenant_id` 为主键独立写入 |
+| **应用（Agent）** | agent-server | 每个 Agent 实例是独立进程，持有独立 system prompt、独立工具集（ToolRegistry）、独立数据库 schema；agent-server 之间禁止跨实例 import |
+| **会话（Session）** | agent-server | 每个 session 的对话历史独立存储于数据库；发起 LLM 调用时由 agent-server 从当前 session 组装 messages 数组，Gateway 本身无状态，不持有任何对话历史 |
+
+### API Key 隔离机制
+
+```
+tenant / agent
+    │  只知道 modelCode，不接触 API Key
+    ▼
+ai-gateway
+    │  从环境变量读取 API Key（ai_model.api_key_env_var）
+    │  Key 不入库，不暴露给 agent-server
+    ▼
+Provider（Doubao / Claude / 私有模型）
+```
+
+同一个 API Key 对应多个租户的请求，隔离由以下保证：
+- LLM API 是**无状态 HTTP 接口**：每次请求携带完整 messages，Provider 不在调用间保留任何上下文
+- messages 数组由 agent-server 组装，只包含当前 session 的历史，天然隔离其他 session
+- 计费和配额在 ai-gateway 层按 `tenant_id + agent_id` 独立统计，串不到其他租户
+
+---
+
+## 3. Runtime Flow
 
 ```text
 business agent / app
@@ -42,7 +74,7 @@ The agent only needs the SDK request contract. It should not know provider API k
 
 ---
 
-## 3. Package Layout
+## 4. Package Layout
 
 ```text
 packages/ai/ai-sdk
@@ -72,7 +104,7 @@ portals/admin/src/modules/ai/ModelGatewayPage.tsx
 
 ---
 
-## 4. Database Split
+## 5. Database Split
 
 ### 4.1 `ai_gateway`
 
@@ -120,7 +152,7 @@ Current quota check reads `tenant_usage_summary` summary rows for the current cy
 
 ---
 
-## 5. Cost And Fee Model
+## 6. Cost And Fee Model
 
 There are two different prices and they must not be mixed:
 
@@ -142,7 +174,7 @@ The phase-1 seed only provides initial product and provider cost records. Contra
 
 ---
 
-## 6. Request Contract
+## 7. Request Contract
 
 `@vxture/ai-sdk` sends a normalized request to AI Gateway:
 
@@ -167,7 +199,7 @@ export interface ChatRequest {
 
 ---
 
-## 7. Authorization And Quota
+## 8. Authorization And Quota
 
 Gateway checks two independent gates:
 
@@ -186,7 +218,7 @@ This keeps platform routing control separate from what the customer purchased.
 
 ---
 
-## 8. Metering
+## 9. Metering
 
 Successful calls write:
 
@@ -214,7 +246,7 @@ Gateway does not persist prompt content or response content in these commerce us
 
 ---
 
-## 9. Phase 1 Seed
+## 10. Phase 1 Seed
 
 Seed file:
 
@@ -242,7 +274,7 @@ The seed is idempotent.
 
 ---
 
-## 10. Implementation Status
+## 11. Implementation Status
 
 Completed in phase 1:
 
