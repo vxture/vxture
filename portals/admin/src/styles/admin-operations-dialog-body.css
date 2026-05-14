@@ -1,0 +1,53 @@
+/* Admin operations dialog body and form styles. */
+
+.vx-dialog__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-admin-operations-dialog-body-gap);
+  padding: var(--vx-admin-operations-dialog-body-padding);
+}
+
+.vx-dialog__desc {
+  margin: 0;
+  font-size: var(--vx-admin-body-size);
+  color: var(--vx-console-muted);
+}
+
+.vx-dialog__label {
+  font-size: var(--vx-admin-body-size);
+  font-weight: 500;
+  color: var(--vx-console-text);
+}
+
+.vx-dialog__label small {
+  font-weight: 400;
+  color: var(--vx-console-muted);
+}
+
+.vx-dialog__textarea {
+  width: 100%;
+  min-height: var(--vx-admin-operations-dialog-textarea-min-height);
+  resize: vertical;
+  padding: var(--vx-admin-operations-dialog-textarea-padding);
+  border: var(--vx-admin-operations-dialog-border-width) solid var(--vx-console-border);
+  border-radius: var(--vx-radius-md);
+  background: var(--vx-console-bg);
+  color: var(--vx-console-text);
+  font: inherit;
+  font-size: var(--vx-admin-body-size);
+  line-height: 1.5;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+  box-sizing: border-box;
+}
+
+.vx-dialog__textarea:focus {
+  outline: none;
+  border-color: var(--vx-console-brand);
+  box-shadow: 0 0 0 var(--vx-admin-operations-dialog-textarea-focus-shadow-width) color-mix(in srgb, var(--vx-console-brand) 18%, transparent);
+}
+
+.vx-dialog__error {
+  margin: 0;
+  font-size: var(--vx-admin-meta-size);
+  color: var(--vx-admin-rose-fg, var(--vx-color-danger));
+}

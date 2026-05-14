@@ -1,0 +1,30 @@
+/* Tenant detail header metric column styles. */
+
+.vx-tenant-detail__metric-column {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: var(--vx-admin-management-space-1r);
+}
+
+.vx-tenant-detail-summary .vx-tenant-key-metric {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-075r);
+  min-height: var(--vx-admin-management-size-175r);
+}
+
+.vx-tenant-detail-summary .vx-tenant-key-metric > span {
+  flex: 0 0 var(--vx-admin-management-size-45r);
+}
+
+.vx-tenant-detail-summary .vx-tenant-key-metric p {
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  overflow: hidden;
+  row-gap: var(--vx-admin-management-space-035r);
+}
+
+.vx-tenant-detail-summary .vx-tenant-key-metric em {
+  flex: 0 0 auto;
+}
