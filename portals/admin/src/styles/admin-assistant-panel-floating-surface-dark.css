@@ -1,0 +1,9 @@
+.dark .vx-assistant-panel--floating {
+  border-color: var(--vx-shell-assistant-line, color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent));
+  border-left-color: var(--vx-shell-assistant-line, color-mix(in srgb, var(--vx-color-gray-400) 22%, transparent));
+  background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  box-shadow: var(
+    --vx-shell-floating-shadow,
+    0 var(--vx-admin-assistant-effect-md) var(--vx-admin-assistant-effect-xl) var(--vx-admin-assistant-shadow-spread) color-mix(in srgb, var(--vx-color-primary) 30%, transparent)
+  );
+}

@@ -1,0 +1,4 @@
+.admin-shell__header .vx-shell-header__search-shell {
+  width: var(--vx-admin-header-search-width);
+  justify-self: stretch;
+}

@@ -1,0 +1,26 @@
+.vx-service-plan-group__badges,
+.vx-service-plan-group__meta,
+.vx-service-plan-tag-line,
+.vx-service-plan-product-tags {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--vx-admin-management-space-05r);
+  flex-wrap: wrap;
+}
+
+.vx-service-plan-group__badges {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+}
+
+.vx-service-plan-group__meta {
+  gap: var(--vx-admin-management-space-075r) var(--vx-admin-management-space-125r);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+}
+
+.vx-service-plan-group__meta span {
+  white-space: nowrap;
+}

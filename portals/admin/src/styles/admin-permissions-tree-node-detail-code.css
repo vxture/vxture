@@ -1,0 +1,16 @@
+.vx-admin-permission-tree-node__detail-row code,
+.vx-admin-permission-tree-node__detail-row small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-admin-permission-tree-node__detail-row code {
+  font-family: var(--font-mono);
+}
+
+.vx-admin-permission-tree-node__detail-row small {
+  color: var(--vx-color-gray-400);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 560;
+}

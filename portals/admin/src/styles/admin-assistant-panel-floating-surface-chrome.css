@@ -1,0 +1,13 @@
+.vx-assistant-panel--floating {
+  border: var(--vx-admin-assistant-border-width) solid var(--vx-shell-assistant-line, var(--vx-color-neutral-border));
+  border-left: var(--vx-admin-assistant-border-width-strong) solid
+    var(--vx-shell-assistant-line, var(--vx-color-neutral-border));
+  border-radius: var(--vx-shell-radius-panel, var(--vx-admin-assistant-radius-panel));
+  background: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  box-shadow: var(
+    --vx-shell-floating-shadow,
+    0 var(--vx-admin-assistant-effect-md) var(--vx-admin-assistant-effect-xl) var(--vx-admin-assistant-shadow-spread) color-mix(in srgb, var(--vx-color-brand-800) 34%, transparent)
+  );
+  backdrop-filter: blur(var(--vx-admin-assistant-effect-md)) saturate(150%);
+  -webkit-backdrop-filter: blur(var(--vx-admin-assistant-effect-md)) saturate(150%);
+}

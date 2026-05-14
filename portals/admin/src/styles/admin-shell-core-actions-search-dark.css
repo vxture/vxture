@@ -1,0 +1,15 @@
+.dark .admin-shell__header .vx-shell-header__search-input {
+  background: var(--vx-shell-surface-soft);
+  border-color: var(--vx-shell-line);
+}
+
+.dark .admin-shell__header .vx-shell-header__search-input:hover {
+  border-color: color-mix(in srgb, var(--vx-console-brand) 48%, transparent);
+  background: color-mix(in srgb, var(--vx-shell-surface-soft) 72%, var(--vx-color-background));
+}
+
+.dark .admin-shell__header .vx-shell-header__search-input:focus,
+.dark .admin-shell__header .vx-shell-header__search-input:focus-visible {
+  border-color: color-mix(in srgb, var(--vx-console-brand) 60%, transparent);
+  box-shadow: 0 0 0 var(--vx-admin-shell-header-search-focus-ring-width) var(--vx-shell-focus-ring);
+}

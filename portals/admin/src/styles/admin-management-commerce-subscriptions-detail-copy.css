@@ -1,0 +1,22 @@
+.vx-subscription-timeline__item strong {
+  display: block;
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-body-size);
+  font-weight: 760;
+}
+
+.vx-subscription-timeline__item p {
+  margin: var(--vx-admin-management-space-035r) 0 0;
+  color: var(--vx-color-gray-600);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+.vx-subscription-timeline__item small {
+  display: block;
+  margin-top: var(--vx-admin-management-space-035r);
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 400;
+}

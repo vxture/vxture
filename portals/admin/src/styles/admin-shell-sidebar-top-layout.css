@@ -1,0 +1,11 @@
+.admin-shell-sidebar__top {
+  min-width: 0;
+  min-height: var(--vx-admin-shell-rail-size);
+  display: grid;
+  grid-template-columns: var(--vx-admin-shell-rail-track) minmax(0, 1fr) auto;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0
+    calc(var(--vx-admin-sidebar-pad-x) + var(--vx-admin-sidebar-control-inset))
+    0 var(--vx-admin-sidebar-pad-x);
+}

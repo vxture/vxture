@@ -1,0 +1,14 @@
+.vx-subscription-timeline__item--success {
+  --subscription-timeline-bg: color-mix(in srgb, var(--vx-color-success) 8%, transparent);
+  --subscription-timeline-color: var(--tenant-green);
+}
+
+.vx-subscription-timeline__item--warning {
+  --subscription-timeline-bg: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  --subscription-timeline-color: var(--tenant-amber);
+}
+
+.vx-subscription-timeline__item--danger {
+  --subscription-timeline-bg: color-mix(in srgb, var(--vx-color-danger) 12%, transparent);
+  --subscription-timeline-color: var(--tenant-rose);
+}

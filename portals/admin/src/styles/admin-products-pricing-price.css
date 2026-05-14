@@ -1,0 +1,22 @@
+.vx-product-plan__price {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: start;
+  display: grid;
+  gap: var(--vx-admin-products-space-05r);
+  padding: 0 0 0 var(--vx-admin-products-space-1r);
+  border-left: var(--vx-admin-products-line-width-2p) solid color-mix(in srgb, var(--vx-color-brand-600) 24%, transparent);
+  border-radius: 0;
+  background: transparent;
+}
+
+.vx-product-plan__price strong {
+  color: var(--vx-color-brand-950);
+  font-size: var(--vx-admin-page-title-size);
+}
+
+.vx-product-plan__price span {
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-admin-caption-size);
+  font-weight: 700;
+}

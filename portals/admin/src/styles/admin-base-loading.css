@@ -1,0 +1,15 @@
+.console-loading {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--vx-admin-base-space-2r);
+}
+
+.console-loading__card {
+  max-width: var(--vx-admin-base-size-540p);
+  padding: var(--vx-admin-base-space-2r);
+  border: var(--vx-admin-base-line-width-1p) solid var(--vx-console-border);
+  border-radius: var(--vx-admin-base-radius-16p);
+  background: var(--vx-console-surface);
+  box-shadow: var(--vx-console-shadow);
+}

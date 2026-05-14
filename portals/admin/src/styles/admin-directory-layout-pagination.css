@@ -1,0 +1,21 @@
+.vx-tenant-pagination {
+  min-height: var(--vx-admin-directory-pagination-min-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-admin-directory-header-gap);
+  padding: var(--vx-admin-directory-pagination-padding-top) 0 var(--vx-admin-directory-pagination-padding-bottom);
+  border-top: var(--vx-admin-directory-list-border-width) dashed var(--vx-color-auth-border);
+}
+
+.vx-tenant-pagination strong {
+  color: var(--tenant-ink);
+  font-size: var(--vx-admin-card-title-size);
+  font-weight: 800;
+}
+
+.vx-tenant-pagination span {
+  color: var(--tenant-muted);
+  font-size: var(--vx-admin-meta-size);
+  font-weight: 400;
+}

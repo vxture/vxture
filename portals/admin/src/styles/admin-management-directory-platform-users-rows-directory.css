@@ -1,0 +1,27 @@
+.vx-platform-user-directory-list .vx-tenant-directory-row__tenant,
+.vx-platform-user-directory-list .vx-tenant-directory-row__tenant > span,
+.vx-platform-user-directory-list .vx-tenant-directory-row__title-line,
+.vx-platform-user-directory-list .vx-model-name-button {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.vx-platform-user-directory-list .vx-model-name-button,
+.vx-platform-user-directory-list .vx-tenant-directory-row__tenant small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vx-platform-user-directory-list .vx-tenant-directory-row__status-line,
+.vx-platform-user-directory-list .vx-tenant-directory-row__badges {
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+.vx-platform-user-directory-list .vx-tenant-pill {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

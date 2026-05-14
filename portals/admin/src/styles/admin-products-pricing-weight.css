@@ -1,0 +1,8 @@
+.vx-product-plan__header p,
+.vx-product-release-group__meta span,
+.vx-product-release__head p,
+.vx-product-release__versions small,
+.vx-product-plan__footer > span,
+.vx-product-plan__footer small {
+  font-weight: 400;
+}
