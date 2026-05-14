@@ -1,0 +1,13 @@
+/* Admin permission type tone styles. */
+
+.vx-admin-permission-type--menu {
+  --tenant-row-tone: var(--tenant-blue);
+}
+
+.vx-admin-permission-type--button {
+  --tenant-row-tone: var(--tenant-cyan);
+}
+
+.vx-admin-permission-type--api {
+  --tenant-row-tone: var(--tenant-amber);
+}

@@ -1,0 +1,16 @@
+/* Ops todo and ticket selection styles. */
+
+.vx-ops-todo-operation-row,
+.vx-ticket-operation-row {
+  cursor: pointer;
+}
+
+.vx-ops-todo-operation-row--selected,
+.vx-ticket-operation-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-ops-todo-operation-row__select,
+.vx-ticket-operation-row__select {
+  justify-self: center;
+}

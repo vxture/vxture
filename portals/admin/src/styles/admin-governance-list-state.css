@@ -1,0 +1,31 @@
+/* Admin platform governance row state styles. */
+
+.vx-platform-governance-row {
+  min-height: var(--vx-admin-governance-row-min-height);
+  cursor: pointer;
+}
+
+.vx-platform-governance-row--selected {
+  background: var(--vx-color-brand-50);
+}
+
+.vx-platform-governance-page--approvals .vx-platform-governance-row {
+  --tenant-row-tone: var(--tenant-amber);
+}
+
+.vx-platform-governance-page--approvals .vx-platform-governance-row__policy strong {
+  color: var(--tenant-ink);
+}
+
+.vx-platform-governance-page--approvals .vx-platform-governance-row__scope .vx-tenant-pill {
+  background: color-mix(in srgb, var(--vx-color-warning-600) 10%, transparent);
+  color: var(--tenant-amber);
+}
+
+.vx-platform-governance-row__index,
+.vx-platform-governance-row__status {
+  text-align: center;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-meta-size);
+  white-space: nowrap;
+}
