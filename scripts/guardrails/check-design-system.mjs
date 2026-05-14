@@ -325,6 +325,23 @@ const rules = [
     },
   },
   {
+    id: "ds/no-large-extracted-style-leaf",
+    description: "应用 src/styles 中承载具体规则的叶子文件不能继续膨胀为大入口。",
+    checkFile(file) {
+      if (!isExtractedPortalStyleModule(file) || isGeneratedOrAsset(file)) return [];
+      if (statSync(file).size <= 12000) return [];
+      const content = readFileSync(file, "utf8");
+      if (isImportOnlyStyleContent(content)) return [];
+      return [
+        violation(
+          file,
+          1,
+          "具体规则 CSS 叶子超过 12KB；请按业务语义拆成少量模块，并让当前文件保持 @import 聚合。",
+        ),
+      ];
+    },
+  },
+  {
     id: "ds/no-style-entry-rules",
     description: "大型样式入口只能作为 @import 聚合入口，具体规则必须进入分层模块。",
     checkContent(file, content) {
@@ -650,6 +667,25 @@ function isFrontendSource(file) {
 
 function isExtractedPortalStyleModule(file) {
   return /^(portals|agent-studio|business)\/[^/]+\/src\/styles\/.+\.css$/.test(normalize(file));
+}
+
+function isImportOnlyStyleContent(content) {
+  const trimmed = content.trim();
+  if (!trimmed) return false;
+  let inBlockComment = false;
+  return trimmed.split(/\r?\n/).every((line) => {
+    const text = line.trim();
+    if (!text) return true;
+    if (inBlockComment) {
+      if (text.includes("*/")) inBlockComment = false;
+      return true;
+    }
+    if (text.startsWith("/*")) {
+      if (!text.includes("*/")) inBlockComment = true;
+      return true;
+    }
+    return /^@import\s+["'][^"']+["'];$/.test(text);
+  });
 }
 
 function isDesignSystemConsumerSource(file) {
