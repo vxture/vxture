@@ -101,7 +101,17 @@
       "Bash(xargs -I{} sh -c 'echo \"$\\(dirname {}\\)\"; cat {} | python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(\\\\\"  name:\\\\\", d.get\\(\\\\\"name\\\\\",\\\\\"?\\\\\"\\)\\)\" 2>/dev/null || true')",
       "PowerShell(Get-Content *)",
       "Bash(grep -v \"^$\")",
-      "Bash(xargs -I {} basename {})"
+      "Bash(xargs -I {} basename {})",
+      "Bash(sed -i 's/^## 2\\\\. Runtime Flow/## 3. Runtime Flow/' docs/design/ai-gateway.md)",
+      "Bash(sed -i 's/^## 3\\\\. Package Layout/## 4. Package Layout/' docs/design/ai-gateway.md)",
+      "Bash(sed -i 's/^## 4\\\\. Database Split/## 5. Database Split/' docs/design/ai-gateway.md)",
+      "Bash(sed -i 's/^## 5\\\\. Cost And Fee Model/## 6. Cost And Fee Model/' docs/design/ai-gateway.md)",
+      "Bash(sed -i 's/^## 6\\\\. Request Contract/## 7. Request Contract/' docs/design/ai-gateway.md)",
+      "PowerShell(Get-ChildItem -Path \"D:\\\\MyWebSite\\\\vxture\\\\docs\" -Recurse -Force | Select-Object FullName, @{Name=\"Type\"; Expression={if\\($_.PSIsContainer\\){\"DIR\"}else{\"FILE\"}}} | Sort-Object FullName)",
+      "Bash(grep -E \"\\\\.md$|\\\\.html$|\\\\.txt$\")",
+      "Bash(Write-Host \"Done\")",
+      "PowerShell(git *)",
+      "PowerShell(Get-ChildItem \"D:\\\\MyWebSite\\\\vxture\" -Recurse -Filter \"CLAUDE.md\" | ForEach-Object { $_.FullName.Replace\\(\"D:\\\\MyWebSite\\\\vxture\\\\\", \"\"\\) } | Sort-Object)"
     ]
   }
 }
