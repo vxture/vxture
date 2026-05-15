@@ -25,6 +25,11 @@ COPY packages/ packages/
 COPY services/ services/
 COPY agent-server/ agent-server/
 COPY bff/ bff/
+COPY portals/ portals/
+COPY agent-studio/ agent-studio/
+COPY business/ business/
+# tools/dev-panel is excluded from build context (dev-only) but pnpm needs it as workspace stub
+RUN mkdir -p tools/dev-panel && echo '{"name":"@vxture/dev-panel","version":"0.0.0"}' > tools/dev-panel/package.json
 
 RUN pnpm install --frozen-lockfile
 
