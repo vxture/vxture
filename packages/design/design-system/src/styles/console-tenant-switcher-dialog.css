@@ -33,7 +33,7 @@
   border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-600) 12%, transparent);
   border-radius: var(--vx-console-radius-18p);
   background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
-  box-shadow: 0 var(--vx-console-effect-28p) var(--vx-console-effect-68p) color-mix(in srgb, var(--vx-color-brand-950) 18%, transparent);
+  box-shadow: var(--vx-console-tenant-dialog-shadow);
 }
 
 .vx-tenant-dialog__header {

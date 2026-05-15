@@ -8,16 +8,16 @@
  */
 
 .vx-account-profile-dialog {
-  width: min(500px, 100%);
+  width: var(--vx-account-profile-dialog-width);
 }
 
 .vx-account-profile-dialog--wide {
-  width: min(720px, 100%);
+  width: var(--vx-account-profile-dialog-wide-width);
 }
 
 .vx-account-profile-dialog__header {
   display: grid;
-  gap: 0.18rem;
+  gap: var(--vx-account-profile-dialog-header-gap);
 }
 
 .vx-account-profile-dialog__header p {
@@ -28,18 +28,18 @@
 
 .vx-account-profile-dialog-grid {
   display: grid;
-  grid-template-columns: minmax(12rem, 0.42fr) minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: var(--vx-account-profile-dialog-grid-columns);
+  gap: var(--vx-account-profile-dialog-grid-gap);
   align-items: flex-start;
 }
 
 .vx-account-avatar-editor {
   display: grid;
   justify-items: center;
-  gap: 0.7rem;
+  gap: var(--vx-account-avatar-editor-gap);
   min-width: 0;
-  padding: 0.86rem;
-  border: 1px solid var(--vx-color-border);
+  padding: var(--vx-account-avatar-editor-padding);
+  border: var(--vx-account-avatar-editor-border);
   border-radius: var(--vx-radius-lg);
   background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 82%, transparent);
   text-align: center;
@@ -51,14 +51,12 @@
 }
 
 .vx-account-avatar-editor__preview {
-  width: 8rem;
-  height: 8rem;
+  width: var(--vx-account-avatar-editor-preview-size);
+  height: var(--vx-account-avatar-editor-preview-size);
   border-radius: var(--vx-radius-full);
   background-position: center;
   background-size: cover;
-  box-shadow:
-    0 18px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent),
-    inset 0 0 0 1px var(--vx-color-border);
+  box-shadow: var(--vx-platform-account-media-shadow);
 }
 
 .vx-account-avatar-editor strong,
@@ -77,7 +75,7 @@
 }
 
 .vx-account-avatar-editor span {
-  margin-top: 0.18rem;
+  margin-top: var(--vx-account-avatar-editor-copy-margin-top);
   color: var(--vx-console-muted);
   font-size: var(--vx-account-profile-meta-size);
 }
@@ -85,7 +83,7 @@
 .vx-account-profile-form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.72rem;
+  gap: var(--vx-account-profile-form-grid-gap);
   min-width: 0;
 }
 
@@ -96,11 +94,11 @@
 .vx-account-profile-input-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.5rem;
+  gap: var(--vx-account-profile-input-row-gap);
   align-items: center;
 }
 
 .vx-account-profile-input-row .vx-btn {
-  min-height: 2.42rem;
+  min-height: var(--vx-account-profile-input-row-button-min-height);
   white-space: nowrap;
 }

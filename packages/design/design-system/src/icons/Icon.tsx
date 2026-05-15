@@ -87,9 +87,9 @@ export const Icon = ({
     <Component
       weight={weight}
       size={resolvedSize}
-      color={color}
       className={`inline-flex shrink-0 ${className}`}
       aria-hidden
+      {...(color !== undefined ? { color } : {})}
       {...rest}
     />
   );

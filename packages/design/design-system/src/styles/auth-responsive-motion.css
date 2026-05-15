@@ -22,13 +22,13 @@
   }
 
   .vx-auth-header {
-    height: 64px;
-    flex-basis: 64px;
+    height: var(--vx-auth-responsive-visual-mobile-size);
+    flex-basis: var(--vx-auth-responsive-visual-mobile-size);
   }
 
   .vx-auth-main {
     align-items: flex-start;
-    padding: 10px 16px 22px;
+    padding: var(--vx-auth-responsive-mobile-card-padding);
   }
 
   .vx-auth-card {
@@ -38,41 +38,41 @@
   }
 
   .vx-auth-visual {
-    min-height: 220px;
+    min-height: var(--vx-auth-responsive-mobile-visual-min-height);
     flex-basis: auto;
   }
 
   .vx-auth-divider {
     width: 100%;
-    height: 1px;
-    flex-basis: 1px;
+    height: var(--vx-auth-responsive-divider-size);
+    flex-basis: var(--vx-auth-responsive-divider-size);
   }
 
   .vx-auth-form-panel {
-    padding: 28px 24px;
+    padding: var(--vx-auth-responsive-form-padding);
   }
 
   .vx-auth-footer {
     height: auto;
-    min-height: 52px;
+    min-height: var(--vx-auth-responsive-form-action-min-height);
   }
 
   .vx-auth-footer-inner {
     flex-wrap: wrap;
     gap: var(--vx-auth-gap-sm);
     height: auto;
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: var(--vx-auth-responsive-form-padding-y);
+    padding-bottom: var(--vx-auth-responsive-form-padding-y);
   }
 }
 
 @media (max-width: 520px) {
   .vx-signup-main {
-    padding: 10px 16px 22px;
+    padding: var(--vx-auth-responsive-mobile-card-padding);
   }
 
   .vx-signup-card {
-    padding: 24px;
+    padding: var(--vx-auth-responsive-compact-card-padding);
   }
 
   .vx-auth-socials,
@@ -81,7 +81,7 @@
   }
 
   .vx-captcha-card {
-    width: calc(100vw - 32px);
+    width: var(--vx-auth-responsive-dialog-width);
   }
 
   .vx-captcha-canvas,
@@ -92,15 +92,15 @@
 
 @media (max-height: 720px) {
   .vx-signup-card {
-    padding: 22px 42px;
+    padding: var(--vx-auth-responsive-compact-form-padding);
   }
 
   .vx-signup-heading {
-    margin-bottom: 14px;
+    margin-bottom: var(--vx-auth-responsive-heading-margin-bottom);
   }
 
   .vx-signup-or {
-    margin: 10px 0;
+    margin: var(--vx-auth-responsive-divider-margin);
   }
 
   .vx-signup-form {
@@ -108,17 +108,17 @@
   }
 
   .vx-signup-field input {
-    height: 36px;
+    height: var(--vx-auth-responsive-social-size);
   }
 
   .vx-signup-primary,
   .vx-signup-page .vx-auth-social {
-    min-height: 38px;
+    min-height: var(--vx-auth-responsive-social-min-height);
   }
 
   .vx-signup-terms,
   .vx-signup-login {
-    margin-top: 8px;
+    margin-top: var(--vx-auth-responsive-social-margin-top);
   }
 }
 
@@ -149,23 +149,23 @@
 @media (min-width: 640px) {
   .vx-auth-header-inner,
   .vx-auth-footer-inner {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: var(--vx-auth-responsive-medium-padding-x);
+    padding-right: var(--vx-auth-responsive-medium-padding-x);
   }
 }
 
 @media (min-width: 1024px) {
   .vx-auth-header-inner,
   .vx-auth-footer-inner {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    padding-left: var(--vx-auth-responsive-large-padding-x);
+    padding-right: var(--vx-auth-responsive-large-padding-x);
   }
 }
 
 @media (min-width: 1280px) {
   .vx-auth-header-inner,
   .vx-auth-footer-inner {
-    max-width: 96rem;
+    max-width: var(--vx-auth-responsive-content-max-width);
   }
 }
 
@@ -175,13 +175,13 @@
   }
 
   .vx-auth-header {
-    height: 56px;
-    flex-basis: 56px;
+    height: var(--vx-auth-responsive-visual-tablet-size);
+    flex-basis: var(--vx-auth-responsive-visual-tablet-size);
   }
 
   .vx-auth-main {
     align-items: flex-start;
-    padding: 10px 16px 22px;
+    padding: var(--vx-auth-responsive-mobile-card-padding);
   }
 
   .vx-auth-card {
@@ -191,26 +191,26 @@
   }
 
   .vx-auth-visual {
-    min-height: 220px;
+    min-height: var(--vx-auth-responsive-mobile-visual-min-height);
     flex-basis: auto;
   }
 
   .vx-auth-divider {
     width: 100%;
-    height: 1px;
-    flex-basis: 1px;
+    height: var(--vx-auth-responsive-divider-size);
+    flex-basis: var(--vx-auth-responsive-divider-size);
   }
 
   .vx-auth-form-panel {
-    padding: 28px 24px;
+    padding: var(--vx-auth-responsive-form-padding);
     overflow: visible;
   }
 
   .vx-auth-footer {
     height: auto;
-    min-height: 52px;
+    min-height: var(--vx-auth-responsive-form-action-min-height);
     flex-basis: auto;
-    padding-bottom: 12px;
+    padding-bottom: var(--vx-auth-responsive-form-padding-y);
   }
 
   .vx-auth-footer-inner {

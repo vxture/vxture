@@ -20,9 +20,9 @@
   line-height: 1;
   font-weight: 600;
   transition:
-    background 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease;
+    background var(--vx-control-transition),
+    border-color var(--vx-control-transition),
+    color var(--vx-control-transition);
 }
 
 :where(.vx-btn:disabled) {

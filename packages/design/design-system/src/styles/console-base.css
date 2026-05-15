@@ -16,7 +16,7 @@ body.dark {
 }
 
 body {
-  min-height: 100vh;
+  min-height: var(--vx-console-viewport-min-height);
   margin: 0;
   font-feature-settings: "ss01" 1, "ss02" 1;
 }
@@ -40,7 +40,7 @@ a {
 }
 
 .console-loading {
-  min-height: 100vh;
+  min-height: var(--vx-console-viewport-min-height);
   display: grid;
   place-items: center;
   padding: var(--vx-console-space-2r);

@@ -9,7 +9,7 @@
 
 @media (max-width: 720px) {
   .vx-shell-header__search-shell {
-    width: min(16rem, 100%);
+    width: var(--vx-platform-responsive-search-width);
     justify-self: stretch;
   }
 
@@ -49,8 +49,8 @@
 
   .vx-members-header-selection {
     align-items: stretch;
-    border-bottom: 1px solid var(--vx-color-shell-line-soft);
-    padding: 0 0 0.5rem;
+    border-bottom: var(--vx-platform-responsive-selection-border);
+    padding: var(--vx-platform-responsive-selection-padding);
   }
 
   .vx-members-header-primary {
@@ -69,7 +69,7 @@
 
   .vx-member-list .vx-member-table__row {
     grid-template-columns: 1fr;
-    gap: 0.45rem;
+    gap: var(--vx-platform-responsive-list-row-gap);
   }
 
   .vx-member-table__menu {
@@ -112,7 +112,7 @@
 
   .vx-role-row {
     grid-template-columns: 1fr;
-    gap: 0.45rem;
+    gap: var(--vx-platform-responsive-list-row-gap);
   }
 
   .vx-role-row__menu {
@@ -128,7 +128,7 @@
   .vx-account-profile-field,
   .vx-account-profile-summary__row {
     grid-template-columns: 1fr;
-    gap: 0.32rem;
+    gap: var(--vx-platform-responsive-account-row-gap);
     align-items: flex-start;
   }
 
@@ -137,8 +137,8 @@
   }
 
   .vx-account-connected-row {
-    grid-template-columns: 2.4rem minmax(0, 1fr);
-    gap: 0.55rem 0.7rem;
+    grid-template-columns: var(--vx-platform-responsive-connected-row-columns);
+    gap: var(--vx-platform-responsive-connected-row-gap);
     align-items: flex-start;
   }
 
@@ -182,7 +182,7 @@
 
   .vx-profile-row {
     grid-template-columns: 1fr;
-    gap: 0.3rem;
+    gap: var(--vx-platform-responsive-profile-row-gap);
     align-items: flex-start;
   }
 }

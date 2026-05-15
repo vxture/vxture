@@ -8,19 +8,19 @@
  */
 
 .vx-auth-field {
-  margin-bottom: 14px;
+  margin-bottom: var(--vx-auth-field-block-margin-bottom);
 }
 
 .vx-auth-field label {
   display: block;
-  margin-bottom: 7px;
+  margin-bottom: var(--vx-auth-field-label-margin-bottom);
   color: color-mix(in srgb, var(--vx-color-auth-secondary) 72%, transparent);
   font-size: var(--vx-auth-text-sm);
   font-weight: 500;
   letter-spacing: 0;
   line-height: 1.25;
   text-transform: none;
-  transition: color 0.2s ease;
+  transition: color var(--vx-control-transition);
 }
 
 .vx-auth-field:focus-within label {
@@ -35,20 +35,20 @@
 
 .vx-auth-field-icon {
   position: absolute;
-  left: 14px;
-  width: 18px;
-  height: 18px;
+  left: var(--vx-auth-field-icon-inset-inline);
+  width: var(--vx-auth-field-icon-size);
+  height: var(--vx-auth-field-icon-size);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--vx-auth-muted);
   pointer-events: none;
-  transition: color 0.2s ease;
+  transition: color var(--vx-control-transition);
 }
 
 .vx-auth-field-icon svg {
-  width: 18px;
-  height: 18px;
+  width: var(--vx-auth-field-icon-size);
+  height: var(--vx-auth-field-icon-size);
 }
 
 .vx-auth-field:focus-within .vx-auth-field-icon {
@@ -57,24 +57,24 @@
 
 .vx-auth-field input {
   width: 100%;
-  min-height: 42px;
+  min-height: var(--vx-auth-field-control-min-height);
   padding: var(--vx-auth-input-padding);
-  border: 1px solid var(--vx-auth-border);
+  border: var(--vx-auth-field-control-border-width) solid var(--vx-auth-border);
   border-radius: var(--vx-auth-radius-md);
   outline: none;
   background: var(--vx-color-auth-card-soft);
   color: var(--vx-auth-text);
   font-size: var(--vx-auth-text-md);
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+    border-color var(--vx-control-transition),
+    background var(--vx-control-transition),
+    box-shadow var(--vx-control-transition);
 }
 
 .vx-auth-field input:focus {
   border-color: var(--vx-auth-border-active);
   background: color-mix(in srgb, var(--vx-color-auth-accent) 5%, transparent);
-  box-shadow: 0 0 0 3px var(--vx-color-auth-border);
+  box-shadow: var(--vx-auth-focus-shadow);
 }
 
 .vx-auth-field input[aria-invalid="true"] {
@@ -82,12 +82,12 @@
 }
 
 .vx-auth-field input[aria-invalid="true"]:focus {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--vx-color-error) 12%, transparent);
+  box-shadow: var(--vx-auth-error-focus-shadow);
 }
 
 .vx-auth-error,
 .vx-auth-hint {
-  margin: 5px 0 0;
+  margin: var(--vx-auth-field-error-margin-top) 0 0;
   font-size: var(--vx-auth-text-2xs);
   line-height: 1.4;
 }
@@ -97,7 +97,7 @@
 }
 
 .vx-auth-form-error {
-  margin: 0 0 10px;
+  margin: 0 0 var(--vx-auth-field-help-margin-bottom);
   text-align: center;
 }
 
@@ -110,13 +110,13 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--vx-auth-gap-lg);
-  margin: -2px 0 14px;
+  margin: var(--vx-auth-field-option-offset-y) 0 var(--vx-auth-field-option-margin-bottom);
 }
 
 .vx-auth-remember {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--vx-auth-field-option-gap);
   color: var(--vx-auth-muted);
   cursor: pointer;
   font-size: var(--vx-auth-text-xs);
@@ -125,8 +125,8 @@
 }
 
 .vx-auth-remember input {
-  width: 14px;
-  height: 14px;
+  width: var(--vx-auth-field-checkbox-size);
+  height: var(--vx-auth-field-checkbox-size);
   margin: 0;
   accent-color: var(--vx-auth-accent);
   cursor: pointer;
@@ -139,13 +139,13 @@
 
 .vx-auth-control-set {
   display: grid;
-  gap: 9px;
-  margin: -2px 0 14px;
-  min-height: 50px;
+  gap: var(--vx-auth-field-code-gap);
+  margin: var(--vx-auth-field-option-offset-y) 0 var(--vx-auth-field-option-margin-bottom);
+  min-height: var(--vx-auth-field-code-min-height);
 }
 
 .vx-auth-control-row {
-  min-height: 20px;
+  min-height: var(--vx-auth-field-code-meta-min-height);
   display: flex;
   align-items: center;
   gap: var(--vx-auth-gap-sm);
@@ -159,7 +159,7 @@
   min-width: 0;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--vx-auth-field-option-gap);
   color: var(--vx-auth-muted);
   cursor: pointer;
   font-size: var(--vx-auth-text-xs);
@@ -168,9 +168,9 @@
 }
 
 .vx-auth-checkbox input {
-  width: 14px;
-  height: 14px;
-  flex: 0 0 14px;
+  width: var(--vx-auth-field-checkbox-size);
+  height: var(--vx-auth-field-checkbox-size);
+  flex: 0 0 var(--vx-auth-field-checkbox-size);
   margin: 0;
   accent-color: var(--vx-auth-accent);
   cursor: pointer;
@@ -186,7 +186,7 @@
 }
 
 .vx-auth-checkbox--agreement input {
-  margin-top: 2px;
+  margin-top: var(--vx-auth-field-footer-margin-top);
 }
 
 .vx-auth-checkbox--agreement span {
@@ -197,7 +197,7 @@
   color: var(--vx-auth-secondary);
   font-weight: 600;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--vx-control-transition);
 }
 
 .vx-auth-checkbox--agreement a:hover {
@@ -216,7 +216,7 @@
   color: var(--vx-auth-muted);
   cursor: pointer;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color var(--vx-control-transition);
 }
 
 .vx-auth-link-group {

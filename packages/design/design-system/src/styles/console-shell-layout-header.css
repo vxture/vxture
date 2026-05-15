@@ -24,7 +24,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--vx-console-space-06r);
-  max-width: min(var(--vx-console-size-28r-large), 42vw);
+  max-width: min(var(--vx-console-size-28r-large), var(--vx-console-shell-title-max-width-fluid));
 }
 
 .vx-shell-header__brand-mark {

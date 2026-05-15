@@ -17,36 +17,24 @@
 .vx-model-list__header,
 .vx-model-row {
   display: grid;
-  grid-template-columns: var(
-    --vx-model-list-columns,
-    minmax(220px, 1.12fr) minmax(110px, 0.52fr) minmax(160px, 0.78fr) minmax(240px, 1.12fr)
-      minmax(150px, 0.72fr) minmax(92px, 0.44fr) 2.5rem
-  );
-  gap: var(--vx-model-row-gap, 0.72rem);
+  grid-template-columns: var(--vx-model-list-columns);
+  gap: var(--vx-model-row-gap);
   align-items: center;
 }
 
 .vx-model-grant-list__header,
 .vx-model-grant-row {
   display: grid;
-  grid-template-columns: var(
-    --vx-model-grant-list-columns,
-    minmax(220px, 1.1fr) minmax(170px, 0.85fr) minmax(180px, 0.85fr) minmax(180px, 0.85fr)
-      minmax(115px, 0.58fr) minmax(92px, 0.44fr) 2.5rem
-  );
-  gap: var(--vx-model-row-gap, 0.72rem);
+  grid-template-columns: var(--vx-model-grant-list-columns);
+  gap: var(--vx-model-row-gap);
   align-items: center;
 }
 
 .vx-model-policy-list__header,
 .vx-model-policy-row {
   display: grid;
-  grid-template-columns: var(
-    --vx-model-policy-list-columns,
-    minmax(210px, 0.96fr) minmax(190px, 0.9fr) minmax(220px, 1.04fr) minmax(120px, 0.5fr)
-      minmax(82px, 0.32fr) minmax(100px, 0.42fr)
-  );
-  gap: var(--vx-model-row-gap, 0.72rem);
+  grid-template-columns: var(--vx-model-policy-list-columns);
+  gap: var(--vx-model-row-gap);
   align-items: center;
 }
 
@@ -54,7 +42,7 @@
 .vx-model-grant-list__header,
 .vx-model-policy-list__header {
   justify-items: var(--vx-model-header-justify, stretch);
-  padding: var(--vx-model-header-padding, 0 1rem 0.35rem);
+  padding: var(--vx-model-header-padding);
   color: var(--vx-color-text-muted);
   font-size: var(--vx-models-meta-size);
   font-weight: 740;
@@ -72,16 +60,16 @@
 .vx-model-policy-row {
   position: relative;
   z-index: 1;
-  min-height: var(--vx-model-row-min-height, 4.05rem);
+  min-height: var(--vx-model-row-min-height);
   overflow: visible;
   justify-items: var(--vx-model-row-justify, stretch);
-  padding: var(--vx-model-row-padding, 0.72rem 1rem);
-  border-bottom: 1px dashed color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
+  padding: var(--vx-model-row-padding);
+  border-bottom: var(--vx-model-row-border-width) dashed color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
   background: transparent;
   text-align: var(--vx-model-row-text-align, left);
   transition:
-    background 160ms ease,
-    border-color 160ms ease;
+    background var(--vx-platform-list-row-transition),
+    border-color var(--vx-platform-list-row-transition);
 }
 
 .dark .vx-model-row,
@@ -102,5 +90,5 @@
 .vx-model-row--active,
 .vx-model-grant-row--active {
   z-index: 1200;
-  box-shadow: var(--vx-model-row-active-shadow, inset 3px 0 0 var(--vx-console-brand));
+  box-shadow: var(--vx-model-row-active-shadow, var(--vx-platform-list-row-active-shadow));
 }

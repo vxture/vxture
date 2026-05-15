@@ -1,0 +1,59 @@
+/**
+ * tokens-platform-tenant-settings-semantics.css - Platform tenant settings 页面、列表和控件语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-16
+ */
+
+:root {
+  --vx-tenant-settings-title-size: clamp(var(--vx-platform-tenant-settings-scale-1-08r), var(--vx-platform-tenant-settings-scale-1-28vw), var(--vx-platform-tenant-settings-scale-1-32r));
+  --vx-tenant-settings-page-gap: var(--vx-platform-tenant-settings-scale-1-65r);
+  --vx-tenant-settings-page-header-gap: var(--vx-platform-tenant-settings-scale-1r);
+  --vx-tenant-settings-page-header-margin-bottom: var(--vx-platform-tenant-settings-scale-1-2r);
+  --vx-tenant-settings-page-header-copy-gap: var(--vx-platform-tenant-settings-scale-0-58r);
+  --vx-tenant-settings-page-description-max-width: var(--vx-platform-tenant-settings-scale-48r);
+  --vx-tenant-settings-actions-gap: var(--vx-platform-tenant-settings-scale-0-55r);
+  --vx-tenant-settings-section-stack-gap: var(--vx-platform-tenant-settings-scale-1r);
+  --vx-tenant-settings-section-padding-top: var(--vx-platform-tenant-settings-scale-0-2r);
+  --vx-tenant-settings-danger-margin-top: var(--vx-platform-tenant-settings-scale-0-55r);
+  --vx-tenant-settings-danger-padding-top: var(--vx-platform-tenant-settings-scale-0-95r);
+  --vx-tenant-settings-block-header-gap: var(--vx-platform-tenant-settings-scale-1r);
+  --vx-tenant-settings-block-header-padding: 0 var(--vx-platform-tenant-settings-scale-1r);
+  --vx-tenant-settings-block-title-size: var(--vx-platform-tenant-settings-scale-0-98r);
+  --vx-tenant-settings-block-meta-margin-top: var(--vx-platform-tenant-settings-scale-0-08r);
+  --vx-tenant-settings-summary-gap: var(--vx-platform-tenant-settings-scale-0-72r);
+  --vx-tenant-settings-summary-padding-bottom: var(--vx-platform-tenant-settings-scale-0-32r);
+  --vx-tenant-settings-summary-item-columns: var(--vx-platform-tenant-settings-scale-2r) minmax(0, 0.72fr) minmax(0, 1fr);
+  --vx-tenant-settings-summary-item-gap: var(--vx-platform-tenant-settings-scale-0-54r);
+  --vx-tenant-settings-summary-item-padding: var(--vx-platform-tenant-settings-scale-0-72r) 0;
+  --vx-tenant-settings-summary-item-border: var(--vx-platform-tenant-settings-scale-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  --vx-tenant-settings-summary-icon-size: var(--vx-platform-tenant-settings-scale-2r);
+  --vx-tenant-settings-summary-icon-padding: var(--vx-platform-tenant-settings-scale-0-46r);
+  --vx-tenant-settings-workspace-gap: var(--vx-platform-tenant-settings-scale-1-9r);
+  --vx-tenant-settings-section-gap: var(--vx-platform-tenant-settings-scale-0-78r);
+  --vx-tenant-settings-section-title-gap: var(--vx-platform-tenant-settings-scale-0-58r);
+  --vx-tenant-settings-section-title-padding: 0 var(--vx-platform-tenant-settings-scale-1r);
+  --vx-tenant-settings-section-icon-size: var(--vx-platform-tenant-settings-scale-1-95r);
+  --vx-tenant-settings-section-icon-padding: var(--vx-platform-tenant-settings-scale-0-42r);
+  --vx-tenant-settings-section-icon-border: var(--vx-platform-tenant-settings-scale-1p) solid var(--vx-color-border);
+  --vx-tenant-settings-section-title-meta-margin-top: var(--vx-platform-tenant-settings-scale-0-08r);
+  --vx-tenant-settings-list-columns: minmax(var(--vx-platform-tenant-settings-scale-280p), 1fr) minmax(var(--vx-platform-tenant-settings-scale-120p), 0.24fr) minmax(var(--vx-platform-tenant-settings-scale-160p), 0.3fr);
+  --vx-tenant-settings-list-gap: var(--vx-platform-tenant-settings-scale-0-72r);
+  --vx-tenant-settings-list-header-padding: 0 var(--vx-platform-tenant-settings-scale-1r) var(--vx-platform-tenant-settings-scale-0-35r);
+  --vx-tenant-settings-row-min-height: var(--vx-platform-tenant-settings-scale-4-05r);
+  --vx-tenant-settings-row-padding: var(--vx-platform-tenant-settings-scale-0-72r) var(--vx-platform-tenant-settings-scale-1r);
+  --vx-tenant-settings-row-border: var(--vx-platform-tenant-settings-scale-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 7%, transparent);
+  --vx-tenant-settings-row-policy-gap: var(--vx-platform-tenant-settings-scale-0-68r);
+  --vx-tenant-settings-row-policy-icon-size: var(--vx-platform-tenant-settings-scale-2-1r);
+  --vx-tenant-settings-row-policy-copy-margin: var(--vx-platform-tenant-settings-scale-0-16r) 0 0;
+  --vx-tenant-settings-state-min-height: var(--vx-platform-tenant-settings-scale-1-75r);
+  --vx-tenant-settings-state-padding: 0 var(--vx-platform-tenant-settings-scale-0-62r);
+  --vx-tenant-settings-state-border: var(--vx-platform-tenant-settings-scale-1p) solid var(--vx-color-border);
+  --vx-tenant-settings-select-width: min(var(--vx-platform-tenant-settings-scale-11-5r), 100%);
+  --vx-tenant-settings-select-height: var(--vx-platform-tenant-settings-scale-2-25r);
+  --vx-tenant-settings-row-mobile-gap: var(--vx-platform-tenant-settings-scale-0-55r);
+  --vx-tenant-settings-action-icon-size: var(--vx-platform-tenant-settings-scale-2-25r);
+  --vx-tenant-settings-action-icon-radius: var(--vx-platform-tenant-settings-scale-0-85r);
+}

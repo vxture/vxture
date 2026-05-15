@@ -1,0 +1,42 @@
+/**
+ * tokens-platform-models-layout-semantics.css - Platform models 列表、菜单和弹窗语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-16
+ */
+
+:root {
+  --vx-model-list-columns: minmax(var(--vx-platform-models-scale-220p), 1.12fr) minmax(var(--vx-platform-models-scale-110p), 0.52fr) minmax(var(--vx-platform-models-scale-160p), 0.78fr) minmax(var(--vx-platform-models-scale-240p), 1.12fr) minmax(var(--vx-platform-models-scale-150p), 0.72fr) minmax(var(--vx-platform-models-scale-92p), 0.44fr) var(--vx-platform-models-scale-2-5r);
+  --vx-model-grant-list-columns: minmax(var(--vx-platform-models-scale-220p), 1.1fr) minmax(var(--vx-platform-models-scale-170p), 0.85fr) minmax(var(--vx-platform-models-scale-180p), 0.85fr) minmax(var(--vx-platform-models-scale-180p), 0.85fr) minmax(var(--vx-platform-models-scale-115p), 0.58fr) minmax(var(--vx-platform-models-scale-92p), 0.44fr) var(--vx-platform-models-scale-2-5r);
+  --vx-model-policy-list-columns: minmax(var(--vx-platform-models-scale-210p), 0.96fr) minmax(var(--vx-platform-models-scale-190p), 0.9fr) minmax(var(--vx-platform-models-scale-220p), 1.04fr) minmax(var(--vx-platform-models-scale-120p), 0.5fr) minmax(var(--vx-platform-models-scale-82p), 0.32fr) minmax(var(--vx-platform-models-scale-100p), 0.42fr);
+  --vx-model-header-padding: 0 var(--vx-platform-models-scale-1r) var(--vx-platform-models-scale-0-35r);
+  --vx-model-row-padding: var(--vx-platform-models-scale-0-72r) var(--vx-platform-models-scale-1r);
+  --vx-model-row-border-width: var(--vx-platform-models-scale-1p);
+  --vx-model-status-padding: var(--vx-platform-models-scale-0-22r) var(--vx-platform-models-scale-0-52r);
+  --vx-model-actions-menu-top: calc(100% + var(--vx-platform-models-scale-0-22r));
+  --vx-model-actions-menu-border-width: var(--vx-platform-models-scale-1p);
+  --vx-model-actions-menu-button-gap: var(--vx-platform-models-scale-0-5r);
+  --vx-model-actions-menu-button-padding: var(--vx-platform-models-scale-0-54r) var(--vx-platform-models-scale-0-62r);
+  --vx-models-pagination-gap: var(--vx-platform-models-scale-0-75r);
+  --vx-models-pagination-padding: var(--vx-platform-models-scale-0-2r) 0 0;
+  --vx-model-grants-header-padding: var(--vx-platform-models-scale-0-25r) 0 var(--vx-platform-models-scale-0-2r);
+  --vx-model-grants-title-size: var(--vx-platform-models-scale-0-94r);
+  --vx-model-dialog-width: min(var(--vx-platform-models-scale-44r), calc(var(--vx-platform-models-scale-100vw) - var(--vx-platform-models-scale-2r)));
+  --vx-model-dialog-textarea-min-height: var(--vx-platform-models-scale-6-5r);
+  --vx-model-dialog-check-control-size: var(--vx-platform-models-scale-1r);
+  --vx-models-summary-item-padding: var(--vx-platform-models-scale-0-62r) var(--vx-platform-models-scale-0-78r);
+  --vx-models-summary-item-border-width: var(--vx-platform-models-scale-1p);
+  --vx-models-page-title-size: clamp(var(--vx-platform-models-scale-1-08r), var(--vx-platform-models-scale-1-28vw), var(--vx-platform-models-scale-1-32r));
+  --vx-model-chip-padding: var(--vx-platform-models-scale-0-16r) var(--vx-platform-models-scale-0-42r);
+  --vx-models-toolbar-padding: var(--vx-platform-models-scale-0-1r) 0 var(--vx-platform-models-scale-0-45r);
+  --vx-models-toolbar-search-width: min(var(--vx-platform-models-scale-30r), 100%);
+  --vx-models-toolbar-search-padding: var(--vx-platform-models-scale-0-3r) var(--vx-platform-models-scale-0-85r);
+  --vx-models-toolbar-search-border: var(--vx-platform-models-scale-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  --vx-models-toolbar-count-border: var(--vx-platform-models-scale-1p) solid var(--vx-color-border);
+  --vx-models-toolbar-count-padding: 0 var(--vx-platform-models-scale-0-8r);
+  --vx-models-segmented-border: var(--vx-platform-models-scale-1p) solid var(--vx-color-border);
+  --vx-models-segmented-border-dark: var(--vx-platform-models-scale-1p) solid var(--vx-color-border);
+  --vx-models-segmented-item-padding: 0 var(--vx-platform-models-scale-0-72r);
+}

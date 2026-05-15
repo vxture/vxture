@@ -1,0 +1,33 @@
+/**
+ * tokens-auth-responsive-scale.css - auth responsive 域尺度语义桥接 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* auth responsive 域只暴露该场景的尺度组装，避免具体样式直接消费 auth 总桥接。 */
+  --vx-auth-responsive-scale-1-5r: var(--vx-auth-scale-1-5r);
+  --vx-auth-responsive-scale-100vw: var(--vx-auth-scale-100vw);
+  --vx-auth-responsive-scale-10p: var(--vx-auth-scale-10p);
+  --vx-auth-responsive-scale-12p: var(--vx-auth-scale-12p);
+  --vx-auth-responsive-scale-14p: var(--vx-auth-scale-14p);
+  --vx-auth-responsive-scale-16p: var(--vx-auth-scale-16p);
+  --vx-auth-responsive-scale-1p: var(--vx-auth-scale-1p);
+  --vx-auth-responsive-scale-220p: var(--vx-auth-scale-220p);
+  --vx-auth-responsive-scale-22p: var(--vx-auth-scale-22p);
+  --vx-auth-responsive-scale-24p: var(--vx-auth-scale-24p);
+  --vx-auth-responsive-scale-28p: var(--vx-auth-scale-28p);
+  --vx-auth-responsive-scale-2r: var(--vx-auth-scale-2r);
+  --vx-auth-responsive-scale-32p: var(--vx-auth-scale-32p);
+  --vx-auth-responsive-scale-36p: var(--vx-auth-scale-36p);
+  --vx-auth-responsive-scale-38p: var(--vx-auth-scale-38p);
+  --vx-auth-responsive-scale-42p: var(--vx-auth-scale-42p);
+  --vx-auth-responsive-scale-52p: var(--vx-auth-scale-52p);
+  --vx-auth-responsive-scale-56p: var(--vx-auth-scale-56p);
+  --vx-auth-responsive-scale-64p: var(--vx-auth-scale-64p);
+  --vx-auth-responsive-scale-8p: var(--vx-auth-scale-8p);
+  --vx-auth-responsive-scale-96r: var(--vx-auth-scale-96r);
+}

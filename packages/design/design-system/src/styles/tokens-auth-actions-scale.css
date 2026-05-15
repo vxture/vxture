@@ -1,0 +1,27 @@
+/**
+ * tokens-auth-actions-scale.css - auth actions 域尺度语义桥接 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* auth actions 域只暴露该场景的尺度组装，避免具体样式直接消费 auth 总桥接。 */
+  --vx-auth-actions-scale-12p: var(--vx-auth-scale-12p);
+  --vx-auth-actions-scale-14p: var(--vx-auth-scale-14p);
+  --vx-auth-actions-scale-16p: var(--vx-auth-scale-16p);
+  --vx-auth-actions-scale-1p: var(--vx-auth-scale-1p);
+  --vx-auth-actions-scale-20p: var(--vx-auth-scale-20p);
+  --vx-auth-actions-scale-22p: var(--vx-auth-scale-22p);
+  --vx-auth-actions-scale-24p: var(--vx-auth-scale-24p);
+  --vx-auth-actions-scale-2p: var(--vx-auth-scale-2p);
+  --vx-auth-actions-scale-3p: var(--vx-auth-scale-3p);
+  --vx-auth-actions-scale-44p: var(--vx-auth-scale-44p);
+  --vx-auth-actions-scale-4p: var(--vx-auth-scale-4p);
+  --vx-auth-actions-scale-52p: var(--vx-auth-scale-52p);
+  --vx-auth-actions-scale-5p: var(--vx-auth-scale-5p);
+  --vx-auth-actions-scale-9p: var(--vx-auth-scale-9p);
+  --vx-auth-actions-scale-neg-1p: var(--vx-auth-scale-neg-1p);
+}

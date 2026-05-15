@@ -68,9 +68,9 @@ function ActionMenu({
           <React.Fragment key={item.id}>
             {item.separatorBefore ? <DropdownMenuSeparator /> : null}
             <DropdownMenuItem
-              disabled={item.disabled}
-              title={item.title}
-              onSelect={item.onSelect}
+              {...(item.disabled !== undefined ? { disabled: item.disabled } : {})}
+              {...(item.title !== undefined ? { title: item.title } : {})}
+              {...(item.onSelect !== undefined ? { onSelect: item.onSelect } : {})}
               className={cn(
                 "vx-action-menu__item gap-2",
                 item.danger && "text-vx-danger focus:text-vx-danger",

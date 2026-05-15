@@ -8,23 +8,23 @@
  */
 
 .vx-profile-page {
-  max-width: 980px;
+  max-width: var(--vx-profile-page-max-width);
 }
 
 .vx-account-profile-page {
   max-width: none;
-  gap: 0.45rem;
+  gap: var(--vx-account-profile-page-gap);
 }
 
 .vx-account-profile-page .vx-page-header {
   grid-template-columns: 1fr;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.55rem;
+  gap: var(--vx-account-profile-page-header-gap);
+  margin-bottom: var(--vx-account-profile-page-header-margin-bottom);
 }
 
 .vx-account-profile-page .vx-page-header__copy {
-  gap: 0.62rem;
+  gap: var(--vx-account-profile-page-header-copy-gap);
 }
 
 .vx-account-profile-page .vx-page-header h1 {
@@ -36,9 +36,9 @@
 .vx-profile-message,
 .vx-profile-error {
   margin: 0;
-  padding: 0.62rem 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
-  font-size: 0.84rem;
+  padding: var(--vx-profile-message-padding);
+  border-bottom: var(--vx-profile-message-border);
+  font-size: var(--vx-profile-message-size);
 }
 
 .vx-profile-message {
@@ -52,60 +52,60 @@
 .vx-profile-group {
   display: grid;
   gap: 0;
-  border-top: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 9%, transparent);
+  border-top: var(--vx-profile-group-border);
 }
 
 .vx-profile-group:last-of-type {
-  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 9%, transparent);
+  border-bottom: var(--vx-profile-group-border);
 }
 
 .vx-profile-group__header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1.1rem 0 0.8rem;
+  gap: var(--vx-profile-group-header-gap);
+  padding: var(--vx-profile-group-header-padding);
 }
 
 .vx-profile-group__header h2 {
   margin: 0;
-  font-size: 0.98rem;
+  font-size: var(--vx-profile-group-title-size);
   font-weight: 720;
   letter-spacing: 0;
 }
 
 .vx-profile-group__header p {
-  margin: 0.32rem 0 0;
+  margin: var(--vx-profile-group-copy-margin);
   color: var(--vx-console-muted);
-  font-size: 0.82rem;
+  font-size: var(--vx-profile-group-copy-size);
 }
 
 .vx-profile-row {
   display: grid;
-  grid-template-columns: minmax(120px, 0.24fr) minmax(0, 1fr);
-  gap: 1.2rem;
+  grid-template-columns: var(--vx-profile-row-columns);
+  gap: var(--vx-profile-row-gap);
   align-items: center;
-  min-height: 2.85rem;
-  padding: 0.72rem 0;
-  border-top: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  min-height: var(--vx-profile-row-min-height);
+  padding: var(--vx-profile-row-padding);
+  border-top: var(--vx-profile-row-border);
 }
 
 .vx-profile-row > span {
   color: var(--vx-console-muted);
-  font-size: 0.82rem;
+  font-size: var(--vx-profile-row-label-size);
 }
 
 .vx-profile-row > strong {
   min-width: 0;
   color: var(--vx-console-text);
-  font-size: 0.9rem;
+  font-size: var(--vx-profile-row-value-size);
   font-weight: 620;
   overflow-wrap: anywhere;
 }
 
 .vx-profile-avatar {
-  width: 3rem;
-  height: 3rem;
+  width: var(--vx-profile-avatar-size);
+  height: var(--vx-profile-avatar-size);
   display: grid;
   place-items: center;
   border-radius: var(--vx-radius-xl);
@@ -125,7 +125,7 @@
 }
 
 .vx-profile-avatar strong {
-  font-size: 0.9rem;
+  font-size: var(--vx-profile-avatar-initial-size);
 }
 
 .vx-profile-dialog {
@@ -134,66 +134,66 @@
   z-index: 90;
   display: grid;
   place-items: center;
-  padding: 1rem;
+  padding: var(--vx-profile-dialog-padding);
 }
 
 .vx-profile-dialog__backdrop {
   position: absolute;
   inset: 0;
   background: color-mix(in srgb, var(--vx-color-gray-900) 24%, transparent);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(var(--vx-profile-dialog-backdrop-blur));
 }
 
 .vx-profile-dialog__content {
   position: relative;
   z-index: 1;
-  width: min(460px, 100%);
+  width: var(--vx-profile-dialog-content-width);
   display: grid;
-  gap: 0.82rem;
-  padding: 1rem;
-  border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 10%, transparent);
+  gap: var(--vx-profile-dialog-content-gap);
+  padding: var(--vx-profile-dialog-content-padding);
+  border: var(--vx-profile-dialog-content-border);
   border-radius: var(--vx-platform-radius-sm);
   background: var(--vx-color-white);
-  box-shadow: 0 24px 68px color-mix(in srgb, var(--vx-color-gray-900) 16%, transparent);
+  box-shadow: var(--vx-platform-account-dialog-shadow);
 }
 
 .vx-profile-dialog__content h3 {
-  margin: 0 0 0.15rem;
-  font-size: 1rem;
+  margin: var(--vx-profile-dialog-title-margin);
+  font-size: var(--vx-profile-dialog-title-size);
   letter-spacing: 0;
 }
 
 .vx-profile-dialog__content .vx-label {
   display: grid;
-  gap: 0.36rem;
+  gap: var(--vx-profile-dialog-label-gap);
   color: var(--vx-console-muted);
-  font-size: 0.78rem;
+  font-size: var(--vx-profile-dialog-label-size);
   font-weight: 650;
 }
 
 .vx-profile-dialog__content .vx-input,
 .vx-profile-dialog__textarea {
-  min-height: 2.42rem;
+  min-height: var(--vx-profile-dialog-input-min-height);
   border-radius: var(--vx-radius-lg);
 }
 
 .vx-profile-dialog__textarea {
   width: 100%;
   resize: vertical;
-  padding: 0.74rem 0.95rem;
-  border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  padding: var(--vx-profile-dialog-textarea-padding);
+  border: var(--vx-profile-dialog-textarea-border);
   background: color-mix(in srgb, var(--vx-color-white) 86%, transparent);
   color: var(--vx-console-text);
 }
 
 .vx-profile-dialog__textarea:focus {
-  outline: 2px solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  outline: var(--vx-profile-dialog-focus-outline);
   border-color: var(--vx-color-brand-300);
 }
 
 .vx-profile-dialog__actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.55rem;
-  padding-top: 0.25rem;
+  gap: var(--vx-profile-dialog-actions-gap);
+  padding-top: var(--vx-profile-dialog-actions-padding-top);
 }

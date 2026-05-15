@@ -12,7 +12,7 @@
   display: flex;
   align-items: center;
   min-width: 0;
-  width: var(--vx-shell-search-width, min(520px, 100%));
+  width: var(--vx-shell-search-width);
   max-width: 100%;
   justify-self: var(--vx-shell-search-justify, stretch);
 }
@@ -20,7 +20,7 @@
 .vx-shell-header__search-icon {
   position: absolute;
   top: 50%;
-  left: 0.72rem;
+  left: var(--vx-shell-search-icon-inset-inline-start);
   z-index: 1;
   display: inline-flex;
   align-items: center;
@@ -33,18 +33,18 @@
 .vx-shell-header__search-input {
   min-width: 0;
   width: 100%;
-  min-height: var(--vx-shell-search-height, 2.25rem);
-  height: var(--vx-shell-search-height, 2.25rem);
-  padding: 0.3rem 0.75rem 0.3rem 2rem;
-  border: var(--vx-shell-search-border, 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent));
+  min-height: var(--vx-shell-search-height);
+  height: var(--vx-shell-search-height);
+  padding: var(--vx-shell-search-padding);
+  border: var(--vx-shell-search-border);
   border-radius: var(--vx-shell-search-radius, var(--vx-shell-radius-pill, var(--vx-radius-full)));
   background: var(--vx-shell-search-background, var(--vx-color-shell-panel));
-  box-shadow: var(--vx-shell-search-shadow, inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent));
+  box-shadow: var(--vx-shell-search-shadow, var(--vx-platform-surface-highlight-shadow));
 }
 
 .vx-shell-header__search-input::placeholder {
   color: var(--vx-shell-search-placeholder-color, var(--vx-shell-subtle, var(--vx-color-shell-subtle)));
-  font-size: var(--vx-shell-search-placeholder-size, var(--vx-shell-item-size, 0.8rem));
+  font-size: var(--vx-shell-search-placeholder-size);
 }
 
 .dark .vx-shell-header__search-input {

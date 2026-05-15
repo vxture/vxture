@@ -14,7 +14,6 @@
   --vx-notification-panel-strong: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
   --vx-notification-line: var(--vx-color-auth-border);
   --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-auth-accent) 22%, transparent);
-  --vx-notification-title-size: clamp(1.1rem, 1.2vw, 1.28rem);
   --vx-notification-title-line-height: 1.25;
   --vx-notification-title-weight: 760;
 }
@@ -27,18 +26,18 @@
 }
 
 .vx-notifications-page {
-  gap: 1.05rem;
+  gap: var(--vx-notification-page-gap);
 }
 
 .vx-notifications-page .vx-page-header {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 1.05rem;
+  gap: var(--vx-notification-page-header-gap);
+  margin-bottom: var(--vx-notification-page-header-margin-bottom);
 }
 
 .vx-notifications-page .vx-page-header__copy {
-  gap: 0.58rem;
+  gap: var(--vx-notification-page-header-copy-gap);
 }
 
 .vx-notifications-page .vx-page-header__description {
@@ -63,29 +62,29 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.55rem;
+  gap: var(--vx-notification-header-actions-gap);
 }
 
 .vx-notification-preferences {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 0.45rem 0 1rem;
-  border-bottom: 1px dashed var(--vx-notification-line);
+  gap: var(--vx-notification-preferences-gap);
+  padding: var(--vx-notification-preferences-padding);
+  border-bottom: var(--vx-notification-preferences-border);
 }
 
 .vx-notification-preferences__status {
   display: flex;
   align-items: center;
-  gap: 0.72rem;
+  gap: var(--vx-notification-preferences-status-gap);
 }
 
 .vx-notification-preferences__status > svg {
-  width: 2.35rem;
-  height: 2.35rem;
-  padding: 0.56rem;
-  border: 1px solid var(--vx-notification-line);
+  width: var(--vx-notification-preferences-icon-size);
+  height: var(--vx-notification-preferences-icon-size);
+  padding: var(--vx-notification-preferences-icon-padding);
+  border: var(--vx-notification-preferences-icon-border);
   border-radius: var(--vx-radius-lg);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
@@ -99,9 +98,9 @@
 
 .vx-notification-preferences__status strong {
   display: block;
-  margin-top: 0.12rem;
+  margin-top: var(--vx-notification-preferences-strong-margin-top);
   color: var(--vx-console-text);
-  font-size: 0.96rem;
+  font-size: var(--vx-notification-preferences-strong-size);
   font-weight: 760;
 }
 
@@ -109,16 +108,16 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.48rem;
+  gap: var(--vx-notification-preferences-stats-gap);
 }
 
 .vx-notification-preferences__stats div {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  min-height: 2.1rem;
-  padding: 0 0.68rem;
-  border: 1px solid var(--vx-color-border);
+  gap: var(--vx-notification-preferences-stat-gap);
+  min-height: var(--vx-notification-preferences-stat-min-height);
+  padding: var(--vx-notification-preferences-stat-padding);
+  border: var(--vx-notification-preferences-stat-border);
   border-radius: var(--vx-radius-full);
   background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 76%, transparent);
   color: var(--vx-console-muted);

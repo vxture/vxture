@@ -29,7 +29,7 @@
 
 .vx-auth-primary {
   width: 100%;
-  min-height: 44px;
+  min-height: var(--vx-auth-primary-action-min-height);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,16 +42,16 @@
   cursor: pointer;
   font-size: var(--vx-auth-text-md);
   font-weight: 600;
-  box-shadow: 0 4px 20px color-mix(in srgb, var(--vx-color-auth-accent) 30%, transparent);
+  box-shadow: var(--vx-auth-primary-shadow);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    opacity 0.2s ease;
+    transform var(--vx-control-transition),
+    box-shadow var(--vx-control-transition),
+    opacity var(--vx-control-transition);
 }
 
 .vx-auth-primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 28px color-mix(in srgb, var(--vx-color-auth-accent) 45%, transparent);
+  transform: translateY(var(--vx-auth-action-hover-translate-y));
+  box-shadow: var(--vx-auth-primary-hover-shadow);
 }
 
 .vx-auth-primary:disabled {
@@ -61,28 +61,28 @@
 }
 
 .vx-auth-spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid color-mix(in srgb, var(--vx-color-white) 32%, transparent);
+  width: var(--vx-auth-action-spinner-size);
+  height: var(--vx-auth-action-spinner-size);
+  border: var(--vx-auth-action-spinner-border-width) solid color-mix(in srgb, var(--vx-color-white) 32%, transparent);
   border-top-color: var(--vx-color-white);
   border-radius: var(--vx-auth-radius-pill);
-  animation: vx-auth-spin 0.7s linear infinite;
+  animation: vx-auth-spin var(--vx-motion-spinner) infinite;
 }
 
 .vx-auth-or {
   display: flex;
   align-items: center;
   gap: var(--vx-auth-gap-sm);
-  margin: 14px 0;
+  margin: var(--vx-auth-divider-margin) 0;
 }
 
 .vx-auth-section-social .vx-auth-or {
-  margin: 0 0 12px;
+  margin: 0 0 var(--vx-auth-divider-label-margin-bottom);
 }
 
 .vx-auth-or span {
   flex: 1;
-  height: 1px;
+  height: var(--vx-auth-divider-line-height);
   background: var(--vx-auth-border);
 }
 
@@ -99,29 +99,29 @@
 
 .vx-auth-social {
   flex: 1;
-  min-height: 44px;
+  min-height: var(--vx-auth-social-button-min-height);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--vx-auth-gap-xs);
   padding: var(--vx-auth-padding-sm);
-  border: 1px solid var(--vx-auth-border);
+  border: var(--vx-auth-social-button-border-width) solid var(--vx-auth-border);
   border-radius: var(--vx-auth-radius-sm);
   background: var(--vx-color-auth-card-soft);
   color: var(--vx-auth-secondary);
   cursor: pointer;
   font-size: var(--vx-auth-text-sm);
   transition:
-    border-color 0.2s ease,
-    background 0.2s ease,
-    color 0.2s ease;
+    border-color var(--vx-control-transition),
+    background var(--vx-control-transition),
+    color var(--vx-control-transition);
 }
 
 .vx-auth-social svg,
 .vx-auth-social img {
-  width: 22px;
-  height: 22px;
-  flex: 0 0 22px;
+  width: var(--vx-auth-social-icon-size);
+  height: var(--vx-auth-social-icon-size);
+  flex: 0 0 var(--vx-auth-social-icon-size);
   display: block;
   object-fit: contain;
 }
@@ -153,7 +153,7 @@
 
 .vx-auth-switch,
 .vx-auth-terms {
-  margin: 16px 0 0;
+  margin: var(--vx-auth-links-margin-top) 0 0;
   color: var(--vx-auth-secondary);
   font-size: var(--vx-auth-text-sm);
   line-height: 1.7;
@@ -165,19 +165,19 @@
 }
 
 .vx-auth-switch button {
-  margin-left: 4px;
+  margin-left: var(--vx-auth-link-indent);
   color: var(--vx-auth-accent);
   font-weight: 500;
   text-decoration: underline;
-  text-underline-offset: 3px;
+  text-underline-offset: var(--vx-auth-link-underline-offset);
 }
 
 .vx-auth-back {
   width: fit-content;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 24px;
+  gap: var(--vx-auth-success-header-gap);
+  margin-bottom: var(--vx-auth-success-header-margin-bottom);
   padding: 0;
   font-size: var(--vx-auth-text-xs);
 }
@@ -187,13 +187,13 @@
 }
 
 .vx-auth-check {
-  width: 52px;
-  height: 52px;
+  width: var(--vx-auth-success-icon-size);
+  height: var(--vx-auth-success-icon-size);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 20px;
-  border: 1px solid color-mix(in srgb, var(--vx-color-success) 30%, transparent);
+  margin: 0 auto var(--vx-auth-success-icon-margin-bottom);
+  border: var(--vx-auth-success-icon-border-width) solid color-mix(in srgb, var(--vx-color-success) 30%, transparent);
   border-radius: var(--vx-auth-radius-pill);
   background: color-mix(in srgb, var(--vx-color-success) 10%, transparent);
   color: var(--vx-auth-success);
@@ -212,17 +212,17 @@
 }
 
 .vx-auth-reset-done button {
-  margin-top: 24px;
-  padding: 9px 20px;
-  border: 1px solid var(--vx-auth-border);
+  margin-top: var(--vx-auth-secondary-action-margin-top);
+  padding: var(--vx-auth-secondary-action-padding);
+  border: var(--vx-auth-secondary-action-border-width) solid var(--vx-auth-border);
   border-radius: var(--vx-auth-radius-sm);
   background: var(--vx-color-white);
   color: var(--vx-auth-secondary);
   cursor: pointer;
   font-size: var(--vx-auth-text-sm);
   transition:
-    border-color 0.2s ease,
-    color 0.2s ease;
+    border-color var(--vx-control-transition),
+    color var(--vx-control-transition);
 }
 
 .vx-auth-reset-done button:hover {

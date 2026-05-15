@@ -1,0 +1,44 @@
+/**
+ * tokens-platform-layout-shell-semantics.css - Console shell 绑定语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-16
+ */
+
+:root {
+  --vx-layout-directory-page-title-size: clamp(var(--vx-platform-layout-scale-1-08r), var(--vx-platform-layout-scale-1-28vw), var(--vx-platform-layout-scale-1-32r));
+  --vx-layout-directory-row-padding-x: var(--vx-platform-layout-scale-1r);
+  --vx-layout-shell-search-width: min(var(--vx-platform-layout-scale-520p), 100%);
+  --vx-layout-shell-search-height: var(--vx-platform-layout-scale-2-25r);
+  --vx-layout-shell-search-border: var(--vx-platform-layout-scale-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  --vx-layout-shell-search-placeholder-size: var(--vx-shell-item-size, var(--vx-platform-layout-scale-0-8r));
+  --vx-layout-shell-icon-button-size: var(--vx-platform-layout-scale-2r);
+  --vx-layout-shell-icon-button-radius: var(--vx-shell-radius-control, var(--vx-platform-layout-scale-9p));
+  --vx-layout-shell-icon-button-toolbar-size: var(--vx-platform-layout-scale-2r);
+  --vx-layout-shell-icon-button-toolbar-radius: var(--vx-platform-layout-scale-9p);
+  --vx-layout-shell-icon-button-rail-size: var(--vx-platform-layout-scale-2-5r);
+  --vx-layout-shell-icon-button-utility-size: var(--vx-platform-layout-scale-2-5r);
+  --vx-layout-shell-icon-button-assistant-size: var(--vx-platform-layout-scale-2r);
+  --vx-layout-shell-icon-button-assistant-radius: var(--vx-platform-layout-scale-9p);
+  --vx-layout-shell-agent-button-size: var(--vx-platform-layout-scale-2r);
+  --vx-layout-shell-agent-button-icon-size: var(--vx-platform-layout-scale-2r);
+  --vx-layout-shell-header-actions-gap: var(--vx-platform-layout-scale-0-9r);
+  --vx-layout-shell-header-action-group-gap: var(--vx-platform-layout-scale-0-18r);
+  --vx-layout-shell-header-action-group-padding: var(--vx-platform-layout-scale-0-16r);
+  --vx-layout-shell-user-size: var(--vx-platform-layout-scale-2r);
+  --vx-layout-shell-user-max-width: var(--vx-platform-layout-scale-11r);
+  --vx-layout-assistant-panel-min-width: var(--vx-platform-layout-scale-380p);
+  --vx-layout-assistant-panel-border-left: var(--vx-platform-layout-scale-1p) solid var(--vx-console-border);
+  --vx-layout-assistant-panel-fullscreen-gradient-stop: var(--vx-platform-layout-scale-24r);
+  --vx-layout-assistant-panel-bar-padding: 0 var(--vx-platform-layout-scale-0-95r) 0 var(--vx-platform-layout-scale-1r);
+  --vx-layout-assistant-panel-bar-title-size: var(--vx-platform-layout-scale-0-92r);
+  --vx-layout-assistant-panel-bar-title-letter-spacing: var(--vx-platform-layout-scale-neg-0-02e);
+  --vx-layout-assistant-panel-bar-actions-gap: var(--vx-platform-layout-scale-0-25r);
+  --vx-layout-assistant-panel-output-gap: var(--vx-platform-layout-scale-0-85r);
+  --vx-layout-assistant-panel-output-padding: var(--vx-platform-layout-scale-0-7r) var(--vx-platform-layout-scale-0-95r) var(--vx-platform-layout-scale-0-75r) var(--vx-platform-layout-scale-1r);
+  --vx-layout-assistant-panel-output-scroll-padding-right: var(--vx-platform-layout-scale-0-1r);
+  --vx-layout-assistant-panel-composer-gap: var(--vx-platform-layout-scale-0-75r);
+  --vx-layout-assistant-panel-composer-padding: var(--vx-platform-layout-scale-0-75r) var(--vx-platform-layout-scale-0-95r) var(--vx-platform-layout-scale-0-95r) var(--vx-platform-layout-scale-1r);
+}

@@ -10,9 +10,9 @@
 @media (max-width: 1180px) {
   :where(.admin-shell) {
     --vx-admin-content-margin-x: 0;
-    --vx-admin-content-padding-x: 2rem;
-    --vx-admin-content-padding-top: 2rem;
-    --vx-admin-content-padding-bottom: 3rem;
+    --vx-admin-content-padding-x: var(--vx-shell-responsive-content-padding-x);
+    --vx-admin-content-padding-top: var(--vx-shell-responsive-content-padding-top);
+    --vx-admin-content-padding-bottom: var(--vx-shell-responsive-content-padding-bottom);
     --vx-admin-content-max-width: none;
   }
 }

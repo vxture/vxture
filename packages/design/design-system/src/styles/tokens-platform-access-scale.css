@@ -1,0 +1,73 @@
+/**
+ * tokens-platform-access-scale.css - Platform access 域尺度语义桥接 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* Platform access 域只暴露该场景的尺度组装，避免具体样式直接消费 platform 总桥接。 */
+  --vx-platform-access-scale-0-05r: var(--vx-platform-scale-0-05r);
+  --vx-platform-access-scale-0-12r: var(--vx-platform-scale-0-12r);
+  --vx-platform-access-scale-0-15r: var(--vx-platform-scale-0-15r);
+  --vx-platform-access-scale-0-16r: var(--vx-platform-scale-0-16r);
+  --vx-platform-access-scale-0-18r: var(--vx-platform-scale-0-18r);
+  --vx-platform-access-scale-0-1r: var(--vx-platform-scale-0-1r);
+  --vx-platform-access-scale-0-22r: var(--vx-platform-scale-0-22r);
+  --vx-platform-access-scale-0-25r: var(--vx-platform-scale-0-25r);
+  --vx-platform-access-scale-0-2r: var(--vx-platform-scale-0-2r);
+  --vx-platform-access-scale-0-32r: var(--vx-platform-scale-0-32r);
+  --vx-platform-access-scale-0-35r: var(--vx-platform-scale-0-35r);
+  --vx-platform-access-scale-0-3r: var(--vx-platform-scale-0-3r);
+  --vx-platform-access-scale-0-42r: var(--vx-platform-scale-0-42r);
+  --vx-platform-access-scale-0-44r: var(--vx-platform-scale-0-44r);
+  --vx-platform-access-scale-0-45r: var(--vx-platform-scale-0-45r);
+  --vx-platform-access-scale-0-4r: var(--vx-platform-scale-0-4r);
+  --vx-platform-access-scale-0-52r: var(--vx-platform-scale-0-52r);
+  --vx-platform-access-scale-0-54r: var(--vx-platform-scale-0-54r);
+  --vx-platform-access-scale-0-55r: var(--vx-platform-scale-0-55r);
+  --vx-platform-access-scale-0-5r: var(--vx-platform-scale-0-5r);
+  --vx-platform-access-scale-0-62r: var(--vx-platform-scale-0-62r);
+  --vx-platform-access-scale-0-65r: var(--vx-platform-scale-0-65r);
+  --vx-platform-access-scale-0-68r: var(--vx-platform-scale-0-68r);
+  --vx-platform-access-scale-0-6r: var(--vx-platform-scale-0-6r);
+  --vx-platform-access-scale-0-72r: var(--vx-platform-scale-0-72r);
+  --vx-platform-access-scale-0-75r: var(--vx-platform-scale-0-75r);
+  --vx-platform-access-scale-0-85r: var(--vx-platform-scale-0-85r);
+  --vx-platform-access-scale-0-8r: var(--vx-platform-scale-0-8r);
+  --vx-platform-access-scale-0-9r: var(--vx-platform-scale-0-9r);
+  --vx-platform-access-scale-1-05r: var(--vx-platform-scale-1-05r);
+  --vx-platform-access-scale-1-2r: var(--vx-platform-scale-1-2r);
+  --vx-platform-access-scale-1-35r: var(--vx-platform-scale-1-35r);
+  --vx-platform-access-scale-1-55r: var(--vx-platform-scale-1-55r);
+  --vx-platform-access-scale-1-88r: var(--vx-platform-scale-1-88r);
+  --vx-platform-access-scale-1-9r: var(--vx-platform-scale-1-9r);
+  --vx-platform-access-scale-10-5r: var(--vx-platform-scale-10-5r);
+  --vx-platform-access-scale-100p: var(--vx-platform-scale-100p);
+  --vx-platform-access-scale-100vh: var(--vx-platform-scale-100vh);
+  --vx-platform-access-scale-100vw: var(--vx-platform-scale-100vw);
+  --vx-platform-access-scale-105p: var(--vx-platform-scale-105p);
+  --vx-platform-access-scale-10r: var(--vx-platform-scale-10r);
+  --vx-platform-access-scale-110p: var(--vx-platform-scale-110p);
+  --vx-platform-access-scale-116p: var(--vx-platform-scale-116p);
+  --vx-platform-access-scale-120p: var(--vx-platform-scale-120p);
+  --vx-platform-access-scale-130p: var(--vx-platform-scale-130p);
+  --vx-platform-access-scale-140p: var(--vx-platform-scale-140p);
+  --vx-platform-access-scale-18p: var(--vx-platform-scale-18p);
+  --vx-platform-access-scale-18r: var(--vx-platform-scale-18r);
+  --vx-platform-access-scale-1p: var(--vx-platform-scale-1p);
+  --vx-platform-access-scale-1r: var(--vx-platform-scale-1r);
+  --vx-platform-access-scale-2-25r: var(--vx-platform-scale-2-25r);
+  --vx-platform-access-scale-2-35r: var(--vx-platform-scale-2-35r);
+  --vx-platform-access-scale-2-5r: var(--vx-platform-scale-2-5r);
+  --vx-platform-access-scale-210p: var(--vx-platform-scale-210p);
+  --vx-platform-access-scale-220p: var(--vx-platform-scale-220p);
+  --vx-platform-access-scale-22p: var(--vx-platform-scale-22p);
+  --vx-platform-access-scale-28r: var(--vx-platform-scale-28r);
+  --vx-platform-access-scale-2r: var(--vx-platform-scale-2r);
+  --vx-platform-access-scale-32r: var(--vx-platform-scale-32r);
+  --vx-platform-access-scale-4-05r: var(--vx-platform-scale-4-05r);
+  --vx-platform-access-scale-neg-0-1r: var(--vx-platform-scale-neg-0-1r);
+}

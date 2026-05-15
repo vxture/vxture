@@ -50,7 +50,7 @@
   height: 100%;
   border-radius: var(--vx-radius-full);
   background: var(--vx-color-gray-300);
-  transition: background 180ms ease;
+  transition: background var(--vx-control-transition);
 }
 
 :where(.vx-switch__track::after) {
@@ -62,8 +62,8 @@
   height: var(--vx-switch-thumb-size);
   border-radius: var(--vx-radius-full);
   background: var(--vx-color-white);
-  box-shadow: 0 var(--vx-switch-thumb-shadow-y) var(--vx-switch-thumb-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 15%, transparent);
-  transition: transform 180ms ease;
+  box-shadow: var(--vx-switch-thumb-shadow);
+  transition: transform var(--vx-control-transition);
 }
 
 :where(.vx-switch__input:checked + .vx-switch__track) {

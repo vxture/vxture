@@ -76,13 +76,13 @@
   font-size: var(--vx-shell-preferences-select-size);
   outline: none;
   transition:
-    border-color 180ms ease,
-    box-shadow 180ms ease;
+    border-color var(--vx-control-transition),
+    box-shadow var(--vx-control-transition);
 }
 
 :where(.vx-shell-preferences__select:focus) {
   border-color: var(--vx-color-brand-300);
-  box-shadow: 0 0 0 var(--vx-control-focus-ring-width) var(--vx-color-ring);
+  box-shadow: var(--vx-control-focus-shadow);
 }
 
 :where(.vx-shell-preferences__select-icon) {
@@ -118,9 +118,9 @@
   font-weight: 650;
   line-height: 1;
   transition:
-    background 180ms ease,
-    color 180ms ease,
-    box-shadow 180ms ease;
+    background var(--vx-control-transition),
+    color var(--vx-control-transition),
+    box-shadow var(--vx-control-transition);
 }
 
 :where(.vx-shell-segmented__item:hover) {
@@ -130,7 +130,7 @@
 :where(.vx-shell-segmented__item--active) {
   background: var(--vx-color-surface);
   color: var(--vx-color-brand-700);
-  box-shadow: 0 var(--vx-shell-segmented-active-shadow-y) var(--vx-shell-segmented-active-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+  box-shadow: var(--vx-shell-segmented-active-shadow);
 }
 
 :where(.dark .vx-shell-segmented__item--active) {

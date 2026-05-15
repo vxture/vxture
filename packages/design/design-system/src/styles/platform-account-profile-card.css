@@ -9,23 +9,23 @@
 
 .vx-account-profile-layout {
   display: grid;
-  grid-template-columns: minmax(17.5rem, 0.38fr) minmax(0, 1fr);
-  gap: 1.1rem;
+  grid-template-columns: var(--vx-account-profile-layout-columns);
+  gap: var(--vx-account-profile-layout-gap);
   align-items: flex-start;
 }
 
 .vx-account-profile-identity {
   display: grid;
-  gap: 0.78rem;
+  gap: var(--vx-account-profile-identity-gap);
   min-width: 0;
 }
 
 .vx-account-profile-avatar-card,
 .vx-account-profile-summary {
-  border: 1px solid var(--vx-color-border);
+  border: var(--vx-account-profile-card-border);
   border-radius: var(--vx-radius-lg);
   background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 76%, transparent);
-  box-shadow: 0 12px 28px color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent);
+  box-shadow: var(--vx-platform-account-card-shadow);
 }
 
 .dark .vx-account-profile-avatar-card,
@@ -38,8 +38,8 @@
 .vx-account-profile-avatar-card {
   display: grid;
   justify-items: center;
-  gap: 0.86rem;
-  padding: 1.15rem 1rem;
+  gap: var(--vx-account-profile-avatar-card-gap);
+  padding: var(--vx-account-profile-avatar-card-padding);
 }
 
 .vx-account-profile-avatar-button {
@@ -60,26 +60,22 @@
 }
 
 .vx-account-profile-avatar {
-  width: 7.25rem;
-  height: 7.25rem;
+  width: var(--vx-account-profile-avatar-size);
+  height: var(--vx-account-profile-avatar-size);
   border-radius: var(--vx-radius-full);
   background-position: center;
   background-size: cover;
-  box-shadow:
-    0 18px 34px color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent),
-    inset 0 0 0 1px var(--vx-color-border);
+  box-shadow: var(--vx-platform-account-media-shadow-strong);
 }
 
 .dark .vx-account-profile-avatar {
-  box-shadow:
-    0 18px 34px color-mix(in srgb, var(--vx-color-black) 32%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
+  box-shadow: var(--vx-platform-account-media-shadow-dark);
 }
 
 .vx-account-profile-avatar__label {
   position: absolute;
-  width: 1px;
-  height: 1px;
+  width: var(--vx-account-profile-sr-only-size);
+  height: var(--vx-account-profile-sr-only-size);
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
@@ -87,30 +83,30 @@
 
 .vx-account-profile-avatar-button__edit {
   position: absolute;
-  right: 0.24rem;
-  bottom: 0.34rem;
+  right: var(--vx-account-profile-avatar-edit-inline-end);
+  bottom: var(--vx-account-profile-avatar-edit-block-end);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  width: var(--vx-account-profile-avatar-edit-size);
+  height: var(--vx-account-profile-avatar-edit-size);
+  border: var(--vx-account-profile-avatar-edit-border);
   border-radius: var(--vx-radius-full);
   background: var(--vx-color-shell-panel-strong);
   color: var(--vx-console-brand);
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
+  box-shadow: var(--vx-platform-account-avatar-edit-shadow);
 }
 
 .dark .vx-account-profile-avatar-button__edit {
   border-color: var(--vx-color-border);
   background: color-mix(in srgb, var(--vx-color-shell-surface) 96%, transparent);
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--vx-color-black) 32%, transparent);
+  box-shadow: var(--vx-platform-account-avatar-edit-shadow-dark);
 }
 
 .vx-account-profile-avatar-card__copy {
   display: grid;
   justify-items: center;
-  gap: 0.28rem;
+  gap: var(--vx-account-profile-avatar-copy-gap);
   min-width: 0;
   text-align: center;
 }
@@ -125,7 +121,7 @@
 
 .vx-account-profile-avatar-card__copy strong {
   color: var(--vx-console-text);
-  font-size: 1rem;
+  font-size: var(--vx-account-profile-avatar-copy-title-size);
   font-weight: 760;
 }
 
@@ -135,7 +131,7 @@
 }
 
 .vx-account-profile-avatar-card__badge {
-  margin-top: 0.1rem;
+  margin-top: var(--vx-account-profile-avatar-badge-margin-top);
   border-radius: var(--vx-radius-full);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
@@ -147,7 +143,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--vx-account-profile-avatar-actions-gap);
 }
 
 .vx-account-profile-summary {
@@ -158,12 +154,12 @@
 
 .vx-account-profile-summary__row {
   display: grid;
-  grid-template-columns: minmax(5.3rem, 0.38fr) minmax(0, 1fr);
-  gap: 0.68rem;
+  grid-template-columns: var(--vx-account-profile-summary-row-columns);
+  gap: var(--vx-account-profile-summary-row-gap);
   align-items: center;
-  min-height: 2.62rem;
-  padding: 0.62rem 0.78rem;
-  border-top: 1px dashed color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  min-height: var(--vx-account-profile-summary-row-min-height);
+  padding: var(--vx-account-profile-summary-row-padding);
+  border-top: var(--vx-account-profile-summary-row-border);
 }
 
 .vx-account-profile-summary__row:first-child {

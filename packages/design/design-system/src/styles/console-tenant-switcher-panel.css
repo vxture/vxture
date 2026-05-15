@@ -12,8 +12,8 @@
   z-index: 60;
   top: calc(100% + var(--vx-console-space-055r));
   left: 0;
-  width: min(var(--vx-console-size-360p), calc(100vw - var(--vx-console-size-2r)));
-  max-height: min(var(--vx-console-popover-max-height), calc(100vh - var(--vx-shell-header-height) - var(--vx-console-size-1r)));
+  width: min(var(--vx-console-size-360p), var(--vx-console-tenant-panel-width-available));
+  max-height: min(var(--vx-console-popover-max-height), var(--vx-console-tenant-panel-max-height-available));
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   gap: var(--vx-console-space-065r);
@@ -23,7 +23,7 @@
   background:
     radial-gradient(circle at top right, color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent), transparent var(--vx-console-pattern-12r-large)),
     color-mix(in srgb, var(--vx-color-white) 97%, transparent);
-  box-shadow: 0 var(--vx-console-effect-22p) var(--vx-console-effect-56p) color-mix(in srgb, var(--vx-color-brand-950) 16%, transparent);
+  box-shadow: var(--vx-console-tenant-panel-shadow);
   backdrop-filter: blur(var(--vx-console-effect-18p));
 }
 

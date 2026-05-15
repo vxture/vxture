@@ -11,8 +11,8 @@
   min-height: var(--vx-shell-header-height);
   height: var(--vx-shell-header-height);
   grid-template-columns: minmax(0, auto) minmax(var(--vx-console-track-18r-large), var(--vx-console-center-column-width)) auto;
-  padding: 0 clamp(var(--vx-console-space-065r), 1.1vw, var(--vx-console-space-11r)) 0 var(--vx-console-space-065r);
-  gap: clamp(var(--vx-console-space-13r-small), 2.4vw, var(--vx-console-space-25r));
+  padding: 0 clamp(var(--vx-console-space-065r), var(--vx-console-shell-header-padding-fluid), var(--vx-console-space-11r)) 0 var(--vx-console-space-065r);
+  gap: clamp(var(--vx-console-space-13r-small), var(--vx-console-shell-header-gap-fluid), var(--vx-console-space-25r));
   border-bottom: 0;
   background: transparent;
 }
@@ -77,7 +77,7 @@
   display: block;
   flex: 0 0 auto;
   object-fit: contain;
-  filter: drop-shadow(0 var(--vx-console-effect-6p) var(--vx-console-effect-14p) color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent));
+  filter: var(--vx-console-brand-logo-filter);
 }
 
 .vx-shell-header__brand-copy {
@@ -100,7 +100,7 @@
   font-weight: 700;
   line-height: var(--vx-console-text-line-2r);
   letter-spacing: 0;
-  transition: color 180ms ease;
+  transition: color var(--vx-shell-control-transition);
 }
 
 .vx-shell-header__divider {

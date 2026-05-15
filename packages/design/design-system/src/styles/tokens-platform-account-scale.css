@@ -1,0 +1,77 @@
+/**
+ * tokens-platform-account-scale.css - Platform account 域尺度语义桥接 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* Platform account 域只暴露该场景的尺度组装，避免具体样式直接消费 platform 总桥接。 */
+  --vx-platform-account-scale-0-15r: var(--vx-platform-scale-0-15r);
+  --vx-platform-account-scale-0-16r: var(--vx-platform-scale-0-16r);
+  --vx-platform-account-scale-0-18r: var(--vx-platform-scale-0-18r);
+  --vx-platform-account-scale-0-1r: var(--vx-platform-scale-0-1r);
+  --vx-platform-account-scale-0-24r: var(--vx-platform-scale-0-24r);
+  --vx-platform-account-scale-0-25r: var(--vx-platform-scale-0-25r);
+  --vx-platform-account-scale-0-28r: var(--vx-platform-scale-0-28r);
+  --vx-platform-account-scale-0-32r: var(--vx-platform-scale-0-32r);
+  --vx-platform-account-scale-0-34r: var(--vx-platform-scale-0-34r);
+  --vx-platform-account-scale-0-36r: var(--vx-platform-scale-0-36r);
+  --vx-platform-account-scale-0-42r: var(--vx-platform-scale-0-42r);
+  --vx-platform-account-scale-0-45r: var(--vx-platform-scale-0-45r);
+  --vx-platform-account-scale-0-46r: var(--vx-platform-scale-0-46r);
+  --vx-platform-account-scale-0-55r: var(--vx-platform-scale-0-55r);
+  --vx-platform-account-scale-0-5r: var(--vx-platform-scale-0-5r);
+  --vx-platform-account-scale-0-62r: var(--vx-platform-scale-0-62r);
+  --vx-platform-account-scale-0-68r: var(--vx-platform-scale-0-68r);
+  --vx-platform-account-scale-0-72r: var(--vx-platform-scale-0-72r);
+  --vx-platform-account-scale-0-74r: var(--vx-platform-scale-0-74r);
+  --vx-platform-account-scale-0-76r: var(--vx-platform-scale-0-76r);
+  --vx-platform-account-scale-0-78r: var(--vx-platform-scale-0-78r);
+  --vx-platform-account-scale-0-7r: var(--vx-platform-scale-0-7r);
+  --vx-platform-account-scale-0-82r: var(--vx-platform-scale-0-82r);
+  --vx-platform-account-scale-0-84r: var(--vx-platform-scale-0-84r);
+  --vx-platform-account-scale-0-85r: var(--vx-platform-scale-0-85r);
+  --vx-platform-account-scale-0-86r: var(--vx-platform-scale-0-86r);
+  --vx-platform-account-scale-0-8r: var(--vx-platform-scale-0-8r);
+  --vx-platform-account-scale-0-92r: var(--vx-platform-scale-0-92r);
+  --vx-platform-account-scale-0-95r: var(--vx-platform-scale-0-95r);
+  --vx-platform-account-scale-0-98r: var(--vx-platform-scale-0-98r);
+  --vx-platform-account-scale-0-9r: var(--vx-platform-scale-0-9r);
+  --vx-platform-account-scale-1-02r: var(--vx-platform-scale-1-02r);
+  --vx-platform-account-scale-1-05r: var(--vx-platform-scale-1-05r);
+  --vx-platform-account-scale-1-15r: var(--vx-platform-scale-1-15r);
+  --vx-platform-account-scale-1-1r: var(--vx-platform-scale-1-1r);
+  --vx-platform-account-scale-1-2r: var(--vx-platform-scale-1-2r);
+  --vx-platform-account-scale-1-55r: var(--vx-platform-scale-1-55r);
+  --vx-platform-account-scale-1-7r: var(--vx-platform-scale-1-7r);
+  --vx-platform-account-scale-120p: var(--vx-platform-scale-120p);
+  --vx-platform-account-scale-128p: var(--vx-platform-scale-128p);
+  --vx-platform-account-scale-12r: var(--vx-platform-scale-12r);
+  --vx-platform-account-scale-17-5r: var(--vx-platform-scale-17-5r);
+  --vx-platform-account-scale-18r: var(--vx-platform-scale-18r);
+  --vx-platform-account-scale-190p: var(--vx-platform-scale-190p);
+  --vx-platform-account-scale-1p: var(--vx-platform-scale-1p);
+  --vx-platform-account-scale-1r: var(--vx-platform-scale-1r);
+  --vx-platform-account-scale-2-42r: var(--vx-platform-scale-2-42r);
+  --vx-platform-account-scale-2-4r: var(--vx-platform-scale-2-4r);
+  --vx-platform-account-scale-2-62r: var(--vx-platform-scale-2-62r);
+  --vx-platform-account-scale-2-85r: var(--vx-platform-scale-2-85r);
+  --vx-platform-account-scale-2p: var(--vx-platform-scale-2p);
+  --vx-platform-account-scale-2r: var(--vx-platform-scale-2r);
+  --vx-platform-account-scale-3-05r: var(--vx-platform-scale-3-05r);
+  --vx-platform-account-scale-3p: var(--vx-platform-scale-3p);
+  --vx-platform-account-scale-3r: var(--vx-platform-scale-3r);
+  --vx-platform-account-scale-4-25r: var(--vx-platform-scale-4-25r);
+  --vx-platform-account-scale-460p: var(--vx-platform-scale-460p);
+  --vx-platform-account-scale-5-3r: var(--vx-platform-scale-5-3r);
+  --vx-platform-account-scale-500p: var(--vx-platform-scale-500p);
+  --vx-platform-account-scale-7-25r: var(--vx-platform-scale-7-25r);
+  --vx-platform-account-scale-7-2r: var(--vx-platform-scale-7-2r);
+  --vx-platform-account-scale-720p: var(--vx-platform-scale-720p);
+  --vx-platform-account-scale-8-8r: var(--vx-platform-scale-8-8r);
+  --vx-platform-account-scale-8r: var(--vx-platform-scale-8r);
+  --vx-platform-account-scale-980p: var(--vx-platform-scale-980p);
+}

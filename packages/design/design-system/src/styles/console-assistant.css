@@ -3,7 +3,7 @@
  */
 .vx-shell__content {
   min-width: 0;
-  min-height: calc(100dvh - var(--vx-shell-header-height));
+  min-height: var(--vx-console-assistant-available-height);
 }
 
 .vx-shell-sidebar__toggle-icon {
@@ -88,7 +88,7 @@
   height: var(--vx-console-size-4p);
   border-radius: var(--vx-radius-full);
   background: var(--vx-color-scrollbar);
-  transition: background 180ms ease;
+  transition: background var(--vx-shell-control-transition);
 }
 
 .vx-assistant-panel__divider:hover span,
@@ -141,9 +141,9 @@
   color: var(--vx-console-text);
   font-weight: 600;
   transition:
-    border-color 180ms ease,
-    background 180ms ease,
-    color 180ms ease;
+    border-color var(--vx-shell-control-transition),
+    background var(--vx-shell-control-transition),
+    color var(--vx-shell-control-transition);
 }
 
 .vx-assistant-action:hover,

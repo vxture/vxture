@@ -21,8 +21,8 @@
   padding-top: var(--vx-console-space-012r);
   padding-right: var(--vx-console-space-028r);
   transition:
-    opacity 140ms ease,
-    transform 220ms ease;
+    opacity var(--vx-shell-fade-transition),
+    transform var(--vx-shell-slide-transition);
 }
 
 .vx-shell-nav::-webkit-scrollbar,
@@ -79,7 +79,10 @@
   padding: 0 var(--vx-console-space-082r) 0 var(--vx-shell-sidebar-content-inset);
   border-radius: var(--vx-console-radius-10p);
   color: var(--vx-console-muted);
-  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+  transition:
+    background var(--vx-shell-control-transition),
+    color var(--vx-shell-control-transition),
+    transform var(--vx-shell-control-transition);
 }
 
 .vx-shell-nav__icon {
@@ -112,8 +115,8 @@
   padding: var(--vx-console-space-045r) var(--vx-console-space-075r) 0 var(--vx-shell-sidebar-content-inset);
   border-top: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
   transition:
-    opacity 140ms ease,
-    transform 220ms ease;
+    opacity var(--vx-shell-fade-transition),
+    transform var(--vx-shell-slide-transition);
 }
 
 .vx-shell-sidebar__footer div {

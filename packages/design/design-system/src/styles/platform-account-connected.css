@@ -10,12 +10,12 @@
 .vx-account-connected-summary {
   display: inline-flex;
   align-items: center;
-  min-height: 2rem;
+  min-height: var(--vx-account-connected-summary-min-height);
   border-radius: var(--vx-radius-full);
-  border: 1px solid var(--vx-color-border);
+  border: var(--vx-account-connected-summary-border);
   background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 88%, transparent);
   color: var(--vx-console-brand-strong);
-  padding: 0 0.72rem;
+  padding: var(--vx-account-connected-summary-padding);
   font-size: var(--vx-account-profile-meta-size);
   font-weight: 720;
   white-space: nowrap;
@@ -34,17 +34,12 @@
 
 .vx-account-connected-row {
   display: grid;
-  grid-template-columns:
-    2.4rem
-    minmax(190px, 1.08fr)
-    minmax(120px, 0.62fr)
-    minmax(128px, 0.68fr)
-    minmax(8.8rem, auto);
-  gap: 0.76rem;
+  grid-template-columns: var(--vx-account-connected-row-columns);
+  gap: var(--vx-account-connected-row-gap);
   align-items: center;
-  min-height: 4.25rem;
-  padding: 0.74rem 0;
-  border-top: 1px dashed var(--vx-color-border);
+  min-height: var(--vx-account-connected-row-min-height);
+  padding: var(--vx-account-connected-row-padding);
+  border-top: var(--vx-account-connected-row-border);
 }
 
 .dark .vx-account-connected-row {
@@ -59,13 +54,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.4rem;
-  height: 2.4rem;
+  width: var(--vx-account-connected-logo-size);
+  height: var(--vx-account-connected-logo-size);
   border-radius: var(--vx-platform-radius-sm);
-  border: 1px solid var(--vx-color-shell-line-soft);
+  border: var(--vx-account-connected-logo-border);
   background: var(--vx-color-shell-panel);
   color: var(--vx-console-brand-strong);
-  font-size: 0.76rem;
+  font-size: var(--vx-account-connected-logo-text-size);
   font-weight: 800;
   letter-spacing: 0;
 }
@@ -97,14 +92,14 @@
 
 .vx-account-connected-copy {
   display: grid;
-  gap: 0.18rem;
+  gap: var(--vx-account-connected-copy-gap);
   min-width: 0;
 }
 
 .vx-account-connected-copy__title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--vx-account-connected-title-gap);
   min-width: 0;
 }
 
@@ -123,7 +118,7 @@
   border-radius: var(--vx-radius-full);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
-  padding: 0.15rem 0.46rem;
+  padding: var(--vx-account-connected-badge-padding);
   font-size: var(--vx-account-profile-meta-size);
   font-weight: 720;
 }
@@ -145,7 +140,7 @@
 
 .vx-account-connected-meta {
   display: grid;
-  gap: 0.16rem;
+  gap: var(--vx-account-connected-meta-gap);
   min-width: 0;
 }
 
@@ -168,10 +163,10 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.42rem;
+  gap: var(--vx-account-connected-actions-gap);
 }
 
 .vx-account-connected-actions .vx-btn {
-  min-height: 2rem;
+  min-height: var(--vx-account-connected-action-button-min-height);
   white-space: nowrap;
 }

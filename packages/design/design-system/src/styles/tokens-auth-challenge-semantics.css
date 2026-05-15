@@ -1,0 +1,43 @@
+/**
+ * tokens-auth-challenge-semantics.css - 认证验证码语义尺度 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  --vx-auth-captcha-panel-width: var(--vx-auth-captcha-scale-348p);
+  --vx-auth-captcha-panel-padding: var(--vx-auth-captcha-scale-24p);
+  --vx-auth-captcha-panel-radius: var(--vx-auth-captcha-scale-14p);
+  --vx-auth-captcha-close-inset: var(--vx-auth-captcha-scale-12p);
+  --vx-auth-captcha-close-padding: var(--vx-auth-captcha-scale-4p);
+  --vx-auth-captcha-title-margin-bottom: var(--vx-auth-captcha-scale-8p);
+  --vx-auth-captcha-copy-margin-bottom: var(--vx-auth-captcha-scale-14p);
+  --vx-auth-captcha-canvas-width: var(--vx-auth-captcha-scale-300p);
+  --vx-auth-captcha-canvas-height: var(--vx-auth-captcha-scale-120p);
+  --vx-auth-captcha-canvas-margin-bottom: var(--vx-auth-captcha-scale-14p);
+  --vx-auth-captcha-canvas-border-width: var(--vx-auth-captcha-scale-1p);
+  --vx-auth-captcha-pattern-primary-x: var(--vx-auth-captcha-scale-60p);
+  --vx-auth-captcha-pattern-primary-y: var(--vx-auth-captcha-scale-40p);
+  --vx-auth-captcha-pattern-primary-radius: var(--vx-auth-captcha-scale-30p);
+  --vx-auth-captcha-pattern-primary-end: var(--vx-auth-captcha-scale-31p);
+  --vx-auth-captcha-pattern-secondary-x: var(--vx-auth-captcha-scale-206p);
+  --vx-auth-captcha-pattern-secondary-y: var(--vx-auth-captcha-scale-72p);
+  --vx-auth-captcha-pattern-secondary-radius: var(--vx-auth-captcha-scale-22p);
+  --vx-auth-captcha-pattern-secondary-end: var(--vx-auth-captcha-scale-23p);
+  --vx-auth-captcha-grid-line-width: var(--vx-auth-captcha-scale-1p);
+  --vx-auth-captcha-grid-size: var(--vx-auth-captcha-scale-20p);
+  --vx-auth-captcha-piece-top: var(--vx-auth-captcha-scale-39p);
+  --vx-auth-captcha-piece-size: var(--vx-auth-captcha-scale-42p);
+  --vx-auth-captcha-piece-radius: var(--vx-auth-captcha-scale-9p) var(--vx-auth-captcha-scale-14p) var(--vx-auth-captcha-scale-9p) var(--vx-auth-captcha-scale-9p);
+  --vx-auth-captcha-track-width: var(--vx-auth-captcha-scale-300p);
+  --vx-auth-captcha-track-height: var(--vx-auth-captcha-scale-40p);
+  --vx-auth-captcha-track-border-width: var(--vx-auth-captcha-scale-1p);
+  --vx-auth-captcha-track-radius: var(--vx-auth-captcha-scale-20p);
+  --vx-auth-captcha-thumb-top: var(--vx-auth-captcha-scale-3p);
+  --vx-auth-captcha-thumb-size: var(--vx-auth-captcha-scale-34p);
+  --vx-auth-captcha-thumb-border-width: var(--vx-auth-captcha-scale-2p);
+  --vx-auth-captcha-status-margin-top: var(--vx-auth-captcha-scale-10p);
+}

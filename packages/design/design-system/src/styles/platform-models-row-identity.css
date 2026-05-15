@@ -11,13 +11,13 @@
 .vx-model-grant-row__model {
   display: flex;
   align-items: center;
-  gap: var(--vx-model-identity-gap, 0.62rem);
+  gap: var(--vx-model-identity-gap);
   min-width: 0;
 }
 
 .vx-model-grant-row__model {
   display: grid;
-  gap: var(--vx-model-grant-model-gap, 0.18rem);
+  gap: var(--vx-model-grant-model-gap);
 }
 
 .vx-model-row__identity > div,
@@ -28,8 +28,8 @@
 .vx-model-row__icon {
   display: grid;
   place-items: center;
-  width: var(--vx-model-icon-size, 2.25rem);
-  height: var(--vx-model-icon-size, 2.25rem);
+  width: var(--vx-model-icon-size);
+  height: var(--vx-model-icon-size);
   flex: 0 0 auto;
   border-radius: var(--vx-model-icon-radius, var(--vx-platform-radius-sm));
   color: var(--vx-color-brand-700);
@@ -55,7 +55,7 @@
 .vx-model-row__identity p,
 .vx-model-grant-row__model p {
   overflow: hidden;
-  margin: var(--vx-model-copy-margin-top, 0.16rem) 0 0;
+  margin: var(--vx-model-copy-margin-top) 0 0;
   color: var(--vx-console-muted);
   font-size: var(--vx-models-meta-size);
   line-height: 1.2;
@@ -83,13 +83,13 @@
 .vx-model-row__chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--vx-model-chip-gap, 0.28rem);
+  gap: var(--vx-model-chip-gap);
   min-width: 0;
 }
 
 .vx-model-row__chips span {
   border-radius: var(--vx-radius-full);
-  padding: var(--vx-model-chip-padding, 0.16rem 0.42rem);
+  padding: var(--vx-model-chip-padding);
   color: var(--vx-console-brand-strong);
   background: var(--vx-console-brand-soft);
   font-size: var(--vx-models-meta-size);

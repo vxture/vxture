@@ -9,7 +9,7 @@
 
 .vx-model-status {
   border-radius: var(--vx-radius-full);
-  padding: var(--vx-model-status-padding, 0.22rem 0.52rem);
+  padding: var(--vx-model-status-padding);
   font-size: var(--vx-models-meta-size);
   font-weight: 720;
 }
@@ -40,9 +40,9 @@
 }
 
 .vx-model-row__menu .vx-btn {
-  width: var(--vx-model-menu-button-size, 2rem);
-  height: var(--vx-model-menu-button-size, 2rem);
-  min-height: var(--vx-model-menu-button-size, 2rem);
+  width: var(--vx-model-menu-button-size);
+  height: var(--vx-model-menu-button-size);
+  min-height: var(--vx-model-menu-button-size);
   border: 0;
   border-radius: var(--vx-model-menu-button-radius, 0);
   background: transparent;
@@ -57,34 +57,34 @@
 }
 
 .vx-model-row__menu .vx-btn svg {
-  width: var(--vx-model-menu-icon-size, 1.25rem);
-  height: var(--vx-model-menu-icon-size, 1.25rem);
+  width: var(--vx-model-menu-icon-size);
+  height: var(--vx-model-menu-icon-size);
 }
 
 .vx-model-actions-menu {
   position: absolute;
-  top: var(--vx-model-actions-menu-top, calc(100% + 0.22rem));
+  top: var(--vx-model-actions-menu-top);
   right: 0;
   z-index: 2400;
   display: grid;
-  min-width: var(--vx-model-actions-menu-min-width, 10.8rem);
-  gap: var(--vx-model-actions-menu-gap, 0.15rem);
-  border: 1px solid var(--vx-console-border);
+  min-width: var(--vx-model-actions-menu-min-width);
+  gap: var(--vx-model-actions-menu-gap);
+  border: var(--vx-model-actions-menu-border-width) solid var(--vx-console-border);
   border-radius: var(--vx-model-actions-menu-radius, var(--vx-platform-radius-sm));
   background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
-  padding: var(--vx-model-actions-menu-padding, 0.32rem);
+  box-shadow: var(--vx-platform-menu-shadow);
+  padding: var(--vx-model-actions-menu-padding);
 }
 
 .dark .vx-model-actions-menu {
   background: color-mix(in srgb, var(--vx-color-shell-surface) 98%, transparent);
-  box-shadow: 0 16px 34px color-mix(in srgb, var(--vx-color-black) 36%, transparent);
+  box-shadow: var(--vx-platform-menu-shadow-dark);
 }
 
 .vx-model-actions-menu button {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--vx-model-actions-menu-button-gap);
   width: 100%;
   border: 0;
   border-radius: var(--vx-model-actions-menu-button-radius, var(--vx-radius-lg));
@@ -93,7 +93,7 @@
   cursor: pointer;
   font-size: var(--vx-model-actions-menu-button-font-size, var(--vx-models-text-size));
   font-weight: var(--vx-model-actions-menu-button-font-weight, 620);
-  padding: var(--vx-model-actions-menu-button-padding, 0.54rem 0.62rem);
+  padding: var(--vx-model-actions-menu-button-padding);
   text-align: left;
 }
 
@@ -120,10 +120,10 @@
   display: flex;
   align-items: center;
   justify-content: var(--vx-models-pagination-justify, flex-end);
-  gap: 0.75rem;
+  gap: var(--vx-models-pagination-gap);
   color: var(--vx-console-muted);
   font-size: var(--vx-models-pagination-font-size, var(--vx-models-meta-size));
-  padding: var(--vx-models-pagination-padding, 0.2rem 0 0);
+  padding: var(--vx-models-pagination-padding);
   border-top: var(--vx-models-pagination-border-top, 0);
 }
 
@@ -137,11 +137,11 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: var(--vx-models-pagination-actions-gap, 0.5rem);
+  gap: var(--vx-models-pagination-actions-gap);
   margin-left: var(--vx-models-pagination-actions-margin-left, 0);
 }
 
 .vx-models-pagination__actions span {
-  padding-right: var(--vx-models-pagination-actions-span-padding-right, 0.25rem);
+  padding-right: var(--vx-models-pagination-actions-span-padding-right);
   white-space: nowrap;
 }

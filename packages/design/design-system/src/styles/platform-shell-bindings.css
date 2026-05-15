@@ -68,30 +68,30 @@
   --vx-shell-agent-button-hover-opacity: var(--vx-admin-shell-agent-button-hover-opacity);
   --vx-assistant-panel-width: 100%;
   --vx-assistant-panel-min-width: 0;
-  --vx-assistant-panel-border-left: 2px solid var(--vx-shell-assistant-line, var(--vx-color-neutral-border));
-  --vx-assistant-panel-shadow: var(--vx-shell-assistant-shadow, -12px 0 24px -24px color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent));
-  --vx-assistant-panel-shadow-dark: var(--vx-shell-assistant-shadow, -12px 0 24px -24px var(--vx-color-primary-soft));
-  --vx-assistant-panel-transition: opacity 220ms ease, transform var(--vx-admin-sidebar-transition);
-  --vx-assistant-panel-inner-transition: opacity 180ms ease, transform 180ms ease;
+  --vx-assistant-panel-border-left: var(--vx-assistant-panel-binding-border-left);
+  --vx-assistant-panel-shadow: var(--vx-shell-assistant-shadow, var(--vx-platform-shell-assistant-shadow));
+  --vx-assistant-panel-shadow-dark: var(--vx-shell-assistant-shadow, var(--vx-platform-shell-assistant-shadow-dark));
+  --vx-assistant-panel-transition: var(--vx-platform-shell-assistant-panel-transition);
+  --vx-assistant-panel-inner-transition: var(--vx-platform-shell-assistant-panel-inner-transition);
   --vx-assistant-panel-will-change: opacity, transform;
   --vx-assistant-panel-fullscreen-z: 2600;
   --vx-assistant-panel-resize-hover-background: color-mix(in srgb, var(--vx-console-brand) 24%, transparent);
-  --vx-assistant-panel-bar-padding: 0 1rem;
-  --vx-assistant-panel-bar-title-size: var(--vx-shell-title-size, 1rem);
+  --vx-assistant-panel-bar-padding: var(--vx-assistant-panel-binding-bar-padding);
+  --vx-assistant-panel-bar-title-size: var(--vx-assistant-panel-binding-bar-title-size);
   --vx-assistant-panel-bar-title-line-height: 1.2;
   --vx-assistant-panel-bar-title-letter-spacing: 0;
   --vx-assistant-panel-bar-title-weight: var(--vx-shell-title-weight, 760);
   --vx-assistant-panel-bar-title-color: var(--vx-shell-ink, var(--vx-color-brand-950));
-  --vx-assistant-panel-bar-actions-gap: 0.5rem;
-  --vx-assistant-panel-output-gap: 0.5rem;
-  --vx-assistant-panel-output-padding: 1rem;
+  --vx-assistant-panel-bar-actions-gap: var(--vx-assistant-panel-binding-bar-actions-gap);
+  --vx-assistant-panel-output-gap: var(--vx-assistant-panel-binding-output-gap);
+  --vx-assistant-panel-output-padding: var(--vx-assistant-panel-binding-output-padding);
   --vx-assistant-panel-output-scrollbar-width: none;
   --vx-assistant-panel-output-scrollbar-color: auto;
   --vx-assistant-panel-output-scroll-padding-right: 0;
   --vx-assistant-panel-stack-min-height: 100%;
   --vx-assistant-panel-stack-align-content: stretch;
   --vx-assistant-panel-composer-display: block;
-  --vx-assistant-panel-composer-padding: 1rem;
+  --vx-assistant-panel-composer-padding: var(--vx-assistant-panel-binding-composer-padding);
 }
 
 :where(.dark .admin-shell) {
@@ -110,8 +110,8 @@
   --vx-shell-line-soft: color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent);
   --vx-shell-divider: color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
   --vx-shell-focus-ring: color-mix(in srgb, var(--vx-color-primary) 22%, transparent);
-  --vx-shell-header-shadow: 0 3px 4px color-mix(in srgb, var(--vx-color-black) 22%, transparent);
+  --vx-shell-header-shadow: var(--vx-platform-shell-header-shadow-dark);
   --vx-shell-assistant-line: color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
-  --vx-shell-assistant-shadow: -12px 0 24px -24px var(--vx-color-primary-soft);
-  --vx-shell-floating-shadow: 0 18px 48px -34px color-mix(in srgb, var(--vx-color-primary) 30%, transparent);
+  --vx-shell-assistant-shadow: var(--vx-platform-shell-assistant-shadow-dark);
+  --vx-shell-floating-shadow: var(--vx-platform-shell-floating-shadow-dark);
 }

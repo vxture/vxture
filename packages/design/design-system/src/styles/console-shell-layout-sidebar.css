@@ -12,9 +12,9 @@
   grid-template-rows: auto auto 1fr auto;
   gap: var(--vx-console-space-048r);
   min-width: 0;
-  height: calc(100dvh - var(--vx-shell-header-height));
-  max-height: calc(100dvh - var(--vx-shell-header-height));
-  min-height: calc(100dvh - var(--vx-shell-header-height));
+  height: var(--vx-console-shell-body-available-height);
+  max-height: var(--vx-console-shell-body-available-height);
+  min-height: var(--vx-console-shell-body-available-height);
   padding: 0;
   background: transparent;
   overflow: visible;
@@ -51,6 +51,6 @@
   min-width: 0;
   padding: 0 var(--vx-console-space-055r) var(--vx-console-space-005r) var(--vx-shell-sidebar-content-inset);
   transition:
-    opacity 140ms ease,
-    transform 220ms ease;
+    opacity var(--vx-shell-fade-transition),
+    transform var(--vx-shell-slide-transition);
 }

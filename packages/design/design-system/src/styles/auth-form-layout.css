@@ -14,7 +14,7 @@
   flex-direction: column;
   justify-content: flex-start;
   overflow: hidden;
-  padding: 34px 48px;
+  padding: var(--vx-auth-form-panel-padding);
   background: var(--vx-color-white);
 }
 
@@ -36,7 +36,7 @@
 
 .vx-auth-section-title {
   flex: 0 0 auto;
-  padding: 4px 0 28px;
+  padding: var(--vx-auth-form-body-padding);
   text-align: center;
 }
 
@@ -58,11 +58,11 @@
 }
 
 .vx-auth-section-social.vx-auth-section-placeholder {
-  min-height: 77px;
+  min-height: var(--vx-auth-form-submit-slot-min-height);
 }
 
 .vx-auth-section-footer.vx-auth-section-placeholder {
-  min-height: 23px;
+  min-height: var(--vx-auth-form-message-slot-min-height);
 }
 
 .vx-auth-field-stack {
@@ -79,7 +79,7 @@
 }
 
 .vx-auth-panel-heading {
-  margin-bottom: 18px;
+  margin-bottom: var(--vx-auth-form-section-margin-bottom);
 }
 
 .vx-auth-panel-heading h1,
@@ -100,7 +100,7 @@
 }
 
 .vx-auth-reset-hint {
-  margin-top: 8px;
+  margin-top: var(--vx-auth-form-footer-margin-top);
   color: var(--vx-color-text-muted);
   font-size: var(--vx-auth-text-xs);
 }

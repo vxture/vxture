@@ -1,47 +1,22 @@
 /**
- * tokens-platform-semantics.css - 平台通用模式语义尺度 token。
+ * tokens-platform-semantics.css - 平台通用模式语义 token 入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-15
+ * @date 2026-05-16
  */
 
-:root {
-  /* 平台语义尺度：platform.css 共享模式优先消费的契约。 */
-  --vx-platform-text-size-xs: var(--vx-component-metric-078r);
-  --vx-platform-text-size-sm: var(--vx-component-metric-082r);
-  --vx-platform-text-size-md: var(--vx-component-metric-084r);
-  --vx-platform-text-size-lg: var(--vx-component-metric-088r);
-  --vx-platform-text-size-xl: var(--vx-component-metric-09r);
-  --vx-platform-text-size-2xl: var(--vx-component-metric-096r);
-  --vx-platform-radius-sm: var(--vx-component-metric-10p);
-  --vx-platform-radius-md: var(--vx-component-metric-14p);
-  --vx-platform-radius-lg: var(--vx-component-metric-18p);
-  --vx-platform-border-width: var(--vx-component-metric-1p);
-  --vx-platform-gap-2xs: var(--vx-component-metric-02r);
-  --vx-platform-gap-xs: var(--vx-component-metric-035r);
-  --vx-platform-gap-sm: var(--vx-component-metric-05r);
-  --vx-platform-gap-md: var(--vx-component-metric-075r);
-  --vx-platform-gap-lg: var(--vx-component-metric-1r);
-  --vx-platform-tabs-gap: var(--vx-platform-gap-sm);
-  --vx-platform-tabs-padding: var(--vx-platform-gap-xs);
-  --vx-platform-tabs-radius: var(--vx-platform-radius-md);
-  --vx-platform-tab-radius: var(--vx-platform-radius-sm);
-  --vx-platform-tab-padding: var(--vx-component-metric-07r) var(--vx-component-metric-095r);
-  --vx-platform-table-gap: var(--vx-platform-gap-lg);
-  --vx-platform-table-header-padding: var(--vx-component-metric-07r) 0;
-  --vx-platform-table-header-size: var(--vx-platform-text-size-xs);
-  --vx-platform-table-row-padding: var(--vx-component-metric-082r) 0;
-  --vx-platform-table-row-size: var(--vx-component-metric-086r);
-  --vx-platform-table-identity-gap: var(--vx-platform-gap-md);
-  --vx-platform-table-identity-margin-top: var(--vx-component-metric-018r);
-  --vx-platform-table-identity-size: var(--vx-platform-text-size-xl);
-  --vx-platform-table-stack-gap: var(--vx-platform-gap-lg);
-  --vx-platform-toolbar-gap: var(--vx-platform-gap-md);
-  --vx-platform-table-toolbar-gap: var(--vx-platform-gap-lg);
-  --vx-platform-table-toolbar-padding-bottom: var(--vx-platform-gap-xs);
-  --vx-platform-table-toolbar-copy-gap: var(--vx-platform-gap-2xs);
-  --vx-platform-table-toolbar-title-size: var(--vx-platform-text-size-2xl);
-  --vx-platform-table-toolbar-meta-size: var(--vx-platform-text-size-sm);
-}
+@import "./tokens-platform-core-semantics.css";
+@import "./tokens-platform-models-semantics.css";
+@import "./tokens-platform-models-layout-semantics.css";
+@import "./tokens-platform-notifications-semantics.css";
+@import "./tokens-platform-access-semantics.css";
+@import "./tokens-platform-access-layout-semantics.css";
+@import "./tokens-platform-tenant-settings-semantics.css";
+@import "./tokens-platform-shell-semantics.css";
+@import "./tokens-platform-layout-semantics.css";
+@import "./tokens-platform-layout-shell-semantics.css";
+@import "./tokens-platform-common-semantics.css";
+@import "./tokens-platform-account-profile-semantics.css";
+@import "./tokens-platform-account-connected-semantics.css";

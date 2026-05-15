@@ -1,0 +1,15 @@
+/**
+ * tokens-console-scale.css - Console 域历史尺度语义桥接入口。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+@import "./tokens-console-scale-core.css";
+@import "./tokens-console-assistant-scale.css";
+@import "./tokens-console-common-scale.css";
+@import "./tokens-console-responsive-scale.css";
+@import "./tokens-console-shell-scale.css";
+@import "./tokens-console-tenant-switcher-scale.css";

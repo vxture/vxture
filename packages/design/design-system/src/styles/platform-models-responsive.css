@@ -31,7 +31,7 @@
   .vx-model-grant-row,
   .vx-model-policy-row {
     grid-template-columns: 1fr;
-    gap: var(--vx-models-row-mobile-gap, 0.42rem);
+    gap: var(--vx-models-row-mobile-gap);
   }
 
   .vx-model-row__menu {

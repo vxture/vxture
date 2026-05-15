@@ -20,23 +20,23 @@ export interface AuthVisualStat {
 }
 
 export interface AuthVisualConfig {
-  pageBackgroundImage?: string;
-  leftBackgroundImage?: string;
-  title?: string;
-  description?: string;
-  statusText?: string;
-  stats?: AuthVisualStat[];
+  pageBackgroundImage?: string | undefined;
+  leftBackgroundImage?: string | undefined;
+  title?: string | undefined;
+  description?: string | undefined;
+  statusText?: string | undefined;
+  stats?: AuthVisualStat[] | undefined;
 }
 
 export interface UnifiedAuthPageProps {
-  className?: string;
-  pageBackgroundImage?: string;
-  visual?: AuthVisualConfig;
-  header?: ReactNode;
-  footer?: ReactNode;
-  overlay?: ReactNode;
+  className?: string | undefined;
+  pageBackgroundImage?: string | undefined;
+  visual?: AuthVisualConfig | undefined;
+  header?: ReactNode | undefined;
+  footer?: ReactNode | undefined;
+  overlay?: ReactNode | undefined;
   children: ReactNode;
-  ariaLabel?: string;
+  ariaLabel?: string | undefined;
 }
 
 export interface AuthLoginLayoutProps {
@@ -47,15 +47,15 @@ export interface AuthLoginLayoutProps {
 export interface AuthFlowFormProps {
   input: ReactNode;
   primary: ReactNode;
-  social?: ReactNode;
-  footer?: ReactNode;
-  reserveSocialSpace?: boolean;
-  reserveFooterSpace?: boolean;
-  inputAriaLabel?: string;
-  primaryAriaLabel?: string;
-  socialAriaLabel?: string;
-  footerAriaLabel?: string;
-  autoComplete?: string;
+  social?: ReactNode | undefined;
+  footer?: ReactNode | undefined;
+  reserveSocialSpace?: boolean | undefined;
+  reserveFooterSpace?: boolean | undefined;
+  inputAriaLabel?: string | undefined;
+  primaryAriaLabel?: string | undefined;
+  socialAriaLabel?: string | undefined;
+  footerAriaLabel?: string | undefined;
+  autoComplete?: string | undefined;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -71,13 +71,13 @@ export interface AuthFieldProps {
   name: string;
   type: string;
   placeholder: string;
-  icon?: AuthFieldIcon | ReactNode;
+  icon?: AuthFieldIcon | ReactNode | undefined;
   value: string;
-  error?: string;
-  hint?: string;
-  autoComplete?: string;
-  autoFocus?: boolean;
-  disabled?: boolean;
+  error?: string | undefined;
+  hint?: string | undefined;
+  autoComplete?: string | undefined;
+  autoFocus?: boolean | undefined;
+  disabled?: boolean | undefined;
   onChange: (value: string) => void;
 }
 
@@ -85,16 +85,16 @@ export interface AuthPrimaryButtonProps {
   loading: boolean;
   label: string;
   loadingLabel: string;
-  disabled?: boolean;
-  disabledLabel?: string;
+  disabled?: boolean | undefined;
+  disabledLabel?: string | undefined;
 }
 
 export interface AuthSocialButtonConfig {
   provider: AuthSocialProvider;
   label: string;
-  disabled?: boolean;
-  iconSrc?: string;
-  onClick?: () => void;
+  disabled?: boolean | undefined;
+  iconSrc?: string | undefined;
+  onClick?: (() => void) | undefined;
 }
 
 export interface AuthSocialButtonsProps {
@@ -123,20 +123,20 @@ export function useAuthVerificationCountdown(active: boolean, seconds = 5) {
 }
 
 export interface AuthChromeHeaderProps {
-  brandHref?: string;
-  brandLogoSrc?: string;
-  brandLogoAlt?: string;
-  brandLabel?: ReactNode;
-  currentLocale?: Locale;
-  localeOptions?: LocaleSelectOption[];
-  localeButtonLabel?: string;
-  localePanelLabel?: string;
-  currentTheme?: Theme | string;
-  themeButtonLabel?: string;
-  lightThemeLabel?: string;
-  darkThemeLabel?: string;
-  onLocaleChange?: (locale: Locale) => void;
-  onThemeChange?: (theme: "light" | "dark") => void;
+  brandHref?: string | undefined;
+  brandLogoSrc?: string | undefined;
+  brandLogoAlt?: string | undefined;
+  brandLabel?: ReactNode | undefined;
+  currentLocale?: Locale | undefined;
+  localeOptions?: LocaleSelectOption[] | undefined;
+  localeButtonLabel?: string | undefined;
+  localePanelLabel?: string | undefined;
+  currentTheme?: Theme | string | undefined;
+  themeButtonLabel?: string | undefined;
+  lightThemeLabel?: string | undefined;
+  darkThemeLabel?: string | undefined;
+  onLocaleChange?: ((locale: Locale) => void) | undefined;
+  onThemeChange?: ((theme: "light" | "dark") => void) | undefined;
 }
 
 export interface AuthChromeFooterProps {
@@ -146,18 +146,18 @@ export interface AuthChromeFooterProps {
 }
 
 export interface AuthTurnstileProps {
-  siteKey?: string;
-  action?: string;
-  cData?: string;
-  appearance?: "always" | "execute" | "interaction-only";
-  size?: "normal" | "flexible";
-  theme?: "auto" | "light" | "dark";
-  language?: string;
-  resetSignal?: number;
-  className?: string;
+  siteKey?: string | undefined;
+  action?: string | undefined;
+  cData?: string | undefined;
+  appearance?: "always" | "execute" | "interaction-only" | undefined;
+  size?: "normal" | "flexible" | undefined;
+  theme?: "auto" | "light" | "dark" | undefined;
+  language?: string | undefined;
+  resetSignal?: number | undefined;
+  className?: string | undefined;
   onToken: (token: string) => void;
-  onExpire?: () => void;
-  onError?: (errorCode?: string) => void;
+  onExpire?: (() => void) | undefined;
+  onError?: ((errorCode?: string) => void) | undefined;
 }
 
 export interface AuthLoginOptionsProps {
@@ -177,8 +177,8 @@ export interface AuthLoginOptionsProps {
   forgetMeTitle?: string;
   onRememberChange: (checked: boolean) => void;
   onAgreementChange: (checked: boolean) => void;
-  onForgot?: () => void;
-  onForgetMe?: () => void;
+  onForgot?: (() => void) | undefined;
+  onForgetMe?: (() => void) | undefined;
 }
 
 export interface AuthLoginTemplateProps extends Omit<UnifiedAuthPageProps, "children"> {
@@ -210,10 +210,10 @@ export interface AuthPasswordLoginPanelProps {
   rememberChecked: boolean;
   agreementChecked: boolean;
   errors?: {
-    identifier?: string;
-    password?: string;
-    form?: string;
-  };
+    identifier?: string | undefined;
+    password?: string | undefined;
+    form?: string | undefined;
+  } | undefined;
   loading: boolean;
   turnstile?: ReactNode;
   social?: ReactNode;
@@ -221,7 +221,7 @@ export interface AuthPasswordLoginPanelProps {
   reserveSocialSpace?: boolean;
   reserveFooterSpace?: boolean;
   primaryDisabled?: boolean;
-  primaryDisabledLabel?: string;
+  primaryDisabledLabel?: string | undefined;
   submitLabel?: string;
   submitLoadingLabel?: string;
   identifierLabel?: string;
@@ -232,13 +232,13 @@ export interface AuthPasswordLoginPanelProps {
   passwordName?: string;
   passwordPlaceholder?: string;
   passwordAutoComplete?: string;
-  options?: AuthLoginOptionOverrides;
+  options?: AuthLoginOptionOverrides | undefined;
   onChangeIdentifier: (value: string) => void;
   onChangePassword: (value: string) => void;
   onRememberChange: (checked: boolean) => void;
   onAgreementChange: (checked: boolean) => void;
-  onForgot?: () => void;
-  onForgetMe?: () => void;
+  onForgot?: (() => void) | undefined;
+  onForgetMe?: (() => void) | undefined;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -249,10 +249,10 @@ export interface AuthPhoneLoginPanelProps {
   rememberChecked: boolean;
   agreementChecked: boolean;
   errors?: {
-    phone?: string;
-    code?: string;
-    form?: string;
-  };
+    phone?: string | undefined;
+    code?: string | undefined;
+    form?: string | undefined;
+  } | undefined;
   loading: boolean;
   codeSending?: boolean;
   codeCountdown?: number;
@@ -263,7 +263,7 @@ export interface AuthPhoneLoginPanelProps {
   reserveSocialSpace?: boolean;
   reserveFooterSpace?: boolean;
   primaryDisabled?: boolean;
-  primaryDisabledLabel?: string;
+  primaryDisabledLabel?: string | undefined;
   submitLabel?: string;
   submitLoadingLabel?: string;
   phoneLabel?: string;
@@ -276,30 +276,30 @@ export interface AuthPhoneLoginPanelProps {
   sendingCodeLabel?: string;
   verificationPendingLabel?: string;
   retryCodeLabel?: (seconds: number) => string;
-  options?: AuthLoginOptionOverrides;
+  options?: AuthLoginOptionOverrides | undefined;
   onChangePhone: (value: string) => void;
   onChangeCode: (value: string) => void;
   onSendCode: () => void;
   onRememberChange: (checked: boolean) => void;
   onAgreementChange: (checked: boolean) => void;
-  onForgot?: () => void;
-  onForgetMe?: () => void;
+  onForgot?: (() => void) | undefined;
+  onForgetMe?: (() => void) | undefined;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 export interface AuthForgotPasswordPanelProps {
   email: string;
-  error?: string;
+  error?: string | undefined;
   loading: boolean;
   resetSent?: boolean;
   backLabel?: ReactNode;
   title?: ReactNode;
-  description?: ReactNode;
-  sentTitle?: ReactNode;
-  sentDescription?: ReactNode;
-  sentHint?: ReactNode;
-  sentEmailFallback?: ReactNode;
-  sentActionLabel?: ReactNode;
+  description?: ReactNode | undefined;
+  sentTitle?: ReactNode | undefined;
+  sentDescription?: ReactNode | undefined;
+  sentHint?: ReactNode | undefined;
+  sentEmailFallback?: ReactNode | undefined;
+  sentActionLabel?: ReactNode | undefined;
   emailLabel?: string;
   emailName?: string;
   emailPlaceholder?: string;
@@ -335,16 +335,16 @@ const AUTH_FIELD_ICONS: AuthFieldIcon[] = ["user", "lock", "phone", "shield", "m
 
 interface TurnstileRenderOptions {
   sitekey: string;
-  action?: string;
-  cData?: string;
-  appearance?: "always" | "execute" | "interaction-only";
-  size?: "normal" | "flexible";
-  theme?: "auto" | "light" | "dark";
-  language?: string;
-  callback?: (token: string) => void;
-  "expired-callback"?: () => void;
-  "timeout-callback"?: () => void;
-  "error-callback"?: (errorCode?: string) => void;
+  action?: string | undefined;
+  cData?: string | undefined;
+  appearance?: "always" | "execute" | "interaction-only" | undefined;
+  size?: "normal" | "flexible" | undefined;
+  theme?: "auto" | "light" | "dark" | undefined;
+  language?: string | undefined;
+  callback?: ((token: string) => void) | undefined;
+  "expired-callback"?: (() => void) | undefined;
+  "timeout-callback"?: (() => void) | undefined;
+  "error-callback"?: ((errorCode?: string) => void) | undefined;
 }
 
 interface TurnstileApi {
@@ -1157,7 +1157,7 @@ function AuthBackButton({ children, onClick }: { children: ReactNode; onClick: (
   );
 }
 
-export function BrandProviderIcon({ provider, src }: { provider: AuthSocialProvider; src?: string }) {
+export function BrandProviderIcon({ provider, src }: { provider: AuthSocialProvider; src?: string | undefined }) {
   return (
     <img
       className="vx-auth-social-icon"
@@ -1173,11 +1173,11 @@ export function BrandProviderIcon({ provider, src }: { provider: AuthSocialProvi
   );
 }
 
-function AuthVisualPanel({ visual }: { visual?: AuthVisualConfig }) {
+function AuthVisualPanel({ visual }: { visual?: AuthVisualConfig | undefined }) {
   const title = visual?.title ?? DEFAULT_AUTH_VISUAL.title;
   const description = visual?.description ?? DEFAULT_AUTH_VISUAL.description;
   const statusText = visual?.statusText ?? DEFAULT_AUTH_VISUAL.statusText;
-  const stats = visual?.stats ?? DEFAULT_AUTH_VISUAL.stats;
+  const stats = visual?.stats ?? DEFAULT_AUTH_VISUAL.stats ?? [];
 
   return (
     <aside className="vx-auth-visual">

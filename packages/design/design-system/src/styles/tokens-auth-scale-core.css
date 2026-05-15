@@ -1,0 +1,76 @@
+/**
+ * tokens-auth-scale-core.css - Auth 域基础尺度桥接 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* Auth 域尺度桥接：供 auth-* 样式使用，后续继续提升为组件级 auth token。 */
+  --vx-auth-scale-0-1e: var(--vx-scale-0-1e);
+  --vx-auth-scale-0-04e: var(--vx-scale-0-04e);
+  --vx-auth-scale-1-5r: var(--vx-scale-1-5r);
+  --vx-auth-scale-1p: var(--vx-scale-1p);
+  --vx-auth-scale-1r: var(--vx-scale-1r);
+  --vx-auth-scale-2p: var(--vx-scale-2p);
+  --vx-auth-scale-2r: var(--vx-scale-2r);
+  --vx-auth-scale-3p: var(--vx-scale-3p);
+  --vx-auth-scale-4p: var(--vx-scale-4p);
+  --vx-auth-scale-4vw: var(--vx-scale-4vw);
+  --vx-auth-scale-5p: var(--vx-scale-5p);
+  --vx-auth-scale-5vw: var(--vx-scale-5vw);
+  --vx-auth-scale-6p: var(--vx-scale-6p);
+  --vx-auth-scale-7p: var(--vx-scale-7p);
+  --vx-auth-scale-8p: var(--vx-scale-8p);
+  --vx-auth-scale-9p: var(--vx-scale-9p);
+  --vx-auth-scale-10p: var(--vx-scale-10p);
+  --vx-auth-scale-12p: var(--vx-scale-12p);
+  --vx-auth-scale-13-5p: var(--vx-scale-13-5p);
+  --vx-auth-scale-14p: var(--vx-scale-14p);
+  --vx-auth-scale-16p: var(--vx-scale-16p);
+  --vx-auth-scale-18p: var(--vx-scale-18p);
+  --vx-auth-scale-20p: var(--vx-scale-20p);
+  --vx-auth-scale-22p: var(--vx-scale-22p);
+  --vx-auth-scale-23p: var(--vx-scale-23p);
+  --vx-auth-scale-24p: var(--vx-scale-24p);
+  --vx-auth-scale-26p: var(--vx-scale-26p);
+  --vx-auth-scale-28p: var(--vx-scale-28p);
+  --vx-auth-scale-30p: var(--vx-scale-30p);
+  --vx-auth-scale-31p: var(--vx-scale-31p);
+  --vx-auth-scale-32p: var(--vx-scale-32p);
+  --vx-auth-scale-34p: var(--vx-scale-34p);
+  --vx-auth-scale-36p: var(--vx-scale-36p);
+  --vx-auth-scale-38p: var(--vx-scale-38p);
+  --vx-auth-scale-39p: var(--vx-scale-39p);
+  --vx-auth-scale-40p: var(--vx-scale-40p);
+  --vx-auth-scale-42p: var(--vx-scale-42p);
+  --vx-auth-scale-44p: var(--vx-scale-44p);
+  --vx-auth-scale-46p: var(--vx-scale-46p);
+  --vx-auth-scale-48p: var(--vx-scale-48p);
+  --vx-auth-scale-50p: var(--vx-scale-50p);
+  --vx-auth-scale-52p: var(--vx-scale-52p);
+  --vx-auth-scale-56p: var(--vx-scale-56p);
+  --vx-auth-scale-60p: var(--vx-scale-60p);
+  --vx-auth-scale-64p: var(--vx-scale-64p);
+  --vx-auth-scale-72p: var(--vx-scale-72p);
+  --vx-auth-scale-77p: var(--vx-scale-77p);
+  --vx-auth-scale-80p: var(--vx-scale-80p);
+  --vx-auth-scale-80r: var(--vx-scale-80r);
+  --vx-auth-scale-96r: var(--vx-scale-96r);
+  --vx-auth-scale-100vh: var(--vx-scale-100vh);
+  --vx-auth-scale-100vw: var(--vx-scale-100vw);
+  --vx-auth-scale-120p: var(--vx-scale-120p);
+  --vx-auth-scale-128p: var(--vx-scale-128p);
+  --vx-auth-scale-206p: var(--vx-scale-206p);
+  --vx-auth-scale-220p: var(--vx-scale-220p);
+  --vx-auth-scale-300p: var(--vx-scale-300p);
+  --vx-auth-scale-348p: var(--vx-scale-348p);
+  --vx-auth-scale-500p: var(--vx-scale-500p);
+  --vx-auth-scale-520p: var(--vx-scale-520p);
+  --vx-auth-scale-560p: var(--vx-scale-560p);
+  --vx-auth-scale-640p: var(--vx-scale-640p);
+  --vx-auth-scale-neg-1p: var(--vx-scale-neg-1p);
+  --vx-auth-scale-neg-2p: var(--vx-scale-neg-2p);
+}

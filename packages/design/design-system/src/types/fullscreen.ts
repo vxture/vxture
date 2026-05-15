@@ -23,13 +23,13 @@ export type FullscreenMode = "pseudo" | "native";
  *                        false：保留滚动能力（适合内容本身需要滚动的场景）
  */
 export interface FullscreenOptions {
-  mode?: FullscreenMode;
-  lockScroll?: boolean;
+  mode?: FullscreenMode | undefined;
+  lockScroll?: boolean | undefined;
 }
 
 export interface FullscreenState {
   isFullscreen: boolean;
-  targetId?: string;
+  targetId?: string | undefined;
   mode: FullscreenMode;
 }
 
@@ -53,11 +53,11 @@ export interface FullscreenProviderProps {
 
 export interface FullscreenContainerProps {
   id: string;
-  mode?: FullscreenMode;
+  mode?: FullscreenMode | undefined;
   /** 是否禁止页面滚动，覆盖 Provider 的 defaultLockScroll */
-  lockScroll?: boolean;
-  portal?: boolean;
-  className?: string;
+  lockScroll?: boolean | undefined;
+  portal?: boolean | undefined;
+  className?: string | undefined;
   children: React.ReactNode;
 }
 
@@ -78,11 +78,11 @@ export interface FullscreenContainerRef {
 
 export interface FullscreenToggleProps {
   targetId: string;
-  mode?: FullscreenMode;
+  mode?: FullscreenMode | undefined;
   /** 是否禁止页面滚动，覆盖 Provider 的 defaultLockScroll */
-  lockScroll?: boolean;
-  className?: string;
-  children?: React.ReactNode;
+  lockScroll?: boolean | undefined;
+  className?: string | undefined;
+  children?: React.ReactNode | undefined;
 }
 
 export interface FullscreenPortalProps {

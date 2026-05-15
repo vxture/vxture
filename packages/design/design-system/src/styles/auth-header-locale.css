@@ -30,7 +30,7 @@
   gap: var(--vx-auth-brand-gap);
   border-radius: var(--vx-auth-brand-radius);
   text-decoration: none;
-  transition: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--vx-auth-brand-transition);
 }
 
 .vx-auth-brand:hover {
@@ -87,11 +87,7 @@
   cursor: pointer;
   box-shadow: var(--vx-auth-icon-button-shadow);
   backdrop-filter: blur(var(--vx-auth-icon-button-blur));
-  transition:
-    border-color 0.18s ease,
-    background 0.18s ease,
-    color 0.18s ease,
-    transform 0.18s ease;
+  transition: var(--vx-auth-icon-button-transition);
 }
 
 .vx-auth-icon-button:hover,
@@ -141,9 +137,7 @@
   color: var(--vx-color-gray-700);
   cursor: pointer;
   text-align: left;
-  transition:
-    background 0.16s ease,
-    color 0.16s ease;
+  transition: var(--vx-auth-locale-option-transition);
 }
 
 .vx-locale-option:hover,

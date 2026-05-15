@@ -43,9 +43,9 @@
   color: var(--vx-console-muted, var(--vx-color-shell-muted));
   cursor: pointer;
   transition:
-    background 180ms ease,
-    color 180ms ease,
-    box-shadow 180ms ease;
+    background var(--vx-control-transition),
+    color var(--vx-control-transition),
+    box-shadow var(--vx-control-transition);
 }
 
 :where(.vx-shell-tool-button:hover),

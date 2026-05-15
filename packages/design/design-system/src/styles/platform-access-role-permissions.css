@@ -8,7 +8,7 @@
  */
 
 .vx-profile-dialog__hint {
-  margin: -0.1rem 0 0;
+  margin: var(--vx-access-profile-hint-margin);
   color: var(--vx-console-muted);
   font-size: var(--vx-members-meta-size);
   line-height: 1.5;
@@ -19,15 +19,15 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 2.35rem;
-  height: 2.35rem;
+  width: var(--vx-access-role-avatar-size);
+  height: var(--vx-access-role-avatar-size);
   border-radius: var(--vx-radius-full);
-  box-shadow: inset 0 0 0 1px var(--vx-color-shell-line-soft);
+  box-shadow: var(--vx-platform-inset-line-shadow);
 }
 
 .vx-role-avatar svg {
-  width: 18px;
-  height: 18px;
+  width: var(--vx-access-role-avatar-icon-size);
+  height: var(--vx-access-role-avatar-icon-size);
 }
 
 .vx-role-avatar--system {
@@ -47,12 +47,12 @@
 
 .vx-role-permission-picker {
   display: grid;
-  gap: 0.65rem;
+  gap: var(--vx-access-permission-picker-gap);
 }
 
 .vx-role-permission-picker header {
   display: grid;
-  gap: 0.18rem;
+  gap: var(--vx-access-permission-picker-header-gap);
 }
 
 .vx-role-permission-picker h2 {
@@ -71,15 +71,15 @@
 .vx-role-permission-picker__list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.42rem;
+  gap: var(--vx-access-permission-list-gap);
 }
 
 .vx-role-permission-chip {
-  border: 1px solid var(--vx-color-border);
+  border: var(--vx-access-permission-chip-border);
   border-radius: var(--vx-radius-full);
   background: var(--vx-color-shell-panel);
   color: var(--vx-console-muted);
-  padding: 0.4rem 0.68rem;
+  padding: var(--vx-access-permission-chip-padding);
   font-size: var(--vx-roles-meta-size);
   font-weight: 650;
   cursor: pointer;

@@ -25,15 +25,15 @@
   position: fixed;
   inset: 0;
   z-index: 1400;
-  width: 100vw;
-  height: 100vh;
+  width: var(--vx-fullscreen-viewport-width);
+  height: var(--vx-fullscreen-viewport-height);
   background: var(--vx-color-background);
   overflow: hidden;
   /* 隐藏滚动条 */
   -ms-overflow-style: none;
   scrollbar-width: none;
   /* 进入/退出过渡 */
-  transition: opacity 0.3s ease-in-out;
+  transition: var(--vx-fullscreen-transition);
 }
 
 .vx-fullscreen-active::-webkit-scrollbar {
@@ -41,8 +41,8 @@
 }
 
 .vx-fullscreen-active .vx-fullscreen-container {
-  width: 100vw;
-  height: 100vh;
+  width: var(--vx-fullscreen-viewport-width);
+  height: var(--vx-fullscreen-viewport-height);
 }
 
 /* ─── 退出过渡状态 ───────────────────────────────────────────────────────────── */

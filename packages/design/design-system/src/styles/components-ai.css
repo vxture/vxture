@@ -17,9 +17,7 @@
       color-mix(in srgb, var(--vx-color-ai-cyan-soft) 54%, transparent)
     );
   color: var(--vx-color-text-primary);
-  box-shadow:
-    0 var(--vx-ai-surface-shadow-y) var(--vx-ai-surface-shadow-blur) color-mix(in srgb, var(--vx-color-ai) 12%, transparent),
-    inset 0 var(--vx-control-border-width) 0 color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  box-shadow: var(--vx-ai-surface-shadow);
 }
 
 :where(.dark .vx-ai-surface) {
@@ -29,9 +27,7 @@
       color-mix(in srgb, var(--vx-color-ai-surface) 78%, transparent),
       color-mix(in srgb, var(--vx-color-ai-cyan-soft) 46%, transparent)
   );
-  box-shadow:
-    0 var(--vx-ai-surface-shadow-y) var(--vx-ai-surface-shadow-blur) color-mix(in srgb, var(--vx-color-black) 28%, transparent),
-    inset 0 var(--vx-control-border-width) 0 color-mix(in srgb, var(--vx-color-white) 9%, transparent);
+  box-shadow: var(--vx-ai-surface-shadow-dark);
 }
 
 :where(.vx-ai-chip) {
@@ -58,7 +54,7 @@
   height: var(--vx-ai-dot-size);
   border-radius: var(--vx-radius-full);
   background: var(--vx-gradient-ai-duo);
-  box-shadow: 0 0 0 var(--vx-control-focus-ring-width) color-mix(in srgb, var(--vx-color-ai) 14%, transparent);
+  box-shadow: var(--vx-ai-dot-shadow);
 }
 
 :where(.vx-ai-gradient-text) {

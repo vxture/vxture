@@ -19,11 +19,11 @@
   background: transparent;
   cursor: pointer;
   outline: none;
-  transition: box-shadow 180ms ease;
+  transition: box-shadow var(--vx-control-transition);
 }
 
 :where(.vx-shell-user-trigger:hover) {
-  box-shadow: 0 0 0 var(--vx-shell-user-trigger-hover-ring) color-mix(in srgb, var(--vx-color-brand-300) 70%, transparent);
+  box-shadow: var(--vx-shell-user-trigger-hover-shadow);
 }
 
 :where(.vx-shell-user-trigger__status) {
@@ -41,7 +41,7 @@
   width: var(--vx-shell-user-avatar-size);
   height: var(--vx-shell-user-avatar-size);
   border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-brand-300) 35%, transparent);
-  box-shadow: 0 var(--vx-shell-user-avatar-shadow-y) var(--vx-shell-user-avatar-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+  box-shadow: var(--vx-shell-user-avatar-shadow);
 }
 
 :where(.vx-shell-user-avatar--lg) {
@@ -73,7 +73,7 @@
   background: var(--vx-color-surface);
   color: var(--vx-color-text-primary);
   padding: 0;
-  box-shadow: 0 var(--vx-shell-user-menu-shadow-y) var(--vx-shell-user-menu-shadow-blur) color-mix(in srgb, var(--vx-color-brand-950) 12%, transparent);
+  box-shadow: var(--vx-shell-user-menu-shadow);
 }
 
 :where(.vx-shell-user-menu__profile) {
@@ -165,8 +165,8 @@
   font-size: var(--vx-shell-user-menu-action-size);
   font-weight: 650;
   transition:
-    background 180ms ease,
-    color 180ms ease;
+    background var(--vx-control-transition),
+    color var(--vx-control-transition);
 }
 
 :where(.vx-shell-user-menu__action:hover) {

@@ -8,7 +8,7 @@
  */
 
 .vx-shell {
-  min-height: 100vh;
+  min-height: var(--vx-console-shell-viewport-min-height);
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   background:
@@ -28,7 +28,7 @@
 
 .vx-shell__body {
   min-width: 0;
-  min-height: calc(100dvh - var(--vx-shell-header-height));
+  min-height: var(--vx-console-shell-body-available-height);
   display: grid;
   grid-template-columns: var(--vx-shell-sidebar-width) minmax(0, 1fr);
   gap: var(--vx-shell-body-gap);
@@ -66,9 +66,9 @@
 
 .vx-shell__end-panel {
   min-width: 0;
-  height: calc(100dvh - var(--vx-shell-header-height));
-  max-height: calc(100dvh - var(--vx-shell-header-height));
-  min-height: calc(100dvh - var(--vx-shell-header-height));
+  height: var(--vx-console-shell-body-available-height);
+  max-height: var(--vx-console-shell-body-available-height);
+  min-height: var(--vx-console-shell-body-available-height);
   align-self: start;
   overflow: hidden;
 }

@@ -11,9 +11,9 @@
   justify-self: center;
   display: inline-flex;
   align-items: center;
-  min-height: 1.75rem;
-  padding: 0 0.62rem;
-  border: 1px solid var(--vx-color-border);
+  min-height: var(--vx-tenant-settings-state-min-height);
+  padding: var(--vx-tenant-settings-state-padding);
+  border: var(--vx-tenant-settings-state-border);
   border-radius: var(--vx-radius-full);
   color: var(--vx-console-muted);
   background: color-mix(in srgb, var(--vx-color-gray-50) 74%, transparent);
@@ -46,9 +46,9 @@
 }
 
 .vx-tenant-settings-select {
-  width: min(11.5rem, 100%);
-  height: 2.25rem;
-  min-height: 2.25rem;
+  width: var(--vx-tenant-settings-select-width);
+  height: var(--vx-tenant-settings-select-height);
+  min-height: var(--vx-tenant-settings-select-height);
   border-radius: var(--vx-radius-full);
   font-size: var(--vx-tenant-settings-meta-size);
 }
@@ -102,7 +102,7 @@
   .vx-tenant-settings-row,
   .vx-tenant-settings-danger-row {
     grid-template-columns: 1fr;
-    gap: 0.55rem;
+    gap: var(--vx-tenant-settings-row-mobile-gap);
   }
 
   .vx-tenant-settings-state,
@@ -118,11 +118,11 @@
 }
 
 .vx-action-item__icon {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: var(--vx-tenant-settings-action-icon-size);
+  height: var(--vx-tenant-settings-action-icon-size);
   display: grid;
   place-items: center;
-  border-radius: 0.85rem;
+  border-radius: var(--vx-tenant-settings-action-icon-radius);
   background: var(--vx-color-brand-50);
   color: var(--vx-console-brand);
 }

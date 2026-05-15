@@ -1,0 +1,14 @@
+/**
+ * tokens-auth-semantics.css - 认证场景语义尺度 token 入口。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+@import "./tokens-auth-core-semantics.css";
+@import "./tokens-auth-challenge-semantics.css";
+@import "./tokens-auth-tabs-semantics.css";
+@import "./tokens-auth-visual-semantics.css";
+@import "./tokens-auth-responsive-semantics.css";

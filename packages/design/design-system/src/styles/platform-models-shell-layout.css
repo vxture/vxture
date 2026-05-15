@@ -1,0 +1,92 @@
+/**
+ * platform-models-shell-layout.css - 平台模型页框架和摘要样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-models-page {
+  width: var(--vx-models-page-width, auto);
+  max-width: var(--vx-models-page-max-width, none);
+  gap: var(--vx-models-page-gap);
+}
+
+.vx-models-page .vx-page-header {
+  grid-template-columns: 1fr;
+  align-items: flex-start;
+  gap: var(--vx-model-dialog-check-control-size);
+  margin-bottom: var(--vx-models-page-header-margin-bottom);
+}
+
+.vx-models-page .vx-page-header h1 {
+  font-size: var(--vx-models-page-title-size);
+  line-height: var(--vx-models-page-title-line-height, 1.28);
+  font-weight: var(--vx-models-page-title-weight, 760);
+}
+
+.vx-models-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-models-summary-gap);
+  margin-bottom: var(--vx-models-summary-margin-bottom);
+}
+
+.vx-models-summary__item {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-models-summary-item-gap);
+  min-width: 0;
+  border: var(--vx-models-summary-item-border-width) solid var(--vx-color-border);
+  border-radius: var(--vx-models-summary-item-radius, var(--vx-platform-radius-sm));
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 68%, transparent);
+  padding: var(--vx-models-summary-item-padding);
+}
+
+.dark .vx-models-summary__item {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 45%, transparent);
+}
+
+.vx-models-summary__item svg {
+  color: var(--vx-console-brand);
+}
+
+.vx-models-summary__item span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-models-meta-size);
+  font-weight: 650;
+}
+
+.vx-models-summary__item strong {
+  margin-left: auto;
+  color: var(--vx-console-text);
+  font-size: var(--vx-models-text-size);
+  font-weight: 760;
+}
+
+.vx-models-workspace,
+.vx-model-grants {
+  display: grid;
+  gap: var(--vx-models-workspace-gap);
+  overflow: visible;
+}
+
+.vx-models-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-models-header-actions-gap);
+  width: 100%;
+}
+
+.vx-models-header-primary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vx-models-header-primary-gap);
+  margin-left: auto;
+}

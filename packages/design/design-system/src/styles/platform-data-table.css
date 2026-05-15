@@ -72,7 +72,7 @@
 .vx-member-table__header,
 .vx-member-table__row {
   display: grid;
-  grid-template-columns: 1.3fr 1.5fr 1fr 0.8fr 1fr 56px;
+  grid-template-columns: 1.3fr 1.5fr 1fr 0.8fr 1fr var(--vx-platform-member-table-actions-column);
   gap: var(--vx-platform-table-gap);
   align-items: center;
 }

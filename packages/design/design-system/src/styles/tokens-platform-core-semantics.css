@@ -1,0 +1,73 @@
+/**
+ * tokens-platform-core-semantics.css - 平台通用模式核心语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* 平台语义尺度：platform.css 共享模式优先消费的契约。 */
+  --vx-platform-text-size-xs: var(--vx-component-metric-078r);
+  --vx-platform-text-size-sm: var(--vx-component-metric-082r);
+  --vx-platform-text-size-md: var(--vx-component-metric-084r);
+  --vx-platform-text-size-lg: var(--vx-component-metric-088r);
+  --vx-platform-text-size-xl: var(--vx-component-metric-09r);
+  --vx-platform-text-size-2xl: var(--vx-component-metric-096r);
+  --vx-platform-radius-sm: var(--vx-component-metric-10p);
+  --vx-platform-radius-md: var(--vx-component-metric-14p);
+  --vx-platform-radius-lg: var(--vx-component-metric-18p);
+  --vx-platform-border-width: var(--vx-component-metric-1p);
+  --vx-platform-gap-2xs: var(--vx-component-metric-02r);
+  --vx-platform-gap-xs: var(--vx-component-metric-035r);
+  --vx-platform-gap-sm: var(--vx-component-metric-05r);
+  --vx-platform-gap-md: var(--vx-component-metric-075r);
+  --vx-platform-gap-lg: var(--vx-component-metric-1r);
+  --vx-platform-tabs-gap: var(--vx-platform-gap-sm);
+  --vx-platform-tabs-padding: var(--vx-platform-gap-xs);
+  --vx-platform-tabs-radius: var(--vx-platform-radius-md);
+  --vx-platform-tab-radius: var(--vx-platform-radius-sm);
+  --vx-platform-tab-padding: var(--vx-component-metric-07r) var(--vx-component-metric-095r);
+  --vx-platform-table-gap: var(--vx-platform-gap-lg);
+  --vx-platform-table-header-padding: var(--vx-component-metric-07r) 0;
+  --vx-platform-table-header-size: var(--vx-platform-text-size-xs);
+  --vx-platform-table-row-padding: var(--vx-component-metric-082r) 0;
+  --vx-platform-table-row-size: var(--vx-component-metric-086r);
+  --vx-platform-table-identity-gap: var(--vx-platform-gap-md);
+  --vx-platform-table-identity-margin-top: var(--vx-component-metric-018r);
+  --vx-platform-table-identity-size: var(--vx-platform-text-size-xl);
+  --vx-platform-table-stack-gap: var(--vx-platform-gap-lg);
+  --vx-platform-list-row-transition: 160ms var(--vx-ease-standard);
+  --vx-platform-list-row-select-transition: var(--vx-shell-fade-transition);
+  --vx-platform-tenant-settings-row-transition: background var(--vx-platform-list-row-transition), border-color var(--vx-platform-list-row-transition), box-shadow var(--vx-platform-list-row-transition);
+  --vx-platform-assistant-panel-transition: none;
+  --vx-platform-shell-assistant-panel-transition: opacity var(--vx-shell-slide-transition), transform var(--vx-admin-sidebar-transition);
+  --vx-platform-shell-assistant-panel-inner-transition: opacity var(--vx-shell-control-transition), transform var(--vx-shell-control-transition);
+  --vx-platform-list-row-active-shadow: inset var(--vx-component-metric-3p) 0 0 var(--vx-console-brand);
+  --vx-platform-drawer-shadow: calc(var(--vx-component-metric-18p) * -1) 0 var(--vx-component-metric-48p) color-mix(in srgb, var(--vx-color-gray-900) 12%, transparent);
+  --vx-platform-menu-shadow: 0 var(--vx-component-metric-16p) 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
+  --vx-platform-menu-shadow-dark: 0 var(--vx-component-metric-16p) 34px color-mix(in srgb, var(--vx-color-black) 36%, transparent);
+  --vx-platform-inset-line-shadow: inset 0 0 0 var(--vx-control-border-width) var(--vx-color-shell-line-soft);
+  --vx-platform-surface-highlight-shadow: inset 0 var(--vx-control-border-width) 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent);
+  --vx-platform-surface-highlight-shadow-soft: inset 0 var(--vx-control-border-width) 0 color-mix(in srgb, var(--vx-color-white) 68%, transparent);
+  --vx-platform-shell-header-shadow-dark: 0 var(--vx-component-metric-3p) var(--vx-component-metric-4p) color-mix(in srgb, var(--vx-color-black) 22%, transparent);
+  --vx-platform-shell-assistant-shadow: calc(var(--vx-component-metric-12p) * -1) 0 var(--vx-component-metric-24p) calc(var(--vx-component-metric-24p) * -1) color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent);
+  --vx-platform-shell-assistant-shadow-dark: calc(var(--vx-component-metric-12p) * -1) 0 var(--vx-component-metric-24p) calc(var(--vx-component-metric-24p) * -1) var(--vx-color-primary-soft);
+  --vx-platform-shell-floating-shadow-dark: 0 var(--vx-component-metric-18p) var(--vx-component-metric-48p) calc((var(--vx-component-metric-16p) + var(--vx-component-metric-18p)) * -1) color-mix(in srgb, var(--vx-color-primary) 30%, transparent);
+  --vx-platform-assistant-panel-shadow: calc(var(--vx-component-metric-18p) * -1) 0 var(--vx-component-metric-24p) calc(var(--vx-component-metric-24p) * -1) color-mix(in srgb, var(--vx-color-gray-900) 18%, transparent);
+  --vx-platform-assistant-panel-shadow-dark: calc(var(--vx-component-metric-18p) * -1) 0 var(--vx-component-metric-24p) calc(var(--vx-component-metric-24p) * -1) var(--vx-color-border);
+  --vx-platform-account-dialog-shadow: 0 var(--vx-component-metric-24p) var(--vx-component-metric-68p) color-mix(in srgb, var(--vx-color-gray-900) 16%, transparent);
+  --vx-platform-account-card-shadow: 0 var(--vx-component-metric-12p) var(--vx-component-metric-28p) color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent);
+  --vx-platform-account-media-shadow: 0 var(--vx-component-metric-18p) 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent), inset 0 0 0 var(--vx-control-border-width) var(--vx-color-border);
+  --vx-platform-account-media-shadow-strong: 0 var(--vx-component-metric-18p) 34px color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent), inset 0 0 0 var(--vx-control-border-width) var(--vx-color-border);
+  --vx-platform-account-media-shadow-dark: 0 var(--vx-component-metric-18p) 34px color-mix(in srgb, var(--vx-color-black) 32%, transparent), inset 0 0 0 var(--vx-control-border-width) color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
+  --vx-platform-account-avatar-edit-shadow: 0 var(--vx-component-metric-10p) var(--vx-component-metric-24p) color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent);
+  --vx-platform-account-avatar-edit-shadow-dark: 0 var(--vx-component-metric-10p) var(--vx-component-metric-24p) color-mix(in srgb, var(--vx-color-black) 32%, transparent);
+  --vx-platform-toolbar-gap: var(--vx-platform-gap-md);
+  --vx-platform-table-toolbar-gap: var(--vx-platform-gap-lg);
+  --vx-platform-table-toolbar-padding-bottom: var(--vx-platform-gap-xs);
+  --vx-platform-table-toolbar-copy-gap: var(--vx-platform-gap-2xs);
+  --vx-platform-table-toolbar-title-size: var(--vx-platform-text-size-2xl);
+  --vx-platform-table-toolbar-meta-size: var(--vx-platform-text-size-sm);
+}

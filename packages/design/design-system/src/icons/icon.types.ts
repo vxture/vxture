@@ -71,32 +71,32 @@ export interface IconProps {
    * 接受语义化规格或直接传 px 数值
    * @default 'md'
    */
-  readonly size?: IconSize | number;
+  readonly size?: IconSize | number | undefined;
 
   /**
    * Phosphor 粗细变体
    * @default 'regular'
    */
-  readonly weight?: IconWeight;
+  readonly weight?: IconWeight | undefined;
 
   /**
    * 图标颜色，接受任意合法 CSS 颜色值
    * @default 'currentColor'  继承父元素文字颜色，推荐默认值
    */
-  readonly color?: string;
+  readonly color?: string | undefined;
 
   /**
    * 额外 className，用于 Tailwind 工具类覆盖
    * @example className="text-vx-primary"
    */
-  readonly className?: string;
+  readonly className?: string | undefined;
 
   /**
    * name 无匹配时的降级图标名
    * 主要用于 JSON / API 驱动的动态图标名场景
    * @default 'placeholder'
    */
-  readonly fallback?: _IconName;
+  readonly fallback?: _IconName | undefined;
 }
 
 // ============================================================================

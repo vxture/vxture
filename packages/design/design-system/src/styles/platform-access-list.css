@@ -19,40 +19,24 @@
 .vx-role-list__header,
 .vx-role-row {
   display: grid;
-  gap: 0.72rem;
+  gap: var(--vx-access-list-row-gap);
   align-items: center;
 }
 
 .vx-member-list__header,
 .vx-member-list .vx-member-table__row {
-  grid-template-columns:
-    2rem
-    minmax(210px, 1.12fr)
-    minmax(120px, 0.68fr)
-    minmax(220px, 1.18fr)
-    minmax(130px, 0.75fr)
-    minmax(105px, 0.56fr)
-    minmax(116px, 0.66fr)
-    2.5rem;
+  grid-template-columns: var(--vx-access-member-list-columns);
 }
 
 .vx-role-list__header,
 .vx-role-row {
-  grid-template-columns:
-    2rem
-    minmax(210px, 1.12fr)
-    minmax(140px, 0.76fr)
-    minmax(100px, 0.56fr)
-    minmax(110px, 0.62fr)
-    minmax(120px, 0.66fr)
-    minmax(220px, 1.18fr)
-    2.5rem;
+  grid-template-columns: var(--vx-access-role-list-columns);
 }
 
 .vx-member-list__header,
 .vx-role-list__header {
   justify-items: var(--vx-directory-header-justify);
-  padding: 0 var(--vx-directory-row-padding-x) 0.35rem;
+  padding: var(--vx-access-list-header-padding);
   color: var(--vx-color-text-muted);
   font-size: var(--vx-members-meta-size);
   font-weight: 740;
@@ -84,20 +68,20 @@
 .vx-role-row {
   position: relative;
   z-index: 1;
-  min-height: 4.05rem;
+  min-height: var(--vx-access-list-row-min-height);
   overflow: visible;
   justify-items: start;
-  padding: 0.72rem var(--vx-directory-row-padding-x);
+  padding: var(--vx-access-list-row-padding);
   border: 0;
-  border-bottom: 1px dashed color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
+  border-bottom: var(--vx-access-list-row-border-width) dashed color-mix(in srgb, var(--vx-color-brand-800) 13%, transparent);
   border-radius: 0;
   background: transparent;
   box-shadow: none;
   text-align: left;
   transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+    background var(--vx-platform-list-row-transition),
+    border-color var(--vx-platform-list-row-transition),
+    box-shadow var(--vx-platform-list-row-transition);
 }
 
 .dark .vx-member-list .vx-member-table__row,
@@ -117,7 +101,7 @@
   z-index: 1200 !important;
   border-bottom-color: color-mix(in srgb, var(--vx-color-shell-brand) 26%, transparent) !important;
   background: color-mix(in srgb, var(--vx-color-shell-brand) 3.5%, transparent);
-  box-shadow: inset 3px 0 0 var(--vx-console-brand);
+  box-shadow: var(--vx-platform-list-row-active-shadow);
 }
 
 .dark .vx-member-list .vx-member-table__row:hover,
@@ -131,11 +115,11 @@
 .vx-role-select {
   display: grid;
   place-items: center;
-  width: 1.35rem;
-  height: 1.35rem;
+  width: var(--vx-access-select-size);
+  height: var(--vx-access-select-size);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 140ms ease;
+  transition: opacity var(--vx-platform-list-row-select-transition);
 }
 
 .vx-members-page--selecting .vx-member-select,
@@ -154,8 +138,8 @@
 
 .vx-member-select input,
 .vx-role-select input {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: var(--vx-access-select-input-size);
+  height: var(--vx-access-select-input-size);
   margin: 0;
   accent-color: var(--vx-console-brand);
   cursor: pointer;
@@ -163,6 +147,6 @@
 
 .vx-member-select--header input,
 .vx-role-select--header input {
-  width: 1rem;
-  height: 1rem;
+  width: var(--vx-access-select-header-input-size);
+  height: var(--vx-access-select-header-input-size);
 }

@@ -10,7 +10,7 @@
 .vx-notification-check {
   display: grid;
   place-items: center;
-  min-height: 2.1rem;
+  min-height: var(--vx-notification-check-min-height);
   cursor: pointer;
 }
 
@@ -20,8 +20,8 @@
 }
 
 .vx-notification-check input {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: var(--vx-notification-check-input-size);
+  height: var(--vx-notification-check-input-size);
   margin: 0;
   accent-color: var(--vx-console-brand);
   cursor: pointer;
@@ -35,9 +35,9 @@
   justify-self: center;
   display: inline-flex;
   align-items: center;
-  min-height: 1.75rem;
-  padding: 0 0.62rem;
-  border: 1px solid var(--vx-color-border);
+  min-height: var(--vx-notification-status-min-height);
+  padding: var(--vx-notification-status-padding);
+  border: var(--vx-notification-status-border);
   border-radius: var(--vx-radius-full);
   color: var(--vx-console-muted);
   background: color-mix(in srgb, var(--vx-color-gray-50) 74%, transparent);
@@ -89,8 +89,8 @@
   }
 
   .vx-notification-table__row {
-    grid-template-columns: minmax(0, 1fr) repeat(3, minmax(3.6rem, 0.3fr));
-    gap: 0.45rem 0.6rem;
+    grid-template-columns: var(--vx-notification-table-mobile-columns);
+    gap: var(--vx-notification-table-mobile-gap);
   }
 
   .vx-notification-topic-cell,

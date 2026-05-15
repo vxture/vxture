@@ -9,6 +9,7 @@ const SCAN_ROOTS = ["portals", "packages", "agent-studio", "business"];
 const SOURCE_EXTENSIONS = new Set([".css", ".js", ".jsx", ".mjs", ".cjs", ".ts", ".tsx", ".json"]);
 const UPDATE_BASELINE = process.argv.includes("--update-baseline");
 const BASELINE_PATH = path.join(ROOT, "scripts/guardrails/design-system-baseline.json");
+const DS_STYLE_HARDCODED_SCALE_BUDGET = 0;
 const BASELINED_RULE_IDS = new Set([
   "ds/no-inline-design-style",
   "ds/no-native-primitive",
@@ -37,6 +38,52 @@ const DS_RUNTIME_TOKEN_STYLE_PATTERN = /^packages\/design\/design-system\/src\/s
 const DS_SEMANTIC_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/components.css"),
   normalize("packages/design/design-system/src/styles/platform.css"),
+]);
+const DS_EFFECT_LOCKED_STYLE_PATHS = new Set([
+  normalize("packages/design/design-system/src/styles/auth-actions-social.css"),
+  normalize("packages/design/design-system/src/styles/auth-captcha.css"),
+  normalize("packages/design/design-system/src/styles/auth-fields-controls.css"),
+  normalize("packages/design/design-system/src/styles/auth-header-locale.css"),
+  normalize("packages/design/design-system/src/styles/auth-signup.css"),
+  normalize("packages/design/design-system/src/styles/auth-visual-panel.css"),
+  normalize("packages/design/design-system/src/styles/components-ai.css"),
+  normalize("packages/design/design-system/src/styles/components-button.css"),
+  normalize("packages/design/design-system/src/styles/components-shell-footer-switch.css"),
+  normalize("packages/design/design-system/src/styles/components-shell-preferences.css"),
+  normalize("packages/design/design-system/src/styles/components-shell-tools.css"),
+  normalize("packages/design/design-system/src/styles/components-shell-user-menu.css"),
+  normalize("packages/design/design-system/src/styles/fullscreen.css"),
+  normalize("packages/design/design-system/src/styles/console-assistant.css"),
+  normalize("packages/design/design-system/src/styles/console-shell-chrome-header.css"),
+  normalize("packages/design/design-system/src/styles/console-shell-layout-nav.css"),
+  normalize("packages/design/design-system/src/styles/console-shell-layout-sidebar.css"),
+  normalize("packages/design/design-system/src/styles/platform-shell-assistant.css"),
+  normalize("packages/design/design-system/src/styles/platform-shell-bindings.css"),
+  normalize("packages/design/design-system/src/styles/platform-shell-header-buttons.css"),
+  normalize("packages/design/design-system/src/styles/platform-shell-header-user.css"),
+  normalize("packages/design/design-system/src/styles/platform-access-list.css"),
+  normalize("packages/design/design-system/src/styles/platform-access-shared-panels.css"),
+  normalize("packages/design/design-system/src/styles/platform-models-actions.css"),
+  normalize("packages/design/design-system/src/styles/platform-models-list.css"),
+  normalize("packages/design/design-system/src/styles/platform-notifications-table.css"),
+]);
+const DS_SHADOW_LOCKED_STYLE_PATHS = new Set([
+  normalize("packages/design/design-system/src/styles/auth-actions-social.css"),
+  normalize("packages/design/design-system/src/styles/auth-captcha.css"),
+  normalize("packages/design/design-system/src/styles/auth-fields-controls.css"),
+  normalize("packages/design/design-system/src/styles/auth-header-locale.css"),
+  normalize("packages/design/design-system/src/styles/auth-signup.css"),
+  normalize("packages/design/design-system/src/styles/auth-visual-panel.css"),
+  normalize("packages/design/design-system/src/styles/components-ai.css"),
+  normalize("packages/design/design-system/src/styles/components-button.css"),
+  normalize("packages/design/design-system/src/styles/components-shell-footer-switch.css"),
+  normalize("packages/design/design-system/src/styles/components-shell-preferences.css"),
+  normalize("packages/design/design-system/src/styles/components-shell-user-menu.css"),
+  normalize("packages/design/design-system/src/styles/platform-access-list.css"),
+  normalize("packages/design/design-system/src/styles/platform-access-shared-panels.css"),
+  normalize("packages/design/design-system/src/styles/platform-models-actions.css"),
+  normalize("packages/design/design-system/src/styles/platform-models-list.css"),
+  normalize("packages/design/design-system/src/styles/platform-notifications-table.css"),
 ]);
 const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("agent-studio/vela/src/app/globals.css"), "Vela globals.css"],
@@ -217,6 +264,90 @@ const rules = [
       if (!allowed) {
         return violation(file, lineNumber, "font-family 必须使用 var(--font-*) 或 inherit。");
       }
+      return null;
+    },
+  },
+  {
+    id: "ds/no-ds-locked-hardcoded-effect",
+    description: "已收敛的 DS 组件样式不能回流硬编码 transition/animation 时长或裸 focus-ring 阴影。",
+    checkLine(file, line, lineNumber) {
+      const normalized = normalize(file);
+      if (!DS_EFFECT_LOCKED_STYLE_PATHS.has(normalized)) return null;
+      const text = stripLineComment(line);
+      if (/\b\d+(?:\.\d+)?(?:ms|s)\b/.test(text) && /\b(?:ease|linear|cubic-bezier)\b/.test(text)) {
+        return violation(file, lineNumber, "使用 --vx-control-transition、--vx-motion-* 或组件 effect token，不能回流硬编码动效。", line);
+      }
+      if (DS_SHADOW_LOCKED_STYLE_PATHS.has(normalized) && /^\s*box-shadow\s*:\s*$/.test(text)) {
+        return violation(file, lineNumber, "已收敛的 DS 样式必须使用单行 shadow token，不能回流多行裸 box-shadow。", line);
+      }
+      const boxShadowMatch = text.match(/^\s*box-shadow\s*:\s*([^;]+);?/);
+      if (boxShadowMatch) {
+        const boxShadowValue = (boxShadowMatch[1] ?? "").trim();
+        const isTokenShadow = boxShadowValue.startsWith("var(");
+        const isNoShadow = boxShadowValue === "none" || boxShadowValue.startsWith("none ");
+
+        if (boxShadowValue.startsWith("0 0 0 ")) {
+          return violation(file, lineNumber, "focus ring 阴影必须使用 --vx-control-focus-shadow 或组件 effect token。", line);
+        }
+        if (DS_SHADOW_LOCKED_STYLE_PATHS.has(normalized) && !isTokenShadow && !isNoShadow) {
+          return violation(file, lineNumber, "已收敛的 DS 样式必须使用 shadow token，不能回流裸 box-shadow。", line);
+        }
+      }
+      return null;
+    },
+  },
+  {
+    id: "ds/no-ds-style-hardcoded-shadow",
+    description: "DS 样式层 shadow 只能由 token owner 定义；样式叶子和 bindings 只能消费 shadow token。",
+    checkLine(file, line, lineNumber) {
+      const normalized = normalize(file);
+      if (!normalized.startsWith(`${DS_ROOT}/src/styles/`) || isDsTokenOwner(file) || isGeneratedOrAsset(file)) return null;
+      const text = stripLineComment(line);
+
+      if (/^\s*box-shadow\s*:\s*$/.test(text)) {
+        return violation(file, lineNumber, "DS 样式叶子必须使用单行 shadow token，不能回流多行裸 box-shadow。", line);
+      }
+
+      const boxShadowMatch = text.match(/^\s*box-shadow\s*:\s*([^;]+);?/);
+      if (boxShadowMatch && !isTokenOrNoneShadowValue(boxShadowMatch[1])) {
+        return violation(file, lineNumber, "DS 样式叶子的 box-shadow 必须使用 var(--vx-*) token 或 none。", line);
+      }
+
+      const filterMatch = text.match(/^\s*filter\s*:\s*([^;]+);?/);
+      if (filterMatch && filterMatch[1]?.includes("drop-shadow(")) {
+        return violation(file, lineNumber, "DS 样式叶子的 drop-shadow 必须封装为 effect token 后通过 var(--vx-*) 消费。", line);
+      }
+
+      const shadowVariableMatch = text.match(/^\s*--vx-[\w-]*shadow[\w-]*\s*:\s*(.*)$/);
+      if (shadowVariableMatch && !isTokenOrNoneShadowValue(shadowVariableMatch[1])) {
+        return violation(file, lineNumber, "DS bindings 只能把 shadow 变量绑定到 token，不能直接定义阴影值。", line);
+      }
+
+      return null;
+    },
+  },
+  {
+    id: "ds/no-ds-style-hardcoded-motion",
+    description: "DS 样式层 motion 只能由 token owner 定义；样式叶子和 bindings 只能消费 motion token。",
+    checkLine(file, line, lineNumber) {
+      const normalized = normalize(file);
+      if (!normalized.startsWith(`${DS_ROOT}/src/styles/`) || isDsTokenOwner(file) || isGeneratedOrAsset(file)) return null;
+      const text = stripLineComment(line);
+
+      if (/\b\d+(?:\.\d+)?(?:ms|s)\b/.test(text)) {
+        return violation(file, lineNumber, "DS 样式叶子不能直接写 motion 时长；请迁入 token owner 后通过 var(--vx-*) 消费。", line);
+      }
+
+      const motionPropertyMatch = text.match(/^\s*(?:transition|animation|transition-duration|transition-delay|animation-duration|animation-delay|transition-timing-function|animation-timing-function)\s*:\s*([^;]+);?/);
+      if (motionPropertyMatch && !isTokenOrNoneMotionValue(motionPropertyMatch[1])) {
+        return violation(file, lineNumber, "DS 样式叶子的 motion 属性必须使用 var(--vx-*) token 或 none。", line);
+      }
+
+      const motionVariableMatch = text.match(/^\s*--vx-[\w-]*(?:transition|motion|duration|animation)[\w-]*\s*:\s*(.*)$/);
+      if (motionVariableMatch && !isTokenOrNoneMotionValue(motionVariableMatch[1])) {
+        return violation(file, lineNumber, "DS bindings 只能把 motion 变量绑定到 token，不能直接定义时长或曲线。", line);
+      }
+
       return null;
     },
   },
@@ -746,6 +877,149 @@ for (const item of collectRedundantStyleWrapperViolations(files)) {
   violations.push({ rule: redundantStyleWrapperRule, ...item });
 }
 
+const dsStyleHardcodedScaleBudgetRule = {
+  id: "ds/no-ds-style-hardcoded-scale-budget",
+  description: "DS 非 token owner 样式中的硬编码尺度存量不能增加；迁移后应持续下调预算。",
+};
+const dsStyleHardcodedScaleCount = collectDsStyleHardcodedScaleCount(files);
+if (dsStyleHardcodedScaleCount > DS_STYLE_HARDCODED_SCALE_BUDGET) {
+  violations.push({
+    rule: dsStyleHardcodedScaleBudgetRule,
+    file: "packages/design/design-system/src/styles",
+    line: 1,
+    message: `DS 非 token owner 硬编码尺度数量 ${dsStyleHardcodedScaleCount} 超过预算 ${DS_STYLE_HARDCODED_SCALE_BUDGET}；新增尺度必须迁入语义 token，或先降低存量预算。`,
+    source: `scale-count:${dsStyleHardcodedScaleCount}`,
+  });
+}
+
+const dsStyleScaleBridgeRule = {
+  id: "ds/no-ds-style-scale-bridge-usage",
+  description: "DS 非 token owner 样式不能直接消费 --vx-scale-* 桥接 token；必须先提升到域语义 token。",
+};
+for (const item of collectDsStyleScaleBridgeViolations(files)) {
+  violations.push({ rule: dsStyleScaleBridgeRule, ...item });
+}
+
+const dsStylePlatformScaleBridgeRule = {
+  id: "ds/no-ds-style-platform-scale-bridge-usage",
+  description: "DS platform 具体样式不能直接消费 --vx-platform-scale-* 总桥接 token；必须先提升到平台子域 token。",
+};
+for (const item of collectDsStylePlatformScaleBridgeViolations(files)) {
+  violations.push({ rule: dsStylePlatformScaleBridgeRule, ...item });
+}
+
+const dsStyleConsoleScaleBridgeRule = {
+  id: "ds/no-ds-style-console-scale-bridge-usage",
+  description: "DS console 具体样式不能直接消费 --vx-console-scale-* 总桥接 token；必须先提升到 Console 子域 token。",
+};
+for (const item of collectDsStyleDomainScaleBridgeViolations(files, "console", "assistant / shell / tenant-switcher / responsive / common")) {
+  violations.push({ rule: dsStyleConsoleScaleBridgeRule, ...item });
+}
+
+const dsStyleAuthScaleBridgeRule = {
+  id: "ds/no-ds-style-auth-scale-bridge-usage",
+  description: "DS auth 具体样式不能直接消费 --vx-auth-scale-* 总桥接 token；必须先提升到 Auth 子域 token。",
+};
+for (const item of collectDsStyleDomainScaleBridgeViolations(files, "auth", "actions / captcha / fields / form / responsive / signup / tabs / visual")) {
+  violations.push({ rule: dsStyleAuthScaleBridgeRule, ...item });
+}
+
+const dsStyleComponentScaleBridgeRule = {
+  id: "ds/no-ds-style-component-scale-bridge-usage",
+  description: "DS component 具体样式不能直接消费 --vx-component-scale-* 总桥接 token；必须先提升到组件子域 token。",
+};
+for (const item of collectDsStyleDomainScaleBridgeViolations(files, "component", "fullscreen / ai / button / shell / common")) {
+  violations.push({ rule: dsStyleComponentScaleBridgeRule, ...item });
+}
+
+const dsStyleAuthSubdomainScaleRule = {
+  id: "ds/no-ds-style-auth-subdomain-scale-usage",
+  description: "DS auth 具体样式不能直接消费 auth 子域 scale token；必须使用认证组件语义 token。",
+};
+for (const item of collectDsStyleSubdomainScaleViolations(files, "auth")) {
+  violations.push({ rule: dsStyleAuthSubdomainScaleRule, ...item });
+}
+
+const dsStyleConsoleSubdomainScaleRule = {
+  id: "ds/no-ds-style-console-subdomain-scale-usage",
+  description: "DS console 具体样式不能直接消费 console 子域 scale token；必须使用 Console 语义 token。",
+};
+for (const item of collectDsStyleSubdomainScaleViolations(files, "console")) {
+  violations.push({ rule: dsStyleConsoleSubdomainScaleRule, ...item });
+}
+
+const dsStyleComponentSubdomainScaleRule = {
+  id: "ds/no-ds-style-component-subdomain-scale-usage",
+  description: "DS component 具体样式不能直接消费 component 子域 scale token；必须使用组件语义 token。",
+};
+for (const item of collectDsStyleSubdomainScaleViolations(files, "component")) {
+  violations.push({ rule: dsStyleComponentSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformModelsSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-models-subdomain-scale-usage",
+  description: "DS platform models 具体样式不能直接消费 models 子域 scale token；必须使用模型列表/菜单/弹窗语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-models")) {
+  violations.push({ rule: dsStylePlatformModelsSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformAccessSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-access-subdomain-scale-usage",
+  description: "DS platform access 具体样式不能直接消费 access 子域 scale token；必须使用访问域布局/控件语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-access")) {
+  violations.push({ rule: dsStylePlatformAccessSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformNotificationsSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-notifications-subdomain-scale-usage",
+  description: "DS platform notifications 具体样式不能直接消费 notifications 子域 scale token；必须使用通知页语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-notifications")) {
+  violations.push({ rule: dsStylePlatformNotificationsSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformTenantSettingsSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-tenant-settings-subdomain-scale-usage",
+  description: "DS platform tenant settings 具体样式不能直接消费 tenant settings 子域 scale token；必须使用租户设置页语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-tenant-settings")) {
+  violations.push({ rule: dsStylePlatformTenantSettingsSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformShellSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-shell-subdomain-scale-usage",
+  description: "DS platform shell 具体样式不能直接消费 shell 子域 scale token；必须使用 shell 顶栏/助手面板语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-shell")) {
+  violations.push({ rule: dsStylePlatformShellSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformLayoutSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-layout-subdomain-scale-usage",
+  description: "DS platform layout 具体样式不能直接消费 layout 子域 scale token；必须使用页面布局/标题区/卡片语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-layout")) {
+  violations.push({ rule: dsStylePlatformLayoutSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformCommonSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-common-subdomain-scale-usage",
+  description: "DS platform common 具体样式不能直接消费 common 子域 scale token；必须使用平台共享 core/hero/table/responsive 语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-common")) {
+  violations.push({ rule: dsStylePlatformCommonSubdomainScaleRule, ...item });
+}
+
+const dsStylePlatformAccountSubdomainScaleRule = {
+  id: "ds/no-ds-style-platform-account-subdomain-scale-usage",
+  description: "DS platform account 具体样式不能直接消费 account 子域 scale token；必须使用账号资料、组织、外部账号和弹窗语义 token。",
+};
+for (const item of collectDsStyleExactScalePrefixViolations(files, "platform-account")) {
+  violations.push({ rule: dsStylePlatformAccountSubdomainScaleRule, ...item });
+}
+
 if (UPDATE_BASELINE) {
   updateBaseline(violations);
   process.exit(0);
@@ -972,6 +1246,142 @@ function collectRedundantStyleWrapperViolations(sourceFiles) {
   return items;
 }
 
+function collectDsStyleHardcodedScaleCount(sourceFiles) {
+  let count = 0;
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!isDsStyleScaleDebtFile(normalized)) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    for (const line of lines) {
+      if (hasDsStyleHardcodedScale(line)) count += 1;
+    }
+  }
+  return count;
+}
+
+function collectDsStyleScaleBridgeViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!isDsStyleScaleDebtFile(normalized)) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!/var\(--vx-scale-/.test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          "非 token owner 不得直接消费 --vx-scale-*；请改为 --vx-auth-scale-*、--vx-platform-scale-*、--vx-console-scale-* 或更具体的组件语义 token。",
+          line.trim(),
+        ),
+      );
+    });
+  }
+  return items;
+}
+
+function collectDsStylePlatformScaleBridgeViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!isDsStyleScaleDebtFile(normalized)) continue;
+    if (!/^packages\/design\/design-system\/src\/styles\/platform[\w-]*\.css$/.test(normalized)) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!/var\(--vx-platform-scale-/.test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          "Platform 具体样式不得直接消费 --vx-platform-scale-*；请改为 --vx-platform-access-scale-*、--vx-platform-account-scale-*、--vx-platform-models-scale-*、--vx-platform-shell-scale-*、--vx-platform-layout-scale-*、--vx-platform-notifications-scale-*、--vx-platform-tenant-settings-scale-* 或 --vx-platform-common-scale-*。",
+          line.trim(),
+        ),
+      );
+    });
+  }
+  return items;
+}
+
+function collectDsStyleDomainScaleBridgeViolations(sourceFiles, prefix, domains) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!isDsStyleScaleDebtFile(normalized)) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!new RegExp(`var\\(--vx-${prefix}-scale-`).test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          `${prefix} 具体样式不得直接消费 --vx-${prefix}-scale-*；请改为 ${domains} 对应的子域 scale token，或继续提升为组件语义 token。`,
+          line.trim(),
+        ),
+      );
+    });
+  }
+  return items;
+}
+
+function collectDsStyleSubdomainScaleViolations(sourceFiles, prefix) {
+  const items = [];
+  const pattern = new RegExp(`var\\(--vx-${prefix}-[\\w-]+-scale-`);
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!isDsStyleScaleDebtFile(normalized)) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!pattern.test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          `${prefix} 具体样式不得直接消费子域 scale token；请通过 ${prefix} 语义 token 组装。`,
+          line.trim(),
+        ),
+      );
+    });
+  }
+  return items;
+}
+
+function collectDsStyleExactScalePrefixViolations(sourceFiles, prefix) {
+  const items = [];
+  const pattern = new RegExp(`var\\(--vx-${prefix}-scale-`);
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!isDsStyleScaleDebtFile(normalized)) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!pattern.test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          `${prefix} 具体样式不得直接消费子域 scale token；请通过对应 Platform 语义 token 组装。`,
+          line.trim(),
+        ),
+      );
+    });
+  }
+  return items;
+}
+
+function isDsStyleScaleDebtFile(normalized) {
+  return (
+    normalized.startsWith(`${DS_ROOT}/src/styles/`) &&
+    normalized.endsWith(".css") &&
+    normalized !== normalize("packages/design/design-system/src/styles/typography.css") &&
+    !DS_RUNTIME_TOKEN_STYLE_PATTERN.test(normalized)
+  );
+}
+
+function hasDsStyleHardcodedScale(line) {
+  const text = stripLineComment(line);
+  if (/^\s*@media\b/.test(text)) return false;
+  return /(?:^|[\s(,])[-+]?\d+(?:\.\d+)?(?:px|rem|em|vh|vw|dvh|dvw)\b/.test(text);
+}
+
 function collectGlobalsStyleEntries(sourceFiles) {
   const entries = new Set();
   for (const file of sourceFiles) {
@@ -1075,6 +1485,25 @@ function isDsTokenOwner(file) {
     DS_RUNTIME_TOKEN_STYLE_PATTERN.test(normalized) ||
     DS_TOKEN_PATHS.some((tokenPath) => normalized === tokenPath || normalized.startsWith(`${tokenPath}/`))
   );
+}
+
+function isTokenOrNoneShadowValue(value) {
+  const normalized = (value ?? "").trim();
+  if (!normalized) return false;
+  const isNoShadow = normalized === "none" || normalized.startsWith("none ");
+  if (isNoShadow) return true;
+  if (!normalized.startsWith("var(")) return false;
+  return !/,\s*(?:-?\d|inset\b|calc\()/u.test(normalized);
+}
+
+function isTokenOrNoneMotionValue(value) {
+  const normalized = (value ?? "").trim();
+  if (!normalized) return true;
+  const isNone = normalized === "none" || normalized.startsWith("none ");
+  if (isNone) return true;
+  if (normalized.startsWith("var(") && !/,\s*(?:\d|[a-z-]+\s+\d|cubic-bezier\()/u.test(normalized)) return true;
+  if (/^[\w-]+\s+var\(--vx-[^)]+\)(?:\s+\w+)?$/.test(normalized)) return true;
+  return false;
 }
 
 function isGeneratedOrAsset(file) {

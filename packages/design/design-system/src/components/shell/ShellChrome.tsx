@@ -13,9 +13,9 @@ export type ShellThemePreference = Theme | "system";
 
 export interface LocaleSelectOption {
   locale: Locale;
-  label?: string;
-  nativeName?: string;
-  flag?: string;
+  label?: string | undefined;
+  nativeName?: string | undefined;
+  flag?: string | undefined;
 }
 
 export interface LocaleSelectPanelProps {
@@ -29,55 +29,55 @@ export interface ShellIconButtonProps {
   label: string;
   active?: boolean;
   disabled?: boolean;
-  className?: string;
-  activeClassName?: string;
-  iconClassName?: string;
-  children?: ReactNode;
-  onClick?: () => void;
+  className?: string | undefined;
+  activeClassName?: string | undefined;
+  iconClassName?: string | undefined;
+  children?: ReactNode | undefined;
+  onClick?: (() => void) | undefined;
 }
 
 export interface ShellBrandProps {
-  href?: string;
-  logoSrc?: string;
-  logoAlt?: string;
-  label?: ReactNode;
-  className?: string;
-  logoClassName?: string;
-  labelClassName?: string;
+  href?: string | undefined;
+  logoSrc?: string | undefined;
+  logoAlt?: string | undefined;
+  label?: ReactNode | undefined;
+  className?: string | undefined;
+  logoClassName?: string | undefined;
+  labelClassName?: string | undefined;
 }
 
 export interface ShellLocaleSwitcherProps {
   currentLocale: Locale;
-  options?: LocaleSelectOption[];
-  buttonLabel?: string;
-  panelLabel?: string;
-  align?: "start" | "end";
-  className?: string;
-  buttonClassName?: string;
-  activeButtonClassName?: string;
-  popoverClassName?: string;
+  options?: LocaleSelectOption[] | undefined;
+  buttonLabel?: string | undefined;
+  panelLabel?: string | undefined;
+  align?: "start" | "end" | undefined;
+  className?: string | undefined;
+  buttonClassName?: string | undefined;
+  activeButtonClassName?: string | undefined;
+  popoverClassName?: string | undefined;
   onLocaleChange: (locale: Locale) => void;
 }
 
 export interface ShellThemeToggleProps {
-  currentTheme?: ShellThemePreference | string;
-  buttonLabel?: string;
-  lightLabel?: string;
-  darkLabel?: string;
-  className?: string;
-  activeClassName?: string;
+  currentTheme?: ShellThemePreference | string | undefined;
+  buttonLabel?: string | undefined;
+  lightLabel?: string | undefined;
+  darkLabel?: string | undefined;
+  className?: string | undefined;
+  activeClassName?: string | undefined;
   onThemeChange: (theme: "light" | "dark") => void;
 }
 
 export interface ShellFullscreenToggleProps {
   targetId: string;
-  mode?: FullscreenMode;
-  lockScroll?: boolean;
-  enterLabel?: string;
-  exitLabel?: string;
-  className?: string;
-  activeClassName?: string;
-  getTargetElement?: () => HTMLElement | null;
+  mode?: FullscreenMode | undefined;
+  lockScroll?: boolean | undefined;
+  enterLabel?: string | undefined;
+  exitLabel?: string | undefined;
+  className?: string | undefined;
+  activeClassName?: string | undefined;
+  getTargetElement?: (() => HTMLElement | null) | undefined;
 }
 
 export interface ShellPreferenceLabels {
@@ -93,18 +93,18 @@ export interface ShellPreferenceLabels {
 
 export interface ShellPreferencePanelProps {
   locale: Locale;
-  localeOptions?: LocaleSelectOption[];
+  localeOptions?: LocaleSelectOption[] | undefined;
   theme: ShellThemePreference;
-  density?: Density;
-  fontSize?: ShellFontSizePreference;
-  labels?: ShellPreferenceLabels;
-  showDensity?: boolean;
-  showFontSize?: boolean;
-  className?: string;
+  density?: Density | undefined;
+  fontSize?: ShellFontSizePreference | undefined;
+  labels?: ShellPreferenceLabels | undefined;
+  showDensity?: boolean | undefined;
+  showFontSize?: boolean | undefined;
+  className?: string | undefined;
   onLocaleChange: (locale: Locale) => void;
   onThemeChange: (theme: ShellThemePreference) => void;
-  onDensityChange?: (density: Density) => void;
-  onFontSizeChange?: (fontSize: ShellFontSizePreference) => void;
+  onDensityChange?: ((density: Density) => void) | undefined;
+  onFontSizeChange?: ((fontSize: ShellFontSizePreference) => void) | undefined;
 }
 
 export interface ShellUserBadge {
@@ -114,41 +114,41 @@ export interface ShellUserBadge {
 
 export interface ShellUserMenuUser {
   displayName: string;
-  uniqueLine?: string;
-  avatarSrc?: string;
-  avatarAlt?: string;
-  avatarFallback?: string;
-  meta?: ReactNode;
-  badges?: ShellUserBadge[];
+  uniqueLine?: string | undefined;
+  avatarSrc?: string | undefined;
+  avatarAlt?: string | undefined;
+  avatarFallback?: string | undefined;
+  meta?: ReactNode | undefined;
+  badges?: ShellUserBadge[] | undefined;
 }
 
 export interface ShellUserMenuAction {
   key: string;
   label: ReactNode;
-  icon?: IconName;
-  disabled?: boolean;
+  icon?: IconName | undefined;
+  disabled?: boolean | undefined;
   onClick: () => void | Promise<void>;
 }
 
 export interface ShellUserMenuPortalReturn {
   label: ReactNode;
   onReturn: () => void;
-  dismissLabel?: string;
-  onDismiss?: () => void;
+  dismissLabel?: string | undefined;
+  onDismiss?: (() => void) | undefined;
 }
 
 export interface ShellUserMenuProps {
   user: ShellUserMenuUser;
-  openLabel?: string;
-  online?: boolean;
-  settings?: ReactNode;
-  portalReturn?: ShellUserMenuPortalReturn;
-  actions?: ShellUserMenuAction[];
-  triggerClassName?: string;
-  contentClassName?: string;
-  statusClassName?: string;
-  align?: "start" | "center" | "end";
-  sideOffset?: number;
+  openLabel?: string | undefined;
+  online?: boolean | undefined;
+  settings?: ReactNode | undefined;
+  portalReturn?: ShellUserMenuPortalReturn | undefined;
+  actions?: ShellUserMenuAction[] | undefined;
+  triggerClassName?: string | undefined;
+  contentClassName?: string | undefined;
+  statusClassName?: string | undefined;
+  align?: "start" | "center" | "end" | undefined;
+  sideOffset?: number | undefined;
 }
 
 export interface ShellLegalFooterLink {
@@ -157,12 +157,12 @@ export interface ShellLegalFooterLink {
 }
 
 export interface ShellLegalFooterProps {
-  copyright?: ReactNode;
-  links?: ShellLegalFooterLink[];
-  legalLabel?: string;
-  className?: string;
-  innerClassName?: string;
-  linksClassName?: string;
+  copyright?: ReactNode | undefined;
+  links?: ShellLegalFooterLink[] | undefined;
+  legalLabel?: string | undefined;
+  className?: string | undefined;
+  innerClassName?: string | undefined;
+  linksClassName?: string | undefined;
 }
 
 const DEFAULT_LOCALE_OPTIONS: LocaleSelectOption[] = SUPPORTED_LOCALES.map((locale) => ({

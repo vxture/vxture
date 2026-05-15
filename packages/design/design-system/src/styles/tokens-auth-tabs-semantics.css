@@ -1,0 +1,28 @@
+/**
+ * tokens-auth-tabs-semantics.css - 认证页 tabs 与辅助入口语义尺度 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  --vx-auth-tabs-border-width: var(--vx-auth-tabs-scale-1p);
+  --vx-auth-tabs-margin-bottom: var(--vx-auth-tabs-scale-22p);
+  --vx-auth-tabs-item-padding: var(--vx-auth-tabs-scale-10p) 0;
+  --vx-auth-tabs-item-active-border-width: var(--vx-auth-tabs-scale-2p);
+  --vx-auth-tabs-item-active-offset: var(--vx-auth-tabs-scale-neg-1p);
+  --vx-auth-tabs-item-size: var(--vx-auth-tabs-scale-13-5p);
+  --vx-auth-send-code-width: var(--vx-auth-tabs-scale-128p);
+  --vx-auth-send-code-height: var(--vx-auth-tabs-scale-42p);
+  --vx-auth-send-code-margin-top: var(--vx-auth-tabs-scale-24p);
+  --vx-auth-send-code-padding-x: var(--vx-auth-tabs-scale-12p);
+  --vx-auth-send-code-border-width: var(--vx-auth-tabs-scale-1p);
+  --vx-auth-reset-margin-top: var(--vx-auth-tabs-scale-14p);
+  --vx-auth-reset-avatar-size: var(--vx-auth-tabs-scale-52p);
+  --vx-auth-reset-avatar-tracking: var(--vx-auth-tabs-scale-0-04e);
+  --vx-auth-footer-max-width: var(--vx-auth-tabs-scale-80r);
+  --vx-auth-footer-padding-x: var(--vx-auth-tabs-scale-1r);
+  --vx-auth-qr-gap: var(--vx-auth-tabs-scale-16p);
+}

@@ -1,0 +1,11 @@
+/**
+ * tokens-component-scale.css - 组件域历史尺度语义桥接入口。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+@import "./tokens-component-scale-core.css";
+@import "./tokens-component-fullscreen-scale.css";

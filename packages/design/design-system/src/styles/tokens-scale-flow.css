@@ -1,0 +1,31 @@
+/**
+ * tokens-scale-flow.css - DS 内部流式与视口尺度桥接 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* 仅供 DS 内部历史尺度收敛使用；应用侧不得作为消费契约。 */
+  --vx-scale-100dvh: 100dvh;
+  --vx-scale-neg-0-05e: -0.05em;
+  --vx-scale-neg-0-03e: -0.03em;
+  --vx-scale-neg-0-02e: -0.02em;
+  --vx-scale-0-04e: 0.04em;
+  --vx-scale-0-1e: 0.1em;
+  --vx-scale-100vh: 100vh;
+  --vx-scale-1-1vw: 1.1vw;
+  --vx-scale-1-2vw: 1.2vw;
+  --vx-scale-1-28vw: 1.28vw;
+  --vx-scale-2vw: 2vw;
+  --vx-scale-2-4vw: 2.4vw;
+  --vx-scale-3vw: 3vw;
+  --vx-scale-3-2vw: 3.2vw;
+  --vx-scale-4vw: 4vw;
+  --vx-scale-5vw: 5vw;
+  --vx-scale-32vw: 32vw;
+  --vx-scale-42vw: 42vw;
+  --vx-scale-100vw: 100vw;
+}

@@ -37,9 +37,9 @@
     position: fixed;
     inset: var(--vx-shell-header-height) var(--vx-console-space-1r) 0;
     z-index: 24;
-    height: calc(100dvh - var(--vx-shell-header-height));
-    max-height: calc(100dvh - var(--vx-shell-header-height));
-    min-height: calc(100dvh - var(--vx-shell-header-height));
+    height: var(--vx-console-responsive-panel-available-height);
+    max-height: var(--vx-console-responsive-panel-available-height);
+    min-height: var(--vx-console-responsive-panel-available-height);
     border-top: 0;
   }
 

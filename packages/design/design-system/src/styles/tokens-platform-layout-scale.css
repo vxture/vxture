@@ -1,0 +1,66 @@
+/**
+ * tokens-platform-layout-scale.css - Platform layout 域尺度语义桥接 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* Platform layout 域只暴露该场景的尺度组装，避免具体样式直接消费 platform 总桥接。 */
+  --vx-platform-layout-scale-0-16r: var(--vx-platform-scale-0-16r);
+  --vx-platform-layout-scale-0-18r: var(--vx-platform-scale-0-18r);
+  --vx-platform-layout-scale-0-1r: var(--vx-platform-scale-0-1r);
+  --vx-platform-layout-scale-0-25r: var(--vx-platform-scale-0-25r);
+  --vx-platform-layout-scale-0-28r: var(--vx-platform-scale-0-28r);
+  --vx-platform-layout-scale-0-2r: var(--vx-platform-scale-0-2r);
+  --vx-platform-layout-scale-0-35r: var(--vx-platform-scale-0-35r);
+  --vx-platform-layout-scale-0-38r: var(--vx-platform-scale-0-38r);
+  --vx-platform-layout-scale-0-42r: var(--vx-platform-scale-0-42r);
+  --vx-platform-layout-scale-0-58r: var(--vx-platform-scale-0-58r);
+  --vx-platform-layout-scale-0-6r: var(--vx-platform-scale-0-6r);
+  --vx-platform-layout-scale-0-75r: var(--vx-platform-scale-0-75r);
+  --vx-platform-layout-scale-0-78r: var(--vx-platform-scale-0-78r);
+  --vx-platform-layout-scale-0-7r: var(--vx-platform-scale-0-7r);
+  --vx-platform-layout-scale-0-82r: var(--vx-platform-scale-0-82r);
+  --vx-platform-layout-scale-0-84r: var(--vx-platform-scale-0-84r);
+  --vx-platform-layout-scale-0-85r: var(--vx-platform-scale-0-85r);
+  --vx-platform-layout-scale-0-86r: var(--vx-platform-scale-0-86r);
+  --vx-platform-layout-scale-0-8r: var(--vx-platform-scale-0-8r);
+  --vx-platform-layout-scale-0-92r: var(--vx-platform-scale-0-92r);
+  --vx-platform-layout-scale-0-94r: var(--vx-platform-scale-0-94r);
+  --vx-platform-layout-scale-0-95r: var(--vx-platform-scale-0-95r);
+  --vx-platform-layout-scale-0-9r: var(--vx-platform-scale-0-9r);
+  --vx-platform-layout-scale-1-05r: var(--vx-platform-scale-1-05r);
+  --vx-platform-layout-scale-1-08r: var(--vx-platform-scale-1-08r);
+  --vx-platform-layout-scale-1-28vw: var(--vx-platform-scale-1-28vw);
+  --vx-platform-layout-scale-1-32r: var(--vx-platform-scale-1-32r);
+  --vx-platform-layout-scale-1-35r: var(--vx-platform-scale-1-35r);
+  --vx-platform-layout-scale-1-45r: var(--vx-platform-scale-1-45r);
+  --vx-platform-layout-scale-1-5r: var(--vx-platform-scale-1-5r);
+  --vx-platform-layout-scale-1-62r: var(--vx-platform-scale-1-62r);
+  --vx-platform-layout-scale-1-9r: var(--vx-platform-scale-1-9r);
+  --vx-platform-layout-scale-11r: var(--vx-platform-scale-11r);
+  --vx-platform-layout-scale-1480p: var(--vx-platform-scale-1480p);
+  --vx-platform-layout-scale-1p: var(--vx-platform-scale-1p);
+  --vx-platform-layout-scale-1r: var(--vx-platform-scale-1r);
+  --vx-platform-layout-scale-2-25r: var(--vx-platform-scale-2-25r);
+  --vx-platform-layout-scale-2-35r: var(--vx-platform-scale-2-35r);
+  --vx-platform-layout-scale-2-5r: var(--vx-platform-scale-2-5r);
+  --vx-platform-layout-scale-24r: var(--vx-platform-scale-24r);
+  --vx-platform-layout-scale-280p: var(--vx-platform-scale-280p);
+  --vx-platform-layout-scale-2r: var(--vx-platform-scale-2r);
+  --vx-platform-layout-scale-2vw: var(--vx-platform-scale-2vw);
+  --vx-platform-layout-scale-3-25r: var(--vx-platform-scale-3-25r);
+  --vx-platform-layout-scale-3-2vw: var(--vx-platform-scale-3-2vw);
+  --vx-platform-layout-scale-320p: var(--vx-platform-scale-320p);
+  --vx-platform-layout-scale-380p: var(--vx-platform-scale-380p);
+  --vx-platform-layout-scale-3r: var(--vx-platform-scale-3r);
+  --vx-platform-layout-scale-3vw: var(--vx-platform-scale-3vw);
+  --vx-platform-layout-scale-4-5r: var(--vx-platform-scale-4-5r);
+  --vx-platform-layout-scale-520p: var(--vx-platform-scale-520p);
+  --vx-platform-layout-scale-8-25r: var(--vx-platform-scale-8-25r);
+  --vx-platform-layout-scale-9p: var(--vx-platform-scale-9p);
+  --vx-platform-layout-scale-neg-0-02e: var(--vx-platform-scale-neg-0-02e);
+}

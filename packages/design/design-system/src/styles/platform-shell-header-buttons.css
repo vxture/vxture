@@ -11,17 +11,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--vx-shell-icon-button-size, 2rem);
-  height: var(--vx-shell-icon-button-size, 2rem);
+  width: var(--vx-shell-icon-button-size);
+  height: var(--vx-shell-icon-button-size);
   border: 0;
-  border-radius: var(--vx-shell-icon-button-radius, var(--vx-shell-radius-control, 9px));
+  border-radius: var(--vx-shell-icon-button-radius);
   background: transparent;
   color: var(--vx-shell-icon-button-color, var(--vx-shell-icon, var(--vx-color-shell-icon)));
   cursor: pointer;
   transition:
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms ease;
+    background var(--vx-shell-control-transition),
+    color var(--vx-shell-control-transition),
+    transform var(--vx-shell-control-transition);
 }
 
 .dark .vx-shell-icon-button {
@@ -45,9 +45,9 @@
 }
 
 .vx-shell-icon-button--toolbar {
-  width: var(--vx-shell-icon-button-toolbar-size, 2rem);
-  height: var(--vx-shell-icon-button-toolbar-size, 2rem);
-  border-radius: var(--vx-shell-icon-button-toolbar-radius, var(--vx-shell-radius-control, 9px));
+  width: var(--vx-shell-icon-button-toolbar-size);
+  height: var(--vx-shell-icon-button-toolbar-size);
+  border-radius: var(--vx-shell-icon-button-toolbar-radius);
 }
 
 .vx-shell-icon-button--toolbar:hover {
@@ -60,14 +60,14 @@
 }
 
 .vx-shell-icon-button--utility {
-  width: var(--vx-shell-icon-button-utility-size, 2.5rem);
-  height: var(--vx-shell-icon-button-utility-size, 2.5rem);
+  width: var(--vx-shell-icon-button-utility-size);
+  height: var(--vx-shell-icon-button-utility-size);
 }
 
 .vx-shell-icon-button--assistant {
-  width: var(--vx-shell-icon-button-assistant-size, 2rem);
-  height: var(--vx-shell-icon-button-assistant-size, 2rem);
-  border-radius: var(--vx-shell-icon-button-assistant-radius, var(--vx-shell-icon-button-toolbar-radius, 9px));
+  width: var(--vx-shell-icon-button-assistant-size);
+  height: var(--vx-shell-icon-button-assistant-size);
+  border-radius: var(--vx-shell-icon-button-assistant-radius);
   background: var(--vx-shell-icon-button-assistant-background, transparent);
   color: var(--vx-shell-icon-button-assistant-color, var(--vx-shell-icon-button-color, var(--vx-console-brand)));
 }
@@ -94,14 +94,14 @@
 .vx-shell-agent-button {
   display: inline-grid;
   place-items: center;
-  width: var(--vx-shell-agent-button-size, 2rem);
-  height: var(--vx-shell-agent-button-size, 2rem);
+  width: var(--vx-shell-agent-button-size);
+  height: var(--vx-shell-agent-button-size);
   border: 0;
   border-radius: 0;
   background: transparent;
   padding: 0;
   cursor: pointer;
-  transition: opacity 180ms ease;
+  transition: opacity var(--vx-shell-control-transition);
 }
 
 .vx-shell-agent-button:hover,
@@ -116,6 +116,6 @@
 
 .vx-shell-agent-button__icon {
   display: block;
-  width: var(--vx-shell-agent-button-icon-size, 2rem);
-  height: var(--vx-shell-agent-button-icon-size, 2rem);
+  width: var(--vx-shell-agent-button-icon-size);
+  height: var(--vx-shell-agent-button-icon-size);
 }

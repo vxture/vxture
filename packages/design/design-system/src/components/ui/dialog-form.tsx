@@ -69,7 +69,7 @@ function DialogForm({
   );
 
   return (
-    <Dialog onOpenChange={onOpenChange} {...props}>
+    <Dialog {...(onOpenChange !== undefined ? { onOpenChange } : {})} {...props}>
       <DialogContent className={cn("vx-dialog-form max-w-2xl", contentClassName)}>
         <form className={cn("grid gap-5", formClassName)} onSubmit={onSubmit}>
           <DialogHeader>

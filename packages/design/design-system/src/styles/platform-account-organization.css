@@ -8,11 +8,11 @@
  */
 
 .vx-organization-profile-page .vx-account-profile-layout {
-  grid-template-columns: minmax(18rem, 0.38fr) minmax(0, 1fr);
+  grid-template-columns: var(--vx-organization-profile-layout-columns);
 }
 
 .vx-organization-profile-card {
-  padding-top: 1.05rem;
+  padding-top: var(--vx-organization-profile-card-padding-top);
 }
 
 .vx-organization-logo-button {
@@ -31,8 +31,8 @@
 .vx-organization-logo {
   display: grid;
   place-items: center;
-  width: 7.25rem;
-  height: 7.25rem;
+  width: var(--vx-organization-logo-size);
+  height: var(--vx-organization-logo-size);
   border-radius: var(--vx-radius-lg);
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--vx-color-shell-brand) 16%, transparent), color-mix(in srgb, var(--vx-color-teal-500) 10%, transparent)),
@@ -40,23 +40,19 @@
   background-position: center;
   background-size: cover;
   color: var(--vx-console-brand-strong);
-  box-shadow:
-    0 18px 34px color-mix(in srgb, var(--vx-color-brand-800) 14%, transparent),
-    inset 0 0 0 1px var(--vx-color-border);
+  box-shadow: var(--vx-platform-account-media-shadow);
 }
 
 .dark .vx-organization-logo {
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--vx-color-primary) 16%, transparent), color-mix(in srgb, var(--vx-color-teal-400) 10%, transparent)),
     color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
-  box-shadow:
-    0 18px 34px color-mix(in srgb, var(--vx-color-black) 32%, transparent),
-    inset 0 0 0 1px color-mix(in srgb, var(--vx-color-gray-400) 18%, transparent);
+  box-shadow: var(--vx-platform-account-media-shadow-dark);
 }
 
 .vx-organization-logo strong {
   color: var(--vx-console-brand-strong);
-  font-size: 1.7rem;
+  font-size: var(--vx-organization-logo-title-size);
   font-weight: 780;
   letter-spacing: 0;
 }
@@ -66,13 +62,13 @@
 }
 
 .vx-organization-logo-editor .vx-organization-logo {
-  width: 8rem;
-  height: 8rem;
+  width: var(--vx-organization-logo-editor-size);
+  height: var(--vx-organization-logo-editor-size);
 }
 
 .vx-organization-logo-upload {
   display: grid;
-  gap: 0.45rem;
+  gap: var(--vx-organization-logo-upload-gap);
   min-width: 0;
 }
 
@@ -83,7 +79,7 @@
 .vx-organization-logo-upload .vx-btn {
   justify-content: center;
   width: 100%;
-  min-height: 2.42rem;
+  min-height: var(--vx-organization-logo-button-min-height);
 }
 
 .vx-organization-logo-upload p {
@@ -94,7 +90,7 @@
 }
 
 .vx-organization-status {
-  margin-top: 0.1rem;
+  margin-top: var(--vx-organization-status-margin-top);
   border-radius: var(--vx-radius-full);
   font-size: var(--vx-account-profile-meta-size);
   font-weight: 720;

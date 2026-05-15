@@ -9,28 +9,28 @@
 
 .vx-tenant-settings-workspace {
   display: grid;
-  gap: 1.9rem;
+  gap: var(--vx-tenant-settings-workspace-gap);
   min-width: 0;
 }
 
 .vx-tenant-settings-section {
   display: grid;
-  gap: 0.78rem;
+  gap: var(--vx-tenant-settings-section-gap);
   min-width: 0;
 }
 
 .vx-tenant-settings-section__title {
   display: flex;
   align-items: center;
-  gap: 0.58rem;
-  padding: 0 1rem;
+  gap: var(--vx-tenant-settings-section-title-gap);
+  padding: var(--vx-tenant-settings-section-title-padding);
 }
 
 .vx-tenant-settings-section__title > svg {
-  width: 1.95rem;
-  height: 1.95rem;
-  padding: 0.42rem;
-  border: 1px solid var(--vx-color-border);
+  width: var(--vx-tenant-settings-section-icon-size);
+  height: var(--vx-tenant-settings-section-icon-size);
+  padding: var(--vx-tenant-settings-section-icon-padding);
+  border: var(--vx-tenant-settings-section-icon-border);
   border-radius: var(--vx-radius-lg);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
@@ -46,7 +46,7 @@
 
 .vx-tenant-settings-section__title span {
   display: block;
-  margin-top: 0.08rem;
+  margin-top: var(--vx-tenant-settings-section-title-meta-margin-top);
   color: var(--vx-console-muted);
   font-size: var(--vx-tenant-settings-meta-size);
 }
@@ -62,14 +62,14 @@
 .vx-tenant-settings-row,
 .vx-tenant-settings-danger-row {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(120px, 0.24fr) minmax(160px, 0.3fr);
-  gap: 0.72rem;
+  grid-template-columns: var(--vx-tenant-settings-list-columns);
+  gap: var(--vx-tenant-settings-list-gap);
   align-items: center;
 }
 
 .vx-tenant-settings-list__header {
   justify-items: var(--vx-tenant-settings-list-header-justify, stretch);
-  padding: var(--vx-tenant-settings-list-header-padding, 0 1rem 0.35rem);
+  padding: var(--vx-tenant-settings-list-header-padding);
   color: var(--vx-color-text-muted);
   font-size: var(--vx-tenant-settings-meta-size);
   font-weight: 740;
@@ -86,16 +86,13 @@
 
 .vx-tenant-settings-row,
 .vx-tenant-settings-danger-row {
-  min-height: 4.05rem;
+  min-height: var(--vx-tenant-settings-row-min-height);
   justify-items: var(--vx-tenant-settings-row-justify, stretch);
-  padding: var(--vx-tenant-settings-row-padding, 0.72rem 1rem);
-  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 7%, transparent);
+  padding: var(--vx-tenant-settings-row-padding);
+  border-bottom: var(--vx-tenant-settings-row-border);
   background: transparent;
   text-align: var(--vx-tenant-settings-row-text-align, left);
-  transition:
-    background 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease;
+  transition: var(--vx-platform-tenant-settings-row-transition);
 }
 
 .dark .vx-tenant-settings-row,
@@ -117,7 +114,7 @@
 .vx-tenant-settings-row__policy {
   display: flex;
   align-items: center;
-  gap: 0.68rem;
+  gap: var(--vx-tenant-settings-row-policy-gap);
   min-width: 0;
 }
 
@@ -126,8 +123,8 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: var(--vx-tenant-settings-row-policy-icon-size);
+  height: var(--vx-tenant-settings-row-policy-icon-size);
   border-radius: var(--vx-radius-lg);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
@@ -145,7 +142,7 @@
 
 .vx-tenant-settings-row__policy p {
   overflow: hidden;
-  margin: 0.16rem 0 0;
+  margin: var(--vx-tenant-settings-row-policy-copy-margin);
   color: var(--vx-console-muted);
   font-size: var(--vx-tenant-settings-meta-size);
   line-height: 1.35;

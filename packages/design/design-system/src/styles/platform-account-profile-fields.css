@@ -9,14 +9,14 @@
 
 .vx-account-profile-main {
   display: grid;
-  gap: 0.92rem;
+  gap: var(--vx-account-profile-main-gap);
   min-width: 0;
 }
 
 .vx-account-profile-section {
   display: grid;
   gap: 0;
-  border-top: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  border-top: var(--vx-account-profile-section-border);
 }
 
 .dark .vx-account-profile-section {
@@ -27,20 +27,20 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1.02rem 0 0.76rem;
+  gap: var(--vx-account-profile-section-header-gap);
+  padding: var(--vx-account-profile-section-header-padding);
 }
 
 .vx-account-profile-section__header h2 {
   margin: 0;
   color: var(--vx-console-text);
-  font-size: 0.98rem;
+  font-size: var(--vx-account-profile-section-title-size);
   font-weight: 740;
   letter-spacing: 0;
 }
 
 .vx-account-profile-section__header p {
-  margin: 0.28rem 0 0;
+  margin: var(--vx-account-profile-section-copy-margin);
   color: var(--vx-console-muted);
   font-size: var(--vx-account-profile-meta-size);
 }
@@ -53,12 +53,12 @@
 
 .vx-account-profile-field {
   display: grid;
-  grid-template-columns: 2rem minmax(7.2rem, 0.24fr) minmax(0, 1fr);
-  gap: 0.85rem;
+  grid-template-columns: var(--vx-account-profile-field-columns);
+  gap: var(--vx-account-profile-field-gap);
   align-items: center;
-  min-height: 3.05rem;
-  padding: 0.72rem 0;
-  border-top: 1px dashed var(--vx-color-border);
+  min-height: var(--vx-account-profile-field-min-height);
+  padding: var(--vx-account-profile-field-padding);
+  border-top: var(--vx-account-profile-field-border);
 }
 
 .dark .vx-account-profile-field {
@@ -73,8 +73,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: var(--vx-account-profile-field-icon-size);
+  height: var(--vx-account-profile-field-icon-size);
   border-radius: var(--vx-radius-lg);
   background: var(--vx-console-brand-soft);
   color: var(--vx-console-brand-strong);
