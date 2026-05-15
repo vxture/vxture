@@ -1,0 +1,231 @@
+/**
+ * auth-actions-social.css - 认证页主要动作、加载状态、社交登录和重置完成态。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-auth-turnstile {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  line-height: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 0;
+}
+
+.vx-auth-turnstile > div {
+  max-width: 100%;
+}
+
+.vx-auth-turnstile:empty {
+  display: none;
+}
+
+.vx-auth-primary {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vx-auth-gap-xs);
+  padding: var(--vx-auth-padding-md);
+  border: 0;
+  border-radius: var(--vx-auth-radius-md);
+  background: var(--vx-auth-accent);
+  color: var(--vx-color-white);
+  cursor: pointer;
+  font-size: var(--vx-auth-text-md);
+  font-weight: 600;
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--vx-color-auth-accent) 30%, transparent);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.vx-auth-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 28px color-mix(in srgb, var(--vx-color-auth-accent) 45%, transparent);
+}
+
+.vx-auth-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+.vx-auth-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid color-mix(in srgb, var(--vx-color-white) 32%, transparent);
+  border-top-color: var(--vx-color-white);
+  border-radius: var(--vx-auth-radius-pill);
+  animation: vx-auth-spin 0.7s linear infinite;
+}
+
+.vx-auth-or {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-auth-gap-sm);
+  margin: 14px 0;
+}
+
+.vx-auth-section-social .vx-auth-or {
+  margin: 0 0 12px;
+}
+
+.vx-auth-or span {
+  flex: 1;
+  height: 1px;
+  background: var(--vx-auth-border);
+}
+
+.vx-auth-or em {
+  color: var(--vx-auth-muted);
+  font-size: var(--vx-auth-text-2xs);
+  font-style: normal;
+}
+
+.vx-auth-socials {
+  display: flex;
+  gap: var(--vx-auth-gap-xs);
+}
+
+.vx-auth-social {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vx-auth-gap-xs);
+  padding: var(--vx-auth-padding-sm);
+  border: 1px solid var(--vx-auth-border);
+  border-radius: var(--vx-auth-radius-sm);
+  background: var(--vx-color-auth-card-soft);
+  color: var(--vx-auth-secondary);
+  cursor: pointer;
+  font-size: var(--vx-auth-text-sm);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.vx-auth-social svg,
+.vx-auth-social img {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  display: block;
+  object-fit: contain;
+}
+
+.vx-auth-social-icon {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vx-auth-social:hover {
+  background: var(--vx-color-primary-soft);
+}
+
+.vx-auth-social.wechat:hover {
+  border-color: color-mix(in srgb, var(--vx-color-social-wechat) 35%, transparent);
+  color: var(--vx-color-social-wechat);
+}
+
+.vx-auth-social.dingtalk:hover {
+  border-color: color-mix(in srgb, var(--vx-color-social-dingtalk) 35%, transparent);
+  color: var(--vx-color-social-dingtalk);
+}
+
+.vx-auth-social.feishu:hover {
+  border-color: color-mix(in srgb, var(--vx-color-social-feishu) 35%, transparent);
+  color: var(--vx-color-social-feishu);
+}
+
+.vx-auth-switch,
+.vx-auth-terms {
+  margin: 16px 0 0;
+  color: var(--vx-auth-secondary);
+  font-size: var(--vx-auth-text-sm);
+  line-height: 1.7;
+  text-align: center;
+}
+
+.vx-auth-section-footer .vx-auth-switch {
+  margin: 0;
+}
+
+.vx-auth-switch button {
+  margin-left: 4px;
+  color: var(--vx-auth-accent);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.vx-auth-back {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 24px;
+  padding: 0;
+  font-size: var(--vx-auth-text-xs);
+}
+
+.vx-auth-reset-done {
+  text-align: center;
+}
+
+.vx-auth-check {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border: 1px solid color-mix(in srgb, var(--vx-color-success) 30%, transparent);
+  border-radius: var(--vx-auth-radius-pill);
+  background: color-mix(in srgb, var(--vx-color-success) 10%, transparent);
+  color: var(--vx-auth-success);
+  font-size: var(--vx-auth-text-xl);
+}
+
+.vx-auth-check--error {
+  border-color: color-mix(in srgb, var(--vx-color-error) 32%, transparent);
+  background: color-mix(in srgb, var(--vx-color-error) 12%, transparent);
+  color: var(--vx-color-error);
+}
+
+.vx-form-error--centered {
+  margin-bottom: var(--vx-space-4);
+  text-align: center;
+}
+
+.vx-auth-reset-done button {
+  margin-top: 24px;
+  padding: 9px 20px;
+  border: 1px solid var(--vx-auth-border);
+  border-radius: var(--vx-auth-radius-sm);
+  background: var(--vx-color-white);
+  color: var(--vx-auth-secondary);
+  cursor: pointer;
+  font-size: var(--vx-auth-text-sm);
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.vx-auth-reset-done button:hover {
+  border-color: var(--vx-auth-accent);
+  color: var(--vx-auth-accent);
+}

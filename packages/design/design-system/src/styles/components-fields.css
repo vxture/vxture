@@ -1,0 +1,46 @@
+/**
+ * components-fields.css - DS Input、Select 和 Label 基础语义类。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:where(.vx-input),
+:where(.vx-select-trigger) {
+  width: 100%;
+  min-height: var(--vx-field-height);
+  padding: var(--vx-field-padding-y) var(--vx-field-padding-x);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  border-radius: var(--vx-field-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
+  color: var(--vx-console-text, var(--vx-color-shell-text));
+}
+
+:where(.dark .vx-input),
+:where(.dark .vx-select-trigger) {
+  background: var(--vx-color-gray-900);
+}
+
+:where(.vx-input:focus),
+:where(.vx-select-trigger:focus) {
+  outline: var(--vx-control-focus-ring-width) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  outline-offset: 0;
+  border-color: var(--vx-color-brand-300);
+}
+
+:where(select.vx-input),
+:where(select.vx-select-trigger) {
+  box-sizing: border-box;
+  height: var(--vx-select-height);
+  min-height: var(--vx-select-height);
+  padding-block: 0;
+  padding-inline: var(--vx-select-padding-start) var(--vx-select-padding-end);
+  line-height: normal;
+}
+
+:where(.vx-label) {
+  font-size: var(--vx-label-font-size);
+  color: var(--vx-console-muted, var(--vx-color-shell-muted));
+}

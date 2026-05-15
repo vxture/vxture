@@ -43,6 +43,8 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("agent-studio/vela/src/styles/vela-tool.css"), "Vela tool.css"],
   [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],
   [normalize("business/ruyin/src/styles/ruyin-base.css"), "Ruyin base.css"],
+  [normalize("packages/design/design-system/src/styles/auth.css"), "DS auth.css"],
+  [normalize("packages/design/design-system/src/styles/components.css"), "DS components.css"],
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
   [normalize("packages/design/design-system/src/styles/console-shell-chrome.css"), "DS console shell chrome.css"],
   [normalize("packages/design/design-system/src/styles/console-shell-layout.css"), "DS console shell layout.css"],
@@ -412,6 +414,42 @@ const rules = [
           file,
           1,
           "DS console-* 具体规则叶子超过 8KB；请按 Console 体验职责拆分，并让当前文件保持 @import 聚合。",
+        ),
+      ];
+    },
+  },
+  {
+    id: "ds/no-large-components-style-leaf",
+    description: "DS components-* 具体规则叶子不能继续膨胀为大入口。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!/^packages\/design\/design-system\/src\/styles\/components-[^/]+\.css$/.test(normalized)) return [];
+      if (statSync(file).size <= 8000) return [];
+      const content = readFileSync(file, "utf8");
+      if (isImportOnlyStyleContent(content)) return [];
+      return [
+        violation(
+          file,
+          1,
+          "DS components-* 具体规则叶子超过 8KB；请按基础组件职责拆分，并让当前文件保持 @import 聚合。",
+        ),
+      ];
+    },
+  },
+  {
+    id: "ds/no-large-auth-style-leaf",
+    description: "DS auth-* 具体规则叶子不能继续膨胀为大入口。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!/^packages\/design\/design-system\/src\/styles\/auth-[^/]+\.css$/.test(normalized)) return [];
+      if (statSync(file).size <= 8000) return [];
+      const content = readFileSync(file, "utf8");
+      if (isImportOnlyStyleContent(content)) return [];
+      return [
+        violation(
+          file,
+          1,
+          "DS auth-* 具体规则叶子超过 8KB；请按认证体验职责拆分，并让当前文件保持 @import 聚合。",
         ),
       ];
     },
@@ -951,6 +989,7 @@ function isDirectUiEngineDependency(dependency) {
 function isDsSemanticStyleFile(normalized) {
   return (
     DS_SEMANTIC_STYLE_PATHS.has(normalized) ||
+    /^packages\/design\/design-system\/src\/styles\/components-[\w-]+\.css$/.test(normalized) ||
     /^packages\/design\/design-system\/src\/styles\/platform-[\w-]+\.css$/.test(normalized)
   );
 }

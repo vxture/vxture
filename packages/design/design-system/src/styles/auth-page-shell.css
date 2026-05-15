@@ -1,0 +1,101 @@
+/**
+ * auth-page-shell.css - 认证页页面级变量、基线和默认背景。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-auth-page {
+  --vx-auth-accent: var(--vx-color-auth-accent);
+  --vx-auth-accent-light: var(--vx-color-auth-accent-light);
+  --vx-auth-border: var(--vx-color-auth-border);
+  --vx-auth-border-active: var(--vx-color-auth-border-active);
+  --vx-auth-text: var(--vx-color-auth-text);
+  --vx-auth-secondary: var(--vx-color-auth-secondary);
+  --vx-auth-muted: var(--vx-color-auth-muted);
+  --vx-auth-error: var(--vx-color-error);
+  --vx-auth-success: var(--vx-color-success);
+  --vx-auth-page-min-height: 100vh;
+  --vx-auth-header-height: 64px;
+  --vx-auth-header-max-width: 80rem;
+  --vx-auth-header-padding-x: 1rem;
+  --vx-auth-brand-gap: 0.5rem;
+  --vx-auth-brand-radius: 0.375rem;
+  --vx-auth-brand-focus-ring: 0 0 0 2px transparent, 0 0 0 4px var(--vx-color-auth-accent-light);
+  --vx-auth-brand-logo-size: 24px;
+  --vx-auth-brand-title-size: 1.5rem;
+  --vx-auth-brand-title-line-height: 2rem;
+  --vx-auth-header-actions-gap: var(--vx-auth-gap-xs);
+  --vx-auth-icon-button-size: 34px;
+  --vx-auth-icon-button-radius: 8px;
+  --vx-auth-icon-button-shadow: 0 4px 14px color-mix(in srgb, var(--vx-color-gray-900) 4%, transparent);
+  --vx-auth-icon-button-blur: 10px;
+  --vx-auth-hover-lift: -1px;
+  --vx-auth-locale-popover-offset: 10px;
+  --vx-auth-locale-panel-width: 190px;
+  --vx-auth-locale-panel-gap: 4px;
+  --vx-auth-locale-panel-padding: 6px;
+  --vx-auth-locale-panel-radius: 10px;
+  --vx-auth-locale-panel-shadow:
+    0 18px 44px color-mix(in srgb, var(--vx-color-gray-900) 13%, transparent),
+    0 4px 12px color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  --vx-auth-locale-panel-blur: 16px;
+  --vx-auth-locale-option-height: 38px;
+  --vx-auth-locale-option-gap: 9px;
+  --vx-auth-locale-option-padding: 7px 9px;
+  --vx-auth-locale-option-radius: 7px;
+  --vx-auth-locale-flag-width: 22px;
+  --vx-auth-locale-flag-size: 15px;
+  --vx-auth-locale-text-gap: 1px;
+  --vx-auth-locale-title-size: 12.5px;
+  --vx-auth-locale-meta-size: 11px;
+  --vx-auth-text-3xs: 10px;
+  --vx-auth-text-2xs: 11px;
+  --vx-auth-text-xs: 12px;
+  --vx-auth-text-sm: 13px;
+  --vx-auth-text-md: 14px;
+  --vx-auth-text-lg: 18px;
+  --vx-auth-text-xl: 20px;
+  --vx-auth-text-2xl: 24px;
+  --vx-auth-gap-xs: 8px;
+  --vx-auth-gap-sm: 10px;
+  --vx-auth-gap-md: 12px;
+  --vx-auth-gap-lg: 14px;
+  --vx-auth-radius-sm: 7px;
+  --vx-auth-radius-md: 8px;
+  --vx-auth-radius-lg: 12px;
+  --vx-auth-radius-pill: 999px;
+  --vx-auth-padding-sm: 9px 10px;
+  --vx-auth-padding-md: 11px 13px;
+  --vx-auth-padding-lg: 12px;
+  --vx-auth-badge-padding: 8px 12px;
+  --vx-auth-input-padding: 10px 14px 10px 44px;
+  --vx-auth-main-padding: 18px clamp(24px, 5vw, 80px);
+  --vx-auth-card-width: min(1180px, 100%);
+  --vx-auth-card-height: min(620px, calc(100vh - 168px));
+  --vx-auth-card-min-height: 540px;
+  --vx-auth-card-border-width: 1px;
+  --vx-auth-card-radius: 16px;
+  --vx-auth-card-shadow:
+    0 20px 60px color-mix(in srgb, var(--vx-color-gray-900) 12%, transparent),
+    0 4px 16px color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent);
+  --vx-auth-grid-size: 44px;
+  --vx-auth-grid-line-width: 1px;
+  min-height: var(--vx-auth-page-min-height);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--vx-auth-bg, none) center / cover no-repeat fixed, var(--vx-color-auth-background);
+  color: var(--vx-auth-text);
+  font-family: var(--font-sans);
+  font-feature-settings: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+.vx-auth-page--default-bg {
+  --vx-auth-bg: url("/images/login-bg-light.jpg");
+}
