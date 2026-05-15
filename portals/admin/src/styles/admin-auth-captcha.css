@@ -1,1 +1,4 @@
-@import "./admin-auth-captcha-content.css";
+@import "./admin-auth-captcha-content-modal.css";
+@import "./admin-auth-captcha-content-surface-slider.css";
+@import "./admin-auth-captcha-content-target-piece.css";
+@import "./admin-auth-captcha-content-handle-state.css";
