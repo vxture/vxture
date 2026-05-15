@@ -10,10 +10,10 @@
 .vx-assistant-panel {
   border-left: var(--vx-control-border-width) solid var(--vx-console-border);
   background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
-  box-shadow: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-brand-800) 24%, transparent);
+  box-shadow: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-ai) 24%, transparent);
 }
 
 .dark .vx-assistant-panel {
   background: color-mix(in srgb, var(--vx-color-background) 96%, transparent);
-  box-shadow: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-primary) 22%, transparent);
+  box-shadow: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-ai) 22%, transparent);
 }

@@ -139,7 +139,7 @@
 
 .admin-feature-tag--beta {
   background: transparent;
-  color: var(--vx-color-auth-accent);
+  color: var(--vx-color-ai);
 }
 
 .admin-shell-sidebar__assistant-button {
@@ -200,7 +200,7 @@
 
 .admin-shell-sidebar__assistant-button:hover,
 .admin-shell-sidebar__assistant-button:focus-visible {
-  background: transparent;
-  color: var(--vx-console-brand-strong);
+  background: var(--vx-color-ai-soft);
+  color: var(--vx-color-ai-foreground);
   outline: none;
 }

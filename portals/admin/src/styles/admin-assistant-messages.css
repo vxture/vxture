@@ -16,15 +16,15 @@
 
 .vx-assistant-message--user {
   justify-self: end;
-  border-color: var(--vx-shell-line, color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent));
-  background: var(--vx-shell-active-subtle, color-mix(in srgb, var(--vx-color-auth-accent) 8%, transparent));
-  color: var(--vx-console-brand-strong);
+  border-color: var(--vx-color-ai-border);
+  background: var(--vx-color-ai-soft);
+  color: var(--vx-color-ai-foreground);
 }
 
 .vx-assistant-message--assistant {
   justify-self: start;
-  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent));
-  background: color-mix(in srgb, var(--vx-color-white) 68%, transparent);
+  border-color: var(--vx-color-ai-border);
+  background: color-mix(in srgb, var(--vx-color-ai-surface) 78%, var(--vx-color-white));
 }
 
 .vx-assistant-message--error {
@@ -34,44 +34,44 @@
 }
 
 .vx-assistant-message--pending {
-  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-brand-800) 6%, transparent));
-  background: color-mix(in srgb, var(--vx-color-white) 54%, transparent);
-  color: var(--vx-console-muted);
+  border-color: var(--vx-color-ai-border);
+  background: color-mix(in srgb, var(--vx-color-ai-surface) 62%, transparent);
+  color: var(--vx-color-ai-foreground);
 }
 
 .vx-assistant-message--stopped {
   border-color: color-mix(
     in srgb,
-    var(--vx-shell-muted, var(--vx-color-gray-500)) 16%,
+    var(--vx-color-spark) 22%,
     transparent
   );
-  background: color-mix(in srgb, var(--vx-color-gray-50) 64%, transparent);
+  background: color-mix(in srgb, var(--vx-color-spark-soft) 64%, transparent);
   color: var(--vx-shell-muted, var(--vx-color-gray-500));
 }
 
 .dark .vx-assistant-message--assistant {
-  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  border-color: var(--vx-color-ai-border);
   background: color-mix(
     in srgb,
-    var(--vx-shell-surface, color-mix(in srgb, var(--vx-color-gray-900) 56%, transparent)) 88%,
+    var(--vx-color-ai-surface) 88%,
     transparent
   );
 }
 
 .dark .vx-assistant-message--pending {
-  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  border-color: var(--vx-color-ai-border);
   background: color-mix(
     in srgb,
-    var(--vx-shell-surface, var(--vx-color-shell-panel)) 78%,
+    var(--vx-color-ai-soft) 78%,
     transparent
   );
 }
 
 .dark .vx-assistant-message--stopped {
-  border-color: var(--vx-shell-line-soft, color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent));
+  border-color: color-mix(in srgb, var(--vx-color-spark) 22%, transparent);
   background: color-mix(
     in srgb,
-    var(--vx-shell-surface, color-mix(in srgb, var(--vx-color-gray-900) 44%, transparent)) 72%,
+    var(--vx-color-spark-soft) 72%,
     transparent
   );
   color: var(--vx-shell-muted, var(--vx-color-text-muted));
@@ -105,7 +105,7 @@
   border: 0;
   border-radius: var(--vx-shell-radius-pill, var(--vx-radius-full));
   background: transparent;
-  color: var(--vx-console-brand-strong);
+  color: var(--vx-color-ai-foreground);
   padding: var(--vx-admin-assistant-space-xs) 0;
   font-size: var(--vx-shell-caption-size, var(--vx-admin-assistant-text-caption));
   font-weight: 720;
@@ -114,7 +114,7 @@
 }
 
 .vx-assistant-message__actions button:hover:not(:disabled) {
-  color: var(--vx-console-brand);
+  color: var(--vx-color-ai);
 }
 
 .vx-assistant-message__actions button:disabled {
@@ -126,12 +126,12 @@
   display: inline-flex;
   align-items: center;
   gap: var(--vx-admin-assistant-space-4xl);
-  color: var(--vx-shell-muted, var(--vx-color-text-muted));
+  color: var(--vx-color-ai-foreground);
   font-weight: 640;
 }
 
 .dark .vx-assistant-message__thinking {
-  color: var(--vx-shell-icon-muted, var(--vx-color-text-muted));
+  color: var(--vx-color-ai-foreground);
 }
 
 .vx-assistant-message__loader {
@@ -140,11 +140,11 @@
   height: var(--vx-admin-assistant-loader-size);
   display: inline-block;
   box-sizing: border-box;
-  border: var(--vx-admin-assistant-border-width-strong) solid color-mix(in srgb, var(--vx-console-brand) 18%, transparent);
-  border-top-color: var(--vx-console-brand);
+  border: var(--vx-admin-assistant-border-width-strong) solid color-mix(in srgb, var(--vx-color-spark) 18%, transparent);
+  border-top-color: var(--vx-color-spark);
   border-right-color: color-mix(
     in srgb,
-    var(--vx-console-brand) 46%,
+    var(--vx-color-ai) 46%,
     transparent
   );
   border-radius: var(--vx-radius-full);
@@ -153,11 +153,11 @@
 }
 
 .dark .vx-assistant-message__loader {
-  border-color: color-mix(in srgb, var(--vx-console-brand) 22%, transparent);
-  border-top-color: var(--vx-console-brand-strong);
+  border-color: color-mix(in srgb, var(--vx-color-spark) 22%, transparent);
+  border-top-color: var(--vx-color-spark);
   border-right-color: color-mix(
     in srgb,
-    var(--vx-console-brand-strong) 58%,
+    var(--vx-color-ai) 58%,
     transparent
   );
 }
