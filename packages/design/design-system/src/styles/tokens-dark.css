@@ -30,6 +30,17 @@
   --vx-color-primary-soft: rgba(96, 165, 250, 0.14);
   --vx-color-primary-subtle: rgba(96, 165, 250, 0.13);
 
+  --vx-color-ai: var(--vx-color-ai-400);
+  --vx-color-ai-hover: var(--vx-color-ai-300);
+  --vx-color-ai-surface: color-mix(in srgb, var(--vx-color-ai-500) 16%, transparent);
+  --vx-color-ai-soft: color-mix(in srgb, var(--vx-color-ai-500) 20%, transparent);
+  --vx-color-ai-border: color-mix(in srgb, var(--vx-color-ai-400) 34%, transparent);
+  --vx-color-ai-foreground: var(--vx-color-ai-300);
+  --vx-color-ai-cyan: var(--vx-color-ai-cyan-400);
+  --vx-color-ai-cyan-soft: color-mix(in srgb, var(--vx-color-ai-cyan-400) 18%, transparent);
+  --vx-color-spark: var(--vx-color-spark-400);
+  --vx-color-spark-soft: color-mix(in srgb, var(--vx-color-spark-400) 18%, transparent);
+
   --vx-color-text-primary: #e6edf7;
   --vx-color-text-secondary: #cbd5e1;
   --vx-color-text-muted: #95a3b8;

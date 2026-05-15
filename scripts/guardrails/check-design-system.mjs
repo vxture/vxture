@@ -278,6 +278,20 @@ const rules = [
     },
   },
   {
+    id: "ds/no-app-ai-primitive-token",
+    description: "应用层不能直接消费 AI primitive 色阶；AI 场景必须使用 DS 语义 token。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return null;
+      if (!hasAiPrimitiveTokenUsage(line)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "应用层不能直接消费 AI primitive 色阶；改用 --vx-color-ai / --vx-color-ai-soft / --vx-color-ai-cyan / --vx-color-spark 等语义 token 或 bg-vx-ai-soft 等语义工具类。",
+        line,
+      );
+    },
+  },
+  {
     id: "ds/no-extracted-style-role-dimension-token",
     description: "应用 src/styles 抽出模块不能消费角色尺度/布局 token；模块样式必须使用组件语义 token。",
     checkLine(file, line, lineNumber) {
@@ -831,6 +845,13 @@ function isHairlineOnly(value) {
 function stripLineComment(line) {
   const commentIndex = line.indexOf("//");
   return commentIndex >= 0 ? line.slice(0, commentIndex) : line;
+}
+
+function hasAiPrimitiveTokenUsage(line) {
+  return (
+    /--(?:color-)?vx-(?:color-)?(?:ai|ai-cyan|spark)-\d{2,3}\b/.test(line) ||
+    /\b(?:bg|text|border|ring|from|via|to|fill|stroke|outline|decoration)-vx-(?:ai|ai-cyan|spark)-\d{2,3}\b/.test(line)
+  );
 }
 
 function isFrontendSource(file) {

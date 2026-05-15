@@ -1,0 +1,38 @@
+/**
+ * tokens-gradients.css - 品牌与 AI 场景渐变 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  --vx-gradient-aurora:
+    linear-gradient(
+      135deg,
+      var(--vx-color-brand-950) 0%,
+      var(--vx-color-brand-600) 35%,
+      var(--vx-color-ai-500) 72%,
+      var(--vx-color-ai-cyan-500) 100%
+    );
+  --vx-gradient-brand:
+    linear-gradient(
+      145deg,
+      var(--vx-color-brand-900) 0%,
+      var(--vx-color-brand-700) 50%,
+      var(--vx-color-brand-600) 100%
+    );
+  --vx-gradient-ai-duo:
+    linear-gradient(
+      135deg,
+      var(--vx-color-ai-500) 0%,
+      var(--vx-color-ai-cyan-500) 100%
+    );
+  --vx-gradient-spark-pulse:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--vx-color-spark-400) 60%, transparent) 0%,
+      transparent 70%
+    );
+}

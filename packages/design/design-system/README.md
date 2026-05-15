@@ -1,7 +1,7 @@
 # Vxture Design System
 
-版本：1.2.2
-最后更新：2026-05-14
+版本：1.3.0
+最后更新：2026-05-15
 
 `@vxture/design-system` 是 Vxture 前端的设计系统包，负责设计 token、基础 UI 原语、平台级可复用模式、主题、密度、图标隔离层和稳定样式入口。应用端负责业务语义组装，不在本地重新定义基础控件、底层 UI 引擎或 `--vx-*` token。
 
@@ -94,6 +94,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 - Tokens：TS token 文件只暴露 `var(--vx-*)` 引用，运行时值源在 `styles/tokens.css`。
 - Hooks：`useBreakpoint`、`useMediaQuery`、`useMounted`、`useControllableState`、`useFullscreen`。
 - Utils：`cn()`。
+
+### AI 色彩语义
+
+DS 1.3.0 将 Quantum AI 色板沉淀为 Foundation primitive、semantic token、Tailwind `@theme` bridge 三层。应用端只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark` 和 `--vx-gradient-aurora` 等语义值；`--vx-color-ai-500`、`--vx-color-ai-cyan-500`、`--vx-color-spark-400` 这类 primitive 色阶只允许 DS 内部组装。本批不替换现有品牌主色，也不自动启用 auth / shell 的 aurora 视觉。
 
 ## CSS 分层
 

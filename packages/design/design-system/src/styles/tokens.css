@@ -9,6 +9,7 @@
 
 @import "./tokens-theme.css";
 @import "./tokens-colors-primitives.css";
+@import "./tokens-gradients.css";
 @import "./tokens-colors-semantic.css";
 @import "./tokens-colors-shell.css";
 @import "./tokens-foundation.css";

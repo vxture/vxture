@@ -8,7 +8,7 @@
 | 项 | 值 |
 |----|-----|
 | 包名 | `@vxture/design-system` |
-| 版本 | `1.2.2` |
+| 版本 | `1.3.0` |
 | 路径 | `packages/design/design-system/` |
 | @layer | `Presentation` |
 | 消费方 | `portals/*` · `business/*` · `agent-studio/*` |
@@ -64,6 +64,8 @@ src/
 ## CSS 分层
 
 - `tokens.css` 是 token runtime 稳定入口，只聚合 `tokens-*` 分层模块；外部消费者不得直接引用 `tokens-*`。
+- `tokens-colors-primitives.css` 持有品牌、状态和 AI primitive 色阶；`tokens-colors-semantic.css` 才是应用消费边界。
+- `tokens-gradients.css` 只定义品牌和 AI 场景渐变 token，不承载组件结构规则。
 - `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。
 - `console.css` 是 Console portal style pack 稳定入口，只聚合 `console-*` 模块。
 - `globals.css` 是标准消费者入口，聚合 DS 全局基线。
@@ -89,6 +91,8 @@ src/
 
 - 所有图标通过 `<Icon name="..." />` 使用；应用不得直接导入底层图标库。
 - CSS 变量运行时值只在 `styles/tokens.css` 入口及其 `tokens-*` 分层模块维护；TS token 文件只暴露 `var(--vx-*)`。
+- AI 色彩的 primitive 色阶只允许 DS 内部组装；应用只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark`、`--vx-gradient-aurora` 等语义 token。
+- Quantum AI 本批只新增 AI 专属语义层，不替换品牌主色，不自动切换 auth / shell 视觉。
 - DS semantic CSS 不直接消费 `--vx-component-metric-*` 兜底 token。
 - 新增公共能力必须同步 `package.json` exports、guardrail 白名单和使用文档。
 - 基础组件和跨应用 pattern 从 DS 导出；应用侧只做业务组装。

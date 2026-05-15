@@ -543,6 +543,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 3. 已完成：`pnpm lint:design` 增加 `ds/no-large-token-style-leaf`，防止新的 token 模块重新膨胀；`tokens-*` 被识别为 DS token owner，允许维护运行时 token 值。
 4. 已完成：`platform-*-tokens.css` 作用域变量组装文件已改名为 `*-bindings.css`；新增 `ds/no-misnamed-token-style-module`，禁止非 runtime token 层继续使用 `*-tokens.css` 命名。
 5. 分层边界：DS 只沉淀 token、基础组件语义类、跨应用 pattern 和 portal style pack；应用侧只组合业务场景，不定义 `--vx-*`、不直接消费底层 UI 引擎、不直接引用 DS 内部 `tokens-*` 文件。
+6. 已完成：Quantum AI 色板已按低风险方案从临时 patch 迁入 DS token 分层；新增 `tokens-gradients.css`，同步 AI 语义 token、Tailwind 语义 bridge、暗色主题覆盖、README、包说明和使用规范；新增 `ds/no-app-ai-primitive-token`，禁止应用侧直接消费 AI primitive 色阶。本批未替换品牌主色，未把 auth / shell 切换到 aurora 视觉；原始 patch 已归档到 `docs/design/tokens-quantum-ai.md`。
 
 ## 后续验收清单
 
@@ -550,6 +551,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 - `rg -n "tranvx" portals/website/src` 无结果。
 - `rg -n "#[0-9a-fA-F]{3,8}\b|rgba?\(" business agent-studio portals --glob "!**/public/**"` 仅在 DS token owner 或允许位置出现。
 - `rg -n -- "--vx-[\w-]+\s*:" portals business agent-studio --glob "*.css"` 的新增命中会被 `pnpm lint:design` 阻断。
+- `rg -n -- "--vx-color-ai-[0-9]|--vx-color-ai-cyan-[0-9]|--vx-color-spark-[0-9]|\\b(?:bg|text|border|ring|from|via|to)-vx-(?:ai|ai-cyan|spark)-[0-9]" portals business agent-studio` 无应用消费结果；新增命中会被 `ds/no-app-ai-primitive-token` 阻断。
 - `rg -n "@/components/ui|components/primitives" portals business agent-studio` 无业务源码结果。
 - `rg -n "@vxture/design-system/" portals business agent-studio packages --glob "*.ts" --glob "*.tsx" --glob "*.css"` 的结果仅允许 `/tokens`、`/types`、`/server` 和 package exports 暴露的 `styles/*`；无 `src/**` 或其他未授权深层导入。
 - `rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals business agent-studio --glob "package.json"` 无应用依赖清单结果。
