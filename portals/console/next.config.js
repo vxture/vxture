@@ -50,6 +50,7 @@ const turboAliases = {
 const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['@vxture/design-system'],
+  output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
   experimental: {
     webpackBuildWorker: false,
   },

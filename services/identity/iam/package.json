@@ -2,14 +2,12 @@
   "name": "@vxture/service-iam",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "description": "Identity and account authentication service",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "echo \"Build for service-iam\"",
-    "dev": "echo \"Dev mode for service-iam\"",
-    "type-check": "tsc --noEmit",
-    "test": "echo \"Test for service-iam\""
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
@@ -20,5 +18,8 @@
   "devDependencies": {
     "@types/pg": "^8.15.6",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

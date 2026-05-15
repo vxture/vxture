@@ -1,9 +1,9 @@
 {
   "name": "@vxture/core-database",
   "version": "1.0.0",
-  "description": "Vxture platform — unified DDL management via Prisma (account / tenancy / product / platform / support / commerce)",
-  "license": "MIT",
   "private": true,
+  "license": "MIT",
+  "description": "Vxture platform — unified DDL management via Prisma (account / tenancy / product / platform / support / commerce)",
   "scripts": {
     "migrate:dev": "prisma migrate dev --schema=prisma/schema.prisma",
     "migrate:deploy": "prisma migrate deploy --schema=prisma/schema.prisma",
@@ -13,7 +13,7 @@
     "studio": "prisma studio --schema=prisma/schema.prisma"
   },
   "dependencies": {
-    "@prisma/client": "6.19.3"
+    "@prisma/client": "^6.0.0"
   },
   "devDependencies": {
     "prisma": "^6.0.0"

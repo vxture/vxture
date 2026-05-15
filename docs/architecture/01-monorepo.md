@@ -34,7 +34,7 @@ vxture/
 │
 ├── agent-server/               # Agent 私有后端（fast-changing, private per agent）
 │   ├── ruyin/                  # @vxture/agent-server-ruyin
-│   ├── vela/                   # vela-server
+│   ├── vela/                   # @vxture/agent-server-vela
 │   └── agent-template/         # @vxture/agent-server-agent01（新 Agent 分叉模板）
 │
 ├── business/                   # 独立商业应用层（独立部署，独立治理）

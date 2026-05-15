@@ -2,18 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "rootDir": "../..",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "include": [
-    "src/**/*.ts",
-    "../../packages/shared/shared/src/**/*.ts",
-    "../../packages/core/auth/src/**/*.ts",
-    "../../packages/core/config/src/**/*.ts",
-    "../../services/identity/iam/src/**/*.ts",
-    "../../services/tenant/organization/src/**/*.ts",
-    "../../services/notification/mail/src/**/*.ts",
-    "../../services/notification/sms/src/**/*.ts"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

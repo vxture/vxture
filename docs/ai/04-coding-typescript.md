@@ -1,7 +1,7 @@
 # Vxture TypeScript Architecture
 
-**Version**: 1.2.0
-**Last Updated**: 2026-03-10
+**Version**: 1.3.0
+**Last Updated**: 2026-05-15
 **TypeScript Version**: 5.9.3
 **ECMAScript Target**: ES2023
 
@@ -49,25 +49,33 @@ vxture/
 
 Defines global TypeScript compiler rules inherited by all packages and applications.
 
-```json
+```jsonc
 {
   "compilerOptions": {
+    // 编译目标
     "target": "ES2023",
+    "lib": ["ES2023"],          // 不含 DOM；前端包在本地覆盖为 ["DOM", "DOM.Iterable", "ES2023"]
     "module": "ESNext",
     "moduleResolution": "bundler",
 
+    // 严格模式（禁止在子包中单独关闭）
     "strict": true,
-    "useDefineForClassFields": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
 
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
+    // 互操作
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "useDefineForClassFields": true,
+    "resolveJsonModule": true,
+
+    // 工具链
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   }
 }
 ```
@@ -171,26 +179,44 @@ Applies to: `packages/core/*`, `packages/ai/ai-sdk`, `packages/platform/*`,
 
 # 6. Layer-Specific Compiler Environment
 
-Different layers have different runtime environments and require adjusted settings:
+不同层的运行时环境不同，需在各包的 `tsconfig.json` 中做针对性补充。
 
-**Frontend packages** (`portals/`, `agent-studio/`, `design-system`, `platform-*`):
+**lib 分层策略**（最重要的差异点）：
 
-- Include `"lib": ["DOM", "ES2023"]`
-- React types via `@types/react`
-- `"jsx": "react-jsx"`
-- `"noEmit": true` for applications
+| 层 | `lib` | 说明 |
+|----|-------|------|
+| 服务端（bff、agent-server、services、core、shared） | 继承 base 的 `["ES2023"]` — **不需要在本地声明** | 无 DOM 类型，防止误用浏览器 API |
+| 前端（portals、agent-studio、design-system、platform-*） | `["DOM", "DOM.Iterable", "ES2023"]` — **必须在本地声明** | 覆盖 base，启用 DOM 类型 |
 
-**Server packages** (`bff/`, `agent-server/`, `services/`, `core-*`, `ai-sdk`):
+**NestJS 包**（bff、agent-server、services、core）额外需要：
 
-- Remove or restrict DOM lib
-- No React types or JSX
-- Must compile cleanly in Node.js environment
+```jsonc
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "types": ["node"]           // 可选，显式限制环境类型
+  }
+}
+```
 
-**Shared packages** (`@vxture/shared`, `@vxture/core-*`):
+**前端包**（portals、agent-studio）额外需要：
 
-- Must compile in both environments
-- Avoid DOM-specific and Node.js-specific APIs
-- Use runtime checks when environment-specific behavior is needed
+```jsonc
+{
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
+    "jsx": "preserve",          // Next.js 用 preserve；纯 React 库用 react-jsx
+    "noEmit": true,
+    "isolatedModules": true     // Next.js 要求
+  }
+}
+```
+
+**共享包**（`@vxture/shared`、`@vxture/core-*`）：
+
+- 继承 base `lib: ["ES2023"]`，禁止引用 DOM API 和 Node.js 专有 API
+- 若有环境差异行为，使用运行时检测（`typeof window !== "undefined"`）
 
 ---
 
@@ -264,15 +290,19 @@ Use `import type` for type-only imports.
 
 # 10. Strictness Policy
 
-The following compiler options are **mandatory and must never be disabled**:
+以下选项**全部在 `tsconfig.base.json` 中启用，禁止在任何子包中单独关闭**：
 
 ```
-strict: true
-noImplicitAny: true
-strictNullChecks: true
-noUncheckedIndexedAccess: true
+strict: true                    // 含 noImplicitAny、strictNullChecks 等
 exactOptionalPropertyTypes: true
+noUncheckedIndexedAccess: true
+noUnusedLocals: true
+noUnusedParameters: true
+noImplicitReturns: true
+noFallthroughCasesInSwitch: true
 ```
+
+> 不需要在子包的 tsconfig 中重复声明上述选项。
 
 Prohibited practices:
 

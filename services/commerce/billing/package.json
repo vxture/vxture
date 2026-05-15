@@ -1,14 +1,13 @@
 {
   "name": "@vxture/service-billing",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "计费管理服务 - 处理账单生成、支付处理、发票管理等功能",
+  "license": "MIT",
+  "description": "计费管理服务 - 账单生成、支付处理、发票管理",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "echo \"Build for service-billing\"",
-    "dev": "echo \"Dev mode for service-billing\"",
-    "test": "echo \"Test for service-billing\""
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
@@ -17,5 +16,11 @@
     "@vxture/core-api": "workspace:*",
     "@vxture/core-utils": "workspace:*",
     "class-validator": "^0.14.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

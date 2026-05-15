@@ -1,14 +1,13 @@
 {
   "name": "@vxture/service-subscription",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
-  "description": "订阅管理服务 - 处理套餐管理、订阅创建、更新、取消等功能",
+  "license": "MIT",
+  "description": "订阅管理服务 - 套餐管理、订阅创建、更新、取消",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "build": "echo \"Build for service-subscription\"",
-    "dev": "echo \"Dev mode for service-subscription\"",
-    "test": "echo \"Test for service-subscription\""
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
@@ -16,5 +15,11 @@
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
     "class-validator": "^0.14.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
