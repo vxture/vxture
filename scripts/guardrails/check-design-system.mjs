@@ -304,6 +304,34 @@ const rules = [
     },
   },
   {
+    id: "ds/no-generic-content-style-module",
+    description: "前端和 DS 样式模块不能使用 *-content.css 泛化命名。",
+    checkFile(file) {
+      if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return [];
+      const normalized = normalize(file);
+      const isDesignSystemStyle = /^packages\/design\/design-system\/src\/styles\/[^/]+-content\.css$/.test(normalized);
+      const isAppStyle = /^(portals|agent-studio|business)\/[^/]+\/src\/styles\/[^/]+-content\.css$/.test(normalized);
+      if (!isDesignSystemStyle && !isAppStyle) return [];
+      return [
+        violation(
+          file,
+          1,
+          "CSS 文件不能使用 *-content.css 泛化命名；请按 brand-hero/navigation-tabs/data-table/toolbar/pages/shell 等职责命名。",
+        ),
+      ];
+    },
+    checkLine(file, line, lineNumber) {
+      if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) return null;
+      if (!/@import\s+["'][^"']*-content\.css["']/.test(line)) return null;
+      return violation(
+        file,
+        lineNumber,
+        "CSS 入口不能 import *-content.css 泛化模块；请改为语义职责文件名。",
+        line,
+      );
+    },
+  },
+  {
     id: "ds/no-global-concrete-style-import",
     description: "前端 globals 只能导入受入口约束的稳定样式入口，不能直接导入具体规则叶子。",
     checkLine(file, line, lineNumber) {

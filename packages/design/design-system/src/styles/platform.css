@@ -14,4 +14,8 @@
 @import "./platform-models.css";
 @import "./platform-access.css";
 @import "./platform-shell.css";
-@import "./platform-content.css";
+@import "./platform-brand-hero.css";
+@import "./platform-navigation-tabs.css";
+@import "./platform-data-table.css";
+@import "./platform-toolbar.css";
+@import "./platform-responsive.css";

@@ -227,6 +227,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    第二阶段第十四批：已将剩余 11 个当前 CSS 文件名中的 `content` 语义残留重命名为 modal/surface/target/handle、metrics/domains/panels/risks、page/main/core 等业务语义名；admin CSS 图谱保持 161 个文件、34 个 import-only 入口、127 个具体规则叶子且无 8KB+ 叶子。
    第二阶段第十五批：已新增 `ds/no-redundant-style-wrapper`，非 `globals.css` 直连的应用 `src/styles` import-only wrapper 若只转发一个子模块会失败，防止单子中间层回流。
    第二阶段第十六批：已将 website、Vela、Ruyin 当前 5 个 `*-content.css` 样式叶子改名为业务语义文件：marketing assembly、legal pages、chat shell、tool result、base document；应用入口继续保持 import-only，只做本应用组装，不把业务页面结构继续下沉到 DS。
+   第二阶段第十七批：已拆分 DS `platform-content.css` 泛化模块，按 brand hero、navigation tabs、data table、toolbar、responsive 五个职责承接规则；`platform.css` 继续作为 import-only style pack 入口。同步新增 `ds/no-generic-content-style-module`，阻止 DS 和应用样式模块重新出现 `*-content.css` 泛化命名。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性
