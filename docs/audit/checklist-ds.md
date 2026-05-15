@@ -224,6 +224,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    第二阶段第十一批：`ds/no-large-extracted-style-leaf` 阈值已从 12KB 收紧到 8KB；全应用当前没有超过 8KB 的具体规则叶子，import-only 聚合入口继续豁免。
    第二阶段第十二批：已新增 CSS 图谱守卫，`ds/no-missing-css-import` 拦截断链相对 `@import`，`ds/no-unreachable-app-style-module` 要求应用 `src/styles/*.css` 必须能从对应 `src/app/globals.css` 图谱到达。
    第二阶段第十三批：已折叠 admin 5 个单用途 `*-content.css` 中间 wrapper，将子模块 import 上移到稳定入口；admin CSS 文件数由 166 收敛到 161，import-only 入口由 39 收敛到 34，具体规则叶子保持 127 且无 8KB+ 叶子。
+   第二阶段第十四批：已将剩余 11 个当前 CSS 文件名中的 `content` 语义残留重命名为 modal/surface/target/handle、metrics/domains/panels/risks、page/main/core 等业务语义名；admin CSS 图谱保持 161 个文件、34 个 import-only 入口、127 个具体规则叶子且无 8KB+ 叶子。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
 
 ## 维度一：DS 系统自身规范性
