@@ -576,6 +576,14 @@ for (const item of collectUnreachableAppStyleViolations(files)) {
   violations.push({ rule: unreachableAppStyleRule, ...item });
 }
 
+const redundantStyleWrapperRule = {
+  id: "ds/no-redundant-style-wrapper",
+  description: "应用 src/styles 非顶层样式 wrapper 不能只转发一个子模块。",
+};
+for (const item of collectRedundantStyleWrapperViolations(files)) {
+  violations.push({ rule: redundantStyleWrapperRule, ...item });
+}
+
 if (UPDATE_BASELINE) {
   updateBaseline(violations);
   process.exit(0);
@@ -761,6 +769,53 @@ function collectUnreachableAppStyleViolations(sourceFiles) {
   }
 
   return items;
+}
+
+function collectRedundantStyleWrapperViolations(sourceFiles) {
+  const fileByPath = new Map(sourceFiles.map((file) => [normalize(path.relative(ROOT, file)), file]));
+  const globalsStyleEntries = collectGlobalsStyleEntries(sourceFiles);
+  const items = [];
+
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!/^(portals|agent-studio|business)\/[^/]+\/src\/styles\/.+\.css$/.test(normalized)) continue;
+    if (globalsStyleEntries.has(normalized)) continue;
+
+    const content = readFileSync(file, "utf8");
+    if (!isImportOnlyStyleContent(content)) continue;
+
+    const localImports = findCssImports(content)
+      .filter((item) => item.specifier.startsWith("."))
+      .map((item) => normalize(path.relative(ROOT, path.resolve(path.dirname(file), item.specifier))))
+      .filter((target) => fileByPath.has(target));
+
+    if (localImports.length !== 1) continue;
+    items.push(
+      violation(
+        file,
+        1,
+        "非 globals 直连的 import-only 样式 wrapper 不能只转发一个子模块；请折叠该层或补充真实语义聚合职责。",
+        normalized,
+      ),
+    );
+  }
+
+  return items;
+}
+
+function collectGlobalsStyleEntries(sourceFiles) {
+  const entries = new Set();
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!/^(portals|agent-studio|business)\/[^/]+\/src\/app\/globals\.css$/.test(normalized)) continue;
+
+    const content = readFileSync(file, "utf8");
+    for (const item of findCssImports(content)) {
+      if (!item.specifier.startsWith("../styles/")) continue;
+      entries.add(normalize(path.relative(ROOT, path.resolve(path.dirname(file), item.specifier))));
+    }
+  }
+  return entries;
 }
 
 function collectReachableCssFiles(entry, fileByPath) {
