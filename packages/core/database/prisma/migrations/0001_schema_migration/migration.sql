@@ -43,13 +43,13 @@ ALTER TABLE "identity"."account"
 ALTER TABLE "identity"."account" ALTER COLUMN "status" SET DEFAULT 'active';
 
 ALTER TABLE "identity"."account"
-  ADD COLUMN "account_source"      VARCHAR(32) NOT NULL DEFAULT 'web',
-  ADD COLUMN "email_verified_at"   TIMESTAMPTZ(6),
-  ADD COLUMN "phone_verified_at"   TIMESTAMPTZ(6),
-  ADD COLUMN "login_count"         INT NOT NULL DEFAULT 0,
-  ADD COLUMN "login_failure_count" INT NOT NULL DEFAULT 0,
-  ADD COLUMN "mfa_enabled"         BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN "locked_until"        TIMESTAMPTZ(6);
+  ADD COLUMN IF NOT EXISTS "account_source"      VARCHAR(32) NOT NULL DEFAULT 'web',
+  ADD COLUMN IF NOT EXISTS "email_verified_at"   TIMESTAMPTZ(6),
+  ADD COLUMN IF NOT EXISTS "phone_verified_at"   TIMESTAMPTZ(6),
+  ADD COLUMN IF NOT EXISTS "login_count"         INT NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "login_failure_count" INT NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "mfa_enabled"         BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS "locked_until"        TIMESTAMPTZ(6);
 
 CREATE INDEX "idx_account_source" ON "identity"."account"("account_source");
 
@@ -82,14 +82,14 @@ ALTER TABLE "identity"."account" DROP COLUMN "password_hash";
 
 -- identity.account_profile: add country_code and metadata
 ALTER TABLE "identity"."account_profile"
-  ADD COLUMN "country_code" CHAR(2),
-  ADD COLUMN "metadata"     JSONB;
+  ADD COLUMN IF NOT EXISTS "country_code" CHAR(2),
+  ADD COLUMN IF NOT EXISTS "metadata"     JSONB;
 
 -- identity.oauth_state: add PKCE / OIDC fields
 ALTER TABLE "identity"."oauth_state"
-  ADD COLUMN "code_verifier" VARCHAR(128),
-  ADD COLUMN "nonce"         VARCHAR(128),
-  ADD COLUMN "ip_address"    VARCHAR(64);
+  ADD COLUMN IF NOT EXISTS "code_verifier" VARCHAR(128),
+  ADD COLUMN IF NOT EXISTS "nonce"         VARCHAR(128),
+  ADD COLUMN IF NOT EXISTS "ip_address"    VARCHAR(64);
 
 -- New identity tables
 
@@ -167,17 +167,17 @@ ALTER TABLE "tenant"."tenant_setting"
 
 -- Add is_encrypted to tenant_setting
 ALTER TABLE "tenant"."tenant_setting"
-  ADD COLUMN "is_encrypted" BOOLEAN NOT NULL DEFAULT false;
+  ADD COLUMN IF NOT EXISTS "is_encrypted" BOOLEAN NOT NULL DEFAULT false;
 
 -- tenant.tenant: add PLG / ownership / region fields
 ALTER TABLE "tenant"."tenant"
-  ADD COLUMN "region"           VARCHAR(64) NOT NULL DEFAULT 'cn-hangzhou',
-  ADD COLUMN "source"           VARCHAR(64),
-  ADD COLUMN "owner_account_id" UUID,
-  ADD COLUMN "is_trial"         BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN "trial_ends_at"    TIMESTAMPTZ(6),
-  ADD COLUMN "converted_at"     TIMESTAMPTZ(6),
-  ADD COLUMN "metadata"         JSONB;
+  ADD COLUMN IF NOT EXISTS "region"           VARCHAR(64) NOT NULL DEFAULT 'cn-hangzhou',
+  ADD COLUMN IF NOT EXISTS "source"           VARCHAR(64),
+  ADD COLUMN IF NOT EXISTS "owner_account_id" UUID,
+  ADD COLUMN IF NOT EXISTS "is_trial"         BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS "trial_ends_at"    TIMESTAMPTZ(6),
+  ADD COLUMN IF NOT EXISTS "converted_at"     TIMESTAMPTZ(6),
+  ADD COLUMN IF NOT EXISTS "metadata"         JSONB;
 
 CREATE INDEX "idx_tenants_is_trial" ON "tenant"."tenant"("is_trial");
 
@@ -194,8 +194,8 @@ DROP INDEX "tenant"."idx_tm_role_id";
 ALTER TABLE "tenant"."tenant_member" DROP COLUMN "role_id";
 
 ALTER TABLE "tenant"."tenant_member"
-  ADD COLUMN "invited_by" UUID,
-  ADD COLUMN "metadata"   JSONB;
+  ADD COLUMN IF NOT EXISTS "invited_by" UUID,
+  ADD COLUMN IF NOT EXISTS "metadata"   JSONB;
 
 ALTER TABLE "tenant"."tenant_member"
   ADD CONSTRAINT "tenant_member_invited_by_fkey"
@@ -264,15 +264,15 @@ ALTER INDEX "idx_trp_tenant_id"     RENAME TO "idx_iam_rp_tenant_id";
 
 -- iam.role: add ui_config
 ALTER TABLE "iam"."role"
-  ADD COLUMN "ui_config" JSONB;
+  ADD COLUMN IF NOT EXISTS "ui_config" JSONB;
 
 -- iam.permission: remove tenant-scoped columns, rename status → is_active, add new fields
 ALTER TABLE "iam"."permission" DROP COLUMN "tenant_id";
 ALTER TABLE "iam"."permission" DROP COLUMN "permission_scope";
 ALTER TABLE "iam"."permission" RENAME COLUMN "status" TO "is_active";
 ALTER TABLE "iam"."permission"
-  ADD COLUMN "module"     VARCHAR(64),
-  ADD COLUMN "is_visible" BOOLEAN NOT NULL DEFAULT true;
+  ADD COLUMN IF NOT EXISTS "module"     VARCHAR(64),
+  ADD COLUMN IF NOT EXISTS "is_visible" BOOLEAN NOT NULL DEFAULT true;
 
 DROP INDEX IF EXISTS "idx_tp_status";
 CREATE INDEX "idx_iam_perm_module" ON "iam"."permission"("module");
@@ -385,10 +385,10 @@ DROP INDEX "ops"."idx_platform_admin_status_code";
 
 -- Add security fields to ops.admin
 ALTER TABLE "ops"."admin"
-  ADD COLUMN "login_failure_count" INT NOT NULL DEFAULT 0,
-  ADD COLUMN "mfa_enabled"         BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN "locked_until"        TIMESTAMPTZ(6),
-  ADD COLUMN "password_changed_at" TIMESTAMPTZ(6);
+  ADD COLUMN IF NOT EXISTS "login_failure_count" INT NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS "mfa_enabled"         BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS "locked_until"        TIMESTAMPTZ(6),
+  ADD COLUMN IF NOT EXISTS "password_changed_at" TIMESTAMPTZ(6);
 
 CREATE INDEX "idx_ops_admin_deleted_at" ON "ops"."admin"("deleted_at");
 CREATE INDEX "idx_ops_admin_email"      ON "ops"."admin"("email");
@@ -399,7 +399,7 @@ CREATE INDEX "idx_ops_admin_status"     ON "ops"."admin"("status");
 
 -- ops.permission: rename status → is_active, add is_visible
 ALTER TABLE "ops"."permission" RENAME COLUMN "status" TO "is_active";
-ALTER TABLE "ops"."permission" ADD COLUMN "is_visible" BOOLEAN NOT NULL DEFAULT true;
+ALTER TABLE "ops"."permission" ADD COLUMN IF NOT EXISTS "is_visible" BOOLEAN NOT NULL DEFAULT true;
 
 DROP INDEX "ops"."idx_perm_status";
 DROP INDEX "ops"."idx_perm_parent_id";
@@ -419,8 +419,8 @@ DROP INDEX "ops"."idx_platform_config_group";
 DROP INDEX "ops"."uk_platform_config_key";
 
 ALTER TABLE "ops"."setting"
-  ADD COLUMN "is_encrypted"    BOOLEAN NOT NULL DEFAULT false,
-  ADD COLUMN "validation_rule" VARCHAR(512);
+  ADD COLUMN IF NOT EXISTS "is_encrypted"    BOOLEAN NOT NULL DEFAULT false,
+  ADD COLUMN IF NOT EXISTS "validation_rule" VARCHAR(512);
 
 CREATE UNIQUE INDEX "uk_ops_setting_key"     ON "ops"."setting"("config_key");
 CREATE INDEX        "idx_ops_setting_group"  ON "ops"."setting"("config_group");
@@ -731,17 +731,17 @@ CREATE INDEX "idx_tpm_status"    ON "commerce"."tenant_payment_method"("status")
 
 -- support.ticket: add account_id, assignee_id, SLA/CSAT/tag fields
 ALTER TABLE "support"."ticket"
-  ADD COLUMN "account_id"           UUID,
-  ADD COLUMN "assignee_id"          UUID,
-  ADD COLUMN "tags"                 VARCHAR(64)[] NOT NULL DEFAULT '{}',
-  ADD COLUMN "satisfaction_score"   INT,
-  ADD COLUMN "satisfaction_comment" VARCHAR(512),
-  ADD COLUMN "sla_breach_at"        TIMESTAMPTZ(6),
-  ADD COLUMN "first_response_at"    TIMESTAMPTZ(6);
+  ADD COLUMN IF NOT EXISTS "account_id"           UUID,
+  ADD COLUMN IF NOT EXISTS "assignee_id"          UUID,
+  ADD COLUMN IF NOT EXISTS "tags"                 VARCHAR(64)[] NOT NULL DEFAULT '{}',
+  ADD COLUMN IF NOT EXISTS "satisfaction_score"   INT,
+  ADD COLUMN IF NOT EXISTS "satisfaction_comment" VARCHAR(512),
+  ADD COLUMN IF NOT EXISTS "sla_breach_at"        TIMESTAMPTZ(6),
+  ADD COLUMN IF NOT EXISTS "first_response_at"    TIMESTAMPTZ(6);
 
 -- support.ticket_event: add actor_type
 ALTER TABLE "support"."ticket_event"
-  ADD COLUMN "actor_type" VARCHAR(32) NOT NULL DEFAULT 'admin';
+  ADD COLUMN IF NOT EXISTS "actor_type" VARCHAR(32) NOT NULL DEFAULT 'admin';
 
 -- audit_log: operation audit, append-only, partitioned by month (partition by DDL)
 CREATE TABLE "support"."audit_log" (

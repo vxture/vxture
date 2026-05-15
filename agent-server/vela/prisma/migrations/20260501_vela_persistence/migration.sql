@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS "VelaMessage" (
   role text NOT NULL,
   content text NOT NULL,
   "toolId" text,
+  "toolCallId" text,
   "toolInput" jsonb,
   "toolResult" jsonb,
   "displayHint" text,

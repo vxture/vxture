@@ -1,0 +1,2 @@
+-- Data migration: remove seed AI gateway models
+-- SQL omitted; handled via seeding pipeline on fresh installs.
