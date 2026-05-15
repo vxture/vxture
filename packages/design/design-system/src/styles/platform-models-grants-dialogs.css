@@ -1,0 +1,63 @@
+/**
+ * platform-models-grants-dialogs.css - 平台模型授权区块和模型弹窗表单。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-model-grants {
+  margin-top: var(--vx-model-grants-margin-top, 1.35rem);
+}
+
+.vx-model-grants__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--vx-model-grants-header-padding, 0.25rem 0 0.2rem);
+}
+
+.vx-model-grants__header h2 {
+  margin: 0;
+  color: var(--vx-console-text);
+  font-size: 0.94rem;
+  font-weight: 760;
+}
+
+.vx-model-grants__header span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-models-meta-size);
+  font-weight: 650;
+}
+
+.vx-model-dialog {
+  width: min(44rem, calc(100vw - 2rem));
+}
+
+.vx-model-dialog__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vx-model-dialog-grid-gap, 0.72rem);
+}
+
+.vx-model-dialog__textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.vx-model-dialog__check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-model-dialog-check-gap, 0.45rem);
+  color: var(--vx-console-text);
+  font-size: var(--vx-models-text-size);
+  font-weight: 650;
+}
+
+.vx-model-dialog__check input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--vx-console-brand);
+}

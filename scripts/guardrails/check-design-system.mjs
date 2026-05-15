@@ -44,7 +44,15 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],
   [normalize("business/ruyin/src/styles/ruyin-base.css"), "Ruyin base.css"],
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
+  [normalize("packages/design/design-system/src/styles/platform-access.css"), "DS platform access.css"],
+  [normalize("packages/design/design-system/src/styles/platform-account.css"), "DS platform account.css"],
   [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
+  [normalize("packages/design/design-system/src/styles/platform-layout.css"), "DS platform layout.css"],
+  [normalize("packages/design/design-system/src/styles/platform-models.css"), "DS platform models.css"],
+  [normalize("packages/design/design-system/src/styles/platform-notifications.css"), "DS platform notifications.css"],
+  [normalize("packages/design/design-system/src/styles/platform-shell.css"), "DS platform shell.css"],
+  [normalize("packages/design/design-system/src/styles/platform-shell-header.css"), "DS platform shell header.css"],
+  [normalize("packages/design/design-system/src/styles/platform-tenant-settings.css"), "DS platform tenant settings.css"],
   [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],
   [normalize("portals/admin/src/styles/admin-assistant.css"), "admin assistant.css"],
   [normalize("portals/admin/src/styles/admin-auth-captcha.css"), "admin auth captcha.css"],
@@ -365,6 +373,24 @@ const rules = [
           file,
           1,
           "具体规则 CSS 叶子超过 8KB；请按业务语义拆成少量模块，并让当前文件保持 @import 聚合。",
+        ),
+      ];
+    },
+  },
+  {
+    id: "ds/no-large-platform-style-leaf",
+    description: "DS platform-* 具体规则叶子不能继续膨胀为大入口。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!/^packages\/design\/design-system\/src\/styles\/platform-[^/]+\.css$/.test(normalized)) return [];
+      if (statSync(file).size <= 8000) return [];
+      const content = readFileSync(file, "utf8");
+      if (isImportOnlyStyleContent(content)) return [];
+      return [
+        violation(
+          file,
+          1,
+          "DS platform-* 具体规则叶子超过 8KB；请按跨应用语义职责拆分，并让当前文件保持 @import 聚合。",
         ),
       ];
     },

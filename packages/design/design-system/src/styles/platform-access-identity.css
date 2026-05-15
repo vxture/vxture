@@ -1,0 +1,151 @@
+/**
+ * platform-access-identity.css - 平台成员与角色访问页的身份、文本、菜单按钮基础样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-member-table__avatar {
+  width: 2.35rem;
+  height: 2.35rem;
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: var(--vx-radius-full);
+  background-position: center;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px var(--vx-color-shell-line-soft);
+}
+
+.vx-member-table__avatar-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.vx-member-table__person,
+.vx-role-row__identity-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.18rem;
+}
+
+.vx-member-table__person-line,
+.vx-role-row__identity {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.vx-member-table__person-line {
+  gap: 0.42rem;
+}
+
+.vx-role-row__identity {
+  gap: 0.68rem;
+}
+
+.vx-member-table__person-line strong,
+.vx-member-table__person p,
+.vx-member-table__text,
+.vx-member-table__muted,
+.vx-role-row__identity strong,
+.vx-role-row__identity p,
+.vx-role-row__text,
+.vx-role-row__muted {
+  overflow: hidden;
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-member-table__person-line strong,
+.vx-role-row__identity strong {
+  color: var(--vx-console-text);
+  font-size: var(--vx-members-text-size);
+  font-weight: 730;
+}
+
+.vx-role-row__identity strong {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-member-table__person-line span {
+  flex: 0 0 auto;
+  border-radius: var(--vx-radius-full);
+  padding: 0.16rem 0.44rem;
+  color: var(--vx-console-brand-strong);
+  background: var(--vx-console-brand-soft);
+  font-size: var(--vx-members-meta-size);
+  font-weight: 720;
+}
+
+.vx-member-table__person p,
+.vx-role-row__identity p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-members-meta-size);
+  line-height: 1.2;
+}
+
+.vx-role-row__identity p {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-member-table__text,
+.vx-member-table__muted,
+.vx-role-row__text,
+.vx-role-row__muted {
+  font-size: var(--vx-members-text-size);
+}
+
+.vx-role-row__text,
+.vx-role-row__muted {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-member-table__text,
+.vx-role-row__text {
+  color: var(--vx-console-text);
+}
+
+.vx-member-table__muted,
+.vx-role-row__muted {
+  color: var(--vx-console-muted);
+}
+
+.vx-member-table__menu,
+.vx-role-row__menu {
+  position: relative;
+  z-index: 1300;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.vx-member-table__menu .vx-btn,
+.vx-role-row__menu .vx-btn {
+  width: 2rem;
+  height: 2rem;
+  min-height: 2rem;
+  border: 0;
+  background: transparent;
+  color: var(--vx-console-text);
+  padding: 0;
+  box-shadow: none;
+}
+
+.vx-member-table__menu .vx-btn svg,
+.vx-role-row__menu .vx-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.vx-member-table__menu .vx-btn:hover,
+.vx-role-row__menu .vx-btn:hover {
+  background: transparent;
+  color: var(--vx-console-brand);
+}

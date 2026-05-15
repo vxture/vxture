@@ -1,0 +1,53 @@
+/**
+ * platform-shell-header-search.css - 平台 shell 顶栏搜索框。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-shell-header__search-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  width: var(--vx-shell-search-width, min(520px, 100%));
+  max-width: 100%;
+  justify-self: var(--vx-shell-search-justify, stretch);
+}
+
+.vx-shell-header__search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.72rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--vx-shell-search-icon-color, var(--vx-shell-icon-muted, var(--vx-color-shell-icon-muted)));
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.vx-shell-header__search-input {
+  min-width: 0;
+  width: 100%;
+  min-height: var(--vx-shell-search-height, 2.25rem);
+  height: var(--vx-shell-search-height, 2.25rem);
+  padding: 0.3rem 0.75rem 0.3rem 2rem;
+  border: var(--vx-shell-search-border, 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent));
+  border-radius: var(--vx-shell-search-radius, var(--vx-shell-radius-pill, var(--vx-radius-full)));
+  background: var(--vx-shell-search-background, var(--vx-color-shell-panel));
+  box-shadow: var(--vx-shell-search-shadow, inset 0 1px 0 color-mix(in srgb, var(--vx-color-white) 70%, transparent));
+}
+
+.vx-shell-header__search-input::placeholder {
+  color: var(--vx-shell-search-placeholder-color, var(--vx-shell-subtle, var(--vx-color-shell-subtle)));
+  font-size: var(--vx-shell-search-placeholder-size, var(--vx-shell-item-size, 0.8rem));
+}
+
+.dark .vx-shell-header__search-input {
+  border-color: var(--vx-shell-search-dark-border-color, var(--vx-color-border));
+  background: var(--vx-shell-search-dark-background, color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent));
+}

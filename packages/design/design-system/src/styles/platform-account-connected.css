@@ -1,0 +1,177 @@
+/**
+ * platform-account-connected.css - 平台账号外部账号绑定列表和操作区。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-account-connected-summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  border-radius: var(--vx-radius-full);
+  border: 1px solid var(--vx-color-border);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 88%, transparent);
+  color: var(--vx-console-brand-strong);
+  padding: 0 0.72rem;
+  font-size: var(--vx-account-profile-meta-size);
+  font-weight: 720;
+  white-space: nowrap;
+}
+
+.dark .vx-account-connected-summary {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 58%, transparent);
+}
+
+.vx-account-connected-list {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+.vx-account-connected-row {
+  display: grid;
+  grid-template-columns:
+    2.4rem
+    minmax(190px, 1.08fr)
+    minmax(120px, 0.62fr)
+    minmax(128px, 0.68fr)
+    minmax(8.8rem, auto);
+  gap: 0.76rem;
+  align-items: center;
+  min-height: 4.25rem;
+  padding: 0.74rem 0;
+  border-top: 1px dashed var(--vx-color-border);
+}
+
+.dark .vx-account-connected-row {
+  border-top-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-account-connected-row--connected {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--vx-color-shell-brand) 3%, transparent), transparent 46%);
+}
+
+.vx-account-connected-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--vx-platform-radius-sm);
+  border: 1px solid var(--vx-color-shell-line-soft);
+  background: var(--vx-color-shell-panel);
+  color: var(--vx-console-brand-strong);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.vx-account-connected-logo--wechat {
+  color: var(--vx-color-success-700);
+  background: color-mix(in srgb, var(--vx-color-success) 12%, transparent);
+}
+
+.vx-account-connected-logo--dingtalk {
+  color: var(--vx-color-brand-700);
+  background: color-mix(in srgb, var(--vx-color-auth-accent-light) 12%, transparent);
+}
+
+.vx-account-connected-logo--feishu {
+  color: var(--vx-color-teal-700);
+  background: var(--vx-color-teal-surface);
+}
+
+.vx-account-connected-logo--google {
+  color: var(--vx-color-warning-700);
+  background: color-mix(in srgb, var(--vx-color-warning) 14%, transparent);
+}
+
+.dark .vx-account-connected-logo {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 58%, transparent);
+}
+
+.vx-account-connected-copy {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.vx-account-connected-copy__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.vx-account-connected-copy__title strong {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--vx-console-text);
+  font-size: var(--vx-account-profile-text-size);
+  font-weight: 740;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-account-connected-copy__title span {
+  flex: 0 0 auto;
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+  padding: 0.15rem 0.46rem;
+  font-size: var(--vx-account-profile-meta-size);
+  font-weight: 720;
+}
+
+.vx-account-connected-row:not(.vx-account-connected-row--connected) .vx-account-connected-copy__title span {
+  background: color-mix(in srgb, var(--vx-color-gray-400) 12%, transparent);
+  color: var(--vx-console-muted);
+}
+
+.vx-account-connected-copy p {
+  overflow: hidden;
+  min-width: 0;
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-account-connected-meta {
+  display: grid;
+  gap: 0.16rem;
+  min-width: 0;
+}
+
+.vx-account-connected-meta span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+}
+
+.vx-account-connected-meta strong {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--vx-console-text);
+  font-size: var(--vx-account-profile-text-size);
+  font-weight: 650;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-account-connected-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.42rem;
+}
+
+.vx-account-connected-actions .vx-btn {
+  min-height: 2rem;
+  white-space: nowrap;
+}

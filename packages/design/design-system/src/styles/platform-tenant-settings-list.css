@@ -1,0 +1,154 @@
+/**
+ * platform-tenant-settings-list.css - 租户设置页区块、列表、行和策略说明。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-tenant-settings-workspace {
+  display: grid;
+  gap: 1.9rem;
+  min-width: 0;
+}
+
+.vx-tenant-settings-section {
+  display: grid;
+  gap: 0.78rem;
+  min-width: 0;
+}
+
+.vx-tenant-settings-section__title {
+  display: flex;
+  align-items: center;
+  gap: 0.58rem;
+  padding: 0 1rem;
+}
+
+.vx-tenant-settings-section__title > svg {
+  width: 1.95rem;
+  height: 1.95rem;
+  padding: 0.42rem;
+  border: 1px solid var(--vx-color-border);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-tenant-settings-section__title h2 {
+  margin: 0;
+  color: var(--vx-console-text);
+  font-size: var(--vx-tenant-settings-text-size);
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.vx-tenant-settings-section__title span {
+  display: block;
+  margin-top: 0.08rem;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-tenant-settings-meta-size);
+}
+
+.vx-tenant-settings-list {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+  overflow: visible;
+}
+
+.vx-tenant-settings-list__header,
+.vx-tenant-settings-row,
+.vx-tenant-settings-danger-row {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(120px, 0.24fr) minmax(160px, 0.3fr);
+  gap: 0.72rem;
+  align-items: center;
+}
+
+.vx-tenant-settings-list__header {
+  justify-items: var(--vx-tenant-settings-list-header-justify, stretch);
+  padding: var(--vx-tenant-settings-list-header-padding, 0 1rem 0.35rem);
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-tenant-settings-meta-size);
+  font-weight: 740;
+  text-align: var(--vx-tenant-settings-list-header-text-align, left);
+}
+
+.dark .vx-tenant-settings-list__header {
+  color: var(--vx-color-shell-subtle);
+}
+
+.vx-tenant-settings-list__header span:not(:first-child) {
+  justify-self: center;
+}
+
+.vx-tenant-settings-row,
+.vx-tenant-settings-danger-row {
+  min-height: 4.05rem;
+  justify-items: var(--vx-tenant-settings-row-justify, stretch);
+  padding: var(--vx-tenant-settings-row-padding, 0.72rem 1rem);
+  border-bottom: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 7%, transparent);
+  background: transparent;
+  text-align: var(--vx-tenant-settings-row-text-align, left);
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.dark .vx-tenant-settings-row,
+.dark .vx-tenant-settings-danger-row {
+  border-bottom-color: color-mix(in srgb, var(--vx-color-gray-400) 9%, transparent);
+}
+
+.vx-tenant-settings-row:hover,
+.vx-tenant-settings-danger-row:hover {
+  border-bottom-color: color-mix(in srgb, var(--vx-color-shell-brand) 12%, transparent);
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 2.5%, transparent);
+}
+
+.dark .vx-tenant-settings-row:hover,
+.dark .vx-tenant-settings-danger-row:hover {
+  background: color-mix(in srgb, var(--vx-color-primary) 5.5%, transparent);
+}
+
+.vx-tenant-settings-row__policy {
+  display: flex;
+  align-items: center;
+  gap: 0.68rem;
+  min-width: 0;
+}
+
+.vx-tenant-settings-row__policy > span:first-child {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-tenant-settings-row__policy strong {
+  display: block;
+  overflow: hidden;
+  color: var(--vx-console-text);
+  font-size: var(--vx-tenant-settings-text-size);
+  font-weight: 740;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-tenant-settings-row__policy p {
+  overflow: hidden;
+  margin: 0.16rem 0 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-tenant-settings-meta-size);
+  line-height: 1.35;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

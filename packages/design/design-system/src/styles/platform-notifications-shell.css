@@ -1,0 +1,142 @@
+/**
+ * platform-notifications-shell.css - 通知设置页页面框架、偏好摘要和统计。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:where(.vx-notifications-page) {
+  --vx-notification-text-size: var(--vx-platform-text-size-lg);
+  --vx-notification-meta-size: var(--vx-platform-text-size-xs);
+  --vx-notification-panel: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  --vx-notification-panel-strong: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
+  --vx-notification-line: var(--vx-color-auth-border);
+  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-auth-accent) 22%, transparent);
+  --vx-notification-title-size: clamp(1.1rem, 1.2vw, 1.28rem);
+  --vx-notification-title-line-height: 1.25;
+  --vx-notification-title-weight: 760;
+}
+
+:where(.dark .vx-notifications-page) {
+  --vx-notification-panel: var(--vx-color-shell-panel);
+  --vx-notification-panel-strong: var(--vx-color-shell-panel-strong);
+  --vx-notification-line: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-primary) 28%, transparent);
+}
+
+.vx-notifications-page {
+  gap: 1.05rem;
+}
+
+.vx-notifications-page .vx-page-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.05rem;
+}
+
+.vx-notifications-page .vx-page-header__copy {
+  gap: 0.58rem;
+}
+
+.vx-notifications-page .vx-page-header__description {
+  display: none;
+}
+
+.vx-notifications-page .vx-page-header h1 {
+  font-size: var(--vx-notification-title-size);
+  line-height: var(--vx-notification-title-line-height);
+  font-weight: var(--vx-notification-title-weight);
+}
+
+.vx-notifications-page .vx-page-header__title-row .vx-badge {
+  border-color: var(--vx-color-auth-border);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+  font-size: var(--vx-notification-meta-size);
+  font-weight: 720;
+}
+
+.vx-notification-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.vx-notification-preferences {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0 1rem;
+  border-bottom: 1px dashed var(--vx-notification-line);
+}
+
+.vx-notification-preferences__status {
+  display: flex;
+  align-items: center;
+  gap: 0.72rem;
+}
+
+.vx-notification-preferences__status > svg {
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0.56rem;
+  border: 1px solid var(--vx-notification-line);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-notification-preferences__status span {
+  display: block;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-notification-meta-size);
+}
+
+.vx-notification-preferences__status strong {
+  display: block;
+  margin-top: 0.12rem;
+  color: var(--vx-console-text);
+  font-size: 0.96rem;
+  font-weight: 760;
+}
+
+.vx-notification-preferences__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.48rem;
+}
+
+.vx-notification-preferences__stats div {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  min-height: 2.1rem;
+  padding: 0 0.68rem;
+  border: 1px solid var(--vx-color-border);
+  border-radius: var(--vx-radius-full);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 76%, transparent);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-notification-meta-size);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dark .vx-notification-preferences__stats div {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 50%, transparent);
+}
+
+.vx-notification-preferences__stats svg {
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-notification-preferences__stats strong {
+  color: var(--vx-console-text);
+  font-weight: 760;
+}
