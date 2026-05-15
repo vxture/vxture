@@ -1,0 +1,165 @@
+name: Docker Build & Push
+
+# push main  → :latest
+# push beta  → :beta
+# git tag v* → semver 标签（同时打 :latest）
+
+on:
+  push:
+    branches: [main, beta]
+    tags: ['v*.*.*']
+
+permissions:
+  contents: read
+  packages: write   # 推送到 GHCR 需要
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false   # 一个镜像构建失败不中断其他镜像
+      matrix:
+        include:
+
+          # ── Next.js 门户 ─────────────────────────────────────────────────
+          - name: website
+            image: ghcr.io/vxture/website
+            dockerfile: deploy/docker/Dockerfile.nextjs
+            build-args: |
+              PORTAL_PATH=portals/website
+              PACKAGE_FILTER=@vxture/website
+
+          - name: console
+            image: ghcr.io/vxture/console
+            dockerfile: deploy/docker/Dockerfile.nextjs
+            build-args: |
+              PORTAL_PATH=portals/console
+              PACKAGE_FILTER=@vxture/console
+
+          - name: admin
+            image: ghcr.io/vxture/admin
+            dockerfile: deploy/docker/Dockerfile.nextjs
+            build-args: |
+              PORTAL_PATH=portals/admin
+              PACKAGE_FILTER=@vxture/admin
+
+          # ── 平台 BFF ─────────────────────────────────────────────────────
+          - name: bff-gateway
+            image: ghcr.io/vxture/bff-gateway
+            dockerfile: deploy/docker/Dockerfile.gateway
+            build-args: ""
+
+          - name: bff-auth
+            image: ghcr.io/vxture/bff-auth
+            dockerfile: deploy/docker/Dockerfile.nestjs
+            build-args: |
+              SERVICE_PATH=bff/auth-bff
+              PACKAGE_FILTER=@vxture/bff-auth
+
+          - name: bff-website
+            image: ghcr.io/vxture/bff-website
+            dockerfile: deploy/docker/Dockerfile.nestjs
+            build-args: |
+              SERVICE_PATH=bff/website-bff
+              PACKAGE_FILTER=@vxture/bff-website
+
+          - name: bff-console
+            image: ghcr.io/vxture/bff-console
+            dockerfile: deploy/docker/Dockerfile.nestjs
+            build-args: |
+              SERVICE_PATH=bff/console-bff
+              PACKAGE_FILTER=@vxture/bff-console
+
+          - name: bff-admin
+            image: ghcr.io/vxture/bff-admin
+            dockerfile: deploy/docker/Dockerfile.nestjs
+            build-args: |
+              SERVICE_PATH=bff/admin-bff
+              PACKAGE_FILTER=@vxture/bff-admin
+
+          # ── Agent BFF ────────────────────────────────────────────────────
+          - name: bff-vela
+            image: ghcr.io/vxture/bff-vela
+            dockerfile: deploy/docker/Dockerfile.nestjs
+            build-args: |
+              SERVICE_PATH=bff/vela-bff
+              PACKAGE_FILTER=@vxture/bff-vela
+
+          - name: bff-ruyin
+            image: ghcr.io/vxture/bff-ruyin
+            dockerfile: deploy/docker/Dockerfile.nestjs
+            build-args: |
+              SERVICE_PATH=bff/ruyin-bff
+              PACKAGE_FILTER=@vxture/bff-ruyin
+
+          # ── Agent Server ─────────────────────────────────────────────────
+          - name: agent-vela
+            image: ghcr.io/vxture/agent-vela
+            dockerfile: deploy/docker/Dockerfile.nestjs-prisma
+            build-args: |
+              SERVICE_PATH=agent-server/vela
+              PACKAGE_FILTER=@vxture/agent-server-vela
+              PRISMA_SCHEMA=agent-server/vela/prisma/schema.prisma
+
+          - name: agent-ruyin
+            image: ghcr.io/vxture/agent-ruyin
+            dockerfile: deploy/docker/Dockerfile.nestjs
+            build-args: |
+              SERVICE_PATH=agent-server/ruyin
+              PACKAGE_FILTER=@vxture/agent-server-ruyin
+
+          # ── 共享服务 ─────────────────────────────────────────────────────
+          - name: service-ai-gateway
+            image: ghcr.io/vxture/service-ai-gateway
+            dockerfile: deploy/docker/Dockerfile.nestjs-prisma
+            build-args: |
+              SERVICE_PATH=services/ai/gateway
+              PACKAGE_FILTER=@vxture/service-ai-gateway
+              PRISMA_SCHEMA=services/ai/gateway/prisma/schema.prisma
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            # push main → :latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
+            # push beta → :beta
+            type=raw,value=beta,enable=${{ github.ref == 'refs/heads/beta' }}
+            # tag v1.2.3 → :1.2.3 :1.2 :1
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            # 每次 push 带 sha 方便回滚
+            type=sha,prefix=sha-,format=short
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          build-args: ${{ matrix.build-args }}
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # 每个服务独立 scope，互不干扰
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: type=gha,scope=${{ matrix.name }},mode=max

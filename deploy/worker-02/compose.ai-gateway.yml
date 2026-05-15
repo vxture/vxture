@@ -1,0 +1,50 @@
+# deploy/worker-02/compose.ai-gateway.yml
+# AI 网关（所有业务共用）—— 先于业务服务启动
+# 使用：docker compose -f compose.ai-gateway.yml up -d
+
+name: vx-ai-gateway
+
+networks:
+  vx-ai-gateway:
+    name: vx-ai-gateway
+    driver: bridge
+
+services:
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: vx-ai-gateway-pg
+    restart: unless-stopped
+    networks: [vx-ai-gateway]
+    environment:
+      POSTGRES_USER: aigateway
+      POSTGRES_DB: ai_gateway
+      POSTGRES_PASSWORD_FILE: /run/secrets/ai_gateway_pg_password
+    secrets: [ai_gateway_pg_password]
+    volumes:
+      - /data/ai-gateway/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aigateway -d ai_gateway"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ai-gateway:
+    image: ghcr.io/vxture/service-ai-gateway:latest
+    container_name: vx-ai-gateway
+    restart: unless-stopped
+    networks: [vx-ai-gateway]
+    ports:
+      - "127.0.0.1:3100:3100"   # 业务 server 通过 host.docker.internal:3100 访问
+    env_file: .env.ai-gateway
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+secrets:
+  ai_gateway_pg_password:
+    file: ./secrets/ai_gateway_pg_password.txt

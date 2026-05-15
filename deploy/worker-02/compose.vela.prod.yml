@@ -1,0 +1,85 @@
+# deploy/worker-02/compose.vela.prod.yml
+# Vela 生产环境（bff:3121 + server:3122 + postgres + redis）
+# 使用：docker compose -f compose.vela.prod.yml up -d
+
+name: vx-vela-prod
+
+networks:
+  vx-vela-prod:
+    name: vx-vela-prod
+    driver: bridge
+
+services:
+
+  postgres:
+    image: postgres:17-alpine
+    container_name: vx-vela-pg-prod
+    restart: unless-stopped
+    networks: [vx-vela-prod]
+    environment:
+      POSTGRES_USER: vela
+      POSTGRES_DB: vela_prod
+      POSTGRES_PASSWORD_FILE: /run/secrets/vela_prod_pg_password
+    secrets: [vela_prod_pg_password]
+    volumes:
+      - /data/vela/prod/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vela -d vela_prod"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    container_name: vx-vela-redis-prod
+    restart: unless-stopped
+    networks: [vx-vela-prod]
+    volumes:
+      - /data/vela/prod/redis:/data
+    command: >
+      redis-server --appendonly yes
+      --requirepass "${VELA_PROD_REDIS_PASSWORD}"
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${VELA_PROD_REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  vela-bff:
+    image: ghcr.io/vxture/bff-vela:latest
+    container_name: vx-vela-bff-prod
+    restart: unless-stopped
+    networks: [vx-vela-prod]
+    ports:
+      - "0.0.0.0:3121:3121"   # UFW 限制仅 Tailscale 子网（100.64.0.0/10）可达；worker-01 Nginx 经 Tailscale 路由 /vela/*
+    env_file: .env.vela.prod.bff
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3121/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  vela-server:
+    image: ghcr.io/vxture/agent-vela:latest
+    container_name: vx-vela-server-prod
+    restart: unless-stopped
+    networks: [vx-vela-prod]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # 访问宿主机 127.0.0.1:3100 (ai-gateway)
+    ports:
+      - "127.0.0.1:3122:3122"   # 内部调用，不对外
+    env_file: .env.vela.prod.server
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3122/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+secrets:
+  vela_prod_pg_password:
+    file: ./secrets/vela_prod_pg_password.txt
