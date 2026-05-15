@@ -99,6 +99,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 DS 1.3.0 将 Quantum AI 色板沉淀为 Foundation primitive、semantic token、Tailwind `@theme` bridge 三层，并同步替换品牌主色、auth 视觉和 shell brand。应用端只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark` 和 `--vx-gradient-aurora` 等语义值；`--vx-color-ai-500`、`--vx-color-ai-cyan-500`、`--vx-color-spark-400` 这类 primitive 色阶只允许 DS 内部组装。
 
+`@vxture/design-system/tokens` 同步暴露 `colors.semantic.ai*` 与 `gradients.*` 引用，值仍全部指向 `var(--vx-*)`。`components.css` 提供 `.vx-ai-surface`、`.vx-ai-chip`、`.vx-ai-dot`、`.vx-ai-gradient-text`、`.vx-ai-ambient` 五个 AI 通用语义类；应用可以组合这些类表达业务结构，但不得在应用层重新定义 AI 颜色、渐变、发光和 badge 基线。
+
 ## CSS 分层
 
 | 层级 | 归属 | 内容 |

@@ -41,6 +41,10 @@
   --vx-card-header-gap: var(--vx-component-metric-04r);
   --vx-card-padding: var(--vx-component-metric-115r);
   --vx-card-title-size: var(--vx-component-metric-105r);
+  --vx-ai-surface-shadow-y: var(--vx-component-metric-18p);
+  --vx-ai-surface-shadow-blur: var(--vx-component-metric-44p);
+  --vx-ai-dot-size: var(--vx-component-metric-05r);
+  --vx-ai-ambient-opacity: 0.7;
   --vx-avatar-size: var(--vx-component-metric-225r);
   --vx-avatar-fallback-size: var(--vx-component-metric-082r);
   --vx-avatar-fallback-letter-spacing: var(--vx-component-metric-004e);

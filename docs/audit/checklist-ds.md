@@ -544,7 +544,8 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 4. 已完成：`platform-*-tokens.css` 作用域变量组装文件已改名为 `*-bindings.css`；新增 `ds/no-misnamed-token-style-module`，禁止非 runtime token 层继续使用 `*-tokens.css` 命名。
 5. 分层边界：DS 只沉淀 token、基础组件语义类、跨应用 pattern 和 portal style pack；应用侧只组合业务场景，不定义 `--vx-*`、不直接消费底层 UI 引擎、不直接引用 DS 内部 `tokens-*` 文件。
 6. 已完成：Quantum AI 色板已按完整方案从临时 patch 迁入 DS token 分层；`tokens-colors-primitives.css` 替换 brand ramp 并新增 AI / AI-CYAN / SPARK primitive，`tokens-colors-semantic.css` 更新 primary、border、ring、auth、shell 与 AI semantic，`tokens-gradients.css` 承接 aurora / brand / AI duo / spark pulse，`tokens-theme-*` 同步 Tailwind bridge，暗色主题、README、包说明和使用规范同步更新；新增 `ds/no-app-ai-primitive-token`，禁止应用侧直接消费 AI primitive 色阶。原始 patch 已归档到 `docs/design/tokens-quantum-ai.md`。
-7. 已完成：应用侧开始消费 AI 语义 token；Vela chat、admin assistant panel/message/composer/sidebar 和 Console assistant panel 已从通用 brand/primary 迁到 `--vx-color-ai*`、`--vx-gradient-ai-duo`、`--vx-color-spark*`，应用侧无 AI primitive 直接消费。
+7. 已完成：DS 内部补齐 AI 语义调用面，`@vxture/design-system/tokens` 暴露 `colors.semantic.ai*` 与 `gradients.*` 引用，`components.css` 新增 `.vx-ai-surface`、`.vx-ai-chip`、`.vx-ai-dot`、`.vx-ai-gradient-text`、`.vx-ai-ambient` 通用基准类。应用端后续只做业务组装，不再自行定义 AI 表面、徽章、渐变文本和环境光基线。
+8. 已完成：应用侧开始消费 AI 语义 token；Vela chat、admin assistant panel/message/composer/sidebar 和 Console assistant panel 已从通用 brand/primary 迁到 `--vx-color-ai*`、`--vx-gradient-ai-duo`、`--vx-color-spark*`，应用侧无 AI primitive 直接消费。
 
 ## 后续验收清单
 
