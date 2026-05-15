@@ -1,5 +1,4 @@
 import {
-  BadGatewayException,
   BadRequestException,
   Body,
   Controller,
@@ -7,15 +6,14 @@ import {
   Get,
   Inject,
   NotFoundException,
-  OnModuleDestroy,
   Param,
   Post,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from '../tokens';
 import type {
   ProductSolutionTierCode,
   RequestContext,
@@ -35,42 +33,17 @@ const CURRENT_USAGE_MONTH = new Date().toISOString().slice(0, 7).replace('-', ''
 const ZERO_UUID = '00000000-0000-0000-0000-000000000000';
 
 @Controller('api/subscriptions')
-export class SubscriptionRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class SubscriptionRouter {
+  constructor(
+    @Inject(ADMIN_BFF_RO_POOL) private readonly roPool: Pool,
+    @Inject(ADMIN_BFF_RW_POOL) private readonly rwPool: Pool,
+  ) {}
 
   @Get()
   async listSubscriptions(@Req() req: Request & RequestContext): Promise<SubscriptionOperationRecord[]> {
     assertCanManageSubscriptions(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Subscription database is not configured');
-    }
-
-    const rows = await this.pool.query<SubscriptionOperationRow>(SUBSCRIPTION_OPERATION_SQL, [CURRENT_USAGE_MONTH]);
+    const rows = await this.roPool.query<SubscriptionOperationRow>(SUBSCRIPTION_OPERATION_SQL, [CURRENT_USAGE_MONTH]);
     return rows.rows.map(mapSubscriptionOperationRow);
   }
 
@@ -81,11 +54,7 @@ export class SubscriptionRouter implements OnModuleDestroy {
   ): Promise<SubscriptionOperationDetailRecord> {
     assertCanManageSubscriptions(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Subscription database is not configured');
-    }
-
-    return loadSubscriptionDetail(this.pool, subscriptionId);
+    return loadSubscriptionDetail(this.roPool, subscriptionId);
   }
 
   @Post(':subscriptionId/actions')
@@ -96,13 +65,9 @@ export class SubscriptionRouter implements OnModuleDestroy {
   ): Promise<SubscriptionOperationDetailRecord> {
     assertCanManageSubscriptions(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Subscription database is not configured');
-    }
-
     const action = normalizeSubscriptionAction(body?.action);
     const reason = normalizeOperationReason(body?.reason);
-    const client = await this.pool.connect();
+    const client = await this.rwPool.connect();
 
     try {
       await client.query('begin');
@@ -144,7 +109,7 @@ export class SubscriptionRouter implements OnModuleDestroy {
       client.release();
     }
 
-    return loadSubscriptionDetail(this.pool, subscriptionId);
+    return loadSubscriptionDetail(this.roPool, subscriptionId);
   }
 }
 

@@ -1,16 +1,14 @@
 import {
-  BadGatewayException,
   Controller,
   ForbiddenException,
   Get,
   Inject,
-  OnModuleDestroy,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL } from '../tokens';
 import type {
   BillingBillStatus,
   CommerceOverviewPlanRevenue,
@@ -26,40 +24,12 @@ import type {
 } from '../types/console.types';
 
 @Controller('api/commercial')
-export class CommercialRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class CommercialRouter {
+  constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get('usage-metering')
   async listUsageMetering(@Req() req: Request & RequestContext): Promise<UsageMeteringRecord[]> {
     assertCanManageCommercial(req);
-
-    if (!this.pool) {
-      throw new BadGatewayException('Commercial database is not configured');
-    }
 
     const rows = await this.pool.query<UsageMeteringRow>(USAGE_METERING_SQL);
     return rows.rows.map(mapUsageMeteringRow);
@@ -69,10 +39,6 @@ export class CommercialRouter implements OnModuleDestroy {
   async listPromotions(@Req() req: Request & RequestContext): Promise<PromotionOperationRecord[]> {
     assertCanManageCommercial(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Commercial database is not configured');
-    }
-
     const rows = await this.pool.query<PromotionRow>(PROMOTION_SQL);
     return rows.rows.map(mapPromotionRow);
   }
@@ -81,10 +47,6 @@ export class CommercialRouter implements OnModuleDestroy {
   async listPromotionRedemptions(@Req() req: Request & RequestContext): Promise<PromotionRedemptionRecord[]> {
     assertCanManageCommercial(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Commercial database is not configured');
-    }
-
     const rows = await this.pool.query<PromotionRedemptionRow>(PROMOTION_REDEMPTION_SQL);
     return rows.rows.map(mapPromotionRedemptionRow);
   }
@@ -92,10 +54,6 @@ export class CommercialRouter implements OnModuleDestroy {
   @Get('overview')
   async getCommerceOverview(@Req() req: Request & RequestContext): Promise<CommerceOverviewSnapshot> {
     assertCanManageCommercial(req);
-
-    if (!this.pool) {
-      throw new BadGatewayException('Commercial database is not configured');
-    }
 
     const [metricsResult, riskResult, planRevenueResult] = await Promise.all([
       this.pool.query<OverviewMetricRow>(OVERVIEW_METRICS_SQL),

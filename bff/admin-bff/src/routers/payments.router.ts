@@ -1,5 +1,4 @@
 import {
-  BadGatewayException,
   BadRequestException,
   Body,
   Controller,
@@ -7,16 +6,15 @@ import {
   Get,
   Inject,
   NotFoundException,
-  OnModuleDestroy,
   Param,
   Post,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import { MailService } from '@vxture/core-mail';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from '../tokens';
 import type {
   BillingBillStatus,
   BillingBillType,
@@ -29,45 +27,18 @@ import type {
 } from '../types/console.types';
 
 @Controller('api/payments')
-export class PaymentsRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
+export class PaymentsRouter {
   constructor(
-    @Inject(VxConfigService) private readonly configService: VxConfigService,
+    @Inject(ADMIN_BFF_RO_POOL) private readonly roPool: Pool,
+    @Inject(ADMIN_BFF_RW_POOL) private readonly rwPool: Pool,
     @Inject(MailService) private readonly mailService: MailService,
-  ) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+  ) {}
 
   @Get()
   async listPayments(@Req() req: Request & RequestContext): Promise<PaymentOperationRecord[]> {
     assertCanManagePayments(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Payment database is not configured');
-    }
-
-    const rows = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_SQL);
+    const rows = await this.roPool.query<PaymentLedgerRow>(PAYMENT_LEDGER_SQL);
     return rows.rows.map(mapPaymentLedgerRow);
   }
 
@@ -79,13 +50,9 @@ export class PaymentsRouter implements OnModuleDestroy {
   ): Promise<PaymentOperationRecord> {
     assertCanManagePayments(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Payment database is not configured');
-    }
-
     const remark = normalizeRemark(body?.remark, '核销原因');
     const operatorId = req.user?.id ?? null;
-    const client = await this.pool.connect();
+    const client = await this.rwPool.connect();
 
     try {
       await client.query('begin');
@@ -125,7 +92,7 @@ export class PaymentsRouter implements OnModuleDestroy {
       client.release();
     }
 
-    const updated = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
+    const updated = await this.roPool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
     if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
 
     const result = mapPaymentLedgerRow(updated.rows[0]);
@@ -149,14 +116,10 @@ export class PaymentsRouter implements OnModuleDestroy {
   ): Promise<PaymentOperationRecord> {
     assertCanManagePayments(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Payment database is not configured');
-    }
-
     const remark = normalizeRemark(body?.remark, '驳回原因');
     const operatorId = req.user?.id ?? null;
 
-    const lookupResult = await this.pool.query<PaymentLookupRow>(PAYMENT_LOOKUP_SQL, [paymentId]);
+    const lookupResult = await this.roPool.query<PaymentLookupRow>(PAYMENT_LOOKUP_SQL, [paymentId]);
     const current = lookupResult.rows[0];
 
     if (!current) {
@@ -166,9 +129,9 @@ export class PaymentsRouter implements OnModuleDestroy {
       throw new BadRequestException(`当前状态（${current.pay_status}）不允许驳回，仅 pending_verify 状态可驳回`);
     }
 
-    await this.pool.query(PAYMENT_REJECT_SQL, [remark, operatorId, paymentId]);
+    await this.rwPool.query(PAYMENT_REJECT_SQL, [remark, operatorId, paymentId]);
 
-    const updated = await this.pool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
+    const updated = await this.roPool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
     if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
 
     const result = mapPaymentLedgerRow(updated.rows[0]);

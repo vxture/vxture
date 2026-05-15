@@ -1,53 +1,23 @@
 import {
-  BadGatewayException,
   Controller,
   ForbiddenException,
   Get,
   Inject,
-  OnModuleDestroy,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL } from '../tokens';
 import type { PlatformAdminPermissionRecord, PlatformPermissionType, RequestContext } from '../types/console.types';
 
 @Controller('api/admin-permissions')
-export class AdminPermissionsRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class AdminPermissionsRouter {
+  constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get()
   async listAdminPermissions(@Req() req: Request & RequestContext): Promise<PlatformAdminPermissionRecord[]> {
     assertCanViewAdminPermissions(req);
-
-    if (!this.pool) {
-      throw new BadGatewayException('Platform permission database is not configured');
-    }
 
     const result = await this.pool.query<PlatformAdminPermissionRow>(PLATFORM_PERMISSION_SQL);
     return result.rows.map((row) => ({

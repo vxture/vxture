@@ -4,6 +4,7 @@ import { AccessTokenRevocationService } from '@vxture/core-auth';
 import { VxConfigModule } from '@vxture/core-config';
 import { MailModule } from '@vxture/core-mail';
 import { SmsModule } from '@vxture/service-sms';
+import { AdminBffPoolsModule } from './providers/pools.module';
 import { PlatformAuthService } from './auth/auth.service';
 import { LoginRateLimiterService } from './auth/login-rate-limiter.service';
 import { CaptchaService } from './auth/captcha.service';
@@ -41,6 +42,7 @@ import { TicketsRouter } from './routers/tickets.router';
     JwtModule.register({}),
     MailModule,
     SmsModule,
+    AdminBffPoolsModule,
   ],
   controllers: [
     HealthRouter,

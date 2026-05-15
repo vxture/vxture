@@ -1,5 +1,4 @@
 import {
-  BadGatewayException,
   BadRequestException,
   Body,
   Controller,
@@ -7,15 +6,14 @@ import {
   Get,
   Inject,
   NotFoundException,
-  OnModuleDestroy,
   Param,
   Post,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from '../tokens';
 import type {
   BillingBillAction,
   BillingBillStatus,
@@ -38,42 +36,17 @@ import type {
 const ZERO_UUID = '00000000-0000-0000-0000-000000000000';
 
 @Controller('api/billing')
-export class BillingRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class BillingRouter {
+  constructor(
+    @Inject(ADMIN_BFF_RO_POOL) private readonly roPool: Pool,
+    @Inject(ADMIN_BFF_RW_POOL) private readonly rwPool: Pool,
+  ) {}
 
   @Get()
   async listBilling(@Req() req: Request & RequestContext): Promise<BillingRecord[]> {
     assertCanManageBilling(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Billing database is not configured');
-    }
-
-    const rows = await this.pool.query<BillingRow>(BILLING_SQL);
+    const rows = await this.roPool.query<BillingRow>(BILLING_SQL);
     return rows.rows.map(mapBillingRow);
   }
 
@@ -84,11 +57,7 @@ export class BillingRouter implements OnModuleDestroy {
   ): Promise<BillingDetailRecord> {
     assertCanManageBilling(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Billing database is not configured');
-    }
-
-    return loadBillingDetail(this.pool, billId);
+    return loadBillingDetail(this.roPool, billId);
   }
 
   @Post(':billId/offline-invoice-sync')
@@ -99,12 +68,8 @@ export class BillingRouter implements OnModuleDestroy {
   ): Promise<BillingDetailRecord> {
     assertCanManageBilling(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Billing database is not configured');
-    }
-
     const payload = normalizeSyncOfflineInvoiceBody(body);
-    const client = await this.pool.connect();
+    const client = await this.rwPool.connect();
 
     try {
       await client.query('begin');
@@ -153,7 +118,7 @@ export class BillingRouter implements OnModuleDestroy {
       client.release();
     }
 
-    return loadBillingDetail(this.pool, billId);
+    return loadBillingDetail(this.roPool, billId);
   }
 
   @Post(':billId/actions')
@@ -164,13 +129,9 @@ export class BillingRouter implements OnModuleDestroy {
   ): Promise<BillingDetailRecord> {
     assertCanManageBilling(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Billing database is not configured');
-    }
-
     const payload = normalizeBillingBillActionBody(body);
     const operatorId = normalizeUuid(req.user?.id) ?? ZERO_UUID;
-    const client = await this.pool.connect();
+    const client = await this.rwPool.connect();
     let nextBillId = billId;
 
     try {
@@ -220,7 +181,7 @@ export class BillingRouter implements OnModuleDestroy {
       client.release();
     }
 
-    return loadBillingDetail(this.pool, nextBillId);
+    return loadBillingDetail(this.roPool, nextBillId);
   }
 
   @Post(':billId/invoice-receipts/:receiptId/actions')
@@ -232,12 +193,8 @@ export class BillingRouter implements OnModuleDestroy {
   ): Promise<BillingDetailRecord> {
     assertCanManageBilling(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Billing database is not configured');
-    }
-
     const payload = normalizeInvoiceReceiptActionBody(body);
-    const client = await this.pool.connect();
+    const client = await this.rwPool.connect();
 
     try {
       await client.query('begin');
@@ -267,7 +224,7 @@ export class BillingRouter implements OnModuleDestroy {
       client.release();
     }
 
-    return loadBillingDetail(this.pool, billId);
+    return loadBillingDetail(this.roPool, billId);
   }
 }
 

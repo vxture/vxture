@@ -1,21 +1,19 @@
 import {
   BadRequestException,
-  BadGatewayException,
   Body,
   Controller,
   ForbiddenException,
   Get,
   Inject,
   NotFoundException,
-  OnModuleDestroy,
   Param,
   Put,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from '../tokens';
 import type {
   PlatformPermissionType,
   PlatformRolePermissionRecord,
@@ -24,44 +22,19 @@ import type {
 } from '../types/console.types';
 
 @Controller('api/admin-roles')
-export class AdminRolesRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class AdminRolesRouter {
+  constructor(
+    @Inject(ADMIN_BFF_RO_POOL) private readonly roPool: Pool,
+    @Inject(ADMIN_BFF_RW_POOL) private readonly rwPool: Pool,
+  ) {}
 
   @Get()
   async listAdminRoles(@Req() req: Request & RequestContext): Promise<PlatformRoleRecord[]> {
     assertCanManageAdminRoles(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Platform role database is not configured');
-    }
-
     const [roleRows, permissionRows] = await Promise.all([
-      this.pool.query<PlatformRoleRow>(PLATFORM_ROLE_SQL),
-      this.pool.query<PlatformRolePermissionRow>(`${PLATFORM_ROLE_PERMISSION_SQL} ${PLATFORM_ROLE_PERMISSION_ORDER_SQL}`),
+      this.roPool.query<PlatformRoleRow>(PLATFORM_ROLE_SQL),
+      this.roPool.query<PlatformRolePermissionRow>(`${PLATFORM_ROLE_PERMISSION_SQL} ${PLATFORM_ROLE_PERMISSION_ORDER_SQL}`),
     ]);
     const permissionsByRole = groupBy(permissionRows.rows, (row) => row.role_id);
 
@@ -98,14 +71,10 @@ export class AdminRolesRouter implements OnModuleDestroy {
   ): Promise<PlatformRoleRecord> {
     assertCanManageAdminRoles(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Platform role database is not configured');
-    }
-
     const actorId = requireUuid(req.user?.id, 'Invalid platform admin principal');
     const targetRoleId = requireUuid(roleId, 'Invalid role id');
     const permissionIds = normalizePermissionIds(body?.permissionIds);
-    const client = await this.pool.connect();
+    const client = await this.rwPool.connect();
 
     try {
       await client.query('begin');
@@ -205,8 +174,8 @@ export class AdminRolesRouter implements OnModuleDestroy {
     }
 
     const [roleRows, permissionRows] = await Promise.all([
-      this.pool.query<PlatformRoleRow>(`${PLATFORM_ROLE_SQL_WITH_FILTER} where r.id = $1 ${PLATFORM_ROLE_SQL_GROUP_ORDER}`, [targetRoleId]),
-      this.pool.query<PlatformRolePermissionRow>(`${PLATFORM_ROLE_PERMISSION_SQL} where rp.role_id = $1 ${PLATFORM_ROLE_PERMISSION_ORDER_SQL}`, [targetRoleId]),
+      this.roPool.query<PlatformRoleRow>(`${PLATFORM_ROLE_SQL_WITH_FILTER} where r.id = $1 ${PLATFORM_ROLE_SQL_GROUP_ORDER}`, [targetRoleId]),
+      this.roPool.query<PlatformRolePermissionRow>(`${PLATFORM_ROLE_PERMISSION_SQL} where rp.role_id = $1 ${PLATFORM_ROLE_PERMISSION_ORDER_SQL}`, [targetRoleId]),
     ]);
     const updatedRole = roleRows.rows[0];
     if (!updatedRole) {

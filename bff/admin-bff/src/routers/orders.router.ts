@@ -1,5 +1,4 @@
 import {
-  BadGatewayException,
   BadRequestException,
   Body,
   Controller,
@@ -7,16 +6,14 @@ import {
   Get,
   Inject,
   NotFoundException,
-  OnModuleDestroy,
   Param,
   Post,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
-import type { PoolClient } from 'pg';
+import type { Pool, PoolClient } from 'pg';
+import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from '../tokens';
 import type {
   OrderInvoiceItemRecord,
   OrderOfflinePaymentType,
@@ -33,42 +30,17 @@ import type {
 } from '../types/console.types';
 
 @Controller('api/orders')
-export class OrdersRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class OrdersRouter {
+  constructor(
+    @Inject(ADMIN_BFF_RO_POOL) private readonly roPool: Pool,
+    @Inject(ADMIN_BFF_RW_POOL) private readonly rwPool: Pool,
+  ) {}
 
   @Get()
   async listOrders(@Req() req: Request & RequestContext): Promise<OrderOperationRecord[]> {
     assertCanManageOrders(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Order database is not configured');
-    }
-
-    const rows = await this.pool.query<OrderOperationRow>(ORDER_OPERATION_SQL);
+    const rows = await this.roPool.query<OrderOperationRow>(ORDER_OPERATION_SQL);
     return rows.rows.map(mapOrderOperationRow);
   }
 
@@ -79,11 +51,7 @@ export class OrdersRouter implements OnModuleDestroy {
   ): Promise<OrderOperationDetailRecord> {
     assertCanManageOrders(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Order database is not configured');
-    }
-
-    return loadOrderDetail(this.pool, orderId);
+    return loadOrderDetail(this.roPool, orderId);
   }
 
   @Post(':orderId/offline-payment-confirm')
@@ -94,12 +62,9 @@ export class OrdersRouter implements OnModuleDestroy {
   ): Promise<OrderOperationDetailRecord> {
     assertCanManageOrders(req);
 
-    if (!this.pool) {
-      throw new BadGatewayException('Order database is not configured');
-    }
 
     const payload = normalizeConfirmOfflinePaymentBody(body);
-    const client = await this.pool.connect();
+    const client = await this.rwPool.connect();
 
     try {
       await client.query('begin');
@@ -146,7 +111,7 @@ export class OrdersRouter implements OnModuleDestroy {
       client.release();
     }
 
-    return loadOrderDetail(this.pool, orderId);
+    return loadOrderDetail(this.roPool, orderId);
   }
 }
 

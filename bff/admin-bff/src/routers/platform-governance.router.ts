@@ -4,14 +4,13 @@ import {
   ForbiddenException,
   Get,
   Inject,
-  OnModuleDestroy,
   Param,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL } from '../tokens';
 import type {
   PlatformGovernanceKind,
   PlatformGovernanceRecord,
@@ -20,32 +19,8 @@ import type {
 } from '../types/console.types';
 
 @Controller('api/platform-governance')
-export class PlatformGovernanceRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class PlatformGovernanceRouter {
+  constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get(':kind')
   async listGovernanceRecords(
@@ -53,10 +28,6 @@ export class PlatformGovernanceRouter implements OnModuleDestroy {
     @Param('kind') kind: PlatformGovernanceKind,
   ): Promise<PlatformGovernanceRecord[]> {
     assertCanReadPlatformGovernance(req);
-
-    if (!this.pool) {
-      throw new BadGatewayException('Platform governance database is not configured');
-    }
 
     const tableCheck = await this.pool.query<{ table_name: string | null }>(
       "select to_regclass('ops.governance_record')::text as table_name",

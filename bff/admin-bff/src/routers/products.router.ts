@@ -1,18 +1,16 @@
 import {
-  BadGatewayException,
   Controller,
   ForbiddenException,
   Get,
   Inject,
   NotFoundException,
-  OnModuleDestroy,
   Param,
   Req,
   UnauthorizedException,
 } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
 import type { Request } from 'express';
-import { Pool } from 'pg';
+import type { Pool } from 'pg';
+import { ADMIN_BFF_RO_POOL } from '../tokens';
 import type {
   ProductAgentRecord,
   ProductCapabilityHealthStatus,
@@ -422,32 +420,8 @@ export const defaultModelPolicies: ProductModelPolicyRecord[] = [
 ];
 
 @Controller('api/products')
-export class ProductsRouter implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+export class ProductsRouter {
+  constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get('capabilities')
   listCapabilities(@Req() req: Request & RequestContext): ProductCapabilityRecord[] {
@@ -480,10 +454,6 @@ export class ProductsRouter implements OnModuleDestroy {
   @Get('plans')
   async listPlans(@Req() req: Request & RequestContext): Promise<ProductPlanRecord[]> {
     assertCanManageProducts(req);
-
-    if (!this.pool) {
-      throw new BadGatewayException('Product plan database is not configured');
-    }
 
     const [planRows, priceRows, featureRows, agentRows] = await Promise.all([
       this.pool.query<ProductPlanRow>(PRODUCT_PLAN_SQL),

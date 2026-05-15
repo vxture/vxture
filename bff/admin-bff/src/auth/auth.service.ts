@@ -1,8 +1,8 @@
 import { compare } from 'bcryptjs';
-import { BadGatewayException, Inject, Injectable, OnModuleDestroy, UnauthorizedException } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
-import { Pool } from 'pg';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import type { Pool } from 'pg';
 import type { ConsoleUser } from '../types/console.types';
+import { ADMIN_BFF_RW_POOL } from '../tokens';
 
 const PLATFORM_ADMIN_CAPABILITIES = [
   'platform.admin.manage',
@@ -13,34 +13,10 @@ const PLATFORM_ADMIN_CAPABILITIES = [
 ];
 
 @Injectable()
-export class PlatformAuthService implements OnModuleDestroy {
-  private readonly pool: Pool | null;
-
+export class PlatformAuthService {
   constructor(
-    @Inject(VxConfigService) private readonly configService: VxConfigService,
-  ) {
-    const database = this.configService.database;
-    const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
-    this.pool = hasDatabaseConfig
-      ? new Pool(
-          database.DATABASE_URL
-            ? { connectionString: database.DATABASE_URL }
-            : {
-                host: database.DB_HOST,
-                port: database.DB_PORT,
-                database: database.DB_NAME,
-                user: database.DB_USER,
-                password: database.DB_PASSWORD,
-                max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
-              },
-        )
-      : null;
-  }
-
-  async onModuleDestroy() {
-    await this.pool?.end();
-  }
+    @Inject(ADMIN_BFF_RW_POOL) private readonly pool: Pool,
+  ) {}
 
   /**
    * 【重构 v1.4】仅做 DB 密码校验，不再签发 JWT。
@@ -71,10 +47,6 @@ export class PlatformAuthService implements OnModuleDestroy {
   }
 
   async canUsePhoneLogin(phone: string): Promise<boolean> {
-    if (!this.pool) {
-      throw new BadGatewayException('Platform admin database is not configured');
-    }
-
     const admin = await this.findPlatformAdminByPhone(phone);
     return Boolean(admin);
   }
@@ -92,10 +64,6 @@ export class PlatformAuthService implements OnModuleDestroy {
   private async authenticatePlatformAdmin(identifier: string, password: string): Promise<PlatformAdminView> {
     if (!identifier.trim() || !password) {
       throw new UnauthorizedException('Invalid credentials');
-    }
-
-    if (!this.pool) {
-      throw new BadGatewayException('Platform admin database is not configured');
     }
 
     const admin = await this.findPlatformAdminByIdentifier(identifier);
@@ -118,10 +86,6 @@ export class PlatformAuthService implements OnModuleDestroy {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    if (!this.pool) {
-      throw new BadGatewayException('Platform admin database is not configured');
-    }
-
     const admin = await this.findPlatformAdminByPhone(phone);
     if (!admin) {
       throw new UnauthorizedException('Invalid credentials');
@@ -133,18 +97,10 @@ export class PlatformAuthService implements OnModuleDestroy {
   }
 
   private async getPlatformAdminById(adminId: string): Promise<PlatformAdminView | null> {
-    if (!this.pool) {
-      throw new BadGatewayException('Platform admin database is not configured');
-    }
-
     return this.findPlatformAdmin('a.id = $1', [adminId]);
   }
 
   private async findPlatformAdminByIdentifier(identifier: string): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
-    if (!this.pool) {
-      return null;
-    }
-
     return this.findPlatformAdmin(
       `
         (
@@ -158,10 +114,6 @@ export class PlatformAuthService implements OnModuleDestroy {
   }
 
   private async findPlatformAdminByPhone(phone: string): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
-    if (!this.pool) {
-      return null;
-    }
-
     return this.findPlatformAdmin('coalesce(a.phone, \'\') = $1', [normalizePhone(phone)]);
   }
 
@@ -169,10 +121,6 @@ export class PlatformAuthService implements OnModuleDestroy {
     predicate: string,
     params: readonly unknown[],
   ): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
-    if (!this.pool) {
-      return null;
-    }
-
     const result = await this.pool.query<PlatformAdminRow>(
       `
         select
@@ -208,7 +156,7 @@ export class PlatformAuthService implements OnModuleDestroy {
   }
 
   private async recordLastLogin(adminId: string): Promise<void> {
-    await this.pool?.query(
+    await this.pool.query(
       `
         update ops.admin
         set last_login_at = now()
