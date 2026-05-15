@@ -55,19 +55,19 @@ import "@vxture/design-system/styles/globals.css";
 
 ## 4. AI 色彩语义
 
-DS 1.3.0 引入 Quantum AI 色彩层。AI primitive 色阶只属于 DS Foundation，应用只能消费语义 token，不得直接引用 `--vx-color-ai-500`、`--vx-color-ai-cyan-500`、`--vx-color-spark-400` 或 `bg-vx-ai-500` 这类 primitive 工具类。
-本批迁入不替换现有品牌主色，也不自动把 auth / shell 切换到 aurora 视觉；这些属于后续独立视觉决策。
+DS 1.3.0 完整迁入 Quantum AI 色彩层，品牌主色、auth 视觉、shell brand 与 AI 专属语义均统一到 DS token。AI primitive 色阶只属于 DS Foundation 和 DS 内部组装，应用只能消费语义 token，不得直接引用 `--vx-color-ai-500`、`--vx-color-ai-cyan-500`、`--vx-color-spark-400` 或 `bg-vx-ai-500` 这类 primitive 工具类。
 
 | token | 用途 |
 |------|------|
-| `--vx-color-primary` | 产品主色：CTA、链接、焦点环、激活导航和品牌 chrome |
+| `--vx-color-primary` | 产品主色：CTA、链接、焦点环、激活导航和品牌 chrome；承担大多数 blue usage |
 | `--vx-color-ai` | AI 专属 UI：模型徽章、助手 chrome、AI 生成标识、AI 导航入口 |
-| `--vx-color-ai-cyan` | 仅与 `--vx-color-ai` 成对使用，用于 AI 渐变层次、图谱线条和内发光 |
+| `--vx-color-ai-cyan` | 仅与 `--vx-color-ai` 成对使用，用于 AI 渐变层次、图谱线条和内发光；不得单独作为主色 |
 | `--vx-color-spark` | 仅用于生成中、完成闪烁、token stream 等短暂动画瞬间 |
 | `--vx-gradient-aurora` | 品牌级重点视觉：登录视觉面板、营销 hero、Agent 落地页；单屏最多一个 |
 
 禁止把 `--vx-color-ai` 用作通用 CTA，禁止把 `--vx-color-spark` 用在静态表面。
 `pnpm lint:design` 通过 `ds/no-app-ai-primitive-token` 阻止应用侧直接消费 AI primitive 色阶。
+如果需要使用 Tailwind 工具类，应用只能使用 `bg-vx-ai`、`bg-vx-ai-soft`、`text-vx-ai-foreground`、`border-vx-ai-border` 等语义映射；`bg-vx-ai-500`、`from-vx-ai-cyan-500`、`text-vx-spark-400` 这类 primitive utility 只允许 DS 内部样式组装。
 
 ## 5. DS 不足时的处理
 

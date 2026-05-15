@@ -97,7 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ### AI 色彩语义
 
-DS 1.3.0 将 Quantum AI 色板沉淀为 Foundation primitive、semantic token、Tailwind `@theme` bridge 三层。应用端只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark` 和 `--vx-gradient-aurora` 等语义值；`--vx-color-ai-500`、`--vx-color-ai-cyan-500`、`--vx-color-spark-400` 这类 primitive 色阶只允许 DS 内部组装。本批不替换现有品牌主色，也不自动启用 auth / shell 的 aurora 视觉。
+DS 1.3.0 将 Quantum AI 色板沉淀为 Foundation primitive、semantic token、Tailwind `@theme` bridge 三层，并同步替换品牌主色、auth 视觉和 shell brand。应用端只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark` 和 `--vx-gradient-aurora` 等语义值；`--vx-color-ai-500`、`--vx-color-ai-cyan-500`、`--vx-color-spark-400` 这类 primitive 色阶只允许 DS 内部组装。
 
 ## CSS 分层
 

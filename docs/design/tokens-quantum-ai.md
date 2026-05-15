@@ -1,8 +1,8 @@
 # Quantum AI 色板设计输入
 
 来源：`packages/design/tokens-quantum-ai.css` 临时 patch。  
-状态：已按低风险方案迁入 DS，当前只新增 AI 专属 primitive、semantic、gradient 与守卫；未替换主品牌色阶，未启用 auth/shell 的 aurora 视觉切换。  
-后续：如需替换 brand ramp 或启用登录视觉渐变，必须作为独立视觉决策批次执行。
+状态：已按完整方案迁入 DS，包含 brand ramp 替换、AI primitive、AI semantic、gradient、Tailwind bridge 与应用侧守卫；auth visual 与 shell brand 已切到 Quantum brand / aurora 语义。
+约束：primitive 色阶进入 DS 与 Tailwind bridge，但应用侧仍只能消费语义 token；`pnpm lint:design` 会阻断应用直接使用 AI primitive 色阶。
 
 ```css
 /* ─────────────────────────────────────────────────────────────────

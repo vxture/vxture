@@ -92,7 +92,7 @@ src/
 - 所有图标通过 `<Icon name="..." />` 使用；应用不得直接导入底层图标库。
 - CSS 变量运行时值只在 `styles/tokens.css` 入口及其 `tokens-*` 分层模块维护；TS token 文件只暴露 `var(--vx-*)`。
 - AI 色彩的 primitive 色阶只允许 DS 内部组装；应用只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark`、`--vx-gradient-aurora` 等语义 token。
-- Quantum AI 本批只新增 AI 专属语义层，不替换品牌主色，不自动切换 auth / shell 视觉。
+- Quantum AI 已完整迁入 DS：brand ramp、AI primitive、AI semantic、gradient、Tailwind bridge、auth visual、shell brand 与 guardrail 同步收敛。
 - DS semantic CSS 不直接消费 `--vx-component-metric-*` 兜底 token。
 - 新增公共能力必须同步 `package.json` exports、guardrail 白名单和使用文档。
 - 基础组件和跨应用 pattern 从 DS 导出；应用侧只做业务组装。

@@ -16,18 +16,18 @@
   --vx-color-surface-muted: var(--vx-color-gray-50);
   --vx-color-surface-soft: #fbfcfe;
   --vx-color-surface-raised: var(--vx-color-white);
-  --vx-color-border: rgba(30, 64, 175, 0.1);
+  --vx-color-border: rgba(30, 81, 255, 0.1);
   --vx-color-border-muted: rgba(15, 23, 42, 0.07);
-  --vx-color-border-strong: rgba(37, 99, 235, 0.32);
-  --vx-color-ring: rgba(37, 99, 235, 0.12);
-  --vx-color-ring-strong: rgba(37, 99, 235, 0.55);
+  --vx-color-border-strong: rgba(30, 81, 255, 0.32);
+  --vx-color-ring: rgba(30, 81, 255, 0.12);
+  --vx-color-ring-strong: rgba(30, 81, 255, 0.55);
   --vx-color-overlay: rgba(15, 23, 42, 0.46);
 
   --vx-color-primary: var(--vx-color-brand-600);
   --vx-color-primary-hover: var(--vx-color-brand-700);
   --vx-color-primary-strong: var(--vx-color-brand-700);
   --vx-color-primary-soft: var(--vx-color-brand-100);
-  --vx-color-primary-subtle: rgba(37, 99, 235, 0.08);
+  --vx-color-primary-subtle: rgba(30, 81, 255, 0.08);
 
   --vx-color-ai: var(--vx-color-ai-500);
   --vx-color-ai-hover: var(--vx-color-ai-600);
@@ -77,14 +77,14 @@
   --vx-color-auth-text: var(--vx-color-gray-900);
   --vx-color-auth-secondary: #4a5a7a;
   --vx-color-auth-muted: var(--vx-color-gray-400);
-  --vx-color-auth-accent: #2563eb;
-  --vx-color-auth-accent-light: #3b82f6;
-  --vx-color-auth-border: rgba(37, 99, 235, 0.12);
-  --vx-color-auth-border-active: rgba(37, 99, 235, 0.55);
+  --vx-color-auth-accent: var(--vx-color-brand-600);
+  --vx-color-auth-accent-light: var(--vx-color-brand-500);
+  --vx-color-auth-border: rgba(30, 81, 255, 0.12);
+  --vx-color-auth-border-active: rgba(30, 81, 255, 0.55);
   --vx-color-auth-card: var(--vx-color-white);
   --vx-color-auth-card-soft: #f8faff;
-  --vx-color-auth-visual-bg: linear-gradient(145deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
-  --vx-color-auth-node-rgb: 147 197 253;
+  --vx-color-auth-visual-bg: var(--vx-gradient-aurora);
+  --vx-color-auth-node-rgb: 168 85 247;
   --vx-color-auth-visual-grid: rgba(255, 255, 255, 0.06);
   --vx-color-auth-visual-panel: rgba(15, 23, 42, 0.22);
   --vx-color-auth-visual-text: var(--vx-color-white);
@@ -96,7 +96,7 @@
   --vx-color-shell-border: rgba(15, 23, 42, 0.07);
   --vx-color-shell-text: #162033;
   --vx-color-shell-muted: #6b7a90;
-  --vx-color-shell-brand: #2f6fed;
+  --vx-color-shell-brand: var(--vx-color-brand-600);
   --vx-color-shell-ink: var(--vx-color-brand-950);
   --vx-color-shell-subtle: #93a0b4;
   --vx-color-shell-icon: #5f7088;

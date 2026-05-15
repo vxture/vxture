@@ -543,7 +543,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 3. 已完成：`pnpm lint:design` 增加 `ds/no-large-token-style-leaf`，防止新的 token 模块重新膨胀；`tokens-*` 被识别为 DS token owner，允许维护运行时 token 值。
 4. 已完成：`platform-*-tokens.css` 作用域变量组装文件已改名为 `*-bindings.css`；新增 `ds/no-misnamed-token-style-module`，禁止非 runtime token 层继续使用 `*-tokens.css` 命名。
 5. 分层边界：DS 只沉淀 token、基础组件语义类、跨应用 pattern 和 portal style pack；应用侧只组合业务场景，不定义 `--vx-*`、不直接消费底层 UI 引擎、不直接引用 DS 内部 `tokens-*` 文件。
-6. 已完成：Quantum AI 色板已按低风险方案从临时 patch 迁入 DS token 分层；新增 `tokens-gradients.css`，同步 AI 语义 token、Tailwind 语义 bridge、暗色主题覆盖、README、包说明和使用规范；新增 `ds/no-app-ai-primitive-token`，禁止应用侧直接消费 AI primitive 色阶。本批未替换品牌主色，未把 auth / shell 切换到 aurora 视觉；原始 patch 已归档到 `docs/design/tokens-quantum-ai.md`。
+6. 已完成：Quantum AI 色板已按完整方案从临时 patch 迁入 DS token 分层；`tokens-colors-primitives.css` 替换 brand ramp 并新增 AI / AI-CYAN / SPARK primitive，`tokens-colors-semantic.css` 更新 primary、border、ring、auth、shell 与 AI semantic，`tokens-gradients.css` 承接 aurora / brand / AI duo / spark pulse，`tokens-theme-*` 同步 Tailwind bridge，暗色主题、README、包说明和使用规范同步更新；新增 `ds/no-app-ai-primitive-token`，禁止应用侧直接消费 AI primitive 色阶。原始 patch 已归档到 `docs/design/tokens-quantum-ai.md`。
 
 ## 后续验收清单
 

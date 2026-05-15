@@ -24,11 +24,11 @@
   --vx-color-ring-strong: rgba(96, 165, 250, 0.42);
   --vx-color-overlay: rgba(2, 6, 23, 0.62);
 
-  --vx-color-primary: #60a5fa;
-  --vx-color-primary-hover: #93c5fd;
-  --vx-color-primary-strong: #93c5fd;
-  --vx-color-primary-soft: rgba(96, 165, 250, 0.14);
-  --vx-color-primary-subtle: rgba(96, 165, 250, 0.13);
+  --vx-color-primary: var(--vx-color-brand-400);
+  --vx-color-primary-hover: var(--vx-color-brand-300);
+  --vx-color-primary-strong: var(--vx-color-brand-300);
+  --vx-color-primary-soft: color-mix(in srgb, var(--vx-color-brand-400) 14%, transparent);
+  --vx-color-primary-subtle: color-mix(in srgb, var(--vx-color-brand-400) 13%, transparent);
 
   --vx-color-ai: var(--vx-color-ai-400);
   --vx-color-ai-hover: var(--vx-color-ai-300);
@@ -51,8 +51,14 @@
   --vx-color-auth-text: #e2e8f0;
   --vx-color-auth-secondary: #cbd5e1;
   --vx-color-auth-muted: #94a3b8;
+  --vx-color-auth-accent: var(--vx-color-brand-400);
+  --vx-color-auth-accent-light: var(--vx-color-brand-300);
+  --vx-color-auth-border: color-mix(in srgb, var(--vx-color-brand-400) 18%, transparent);
+  --vx-color-auth-border-active: color-mix(in srgb, var(--vx-color-brand-400) 48%, transparent);
   --vx-color-auth-card: rgba(15, 23, 42, 0.94);
   --vx-color-auth-card-soft: rgba(15, 23, 42, 0.38);
+  --vx-color-auth-visual-bg: var(--vx-gradient-aurora);
+  --vx-color-auth-node-rgb: 168 85 247;
 
   --vx-color-shell-bg: #07101f;
   --vx-color-shell-surface: #0d1728;
@@ -60,7 +66,7 @@
   --vx-color-shell-border: rgba(148, 163, 184, 0.16);
   --vx-color-shell-text: #e6edf7;
   --vx-color-shell-muted: #95a3b8;
-  --vx-color-shell-brand: #60a5fa;
+  --vx-color-shell-brand: var(--vx-color-brand-400);
   --vx-color-shell-ink: var(--vx-color-brand-200);
   --vx-color-shell-subtle: #9badc4;
   --vx-color-shell-icon: var(--vx-color-gray-300);

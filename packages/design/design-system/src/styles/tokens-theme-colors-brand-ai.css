@@ -23,6 +23,11 @@
   --color-vx-brand-900: var(--vx-color-brand-900);
   --color-vx-brand-950: var(--vx-color-brand-950);
 
+  --color-vx-ai-50: var(--vx-color-ai-50);
+  --color-vx-ai-100: var(--vx-color-ai-100);
+  --color-vx-ai-500: var(--vx-color-ai-500);
+  --color-vx-ai-600: var(--vx-color-ai-600);
+  --color-vx-ai-700: var(--vx-color-ai-700);
   --color-vx-ai: var(--vx-color-ai);
   --color-vx-ai-hover: var(--vx-color-ai-hover);
   --color-vx-ai-surface: var(--vx-color-ai-surface);
@@ -30,9 +35,13 @@
   --color-vx-ai-border: var(--vx-color-ai-border);
   --color-vx-ai-foreground: var(--vx-color-ai-foreground);
 
+  --color-vx-ai-cyan-100: var(--vx-color-ai-cyan-100);
+  --color-vx-ai-cyan-500: var(--vx-color-ai-cyan-500);
   --color-vx-ai-cyan: var(--vx-color-ai-cyan);
   --color-vx-ai-cyan-soft: var(--vx-color-ai-cyan-soft);
 
+  --color-vx-spark-100: var(--vx-color-spark-100);
+  --color-vx-spark-400: var(--vx-color-spark-400);
   --color-vx-spark: var(--vx-color-spark);
   --color-vx-spark-soft: var(--vx-color-spark-soft);
 }
