@@ -1,6 +1,6 @@
 # Vxture 数据库顶层架构设计
 
-> 版本：1.0.0 | 2026-05-14
+> 版本：1.1.0 | 2026-05-15
 > 上级文档：[`docs/design/control-plane.md`](control-plane.md)（双平面架构概要）
 
 ---
@@ -33,13 +33,13 @@ Vxture 数据库体系遵循双平面架构，与代码架构严格对应：
 
 **Beta 是环境隔离，不是套餐隔离。**
 
-| 维度 | Beta 业务数据库 | Prod 业务数据库 |
-|------|--------------|--------------|
-| 目标用户 | 公测用户、内部测试、功能验证 | 所有正式用户（含 Free 套餐） |
-| 数据生命周期 | 可自动清理、限期保留、可重置 | 永久保留，受合规约束 |
-| 数据迁移方向 | Beta → Prod（转正时迁移业务数据） |  |
-| 配额/订阅来源 | 仍来自 Platform DB（统一配额） | 仍来自 Platform DB（统一配额） |
-| SLA | 无承诺 | 承诺 |
+| 维度          | Beta 业务数据库                   | Prod 业务数据库                |
+| ------------- | --------------------------------- | ------------------------------ |
+| 目标用户      | 公测用户、内部测试、功能验证      | 所有正式用户（含 Free 套餐）   |
+| 数据生命周期  | 可自动清理、限期保留、可重置      | 永久保留，受合规约束           |
+| 数据迁移方向  | Beta → Prod（转正时迁移业务数据） |                                |
+| 配额/订阅来源 | 仍来自 Platform DB（统一配额）    | 仍来自 Platform DB（统一配额） |
+| SLA           | 无承诺                            | 承诺                           |
 
 **Free 套餐用户走 Prod**，因为 Free 是正式订阅计划（`plan_code = 'free'`），只是配额受限，不是试用环境。
 
@@ -69,7 +69,7 @@ Vxture 数据库体系遵循双平面架构，与代码架构严格对应：
 │  vx-aigateway-pg                                             │
 │  PostgreSQL — worker-02，仅 Prod，高写入量分离               │
 │                                                              │
-│  Database: vxturebiz_aigateway_main                          │
+│  Database: vxturestudio_aigateway_main                          │
 │  ├── schema: routing       模型路由规则 / Provider 配置       │
 │  ├── schema: key           API Key 安全存储（加密）           │
 │  └── schema: reqlog        请求日志（高频，独立归档策略）      │
@@ -94,12 +94,12 @@ Vxture 数据库体系遵循双平面架构，与代码架构严格对应：
 
 ### 2.2 数据库命名规则
 
-| 类型 | 命名模式 | 示例 |
-|------|---------|------|
-| 平台控制面 | `vxturestudio_platform_main` | 唯一，固定名 |
-| AI Gateway | `vxturebiz_aigateway_main` | 唯一，固定名 |
-| 业务 Beta | `vxturebiz_{product}_beta` | `vxturebiz_ruyin_beta` / `vxturebiz_xuanzhen_beta` |
-| 业务 Prod | `vxturebiz_{product}_prod` | `vxturebiz_ruyin_prod` / `vxturebiz_xuanzhen_prod` |
+| 类型       | 命名模式                      | 示例                                               |
+| ---------- | ----------------------------- | -------------------------------------------------- |
+| 平台控制面 | `vxturestudio_platform_main`  | 唯一，固定名                                       |
+| AI Gateway | `vxturestudio_aigateway_main` | 唯一，固定名                                       |
+| 业务 Beta  | `vxturebiz_{product}_beta`    | `vxturebiz_ruyin_beta` / `vxturebiz_xuanzhen_beta` |
+| 业务 Prod  | `vxturebiz_{product}_prod`    | `vxturebiz_ruyin_prod` / `vxturebiz_xuanzhen_prod` |
 
 ---
 
@@ -120,6 +120,7 @@ core_tables:
 ```
 
 **约束：**
+
 - `account.status`：`active | suspended | deleted`（软删除）
 - `account_credential` 与 `account` 1-1，写时加密
 - `account_session` 支持黑名单（logout 时写 blacklist，JWT 校验时查）
@@ -140,6 +141,7 @@ core_tables:
 ```
 
 **核心字段设计：**
+
 - `tenant.type`：`individual | organization`
 - `tenant.status`：`active | suspended | deleted`
 - `tenant_member.role`：`owner | admin | member`（粗粒度，细粒度由 iam 管）
@@ -166,11 +168,11 @@ core_tables:
 
 **两套权限域隔离：**
 
-| 域 | 位置 | 用途 |
-|----|------|------|
-| 租户域 RBAC | `iam.tenant_role / permission` | 控制租户成员在 console 内的操作权限 |
-| 平台能力 Capability | `iam.capability` | 控制租户可访问哪些功能（由订阅计划决定） |
-| 运营域 RBAC | `ops.role / ops.permission` | 控制运营人员在 admin 后台的权限 |
+| 域                  | 位置                           | 用途                                     |
+| ------------------- | ------------------------------ | ---------------------------------------- |
+| 租户域 RBAC         | `iam.tenant_role / permission` | 控制租户成员在 console 内的操作权限      |
+| 平台能力 Capability | `iam.capability`               | 控制租户可访问哪些功能（由订阅计划决定） |
+| 运营域 RBAC         | `ops.role / ops.permission`    | 控制运营人员在 admin 后台的权限          |
 
 ---
 
@@ -219,6 +221,7 @@ core_tables:
 ```
 
 **用量数据聚合路径：**
+
 ```
 Business DB 用量事件（本地上报）
         ↓ 异步聚合 Job（每分钟）
@@ -298,7 +301,7 @@ core_tables:
 **独立原因：** 请求日志写入量极高（每次 AI 调用写一条），与平台 DB 共实例会影响 OLTP 性能。
 
 ```
-Database: vxturebiz_aigateway_main
+Database: vxturestudio_aigateway_main
 
 schema: routing
   provider_config    -- Provider 连接配置（endpoint / timeout / 重试策略）
@@ -315,6 +318,7 @@ schema: reqlog
 ```
 
 **与 Platform DB 的关系：**
+
 - AI Gateway 读 `platform.model` 获取模型定义
 - AI Gateway 写 `commerce.tenant_usage_event` 到 Platform DB（用量计量权威）
 - `reqlog` 是 AI Gateway 内部审计，不同于 `commerce.tenant_usage_event`
@@ -443,6 +447,7 @@ Beta 数据生命周期：
 ```
 
 **数据流向规则：**
+
 1. 平台 DB 数据**不下沉**到业务 DB（不复制 tenant / account 详情）
 2. 业务 DB 只持有 `tenant_id` / `user_id` 作为外部引用
 3. 用量数据**只上报**到平台 DB，不在业务 DB 做配额判断
@@ -454,20 +459,23 @@ Beta 数据生命周期：
 
 ### 8.1 备份策略
 
-| 数据库 | 备份频率 | 保留期 | 策略 |
-|--------|---------|--------|------|
-| Platform DB | 每日全量 + 实时 WAL | 30 天 + 年度归档 | 异地双份，加密 |
-| AI Gateway DB | 每日全量 | 14 天 | 同机房备份 |
-| Business Prod | 每日全量 + WAL | 30 天 | 同机房备份 |
-| Business Beta | 每日全量 | 7 天 | 本地备份，可重建 |
+| 数据库        | 备份频率            | 保留期           | 策略             |
+| ------------- | ------------------- | ---------------- | ---------------- |
+| Platform DB   | 每日全量 + 实时 WAL | 30 天 + 年度归档 | 异地双份，加密   |
+| AI Gateway DB | 每日全量            | 14 天            | 同机房备份       |
+| Business Prod | 每日全量 + WAL      | 30 天            | 同机房备份       |
+| Business Beta | 每日全量            | 7 天             | 本地备份，可重建 |
 
 ### 8.2 访问控制
 
-| 数据库 | 应用账号权限 | 禁止 |
-|--------|------------|------|
-| Platform DB | 各 schema 独立账号，最小权限 | DDL 操作、跨 schema 直接 JOIN（通过服务层聚合） |
-| AI Gateway DB | aigateway 专属账号 | 其他服务直接访问 |
-| Business DB | 各 product service 专属账号 | 跨产品访问、直接读 Platform DB |
+> 详细分层规则、PostgreSQL GRANT 脚本、BFF 访问矩阵、演进路线图见
+> **[`docs/design/data-access.md`](data-access.md)**（执行级别：强制）。
+
+| 数据库        | 应用账号权限                                   | 禁止                                            |
+| ------------- | ---------------------------------------------- | ----------------------------------------------- |
+| Platform DB   | 各 schema 独立 PG 角色，最小权限（见 §3 GRANT） | DDL 操作、BFF 绕过 Domain Service 直连           |
+| AI Gateway DB | `aigateway_svc` 专属账号                       | 其他服务直接访问                                |
+| Business DB   | 各 product service 专属账号                    | 跨产品访问、直接读 Platform DB                  |
 
 ### 8.3 Schema 迁移原则
 
@@ -497,17 +505,17 @@ Beta 数据生命周期：
 
 ### 9.2 字段命名
 
-| 约定 | 示例 |
-|------|------|
-| 主键 | `id UUID DEFAULT gen_random_uuid()` |
-| 外键 | `{entity}_id` |
-| 时间戳 | `created_at / updated_at TIMESTAMPTZ` |
-| 软删除 | `deleted_at TIMESTAMPTZ NULL` |
-| 状态枚举 | `status VARCHAR(32)`（用 CHECK 约束，不用 PG ENUM） |
-| 布尔标志 | `is_{name} BOOLEAN` |
-| JSON 扩展字段 | `metadata JSONB NULL` |
-| 货币金额 | `NUMERIC(12,2)`（单位：元，不用浮点） |
-| Token 数量 | `BIGINT`（可能超过 INT 范围） |
+| 约定          | 示例                                                |
+| ------------- | --------------------------------------------------- |
+| 主键          | `id UUID DEFAULT gen_random_uuid()`                 |
+| 外键          | `{entity}_id`                                       |
+| 时间戳        | `created_at / updated_at TIMESTAMPTZ`               |
+| 软删除        | `deleted_at TIMESTAMPTZ NULL`                       |
+| 状态枚举      | `status VARCHAR(32)`（用 CHECK 约束，不用 PG ENUM） |
+| 布尔标志      | `is_{name} BOOLEAN`                                 |
+| JSON 扩展字段 | `metadata JSONB NULL`                               |
+| 货币金额      | `NUMERIC(12,2)`（单位：元，不用浮点）               |
+| Token 数量    | `BIGINT`（可能超过 INT 范围）                       |
 
 ### 9.3 索引命名
 
@@ -525,16 +533,16 @@ chk_{table}_{rule}            -- CHECK 约束
 
 ### Phase 1（当前）：平台核心域上线
 
-| Schema | 状态 |
-|--------|------|
-| `identity` | ✅ 基本表已建立 |
-| `tenant` | ✅ 基本表已建立 |
-| `iam` | ✅ 租户域已建立，平台域待补全 |
-| `product` | ✅ 静态配置表已建立 |
+| Schema     | 状态                             |
+| ---------- | -------------------------------- |
+| `identity` | ✅ 基本表已建立                  |
+| `tenant`   | ✅ 基本表已建立                  |
+| `iam`      | ✅ 租户域已建立，平台域待补全    |
+| `product`  | ✅ 静态配置表已建立              |
 | `commerce` | ✅ Schema 已建立，支付流程待完善 |
-| `model` | ⚠️ 基本表已建立，模型策略待补全 |
-| `ops` | ⚠️ 运营账号已建，治理表待补全 |
-| `support` | ⚠️ 工单表已建，审计分区待配置 |
+| `model`    | ⚠️ 基本表已建立，模型策略待补全  |
+| `ops`      | ⚠️ 运营账号已建，治理表待补全    |
+| `support`  | ⚠️ 工单表已建，审计分区待配置    |
 
 ### Phase 2：业务 DB 标准化
 
@@ -554,13 +562,13 @@ chk_{table}_{rule}            -- CHECK 约束
 
 ## 11. 关键设计约束汇总
 
-| 约束 | 原因 |
-|------|------|
-| Platform DB 不存业务执行数据 | 控制面不应因业务洪峰降级 |
-| 业务 DB 不存配额/订阅数据 | 配额必须统一，不能分布式 |
-| AI Gateway 是用量写入唯一入口 | 防止绕过配额、保证审计完整 |
-| `tenant_transaction` 不可变 | 账本是法律证据，任何修改都是追加冲正 |
-| `tenant_usage_event` Append-only | 用量数据是计费依据，不允许删改 |
-| Beta / Prod 业务 DB 物理隔离 | 防止测试数据污染生产，支持独立清理 |
-| Free 套餐走 Prod | Free 是正式订阅，不是测试环境 |
-| API Key 只在 AI Gateway DB 存储 | 降低平台 DB 被攻击时的 Key 泄露风险 |
+| 约束                             | 原因                                 |
+| -------------------------------- | ------------------------------------ |
+| Platform DB 不存业务执行数据     | 控制面不应因业务洪峰降级             |
+| 业务 DB 不存配额/订阅数据        | 配额必须统一，不能分布式             |
+| AI Gateway 是用量写入唯一入口    | 防止绕过配额、保证审计完整           |
+| `tenant_transaction` 不可变      | 账本是法律证据，任何修改都是追加冲正 |
+| `tenant_usage_event` Append-only | 用量数据是计费依据，不允许删改       |
+| Beta / Prod 业务 DB 物理隔离     | 防止测试数据污染生产，支持独立清理   |
+| Free 套餐走 Prod                 | Free 是正式订阅，不是测试环境        |
+| API Key 只在 AI Gateway DB 存储  | 降低平台 DB 被攻击时的 Key 泄露风险  |

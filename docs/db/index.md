@@ -8,27 +8,27 @@
 
 ## 容器分布
 
-| 容器 | 节点 | 数据库名 | 管理方 |
-|------|------|---------|--------|
-| `vx-platform-pg` | worker-01 | `vxturestudio_platform_main` | `@vxture/core-database` |
-| `vx-ai-gateway-pg` | worker-02 | `vxturebiz_aigateway_main` | `services/ai/gateway`（独立 Prisma） |
-| `vx-vela-pg` | worker-02 | `vxturebiz_vela_main` | `agent-server/vela`（独立 Prisma） |
-| `vx-ruyin-pg` | worker-02 | `vxturebiz_ruyin_main` | `agent-server/ruyin`（独立 Prisma） |
+| 容器               | 节点      | 数据库名                      | 管理方                               |
+| ------------------ | --------- | ----------------------------- | ------------------------------------ |
+| `vx-platform-pg`   | worker-01 | `vxturestudio_platform_main`  | `@vxture/core-database`              |
+| `vx-ai-gateway-pg` | worker-02 | `vxturestudio_aigateway_main` | `services/ai/gateway`（独立 Prisma） |
+| `vx-vela-pg`       | worker-02 | `vxturebiz_vela_main`         | `agent-server/vela`（独立 Prisma）   |
+| `vx-ruyin-pg`      | worker-02 | `vxturebiz_ruyin_main`        | `agent-server/ruyin`（独立 Prisma）  |
 
 ---
 
 ## 平台库 Schema 分布（`vx-platform-pg`）
 
-| Schema | 表数 | 主要消费方 |
-|--------|------|-----------|
-| `identity` | 10 | auth-bff, website-bff |
-| `iam` | 6 | auth-bff, console-bff |
-| `tenant` | 7 | website-bff, console-bff |
-| `product` | 7 | admin-bff |
-| `commerce` | 12 | admin-bff, console-bff |
-| `model` | 5 | admin-bff |
-| `ops` | 9 | admin-bff |
-| `support` | 4 | admin-bff |
+| Schema     | 表数 | 主要消费方               |
+| ---------- | ---- | ------------------------ |
+| `identity` | 10   | auth-bff, website-bff    |
+| `iam`      | 6    | auth-bff, console-bff    |
+| `tenant`   | 7    | website-bff, console-bff |
+| `product`  | 7    | admin-bff                |
+| `commerce` | 12   | admin-bff, console-bff   |
+| `model`    | 5    | admin-bff                |
+| `ops`      | 9    | admin-bff                |
+| `support`  | 4    | admin-bff                |
 
 권위参考：`packages/core/database/prisma/schema.prisma`
 
@@ -36,11 +36,11 @@
 
 ## 业务库 Schema（各自独立容器）
 
-| 容器 | Schema | 主要消费方 |
-|------|--------|-----------|
-| `vx-ai-gateway-pg` | `ai_gateway` | ai-gateway 服务 |
-| `vx-vela-pg` | `vela` | agent-server/vela |
-| `vx-ruyin-pg` | `ruyin` | agent-server/ruyin |
+| 容器               | Schema       | 主要消费方         |
+| ------------------ | ------------ | ------------------ |
+| `vx-ai-gateway-pg` | `ai_gateway` | ai-gateway 服务    |
+| `vx-vela-pg`       | `vela`       | agent-server/vela  |
+| `vx-ruyin-pg`      | `ruyin`      | agent-server/ruyin |
 
 业务库不存储平台数据（用户、订阅、支付等），只保留 `tenant_id` / `user_id` 用于关联。
 
@@ -84,7 +84,7 @@ npx prisma migrate resolve --applied "0001_schema_migration" \
 
 待确认的表结构设计文档（尚未进入 Prisma schema）：
 
-| 文档 | 内容 |
-|------|------|
+| 文档                                               | 内容                                       |
+| -------------------------------------------------- | ------------------------------------------ |
 | [`platform-governance.md`](platform-governance.md) | `ops.governance_record` 统一治理视图表设计 |
-| [`tickets.md`](tickets.md) | `support.ticket` 工单表 + 运营待办聚合方案 |
+| [`tickets.md`](tickets.md)                         | `support.ticket` 工单表 + 运营待办聚合方案 |
