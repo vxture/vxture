@@ -13,7 +13,7 @@
 
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { Geist_Mono, Inter, Sora } from 'next/font/google';
+import { Funnel_Display, Geist_Mono, Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { FullscreenProvider, ThemeProvider } from '@vxture/design-system';
 import type { Density } from '@vxture/design-system';
@@ -21,23 +21,23 @@ import { DEFAULT_LOCALE, PREFERENCE_CONSTANTS, THEME_CONSTANTS } from '@vxture/s
 import type { Theme } from '@vxture/shared';
 import './globals.css';
 
-const sora = Sora({
+const fontBrand = Funnel_Display({
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
   variable: '--vx-font-loader-brand',
 });
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
   variable: '--vx-font-loader-sans',
 });
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['400', '500', '600'],
   display: 'swap',
   variable: '--vx-font-loader-mono',
 });
@@ -57,7 +57,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
-      <body className={`${sora.variable} ${inter.variable} ${geistMono.variable}`}>
+      <body className={`${fontBrand.variable} ${inter.variable} ${geistMono.variable}`}>
         <ThemeProvider defaultTheme={initialTheme} defaultDensity={initialDensity}>
           <FullscreenProvider defaultMode="native" defaultLockScroll={false}>
             {children}

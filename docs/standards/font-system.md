@@ -3,7 +3,7 @@
 版本：v1.0  
 日期：2026-05-08  
 适用对象：AI SaaS 官网、产品控制台、文档中心、营销物料、中文与中英文混排界面  
-品牌字体决策：**Sora 作为主品牌字体**
+品牌字体决策：**Funnel Display 作为主品牌字体**
 
 ---
 
@@ -12,7 +12,7 @@
 Virtual Nature Studio 的字体体系采用 **“品牌字体 + 产品字体 + 中文字体 + 等宽字体”** 的分层架构。
 
 ```text
-Brand / Display: Sora
+Brand / Display: Funnel Display
 Product UI / Body: Inter
 Chinese / CJK: Noto Sans SC + 系统中文 fallback
 Mono / Code: Geist Mono + system mono fallback
@@ -21,10 +21,10 @@ Mono / Code: Geist Mono + system mono fallback
 一句话规范：
 
 ```text
-Sora 负责品牌记忆点，Inter 负责产品可读性，Noto Sans SC 负责中文稳定性，Geist Mono 负责代码和数据场景。
+Funnel Display 负责品牌记忆点，Inter 负责产品可读性，Noto Sans SC 负责中文稳定性，Geist Mono 负责代码和数据场景。
 ```
 
-不建议全站只使用 Sora。Sora 应作为品牌与展示层字体使用；正文、控制台、表单、数据密集页面应使用 Inter 与中文 fallback，以保证长期阅读和复杂 UI 的稳定性。
+不建议全站只使用 Funnel Display。Funnel Display 应作为品牌与展示层字体使用；正文、控制台、表单、数据密集页面应使用 Inter 与中文 fallback，以保证长期阅读和复杂 UI 的稳定性。
 
 ---
 
@@ -64,8 +64,8 @@ AI / virtual / creative / nature / studio
 
 | Token | 字体 | 角色 | 主要场景 | 使用优先级 |
 |---|---|---|---|---:|
-| `--font-brand` | Sora | 品牌字体 | Logo、品牌名、Hero 主标题、营销页大标题 | P0 |
-| `--font-display` | Sora | 展示标题字体 | Landing Page、Section Title、Campaign 标题 | P0 |
+| `--font-brand` | Funnel Display | 品牌字体 | Logo、品牌名、Hero 主标题、营销页大标题 | P0 |
+| `--font-display` | Funnel Display | 展示标题字体 | Landing Page、Section Title、Campaign 标题 | P0 |
 | `--font-sans` | Inter + CJK fallback | 产品通用字体 | 正文、按钮、导航、表单、产品界面 | P0 |
 | `--font-cjk` | Noto Sans SC + 系统中文 | 中文专用字体 | 中文正文、帮助文档、中文标题、中文界面 | P0 |
 | `--font-mono` | Geist Mono + system mono | 等宽字体 | 代码、API Key、JSON、Prompt、日志、命令行 | P1 |
@@ -73,11 +73,11 @@ AI / virtual / creative / nature / studio
 
 ### 2.2 核心决策
 
-#### Sora 不承担全站正文
+#### Funnel Display 不承担全站正文
 
-Sora 是品牌字体，不是全场景 UI 字体。它用于建立 Virtual Nature Studio 的第一视觉印象：科技、几何、未来、创作感。
+Funnel Display 是品牌字体，不是全场景 UI 字体。它用于建立 Virtual Nature Studio 的第一视觉印象：科技、几何、未来、创作感。
 
-允许使用 Sora 的场景：
+允许使用 Funnel Display 的场景：
 
 ```text
 Logo
@@ -89,7 +89,7 @@ Feature Section 标题
 社交媒体海报标题
 ```
 
-不建议使用 Sora 的场景：
+不建议使用 Funnel Display 的场景：
 
 ```text
 大段正文
@@ -125,7 +125,7 @@ FAQ
 
 #### Noto Sans SC 是中文稳定层
 
-Sora 与 Inter 主要解决拉丁字符体验，中文需要独立 fallback 策略。
+Funnel Display 与 Inter 主要解决拉丁字符体验，中文需要独立 fallback 策略。
 
 中文优先顺序：
 
@@ -138,7 +138,7 @@ Noto Sans SC → PingFang SC → Hiragino Sans GB → Microsoft YaHei → Noto S
 - `Noto Sans SC` 负责跨平台一致性。
 - `PingFang SC` 负责 macOS / iOS 中文系统体验。
 - `Microsoft YaHei` 负责 Windows 中文 fallback。
-- 中文不要被迫套用 Sora 的 tracking 规则。
+- 中文不要被迫套用 Funnel Display 的 tracking 规则。
 
 #### Geist Mono 用于技术表达
 
@@ -166,9 +166,9 @@ code snippet
 @import "tailwindcss";
 
 @theme {
-  --font-brand: "Sora", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
 
-  --font-display: "Sora", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
 
   --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
@@ -182,8 +182,8 @@ code snippet
 
 ```css
 :root {
-  --font-brand: "Sora", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Sora", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-cjk: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -238,7 +238,7 @@ samp,
 
 | 优先级 | 字体 | 建议加载方式 | 说明 |
 |---|---|---|---|
-| P0 | Sora | preload / self-host / variable font | 首屏品牌字体，影响第一印象 |
+| P0 | Funnel Display | preload / self-host / variable font | 首屏品牌字体，影响第一印象 |
 | P0 | Inter | self-host / variable font | 全站 UI 与正文主力字体 |
 | P1 | Geist Mono | 按需加载或全局轻量加载 | 代码、API、Prompt 场景 |
 | P1 / P2 | Noto Sans SC | 谨慎加载；优先系统 fallback 或子集化 | CJK 文件较大，避免一次加载完整字体全家桶 |
@@ -248,26 +248,26 @@ samp,
 1. 首屏最多 preload 1 个品牌字体文件。
 2. 优先使用 `woff2`。
 3. 所有 Web Font 必须设置 `font-display: swap`。
-4. 不要在首屏同时加载 Sora、Inter、Noto Sans SC 多字重完整文件。
+4. 不要在首屏同时加载 Funnel Display、Inter、Noto Sans SC 多字重完整文件。
 5. 中文字体按需加载，优先使用系统中文 fallback；确有品牌一致性要求时再引入 Noto Sans SC。
 6. 字重控制在有限范围：
 
 ```text
-Sora: 600 / 700 / 800
-Inter: 400 / 500 / 600 / 700
+Funnel Display: 400 / 500 / 600 / 700 / 800
+Inter: 400 / 500 / 600 / 700 / 800 / 900
 Noto Sans SC: 400 / 500 / 700
-Geist Mono: 400 / 500
+Geist Mono: 400 / 500 / 600
 ```
 
-7. 营销页可以加载 Sora 更重字重；产品控制台不应加载过多展示字体。
+7. 营销页可以加载 Funnel Display 更重字重；产品控制台不应加载过多展示字体。
 8. 对中文长文页，允许优先使用系统中文字体，降低首屏字体资源压力。
 
 ### 4.3 `@font-face` 示例
 
 ```css
 @font-face {
-  font-family: "Sora";
-  src: url("/fonts/sora-variable.woff2") format("woff2");
+  font-family: "Funnel Display";
+  src: url("/fonts/funnel-display-variable.woff2") format("woff2");
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
@@ -311,11 +311,11 @@ Geist Mono: 400 / 500
 
 | Token | 字体 | 字重 | 字号 | 行高 | 字距 | 用途 |
 |---|---|---:|---:|---:|---:|---|
-| `display-hero` | Sora | 800 | `clamp(56px, 8vw, 128px)` | 0.92 | `-0.055em` | 首页 Hero 主标题 |
-| `display-xl` | Sora | 800 | `clamp(44px, 6vw, 88px)` | 0.95 | `-0.05em` | 营销页大标题 |
-| `display-lg` | Sora | 700 | `48px` | 1.02 | `-0.04em` | 页面主标题 |
-| `heading-1` | Sora / Inter | 700 | `40px` | 1.1 | `-0.035em` | H1 |
-| `heading-2` | Sora / Inter | 700 | `32px` | 1.15 | `-0.025em` | H2 |
+| `display-hero` | Funnel Display | 800 | `clamp(56px, 8vw, 128px)` | 0.95 | `-0.048em` | 首页 Hero 主标题 |
+| `display-xl` | Funnel Display | 800 | `clamp(44px, 6vw, 88px)` | 0.98 | `-0.045em` | 营销页大标题 |
+| `display-lg` | Funnel Display | 700 | `48px` | 1.02 | `-0.04em` | 页面主标题 |
+| `heading-1` | Funnel Display / Inter | 700 | `40px` | 1.1 | `-0.035em` | H1 |
+| `heading-2` | Funnel Display / Inter | 700 | `32px` | 1.15 | `-0.025em` | H2 |
 | `heading-3` | Inter | 600 | `24px` | 1.25 | `-0.015em` | H3 / 卡片标题 |
 | `body-lg` | Inter | 400 / 500 | `18px` | 1.7 | `0` | 营销页段落 |
 | `body` | Inter | 400 | `16px` | 1.6 | `0` | 正文 / UI |
@@ -332,16 +332,16 @@ Geist Mono: 400 / 500
   font-family: var(--font-brand);
   font-size: clamp(3.5rem, 8vw, 8rem);
   font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.055em;
+  line-height: 0.95;
+  letter-spacing: -0.048em;
 }
 
 .text-display-xl {
   font-family: var(--font-display);
   font-size: clamp(2.75rem, 6vw, 5.5rem);
   font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.05em;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
 }
 
 .text-heading-1 {
@@ -416,7 +416,7 @@ Logo CSS：
 .logo-text {
   font-family: var(--font-brand);
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   line-height: 1;
 }
 ```
@@ -427,7 +427,7 @@ Logo CSS：
 .logo-text-large {
   font-family: var(--font-brand);
   font-weight: 800;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.04em;
   line-height: 0.95;
 }
 ```
@@ -450,9 +450,9 @@ studio
 
 Hero Title 规则：
 
-1. 使用 `Sora 800`。
+1. 使用 `Funnel Display 800`。
 2. 字距使用 `-0.045em` 到 `-0.06em`。
-3. 行高使用 `0.92` 到 `0.98`。
+3. 行高使用 `0.95` 到 `0.98`。
 4. 不要在 Hero Title 中混入过长中文句子。
 5. 若需要中文副标题，中文副标题单独成行，使用 `Noto Sans SC / Inter stack`。
 
@@ -470,7 +470,7 @@ Hero Title 规则：
 
 ### 6.3 中文品牌副标题
 
-中文副标题不使用 Sora 的紧字距规则。
+中文副标题不使用 Funnel Display 的紧字距规则。
 
 ```css
 .brand-subtitle-cn {
@@ -488,7 +488,7 @@ Hero Title 规则：
 
 ### 7.1 导航
 
-导航使用 Inter，不使用 Sora。
+导航使用 Inter，不使用 Funnel Display。
 
 ```css
 .nav-item {
@@ -514,7 +514,7 @@ Hero Title 规则：
 }
 ```
 
-营销页主 CTA 可允许 Sora，但只限短按钮，例如：
+营销页主 CTA 可允许 Funnel Display，但只限短按钮，例如：
 
 ```text
 Create Now
@@ -522,7 +522,7 @@ Start Studio
 Explore Nature AI
 ```
 
-产品控制台按钮不使用 Sora。
+产品控制台按钮不使用 Funnel Display。
 
 ### 7.3 表单
 
@@ -546,7 +546,7 @@ Placeholder 不应使用过轻字重；最低使用 400。
 标题：Inter 600。  
 正文：Inter 400。  
 标签：Inter 500。  
-不要在复杂组件内同时混用 Sora 与 Inter。
+不要在复杂组件内同时混用 Funnel Display 与 Inter。
 
 ```css
 .card-title {
@@ -570,10 +570,10 @@ Placeholder 不应使用过轻字重；最低使用 400。
 
 ### 8.1 混排原则
 
-1. 英文品牌名可以使用 Sora。
-2. 中文正文不使用 Sora。
+1. 英文品牌名可以使用 Funnel Display。
+2. 中文正文不使用 Funnel Display。
 3. 中英文混排长句使用 `--font-sans`，不要使用 `--font-brand`。
-4. 短品牌标题可分 span，英文 Sora，中文 Noto Sans SC。
+4. 短品牌标题可分 span，英文 Funnel Display，中文 Noto Sans SC。
 5. 中文行高比英文更大，正文建议 `1.7` 到 `1.85`。
 6. 中文不要使用过大的负字距。
 
@@ -592,7 +592,7 @@ Placeholder 不应使用过轻字重；最低使用 400。
 .hero-title .font-brand {
   font-family: var(--font-brand);
   font-weight: 800;
-  letter-spacing: -0.055em;
+  letter-spacing: -0.048em;
   line-height: 0.95;
 }
 
@@ -617,7 +617,7 @@ Placeholder 不应使用过轻字重；最低使用 400。
 
 原因：
 
-- 中文会 fallback 到中文字体，但继承 Sora 的负字距和展示级行高。
+- 中文会 fallback 到中文字体，但继承 Funnel Display 的负字距和展示级行高。
 - 中文可读性下降。
 - 混排节奏不稳定。
 
@@ -773,7 +773,7 @@ font-mono
 示例：
 
 ```html
-<h1 class="font-brand text-7xl font-extrabold tracking-[-0.055em] leading-[0.92]">
+<h1 class="font-brand text-7xl font-extrabold tracking-[-0.048em] leading-[0.95]">
   Virtual Nature Studio
 </h1>
 
@@ -794,8 +794,8 @@ font-mono
 
 | 组件 | Font Class | Weight | Tracking |
 |---|---|---:|---:|
-| Logo | `font-brand` | 700 / 800 | `-0.035em` 到 `-0.05em` |
-| Hero Title | `font-brand` | 800 | `-0.045em` 到 `-0.06em` |
+| Logo | `font-brand` | 700 / 800 | `-0.025em` 到 `-0.04em` |
+| Hero Title | `font-brand` | 800 | `-0.04em` 到 `-0.048em` |
 | Marketing H2 | `font-display` | 700 | `-0.025em` 到 `-0.04em` |
 | Product H1 | `font-sans` | 700 | `-0.025em` |
 | Body | `font-sans` | 400 | `0` |
@@ -832,12 +832,12 @@ font-family: var(--font-mono);
 
 | 区域 | 字体 |
 |---|---|
-| Logo | Sora |
+| Logo | Funnel Display |
 | Navigation | Inter |
-| Hero Title | Sora |
+| Hero Title | Funnel Display |
 | Hero Subtitle | Inter / Noto Sans SC |
 | CTA | Inter 600 |
-| Section Title | Sora |
+| Section Title | Funnel Display |
 | Feature Card | Inter |
 | Footer | Inter |
 
@@ -846,14 +846,14 @@ font-family: var(--font-mono);
 允许更强品牌化：
 
 ```text
-Sora 使用比例：高
+Funnel Display 使用比例：高
 Inter 使用比例：中
 Noto Sans SC：按中文内容需要
 ```
 
 规则：
 
-1. 大标题使用 Sora。
+1. 大标题使用 Funnel Display。
 2. 长段落使用 Inter。
 3. 中文正文使用 Noto Sans SC stack。
 4. 每屏最多 2 种字体角色同时出现。
@@ -863,7 +863,7 @@ Noto Sans SC：按中文内容需要
 控制台以效率和可读性为主：
 
 ```text
-Sora 使用比例：低
+Funnel Display 使用比例：低
 Inter 使用比例：高
 Geist Mono：按技术内容需要
 Noto Sans SC：按中文内容需要
@@ -871,7 +871,7 @@ Noto Sans SC：按中文内容需要
 
 规则：
 
-1. 除品牌标识外，控制台不使用 Sora。
+1. 除品牌标识外，控制台不使用 Funnel Display。
 2. 表格、表单、导航、筛选器统一 Inter。
 3. 数据数字使用 tabular nums。
 4. 代码与模型参数使用 Geist Mono。
@@ -880,7 +880,7 @@ Noto Sans SC：按中文内容需要
 
 | 内容 | 字体 |
 |---|---|
-| 文档标题 | Inter 700 或 Sora 700 |
+| 文档标题 | Inter 700 或 Funnel Display 700 |
 | 文档正文 | Inter / Noto Sans SC |
 | 代码块 | Geist Mono |
 | API 参数 | Geist Mono |
@@ -918,8 +918,8 @@ font-size: 16px 或 18px;
 ### 13.1 字体族命名
 
 ```text
-Font / Brand / Sora
-Font / Display / Sora
+Font / Brand / Funnel Display
+Font / Display / Funnel Display
 Font / Sans / Inter
 Font / CJK / Noto Sans SC
 Font / Mono / Geist Mono
@@ -1101,7 +1101,7 @@ fallback 方案
 2. 在组件 CSS 中硬编码非 token 字体。
 3. 为单个按钮引入新字体。
 4. 在首屏加载完整中文字体全字重。
-5. 中文正文套用 Sora 的展示级负字距。
+5. 中文正文套用 Funnel Display 的展示级负字距。
 6. 在 Dashboard 表格中使用品牌展示字体。
 7. 在代码块中使用普通 sans 字体。
 
@@ -1112,9 +1112,9 @@ fallback 方案
 上线前检查：
 
 ```text
-[ ] Logo / Hero 是否使用 Sora？
+[ ] Logo / Hero 是否使用 Funnel Display？
 [ ] 正文是否使用 Inter 或 CJK stack？
-[ ] 中文长文是否避免 Sora tracking？
+[ ] 中文长文是否避免 Funnel Display tracking？
 [ ] 中英文混排是否有合理空格？
 [ ] 表格数字是否启用 tabular-nums？
 [ ] API / Code 是否使用 mono？
@@ -1124,6 +1124,28 @@ fallback 方案
 [ ] 移动端字号是否可读？
 [ ] 设计稿字体样式是否映射到代码 token？
 [ ] 是否没有硬编码 Arial / Helvetica / Microsoft YaHei？
+```
+
+### 18.1 Funnel Display 迁移验收
+
+迁移完成必须满足：
+
+```text
+[ ] DS `typography.css` 的 `--vx-font-brand` / `--vx-font-display` fallback 已从旧品牌字体切到 Funnel Display。
+[ ] DS `typography.css` 已完成 6 项展示层 metric 校准：logo / logo-large letter-spacing，display-hero line-height / letter-spacing，display-xl line-height / letter-spacing。
+[ ] 所有 Next.js `app/layout.tsx` 已通过 `Funnel_Display`、`Inter`、`Geist_Mono` 加载字体变量。
+[ ] 如使用 Google Fonts `<link>`，URL 必须使用 `family=Funnel+Display`，不得继续加载旧品牌字体。
+[ ] 应用侧不得直接写字体族，必须使用 `--font-brand`、`--font-display`、`--font-sans`、`--font-cjk`、`--font-mono`。
+```
+
+验收命令：
+
+```bash
+rg -n -g "*.ts" -g "*.tsx" -g "*.css" -g "*.html" -- "Sora|font-family:.*Sora|family=Sora" portals agent-studio business packages/design/design-system
+pnpm lint:design
+pnpm --filter @vxture/design-system lint
+pnpm --filter @vxture/design-system type-check
+pnpm --filter @vxture/design-system build
 ```
 
 ---
@@ -1146,7 +1168,7 @@ src/
     layout.tsx
 public/
   fonts/
-    sora-variable.woff2
+    funnel-display-variable.woff2
     inter-variable.woff2
     geist-mono-variable.woff2
     noto-sans-sc-regular-subset.woff2
@@ -1158,8 +1180,8 @@ public/
 
 ```css
 @font-face {
-  font-family: "Sora";
-  src: url("/fonts/sora-variable.woff2") format("woff2");
+  font-family: "Funnel Display";
+  src: url("/fonts/funnel-display-variable.woff2") format("woff2");
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
@@ -1182,8 +1204,8 @@ public/
 }
 
 :root {
-  --font-brand: "Sora", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Sora", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-cjk: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -1204,7 +1226,7 @@ body {
 .logo-text {
   font-family: var(--font-brand);
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   line-height: 1;
 }
 
@@ -1212,8 +1234,8 @@ body {
   font-family: var(--font-brand);
   font-size: clamp(3.5rem, 8vw, 8rem);
   font-weight: 800;
-  letter-spacing: -0.055em;
-  line-height: 0.92;
+  letter-spacing: -0.048em;
+  line-height: 0.95;
 }
 
 .marketing-title {
@@ -1264,7 +1286,7 @@ body {
 Virtual Nature Studio 字体体系定案：
 
 ```text
-1. Sora = 主品牌字体
+1. Funnel Display = 主品牌字体
 2. Inter = 产品与正文主字体
 3. Noto Sans SC = 中文与中英文混排稳定层
 4. Geist Mono = 代码、Prompt、API、日志字体
@@ -1274,7 +1296,7 @@ Virtual Nature Studio 字体体系定案：
 
 ```css
 @theme {
-  --font-brand: "Sora", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   --font-cjk: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -1284,7 +1306,7 @@ Virtual Nature Studio 字体体系定案：
 上线标准：
 
 ```text
-品牌清晰：Sora 在 Logo 与 Hero 中建立记忆点。
+品牌清晰：Funnel Display 在 Logo 与 Hero 中建立记忆点。
 阅读稳定：Inter 承担 UI 和正文。
 中文可靠：Noto Sans SC 与系统中文 fallback 处理中文和混排。
 技术专业：Geist Mono 承担代码、Prompt、API 与日志。
@@ -1296,7 +1318,7 @@ Virtual Nature Studio 字体体系定案：
 
 ## 23. 参考来源
 
-- Sora / Google Fonts: https://fonts.google.com/specimen/Sora
+- Funnel Display / Google Fonts: https://fonts.google.com/specimen/Funnel+Display
 - Inter / Google Fonts: https://fonts.google.com/specimen/Inter
 - Inter official site: https://rsms.me/inter/
 - Noto Sans SC / Google Fonts: https://fonts.google.com/noto/specimen/Noto%2BSans%2BSC

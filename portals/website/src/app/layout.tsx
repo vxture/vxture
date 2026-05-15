@@ -19,29 +19,29 @@
  */
 
 import type { Metadata } from 'next';
-import { Geist_Mono, Inter, Sora } from 'next/font/google';
+import { Funnel_Display, Geist_Mono, Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import { ThemeProvider, FullscreenProvider } from '@vxture/design-system';
 import { DEFAULT_LOCALE, PREFERENCE_CONSTANTS, THEME_CONSTANTS } from '@vxture/shared';
 import './globals.css';
 
-const sora = Sora({
+const fontBrand = Funnel_Display({
   subsets: ['latin'],
-  weight: ['600', '700', '800'],
+  weight: ['400', '500', '600', '700', '800'],
   display: 'swap',
   variable: '--vx-font-loader-brand',
 });
 
 const inter = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
+  weight: ['400', '500', '600', '700', '800', '900'],
   display: 'swap',
   variable: '--vx-font-loader-sans',
 });
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['400', '500', '600'],
   display: 'swap',
   variable: '--vx-font-loader-mono',
 });
@@ -59,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     // suppressHydrationWarning 是 next-themes 官方要求，避免 SSR/CSR class 不一致警告
     <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
-      <body className={`${sora.variable} ${inter.variable} ${geistMono.variable}`}>
+      <body className={`${fontBrand.variable} ${inter.variable} ${geistMono.variable}`}>
         {/* ThemeProvider 管理全站多主题模式，默认跟随系统偏好 */}
         <ThemeProvider
           defaultTheme={defaultTheme}

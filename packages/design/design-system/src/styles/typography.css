@@ -8,14 +8,14 @@
 
   --vx-typography-body-size: 16px;
   --vx-typography-body-line-height: 1.6;
-  --vx-typography-logo-letter-spacing: -0.035em;
-  --vx-typography-logo-large-letter-spacing: -0.05em;
+  --vx-typography-logo-letter-spacing: -0.025em;
+  --vx-typography-logo-large-letter-spacing: -0.04em;
   --vx-typography-display-hero-size: clamp(3.5rem, 8vw, 8rem);
-  --vx-typography-display-hero-line-height: 0.92;
-  --vx-typography-display-hero-letter-spacing: -0.055em;
+  --vx-typography-display-hero-line-height: 0.95;
+  --vx-typography-display-hero-letter-spacing: -0.048em;
   --vx-typography-display-xl-size: clamp(2.75rem, 6vw, 5.5rem);
-  --vx-typography-display-xl-line-height: 0.95;
-  --vx-typography-display-xl-letter-spacing: -0.05em;
+  --vx-typography-display-xl-line-height: 0.98;
+  --vx-typography-display-xl-letter-spacing: -0.045em;
   --vx-typography-heading-1-size: clamp(2.25rem, 4vw, 3.5rem);
   --vx-typography-heading-1-line-height: 1.08;
   --vx-typography-heading-1-letter-spacing: -0.04em;
@@ -42,8 +42,8 @@
 }
 
 :root {
-  --vx-font-brand: var(--vx-font-loader-brand, "Sora"), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --vx-font-display: var(--vx-font-loader-brand, "Sora"), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --vx-font-brand: var(--vx-font-loader-brand, "Funnel Display"), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --vx-font-display: var(--vx-font-loader-brand, "Funnel Display"), "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
   --vx-font-sans: var(--vx-font-loader-sans, "Inter"), "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --vx-font-cjk: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
   --vx-font-mono: var(--vx-font-loader-mono, "Geist Mono"), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
