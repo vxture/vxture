@@ -977,10 +977,10 @@ const BILLING_SQL = `
     bill.created_at,
     bill.updated_at
   from commerce.tenant_invoice bill
-  join tenancy.tenant t
+  join tenant.tenant t
     on t.id = bill.tenant_id
    and t.deleted_at is null
-  left join tenancy.tenant_organization org
+  left join tenant.tenant_organization org
     on org.tenant_id = t.id
    and org.deleted_at is null
   left join commerce.tenant_subscription sub
@@ -1003,9 +1003,9 @@ const BILLING_SQL = `
     where r.bill_id = bill.id
       and r.deleted_at is null
   ) receipt_sum on true
-  left join account.account operator
+  left join identity.account operator
     on operator.id = bill.operator_id
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   where bill.deleted_at is null
   order by
@@ -1055,9 +1055,9 @@ const BILLING_PAYMENT_SQL = `
     operator.username as operator_username,
     operator_profile.display_name as operator_display_name
   from commerce.tenant_payment pay
-  left join account.account operator
+  left join identity.account operator
     on operator.id = pay.operator_id
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   where pay.bill_id = $1
   order by pay.created_at desc
@@ -1088,9 +1088,9 @@ const BILLING_RECEIPT_SQL = `
     receipt.created_at,
     receipt.updated_at
   from commerce.tenant_invoice_receipt receipt
-  left join account.account auditor
+  left join identity.account auditor
     on auditor.id = receipt.auditor_id
-  left join account.account_profile auditor_profile
+  left join identity.account_profile auditor_profile
     on auditor_profile.account_id = auditor.id
   where receipt.bill_id = $1
     and receipt.deleted_at is null

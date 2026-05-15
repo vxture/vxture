@@ -17,8 +17,7 @@ import type {
 interface TenantMembershipRow {
   tenant_id: string;
   account_id: string;
-  role_code: string | null;
-  role_name: string | null;
+  role: string | null;
   is_primary_owner: boolean;
   status: 'active' | 'inactive' | 'banned';
   joined_at: Date;
@@ -121,8 +120,6 @@ interface AccountLookupRow {
 
 @Injectable()
 export class PgOrganizationRepository implements OrganizationReadRepository {
-  private profileTableEnsured = false;
-
   constructor(@Inject(PG_POOL) private readonly pool: Pool) {}
 
   async createTenant(input: CreateTenantInput): Promise<TenantContextView> {
@@ -134,18 +131,17 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
 
       const tenantResult = await client.query<{ id: string }>(
         `
-          insert into tenancy.tenant (
+          insert into tenant.tenant (
             tenant_code,
             tenant_name,
             display_name,
             tenant_type,
             status,
             created_by,
-            updated_by,
             created_at,
             updated_at
           )
-          values ($1, $2, $3, $4, 'trial', $5, $5, now(), now())
+          values ($1, $2, $3, $4, 'trial', $5, now(), now())
           returning id
         `,
         [tenantCode, input.displayName.trim(), input.displayName.trim(), input.type, input.accountId],
@@ -158,7 +154,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
 
       await client.query(
         `
-          insert into tenancy.tenant_member (
+          insert into tenant.tenant_member (
             tenant_id,
             account_id,
             role,
@@ -198,18 +194,14 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
         select
           tm.tenant_id,
           tm.account_id,
-          tr.role_code,
-          tr.role_name,
+          tm.role,
           tm.is_primary_owner,
           tm.status,
           tm.joined_at
-        from tenancy.tenant_member tm
-        left join tenancy.tenant t
+        from tenant.tenant_member tm
+        left join tenant.tenant t
           on t.id = tm.tenant_id
          and t.deleted_at is null
-        left join tenancy.tenant_role tr
-          on tr.id = tm.role_id
-         and tr.deleted_at is null
         where tm.account_id = $1
           and tm.deleted_at is null
         order by
@@ -223,8 +215,8 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     return result.rows.map((row) => ({
       tenantId: row.tenant_id,
       accountId: row.account_id,
-      roleCode: row.role_code,
-      roleName: row.role_name,
+      roleCode: row.role,
+      roleName: null,
       isPrimaryOwner: row.is_primary_owner,
       status: row.status,
       joinedAt: row.joined_at,
@@ -245,11 +237,11 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           t.time_zone,
           org.company_name,
           domain.domain as primary_domain
-        from tenancy.tenant t
-        left join tenancy.tenant_organization org
+        from tenant.tenant t
+        left join tenant.tenant_organization org
           on org.tenant_id = t.id
          and org.deleted_at is null
-        left join tenancy.tenant_domain domain
+        left join tenant.tenant_domain domain
           on domain.tenant_id = t.id
          and domain.is_primary = true
          and domain.deleted_at is null
@@ -313,11 +305,11 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           org.rejected_reason,
           domain.domain as primary_domain,
           coalesce(org.updated_at, t.updated_at) as updated_at
-        from tenancy.tenant t
-        left join tenancy.tenant_organization org
+        from tenant.tenant t
+        left join tenant.tenant_organization org
           on org.tenant_id = t.id
          and org.deleted_at is null
-        left join tenancy.tenant_domain domain
+        left join tenant.tenant_domain domain
           on domain.tenant_id = t.id
          and domain.is_primary = true
          and domain.deleted_at is null
@@ -367,8 +359,6 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   }
 
   async getTenantMemberById(tenantId: string, memberId: string): Promise<TenantMemberView | null> {
-    await this.ensureAccountProfileTable();
-
     const result = await this.pool.query<TenantMemberRow>(
       `
         select
@@ -381,21 +371,18 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           account.phone,
           tm.nickname,
           tm.remark,
-          tr.role_code,
-          tr.role_name,
+          tm.role as role_code,
+          null::varchar as role_name,
           tm.status,
           tm.is_primary_owner,
           tm.joined_at,
           tm.last_active_at
-        from tenancy.tenant_member tm
-        join account.account account
+        from tenant.tenant_member tm
+        join identity.account account
           on account.id = tm.account_id
          and account.deleted_at is null
-        left join account.account_profile profile
+        left join identity.account_profile profile
           on profile.account_id = account.id
-        left join tenancy.tenant_role tr
-          on tr.id = tm.role_id
-         and tr.deleted_at is null
         where tm.tenant_id = $1
           and tm.id = $2
           and tm.deleted_at is null
@@ -410,23 +397,23 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   async listTenantRoles(tenantId: string): Promise<TenantRoleView[]> {
     const [rolesResult, permissionsResult] = await Promise.all([
       this.pool.query<TenantRoleRow>(
-      `
-        select
-          id,
-          tenant_id,
-          role_code,
-          role_name,
-          description,
-          is_system,
-          status,
-          sort
-        from tenancy.tenant_role
-        where tenant_id = $1
-          and deleted_at is null
-        order by sort asc, role_name asc
-      `,
-      [tenantId],
-    ),
+        `
+          select
+            id,
+            tenant_id,
+            role_code,
+            role_name,
+            description,
+            is_system,
+            status,
+            sort
+          from iam.role
+          where tenant_id = $1
+            and deleted_at is null
+          order by sort asc, role_name asc
+        `,
+        [tenantId],
+      ),
       this.pool.query<{
         role_id: string;
         id: string;
@@ -438,19 +425,19 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       }>(
         `
           select
-            trp.role_id,
-            tp.id,
-            tp.permission_code,
-            tp.permission_name,
-            tp.permission_type,
-            tp.description,
-            tp.sort
-          from tenancy.tenant_role_permission trp
-          join tenancy.tenant_permission tp
-            on tp.id = trp.permission_id
-          where trp.tenant_id = $1
-            and tp.deleted_at is null
-          order by tp.sort asc, tp.permission_name asc
+            rp.role_id,
+            p.id,
+            p.permission_code,
+            p.permission_name,
+            p.permission_type,
+            p.description,
+            p.sort
+          from iam.role_permission rp
+          join iam.permission p
+            on p.id = rp.permission_id
+          where rp.tenant_id = $1
+            and p.deleted_at is null
+          order by p.sort asc, p.permission_name asc
         `,
         [tenantId],
       ),
@@ -483,7 +470,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     }));
   }
 
-  async listTenantPermissions(tenantId: string): Promise<TenantPermissionView[]> {
+  async listTenantPermissions(_tenantId: string): Promise<TenantPermissionView[]> {
     const result = await this.pool.query<TenantPermissionRow>(
       `
         select
@@ -493,15 +480,11 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           permission_type,
           description,
           sort
-        from tenancy.tenant_permission
+        from iam.permission
         where deleted_at is null
-          and (
-            permission_scope = 'platform'
-            or (permission_scope = 'tenant' and tenant_id = $1)
-          )
+          and is_active = true
         order by sort asc, permission_name asc
       `,
-      [tenantId],
     );
 
     return result.rows.map((row) => ({
@@ -530,7 +513,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
 
       const roleResult = await client.query<{ id: string }>(
         `
-          insert into tenancy.tenant_role (
+          insert into iam.role (
             tenant_id,
             role_code,
             role_name,
@@ -587,7 +570,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       await client.query('begin');
       await client.query(
         `
-          update tenancy.tenant_role
+          update iam.role
           set
             role_name = coalesce($3, role_name),
             description = coalesce($4, description),
@@ -619,7 +602,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   async removeTenantRole(tenantId: string, roleId: string, operatorAccountId: string): Promise<boolean> {
     const result = await this.pool.query(
       `
-        update tenancy.tenant_role
+        update iam.role
         set
           deleted_at = now(),
           updated_by = $3,
@@ -642,14 +625,12 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       await client.query('begin');
 
       const accountId = await this.resolveAccountId(client, input.email);
-      const roleId = await this.resolveRoleId(client, tenantId, input.roleId ?? null, input.roleCode ?? null);
 
-      const result = await client.query<TenantMemberRow>(
+      const result = await client.query<{ id: string }>(
         `
-          insert into tenancy.tenant_member (
+          insert into tenant.tenant_member (
             tenant_id,
             account_id,
-            role_id,
             role,
             is_primary_owner,
             status,
@@ -664,10 +645,9 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
             deleted_at
           )
           values (
-            $1, $2, $3, coalesce($4, 'member'), false, $5, $6, $7, $8, now(), $9, $9, now(), now(), null
+            $1, $2, coalesce($3, 'member'), false, $4, $5, $6, $7, now(), $8, $8, now(), now(), null
           )
           on conflict (tenant_id, account_id) do update set
-            role_id = excluded.role_id,
             role = excluded.role,
             status = excluded.status,
             nickname = excluded.nickname,
@@ -676,21 +656,17 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
             updated_by = excluded.updated_by,
             updated_at = now(),
             deleted_at = null
-          returning id, tenant_id, account_id, ''::varchar as username, null::varchar as avatar_url,
-            $10::varchar as email, null::varchar as phone,
-            nickname, remark, $4::varchar as role_code, null::varchar as role_name, status, is_primary_owner, joined_at, last_active_at
+          returning id
         `,
         [
           tenantId,
           accountId,
-          roleId,
           input.roleCode ?? 'member',
           input.status,
           normalizeNullable(input.nickname),
           normalizeNullable(input.remark),
           input.joinedSource,
           operatorAccountId,
-          input.email,
         ],
       );
 
@@ -722,19 +698,17 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     input: {
       nickname?: string | null;
       remark?: string | null;
-      roleId?: string | null;
+      role?: string | null;
       status?: 'active' | 'inactive' | 'banned';
     },
   ): Promise<TenantMemberView | null> {
-    const roleId = input.roleId === undefined ? undefined : await this.resolveRoleId(this.pool, tenantId, input.roleId, null);
-
     await this.pool.query(
       `
-        update tenancy.tenant_member
+        update tenant.tenant_member
         set
           nickname = coalesce($4, nickname),
           remark = coalesce($5, remark),
-          role_id = coalesce($6, role_id),
+          role = coalesce($6, role),
           status = coalesce($7, status),
           updated_by = $3,
           updated_at = now()
@@ -742,7 +716,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           and id = $2
           and deleted_at is null
       `,
-      [tenantId, memberId, operatorAccountId, normalizeNullable(input.nickname), normalizeNullable(input.remark), roleId ?? null, input.status ?? null],
+      [tenantId, memberId, operatorAccountId, normalizeNullable(input.nickname), normalizeNullable(input.remark), input.role ?? null, input.status ?? null],
     );
 
     return this.getTenantMemberById(tenantId, memberId);
@@ -751,7 +725,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   async removeTenantMember(tenantId: string, memberId: string, operatorAccountId: string): Promise<boolean> {
     const result = await this.pool.query(
       `
-        update tenancy.tenant_member
+        update tenant.tenant_member
         set
           deleted_at = now(),
           updated_by = $3,
@@ -773,10 +747,11 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           count(*)::text as total_members,
           count(*) filter (where tm.status = 'active')::text as active_members,
           count(*) filter (where tm.is_primary_owner = true and tm.status = 'active')::text as primary_owners,
-          count(distinct tr.id) filter (where tr.status = 'active' and tr.deleted_at is null)::text as active_roles
-        from tenancy.tenant_member tm
-        left join tenancy.tenant_role tr
-          on tr.id = tm.role_id
+          (
+            select count(*)::text from iam.role
+            where tenant_id = $1 and deleted_at is null and status = 'active'
+          ) as active_roles
+        from tenant.tenant_member tm
         where tm.tenant_id = $1
           and tm.deleted_at is null
       `,
@@ -793,8 +768,6 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   }
 
   async listTenantMembers(tenantId: string): Promise<TenantMemberView[]> {
-    await this.ensureAccountProfileTable();
-
     const result = await this.pool.query<TenantMemberRow>(
       `
         select
@@ -807,26 +780,22 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           account.phone,
           tm.nickname,
           tm.remark,
-          tr.role_code,
-          tr.role_name,
+          tm.role as role_code,
+          null::varchar as role_name,
           tm.status,
           tm.is_primary_owner,
           tm.joined_at,
           tm.last_active_at
-        from tenancy.tenant_member tm
-        join account.account account
+        from tenant.tenant_member tm
+        join identity.account account
           on account.id = tm.account_id
          and account.deleted_at is null
-        left join account.account_profile profile
+        left join identity.account_profile profile
           on profile.account_id = account.id
-        left join tenancy.tenant_role tr
-          on tr.id = tm.role_id
-         and tr.deleted_at is null
         where tm.tenant_id = $1
           and tm.deleted_at is null
         order by
           tm.is_primary_owner desc,
-          coalesce(tr.sort, 999) asc,
           tm.joined_at asc
       `,
       [tenantId],
@@ -841,7 +810,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     const existing = await client.query<AccountLookupRow>(
       `
         select id, username
-        from account.account
+        from identity.account
         where lower(coalesce(email, '')) = $1
           and deleted_at is null
         limit 1
@@ -856,14 +825,14 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     const username = buildUsernameFromEmail(normalizedEmail);
     const inserted = await client.query<AccountLookupRow>(
       `
-        insert into account.account (
+        insert into identity.account (
           username,
           email,
           status,
           created_at,
           updated_at
         )
-        values ($1, $2, true, now(), now())
+        values ($1, $2, 'active', now(), now())
         returning id, username
       `,
       [username, normalizedEmail],
@@ -877,32 +846,6 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     return insertedAccountId;
   }
 
-  private async resolveRoleId(
-    client: Pool | { query: Pool['query'] },
-    tenantId: string,
-    roleId?: string | null,
-    roleCode?: string | null,
-  ) {
-    if (roleId) {
-      return roleId;
-    }
-
-    const result = await client.query<{ id: string }>(
-      `
-        select id
-        from tenancy.tenant_role
-        where tenant_id = $1
-          and deleted_at is null
-          and status = 'active'
-          and role_code = $2
-        limit 1
-      `,
-      [tenantId, roleCode ?? 'member'],
-    );
-
-    return result.rows[0]?.id ?? null;
-  }
-
   private async replaceRolePermissions(
     client: Pool | { query: Pool['query'] },
     tenantId: string,
@@ -912,7 +855,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   ) {
     await client.query(
       `
-        delete from tenancy.tenant_role_permission
+        delete from iam.role_permission
         where tenant_id = $1
           and role_id = $2
       `,
@@ -922,7 +865,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     for (const permissionId of permissionIds) {
       await client.query(
         `
-          insert into tenancy.tenant_role_permission (
+          insert into iam.role_permission (
             tenant_id,
             role_id,
             permission_id,
@@ -935,27 +878,6 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
         [tenantId, roleId, permissionId, operatorAccountId],
       );
     }
-  }
-
-  private async ensureAccountProfileTable() {
-    if (this.profileTableEnsured) {
-      return;
-    }
-
-    await this.pool.query(`
-      create table if not exists account.account_profile (
-        account_id uuid primary key references account.account(id) on delete cascade,
-        display_name varchar(96),
-        avatar_url varchar(512),
-        headline varchar(128),
-        bio text,
-        timezone varchar(64),
-        language varchar(32),
-        updated_at timestamptz default now()
-      )
-    `);
-
-    this.profileTableEnsured = true;
   }
 }
 

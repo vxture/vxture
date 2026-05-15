@@ -127,8 +127,8 @@ select
   tenant.industry,
   coalesce(ticket.assignee_name, ticket.reporter_name, tenant.contact_name) as owner_name
 from support.ticket ticket
-join tenancy.tenant tenant on tenant.id = ticket.tenant_id
-left join tenancy.tenant_config config on config.tenant_id = tenant.id
+join tenant.tenant tenant on tenant.id = ticket.tenant_id
+left join tenant.tenant_setting config on config.tenant_id = tenant.id
 where ticket.deleted_at is null
 order by
   case ticket.priority

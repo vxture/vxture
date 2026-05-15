@@ -115,15 +115,15 @@ export class AdminRolesRouter implements OnModuleDestroy {
           select
             r.id,
             r.role_code,
-            coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) as status_code,
+            r.status as status_code,
             exists (
               select 1
-              from platform.platform_admin a
+              from ops.admin a
               where a.id = $2
                 and a.role_id = r.id
                 and a.deleted_at is null
             ) as is_actor_role
-          from platform.platform_role r
+          from ops.role r
           where r.id = $1
           for update
         `,
@@ -139,8 +139,8 @@ export class AdminRolesRouter implements OnModuleDestroy {
 
       const permissionResult = await client.query<PermissionIntegrityRow>(
         `
-          select id, parent_id, perm_code, status
-          from platform.platform_permission
+          select id, parent_id, perm_code, is_active as status
+          from ops.permission
           where id = any($1::uuid[])
         `,
         [permissionIds],
@@ -165,7 +165,7 @@ export class AdminRolesRouter implements OnModuleDestroy {
 
       await client.query(
         `
-          delete from platform.platform_role_permission
+          delete from ops.role_permission
           where role_id = $1
             and not (permission_id = any($2::uuid[]))
         `,
@@ -175,7 +175,7 @@ export class AdminRolesRouter implements OnModuleDestroy {
       if (permissionIds.length) {
         await client.query(
           `
-            insert into platform.platform_role_permission (role_id, permission_id, created_by, updated_by)
+            insert into ops.role_permission (role_id, permission_id, created_by, updated_by)
             select $1::uuid, selected.permission_id, $3::uuid, $3::uuid
             from unnest($2::uuid[]) as selected(permission_id)
             on conflict (role_id, permission_id) do update
@@ -188,7 +188,7 @@ export class AdminRolesRouter implements OnModuleDestroy {
 
       await client.query(
         `
-          update platform.platform_role
+          update ops.role
           set updated_by = $2,
               updated_at = now()
           where id = $1
@@ -390,21 +390,20 @@ const PLATFORM_ROLE_SQL_WITH_FILTER = `
     count(distinct a.id) filter (where a.deleted_at is null)::int as admin_count,
     count(distinct a.id) filter (
       where a.deleted_at is null
-        and a.status = true
-        and coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) = 'active'
+        and a.status = 'active'
     )::int as active_admin_count,
-    count(distinct p.id) filter (where p.status = true)::int as permission_count,
-    count(distinct p.id) filter (where p.status = true and p.perm_type = 'MENU')::int as menu_permission_count,
-    count(distinct p.id) filter (where p.status = true and p.perm_type = 'BUTTON')::int as button_permission_count,
-    count(distinct p.id) filter (where p.status = true and p.perm_type = 'API')::int as api_permission_count
-  from platform.platform_role r
-  left join platform.platform_admin creator
+    count(distinct p.id) filter (where p.is_active = true)::int as permission_count,
+    count(distinct p.id) filter (where p.is_active = true and p.perm_type = 'MENU')::int as menu_permission_count,
+    count(distinct p.id) filter (where p.is_active = true and p.perm_type = 'BUTTON')::int as button_permission_count,
+    count(distinct p.id) filter (where p.is_active = true and p.perm_type = 'API')::int as api_permission_count
+  from ops.role r
+  left join ops.admin creator
     on creator.id = r.created_by
-  left join platform.platform_admin a
+  left join ops.admin a
     on a.role_id = r.id
-  left join platform.platform_role_permission rp
+  left join ops.role_permission rp
     on rp.role_id = r.id
-  left join platform.platform_permission p
+  left join ops.permission p
     on p.id = rp.permission_id
 `;
 
@@ -423,11 +422,11 @@ const PLATFORM_ROLE_PERMISSION_SQL = `
     p.perm_code,
     p.perm_name,
     p.perm_type,
-    p.status,
+    p.is_active as status,
     p.description,
     nullif(p.route_path, '') as route_path
-  from platform.platform_role_permission rp
-  join platform.platform_permission p
+  from ops.role_permission rp
+  join ops.permission p
     on p.id = rp.permission_id
 `;
 

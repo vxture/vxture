@@ -27,7 +27,7 @@ type UsagePersistenceInput = UsageLogInput & {
 @Injectable()
 export class ModelRegistryRepository {
   findActiveModelByCode(modelCode: string): Promise<AiModelRecord | null> {
-    return prisma.aiModel.findFirst({
+    return prisma.modelDefinition.findFirst({
       where: {
         modelCode,
         isActive: true,
@@ -37,7 +37,7 @@ export class ModelRegistryRepository {
   }
 
   listActiveModels(): Promise<AiModelRecord[]> {
-    return prisma.aiModel.findMany({
+    return prisma.modelDefinition.findMany({
       where: {
         isActive: true,
         deletedAt: null,
@@ -49,7 +49,7 @@ export class ModelRegistryRepository {
   }
 
   listModels(includeInactive = false): Promise<AiModelRecord[]> {
-    return prisma.aiModel.findMany({
+    return prisma.modelDefinition.findMany({
       where: includeInactive ? { deletedAt: null } : { isActive: true, deletedAt: null },
       orderBy: [
         { isActive: 'desc' },
@@ -60,7 +60,7 @@ export class ModelRegistryRepository {
   }
 
   findModelById(modelId: string): Promise<AiModelRecord | null> {
-    return prisma.aiModel.findFirst({
+    return prisma.modelDefinition.findFirst({
       where: {
         id: modelId,
         deletedAt: null,
@@ -69,13 +69,13 @@ export class ModelRegistryRepository {
   }
 
   createModel(input: CreateAiModelInput): Promise<AiModelRecord> {
-    return prisma.aiModel.create({
+    return prisma.modelDefinition.create({
       data: input,
     });
   }
 
   updateModel(modelId: string, input: UpdateAiModelInput): Promise<AiModelRecord> {
-    return prisma.aiModel.update({
+    return prisma.modelDefinition.update({
       where: {
         id: modelId,
       },
@@ -87,7 +87,7 @@ export class ModelRegistryRepository {
     const deletedAt = new Date();
 
     return prisma.$transaction(async (tx) => {
-      await tx.aiModelGrant.updateMany({
+      await tx.modelGrant.updateMany({
         where: {
           modelId,
           deletedAt: null,
@@ -98,7 +98,7 @@ export class ModelRegistryRepository {
         },
       });
 
-      return tx.aiModel.update({
+      return tx.modelDefinition.update({
         where: {
           id: modelId,
         },
@@ -115,7 +115,7 @@ export class ModelRegistryRepository {
     tenantId: string,
     agentId?: string,
   ): Promise<AiModelGrantRecord | null> {
-    const grants = await prisma.aiModelGrant.findMany({
+    const grants = await prisma.modelGrant.findMany({
       where: {
         modelId,
         tenantId,
@@ -148,7 +148,7 @@ export class ModelRegistryRepository {
   }
 
   listGrants(filters: { tenantId?: string; modelId?: string }): Promise<AiModelGrantRecord[]> {
-    return prisma.aiModelGrant.findMany({
+    return prisma.modelGrant.findMany({
       where: {
         ...(filters.tenantId ? { tenantId: filters.tenantId } : {}),
         ...(filters.modelId ? { modelId: filters.modelId } : {}),
@@ -162,7 +162,7 @@ export class ModelRegistryRepository {
   }
 
   findGrantById(grantId: string): Promise<AiModelGrantRecord | null> {
-    return prisma.aiModelGrant.findFirst({
+    return prisma.modelGrant.findFirst({
       where: {
         id: grantId,
         deletedAt: null,
@@ -171,7 +171,7 @@ export class ModelRegistryRepository {
   }
 
   createGrant(input: CreateAiModelGrantInput): Promise<AiModelGrantRecord> {
-    return prisma.aiModelGrant.create({
+    return prisma.modelGrant.create({
       data: {
         modelId: input.modelId,
         tenantId: input.tenantId,
@@ -185,7 +185,7 @@ export class ModelRegistryRepository {
   }
 
   updateGrant(grantId: string, input: UpdateAiModelGrantInput): Promise<AiModelGrantRecord> {
-    return prisma.aiModelGrant.update({
+    return prisma.modelGrant.update({
       where: {
         id: grantId,
       },

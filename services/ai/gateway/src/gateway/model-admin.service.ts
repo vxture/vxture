@@ -19,8 +19,8 @@ export interface AiModelAdminRecord {
   provider: string;
   endpointUrl: string;
   protocol: string;
+  modelType: string;
   capabilities: string[];
-  apiKeyEnvVar: string;
   isActive: boolean;
   config: ModelConfig | null;
   createdAt: string;
@@ -134,8 +134,8 @@ export class ModelAdminService {
       provider: requiredString(body.provider, 'provider'),
       endpointUrl: requiredUrl(body.endpointUrl, 'endpointUrl'),
       protocol: requiredString(body.protocol, 'protocol'),
+      modelType: body.modelType ?? 'chat',
       capabilities,
-      apiKeyEnvVar: requiredString(body.apiKeyEnvVar, 'apiKeyEnvVar'),
       config: body.config ?? null,
     };
   }
@@ -149,7 +149,7 @@ export class ModelAdminService {
     if (body.provider !== undefined) input.provider = requiredString(body.provider, 'provider');
     if (body.endpointUrl !== undefined) input.endpointUrl = requiredUrl(body.endpointUrl, 'endpointUrl');
     if (body.protocol !== undefined) input.protocol = requiredString(body.protocol, 'protocol');
-    if (body.apiKeyEnvVar !== undefined) input.apiKeyEnvVar = requiredString(body.apiKeyEnvVar, 'apiKeyEnvVar');
+    if (body.modelType !== undefined) input.modelType = requiredString(body.modelType, 'modelType');
     if (body.capabilities !== undefined) input.capabilities = normalizeCapabilities(body.capabilities);
     if (body.config !== undefined) input.config = body.config;
     if (body.isActive !== undefined) input.isActive = body.isActive;
@@ -214,8 +214,8 @@ function mapModel(model: AiModelRecord): AiModelAdminRecord {
     provider: model.provider,
     endpointUrl: model.endpointUrl,
     protocol: model.protocol,
+    modelType: model.modelType,
     capabilities: model.capabilities,
-    apiKeyEnvVar: model.apiKeyEnvVar,
     isActive: model.isActive,
     config: model.config,
     createdAt: model.createdAt.toISOString(),

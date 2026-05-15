@@ -186,19 +186,17 @@ export class PlatformAuthService implements OnModuleDestroy {
           r.name_i18n_key,
           r.name_en,
           coalesce(array_remove(array_agg(distinct p.perm_code), null), array[]::varchar[]) as permissions
-        from platform.platform_admin a
-        join platform.platform_role r
+        from ops.admin a
+        join ops.role r
           on r.id = a.role_id
-         and r.status = true
-         and coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) = 'active'
-        left join platform.platform_role_permission rp
+         and r.status = 'active'
+        left join ops.role_permission rp
           on rp.role_id = r.id
-        left join platform.platform_permission p
+        left join ops.permission p
           on p.id = rp.permission_id
-         and p.status = true
+         and p.is_active = true
         where a.deleted_at is null
-          and a.status = true
-          and coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) = 'active'
+          and a.status = 'active'
           and ${predicate}
         group by a.id, r.role_code, r.name_i18n_key, r.name_en
         limit 1
@@ -212,7 +210,7 @@ export class PlatformAuthService implements OnModuleDestroy {
   private async recordLastLogin(adminId: string): Promise<void> {
     await this.pool?.query(
       `
-        update platform.platform_admin
+        update ops.admin
         set last_login_at = now()
         where id = $1
       `,

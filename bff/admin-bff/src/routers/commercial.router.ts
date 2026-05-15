@@ -551,10 +551,10 @@ const USAGE_METERING_SQL = `
     usage.last_synced_at,
     usage.updated_at
   from commerce.tenant_usage_summary usage
-  join tenancy.tenant t
+  join tenant.tenant t
     on t.id = usage.tenant_id
    and t.deleted_at is null
-  left join tenancy.tenant_organization org
+  left join tenant.tenant_organization org
     on org.tenant_id = t.id
    and org.deleted_at is null
   left join product.feature feature
@@ -648,9 +648,9 @@ const PROMOTION_SQL = `
   ) price on true
   left join redemption
     on redemption.plan_id = plan.id
-  left join account.account owner
+  left join identity.account owner
     on owner.id = coalesce(plan.updated_by, plan.created_by)
-  left join account.account_profile owner_profile
+  left join identity.account_profile owner_profile
     on owner_profile.account_id = owner.id
   where plan.deleted_at is null
   order by plan.level asc nulls last, updated_at desc
@@ -679,7 +679,7 @@ const PROMOTION_REDEMPTION_SQL = `
     operator_profile.display_name as operator_display_name,
     bill.updated_at
   from commerce.tenant_invoice bill
-  join tenancy.tenant t
+  join tenant.tenant t
     on t.id = bill.tenant_id
    and t.deleted_at is null
   left join commerce.tenant_subscription sub
@@ -688,9 +688,9 @@ const PROMOTION_REDEMPTION_SQL = `
   left join product.plan plan
     on plan.id = sub.plan_id
    and plan.deleted_at is null
-  left join account.account operator
+  left join identity.account operator
     on operator.id = bill.operator_id
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   where bill.deleted_at is null
     and coalesce(bill.discount_amount, 0) > 0
@@ -758,7 +758,7 @@ const OVERVIEW_RISK_SQL = `
     concat('租户 ', t.tenant_code, ' 存在账单、收款或用量需关注事项。') as detail,
     case when bool_or(bill.bill_status = 'overdue') then 'rose' else 'amber' end as tone,
     concat('/tenants/', t.id) as href
-  from tenancy.tenant t
+  from tenant.tenant t
   left join commerce.tenant_invoice bill
     on bill.tenant_id = t.id
    and bill.deleted_at is null

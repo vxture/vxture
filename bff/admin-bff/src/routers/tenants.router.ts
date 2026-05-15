@@ -393,7 +393,7 @@ const TENANT_SQL = `
       count(*) filter (where tm.deleted_at is null and tm.status = 'active')::int as active_member_count,
       count(*) filter (where tm.deleted_at is null and tm.role in ('owner', 'admin'))::int as admin_count,
       max(tm.last_active_at) as last_active_at
-    from tenancy.tenant_member tm
+    from tenant.tenant_member tm
     group by tm.tenant_id
   ),
   subscription_stats as (
@@ -446,13 +446,13 @@ const TENANT_SQL = `
     coalesce(qs.period_tokens, 0) as period_tokens,
     coalesce(qs.max_users, 0) as max_users,
     coalesce(risk.config_value, 'normal') as risk_level
-  from tenancy.tenant t
-  left join tenancy.tenant_organization org
+  from tenant.tenant t
+  left join tenant.tenant_organization org
     on org.tenant_id = t.id
    and org.deleted_at is null
-  left join account.account owner
-    on owner.id = t.tenant_owner
-  left join account.account_profile profile
+  left join identity.account owner
+    on owner.id = t.owner_account_id
+  left join identity.account_profile profile
     on profile.account_id = owner.id
   left join member_stats ms
     on ms.tenant_id = t.id
@@ -460,7 +460,7 @@ const TENANT_SQL = `
     on ss.tenant_id = t.id
   left join quota_stats qs
     on qs.tenant_id = t.id
-  left join tenancy.tenant_config risk
+  left join tenant.tenant_setting risk
     on risk.tenant_id = t.id
    and risk.config_key = 'ops.risk_level'
    and risk.deleted_at is null
@@ -477,19 +477,17 @@ const MEMBER_SQL = `
     tm.nickname,
     p.display_name,
     tm.role,
-    tr.role_name,
+    null::varchar as role_name,
     tm.status,
     tm.joined_at,
     tm.last_active_at
-  from tenancy.tenant_member tm
-  join account.account a
+  from tenant.tenant_member tm
+  join identity.account a
     on a.id = tm.account_id
-  left join account.account_profile p
+  left join identity.account_profile p
     on p.account_id = a.id
-  left join tenancy.tenant_role tr
-    on tr.id = tm.role_id
   where tm.deleted_at is null
-  order by tm.is_primary_owner desc, tr.sort asc nulls last, tm.joined_at asc
+  order by tm.is_primary_owner desc, tm.joined_at asc
 `;
 
 const SUBSCRIPTION_SQL = `
@@ -532,8 +530,8 @@ const MODEL_POLICY_SQL = `
     m.model_code,
     g.is_active,
     p.plan_name
-  from ai_gateway.ai_model_grant g
-  join ai_gateway.ai_model m
+  from model.model_grant g
+  join model.model m
     on m.id = g.model_id
   left join product.agent a
     on a.id = g.agent_id

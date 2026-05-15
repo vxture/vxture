@@ -17,11 +17,15 @@ interface AccountRow {
   username: string;
   email: string | null;
   phone: string | null;
+  status: string;
+}
+
+interface AccountCredentialRow extends AccountRow {
   password_hash: string | null;
-  status: boolean;
 }
 
 interface AccountProfileRow extends AccountRow {
+  password_hash: string | null;
   display_name: string | null;
   avatar_url: string | null;
   headline: string | null;
@@ -36,22 +40,23 @@ export class PgAccountRepository implements AccountReadRepository {
   constructor(@Inject(IAM_PG_POOL) private readonly pool: Pool) {}
 
   async findByIdentifier(identifier: string): Promise<AccountCredentialRecord | null> {
-    const result = await this.pool.query<AccountRow>(
+    const result = await this.pool.query<AccountCredentialRow>(
       `
         select
-          id,
-          username,
-          email,
-          phone,
-          password_hash,
-          status
-        from account.account
-        where deleted_at is null
-          and status = true
+          a.id,
+          a.username,
+          a.email,
+          a.phone,
+          a.status,
+          c.password_hash
+        from identity.account a
+        left join identity.account_credential c on c.account_id = a.id
+        where a.deleted_at is null
+          and a.status = 'active'
           and (
-            lower(username) = lower($1)
-            or lower(coalesce(email, '')) = lower($1)
-            or coalesce(phone, '') = $1
+            lower(a.username) = lower($1)
+            or lower(coalesce(a.email, '')) = lower($1)
+            or coalesce(a.phone, '') = $1
           )
         limit 1
       `,
@@ -69,12 +74,11 @@ export class PgAccountRepository implements AccountReadRepository {
           username,
           email,
           phone,
-          password_hash,
           status
-        from account.account
+        from identity.account
         where id = $1
           and deleted_at is null
-          and status = true
+          and status = 'active'
         limit 1
       `,
       [accountId],
@@ -94,19 +98,20 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async findCredentialById(accountId: string): Promise<AccountCredentialRecord | null> {
-    const result = await this.pool.query<AccountRow>(
+    const result = await this.pool.query<AccountCredentialRow>(
       `
         select
-          id,
-          username,
-          email,
-          phone,
-          password_hash,
-          status
-        from account.account
-        where id = $1
-          and deleted_at is null
-          and status = true
+          a.id,
+          a.username,
+          a.email,
+          a.phone,
+          a.status,
+          c.password_hash
+        from identity.account a
+        left join identity.account_credential c on c.account_id = a.id
+        where a.id = $1
+          and a.deleted_at is null
+          and a.status = 'active'
         limit 1
       `,
       [accountId],
@@ -123,8 +128,8 @@ export class PgAccountRepository implements AccountReadRepository {
           a.username,
           a.email,
           a.phone,
-          a.password_hash,
           a.status,
+          c.password_hash,
           p.display_name,
           p.avatar_url,
           p.headline,
@@ -132,11 +137,12 @@ export class PgAccountRepository implements AccountReadRepository {
           p.timezone,
           p.language,
           p.updated_at as profile_updated_at
-        from account.account a
-        left join account.account_profile p on p.account_id = a.id
+        from identity.account a
+        left join identity.account_credential c on c.account_id = a.id
+        left join identity.account_profile p on p.account_id = a.id
         where a.id = $1
           and a.deleted_at is null
-          and a.status = true
+          and a.status = 'active'
         limit 1
       `,
       [accountId],
@@ -153,7 +159,7 @@ export class PgAccountRepository implements AccountReadRepository {
       if (Object.prototype.hasOwnProperty.call(input, 'email') || Object.prototype.hasOwnProperty.call(input, 'phone')) {
         await client.query(
           `
-            update account.account
+            update identity.account
             set
               email = coalesce($2, email),
               phone = coalesce($3, phone),
@@ -167,7 +173,7 @@ export class PgAccountRepository implements AccountReadRepository {
 
       await client.query(
         `
-          insert into account.account_profile (
+          insert into identity.account_profile (
             account_id,
             display_name,
             avatar_url,
@@ -216,7 +222,7 @@ export class PgAccountRepository implements AccountReadRepository {
     const tokenHash = createHash('sha256').update(rawToken).digest('hex');
 
     await this.pool.query(
-      `insert into account.password_reset_token (account_id, token_hash, expires_at)
+      `insert into identity.password_reset_token (account_id, token_hash, expires_at)
        values ($1, $2, $3)
        on conflict do nothing`,
       [accountId, tokenHash, expiresAt],
@@ -229,7 +235,7 @@ export class PgAccountRepository implements AccountReadRepository {
     const tokenHash = createHash('sha256').update(token).digest('hex');
 
     const result = await this.pool.query<{ account_id: string }>(
-      `update account.password_reset_token
+      `update identity.password_reset_token
        set used_at = now()
        where token_hash = $1
          and used_at is null
@@ -251,13 +257,19 @@ export class PgAccountRepository implements AccountReadRepository {
       await client.query('begin');
 
       await client.query(
-        `insert into account.account (id, username, email, password_hash, status, created_at, updated_at)
-         values ($1, $2, $3, $4, true, now(), now())`,
-        [id, username, email, input.passwordHash],
+        `insert into identity.account (id, username, email, status, created_at, updated_at)
+         values ($1, $2, $3, 'active', now(), now())`,
+        [id, username, email],
       );
 
       await client.query(
-        `insert into account.account_profile (account_id, display_name, created_at, updated_at)
+        `insert into identity.account_credential (account_id, password_hash, created_at, updated_at)
+         values ($1, $2, now(), now())`,
+        [id, input.passwordHash],
+      );
+
+      await client.query(
+        `insert into identity.account_profile (account_id, display_name, created_at, updated_at)
          values ($1, $2, now(), now())`,
         [id, input.name.trim()],
       );
@@ -265,7 +277,6 @@ export class PgAccountRepository implements AccountReadRepository {
       await client.query('commit');
     } catch (error: unknown) {
       await client.query('rollback');
-      // PostgreSQL unique_violation 错误码
       if (isUniqueViolation(error)) {
         throw new ConflictException('该邮箱已被注册');
       }
@@ -281,21 +292,21 @@ export class PgAccountRepository implements AccountReadRepository {
   async updatePassword(accountId: string, passwordHash: string): Promise<void> {
     await this.pool.query(
       `
-        update account.account
-        set password_hash = $2,
-            updated_at = now()
-        where id = $1
-          and deleted_at is null
-          and status = true
+        insert into identity.account_credential (account_id, password_hash, created_at, updated_at)
+        values ($1, $2, now(), now())
+        on conflict (account_id) do update set
+          password_hash = excluded.password_hash,
+          password_changed_at = now(),
+          updated_at = now()
       `,
       [accountId, passwordHash],
     );
   }
 
   async findOrCreateByOAuth(input: FindOrCreateByOAuthInput): Promise<AuthenticatedAccountView> {
-    // 1. 通过 account_identity 表查找已绑定账号
+    // 1. 通过 sso_connection 表查找已绑定账号
     const existing = await this.pool.query<{ account_id: string }>(
-      `select account_id from account.account_identity
+      `select account_id from identity.sso_connection
        where provider = $1 and provider_account_id = $2
          and deleted_at is null
        limit 1`,
@@ -324,19 +335,19 @@ export class PgAccountRepository implements AccountReadRepository {
       await client.query('begin');
 
       await client.query(
-        `insert into account.account (id, username, email, password_hash, status, created_at, updated_at)
-         values ($1, $2, $3, null, true, now(), now())`,
+        `insert into identity.account (id, username, email, status, created_at, updated_at)
+         values ($1, $2, $3, 'active', now(), now())`,
         [id, username, input.email?.toLowerCase().trim() ?? null],
       );
 
       await client.query(
-        `insert into account.account_profile (account_id, display_name, avatar_url, created_at, updated_at)
+        `insert into identity.account_profile (account_id, display_name, avatar_url, created_at, updated_at)
          values ($1, $2, $3, now(), now())`,
         [id, input.name.trim(), input.avatarUrl ?? null],
       );
 
       await client.query(
-        `insert into account.account_identity (account_id, provider, provider_account_id, provider_account_data, created_at, updated_at)
+        `insert into identity.sso_connection (account_id, provider, provider_account_id, provider_account_data, created_at, updated_at)
          values ($1, $2, $3, $4, now(), now())`,
         [id, input.provider, input.providerId, providerAccountData],
       );
@@ -352,7 +363,7 @@ export class PgAccountRepository implements AccountReadRepository {
     return { id, username, email: input.email?.toLowerCase().trim() ?? null, phone: null };
   }
 
-  private mapCredential(row?: AccountRow): AccountCredentialRecord | null {
+  private mapCredential(row?: AccountCredentialRow): AccountCredentialRecord | null {
     if (!row) {
       return null;
     }
@@ -397,7 +408,6 @@ function normalizeNullable(value: string | null | undefined) {
   return normalized ? normalized : null;
 }
 
-// 从显示名派生用户名，加随机后缀避免冲突（OAuth 账号无邮箱时使用）
 function deriveUsernameFromName(name: string): string {
   const prefix = name
     .toLowerCase()
@@ -407,7 +417,6 @@ function deriveUsernameFromName(name: string): string {
   return prefix ? `${prefix}_${suffix}` : `user_${suffix}`;
 }
 
-// 从邮箱前缀派生用户名，加随机后缀避免冲突
 function deriveUsername(email: string): string {
   const prefix = (email.split('@')[0] ?? '')
     .toLowerCase()

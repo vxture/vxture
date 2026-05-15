@@ -1,24 +1,27 @@
 // @package @vxture/core-database
 // @layer  Infrastructure
 // @category Database DDL — 平台手动维护 schema 的 Prisma 统一管理
-// @author AI-Generated
-// @date   2026-05-04
 //
-// 覆盖范围（6 个 schema，39 张表）：
-//   account  — 6 张：account / account_identity / account_oauth_provider /
-//                     account_oauth_state / account_profile / password_reset_token
-//   tenancy  — 9 张：tenant / tenant_config / tenant_domain / tenant_member /
-//                     tenant_organization / tenant_ownership_transfer /
-//                     tenant_permission / tenant_role / tenant_role_permission
-//   product  — 7 张：agent / agent_feature / feature / plan /
-//                     plan_agent / plan_feature / plan_price
-//   platform — 5 张：platform_admin / platform_config / platform_permission /
-//                     platform_role / platform_role_permission
-//   support  — 2 张：ticket / ticket_event
-//   commerce — 9 张：tenant_invoice / tenant_invoice_item / tenant_invoice_receipt /
-//                     tenant_payment / tenant_refund / tenant_subscription /
-//                     tenant_subscription_history / tenant_subscription_override /
-//                     tenant_transaction
+// 覆盖范围（8 个 schema）：
+//   identity — 10 张：account / account_credential / account_profile /
+//                      sso_connection / oauth_provider / oauth_state /
+//                      password_reset_token / account_session /
+//                      account_verification / login_attempt
+//   tenant   —  7 张：tenant / tenant_member / tenant_setting / tenant_domain /
+//                      tenant_organization / tenant_ownership_transfer / tenant_invitation
+//   iam      —  6 张：role / permission / role_permission /
+//                      member_role_binding / capability / plan_capability
+//   product  —  7 张：agent / agent_feature / feature / plan /
+//                      plan_agent / plan_feature / plan_price
+//   commerce — 12 张：tenant_invoice / tenant_invoice_item / tenant_invoice_receipt /
+//                      tenant_payment / tenant_refund / tenant_subscription /
+//                      tenant_subscription_history / tenant_subscription_override /
+//                      tenant_transaction / tenant_credit /
+//                      tenant_billing_address / tenant_payment_method
+//   model    —  5 张：provider / model / model_grant / model_price_rule / model_policy
+//   ops      —  9 张：admin / role / permission / role_permission / setting /
+//                      governance_record / feature_flag / announcement / maintenance
+//   support  —  4 张：ticket / ticket_event / audit_log / notification_log
 //
 // 排除（由 services/ai/gateway/prisma/schema.prisma 管理）：
 //   commerce.tenant_subscription_quota
@@ -33,39 +36,82 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["account", "tenancy", "product", "platform", "support", "commerce"]
+  schemas  = ["identity", "tenant", "iam", "product", "commerce", "model", "ops", "support"]
 }
 
 // ═══════════════════════════════════════════════════════════════
-// schema: account
+// schema: identity
 // ═══════════════════════════════════════════════════════════════
 
 model Account {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  username     String    @unique @db.VarChar(64)
-  email        String?   @unique @db.VarChar(128)
-  phone        String?   @unique @db.VarChar(32)
-  passwordHash String?   @map("password_hash") @db.VarChar(255)
-  status       Boolean   @default(true)
-  lastLoginAt  DateTime? @map("last_login_at") @db.Timestamptz(6)
-  lastLoginIp  String?   @map("last_login_ip") @db.VarChar(64)
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username          String    @unique @db.VarChar(64)
+  accountSource     String    @default("web") @map("account_source") @db.VarChar(32)
+  status            String    @default("active") @db.VarChar(32)
+  email             String?   @unique @db.VarChar(128)
+  phone             String?   @unique @db.VarChar(32)
+  emailVerifiedAt   DateTime? @map("email_verified_at") @db.Timestamptz(6)
+  phoneVerifiedAt   DateTime? @map("phone_verified_at") @db.Timestamptz(6)
+  loginCount        Int       @default(0) @map("login_count")
+  loginFailureCount Int       @default(0) @map("login_failure_count")
+  lastLoginAt       DateTime? @map("last_login_at") @db.Timestamptz(6)
+  lastLoginIp       String?   @map("last_login_ip") @db.VarChar(64)
+  mfaEnabled        Boolean   @default(false) @map("mfa_enabled")
+  lockedUntil       DateTime? @map("locked_until") @db.Timestamptz(6)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz(6)
 
-  identities  AccountIdentity[]
-  profile     AccountProfile?
-  resetTokens PasswordResetToken[]
+  credential     AccountCredential?
+  profile        AccountProfile?
+  ssoConnections SsoConnection[]
+  resetTokens    PasswordResetToken[]
 
   @@index([email], map: "idx_account_email")
   @@index([phone], map: "idx_account_phone")
   @@index([status], map: "idx_account_status")
+  @@index([accountSource], map: "idx_account_source")
   @@index([deletedAt], map: "idx_account_deleted_at")
   @@map("account")
-  @@schema("account")
+  @@schema("identity")
 }
 
-model AccountIdentity {
+model AccountCredential {
+  accountId           String    @id @map("account_id") @db.Uuid
+  passwordHash        String?   @map("password_hash") @db.VarChar(255)
+  mfaSecret           String?   @map("mfa_secret") @db.VarChar(255)
+  mfaRecoveryCodes    String[]  @map("mfa_recovery_codes")
+  forcePasswordChange Boolean   @default(false) @map("force_password_change")
+  passwordChangedAt   DateTime? @map("password_changed_at") @db.Timestamptz(6)
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("account_credential")
+  @@schema("identity")
+}
+
+model AccountProfile {
+  accountId   String    @id @map("account_id") @db.Uuid
+  countryCode String?   @map("country_code") @db.Char(2)
+  displayName String?   @map("display_name") @db.VarChar(96)
+  avatarUrl   String?   @map("avatar_url") @db.VarChar(512)
+  headline    String?   @db.VarChar(128)
+  bio         String?   @db.Text
+  timezone    String?   @db.VarChar(64)
+  language    String?   @db.VarChar(32)
+  metadata    Json?     @db.JsonB
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("account_profile")
+  @@schema("identity")
+}
+
+model SsoConnection {
   id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   accountId           String    @map("account_id") @db.Uuid
   provider            String    @db.VarChar(32)
@@ -77,19 +123,19 @@ model AccountIdentity {
 
   account Account @relation(fields: [accountId], references: [id])
 
-  @@unique([accountId, provider], map: "account_identities_account_id_provider_key")
-  @@unique([provider, providerAccountId], map: "account_identities_provider_provider_account_id_key")
-  @@index([accountId], map: "idx_account_identities_account_id")
-  @@index([provider], map: "idx_account_identities_provider")
-  @@index([providerAccountId], map: "idx_account_identities_provider_account_id")
-  @@index([deletedAt], map: "idx_account_identities_deleted_at")
-  @@map("account_identity")
-  @@schema("account")
+  @@unique([accountId, provider], map: "sso_connection_account_id_provider_key")
+  @@unique([provider, providerAccountId], map: "sso_connection_provider_provider_account_id_key")
+  @@index([accountId], map: "idx_sso_connection_account_id")
+  @@index([provider], map: "idx_sso_connection_provider")
+  @@index([providerAccountId], map: "idx_sso_connection_provider_account_id")
+  @@index([deletedAt], map: "idx_sso_connection_deleted_at")
+  @@map("sso_connection")
+  @@schema("identity")
 }
 
-model AccountOauthProvider {
+model OauthProvider {
   id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  code           String   @unique(map: "oauth_providers_code_key") @db.VarChar(64)
+  code           String   @unique(map: "oauth_provider_code_key") @db.VarChar(64)
   name           String   @db.VarChar(64)
   clientId       String?  @map("client_id") @db.VarChar(255)
   clientSecret   String?  @map("client_secret") @db.VarChar(255)
@@ -103,46 +149,31 @@ model AccountOauthProvider {
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
 
-  @@index([isEnabled], map: "oauth_providers_is_enabled_idx")
-  @@index([sort], map: "oauth_providers_sort_idx")
-  @@map("account_oauth_provider")
-  @@schema("account")
+  @@index([isEnabled], map: "idx_oauth_provider_is_enabled")
+  @@index([sort], map: "idx_oauth_provider_sort")
+  @@map("oauth_provider")
+  @@schema("identity")
 }
 
-// OAuth 授权请求状态，不含 updated_at（append-only 语义）
-model AccountOauthState {
+// OAuth 授权请求状态，append-only
+model OauthState {
   id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  state        String   @unique(map: "oauth_states_state_key") @db.VarChar(128)
   providerCode String   @map("provider_code") @db.VarChar(64)
+  state        String   @unique(map: "oauth_state_state_key") @db.VarChar(128)
   redirectUri  String   @map("redirect_uri") @db.VarChar(512)
+  codeVerifier String?  @map("code_verifier") @db.VarChar(128)
+  nonce        String?  @db.VarChar(128)
+  ipAddress    String?  @map("ip_address") @db.VarChar(64)
   expiresAt    DateTime @map("expires_at") @db.Timestamptz(6)
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  @@index([expiresAt], map: "oauth_states_expires_at_idx")
-  @@index([providerCode], map: "oauth_states_provider_code_idx")
-  @@map("account_oauth_state")
-  @@schema("account")
+  @@index([expiresAt], map: "idx_oauth_state_expires_at")
+  @@index([providerCode], map: "idx_oauth_state_provider_code")
+  @@map("oauth_state")
+  @@schema("identity")
 }
 
-// 账号扩展资料，以 account_id 为主键（一对一）
-model AccountProfile {
-  accountId   String    @id @map("account_id") @db.Uuid
-  displayName String?   @map("display_name") @db.VarChar(96)
-  avatarUrl   String?   @map("avatar_url") @db.VarChar(512)
-  headline    String?   @db.VarChar(128)
-  bio         String?   @db.Text
-  timezone    String?   @db.VarChar(64)
-  language    String?   @db.VarChar(32)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-
-  @@map("account_profile")
-  @@schema("account")
-}
-
-// 密码重置令牌，不含 updated_at（token 只写入一次，used_at 记录使用状态）
+// 密码重置令牌，append-only
 model PasswordResetToken {
   id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   accountId String    @map("account_id") @db.Uuid
@@ -156,99 +187,109 @@ model PasswordResetToken {
   @@index([accountId], map: "idx_password_reset_token_account_id")
   @@index([expiresAt], map: "idx_password_reset_token_expires_at")
   @@map("password_reset_token")
-  @@schema("account")
+  @@schema("identity")
+}
+
+// JWT 吊销黑名单，append-only
+model AccountSession {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId    String   @map("account_id") @db.Uuid
+  jti          String   @unique(map: "account_session_jti_key") @db.VarChar(128)
+  revokeReason String   @map("revoke_reason") @db.VarChar(64)
+  expiresAt    DateTime @map("expires_at") @db.Timestamptz(6)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([accountId], map: "idx_account_session_account_id")
+  @@index([expiresAt], map: "idx_account_session_expires_at")
+  @@map("account_session")
+  @@schema("identity")
+}
+
+// 邮箱/手机验证码，append-only
+model AccountVerification {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId    String?   @map("account_id") @db.Uuid
+  targetType   String    @map("target_type") @db.VarChar(16)
+  target       String    @db.VarChar(128)
+  purpose      String    @db.VarChar(32)
+  codeHash     String    @map("code_hash") @db.VarChar(64)
+  attemptCount Int       @default(0) @map("attempt_count")
+  expiresAt    DateTime  @map("expires_at") @db.Timestamptz(6)
+  usedAt       DateTime? @map("used_at") @db.Timestamptz(6)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([accountId], map: "idx_account_verification_account_id")
+  @@index([target, expiresAt], map: "idx_account_verification_target_expires")
+  @@map("account_verification")
+  @@schema("identity")
+}
+
+// 登录尝试记录，风控/限速，append-only
+model LoginAttempt {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId   String?  @map("account_id") @db.Uuid
+  identity    String   @db.VarChar(128)
+  authMethod  String   @default("password") @map("auth_method") @db.VarChar(32)
+  result      String   @db.VarChar(32)
+  ipAddress   String   @map("ip_address") @db.VarChar(64)
+  countryCode String?  @map("country_code") @db.Char(2)
+  userAgent   String?  @map("user_agent") @db.VarChar(512)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([identity, createdAt(sort: Desc)], map: "idx_login_attempt_identity_created")
+  @@index([ipAddress, createdAt(sort: Desc)], map: "idx_login_attempt_ip_created")
+  @@index([accountId], map: "idx_login_attempt_account_id")
+  @@map("login_attempt")
+  @@schema("identity")
 }
 
 // ═══════════════════════════════════════════════════════════════
-// schema: tenancy
+// schema: tenant
 // ═══════════════════════════════════════════════════════════════
 
 model Tenant {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantCode   String    @unique(map: "tenants_tenant_code_key") @map("tenant_code") @db.VarChar(64)
-  tenantName   String    @map("tenant_name") @db.VarChar(128)
-  displayName  String?   @map("display_name") @db.VarChar(128)
-  tenantType   String    @map("tenant_type") @db.VarChar(32)
-  status       String    @default("active") @db.VarChar(32)
-  createdBy    String?   @map("created_by") @db.Uuid
-  approvedAt   DateTime? @map("approved_at") @db.Timestamptz(6)
-  approvedBy   String?   @map("approved_by") @db.Uuid
-  logoUrl      String?   @map("logo_url") @db.VarChar(512)
-  description  String?   @db.VarChar(1024)
-  language     String?   @default("zh-CN") @db.VarChar(16)
-  timeZone     String?   @default("Asia/Shanghai") @map("time_zone") @db.VarChar(64)
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
-  statusReason String?   @map("status_reason") @db.VarChar(512)
-  statusAt     DateTime? @map("status_at") @db.Timestamptz(6)
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantCode     String    @unique(map: "tenants_tenant_code_key") @map("tenant_code") @db.VarChar(64)
+  tenantType     String    @map("tenant_type") @db.VarChar(32)
+  status         String    @default("active") @db.VarChar(32)
+  statusReason   String?   @map("status_reason") @db.VarChar(512)
+  statusAt       DateTime? @map("status_at") @db.Timestamptz(6)
+  tenantName     String    @map("tenant_name") @db.VarChar(128)
+  displayName    String?   @map("display_name") @db.VarChar(128)
+  description    String?   @db.VarChar(1024)
+  logoUrl        String?   @map("logo_url") @db.VarChar(512)
+  region         String    @default("cn-hangzhou") @db.VarChar(64)
+  language       String    @default("zh-CN") @db.VarChar(16)
+  timeZone       String    @default("Asia/Shanghai") @map("time_zone") @db.VarChar(64)
+  source         String?   @db.VarChar(64)
+  ownerAccountId String?   @map("owner_account_id") @db.Uuid
+  isTrial        Boolean   @default(false) @map("is_trial")
+  trialEndsAt    DateTime? @map("trial_ends_at") @db.Timestamptz(6)
+  convertedAt    DateTime? @map("converted_at") @db.Timestamptz(6)
+  approvedAt     DateTime? @map("approved_at") @db.Timestamptz(6)
+  metadata       Json?     @db.JsonB
+  createdBy      String?   @map("created_by") @db.Uuid
+  approvedBy     String?   @map("approved_by") @db.Uuid
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz(6)
 
-  configs            TenantConfig[]
+  settings           TenantSetting[]
   domains            TenantDomain[]
   members            TenantMember[]
   organization       TenantOrganization?
   ownershipTransfers TenantOwnershipTransfer[]
-  roles              TenantRole[]
+  iamRoles           IamRole[]
+  invitations        TenantInvitation[]
 
   @@index([createdBy], map: "idx_tenants_created_by")
   @@index([deletedAt], map: "idx_tenants_deleted_at")
+  @@index([isTrial], map: "idx_tenants_is_trial")
   @@index([status], map: "idx_tenants_status")
   @@index([tenantName], map: "idx_tenants_tenant_name")
   @@index([tenantType], map: "idx_tenants_tenant_type")
   @@map("tenant")
-  @@schema("tenancy")
-}
-
-model TenantConfig {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId    String    @map("tenant_id") @db.Uuid
-  configKey   String    @map("config_key") @db.VarChar(128)
-  configValue String?   @map("config_value") @db.Text
-  isEncrypted Boolean?  @default(false) @map("is_encrypted")
-  description String?   @db.VarChar(512)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
-  configGroup String?   @map("config_group") @db.VarChar(100)
-  isSensitive Boolean   @default(false) @map("is_sensitive")
-  isReadonly  Boolean   @default(false) @map("is_readonly")
-  createdBy   String    @map("created_by") @db.Uuid
-  updatedBy   String?   @map("updated_by") @db.Uuid
-  valueType   String    @default("string") @map("value_type") @db.VarChar(20)
-
-  tenant Tenant @relation(fields: [tenantId], references: [id])
-
-  @@unique([tenantId, configKey], map: "tenant_configs_tenant_id_config_key_key")
-  @@index([configKey], map: "idx_tc_config_key")
-  @@index([deletedAt], map: "idx_tc_deleted_at")
-  @@index([tenantId, configGroup], map: "idx_tc_tenant_group")
-  @@index([tenantId], map: "idx_tc_tenant_id")
-  @@map("tenant_config")
-  @@schema("tenancy")
-}
-
-model TenantDomain {
-  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId           String    @map("tenant_id") @db.Uuid
-  domain             String    @unique(map: "tenant_domains_domain_key") @db.VarChar(256)
-  domainType         String    @map("domain_type") @db.VarChar(32)
-  isPrimary          Boolean   @default(false) @map("is_primary")
-  sslStatus          String?   @default("none") @map("ssl_status") @db.VarChar(32)
-  verificationStatus String?   @default("pending") @map("verification_status") @db.VarChar(32)
-  verificationToken  String?   @map("verification_token") @db.VarChar(128)
-  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz(6)
-  verifiedAt         DateTime? @map("verified_at") @db.Timestamptz(6)
-  tokenExpiresAt     DateTime? @map("token_expires_at") @db.Timestamptz(6)
-
-  tenant Tenant @relation(fields: [tenantId], references: [id])
-
-  @@index([deletedAt], map: "idx_td_deleted_at")
-  @@index([domain], map: "idx_td_domain")
-  @@index([tenantId], map: "idx_td_tenant_id")
-  @@map("tenant_domain")
-  @@schema("tenancy")
+  @@schema("tenant")
 }
 
 model TenantMember {
@@ -256,59 +297,111 @@ model TenantMember {
   tenantId       String    @map("tenant_id") @db.Uuid
   accountId      String    @map("account_id") @db.Uuid
   role           String    @default("member") @db.VarChar(32)
-  isPrimaryOwner Boolean   @default(false) @map("is_primary_owner")
   status         String    @default("active") @db.VarChar(32)
+  joinedSource   String    @default("created") @map("joined_source") @db.VarChar(64)
   nickname       String?   @db.VarChar(128)
   remark         String?   @db.VarChar(512)
-  joinedSource   String?   @default("created") @map("joined_source") @db.VarChar(64)
+  invitedBy      String?   @map("invited_by") @db.Uuid
+  isPrimaryOwner Boolean   @default(false) @map("is_primary_owner")
   joinedAt       DateTime  @default(now()) @map("joined_at") @db.Timestamptz(6)
   lastActiveAt   DateTime? @map("last_active_at") @db.Timestamptz(6)
+  metadata       Json?     @db.JsonB
   createdBy      String?   @map("created_by") @db.Uuid
   updatedBy      String?   @map("updated_by") @db.Uuid
   createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt      DateTime? @map("deleted_at") @db.Timestamptz(6)
-  roleId         String?   @map("role_id") @db.Uuid
 
-  tenant     Tenant      @relation(fields: [tenantId], references: [id])
-  tenantRole TenantRole? @relation(fields: [roleId], references: [id])
+  tenant       Tenant                 @relation(fields: [tenantId], references: [id])
+  roleBindings IamMemberRoleBinding[]
 
   @@unique([tenantId, accountId], map: "tenant_members_tenant_id_user_id_key")
   @@index([accountId], map: "idx_tm_account_id")
   @@index([deletedAt], map: "idx_tm_deleted_at")
   @@index([isPrimaryOwner], map: "idx_tm_is_primary_owner")
   @@index([role], map: "idx_tm_role")
-  @@index([roleId], map: "idx_tm_role_id")
   @@index([status], map: "idx_tm_status")
   @@index([tenantId], map: "idx_tm_tenant_id")
   @@map("tenant_member")
-  @@schema("tenancy")
+  @@schema("tenant")
+}
+
+model TenantSetting {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String    @map("tenant_id") @db.Uuid
+  configGroup String?   @map("config_group") @db.VarChar(100)
+  configKey   String    @map("config_key") @db.VarChar(128)
+  valueType   String    @default("string") @map("value_type") @db.VarChar(20)
+  configValue String?   @map("config_value") @db.Text
+  isSensitive Boolean   @default(false) @map("is_sensitive")
+  isEncrypted Boolean   @default(false) @map("is_encrypted")
+  isReadonly  Boolean   @default(false) @map("is_readonly")
+  description String?   @db.VarChar(512)
+  createdBy   String    @map("created_by") @db.Uuid
+  updatedBy   String?   @map("updated_by") @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@unique([tenantId, configKey], map: "tenant_settings_tenant_id_config_key_key")
+  @@index([configKey], map: "idx_tset_config_key")
+  @@index([deletedAt], map: "idx_tset_deleted_at")
+  @@index([tenantId, configGroup], map: "idx_tset_tenant_group")
+  @@index([tenantId], map: "idx_tset_tenant_id")
+  @@map("tenant_setting")
+  @@schema("tenant")
+}
+
+model TenantDomain {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId           String    @map("tenant_id") @db.Uuid
+  domain             String    @unique(map: "tenant_domains_domain_key") @db.VarChar(256)
+  domainType         String    @map("domain_type") @db.VarChar(32)
+  verificationStatus String    @default("pending") @map("verification_status") @db.VarChar(32)
+  sslStatus          String    @default("none") @map("ssl_status") @db.VarChar(32)
+  verificationToken  String?   @map("verification_token") @db.VarChar(128)
+  isPrimary          Boolean   @default(false) @map("is_primary")
+  tokenExpiresAt     DateTime? @map("token_expires_at") @db.Timestamptz(6)
+  verifiedAt         DateTime? @map("verified_at") @db.Timestamptz(6)
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  tenant Tenant @relation(fields: [tenantId], references: [id])
+
+  @@index([deletedAt], map: "idx_td_deleted_at")
+  @@index([domain], map: "idx_td_domain")
+  @@index([tenantId], map: "idx_td_tenant_id")
+  @@map("tenant_domain")
+  @@schema("tenant")
 }
 
 model TenantOrganization {
   id                      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenantId                String    @unique(map: "tenant_organizations_tenant_id_key") @map("tenant_id") @db.Uuid
+  countryCode             String    @default("CN") @map("country_code") @db.Char(2)
   companyName             String    @map("company_name") @db.VarChar(256)
   unifiedSocialCreditCode String?   @map("unified_social_credit_code") @db.VarChar(64)
-  businessLicenseUrl      String?   @map("business_license_url") @db.VarChar(512)
   industry                String?   @db.VarChar(128)
   scale                   String?   @db.VarChar(64)
-  contactName             String?   @map("contact_name") @db.VarChar(128)
-  contactPhone            String?   @map("contact_phone") @db.VarChar(64)
-  contactEmail            String?   @map("contact_email") @db.VarChar(128)
   province                String?   @db.VarChar(128)
   city                    String?   @db.VarChar(128)
   district                String?   @db.VarChar(128)
+  postalCode              String?   @map("postal_code") @db.VarChar(16)
   address                 String?   @db.VarChar(512)
-  verifiedStatus          String?   @default("unverified") @map("verified_status") @db.VarChar(32)
-  verifiedAt              DateTime? @map("verified_at") @db.Timestamptz(6)
+  contactName             String?   @map("contact_name") @db.VarChar(128)
+  contactPhone            String?   @map("contact_phone") @db.VarChar(64)
+  contactEmail            String?   @map("contact_email") @db.VarChar(128)
+  businessLicenseUrl      String?   @map("business_license_url") @db.VarChar(512)
+  verifiedStatus          String    @default("unverified") @map("verified_status") @db.VarChar(32)
+  rejectedReason          String?   @map("rejected_reason") @db.VarChar(512)
   verifiedBy              String?   @map("verified_by") @db.Uuid
+  verifiedAt              DateTime? @map("verified_at") @db.Timestamptz(6)
   createdAt               DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt               DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt               DateTime? @map("deleted_at") @db.Timestamptz(6)
-  rejectedReason          String?   @map("rejected_reason") @db.VarChar(512)
-  countryCode             String    @default("CN") @map("country_code") @db.Char(2)
-  postalCode              String?   @map("postal_code") @db.VarChar(16)
 
   tenant Tenant @relation(fields: [tenantId], references: [id])
 
@@ -316,20 +409,20 @@ model TenantOrganization {
   @@index([tenantId], map: "idx_to_tenant_id")
   @@index([verifiedStatus], map: "idx_to_verified_status")
   @@map("tenant_organization")
-  @@schema("tenancy")
+  @@schema("tenant")
 }
 
-// 所有权转移记录，append-only，不含 updated_at
+// 所有权转移记录，append-only
 model TenantOwnershipTransfer {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId       String    @map("tenant_id") @db.Uuid
-  fromAccountId  String    @map("from_account_id") @db.Uuid
-  toAccountId    String    @map("to_account_id") @db.Uuid
-  operatorId     String    @map("operator_id") @db.Uuid
-  transferReason String?   @map("transfer_reason") @db.VarChar(512)
-  remark         String?   @db.Text
-  transferStatus String?   @default("success") @map("transfer_status") @db.VarChar(32)
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId       String   @map("tenant_id") @db.Uuid
+  operatorId     String   @map("operator_id") @db.Uuid
+  fromAccountId  String   @map("from_account_id") @db.Uuid
+  toAccountId    String   @map("to_account_id") @db.Uuid
+  transferStatus String   @default("success") @map("transfer_status") @db.VarChar(32)
+  transferReason String?  @map("transfer_reason") @db.VarChar(512)
+  remark         String?  @db.Text
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
   tenant Tenant @relation(fields: [tenantId], references: [id])
 
@@ -337,84 +430,171 @@ model TenantOwnershipTransfer {
   @@index([tenantId], map: "idx_tot_tenant_id")
   @@index([toAccountId], map: "idx_tot_to_account_id")
   @@map("tenant_ownership_transfer")
-  @@schema("tenancy")
+  @@schema("tenant")
 }
 
-model TenantPermission {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  permissionCode  String    @unique(map: "tenant_permissions_permission_code_key") @map("permission_code") @db.VarChar(128)
-  permissionName  String    @map("permission_name") @db.VarChar(128)
-  parentCode      String?   @map("parent_code") @db.VarChar(128)
-  permissionType  String?   @default("function") @map("permission_type") @db.VarChar(32)
-  description     String?   @db.VarChar(512)
-  status          Boolean   @default(true)
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt       DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz(6)
-  tenantId        String?   @map("tenant_id") @db.Uuid
-  permissionScope String    @default("platform") @map("permission_scope") @db.VarChar(16)
-  sort            Int       @default(999)
+model TenantInvitation {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId   String    @map("tenant_id") @db.Uuid
+  targetType String    @map("target_type") @db.VarChar(16)
+  target     String    @db.VarChar(128)
+  role       String    @db.VarChar(32)
+  status     String    @default("pending") @db.VarChar(32)
+  tokenHash  String    @unique(map: "tenant_invitation_token_hash_key") @map("token_hash") @db.VarChar(64)
+  expiresAt  DateTime  @map("expires_at") @db.Timestamptz(6)
+  acceptedAt DateTime? @map("accepted_at") @db.Timestamptz(6)
+  createdBy  String    @map("created_by") @db.Uuid
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
 
-  rolePermissions TenantRolePermission[]
+  tenant Tenant @relation(fields: [tenantId], references: [id])
 
-  @@index([deletedAt], map: "idx_tp_deleted_at")
-  @@index([parentCode], map: "idx_tp_parent_code")
-  @@index([permissionCode], map: "idx_tp_permission_code")
-  @@index([sort], map: "idx_tp_sort")
-  @@map("tenant_permission")
-  @@schema("tenancy")
+  @@index([tenantId], map: "idx_tinv_tenant_id")
+  @@index([status], map: "idx_tinv_status")
+  @@index([expiresAt], map: "idx_tinv_expires_at")
+  @@map("tenant_invitation")
+  @@schema("tenant")
 }
 
-model TenantRole {
+// ═══════════════════════════════════════════════════════════════
+// schema: iam
+// ═══════════════════════════════════════════════════════════════
+
+model IamRole {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenantId    String    @map("tenant_id") @db.Uuid
   roleCode    String    @map("role_code") @db.VarChar(64)
   roleName    String    @map("role_name") @db.VarChar(128)
   description String?   @db.VarChar(512)
   isSystem    Boolean   @default(false) @map("is_system")
+  status      String    @default("active") @db.VarChar(16)
+  sort        Int       @default(999)
+  uiConfig    Json?     @map("ui_config") @db.JsonB
   createdBy   String?   @map("created_by") @db.Uuid
   updatedBy   String?   @map("updated_by") @db.Uuid
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
   deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
-  status      String    @default("active") @db.VarChar(16)
-  sort        Int       @default(999)
 
   tenant          Tenant                 @relation(fields: [tenantId], references: [id])
-  members         TenantMember[]
-  rolePermissions TenantRolePermission[]
+  rolePermissions IamRolePermission[]
+  memberBindings  IamMemberRoleBinding[]
 
-  @@unique([tenantId, roleCode], map: "tenant_roles_tenant_id_role_code_key")
-  @@index([deletedAt], map: "idx_tr_deleted_at")
-  @@index([roleCode], map: "idx_tr_role_code")
-  @@index([sort], map: "idx_tr_sort")
-  @@index([status], map: "idx_tr_status")
-  @@index([tenantId], map: "idx_tr_tenant_id")
-  @@map("tenant_role")
-  @@schema("tenancy")
+  @@unique([tenantId, roleCode], map: "iam_role_tenant_id_role_code_key")
+  @@index([deletedAt], map: "idx_iam_role_deleted_at")
+  @@index([roleCode], map: "idx_iam_role_code")
+  @@index([sort], map: "idx_iam_role_sort")
+  @@index([status], map: "idx_iam_role_status")
+  @@index([tenantId], map: "idx_iam_role_tenant_id")
+  @@map("role")
+  @@schema("iam")
 }
 
-// 角色权限关联，复合主键，硬删除（无 deleted_at）
-model TenantRolePermission {
-  tenantId     String   @map("tenant_id") @db.Uuid
+model IamPermission {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  permissionCode String    @unique(map: "iam_permission_code_key") @map("permission_code") @db.VarChar(128)
+  module         String?   @db.VarChar(64)
+  permissionType String    @default("function") @map("permission_type") @db.VarChar(32)
+  permissionName String    @map("permission_name") @db.VarChar(128)
+  parentCode     String?   @map("parent_code") @db.VarChar(128)
+  description    String?   @db.VarChar(512)
+  isActive       Boolean   @default(true) @map("is_active")
+  isVisible      Boolean   @default(true) @map("is_visible")
+  sort           Int       @default(999)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  rolePermissions IamRolePermission[]
+
+  @@index([deletedAt], map: "idx_iam_perm_deleted_at")
+  @@index([module], map: "idx_iam_perm_module")
+  @@index([parentCode], map: "idx_iam_perm_parent_code")
+  @@index([permissionCode], map: "idx_iam_perm_code")
+  @@index([sort], map: "idx_iam_perm_sort")
+  @@map("permission")
+  @@schema("iam")
+}
+
+// 角色权限关联，复合主键，硬删除
+model IamRolePermission {
   roleId       String   @map("role_id") @db.Uuid
   permissionId String   @map("permission_id") @db.Uuid
+  tenantId     String   @map("tenant_id") @db.Uuid
   createdBy    String?  @map("created_by") @db.Uuid
   createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  role       TenantRole       @relation(fields: [roleId], references: [id])
-  permission TenantPermission @relation(fields: [permissionId], references: [id])
+  role       IamRole       @relation(fields: [roleId], references: [id])
+  permission IamPermission @relation(fields: [permissionId], references: [id])
 
   @@id([roleId, permissionId])
-  @@index([permissionId], map: "idx_trp_permission_id")
-  @@index([roleId], map: "idx_trp_role_id")
-  @@index([tenantId], map: "idx_trp_tenant_id")
-  @@map("tenant_role_permission")
-  @@schema("tenancy")
+  @@index([permissionId], map: "idx_iam_rp_permission_id")
+  @@index([roleId], map: "idx_iam_rp_role_id")
+  @@index([tenantId], map: "idx_iam_rp_tenant_id")
+  @@map("role_permission")
+  @@schema("iam")
+}
+
+// 成员→角色多对多绑定，硬删除
+model IamMemberRoleBinding {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId  String   @map("tenant_id") @db.Uuid
+  memberId  String   @map("member_id") @db.Uuid
+  roleId    String   @map("role_id") @db.Uuid
+  grantedBy String?  @map("granted_by") @db.Uuid
+  grantedAt DateTime @default(now()) @map("granted_at") @db.Timestamptz(6)
+
+  member TenantMember @relation(fields: [memberId], references: [id])
+  role   IamRole      @relation(fields: [roleId], references: [id])
+
+  @@unique([memberId, roleId], map: "iam_member_role_binding_member_role_key")
+  @@index([memberId], map: "idx_iam_mrb_member_id")
+  @@index([roleId], map: "idx_iam_mrb_role_id")
+  @@index([tenantId], map: "idx_iam_mrb_tenant_id")
+  @@map("member_role_binding")
+  @@schema("iam")
+}
+
+model IamCapability {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  capabilityCode String   @unique(map: "iam_capability_code_key") @map("capability_code") @db.VarChar(128)
+  category       String   @db.VarChar(64)
+  capabilityName String   @map("capability_name") @db.VarChar(128)
+  description    String?  @db.VarChar(512)
+  unit           String?  @db.VarChar(32)
+  defaultLimit   BigInt?  @map("default_limit")
+  isActive       Boolean  @default(true) @map("is_active")
+  isMetered      Boolean  @default(false) @map("is_metered")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  planCapabilities IamPlanCapability[]
+
+  @@index([category], map: "idx_iam_cap_category")
+  @@index([isActive], map: "idx_iam_cap_is_active")
+  @@map("capability")
+  @@schema("iam")
+}
+
+// 订阅计划→能力集映射，复合主键，硬删除；planId 引用 product.plan
+model IamPlanCapability {
+  planId       String   @map("plan_id") @db.Uuid
+  capabilityId String   @map("capability_id") @db.Uuid
+  limitOverride BigInt? @map("limit_override")
+  createdBy    String?  @map("created_by") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  capability IamCapability @relation(fields: [capabilityId], references: [id])
+
+  @@id([planId, capabilityId])
+  @@index([capabilityId], map: "idx_iam_pc_capability_id")
+  @@index([planId], map: "idx_iam_pc_plan_id")
+  @@map("plan_capability")
+  @@schema("iam")
 }
 
 // ═══════════════════════════════════════════════════════════════
-// schema: product
+// schema: product（结构暂不变更，待单独详细设计）
 // ═══════════════════════════════════════════════════════════════
 
 model ProductAgent {
@@ -450,7 +630,6 @@ model ProductAgent {
   @@schema("product")
 }
 
-// Agent-Feature 关联，复合主键
 model ProductAgentFeature {
   agentId    String    @map("agent_id") @db.Uuid
   featureId  String    @map("feature_id") @db.Uuid
@@ -467,8 +646,8 @@ model ProductAgentFeature {
 
   @@id([agentId, featureId])
   @@index([agentId], map: "idx_paf_agent_id")
-  @@index([featureId], map: "idx_paf_feature_id")
   @@index([deletedAt], map: "idx_paf_deleted_at")
+  @@index([featureId], map: "idx_paf_feature_id")
   @@map("agent_feature")
   @@schema("product")
 }
@@ -524,7 +703,6 @@ model ProductPlan {
   @@schema("product")
 }
 
-// Plan-Agent 关联，复合主键
 model ProductPlanAgent {
   planId    String    @map("plan_id") @db.Uuid
   agentId   String    @map("agent_id") @db.Uuid
@@ -538,13 +716,12 @@ model ProductPlanAgent {
 
   @@id([agentId, planId])
   @@index([agentId], map: "idx_ppa_agent_id")
-  @@index([planId], map: "idx_ppa_plan_id")
   @@index([deletedAt], map: "idx_ppa_deleted_at")
+  @@index([planId], map: "idx_ppa_plan_id")
   @@map("plan_agent")
   @@schema("product")
 }
 
-// Plan-Feature 关联，复合主键
 model ProductPlanFeature {
   planId      String    @map("plan_id") @db.Uuid
   featureId   String    @map("feature_id") @db.Uuid
@@ -561,9 +738,9 @@ model ProductPlanFeature {
   feature ProductFeature @relation(fields: [featureId], references: [id])
 
   @@id([planId, featureId])
-  @@index([planId], map: "idx_ppf_plan_id")
-  @@index([featureId], map: "idx_ppf_feature_id")
   @@index([deletedAt], map: "idx_ppf_deleted_at")
+  @@index([featureId], map: "idx_ppf_feature_id")
+  @@index([planId], map: "idx_ppf_plan_id")
   @@map("plan_feature")
   @@schema("product")
 }
@@ -589,221 +766,15 @@ model ProductPlanPrice {
   plan ProductPlan @relation(fields: [planId], references: [id])
 
   @@unique([planId, periodType, deletedAt], map: "uk_plan_price_period")
+  @@index([deletedAt], map: "idx_plan_price_deleted")
   @@index([planId], map: "idx_plan_price_plan_id")
   @@index([status], map: "idx_plan_price_status")
-  @@index([deletedAt], map: "idx_plan_price_deleted")
   @@map("plan_price")
   @@schema("product")
 }
 
 // ═══════════════════════════════════════════════════════════════
-// schema: platform
-// ═══════════════════════════════════════════════════════════════
-
-model PlatformRole {
-  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sort               Int       @default(999)
-  roleCode           String    @unique(map: "uk_role_code") @map("role_code") @db.VarChar(64)
-  nameI18nKey        String    @map("name_i18n_key") @db.VarChar(128)
-  nameEn             String    @map("name_en") @db.VarChar(128)
-  descriptionI18nKey String?   @map("description_i18n_key") @db.VarChar(128)
-  description        String    @default("") @db.VarChar(255)
-  isSystem           Boolean   @default(false) @map("is_system")
-  status             Boolean   @default(true)
-  statusCode         String    @default("active") @map("status_code") @db.VarChar(32)
-  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  createdBy          String?   @map("created_by") @db.Uuid
-  updatedBy          String?   @map("updated_by") @db.Uuid
-
-  admins          PlatformAdmin[]
-  rolePermissions PlatformRolePermission[]
-
-  @@index([sort], map: "idx_platform_role_sort")
-  @@index([statusCode], map: "idx_platform_role_status_code")
-  @@index([nameI18nKey], map: "idx_platform_role_name_i18n_key")
-  @@map("platform_role")
-  @@schema("platform")
-}
-
-model PlatformAdmin {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  sort         Int       @default(999)
-  username     String    @unique(map: "uk_admin_username") @db.VarChar(64)
-  phone        String?   @unique(map: "uk_admin_phone") @db.VarChar(32)
-  email        String?   @unique(map: "uk_admin_email") @db.VarChar(128)
-  passwordHash String    @map("password_hash") @db.VarChar(255)
-  roleId       String    @map("role_id") @db.Uuid
-  status       Boolean   @default(true)
-  statusCode   String    @default("active") @map("status_code") @db.VarChar(32)
-  lastLoginAt  DateTime? @map("last_login_at") @db.Timestamptz(6)
-  lastLoginIp  String?   @map("last_login_ip") @db.VarChar(64)
-  createdBy    String?   @map("created_by") @db.Uuid
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
-  updatedBy    String?   @map("updated_by") @db.Uuid
-  isSystem     Boolean   @default(false) @map("is_system")
-  displayName  String    @default("") @map("display_name") @db.VarChar(50)
-  remark       String?   @db.VarChar(255)
-
-  role PlatformRole @relation(fields: [roleId], references: [id])
-
-  @@index([deletedAt], map: "idx_platform_admin_deleted_at")
-  @@index([email], map: "idx_platform_admin_email")
-  @@index([phone], map: "idx_platform_admin_phone")
-  @@index([roleId], map: "idx_platform_admin_role_id")
-  @@index([sort], map: "idx_platform_admin_sort")
-  @@index([status], map: "idx_platform_admin_status")
-  @@index([statusCode], map: "idx_platform_admin_status_code")
-  @@map("platform_admin")
-  @@schema("platform")
-}
-
-model PlatformConfig {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  configKey   String   @unique(map: "uk_platform_config_key") @map("config_key") @db.VarChar(128)
-  configGroup String   @map("config_group") @db.VarChar(64)
-  configValue String   @map("config_value") @db.Text
-  description String?  @db.Text
-  isSensitive Boolean  @default(false) @map("is_sensitive")
-  isReadonly  Boolean  @default(false) @map("is_readonly")
-  updatedBy   String?  @map("updated_by") @db.Uuid
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
-  valueType   String   @default("string") @map("value_type") @db.VarChar(20)
-  createdBy   String?  @map("created_by") @db.Uuid
-
-  @@index([configGroup], map: "idx_platform_config_group")
-  @@map("platform_config")
-  @@schema("platform")
-}
-
-// 支持自引用父子树结构
-model PlatformPermission {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  parentId    String?   @map("parent_id") @db.Uuid
-  permCode    String    @unique(map: "uk_perm_code") @map("perm_code") @db.VarChar(64)
-  permName    String    @map("perm_name") @db.VarChar(64)
-  permType    String    @map("perm_type") @db.VarChar(20)
-  status      Boolean   @default(true)
-  description String    @default("") @db.VarChar(255)
-  icon        String?   @db.VarChar(64)
-  sort        Int       @default(999)
-  routePath   String?   @map("route_path") @db.VarChar(255)
-  component   String?   @db.VarChar(255)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  createdBy   String    @map("created_by") @db.Uuid
-  updatedBy   String    @map("updated_by") @db.Uuid
-
-  parent          PlatformPermission?      @relation("PermParent", fields: [parentId], references: [id])
-  children        PlatformPermission[]     @relation("PermParent")
-  rolePermissions PlatformRolePermission[]
-
-  @@index([parentId], map: "idx_perm_parent_id")
-  @@index([sort], map: "idx_perm_sort")
-  @@index([status], map: "idx_perm_status")
-  @@index([permType], map: "idx_perm_type")
-  @@map("platform_permission")
-  @@schema("platform")
-}
-
-// 角色权限关联，复合主键
-model PlatformRolePermission {
-  roleId       String    @map("role_id") @db.Uuid
-  permissionId String    @map("permission_id") @db.Uuid
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  createdBy    String    @map("created_by") @db.Uuid
-  updatedAt    DateTime? @map("updated_at") @db.Timestamptz(6)
-  updatedBy    String?   @map("updated_by") @db.Uuid
-
-  role       PlatformRole       @relation(fields: [roleId], references: [id])
-  permission PlatformPermission @relation(fields: [permissionId], references: [id])
-
-  @@id([roleId, permissionId])
-  @@map("platform_role_permission")
-  @@schema("platform")
-}
-
-// 治理记录，id 为 varchar(64) 非 UUID，与 kind 构成复合主键
-// GIN index on tags 由原始 DDL 管理（Prisma 不支持 GIN 声明）
-model GovernanceRecord {
-  id          String    @map("id") @db.VarChar(64)
-  kind        String    @db.VarChar(32)
-  name        String    @db.VarChar(160)
-  status      String    @default("normal") @db.VarChar(32)
-  scope       String    @db.VarChar(160)
-  owner       String    @db.VarChar(120)
-  policy      String    @db.VarChar(200)
-  description String    @default("") @db.Text
-  tags        String[]  @default([])
-  sourceTable String?   @map("source_table") @db.VarChar(128)
-  sourceId    String?   @map("source_id") @db.VarChar(128)
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
-
-  @@id([kind, id], map: "pk_platform_governance_record")
-  @@index([kind, status], map: "idx_platform_governance_kind_status")
-  @@index([kind, updatedAt(sort: Desc)], map: "idx_platform_governance_kind_updated")
-  @@map("governance_record")
-  @@schema("platform")
-}
-
-// ═══════════════════════════════════════════════════════════════
-// schema: support
-// ═══════════════════════════════════════════════════════════════
-
-model SupportTicket {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ticketNo     String    @unique(map: "uq_support_ticket_no") @map("ticket_no") @db.VarChar(64)
-  tenantId     String    @map("tenant_id") @db.Uuid
-  title        String    @db.VarChar(200)
-  description  String    @default("") @db.Text
-  status       String    @default("open") @db.VarChar(32)
-  priority     String    @default("p2") @db.VarChar(16)
-  category     String    @default("general") @db.VarChar(64)
-  source       String    @default("admin") @db.VarChar(64)
-  reporterName String?   @map("reporter_name") @db.VarChar(100)
-  assigneeName String?   @map("assignee_name") @db.VarChar(100)
-  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
-  dueAt        DateTime? @map("due_at") @db.Timestamptz(6)
-  resolvedAt   DateTime? @map("resolved_at") @db.Timestamptz(6)
-  closedAt     DateTime? @map("closed_at") @db.Timestamptz(6)
-  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
-
-  events SupportTicketEvent[]
-
-  @@index([tenantId, status], map: "idx_support_ticket_tenant_status")
-  @@index([priority, updatedAt(sort: Desc)], map: "idx_support_ticket_priority_updated")
-  @@index([deletedAt], map: "idx_support_ticket_deleted_at")
-  @@map("ticket")
-  @@schema("support")
-}
-
-// 工单事件流水，append-only，不含 updated_at
-model SupportTicketEvent {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ticketId  String   @map("ticket_id") @db.Uuid
-  eventType String   @map("event_type") @db.VarChar(64)
-  actorId   String?  @map("actor_id") @db.Uuid
-  actorName String   @map("actor_name") @db.VarChar(100)
-  payload   Json     @default("{}") @db.JsonB
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-
-  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
-
-  @@index([ticketId, createdAt(sort: Desc)], map: "idx_support_ticket_event_ticket_created")
-  @@map("ticket_event")
-  @@schema("support")
-}
-
-// ═══════════════════════════════════════════════════════════════
-// schema: commerce（手动维护的 9 张表）
-// 注：tenant_subscription_quota / tenant_usage_event / tenant_usage_summary
-//     由 services/ai/gateway/prisma/schema.prisma 管理，此处不定义。
+// schema: commerce（手动维护；quota/event/summary 由 gateway 管理）
 // ═══════════════════════════════════════════════════════════════
 
 model TenantInvoice {
@@ -835,12 +806,12 @@ model TenantInvoice {
   items    TenantInvoiceItem[]
   payments TenantPayment[]
 
-  @@index([tenantId, billCycle], map: "idx_tenant_bill_tenant_cycle")
   @@index([billCycle], map: "idx_ti_cycle")
-  @@index([deletedAt], map: "idx_ti_deleted_at")
   @@index([billNo], map: "idx_ti_invoice_no")
   @@index([billStatus], map: "idx_ti_status")
+  @@index([deletedAt], map: "idx_ti_deleted_at")
   @@index([tenantId], map: "idx_ti_tenant_id")
+  @@index([tenantId, billCycle], map: "idx_tenant_bill_tenant_cycle")
   @@map("tenant_invoice")
   @@schema("commerce")
 }
@@ -867,8 +838,8 @@ model TenantInvoiceItem {
   invoice TenantInvoice @relation(fields: [billId], references: [id])
 
   @@index([agentId], map: "idx_tii_agent_id")
-  @@index([deletedAt], map: "idx_tii_deleted_at")
   @@index([billId], map: "idx_tii_invoice_id")
+  @@index([deletedAt], map: "idx_tii_deleted_at")
   @@index([itemType], map: "idx_tii_item_type")
   @@index([tenantId], map: "idx_tii_tenant_id")
   @@map("tenant_invoice_item")
@@ -1010,7 +981,7 @@ model TenantSubscription {
   @@schema("commerce")
 }
 
-// 订阅变更日志，append-only，不含 updated_at
+// 订阅变更日志，append-only
 model TenantSubscriptionHistory {
   id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenantId       String   @map("tenant_id") @db.Uuid
@@ -1064,7 +1035,7 @@ model TenantSubscriptionOverride {
   @@schema("commerce")
 }
 
-// 交易流水，不可更新不可删除（DB 层 RULE 强制保证），不含 updated_at
+// 交易流水，不可更新/删除（DB RULE 强制），append-only
 model TenantTransaction {
   id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   tenantId      String   @map("tenant_id") @db.Uuid
@@ -1080,12 +1051,553 @@ model TenantTransaction {
   remark        String?  @db.VarChar(512)
   operatorId    String?  @map("operator_id") @db.Uuid
   clientIp      String?  @map("client_ip") @db.VarChar(64)
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   createdBy     String   @map("created_by") @db.Uuid
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@index([tenantId], map: "idx_tt_tenant_id")
   @@index([tradeType], map: "idx_tt_trade_type")
   @@index([transactionNo], map: "idx_tt_transaction_no")
   @@map("tenant_transaction")
   @@schema("commerce")
+}
+
+// 账户余额快照；余额变动流水在 tenant_transaction
+model TenantCredit {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId       String   @unique(map: "tenant_credit_tenant_id_key") @map("tenant_id") @db.Uuid
+  currency       String   @default("CNY") @db.VarChar(16)
+  balance        Decimal  @default(0) @db.Decimal(12, 2)
+  totalGranted   Decimal  @default(0) @map("total_granted") @db.Decimal(12, 2)
+  totalConsumed  Decimal  @default(0) @map("total_consumed") @db.Decimal(12, 2)
+  version        Int      @default(0)
+  updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([tenantId], map: "idx_tc_credit_tenant_id")
+  @@map("tenant_credit")
+  @@schema("commerce")
+}
+
+model TenantBillingAddress {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String    @map("tenant_id") @db.Uuid
+  invoiceType String    @map("invoice_type") @db.VarChar(32)
+  title       String    @db.VarChar(256)
+  taxNo       String?   @map("tax_no") @db.VarChar(64)
+  phone       String?   @db.VarChar(64)
+  address     String?   @db.VarChar(512)
+  bankName    String?   @map("bank_name") @db.VarChar(256)
+  bankAccount String?   @map("bank_account") @db.VarChar(256)
+  isDefault   Boolean   @default(false) @map("is_default")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  @@index([tenantId], map: "idx_tba_tenant_id")
+  @@map("tenant_billing_address")
+  @@schema("commerce")
+}
+
+model TenantPaymentMethod {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId    String    @map("tenant_id") @db.Uuid
+  methodType  String    @map("method_type") @db.VarChar(32)
+  status      String    @default("active") @db.VarChar(32)
+  displayName String    @map("display_name") @db.VarChar(128)
+  externalId  String?   @map("external_id") @db.VarChar(256)
+  isDefault   Boolean   @default(false) @map("is_default")
+  lastUsedAt  DateTime? @map("last_used_at") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  @@index([tenantId], map: "idx_tpm_tenant_id")
+  @@index([status], map: "idx_tpm_status")
+  @@map("tenant_payment_method")
+  @@schema("commerce")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// schema: model（从 ai_gateway 迁入，去除 api_key_env_var）
+// ═══════════════════════════════════════════════════════════════
+
+model ModelProvider {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  providerCode String    @unique(map: "model_provider_code_key") @map("provider_code") @db.VarChar(64)
+  providerType String    @default("online") @map("provider_type") @db.VarChar(32)
+  providerName String    @map("provider_name") @db.VarChar(128)
+  description  String?   @db.VarChar(512)
+  logoUrl      String?   @map("logo_url") @db.Text
+  homepageUrl  String?   @map("homepage_url") @db.Text
+  consoleUrl   String?   @map("console_url") @db.Text
+  billingUrl   String?   @map("billing_url") @db.Text
+  isActive     Boolean   @default(true) @map("is_active")
+  config       Json?     @db.JsonB
+  createdBy    String?   @map("created_by") @db.Uuid
+  updatedBy    String?   @map("updated_by") @db.Uuid
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt    DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  models ModelDefinition[]
+
+  @@index([isActive], map: "idx_model_provider_is_active")
+  @@index([providerType], map: "idx_model_provider_type")
+  @@map("provider")
+  @@schema("model")
+}
+
+// model 是 Prisma 关键字（小写），Prisma 模型名用 ModelDefinition 避免混淆
+model ModelDefinition {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  providerId        String?   @map("provider_id") @db.Uuid
+  modelCode         String    @unique(map: "model_definition_code_key") @map("model_code") @db.VarChar(128)
+  provider          String    @db.VarChar(64)
+  modelType         String    @default("chat") @map("model_type") @db.VarChar(32)
+  protocol          String    @db.VarChar(64)
+  modelName         String    @map("model_name") @db.VarChar(128)
+  description       String?   @db.VarChar(512)
+  endpointUrl       String    @map("endpoint_url") @db.Text
+  contextWindow     Int?      @map("context_window")
+  maxOutputTokens   Int?      @map("max_output_tokens")
+  capabilities      String[]  @default([])
+  supportsStreaming  Boolean   @default(true) @map("supports_streaming")
+  isActive          Boolean   @default(true) @map("is_active")
+  sort              Int       @default(999)
+  config            Json?     @db.JsonB
+  createdBy         String?   @map("created_by") @db.Uuid
+  updatedBy         String?   @map("updated_by") @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  providerRef ModelProvider?    @relation(fields: [providerId], references: [id])
+  grants      ModelGrant[]
+  priceRules  ModelPriceRule[]
+  policies    ModelPolicy[]
+
+  @@index([isActive], map: "idx_model_def_is_active")
+  @@index([modelType], map: "idx_model_def_type")
+  @@index([provider], map: "idx_model_def_provider")
+  @@index([providerId], map: "idx_model_def_provider_id")
+  @@map("model")
+  @@schema("model")
+}
+
+model ModelGrant {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelId   String    @map("model_id") @db.Uuid
+  tenantId  String    @map("tenant_id") @db.Uuid
+  agentId   String?   @map("agent_id") @db.Uuid
+  priority  Int       @default(100)
+  isActive  Boolean   @default(true) @map("is_active")
+  reason    String?   @db.VarChar(512)
+  expiresAt DateTime? @map("expires_at") @db.Timestamptz(6)
+  createdBy String?   @map("created_by") @db.Uuid
+  updatedBy String?   @map("updated_by") @db.Uuid
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  modelDef ModelDefinition @relation(fields: [modelId], references: [id])
+
+  @@index([agentId], map: "idx_model_grant_agent")
+  @@index([isActive], map: "idx_model_grant_is_active")
+  @@index([modelId], map: "idx_model_grant_model")
+  @@index([tenantId], map: "idx_model_grant_tenant")
+  @@map("model_grant")
+  @@schema("model")
+}
+
+model ModelPriceRule {
+  id               String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelId          String    @map("model_id") @db.Uuid
+  billingMode      String    @default("token") @map("billing_mode") @db.VarChar(32)
+  currency         String    @default("CNY") @db.VarChar(16)
+  unitTokens       Int       @default(1000000) @map("unit_tokens")
+  inputUnitPrice   Decimal   @default(0) @map("input_unit_price") @db.Decimal(18, 8)
+  outputUnitPrice  Decimal   @default(0) @map("output_unit_price") @db.Decimal(18, 8)
+  requestUnitPrice Decimal   @default(0) @map("request_unit_price") @db.Decimal(18, 8)
+  isActive         Boolean   @default(true) @map("is_active")
+  effectiveAt      DateTime  @default(now()) @map("effective_at") @db.Timestamptz(6)
+  expiresAt        DateTime? @map("expires_at") @db.Timestamptz(6)
+  createdBy        String?   @map("created_by") @db.Uuid
+  updatedBy        String?   @map("updated_by") @db.Uuid
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  modelDef ModelDefinition @relation(fields: [modelId], references: [id])
+
+  @@index([effectiveAt], map: "idx_model_price_effective")
+  @@index([isActive], map: "idx_model_price_is_active")
+  @@index([modelId], map: "idx_model_price_model")
+  @@map("model_price_rule")
+  @@schema("model")
+}
+
+model ModelPolicy {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  modelId           String    @map("model_id") @db.Uuid
+  tenantId          String?   @map("tenant_id") @db.Uuid
+  name              String?   @db.VarChar(128)
+  priority          Int       @default(100)
+  maxConcurrent     Int?      @map("max_concurrent")
+  rateLimitRpm      Int?      @map("rate_limit_rpm")
+  rateLimitTpm      BigInt?   @map("rate_limit_tpm")
+  rateLimitTpd      BigInt?   @map("rate_limit_tpd")
+  maxContextTokens  Int?      @map("max_context_tokens")
+  isActive          Boolean   @default(true) @map("is_active")
+  effectiveAt       DateTime  @default(now()) @map("effective_at") @db.Timestamptz(6)
+  expiresAt         DateTime? @map("expires_at") @db.Timestamptz(6)
+  createdBy         String?   @map("created_by") @db.Uuid
+  updatedBy         String?   @map("updated_by") @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt         DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  modelDef ModelDefinition @relation(fields: [modelId], references: [id])
+
+  @@unique([modelId, tenantId], map: "model_policy_model_tenant_key")
+  @@index([isActive], map: "idx_model_policy_is_active")
+  @@index([modelId], map: "idx_model_policy_model")
+  @@index([tenantId], map: "idx_model_policy_tenant")
+  @@map("model_policy")
+  @@schema("model")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// schema: ops（当前：platform；status 字段已合并）
+// ═══════════════════════════════════════════════════════════════
+
+model OpsAdmin {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleId             String    @map("role_id") @db.Uuid
+  username           String    @unique(map: "uk_admin_username") @db.VarChar(64)
+  status             String    @default("active") @map("status") @db.VarChar(32)
+  email              String?   @unique(map: "uk_admin_email") @db.VarChar(128)
+  phone              String?   @unique(map: "uk_admin_phone") @db.VarChar(32)
+  displayName        String    @default("") @map("display_name") @db.VarChar(50)
+  passwordHash       String    @map("password_hash") @db.VarChar(255)
+  loginFailureCount  Int       @default(0) @map("login_failure_count")
+  remark             String?   @db.VarChar(255)
+  lastLoginIp        String?   @map("last_login_ip") @db.VarChar(64)
+  isSystem           Boolean   @default(false) @map("is_system")
+  mfaEnabled         Boolean   @default(false) @map("mfa_enabled")
+  lockedUntil        DateTime? @map("locked_until") @db.Timestamptz(6)
+  passwordChangedAt  DateTime? @map("password_changed_at") @db.Timestamptz(6)
+  lastLoginAt        DateTime? @map("last_login_at") @db.Timestamptz(6)
+  sort               Int       @default(999)
+  createdBy          String?   @map("created_by") @db.Uuid
+  updatedBy          String?   @map("updated_by") @db.Uuid
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  role OpsRole @relation(fields: [roleId], references: [id])
+
+  @@index([deletedAt], map: "idx_ops_admin_deleted_at")
+  @@index([email], map: "idx_ops_admin_email")
+  @@index([phone], map: "idx_ops_admin_phone")
+  @@index([roleId], map: "idx_ops_admin_role_id")
+  @@index([sort], map: "idx_ops_admin_sort")
+  @@index([status], map: "idx_ops_admin_status")
+  @@map("admin")
+  @@schema("ops")
+}
+
+model OpsRole {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  roleCode           String   @unique(map: "uk_role_code") @map("role_code") @db.VarChar(64)
+  status             String   @default("active") @db.VarChar(32)
+  nameEn             String   @map("name_en") @db.VarChar(128)
+  nameI18nKey        String   @map("name_i18n_key") @db.VarChar(128)
+  description        String   @default("") @db.VarChar(255)
+  descriptionI18nKey String?  @map("description_i18n_key") @db.VarChar(128)
+  isSystem           Boolean  @default(false) @map("is_system")
+  sort               Int      @default(999)
+  createdBy          String?  @map("created_by") @db.Uuid
+  updatedBy          String?  @map("updated_by") @db.Uuid
+  createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  admins          OpsAdmin[]
+  rolePermissions OpsRolePermission[]
+
+  @@index([sort], map: "idx_ops_role_sort")
+  @@index([status], map: "idx_ops_role_status")
+  @@map("role")
+  @@schema("ops")
+}
+
+// 支持自引用父子树结构
+model OpsPermission {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentId    String?  @map("parent_id") @db.Uuid
+  permCode    String   @unique(map: "uk_perm_code") @map("perm_code") @db.VarChar(64)
+  permType    String   @map("perm_type") @db.VarChar(20)
+  permName    String   @map("perm_name") @db.VarChar(64)
+  routePath   String?  @map("route_path") @db.VarChar(255)
+  component   String?  @db.VarChar(255)
+  icon        String?  @db.VarChar(64)
+  description String   @default("") @db.VarChar(255)
+  isActive    Boolean  @default(true) @map("is_active")
+  isVisible   Boolean  @default(true) @map("is_visible")
+  sort        Int      @default(999)
+  createdBy   String   @map("created_by") @db.Uuid
+  updatedBy   String   @map("updated_by") @db.Uuid
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  parent          OpsPermission?      @relation("OpsPermParent", fields: [parentId], references: [id])
+  children        OpsPermission[]     @relation("OpsPermParent")
+  rolePermissions OpsRolePermission[]
+
+  @@index([parentId], map: "idx_ops_perm_parent_id")
+  @@index([permType], map: "idx_ops_perm_type")
+  @@index([sort], map: "idx_ops_perm_sort")
+  @@map("permission")
+  @@schema("ops")
+}
+
+// 角色权限关联，复合主键，无更新语义（硬删除）
+model OpsRolePermission {
+  roleId       String   @map("role_id") @db.Uuid
+  permissionId String   @map("permission_id") @db.Uuid
+  createdBy    String   @map("created_by") @db.Uuid
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  role       OpsRole       @relation(fields: [roleId], references: [id])
+  permission OpsPermission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@map("role_permission")
+  @@schema("ops")
+}
+
+model OpsSetting {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  configGroup    String   @map("config_group") @db.VarChar(64)
+  configKey      String   @unique(map: "uk_ops_setting_key") @map("config_key") @db.VarChar(128)
+  valueType      String   @default("string") @map("value_type") @db.VarChar(20)
+  configValue    String   @map("config_value") @db.Text
+  isSensitive    Boolean  @default(false) @map("is_sensitive")
+  isEncrypted    Boolean  @default(false) @map("is_encrypted")
+  isReadonly     Boolean  @default(false) @map("is_readonly")
+  validationRule String?  @map("validation_rule") @db.VarChar(512)
+  description    String?  @db.Text
+  createdBy      String?  @map("created_by") @db.Uuid
+  updatedBy      String?  @map("updated_by") @db.Uuid
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([configGroup], map: "idx_ops_setting_group")
+  @@map("setting")
+  @@schema("ops")
+}
+
+// 治理记录，id 为 varchar(64) 非 UUID，与 kind 构成复合主键
+// GIN index on tags 由原始 DDL 管理（Prisma 不支持 GIN 声明）
+model GovernanceRecord {
+  id          String    @map("id") @db.VarChar(64)
+  kind        String    @db.VarChar(32)
+  name        String    @db.VarChar(160)
+  status      String    @default("normal") @db.VarChar(32)
+  scope       String    @db.VarChar(160)
+  owner       String    @db.VarChar(120)
+  policy      String    @db.VarChar(200)
+  description String    @default("") @db.Text
+  tags        String[]  @default([])
+  sourceTable String?   @map("source_table") @db.VarChar(128)
+  sourceId    String?   @map("source_id") @db.VarChar(128)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  @@id([kind, id], map: "pk_ops_governance_record")
+  @@index([kind, status], map: "idx_ops_governance_kind_status")
+  @@index([kind, updatedAt(sort: Desc)], map: "idx_ops_governance_kind_updated")
+  @@map("governance_record")
+  @@schema("ops")
+}
+
+model OpsFeatureFlag {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  flagKey            String    @unique(map: "ops_feature_flag_key_key") @map("flag_key") @db.VarChar(128)
+  category           String    @default("release") @db.VarChar(64)
+  environment        String    @default("all") @db.VarChar(32)
+  description        String?   @db.VarChar(512)
+  isGloballyEnabled  Boolean   @default(false) @map("is_globally_enabled")
+  isArchived         Boolean   @default(false) @map("is_archived")
+  rolloutPercentage  Int       @default(0) @map("rollout_percentage")
+  tenantOverrides    Json      @default("{}") @map("tenant_overrides") @db.JsonB
+  expiresAt          DateTime? @map("expires_at") @db.Timestamptz(6)
+  createdBy          String?   @map("created_by") @db.Uuid
+  updatedBy          String?   @map("updated_by") @db.Uuid
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([category], map: "idx_ops_ff_category")
+  @@index([environment], map: "idx_ops_ff_environment")
+  @@map("feature_flag")
+  @@schema("ops")
+}
+
+model OpsAnnouncement {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  announcementType    String    @map("announcement_type") @db.VarChar(32)
+  severity            String    @default("info") @db.VarChar(16)
+  status              String    @default("draft") @db.VarChar(32)
+  lang                String    @default("zh-CN") @db.VarChar(16)
+  title               String    @db.VarChar(256)
+  content             String    @db.Text
+  ctaLabel            String?   @map("cta_label") @db.VarChar(64)
+  ctaUrl              String?   @map("cta_url") @db.VarChar(512)
+  targetPlans         String[]  @default([]) @map("target_plans") @db.VarChar(64)
+  targetTenantTypes   String[]  @default([]) @map("target_tenant_types") @db.VarChar(32)
+  isDismissible       Boolean   @default(true) @map("is_dismissible")
+  publishAt           DateTime  @map("publish_at") @db.Timestamptz(6)
+  expiresAt           DateTime? @map("expires_at") @db.Timestamptz(6)
+  meta                Json?     @db.JsonB
+  createdBy           String    @map("created_by") @db.Uuid
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt           DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  @@index([publishAt], map: "idx_ops_ann_publish_at")
+  @@index([status], map: "idx_ops_ann_status")
+  @@map("announcement")
+  @@schema("ops")
+}
+
+model OpsMaintenance {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  severity           String    @default("minor") @db.VarChar(16)
+  status             String    @default("scheduled") @db.VarChar(32)
+  title              String    @db.VarChar(256)
+  description        String?   @db.Text
+  impactDescription  String?   @map("impact_description") @db.Text
+  affectedServices   String[]  @default([]) @map("affected_services") @db.VarChar(64)
+  startAt            DateTime  @map("start_at") @db.Timestamptz(6)
+  endAt              DateTime  @map("end_at") @db.Timestamptz(6)
+  actualEndAt        DateTime? @map("actual_end_at") @db.Timestamptz(6)
+  createdBy          String    @map("created_by") @db.Uuid
+  updatedBy          String?   @map("updated_by") @db.Uuid
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+
+  @@index([startAt], map: "idx_ops_maint_start_at")
+  @@index([status], map: "idx_ops_maint_status")
+  @@map("maintenance")
+  @@schema("ops")
+}
+
+// ═══════════════════════════════════════════════════════════════
+// schema: support
+// ═══════════════════════════════════════════════════════════════
+
+model SupportTicket {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId            String    @map("tenant_id") @db.Uuid
+  accountId           String?   @map("account_id") @db.Uuid
+  ticketNo            String    @unique(map: "uq_support_ticket_no") @map("ticket_no") @db.VarChar(64)
+  category            String    @default("general") @db.VarChar(64)
+  priority            String    @default("p2") @db.VarChar(16)
+  source              String    @default("console") @db.VarChar(64)
+  status              String    @default("open") @db.VarChar(32)
+  title               String    @db.VarChar(200)
+  description         String    @default("") @db.Text
+  reporterName        String?   @map("reporter_name") @db.VarChar(100)
+  assigneeId          String?   @map("assignee_id") @db.Uuid
+  assigneeName        String?   @map("assignee_name") @db.VarChar(100)
+  tags                String[]  @default([]) @db.VarChar(64)
+  satisfactionScore   Int?      @map("satisfaction_score")
+  satisfactionComment String?   @map("satisfaction_comment") @db.VarChar(512)
+  slaBreachAt         DateTime? @map("sla_breach_at") @db.Timestamptz(6)
+  firstResponseAt     DateTime? @map("first_response_at") @db.Timestamptz(6)
+  dueAt               DateTime? @map("due_at") @db.Timestamptz(6)
+  resolvedAt          DateTime? @map("resolved_at") @db.Timestamptz(6)
+  closedAt            DateTime? @map("closed_at") @db.Timestamptz(6)
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime  @default(now()) @map("updated_at") @db.Timestamptz(6)
+  deletedAt           DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  events SupportTicketEvent[]
+
+  @@index([deletedAt], map: "idx_support_ticket_deleted_at")
+  @@index([priority, updatedAt(sort: Desc)], map: "idx_support_ticket_priority_updated")
+  @@index([tenantId, status], map: "idx_support_ticket_tenant_status")
+  @@map("ticket")
+  @@schema("support")
+}
+
+// 工单事件流水，append-only
+model SupportTicketEvent {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticketId  String   @map("ticket_id") @db.Uuid
+  eventType String   @map("event_type") @db.VarChar(64)
+  actorType String   @map("actor_type") @db.VarChar(32)
+  actorId   String?  @map("actor_id") @db.Uuid
+  actorName String   @map("actor_name") @db.VarChar(100)
+  payload   Json     @default("{}") @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  @@index([ticketId, createdAt(sort: Desc)], map: "idx_support_ticket_event_ticket_created")
+  @@map("ticket_event")
+  @@schema("support")
+}
+
+// 操作审计，append-only，按月 RANGE 分区（Prisma 不支持分区声明，由 DDL 管理）
+model SupportAuditLog {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorType    String   @map("actor_type") @db.VarChar(32)
+  actorId      String   @map("actor_id") @db.Uuid
+  tenantId     String?  @map("tenant_id") @db.Uuid
+  action       String   @db.VarChar(128)
+  result       String   @default("success") @db.VarChar(32)
+  resourceType String   @map("resource_type") @db.VarChar(64)
+  resourceId   String   @map("resource_id") @db.VarChar(128)
+  errorCode    String?  @map("error_code") @db.VarChar(64)
+  before       Json?    @db.JsonB
+  after        Json?    @db.JsonB
+  requestId    String?  @map("request_id") @db.VarChar(128)
+  durationMs   Int?     @map("duration_ms")
+  ipAddress    String?  @map("ip_address") @db.VarChar(64)
+  userAgent    String?  @map("user_agent") @db.VarChar(512)
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([actorId], map: "idx_audit_log_actor_id")
+  @@index([action], map: "idx_audit_log_action")
+  @@index([createdAt], map: "idx_audit_log_created_at")
+  @@index([requestId], map: "idx_audit_log_request_id")
+  @@index([tenantId], map: "idx_audit_log_tenant_id")
+  @@map("audit_log")
+  @@schema("support")
+}
+
+// 通知发送流水，append-only
+model SupportNotificationLog {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId          String?   @map("tenant_id") @db.Uuid
+  accountId         String?   @map("account_id") @db.Uuid
+  channel           String    @db.VarChar(32)
+  templateCode      String    @map("template_code") @db.VarChar(64)
+  status            String    @db.VarChar(32)
+  referenceType     String?   @map("reference_type") @db.VarChar(64)
+  referenceId       String?   @map("reference_id") @db.VarChar(128)
+  recipient         String    @db.VarChar(256)
+  subject           String?   @db.VarChar(256)
+  provider          String?   @db.VarChar(64)
+  providerMessageId String?   @map("provider_message_id") @db.VarChar(256)
+  errorMessage      String?   @map("error_message") @db.Text
+  retryCount        Int       @default(0) @map("retry_count")
+  deliveredAt       DateTime? @map("delivered_at") @db.Timestamptz(6)
+  openedAt          DateTime? @map("opened_at") @db.Timestamptz(6)
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([accountId], map: "idx_notif_log_account_id")
+  @@index([channel], map: "idx_notif_log_channel")
+  @@index([status], map: "idx_notif_log_status")
+  @@index([tenantId], map: "idx_notif_log_tenant_id")
+  @@map("notification_log")
+  @@schema("support")
 }

@@ -15,7 +15,7 @@ const mockAccount: AccountCredentialRecord = {
   email: 'lin.chen@vxture.ai',
   phone: '13800000000',
   passwordHash: 'console123',
-  status: true,
+  status: 'active',
 };
 
 let mockProfile: AccountProfileView = {

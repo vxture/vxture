@@ -59,7 +59,7 @@ export class PlatformGovernanceRouter implements OnModuleDestroy {
     }
 
     const tableCheck = await this.pool.query<{ table_name: string | null }>(
-      "select to_regclass('platform.governance_record')::text as table_name",
+      "select to_regclass('ops.governance_record')::text as table_name",
     );
     if (!tableCheck.rows[0]?.table_name) {
       throw new BadGatewayException('Platform governance database is not connected. Confirm the schema design before enabling governance data.');
@@ -127,7 +127,7 @@ select
   updated_at,
   description,
   tags
-from platform.governance_record
+from ops.governance_record
 where kind = $1
   and deleted_at is null
 order by updated_at desc, id asc

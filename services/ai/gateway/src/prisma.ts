@@ -6,6 +6,9 @@ import type {
   TenantUsageSummaryRecord,
 } from './types/gateway.types';
 
+// AiModelRecord / AiModelGrantRecord are kept as-is for backward compat with callers.
+// The Prisma delegate names match the new model schema: modelDefinition / modelGrant.
+
 type PrismaArgs = Record<string, unknown>;
 
 interface PrismaMutationResult {
@@ -22,8 +25,8 @@ interface PrismaDelegate<TRecord> {
 }
 
 export interface AiGatewayPrismaClient {
-  aiModel: PrismaDelegate<AiModelRecord>;
-  aiModelGrant: PrismaDelegate<AiModelGrantRecord>;
+  modelDefinition: PrismaDelegate<AiModelRecord>;
+  modelGrant: PrismaDelegate<AiModelGrantRecord>;
   tenantSubscriptionQuota: PrismaDelegate<TenantSubscriptionQuotaRecord>;
   tenantUsageEvent: PrismaDelegate<TenantUsageEventRecord>;
   tenantUsageSummary: PrismaDelegate<TenantUsageSummaryRecord>;

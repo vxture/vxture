@@ -390,10 +390,10 @@ const PAYMENT_LEDGER_SQL = `
     plan.plan_code,
     plan.plan_name
   from commerce.tenant_payment pay
-  join tenancy.tenant t
+  join tenant.tenant t
     on t.id = pay.tenant_id
    and t.deleted_at is null
-  left join tenancy.tenant_organization org
+  left join tenant.tenant_organization org
     on org.tenant_id = t.id
    and org.deleted_at is null
   left join commerce.tenant_invoice bill
@@ -405,9 +405,9 @@ const PAYMENT_LEDGER_SQL = `
   left join product.plan plan
     on plan.id = sub.plan_id
    and plan.deleted_at is null
-  left join account.account operator
+  left join identity.account operator
     on operator.id = pay.operator_id
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   order by
     case

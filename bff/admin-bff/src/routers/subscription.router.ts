@@ -691,13 +691,13 @@ const SUBSCRIPTION_OPERATION_SQL = `
     s.created_at,
     s.updated_at
   from commerce.tenant_subscription s
-  join tenancy.tenant t
+  join tenant.tenant t
     on t.id = s.tenant_id
    and t.deleted_at is null
   join product.plan p
     on p.id = s.plan_id
    and p.deleted_at is null
-  left join tenancy.tenant_organization org
+  left join tenant.tenant_organization org
     on org.tenant_id = t.id
    and org.deleted_at is null
   left join lateral (
@@ -715,9 +715,9 @@ const SUBSCRIPTION_OPERATION_SQL = `
   ) q on true
   left join usage_stats us
     on us.tenant_id = s.tenant_id
-  left join account.account operator
+  left join identity.account operator
     on operator.id = s.created_by
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   where s.deleted_at is null
   order by
@@ -799,9 +799,9 @@ const SUBSCRIPTION_HISTORY_SQL = `
     operator_profile.display_name as operator_display_name,
     h.created_at
   from commerce.tenant_subscription_history h
-  left join account.account operator
+  left join identity.account operator
     on operator.id = h.operator_id
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   where h.subscription_id = $1
   order by h.created_at desc

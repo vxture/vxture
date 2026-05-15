@@ -114,7 +114,7 @@ const PLATFORM_PERMISSION_SQL = `
     p.perm_code,
     p.perm_name,
     p.perm_type,
-    p.status,
+    p.is_active as status,
     p.description,
     p.icon,
     p.sort,
@@ -124,13 +124,12 @@ const PLATFORM_PERMISSION_SQL = `
     p.updated_at,
     count(distinct rp.role_id)::int as role_count,
     count(distinct rp.role_id) filter (
-      where r.status = true
-        and coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) = 'active'
+      where r.status = 'active'
     )::int as active_role_count
-  from platform.platform_permission p
-  left join platform.platform_role_permission rp
+  from ops.permission p
+  left join ops.role_permission rp
     on rp.permission_id = p.id
-  left join platform.platform_role r
+  left join ops.role r
     on r.id = rp.role_id
   group by p.id
   order by p.perm_type asc, p.sort asc, p.perm_code asc

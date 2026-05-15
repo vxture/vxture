@@ -136,18 +136,18 @@ const PLATFORM_ADMIN_SQL = `
     r.role_code,
     r.name_i18n_key,
     r.name_en,
-    coalesce(nullif(to_jsonb(r)->>'status_code', ''), case when r.status = true then 'active' else 'disabled' end) as role_status_code,
-    r.status as role_status,
-    coalesce(nullif(to_jsonb(a)->>'status_code', ''), case when a.status = true then 'active' else 'disabled' end) as status_code,
-    a.status,
+    r.status as role_status_code,
+    (r.status = 'active') as role_status,
+    a.status as status_code,
+    (a.status = 'active') as status,
     a.is_system,
     a.last_login_at,
     a.last_login_ip,
     a.remark,
     a.created_at,
     a.updated_at
-  from platform.platform_admin a
-  join platform.platform_role r
+  from ops.admin a
+  join ops.role r
     on r.id = a.role_id
   where a.deleted_at is null
   order by a.sort asc, a.created_at asc

@@ -702,13 +702,13 @@ const ORDER_OPERATION_SQL = `
     coalesce(pay.paid_at, inv.paid_at) as confirmed_at,
     greatest(s.updated_at, coalesce(inv.updated_at, s.updated_at), coalesce(pay.updated_at, s.updated_at)) as updated_at
   from commerce.tenant_subscription s
-  join tenancy.tenant t
+  join tenant.tenant t
     on t.id = s.tenant_id
    and t.deleted_at is null
   join product.plan p
     on p.id = s.plan_id
    and p.deleted_at is null
-  left join tenancy.tenant_organization org
+  left join tenant.tenant_organization org
     on org.tenant_id = t.id
    and org.deleted_at is null
   left join lateral (
@@ -746,9 +746,9 @@ const ORDER_OPERATION_SQL = `
     order by tp.updated_at desc, tp.created_at desc
     limit 1
   ) pay on true
-  left join account.account operator
+  left join identity.account operator
     on operator.id = coalesce(pay.operator_id, inv.operator_id, s.created_by)
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   where s.deleted_at is null
   order by
@@ -803,9 +803,9 @@ const ORDER_PAYMENT_SQL = `
   join commerce.tenant_invoice inv
     on inv.id = pay.bill_id
    and inv.deleted_at is null
-  left join account.account operator
+  left join identity.account operator
     on operator.id = pay.operator_id
-  left join account.account_profile operator_profile
+  left join identity.account_profile operator_profile
     on operator_profile.account_id = operator.id
   where inv.subscription_id = $1
   order by pay.created_at desc

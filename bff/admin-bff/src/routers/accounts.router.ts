@@ -203,7 +203,7 @@ const ACCOUNT_SQL = `
     a.username,
     a.email,
     a.phone,
-    a.status as account_enabled,
+    (a.status = 'active') as account_enabled,
     a.last_login_at,
     a.last_login_ip,
     p.display_name,
@@ -211,24 +211,22 @@ const ACCOUNT_SQL = `
     tm.joined_at,
     tm.last_active_at,
     tm.role,
-    tr.role_name,
+    null::varchar as role_name,
     tm.is_primary_owner,
     t.id as tenant_id,
     t.tenant_code,
     t.tenant_name,
     t.display_name as tenant_display_name,
     t.tenant_type
-  from account.account a
-  join tenancy.tenant_member tm
+  from identity.account a
+  join tenant.tenant_member tm
     on tm.account_id = a.id
    and tm.deleted_at is null
-  join tenancy.tenant t
+  join tenant.tenant t
     on t.id = tm.tenant_id
    and t.deleted_at is null
-  left join account.account_profile p
+  left join identity.account_profile p
     on p.account_id = a.id
-  left join tenancy.tenant_role tr
-    on tr.id = tm.role_id
   where a.deleted_at is null
   order by a.created_at desc, a.username asc, tm.is_primary_owner desc, tm.joined_at asc
 `;

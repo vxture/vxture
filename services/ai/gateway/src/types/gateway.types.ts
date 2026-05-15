@@ -129,9 +129,14 @@ export interface AiModelRecord {
   provider: string;
   endpointUrl: string;
   protocol: string;
+  modelType: string;
+  description: string | null;
+  contextWindow: number | null;
+  maxOutputTokens: number | null;
   capabilities: string[];
-  apiKeyEnvVar: string;
+  supportsStreaming: boolean;
   isActive: boolean;
+  sort: number;
   config: ModelConfig | null;
   createdBy: string | null;
   updatedBy: string | null;
@@ -225,8 +230,8 @@ export interface CreateAiModelInput {
   provider: string;
   endpointUrl: string;
   protocol: string;
+  modelType?: string;
   capabilities: string[];
-  apiKeyEnvVar: string;
   config?: ModelConfig | null;
 }
 
@@ -237,8 +242,8 @@ export interface UpdateAiModelInput {
   provider?: string;
   endpointUrl?: string;
   protocol?: string;
+  modelType?: string;
   capabilities?: string[];
-  apiKeyEnvVar?: string;
   config?: ModelConfig | null;
   isActive?: boolean;
 }

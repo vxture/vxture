@@ -166,15 +166,18 @@ export class GatewayService {
   }
 
   private resolveApiKey(model: AiModelRecord): string {
-    if (!model.apiKeyEnvVar.trim()) {
+    const config = model.config as Record<string, unknown> | null;
+    const apiKeyEnvVar = typeof config?.['apiKeyEnvVar'] === 'string' ? config['apiKeyEnvVar'] : '';
+
+    if (!apiKeyEnvVar) {
       return '';
     }
 
-    const apiKey = process.env[model.apiKeyEnvVar];
+    const apiKey = process.env[apiKeyEnvVar];
 
     if (!apiKey && model.provider !== 'private') {
       throw new UnauthorizedException(
-        `Missing API key environment variable "${model.apiKeyEnvVar}" for model "${model.modelCode}"`,
+        `Missing API key environment variable "${apiKeyEnvVar}" for model "${model.modelCode}"`,
       );
     }
 

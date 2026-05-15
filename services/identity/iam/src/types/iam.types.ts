@@ -4,7 +4,7 @@ export interface AccountCredentialRecord {
   email: string | null;
   phone: string | null;
   passwordHash: string | null;
-  status: boolean;
+  status: string;
 }
 
 export interface AuthenticatedAccountView {
