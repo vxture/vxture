@@ -44,6 +44,9 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("business/ruyin/src/app/globals.css"), "Ruyin globals.css"],
   [normalize("business/ruyin/src/styles/ruyin-base.css"), "Ruyin base.css"],
   [normalize("packages/design/design-system/src/styles/console.css"), "DS console.css"],
+  [normalize("packages/design/design-system/src/styles/console-shell-chrome.css"), "DS console shell chrome.css"],
+  [normalize("packages/design/design-system/src/styles/console-shell-layout.css"), "DS console shell layout.css"],
+  [normalize("packages/design/design-system/src/styles/console-tenant-switcher.css"), "DS console tenant switcher.css"],
   [normalize("packages/design/design-system/src/styles/platform-access.css"), "DS platform access.css"],
   [normalize("packages/design/design-system/src/styles/platform-account.css"), "DS platform account.css"],
   [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
@@ -391,6 +394,24 @@ const rules = [
           file,
           1,
           "DS platform-* 具体规则叶子超过 8KB；请按跨应用语义职责拆分，并让当前文件保持 @import 聚合。",
+        ),
+      ];
+    },
+  },
+  {
+    id: "ds/no-large-console-style-leaf",
+    description: "DS console-* 具体规则叶子不能继续膨胀为大入口。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!/^packages\/design\/design-system\/src\/styles\/console-[^/]+\.css$/.test(normalized)) return [];
+      if (statSync(file).size <= 8000) return [];
+      const content = readFileSync(file, "utf8");
+      if (isImportOnlyStyleContent(content)) return [];
+      return [
+        violation(
+          file,
+          1,
+          "DS console-* 具体规则叶子超过 8KB；请按 Console 体验职责拆分，并让当前文件保持 @import 聚合。",
         ),
       ];
     },

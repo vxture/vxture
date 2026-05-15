@@ -1,0 +1,43 @@
+/**
+ * console-tenant-switcher-actions.css - Console 租户切换器动作区。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-tenant-switcher__actions {
+  display: grid;
+  gap: var(--vx-console-space-03r);
+  padding-top: var(--vx-console-space-035r);
+}
+
+.vx-tenant-switcher__actions .vx-btn,
+.vx-tenant-switcher__action-link {
+  width: 100%;
+  justify-content: flex-start;
+  min-height: var(--vx-console-size-21r);
+  border-radius: var(--vx-console-radius-10p);
+  background: transparent;
+  color: var(--vx-console-text);
+  font-size: var(--vx-console-text-size-078r);
+  box-shadow: none;
+}
+
+.vx-tenant-switcher__actions .vx-btn:hover:not(:disabled),
+.vx-tenant-switcher__action-link:hover {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 7%, transparent);
+}
+
+.vx-tenant-switcher__action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-056r);
+  padding: var(--vx-console-space-046r) var(--vx-console-space-074r);
+}
+
+.vx-tenant-switcher__action-link--muted {
+  color: color-mix(in srgb, var(--vx-color-shell-muted) 62%, transparent);
+  pointer-events: none;
+}

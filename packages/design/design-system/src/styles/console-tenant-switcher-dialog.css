@@ -1,0 +1,89 @@
+/**
+ * console-tenant-switcher-dialog.css - Console 租户创建和编辑弹窗。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-tenant-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: var(--vx-console-space-1r);
+}
+
+.vx-tenant-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--vx-color-gray-900) 22%, transparent);
+  backdrop-filter: blur(var(--vx-console-effect-4p));
+}
+
+.vx-tenant-dialog__card {
+  position: relative;
+  z-index: 1;
+  width: min(var(--vx-console-dialog-width), 100%);
+  display: grid;
+  gap: var(--vx-console-space-1r);
+  padding: var(--vx-console-space-105r);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-600) 12%, transparent);
+  border-radius: var(--vx-console-radius-18p);
+  background: color-mix(in srgb, var(--vx-color-white) 98%, transparent);
+  box-shadow: 0 var(--vx-console-effect-28p) var(--vx-console-effect-68p) color-mix(in srgb, var(--vx-color-brand-950) 18%, transparent);
+}
+
+.vx-tenant-dialog__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--vx-console-space-1r);
+}
+
+.vx-tenant-dialog__header p {
+  margin: 0 0 var(--vx-console-space-03r);
+  color: var(--vx-console-brand);
+  font-size: var(--vx-console-text-size-072r);
+  font-weight: 750;
+  letter-spacing: var(--vx-console-text-tracking-008e);
+  text-transform: uppercase;
+}
+
+.vx-tenant-dialog__header h2 {
+  margin: 0;
+  font-size: var(--vx-console-text-size-105r);
+  letter-spacing: calc(var(--vx-console-text-tracking-002e) * -1);
+}
+
+.vx-tenant-dialog__fields {
+  display: grid;
+  gap: var(--vx-console-space-08r);
+}
+
+.vx-tenant-dialog__fields .vx-label {
+  display: grid;
+  gap: var(--vx-console-space-036r);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-console-text-size-076r);
+  font-weight: 650;
+}
+
+.vx-tenant-dialog__fields .vx-input {
+  min-height: var(--vx-console-size-245r);
+  border-radius: var(--vx-console-radius-10p);
+}
+
+.vx-tenant-dialog__error {
+  margin: 0;
+  color: var(--vx-color-error-700);
+  font-size: var(--vx-console-text-size-078r);
+}
+
+.vx-tenant-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--vx-console-space-055r);
+}

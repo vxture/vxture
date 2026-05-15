@@ -1,0 +1,131 @@
+/**
+ * console-shell-layout-nav.css - Console shell 导航列表、滚动条和页脚。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-shell-nav {
+  display: grid;
+  gap: var(--vx-console-space-082r);
+  align-content: start;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vx-color-scrollbar) transparent;
+  padding-top: var(--vx-console-space-012r);
+  padding-right: var(--vx-console-space-028r);
+  transition:
+    opacity 140ms ease,
+    transform 220ms ease;
+}
+
+.vx-shell-nav::-webkit-scrollbar,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar,
+.vx-assistant-panel__composer-input::-webkit-scrollbar {
+  width: var(--vx-console-size-4p);
+  height: var(--vx-console-size-4p);
+}
+
+.vx-shell-nav::-webkit-scrollbar-track,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar-track,
+.vx-assistant-panel__composer-input::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vx-shell-nav::-webkit-scrollbar-thumb,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar-thumb,
+.vx-assistant-panel__composer-input::-webkit-scrollbar-thumb {
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-scrollbar);
+}
+
+.vx-shell-nav::-webkit-scrollbar-thumb:hover,
+.vx-assistant-panel__output-scroll::-webkit-scrollbar-thumb:hover,
+.vx-assistant-panel__composer-input::-webkit-scrollbar-thumb:hover {
+  background: var(--vx-color-scrollbar-hover);
+}
+
+.vx-shell-nav__group {
+  display: grid;
+  gap: var(--vx-console-space-042r);
+}
+
+.vx-shell-nav__group-title {
+  margin: 0;
+  padding: 0 var(--vx-console-space-075r) 0 var(--vx-shell-sidebar-content-inset);
+  font-size: var(--vx-console-text-size-064r);
+  font-weight: 700;
+  letter-spacing: var(--vx-console-text-tracking-01e);
+  text-transform: uppercase;
+  color: var(--vx-color-shell-subtle);
+}
+
+.vx-shell-nav__items {
+  display: grid;
+  gap: var(--vx-console-space-024r);
+}
+
+.vx-shell-nav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-068r);
+  min-height: var(--vx-console-size-228r);
+  padding: 0 var(--vx-console-space-082r) 0 var(--vx-shell-sidebar-content-inset);
+  border-radius: var(--vx-console-radius-10p);
+  color: var(--vx-console-muted);
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.vx-shell-nav__icon {
+  width: var(--vx-shell-sidebar-icon-size);
+  height: var(--vx-shell-sidebar-icon-size);
+  flex: 0 0 var(--vx-shell-sidebar-icon-size);
+}
+
+.vx-shell-nav__item:hover {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 5.5%, transparent);
+  color: var(--vx-console-text);
+}
+
+.vx-shell-nav__item--active {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8.5%, transparent);
+  color: var(--vx-console-brand);
+}
+
+.vx-shell-nav__item span {
+  font-size: var(--vx-console-text-size-084r);
+  font-weight: 600;
+}
+
+.vx-shell-sidebar__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--vx-console-space-1r);
+  min-height: var(--vx-console-size-325r);
+  padding: var(--vx-console-space-045r) var(--vx-console-space-075r) 0 var(--vx-shell-sidebar-content-inset);
+  border-top: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
+  transition:
+    opacity 140ms ease,
+    transform 220ms ease;
+}
+
+.vx-shell-sidebar__footer div {
+  display: grid;
+  gap: var(--vx-console-space-018r);
+}
+
+.vx-shell-sidebar__footer span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-console-text-size-078r);
+}
+
+.vx-shell-sidebar__footer strong {
+  font-size: var(--vx-console-text-size-082r);
+}

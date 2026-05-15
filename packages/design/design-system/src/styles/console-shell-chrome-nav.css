@@ -1,0 +1,104 @@
+/**
+ * console-shell-chrome-nav.css - Console shell 折叠导航、导航项和页脚。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.vx-shell-sidebar--collapsed .vx-shell-nav {
+  max-height: none;
+  min-height: 0;
+  padding: 0 var(--vx-console-space-065r);
+  overflow: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-nav__group {
+  gap: var(--vx-console-space-018r);
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-nav__group-title {
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-nav__item {
+  width: var(--vx-console-size-255r);
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-nav__item span {
+  width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-nav__item--active::before {
+  left: calc(var(--vx-console-space-042r) * -1);
+}
+
+.vx-shell-nav__group {
+  gap: var(--vx-console-space-036r);
+}
+
+.vx-shell-nav__group-title {
+  padding: 0;
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-console-text-size-07r);
+  font-weight: 760;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.vx-shell-nav__items {
+  gap: var(--vx-console-space-016r);
+}
+
+.vx-shell-nav__item {
+  position: relative;
+  min-height: var(--vx-console-size-228r);
+  gap: var(--vx-console-space-065r);
+  padding: 0 var(--vx-console-space-072r);
+  border-radius: var(--vx-console-radius-10p);
+  color: var(--vx-color-text-secondary);
+}
+
+.vx-shell-nav__item:hover {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 6%, transparent);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-shell-nav__item--active {
+  background: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-shell-nav__item--active::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--vx-console-space-062r) * -1);
+  top: var(--vx-console-space-048r);
+  bottom: var(--vx-console-space-048r);
+  width: var(--vx-console-size-3p);
+  border-radius: var(--vx-radius-full);
+  background: linear-gradient(180deg, var(--vx-console-brand), var(--vx-console-cyan));
+}
+
+.vx-shell-nav__item span {
+  font-size: var(--vx-console-text-size-086r);
+  font-weight: 660;
+}
+
+.vx-shell-sidebar__footer {
+  min-height: var(--vx-console-size-3r);
+  margin: 0 var(--vx-console-space-065r) 0 var(--vx-shell-sidebar-content-inset);
+  padding: var(--vx-console-space-075r) 0 0;
+}
