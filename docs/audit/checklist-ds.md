@@ -228,7 +228,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
    第二阶段第十五批：已新增 `ds/no-redundant-style-wrapper`，非 `globals.css` 直连的应用 `src/styles` import-only wrapper 若只转发一个子模块会失败，防止单子中间层回流。
    第二阶段第十六批：已将 website、Vela、Ruyin 当前 5 个 `*-content.css` 样式叶子改名为业务语义文件：marketing assembly、legal pages、chat shell、tool result、base document；应用入口继续保持 import-only，只做本应用组装，不把业务页面结构继续下沉到 DS。
    第二阶段第十七批：已拆分 DS `platform-content.css` 泛化模块，按 brand hero、navigation tabs、data table、toolbar、responsive 五个职责承接规则；`platform.css` 继续作为 import-only style pack 入口。同步新增 `ds/no-generic-content-style-module`，阻止 DS 和应用样式模块重新出现 `*-content.css` 泛化命名。
-   第二阶段第十八批：已大幅拆分 DS platform 大模块，`platform-access.css`、`platform-account.css`、`platform-shell.css`、`platform-shell-header.css`、`platform-layout.css`、`platform-models.css`、`platform-tenant-settings.css`、`platform-notifications.css` 均转为 import-only 聚合入口，具体规则按 shell/list/identity/actions/profile/cards/dialogs/header/tokens/table/controls/responsive 等职责沉淀到子模块；新增 `ds/no-large-platform-style-leaf`，要求 DS `platform-*` 具体规则叶子不超过 8KB。
+   第二阶段第十八批：已大幅拆分 DS platform 大模块，`platform-access.css`、`platform-account.css`、`platform-shell.css`、`platform-shell-header.css`、`platform-layout.css`、`platform-models.css`、`platform-tenant-settings.css`、`platform-notifications.css` 均转为 import-only 聚合入口，具体规则按 shell/list/identity/actions/profile/cards/dialogs/header/bindings/table/controls/responsive 等职责沉淀到子模块；新增 `ds/no-large-platform-style-leaf`，要求 DS `platform-*` 具体规则叶子不超过 8KB。
    第二阶段第十九批：已拆分 DS Console style pack 中 3 个 8KB+ 大模块，`console-tenant-switcher.css`、`console-shell-layout.css`、`console-shell-chrome.css` 均转为 import-only 聚合入口，具体规则按 trigger/panel/actions/dialog、frame/sidebar/nav/header、surface/header/sidebar/nav/assistant 等职责沉淀到子模块；新增 `ds/no-large-console-style-leaf`，要求 DS `console-*` 具体规则叶子不超过 8KB。
    第二阶段第二十批：已拆分 DS 公共 `components.css` 与 `auth.css` 大模块，两者均转为 import-only 公共入口；组件规则按 button/fields/display/shell tools/preferences/user menu/footer switch 拆分，认证规则按 page shell/header locale/visual/form/fields/actions/tabs/signup/captcha/responsive 拆分。同步新增 `ds/no-large-components-style-leaf` 与 `ds/no-large-auth-style-leaf`，要求 DS `components-*`、`auth-*` 具体规则叶子不超过 8KB。
 6. P2：文档与模板同步。状态：进行中；文档体系已迁移到 `docs/packages` / `docs/standards` / `docs/audit`，本轮同步 DS README、包说明、使用规范、组件清单、包 exports、消费者规范。验收：版本、组件数量、公共导出入口一致；新应用模板默认接入 DS globals、ThemeProvider、质量门禁和 guardrail。
@@ -541,7 +541,8 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 1. 已完成：`styles/tokens.css` 从单体运行时值源拆为稳定 import-only 入口，具体值按 `tokens-theme`、`tokens-colors-*`、`tokens-foundation`、`tokens-component-*`、`tokens-platform-*`、`tokens-admin-*`、`tokens-console-*`、`tokens-agent-studio`、`tokens-website`、`tokens-dark`、`tokens-density` 分层维护。
 2. 已完成：所有 `tokens-*` 运行时 token 模块低于 8KB，`tokens.css` 只保留公共入口职责，继续通过 `@vxture/design-system/styles/tokens.css` 对外暴露。
 3. 已完成：`pnpm lint:design` 增加 `ds/no-large-token-style-leaf`，防止新的 token 模块重新膨胀；`tokens-*` 被识别为 DS token owner，允许维护运行时 token 值。
-4. 分层边界：DS 只沉淀 token、基础组件语义类、跨应用 pattern 和 portal style pack；应用侧只组合业务场景，不定义 `--vx-*`、不直接消费底层 UI 引擎、不直接引用 DS 内部 `tokens-*` 文件。
+4. 已完成：`platform-*-tokens.css` 作用域变量组装文件已改名为 `*-bindings.css`；新增 `ds/no-misnamed-token-style-module`，禁止非 runtime token 层继续使用 `*-tokens.css` 命名。
+5. 分层边界：DS 只沉淀 token、基础组件语义类、跨应用 pattern 和 portal style pack；应用侧只组合业务场景，不定义 `--vx-*`、不直接消费底层 UI 引擎、不直接引用 DS 内部 `tokens-*` 文件。
 
 ## 后续验收清单
 

@@ -5,7 +5,7 @@
  * @category styles
  */
 
-@import "./platform-shell-tokens.css";
+@import "./platform-shell-bindings.css";
 @import "./platform-shell-header.css";
 @import "./platform-shell-assistant.css";
 @import "./platform-shell-responsive.css";

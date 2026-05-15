@@ -67,6 +67,7 @@ src/
 - `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。
 - `console.css` 是 Console portal style pack 稳定入口，只聚合 `console-*` 模块。
 - `globals.css` 是标准消费者入口，聚合 DS 全局基线。
+- `*-bindings.css` 只用于选择器作用域内的变量组装，不作为 runtime token 值源。
 - 应用端样式入口和大 CSS 文件应保持 import-only，具体规则放入分层模块。
 
 ## 依赖约束

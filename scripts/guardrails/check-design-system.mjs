@@ -50,6 +50,7 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("packages/design/design-system/src/styles/console-shell-chrome.css"), "DS console shell chrome.css"],
   [normalize("packages/design/design-system/src/styles/console-shell-layout.css"), "DS console shell layout.css"],
   [normalize("packages/design/design-system/src/styles/console-tenant-switcher.css"), "DS console tenant switcher.css"],
+  [normalize("packages/design/design-system/src/styles/globals.css"), "DS globals.css"],
   [normalize("packages/design/design-system/src/styles/platform-access.css"), "DS platform access.css"],
   [normalize("packages/design/design-system/src/styles/platform-account.css"), "DS platform account.css"],
   [normalize("packages/design/design-system/src/styles/platform.css"), "DS platform.css"],
@@ -468,6 +469,22 @@ const rules = [
           file,
           1,
           "DS tokens-* 模块超过 8KB；请按 theme、colors、foundation、component、platform、admin、console、website 等语义域继续拆分。",
+        ),
+      ];
+    },
+  },
+  {
+    id: "ds/no-misnamed-token-style-module",
+    description: "只有 runtime token 层允许使用 tokens.css / tokens-* 命名；作用域变量组装必须使用 bindings 命名。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!/^packages\/design\/design-system\/src\/styles\/[\w-]+-tokens\.css$/.test(normalized)) return [];
+      if (DS_RUNTIME_TOKEN_STYLE_PATTERN.test(normalized)) return [];
+      return [
+        violation(
+          file,
+          1,
+          "该文件不是 runtime token 分层模块；若是选择器作用域内的变量组装，请命名为 *-bindings.css，若是全局运行时值源，请迁入 tokens-* 模块。",
         ),
       ];
     },
