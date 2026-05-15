@@ -8,8 +8,8 @@
 
 运营待办优先作为聚合视图生成：
 
-- 租户认证待审：来自 `tenancy.tenant`。
-- 风险复核：来自 `tenancy.tenant` 与 `tenancy.tenant_config`。
+- 租户认证待审：来自 `tenant.tenant`。
+- 风险复核：来自 `tenant.tenant` 与 `tenant.tenant_setting`。
 - 用量异常：来自订阅额度和用量汇总表。
 - 订阅跟进：来自订阅表。
 - 工单处理：来自 `support.ticket`。
@@ -24,7 +24,7 @@
 | --- | --- | --- |
 | `id` | `uuid` | 主键 |
 | `ticket_no` | `varchar(64)` | 业务编号，唯一 |
-| `tenant_id` | `uuid` | 关联 `tenancy.tenant.id` |
+| `tenant_id` | `uuid` | 关联 `tenant.tenant.id` |
 | `title` | `varchar(200)` | 工单标题 |
 | `description` | `text` | 工单说明 |
 | `status` | `varchar(32)` | `open / processing / blocked / closed` |
@@ -68,8 +68,8 @@
 第一阶段不建议落实体待办表，避免待办与源业务状态不一致。页面按正式数据库实时聚合：
 
 - `support.ticket.status != 'closed'` 生成工单待办。
-- `tenancy.tenant.verified_status = 'pending'` 生成认证待审。
-- `tenancy.tenant_config.risk_level != 'normal'` 或租户停用生成风险复核。
+- `tenant.tenant.verified_status = 'pending'` 生成认证待审。
+- `tenant.tenant_setting.risk_level != 'normal'` 或租户停用生成风险复核。
 - 用量达到阈值生成用量异常。
 - 订阅试用、逾期生成订阅跟进。
 

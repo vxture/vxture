@@ -16,7 +16,7 @@
 
 ## 职责
 
-**唯一职责**：用 Prisma 管理平台手动维护的 6 个 PostgreSQL schema 的 DDL（表结构）。
+**唯一职责**：用 Prisma 管理平台主库（`platform_main`）中 8 个 PostgreSQL schema 的 DDL（表结构）。
 
 - 不提供 Prisma Client 给业务层（各 service 自行决定是否引入）
 - 不包含任何查询逻辑、业务逻辑
@@ -26,14 +26,14 @@
 
 | Schema | 表数 |
 |--------|------|
-| `account` | 6 |
-| `tenancy` | 9 |
+| `identity` | 10 |
+| `iam` | 6 |
+| `tenant` | 7 |
 | `product` | 7 |
-| `platform` | 5 |
-| `support` | 2 |
-| `commerce` | 9 |
-
-**排除**（由 `services/ai/gateway` 独立管理）：`commerce.tenant_subscription_quota` 等
+| `commerce` | 12 |
+| `model` | 5 |
+| `ops` | 9 |
+| `support` | 4 |
 
 ## 常用命令
 
@@ -42,7 +42,7 @@
 pnpm --filter @vxture/core-database migrate:dev
 
 # 首次对接已有 DB（执行一次）
-npx prisma migrate resolve --applied "0000_baseline" \
+npx prisma migrate resolve --applied "0001_schema_migration" \
   --schema=packages/core/database/prisma/schema.prisma
 
 # 生成 Prisma Client（可选）

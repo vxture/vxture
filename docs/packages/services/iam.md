@@ -49,5 +49,5 @@ src/
 - website-bff 登录流程：`iam.verifyCredential()` → 成功 → 调用 auth-bff `/auth/internal/sign`
 
 **跨租户查询（iam vs organization 的区别）：**
-- iam：查 `account` 层（身份，跨租户），如「这个邮箱是否已注册」
-- organization：查 `tenancy` 层（组织，租户内），如「这个租户有哪些成员」
+- iam：查 `identity` 层（身份，跨租户），如「这个邮箱是否已注册」
+- organization：查 `tenant` 层（组织，租户内），如「这个租户有哪些成员」

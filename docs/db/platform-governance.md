@@ -15,7 +15,7 @@
 
 ## 统一治理记录表
 
-建议新增：`platform.governance_record`
+建议新增：`ops.governance_record`
 
 | 字段 | 类型 | 说明 |
 | --- | --- | --- |
@@ -43,6 +43,6 @@
 
 ## 接口约束
 
-- `/api/platform-governance/:kind` 只读 `platform.governance_record`。
+- `/api/platform-governance/:kind` 只读 `ops.governance_record`。
 - 如果表未建设，接口返回 502，并提示先确认数据库设计。
 - 前端不使用配置样本或接口 fallback。

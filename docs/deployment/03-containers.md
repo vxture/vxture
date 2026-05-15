@@ -1,7 +1,7 @@
 # 容器构建规范
 
 > Dockerfile 模板、构建顺序、服务调用拓扑、资源规格
-> 更新：2026-05-11
+> 更新：2026-05-15
 
 相关文档：[架构总览](overview.md) · [Compose 编排](services.md) · [端口分配](../ai/port-allocation.md) · [环境变量](environments.md)
 
@@ -40,7 +40,7 @@
 ──── worker-01 内部（vx-platform 网络）──────────────────────────
 
 [vx-website-bff / vx-console-bff / vx-admin-bff]
-    ├──▶ vx-platform-pg    :5432  (账户/租户/商务/平台 schema)
+    ├──▶ vx-platform-pg    :5432  (identity/iam/tenant/commerce/product/model/ops/support schema)
     ├──▶ vx-platform-redis :6379  (会话/限流/Token)
     └──▶ vx-auth-bff       :3090  (JWT 签发，同网络直连)
 
@@ -280,6 +280,6 @@ pnpm --filter @vxture/agent-server-ruyin migrate:deploy
 首次上线平台数据库时，如已有历史数据，需先 resolve baseline：
 
 ```bash
-npx prisma migrate resolve --applied "0000_baseline" \
+npx prisma migrate resolve --applied "0001_schema_migration" \
   --schema=packages/core/database/prisma/schema.prisma
 ```

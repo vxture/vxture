@@ -1,7 +1,7 @@
 # Vxture 基础设施概要
 
 > 供 AI Coding 参考的基础设施现状与部署规划
-> 更新：2026-05-14
+> 更新：2026-05-15
 
 ---
 
@@ -74,16 +74,18 @@ vxture-worker-02（私有服务器，业务执行层）
 | **platform-postgres** | `vx-platform-pg` | 内部 | 平台数据库（见 Schema 表） |
 | **platform-redis** | `vx-platform-redis` | 内部 | 会话/限流/Token 黑名单 |
 
-**平台数据库 Schema 分布：**
+**平台数据库 Schema 分布（`platform_main`，8 个 schema）：**
 
 | Schema | 内容 | 管理方 |
 |--------|------|--------|
-| `account` | 用户账号、密码、OAuth | website-bff |
-| `tenancy` | 租户、成员、角色 | website-bff / console-bff |
-| `product` | 产品方案、能力定义 | admin-bff |
-| `platform` | 平台配置、管理员 | admin-bff |
-| `commerce` | 订单、账单、支付、用量计费 | admin-bff / console-bff |
-| `support` | 工单 | admin-bff |
+| `identity` | 账号、凭证、OAuth、会话、验证码、登录记录 | auth-bff / website-bff |
+| `iam` | 角色、权限、成员角色绑定、能力定义 | console-bff |
+| `tenant` | 租户、成员、配置、邀请 | website-bff / console-bff |
+| `product` | 产品方案、能力定义、定价 | admin-bff |
+| `commerce` | 订单、账单、支付、退款、订阅、积分 | admin-bff / console-bff |
+| `model` | AI 模型目录、授权、定价策略 | admin-bff |
+| `ops` | 平台管理员、角色权限、配置、治理记录 | admin-bff |
+| `support` | 工单、审计日志、通知日志 | admin-bff |
 
 > **worker-01 内存压力提示**：2G RAM 运行全套平台服务较紧。建议 Next.js 使用 `output: 'standalone'`，各容器设置 `--memory` 上限，开启 2G swap 作为应急缓冲。
 

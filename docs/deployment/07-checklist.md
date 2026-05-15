@@ -1,6 +1,6 @@
 # 部署检查清单
 
-> 更新：2026-05-14
+> 更新：2026-05-15
 > 依赖文档：[`00-overview.md`](00-overview.md) · [`04-services.md`](04-services.md) · [`01-environments.md`](01-environments.md)
 
 ---
@@ -54,9 +54,9 @@ cd deploy/worker-01
 docker compose -f compose.platform.yml pull
 
 # 2. 运行数据库迁移（若有 schema 变更）
-docker exec vx-platform-pg psql -U vxture -d platform_main -f /migrations/latest.sql
-# 或 Prisma migrate deploy（在 BFF 容器内）
 pnpm --filter @vxture/core-database migrate:deploy
+# 首次上线（历史库标记 baseline）：
+# npx prisma migrate resolve --applied "0001_schema_migration" --schema=packages/core/database/prisma/schema.prisma
 
 # 3. 滚动重启平台服务（逐个，避免全量停机）
 docker compose -f compose.platform.yml up -d --no-deps auth-bff

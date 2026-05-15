@@ -21,12 +21,14 @@
 
 | Schema | 表数 | 主要消费方 |
 |--------|------|-----------|
-| `account` | 6 | website-bff, console-bff |
-| `tenancy` | 9 | website-bff, console-bff, admin-bff |
-| `product` | 7 | admin-bff, ai-gateway |
-| `platform` | 5 | admin-bff |
-| `support` | 2 | admin-bff, vela-server |
-| `commerce` | 9 | admin-bff, ai-gateway |
+| `identity` | 10 | auth-bff, website-bff |
+| `iam` | 6 | auth-bff, console-bff |
+| `tenant` | 7 | website-bff, console-bff |
+| `product` | 7 | admin-bff |
+| `commerce` | 12 | admin-bff, console-bff |
+| `model` | 5 | admin-bff |
+| `ops` | 9 | admin-bff |
+| `support` | 4 | admin-bff |
 
 권위参考：`packages/core/database/prisma/schema.prisma`
 
@@ -62,7 +64,7 @@
 pnpm --filter @vxture/core-database migrate:dev
 
 # 首次对接已有 DB（一次性）
-npx prisma migrate resolve --applied "0000_baseline" \
+npx prisma migrate resolve --applied "0001_schema_migration" \
   --schema=packages/core/database/prisma/schema.prisma
 ```
 
@@ -84,5 +86,5 @@ npx prisma migrate resolve --applied "0000_baseline" \
 
 | 文档 | 内容 |
 |------|------|
-| [`platform-governance.md`](platform-governance.md) | `platform.governance_record` 统一治理视图表设计 |
+| [`platform-governance.md`](platform-governance.md) | `ops.governance_record` 统一治理视图表设计 |
 | [`tickets.md`](tickets.md) | `support.ticket` 工单表 + 运营待办聚合方案 |

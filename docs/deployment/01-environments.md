@@ -1,7 +1,7 @@
 # 环境变量矩阵
 
 > 所有服务的环境变量定义。符号说明：✅ 必填（缺失则启动失败）· ⚪ 可选（有默认值）· — 不需要
-> 更新：2026-05-11
+> 更新：2026-05-15
 
 ---
 
@@ -30,7 +30,7 @@
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
-| `DATABASE_URL` | ✅ | `postgresql://vxture:***@vx-platform-pg:5432/platform_main?schema=account` |
+| `DATABASE_URL` | ✅ | `postgresql://vxture:***@vx-platform-pg:5432/platform_main`（访问 `identity` / `tenant` schema） |
 | `REDIS_URL` | ✅ | 指向 vx-platform-redis |
 | `AUTH_BFF_URL` | ✅ | `http://vx-auth-bff:3090`（同网络直连） |
 | `WEBSITE_BFF_PORT` | ⚪ | 默认 3011 |
@@ -47,7 +47,7 @@
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
-| `DATABASE_URL` | ✅ | platform_main，schema=tenancy（含 commerce） |
+| `DATABASE_URL` | ✅ | `postgresql://vxture:***@vx-platform-pg:5432/platform_main`（访问 `tenant` / `commerce` / `iam` schema） |
 | `REDIS_URL` | ✅ | 指向 vx-platform-redis |
 | `AUTH_BFF_URL` | ✅ | `http://vx-auth-bff:3090` |
 | `CONSOLE_BFF_PORT` | ⚪ | 默认 3021 |
@@ -57,7 +57,7 @@
 
 | 变量 | 必填 | 说明 |
 |------|------|------|
-| `DATABASE_URL` | ✅ | platform_main，schema=platform（含 product / commerce / support） |
+| `DATABASE_URL` | ✅ | `postgresql://vxture:***@vx-platform-pg:5432/platform_main`（访问 `ops` / `product` / `commerce` / `model` / `support` schema） |
 | `AUTH_BFF_URL` | ✅ | `http://vx-auth-bff:3090` |
 | `ADMIN_BFF_PORT` | ⚪ | 默认 3031 |
 | `AUTH_COOKIE_DOMAIN` | ✅ | `.vxture.com` |

@@ -1,7 +1,7 @@
 # 基础设施配置
 
 > 运维操作参考：Nginx / PostgreSQL / Redis / Docker volume 映射
-> 更新：2026-05-11
+> 更新：2026-05-15
 
 ---
 
@@ -129,12 +129,14 @@ docker run -d \
 
 | Schema | 管理方 | 主要表 |
 |--------|--------|--------|
-| `account` | website-bff | users, credentials, oauth_connections |
-| `tenancy` | website-bff / console-bff | tenants, tenant_members, roles |
-| `product` | admin-bff | products, plans, capabilities |
-| `platform` | admin-bff | platform_admins, configs, feature_flags |
-| `commerce` | admin-bff / console-bff | orders, invoices, payments, subscriptions, usage |
-| `support` | admin-bff | tickets, ticket_messages |
+| `identity` | auth-bff / website-bff | account, account_credential, account_session, login_attempt, oauth_provider |
+| `iam` | console-bff | role, permission, role_permission, member_role_binding, capability |
+| `tenant` | website-bff / console-bff | tenant, tenant_member, tenant_setting, tenant_invitation |
+| `product` | admin-bff | product_agent, product_plan, product_feature, product_plan_price |
+| `commerce` | admin-bff / console-bff | tenant_invoice, tenant_payment, tenant_subscription, tenant_transaction, tenant_credit |
+| `model` | admin-bff | model_provider, model_definition, model_grant, model_price_rule, model_policy |
+| `ops` | admin-bff | admin, role, permission, setting, governance_record, feature_flag |
+| `support` | admin-bff | ticket, ticket_event, audit_log, notification_log |
 
 ### Redis — platform
 
