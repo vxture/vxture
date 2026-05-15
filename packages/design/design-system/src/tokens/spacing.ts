@@ -17,4 +17,6 @@ export const spacing = {
   lg: "var(--vx-space-lg)",
   xl: "var(--vx-space-xl)",
   "2xl": "var(--vx-space-2xl)",
+  "3xl": "var(--vx-space-3xl)",
+  "4xl": "var(--vx-space-4xl)",
 } as const;

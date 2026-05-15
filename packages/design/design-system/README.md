@@ -99,7 +99,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 DS 1.3.0 将 Quantum AI 色板沉淀为 Foundation primitive、semantic token、Tailwind `@theme` bridge 三层，并同步替换品牌主色、auth 视觉和 shell brand。应用端只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark` 和 `--vx-gradient-aurora` 等语义值；`--vx-color-ai-500`、`--vx-color-ai-cyan-500`、`--vx-color-spark-400` 这类 primitive 色阶只允许 DS 内部组装。
 
-`@vxture/design-system/tokens` 同步暴露 `colors.semantic.ai*` 与 `gradients.*` 引用，值仍全部指向 `var(--vx-*)`。`components.css` 提供 `.vx-ai-surface`、`.vx-ai-chip`、`.vx-ai-dot`、`.vx-ai-gradient-text`、`.vx-ai-ambient` 五个 AI 通用语义类；应用可以组合这些类表达业务结构，但不得在应用层重新定义 AI 颜色、渐变、发光和 badge 基线。
+`@vxture/design-system/tokens` 同步暴露 `colors.semantic.ai*` 与 `gradients.*` 引用，值仍全部指向 `var(--vx-*)`。`@theme` 同步提供 `bg-vx-gradient-aurora`、`bg-vx-gradient-brand`、`bg-vx-gradient-ai-duo`、`bg-vx-gradient-spark-pulse` 映射。`components.css` 提供 `.vx-ai-surface`、`.vx-ai-chip`、`.vx-ai-dot`、`.vx-ai-gradient-text`、`.vx-ai-ambient` 五个 AI 通用语义类；应用可以组合这些类表达业务结构，但不得在应用层重新定义 AI 颜色、渐变、发光和 badge 基线。
+
+### Foundation 尺度与动效
+
+Foundation 层统一维护 spacing、radius、shadow、motion 和 animation keyframes。`styles/tokens-foundation.css` 是运行时值源，`styles/tokens-density.css` 负责密度覆盖，`styles/tokens-theme-foundation.css` 负责 Tailwind `@theme` 映射，`src/tokens/*.ts` 只暴露 `var(--vx-*)` 引用。
+
+已开放的新增能力包括 `--vx-space-3xl/4xl`、`--vx-radius-xs/2xl/3xl`、`--vx-shadow-xs/xl/2xl/glow/focus-ring/focus-ring-ai`、`--vx-duration-*`、`--vx-ease-*`、`--vx-motion-*` 和 `--animate-vx-*`。应用端不得重新定义阴影、圆角、动效曲线或关键帧；AI 发光、shimmer 和 pop 动效只能通过 DS 语义 token 或 DS 组件组合使用。
+
+临时迁移 patch 文件不得作为 DS 长期源码保留。Foundation 与字体迁入完成后，正式来源只认 `src/styles/*`、`src/tokens/*`、`docs/standards/design-system.md` 和 `docs/standards/font-system.md`。
 
 ## CSS 分层
 

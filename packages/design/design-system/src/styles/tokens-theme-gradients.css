@@ -1,0 +1,15 @@
+/**
+ * tokens-theme-gradients.css - Tailwind 渐变映射。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+@theme {
+  --background-image-vx-gradient-aurora: var(--vx-gradient-aurora);
+  --background-image-vx-gradient-brand: var(--vx-gradient-brand);
+  --background-image-vx-gradient-ai-duo: var(--vx-gradient-ai-duo);
+  --background-image-vx-gradient-spark-pulse: var(--vx-gradient-spark-pulse);
+}

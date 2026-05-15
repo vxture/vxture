@@ -10,62 +10,73 @@
  * @category Tokens
  */
 
-/**
- * 缓动函数 tokens
- *
- * - easeIn: 加速进入
- * - easeOut: 减速退出
- * - easeInOut: 平滑进入退出
- * - bounce: 弹跳效果
- * - elastic: 弹性效果
- */
 export const easing = {
-  easeIn: "cubic-bezier(0.4, 0, 1, 1)",
-  easeOut: "cubic-bezier(0, 0, 0.2, 1)",
-  easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
-  bounce: "cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-  elastic: "cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+  linear: "var(--vx-ease-linear)",
+  standard: "var(--vx-ease-standard)",
+  out: "var(--vx-ease-out)",
+  in: "var(--vx-ease-in)",
+  inOut: "var(--vx-ease-in-out)",
+  snappy: "var(--vx-ease-snappy)",
+  easeIn: "var(--vx-ease-in)",
+  easeOut: "var(--vx-ease-out)",
+  easeInOut: "var(--vx-ease-in-out)",
+  bounce: "var(--vx-ease-snappy)",
+  elastic: "var(--vx-ease-snappy)",
 } as const;
 
-/**
- * 动画持续时间 tokens (毫秒)
- *
- * - fast: 快速动画 (100ms)
- * - normal: 普通动画 (200ms)
- * - slow: 慢速动画 (300ms)
- * - verySlow: 超慢动画 (500ms)
- */
 export const duration = {
-  fast: "100ms",
-  normal: "200ms",
-  slow: "300ms",
-  verySlow: "500ms",
+  instant: "var(--vx-duration-instant)",
+  fast: "var(--vx-duration-fast)",
+  base: "var(--vx-duration-base)",
+  moderate: "var(--vx-duration-moderate)",
+  slow: "var(--vx-duration-slow)",
+  slower: "var(--vx-duration-slower)",
+  spinner: "var(--vx-duration-spinner)",
+  pulse: "var(--vx-duration-pulse)",
+  shimmer: "var(--vx-duration-shimmer)",
+  normal: "var(--vx-duration-base)",
+  verySlow: "var(--vx-duration-slower)",
 } as const;
 
-/**
- * 动画预设 tokens
- *
- * 常用动画组合，包含 duration 和 easing
- */
+export const motion = {
+  buttonHover: "var(--vx-motion-button-hover)",
+  cardLift: "var(--vx-motion-card-lift)",
+  modalOpen: "var(--vx-motion-modal-open)",
+  dropdownOpen: "var(--vx-motion-dropdown-open)",
+  tooltipOpen: "var(--vx-motion-tooltip-open)",
+  aiPop: "var(--vx-motion-ai-pop)",
+  spinner: "var(--vx-motion-spinner)",
+  pulse: "var(--vx-motion-pulse)",
+} as const;
+
+export const animation = {
+  spin: "var(--animate-vx-spin)",
+  pulse: "var(--animate-vx-pulse)",
+  fadeIn: "var(--animate-vx-fade-in)",
+  fadeUp: "var(--animate-vx-fade-up)",
+  scaleIn: "var(--animate-vx-scale-in)",
+  shimmer: "var(--animate-vx-shimmer)",
+} as const;
+
 export const motionPresets = {
   fadeIn: {
-    duration: duration.normal,
-    easing: easing.easeOut,
+    duration: duration.base,
+    easing: easing.out,
   },
   slideIn: {
-    duration: duration.slow,
-    easing: easing.easeOut,
+    duration: duration.moderate,
+    easing: easing.out,
   },
   scaleIn: {
-    duration: duration.normal,
-    easing: easing.easeOut,
+    duration: duration.base,
+    easing: easing.snappy,
   },
   bounce: {
     duration: duration.slow,
-    easing: easing.bounce,
+    easing: easing.snappy,
   },
   elastic: {
-    duration: duration.verySlow,
-    easing: easing.elastic,
+    duration: duration.slower,
+    easing: easing.snappy,
   },
 } as const;

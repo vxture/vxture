@@ -64,13 +64,15 @@ src/
 ## CSS 分层
 
 - `tokens.css` 是 token runtime 稳定入口，只聚合 `tokens-*` 分层模块；外部消费者不得直接引用 `tokens-*`。
+- `tokens-foundation.css` 持有 spacing、radius、shadow、motion、keyframes 与默认字号运行时值；`tokens-density.css` 只覆盖密度相关尺度；`tokens-theme-foundation.css` 只负责 Tailwind spacing/radius/shadow/text/animate 映射。
 - `tokens-colors-primitives.css` 持有品牌、状态和 AI primitive 色阶；`tokens-colors-semantic.css` 才是应用消费边界。
-- `tokens-gradients.css` 只定义品牌和 AI 场景渐变 token，不承载组件结构规则。
+- `tokens-gradients.css` 只定义品牌和 AI 场景渐变 token，不承载组件结构规则；`tokens-theme-gradients.css` 只负责 Tailwind `bg-vx-gradient-*` 映射。
 - `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。
 - `console.css` 是 Console portal style pack 稳定入口，只聚合 `console-*` 模块。
 - `globals.css` 是标准消费者入口，聚合 DS 全局基线。
 - `*-bindings.css` 只用于选择器作用域内的变量组装，不作为 runtime token 值源。
 - 应用端样式入口和大 CSS 文件应保持 import-only，具体规则放入分层模块。
+- `packages/design/*.css` 迁移 patch 文件不得长期保留；迁入完成后必须删除，正式实现只落在 `packages/design/design-system/src/styles/*` 与 `src/tokens/*`。
 
 ## 依赖约束
 
@@ -91,6 +93,7 @@ src/
 
 - 所有图标通过 `<Icon name="..." />` 使用；应用不得直接导入底层图标库。
 - CSS 变量运行时值只在 `styles/tokens.css` 入口及其 `tokens-*` 分层模块维护；TS token 文件只暴露 `var(--vx-*)`。
+- Foundation 尺度、阴影和动效只能在 DS token owner 中定义；应用端只能消费 `--vx-space-*`、`--vx-radius-*`、`--vx-shadow-*`、`--vx-motion-*`、`--animate-vx-*` 或对应 Tailwind `vx-*` 映射，不得复制固定视觉值。
 - AI 色彩的 primitive 色阶只允许 DS 内部组装；应用只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark`、`--vx-gradient-aurora` 等语义 token。
 - Quantum AI 已完整迁入 DS：brand ramp、AI primitive、AI semantic、gradient、Tailwind bridge、auth visual、shell brand 与 guardrail 同步收敛。
 - DS semantic CSS 不直接消费 `--vx-component-metric-*` 兜底 token。

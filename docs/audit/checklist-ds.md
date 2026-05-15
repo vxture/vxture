@@ -368,7 +368,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 优先级：P1  
 状态：已修复。  
-修复证据：`agent-studio/vela/src/app/layout.tsx` 已按平台标准加载 Sora / Inter / Geist Mono 字体变量，并接入 `ThemeProvider`、`FullscreenProvider`；body 不再 inline 设置字体。  
+修复证据：`agent-studio/vela/src/app/layout.tsx` 已按平台标准加载 Funnel Display / Inter / Geist Mono 字体变量，并接入 `ThemeProvider`、`FullscreenProvider`；body 不再 inline 设置字体。
 问题：`var(--font-sans)` 依赖应用层加载器变量，Vela 未提供，实际字体可能回退不可控。  
 修复方向：要么复用统一 AppFontProvider/RootLayout helper，要么在 Vela layout 中按平台标准加载字体变量。  
 验收标准：所有前端应用字体加载逻辑一致，body 不再 inline 设置字体。
@@ -544,8 +544,10 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 4. 已完成：`platform-*-tokens.css` 作用域变量组装文件已改名为 `*-bindings.css`；新增 `ds/no-misnamed-token-style-module`，禁止非 runtime token 层继续使用 `*-tokens.css` 命名。
 5. 分层边界：DS 只沉淀 token、基础组件语义类、跨应用 pattern 和 portal style pack；应用侧只组合业务场景，不定义 `--vx-*`、不直接消费底层 UI 引擎、不直接引用 DS 内部 `tokens-*` 文件。
 6. 已完成：Quantum AI 色板已按完整方案从临时 patch 迁入 DS token 分层；`tokens-colors-primitives.css` 替换 brand ramp 并新增 AI / AI-CYAN / SPARK primitive，`tokens-colors-semantic.css` 更新 primary、border、ring、auth、shell 与 AI semantic，`tokens-gradients.css` 承接 aurora / brand / AI duo / spark pulse，`tokens-theme-*` 同步 Tailwind bridge，暗色主题、README、包说明和使用规范同步更新；新增 `ds/no-app-ai-primitive-token`，禁止应用侧直接消费 AI primitive 色阶。原始 patch 已归档到 `docs/design/tokens-quantum-ai.md`。
-7. 已完成：DS 内部补齐 AI 语义调用面，`@vxture/design-system/tokens` 暴露 `colors.semantic.ai*` 与 `gradients.*` 引用，`components.css` 新增 `.vx-ai-surface`、`.vx-ai-chip`、`.vx-ai-dot`、`.vx-ai-gradient-text`、`.vx-ai-ambient` 通用基准类。应用端后续只做业务组装，不再自行定义 AI 表面、徽章、渐变文本和环境光基线。
+7. 已完成：DS 内部补齐 AI 语义调用面，`@vxture/design-system/tokens` 暴露 `colors.semantic.ai*` 与 `gradients.*` 引用，Tailwind bridge 暴露 `bg-vx-gradient-*` 映射，`components.css` 新增 `.vx-ai-surface`、`.vx-ai-chip`、`.vx-ai-dot`、`.vx-ai-gradient-text`、`.vx-ai-ambient` 通用基准类。应用端后续只做业务组装，不再自行定义 AI 表面、徽章、渐变文本和环境光基线。
 8. 已完成：应用侧开始消费 AI 语义 token；Vela chat、admin assistant panel/message/composer/sidebar 和 Console assistant panel 已从通用 brand/primary 迁到 `--vx-color-ai*`、`--vx-gradient-ai-duo`、`--vx-color-spark*`，应用侧无 AI primitive 直接消费。
+9. 已完成：`foundation-patch.css` 迁入 DS Foundation 层；spacing 3xl/4xl、radius xs/2xl/3xl、shadow xs-xl/2xl/glow/focus-ring、duration/easing/motion、`vx-*` keyframes、Tailwind `@theme` animate 映射和 TS token 引用已归入 `tokens-foundation.css`、`tokens-density.css`、`tokens-theme-foundation.css` 与 `src/tokens/*`。临时 patch 文件已删除，应用端后续只消费 DS token / Tailwind bridge / DS 组件封装，不再自定义固定阴影、圆角、动效曲线或关键帧。
+10. 已完成：`typography-funnel-display.css` 的 Funnel Display 迁移职责已落到 DS `typography.css`、应用 `layout.tsx` 字体加载器与 `docs/standards/font-system.md`；临时 patch 文件已删除，不再作为字体体系事实来源。
 
 ## 后续验收清单
 

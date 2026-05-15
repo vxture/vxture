@@ -1136,6 +1136,7 @@ fallback 方案
 [ ] 所有 Next.js `app/layout.tsx` 已通过 `Funnel_Display`、`Inter`、`Geist_Mono` 加载字体变量。
 [ ] 如使用 Google Fonts `<link>`，URL 必须使用 `family=Funnel+Display`，不得继续加载旧品牌字体。
 [ ] 应用侧不得直接写字体族，必须使用 `--font-brand`、`--font-display`、`--font-sans`、`--font-cjk`、`--font-mono`。
+[ ] `packages/design/typography-funnel-display.css` 这类临时迁移文件已删除；正式来源只认 DS `typography.css`、应用 `layout.tsx` 字体加载器和本文档。
 ```
 
 验收命令：
