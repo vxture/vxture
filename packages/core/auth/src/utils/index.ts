@@ -11,6 +11,11 @@ export {
 } from './auth.utils';
 
 export {
+  resolveInternalAuthToken,
+  assertInternalAuth,
+} from './internal-auth.utils';
+
+export {
   hasPermission,
   hasRole,
   isAdmin,

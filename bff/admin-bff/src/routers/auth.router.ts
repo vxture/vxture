@@ -32,6 +32,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { resolveInternalAuthToken } from '@vxture/core-auth';
 import { PhoneCodeService } from '@vxture/service-sms';
 import { PlatformAuthService } from '../auth/auth.service';
 import { LoginRateLimiterService } from '../auth/login-rate-limiter.service';
@@ -52,15 +53,6 @@ const logger = new Logger('AdminAuthRouter');
 const ADMIN_PHONE_CODE_SCOPE = 'admin-auth';
 const PHONE_PATTERN = /^1[3-9]\d{9}$/;
 const PHONE_CODE_PATTERN = /^\d{6}$/;
-
-function resolveInternalAuthToken(): string {
-  const token = process.env.AUTH_INTERNAL_TOKEN?.trim();
-  if (token) return token;
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('AUTH_INTERNAL_TOKEN is required in production');
-  }
-  return 'vxture-local-internal-auth';
-}
 
 interface AuthHttpRequest {
   headers: Record<string, string | string[] | undefined>;

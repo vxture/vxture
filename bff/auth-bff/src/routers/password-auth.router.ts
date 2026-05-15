@@ -31,9 +31,10 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { JwtAuthScope, JwtUserType, TurnstileVerifier } from '@vxture/core-auth';
+import { InternalAuthGuard, JwtAuthScope, JwtUserType, TurnstileVerifier } from '@vxture/core-auth';
 import { AUTH_CONSTANTS } from '@vxture/shared';
 import { AuthService, type LoginSource } from '../auth/auth.service';
 import { RedisService, type TenantRefreshSurface } from '../redis/redis.service';
@@ -217,21 +218,6 @@ function remainingTtlSeconds(exp: number | undefined, fallbackSeconds: number): 
   return Math.max(1, exp - Math.floor(Date.now() / 1000));
 }
 
-function resolveInternalAuthToken(): string {
-  const token = process.env.AUTH_INTERNAL_TOKEN?.trim();
-  if (token) return token;
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('AUTH_INTERNAL_TOKEN is required in production');
-  }
-  return 'vxture-local-internal-auth';
-}
-
-function assertInternalSignAuthorized(req: Request) {
-  const token = req.headers['x-vxture-internal-auth'];
-  if (token !== resolveInternalAuthToken()) {
-    throw new UnauthorizedException('Unauthorized internal auth request');
-  }
-}
 
 function resolveClientIp(req: Request): string | null {
   const forwarded = req.headers['x-forwarded-for'];
@@ -573,8 +559,8 @@ export class PasswordAuthRouter {
    */
   @Post('internal/sign')
   @HttpCode(HttpStatus.OK)
+  @UseGuards(InternalAuthGuard)
   async internalSign(
-    @Req() req: Request,
     @Body() body: {
       sub: string;
       email: string;
@@ -588,7 +574,6 @@ export class PasswordAuthRouter {
     },
     @Res({ passthrough: true }) res: Response,
   ) {
-    assertInternalSignAuthorized(req);
     const source: LoginSource =
       body.source === 'admin' || body.source === 'console' || body.source === 'ruyin'
         ? body.source

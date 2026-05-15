@@ -28,6 +28,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Response } from 'express';
+import { resolveInternalAuthToken } from '@vxture/core-auth';
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
@@ -43,15 +44,6 @@ function resolveAuthBffUrl(): string {
 }
 
 const AUTH_BFF = resolveAuthBffUrl();
-
-function resolveInternalAuthToken(): string {
-  const token = process.env.AUTH_INTERNAL_TOKEN?.trim();
-  if (token) return token;
-  if (process.env.NODE_ENV === 'production') {
-    throw new Error('AUTH_INTERNAL_TOKEN is required in production');
-  }
-  return 'vxture-local-internal-auth';
-}
 
 function forwardSetCookie(res: RedirectResponse, upstream: globalThis.Response): void {
   const setCookie = readSetCookie(upstream);

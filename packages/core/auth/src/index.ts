@@ -22,7 +22,7 @@ export type {
 export { VxJwtClient } from './client';
 
 // Guards
-export { JwtAuthGuard, RolesGuard } from './guards';
+export { JwtAuthGuard, RolesGuard, InternalAuthGuard } from './guards';
 
 // Decorators
 export { Public, IS_PUBLIC_KEY, Roles, ROLES_KEY, CurrentUser } from './decorators';
@@ -40,6 +40,8 @@ export {
   isValidProvider,
   buildOAuthProfile,
   generateJti,
+  resolveInternalAuthToken,
+  assertInternalAuth,
 } from './utils';
 
 // Session
