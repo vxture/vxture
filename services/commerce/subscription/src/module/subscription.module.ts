@@ -1,24 +1,36 @@
-/**
- * subscription.module.ts - 订阅管理 NestJS 模块定义
- * @package @vxture/service-subscription
- *
- * Description: NestJS 模块定义，注册和导出服务
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @layer Domain
- * @category Module
- */
-
 import { Module } from '@nestjs/common';
+import { VxConfigModule, VxConfigService } from '@vxture/core-config';
+import { Pool } from 'pg';
+import { COMMERCE_PG_POOL } from '../tokens';
+import { PgSubscriptionRepository } from '../repository/pg-subscription.repository';
 import { SubscriptionService } from '../service/subscription.service';
-import { PlanRepository } from '../repository/plan.repository';
-import { SubscriptionRepository } from '../repository/subscription.repository';
 
 @Module({
-  providers: [SubscriptionService, PlanRepository, SubscriptionRepository],
-  exports: [SubscriptionService]
+  imports: [VxConfigModule.register({ domains: ['database'] })],
+  providers: [
+    {
+      provide: COMMERCE_PG_POOL,
+      inject: [VxConfigService],
+      useFactory: (config: VxConfigService) => {
+        const db = config.database;
+        return new Pool(
+          db.DATABASE_URL
+            ? { connectionString: db.DATABASE_URL }
+            : {
+                host: db.DB_HOST,
+                port: db.DB_PORT,
+                database: db.DB_NAME,
+                user: db.DB_USER,
+                password: db.DB_PASSWORD,
+                max: db.DB_POOL_MAX,
+                ssl: db.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
+              },
+        );
+      },
+    },
+    PgSubscriptionRepository,
+    SubscriptionService,
+  ],
+  exports: [SubscriptionService],
 })
 export class SubscriptionModule {}

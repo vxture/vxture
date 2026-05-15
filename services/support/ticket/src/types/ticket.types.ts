@@ -1,118 +1,125 @@
-/**
- * ticket.types.ts - 工单管理领域类型定义
- * @package @vxture/service-ticket
- *
- * Description: 包含工单管理相关的所有类型定义
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @layer Domain
- * @category Types
- */
-
-// ============================================================================
-// Enums
-// ============================================================================
-
-// 工单状态
-export enum TicketStatus {
-  OPEN = 'open',
-  IN_PROGRESS = 'in_progress',
-  RESOLVED = 'resolved',
-  CLOSED = 'closed',
-  CANCELLED = 'cancelled'
-}
-
-// 工单优先级
-export enum TicketPriority {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  URGENT = 'urgent',
-  CRITICAL = 'critical'
-}
-
-// ============================================================================
-// Domain Types
-// ============================================================================
-
-// 工单基本信息类型
-export interface Ticket {
+export interface TicketRecord {
   id: string;
   tenantId: string;
+  accountId: string | null;
+  ticketNo: string;
+  category: string;
+  priority: string;
+  source: string;
+  status: string;
   title: string;
   description: string;
-  status: TicketStatus;
-  priority: TicketPriority;
-  assigneeId?: string;
-  reporterId: string;
-  category: string;
+  reporterName: string | null;
+  assigneeId: string | null;
+  assigneeName: string | null;
   tags: string[];
+  satisfactionScore: number | null;
+  satisfactionComment: string | null;
+  slaBreachAt: Date | null;
+  firstResponseAt: Date | null;
+  dueAt: Date | null;
+  resolvedAt: Date | null;
+  closedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  dueDate?: Date;
-  resolution?: string;
-  resolutionDate?: Date;
+  deletedAt: Date | null;
 }
 
-// ============================================================================
-// Query Params
-// ============================================================================
+export interface TicketEventRecord {
+  id: string;
+  ticketId: string;
+  eventType: string;
+  actorType: string;
+  actorId: string | null;
+  actorName: string;
+  payload: Record<string, unknown>;
+  createdAt: Date;
+}
 
-// 工单查询参数类型
-export interface TicketQueryParams {
+export interface AuditLogRecord {
+  id: string;
+  actorType: string;
+  actorId: string;
+  tenantId: string | null;
+  action: string;
+  result: string;
+  resourceType: string;
+  resourceId: string;
+  errorCode: string | null;
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
+  requestId: string | null;
+  durationMs: number | null;
+  ipAddress: string | null;
+  userAgent: string | null;
+  createdAt: Date;
+}
+
+export interface ListTicketsParams {
   tenantId?: string;
-  status?: TicketStatus;
-  priority?: TicketPriority;
-  assigneeId?: string;
-  reporterId?: string;
+  status?: string;
+  priority?: string;
   category?: string;
-  tags?: string[];
-  startDate?: Date;
-  endDate?: Date;
+  assigneeId?: string;
+  keyword?: string;
   page?: number;
-  limit?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
+  pageSize?: number;
+}
+
+export interface ListTicketsResult {
+  items: TicketRecord[];
+  total: number;
 }
 
 export interface CreateTicketInput {
-  tenantId?: string;
+  tenantId: string;
+  accountId?: string;
+  category?: string;
+  priority?: string;
+  source?: string;
   title: string;
-  description: string;
-  priority?: TicketPriority;
-  assigneeId?: string;
-  reporterId?: string;
-  category: string;
+  description?: string;
+  reporterName?: string;
   tags?: string[];
-  dueDate?: Date;
+  dueAt?: Date;
 }
 
 export interface UpdateTicketInput {
+  status?: string;
+  priority?: string;
+  assigneeId?: string;
+  assigneeName?: string;
   title?: string;
   description?: string;
-  status?: TicketStatus;
-  priority?: TicketPriority;
-  assigneeId?: string;
-  category?: string;
   tags?: string[];
-  dueDate?: Date;
-  resolution?: string;
-  resolutionDate?: Date;
+  resolvedAt?: Date;
+  closedAt?: Date;
+  satisfactionScore?: number;
+  satisfactionComment?: string;
 }
 
-// ============================================================================
-// Statistics Types
-// ============================================================================
+export interface AddTicketEventInput {
+  ticketId: string;
+  eventType: string;
+  actorType: string;
+  actorId?: string;
+  actorName: string;
+  payload?: Record<string, unknown>;
+}
 
-export interface TicketStats {
-  total: number;
-  open: number;
-  inProgress: number;
-  resolved: number;
-  closed: number;
-  byPriority: { [key in TicketPriority]: number };
-  byCategory: { [category: string]: number };
+export interface AppendAuditLogInput {
+  actorType: string;
+  actorId: string;
+  tenantId?: string;
+  action: string;
+  result?: string;
+  resourceType: string;
+  resourceId: string;
+  errorCode?: string;
+  before?: Record<string, unknown>;
+  after?: Record<string, unknown>;
+  requestId?: string;
+  durationMs?: number;
+  ipAddress?: string;
+  userAgent?: string;
 }

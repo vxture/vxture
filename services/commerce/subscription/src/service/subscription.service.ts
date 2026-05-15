@@ -1,601 +1,89 @@
-/**
- * subscription.service.ts - 订阅管理业务逻辑层
- * @package @vxture/service-subscription
- *
- * Description: 实现订阅管理的核心业务逻辑
- *
- * @author AI-Generated
- * @date 2026-03-11
- * @version 1.0
- *
- * @layer Domain
- * @category Service
- */
-
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { PgSubscriptionRepository } from '../repository/pg-subscription.repository';
 import type {
-  Plan,
-  Subscription,
+  SubscriptionRecord,
+  SubscriptionHistoryRecord,
+  ListSubscriptionsParams,
+  ListSubscriptionsResult,
   CreateSubscriptionInput,
   UpdateSubscriptionInput,
-  PlanQueryParams,
-  SubscriptionQueryParams,
-  SubscriptionStats,
-  UsageStats,
-  UsageStatsQuery
 } from '../types/subscription.types';
-import { SubscriptionStatus, BillingCycle } from '../types/subscription.types';
-import { planRepository } from '../repository/plan.repository';
-import { subscriptionRepository } from '../repository/subscription.repository';
 
-// 订阅服务类
 @Injectable()
 export class SubscriptionService {
-  /**
-   * 获取套餐列表
-   * @param params 查询参数
-   * @returns 套餐列表
-   */
-  async getPlans(params: PlanQueryParams = {}): Promise<Plan[]> {
-    const plans = await planRepository.getPlans(params);
-    return plans;
+  constructor(private readonly repo: PgSubscriptionRepository) {}
+
+  async listSubscriptions(params: ListSubscriptionsParams): Promise<ListSubscriptionsResult> {
+    return this.repo.listSubscriptions(params);
   }
 
-  /**
-   * 根据ID获取套餐
-   * @param id 套餐ID
-   * @returns 套餐对象
-   * @throws {Error} 当套餐不存在时
-   */
-  async getPlanById(id: string): Promise<Plan> {
-    if (!id || id.trim().length === 0) {
-      throw new Error('套餐ID不能为空');
-    }
-
-    const plan = await planRepository.getPlanById(id);
-
-    if (!plan) {
-      throw new Error('套餐不存在');
-    }
-
-    return plan;
+  async getSubscription(id: string): Promise<SubscriptionRecord> {
+    const record = await this.repo.getById(id);
+    if (!record) throw new NotFoundException(`订阅 ${id} 不存在`);
+    return record;
   }
 
-  /**
-   * 根据代码获取套餐
-   * @param code 套餐代码
-   * @returns 套餐对象
-   * @throws {Error} 当套餐不存在时
-   */
-  async getPlanByCode(code: string): Promise<Plan> {
-    if (!code || code.trim().length === 0) {
-      throw new Error('套餐代码不能为空');
-    }
-
-    const plan = await planRepository.getPlanByCode(code);
-
-    if (!plan) {
-      throw new Error('套餐不存在');
-    }
-
-    return plan;
+  async getActiveSubscription(tenantId: string): Promise<SubscriptionRecord | null> {
+    return this.repo.getActiveByTenantId(tenantId);
   }
 
-  /**
-   * 获取活跃的公开套餐
-   * @param cycle 计费周期（可选）
-   * @returns 活跃的公开套餐列表
-   */
-  async getActivePublicPlans(cycle?: BillingCycle): Promise<Plan[]> {
-    const plans = await planRepository.getActivePublicPlans(cycle);
-    return plans;
+  async createSubscription(input: CreateSubscriptionInput): Promise<SubscriptionRecord> {
+    const existing = await this.repo.getActiveByTenantId(input.tenantId);
+    if (existing) throw new ConflictException('租户已有活跃订阅，请先取消或升级现有订阅');
+    return this.repo.create(input);
   }
 
-  /**
-   * 创建订阅
-   * @param input 创建订阅输入参数
-   * @returns 新创建的订阅
-   * @throws {Error} 当输入参数验证失败时
-   */
-  async createSubscription(input: CreateSubscriptionInput): Promise<Subscription> {
-    if (!input.customerId || !input.planId) {
-      throw new Error('客户ID和套餐ID不能为空');
-    }
+  async cancelSubscription(
+    id: string,
+    operatorId?: string,
+    remark?: string,
+  ): Promise<SubscriptionRecord> {
+    const subscription = await this.getSubscription(id);
+    if (subscription.status === 'cancelled') throw new ConflictException('订阅已取消');
+    if (subscription.status === 'expired') throw new ConflictException('订阅已过期');
 
-    const plan = await this.getPlanById(input.planId);
-
-    if (!plan.isActive) {
-      throw new Error('所选套餐已不可用');
-    }
-
-    const existingActiveSubscription = await subscriptionRepository.getActiveSubscriptionByCustomerId(input.customerId);
-
-    if (existingActiveSubscription) {
-      throw new Error('该客户已有活跃订阅，请先取消或升级现有订阅');
-    }
-
-    const startDate = input.startDate || new Date();
-    let nextBillingDate: Date;
-    let trialEndDate: Date | undefined;
-    let isTrial = false;
-
-    if (input.trialDays && input.trialDays > 0) {
-      isTrial = true;
-      trialEndDate = new Date(startDate.getTime() + input.trialDays * 24 * 60 * 60 * 1000);
-      nextBillingDate = trialEndDate;
-    } else {
-      nextBillingDate = this.calculateNextBillingDate(startDate, input.cycle || plan.cycle);
-    }
-
-    const subscription = await subscriptionRepository.createSubscription({
-      customerId: input.customerId,
-      tenantId: input.tenantId ?? input.customerId,
-      planId: input.planId,
-      planName: plan.name,
-      status: SubscriptionStatus.ACTIVE,
-      price: plan.price,
-      currency: plan.currency,
-      cycle: input.cycle || plan.cycle,
-      startDate,
-      nextBillingDate,
-      trialEndDate,
-      isTrial,
-      autoRenew: input.autoRenew !== false,
-      cancelAtPeriodEnd: false,
-      paymentMethodId: input.paymentMethodId,
-      metadata: input.metadata
+    const result = await this.repo.update(id, subscription, {
+      status: 'cancelled',
+      endAt: new Date(),
+      operatorType: 'operator',
+      operatorId,
+      operatorRemark: remark,
+      updatedBy: operatorId,
     });
-
-    return subscription;
+    return result!;
   }
 
-  private calculateNextBillingDate(fromDate: Date, cycle: BillingCycle): Date {
-    const nextDate = new Date(fromDate);
+  async upgradeSubscription(
+    id: string,
+    newPlanId: string,
+    operatorId?: string,
+    remark?: string,
+  ): Promise<SubscriptionRecord> {
+    const subscription = await this.getSubscription(id);
+    if (subscription.status !== 'active') throw new ConflictException('只有活跃订阅可以升级');
 
-    switch (cycle) {
-      case BillingCycle.DAILY:
-        nextDate.setDate(nextDate.getDate() + 1);
-        break;
-      case BillingCycle.WEEKLY:
-        nextDate.setDate(nextDate.getDate() + 7);
-        break;
-      case BillingCycle.MONTHLY:
-        nextDate.setMonth(nextDate.getMonth() + 1);
-        break;
-      case BillingCycle.QUARTERLY:
-        nextDate.setMonth(nextDate.getMonth() + 3);
-        break;
-      case BillingCycle.YEARLY:
-        nextDate.setFullYear(nextDate.getFullYear() + 1);
-        break;
-    }
-
-    return nextDate;
+    const result = await this.repo.update(id, subscription, {
+      toPlanId: newPlanId,
+      operatorType: 'operator',
+      operatorId,
+      operatorRemark: remark,
+      updatedBy: operatorId,
+    });
+    return result!;
   }
 
-  /**
-   * 根据ID获取订阅
-   * @param id 订阅ID
-   * @returns 订阅对象
-   * @throws {Error} 当订阅不存在时
-   */
-  async getSubscriptionById(id: string): Promise<Subscription> {
-    if (!id || id.trim().length === 0) {
-      throw new Error('订阅ID不能为空');
-    }
-
-    const subscription = await subscriptionRepository.getSubscriptionById(id);
-
-    if (!subscription) {
-      throw new Error('订阅不存在');
-    }
-
-    return subscription;
-  }
-
-  /**
-   * 获取客户的订阅列表
-   * @param customerId 客户ID
-   * @returns 订阅列表
-   * @throws {Error} 当客户ID为空时
-   */
-  async getCustomerSubscriptions(customerId: string): Promise<Subscription[]> {
-    if (!customerId || customerId.trim().length === 0) {
-      throw new Error('客户ID不能为空');
-    }
-
-    const subscriptions = await subscriptionRepository.getSubscriptionsByCustomerId(customerId);
-    return subscriptions;
-  }
-
-  async getTenantSubscriptions(tenantId: string): Promise<Subscription[]> {
-    if (!tenantId || tenantId.trim().length === 0) {
-      throw new Error('租户ID不能为空');
-    }
-
-    const subscriptions = await subscriptionRepository.getSubscriptionsByTenantId(tenantId);
-    return subscriptions;
-  }
-
-  /**
-   * 获取客户的活跃订阅
-   * @param customerId 客户ID
-   * @returns 活跃的订阅对象
-   */
-  async getCustomerActiveSubscription(customerId: string): Promise<Subscription | null> {
-    if (!customerId || customerId.trim().length === 0) {
-      throw new Error('客户ID不能为空');
-    }
-
-    const subscription = await subscriptionRepository.getActiveSubscriptionByCustomerId(customerId);
-    return subscription;
-  }
-
-  /**
-   * 获取订阅列表
-   * @param params 查询参数
-   * @returns 订阅列表
-   */
-  async getSubscriptions(params: SubscriptionQueryParams = {}): Promise<Subscription[]> {
-    const subscriptions = await subscriptionRepository.getSubscriptions(params);
-    return subscriptions;
-  }
-
-  /**
-   * 更新订阅
-   * @param id 订阅ID
-   * @param input 更新参数
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅不存在或套餐验证失败时
-   */
   async updateSubscription(
     id: string,
     input: UpdateSubscriptionInput,
-    changedBy: string = 'system'
-  ): Promise<Subscription | null> {
-    const existingSubscription = await this.getSubscriptionById(id);
-
-    if (input.planId && input.planId !== existingSubscription.planId) {
-      const newPlan = await this.getPlanById(input.planId);
-
-      if (!newPlan.isActive) {
-        throw new Error('目标套餐已不可用');
-      }
-
-      input.planName = newPlan.name;
-      input.price = newPlan.price;
-      input.currency = newPlan.currency;
-      input.cycle = newPlan.cycle;
-    }
-
-    const updatedSubscription = await subscriptionRepository.updateSubscription(id, input, changedBy);
-    return updatedSubscription;
+  ): Promise<SubscriptionRecord> {
+    const subscription = await this.getSubscription(id);
+    const result = await this.repo.update(id, subscription, input);
+    if (!result) throw new NotFoundException(`订阅 ${id} 不存在`);
+    return result;
   }
 
-  /**
-   * 暂停订阅
-   * @param id 订阅ID
-   * @param reason 暂停原因
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅状态不符合要求时
-   */
-  async pauseSubscription(id: string, reason?: string, changedBy: string = 'system'): Promise<Subscription> {
-    const subscription = await this.getSubscriptionById(id);
-
-    if (subscription.status !== SubscriptionStatus.ACTIVE) {
-      throw new Error('只能暂停活跃的订阅');
-    }
-
-    if (subscription.isTrial) {
-      throw new Error('试用订阅无法暂停');
-    }
-
-    const updatedSubscription = await subscriptionRepository.updateSubscription(
-      id,
-      {
-        status: SubscriptionStatus.PAUSED,
-        metadata: { ...subscription.metadata, pauseReason: reason }
-      },
-      changedBy
-    );
-
-    return updatedSubscription!;
-  }
-
-  /**
-   * 恢复订阅
-   * @param id 订阅ID
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅状态不符合要求时
-   */
-  async resumeSubscription(id: string, changedBy: string = 'system'): Promise<Subscription> {
-    const subscription = await this.getSubscriptionById(id);
-
-    if (subscription.status !== SubscriptionStatus.PAUSED) {
-      throw new Error('只能恢复暂停的订阅');
-    }
-
-    const updatedSubscription = await subscriptionRepository.updateSubscription(
-      id,
-      {
-        status: SubscriptionStatus.ACTIVE
-      },
-      changedBy
-    );
-
-    return updatedSubscription!;
-  }
-
-  /**
-   * 取消订阅
-   * @param id 订阅ID
-   * @param reason 取消原因
-   * @param immediate 是否立即取消
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅状态不符合要求时
-   */
-  async cancelSubscription(
-    id: string,
-    reason?: string,
-    immediate: boolean = false,
-    changedBy: string = 'system'
-  ): Promise<Subscription> {
-    const subscription = await this.getSubscriptionById(id);
-
-    if (subscription.status === SubscriptionStatus.CANCELLED || subscription.status === SubscriptionStatus.EXPIRED) {
-      throw new Error('订阅已经是取消或过期状态');
-    }
-
-    if (immediate) {
-      const updatedSubscription = await subscriptionRepository.updateSubscription(
-        id,
-        {
-          status: SubscriptionStatus.CANCELLED,
-          endDate: new Date(),
-          cancelAtPeriodEnd: false,
-          metadata: { ...subscription.metadata, cancelReason: reason }
-        },
-        changedBy
-      );
-
-      return updatedSubscription!;
-    } else {
-      const updatedSubscription = await subscriptionRepository.updateSubscription(
-        id,
-        {
-          cancelAtPeriodEnd: true,
-          metadata: { ...subscription.metadata, cancelReason: reason }
-        },
-        changedBy
-      );
-
-      return updatedSubscription!;
-    }
-  }
-
-  /**
-   * 重新激活订阅
-   * @param id 订阅ID
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅状态不符合要求时
-   */
-  async reactivateSubscription(id: string, changedBy: string = 'system'): Promise<Subscription> {
-    const subscription = await this.getSubscriptionById(id);
-
-    if (subscription.status !== SubscriptionStatus.CANCELLED) {
-      throw new Error('只能重新激活已取消的订阅');
-    }
-
-    const plan = await this.getPlanById(subscription.planId);
-
-    if (!plan.isActive) {
-      throw new Error('原套餐已不可用，请选择新套餐');
-    }
-
-    const newStartDate = new Date();
-    const newNextBillingDate = this.calculateNextBillingDate(newStartDate, subscription.cycle);
-
-    const updatedSubscription = await subscriptionRepository.updateSubscription(
-      id,
-      {
-        status: SubscriptionStatus.ACTIVE,
-        startDate: newStartDate,
-        nextBillingDate: newNextBillingDate,
-        endDate: undefined,
-        cancelAtPeriodEnd: false,
-        metadata: { ...subscription.metadata, reactivatedAt: new Date() }
-      },
-      changedBy
-    );
-
-    return updatedSubscription!;
-  }
-
-  /**
-   * 升级套餐
-   * @param id 订阅ID
-   * @param newPlanId 新套餐ID
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅状态不符合要求时
-   */
-  async upgradePlan(
-    id: string,
-    newPlanId: string,
-    changedBy: string = 'system'
-  ): Promise<Subscription> {
-    const subscription = await this.getSubscriptionById(id);
-
-    if (subscription.status !== SubscriptionStatus.ACTIVE) {
-      throw new Error('只能升级活跃的订阅');
-    }
-
-    if (subscription.planId === newPlanId) {
-      throw new Error('已在该套餐中');
-    }
-
-    const newPlan = await this.getPlanById(newPlanId);
-
-    if (!newPlan.isActive) {
-      throw new Error('目标套餐已不可用');
-    }
-
-    const updatedSubscription = await subscriptionRepository.updateSubscription(
-      id,
-      {
-        planId: newPlanId,
-        planName: newPlan.name,
-        price: newPlan.price,
-        currency: newPlan.currency,
-        cycle: newPlan.cycle,
-        nextBillingDate: this.calculateNextBillingDate(new Date(), newPlan.cycle),
-        metadata: {
-          ...subscription.metadata,
-          upgradedFromPlanId: subscription.planId,
-          upgradedAt: new Date()
-        }
-      },
-      changedBy
-    );
-
-    return updatedSubscription!;
-  }
-
-  /**
-   * 处理试用结束
-   * @param id 订阅ID
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅状态不符合要求时
-   */
-  async processTrialEnd(id: string, changedBy: string = 'system'): Promise<Subscription> {
-    const subscription = await this.getSubscriptionById(id);
-
-    if (!subscription.isTrial) {
-      throw new Error('不是试用订阅');
-    }
-
-    if (subscription.status !== SubscriptionStatus.ACTIVE) {
-      throw new Error('试用订阅不是活跃状态');
-    }
-
-    if (!subscription.trialEndDate || subscription.trialEndDate > new Date()) {
-      throw new Error('试用期尚未结束');
-    }
-
-    const updatedSubscription = await subscriptionRepository.updateSubscription(
-      id,
-      {
-        isTrial: false,
-        trialEndDate: undefined,
-        nextBillingDate: this.calculateNextBillingDate(new Date(), subscription.cycle),
-        metadata: {
-          ...subscription.metadata,
-          trialEndedAt: new Date()
-        }
-      },
-      changedBy
-    );
-
-    return updatedSubscription!;
-  }
-
-  /**
-   * 处理续费
-   * @param id 订阅ID
-   * @param changedBy 修改人
-   * @returns 更新后的订阅
-   * @throws {Error} 当订阅状态不符合要求时
-   */
-  async processRenewal(id: string, changedBy: string = 'system'): Promise<Subscription> {
-    const subscription = await this.getSubscriptionById(id);
-
-    if (subscription.status !== SubscriptionStatus.ACTIVE) {
-      throw new Error('只能续费活跃的订阅');
-    }
-
-    if (!subscription.autoRenew) {
-      throw new Error('该订阅未开启自动续费');
-    }
-
-    if (subscription.cancelAtPeriodEnd) {
-      throw new Error('该订阅已设置到期取消');
-    }
-
-    const newNextBillingDate = this.calculateNextBillingDate(subscription.nextBillingDate, subscription.cycle);
-
-    const updatedSubscription = await subscriptionRepository.updateSubscription(
-      id,
-      {
-        nextBillingDate: newNextBillingDate,
-        metadata: {
-          ...subscription.metadata,
-          lastRenewedAt: new Date()
-        }
-      },
-      changedBy
-    );
-
-    return updatedSubscription!;
-  }
-
-  /**
-   * 获取订阅统计
-   * @param customerId 客户ID（可选）
-   * @returns 订阅统计数据
-   */
-  async getSubscriptionStats(customerId?: string): Promise<SubscriptionStats> {
-    const subscriptions = await subscriptionRepository.getSubscriptions(customerId ? { customerId } : {});
-
-    const stats = {
-      totalSubscriptions: subscriptions.length,
-      activeSubscriptions: subscriptions.filter(s => s.status === SubscriptionStatus.ACTIVE).length,
-      pendingSubscriptions: subscriptions.filter(s => s.status === SubscriptionStatus.PENDING).length,
-      pausedSubscriptions: subscriptions.filter(s => s.status === SubscriptionStatus.PAUSED).length,
-      cancelledSubscriptions: subscriptions.filter(s => s.status === SubscriptionStatus.CANCELLED || s.status === SubscriptionStatus.EXPIRED).length,
-      trialSubscriptions: subscriptions.filter(s => s.isTrial).length,
-      byPlan: {} as { [planId: string]: number }
-    };
-
-    subscriptions.forEach(subscription => {
-      stats.byPlan[subscription.planId] = (stats.byPlan[subscription.planId] ?? 0) + 1;
-    });
-
-    return stats;
-  }
-
-  async getUsageStats(query: UsageStatsQuery): Promise<UsageStats> {
-    const period = query.period ?? '30d';
-    const subscriptions = await subscriptionRepository.getSubscriptions({ tenantId: query.tenantId });
-    const activeSubscriptions = subscriptions.filter(s => s.status === SubscriptionStatus.ACTIVE);
-    const trialSubscriptions = subscriptions.filter(s => s.isTrial);
-    const plans = new Map<string, { planId: string; planName: string; count: number }>();
-
-    for (const subscription of subscriptions) {
-      const plan = plans.get(subscription.planId) ?? {
-        planId: subscription.planId,
-        planName: subscription.planName,
-        count: 0,
-      };
-      plan.count += 1;
-      plans.set(subscription.planId, plan);
-    }
-
-    return {
-      tenantId: query.tenantId,
-      period,
-      activeSubscriptions: activeSubscriptions.length,
-      trialSubscriptions: trialSubscriptions.length,
-      estimatedMonthlySpend: activeSubscriptions.reduce((sum, sub) => sum + sub.price, 0),
-      plans: [...plans.values()],
-    };
+  async getHistory(id: string): Promise<SubscriptionHistoryRecord[]> {
+    await this.getSubscription(id);
+    return this.repo.getHistory(id);
   }
 }
-
-// 导出单例实例
-export const subscriptionService = new SubscriptionService();

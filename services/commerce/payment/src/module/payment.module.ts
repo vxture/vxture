@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { VxConfigModule, VxConfigService } from '@vxture/core-config';
 import { Pool } from 'pg';
-import { SUPPORT_PG_POOL } from '../tokens';
-import { PgTicketRepository } from '../repository/pg-ticket.repository';
-import { TicketService } from '../service/ticket.service';
+import { COMMERCE_PG_POOL } from '../tokens';
+import { PgPaymentRepository } from '../repository/pg-payment.repository';
+import { PaymentService } from '../service/payment.service';
 
 @Module({
   imports: [VxConfigModule.register({ domains: ['database'] })],
   providers: [
     {
-      provide: SUPPORT_PG_POOL,
+      provide: COMMERCE_PG_POOL,
       inject: [VxConfigService],
       useFactory: (config: VxConfigService) => {
         const db = config.database;
@@ -28,9 +28,9 @@ import { TicketService } from '../service/ticket.service';
         );
       },
     },
-    PgTicketRepository,
-    TicketService,
+    PgPaymentRepository,
+    PaymentService,
   ],
-  exports: [TicketService],
+  exports: [PaymentService],
 })
-export class TicketModule {}
+export class PaymentModule {}
