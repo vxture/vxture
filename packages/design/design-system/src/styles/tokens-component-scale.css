@@ -1,5 +1,5 @@
 /**
- * tokens-component-scale.css - 组件域历史尺度语义桥接入口。
+ * tokens-component-scale.css - 组件域历史尺度语义桥接 token。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
@@ -7,5 +7,12 @@
  * @date 2026-05-15
  */
 
-@import "./tokens-component-scale-core.css";
-@import "./tokens-component-fullscreen-scale.css";
+:root {
+  /* 组件域尺度桥接：供 components-* / fullscreen 等 DS 基础样式使用。 */
+  --vx-component-scale-100vh: var(--vx-scale-100vh);
+  --vx-component-scale-100vw: var(--vx-scale-100vw);
+
+  /* component fullscreen 域只暴露该场景的尺度组装，避免具体样式直接消费 component 总桥接。 */
+  --vx-component-fullscreen-scale-100vh: var(--vx-component-scale-100vh);
+  --vx-component-fullscreen-scale-100vw: var(--vx-component-scale-100vw);
+}

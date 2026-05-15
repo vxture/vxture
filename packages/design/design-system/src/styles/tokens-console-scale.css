@@ -1,5 +1,5 @@
 /**
- * tokens-console-scale.css - Console 域历史尺度语义桥接入口。
+ * tokens-console-scale.css - Console 域历史尺度语义桥接 token。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
@@ -7,9 +7,34 @@
  * @date 2026-05-15
  */
 
-@import "./tokens-console-scale-core.css";
-@import "./tokens-console-assistant-scale.css";
-@import "./tokens-console-common-scale.css";
-@import "./tokens-console-responsive-scale.css";
-@import "./tokens-console-shell-scale.css";
-@import "./tokens-console-tenant-switcher-scale.css";
+:root {
+  /* Console 域尺度桥接：供 console-* 样式使用，后续继续提升为组件级 console token。 */
+  --vx-console-scale-1-1vw: var(--vx-scale-1-1vw);
+  --vx-console-scale-2-4vw: var(--vx-scale-2-4vw);
+  --vx-console-scale-32vw: var(--vx-scale-32vw);
+  --vx-console-scale-42vw: var(--vx-scale-42vw);
+  --vx-console-scale-100dvh: var(--vx-scale-100dvh);
+  --vx-console-scale-100vh: var(--vx-scale-100vh);
+  --vx-console-scale-100vw: var(--vx-scale-100vw);
+
+  /* console assistant 域只暴露该场景的尺度组装，避免具体样式直接消费 console 总桥接。 */
+  --vx-console-assistant-scale-100dvh: var(--vx-console-scale-100dvh);
+
+  /* console common 域只暴露该场景的尺度组装，避免具体样式直接消费 console 总桥接。 */
+  --vx-console-common-scale-100vh: var(--vx-console-scale-100vh);
+
+  /* console responsive 域只暴露该场景的尺度组装，避免具体样式直接消费 console 总桥接。 */
+  --vx-console-responsive-scale-100dvh: var(--vx-console-scale-100dvh);
+
+  /* console shell 域只暴露该场景的尺度组装，避免具体样式直接消费 console 总桥接。 */
+  --vx-console-shell-scale-1-1vw: var(--vx-console-scale-1-1vw);
+  --vx-console-shell-scale-100dvh: var(--vx-console-scale-100dvh);
+  --vx-console-shell-scale-100vh: var(--vx-console-scale-100vh);
+  --vx-console-shell-scale-2-4vw: var(--vx-console-scale-2-4vw);
+  --vx-console-shell-scale-42vw: var(--vx-console-scale-42vw);
+
+  /* console tenant-switcher 域只暴露该场景的尺度组装，避免具体样式直接消费 console 总桥接。 */
+  --vx-console-tenant-switcher-scale-100vh: var(--vx-console-scale-100vh);
+  --vx-console-tenant-switcher-scale-100vw: var(--vx-console-scale-100vw);
+  --vx-console-tenant-switcher-scale-32vw: var(--vx-console-scale-32vw);
+}

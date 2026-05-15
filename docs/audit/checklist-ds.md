@@ -565,6 +565,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 25. 已完成：Platform layout / common 语义 token 融合；页面容器、标题区、摘要条、设置分栏、卡片/操作列表、Console shell 绑定、平台 core、brand hero、data table 与共享响应式覆盖已提升到 `--vx-layout-*` 与 `--vx-platform-*` 共享语义 token。新增 `ds/no-ds-style-platform-layout-subdomain-scale-usage`、`ds/no-ds-style-platform-common-subdomain-scale-usage`，锁定 layout / common 子域不得回退；Platform 子域 scale 直连剩余重点收敛到 `account`。
 26. 已完成：Platform account 语义 token 融合；账号资料页、组织资料、头像/Logo、资料字段、外部账号绑定、资料弹窗和头像编辑器已提升到 `--vx-account-profile-*`、`--vx-profile-*`、`--vx-organization-*`、`--vx-account-connected-*` 语义 token。新增 `ds/no-ds-style-platform-account-subdomain-scale-usage`，锁定 account 子域不得回退；至此 Platform 具体样式层不再直接消费各子域 scale token。
 27. 已完成：Platform 语义 token 收尾质量巡检；新增语义 token 无重复声明、无未消费声明、无自引用变量，所有 `tokens-platform-*-semantics.css` 文件均低于 8KB。`--vx-account-profile-title-size` 已从 common 边界移回 account profile 语义文件，保持 token ownership 与业务域一致。
+28. 已完成：DS 结构融合第一批；在不突破 8KB 叶子上限、不改变公开入口的前提下，`platform-models-shell.css` 回收模型页 shell layout / controls 两个机械拆分文件，`tokens-component-scale.css` 与 `tokens-console-scale.css` 回收各自小型 scale 子文件。DS 样式文件数从 191 降到 181，`pnpm lint:design` 与 `pnpm --filter @vxture/design-system build` 通过。
 
 ## 后续验收清单
 
