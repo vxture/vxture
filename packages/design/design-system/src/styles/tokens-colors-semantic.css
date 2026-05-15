@@ -1,0 +1,103 @@
+/**
+ * tokens-colors-semantic.css - 应用消费的语义颜色 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* 语义颜色：应用只能消费这些语义值。 */
+  --vx-color-background: var(--vx-color-brand-50);
+  --vx-color-foreground: var(--vx-color-gray-900);
+  --vx-color-page: var(--vx-color-white);
+  --vx-color-surface: var(--vx-color-white);
+  --vx-color-surface-muted: var(--vx-color-gray-50);
+  --vx-color-surface-soft: #fbfcfe;
+  --vx-color-surface-raised: var(--vx-color-white);
+  --vx-color-border: rgba(30, 64, 175, 0.1);
+  --vx-color-border-muted: rgba(15, 23, 42, 0.07);
+  --vx-color-border-strong: rgba(37, 99, 235, 0.32);
+  --vx-color-ring: rgba(37, 99, 235, 0.12);
+  --vx-color-ring-strong: rgba(37, 99, 235, 0.55);
+  --vx-color-overlay: rgba(15, 23, 42, 0.46);
+
+  --vx-color-primary: var(--vx-color-brand-600);
+  --vx-color-primary-hover: var(--vx-color-brand-700);
+  --vx-color-primary-strong: var(--vx-color-brand-700);
+  --vx-color-primary-soft: var(--vx-color-brand-100);
+  --vx-color-primary-subtle: rgba(37, 99, 235, 0.08);
+
+  --vx-color-text-primary: var(--vx-color-gray-900);
+  --vx-color-text-secondary: var(--vx-color-gray-700);
+  --vx-color-text-muted: var(--vx-color-gray-500);
+  --vx-color-text-disabled: var(--vx-color-gray-400);
+  --vx-color-text-inverse: var(--vx-color-white);
+  --vx-color-text-strong: var(--vx-color-brand-950);
+
+  --vx-color-success: var(--vx-color-success-600);
+  --vx-color-success-foreground: var(--vx-color-success-700);
+  --vx-color-success-surface: var(--vx-color-success-50);
+  --vx-color-success-border: var(--vx-color-success-300);
+  --vx-color-warning: var(--vx-color-warning-500);
+  --vx-color-warning-foreground: var(--vx-color-warning-800);
+  --vx-color-warning-surface: var(--vx-color-warning-50);
+  --vx-color-warning-border: var(--vx-color-warning-200);
+  --vx-color-danger: var(--vx-color-danger-600);
+  --vx-color-danger-foreground: var(--vx-color-danger-700);
+  --vx-color-danger-surface: var(--vx-color-danger-50);
+  --vx-color-danger-border: var(--vx-color-danger-300);
+  --vx-color-error: var(--vx-color-error-500);
+  --vx-color-error-foreground: var(--vx-color-error-800);
+  --vx-color-error-surface: var(--vx-color-error-50);
+  --vx-color-error-border: var(--vx-color-error-300);
+  --vx-color-info: var(--vx-color-info-600);
+  --vx-color-info-foreground: var(--vx-color-info-700);
+  --vx-color-info-surface: var(--vx-color-info-100);
+  --vx-color-info-border: var(--vx-color-info-300);
+  --vx-color-teal: var(--vx-color-teal-600);
+  --vx-color-teal-foreground: var(--vx-color-teal-700);
+  --vx-color-teal-surface: color-mix(in srgb, var(--vx-color-teal-500) 12%, transparent);
+  --vx-color-neutral-surface: color-mix(in srgb, var(--vx-color-gray-500) 10%, transparent);
+  --vx-color-neutral-border: color-mix(in srgb, var(--vx-color-gray-500) 16%, transparent);
+
+  --vx-color-auth-background: #cde4f5;
+  --vx-color-auth-text: var(--vx-color-gray-900);
+  --vx-color-auth-secondary: #4a5a7a;
+  --vx-color-auth-muted: var(--vx-color-gray-400);
+  --vx-color-auth-accent: #2563eb;
+  --vx-color-auth-accent-light: #3b82f6;
+  --vx-color-auth-border: rgba(37, 99, 235, 0.12);
+  --vx-color-auth-border-active: rgba(37, 99, 235, 0.55);
+  --vx-color-auth-card: var(--vx-color-white);
+  --vx-color-auth-card-soft: #f8faff;
+  --vx-color-auth-visual-bg: linear-gradient(145deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  --vx-color-auth-node-rgb: 147 197 253;
+  --vx-color-auth-visual-grid: rgba(255, 255, 255, 0.06);
+  --vx-color-auth-visual-panel: rgba(15, 23, 42, 0.22);
+  --vx-color-auth-visual-text: var(--vx-color-white);
+  --vx-color-auth-visual-text-muted: rgba(255, 255, 255, 0.76);
+
+  --vx-color-shell-bg: #f5f7fb;
+  --vx-color-shell-surface: var(--vx-color-white);
+  --vx-color-shell-surface-muted: #fbfcfe;
+  --vx-color-shell-border: rgba(15, 23, 42, 0.07);
+  --vx-color-shell-text: #162033;
+  --vx-color-shell-muted: #6b7a90;
+  --vx-color-shell-brand: #2f6fed;
+  --vx-color-shell-ink: var(--vx-color-brand-950);
+  --vx-color-shell-subtle: #93a0b4;
+  --vx-color-shell-icon: #5f7088;
+  --vx-color-shell-icon-muted: #8a9ab0;
+  --vx-color-shell-panel: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  --vx-color-shell-panel-strong: color-mix(in srgb, var(--vx-color-white) 96%, transparent);
+  --vx-color-shell-panel-soft: color-mix(in srgb, var(--vx-color-white) 74%, transparent);
+  --vx-color-shell-glass: color-mix(in srgb, var(--vx-color-brand-50) 92%, transparent);
+  --vx-color-shell-hover: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  --vx-color-shell-line-soft: color-mix(in srgb, var(--vx-color-brand-800) 8%, transparent);
+  --vx-color-shell-divider: color-mix(in srgb, var(--vx-color-gray-500) 32%, transparent);
+  --vx-color-shell-focus-ring: color-mix(in srgb, var(--vx-color-auth-accent-light) 20%, transparent);
+  --vx-color-scrollbar: color-mix(in srgb, var(--vx-color-shell-muted) 28%, transparent);
+  --vx-color-scrollbar-hover: color-mix(in srgb, var(--vx-color-shell-muted) 44%, transparent);
+}

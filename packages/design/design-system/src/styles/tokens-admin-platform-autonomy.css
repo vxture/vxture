@@ -1,0 +1,44 @@
+/**
+ * tokens-admin-platform-autonomy.css - Admin Platform Autonomy 语义尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  --vx-admin-platform-autonomy-page-max-width: var(--vx-admin-directory-row-max-width);
+  --vx-admin-platform-autonomy-gap-xs: var(--vx-component-metric-0125r);
+  --vx-admin-platform-autonomy-gap-sm: var(--vx-component-metric-025r);
+  --vx-admin-platform-autonomy-gap-md: var(--vx-component-metric-05r);
+  --vx-admin-platform-autonomy-gap-lg: var(--vx-component-metric-075r);
+  --vx-admin-platform-autonomy-gap-xl: var(--vx-component-metric-0875r);
+  --vx-admin-platform-autonomy-gap-2xl: var(--vx-component-metric-1r);
+  --vx-admin-platform-autonomy-border-width: var(--vx-component-metric-1p);
+  --vx-admin-platform-autonomy-card-grid: var(--vx-component-metric-25r) minmax(0, 1fr);
+  --vx-admin-platform-autonomy-card-padding: var(--vx-component-metric-1r);
+  --vx-admin-platform-autonomy-icon-size: var(--vx-component-metric-25r);
+  --vx-admin-platform-autonomy-text-caption: var(--vx-component-metric-075r);
+  --vx-admin-platform-autonomy-text-body: var(--vx-component-metric-08125r);
+  --vx-admin-platform-autonomy-text-title: var(--vx-component-metric-09375r);
+  --vx-admin-platform-autonomy-text-metric: var(--vx-component-metric-15r);
+  --vx-admin-platform-autonomy-text-value: var(--vx-component-metric-125r);
+  --vx-admin-platform-autonomy-line-caption: var(--vx-component-metric-1r);
+  --vx-admin-platform-autonomy-line-body: var(--vx-component-metric-125r);
+  --vx-admin-platform-autonomy-line-link: var(--vx-component-metric-1125r);
+  --vx-admin-platform-autonomy-line-metric: var(--vx-component-metric-2r);
+  --vx-admin-platform-autonomy-line-value: var(--vx-component-metric-15r);
+  --vx-admin-platform-autonomy-link-min-height: var(--vx-component-metric-3r);
+  --vx-admin-platform-autonomy-link-grid: minmax(0, 1fr) var(--vx-component-metric-125r);
+  --vx-admin-platform-autonomy-link-padding-y: var(--vx-component-metric-0625r);
+  --vx-admin-platform-autonomy-link-padding-x: var(--vx-component-metric-075r);
+  --vx-admin-platform-autonomy-grid-aside-min-width: var(--vx-component-metric-18r-large);
+  --vx-admin-platform-autonomy-resource-min-width: var(--vx-component-metric-46r);
+  --vx-admin-platform-autonomy-resource-grid: minmax(var(--vx-component-metric-6r), 0.7fr) minmax(var(--vx-component-metric-8r), 0.8fr) minmax(var(--vx-component-metric-10r), 1fr) minmax(var(--vx-admin-grid-column-xs), 0.65fr) minmax(var(--vx-admin-grid-column-xs), 0.65fr) minmax(var(--vx-component-metric-5r), 0.45fr);
+  --vx-admin-platform-autonomy-resource-padding-x: var(--vx-component-metric-075r);
+  --vx-admin-platform-autonomy-resource-header-min-height: var(--vx-component-metric-25r);
+  --vx-admin-platform-autonomy-resource-row-min-height: var(--vx-component-metric-325r);
+  --vx-admin-platform-autonomy-risk-min-height: var(--vx-component-metric-35r);
+  --vx-admin-platform-autonomy-risk-value-min-width: var(--vx-component-metric-175r);
+}

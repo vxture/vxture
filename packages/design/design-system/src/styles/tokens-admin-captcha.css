@@ -1,0 +1,52 @@
+/**
+ * tokens-admin-captcha.css - Admin 人机验证和浮动助手基础尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* 平台布局语义尺寸：Portal Shell 和高密列表优先消费的契约。 */
+  --vx-admin-floating-assistant-width: min(var(--vx-shell-assistant-width, 420px), calc(100dvw - var(--vx-component-metric-2r)));
+  --vx-admin-floating-assistant-min-width: min(var(--vx-component-metric-380p), calc(100dvw - var(--vx-component-metric-2r)));
+  --vx-admin-captcha-modal-panel-width: min(25rem, 100%);
+  --vx-admin-captcha-gap: var(--vx-component-metric-1r);
+  --vx-admin-captcha-modal-padding: var(--vx-component-metric-15r);
+  --vx-admin-captcha-modal-backdrop-blur: var(--vx-component-metric-8p);
+  --vx-admin-captcha-panel-gap: var(--vx-component-metric-125r);
+  --vx-admin-captcha-panel-padding: var(--vx-component-metric-135r);
+  --vx-admin-captcha-panel-border-width: var(--vx-component-metric-1p);
+  --vx-admin-captcha-border-width: var(--vx-component-metric-1p);
+  --vx-admin-captcha-panel-shadow-y: var(--vx-component-metric-24p);
+  --vx-admin-captcha-panel-shadow-blur: var(--vx-component-metric-70p);
+  --vx-admin-captcha-header-gap: var(--vx-component-metric-035r);
+  --vx-admin-captcha-header-padding-end: var(--vx-component-metric-2r);
+  --vx-admin-captcha-title-size: var(--vx-component-metric-098r);
+  --vx-admin-captcha-copy-size: var(--vx-component-metric-078r);
+  --vx-admin-captcha-close-offset: var(--vx-component-metric-09r);
+  --vx-admin-captcha-close-size: var(--vx-component-metric-175r);
+  --vx-admin-captcha-close-glyph-size: var(--vx-component-metric-11r);
+  --vx-admin-captcha-image-height: var(--vx-component-metric-875r);
+  --vx-admin-captcha-image-border-width: var(--vx-component-metric-1p);
+  --vx-admin-captcha-image-radius: var(--vx-component-metric-10p);
+  --vx-admin-captcha-surface-highlight-width: var(--vx-component-metric-1p);
+  --vx-admin-captcha-slider-height: var(--vx-component-metric-2875r);
+  --vx-admin-captcha-target-top: var(--vx-component-metric-3r);
+  --vx-admin-captcha-piece-size: var(--vx-component-metric-42p);
+  --vx-admin-captcha-piece-cutout: var(--vx-component-metric-036r);
+  --vx-admin-captcha-piece-offset-y: var(--vx-component-metric-21p);
+  --vx-admin-captcha-piece-shadow-y: var(--vx-component-metric-075r);
+  --vx-admin-captcha-piece-shadow-blur: var(--vx-component-metric-15r);
+  --vx-admin-captcha-handle-width: var(--vx-component-metric-2625r);
+  --vx-admin-captcha-handle-height: var(--vx-component-metric-275r);
+  --vx-admin-captcha-handle-shadow-y: var(--vx-component-metric-6p);
+  --vx-admin-captcha-handle-shadow-blur: var(--vx-component-metric-16p);
+  --vx-admin-captcha-handle-glyph-size: var(--vx-component-metric-072r);
+  --vx-admin-captcha-handle-glyph-border-width: var(--vx-component-metric-2p);
+  --vx-admin-captcha-return-duration: 220ms;
+  --vx-admin-captcha-status-cutout-size: var(--vx-admin-status-cutout-size);
+  --vx-admin-captcha-pattern-cutout: var(--vx-component-metric-028r);
+  --vx-admin-captcha-pattern-dot-size: var(--vx-admin-pattern-dot-size);
+}

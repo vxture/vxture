@@ -1,0 +1,71 @@
+/**
+ * tokens-density.css - 密度覆盖 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+/* ============================================
+   密度：紧凑（0.875x）
+   ============================================ */
+.density-compact {
+  /* 间距：紧凑 */
+  --vx-space-xs: 3.5px;
+  --vx-space-sm: 7px;
+  --vx-space-md: 10.5px;
+  --vx-space-lg: 14px;
+  --vx-space-xl: 21px;
+  --vx-space-2xl: 28px;
+
+  /* 字号：紧凑 */
+  --vx-font-size-xs: 10.5px;
+  --vx-font-size-sm: 12.25px;
+  --vx-font-size-md: 14px;
+  --vx-font-size-lg: 15.75px;
+  --vx-font-size-xl: 17.5px;
+  --vx-font-size-2xl: 21px;
+}
+
+/* ============================================
+   密度：默认（1x）
+   ============================================ */
+.density-default {
+  /* 间距：默认 */
+  --vx-space-xs: 4px;
+  --vx-space-sm: 8px;
+  --vx-space-md: 12px;
+  --vx-space-lg: 16px;
+  --vx-space-xl: 24px;
+  --vx-space-2xl: 32px;
+
+  /* 字号：默认 */
+  --vx-font-size-xs: 12px;
+  --vx-font-size-sm: 14px;
+  --vx-font-size-md: 16px;
+  --vx-font-size-lg: 18px;
+  --vx-font-size-xl: 20px;
+  --vx-font-size-2xl: 24px;
+}
+
+/* ============================================
+   密度：舒适（1.125x）
+   ============================================ */
+.density-comfortable {
+  /* 间距：舒适 */
+  --vx-space-xs: 4.5px;
+  --vx-space-sm: 9px;
+  --vx-space-md: 13.5px;
+  --vx-space-lg: 18px;
+  --vx-space-xl: 27px;
+  --vx-space-2xl: 36px;
+
+  /* 字号：舒适 */
+  --vx-font-size-xs: 13.5px;
+  --vx-font-size-sm: 15.75px;
+  --vx-font-size-md: 18px;
+  --vx-font-size-lg: 20.25px;
+  --vx-font-size-xl: 22.5px;
+  --vx-font-size-2xl: 27px;
+}

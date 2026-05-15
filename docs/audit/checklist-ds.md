@@ -536,6 +536,13 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 5. 已确认：`pnpm lint:design` 通过，`design-system-baseline.json` 为空 baseline。
 6. 已完成：`business/ruyin` 和 `agent-studio/agent-template` 已接入真实 lint，DS 消费者质量门禁进入新增消费者巡检。
 
+## 第二阶段补充记录（2026-05-15）
+
+1. 已完成：`styles/tokens.css` 从单体运行时值源拆为稳定 import-only 入口，具体值按 `tokens-theme`、`tokens-colors-*`、`tokens-foundation`、`tokens-component-*`、`tokens-platform-*`、`tokens-admin-*`、`tokens-console-*`、`tokens-agent-studio`、`tokens-website`、`tokens-dark`、`tokens-density` 分层维护。
+2. 已完成：所有 `tokens-*` 运行时 token 模块低于 8KB，`tokens.css` 只保留公共入口职责，继续通过 `@vxture/design-system/styles/tokens.css` 对外暴露。
+3. 已完成：`pnpm lint:design` 增加 `ds/no-large-token-style-leaf`，防止新的 token 模块重新膨胀；`tokens-*` 被识别为 DS token owner，允许维护运行时 token 值。
+4. 分层边界：DS 只沉淀 token、基础组件语义类、跨应用 pattern 和 portal style pack；应用侧只组合业务场景，不定义 `--vx-*`、不直接消费底层 UI 引擎、不直接引用 DS 内部 `tokens-*` 文件。
+
 ## 后续验收清单
 
 - `pnpm lint:design` 扫描所有前端工作区并通过。

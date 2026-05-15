@@ -1,0 +1,38 @@
+/**
+ * tokens-foundation.css - 圆角、间距、阴影和字号基础 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  /* 圆角 */
+  --vx-radius-sm: 4px;
+  --vx-radius-md: 6px;
+  --vx-radius-lg: 8px;
+  --vx-radius-xl: 12px;
+  --vx-radius-full: 9999px;
+
+  /* 间距：默认密度。 */
+  --vx-space-xs: 4px;
+  --vx-space-sm: 8px;
+  --vx-space-md: 12px;
+  --vx-space-lg: 16px;
+  --vx-space-xl: 24px;
+  --vx-space-2xl: 32px;
+
+  /* 阴影 */
+  --vx-shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --vx-shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --vx-shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+
+  /* 字号：默认密度。 */
+  --vx-font-size-xs: 12px;
+  --vx-font-size-sm: 14px;
+  --vx-font-size-md: 16px;
+  --vx-font-size-lg: 18px;
+  --vx-font-size-xl: 20px;
+  --vx-font-size-2xl: 24px;
+}

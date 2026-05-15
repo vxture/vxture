@@ -1,0 +1,86 @@
+/**
+ * tokens-admin-assistant-workspace.css - Admin Assistant 和工作区切换器语义尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+:root {
+  --vx-admin-assistant-floating-width: var(--vx-admin-floating-assistant-width);
+  --vx-admin-assistant-floating-min-width: var(--vx-admin-floating-assistant-min-width);
+  --vx-admin-assistant-floating-viewport-gap: var(--vx-component-metric-2r);
+  --vx-admin-assistant-floating-mobile-viewport-gap: var(--vx-component-metric-1r);
+  --vx-admin-assistant-floating-offset: var(--vx-component-metric-1r);
+  --vx-admin-assistant-floating-mobile-offset: var(--vx-component-metric-05r);
+  --vx-admin-assistant-space-3xs: var(--vx-component-metric-0125r);
+  --vx-admin-assistant-space-2xs: var(--vx-component-metric-015r);
+  --vx-admin-assistant-space-xs: var(--vx-component-metric-02r);
+  --vx-admin-assistant-space-sm: var(--vx-component-metric-025r);
+  --vx-admin-assistant-space-md: var(--vx-component-metric-035r);
+  --vx-admin-assistant-space-lg: var(--vx-component-metric-0375r);
+  --vx-admin-assistant-space-xl: var(--vx-component-metric-04r);
+  --vx-admin-assistant-space-2xl: var(--vx-component-metric-045r);
+  --vx-admin-assistant-space-3xl: var(--vx-component-metric-05r);
+  --vx-admin-assistant-space-4xl: var(--vx-component-metric-055r);
+  --vx-admin-assistant-space-5xl: var(--vx-component-metric-062r);
+  --vx-admin-assistant-space-6xl: var(--vx-component-metric-0625r);
+  --vx-admin-assistant-space-panel: var(--vx-component-metric-075r);
+  --vx-admin-assistant-space-panel-lg: var(--vx-component-metric-1r);
+  --vx-admin-assistant-control-size-sm: var(--vx-component-metric-1875r);
+  --vx-admin-assistant-control-size-md: var(--vx-component-metric-2r);
+  --vx-admin-assistant-loader-size: var(--vx-component-metric-1r);
+  --vx-admin-assistant-composer-min-height: var(--vx-component-metric-5r);
+  --vx-admin-assistant-input-max-height: var(--vx-component-metric-10r);
+  --vx-admin-assistant-stop-size: var(--vx-component-metric-048r);
+  --vx-admin-assistant-copy-max-width: var(--vx-component-metric-26r);
+  --vx-admin-assistant-suggestions-max-width: var(--vx-component-metric-28r-large);
+  --vx-admin-assistant-track-suggestion-index: var(--vx-component-metric-115r);
+  --vx-admin-assistant-track-composer-actions: var(--vx-component-metric-2r);
+  --vx-admin-assistant-border-width: var(--vx-component-metric-1p);
+  --vx-admin-assistant-border-width-strong: var(--vx-component-metric-2p);
+  --vx-admin-assistant-radius-panel: var(--vx-component-metric-1r);
+  --vx-admin-assistant-radius-control: var(--vx-component-metric-075r);
+  --vx-admin-assistant-radius-stop: var(--vx-component-metric-012r);
+  --vx-admin-assistant-text-counter: var(--vx-component-metric-068r);
+  --vx-admin-assistant-text-caption: var(--vx-component-metric-075r);
+  --vx-admin-assistant-text-copy: var(--vx-component-metric-08125r);
+  --vx-admin-assistant-text-body: var(--vx-component-metric-0875r);
+  --vx-admin-assistant-text-title: var(--vx-component-metric-095r);
+  --vx-admin-assistant-effect-hairline: var(--vx-component-metric-1p);
+  --vx-admin-assistant-effect-focus-ring: var(--vx-component-metric-2p);
+  --vx-admin-assistant-effect-sm: var(--vx-component-metric-8p);
+  --vx-admin-assistant-effect-md: var(--vx-component-metric-18p);
+  --vx-admin-assistant-effect-lg: var(--vx-component-metric-24p);
+  --vx-admin-assistant-effect-xl: var(--vx-component-metric-48p);
+  --vx-admin-assistant-shadow-spread: calc(var(--vx-component-metric-24p) * -1);
+  --vx-admin-assistant-hidden-offset: var(--vx-component-metric-035r);
+  --vx-admin-assistant-press-offset: var(--vx-component-metric-1p);
+  --vx-admin-workspace-switcher-header-min-height: var(--vx-component-metric-225r);
+  --vx-admin-workspace-switcher-header-padding-bottom: var(--vx-component-metric-1r);
+  --vx-admin-workspace-switcher-header-title-size: var(--vx-component-metric-08125r);
+  --vx-admin-workspace-switcher-header-title-line: var(--vx-component-metric-1125r);
+  --vx-admin-workspace-switcher-list-gap: var(--vx-component-metric-0875r);
+  --vx-admin-workspace-switcher-item-min-height: var(--vx-component-metric-5r);
+  --vx-admin-workspace-switcher-item-gap: var(--vx-component-metric-0875r);
+  --vx-admin-workspace-switcher-item-padding-y: var(--vx-component-metric-0875r);
+  --vx-admin-workspace-switcher-item-padding-x: var(--vx-component-metric-1r);
+  --vx-admin-workspace-switcher-item-padding-start: var(--vx-component-metric-15r);
+  --vx-admin-workspace-switcher-item-border-width: var(--vx-component-metric-1p);
+  --vx-admin-workspace-switcher-item-radius: var(--vx-component-metric-1r);
+  --vx-admin-workspace-switcher-item-highlight-width: var(--vx-component-metric-1p);
+  --vx-admin-workspace-switcher-item-shadow-y: var(--vx-component-metric-10p);
+  --vx-admin-workspace-switcher-item-shadow-blur: var(--vx-component-metric-22p);
+  --vx-admin-workspace-switcher-item-shadow-spread: var(--vx-admin-shadow-spread-xs);
+  --vx-admin-workspace-switcher-item-hover-shadow-y: var(--vx-component-metric-18p);
+  --vx-admin-workspace-switcher-item-hover-shadow-blur: var(--vx-admin-shadow-blur-current);
+  --vx-admin-workspace-switcher-item-hover-shadow-spread: var(--vx-admin-shadow-spread-md);
+  --vx-admin-workspace-switcher-item-dark-shadow-blur: var(--vx-component-metric-24p);
+  --vx-admin-workspace-switcher-item-dark-shadow-spread: var(--vx-admin-shadow-spread-sm);
+  --vx-admin-workspace-switcher-item-hover-translate: var(--vx-component-metric-2p);
+  --vx-admin-workspace-switcher-icon-size: var(--vx-component-metric-325r);
+  --vx-admin-workspace-switcher-icon-glyph-size: var(--vx-component-metric-175r);
+  --vx-admin-workspace-switcher-copy-title-size: var(--vx-component-metric-09375r);
+  --vx-admin-workspace-switcher-copy-title-line: var(--vx-component-metric-1375r);
+}

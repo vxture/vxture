@@ -1,0 +1,96 @@
+/**
+ * tokens-dark.css - 暗色主题覆盖 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-15
+ */
+
+.dark {
+  color-scheme: dark;
+
+  --vx-color-background: #020617;
+  --vx-color-foreground: var(--vx-color-gray-50);
+  --vx-color-page: #020617;
+  --vx-color-surface: #0f172a;
+  --vx-color-surface-muted: #101d31;
+  --vx-color-surface-soft: #0d1728;
+  --vx-color-surface-raised: #111827;
+  --vx-color-border: rgba(148, 163, 184, 0.16);
+  --vx-color-border-muted: rgba(148, 163, 184, 0.14);
+  --vx-color-border-strong: rgba(96, 165, 250, 0.35);
+  --vx-color-ring: rgba(96, 165, 250, 0.18);
+  --vx-color-ring-strong: rgba(96, 165, 250, 0.42);
+  --vx-color-overlay: rgba(2, 6, 23, 0.62);
+
+  --vx-color-primary: #60a5fa;
+  --vx-color-primary-hover: #93c5fd;
+  --vx-color-primary-strong: #93c5fd;
+  --vx-color-primary-soft: rgba(96, 165, 250, 0.14);
+  --vx-color-primary-subtle: rgba(96, 165, 250, 0.13);
+
+  --vx-color-text-primary: #e6edf7;
+  --vx-color-text-secondary: #cbd5e1;
+  --vx-color-text-muted: #95a3b8;
+  --vx-color-text-disabled: #64748b;
+  --vx-color-text-inverse: #020617;
+
+  --vx-color-auth-background: #0f172a;
+  --vx-color-auth-text: #e2e8f0;
+  --vx-color-auth-secondary: #cbd5e1;
+  --vx-color-auth-muted: #94a3b8;
+  --vx-color-auth-card: rgba(15, 23, 42, 0.94);
+  --vx-color-auth-card-soft: rgba(15, 23, 42, 0.38);
+
+  --vx-color-shell-bg: #07101f;
+  --vx-color-shell-surface: #0d1728;
+  --vx-color-shell-surface-muted: #101d31;
+  --vx-color-shell-border: rgba(148, 163, 184, 0.16);
+  --vx-color-shell-text: #e6edf7;
+  --vx-color-shell-muted: #95a3b8;
+  --vx-color-shell-brand: #60a5fa;
+  --vx-color-shell-ink: var(--vx-color-brand-200);
+  --vx-color-shell-subtle: #9badc4;
+  --vx-color-shell-icon: var(--vx-color-gray-300);
+  --vx-color-shell-icon-muted: var(--vx-color-gray-400);
+  --vx-color-shell-panel: color-mix(in srgb, var(--vx-color-gray-900) 48%, transparent);
+  --vx-color-shell-panel-strong: color-mix(in srgb, var(--vx-color-gray-900) 66%, transparent);
+  --vx-color-shell-panel-soft: color-mix(in srgb, var(--vx-color-gray-900) 42%, transparent);
+  --vx-color-shell-glass: color-mix(in srgb, var(--vx-color-background) 90%, transparent);
+  --vx-color-shell-hover: color-mix(in srgb, var(--vx-color-primary) 10%, transparent);
+  --vx-color-shell-line-soft: color-mix(in srgb, var(--vx-color-brand-800) 16%, transparent);
+  --vx-color-shell-divider: color-mix(in srgb, var(--vx-color-gray-500) 32%, transparent);
+  --vx-color-shell-focus-ring: color-mix(in srgb, var(--vx-color-primary) 22%, transparent);
+  --vx-color-scrollbar: color-mix(in srgb, var(--vx-color-shell-muted) 28%, transparent);
+  --vx-color-scrollbar-hover: color-mix(in srgb, var(--vx-color-shell-muted) 44%, transparent);
+
+  --vx-console-bg: var(--vx-color-shell-bg);
+  --vx-console-surface: var(--vx-color-shell-surface);
+  --vx-console-surface-muted: var(--vx-color-shell-surface-muted);
+  --vx-console-border: var(--vx-color-shell-border);
+  --vx-console-text: var(--vx-color-shell-text);
+  --vx-console-muted: var(--vx-color-shell-muted);
+  --vx-console-brand: var(--vx-color-shell-brand);
+  --vx-console-brand-strong: var(--vx-color-primary-strong);
+  --vx-console-brand-soft: var(--vx-color-primary-soft);
+  --vx-console-cyan: var(--vx-color-cyan-100);
+  --vx-console-shadow: 0 18px 44px color-mix(in srgb, var(--vx-color-black) 35%, transparent);
+  --vx-console-shadow-soft: 0 10px 26px color-mix(in srgb, var(--vx-color-black) 28%, transparent);
+
+  --vx-color-section-page-bg: #020617;
+  --vx-color-section-odd-bg: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --vx-color-section-even-bg: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  --vx-color-section-border: rgba(71, 85, 105, 0.72);
+  --vx-page-bg: var(--vx-color-section-page-bg);
+  --vx-section-odd-bg: var(--vx-color-section-odd-bg);
+  --vx-section-even-bg: var(--vx-color-section-even-bg);
+  --vx-section-border: var(--vx-color-section-border);
+
+  --vx-color-hero-bg: linear-gradient(145deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%);
+  --vx-color-hero-grid: rgba(255, 255, 255, 0.04);
+  --vx-color-hero-node-rgb: 147 197 253;
+  --vx-color-hero-line-rgb: 147 197 253;
+  --vx-color-hero-scan: rgba(147, 197, 253, 0.45);
+  --vx-color-hero-fade: rgba(15, 23, 42, 0.52);
+}

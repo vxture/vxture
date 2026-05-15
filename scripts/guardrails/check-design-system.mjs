@@ -33,6 +33,7 @@ const DS_TOKEN_PATHS = [
   normalize("packages/design/design-system/src/tokens"),
   normalize("packages/design/design-system/src/styles/tokens.css"),
 ];
+const DS_RUNTIME_TOKEN_STYLE_PATTERN = /^packages\/design\/design-system\/src\/styles\/tokens(?:-[\w-]+)?\.css$/;
 const DS_SEMANTIC_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/components.css"),
   normalize("packages/design/design-system/src/styles/platform.css"),
@@ -58,6 +59,7 @@ const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("packages/design/design-system/src/styles/platform-shell.css"), "DS platform shell.css"],
   [normalize("packages/design/design-system/src/styles/platform-shell-header.css"), "DS platform shell header.css"],
   [normalize("packages/design/design-system/src/styles/platform-tenant-settings.css"), "DS platform tenant settings.css"],
+  [normalize("packages/design/design-system/src/styles/tokens.css"), "DS tokens.css"],
   [normalize("portals/admin/src/app/globals.css"), "admin globals.css"],
   [normalize("portals/admin/src/styles/admin-assistant.css"), "admin assistant.css"],
   [normalize("portals/admin/src/styles/admin-auth-captcha.css"), "admin auth captcha.css"],
@@ -455,6 +457,22 @@ const rules = [
     },
   },
   {
+    id: "ds/no-large-token-style-leaf",
+    description: "DS tokens-* 运行时 token 模块必须按语义域拆分，不能重新膨胀为单体文件。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!/^packages\/design\/design-system\/src\/styles\/tokens-[^/]+\.css$/.test(normalized)) return [];
+      if (statSync(file).size <= 8000) return [];
+      return [
+        violation(
+          file,
+          1,
+          "DS tokens-* 模块超过 8KB；请按 theme、colors、foundation、component、platform、admin、console、website 等语义域继续拆分。",
+        ),
+      ];
+    },
+  },
+  {
     id: "ds/no-style-entry-rules",
     description: "大型样式入口只能作为 @import 聚合入口，具体规则必须进入分层模块。",
     checkContent(file, content) {
@@ -510,7 +528,7 @@ const rules = [
       }
       const text = stripLineComment(line);
       if (/["'][^"']*(?:#[0-9a-fA-F]{3,8}\b|\b(?:rgb|rgba|hsl|hsla)\(|\b\d+(?:\.\d+)?(?:px|rem|em|vh|vw|%)\b)/.test(text)) {
-        return violation(file, lineNumber, "运行时 token 值只能定义在 styles/tokens.css；TS token 只暴露 var(--vx-*) 引用。", line);
+        return violation(file, lineNumber, "运行时 token 值只能定义在 styles/tokens.css 及其 tokens-* 分层模块；TS token 只暴露 var(--vx-*) 引用。", line);
       }
       return null;
     },
@@ -1015,7 +1033,10 @@ function findDesignSystemSpecifiers(line) {
 
 function isDsTokenOwner(file) {
   const normalized = normalize(file);
-  return DS_TOKEN_PATHS.some((tokenPath) => normalized === tokenPath || normalized.startsWith(`${tokenPath}/`));
+  return (
+    DS_RUNTIME_TOKEN_STYLE_PATTERN.test(normalized) ||
+    DS_TOKEN_PATHS.some((tokenPath) => normalized === tokenPath || normalized.startsWith(`${tokenPath}/`))
+  );
 }
 
 function isGeneratedOrAsset(file) {

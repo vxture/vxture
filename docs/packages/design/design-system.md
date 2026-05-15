@@ -63,6 +63,7 @@ src/
 
 ## CSS 分层
 
+- `tokens.css` 是 token runtime 稳定入口，只聚合 `tokens-*` 分层模块；外部消费者不得直接引用 `tokens-*`。
 - `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。
 - `console.css` 是 Console portal style pack 稳定入口，只聚合 `console-*` 模块。
 - `globals.css` 是标准消费者入口，聚合 DS 全局基线。
@@ -86,7 +87,7 @@ src/
 ## 开发约束
 
 - 所有图标通过 `<Icon name="..." />` 使用；应用不得直接导入底层图标库。
-- CSS 变量运行时值只在 `styles/tokens.css` 维护；TS token 文件只暴露 `var(--vx-*)`。
+- CSS 变量运行时值只在 `styles/tokens.css` 入口及其 `tokens-*` 分层模块维护；TS token 文件只暴露 `var(--vx-*)`。
 - DS semantic CSS 不直接消费 `--vx-component-metric-*` 兜底 token。
 - 新增公共能力必须同步 `package.json` exports、guardrail 白名单和使用文档。
 - 基础组件和跨应用 pattern 从 DS 导出；应用侧只做业务组装。
