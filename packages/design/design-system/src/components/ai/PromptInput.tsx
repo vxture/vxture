@@ -26,6 +26,7 @@ export interface PromptInputProps {
   readonly onChange: (next: string) => void;
   readonly onSubmit?: (value: string) => void;
   readonly placeholder?: string;
+  readonly label?: string;
   readonly chips?: readonly PromptInputChip[];
   readonly hint?: string;
   readonly submitLabel?: string;
@@ -38,6 +39,7 @@ export function PromptInput({
   onChange,
   onSubmit,
   placeholder = 'Ask anything...',
+  label,
   chips,
   hint = 'Cmd+Enter to send',
   submitLabel = 'Generate',
@@ -74,6 +76,7 @@ export function PromptInput({
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
+        aria-label={label ?? placeholder}
         rows={3}
       />
       <div className="vx-prompt-input__footer">

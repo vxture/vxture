@@ -46,7 +46,9 @@ type ThemeContextValue = {
 export type ThemeProviderProps = {
   /** 子组件 */
   readonly children: ReactNode;
-  /** 默认主题 */
+  /**
+   * @deprecated 请使用 `defaultMode` 代替
+   */
   readonly defaultTheme?: string;
   /** 默认主题模式 */
   readonly defaultMode?: "light" | "dark" | "system";

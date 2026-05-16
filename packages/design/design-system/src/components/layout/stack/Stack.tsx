@@ -11,17 +11,14 @@
  */
 
 import { forwardRef } from "react";
+import type { HTMLAttributes } from "react";
 import { cn } from "../../../utils/cn";
 
-export interface StackProps {
+export interface StackProps extends HTMLAttributes<HTMLDivElement> {
   /** 间距大小 */
   gap?: "xs" | "sm" | "md" | "lg";
   /** 对齐方式 */
   align?: "start" | "center" | "end" | "stretch";
-  /** 额外的 CSS 类名 */
-  className?: string;
-  /** 子内容 */
-  children: React.ReactNode;
 }
 
 const gapClasses = {
@@ -39,7 +36,7 @@ const alignClasses = {
 };
 
 export const Stack = forwardRef<HTMLDivElement, StackProps>(
-  ({ gap = "md", align = "stretch", className, children }, ref) => {
+  ({ gap = "md", align = "stretch", className, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -49,6 +46,7 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
           alignClasses[align],
           className
         )}
+        {...props}
       >
         {children}
       </div>

@@ -22,6 +22,7 @@ export interface ModelBadgeProps {
   readonly variant?: 'default' | 'flagship';
   readonly status?: ModelBadgeStatus;
   readonly onClick?: () => void;
+  readonly disabled?: boolean;
   readonly className?: string;
 }
 
@@ -37,12 +38,24 @@ export function ModelBadge({
   variant = 'default',
   status = 'active',
   onClick,
+  disabled = false,
   className,
 }: ModelBadgeProps) {
+  const isInteractive = !!onClick && !disabled;
+
   const handleKeyDown = (event: KeyboardEvent<HTMLSpanElement>) => {
-    if (!onClick || (event.key !== 'Enter' && event.key !== ' ')) return;
-    event.preventDefault();
-    onClick();
+    if (!isInteractive) return;
+    if (event.key === ' ') {
+      event.preventDefault(); // prevent page scroll on Space
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      onClick!();
+    }
+  };
+
+  const handleKeyUp = (event: KeyboardEvent<HTMLSpanElement>) => {
+    if (!isInteractive || event.key !== ' ') return;
+    onClick!();
   };
 
   return (
@@ -51,13 +64,16 @@ export function ModelBadge({
         'vx-model-badge',
         `vx-model-badge--${variant}`,
         `vx-model-badge--${status}`,
-        onClick ? 'vx-model-badge--interactive' : undefined,
+        isInteractive ? 'vx-model-badge--interactive' : undefined,
+        disabled ? 'vx-model-badge--disabled' : undefined,
         className,
       )}
-      onClick={onClick}
+      onClick={isInteractive ? onClick : undefined}
       onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
       role={onClick ? 'button' : undefined}
-      tabIndex={onClick ? 0 : undefined}
+      tabIndex={isInteractive ? 0 : undefined}
+      aria-disabled={disabled || undefined}
     >
       <span className="vx-model-badge__dot" aria-hidden />
       <span className="vx-model-badge__id">{modelId}</span>

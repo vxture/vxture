@@ -11,15 +11,12 @@
  */
 
 import { forwardRef } from "react";
+import type { HTMLAttributes } from "react";
 import { cn } from "../../../utils/cn";
 
-export interface ContainerProps {
+export interface ContainerProps extends HTMLAttributes<HTMLDivElement> {
   /** 容器尺寸 */
   size?: "sm" | "md" | "lg" | "xl" | "full";
-  /** 额外的 CSS 类名 */
-  className?: string;
-  /** 子内容 */
-  children: React.ReactNode;
 }
 
 const sizeClasses = {
@@ -31,7 +28,7 @@ const sizeClasses = {
 };
 
 export const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  ({ size = "lg", className, children }, ref) => {
+  ({ size = "lg", className, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -40,6 +37,7 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
           sizeClasses[size],
           className
         )}
+        {...props}
       >
         {children}
       </div>

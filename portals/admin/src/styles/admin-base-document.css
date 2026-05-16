@@ -7,8 +7,8 @@ body {
   color: var(--vx-console-text);
 }
 
-.dark html,
-.dark body,
+html.dark,
+body.dark,
 :root[class~="dark"] {
   background: var(--vx-color-shell-bg);
 }

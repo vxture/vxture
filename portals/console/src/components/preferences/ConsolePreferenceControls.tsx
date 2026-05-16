@@ -3,8 +3,7 @@
 import { startTransition, useEffect, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/lib/i18n/navigation';
-import { useTheme } from '@vxture/design-system';
-import { Button, NativeSelect } from '@vxture/design-system';
+import { Button, NativeSelect, useTheme } from '@vxture/design-system';
 import {
   getGlobalUserPreferences,
   setGlobalDensityPreference,

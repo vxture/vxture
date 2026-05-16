@@ -11,17 +11,14 @@
  */
 
 import { forwardRef } from "react";
+import type { HTMLAttributes } from "react";
 import { cn } from "../../../utils/cn";
 
-export interface GridProps {
+export interface GridProps extends HTMLAttributes<HTMLDivElement> {
   /** 列数 */
   columns?: number;
   /** 间距大小 */
   gap?: "xs" | "sm" | "md" | "lg";
-  /** 额外的 CSS 类名 */
-  className?: string;
-  /** 子内容 */
-  children: React.ReactNode;
 }
 
 const gapClasses = {
@@ -47,7 +44,7 @@ const columnsClasses = {
 };
 
 export const Grid = forwardRef<HTMLDivElement, GridProps>(
-  ({ columns = 3, gap = "md", className, children }, ref) => {
+  ({ columns = 3, gap = "md", className, children, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -57,6 +54,7 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
           gapClasses[gap],
           className
         )}
+        {...props}
       >
         {children}
       </div>

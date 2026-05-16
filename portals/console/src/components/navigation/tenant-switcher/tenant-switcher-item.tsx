@@ -1,7 +1,6 @@
 'use client';
 
-import { Button, Icon } from '@vxture/design-system';
-import { Avatar, AvatarFallback } from '@vxture/design-system';
+import { Avatar, AvatarFallback, Button, Icon } from '@vxture/design-system';
 import type { TenantListItem } from '@/features/tenant';
 
 function getInitials(name: string) {

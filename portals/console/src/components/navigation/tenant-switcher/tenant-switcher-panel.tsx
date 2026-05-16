@@ -1,8 +1,7 @@
 'use client';
 
 import { Link } from '@/lib/i18n/navigation';
-import { Icon } from '@vxture/design-system';
-import { Button } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import { useTenant, type TenantType } from '@/features/tenant';
 import { TenantSwitcherItem } from './tenant-switcher-item';
 

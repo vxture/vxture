@@ -1,4 +1,5 @@
 @import "@vxture/design-system/styles/globals.css";
+@import "@vxture/design-system/styles/console.css";
 @import "../styles/admin-base.css";
 @import "../styles/admin-shell.css";
 @import "../styles/admin-assistant.css";
