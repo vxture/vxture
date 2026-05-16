@@ -40,8 +40,9 @@ ENV NEXT_STANDALONE=1
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY=${NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY}
 
-# Compile shared workspace packages first — portals resolve them via dist/ exports
-RUN pnpm -w build:frontend-deps
+# Build only the workspace packages that this portal actually depends on
+# (pnpm ...^ = recursive deps of PACKAGE_FILTER, excluding PACKAGE_FILTER itself)
+RUN pnpm --filter "...^${PACKAGE_FILTER}" --if-present build
 
 RUN pnpm --filter ${PACKAGE_FILTER} build
 
