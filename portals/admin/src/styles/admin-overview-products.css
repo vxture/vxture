@@ -125,7 +125,7 @@
 
 .admin-overview-card-title-line {
   min-width: 0;
-  display: flex !important;
+  display: flex;
   align-items: center;
   justify-content: flex-start;
   gap: var(--vx-admin-overview-space-04r);

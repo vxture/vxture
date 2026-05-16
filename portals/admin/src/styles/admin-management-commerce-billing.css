@@ -70,7 +70,7 @@
 }
 
 .vx-billing-exception-empty {
-  color: var(--vx-color-gray-400) !important;
+  color: var(--vx-color-gray-400);
 }
 
 .vx-billing-status-line {

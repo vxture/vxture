@@ -17,11 +17,6 @@ export const easing = {
   in: "var(--vx-ease-in)",
   inOut: "var(--vx-ease-in-out)",
   snappy: "var(--vx-ease-snappy)",
-  easeIn: "var(--vx-ease-in)",
-  easeOut: "var(--vx-ease-out)",
-  easeInOut: "var(--vx-ease-in-out)",
-  bounce: "var(--vx-ease-snappy)",
-  elastic: "var(--vx-ease-snappy)",
 } as const;
 
 export const duration = {
@@ -34,8 +29,6 @@ export const duration = {
   spinner: "var(--vx-duration-spinner)",
   pulse: "var(--vx-duration-pulse)",
   shimmer: "var(--vx-duration-shimmer)",
-  normal: "var(--vx-duration-base)",
-  verySlow: "var(--vx-duration-slower)",
 } as const;
 
 export const motion = {

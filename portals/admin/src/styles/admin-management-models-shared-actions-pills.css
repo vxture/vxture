@@ -51,10 +51,10 @@
   opacity: 1;
 }
 
-.vx-model-operation-buttons__danger:hover:not(:disabled) {
-  border-color: color-mix(in srgb, var(--vx-color-danger) 24%, transparent) !important;
-  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent) !important;
-  color: var(--tenant-rose) !important;
+.vx-btn.vx-model-operation-buttons__danger:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--vx-color-danger) 24%, transparent);
+  background: color-mix(in srgb, var(--vx-color-danger) 8%, transparent);
+  color: var(--vx-color-danger);
 }
 
 .vx-model-operation-buttons .vx-model-operation-buttons__danger:not(:disabled) {
@@ -64,16 +64,16 @@
 }
 
 .vx-model-batch-actions .vx-model-operation-buttons__danger:not(:disabled) {
-  border-color: var(--tenant-rose);
-  background: var(--tenant-rose);
+  border-color: var(--vx-color-danger);
+  background: var(--vx-color-danger);
   color: var(--vx-color-white);
 }
 
 .vx-model-batch-actions
   .vx-model-operation-buttons__danger:hover:not(:disabled) {
-  border-color: var(--tenant-rose) !important;
-  background: var(--tenant-rose) !important;
-  color: var(--vx-color-white) !important;
+  border-color: var(--vx-color-danger-strong);
+  background: var(--vx-color-danger-strong);
+  color: var(--vx-color-white);
 }
 
 .vx-model-batch-actions {
