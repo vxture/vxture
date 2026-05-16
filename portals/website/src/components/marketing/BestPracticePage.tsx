@@ -1,7 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Icon } from '@vxture/design-system';
+import { Button, Icon } from '@vxture/design-system';
 import type { IconName } from '@vxture/design-system';
 import { Link } from '@/lib/i18n/navigation';
 import Image from 'next/image';
@@ -58,18 +58,12 @@ export default function BestPracticePage() {
               ))}
             </div>
             <div className='mt-8 flex flex-wrap items-center gap-4'>
-              <Link
-                href='/signin'
-                className='inline-flex h-11 items-center rounded-md bg-vx-brand-600 px-5 text-sm font-semibold text-vx-white transition hover:bg-vx-brand-500'
-              >
-                {t('page.hero.primaryAction')}
-              </Link>
-              <a
-                href='#practice-list'
-                className='inline-flex h-11 items-center rounded-md border border-vx-brand-200 bg-vx-white/60 px-5 text-sm font-semibold text-vx-brand-700 transition hover:border-vx-brand-300 hover:bg-vx-white dark:border-vx-white/35 dark:bg-transparent dark:text-vx-white dark:hover:border-vx-white dark:hover:bg-vx-white/10'
-              >
-                {t('page.hero.secondaryAction')}
-              </a>
+              <Button asChild size="lg" className='px-5 hover:bg-vx-brand-500'>
+                <Link href='/signin'>{t('page.hero.primaryAction')}</Link>
+              </Button>
+              <Button asChild variant="ghost" size="lg" className='border border-vx-brand-200 bg-vx-white/60 px-5 text-vx-brand-700 hover:border-vx-brand-300 hover:bg-vx-white dark:border-vx-white/35 dark:bg-transparent dark:text-vx-white dark:hover:border-vx-white dark:hover:bg-vx-white/10'>
+                <a href='#practice-list'>{t('page.hero.secondaryAction')}</a>
+              </Button>
             </div>
           </div>
         </div>
@@ -234,12 +228,9 @@ export default function BestPracticePage() {
               {t('page.cta.description')}
             </p>
           </div>
-          <Link
-            href='/signin'
-            className='inline-flex h-11 w-max items-center rounded-md bg-vx-brand-600 px-5 text-sm font-semibold text-vx-white transition hover:bg-vx-brand-500'
-          >
-            {t('page.cta.action')}
-          </Link>
+          <Button asChild size="lg" className='w-max px-5 hover:bg-vx-brand-500'>
+            <Link href='/signin'>{t('page.cta.action')}</Link>
+          </Button>
         </div>
       </section>
     </div>

@@ -125,12 +125,9 @@ const SolutionCard = memo(function SolutionCard({
             <div className='flex flex-col gap-4 mt-auto mb-4'>
               {/* 了解更多 */}
               <div className='flex justify-start items-center ml-12'>
-                <a
-                  href={solution.cta.href}
-                  className='inline-flex items-center px-5 py-2 bg-vx-brand-500 hover:bg-vx-brand-600 dark:bg-vx-brand-500/80 dark:hover:bg-vx-brand-500 text-vx-white rounded-lg transition-all duration-300 font-semibold w-max hover:opacity-90 text-sm'
-                >
-                  {uiTexts.viewDetails}
-                </a>
+                <Button asChild variant="default" className='rounded-lg px-5 py-2 h-auto w-max bg-vx-brand-500 hover:bg-vx-brand-600 dark:bg-vx-brand-500/80 dark:hover:bg-vx-brand-500'>
+                  <a href={solution.cta.href}>{uiTexts.viewDetails}</a>
+                </Button>
               </div>
               {/* 分割线 */}
               <div className='w-full h-px bg-vx-gray-200 dark:bg-vx-gray-600'></div>

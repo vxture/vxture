@@ -36,7 +36,6 @@ export default function AgentMarketplacePage() {
   const agents = t.raw('agents.items') as AgentItem[];
   const hasTenantSession = isAuthenticated && Boolean(user);
   const consoleEntryUrl = buildConsoleEntryUrl(locale);
-  const heroPrimaryClassName = 'inline-flex h-11 items-center rounded-md bg-vx-brand-600 px-5 text-sm font-semibold text-vx-white transition hover:bg-vx-brand-500';
 
   const visibleAgents = useMemo(() => {
     if (activeIndustry === 'all') {
@@ -67,20 +66,17 @@ export default function AgentMarketplacePage() {
             </div>
             <div className='mt-8 flex flex-wrap items-center gap-4'>
               {hasTenantSession ? (
-                <a href={consoleEntryUrl} className={heroPrimaryClassName}>
-                  {t('hero.primaryAction')}
-                </a>
+                <Button asChild size="lg" className='px-5 hover:bg-vx-brand-500'>
+                  <a href={consoleEntryUrl}>{t('hero.primaryAction')}</a>
+                </Button>
               ) : (
-                <Link href='/signup' className={heroPrimaryClassName}>
-                  {t('hero.guestPrimaryAction')}
-                </Link>
+                <Button asChild size="lg" className='px-5 hover:bg-vx-brand-500'>
+                  <Link href='/signup'>{t('hero.guestPrimaryAction')}</Link>
+                </Button>
               )}
-              <a
-                href='#agent-marketplace'
-                className='inline-flex h-11 items-center rounded-md border border-vx-brand-200 bg-vx-white/60 px-5 text-sm font-semibold text-vx-brand-700 transition hover:border-vx-brand-300 hover:bg-vx-white dark:border-vx-white/35 dark:bg-transparent dark:text-vx-white dark:hover:border-vx-white dark:hover:bg-vx-white/10'
-              >
-                {t('hero.secondaryAction')}
-              </a>
+              <Button asChild variant="ghost" size="lg" className='border border-vx-brand-200 bg-vx-white/60 px-5 text-vx-brand-700 hover:border-vx-brand-300 hover:bg-vx-white dark:border-vx-white/35 dark:bg-transparent dark:text-vx-white dark:hover:border-vx-white dark:hover:bg-vx-white/10'>
+                <a href='#agent-marketplace'>{t('hero.secondaryAction')}</a>
+              </Button>
             </div>
           </div>
         </div>
