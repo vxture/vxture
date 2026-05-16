@@ -42,15 +42,15 @@ get_or_generate() {
   local key="$1"
   local len="${2:-32}"
   local existing
-  existing=$(grep "^${key}=" "$SHARED_SECRETS_FILE" 2>/dev/null | cut -d= -f2- || echo "")
+  existing=$(grep "^${key}=" "$SHARED_SECRETS_FILE" 2>/dev/null | cut -d= -f2- || true)
   if [ -z "$existing" ]; then
     existing=$(openssl rand -hex "$len")
     echo "${key}=${existing}" >> "$SHARED_SECRETS_FILE"
-    echo "[OK] Generated new $key"
+    echo "[OK] Generated new $key" >&2
   else
-    echo "[OK] $key already exists"
+    echo "[OK] $key already exists" >&2
   fi
-  echo "$existing"
+  printf '%s' "$existing"
 }
 
 JWT_SECRET=$(get_or_generate "JWT_SECRET" 32)
