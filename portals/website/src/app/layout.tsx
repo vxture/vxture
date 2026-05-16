@@ -21,7 +21,7 @@
 import type { Metadata } from 'next';
 import { Funnel_Display, Geist_Mono, Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
-import { ThemeProvider, FullscreenProvider } from '@vxture/design-system';
+import { ThemeProvider, FullscreenProvider, themeBootstrapScript } from '@vxture/design-system';
 import { DEFAULT_LOCALE, PREFERENCE_CONSTANTS, THEME_CONSTANTS } from '@vxture/shared';
 import './globals.css';
 
@@ -59,10 +59,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     // suppressHydrationWarning 是 next-themes 官方要求，避免 SSR/CSR class 不一致警告
     <html lang={DEFAULT_LOCALE} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+      </head>
       <body className={`${fontBrand.variable} ${inter.variable} ${geistMono.variable}`}>
         {/* ThemeProvider 管理全站多主题模式，默认跟随系统偏好 */}
         <ThemeProvider
-          defaultTheme={defaultTheme}
+          defaultMode={defaultTheme === 'light' || defaultTheme === 'dark' || defaultTheme === 'system' ? defaultTheme : 'system'}
           defaultDensity={defaultDensity === 'compact' || defaultDensity === 'comfortable' ? defaultDensity : 'default'}
         >
           {/* FullscreenProvider 管理全站全屏状态，默认 pseudo 模式 */}

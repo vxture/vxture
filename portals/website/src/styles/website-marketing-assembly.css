@@ -17,14 +17,14 @@
   padding: var(--vx-website-hero-content-padding);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   .vx-hero-content {
     padding-left: var(--vx-website-hero-content-padding-x-lg);
     padding-right: var(--vx-website-hero-content-padding-x-lg);
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 80rem) {
   .vx-hero-content {
     max-width: var(--vx-website-hero-content-max-width-xl);
   }
@@ -82,7 +82,7 @@
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   .vx-website-split-grid--30 {
     grid-template-columns: var(--vx-website-split-grid-30-columns);
   }
@@ -132,7 +132,7 @@
   grid-template-columns: 1fr;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
   .vx-solution-card-grid {
     grid-template-columns: var(--vx-website-solution-card-grid-columns-lg);
   }

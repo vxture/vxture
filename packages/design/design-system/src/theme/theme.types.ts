@@ -17,14 +17,15 @@
  * - dark：暗色
  * - system：跟随操作系统
  */
-type Theme = "light" | "dark" | "system";
+export type ThemeMode = "light" | "dark" | "system";
+export type Theme = "light" | "dark";
 
 /**
  * 单个主题的展示配置，用于主题切换列表渲染
  * isDark 由消费方按需计算，不在此冗余存储
  */
 export interface ThemeConfig {
-  theme: Theme;
+  theme: ThemeMode;
   displayName: string;
   icon?: string;
 }

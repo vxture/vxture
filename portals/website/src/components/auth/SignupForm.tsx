@@ -269,7 +269,7 @@ function SignupField({
   type: string;
   placeholder: string;
   value: string;
-  error?: string;
+  error?: string | undefined;
   autoComplete?: string;
   autoFocus?: boolean;
   disabled?: boolean;

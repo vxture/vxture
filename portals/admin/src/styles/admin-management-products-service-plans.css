@@ -141,7 +141,7 @@
 
 .vx-service-plan-tier-row:has(.vx-tenant-actions__menu),
 .vx-service-plan-tier-card:has(.vx-tenant-actions__menu) {
-  z-index: 2400;
+  z-index: var(--vx-z-dropdown);
 }
 
 .vx-service-plan-tier-grid {

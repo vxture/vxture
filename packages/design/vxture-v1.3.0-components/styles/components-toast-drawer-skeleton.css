@@ -1,0 +1,218 @@
+/* ─────────────────────────────────────────────────────────────────
+   vxture/design-system — components-toast-drawer-skeleton.css
+   ───────────────────────────────────────────────────────────────── */
+
+
+/* ── Toast ──────────────────────────────────────────────────────── */
+
+.vx-toast-viewport {
+  position: fixed;
+  top: var(--vx-space-lg);
+  right: var(--vx-space-lg);
+  z-index: var(--vx-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-space-sm);
+  pointer-events: none;
+  max-width: 380px;
+}
+
+.vx-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vx-space-sm);
+  padding: var(--vx-space-md) var(--vx-space-md);
+  background: var(--vx-color-surface);
+  border: 1px solid var(--vx-color-border);
+  border-radius: var(--vx-radius-lg);
+  box-shadow: var(--vx-shadow-lg);
+  pointer-events: auto;
+  animation: vx-fade-up var(--vx-duration-moderate) var(--vx-ease-out) both;
+}
+
+.vx-toast__icon {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--vx-radius-full);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--vx-color-white);
+  font-weight: 700;
+  margin-top: 1px;
+}
+.vx-toast--success .vx-toast__icon { background: var(--vx-color-success); }
+.vx-toast--error   .vx-toast__icon { background: var(--vx-color-error); }
+.vx-toast--warning .vx-toast__icon { background: var(--vx-color-warning); }
+.vx-toast--info    .vx-toast__icon { background: var(--vx-color-info); }
+.vx-toast--ai      .vx-toast__icon { background: var(--vx-gradient-ai-duo); }
+
+.vx-toast__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.vx-toast__title {
+  font-family: var(--vx-font-sans);
+  font-size: var(--vx-font-size-sm);
+  font-weight: 600;
+  color: var(--vx-color-text-primary);
+  margin-bottom: 2px;
+}
+
+.vx-toast__desc {
+  font-family: var(--vx-font-sans);
+  font-size: var(--vx-font-size-xs);
+  color: var(--vx-color-text-secondary);
+  line-height: 1.55;
+}
+
+.vx-toast__close {
+  background: transparent;
+  border: 0;
+  color: var(--vx-color-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px;
+  border-radius: var(--vx-radius-sm);
+  transition: var(--vx-motion-button-hover);
+  transition-property: color, background;
+}
+.vx-toast__close:hover {
+  color: var(--vx-color-text-primary);
+  background: var(--vx-color-surface-muted);
+}
+
+
+/* ── Drawer ─────────────────────────────────────────────────────── */
+
+.vx-drawer-root {
+  position: fixed;
+  inset: 0;
+  z-index: var(--vx-z-drawer);
+}
+
+.vx-drawer__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--vx-color-overlay);
+  z-index: 1;
+  animation: vx-fade-in var(--vx-duration-moderate) var(--vx-ease-out) both;
+}
+
+.vx-drawer__panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: var(--vx-color-surface);
+  border-left: 1px solid var(--vx-color-border);
+  box-shadow: var(--vx-shadow-xl);
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+  max-width: 100vw;
+}
+
+.vx-drawer-root--right .vx-drawer__panel {
+  right: 0;
+  animation: vx-drawer-in-right var(--vx-duration-moderate) var(--vx-ease-out) both;
+}
+.vx-drawer-root--left .vx-drawer__panel {
+  left: 0;
+  border-left: 0;
+  border-right: 1px solid var(--vx-color-border);
+  animation: vx-drawer-in-left var(--vx-duration-moderate) var(--vx-ease-out) both;
+}
+
+@keyframes vx-drawer-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes vx-drawer-in-left {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+.vx-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--vx-space-md) var(--vx-space-lg);
+  border-bottom: 1px solid var(--vx-color-border);
+  flex-shrink: 0;
+}
+
+.vx-drawer__title {
+  font-family: var(--vx-font-display);
+  font-size: var(--vx-font-size-lg);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--vx-color-text-primary);
+}
+
+.vx-drawer__close {
+  background: transparent;
+  border: 0;
+  color: var(--vx-color-text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--vx-radius-md);
+  transition: var(--vx-motion-button-hover);
+  transition-property: color, background;
+}
+.vx-drawer__close:hover {
+  color: var(--vx-color-text-primary);
+  background: var(--vx-color-surface-muted);
+}
+
+.vx-drawer__body {
+  padding: var(--vx-space-lg);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.vx-drawer__footer {
+  padding: var(--vx-space-md) var(--vx-space-lg);
+  border-top: 1px solid var(--vx-color-border);
+  flex-shrink: 0;
+}
+
+
+/* ── Skeleton ───────────────────────────────────────────────────── */
+
+.vx-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--vx-color-surface-muted) 0%,
+    var(--vx-color-surface-soft) 50%,
+    var(--vx-color-surface-muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: vx-ai-shimmer 1.5s linear infinite;
+  border-radius: var(--vx-radius-sm);
+}
+
+.vx-skeleton--line {
+  height: 12px;
+  width: 100%;
+}
+
+.vx-skeleton--rect {
+  border-radius: var(--vx-radius-lg);
+}
+
+.vx-skeleton--circle {
+  border-radius: var(--vx-radius-full);
+}
+
+.vx-skeleton-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-space-sm);
+}

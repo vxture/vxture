@@ -9,8 +9,7 @@ body {
 
 .dark html,
 .dark body,
-html.dark,
-body.dark {
+:root[class~="dark"] {
   background: var(--vx-color-shell-bg);
 }
 

@@ -26,7 +26,7 @@ export interface ActionMenuItem {
   readonly id: string;
   readonly label: React.ReactNode;
   readonly icon?: React.ReactNode;
-  readonly title?: string;
+  readonly title?: string | undefined;
   readonly disabled?: boolean;
   readonly danger?: boolean;
   readonly separatorBefore?: boolean;

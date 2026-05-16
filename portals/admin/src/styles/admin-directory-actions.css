@@ -30,7 +30,7 @@
   position: absolute;
   right: 0;
   top: calc(100% + var(--vx-admin-directory-actions-menu-offset));
-  z-index: 2400;
+  z-index: var(--vx-z-dropdown);
   width: var(--vx-admin-directory-actions-menu-width);
   display: grid;
   gap: var(--vx-admin-directory-actions-menu-gap);
@@ -44,7 +44,7 @@
 .vx-tenant-actions__menu--portal {
   position: fixed;
   right: auto;
-  z-index: 5000;
+  z-index: var(--vx-z-modal);
 }
 
 .vx-tenant-actions__menu::before {

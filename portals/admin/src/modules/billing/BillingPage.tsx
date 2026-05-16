@@ -101,19 +101,21 @@ function billingExceptionTags(bill: BillingRecord) {
   }> = [];
 
   if (bill.billType === "adjust") {
+    const title = bill.operationRemark ?? undefined;
     tags.push({
       key: "adjust",
       label: "调整单",
       tone: "adjust",
-      title: bill.operationRemark ?? undefined,
+      ...(title ? { title } : {}),
     });
   }
   if (bill.billType === "supplement") {
+    const title = bill.operationRemark ?? undefined;
     tags.push({
       key: "supplement",
       label: "补录单",
       tone: "supplement",
-      title: bill.operationRemark ?? undefined,
+      ...(title ? { title } : {}),
     });
   }
   if (bill.discountAmount > 0) {
@@ -133,19 +135,21 @@ function billingExceptionTags(bill: BillingRecord) {
     });
   }
   if (bill.billStatus === "cancelled") {
+    const title = bill.operationRemark ?? undefined;
     tags.push({
       key: "cancelled",
       label: "已作废",
       tone: "cancelled",
-      title: bill.operationRemark ?? undefined,
+      ...(title ? { title } : {}),
     });
   }
   if (bill.invoiceStatus === "red" || bill.invoiceStatus === "rejected") {
+    const title = bill.invoiceNo ?? undefined;
     tags.push({
       key: "invoice_exception",
       label: bill.invoiceStatus === "red" ? "发票红冲" : "发票驳回",
       tone: "invoice",
-      title: bill.invoiceNo ?? undefined,
+      ...(title ? { title } : {}),
     });
   }
 
@@ -274,6 +278,7 @@ function BillingActionsMenu({
   onSyncInvoice: (bill: BillingRecord) => void;
 }) {
   const router = useRouter();
+  const invoiceDisabledReason = offlineInvoiceDisabledReason(bill) ?? undefined;
 
   return (
     <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
@@ -319,7 +324,7 @@ function BillingActionsMenu({
             label: "登记发票",
             icon: <Icon name="key" size="xs" fallback="placeholder" />,
             disabled: !canSyncOfflineInvoice(bill),
-            title: offlineInvoiceDisabledReason(bill) ?? undefined,
+            ...(invoiceDisabledReason ? { title: invoiceDisabledReason } : {}),
             onSelect: () => onSyncInvoice(bill),
           },
         ]}

@@ -61,7 +61,6 @@ export default function HomePage() {
     targetAlignTo: 'top',
     snapThreshold: 280,
     enabledDirections: ['up', 'down'],
-    observerRoot: undefined,
   });
 
   // ==========================================================================
@@ -73,9 +72,9 @@ export default function HomePage() {
       
       {/* 调试面板信息组件 */}
       <SnapDebugPanel
-        snapdebugInfo={snapdebugInfo}
         position={DEBUG_PANEL_POSITION}
         visible={IS_DEVELOPMENT}
+        {...(snapdebugInfo ? { snapdebugInfo } : {})}
       />
 
       {/* 吸附选择调试组件 */}

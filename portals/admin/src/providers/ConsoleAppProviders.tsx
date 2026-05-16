@@ -58,7 +58,7 @@ export function ConsoleAppProviders({
   }, [initialLocale, initialMessageCatalog, initialMessages, locale]);
 
   return (
-    <ThemeProvider defaultTheme={initialTheme} defaultDensity={initialDensity}>
+    <ThemeProvider defaultMode={initialTheme} defaultDensity={initialDensity}>
       <FullscreenProvider defaultMode="native" defaultLockScroll={false}>
         <ConsoleIntlProvider locale={locale} messages={messages}>
           <TooltipProvider>{children}</TooltipProvider>

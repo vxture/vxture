@@ -18,7 +18,7 @@
   .vx-assistant-panel--max {
     position: fixed;
     inset: var(--vx-shell-header-height) var(--vx-admin-assistant-space-panel-lg) 0;
-    z-index: 2600;
+    z-index: var(--vx-z-drawer);
     height: calc(100dvh - var(--vx-shell-header-height));
     max-height: calc(100dvh - var(--vx-shell-header-height));
     min-height: calc(100dvh - var(--vx-shell-header-height));

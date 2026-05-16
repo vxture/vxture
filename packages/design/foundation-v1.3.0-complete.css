@@ -1,0 +1,462 @@
+/* ═══════════════════════════════════════════════════════════════════
+   vxture Design System — Foundation v1.3.0 Complete
+   ───────────────────────────────────────────────────────────────────
+   合并已确认的 4 个体系 + P0 补齐：
+     ✓ 1. Color (Quantum AI · Pro/Violet/Neutral)
+     ✓ 2. Typography (Funnel Display + Inter + Geist Mono)
+     ✓ 3. Spacing / Radius / Shadow / Motion
+     ★ 4. Dark mode (full surface system)
+     ★ 5. Z-index semantic layers
+     ★ 6. Breakpoints
+     ★ 7. Grid / Container
+
+   Apply order:
+     a) Merge sections into packages/design/design-system/src/styles/
+        tokens.css (or split into tokens-*.css per existing file layout)
+     b) Append @theme mappings into tokens-theme-foundation.css
+     c) Run pnpm lint:design && build
+   ═══════════════════════════════════════════════════════════════════ */
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  SECTION 1 · COLOR — Quantum AI (already merged, here for ref)  ║
+   ╚═════════════════════════════════════════════════════════════════╝
+   See: tokens-quantum-ai.css (already applied) */
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  SECTION 2 · TYPOGRAPHY — Funnel Display (already drafted)      ║
+   ╚═════════════════════════════════════════════════════════════════╝
+   See: typography-funnel-display.css */
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  SECTION 3 · SPACING — extend to 4xl                            ║
+   ╚═════════════════════════════════════════════════════════════════╝ */
+
+:root {
+  --vx-space-3xl: 48px;
+  --vx-space-4xl: 64px;
+  --vx-space-5xl: 96px;   /* marketing landing only */
+}
+:root[data-density="compact"] {
+  --vx-space-3xl: 42px;
+  --vx-space-4xl: 56px;
+  --vx-space-5xl: 80px;
+}
+:root[data-density="comfortable"] {
+  --vx-space-3xl: 54px;
+  --vx-space-4xl: 72px;
+  --vx-space-5xl: 112px;
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  SECTION 4 · RADIUS — extend to 3xl                             ║
+   ╚═════════════════════════════════════════════════════════════════╝ */
+
+:root {
+  --vx-radius-xs:  2px;
+  --vx-radius-2xl: 16px;
+  --vx-radius-3xl: 20px;
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  SECTION 5 · SHADOW — 7 tinted + glow + focus rings             ║
+   ╚═════════════════════════════════════════════════════════════════╝ */
+
+:root {
+  --vx-shadow-xs:    0 1px 0 rgba(15, 23, 42, 0.04);
+  --vx-shadow-sm:    0 1px 2px rgba(15, 23, 42, 0.06),
+                     0 1px 1px rgba(15, 23, 42, 0.04);
+  --vx-shadow-md:    0 4px 8px rgba(15, 23, 42, 0.06),
+                     0 2px 4px rgba(15, 23, 42, 0.04);
+  --vx-shadow-lg:    0 12px 24px rgba(29, 78, 216, 0.08),
+                     0 4px 8px rgba(15, 23, 42, 0.06);
+  --vx-shadow-xl:    0 24px 48px rgba(29, 78, 216, 0.12),
+                     0 8px 16px rgba(15, 23, 42, 0.08);
+  --vx-shadow-2xl:   0 40px 80px rgba(29, 78, 216, 0.16),
+                     0 16px 32px rgba(168, 85, 247, 0.08);
+  --vx-shadow-glow:  0 0 32px rgba(168, 85, 247, 0.35),
+                     0 0 16px rgba(29, 78, 216, 0.25);
+  --vx-shadow-focus-ring:    0 0 0 3px rgba(29, 78, 216, 0.15);
+  --vx-shadow-focus-ring-ai: 0 0 0 3px rgba(168, 85, 247, 0.20);
+  --vx-shadow-inset:         inset 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  SECTION 6 · MOTION — duration · ease · semantic presets        ║
+   ╚═════════════════════════════════════════════════════════════════╝ */
+
+:root {
+  --vx-duration-instant:  75ms;
+  --vx-duration-fast:     150ms;
+  --vx-duration-base:     200ms;
+  --vx-duration-moderate: 300ms;
+  --vx-duration-slow:     400ms;
+  --vx-duration-slower:   600ms;
+
+  --vx-ease-linear:   linear;
+  --vx-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --vx-ease-out:      cubic-bezier(0,   0, 0.2, 1);
+  --vx-ease-in:       cubic-bezier(0.4, 0, 1,   1);
+  --vx-ease-in-out:   cubic-bezier(0.4, 0, 0.2, 1);
+  --vx-ease-snappy:   cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --vx-motion-button-hover:  var(--vx-duration-base)     var(--vx-ease-standard);
+  --vx-motion-card-lift:     var(--vx-duration-moderate) var(--vx-ease-out);
+  --vx-motion-modal-open:    var(--vx-duration-moderate) var(--vx-ease-out);
+  --vx-motion-dropdown-open: var(--vx-duration-fast)     var(--vx-ease-out);
+  --vx-motion-tooltip-open:  var(--vx-duration-instant)  var(--vx-ease-out);
+  --vx-motion-ai-pop:        var(--vx-duration-slow)     var(--vx-ease-snappy);
+}
+
+@keyframes vx-spin       { to { transform: rotate(360deg); } }
+@keyframes vx-pulse      { 0%,100%{opacity:.45} 50%{opacity:1} }
+@keyframes vx-fade-in    { from{opacity:0} to{opacity:1} }
+@keyframes vx-fade-up    { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes vx-scale-in   { from{opacity:0;transform:scale(.95)} to{opacity:1;transform:scale(1)} }
+@keyframes vx-ai-shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --vx-duration-instant: 0ms; --vx-duration-fast: 0ms;
+    --vx-duration-base:    0ms; --vx-duration-moderate: 0ms;
+    --vx-duration-slow:    0ms; --vx-duration-slower: 0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  ★ SECTION 7 · DARK MODE — full surface system                  ║
+   ╚═════════════════════════════════════════════════════════════════╝
+   Activated via either:
+     • <html class="dark">         (manual / theme provider)
+     • @media (prefers-color-scheme: dark) — auto follow system
+   The existing .dark{} selector in tokens.css line 1865 is sparse;
+   this fills it in entirely. */
+
+.dark, :root.dark {
+  color-scheme: dark;
+
+  /* Surfaces — layered dark scale */
+  --vx-color-background:       #0a0e1a;   /* page bg — deep cosmic */
+  --vx-color-page:             #0a0e1a;
+  --vx-color-surface:          #12172a;   /* card / panel */
+  --vx-color-surface-muted:    #1a2038;   /* secondary surface */
+  --vx-color-surface-soft:     #161b2e;   /* tertiary, between page & card */
+  --vx-color-surface-raised:   #1c2440;   /* elevated card · hover */
+  --vx-color-surface-inverse:  #f8faff;   /* inverse for chips on dark */
+
+  /* Borders — subtle cool tint */
+  --vx-color-border:        rgba(148, 163, 200, 0.10);
+  --vx-color-border-muted:  rgba(148, 163, 200, 0.06);
+  --vx-color-border-strong: rgba(120, 156, 255, 0.32);
+  --vx-color-ring:          rgba(120, 156, 255, 0.18);
+  --vx-color-ring-strong:   rgba(120, 156, 255, 0.55);
+  --vx-color-overlay:       rgba(2, 6, 23, 0.72);
+
+  /* Text — recalibrated for dark surfaces */
+  --vx-color-foreground:     #e6ebff;
+  --vx-color-text-primary:   #e6ebff;
+  --vx-color-text-secondary: #aab4d4;
+  --vx-color-text-muted:     #6b7794;
+  --vx-color-text-disabled:  #4a5474;
+  --vx-color-text-inverse:   #0f172a;
+  --vx-color-text-strong:    #ffffff;
+
+  /* Primary — slightly lifted brand for contrast on dark */
+  --vx-color-primary:        var(--vx-color-brand-500);
+  --vx-color-primary-hover:  var(--vx-color-brand-400);
+  --vx-color-primary-strong: var(--vx-color-brand-400);
+  --vx-color-primary-soft:   rgba(30, 81, 255, 0.18);
+  --vx-color-primary-subtle: rgba(30, 81, 255, 0.10);
+
+  /* AI accents — boost saturation slightly for dark */
+  --vx-color-ai:            var(--vx-color-ai-400);
+  --vx-color-ai-hover:      var(--vx-color-ai-300);
+  --vx-color-ai-surface:    rgba(168, 85, 247, 0.10);
+  --vx-color-ai-soft:       rgba(168, 85, 247, 0.18);
+  --vx-color-ai-border:     rgba(168, 85, 247, 0.40);
+
+  /* Semantic — slightly muted reds/greens for dark legibility */
+  --vx-color-success:         var(--vx-color-success-400);
+  --vx-color-success-surface: rgba(16, 185, 129, 0.12);
+  --vx-color-warning:         var(--vx-color-warning-400);
+  --vx-color-warning-surface: rgba(245, 158, 11, 0.14);
+  --vx-color-danger:          var(--vx-color-danger-400);
+  --vx-color-danger-surface:  rgba(244, 63, 94, 0.14);
+  --vx-color-error:           var(--vx-color-error-400);
+  --vx-color-error-surface:   rgba(239, 68, 68, 0.14);
+  --vx-color-info:            var(--vx-color-info-400);
+  --vx-color-info-surface:    rgba(56, 189, 248, 0.14);
+
+  /* Inputs — dark field surfaces */
+  --vx-color-input-bg:       #161b2e;
+  --vx-color-input-border:   rgba(148, 163, 200, 0.12);
+  --vx-color-input-focus-bg: rgba(30, 81, 255, 0.08);
+
+  /* Shadows — darker, less obvious (use border tint instead on dark) */
+  --vx-shadow-xs:   0 1px 0 rgba(0, 0, 0, 0.5);
+  --vx-shadow-sm:   0 1px 2px rgba(0, 0, 0, 0.4),
+                    0 1px 1px rgba(0, 0, 0, 0.2);
+  --vx-shadow-md:   0 4px 8px rgba(0, 0, 0, 0.40),
+                    0 2px 4px rgba(0, 0, 0, 0.30);
+  --vx-shadow-lg:   0 12px 24px rgba(0, 0, 0, 0.45),
+                    0 0 0 1px rgba(120, 156, 255, 0.06);
+  --vx-shadow-xl:   0 24px 48px rgba(0, 0, 0, 0.55),
+                    0 0 0 1px rgba(120, 156, 255, 0.08);
+  --vx-shadow-2xl:  0 40px 80px rgba(0, 0, 0, 0.65),
+                    0 0 0 1px rgba(168, 85, 247, 0.12);
+  --vx-shadow-glow: 0 0 40px rgba(168, 85, 247, 0.50),
+                    0 0 20px rgba(48, 102, 255, 0.40);
+
+  /* Gradients — re-saturate for dark backdrop */
+  --vx-gradient-aurora: linear-gradient(135deg,
+                          #0a0e1a 0%,
+                          #1e51ff 32%,
+                          #a855f7 68%,
+                          #22d3ee 100%);
+
+  /* Auth template — dark variant */
+  --vx-color-auth-background: #0a0e1a;
+  --vx-color-auth-card:       #12172a;
+  --vx-color-auth-card-soft:  #161b2e;
+  --vx-color-auth-text:       #e6ebff;
+  --vx-color-auth-secondary:  #aab4d4;
+  --vx-color-auth-muted:      #6b7794;
+  --vx-color-auth-border:     rgba(148, 163, 200, 0.10);
+  --vx-color-auth-border-active: rgba(120, 156, 255, 0.55);
+
+  /* Shell — dark portal chrome */
+  --vx-color-shell-bg:           #0a0e1a;
+  --vx-color-shell-surface:      #12172a;
+  --vx-color-shell-surface-muted: #161b2e;
+  --vx-color-shell-border:       rgba(148, 163, 200, 0.08);
+  --vx-color-shell-text:         #e6ebff;
+  --vx-color-shell-muted:        #aab4d4;
+  --vx-color-shell-brand:        var(--vx-color-brand-400);
+  --vx-color-shell-ink:          #ffffff;
+  --vx-color-shell-icon:         #aab4d4;
+  --vx-color-shell-icon-muted:   #6b7794;
+  --vx-color-shell-hover:        rgba(120, 156, 255, 0.12);
+  --vx-color-shell-divider:      rgba(148, 163, 200, 0.10);
+
+  /* Scrollbar */
+  --vx-color-scrollbar:       rgba(148, 163, 200, 0.18);
+  --vx-color-scrollbar-hover: rgba(148, 163, 200, 0.32);
+}
+
+/* Auto follow system if user hasn't set theme manually */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    /* All the same vars as .dark above — handled in ThemeProvider via attribute */
+  }
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  ★ SECTION 8 · Z-INDEX — semantic layer stack                   ║
+   ╚═════════════════════════════════════════════════════════════════╝
+   Replaces ad-hoc z-index numbers across the app.
+   Every overlay must reference one of these tokens. */
+
+:root {
+  /* Base flow (rarely needed, but reserved) */
+  --vx-z-base:        0;
+  --vx-z-content:     1;
+
+  /* In-flow elevated UI */
+  --vx-z-sticky:      100;     /* sticky table headers, sticky CTAs */
+  --vx-z-fixed:       200;     /* app shell header, side nav */
+  --vx-z-overlay-bg:  300;     /* dimming layer / scrim */
+
+  /* Floating UI — order matters when stacking */
+  --vx-z-dropdown:    1000;    /* select, menu, autocomplete */
+  --vx-z-popover:     1100;    /* popover anchored to element */
+  --vx-z-tooltip:     1200;    /* tooltip ALWAYS above popover */
+
+  /* Modal layer — top of UI stack */
+  --vx-z-modal-bg:    1900;    /* modal backdrop */
+  --vx-z-modal:       2000;    /* modal dialog */
+  --vx-z-drawer:      2000;    /* drawer (same as modal, mutually exclusive) */
+
+  /* System layer — never blocked by anything */
+  --vx-z-toast:       3000;    /* notifications */
+  --vx-z-banner:      3100;    /* system-wide announcements */
+  --vx-z-command:     4000;    /* command palette (cmd+k) */
+  --vx-z-edit-mode:   2147483600; /* design-time tweaks panel */
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  ★ SECTION 9 · BREAKPOINTS — responsive token system            ║
+   ╚═════════════════════════════════════════════════════════════════╝
+   Mobile-first. Use these in @media queries and JS (via useBreakpoint hook). */
+
+:root {
+  --vx-breakpoint-xs:  0px;       /* mobile portrait */
+  --vx-breakpoint-sm:  640px;     /* large phone / small tablet portrait */
+  --vx-breakpoint-md:  768px;     /* tablet portrait · iPad mini */
+  --vx-breakpoint-lg:  1024px;    /* tablet landscape · small laptop */
+  --vx-breakpoint-xl:  1280px;    /* desktop · 13" laptop */
+  --vx-breakpoint-2xl: 1536px;    /* large desktop · 27" iMac */
+  --vx-breakpoint-3xl: 1920px;    /* 4K / ultrawide */
+}
+
+/* Container widths — content max-width at each breakpoint */
+:root {
+  --vx-container-sm:  100%;       /* full width on small screens */
+  --vx-container-md:  720px;
+  --vx-container-lg:  960px;
+  --vx-container-xl:  1200px;
+  --vx-container-2xl: 1440px;     /* common dashboard cap */
+  --vx-container-max: 1600px;     /* hard cap for hero / marketing */
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  ★ SECTION 10 · GRID — 12-column system + gutters               ║
+   ╚═════════════════════════════════════════════════════════════════╝ */
+
+:root {
+  --vx-grid-columns:        12;
+  --vx-grid-gutter:         var(--vx-space-lg);   /* 16px default */
+  --vx-grid-gutter-tight:   var(--vx-space-md);   /* 12px dense surfaces */
+  --vx-grid-gutter-wide:    var(--vx-space-xl);   /* 24px marketing */
+  --vx-grid-margin:         var(--vx-space-xl);   /* 24px page padding default */
+  --vx-grid-margin-mobile:  var(--vx-space-lg);   /* 16px on mobile */
+  --vx-grid-margin-desktop: var(--vx-space-2xl);  /* 32px on desktop ≥ lg */
+}
+
+/* Utility classes (optional — if not using Tailwind grid) */
+.vx-container {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--vx-grid-margin-mobile);
+  max-width: var(--vx-container-sm);
+}
+@media (min-width: 640px)  { .vx-container { max-width: var(--vx-container-md); } }
+@media (min-width: 768px)  { .vx-container { padding-inline: var(--vx-grid-margin); max-width: var(--vx-container-lg); } }
+@media (min-width: 1024px) { .vx-container { padding-inline: var(--vx-grid-margin-desktop); max-width: var(--vx-container-xl); } }
+@media (min-width: 1280px) { .vx-container { max-width: var(--vx-container-2xl); } }
+
+.vx-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--vx-grid-columns), minmax(0, 1fr));
+  gap: var(--vx-grid-gutter);
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  SECTION 11 · @theme — Tailwind v4 mappings                     ║
+   ╚═════════════════════════════════════════════════════════════════╝
+   Append into tokens-theme-foundation.css (or wherever @theme lives). */
+
+@theme {
+  /* Spacing extras */
+  --spacing-vx-3xl: var(--vx-space-3xl);
+  --spacing-vx-4xl: var(--vx-space-4xl);
+  --spacing-vx-5xl: var(--vx-space-5xl);
+
+  /* Radius extras */
+  --radius-vx-xs:  var(--vx-radius-xs);
+  --radius-vx-2xl: var(--vx-radius-2xl);
+  --radius-vx-3xl: var(--vx-radius-3xl);
+
+  /* Shadow set */
+  --shadow-vx-xs:   var(--vx-shadow-xs);
+  --shadow-vx-sm:   var(--vx-shadow-sm);
+  --shadow-vx-md:   var(--vx-shadow-md);
+  --shadow-vx-lg:   var(--vx-shadow-lg);
+  --shadow-vx-xl:   var(--vx-shadow-xl);
+  --shadow-vx-2xl:  var(--vx-shadow-2xl);
+  --shadow-vx-glow: var(--vx-shadow-glow);
+
+  /* Animations */
+  --animate-vx-spin:     vx-spin     800ms  linear infinite;
+  --animate-vx-pulse:    vx-pulse    1500ms cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-vx-fade-in:  vx-fade-in  200ms  cubic-bezier(0, 0, 0.2, 1) both;
+  --animate-vx-fade-up:  vx-fade-up  300ms  cubic-bezier(0, 0, 0.2, 1) both;
+  --animate-vx-scale-in: vx-scale-in 200ms  cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-vx-shimmer:  vx-ai-shimmer 2000ms linear infinite;
+
+  /* Breakpoints — Tailwind v4 reads these for @screen */
+  --breakpoint-sm:  640px;
+  --breakpoint-md:  768px;
+  --breakpoint-lg:  1024px;
+  --breakpoint-xl:  1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 1920px;
+}
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  USAGE RULES — append to docs/standards/design-system.md        ║
+   ╚═════════════════════════════════════════════════════════════════╝
+
+   DARK MODE
+     Toggle by setting <html class="dark"> or via ThemeProvider.
+     All --vx-color-* tokens auto-swap. Apps SHOULD NOT define their
+     own dark-mode color values. Use the existing token chain.
+
+     Pattern:
+       .my-card { background: var(--vx-color-surface); }
+       // Works in both light and dark — no extra rules needed.
+
+   Z-INDEX
+     Always use semantic token (--vx-z-modal etc), never a literal number.
+     If you need a new layer, add it to this file with reasoning, not
+     in your component.
+
+   BREAKPOINTS
+     Mobile-first. Use min-width queries:
+       @media (min-width: 768px) { ... }    // md+
+     Or Tailwind: md:flex / lg:grid-cols-3
+     Avoid max-width queries unless absolutely necessary.
+
+   GRID
+     Default 12 columns with --vx-grid-gutter. For dashboard tables,
+     use --vx-grid-gutter-tight. For marketing/landing, use -wide.
+
+   PROHIBITED (lint:design will reject):
+     · Hardcoded z-index above 99
+     · Hardcoded breakpoint px values in media queries
+     · Custom dark-mode color overrides in application CSS
+     · Hand-rolled container max-widths in pages
+   ═════════════════════════════════════════════════════════════════ */
+
+
+/* ╔═════════════════════════════════════════════════════════════════╗
+   ║  VERIFICATION CHECKLIST                                         ║
+   ╚═════════════════════════════════════════════════════════════════╝
+   [ ] tokens.css — Sections 3-6 merged (already shipped if foundation-patch applied)
+   [ ] tokens.css — Section 7 .dark block REPLACES existing line 1865 sparse block
+   [ ] tokens.css — Sections 8-10 appended
+   [ ] tokens-theme-foundation.css — Section 11 @theme additions appended
+   [ ] ThemeProvider — wire up data-theme attribute to .dark class toggle
+   [ ] Global search for hardcoded values:
+         rg -n "z-index:\s*[0-9]{3,}" portals agent-studio business
+         rg -n "@media.*\b(640|768|1024|1280)px" portals agent-studio business
+         rg -n "max-width:\s*[0-9]{3,4}px" portals agent-studio business
+       Replace with token references.
+   [ ] Add lint:design rules:
+         · ds/no-hardcoded-z-index    (reject z-index > 99 literals)
+         · ds/no-hardcoded-breakpoint (reject 640|768|1024|1280|1536 in media queries)
+         · ds/no-app-dark-overrides   (reject .dark{} blocks outside DS)
+   [ ] Run gates:
+         pnpm lint:design
+         pnpm --filter @vxture/design-system lint
+         pnpm --filter @vxture/design-system type-check
+         pnpm --filter @vxture/design-system build
+         pnpm --filter @vxture/website build       # smoke-test consumer
+   ═════════════════════════════════════════════════════════════════ */

@@ -542,10 +542,11 @@ export async function fetchPlatformPermissions(): Promise<PlatformAdminPermissio
 }
 
 export async function fetchDevServices(signal?: AbortSignal): Promise<DevServiceSnapshot[]> {
-  const response = await fetch(`/api/dev-services?ts=${Date.now()}`, {
+  const requestInit: RequestInit = {
     cache: 'no-store',
-    signal,
-  });
+    ...(signal ? { signal } : {}),
+  };
+  const response = await fetch(`/api/dev-services?ts=${Date.now()}`, requestInit);
 
   if (!response.ok) {
     throw new AdminBffError('Dev services snapshot failed', response.status);

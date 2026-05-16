@@ -11,7 +11,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Funnel_Display, Geist_Mono, Inter } from 'next/font/google';
-import { FullscreenProvider, ThemeProvider } from '@vxture/design-system';
+import { FullscreenProvider, ThemeProvider, themeBootstrapScript } from '@vxture/design-system';
 import './globals.css';
 
 const fontBrand = Funnel_Display({
@@ -43,8 +43,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+      </head>
       <body className={`${fontBrand.variable} ${inter.variable} ${geistMono.variable} vx-vela-body`}>
-        <ThemeProvider defaultTheme="light" defaultDensity="default">
+        <ThemeProvider defaultMode="system" defaultDensity="default">
           <FullscreenProvider defaultMode="native" defaultLockScroll={false}>
             {children}
           </FullscreenProvider>

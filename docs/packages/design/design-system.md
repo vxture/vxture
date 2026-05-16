@@ -41,7 +41,7 @@ src/
 ├── density/      # density 配置、类型与导出
 ├── icons/        # Icon 组件、字典和注册表
 ├── components/
-│   ├── ui/       # 25 个 UI primitive 和平台 pattern
+│   ├── ui/       # 28 个 UI primitive 和平台 pattern
 │   ├── auth/     # 统一认证模板组件
 │   ├── shell/    # ShellChrome
 │   └── layout/   # Container / Stack / Grid / Fullscreen
@@ -57,9 +57,13 @@ src/
 
 ## UI 组件清单
 
-当前 `src/components/ui` 有 25 个 `.tsx` 组件：
+当前公共组件共 33 个：`src/components/ui` 28 个 `.tsx` 组件，`src/components/ai` 5 个 AI 组件。
 
 `ActionMenu`、`Avatar`、`Badge`、`Breadcrumb`、`Button`、`Card`、`Checkbox`、`DataTable`、`Dialog`、`DialogForm`、`DropdownMenu`、`FilterBar`、`Input`、`Label`、`MetricCard`、`NativeSelect`、`Pagination`、`Popover`、`Select`、`Separator`、`StatusBadge`、`Switch`、`Tabs`、`Textarea`、`Tooltip`。
+
+新增 UI：`Toast`、`Drawer`、`Skeleton`。
+
+新增 AI：`ModelBadge`、`GenerationStream`、`PromptInput`、`AIAssistantBubble`、`TokenCounter`。
 
 ## CSS 分层
 

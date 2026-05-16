@@ -36,6 +36,8 @@ import {
 import type { Request, Response } from 'express';
 import { InternalAuthGuard, JwtAuthScope, JwtUserType, TurnstileVerifier } from '@vxture/core-auth';
 import { AUTH_CONSTANTS } from '@vxture/shared';
+import { AccountAuthService } from '@vxture/service-iam';
+import { MailService } from '@vxture/service-mail';
 import { AuthService, type LoginSource } from '../auth/auth.service';
 import { RedisService, type TenantRefreshSurface } from '../redis/redis.service';
 import type { AuthUserDto } from '../types/auth.types';
@@ -61,6 +63,20 @@ class SignupDto {
 class SwitchTenantDto {
   tenantId!: string;
   source?: LoginSource;
+}
+
+class ForgotPasswordDto {
+  email!: string;
+  source?: 'website' | 'console';
+}
+
+class ResetPasswordDto {
+  token!: string;
+  newPassword!: string;
+}
+
+class InitTenantDto {
+  type!: 'individual' | 'organization';
 }
 
 // ============================================================================
@@ -238,6 +254,8 @@ export class PasswordAuthRouter {
   constructor(
     @Inject(AuthService) private readonly authService: AuthService,
     @Inject(RedisService) private readonly redis: RedisService,
+    @Inject(AccountAuthService) private readonly accountAuthService: AccountAuthService,
+    @Inject(MailService) private readonly mailService: MailService,
   ) {}
 
   /**
@@ -549,6 +567,89 @@ export class PasswordAuthRouter {
     } catch {
       throw new UnauthorizedException('人机验证未通过，请重试');
     }
+  }
+
+  /**
+   * 忘记密码 — 发送重置邮件
+   * 无论邮箱是否存在均返回 200，防止用户枚举。
+   * POST /auth/forgot-password
+   */
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() body: ForgotPasswordDto): Promise<{ status: string }> {
+    try {
+      const resetToken = await this.accountAuthService.requestPasswordReset(body.email);
+      if (resetToken) {
+        const isConsole = body.source === 'console';
+        const baseUrl = isConsole
+          ? (process.env['CONSOLE_BASE_URL']?.replace(/\/$/, '') ?? 'http://localhost:3020')
+          : (process.env['WEBSITE_BASE_URL']?.replace(/\/$/, '') ?? 'http://localhost:3010');
+        const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
+        await this.mailService.sendPasswordReset(body.email, resetUrl);
+      }
+    } catch {
+      // always 200 to prevent email enumeration
+    }
+    return { status: 'ok' };
+  }
+
+  /**
+   * 重置密码
+   * POST /auth/reset-password
+   */
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() body: ResetPasswordDto): Promise<{ status: string }> {
+    const ok = await this.accountAuthService.resetPasswordWithToken(body.token, body.newPassword);
+    if (!ok) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
+    return { status: 'ok' };
+  }
+
+  /**
+   * 初始化租户（注册后首次选择账号类型）
+   * 需要有效的 access token cookie；完成后更新 cookie 中的 tenantId。
+   * POST /auth/tenant/init
+   */
+  @Post('tenant/init')
+  @HttpCode(HttpStatus.OK)
+  async initTenant(
+    @Body() body: InitTenantDto,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ tenantId: string }> {
+    const accessToken = readTenantCookie(req, 'access');
+    if (!accessToken) {
+      throw new UnauthorizedException('No active session');
+    }
+
+    let payload: ReturnType<typeof this.authService.verifyAccessToken>;
+    try {
+      payload = this.authService.verifyAccessToken(accessToken);
+    } catch {
+      throw new UnauthorizedException('Invalid or expired session');
+    }
+
+    const type: 'individual' | 'organization' = body.type === 'organization' ? 'organization' : 'individual';
+    const result = await this.authService.initTenant(payload.sub, payload.email, type);
+
+    await this.redis.storeRefreshToken(
+      payload.sub,
+      result.tokens.refreshToken,
+      result.tokens.refreshExpiresIn,
+      false,
+      'platform',
+    );
+
+    const secure = process.env.NODE_ENV === 'production';
+    const domain = resolvePlatformCookieDomain();
+    const cookieBase = { httpOnly: true, sameSite: 'lax' as const, secure, path: '/', domain };
+
+    res.cookie(TENANT_COOKIES.access, result.tokens.accessToken, { ...cookieBase, maxAge: result.tokens.expiresIn * 1000 });
+    res.cookie(TENANT_COOKIES.refresh, result.tokens.refreshToken, { ...cookieBase, maxAge: result.tokens.refreshExpiresIn * 1000 });
+
+    return { tenantId: result.tenantId };
   }
 
   /**

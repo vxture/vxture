@@ -15,6 +15,8 @@ import { useVelaStore } from '../stores/vela.store';
 import { streamChat } from '../lib/vela.client';
 import type { VelaMessage, VelaToolMessage } from '../types/vela.types';
 
+type VelaDisplayHint = NonNullable<VelaToolMessage['displayHint']>;
+
 // ============================================================================
 // Hook
 // ============================================================================
@@ -74,11 +76,17 @@ export function useVelaChat() {
             case 'tool_result': {
               // 找到对应 tool 消息，更新 data 和 displayHint
               useVelaStore.setState((s) => ({
-                messages: s.messages.map((m) =>
-                  m.role === 'tool' && m.toolId === event.toolId
-                    ? { ...m, data: event.data, displayHint: event.displayHint as VelaToolMessage['displayHint'] }
-                    : m,
-                ),
+                messages: s.messages.map((m) => {
+                  if (m.role !== 'tool' || m.toolId !== event.toolId) {
+                    return m;
+                  }
+
+                  const nextMessage: VelaToolMessage = { ...m, data: event.data };
+                  if (event.displayHint) {
+                    nextMessage.displayHint = event.displayHint as VelaDisplayHint;
+                  }
+                  return nextMessage;
+                }),
               }));
               break;
             }

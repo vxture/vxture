@@ -3,7 +3,7 @@
 .vx-subscription-action-dialog {
   position: fixed;
   inset: 0;
-  z-index: 5000;
+  z-index: var(--vx-z-modal);
   display: grid;
   place-items: center;
   padding: var(--vx-admin-management-space-15r);

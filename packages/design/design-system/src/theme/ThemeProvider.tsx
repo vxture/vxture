@@ -24,9 +24,15 @@ import { THEME_CONSTANTS } from "@vxture/shared";
  * Theme Context Value
  */
 type ThemeContextValue = {
-  /** 当前主题 */
-  theme: string | undefined;
-  /** 设置主题 */
+  /** 当前实际渲染主题 */
+  theme: "light" | "dark";
+  /** 用户选择的主题模式 */
+  mode: "light" | "dark" | "system";
+  /** 设置主题模式 */
+  setMode: (mode: "light" | "dark" | "system") => void;
+  /** 切换亮暗主题 */
+  toggle: () => void;
+  /** 兼容既有调用方的主题设置方法 */
   setTheme: (theme: string) => void;
   /** 当前密度 */
   density: Density;
@@ -42,6 +48,8 @@ export type ThemeProviderProps = {
   readonly children: ReactNode;
   /** 默认主题 */
   readonly defaultTheme?: string;
+  /** 默认主题模式 */
+  readonly defaultMode?: "light" | "dark" | "system";
   /** 默认密度 */
   readonly defaultDensity?: Density;
 };
@@ -122,10 +130,23 @@ function ThemeContextBridge({
   children: ReactNode;
   defaultDensity: Density;
 }) {
-  const { theme, setTheme } = useNextTheme();
+  const { theme: selectedTheme, resolvedTheme, setTheme } = useNextTheme();
+  const mode = normalizeThemeMode(selectedTheme);
+  const theme = resolvedTheme === "dark" ? "dark" : "light";
+
+  const setMode = useCallback((nextMode: "light" | "dark" | "system") => {
+    setTheme(nextMode);
+  }, [setTheme]);
+
+  const toggle = useCallback(() => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  }, [setTheme, theme]);
 
   const baseValue: Omit<ThemeContextValue, "density" | "setDensity"> = {
     theme,
+    mode,
+    setMode,
+    toggle,
     setTheme,
   };
 
@@ -156,12 +177,15 @@ function ThemeContextBridge({
 export function ThemeProvider({
   children,
   defaultTheme = "system",
+  defaultMode,
   defaultDensity = DEFAULT_DENSITY,
 }: ThemeProviderProps) {
+  const resolvedDefaultTheme = defaultMode ?? normalizeThemeMode(defaultTheme);
+
   return (
     <NextThemeProvider
       attribute="class"
-      defaultTheme={defaultTheme}
+      defaultTheme={resolvedDefaultTheme}
       storageKey={THEME_CONSTANTS.STORAGE_KEY}
       enableSystem
     >
@@ -192,4 +216,11 @@ export function useTheme(): ThemeContextValue {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
+}
+
+function normalizeThemeMode(value: string | undefined): "light" | "dark" | "system" {
+  if (value === "light" || value === "dark" || value === "system") {
+    return value;
+  }
+  return "system";
 }

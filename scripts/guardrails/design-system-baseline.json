@@ -1,5 +1,10 @@
 {
   "version": 1,
   "description": "Existing DS inline-style/native-primitive/scale debt. The guardrail blocks new signatures; shrink this file as modules migrate to DS.",
+  "scannedRules": [
+    "ds/no-hardcoded-z-index",
+    "ds/no-hardcoded-breakpoint",
+    "ds/no-app-dark-overrides"
+  ],
   "allowed": []
 }

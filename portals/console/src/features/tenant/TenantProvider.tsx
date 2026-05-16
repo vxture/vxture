@@ -1,13 +1,17 @@
 'use client';
 
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo } from 'react';
 import { usePathname, useRouter } from '@/lib/i18n/navigation';
 import type { TenantContext } from '@/entities/console';
 import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { createMockTenant, tenantRolePriority } from './mock';
 import type { CreateTenantPayload, TenantContextState, TenantListItem, TenantProviderProps, TenantRole } from './types';
 
 const TenantUiContext = createContext<TenantContextState | null>(null);
+const tenantRolePriority: Record<TenantRole, number> = {
+  owner: 0,
+  admin: 1,
+  member: 2,
+};
 
 function slugify(value: string) {
   const normalized = value
@@ -53,8 +57,6 @@ export function TenantProvider({ children }: TenantProviderProps) {
   const { session, switchTenant } = useConsoleSession();
   const router = useRouter();
   const pathname = usePathname();
-  const [localTenants, setLocalTenants] = useState<TenantListItem[]>([]);
-  const [localCurrentTenantId, setLocalCurrentTenantId] = useState<string | null>(null);
 
   const baseTenants = useMemo(() => {
     const tenantMap = new Map<string, TenantContext>();
@@ -69,16 +71,12 @@ export function TenantProvider({ children }: TenantProviderProps) {
     return Array.from(tenantMap.values());
   }, [session.tenant, session.tenantOptions]);
 
-  const currentTenantId = localCurrentTenantId ?? session.tenant?.id ?? null;
+  const currentTenantId = session.tenant?.id ?? null;
   const tenantList = useMemo(() => {
     const sessionItems = baseTenants.map((tenant) => mapTenantContextToItem(tenant, currentTenantId));
-    const localItems = localTenants.map((tenant) => ({
-      ...tenant,
-      isCurrent: tenant.id === currentTenantId,
-    }));
 
-    return sortTenants([...sessionItems, ...localItems]);
-  }, [baseTenants, currentTenantId, localTenants]);
+    return sortTenants(sessionItems);
+  }, [baseTenants, currentTenantId]);
 
   const currentTenant = tenantList.find((tenant) => tenant.isCurrent) ?? tenantList[0] ?? null;
   const hasPersonalTenant = tenantList.some((tenant) => tenant.type === 'personal');
@@ -89,14 +87,6 @@ export function TenantProvider({ children }: TenantProviderProps) {
       return;
     }
 
-    if (tenant.source === 'mock') {
-      setLocalCurrentTenantId(tenant.id);
-      router.replace(pathname);
-      router.refresh();
-      return;
-    }
-
-    setLocalCurrentTenantId(null);
     await switchTenant(tenant.id);
     router.replace(pathname);
     router.refresh();
@@ -107,16 +97,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
       throw new Error('Only one personal workspace is allowed.');
     }
 
-    const tenant = createMockTenant({
-      ...payload,
-      slug: slugify(payload.slug || payload.name),
-      ownerId: session.user?.id ?? 'local-user',
-    });
-
-    setLocalTenants((items) => [...items, tenant]);
-    setLocalCurrentTenantId(tenant.id);
-    router.replace(pathname);
-    router.refresh();
+    throw new Error('Tenant creation BFF endpoint is not available.');
   }
 
   return (

@@ -28,17 +28,27 @@ export function EntityTableSection({
   emptyAction?: ReactNode;
   children: ReactNode;
 }) {
+  const sectionProps = description ? { description } : {};
+  const toolbarProps = {
+    ...(toolbarHint ? { hint: toolbarHint } : {}),
+    ...(toolbarAction ? { action: toolbarAction } : {}),
+  };
+  const emptyProps = {
+    ...(emptyDescription ? { description: emptyDescription } : {}),
+    ...(emptyAction ? { action: emptyAction } : {}),
+  };
+
   return (
-    <PageSection title={title} description={description}>
+    <PageSection title={title} {...sectionProps}>
       <div className="vx-table-stack">
         {toolbarTitle || toolbarHint || toolbarAction ? (
-          <TableToolbar title={toolbarTitle ?? ''} hint={toolbarHint} action={toolbarAction} />
+          <TableToolbar title={toolbarTitle ?? ''} {...toolbarProps} />
         ) : null}
         {filters ? <div className="vx-entity-table-section__filters">{filters}</div> : null}
         {hasData ? (
           children
         ) : (
-          <EmptyState title={emptyTitle ?? 'No items found.'} description={emptyDescription} action={emptyAction} />
+          <EmptyState title={emptyTitle ?? 'No items found.'} {...emptyProps} />
         )}
       </div>
     </PageSection>

@@ -12,6 +12,7 @@ import { SessionAggregator } from './aggregators/session.aggregator';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { PermissionMiddleware } from './middleware/permission.middleware';
 import { TenantMiddleware } from './middleware/tenant.middleware';
+import { AiGatewayRouter } from './routers/ai-gateway.router';
 import { AuthRouter } from './routers/auth.router';
 import { PhoneAuthRouter } from './routers/phone-auth.router';
 import { BillingRouter } from './routers/billing.router';
@@ -34,7 +35,7 @@ import { TenantContextRouter } from './routers/tenant-context.router';
     BillingModule,
     SubscriptionModule,
   ],
-  controllers: [HealthRouter, AuthRouter, PhoneAuthRouter, MeRouter, CapabilitiesRouter, TenantContextRouter, IamRouter, SubscriptionRouter, BillingRouter],
+  controllers: [HealthRouter, AuthRouter, PhoneAuthRouter, MeRouter, CapabilitiesRouter, TenantContextRouter, IamRouter, SubscriptionRouter, BillingRouter, AiGatewayRouter],
   providers: [ConsoleAuthService, SessionAggregator, AccessTokenRevocationService],
 })
 export class AppModule implements NestModule {

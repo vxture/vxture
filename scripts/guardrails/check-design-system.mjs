@@ -17,6 +17,9 @@ const BASELINED_RULE_IDS = new Set([
   "ds/no-app-component-metric-token",
   "ds/no-app-hardcoded-scale",
   "ds/no-app-hardcoded-layout-scale",
+  "ds/no-hardcoded-z-index",
+  "ds/no-hardcoded-breakpoint",
+  "ds/no-app-dark-overrides",
 ]);
 const IGNORED_PARTS = new Set([
   ".git",
@@ -27,6 +30,8 @@ const IGNORED_PARTS = new Set([
   "node_modules",
   "out",
   "storybook-static",
+  "foundation-v1.3.0-complete.css",
+  "vxture-v1.3.0-components",
 ]);
 
 const DS_ROOT = normalize("packages/design/design-system");
@@ -235,6 +240,41 @@ const rules = [
       }
 
       return items;
+    },
+  },
+  {
+    id: "ds/no-hardcoded-z-index",
+    description: "业务层 z-index 大于 99 必须使用 DS 语义层级 token。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return null;
+      const text = stripLineComment(line);
+      const cssMatch = text.match(/\bz-index\s*:\s*(-?\d+)\b/i);
+      const inlineMatch = text.match(/\bzIndex\s*:\s*(-?\d+)\b/);
+      const value = Number(cssMatch?.[1] ?? inlineMatch?.[1] ?? NaN);
+      if (!Number.isFinite(value) || value <= 99) return null;
+      return violation(file, lineNumber, "改为使用 --vx-z-* 语义层级 token，例如 var(--vx-z-dropdown)、var(--vx-z-modal)。", line);
+    },
+  },
+  {
+    id: "ds/no-hardcoded-breakpoint",
+    description: "业务层 media query 不能硬编码 DS 标准断点 px 值。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return null;
+      const text = stripLineComment(line);
+      if (!/@media\b.*\b(?:640|768|1024|1280|1536)px\b/.test(text)) return null;
+      return violation(file, lineNumber, "断点请通过 DS token/Tailwind 语义能力表达，不能在业务样式中复制标准 px 值。", line);
+    },
+  },
+  {
+    id: "ds/no-app-dark-overrides",
+    description: "业务源码不能定义 .dark{} 块；暗色主题必须由 DS token 重映射承接。",
+    checkLine(file, line, lineNumber) {
+      if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return null;
+      const normalized = normalize(file);
+      if (!normalized.endsWith(".css")) return null;
+      const text = stripLineComment(line);
+      if (!/(^|[,{]\s*)(?:\.dark|:root\.dark)\s*\{/.test(text)) return null;
+      return violation(file, lineNumber, "移除应用层 .dark{} 定义，改为消费 DS 暗色 token。", line);
     },
   },
   {
@@ -1046,13 +1086,12 @@ console.log(
 );
 
 function collectFiles(target) {
+  const dirName = path.basename(target);
+  if (IGNORED_PARTS.has(dirName)) return [];
   if (!exists(target)) return [];
   const stats = statSync(target);
   if (stats.isFile()) return [target];
   if (!stats.isDirectory()) return [];
-
-  const dirName = path.basename(target);
-  if (IGNORED_PARTS.has(dirName)) return [];
 
   return readdirSync(target).flatMap((entry) => collectFiles(path.join(target, entry)));
 }

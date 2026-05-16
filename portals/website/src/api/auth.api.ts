@@ -67,14 +67,14 @@ export interface ChangePasswordRequest {
 export interface LoginRequest {
   identifier: string;
   password: string;
-  turnstileToken?: string;
+  turnstileToken?: string | undefined;
 }
 
 export interface SignupRequest {
   email: string;
   password: string;
   name: string;
-  turnstileToken?: string;
+  turnstileToken?: string | undefined;
 }
 
 export async function login(data: LoginRequest): Promise<AuthUserDto> {

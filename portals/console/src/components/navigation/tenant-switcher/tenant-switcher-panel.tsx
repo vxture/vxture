@@ -42,13 +42,19 @@ export function TenantSwitcherPanel({
       ) : null}
 
       <section className="vx-tenant-switcher__list" aria-label="Available workspaces">
-        {tenantList.map((tenant) => (
-          <TenantSwitcherItem
-            key={tenant.id}
-            tenant={tenant}
-            onSelect={tenant.isCurrent ? undefined : (tenantId) => void handleSelect(tenantId)}
-          />
-        ))}
+        {tenantList.map((tenant) => {
+          const itemProps = tenant.isCurrent
+            ? {}
+            : { onSelect: (tenantId: string) => void handleSelect(tenantId) };
+
+          return (
+            <TenantSwitcherItem
+              key={tenant.id}
+              tenant={tenant}
+              {...itemProps}
+            />
+          );
+        })}
       </section>
 
       <section className="vx-tenant-switcher__actions" aria-label="Workspace actions">

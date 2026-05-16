@@ -28,7 +28,7 @@ export interface TenantListItem {
   type: TenantType;
   role: TenantRole;
   isCurrent: boolean;
-  source?: 'session' | 'mock';
+  source?: 'session';
 }
 
 export interface CreateTenantPayload {

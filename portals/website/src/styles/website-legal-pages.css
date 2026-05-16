@@ -155,7 +155,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 40rem) {
   .vx-legal-container {
     width: var(--vx-website-legal-container-width-mobile);
     padding: var(--vx-website-legal-container-padding-mobile);

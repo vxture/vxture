@@ -14,3 +14,4 @@
 // ThemeProvider 同时导出 ThemeProvider、useTheme、ThemeProviderProps
 export * from "./ThemeProvider";
 export * from "./theme.types";
+export * from "./script";

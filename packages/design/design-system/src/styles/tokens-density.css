@@ -20,6 +20,7 @@
   --vx-space-2xl: 28px;
   --vx-space-3xl: 42px;
   --vx-space-4xl: 56px;
+  --vx-space-5xl: 80px;
 
   /* 字号：紧凑 */
   --vx-font-size-xs: 10.5px;
@@ -43,6 +44,7 @@
   --vx-space-2xl: 32px;
   --vx-space-3xl: 48px;
   --vx-space-4xl: 64px;
+  --vx-space-5xl: 96px;
 
   /* 字号：默认 */
   --vx-font-size-xs: 12px;
@@ -66,6 +68,7 @@
   --vx-space-2xl: 36px;
   --vx-space-3xl: 54px;
   --vx-space-4xl: 72px;
+  --vx-space-5xl: 112px;
 
   /* 字号：舒适 */
   --vx-font-size-xs: 13.5px;

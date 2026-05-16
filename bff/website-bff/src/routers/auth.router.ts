@@ -37,6 +37,19 @@ class SignupDto {
   turnstileToken?: string;
 }
 
+class ForgotPasswordDto {
+  email!: string;
+}
+
+class ResetPasswordDto {
+  token!: string;
+  newPassword!: string;
+}
+
+class InitTenantDto {
+  type!: 'individual' | 'organization';
+}
+
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
 function resolveAuthBffUrl(): string {
@@ -167,6 +180,58 @@ export class AuthRouter {
         },
       },
     );
+
+    const data = await response.json();
+    forwardSetCookie(res, response);
+    res.status(response.status).json(data);
+  }
+
+  /**
+   * 忘记密码 → 代理到 auth-bff（发送重置邮件）
+   * POST /api/auth/forgot-password
+   */
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() body: ForgotPasswordDto, @Req() req: Request, @Res() res: Response): Promise<void> {
+    const response = await fetch(AUTH_BFF + '/auth/forgot-password', {
+      method: 'POST',
+      headers: forwardJsonHeaders(req),
+      body: JSON.stringify({ email: body.email, source: 'website' }),
+    });
+
+    const data = await response.json();
+    res.status(response.status).json(data);
+  }
+
+  /**
+   * 重置密码 → 代理到 auth-bff
+   * POST /api/auth/reset-password
+   */
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  async resetPassword(@Body() body: ResetPasswordDto, @Req() req: Request, @Res() res: Response): Promise<void> {
+    const response = await fetch(AUTH_BFF + '/auth/reset-password', {
+      method: 'POST',
+      headers: forwardJsonHeaders(req),
+      body: JSON.stringify({ token: body.token, newPassword: body.newPassword }),
+    });
+
+    const data = await response.json();
+    res.status(response.status).json(data);
+  }
+
+  /**
+   * 初始化租户（注册后首次选择类型）→ 代理到 auth-bff，转发 Set-Cookie
+   * POST /api/auth/tenant/init
+   */
+  @Post('tenant/init')
+  @HttpCode(HttpStatus.OK)
+  async initTenant(@Body() body: InitTenantDto, @Req() req: Request, @Res() res: Response): Promise<void> {
+    const response = await fetch(AUTH_BFF + '/auth/tenant/init', {
+      method: 'POST',
+      headers: forwardJsonHeaders(req),
+      body: JSON.stringify({ type: body.type }),
+    });
 
     const data = await response.json();
     forwardSetCookie(res, response);

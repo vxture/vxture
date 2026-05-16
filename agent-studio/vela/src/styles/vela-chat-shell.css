@@ -30,7 +30,7 @@
   position: fixed;
   right: var(--vx-space-xl);
   bottom: var(--vx-vela-float-bottom);
-  z-index: 9999;
+  z-index: var(--vx-z-toast);
   width: var(--vx-vela-float-width);
   height: var(--vx-vela-float-height);
   overflow: hidden;
@@ -45,7 +45,7 @@
   position: fixed;
   right: var(--vx-space-xl);
   bottom: var(--vx-space-xl);
-  z-index: 9999;
+  z-index: var(--vx-z-toast);
   width: var(--vx-vela-float-button-size);
   height: var(--vx-vela-float-button-size);
   border-radius: var(--vx-radius-full);

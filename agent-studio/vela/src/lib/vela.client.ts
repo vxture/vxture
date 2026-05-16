@@ -21,18 +21,28 @@ export interface StreamChatParams {
   surface:   VelaSurface;
 }
 
+function normalizeOrigin(value: string | undefined): string {
+  return value?.trim().replace(/\/+$/, '') ?? '';
+}
+
+const VELA_BFF_ORIGIN = normalizeOrigin(process.env.NEXT_PUBLIC_VELA_BFF_URL);
+
+function velaBffUrl(path: string): string {
+  return `${VELA_BFF_ORIGIN}${path}`;
+}
+
 // ============================================================================
 // 客户端
 // ============================================================================
 
 /**
- * 向 /vela/chat 发起 SSE 流式请求，返回异步生成器。
+ * 向 vela-bff 发起 SSE 流式请求，返回异步生成器。
  * 请求携带 cookie（credentials: 'include'），认证由 vela-bff 中间件处理。
  */
 export async function* streamChat(
   { message, sessionId, surface }: StreamChatParams,
 ): AsyncGenerator<ChatStreamEvent> {
-  const res = await fetch('/vela/chat', {
+  const res = await fetch(velaBffUrl('/vela/chat'), {
     method:      'POST',
     credentials: 'include',
     headers: {
@@ -68,9 +78,9 @@ export interface ConfirmParams {
   sessionId?: string | null;
 }
 
-/** 向 /vela/confirm 发送用户确认或取消指令，返回 agent-server 的响应 JSON。 */
+/** 向 vela-bff 发送用户确认或取消指令，返回 agent-server 的响应 JSON。 */
 export async function sendConfirm({ auditId, confirmed, surface, sessionId }: ConfirmParams): Promise<unknown> {
-  const res = await fetch('/vela/confirm', {
+  const res = await fetch(velaBffUrl('/vela/confirm'), {
     method:      'POST',
     credentials: 'include',
     headers: {

@@ -9,6 +9,7 @@
 @import "./components-fields.css";
 @import "./components-display.css";
 @import "./components-ai.css";
+@import "./components-toast-drawer-skeleton.css";
 @import "./components-shell-tools.css";
 @import "./components-shell-preferences.css";
 @import "./components-shell-user-menu.css";

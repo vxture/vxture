@@ -60,6 +60,14 @@ const nextConfig = {
   turbopack: {
     resolveAlias: turboAliases,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/vela/:path*',
+        destination: `${process.env.VELA_BFF_DEV_URL ?? 'http://localhost:3121'}/vela/:path*`,
+      },
+    ];
+  },
   webpack: (config) => {
     Object.assign(config.resolve.alias, internalAliases);
     return config;

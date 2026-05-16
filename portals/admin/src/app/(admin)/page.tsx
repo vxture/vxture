@@ -38,6 +38,7 @@ type Tone = 'blue' | 'green' | 'cyan' | 'amber' | 'rose' | 'indigo';
 type PeriodKey = 'recent30' | 'total' | 'year' | 'quarter' | 'month';
 type BusinessPanelId = 'tenantScale' | 'subscription' | 'finance';
 type BusinessMetricIcon = 'building-library' | 'user' | 'api' | 'database' | 'chart-bar' | 'shield-check' | 'cloud';
+type OverviewPulseTag = { label?: string; value: string; tone?: Tone };
 
 interface SummaryMetric {
   label: string;
@@ -870,7 +871,7 @@ function overviewPulseMetrics(period: PeriodKey, locale: Locale) {
       value: compactMetricValue(tenantMetric?.secondary, ['活跃']) || tenantMetric?.value || '—',
       detail: tenantMetric?.detail ?? '暂无活跃客户数据。',
       tone: 'blue',
-      tags: [{ label: '新增', value: tenantMetric?.delta ?? '—', tone: displayDeltaTone(tenantMetric?.delta) }],
+      tags: [createOverviewPulseTag(tenantMetric?.delta ?? '—', '新增', displayDeltaTone(tenantMetric?.delta))],
     },
     {
       id: 'revenue',
@@ -878,7 +879,7 @@ function overviewPulseMetrics(period: PeriodKey, locale: Locale) {
       value: formatAdminCompactCurrencyInput(revenueMetric?.value, locale),
       detail: revenueMetric?.detail ?? '暂无订阅收入数据。',
       tone: 'green',
-      tags: [{ value: revenueMetric?.delta ?? '—', tone: displayDeltaTone(revenueMetric?.delta) }],
+      tags: [createOverviewPulseTag(revenueMetric?.delta ?? '—', undefined, displayDeltaTone(revenueMetric?.delta))],
     },
     {
       id: 'modelCalls',
@@ -886,7 +887,7 @@ function overviewPulseMetrics(period: PeriodKey, locale: Locale) {
       value: tokenMetric?.value ?? '—',
       detail: tokenMetric?.detail ?? '暂无模型调用数据。',
       tone: 'amber',
-      tags: [{ value: tokenMetric?.delta ?? '—', tone: displayDeltaTone(tokenMetric?.delta) }],
+      tags: [createOverviewPulseTag(tokenMetric?.delta ?? '—', undefined, displayDeltaTone(tokenMetric?.delta))],
     },
     {
       id: 'platformStability',
@@ -907,6 +908,14 @@ function displayDeltaTone(value: string | undefined): Tone | undefined {
   if (trimmed.startsWith('+')) return 'blue';
 
   return undefined;
+}
+
+function createOverviewPulseTag(value: string, label?: string, tone?: Tone): OverviewPulseTag {
+  return {
+    ...(label ? { label } : {}),
+    value,
+    ...(tone ? { tone } : {}),
+  };
 }
 
 function isNegativeDisplayValue(value: string) {

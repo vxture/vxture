@@ -16,6 +16,7 @@
   --spacing-vx-2xl: var(--vx-space-2xl);
   --spacing-vx-3xl: var(--vx-space-3xl);
   --spacing-vx-4xl: var(--vx-space-4xl);
+  --spacing-vx-5xl: var(--vx-space-5xl);
 
   --radius-vx-xs: var(--vx-radius-xs);
   --radius-vx-sm: var(--vx-radius-sm);
@@ -33,6 +34,9 @@
   --shadow-vx-xl: var(--vx-shadow-xl);
   --shadow-vx-2xl: var(--vx-shadow-2xl);
   --shadow-vx-glow: var(--vx-shadow-glow);
+  --shadow-vx-focus-ring: var(--vx-shadow-focus-ring);
+  --shadow-vx-focus-ring-ai: var(--vx-shadow-focus-ring-ai);
+  --shadow-vx-inset: var(--vx-shadow-inset);
 
   --text-vx-xs: var(--vx-font-size-xs);
   --text-vx-sm: var(--vx-font-size-sm);
@@ -47,4 +51,19 @@
   --animate-vx-fade-up: vx-fade-up var(--vx-motion-modal-open) both;
   --animate-vx-scale-in: vx-scale-in var(--vx-motion-ai-pop) both;
   --animate-vx-shimmer: vx-ai-shimmer var(--vx-duration-shimmer) var(--vx-ease-linear) infinite;
+
+  --breakpoint-xs: 0px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 1920px;
+
+  --container-vx-sm: var(--vx-container-sm);
+  --container-vx-md: var(--vx-container-md);
+  --container-vx-lg: var(--vx-container-lg);
+  --container-vx-xl: var(--vx-container-xl);
+  --container-vx-2xl: var(--vx-container-2xl);
+  --container-vx-max: var(--vx-container-max);
 }

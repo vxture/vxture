@@ -78,7 +78,9 @@ REDIS_PORT=6379
 REDIS_PASSWORD=${REDIS_PASS}
 JWT_SECRET=${JWT_SECRET}
 AUTH_INTERNAL_TOKEN=${AUTH_INTERNAL_TOKEN}
-COOKIE_DOMAIN_PLATFORM=.vxture.com"
+COOKIE_DOMAIN_PLATFORM=.vxture.com
+WEBSITE_BASE_URL=https://vxture.com
+CONSOLE_BASE_URL=https://console.vxture.com"
 
 # ─ website-bff ──────────────────────────────────────────────────────────────
 write_env "$PLATFORM_DIR/.env.website-bff" "NODE_ENV=production
@@ -108,7 +110,8 @@ REDIS_PORT=6379
 REDIS_PASSWORD=${REDIS_PASS}
 JWT_SECRET=${JWT_SECRET}
 AUTH_BFF_URL=http://vx-auth-bff:3090
-ALLOWED_ORIGIN=https://console.vxture.com"
+ALLOWED_ORIGIN=https://console.vxture.com
+AI_GATEWAY_URL=http://vx-ai-gateway:8000"
 
 # ─ admin-bff ────────────────────────────────────────────────────────────────
 write_env "$PLATFORM_DIR/.env.admin-bff" "NODE_ENV=production

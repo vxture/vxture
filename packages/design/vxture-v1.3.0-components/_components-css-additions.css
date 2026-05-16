@@ -1,0 +1,6 @@
+/* ─────────────────────────────────────────────────────────────────
+   Append to packages/design/design-system/src/styles/components.css
+   ───────────────────────────────────────────────────────────────── */
+
+@import './components-ai.css';
+@import './components-toast-drawer-skeleton.css';

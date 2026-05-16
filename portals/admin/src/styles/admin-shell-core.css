@@ -26,7 +26,7 @@
 .admin-shell__header {
   position: sticky;
   top: 0;
-  z-index: 3200;
+  z-index: var(--vx-z-command);
   min-width: 0;
   min-height: var(--vx-admin-header-height);
   height: var(--vx-admin-header-height);

@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ## 当前能力
 
-### UI 组件（25 个）
+### UI 组件（28 个）
 
 | 组件 | 说明 |
 |------|------|
@@ -85,6 +85,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 | `Tabs` | 标签页 |
 | `Textarea` | 多行输入 |
 | `Tooltip` | 提示 |
+| `ToastProvider` / `useToast` | 全局通知 |
+| `Drawer` | 侧滑面板 |
+| `Skeleton` | 加载占位 |
+
+### AI 组件（5 个）
+
+| 组件 | 说明 |
+|------|------|
+| `ModelBadge` | 模型身份徽章 |
+| `GenerationStream` | AI 流式生成展示面 |
+| `PromptInput` | AI Prompt 输入框 |
+| `AIAssistantBubble` | AI 对话气泡 |
+| `TokenCounter` | Token 用量条 |
 
 ### 其他导出
 

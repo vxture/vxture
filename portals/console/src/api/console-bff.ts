@@ -11,7 +11,6 @@ import type {
   TenantPermissionRecord,
   TenantRoleRecord,
 } from '@/entities/console';
-import { aiModelGrantRecords, aiModelRecords, anonymousSession } from '@/shared/mock-console-data';
 
 // ── 订阅与账单 DTO（与 BFF 响应结构对齐）────────────────────────────────────
 
@@ -75,8 +74,16 @@ function resolveConsoleApiPrefix(): string {
 interface LoginPayload {
   identifier: string;
   password: string;
-  turnstileToken?: string;
+  turnstileToken?: string | undefined;
 }
+
+const ANONYMOUS_SESSION: SessionSnapshot = {
+  isAuthenticated: false,
+  user: null,
+  tenant: null,
+  tenantOptions: [],
+  capabilities: [],
+};
 
 export class ConsoleBffError extends Error {
   constructor(message: string, readonly status?: number) {
@@ -107,11 +114,11 @@ function withTenant(path: string) {
 }
 
 export async function fetchCurrentUser(): Promise<ConsoleUser | null> {
-  return readJson<ConsoleUser | null>('/api/me', anonymousSession.user);
+  return readJson<ConsoleUser | null>('/api/me', null);
 }
 
 export async function fetchTenantContext(): Promise<TenantContext | null> {
-  return readJson<TenantContext | null>(withTenant('/api/tenant-context'), anonymousSession.tenant);
+  return readJson<TenantContext | null>(withTenant('/api/tenant-context'), null);
 }
 
 export async function fetchTenantOptions(): Promise<TenantContext[]> {
@@ -119,7 +126,7 @@ export async function fetchTenantOptions(): Promise<TenantContext[]> {
 }
 
 export async function fetchCapabilities(): Promise<Capability[]> {
-  return readJson<Capability[]>('/api/capabilities', anonymousSession.capabilities);
+  return readJson<Capability[]>('/api/capabilities', []);
 }
 
 export async function fetchMembers(): Promise<MemberRecord[]> {
@@ -141,7 +148,7 @@ export async function fetchTenantPermissions(): Promise<TenantPermissionRecord[]
 export async function fetchAiModels(includeInactive = true): Promise<AiModelRecord[]> {
   return readJson<AiModelRecord[]>(
     `/api/ai-gateway/models?includeInactive=${includeInactive ? 'true' : 'false'}`,
-    aiModelRecords,
+    [],
   );
 }
 
@@ -151,7 +158,7 @@ export async function fetchAiModelGrants(filters: { modelId?: string } = {}): Pr
 
   return readJson<AiModelGrantRecord[]>(
     `/api/ai-gateway/grants${params.size ? `?${params.toString()}` : ''}`,
-    aiModelGrantRecords,
+    [],
   );
 }
 
@@ -525,7 +532,7 @@ export async function restoreSession(): Promise<SessionSnapshot> {
   }
 
   if (!active) {
-    return anonymousSession;
+    return ANONYMOUS_SESSION;
   }
 
   const [user, tenant, tenantOptions, capabilities] = await Promise.all([
@@ -657,7 +664,7 @@ export async function sendPhoneCode(phone: string, turnstileToken?: string): Pro
 }
 
 /** 手机验证码登录 */
-export async function loginWithPhone(payload: { phone: string; code: string; turnstileToken?: string }): Promise<SessionSnapshot> {
+export async function loginWithPhone(payload: { phone: string; code: string; turnstileToken?: string | undefined }): Promise<SessionSnapshot> {
   let response: Response;
   try {
     response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/login-with-phone`, {
@@ -699,6 +706,39 @@ export async function forgotPassword(payload: { email: string }): Promise<void> 
     });
   } catch {
     // 防止邮箱枚举，忽略所有错误
+  }
+}
+
+export async function resetPassword(payload: { token: string; newPassword: string }): Promise<void> {
+  let response: Response;
+
+  try {
+    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/reset-password`, {
+      method: 'POST',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+  }
+
+  if (!response.ok) {
+    let message = 'Password reset failed';
+
+    try {
+      const body = (await response.json()) as { message?: string | string[] };
+      if (Array.isArray(body.message)) {
+        message = body.message[0] ?? message;
+      } else if (body.message) {
+        message = body.message;
+      }
+    } catch {
+      // 忽略非标准错误体，保留统一错误文案。
+    }
+
+    throw new ConsoleBffError(message, response.status);
   }
 }
 

@@ -3,11 +3,17 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { login, logout, restoreSession, switchTenantSession } from '@/api/console-bff';
 import type { SessionSnapshot } from '@/entities/console';
-import { anonymousSession } from '@/shared/mock-console-data';
 
 type SessionStatus = 'idle' | 'loading' | 'ready';
 const SESSION_SYNC_INTERVAL_MS = 2000;
 const SESSION_SYNC_THROTTLE_MS = 1500;
+const ANONYMOUS_SESSION: SessionSnapshot = {
+  isAuthenticated: false,
+  user: null,
+  tenant: null,
+  tenantOptions: [],
+  capabilities: [],
+};
 
 interface RefreshSessionOptions {
   silent?: boolean;
@@ -23,12 +29,12 @@ interface SessionContextValue {
 }
 
 const SessionContext = createContext<SessionContextValue>({
-  session: anonymousSession,
+  session: ANONYMOUS_SESSION,
   status: 'idle',
   signIn: async () => undefined,
   signOut: () => undefined,
   switchTenant: async () => undefined,
-  refreshSession: async () => anonymousSession,
+  refreshSession: async () => ANONYMOUS_SESSION,
 });
 
 const ACTIVE_TENANT_STORAGE_KEY = 'vx-console-active-tenant-id';
@@ -68,9 +74,9 @@ function getSessionIdentity(snapshot: SessionSnapshot) {
 }
 
 export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<SessionSnapshot>(anonymousSession);
+  const [session, setSession] = useState<SessionSnapshot>(ANONYMOUS_SESSION);
   const [status, setStatus] = useState<SessionStatus>('loading');
-  const sessionRef = useRef<SessionSnapshot>(anonymousSession);
+  const sessionRef = useRef<SessionSnapshot>(ANONYMOUS_SESSION);
   const lastSyncAtRef = useRef(0);
   const syncInFlightRef = useRef(false);
 
@@ -96,11 +102,11 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
       return snapshot;
     } catch (error) {
       if (!options.silent) {
-        commitSession(anonymousSession);
+        commitSession(ANONYMOUS_SESSION);
       }
 
       setStatus('ready');
-      return options.silent ? sessionRef.current : anonymousSession;
+      return options.silent ? sessionRef.current : ANONYMOUS_SESSION;
     }
   }, [commitSession]);
 
@@ -152,7 +158,7 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
       commitSession(snapshot);
       setStatus('ready');
     } catch (error) {
-      commitSession(anonymousSession);
+      commitSession(ANONYMOUS_SESSION);
       setStatus('ready');
       throw error;
     }
@@ -160,7 +166,7 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
 
   async function signOut() {
     await logout();
-    commitSession(anonymousSession);
+    commitSession(ANONYMOUS_SESSION);
     setStatus('ready');
   }
 

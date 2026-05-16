@@ -17,6 +17,11 @@ export function DetailDrawer({
   children?: ReactNode;
   onClose: () => void;
 }) {
+  const detailProps = {
+    ...(description ? { description } : {}),
+    ...(fields ? { fields } : {}),
+  };
+
   return (
     <div className="vx-overlay" onClick={onClose}>
       <aside
@@ -30,7 +35,7 @@ export function DetailDrawer({
             <span aria-hidden="true">×</span>
           </Button>
         </div>
-        <DetailPanel title={title} description={description} fields={fields}>
+        <DetailPanel title={title} {...detailProps}>
           {children}
         </DetailPanel>
       </aside>

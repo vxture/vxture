@@ -6,6 +6,7 @@ import { LOCALE_CONSTANTS, PREFERENCE_CONSTANTS, THEME_CONSTANTS, type Locale, t
 import type { Density } from '@vxture/design-system';
 import { ConsoleAppProviders } from '@/providers/ConsoleAppProviders';
 import { loadConsoleMessageCatalog, loadConsoleMessages, normalizeConsoleLocale } from '@/lib/i18n';
+import { themeBootstrapScript } from '@vxture/design-system';
 import './globals.css';
 
 const fontBrand = Funnel_Display({
@@ -46,6 +47,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+      </head>
       <body className={`${fontBrand.variable} ${inter.variable} ${geistMono.variable}`}>
         <ConsoleAppProviders
           initialLocale={locale}

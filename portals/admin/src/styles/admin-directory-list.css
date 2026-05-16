@@ -44,7 +44,7 @@
 
 .vx-tenant-directory-row:has(.vx-tenant-actions__menu),
 .vx-tenant-directory-card:has(.vx-tenant-actions__menu) {
-  z-index: 2400;
+  z-index: var(--vx-z-dropdown);
 }
 
 .vx-tenant-directory-row__index {
