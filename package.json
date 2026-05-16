@@ -3,6 +3,7 @@
   "name": "vxture",
   "private": true,
   "version": "0.1.0",
+  "packageManager": "pnpm@10.30.3",
   "description": "Vxture 大模型和智能体服务平台",
   "keywords": [
     "monorepo",

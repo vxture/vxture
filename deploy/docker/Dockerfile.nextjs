@@ -15,7 +15,7 @@ ARG NODE_VERSION=22
 FROM node:${NODE_VERSION}-alpine AS builder
 WORKDIR /repo
 
-RUN corepack enable && corepack prepare pnpm@9 --activate
+RUN corepack enable
 
 # 先复制 lockfile，最大化 install 缓存命中
 COPY pnpm-workspace.yaml pnpm-lock.yaml package.json tsconfig.base.json ./
