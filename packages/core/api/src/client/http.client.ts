@@ -180,12 +180,14 @@ export class VxHttpClient {
     data?:   unknown,
     options?: RequestOptions,
   ): AxiosRequestConfig {
+    const baseURL  = options?.baseURL  ?? this.options.baseURL;
+    const headers  = options?.headers  ?? this.options.headers;
     return {
       method,
       url:          path,
-      baseURL:      options?.baseURL ?? this.options.baseURL,
+      ...(baseURL  !== undefined ? { baseURL }  : {}),
       data,
-      headers:      options?.headers ?? this.options.headers,
+      ...(headers  !== undefined ? { headers }  : {}),
       timeout:      options?.timeout ?? this.options.timeout ?? 30_000,
       responseType: options?.responseType ?? 'json',
     };
@@ -249,11 +251,13 @@ export class VxHttpClient {
 
       this.logger.error(`[VxHttpClient] ${label} → ${status ?? 'network error'}`);
 
+      const errMessage = typeof body?.['message'] === 'string' ? body['message'] : undefined;
+      const errCode    = typeof body?.['code']    === 'string' ? body['code']    : undefined;
       return normalizeHttpError(
         status ?? 0,
         {
-          message: typeof body?.['message'] === 'string' ? body['message'] : undefined,
-          code:    typeof body?.['code']    === 'string' ? body['code']    : undefined,
+          ...(errMessage !== undefined ? { message: errMessage } : {}),
+          ...(errCode    !== undefined ? { code:    errCode }    : {}),
           details: body?.['details'],
         },
         requestId,
