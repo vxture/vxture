@@ -11,8 +11,9 @@ function isDev(): boolean {
   }
 
   // 浏览器环境（仅 ESM 格式）
-  if (typeof globalThis !== 'undefined' && globalThis.document !== undefined) {
-    return globalThis.location?.hostname === 'localhost' || globalThis.location?.hostname === '127.0.0.1';
+  if (typeof document !== 'undefined') {
+    const hostname = typeof location !== 'undefined' ? location.hostname : '';
+    return hostname === 'localhost' || hostname === '127.0.0.1';
   }
 
   // 默认返回 false
