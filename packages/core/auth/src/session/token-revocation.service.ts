@@ -150,11 +150,13 @@ function resolveRedisRuntimeConfig(): {
   REDIS_DB: number;
   REDIS_KEY_PREFIX: string;
 } {
+  const url = process.env.REDIS_URL?.trim();
+  const password = process.env.REDIS_PASSWORD?.trim();
   return {
-    REDIS_URL: process.env.REDIS_URL?.trim() || undefined,
+    ...(url ? { REDIS_URL: url } : {}),
     REDIS_HOST: process.env.REDIS_HOST?.trim() || 'localhost',
     REDIS_PORT: parseInteger(process.env.REDIS_PORT, 6379),
-    REDIS_PASSWORD: process.env.REDIS_PASSWORD?.trim() || undefined,
+    ...(password ? { REDIS_PASSWORD: password } : {}),
     REDIS_DB: parseInteger(process.env.REDIS_DB, 0),
     REDIS_KEY_PREFIX: process.env.REDIS_KEY_PREFIX?.trim() || 'vx:',
   };

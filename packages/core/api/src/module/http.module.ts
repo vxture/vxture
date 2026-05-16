@@ -34,9 +34,9 @@ export class VxHttpModule {
       module: VxHttpModule,
       imports: [
         HttpModule.register({
-          baseURL:  options.baseURL,
-          timeout:  options.timeout ?? 30_000,
-          headers:  options.headers,
+          ...(options.baseURL !== undefined ? { baseURL: options.baseURL } : {}),
+          timeout: options.timeout ?? 30_000,
+          ...(options.headers !== undefined ? { headers: options.headers } : {}),
         }),
       ],
       providers: [
