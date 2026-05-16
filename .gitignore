@@ -33,6 +33,9 @@ dist/
 .env.production
 .env.development
 .env.test
+# Deploy server env files with real secrets (keep only .example counterparts)
+deploy/**/.env.*
+!deploy/**/.env.*.example
 
 # OS generated files
 .DS_Store
