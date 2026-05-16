@@ -6,8 +6,9 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
+  const allowedOrigins = process.env['ALLOWED_ORIGIN']?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
   app.enableCors({
-    origin: true,
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
     credentials: true,
   });
   await app.listen(Number(process.env.CONSOLE_BFF_PORT ?? 3021));

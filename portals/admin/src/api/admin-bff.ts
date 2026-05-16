@@ -47,13 +47,13 @@ import type {
 function normalizeOrigin(value: string | undefined): string {
   const normalized = value?.trim().replace(/\/+$/, '');
   if (!normalized) {
-    return 'http://localhost:8000';
+    return 'http://localhost:3031';
   }
   return normalized;
 }
 
 const DEFAULT_BFF_URL = normalizeOrigin(
-  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_ADMIN_BFF_URL
+  process.env.NEXT_PUBLIC_ADMIN_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL
 );
 const ADMIN_API_PREFIX = resolveAdminApiPrefix();
 const EMPTY_SESSION: SessionSnapshot = {
@@ -68,7 +68,8 @@ function resolveAdminApiPrefix(): string {
     return explicitPrefix.trim().replace(/\/+$/, '');
   }
 
-  const usesDirectAdminBff = Boolean(process.env.NEXT_PUBLIC_ADMIN_BFF_URL?.trim()) && !process.env.NEXT_PUBLIC_API_URL?.trim();
+  // 默认直连 admin-bff；只有显式配置统一 API 网关时才保留 /admin-api 前缀。
+  const usesDirectAdminBff = Boolean(process.env.NEXT_PUBLIC_ADMIN_BFF_URL?.trim()) || !process.env.NEXT_PUBLIC_API_URL?.trim();
   return usesDirectAdminBff ? '' : '/admin-api';
 }
 

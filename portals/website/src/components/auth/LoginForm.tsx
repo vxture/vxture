@@ -401,10 +401,11 @@ function RegisterLink({ onRegister }: { onRegister: () => void }) {
 }
 
 function buildOAuthStartUrl(provider: 'dingtalk' | 'feishu'): string {
-  const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000').replace(/\/+$/, '');
-  const authApiPrefix = (process.env.NEXT_PUBLIC_AUTH_API_PREFIX ?? '/auth-api').replace(/\/+$/, '');
+  const authBffUrl = (process.env.NEXT_PUBLIC_AUTH_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3090').replace(/\/+$/, '');
+  const usesDirectAuthBff = Boolean(process.env.NEXT_PUBLIC_AUTH_BFF_URL?.trim()) || !process.env.NEXT_PUBLIC_API_URL?.trim();
+  const authApiPrefix = (process.env.NEXT_PUBLIC_AUTH_API_PREFIX ?? (usesDirectAuthBff ? '' : '/auth-api')).replace(/\/+$/, '');
   const returnTo = typeof window !== 'undefined' ? window.location.origin + '/' : '/';
-  return `${apiUrl}${authApiPrefix}/auth/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}&source=website`;
+  return `${authBffUrl}${authApiPrefix}/auth/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}&source=website`;
 }
 
 const OFFICIAL_SOCIAL_ICON_SRC = {

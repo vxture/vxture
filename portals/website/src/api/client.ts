@@ -10,13 +10,24 @@ import axios from 'axios';
 function normalizeOrigin(value: string | undefined): string {
   const normalized = value?.trim().replace(/\/+$/, '');
   if (!normalized) {
-    return 'http://localhost:8000';
+    return 'http://localhost:3011';
   }
   return normalized;
 }
 
-const API_ORIGIN = normalizeOrigin(process.env.NEXT_PUBLIC_API_URL);
-const API_PREFIX = (process.env.NEXT_PUBLIC_WEBSITE_API_PREFIX ?? '/website-api').replace(/\/+$/, '');
+function resolveWebsiteApiPrefix(): string {
+  const explicitPrefix = process.env.NEXT_PUBLIC_WEBSITE_API_PREFIX;
+  if (explicitPrefix !== undefined) {
+    return explicitPrefix.trim().replace(/\/+$/, '');
+  }
+
+  // 默认直连 website-bff；只有显式配置统一 API 网关时才保留 /website-api 前缀。
+  const usesDirectWebsiteBff = Boolean(process.env.NEXT_PUBLIC_WEBSITE_BFF_URL?.trim()) || !process.env.NEXT_PUBLIC_API_URL?.trim();
+  return usesDirectWebsiteBff ? '' : '/website-api';
+}
+
+const API_ORIGIN = normalizeOrigin(process.env.NEXT_PUBLIC_WEBSITE_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL);
+const API_PREFIX = resolveWebsiteApiPrefix();
 const API_BASE_URL = `${API_ORIGIN}${API_PREFIX}`;
 
 export const apiClient = axios.create({

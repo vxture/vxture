@@ -57,8 +57,8 @@ export class PaymentsRouter {
     try {
       await client.query('begin');
 
-      // 查询当前支付记录
-      const lookupResult = await client.query<PaymentLookupRow>(PAYMENT_LOOKUP_SQL, [paymentId]);
+      // 查询当前支付记录并锁行（FOR UPDATE），防止并发双核销
+      const lookupResult = await client.query<PaymentLookupRow>(PAYMENT_LOOKUP_FOR_UPDATE_SQL, [paymentId]);
       const current = lookupResult.rows[0];
 
       if (!current) {
@@ -118,18 +118,29 @@ export class PaymentsRouter {
 
     const remark = normalizeRemark(body?.remark, '驳回原因');
     const operatorId = req.user?.id ?? null;
+    const client = await this.rwPool.connect();
 
-    const lookupResult = await this.roPool.query<PaymentLookupRow>(PAYMENT_LOOKUP_SQL, [paymentId]);
-    const current = lookupResult.rows[0];
+    try {
+      await client.query('begin');
 
-    if (!current) {
-      throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+      const lookupResult = await client.query<PaymentLookupRow>(PAYMENT_LOOKUP_FOR_UPDATE_SQL, [paymentId]);
+      const current = lookupResult.rows[0];
+
+      if (!current) {
+        throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+      }
+      if (current.pay_status !== 'pending_verify') {
+        throw new BadRequestException(`当前状态（${current.pay_status}）不允许驳回，仅 pending_verify 状态可驳回`);
+      }
+
+      await client.query(PAYMENT_REJECT_SQL, [remark, operatorId, paymentId]);
+      await client.query('commit');
+    } catch (error) {
+      await client.query('rollback');
+      throw error;
+    } finally {
+      client.release();
     }
-    if (current.pay_status !== 'pending_verify') {
-      throw new BadRequestException(`当前状态（${current.pay_status}）不允许驳回，仅 pending_verify 状态可驳回`);
-    }
-
-    await this.rwPool.query(PAYMENT_REJECT_SQL, [remark, operatorId, paymentId]);
 
     const updated = await this.roPool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
     if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
@@ -398,6 +409,13 @@ const PAYMENT_LOOKUP_SQL = `
   select id, pay_status, paid_amount, bill_id
   from commerce.tenant_payment
   where id = $1
+`;
+
+const PAYMENT_LOOKUP_FOR_UPDATE_SQL = `
+  select id, pay_status, paid_amount, bill_id
+  from commerce.tenant_payment
+  where id = $1
+  for update
 `;
 
 // ─── 核销：pending_verify → paid ──────────────────────────────────────────────

@@ -116,13 +116,26 @@ export class AuthRouter {
 
   @Post('send-phone-code')
   @HttpCode(HttpStatus.OK)
-  async sendPhoneCode(@Body() body: SendPhoneCodeDto): Promise<{ message: string }> {
+  async sendPhoneCode(
+    @Req() req: AuthHttpRequest,
+    @Body() body: SendPhoneCodeDto,
+  ): Promise<{ message: string }> {
     const phone = normalizePhone(String(body.phone ?? ''));
     assertPhone(phone);
+
+    const ip = resolveClientIp(req);
+    const rateLimit = this.rateLimiter.check(ip, phone);
+    if (!rateLimit.allowed) {
+      throw new HttpException(
+        `请求过于频繁，请 ${rateLimit.retryAfter ?? 900} 秒后重试`,
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
+    }
 
     const canUsePhoneLogin = await this.platformAuthService.canUsePhoneLogin(phone);
     if (canUsePhoneLogin) {
       await this.phoneCodeService.sendCode(phone, { scope: ADMIN_PHONE_CODE_SCOPE });
+      this.rateLimiter.recordFailure(ip, phone);
     }
 
     return { message: '验证码已发送，请在 10 分钟内输入' };

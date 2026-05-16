@@ -19,10 +19,10 @@ import cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
-  // 开启全局参数校验：自动剥离多余字段，校验不通过直接 400
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  const allowedOrigins = process.env['ALLOWED_ORIGIN']?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
   app.enableCors({
-    origin: true,
+    origin: allowedOrigins.length > 0 ? allowedOrigins : true,
     credentials: true,
   });
   await app.listen(Number(process.env.WEBSITE_BFF_PORT ?? 3011));

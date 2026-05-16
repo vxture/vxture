@@ -84,7 +84,7 @@ const nextConfig = {
   output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
 
   env: {
-    CUSTOM_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
+    CUSTOM_API_URL: process.env.NEXT_PUBLIC_WEBSITE_BFF_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3011',
     NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY: process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? '',
   },
 

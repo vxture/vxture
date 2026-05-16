@@ -51,15 +51,26 @@ export interface ConsoleBillingOverview {
 function normalizeOrigin(value: string | undefined): string {
   const normalized = value?.trim().replace(/\/+$/, '');
   if (!normalized) {
-    return 'http://localhost:8000';
+    return 'http://localhost:3021';
   }
   return normalized;
 }
 
 const DEFAULT_BFF_URL = normalizeOrigin(
-  process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_CONSOLE_BFF_URL
+  process.env.NEXT_PUBLIC_CONSOLE_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL
 );
-const CONSOLE_API_PREFIX = (process.env.NEXT_PUBLIC_CONSOLE_API_PREFIX ?? '/console-api').replace(/\/+$/, '');
+const CONSOLE_API_PREFIX = resolveConsoleApiPrefix();
+
+function resolveConsoleApiPrefix(): string {
+  const explicitPrefix = process.env.NEXT_PUBLIC_CONSOLE_API_PREFIX;
+  if (explicitPrefix !== undefined) {
+    return explicitPrefix.trim().replace(/\/+$/, '');
+  }
+
+  // 默认直连 console-bff；只有显式配置统一 API 网关时才保留 /console-api 前缀。
+  const usesDirectConsoleBff = Boolean(process.env.NEXT_PUBLIC_CONSOLE_BFF_URL?.trim()) || !process.env.NEXT_PUBLIC_API_URL?.trim();
+  return usesDirectConsoleBff ? '' : '/console-api';
+}
 
 interface LoginPayload {
   identifier: string;

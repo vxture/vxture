@@ -31,7 +31,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     const accessToken = req.cookies?.[CONSOLE_AUTH_COOKIES.ACCESS_TOKEN];
     if (!accessToken) {
-      res.status(401).json({ message: 'No active session' });
+      res.status(401).json({ code: 'UNAUTHORIZED', message: 'No active session' });
       return;
     }
 
@@ -41,7 +41,7 @@ export class AuthMiddleware implements NestMiddleware {
       const user = await this.consoleAuthService.getCurrentUser(payload.sub);
 
       if (!user) {
-        res.status(401).json({ message: 'No active session' });
+        res.status(401).json({ code: 'UNAUTHORIZED', message: 'No active session' });
         return;
       }
 
@@ -51,6 +51,7 @@ export class AuthMiddleware implements NestMiddleware {
     } catch (error) {
       const forbidden = error instanceof ForbiddenException;
       res.status(forbidden ? 403 : 401).json({
+        code: forbidden ? 'FORBIDDEN' : 'UNAUTHORIZED',
         message: forbidden ? 'Invalid console session scope' : 'No active session',
       });
       return;
