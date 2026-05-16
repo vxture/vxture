@@ -26,10 +26,15 @@ jobs:
             # 1. 同步最新配置
             git -C /srv/vxture/repo pull
 
-            # 2. 拉取新镜像并滚动重启平台栈
+            # 2. 可选登录 GHCR，私有包需要 WORKER01_GHCR_USERNAME / WORKER01_GHCR_TOKEN
+            if [ -n "${{ secrets.WORKER01_GHCR_USERNAME }}" ] && [ -n "${{ secrets.WORKER01_GHCR_TOKEN }}" ]; then
+              echo "${{ secrets.WORKER01_GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.WORKER01_GHCR_USERNAME }}" --password-stdin
+            fi
+
+            # 3. 拉取新镜像并滚动重启平台栈
             cd /srv/vxture/repo/deploy/worker-01
             docker compose -f compose.platform.yml pull
             docker compose -f compose.platform.yml up -d
 
-            # 3. 输出最终状态
+            # 4. 输出最终状态
             docker compose -f compose.platform.yml ps

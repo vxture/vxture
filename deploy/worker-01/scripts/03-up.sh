@@ -36,7 +36,7 @@ check_file "$COMPOSE_DIR/.env.console-bff"
 check_file "$COMPOSE_DIR/.env.admin-bff"
 
 echo "  密钥文件:"
-check_file "$COMPOSE_DIR/secrets/platform_pg_password.txt"
+check_file "$COMPOSE_DIR/secrets/pg-password"
 
 echo "  SSL 证书:"
 check_file /srv/vxture/data/nginx/ssl/vxture.com.crt
