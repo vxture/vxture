@@ -38,6 +38,9 @@ ARG PACKAGE_FILTER
 ENV NEXT_STANDALONE=1
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Compile shared workspace packages first — portals resolve them via dist/ exports
+RUN pnpm -w build:frontend-deps
+
 RUN pnpm --filter ${PACKAGE_FILTER} build
 
 # ── 运行层 ────────────────────────────────────────────────────────────────────
