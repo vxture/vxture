@@ -30,7 +30,6 @@ jobs:
             build-args: |
               PORTAL_PATH=portals/website
               PACKAGE_FILTER=@vxture/website
-              NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY=${{ secrets.CF_TURNSTILE_TENANT_SITE_KEY }}
 
           - name: console
             image: ghcr.io/vxture/console
@@ -38,7 +37,6 @@ jobs:
             build-args: |
               PORTAL_PATH=portals/console
               PACKAGE_FILTER=@vxture/console
-              NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY=${{ secrets.CF_TURNSTILE_TENANT_SITE_KEY }}
 
           - name: admin
             image: ghcr.io/vxture/admin
@@ -157,7 +155,9 @@ jobs:
         with:
           context: .
           file: ${{ matrix.dockerfile }}
-          build-args: ${{ matrix.build-args }}
+          build-args: |
+            ${{ matrix.build-args }}
+            NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY=${{ secrets.CF_TURNSTILE_TENANT_SITE_KEY }}
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
