@@ -578,13 +578,13 @@ export class PasswordAuthRouter {
   @HttpCode(HttpStatus.OK)
   async forgotPassword(@Body() body: ForgotPasswordDto): Promise<{ status: string }> {
     try {
-      const resetToken = await this.accountAuthService.requestPasswordReset(body.email);
-      if (resetToken) {
+      const result = await this.accountAuthService.requestPasswordReset(body.email);
+      if (result) {
         const isConsole = body.source === 'console';
         const baseUrl = isConsole
           ? (process.env['CONSOLE_BASE_URL']?.replace(/\/$/, '') ?? 'http://localhost:3020')
           : (process.env['WEBSITE_BASE_URL']?.replace(/\/$/, '') ?? 'http://localhost:3010');
-        const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
+        const resetUrl = `${baseUrl}/reset-password?token=${result.rawToken}`;
         await this.mailService.sendPasswordReset(body.email, resetUrl);
       }
     } catch {

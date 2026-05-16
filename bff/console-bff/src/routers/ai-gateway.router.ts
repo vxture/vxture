@@ -5,7 +5,8 @@
  * 代理 console portal 的 AI 模型/授权 CRUD 请求到 ai-gateway 服务。
  * 所有端点要求 platform.model.manage 能力（运营人员权限）。
  *
- * 上游：AI_GATEWAY_URL（默认 http://localhost:8000）
+ * 上游：AI_GATEWAY_URL（默认 http://localhost:3100）
+ * 上游路径前缀：/ai/gateway/admin
  */
 
 import {
@@ -30,10 +31,11 @@ import type { RequestContext } from '../types/console.types';
 // ─── 配置 ─────────────────────────────────────────────────────────────────────
 
 function resolveGatewayUrl(): string {
-  return (process.env['AI_GATEWAY_URL']?.trim() ?? 'http://localhost:8000').replace(/\/+$/, '');
+  return (process.env['AI_GATEWAY_URL']?.trim() ?? 'http://localhost:3100').replace(/\/+$/, '');
 }
 
 const AI_GATEWAY = resolveGatewayUrl();
+const ADMIN_BASE = `${AI_GATEWAY}/ai/gateway/admin`;
 
 // ─── 守卫 ─────────────────────────────────────────────────────────────────────
 
@@ -48,34 +50,37 @@ function requireModelManageCapability(req: Request & RequestContext): void {
 
 // ─── 代理工具 ─────────────────────────────────────────────────────────────────
 
+async function readJson(response: globalThis.Response): Promise<unknown> {
+  if (response.status === 204 || response.headers.get('content-length') === '0') return {};
+  const text = await response.text();
+  if (!text) return {};
+  return JSON.parse(text);
+}
+
 async function proxyGet(path: string): Promise<{ status: number; data: unknown }> {
-  const response = await fetch(AI_GATEWAY + path);
-  const data = await response.json();
-  return { status: response.status, data };
+  const response = await fetch(ADMIN_BASE + path);
+  return { status: response.status, data: await readJson(response) };
 }
 
 async function proxyPost(path: string, body?: unknown): Promise<{ status: number; data: unknown }> {
   const init: RequestInit = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
   if (body !== undefined) init.body = JSON.stringify(body);
-  const response = await fetch(AI_GATEWAY + path, init);
-  const data = await response.json();
-  return { status: response.status, data };
+  const response = await fetch(ADMIN_BASE + path, init);
+  return { status: response.status, data: await readJson(response) };
 }
 
 async function proxyPut(path: string, body: unknown): Promise<{ status: number; data: unknown }> {
-  const response = await fetch(AI_GATEWAY + path, {
+  const response = await fetch(ADMIN_BASE + path, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  const data = await response.json();
-  return { status: response.status, data };
+  return { status: response.status, data: await readJson(response) };
 }
 
 async function proxyDelete(path: string): Promise<{ status: number; data: unknown }> {
-  const response = await fetch(AI_GATEWAY + path, { method: 'DELETE' });
-  const data = await response.json();
-  return { status: response.status, data };
+  const response = await fetch(ADMIN_BASE + path, { method: 'DELETE' });
+  return { status: response.status, data: await readJson(response) };
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
