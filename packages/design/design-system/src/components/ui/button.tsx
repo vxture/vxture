@@ -30,7 +30,7 @@ const buttonVariants = ({
     "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-vx-surface transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vx-ring-strong focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
     {
       "bg-vx-primary text-vx-text-inverse hover:bg-vx-primary-strong": variant === "default",
-      "bg-vx-danger text-vx-text-inverse hover:bg-vx-danger": variant === "destructive",
+      "bg-vx-danger text-vx-text-inverse hover:bg-vx-danger-strong": variant === "destructive",
       "border border-vx-border bg-vx-surface hover:bg-vx-surface-muted hover:text-vx-text-primary":
         variant === "outline",
       "bg-vx-surface-muted text-vx-text-primary hover:bg-vx-primary-soft": variant === "secondary",

@@ -13,8 +13,11 @@
 export type {
   FullscreenMode,
   FullscreenOptions,
+  FullscreenState,
+  FullscreenContextValue,
   FullscreenProviderProps,
   FullscreenContainerProps,
   FullscreenContainerRef,
   FullscreenToggleProps,
+  FullscreenPortalProps,
 } from "./fullscreen";

@@ -56,6 +56,7 @@
   --vx-color-warning-surface: var(--vx-color-warning-50);
   --vx-color-warning-border: var(--vx-color-warning-200);
   --vx-color-danger: var(--vx-color-danger-600);
+  --vx-color-danger-strong: var(--vx-color-danger-700);
   --vx-color-danger-foreground: var(--vx-color-danger-700);
   --vx-color-danger-surface: var(--vx-color-danger-50);
   --vx-color-danger-border: var(--vx-color-danger-300);

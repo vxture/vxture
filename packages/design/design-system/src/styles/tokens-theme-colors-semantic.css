@@ -30,6 +30,7 @@
   --color-vx-warning: var(--vx-color-warning);
   --color-vx-warning-surface: var(--vx-color-warning-surface);
   --color-vx-danger: var(--vx-color-danger);
+  --color-vx-danger-strong: var(--vx-color-danger-strong);
   --color-vx-danger-surface: var(--vx-color-danger-surface);
   --color-vx-info: var(--vx-color-info);
   --color-vx-info-surface: var(--vx-color-info-surface);

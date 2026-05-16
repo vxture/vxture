@@ -4,5 +4,3 @@
  */
 
 export type * from "./types";
-
-export const DESIGN_SYSTEM_TYPES_ENTRY = "types";
