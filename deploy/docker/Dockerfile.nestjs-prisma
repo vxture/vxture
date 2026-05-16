@@ -38,7 +38,7 @@ ARG PACKAGE_FILTER
 ARG PRISMA_SCHEMA
 
 # 生成 Linux 平台的 Prisma query engine（容器内执行，确保平台匹配）
-RUN node_modules/.bin/prisma generate --schema=${PRISMA_SCHEMA}
+RUN pnpm --filter ${PACKAGE_FILTER} exec prisma generate --schema=${PRISMA_SCHEMA}
 
 RUN pnpm --filter ${PACKAGE_FILTER} build
 
