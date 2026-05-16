@@ -4,9 +4,8 @@
 # 使用：docker compose -f compose.platform.yml up -d
 #
 # 前置：
-#   1. cp .env.example .env  （填写 PLATFORM_REDIS_PASSWORD）
-#   2. cp .env.*.example → .env.*  （填写各服务真实密钥）
-#   3. echo 'password' > secrets/platform_pg_password.txt && chmod 600 secrets/platform_pg_password.txt
+#   1. bash scripts/setup-env.sh  （生成 secrets/platform.env、secrets/pg-password、.env、.env.*）
+#   2. 手动补全 .env.* 中的 CHANGE_ME 字段（SMTP、OAuth 等服务专属密钥）
 
 name: vx-platform
 
@@ -45,9 +44,9 @@ services:
       - /srv/vxture/data/platform-redis:/data
     command: >
       redis-server --appendonly yes
-      --requirepass "${PLATFORM_REDIS_PASSWORD}"
+      --requirepass "${REDIS_PASSWORD}"
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${PLATFORM_REDIS_PASSWORD}", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -105,7 +104,7 @@ services:
     networks: [vxture-prod]
     ports:
       - "100.100.197.42:3090:3090"  # 绑定 Tailscale 接口，仅 Tailscale 对端可达
-    env_file: .env.auth-bff
+    env_file: [secrets/platform.env, .env.auth-bff]
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -132,7 +131,7 @@ services:
     container_name: vx-website-bff
     restart: unless-stopped
     networks: [vxture-prod]
-    env_file: .env.website-bff
+    env_file: [secrets/platform.env, .env.website-bff]
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -148,7 +147,7 @@ services:
     container_name: vx-ai-gateway
     restart: unless-stopped
     networks: [vxture-prod]
-    env_file: .env.ai-gateway
+    env_file: [secrets/platform.env, .env.ai-gateway]
     depends_on:
       postgres: { condition: service_healthy }
     healthcheck:
@@ -162,7 +161,7 @@ services:
     container_name: vx-console-bff
     restart: unless-stopped
     networks: [vxture-prod]
-    env_file: .env.console-bff
+    env_file: [secrets/platform.env, .env.console-bff]
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -179,7 +178,7 @@ services:
     container_name: vx-admin-bff
     restart: unless-stopped
     networks: [vxture-prod]
-    env_file: .env.admin-bff
+    env_file: [secrets/platform.env, .env.admin-bff]
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -192,4 +191,4 @@ services:
 
 secrets:
   platform_pg_password:
-    file: ./secrets/platform_pg_password.txt
+    file: ./secrets/pg-password

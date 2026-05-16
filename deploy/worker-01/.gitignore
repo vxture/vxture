@@ -4,8 +4,10 @@
 !.env.example
 !.env.*.example
 
-# Docker secrets 明文文件（禁止提交）
-secrets/*.txt
+# secrets 目录下的实际密钥文件（禁止提交）
+secrets/pg-password
+secrets/platform.env
 
-# 保留 secrets 目录本身
+# 保留示例文件和占位符
+!secrets/platform.env.example
 !secrets/.gitkeep
