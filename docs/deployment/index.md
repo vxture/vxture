@@ -1,6 +1,6 @@
 # 部署文档
 
-> 更新：2026-05-14
+> 更新：2026-05-17
 
 
 ---
@@ -16,7 +16,7 @@
 | [`02-infrastructure.md`](02-infrastructure.md) | **运维操作手册** | Nginx/PostgreSQL/Redis docker run 命令、volume 映射、备份脚本、内存优化 |
 | [`03-containers.md`](03-containers.md) | **构建规范** | Dockerfile 模板、构建顺序、服务调用拓扑、健康检查约定、资源规格 |
 | [`04-services.md`](04-services.md) | **Compose 编排** | worker-01/02 完整 Compose YAML、启动顺序、端口总表 |
-| [`05-ci-cd.md`](05-ci-cd.md) | **CI/CD 流水线** | CI（类型检查/lint/边界）、镜像构建推送 GHCR、手动部署工作流、Husky hooks |
+| [`05-ci-cd.md`](05-ci-cd.md) | **CI/CD 流水线** | 分支触发矩阵、CI（类型检查/lint/边界）、prod 镜像构建、beta 镜像构建 + 自动部署、手动部署工作流、Husky hooks |
 | [`06-subdomain-dns.md`](06-subdomain-dns.md) | **DNS 记录** | Cloudflare DNS 记录清单、预注册子域名说明 |
 | [`07-checklist.md`](07-checklist.md) | **部署检查单** | 部署前后验证步骤、回滚预案 |
 

@@ -1,6 +1,21 @@
 # CI/CD 流水线
 
-> 更新：2026-05-14
+> 更新：2026-05-17
+
+---
+
+## 分支触发矩阵
+
+| 分支 | CI（type-check + lint） | 镜像构建（GHCR） | 自动部署 | 手动部署 |
+|------|----------------------|----------------|---------|---------|
+| 工作分支（PR） | ✅ PR 时运行 | — | — | — |
+| `develop` push | ✅ push 时运行 | — | — | — |
+| `beta` push | ✅ push 时运行 | ✅ `:beta` tag | ✅ worker-02 业务 beta | — |
+| `main` push | ✅ push 时运行 | ✅ `:latest` + `:sha` | — | ✅ workflow_dispatch |
+
+**平台层说明**：worker-01 服务（website / console / admin / platform BFFs）只跟随 `main` 构建和部署，`beta` 分支不触发平台层镜像构建。
+
+**业务层说明**：worker-02 业务服务（vela / ruyin / …）在 `beta` 和 `main` 均构建镜像，分别对应各自的 beta / prod 容器。
 
 ---
 
@@ -8,16 +23,19 @@
 
 | 文件 | 触发条件 | 运行环境 | 用途 |
 |------|---------|---------|------|
-| `.github/workflows/ci.yml` | PR / push to main | ubuntu-latest | 类型检查 · Lint · 边界校验 |
-| `.github/workflows/build.yml` | push to main（merge） | ubuntu-latest | 构建 Docker 镜像，推送 GHCR |
+| `.github/workflows/ci.yml` | PR / push to main · beta · develop | ubuntu-latest | 类型检查 · Lint · 边界校验 |
+| `.github/workflows/build.yml` | push to main（CI 通过后） | ubuntu-latest | 构建平台 + 业务 prod 镜像，推送 GHCR |
+| `.github/workflows/build-beta.yml` | push to beta（CI 通过后） | ubuntu-latest | 构建业务 beta 镜像，推送 GHCR，自动部署 |
 | `.github/workflows/sonar.yml` | PR / push to main | windows-latest | SonarQube 代码质量扫描 |
 | `.github/workflows/deploy.yml` | 手动触发（workflow_dispatch） | ubuntu-latest | SSH 进服务器，滚动重启指定服务 |
 
-CI（`ci.yml`）和 SonarQube（`sonar.yml`）并行运行；镜像构建（`build.yml`）在 CI 通过后触发；部署（`deploy.yml`）手动触发。
+CI（`ci.yml`）和 SonarQube（`sonar.yml`）并行运行；镜像构建在 CI 通过后触发；prod 部署（`deploy.yml`）手动触发。
 
 ---
 
 ## CI 工作流（ci.yml）
+
+CI 对三个主干分支（`main` / `beta` / `develop`）的 PR 和 push 均触发。
 
 ```
 checkout
@@ -195,6 +213,113 @@ jobs:
 - `dorny/paths-filter`：仅构建有变更的服务，节省构建时间
 - `docker/build-push-action` 的 `cache-from/cache-to: type=gha`：利用 GitHub Actions 缓存加速 Docker 层复用
 - 同时推送 `latest` 和 SHA tag：Compose 文件引用 `latest` 滚动更新，SHA tag 保留版本历史供回滚
+
+---
+
+## Beta 构建工作流（build-beta.yml）
+
+push 到 `beta` 分支后自动触发，仅构建业务层服务（worker-02），构建完成后自动 SSH 到 worker-02 重启 beta 容器。
+
+```yaml
+# .github/workflows/build-beta.yml
+name: Build Beta
+
+on:
+  push:
+    branches: [beta]
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      vela: ${{ steps.filter.outputs.vela }}
+      ruyin: ${{ steps.filter.outputs.ruyin }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            vela:
+              - 'bff/vela-bff/**'
+              - 'agent-server/vela-server/**'
+              - 'packages/shared/**'
+              - 'packages/core/**'
+            ruyin:
+              - 'bff/ruyin-bff/**'
+              - 'agent-server/ruyin-server/**'
+              - 'packages/shared/**'
+              - 'packages/core/**'
+
+  build:
+    needs: changes
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        include:
+          - service: vela-bff
+            image: ghcr.io/vxture/bff-vela
+            dockerfile: bff/vela-bff/Dockerfile
+            changed: ${{ needs.changes.outputs.vela }}
+          - service: vela-server
+            image: ghcr.io/vxture/vela-server
+            dockerfile: agent-server/vela-server/Dockerfile
+            changed: ${{ needs.changes.outputs.vela }}
+          - service: ruyin-bff
+            image: ghcr.io/vxture/bff-ruyin
+            dockerfile: bff/ruyin-bff/Dockerfile
+            changed: ${{ needs.changes.outputs.ruyin }}
+          - service: ruyin-server
+            image: ghcr.io/vxture/ruyin-server
+            dockerfile: agent-server/ruyin-server/Dockerfile
+            changed: ${{ needs.changes.outputs.ruyin }}
+    steps:
+      - if: matrix.changed == 'true'
+        uses: actions/checkout@v4
+
+      - if: matrix.changed == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - if: matrix.changed == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ matrix.image }}:beta
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy-beta:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy beta to worker-02
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.WORKER02_TAILSCALE_IP }}
+          username: ubuntu
+          key: ${{ secrets.WORKER02_SSH_KEY }}
+          script: |
+            cd /deploy/worker-02
+            docker compose -f compose.vela.beta.yml pull && \
+              docker compose -f compose.vela.beta.yml up -d
+            docker compose -f compose.ruyin.beta.yml pull && \
+              docker compose -f compose.ruyin.beta.yml up -d
+            docker system prune -f --filter "until=24h"
+```
+
+**关键设计**：
+- beta 镜像仅打 `:beta` tag（不打 SHA tag），便于 compose 文件始终 pull 最新 beta
+- 业务 beta 容器的 `DATABASE_URL` / `REDIS_URL` 指向各自的 beta 数据库（见 `01-environments.md §五`）
+- 平台服务（website / console / admin / platform BFFs）**不在**此 workflow 中构建
 
 ---
 

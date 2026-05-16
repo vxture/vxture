@@ -1,23 +1,89 @@
 # Vxture Git Workflow Specification
 
-> 版本：1.1.0 | 更新：2026-05-11
+> 版本：2.0.0 | 更新：2026-05-17
 
 ---
 
-## 1. 分支策略
+## 1. 分支体系
 
-| 分支前缀 | 用途 | 示例 |
-|----------|------|------|
-| `main` | 生产分支，始终保持可部署状态 | — |
-| `feature/` | 新功能开发 | `feature/vela-tool-registry` |
-| `fix/` | Bug 修复 | `fix/auth-cookie-domain` |
-| `refactor/` | 重构（不改行为） | `refactor/design-token-centralize` |
-| `docs/` | 纯文档变更 | `docs/architecture-restructure` |
-| `chore/` | 构建、CI、依赖等工程类 | `chore/pnpm-upgrade` |
+### 1.1 主干分支（长期存在，受保护，禁止直接 push）
+
+| 分支 | 对应环境 | 说明 |
+|------|---------|------|
+| `main` | 生产（prod） | 平台全量 prod + 所有业务 prod；合并触发正式镜像构建，手动 deploy |
+| `beta` | 公测（beta） | 业务板块 beta / 试用版本；合并触发 beta 镜像构建，自动部署到 worker-02 beta |
+| `develop` | 开发集成 | 日常开发集成主线；仅触发 CI，不构建镜像，不部署 |
+
+**平台层（worker-01）**：只有 prod，仅跟随 `main` 发布。`beta` / `develop` 分支不触发平台层部署。
+
+**业务层（worker-02）**：维持 prod + beta 双环境：
+- `main` 合并 → 构建 `:latest` / `:sha` 镜像 → 手动部署各业务 prod 容器
+- `beta` 合并 → 构建 `:beta` 镜像 → 自动部署各业务 beta 容器
+
+**CI 触发**：三个主干分支的 PR 以及 push 均触发 CI（type-check · lint · dep-cruiser）。
+
+---
+
+### 1.2 工作分支（短期，任务完成即删除）
+
+| 前缀 | 用途 | 基分支 | 目标分支 | 示例 |
+|------|------|--------|---------|------|
+| `feature/` | 新功能 | `develop` | `develop` | `feature/vela-tool-registry` |
+| `fix/` | Bug 修复 | `develop` | `develop` | `fix/auth-cookie-domain` |
+| `hotfix/` | 紧急生产修复 | `main` | `main` → back-merge | `hotfix/auth-jwt-leak` |
+| `refactor/` | 重构（不改行为） | `develop` | `develop` | `refactor/design-token-centralize` |
+| `docs/` | 纯文档变更 | `develop` | `develop` | `docs/architecture-restructure` |
+| `chore/` | 构建 / CI / 依赖 | `develop` | `develop` | `chore/pnpm-upgrade` |
 
 **规则**：
-- 所有开发在独立分支进行，禁止直接推送到 `main`
+- 所有工作分支必须从 `develop` 创建（`hotfix/` 例外，从 `main` 创建）
+- 禁止直接推送到 `main` / `beta` / `develop`
 - 分支名使用小写 kebab-case，描述具体内容
+
+---
+
+### 1.3 版本晋升流程
+
+```
+feature/* / fix/* / refactor/* / docs/* / chore/*
+        │
+        ▼  PR → squash merge
+    develop   ←─── 日常集成，CI 验证
+        │
+        ▼  PR → squash merge（集成测试通过后）
+      beta    ←─── 业务 beta 自动更新，公测验证
+        │
+        ▼  PR → squash merge（公测通过 / 发版窗口）
+      main    ←─── 正式镜像构建 + 手动部署 prod
+```
+
+**hotfix 路径**：
+
+```
+main
+ ├──▶ hotfix/* ──▶ main  （紧急修复，squash merge）
+ │                  │
+ │                  ▼ back-merge（保持三支同步）
+ │                 beta
+ │                  │
+ │                  ▼
+ └──────────────── develop
+```
+
+---
+
+### 1.4 待执行的独立整改分支（DS 审计后续）
+
+以下分支均从 `develop` 创建，完成后 PR 回 `develop`：
+
+| 分支 | 内容 | 优先级 |
+|------|------|--------|
+| `fix/ds-context-split` | density / theme context 拆分；DensityProvider 反模式重构 | P2 |
+| `feat/ds-button-danger-variant` | DS Button 增加正式 `variant="danger"` 扩展点，清理 admin CSS 补丁 | P2 |
+| `fix/ds-layout-tokens` | 布局组件 gap / padding 间距 token 设计对齐；FullscreenContainer 重构 | P2 |
+| `refactor/portal-rsc-pages` | website 落地页 / admin 首页改为 Server Component | P2 |
+| `refactor/portal-shared-ui` | ActionButton / EmptyState 提取到共享包 | P3 |
+| `fix/admin-token-dark-mode` | admin `--tenant-*` scale token 语义化；补充 gray-950 CSS 变量 | P3 |
 
 ---
 
@@ -34,6 +100,7 @@
 | `feat` | 新功能 |
 | `fix` | Bug 修复 |
 | `refactor` | 重构（不影响外部行为） |
+| `perf` | 性能优化 |
 | `docs` | 纯文档变更 |
 | `chore` | 构建、CI、依赖升级等 |
 | `test` | 测试相关 |
@@ -45,6 +112,7 @@
 feat(vela-bff): add CallerContext middleware
 fix(core-auth): handle expired refresh token edge case
 refactor(design): centralize tenant settings styles
+perf(ds): wrap hook callbacks with useCallback for stability
 docs(architecture): remove duplicate dependency rules
 chore(deps): upgrade pnpm to 10.x
 ```
@@ -57,18 +125,18 @@ chore(deps): upgrade pnpm to 10.x
 
 ## 3. PR 流程
 
-1. 从 `main` 创建功能分支
-2. 开发完成后发起 PR，目标分支为 `main`
+1. 从目标基分支（通常是 `develop`）创建工作分支
+2. 开发完成后发起 PR，目标分支按 §1.3 晋升流程确定
 3. PR 标题遵循 Conventional Commits 格式
 4. PR 描述说明：变更内容、测试方式、相关 issue / 设计文档
-5. 合并方式：**Squash merge**（保持 main 历史整洁）
-6. 合并后删除功能分支
+5. 合并方式：**Squash merge**（保持各主干分支历史整洁）
+6. 合并后删除工作分支
 
 ---
 
 ## 4. Release Tag 规范
 
-正式发布时为对应包打 Tag：
+正式发布时在 `main` 对应提交上打 Tag：
 
 ### Tag 格式
 
@@ -87,7 +155,7 @@ shortname@Vx.y.yyMMdd.nn
 
 ### 发布流程
 
-1. 确认代码已合并到 `main` 且测试通过
+1. 确认代码已合并到 `main` 且 CI 全绿
 2. 更新 `package.json` 版本号
 3. 提交版本号变更（commit message：`chore(shortname): release Vx.y`）
 4. 打 Tag 并推送：`git tag shortname@Vx.y.yyMMdd.nn && git push origin --tags`
