@@ -86,8 +86,8 @@ export class VxLogger {
       level,
       message,
       timestamp: new Date(),
-      context:   this.config.context || undefined,
-      metadata,
+      ...(this.config.context ? { context: this.config.context } : {}),
+      ...(metadata !== undefined ? { metadata } : {}),
     };
 
     const formatted = this.format(record);

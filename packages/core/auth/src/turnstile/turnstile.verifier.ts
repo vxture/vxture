@@ -62,11 +62,13 @@ export class TurnstileVerifier {
     const fallbackHostnames = parseHostnames(env.CF_TURNSTILE_ALLOWED_HOSTNAMES);
     const surfaceHostnames = parseHostnames(env[`${prefix}_ALLOWED_HOSTNAMES`]);
 
+    const secretKey = env[`${prefix}_SECRET_KEY`]?.trim();
+    const siteverifyUrl = env.CF_TURNSTILE_SITEVERIFY_URL?.trim();
     return new TurnstileVerifier({
       enabled: parseBoolean(env.CF_TURNSTILE_ENABLED),
-      secretKey: env[`${prefix}_SECRET_KEY`]?.trim() || undefined,
+      ...(secretKey ? { secretKey } : {}),
       allowedHostnames: surfaceHostnames.length > 0 ? surfaceHostnames : fallbackHostnames,
-      siteverifyUrl: env.CF_TURNSTILE_SITEVERIFY_URL?.trim() || undefined,
+      ...(siteverifyUrl ? { siteverifyUrl } : {}),
     });
   }
 
