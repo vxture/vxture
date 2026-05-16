@@ -41,3 +41,6 @@ fi
 echo ""
 echo "  !! 检查 SSL 证书是否已放置（compose up 前必须）："
 echo "     ls -la /srv/vxture/data/nginx/ssl/"
+echo ""
+echo "  启动 nginx（首次或更新）："
+echo "     docker compose -f /srv/vxture/data/nginx/compose.yml up -d"

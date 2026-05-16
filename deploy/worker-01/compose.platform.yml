@@ -1,5 +1,5 @@
 # deploy/worker-01/compose.platform.yml
-# 平台控制面（不含 nginx，nginx 由 /srv/vxture/data/nginx/ 独立管理）
+# 平台控制面（不含 nginx，nginx 由 compose.nginx.yml 独立管理）
 # 服务器工作目录：/srv/vxture/repo/deploy/worker-01/
 # 使用：docker compose -f compose.platform.yml up -d
 #

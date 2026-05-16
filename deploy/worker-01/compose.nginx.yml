@@ -1,0 +1,35 @@
+# deploy/worker-01/compose.nginx.yml
+# Nginx 反向代理（独立于平台栈，单独管理）
+# 服务器工作目录：/srv/vxture/data/nginx/
+# 使用：docker compose -f /srv/vxture/data/nginx/compose.yml up -d
+#
+# 前置：
+#   1. 运行 02-sync-nginx.sh 同步 infra/nginx/ 配置到 /srv/vxture/data/nginx/conf/
+#   2. 上传 SSL 证书到 /srv/vxture/data/nginx/ssl/
+
+name: vx-nginx
+
+services:
+
+  nginx:
+    image: nginx:alpine
+    container_name: vxture-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /srv/vxture/data/nginx/conf/conf.d:/etc/nginx/conf.d:ro
+      - /srv/vxture/data/nginx/conf/sites-enabled:/etc/nginx/sites-enabled:ro
+      - /srv/vxture/data/nginx/html:/var/www/html:ro
+      - /srv/vxture/data/nginx/ssl:/etc/nginx/ssl:ro
+      - /srv/vxture/data/nginx/logs/nginx:/var/log/nginx
+    networks:
+      - vxture-prod
+      - vxture-beta
+
+networks:
+  vxture-prod:
+    external: true
+  vxture-beta:
+    external: true
