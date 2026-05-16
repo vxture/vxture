@@ -45,10 +45,10 @@ RUN pnpm --filter ${PACKAGE_FILTER} build
 # 将运行时所需文件归集到 /runtime，避免运行层使用条件 COPY
 RUN mkdir -p /runtime/node_modules && \
     cp ${SERVICE_PATH}/dist/main.cjs /runtime/main.cjs && \
-    { [ -d "node_modules/.prisma" ]         && cp -r node_modules/.prisma         /runtime/node_modules/ || true; } && \
-    { [ -d "node_modules/@prisma" ]         && cp -r node_modules/@prisma         /runtime/node_modules/ || true; } && \
-    { [ -d "${SERVICE_PATH}/node_modules/.prisma" ] && cp -r ${SERVICE_PATH}/node_modules/.prisma /runtime/node_modules/ || true; } && \
-    { [ -d "${SERVICE_PATH}/node_modules/@prisma" ] && cp -r ${SERVICE_PATH}/node_modules/@prisma /runtime/node_modules/ || true; }
+    { [ -d "node_modules/.prisma" ]         && cp -rL node_modules/.prisma         /runtime/node_modules/ || true; } && \
+    { [ -d "node_modules/@prisma" ]         && cp -rL node_modules/@prisma         /runtime/node_modules/ || true; } && \
+    { [ -d "${SERVICE_PATH}/node_modules/.prisma" ] && cp -rL ${SERVICE_PATH}/node_modules/.prisma /runtime/node_modules/ || true; } && \
+    { [ -d "${SERVICE_PATH}/node_modules/@prisma" ] && cp -rL ${SERVICE_PATH}/node_modules/@prisma /runtime/node_modules/ || true; }
 
 # ── 运行层 ────────────────────────────────────────────────────────────────────
 FROM node:${NODE_VERSION}-alpine AS runner

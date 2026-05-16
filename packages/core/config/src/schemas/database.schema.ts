@@ -30,7 +30,7 @@ export const databaseSchema = z.object({
   DB_PORT: z.coerce.number().int().min(1).max(65535).default(5432),
   DB_NAME: z.string().min(1).default('vxture'),
   DB_USER: z.string().min(1).default('postgres'),
-  DB_PASSWORD: z.string().min(1),
+  DB_PASSWORD: z.string().min(1).optional(),
 
   /** Connection pool maximum connections */
   DB_POOL_MAX: z.coerce.number().int().min(1).max(100).default(10),
