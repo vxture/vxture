@@ -60,14 +60,16 @@ RUN apk add --no-cache curl \
   && adduser --system --uid 1001 nextjs
 
 ARG PORTAL_PATH
+# Make PORTAL_PATH available at runtime for CMD
+ENV PORTAL_PATH=${PORTAL_PATH}
 
 # standalone 目录包含 server.js + 最小化 node_modules
 COPY --from=builder --chown=nextjs:nodejs /repo/${PORTAL_PATH}/.next/standalone ./
 # 静态资源（CSS/JS chunks）必须单独复制到 standalone 的 .next 目录下
-COPY --from=builder --chown=nextjs:nodejs /repo/${PORTAL_PATH}/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /repo/${PORTAL_PATH}/.next/static ./${PORTAL_PATH}/.next/static
 # public 目录
-COPY --from=builder --chown=nextjs:nodejs /repo/${PORTAL_PATH}/public ./public
+COPY --from=builder --chown=nextjs:nodejs /repo/${PORTAL_PATH}/public ./${PORTAL_PATH}/public
 
 USER nextjs
 
-CMD ["node", "server.js"]
+CMD ["sh", "-c", "node $PORTAL_PATH/server.js"]
