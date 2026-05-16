@@ -27,7 +27,7 @@ export function ok<T>(data: T, requestId?: string): ApiResponse<T> {
     data,
     code:      'OK',
     timestamp: new Date().toISOString(),
-    requestId,
+    ...(requestId !== undefined ? { requestId } : {}),
   };
 }
 
@@ -48,7 +48,7 @@ export function fail(
     code,
     message,
     timestamp: new Date().toISOString(),
-    requestId,
+    ...(requestId !== undefined ? { requestId } : {}),
   };
 }
 
@@ -98,7 +98,7 @@ export function safePageQuery(query: Partial<PageQuery>): PageQuery {
   return {
     page:      Math.max(1, query.page      ?? 1),
     pageSize:  Math.min(100, Math.max(1, query.pageSize ?? 20)),
-    sortBy:    query.sortBy,
+    ...(query.sortBy !== undefined ? { sortBy: query.sortBy } : {}),
     sortOrder: query.sortOrder ?? 'desc',
   };
 }

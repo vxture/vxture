@@ -42,7 +42,7 @@ export function normalizeHttpError(
   const message   = body?.message ?? defaultMessageForStatus(status);
   const code      = body?.code    ?? `HTTP_${status}`;
   const details   = body?.details;
-  const metadata  = { code, status, details, requestId };
+  const metadata  = { code, status, details, ...(requestId !== undefined ? { requestId } : {}) };
 
   switch (status) {
     case 400: return new ValidationError(message,     metadata);
