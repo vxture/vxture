@@ -858,7 +858,6 @@ function pageHtml() {
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: 0 1px 6px rgba(30,50,180,.04);
-      cursor: pointer;
       transition: background .15s, box-shadow .15s, border-color .15s, transform .12s;
     }
     .card:hover {
@@ -871,33 +870,47 @@ function pageHtml() {
       border-color: var(--brand-dim);
       box-shadow: 0 4px 24px rgba(79,117,255,.14);
     }
-    .card.selected .card-head { background: #c8d6ff; }
+    .card.state-healthy {
+      background: #f2fbf6;
+      border-color: #b7e4c7;
+    }
+    .card.state-healthy .card-head {
+      background: #dff6e8;
+      border-bottom-color: #a7d7b7;
+    }
+    .card.state-issue {
+      background: #fff1f2;
+      border-color: #fda4af;
+      box-shadow: 0 0 0 1px rgba(225,29,72,.12), 0 8px 24px rgba(159,18,57,.08);
+    }
+    .card.state-issue .card-head {
+      background: #ffe4e6;
+      border-bottom-color: #fda4af;
+    }
+    .card.state-stopped {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+    .card.state-stopped .card-head {
+      background: #e5e7eb;
+      border-bottom-color: #d1d5db;
+    }
+    .card.state-changing,
     .card.is-busy {
-      background: #fff1b8;
-      border-color: #f59e0b;
-      box-shadow: 0 0 0 2px rgba(245,158,11,.26), 0 10px 30px rgba(180,83,9,.18);
+      background: #fff7d6;
+      border-color: #fbbf24;
+      box-shadow: 0 0 0 2px rgba(245,158,11,.18), 0 10px 30px rgba(180,83,9,.12);
     }
-    .card.is-busy:hover {
-      background: #ffec99;
-      border-color: #ea580c;
-      box-shadow: 0 0 0 2px rgba(234,88,12,.32), 0 14px 34px rgba(180,83,9,.24);
+    .card.state-changing .card-head,
+    .card.is-busy .card-head {
+      background: #fde68a;
+      border-bottom-color: #f59e0b;
     }
-    .card.is-busy .card-head,
-    .card.is-busy:hover .card-head,
-    .card.is-busy.selected .card-head {
-      background: #f97316;
-      border-bottom-color: #ea580c;
-    }
-    .card.is-busy .card-head .svc-name { color: #ffffff; }
-    .card.is-busy .card-head .badge-p,
-    .card.is-busy .card-head .svc-port {
-      background: rgba(255,255,255,.9);
-      color: #7c2d12;
-      border-color: rgba(255,255,255,.65);
+    .card.selected .card-head {
+      box-shadow: inset 0 0 0 2px rgba(79,117,255,.18);
     }
     .busy-label {
-      flex-shrink: 0;
-      display: inline-flex;
+      display: none;
       align-items: center;
       height: 22px;
       padding: 0 8px;
@@ -920,20 +933,25 @@ function pageHtml() {
       padding: 10px 12px;
       background: var(--card-head);
       border-bottom: 1px solid var(--border-med);
+      cursor: pointer;
       user-select: none;
       transition: background .15s;
     }
-    .card:hover .card-head {
+    .card:not(.state-healthy):not(.state-issue):not(.state-stopped):not(.state-changing):hover .card-head {
       background: var(--card-head-hover);
     }
     .svc-name {
-      flex: 1;
+      min-width: 0;
       font-size: 14px;
       font-weight: 800;
       color: var(--ink);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+    .card-head-spacer {
+      flex: 1;
+      min-width: 8px;
     }
     .svc-port {
       font-size: 11px;
@@ -944,6 +962,29 @@ function pageHtml() {
       border: 1px solid var(--brand-border);
       border-radius: var(--radius-sm);
       white-space: nowrap;
+    }
+    .probe-summary {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+    .probe-issue-count {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 22px;
+      padding: 0 7px;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      font-weight: 900;
+      border: 1px solid var(--err-border);
+      background: var(--err-bg);
+      color: var(--err);
+    }
+    .probe-issue-count.visible {
+      display: inline-flex;
     }
 
     .card-content {
@@ -1111,14 +1152,36 @@ function pageHtml() {
       height: 6px;
       border-radius: 50%;
     }
-    .status-badge.on   { background: var(--ok-bg);   color: var(--ok);   }
-    .status-badge.on::before   { background: var(--ok); }
-    .status-badge.wait { background: var(--warn-bg); color: var(--warn); }
-    .status-badge.wait::before { background: #f59e0b; animation: pulse .9s ease-in-out infinite; }
-    .status-badge.off  { background: var(--err-bg);  color: var(--err);  }
-    .status-badge.off::before  { background: #e11d48; }
+    .status-badge.healthy { background: var(--ok-bg); color: var(--ok); border: 1px solid var(--ok-border); }
+    .status-badge.healthy::before { background: var(--ok); }
+    .status-badge.issue { background: var(--err-bg); color: var(--err); border: 1px solid var(--err-border); }
+    .status-badge.issue::before { background: #e11d48; }
+    .status-badge.stopped { background: #f9fafb; color: #4b5563; border: 1px solid #d1d5db; }
+    .status-badge.stopped::before { background: #6b7280; }
+    .status-badge.changing { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn-border); }
+    .status-badge.changing::before { background: #f59e0b; animation: pulse .9s ease-in-out infinite; }
 
     @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+
+    /* ── 紧凑视图 ── */
+    .workspace.compact-mode .card {
+      min-height: 92px;
+    }
+    .workspace.compact-mode .card-content {
+      flex: 0;
+      padding: 10px 12px 12px;
+      gap: 0;
+    }
+    .workspace.compact-mode .probe-row,
+    .workspace.compact-mode .command-row {
+      display: none;
+    }
+    .workspace.compact-mode .probe-summary {
+      display: inline-flex;
+    }
+    .workspace.compact-mode .card-actions button {
+      height: 30px;
+    }
 
     /* ── 日志面板 ── */
     .log-panel {
@@ -1215,6 +1278,7 @@ function pageHtml() {
       <button type="button" class="btn-tb primary" onclick="bulkAction('start')">全部启动</button>
       <button type="button" class="btn-tb"         onclick="bulkAction('restart')">全部重启</button>
       <button type="button" class="btn-tb"         onclick="bulkAction('stop')">全部停止</button>
+      <button type="button" class="btn-tb" id="btn-view-mode" onclick="toggleViewMode()">压缩</button>
       <button type="button" class="btn-tb"         onclick="refreshOnce()">刷新</button>
     </div>
   </header>
@@ -1245,6 +1309,7 @@ function pageHtml() {
     let pollBusy        = false;
     let bulkBusy        = false;
     let bulkCurrentServiceId = null;
+    let compactMode     = localStorage.getItem('dev-panel:view-mode') === 'compact';
     const pendingOps    = new Map();
 
     const GROUP_LABELS = { 0: 'P0 · 后端基础', 1: 'P1 · 网关聚合', 2: 'P2 · 前端应用' };
@@ -1296,14 +1361,19 @@ function pageHtml() {
 
     /* ── 状态分类 ── */
     function statusCls(s)  {
-      if (s.listening && s.healthy) return 'on';
-      if (s.stopping || s.running)  return 'wait';
-      return 'off';
+      if (pendingOps.has(s.id) || bulkCurrentServiceId === s.id || s.stopping) return 'changing';
+      if (s.listening && s.healthy) return 'healthy';
+      if (s.listening && !s.healthy) return 'issue';
+      if (s.running) return 'changing';
+      return 'stopped';
     }
     function statusTxt(s) {
+      const pendingAction = pendingOps.get(s.id);
+      if (pendingAction) return actionLabel(pendingAction);
+      if (bulkCurrentServiceId === s.id) return '启动中';
+      if (s.stopping) return '停止中';
       if (s.listening && s.healthy) return '健康';
       if (s.listening && !s.healthy) return '未就绪';
-      if (s.stopping) return '停止中';
       if (s.running)  return '启动中';
       return '已停止';
     }
@@ -1328,6 +1398,16 @@ function pageHtml() {
       return Math.max(1, Math.ceil((health?.length ?? 0) / 2));
     }
 
+    function probeStats(health) {
+      const checks = health ?? [];
+      return { total: checks.length, bad: checks.filter((h) => !h.ok).length };
+    }
+
+    function shouldShowProbeIssue(s) {
+      const probes = probeStats(s.health);
+      return statusCls(s) === 'issue' && probes.bad > 0;
+    }
+
     /* ── 渲染健康检查 ── */
     function renderChecks(health) {
       return health.map((h) => {
@@ -1349,18 +1429,25 @@ function pageHtml() {
       const sel = selectedId === s.id ? ' selected' : '';
       const busy = busyLabel(s);
       const busyCls = busy ? ' is-busy' : '';
+      const stateCls = statusCls(s);
       const pid = s.pid ? \`PID <b>\${s.pid}</b>\` : '';
       const up  = s.uptime ? \`运行 <b>\${s.uptime}</b>\` : '';
       const meta = [pid, up].filter(Boolean).join(' · ');
+      const probes = probeStats(s.health);
+      const showProbeIssue = shouldShowProbeIssue(s);
 
       return \`
-        <div class="card\${sel}\${busyCls}" id="card-\${esc(s.id)}" onclick="select('\${esc(s.id)}')">
-          <div class="card-head">
+        <div class="card state-\${stateCls}\${sel}\${busyCls}" id="card-\${esc(s.id)}">
+          <div class="card-head" onclick="toggleLog('\${esc(s.id)}')" title="打开/关闭日志">
             <span class="badge-p p\${s.priority}">P\${s.priority}</span>
             <span class="svc-name">\${esc(s.name)}</span>
-            <span class="svc-port">:\${s.port}</span>
-            <span class="busy-label">\${esc(busy)}</span>
             <span class="status-badge \${cls}">\${txt}</span>
+            <span class="card-head-spacer"></span>
+            <span class="svc-port">:\${s.port}</span>
+            <span class="probe-summary" aria-label="探针总数和问题探针数">
+              <span class="probe-issue-count\${showProbeIssue ? ' visible' : ''}" title="问题探针数量">\${probes.bad}/\${probes.total}</span>
+            </span>
+            <span class="busy-label">\${esc(busy)}</span>
           </div>
           <div class="card-content">
             <div class="probe-row">
@@ -1418,11 +1505,20 @@ function pageHtml() {
       card.classList.toggle('selected', selectedId === s.id);
       const busy = busyLabel(s);
       card.classList.toggle('is-busy', Boolean(busy));
+      card.classList.remove('state-healthy', 'state-issue', 'state-stopped', 'state-changing');
+      card.classList.add('state-' + statusCls(s));
       const busyEl = card.querySelector('.busy-label');
       if (busyEl) busyEl.textContent = busy;
 
       const badge = card.querySelector('.status-badge');
       if (badge) { badge.className = 'status-badge ' + statusCls(s); badge.textContent = statusTxt(s); }
+
+      const probes = probeStats(s.health);
+      const probeIssueEl = card.querySelector('.probe-issue-count');
+      if (probeIssueEl) {
+        probeIssueEl.textContent = \`\${probes.bad}/\${probes.total}\`;
+        probeIssueEl.classList.toggle('visible', shouldShowProbeIssue(s));
+      }
 
       const checksEl = card.querySelector('.checks');
       if (checksEl) {
@@ -1476,6 +1572,13 @@ function pageHtml() {
       renderLog();
     }
 
+    function isSelectingLogText(logBox) {
+      const selection = window.getSelection?.();
+      if (!selection || selection.isCollapsed || selection.rangeCount === 0) return false;
+      const range = selection.getRangeAt(0);
+      return logBox.contains(range.commonAncestorContainer);
+    }
+
     /* ── 日志面板 ── */
     function renderLog() {
       const svc     = latestServices.find((s) => s.id === selectedId);
@@ -1487,15 +1590,20 @@ function pageHtml() {
       if (!svc) {
         if (titleEl) titleEl.textContent = '日志';
         if (copyBtn) copyBtn.disabled = true;
-        logBox.textContent = '[点击卡片查看日志]';
+        if (logBox.textContent !== '[点击卡片查看日志]') logBox.textContent = '[点击卡片查看日志]';
         return;
       }
 
       const atBottom = logBox.scrollHeight - logBox.scrollTop - logBox.clientHeight < 40;
+      const nextText = svc.logs.length ? svc.logs.join('\\n') : '[暂无日志]';
       if (titleEl) titleEl.textContent = \`\${svc.name}  :\${svc.port}\`;
       if (copyBtn) copyBtn.disabled = !svc.logs.length;
-      logBox.textContent = svc.logs.length ? svc.logs.join('\\n') : '[暂无日志]';
-      if ((autoScroll || atBottom) && svc.logs.length) logBox.scrollTop = logBox.scrollHeight;
+      if (logBox.textContent !== nextText && !isSelectingLogText(logBox)) {
+        logBox.textContent = nextText;
+        if ((autoScroll || atBottom) && svc.logs.length) logBox.scrollTop = logBox.scrollHeight;
+      } else if ((autoScroll || atBottom) && svc.logs.length && !isSelectingLogText(logBox)) {
+        logBox.scrollTop = logBox.scrollHeight;
+      }
     }
 
     function select(id) {
@@ -1504,6 +1612,14 @@ function pageHtml() {
       workspace?.classList.add('log-open');
       document.querySelectorAll('.card').forEach((c) => c.classList.toggle('selected', c.id === 'card-' + id));
       renderLog();
+    }
+
+    function toggleLog(id) {
+      if (selectedId === id && document.getElementById('workspace')?.classList.contains('log-open')) {
+        closeLog();
+        return;
+      }
+      select(id);
     }
 
     function closeLog() {
@@ -1542,6 +1658,19 @@ function pageHtml() {
         const logBox = document.getElementById('log-box');
         if (logBox) logBox.scrollTop = logBox.scrollHeight;
       }
+    }
+
+    function applyViewMode() {
+      const workspace = document.getElementById('workspace');
+      const btn = document.getElementById('btn-view-mode');
+      workspace?.classList.toggle('compact-mode', compactMode);
+      if (btn) btn.textContent = compactMode ? '全部' : '压缩';
+    }
+
+    function toggleViewMode() {
+      compactMode = !compactMode;
+      localStorage.setItem('dev-panel:view-mode', compactMode ? 'compact' : 'full');
+      applyViewMode();
     }
 
     /* 手动上滚时关闭自动滚动 */
@@ -1595,7 +1724,8 @@ function pageHtml() {
     async function svcAction(id, action) {
       if (pendingOps.has(id)) return;
       pendingOps.set(id, action);
-      select(id);
+      const svc = latestServices.find((s) => s.id === id);
+      if (svc) patchCard(svc);
       const card = document.getElementById('card-' + id);
       if (card) {
         card.classList.add('is-busy');
@@ -1640,6 +1770,7 @@ function pageHtml() {
 
     /* ── 初始化自动滚动按钮状态 ── */
     document.getElementById('btn-autoscroll')?.classList.add('active');
+    applyViewMode();
 
     /* ── 首次加载 ── */
     refreshOnce();
