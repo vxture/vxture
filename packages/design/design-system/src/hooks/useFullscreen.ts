@@ -11,39 +11,37 @@
  * @category Hooks
  */
 
+import { useCallback } from "react";
 import { useFullscreenContext } from "../components/layout/fullscreen/Provider";
 import type { FullscreenOptions } from "../types/fullscreen";
 
 export function useFullscreen() {
   const context = useFullscreenContext();
 
-  /**
-   * 进入全屏（简化签名）
-   */
-  const enter = (id: string, element: HTMLElement, options?: FullscreenOptions) => {
-    context.enterFullscreen(id, element, options);
-  };
+  const enter = useCallback(
+    (id: string, element: HTMLElement, options?: FullscreenOptions) => {
+      context.enterFullscreen(id, element, options);
+    },
+    [context.enterFullscreen],
+  );
 
-  /**
-   * 退出全屏（简化签名）
-   */
-  const exit = () => {
+  const exit = useCallback(() => {
     context.exitFullscreen();
-  };
+  }, [context.exitFullscreen]);
 
-  /**
-   * 切换全屏（简化签名）
-   */
-  const toggle = (id: string, element: HTMLElement, options?: FullscreenOptions) => {
-    context.toggleFullscreen(id, element, options);
-  };
+  const toggle = useCallback(
+    (id: string, element: HTMLElement, options?: FullscreenOptions) => {
+      context.toggleFullscreen(id, element, options);
+    },
+    [context.toggleFullscreen],
+  );
 
-  /**
-   * 检查特定目标是否处于全屏状态
-   */
-  const isTargetFullscreen = (id: string): boolean => {
-    return context.isFullscreen && context.targetId === id;
-  };
+  const isTargetFullscreen = useCallback(
+    (id: string): boolean => {
+      return context.isFullscreen && context.targetId === id;
+    },
+    [context.isFullscreen, context.targetId],
+  );
 
   return {
     ...context,

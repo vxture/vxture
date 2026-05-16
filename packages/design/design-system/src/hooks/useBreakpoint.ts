@@ -101,17 +101,23 @@ export function useBreakpoint(): UseBreakpointReturn {
   );
 
   React.useEffect(() => {
-    // SSR 环境下不执行
     if (!hasWindow) return;
 
-    // 窗口大小变化处理函数
-    const handleResize = () => setWidth(globalThis.window.innerWidth);
+    let rafId: number | undefined;
 
-    // 添加监听
+    const handleResize = () => {
+      if (rafId !== undefined) return;
+      rafId = globalThis.window.requestAnimationFrame(() => {
+        setWidth(globalThis.window.innerWidth);
+        rafId = undefined;
+      });
+    };
+
     globalThis.window.addEventListener("resize", handleResize);
-
-    // 组件卸载时移除监听
-    return () => globalThis.window.removeEventListener("resize", handleResize);
+    return () => {
+      globalThis.window.removeEventListener("resize", handleResize);
+      if (rafId !== undefined) globalThis.window.cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // 计算当前断点

@@ -10,7 +10,7 @@
  * @category Hooks
  */
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export interface UseControllableStateProps<T> {
   /** 受控值 */
@@ -45,12 +45,15 @@ export function useControllableState<T>({
 
   const currentValue = isControlled ? value : internalValue;
 
-  const setValue = (nextValue: T) => {
-    if (!isControlled) {
-      setInternalValue(nextValue);
-    }
-    onChange?.(nextValue);
-  };
+  const setValue = useCallback(
+    (nextValue: T) => {
+      if (!isControlled) {
+        setInternalValue(nextValue);
+      }
+      onChange?.(nextValue);
+    },
+    [isControlled, onChange],
+  );
 
   return [currentValue as T, setValue];
 }

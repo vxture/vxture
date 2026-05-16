@@ -10,7 +10,7 @@
  * @category Hooks
  */
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 /**
  * 媒体查询检测 Hook
@@ -22,30 +22,14 @@ import { useEffect, useState } from "react";
  * const isMobile = useMediaQuery("(max-width: 768px)");
  */
 export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState(false);
-
-  useEffect(() => {
-    // SSR 安全检查
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    const mediaQueryList = window.matchMedia(query);
-
-    // 初始化匹配状态
-    setMatches(mediaQueryList.matches);
-
-    // 监听媒体查询变化
-    const handleChange = (event: MediaQueryListEvent) => {
-      setMatches(event.matches);
-    };
-
-    mediaQueryList.addEventListener("change", handleChange);
-
-    return () => {
-      mediaQueryList.removeEventListener("change", handleChange);
-    };
-  }, [query]);
-
-  return matches;
+  return useSyncExternalStore(
+    (callback) => {
+      if (typeof window === "undefined") return () => {};
+      const mql = window.matchMedia(query);
+      mql.addEventListener("change", callback);
+      return () => mql.removeEventListener("change", callback);
+    },
+    () => (typeof window !== "undefined" ? window.matchMedia(query).matches : false),
+    () => false,
+  );
 }
