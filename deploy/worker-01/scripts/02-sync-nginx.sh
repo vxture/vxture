@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # deploy/worker-01/scripts/02-sync-nginx.sh
-# 将仓库 infra/nginx/ 配置同步到 /data/nginx/conf/
+# 将仓库 infra/nginx/ 配置同步到 /srv/vxture/data/nginx/conf/
 # 运行：sudo bash 02-sync-nginx.sh
 # 幂等：重复运行安全；Nginx 容器运行中时会执行 nginx -t + reload
 set -euo pipefail
@@ -8,7 +8,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 SRC="$REPO_DIR/infra/nginx"
-DST=/data/vxtureworker01-nginx/conf
+DST=/srv/vxture/data/nginx/conf
 
 if [ ! -f "$SRC/nginx.conf" ]; then
   echo "错误：找不到 $SRC/nginx.conf，请确认仓库路径正确（当前: $REPO_DIR）"
@@ -40,4 +40,4 @@ fi
 
 echo ""
 echo "  !! 检查 SSL 证书是否已放置（compose up 前必须）："
-echo "     ls -la /data/nginx/ssl/"
+echo "     ls -la /srv/vxture/data/nginx/ssl/"

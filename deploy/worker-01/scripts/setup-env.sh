@@ -3,7 +3,7 @@
 # 运行一次即可，支持幂等重运行（已有密钥不覆盖）
 set -euo pipefail
 
-PLATFORM_DIR=/data/compose/platform
+PLATFORM_DIR=/srv/vxture/repo/deploy/worker-01
 ENV_FILE="$PLATFORM_DIR/.env"
 
 echo "=== Vxture Platform BFF Env Setup ==="
@@ -56,10 +56,14 @@ get_or_generate() {
 JWT_SECRET=$(get_or_generate "JWT_SECRET" 32)
 AUTH_INTERNAL_TOKEN=$(get_or_generate "AUTH_INTERNAL_TOKEN" 24)
 
-# ── 4. 写入各 BFF env 文件 ──────────────────────────────────────────────────
+# ── 4. 写入各 BFF env 文件（仅首次；已存在的文件不覆盖，保留人工补充的密钥）──────
 write_env() {
   local file="$1"
   local content="$2"
+  if [ -f "$file" ] && [ -s "$file" ]; then
+    echo "[SKIP] Already exists: $file (delete it manually to regenerate)"
+    return
+  fi
   printf '%s\n' "$content" > "$file"
   chmod 600 "$file"
   echo "[OK] Written: $file"
@@ -111,7 +115,7 @@ REDIS_PASSWORD=${REDIS_PASS}
 JWT_SECRET=${JWT_SECRET}
 AUTH_BFF_URL=http://vx-auth-bff:3090
 ALLOWED_ORIGIN=https://console.vxture.com
-AI_GATEWAY_URL=http://vx-ai-gateway:8000"
+AI_GATEWAY_URL=http://vx-ai-gateway:3100"
 
 # ─ admin-bff ────────────────────────────────────────────────────────────────
 write_env "$PLATFORM_DIR/.env.admin-bff" "NODE_ENV=production
@@ -128,6 +132,11 @@ JWT_SECRET=${JWT_SECRET}
 AUTH_INTERNAL_TOKEN=${AUTH_INTERNAL_TOKEN}
 AUTH_BFF_URL=http://vx-auth-bff:3090
 ALLOWED_ORIGIN=https://admin.vxture.com"
+
+# ─ ai-gateway ───────────────────────────────────────────────────────────────
+write_env "$PLATFORM_DIR/.env.ai-gateway" "NODE_ENV=production
+AI_GATEWAY_PORT=3100
+DATABASE_URL=postgresql://vxture:${PG_PASS}@vx-platform-pg:5432/platform_main"
 
 # ─ gateway-bff ──────────────────────────────────────────────────────────────
 write_env "$PLATFORM_DIR/.env.gateway-bff" "NODE_ENV=production

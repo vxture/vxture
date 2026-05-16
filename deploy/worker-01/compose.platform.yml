@@ -1,6 +1,6 @@
 # deploy/worker-01/compose.platform.yml
-# 平台控制面（不含 nginx，nginx 由 /data/compose/nginx/compose.yml 独立管理）
-# 服务器工作目录：/data/compose/platform/
+# 平台控制面（不含 nginx，nginx 由 /srv/vxture/data/nginx/ 独立管理）
+# 服务器工作目录：/srv/vxture/repo/deploy/worker-01/
 # 使用：docker compose -f compose.platform.yml up -d
 #
 # 前置：
@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/platform_pg_password
     secrets: [platform_pg_password]
     volumes:
-      - /data/vxtureworker01-platform-pg-main:/var/lib/postgresql
+      - /srv/vxture/data/platform-pg:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U vxture -d platform_main"]
       interval: 10s
@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     networks: [vxture-prod]
     volumes:
-      - /data/vxtureworker01-platform-redis-main/data:/data
+      - /srv/vxture/data/platform-redis:/data
     command: >
       redis-server --appendonly yes
       --requirepass "${PLATFORM_REDIS_PASSWORD}"
@@ -143,6 +143,20 @@ services:
       timeout: 5s
       retries: 3
 
+  ai-gateway:
+    image: ghcr.io/vxture/service-ai-gateway:latest
+    container_name: vx-ai-gateway
+    restart: unless-stopped
+    networks: [vxture-prod]
+    env_file: .env.ai-gateway
+    depends_on:
+      postgres: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
   console-bff:
     image: ghcr.io/vxture/bff-console:latest
     container_name: vx-console-bff
@@ -153,6 +167,7 @@ services:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
       auth-bff: { condition: service_healthy }
+      ai-gateway: { condition: service_healthy }
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3021/health"]
       interval: 30s

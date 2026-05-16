@@ -58,16 +58,14 @@ else
 fi
 
 echo "==> [5/6] 创建数据目录"
-mkdir -p /data/platform/db/postgres
-mkdir -p /data/platform/db/redis
-mkdir -p /data/nginx/conf/sites-enabled
-mkdir -p /data/nginx/conf/snippets
-mkdir -p /data/nginx/ssl
-mkdir -p /data/nginx/logs
-mkdir -p /srv/vxture
+mkdir -p /srv/vxture/data/platform-pg
+mkdir -p /srv/vxture/data/platform-redis
+mkdir -p /srv/vxture/data/nginx/conf/sites-enabled
+mkdir -p /srv/vxture/data/nginx/conf/snippets
+mkdir -p /srv/vxture/data/nginx/ssl
+mkdir -p /srv/vxture/data/nginx/logs
 echo "目录结构:"
-find /data -maxdepth 3 -type d | sort
-find /srv/vxture -maxdepth 2 -type d | sort
+find /srv/vxture -maxdepth 4 -type d | sort
 
 echo "==> [6/6] 克隆仓库"
 if [ -d "$REPO_DIR/.git" ]; then
@@ -93,8 +91,8 @@ echo ""
 echo "  A. 完成 Tailscale auth（如未完成）："
 echo "     tailscale up --authkey=<key> --hostname=worker-01"
 echo ""
-echo "  B. 上传 SSL 证书到 /data/nginx/ssl/ ："
-echo "     scp vxture.com.crt vxture.com.key root@<server>:/data/nginx/ssl/"
+echo "  B. 上传 SSL 证书到 /srv/vxture/data/nginx/ssl/ ："
+echo "     scp vxture.com.crt vxture.com.key root@<server>:/srv/vxture/data/nginx/ssl/"
 echo ""
 echo "  C. 填写 compose 环境变量（在 $COMPOSE_DIR/）："
 echo "     cp .env.example .env                           # PLATFORM_REDIS_PASSWORD"

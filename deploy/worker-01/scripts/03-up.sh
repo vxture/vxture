@@ -39,11 +39,11 @@ echo "  密钥文件:"
 check_file "$COMPOSE_DIR/secrets/platform_pg_password.txt"
 
 echo "  SSL 证书:"
-check_file /data/nginx/ssl/vxture.com.crt
-check_file /data/nginx/ssl/vxture.com.key
+check_file /srv/vxture/data/nginx/ssl/vxture.com.crt
+check_file /srv/vxture/data/nginx/ssl/vxture.com.key
 
 echo "  Nginx 配置:"
-check_file /data/nginx/conf/nginx.conf
+check_file /srv/vxture/data/nginx/conf/nginx.conf
 
 if [ "${MISSING:-0}" -eq 1 ]; then
   echo ""
