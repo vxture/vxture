@@ -8,8 +8,6 @@ body {
   color: var(--vx-console-text);
 }
 
-.dark html,
-.dark body,
 html.dark,
 body.dark {
   background: linear-gradient(180deg, var(--vx-color-background) 0%, var(--vx-color-surface-soft) 100%);
