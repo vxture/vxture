@@ -46,9 +46,8 @@ export class SubscriptionService {
       status: 'cancelled',
       endAt: new Date(),
       operatorType: 'operator',
-      operatorId,
-      operatorRemark: remark,
-      updatedBy: operatorId,
+      ...(operatorId !== undefined ? { operatorId, updatedBy: operatorId } : {}),
+      ...(remark     !== undefined ? { operatorRemark: remark }            : {}),
     });
     return result!;
   }
@@ -65,9 +64,8 @@ export class SubscriptionService {
     const result = await this.repo.update(id, subscription, {
       toPlanId: newPlanId,
       operatorType: 'operator',
-      operatorId,
-      operatorRemark: remark,
-      updatedBy: operatorId,
+      ...(operatorId !== undefined ? { operatorId, updatedBy: operatorId } : {}),
+      ...(remark     !== undefined ? { operatorRemark: remark }            : {}),
     });
     return result!;
   }

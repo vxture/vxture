@@ -176,7 +176,7 @@ export class PhoneAuthRouter {
   private async verifyTenantTurnstile(token: string | undefined, req: Request): Promise<void> {
     try {
       await this.turnstile.verify({
-        token,
+        token: token ?? null,
         remoteIp: resolveClientIp(req),
         expectedAction: TENANT_TURNSTILE_ACTION,
       });

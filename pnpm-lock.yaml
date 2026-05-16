@@ -1307,7 +1307,13 @@ importers:
       class-validator:
         specifier: ^0.14.0
         version: 0.14.4
+      pg:
+        specifier: ^8.13.3
+        version: 8.20.0
     devDependencies:
+      '@types/pg':
+        specifier: ^8.11.11
+        version: 8.20.0
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1329,7 +1335,13 @@ importers:
       class-validator:
         specifier: ^0.14.0
         version: 0.14.4
+      pg:
+        specifier: ^8.13.3
+        version: 8.20.0
     devDependencies:
+      '@types/pg':
+        specifier: ^8.11.11
+        version: 8.20.0
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -1411,7 +1423,13 @@ importers:
       class-validator:
         specifier: ^0.14.0
         version: 0.14.4
+      pg:
+        specifier: ^8.13.3
+        version: 8.20.0
     devDependencies:
+      '@types/pg':
+        specifier: ^8.11.11
+        version: 8.20.0
       typescript:
         specifier: ^5.9.3
         version: 5.9.3

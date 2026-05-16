@@ -11,7 +11,6 @@
  * @date 2026-04-30
  */
 
-import { subscriptionService } from '@vxture/service-subscription';
 import type { VelaTool } from '../tool.types';
 
 export const mySubscriptionTool: VelaTool = {
@@ -21,11 +20,7 @@ export const mySubscriptionTool: VelaTool = {
   surfaces:    ['console'],
   dataScope:   'tenant',
   inputSchema: { type: 'object', properties: {} },
-  async execute(_input, ctx) {
-    const subscriptions = await subscriptionService.getSubscriptions({
-      tenantId: ctx.tenantId!,
-      limit:    10,
-    });
-    return { success: true, data: subscriptions, displayHint: 'card' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'my_subscription: not yet implemented' };
   },
 };

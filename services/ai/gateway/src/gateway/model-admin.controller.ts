@@ -52,7 +52,10 @@ export class ModelAdminController {
     @Query('tenantId') tenantId?: string,
     @Query('modelId') modelId?: string,
   ): Promise<AiModelGrantAdminRecord[]> {
-    return this.admin.listGrants({ tenantId, modelId });
+    return this.admin.listGrants({
+      ...(tenantId !== undefined ? { tenantId } : {}),
+      ...(modelId  !== undefined ? { modelId }  : {}),
+    });
   }
 
   @Post('grants')

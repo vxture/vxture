@@ -76,7 +76,7 @@ export class GatewayLLMError extends Error implements LLMError {
 export class GatewayLLMClient {
   private readonly gatewayUrl: string;
   private readonly tenantId: string;
-  private readonly agentId?: string;
+  private readonly agentId: string | undefined;
   private readonly defaultTimeoutMs: number;
   private readonly fetchImpl: typeof fetch;
 
@@ -113,8 +113,8 @@ export class GatewayLLMClient {
 
     return {
       content: response.message.content,
-      toolCalls: response.message.toolCalls,
-      finishReason: response.finishReason,
+      ...(response.message.toolCalls !== undefined ? { toolCalls: response.message.toolCalls } : {}),
+      ...(response.finishReason      !== undefined ? { finishReason: response.finishReason }  : {}),
       usage: response.usage,
       model: response.modelCode,
       latency: response.latencyMs,
@@ -193,17 +193,18 @@ export class GatewayLLMClient {
     options: GatewayLLMChatOptions,
     stream: boolean,
   ): GatewayChatRequest {
+    const resolvedAgentId = options.agentId ?? this.agentId;
     return {
       modelCode: String(config.model),
       messages: messages.map(toWireMessage),
-      temperature: config.temperature,
-      maxTokens: config.maxTokens,
-      topP: config.topP,
-      tools: options.tools,
-      toolChoice: options.toolChoice,
+      ...(config.temperature   !== undefined ? { temperature:  config.temperature }   : {}),
+      ...(config.maxTokens     !== undefined ? { maxTokens:    config.maxTokens }     : {}),
+      ...(config.topP          !== undefined ? { topP:         config.topP }          : {}),
+      ...(options.tools        !== undefined ? { tools:        options.tools }        : {}),
+      ...(options.toolChoice   !== undefined ? { toolChoice:   options.toolChoice }   : {}),
       stream,
       tenantId: options.tenantId ?? this.tenantId,
-      agentId: options.agentId ?? this.agentId,
+      ...(resolvedAgentId !== undefined ? { agentId: resolvedAgentId } : {}),
     };
   }
 

@@ -179,8 +179,8 @@ async function gatewayRequest<TResponse>(
   try {
     response = await fetch(`${gatewayBaseUrl()}${path}`, {
       method: options.method ?? 'GET',
-      headers: options.body ? { 'content-type': 'application/json' } : undefined,
-      body: options.body ? JSON.stringify(options.body) : undefined,
+      ...(options.body ? { headers: { 'content-type': 'application/json' } } : {}),
+      ...(options.body ? { body: JSON.stringify(options.body) } : {}),
     });
   } catch {
     throw new BadGatewayException('AI Gateway is unavailable');

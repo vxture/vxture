@@ -1,3 +1,18 @@
+export enum BillingCycle {
+  MONTHLY   = 'monthly',
+  QUARTERLY = 'quarterly',
+  ANNUAL    = 'annual',
+  YEARLY    = 'yearly',
+}
+
+export enum SubscriptionStatus {
+  ACTIVE    = 'active',
+  TRIALING  = 'trialing',
+  PAUSED    = 'paused',
+  CANCELLED = 'cancelled',
+  EXPIRED   = 'expired',
+}
+
 export interface SubscriptionRecord {
   id: string;
   tenantId: string;

@@ -32,7 +32,7 @@ export class TicketService {
       ticketId: ticket.id,
       eventType: 'created',
       actorType: 'user',
-      actorId: input.accountId,
+      ...(input.accountId !== undefined ? { actorId: input.accountId } : {}),
       actorName: input.reporterName ?? 'unknown',
       payload: { title: ticket.title, category: ticket.category },
     });

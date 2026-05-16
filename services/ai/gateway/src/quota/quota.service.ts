@@ -86,9 +86,10 @@ export class QuotaService {
     const used = summary?.totalQuota ?? 0n;
     const remaining = quota.periodTokens - used;
 
+    const isAllowed = remaining > 0n;
     return {
-      allowed: remaining > 0n,
-      reason: remaining > 0n ? undefined : 'Tenant subscription token quota is exhausted',
+      allowed: isAllowed,
+      ...(isAllowed ? {} : { reason: 'Tenant subscription token quota is exhausted' }),
       remaining,
     };
   }

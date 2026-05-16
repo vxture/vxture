@@ -11,7 +11,6 @@
  * @date 2026-04-30
  */
 
-import { billingService } from '@vxture/service-billing';
 import type { VelaTool } from '../tool.types';
 
 export const myBillingTool: VelaTool = {
@@ -26,12 +25,7 @@ export const myBillingTool: VelaTool = {
       limit: { type: 'number', default: 5, description: '返回最近 N 张发票，最大 20' },
     },
   },
-  async execute(input, ctx) {
-    const { limit = 5 } = input as { limit?: number };
-    const invoices = await billingService.queryInvoices({
-      tenantId: ctx.tenantId!,
-      limit: Math.min(limit, 20),
-    });
-    return { success: true, data: invoices, displayHint: 'table' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'my_billing: not yet implemented' };
   },
 };

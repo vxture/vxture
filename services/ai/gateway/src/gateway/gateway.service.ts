@@ -48,12 +48,12 @@ export class GatewayService {
         apiKey,
         modelCode: model.modelCode,
         messages: request.messages,
-        temperature: request.temperature,
-        maxTokens: request.maxTokens,
-        topP: request.topP,
-        tools: request.tools,
-        toolChoice: request.toolChoice,
-        config: model.config ?? undefined,
+        ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
+        ...(request.maxTokens   !== undefined ? { maxTokens:   request.maxTokens }   : {}),
+        ...(request.topP        !== undefined ? { topP:        request.topP }        : {}),
+        ...(request.tools       !== undefined ? { tools:       request.tools }       : {}),
+        ...(request.toolChoice  !== undefined ? { toolChoice:  request.toolChoice }  : {}),
+        ...(model.config        != null       ? { config:      model.config }        : {}),
       });
       const latencyMs = Date.now() - startedAt;
 
@@ -65,7 +65,7 @@ export class GatewayService {
         message: {
           role: 'assistant',
           content: providerResponse.content,
-          toolCalls: providerResponse.toolCalls,
+          ...(providerResponse.toolCalls !== undefined ? { toolCalls: providerResponse.toolCalls } : {}),
         },
         usage: {
           promptTokens: providerResponse.promptTokens,
@@ -73,7 +73,7 @@ export class GatewayService {
           totalTokens: providerResponse.totalTokens,
         },
         latencyMs,
-        finishReason: providerResponse.finishReason,
+        ...(providerResponse.finishReason !== undefined ? { finishReason: providerResponse.finishReason } : {}),
       };
     } catch (error) {
       throw error instanceof Error
@@ -105,12 +105,12 @@ export class GatewayService {
         apiKey,
         modelCode: model.modelCode,
         messages: request.messages,
-        temperature: request.temperature,
-        maxTokens: request.maxTokens,
-        topP: request.topP,
-        tools: request.tools,
-        toolChoice: request.toolChoice,
-        config: model.config ?? undefined,
+        ...(request.temperature !== undefined ? { temperature: request.temperature } : {}),
+        ...(request.maxTokens   !== undefined ? { maxTokens:   request.maxTokens }   : {}),
+        ...(request.topP        !== undefined ? { topP:        request.topP }        : {}),
+        ...(request.tools       !== undefined ? { tools:       request.tools }       : {}),
+        ...(request.toolChoice  !== undefined ? { toolChoice:  request.toolChoice }  : {}),
+        ...(model.config        != null       ? { config:      model.config }        : {}),
       })) {
         if (event.type === 'done' && event.usage) {
           lastUsage = event.usage;
@@ -194,11 +194,11 @@ export class GatewayService {
     await this.metering.record({
       requestId,
       tenantId: request.tenantId,
-      agentId: request.agentId,
-      userId: request.userId,
-      featureId: request.featureId,
-      businessId: request.businessId,
-      usageType: request.usageType,
+      ...(request.agentId    !== undefined ? { agentId:    request.agentId }    : {}),
+      ...(request.userId     !== undefined ? { userId:     request.userId }     : {}),
+      ...(request.featureId  !== undefined ? { featureId:  request.featureId }  : {}),
+      ...(request.businessId !== undefined ? { businessId: request.businessId } : {}),
+      ...(request.usageType  !== undefined ? { usageType:  request.usageType }  : {}),
       modelCode: model.modelCode,
       usage,
       latencyMs,

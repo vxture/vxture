@@ -11,7 +11,6 @@
  * @date 2026-04-30
  */
 
-import { ticketService } from '@vxture/service-ticket';
 import type { VelaTool } from '../tool.types';
 
 export const myTicketsTool: VelaTool = {
@@ -31,13 +30,7 @@ export const myTicketsTool: VelaTool = {
       limit: { type: 'number', default: 10, description: '最多返回条数，最大 50' },
     },
   },
-  async execute(input, ctx) {
-    const { status, limit = 10 } = input as { status?: string; limit?: number };
-    const tickets = await ticketService.getTickets({
-      tenantId: ctx.tenantId!,
-      status: status as never,
-      limit: Math.min(limit, 50),
-    });
-    return { success: true, data: tickets, displayHint: 'table' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'my_tickets: not yet implemented' };
   },
 };

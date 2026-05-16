@@ -8,7 +8,6 @@
  * @date 2026-04-30
  */
 
-import { subscriptionService } from '@vxture/service-subscription';
 import type { VelaTool } from '../tool.types';
 
 export const subscriptionListTool: VelaTool = {
@@ -28,12 +27,7 @@ export const subscriptionListTool: VelaTool = {
       limit: { type: 'number', default: 20, description: '最多返回条数，最大 100' },
     },
   },
-  async execute(input, _ctx) {
-    const { status, limit = 20 } = input as { status?: string; limit?: number };
-    const subscriptions = await subscriptionService.getSubscriptions({
-      status: status as never,
-      limit: Math.min(limit, 100),
-    });
-    return { success: true, data: subscriptions, displayHint: 'table' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'subscription_list: not yet implemented' };
   },
 };

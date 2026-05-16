@@ -48,7 +48,7 @@ export class BillingService {
       paidAt: new Date(),
       paymentMethod: data.paymentMethod,
       transactionNo: data.transactionNo,
-      operatorId: data.operatorId,
+      ...(data.operatorId !== undefined ? { operatorId: data.operatorId } : {}),
       paidAmount: parseFloat(invoice.payableAmount),
     });
     return result!;
@@ -61,8 +61,8 @@ export class BillingService {
 
     const result = await this.billing.updateInvoiceStatus(id, {
       billStatus: 'cancelled',
-      operatorId,
-      operateRemark: remark,
+      ...(operatorId !== undefined ? { operatorId }       : {}),
+      ...(remark     !== undefined ? { operateRemark: remark } : {}),
     });
     return result!;
   }

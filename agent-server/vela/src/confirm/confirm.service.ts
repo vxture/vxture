@@ -108,11 +108,11 @@ export class ConfirmService {
 
       await this.messageRepository.saveMessages([{
         sessionId,
-        role:        'assistant',
-        content:     summary,
+        role:       'assistant',
+        content:    summary,
         toolId,
-        toolResult:  result,
-        displayHint: result.displayHint,
+        toolResult: result,
+        ...(result.displayHint !== undefined ? { displayHint: result.displayHint } : {}),
       }]);
     } catch (err) {
       // 写入失败不影响主流程，但记录警告便于排查

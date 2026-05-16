@@ -1,3 +1,18 @@
+export enum TicketPriority {
+  LOW      = 'low',
+  MEDIUM   = 'medium',
+  HIGH     = 'high',
+  URGENT   = 'urgent',
+  CRITICAL = 'critical',
+}
+
+export enum TicketStatus {
+  OPEN        = 'open',
+  IN_PROGRESS = 'in_progress',
+  RESOLVED    = 'resolved',
+  CLOSED      = 'closed',
+}
+
 export interface TicketRecord {
   id: string;
   tenantId: string;

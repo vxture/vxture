@@ -405,12 +405,6 @@ const PAYMENT_LEDGER_BY_ID_SQL = PAYMENT_LEDGER_SQL.replace(
 
 // ─── 核销前状态查询 ────────────────────────────────────────────────────────────
 
-const PAYMENT_LOOKUP_SQL = `
-  select id, pay_status, paid_amount, bill_id
-  from commerce.tenant_payment
-  where id = $1
-`;
-
 const PAYMENT_LOOKUP_FOR_UPDATE_SQL = `
   select id, pay_status, paid_amount, bill_id
   from commerce.tenant_payment

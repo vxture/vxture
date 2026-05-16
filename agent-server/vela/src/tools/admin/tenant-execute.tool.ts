@@ -11,13 +11,11 @@
  *
  *   三个工具均为执行类（requiresConfirmation=true），经用户确认后才执行，
  *   并由 ToolRegistry.executeAfterConfirm() 负责写入 VelaAuditLog（spec §6.5）。
- *   changedBy 统一传 ctx.userId，保留操作人信息供审计追溯。
  *
  * @author AI-Generated
  * @date 2026-05-01
  */
 
-import { subscriptionService } from '@vxture/service-subscription';
 import type { VelaTool } from '../tool.types';
 
 // ============================================================================
@@ -49,18 +47,8 @@ export const tenantPauseSubscriptionTool: VelaTool = {
     },
     required: ['subscriptionId', 'tenantId'],
   },
-  async execute(input, ctx) {
-    const { subscriptionId, reason } = input as {
-      subscriptionId: string;
-      tenantId:       string;
-      reason?:        string;
-    };
-    const result = await subscriptionService.pauseSubscription(
-      subscriptionId,
-      reason,
-      ctx.userId,
-    );
-    return { success: true, data: result, displayHint: 'card' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'tenant_pause_subscription: not yet implemented' };
   },
 };
 
@@ -90,16 +78,8 @@ export const tenantResumeSubscriptionTool: VelaTool = {
     },
     required: ['subscriptionId', 'tenantId'],
   },
-  async execute(input, ctx) {
-    const { subscriptionId } = input as {
-      subscriptionId: string;
-      tenantId:       string;
-    };
-    const result = await subscriptionService.resumeSubscription(
-      subscriptionId,
-      ctx.userId,
-    );
-    return { success: true, data: result, displayHint: 'card' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'tenant_resume_subscription: not yet implemented' };
   },
 };
 
@@ -131,17 +111,7 @@ export const tenantChangePlanTool: VelaTool = {
     },
     required: ['subscriptionId', 'tenantId', 'newPlanId'],
   },
-  async execute(input, ctx) {
-    const { subscriptionId, newPlanId } = input as {
-      subscriptionId: string;
-      tenantId:       string;
-      newPlanId:      string;
-    };
-    const result = await subscriptionService.upgradePlan(
-      subscriptionId,
-      newPlanId,
-      ctx.userId,
-    );
-    return { success: true, data: result, displayHint: 'card' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'tenant_change_plan: not yet implemented' };
   },
 };

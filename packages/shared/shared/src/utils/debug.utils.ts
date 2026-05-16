@@ -10,9 +10,10 @@ function isDev(): boolean {
     return process.env['NODE_ENV'] === 'development';
   }
 
-  // 浏览器环境（仅 ESM 格式）
-  if (typeof document !== 'undefined') {
-    const hostname = typeof location !== 'undefined' ? location.hostname : '';
+  // 浏览器环境（仅 ESM 格式） — use dynamic access to avoid DOM lib requirement
+  const loc = (globalThis as Record<string, unknown>)['location'];
+  if (typeof loc === 'object' && loc !== null) {
+    const hostname = String((loc as Record<string, unknown>)['hostname'] ?? '');
     return hostname === 'localhost' || hostname === '127.0.0.1';
   }
 

@@ -128,7 +128,7 @@ export class RuyinAggregator {
     return {
       message: this.mapMessage(data.message),
       requiresAsync: data.requiresAsync,
-      taskId: data.taskId,
+      ...(data.taskId !== undefined ? { taskId: data.taskId } : {}),
     };
   }
 
@@ -147,13 +147,13 @@ export class RuyinAggregator {
 
     return {
       status: data.status,
-      progress: data.progress,
-      result: data.result,
-      error: data.error,
+      ...(data.progress !== undefined ? { progress: data.progress } : {}),
+      ...(data.result   !== undefined ? { result:   data.result }   : {}),
+      ...(data.error    !== undefined ? { error:    data.error }    : {}),
     };
   }
 
-  private buildHeaders(accessToken: string, includeContentType: boolean = true): HeadersInit {
+  private buildHeaders(accessToken: string, includeContentType: boolean = true): Record<string, string> {
     const headers: Record<string, string> = {
       authorization: `Bearer ${accessToken}`,
     };
@@ -197,7 +197,7 @@ export class RuyinAggregator {
       content: message.content,
       type: message.type,
       timestamp: message.timestamp,
-      taskId: message.taskId,
+      ...(message.taskId !== undefined ? { taskId: message.taskId } : {}),
     };
   }
 }

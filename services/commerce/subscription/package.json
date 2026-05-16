@@ -14,9 +14,11 @@
     "@nestjs/swagger": "^11.0.0",
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
-    "class-validator": "^0.14.0"
+    "class-validator": "^0.14.0",
+    "pg": "^8.13.3"
   },
   "devDependencies": {
+    "@types/pg": "^8.11.11",
     "typescript": "^5.9.3"
   },
   "engines": {

@@ -11,7 +11,6 @@
  * @date 2026-04-30
  */
 
-import { subscriptionService } from '@vxture/service-subscription';
 import type { VelaTool } from '../tool.types';
 
 export const myUsageTool: VelaTool = {
@@ -31,12 +30,7 @@ export const myUsageTool: VelaTool = {
       },
     },
   },
-  async execute(input, ctx) {
-    const { period = '30d' } = input as { period?: string };
-    const stats = await subscriptionService.getUsageStats({
-      tenantId: ctx.tenantId!,
-      period: period as '7d' | '30d' | '90d',
-    });
-    return { success: true, data: stats, displayHint: 'card' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'my_usage: not yet implemented' };
   },
 };

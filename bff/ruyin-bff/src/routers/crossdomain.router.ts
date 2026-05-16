@@ -87,11 +87,11 @@ export class CrossDomainRouter {
     });
 
     if (!verifyResponse.ok) {
-      const err = await verifyResponse.json().catch(() => ({ message: 'Token verification failed' }));
+      const err = await verifyResponse.json().catch(() => ({ message: 'Token verification failed' })) as { message?: string };
       throw new UnauthorizedException(err.message || 'Invalid crossdomain token');
     }
 
-    const payload = await verifyResponse.json();
+    const payload = await verifyResponse.json() as { sub?: string; tenantId?: string };
 
     // Step 2: 委托 auth-bff 签发 ruyin domain Cookie
     const signResponse = await fetch(`${AUTH_BFF}/auth/internal/sign`, {

@@ -560,7 +560,7 @@ export class PasswordAuthRouter {
   private async verifyTenantTurnstile(token: string | undefined, req: Request): Promise<void> {
     try {
       await this.turnstile.verify({
-        token,
+        token: token ?? null,
         remoteIp: resolveClientIp(req),
         expectedAction: TENANT_TURNSTILE_ACTION,
       });
@@ -683,11 +683,11 @@ export class PasswordAuthRouter {
       ? this.authService.issueOperatorTokens({
           sub: body.sub,
           email: body.email,
-          username: body.username,
-          displayName: body.displayName,
+          ...(body.username    !== undefined ? { username:    body.username }    : {}),
+          ...(body.displayName !== undefined ? { displayName: body.displayName } : {}),
           role: body.role,
-          roleLabel: body.roleLabel,
-          permissions: body.permissions,
+          ...(body.roleLabel   !== undefined ? { roleLabel:   body.roleLabel }   : {}),
+          ...(body.permissions !== undefined ? { permissions: body.permissions } : {}),
         })
       : await this.authService.reissueTokensForUser(body.sub, source, body.tenantId);
 

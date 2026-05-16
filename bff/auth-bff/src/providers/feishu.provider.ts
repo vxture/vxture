@@ -133,12 +133,13 @@ export class FeishuProvider {
       throw new Error(`Feishu userinfo error: ${data.code} ${data.msg}`);
     }
 
+    const feishuAvatar = data.data.avatar?.avatar_big || data.data.picture;
     return {
       providerId: data.data.sub,
       provider: OAuthProviderType.FEISHU,
-      email: data.data.email,
+      ...(data.data.email !== undefined ? { email:  data.data.email } : {}),
       name: data.data.en_name || data.data.name,
-      avatar: data.data.avatar?.avatar_big || data.data.picture,
+      ...(feishuAvatar    !== undefined ? { avatar: feishuAvatar }   : {}),
       raw: data as unknown as Record<string, unknown>,
     };
   }

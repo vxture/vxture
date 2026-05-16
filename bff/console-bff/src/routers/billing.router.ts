@@ -29,12 +29,19 @@ import {
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { BillingService } from '@vxture/service-billing';
-import type { BillingStats, Invoice } from '@vxture/service-billing';
+import type { InvoiceRecord } from '@vxture/service-billing';
 import type { RequestContext } from '../types/console.types';
 
 // ============================================================================
 // BillingRouter
 // ============================================================================
+
+export interface BillingOverview {
+  total: number;
+  paid: number;
+  pending: number;
+  cancelled: number;
+}
 
 @Controller('api/billing')
 export class BillingRouter {
@@ -53,31 +60,41 @@ export class BillingRouter {
   async getInvoices(
     @Req() req: Request & RequestContext,
     @Query('limit') limit?: string,
-  ): Promise<Invoice[]> {
+  ): Promise<InvoiceRecord[]> {
     if (!req.tenant) {
       throw new UnauthorizedException('租户上下文缺失');
     }
 
-    const limitNum = Math.min(Number(limit) || 20, 100);
-
-    return this.billingService.queryInvoices({
+    const pageSize = Math.min(Number(limit) || 20, 100);
+    const result = await this.billingService.listInvoices({
       tenantId: req.tenant.id,
-      limit: limitNum,
+      pageSize,
     });
+    return result.items;
   }
 
   // ── GET /api/billing/overview ──────────────────────────────────────────────
 
   /**
-   * 返回当前租户的账单概览统计：
-   * 发票总数、已付数量、待付数量、逾期数量、总收入、活跃订阅数。
+   * 返回当前租户的账单概览统计：总数、已付、待付、已取消。
    */
   @Get('overview')
-  async getOverview(@Req() req: Request & RequestContext): Promise<BillingStats> {
+  async getOverview(@Req() req: Request & RequestContext): Promise<BillingOverview> {
     if (!req.tenant) {
       throw new UnauthorizedException('租户上下文缺失');
     }
 
-    return this.billingService.getBillingOverview({ tenantId: req.tenant.id });
+    const result = await this.billingService.listInvoices({
+      tenantId: req.tenant.id,
+      pageSize: 200,
+    });
+
+    const items = result.items;
+    return {
+      total:     items.length,
+      paid:      items.filter(i => i.billStatus === 'paid').length,
+      pending:   items.filter(i => i.billStatus === 'pending').length,
+      cancelled: items.filter(i => i.billStatus === 'cancelled').length,
+    };
   }
 }

@@ -48,5 +48,5 @@ export function isNode(): boolean {
 
 /** Is running in browser environment */
 export function isBrowser(): boolean {
-  return typeof window !== 'undefined' && typeof document !== 'undefined';
+  return 'window' in globalThis && 'document' in globalThis;
 }

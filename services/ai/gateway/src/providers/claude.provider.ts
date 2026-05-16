@@ -93,10 +93,12 @@ export class ClaudeProvider extends BaseProvider {
     const promptTokens = response.usage?.input_tokens ?? 0;
     const completionTokens = response.usage?.output_tokens ?? 0;
 
+    const mappedToolCalls  = toolCalls.length > 0 ? toolCalls : undefined;
+    const mappedFinishReason = mapClaudeStopReason(response.stop_reason);
     return {
       content,
-      toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
-      finishReason: mapClaudeStopReason(response.stop_reason),
+      ...(mappedToolCalls    !== undefined ? { toolCalls:    mappedToolCalls }    : {}),
+      ...(mappedFinishReason !== undefined ? { finishReason: mappedFinishReason } : {}),
       promptTokens,
       completionTokens,
       totalTokens: promptTokens + completionTokens,

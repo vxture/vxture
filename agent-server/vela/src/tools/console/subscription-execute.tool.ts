@@ -9,13 +9,11 @@
  *
  *   tenantId 强制来自 CallerContext，前端无法篡改（spec §11.3）。
  *   requiresConfirmation=true，套餐变更前须用户二次确认。
- *   changedBy 传 ctx.userId，保留操作人信息供审计追溯。
  *
  * @author AI-Generated
  * @date 2026-05-01
  */
 
-import { subscriptionService } from '@vxture/service-subscription';
 import type { VelaTool } from '../tool.types';
 
 // ============================================================================
@@ -44,32 +42,7 @@ export const myChangePlanTool: VelaTool = {
     },
     required: ['subscriptionId', 'newPlanId'],
   },
-  async execute(input, ctx) {
-    const { subscriptionId, newPlanId } = input as {
-      subscriptionId: string;
-      newPlanId:      string;
-    };
-
-    // 按 ID 查单条，再校验 tenantId 归属，避免 getSubscriptions limit 导致假阳性
-    let subscription: { id: string; tenantId?: string } | null = null;
-    try {
-      subscription = await subscriptionService.getSubscriptionById(subscriptionId) as {
-        id: string;
-        tenantId?: string;
-      };
-    } catch {
-      return { success: false, error: `订阅 ${subscriptionId} 不存在` };
-    }
-
-    if (subscription.tenantId !== ctx.tenantId) {
-      return { success: false, error: `订阅 ${subscriptionId} 不属于当前租户` };
-    }
-
-    const result = await subscriptionService.upgradePlan(
-      subscriptionId,
-      newPlanId,
-      ctx.userId,
-    );
-    return { success: true, data: result, displayHint: 'card' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'my_change_plan: not yet implemented' };
   },
 };

@@ -126,16 +126,16 @@ function toJsonText(value: unknown): string | null {
 
 function toMessageRecord(row: VelaMessageRow): VelaMessageRecord {
   return {
-    id:          row.id,
-    sessionId:   row.sessionId,
-    role:        toMessageRole(row.role),
-    content:     row.content,
-    toolId:      row.toolId ?? undefined,
-    toolCallId:  row.toolCallId ?? undefined,
-    toolInput:   row.toolInput ?? undefined,
-    toolResult:  row.toolResult ?? undefined,
-    displayHint: row.displayHint ?? undefined,
-    createdAt:   row.createdAt,
+    id:        row.id,
+    sessionId: row.sessionId,
+    role:      toMessageRole(row.role),
+    content:   row.content,
+    ...(row.toolId      != null ? { toolId:      row.toolId }      : {}),
+    ...(row.toolCallId  != null ? { toolCallId:  row.toolCallId }  : {}),
+    ...(row.toolInput   != null ? { toolInput:   row.toolInput }   : {}),
+    ...(row.toolResult  != null ? { toolResult:  row.toolResult }  : {}),
+    ...(row.displayHint != null ? { displayHint: row.displayHint } : {}),
+    createdAt: row.createdAt,
   };
 }
 

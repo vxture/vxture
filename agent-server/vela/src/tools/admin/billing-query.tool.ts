@@ -8,7 +8,6 @@
  * @date 2026-04-30
  */
 
-import { billingService } from '@vxture/service-billing';
 import type { VelaTool } from '../tool.types';
 
 export const billingOverviewTool: VelaTool = {
@@ -28,9 +27,7 @@ export const billingOverviewTool: VelaTool = {
       },
     },
   },
-  async execute(input, _ctx) {
-    const { period = '30d' } = input as { period?: string };
-    const stats = await billingService.getBillingOverview({ period: period as '7d' | '30d' | '90d' | '1y' });
-    return { success: true, data: stats, displayHint: 'card' };
+  async execute(_input, _ctx) {
+    return { success: false, error: 'billing_overview: not yet implemented' };
   },
 };

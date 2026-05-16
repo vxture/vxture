@@ -300,8 +300,8 @@ export class AuthService {
       provider: profile.provider,
       providerId: profile.providerId,
       name: profile.name,
-      email: profile.email,
-      avatarUrl: profile.avatar,
+      email: profile.email ?? null,
+      avatarUrl: profile.avatar ?? null,
     });
 
     const tenantContext = await this.organizationReadService.resolveTenantContextForAccount(account.id);

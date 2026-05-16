@@ -43,9 +43,8 @@ export class AuthMiddleware implements NestMiddleware {
       if (user) {
         const capabilities = await this.platformAuthService.getCapabilities(payload.sub);
         (req as Request & RequestContext).user = user;
-        (req as Request & RequestContext).capabilities = (
-          capabilities.length ? capabilities : payload.permissions ?? []
-        ) as RequestContext['capabilities'];
+        (req as Request & RequestContext).capabilities =
+          capabilities.length ? capabilities : (payload.permissions ?? []);
       }
     } catch {
       // Ignore invalid token and let downstream route decide how to respond.

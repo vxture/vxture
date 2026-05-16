@@ -106,7 +106,7 @@ export class ChatService {
         for await (const chunk of client.chatStream(
           messages,
           { model: DEFAULT_MODEL_CODE, temperature: 0.7 },
-          { tools: llmTools.length > 0 ? llmTools : undefined, toolChoice: 'auto' },
+          { ...(llmTools.length > 0 ? { tools: llmTools } : {}), toolChoice: 'auto' as const },
         )) {
           if (chunk.type === 'text') {
             assistantText += chunk.delta;
@@ -153,14 +153,14 @@ export class ChatService {
         toolCallId: toolCallId!,
         toolInput:  toolCallArgs,
         toolResult,
-        displayHint: toolResult.displayHint,
+        ...(toolResult.displayHint !== undefined ? { displayHint: toolResult.displayHint } : {}),
       });
 
       yield {
-        type:        'tool_result',
-        toolId:      toolCallName,
-        data:        toolResult.data,
-        displayHint: toolResult.displayHint,
+        type:   'tool_result',
+        toolId: toolCallName,
+        data:   toolResult.data,
+        ...(toolResult.displayHint !== undefined ? { displayHint: toolResult.displayHint } : {}),
       };
 
       // 5. 将 assistant + tool 结果追加到消息历史，继续循环

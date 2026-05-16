@@ -93,14 +93,14 @@ export class SessionAggregator {
     input: UpdateProfileDto,
   ): Promise<AccountProfileDto | null> {
     const profile = await this.accountAuthService.updateAccountProfile(accountId, {
-      displayName: input.displayName,
-      avatarUrl: input.avatarUrl,
-      headline: input.headline,
-      bio: input.bio,
-      timezone: input.timezone,
-      language: input.language,
-      email: input.email,
-      phone: input.phone,
+      ...(input.displayName !== undefined ? { displayName: input.displayName } : {}),
+      ...(input.avatarUrl   !== undefined ? { avatarUrl:   input.avatarUrl }   : {}),
+      ...(input.headline    !== undefined ? { headline:    input.headline }    : {}),
+      ...(input.bio         !== undefined ? { bio:         input.bio }         : {}),
+      ...(input.timezone    !== undefined ? { timezone:    input.timezone }    : {}),
+      ...(input.language    !== undefined ? { language:    input.language }    : {}),
+      ...(input.email       !== undefined ? { email:       input.email }       : {}),
+      ...(input.phone       !== undefined ? { phone:       input.phone }       : {}),
     });
 
     if (!profile) {

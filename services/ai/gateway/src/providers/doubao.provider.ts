@@ -150,10 +150,12 @@ export function normalizeOpenAiCompatibleResponse(
   const promptTokens = response.usage?.prompt_tokens ?? 0;
   const completionTokens = response.usage?.completion_tokens ?? 0;
 
+  const mappedToolCalls    = toolCalls.length > 0 ? toolCalls : undefined;
+  const mappedFinishReason = mapFinishReason(choice?.finish_reason ?? undefined);
   return {
     content,
-    toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
-    finishReason: mapFinishReason(choice?.finish_reason ?? undefined),
+    ...(mappedToolCalls    !== undefined ? { toolCalls:    mappedToolCalls }    : {}),
+    ...(mappedFinishReason !== undefined ? { finishReason: mappedFinishReason } : {}),
     promptTokens,
     completionTokens,
     totalTokens: response.usage?.total_tokens ?? promptTokens + completionTokens,
@@ -238,7 +240,7 @@ async function* parseOpenAiCompatibleStream(
               },
             };
           }
-          yield { type: 'done', usage, finishReason };
+          yield { type: 'done', ...(usage !== undefined ? { usage } : {}), ...(finishReason !== undefined ? { finishReason } : {}) };
           return;
         }
 
@@ -301,7 +303,7 @@ async function* parseOpenAiCompatibleStream(
       },
     };
   }
-  yield { type: 'done', usage, finishReason };
+  yield { type: 'done', ...(usage !== undefined ? { usage } : {}), ...(finishReason !== undefined ? { finishReason } : {}) };
 }
 
 function extractDataPayload(rawEvent: string): string | null {

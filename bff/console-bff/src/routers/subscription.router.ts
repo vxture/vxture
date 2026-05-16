@@ -20,7 +20,7 @@ import {
 import type { Request } from 'express';
 import { MailService } from '@vxture/core-mail';
 import { SubscriptionService } from '@vxture/service-subscription';
-import type { Subscription } from '@vxture/service-subscription';
+import type { SubscriptionRecord } from '@vxture/service-subscription';
 import type { RequestContext } from '../types/console.types';
 
 // ============================================================================
@@ -56,9 +56,10 @@ export class SubscriptionRouter {
   // --------------------------------------------------------------------------
 
   @Get('my')
-  async getMySubscriptions(@Req() req: Request & RequestContext): Promise<Subscription[]> {
+  async getMySubscriptions(@Req() req: Request & RequestContext): Promise<SubscriptionRecord[]> {
     if (!req.tenant) throw new UnauthorizedException('租户上下文缺失');
-    return this.subscriptionService.getTenantSubscriptions(req.tenant.id);
+    const result = await this.subscriptionService.listSubscriptions({ tenantId: req.tenant.id });
+    return result.items;
   }
 
   // --------------------------------------------------------------------------
@@ -69,10 +70,10 @@ export class SubscriptionRouter {
   async executeAction(
     @Req() req: Request & RequestContext,
     @Body() body: SubscriptionActionBody,
-  ): Promise<Subscription> {
+  ): Promise<SubscriptionRecord> {
     if (!req.user || !req.tenant) throw new UnauthorizedException('会话已失效');
 
-    const { subscriptionId, action, planId, reason, immediate = false } = body ?? {};
+    const { subscriptionId, action, planId, reason } = body ?? {};
 
     // ── 入参校验 ──────────────────────────────────────────────────────────
     if (!subscriptionId?.trim()) throw new BadRequestException('subscriptionId 不能为空');
@@ -85,9 +86,9 @@ export class SubscriptionRouter {
     }
 
     // ── 查订阅并校验租户归属 ──────────────────────────────────────────────
-    let current: Subscription;
+    let current: SubscriptionRecord;
     try {
-      current = await this.subscriptionService.getSubscriptionById(subscriptionId);
+      current = await this.subscriptionService.getSubscription(subscriptionId);
     } catch {
       throw new BadRequestException('订阅不存在');
     }
@@ -98,16 +99,25 @@ export class SubscriptionRouter {
 
     // ── 执行操作 ──────────────────────────────────────────────────────────
     const changedBy = req.user.email;
-    let updated!: Subscription;
+    let updated!: SubscriptionRecord;
     try {
       if (action === 'upgrade') {
-        updated = await this.subscriptionService.upgradePlan(subscriptionId, planId!, changedBy);
+        updated = await this.subscriptionService.upgradeSubscription(subscriptionId, planId!, changedBy);
       } else if (action === 'pause') {
-        updated = await this.subscriptionService.pauseSubscription(subscriptionId, reason, changedBy);
+        updated = await this.subscriptionService.updateSubscription(subscriptionId, {
+          status: 'paused',
+          operatorType: 'user',
+          ...(changedBy ? { operatorId: changedBy, updatedBy: changedBy } : {}),
+          ...(reason    ? { operatorRemark: reason } : {}),
+        });
       } else if (action === 'resume') {
-        updated = await this.subscriptionService.resumeSubscription(subscriptionId, changedBy);
+        updated = await this.subscriptionService.updateSubscription(subscriptionId, {
+          status: 'active',
+          operatorType: 'user',
+          ...(changedBy ? { operatorId: changedBy, updatedBy: changedBy } : {}),
+        });
       } else {
-        updated = await this.subscriptionService.cancelSubscription(subscriptionId, reason, immediate, changedBy);
+        updated = await this.subscriptionService.cancelSubscription(subscriptionId, changedBy, reason);
       }
     } catch (err) {
       throw new BadRequestException(err instanceof Error ? err.message : '订阅操作失败');
@@ -133,7 +143,7 @@ const ACTION_LABELS: Record<SubscriptionAction, string> = {
   cancel:  '订阅取消',
 };
 
-function buildActionEmail(to: string, action: SubscriptionAction, sub: Subscription) {
+function buildActionEmail(to: string, action: SubscriptionAction, sub: SubscriptionRecord) {
   const label = ACTION_LABELS[action];
   const subject = `[Vxture] 您的${label}操作已完成`;
   const html = `
@@ -146,8 +156,8 @@ function buildActionEmail(to: string, action: SubscriptionAction, sub: Subscript
       <td style="padding:10px 12px">${sub.id}</td>
     </tr>
     <tr>
-      <td style="padding:10px 12px;color:#888">套餐名称</td>
-      <td style="padding:10px 12px">${sub.planName}</td>
+      <td style="padding:10px 12px;color:#888">套餐 ID</td>
+      <td style="padding:10px 12px">${sub.planId}</td>
     </tr>
     <tr style="background:#f5f5f5">
       <td style="padding:10px 12px;color:#888">当前状态</td>

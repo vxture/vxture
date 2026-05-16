@@ -33,7 +33,7 @@ class Agent01Server {
    */
   start(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.server = createServer((req, res) => {
+      this.server = createServer((_req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
           message: 'Agent01 backend server is running',

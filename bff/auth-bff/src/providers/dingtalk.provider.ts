@@ -87,7 +87,7 @@ export class DingtalkProvider {
     const data = (await response.json()) as DingTalkTokenResponse;
     return {
       accessToken: data.accessToken,
-      refreshToken: data.refreshToken,
+      ...(data.refreshToken !== undefined ? { refreshToken: data.refreshToken } : {}),
       expiresIn: data.expireIn ?? 7200,
     };
   }
@@ -106,9 +106,9 @@ export class DingtalkProvider {
     return {
       providerId: data.unionId,
       provider: OAuthProviderType.DINGTALK,
-      email: data.email,
+      ...(data.email    !== undefined ? { email:  data.email }    : {}),
       name: data.nick,
-      avatar: data.avatarUrl,
+      ...(data.avatarUrl !== undefined ? { avatar: data.avatarUrl } : {}),
       raw: data as unknown as Record<string, unknown>,
     };
   }
