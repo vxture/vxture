@@ -1,0 +1,28 @@
+/**
+ * auth-actions-verification.css - 认证页验证组件容器。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-auth-turnstile {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  line-height: 0;
+  overflow: visible;
+  position: relative;
+  z-index: 0;
+}
+
+.vx-auth-turnstile > div {
+  max-width: 100%;
+}
+
+.vx-auth-turnstile:empty {
+  display: none;
+}

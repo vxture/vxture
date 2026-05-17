@@ -1,0 +1,50 @@
+/**
+ * auth-actions-primary.css - 认证页主操作按钮和加载状态。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-auth-primary {
+  width: 100%;
+  min-height: var(--vx-auth-primary-action-min-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vx-auth-gap-xs);
+  padding: var(--vx-auth-padding-md);
+  border: 0;
+  border-radius: var(--vx-auth-radius-md);
+  background: var(--vx-auth-accent);
+  color: var(--vx-color-white);
+  cursor: pointer;
+  font-size: var(--vx-auth-text-md);
+  font-weight: 600;
+  box-shadow: var(--vx-auth-primary-shadow);
+  transition:
+    transform var(--vx-control-transition),
+    box-shadow var(--vx-control-transition),
+    opacity var(--vx-control-transition);
+}
+
+.vx-auth-primary:hover:not(:disabled) {
+  transform: translateY(var(--vx-auth-action-hover-translate-y));
+  box-shadow: var(--vx-auth-primary-hover-shadow);
+}
+
+.vx-auth-primary:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+.vx-auth-spinner {
+  width: var(--vx-auth-action-spinner-size);
+  height: var(--vx-auth-action-spinner-size);
+  border: var(--vx-auth-action-spinner-border-width) solid color-mix(in srgb, var(--vx-color-white) 32%, transparent);
+  border-top-color: var(--vx-color-white);
+  border-radius: var(--vx-auth-radius-pill);
+  animation: vx-auth-spin var(--vx-motion-spinner) infinite;
+}

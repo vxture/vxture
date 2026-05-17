@@ -1,0 +1,90 @@
+/**
+ * auth-actions-social-buttons.css - 认证页分隔线和社交登录按钮。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-auth-or {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-auth-gap-sm);
+  margin: var(--vx-auth-divider-margin) 0;
+}
+
+.vx-auth-section-social .vx-auth-or {
+  margin: 0 0 var(--vx-auth-divider-label-margin-bottom);
+}
+
+.vx-auth-or span {
+  flex: 1;
+  height: var(--vx-auth-divider-line-height);
+  background: var(--vx-auth-border);
+}
+
+.vx-auth-or em {
+  color: var(--vx-auth-muted);
+  font-size: var(--vx-auth-text-2xs);
+  font-style: normal;
+}
+
+.vx-auth-socials {
+  display: flex;
+  gap: var(--vx-auth-gap-xs);
+}
+
+.vx-auth-social {
+  flex: 1;
+  min-height: var(--vx-auth-social-button-min-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--vx-auth-gap-xs);
+  padding: var(--vx-auth-padding-sm);
+  border: var(--vx-auth-social-button-border-width) solid var(--vx-auth-border);
+  border-radius: var(--vx-auth-radius-sm);
+  background: var(--vx-color-auth-card-soft);
+  color: var(--vx-auth-secondary);
+  cursor: pointer;
+  font-size: var(--vx-auth-text-sm);
+  transition:
+    border-color var(--vx-control-transition),
+    background var(--vx-control-transition),
+    color var(--vx-control-transition);
+}
+
+.vx-auth-social svg,
+.vx-auth-social img {
+  width: var(--vx-auth-social-icon-size);
+  height: var(--vx-auth-social-icon-size);
+  flex: 0 0 var(--vx-auth-social-icon-size);
+  display: block;
+  object-fit: contain;
+}
+
+.vx-auth-social-icon {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.vx-auth-social:hover {
+  background: var(--vx-color-primary-soft);
+}
+
+.vx-auth-social.wechat:hover {
+  border-color: color-mix(in srgb, var(--vx-color-social-wechat) 35%, transparent);
+  color: var(--vx-color-social-wechat);
+}
+
+.vx-auth-social.dingtalk:hover {
+  border-color: color-mix(in srgb, var(--vx-color-social-dingtalk) 35%, transparent);
+  color: var(--vx-color-social-dingtalk);
+}
+
+.vx-auth-social.feishu:hover {
+  border-color: color-mix(in srgb, var(--vx-color-social-feishu) 35%, transparent);
+  color: var(--vx-color-social-feishu);
+}
