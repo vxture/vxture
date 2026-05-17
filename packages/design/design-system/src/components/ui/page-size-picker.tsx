@@ -36,7 +36,7 @@ function PageSizePicker<TValue extends number | string = number>({
 }: PageSizePickerProps<TValue>) {
   return (
     <div
-      className={cn("vx-page-size-picker vx-tenant-page-size", className)}
+      className={cn("vx-page-size-picker", className)}
       aria-label={ariaLabel}
       {...props}
     >

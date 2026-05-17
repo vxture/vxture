@@ -31,6 +31,10 @@
   --vx-select-height: var(--vx-component-metric-225r);
   --vx-select-padding-start: var(--vx-component-metric-085r);
   --vx-select-padding-end: var(--vx-component-metric-2r);
+  --vx-page-size-picker-gap: var(--vx-component-metric-05r);
+  --vx-page-size-picker-min-height: var(--vx-component-metric-2r);
+  --vx-page-size-picker-button-size: var(--vx-component-metric-2r);
+  --vx-page-size-picker-button-padding-x: var(--vx-component-metric-05r);
   --vx-label-font-size: var(--vx-component-metric-095r);
   --vx-badge-gap: var(--vx-component-metric-035r);
   --vx-badge-height: var(--vx-component-metric-18r);

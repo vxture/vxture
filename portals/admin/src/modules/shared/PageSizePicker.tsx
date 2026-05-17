@@ -8,6 +8,7 @@
  */
 
 import {
+  cn,
   PageSizePicker as DesignPageSizePicker,
   type PageSizePickerProps as DesignPageSizePickerProps,
 } from "@vxture/design-system";
@@ -20,6 +21,12 @@ export type PageSizePickerProps = Omit<
   "options"
 >;
 
-export function PageSizePicker(props: PageSizePickerProps) {
-  return <DesignPageSizePicker options={PAGE_SIZE_OPTIONS} {...props} />;
+export function PageSizePicker({ className, ...props }: PageSizePickerProps) {
+  return (
+    <DesignPageSizePicker
+      className={cn("vx-tenant-page-size", className)}
+      options={PAGE_SIZE_OPTIONS}
+      {...props}
+    />
+  );
 }
