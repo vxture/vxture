@@ -1,0 +1,38 @@
+/**
+ * tokens-console-text.css - Console 字号、行高和字距 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-console-text-size-062r: var(--vx-component-metric-062r);
+  --vx-console-text-size-064r: var(--vx-component-metric-064r);
+  --vx-console-text-size-066r: var(--vx-component-metric-066r);
+  --vx-console-text-size-067r: var(--vx-component-metric-067r);
+  --vx-console-text-size-068r: var(--vx-component-metric-068r);
+  --vx-console-text-size-072r: var(--vx-component-metric-072r);
+  --vx-console-text-size-076r: var(--vx-component-metric-076r);
+  --vx-console-text-size-078r: var(--vx-component-metric-078r);
+  --vx-console-text-size-07r: var(--vx-component-metric-07r);
+  --vx-console-text-size-082r: var(--vx-component-metric-082r);
+  --vx-console-text-size-084r: var(--vx-component-metric-084r);
+  --vx-console-text-size-086r: var(--vx-component-metric-086r);
+  --vx-console-text-size-088r: var(--vx-component-metric-088r);
+  --vx-console-text-size-08r: var(--vx-component-metric-08r);
+  --vx-console-text-size-092r: var(--vx-component-metric-092r);
+  --vx-console-text-size-094r: var(--vx-component-metric-094r);
+  --vx-console-text-size-096r: var(--vx-component-metric-096r);
+  --vx-console-text-size-09r: var(--vx-component-metric-09r);
+  --vx-console-text-size-105r: var(--vx-component-metric-105r);
+  --vx-console-text-size-15r: var(--vx-component-metric-15r);
+  --vx-console-text-size-1r: var(--vx-component-metric-1r);
+  --vx-console-text-line-2r: var(--vx-component-metric-2r);
+  --vx-console-text-tracking-001e: var(--vx-component-metric-001e);
+  --vx-console-text-tracking-002e: var(--vx-component-metric-002e);
+  --vx-console-text-tracking-008e: var(--vx-component-metric-008e);
+  --vx-console-text-tracking-018e: var(--vx-component-metric-018e);
+  --vx-console-text-tracking-01e: var(--vx-component-metric-01e);
+}
