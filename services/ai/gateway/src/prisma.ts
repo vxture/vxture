@@ -1,3 +1,4 @@
+import { PrismaClient as PrismaClientImpl } from "@prisma/client";
 import type {
   AiModelGrantRecord,
   AiModelRecord,
@@ -34,8 +35,6 @@ export interface AiGatewayPrismaClient {
   $disconnect(): Promise<void>;
   $transaction<T>(fn: (tx: AiGatewayPrismaClient) => Promise<T>): Promise<T>;
 }
-
-import { PrismaClient as PrismaClientImpl } from "@prisma/client";
 
 declare global {
   var __vxtureAiGatewayPrisma: AiGatewayPrismaClient | undefined;
