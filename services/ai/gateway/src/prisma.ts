@@ -4,7 +4,7 @@ import type {
   TenantSubscriptionQuotaRecord,
   TenantUsageEventRecord,
   TenantUsageSummaryRecord,
-} from './types/gateway.types';
+} from "./types/gateway.types";
 
 // AiModelRecord / AiModelGrantRecord are kept as-is for backward compat with callers.
 // The Prisma delegate names match the new model schema: modelDefinition / modelGrant.
@@ -35,20 +35,16 @@ export interface AiGatewayPrismaClient {
   $transaction<T>(fn: (tx: AiGatewayPrismaClient) => Promise<T>): Promise<T>;
 }
 
-type PrismaClientConstructor = new () => AiGatewayPrismaClient;
-
-interface PrismaClientModule {
-  PrismaClient: PrismaClientConstructor;
-}
+import { PrismaClient as PrismaClientImpl } from "@prisma/client";
 
 declare global {
   var __vxtureAiGatewayPrisma: AiGatewayPrismaClient | undefined;
 }
 
-const { PrismaClient } = require('@prisma/client') as PrismaClientModule;
+export const prisma: AiGatewayPrismaClient =
+  globalThis.__vxtureAiGatewayPrisma ??
+  (new PrismaClientImpl() as unknown as AiGatewayPrismaClient);
 
-export const prisma = globalThis.__vxtureAiGatewayPrisma ?? new PrismaClient();
-
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
   globalThis.__vxtureAiGatewayPrisma = prisma;
 }
