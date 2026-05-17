@@ -80,14 +80,6 @@
     flex-wrap: wrap;
   }
 
-  .vx-captcha-card {
-    width: var(--vx-auth-responsive-dialog-width);
-  }
-
-  .vx-captcha-canvas,
-  .vx-captcha-track {
-    width: 100%;
-  }
 }
 
 @media (max-height: 720px) {

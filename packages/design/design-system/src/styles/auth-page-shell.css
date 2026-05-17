@@ -1,5 +1,5 @@
 /**
- * auth-page-shell.css - 认证页页面级变量、基线和默认背景。
+ * auth-page-shell.css - 认证页页面骨架、表单布局和基础动效。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
@@ -33,4 +33,112 @@
 
 .vx-auth-page--default-bg {
   --vx-auth-bg: url("/images/login-bg-light.jpg");
+}
+
+.vx-auth-form-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding: var(--vx-auth-form-panel-padding);
+  background: var(--vx-color-white);
+}
+
+.vx-auth-login-layout,
+.vx-auth-flow-form {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.vx-auth-login-layout {
+  height: 100%;
+}
+
+.vx-auth-section {
+  min-width: 0;
+}
+
+.vx-auth-section-title {
+  flex: 0 0 auto;
+  padding: var(--vx-auth-form-body-padding);
+  text-align: center;
+}
+
+.vx-auth-section-title .vx-auth-panel-heading {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.vx-auth-section-inputs {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.vx-auth-section-placeholder {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.vx-auth-section-social.vx-auth-section-placeholder {
+  min-height: var(--vx-auth-form-submit-slot-min-height);
+}
+
+.vx-auth-section-footer.vx-auth-section-placeholder {
+  min-height: var(--vx-auth-form-message-slot-min-height);
+}
+
+.vx-auth-field-stack {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.vx-auth-bottom-stack {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-auth-gap-lg);
+  margin-top: auto;
+}
+
+.vx-auth-panel-heading {
+  margin-bottom: var(--vx-auth-form-section-margin-bottom);
+}
+
+.vx-auth-panel-heading h1,
+.vx-auth-reset-done h1 {
+  margin: 0;
+  color: var(--vx-auth-text);
+  font-family: var(--font-display);
+  font-size: var(--vx-auth-text-2xl);
+  font-weight: 700;
+}
+
+.vx-auth-panel-heading p,
+.vx-auth-reset-done p {
+  margin: 0;
+  color: var(--vx-auth-secondary);
+  font-size: var(--vx-auth-text-sm);
+  line-height: 1.65;
+}
+
+.vx-auth-reset-hint {
+  margin-top: var(--vx-auth-form-footer-margin-top);
+  color: var(--vx-color-text-muted);
+  font-size: var(--vx-auth-text-xs);
+}
+
+@keyframes vx-auth-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

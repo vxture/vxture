@@ -46,7 +46,6 @@ const DS_SEMANTIC_STYLE_PATHS = new Set([
 ]);
 const DS_EFFECT_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/auth-actions-social.css"),
-  normalize("packages/design/design-system/src/styles/auth-captcha.css"),
   normalize("packages/design/design-system/src/styles/auth-fields-controls.css"),
   normalize("packages/design/design-system/src/styles/auth-header-locale.css"),
   normalize("packages/design/design-system/src/styles/auth-signup.css"),
@@ -74,7 +73,6 @@ const DS_EFFECT_LOCKED_STYLE_PATHS = new Set([
 ]);
 const DS_SHADOW_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/auth-actions-social.css"),
-  normalize("packages/design/design-system/src/styles/auth-captcha.css"),
   normalize("packages/design/design-system/src/styles/auth-fields-controls.css"),
   normalize("packages/design/design-system/src/styles/auth-header-locale.css"),
   normalize("packages/design/design-system/src/styles/auth-signup.css"),
