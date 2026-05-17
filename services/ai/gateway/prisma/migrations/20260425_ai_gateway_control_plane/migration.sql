@@ -1,5 +1,14 @@
 CREATE SCHEMA IF NOT EXISTS ai_gateway;
 
+-- ai_gateway schema owns its own updated_at trigger function
+CREATE OR REPLACE FUNCTION ai_gateway.set_updated_at()
+  RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE TABLE IF NOT EXISTS ai_gateway.ai_provider (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   provider_code varchar(64) NOT NULL UNIQUE,
@@ -30,7 +39,7 @@ DROP TRIGGER IF EXISTS trg_ai_provider_updated ON ai_gateway.ai_provider;
 CREATE TRIGGER trg_ai_provider_updated
 BEFORE UPDATE ON ai_gateway.ai_provider
 FOR EACH ROW
-EXECUTE PROCEDURE commerce.set_updated_at();
+EXECUTE PROCEDURE ai_gateway.set_updated_at();
 
 CREATE TABLE IF NOT EXISTS ai_gateway.ai_model (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -65,7 +74,7 @@ DROP TRIGGER IF EXISTS trg_ai_model_updated ON ai_gateway.ai_model;
 CREATE TRIGGER trg_ai_model_updated
 BEFORE UPDATE ON ai_gateway.ai_model
 FOR EACH ROW
-EXECUTE PROCEDURE commerce.set_updated_at();
+EXECUTE PROCEDURE ai_gateway.set_updated_at();
 
 CREATE TABLE IF NOT EXISTS ai_gateway.ai_model_grant (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -100,7 +109,7 @@ DROP TRIGGER IF EXISTS trg_ai_model_grant_updated ON ai_gateway.ai_model_grant;
 CREATE TRIGGER trg_ai_model_grant_updated
 BEFORE UPDATE ON ai_gateway.ai_model_grant
 FOR EACH ROW
-EXECUTE PROCEDURE commerce.set_updated_at();
+EXECUTE PROCEDURE ai_gateway.set_updated_at();
 
 CREATE TABLE IF NOT EXISTS ai_gateway.ai_model_cost_rate (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -137,12 +146,111 @@ DROP TRIGGER IF EXISTS trg_ai_model_cost_rate_updated ON ai_gateway.ai_model_cos
 CREATE TRIGGER trg_ai_model_cost_rate_updated
 BEFORE UPDATE ON ai_gateway.ai_model_cost_rate
 FOR EACH ROW
+EXECUTE PROCEDURE ai_gateway.set_updated_at();
+
+-- commerce tables owned by ai-gateway (excluded from core schema)
+CREATE SCHEMA IF NOT EXISTS commerce;
+
+CREATE OR REPLACE FUNCTION commerce.set_updated_at()
+  RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TABLE IF NOT EXISTS commerce.tenant_subscription_quota (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id uuid NOT NULL UNIQUE,
+  subscription_id uuid,
+  max_users integer NOT NULL DEFAULT 10,
+  max_api_keys integer NOT NULL DEFAULT 5,
+  max_workflows integer NOT NULL DEFAULT 20,
+  max_concurrent integer NOT NULL DEFAULT 5,
+  rate_limit_per_minute integer NOT NULL DEFAULT 60,
+  period_tokens bigint NOT NULL DEFAULT 1000000,
+  quota_cycle varchar(32) NOT NULL DEFAULT 'monthly',
+  allowed_models text[] NOT NULL DEFAULT '{}',
+  allow_custom_model boolean NOT NULL DEFAULT false,
+  created_by uuid,
+  updated_by uuid,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  effective_at timestamptz NOT NULL DEFAULT now(),
+  expires_at timestamptz
+);
+
+CREATE INDEX IF NOT EXISTS idx_tsq_tenant_id ON commerce.tenant_subscription_quota (tenant_id);
+CREATE INDEX IF NOT EXISTS idx_tsq_subscription_id ON commerce.tenant_subscription_quota (subscription_id);
+
+DROP TRIGGER IF EXISTS trg_tsq_updated ON commerce.tenant_subscription_quota;
+CREATE TRIGGER trg_tsq_updated
+BEFORE UPDATE ON commerce.tenant_subscription_quota
+FOR EACH ROW
 EXECUTE PROCEDURE commerce.set_updated_at();
 
+CREATE TABLE IF NOT EXISTS commerce.tenant_usage_event (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id uuid NOT NULL,
+  agent_id uuid NOT NULL,
+  feature_id uuid NOT NULL,
+  user_id uuid,
+  used_quota bigint NOT NULL DEFAULT 0,
+  input_quota bigint DEFAULT 0,
+  output_quota bigint DEFAULT 0,
+  request_id varchar(128),
+  business_id varchar(128),
+  usage_type varchar(32) NOT NULL DEFAULT 'normal',
+  cycle_date date NOT NULL,
+  cycle_month varchar(6) NOT NULL,
+  model_code varchar(64),
+  latency_ms integer,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS idx_tue_tenant_id ON commerce.tenant_usage_event (tenant_id);
+CREATE INDEX IF NOT EXISTS idx_tue_agent_id ON commerce.tenant_usage_event (agent_id);
+CREATE INDEX IF NOT EXISTS idx_tue_feature_id ON commerce.tenant_usage_event (feature_id);
+CREATE INDEX IF NOT EXISTS idx_tue_user_id ON commerce.tenant_usage_event (user_id);
+CREATE INDEX IF NOT EXISTS idx_tue_request_id ON commerce.tenant_usage_event (request_id);
+CREATE INDEX IF NOT EXISTS idx_tue_cycle_date ON commerce.tenant_usage_event (cycle_date);
+CREATE INDEX IF NOT EXISTS idx_tue_cycle_month ON commerce.tenant_usage_event (cycle_month);
+CREATE INDEX IF NOT EXISTS idx_tue_model_code ON commerce.tenant_usage_event (model_code);
+CREATE INDEX IF NOT EXISTS idx_tue_tenant_month ON commerce.tenant_usage_event (tenant_id, cycle_month);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_tue_request_id_not_null
   ON commerce.tenant_usage_event (request_id)
   WHERE request_id IS NOT NULL;
-
 CREATE INDEX IF NOT EXISTS idx_tue_business_id
   ON commerce.tenant_usage_event (business_id)
   WHERE business_id IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS commerce.tenant_usage_summary (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id uuid NOT NULL,
+  feature_id uuid NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+  agent_id uuid NOT NULL DEFAULT '00000000-0000-0000-0000-000000000000',
+  cycle_month varchar(6) NOT NULL,
+  total_quota bigint NOT NULL DEFAULT 0,
+  input_quota bigint NOT NULL DEFAULT 0,
+  output_quota bigint NOT NULL DEFAULT 0,
+  request_count bigint NOT NULL DEFAULT 0,
+  last_synced_at timestamptz NOT NULL DEFAULT now(),
+  stat_type varchar(32) NOT NULL DEFAULT 'detail',
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS tenant_usage_summary_unique
+  ON commerce.tenant_usage_summary (tenant_id, feature_id, agent_id, cycle_month, stat_type);
+CREATE INDEX IF NOT EXISTS idx_tus_tenant_id ON commerce.tenant_usage_summary (tenant_id);
+CREATE INDEX IF NOT EXISTS idx_tus_feature_id ON commerce.tenant_usage_summary (feature_id);
+CREATE INDEX IF NOT EXISTS idx_tus_agent_id ON commerce.tenant_usage_summary (agent_id);
+CREATE INDEX IF NOT EXISTS idx_tus_cycle_month ON commerce.tenant_usage_summary (cycle_month);
+CREATE INDEX IF NOT EXISTS idx_tus_stat_type ON commerce.tenant_usage_summary (stat_type);
+CREATE INDEX IF NOT EXISTS idx_tus_tenant_month ON commerce.tenant_usage_summary (tenant_id, cycle_month);
+
+DROP TRIGGER IF EXISTS trg_tus_updated ON commerce.tenant_usage_summary;
+CREATE TRIGGER trg_tus_updated
+BEFORE UPDATE ON commerce.tenant_usage_summary
+FOR EACH ROW
+EXECUTE PROCEDURE commerce.set_updated_at();
