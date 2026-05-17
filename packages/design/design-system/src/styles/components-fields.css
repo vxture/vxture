@@ -12,22 +12,22 @@
   width: 100%;
   min-height: var(--vx-field-height);
   padding: var(--vx-field-padding-y) var(--vx-field-padding-x);
-  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  border: var(--vx-control-border-width) solid var(--vx-control-border);
   border-radius: var(--vx-field-radius);
-  background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
-  color: var(--vx-console-text, var(--vx-color-shell-text));
+  background: var(--vx-control-surface);
+  color: var(--vx-control-text);
 }
 
 :where(.dark .vx-input),
 :where(.dark .vx-select-trigger) {
-  background: var(--vx-color-gray-900);
+  background: var(--vx-control-surface-dark);
 }
 
 :where(.vx-input:focus),
 :where(.vx-select-trigger:focus) {
-  outline: var(--vx-control-focus-ring-width) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  outline: var(--vx-control-focus-ring-width) solid var(--vx-control-focus-ring);
   outline-offset: 0;
-  border-color: var(--vx-color-brand-300);
+  border-color: var(--vx-control-focus-border);
 }
 
 :where(select.vx-input),
@@ -42,5 +42,5 @@
 
 :where(.vx-label) {
   font-size: var(--vx-label-font-size);
-  color: var(--vx-console-muted, var(--vx-color-shell-muted));
+  color: var(--vx-control-muted);
 }

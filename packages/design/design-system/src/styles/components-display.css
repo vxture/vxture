@@ -41,10 +41,10 @@
 }
 
 :where(.vx-card) {
-  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
+  border: var(--vx-control-border-width) solid var(--vx-card-border);
   border-radius: var(--vx-card-radius);
-  background: color-mix(in srgb, var(--vx-color-white) 88%, transparent);
-  box-shadow: var(--vx-console-shadow, var(--vx-shadow-sm));
+  background: var(--vx-card-background);
+  box-shadow: var(--vx-card-shadow);
 }
 
 :where(.vx-card__header) {
@@ -66,7 +66,7 @@
 
 :where(.vx-card__description) {
   margin: 0;
-  color: var(--vx-console-muted, var(--vx-color-shell-muted));
+  color: var(--vx-control-muted);
 }
 
 :where(.vx-avatar) {
