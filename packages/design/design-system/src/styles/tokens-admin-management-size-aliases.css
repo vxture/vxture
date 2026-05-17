@@ -1,0 +1,45 @@
+/**
+ * tokens-admin-management-size-aliases.css - Admin management size 别名 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-admin-management-size-05r: var(--vx-admin-size-05r);
+  --vx-admin-management-size-06875r: var(--vx-admin-size-06875r);
+  --vx-admin-management-size-0875r: var(--vx-admin-size-0875r);
+  --vx-admin-management-size-10r: var(--vx-admin-size-10r);
+  --vx-admin-management-size-1125r: var(--vx-admin-size-1125r);
+  --vx-admin-management-size-11r-large: var(--vx-admin-size-11r-large);
+  --vx-admin-management-size-12r-large: var(--vx-admin-size-12r-large);
+  --vx-admin-management-size-135r: var(--vx-admin-size-135r);
+  --vx-admin-management-size-1375r: var(--vx-admin-size-1375r);
+  --vx-admin-management-size-13r: var(--vx-admin-size-13r);
+  --vx-admin-management-size-15r: var(--vx-admin-size-15r);
+  --vx-admin-management-size-175r: var(--vx-admin-size-175r);
+  --vx-admin-management-size-17r: var(--vx-admin-size-17r);
+  --vx-admin-management-size-18r-large: var(--vx-admin-size-18r-large);
+  --vx-admin-management-size-1r: var(--vx-admin-size-1r);
+  --vx-admin-management-size-20r: var(--vx-admin-size-20r);
+  --vx-admin-management-size-225r: var(--vx-admin-size-225r);
+  --vx-admin-management-size-22r: var(--vx-admin-size-22r);
+  --vx-admin-management-size-24r: var(--vx-admin-size-24r);
+  --vx-admin-management-size-25r: var(--vx-admin-size-25r);
+  --vx-admin-management-size-275r: var(--vx-admin-size-275r);
+  --vx-admin-management-size-2p: var(--vx-admin-size-2p);
+  --vx-admin-management-size-2r: var(--vx-admin-size-2r);
+  --vx-admin-management-size-3r: var(--vx-admin-size-3r);
+  --vx-admin-management-size-40p: var(--vx-admin-size-40p);
+  --vx-admin-management-size-45r: var(--vx-admin-size-45r);
+  --vx-admin-management-size-475r: var(--vx-admin-size-475r);
+  --vx-admin-management-size-48r-large: var(--vx-admin-size-48r-large);
+  --vx-admin-management-size-4r: var(--vx-admin-size-4r);
+  --vx-admin-management-size-6r: var(--vx-admin-size-6r);
+  --vx-admin-management-size-75r: var(--vx-admin-size-75r);
+  --vx-admin-management-size-85r: var(--vx-admin-size-85r);
+  --vx-admin-management-size-8r: var(--vx-admin-size-8r);
+  --vx-admin-management-size-95r: var(--vx-admin-size-95r);
+}
