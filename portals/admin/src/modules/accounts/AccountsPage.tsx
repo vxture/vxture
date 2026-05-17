@@ -1,21 +1,37 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import type { IconName } from '@vxture/design-system';
-import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
-import { fetchAccountOperations } from '@/api/admin-bff';
-import type { AccountOperationRecord } from '@/entities/console';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
-import { formatDate, formatNumber, joinClasses } from '@/modules/tenants/tenant-utils';
+import { useEffect, useMemo, useState } from "react";
+import { Icon } from "@vxture/design-system";
+import type { IconName } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination,
+} from "@vxture/design-system";
+import { fetchAccountOperations } from "@/api/admin-bff";
+import type { AccountOperationRecord } from "@/entities/console";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  PageSizePicker as AdminPageSizePicker,
+  type PageSize,
+} from "@/modules/shared/PageSizePicker";
+import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
+import {
+  formatDate,
+  formatNumber,
+  joinClasses,
+} from "@/modules/tenants/tenant-utils";
 
-type ViewMode = 'list' | 'cards';
-type StatusFilter = 'all' | AccountOperationRecord['status'];
-type TenantTypeFilter = 'all' | 'company' | 'individual' | 'mixed';
-type RoleFilter = 'all' | 'owner' | 'admin' | 'member';
+type ViewMode = "list" | "cards";
+type StatusFilter = "all" | AccountOperationRecord["status"];
+type TenantTypeFilter = "all" | "company" | "individual" | "mixed";
+type RoleFilter = "all" | "owner" | "admin" | "member";
 type AccountsPageCopy = {
   eyebrow: string;
   title: string;
@@ -35,48 +51,57 @@ type AccountsPageCopy = {
   emptyDescription: string;
 };
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
-type AccountStatusIndicatorTone = 'normal' | 'progress' | 'attention' | 'closed';
+type AccountStatusIndicatorTone =
+  | "normal"
+  | "progress"
+  | "attention"
+  | "closed";
 
 const defaultAccountsPageCopy: AccountsPageCopy = {
-  eyebrow: '租户账号',
-  title: '账号体系',
-  description: '平台运营侧跨租户检索账号、识别安全状态、处理账号启停与登录问题。',
-  summaryAriaLabel: '账号运营统计',
-  toolbarAriaLabel: '账号筛选',
-  directoryAriaLabel: '账号清单',
-  searchPlaceholder: '搜索账号、邮箱、租户、权限',
-  searchAriaLabel: '搜索账号',
-  statusAriaLabel: '账号状态',
-  tenantTypeAriaLabel: '租户类型',
-  roleAriaLabel: '权限类型',
-  createActionLabel: '新建账号',
-  loadingTitle: '正在加载账号',
-  loadingDescription: '正在读取平台账号运营数据。',
-  emptyTitle: '没有匹配的账号',
-  emptyDescription: '清空筛选条件后可查看全部账号。',
+  eyebrow: "租户账号",
+  title: "账号体系",
+  description:
+    "平台运营侧跨租户检索账号、识别安全状态、处理账号启停与登录问题。",
+  summaryAriaLabel: "账号运营统计",
+  toolbarAriaLabel: "账号筛选",
+  directoryAriaLabel: "账号清单",
+  searchPlaceholder: "搜索账号、邮箱、租户、权限",
+  searchAriaLabel: "搜索账号",
+  statusAriaLabel: "账号状态",
+  tenantTypeAriaLabel: "租户类型",
+  roleAriaLabel: "权限类型",
+  createActionLabel: "新建账号",
+  loadingTitle: "正在加载账号",
+  loadingDescription: "正在读取平台账号运营数据。",
+  emptyTitle: "没有匹配的账号",
+  emptyDescription: "清空筛选条件后可查看全部账号。",
 };
 
-function roleGroup(role: string): Exclude<RoleFilter, 'all'> {
+function roleGroup(role: string): Exclude<RoleFilter, "all"> {
   const normalized = role.toLowerCase();
-  if (normalized.includes('owner')) return 'owner';
-  if (normalized.includes('admin')) return 'admin';
-  return 'member';
+  if (normalized.includes("owner")) return "owner";
+  if (normalized.includes("admin")) return "admin";
+  return "member";
 }
 
-function accountRoleGroup(account: AccountOperationRecord): Exclude<RoleFilter, 'all'> {
+function accountRoleGroup(
+  account: AccountOperationRecord,
+): Exclude<RoleFilter, "all"> {
   const groups = account.tenantBindings.map((tenant) => roleGroup(tenant.role));
-  if (groups.includes('owner')) return 'owner';
-  if (groups.includes('admin')) return 'admin';
+  if (groups.includes("owner")) return "owner";
+  if (groups.includes("admin")) return "admin";
   return roleGroup(account.role);
 }
 
 function accountHighestRole(account: AccountOperationRecord) {
-  const owner = account.tenantBindings.find((tenant) => roleGroup(tenant.role) === 'owner');
+  const owner = account.tenantBindings.find(
+    (tenant) => roleGroup(tenant.role) === "owner",
+  );
   if (owner) return owner.role;
 
-  const admin = account.tenantBindings.find((tenant) => roleGroup(tenant.role) === 'admin');
+  const admin = account.tenantBindings.find(
+    (tenant) => roleGroup(tenant.role) === "admin",
+  );
   if (admin) return admin.role;
 
   return account.role;
@@ -85,60 +110,78 @@ function accountHighestRole(account: AccountOperationRecord) {
 function accountHighestRoleLabel(account: AccountOperationRecord) {
   const role = accountHighestRole(account);
   const normalized = role.toLowerCase();
-  if (normalized.includes('owner')) return 'owner';
-  if (normalized.includes('admin')) return 'admin';
+  if (normalized.includes("owner")) return "owner";
+  if (normalized.includes("admin")) return "admin";
   return role;
 }
 
 function accountTenantSummary(account: AccountOperationRecord) {
-  const personalCount = account.tenantBindings.filter((tenant) => tenant.tenantType === 'individual').length;
-  const companyCount = account.tenantBindings.filter((tenant) => tenant.tenantType === 'company').length;
+  const personalCount = account.tenantBindings.filter(
+    (tenant) => tenant.tenantType === "individual",
+  ).length;
+  const companyCount = account.tenantBindings.filter(
+    (tenant) => tenant.tenantType === "company",
+  ).length;
   const tags = [
-    personalCount > 0 ? '个人' : null,
-    companyCount === 1 ? '组织' : companyCount > 1 ? `组织 ${formatNumber(companyCount)}` : null,
+    personalCount > 0 ? "个人" : null,
+    companyCount === 1
+      ? "组织"
+      : companyCount > 1
+        ? `组织 ${formatNumber(companyCount)}`
+        : null,
   ].filter(Boolean) as string[];
-  const primary = account.tenantBindings.find((tenant) => tenant.isPrimaryOwner) ?? account.tenantBindings[0];
+  const primary =
+    account.tenantBindings.find((tenant) => tenant.isPrimaryOwner) ??
+    account.tenantBindings[0];
 
   return {
-    tags: tags.length ? tags : ['未归属'],
+    tags: tags.length ? tags : ["未归属"],
     primaryName: primary?.tenantName ?? account.primaryTenantName,
     personalCount,
     companyCount,
   };
 }
 
-function accountMatchesTenantType(account: AccountOperationRecord, filter: TenantTypeFilter) {
-  if (filter === 'all') return true;
+function accountMatchesTenantType(
+  account: AccountOperationRecord,
+  filter: TenantTypeFilter,
+) {
+  if (filter === "all") return true;
   const summary = accountTenantSummary(account);
-  if (filter === 'mixed') return summary.personalCount > 0 && summary.companyCount > 0;
+  if (filter === "mixed")
+    return summary.personalCount > 0 && summary.companyCount > 0;
   return account.tenantBindings.some((tenant) => tenant.tenantType === filter);
 }
 
-function accountStatusLabel(status: AccountOperationRecord['status']) {
-  if (status === 'active') return '正常';
-  if (status === 'invited') return '待激活';
-  if (status === 'locked') return '已锁定';
-  return '已停用';
+function accountStatusLabel(status: AccountOperationRecord["status"]) {
+  if (status === "active") return "正常";
+  if (status === "invited") return "待激活";
+  if (status === "locked") return "已锁定";
+  return "已停用";
 }
 
-function accountStatusPillClass(status: AccountOperationRecord['status']) {
+function accountStatusPillClass(status: AccountOperationRecord["status"]) {
   return `vx-tenant-pill vx-tenant-pill--${status} vx-account-status-pill--${status}`;
 }
 
-function accountStatusIndicator(account: AccountOperationRecord): { tone: AccountStatusIndicatorTone; label: string; icon: IconName } {
-  if (account.status === 'disabled') {
-    return { tone: 'closed', label: '已停用', icon: 'x' };
+function accountStatusIndicator(account: AccountOperationRecord): {
+  tone: AccountStatusIndicatorTone;
+  label: string;
+  icon: IconName;
+} {
+  if (account.status === "disabled") {
+    return { tone: "closed", label: "已停用", icon: "x" };
   }
 
-  if (account.status === 'locked') {
-    return { tone: 'attention', label: '已锁定', icon: 'warning' };
+  if (account.status === "locked") {
+    return { tone: "attention", label: "已锁定", icon: "warning" };
   }
 
-  if (account.status === 'invited') {
-    return { tone: 'progress', label: '待激活', icon: 'clock' };
+  if (account.status === "invited") {
+    return { tone: "progress", label: "待激活", icon: "clock" };
   }
 
-  return { tone: 'normal', label: '正常', icon: 'check' };
+  return { tone: "normal", label: "正常", icon: "check" };
 }
 
 function accountSearchText(account: AccountOperationRecord) {
@@ -153,8 +196,12 @@ function accountSearchText(account: AccountOperationRecord) {
     account.primaryTenantCode,
     account.primaryTenantName,
     account.lastActiveLocation,
-    ...account.tenantBindings.map((tenant) => `${tenant.tenantCode} ${tenant.tenantName} ${tenant.role}`),
-  ].join(' ').toLowerCase();
+    ...account.tenantBindings.map(
+      (tenant) => `${tenant.tenantCode} ${tenant.tenantName} ${tenant.role}`,
+    ),
+  ]
+    .join(" ")
+    .toLowerCase();
 }
 
 function AccountSummaryItem({
@@ -162,76 +209,81 @@ function AccountSummaryItem({
   label,
   value,
   tags,
-  tone = 'blue',
+  tone = "blue",
 }: {
   icon: IconName;
   label: string;
   value: string;
   tags?: string[];
-  tone?: 'blue' | 'green' | 'amber' | 'rose';
+  tone?: "blue" | "green" | "amber" | "rose";
 }) {
   return (
-    <article className={joinClasses(`vx-tenant-summary__item vx-tenant-tone--${tone}`, icon === 'user' || icon === 'role' ? 'vx-tenant-summary__item--identity-icon' : '')}>
+    <article
+      className={joinClasses(
+        `vx-tenant-summary__item vx-tenant-tone--${tone}`,
+        icon === "user" || icon === "role"
+          ? "vx-tenant-summary__item--identity-icon"
+          : "",
+      )}
+    >
       <Icon name={icon} size="lg" fallback="placeholder" />
       <div>
         <span>{label}</span>
         <p>
           <strong>{value}</strong>
-          {tags?.map((tag) => <em key={tag}>{tag}</em>)}
+          {tags?.map((tag) => (
+            <em key={tag}>{tag}</em>
+          ))}
         </p>
       </div>
     </article>
   );
 }
 
-function AccountPageSizePicker({ value, onChange }: { value: PageSize; onChange: (value: PageSize) => void }) {
+function AccountActionsMenu({ account }: { account: AccountOperationRecord }) {
   return (
-    <div className="vx-tenant-page-size" aria-label="每页条数">
-      {PAGE_SIZE_OPTIONS.map((option) => (
-        <span key={option}>
-          <Button
-            variant={value === option ? 'secondary' : 'ghost'}
-            size="sm"
-            className={value === option ? 'is-active' : undefined}
-            onClick={() => onChange(option)}
-            aria-label={`每页 ${option} 条`}
-          >
-            {option}
-          </Button>
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function AccountActionsMenu({
-  account,
-}: {
-  account: AccountOperationRecord;
-}) {
-  return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${account.displayName} 操作`}
         triggerClassName="vx-tenant-actions__trigger"
-        triggerProps={{ title: '操作' }}
+        triggerProps={{ title: "操作" }}
         items={[
           {
-            id: 'details',
-            label: '查看详情',
+            id: "details",
+            label: "查看详情",
             icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
             disabled: true,
           },
           {
-            id: 'reset-password',
-            label: '重置密码',
+            id: "reset-password",
+            label: "重置密码",
             icon: <Icon name="key" size="xs" fallback="placeholder" />,
             disabled: true,
           },
           {
-            id: 'toggle-status',
-            label: account.status === 'disabled' ? '恢复账号' : account.status === 'locked' ? '解除锁定' : '停用账号',
-            icon: <Icon name={account.status === 'disabled' ? 'success' : account.status === 'locked' ? 'check' : 'warning'} size="xs" fallback="placeholder" />,
+            id: "toggle-status",
+            label:
+              account.status === "disabled"
+                ? "恢复账号"
+                : account.status === "locked"
+                  ? "解除锁定"
+                  : "停用账号",
+            icon: (
+              <Icon
+                name={
+                  account.status === "disabled"
+                    ? "success"
+                    : account.status === "locked"
+                      ? "check"
+                      : "warning"
+                }
+                size="xs"
+                fallback="placeholder"
+              />
+            ),
             disabled: true,
           },
         ]}
@@ -257,16 +309,32 @@ function AccountListRows({
   onToggleAccount: (accountId: string, checked: boolean) => void;
   onTogglePage: (checked: boolean) => void;
 }) {
-  const selectedOnPage = accounts.filter((account) => selectedAccountIds.has(account.id)).length;
-  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < accounts.length;
+  const selectedOnPage = accounts.filter((account) =>
+    selectedAccountIds.has(account.id),
+  ).length;
+  const isPagePartiallySelected =
+    selectedOnPage > 0 && selectedOnPage < accounts.length;
 
   return (
-    <div className={joinClasses('vx-tenant-directory-list vx-account-directory-list', !showTenantContext ? 'vx-account-directory-list--platform' : '')} role="region" aria-label="账号清单">
+    <div
+      className={joinClasses(
+        "vx-tenant-directory-list vx-account-directory-list",
+        !showTenantContext ? "vx-account-directory-list--platform" : "",
+      )}
+      role="region"
+      aria-label="账号清单"
+    >
       <div className="vx-tenant-directory-list__header">
         <span>
           <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected ? true : isPagePartiallySelected ? 'indeterminate' : false}
+            checked={
+              isPageSelected
+                ? true
+                : isPagePartiallySelected
+                  ? "indeterminate"
+                  : false
+            }
             onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页账号"
           />
@@ -286,9 +354,21 @@ function AccountListRows({
         return (
           <div
             key={account.id}
-            className={joinClasses('vx-tenant-directory-row', 'vx-account-operation-row', selectedAccountIds.has(account.id) ? 'vx-account-operation-row--selected' : '')}
+            className={joinClasses(
+              "vx-tenant-directory-row",
+              "vx-account-operation-row",
+              selectedAccountIds.has(account.id)
+                ? "vx-account-operation-row--selected"
+                : "",
+            )}
             onClick={(event) => {
-              if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+              if (
+                event.target instanceof HTMLElement &&
+                event.target.closest(
+                  'button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]',
+                )
+              )
+                return;
               onToggleAccount(account.id, !selectedAccountIds.has(account.id));
             }}
           >
@@ -297,27 +377,40 @@ function AccountListRows({
                 className="vx-model-select-checkbox"
                 checked={selectedAccountIds.has(account.id)}
                 onClick={(event) => event.stopPropagation()}
-                onCheckedChange={(value) => onToggleAccount(account.id, value === true)}
+                onCheckedChange={(value) =>
+                  onToggleAccount(account.id, value === true)
+                }
                 aria-label={`选择 ${account.displayName}`}
               />
             </span>
-            <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
+            <span className="vx-tenant-directory-row__index">
+              {formatNumber(startIndex + index + 1)}
+            </span>
             <span className="vx-tenant-directory-row__tenant">
               <Icon name="user" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                  <Button
+                    variant="link"
+                    className="vx-model-name-button"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     {account.displayName}
                   </Button>
                 </span>
-                <small>{account.accountCode} · {account.email}</small>
+                <small>
+                  {account.accountCode} · {account.email}
+                </small>
               </span>
             </span>
             {showTenantContext ? (
               <span className="vx-tenant-directory-row__subscription">
                 <span className="vx-tenant-directory-row__tag-line">
                   {tenantSummary.tags.map((tag) => (
-                    <Badge key={tag} className="vx-tenant-pill vx-account-muted-pill">
+                    <Badge
+                      key={tag}
+                      className="vx-tenant-pill vx-account-muted-pill"
+                    >
                       {tag}
                     </Badge>
                   ))}
@@ -327,25 +420,47 @@ function AccountListRows({
             ) : null}
             <span className="vx-tenant-directory-row__status">
               <span className="vx-tenant-directory-row__status-line">
-                <span className={`vx-tenant-status-dot vx-tenant-status-dot--${indicator.tone}`} role="img" aria-label={indicator.label} title={indicator.label}>
-                  <Icon name={indicator.icon} size="xs" fallback="placeholder" />
+                <span
+                  className={`vx-tenant-status-dot vx-tenant-status-dot--${indicator.tone}`}
+                  role="img"
+                  aria-label={indicator.label}
+                  title={indicator.label}
+                >
+                  <Icon
+                    name={indicator.icon}
+                    size="xs"
+                    fallback="placeholder"
+                  />
                 </span>
                 <span className="vx-tenant-directory-row__badges">
-                  <Badge className={accountStatusPillClass(account.status)}>{accountStatusLabel(account.status)}</Badge>
+                  <Badge className={accountStatusPillClass(account.status)}>
+                    {accountStatusLabel(account.status)}
+                  </Badge>
                 </span>
               </span>
             </span>
             <span className="vx-tenant-directory-row__subscription">
               <span className="vx-tenant-directory-row__tag-line">
-                <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--permission">{accountHighestRoleLabel(account)}</Badge>
+                <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--permission">
+                  {accountHighestRoleLabel(account)}
+                </Badge>
               </span>
-              <small>{showTenantContext ? `${formatNumber(account.tenantCount)} 个租户` : '平台角色'}</small>
+              <small>
+                {showTenantContext
+                  ? `${formatNumber(account.tenantCount)} 个租户`
+                  : "平台角色"}
+              </small>
             </span>
             <span className="vx-tenant-directory-row__service">
               <span className="vx-tenant-directory-row__tag-line">
-                <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--product">{account.lastActiveLocation}</Badge>
+                <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--product">
+                  {account.lastActiveLocation}
+                </Badge>
               </span>
-              <small>{formatDate(account.lastActiveAt)} · {formatNumber(account.loginCount30d)} 次</small>
+              <small>
+                {formatDate(account.lastActiveAt)} ·{" "}
+                {formatNumber(account.loginCount30d)} 次
+              </small>
             </span>
             <AccountActionsMenu account={account} />
           </div>
@@ -370,20 +485,29 @@ function AccountCards({
             <Icon name="user" size="lg" fallback="placeholder" />
             <div>
               <strong>{account.displayName}</strong>
-              <span>{account.accountCode} · {account.email}</span>
+              <span>
+                {account.accountCode} · {account.email}
+              </span>
             </div>
             <AccountActionsMenu account={account} />
           </header>
           <div className="vx-tenant-directory-card__badges">
-            <Badge className={accountStatusPillClass(account.status)}>{accountStatusLabel(account.status)}</Badge>
+            <Badge className={accountStatusPillClass(account.status)}>
+              {accountStatusLabel(account.status)}
+            </Badge>
             {showTenantContext
               ? accountTenantSummary(account).tags.map((tag) => (
-                  <Badge key={tag} className="vx-tenant-pill vx-account-muted-pill">
+                  <Badge
+                    key={tag}
+                    className="vx-tenant-pill vx-account-muted-pill"
+                  >
                     {tag}
                   </Badge>
                 ))
               : null}
-            <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--permission">{accountHighestRoleLabel(account)}</Badge>
+            <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--permission">
+              {accountHighestRoleLabel(account)}
+            </Badge>
           </div>
           <div className="vx-tenant-directory-card__metrics">
             {showTenantContext ? (
@@ -407,7 +531,11 @@ function AccountCards({
             </span>
           </div>
           <footer>
-            <span>{showTenantContext ? accountTenantSummary(account).primaryName : '平台用户'}</span>
+            <span>
+              {showTenantContext
+                ? accountTenantSummary(account).primaryName
+                : "平台用户"}
+            </span>
             <strong>{formatDate(account.lastActiveAt)}</strong>
           </footer>
         </article>
@@ -433,10 +561,17 @@ function AccountPagination({
 }) {
   return (
     <footer className="vx-tenant-pagination">
-      <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
+      <span className="vx-tenant-pagination__total">
+        共 {formatNumber(total)} 条记录
+      </span>
       <div className="vx-tenant-pagination__actions">
-        <AccountPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
+        <AdminPageSizePicker value={pageSize} onChange={onPageSizeChange} />
+        <Pagination
+          className="vx-tenant-pagination__pager"
+          page={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </footer>
   );
@@ -453,12 +588,15 @@ export function AccountsPage({
 } = {}) {
   const pageCopy = { ...defaultAccountsPageCopy, ...copy };
   const [accounts, setAccounts] = useState<AccountOperationRecord[]>([]);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [selectedAccountIds, setSelectedAccountIds] = useState<Set<string>>(() => new Set());
-  const [query, setQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [tenantTypeFilter, setTenantTypeFilter] = useState<TenantTypeFilter>('all');
-  const [roleFilter, setRoleFilter] = useState<RoleFilter>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [selectedAccountIds, setSelectedAccountIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [tenantTypeFilter, setTenantTypeFilter] =
+    useState<TenantTypeFilter>("all");
+  const [roleFilter, setRoleFilter] = useState<RoleFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
   const [loading, setLoading] = useState(true);
@@ -484,33 +622,65 @@ export function AccountsPage({
     const normalizedQuery = query.trim().toLowerCase();
 
     return accounts.filter((account) => {
-      if (statusFilter !== 'all' && account.status !== statusFilter) return false;
-      if (showTenantContext && !accountMatchesTenantType(account, tenantTypeFilter)) return false;
-      if (roleFilter !== 'all' && accountRoleGroup(account) !== roleFilter) return false;
-      if (normalizedQuery && !accountSearchText(account).includes(normalizedQuery)) return false;
+      if (statusFilter !== "all" && account.status !== statusFilter)
+        return false;
+      if (
+        showTenantContext &&
+        !accountMatchesTenantType(account, tenantTypeFilter)
+      )
+        return false;
+      if (roleFilter !== "all" && accountRoleGroup(account) !== roleFilter)
+        return false;
+      if (
+        normalizedQuery &&
+        !accountSearchText(account).includes(normalizedQuery)
+      )
+        return false;
       return true;
     });
-  }, [accounts, query, roleFilter, showTenantContext, statusFilter, tenantTypeFilter]);
+  }, [
+    accounts,
+    query,
+    roleFilter,
+    showTenantContext,
+    statusFilter,
+    tenantTypeFilter,
+  ]);
 
   const pageCount = Math.max(1, Math.ceil(filteredAccounts.length / pageSize));
-  const visibleAccounts = filteredAccounts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const visibleAccounts = filteredAccounts.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
   const visibleAccountIds = visibleAccounts.map((account) => account.id);
-  const selectedVisibleAccountCount = visibleAccountIds.filter((accountId) => selectedAccountIds.has(accountId)).length;
-  const isAccountPageSelected = visibleAccountIds.length > 0 && selectedVisibleAccountCount === visibleAccountIds.length;
-  const activeAccounts = accounts.filter((account) => account.status === 'active').length;
-  const invitedAccounts = accounts.filter((account) => account.status === 'invited').length;
-  const lockedAccounts = accounts.filter((account) => account.status === 'locked').length;
-  const disabledAccounts = accounts.filter((account) => account.status === 'disabled').length;
+  const selectedVisibleAccountCount = visibleAccountIds.filter((accountId) =>
+    selectedAccountIds.has(accountId),
+  ).length;
+  const isAccountPageSelected =
+    visibleAccountIds.length > 0 &&
+    selectedVisibleAccountCount === visibleAccountIds.length;
+  const activeAccounts = accounts.filter(
+    (account) => account.status === "active",
+  ).length;
+  const invitedAccounts = accounts.filter(
+    (account) => account.status === "invited",
+  ).length;
+  const lockedAccounts = accounts.filter(
+    (account) => account.status === "locked",
+  ).length;
+  const disabledAccounts = accounts.filter(
+    (account) => account.status === "disabled",
+  ).length;
 
   useEffect(() => {
     setCurrentPage(1);
   }, [pageSize, query, roleFilter, statusFilter, tenantTypeFilter, viewMode]);
 
   function handleReset() {
-    setQuery('');
-    setStatusFilter('all');
-    setTenantTypeFilter('all');
-    setRoleFilter('all');
+    setQuery("");
+    setStatusFilter("all");
+    setTenantTypeFilter("all");
+    setRoleFilter("all");
   }
 
   function toggleAccountSelection(accountId: string, checked: boolean) {
@@ -548,17 +718,52 @@ export function AccountsPage({
         description={pageCopy.description}
       />
 
-      <section className="vx-tenant-summary" aria-label={pageCopy.summaryAriaLabel}>
-        <AccountSummaryItem icon="user" label="账号总数" value={formatNumber(accounts.length)} tags={[`活跃 ${formatNumber(activeAccounts)}`]} />
-        <AccountSummaryItem icon="clock" label="待激活" value={formatNumber(invitedAccounts)} tags={['邀请中']} tone="amber" />
-        <AccountSummaryItem icon="warning" label="已锁定" value={formatNumber(lockedAccounts)} tags={['临时锁定']} tone={lockedAccounts ? 'amber' : 'green'} />
-        <AccountSummaryItem icon="x" label="已停用" value={formatNumber(disabledAccounts)} tags={['长期未用']} tone={disabledAccounts ? 'rose' : 'green'} />
+      <section
+        className="vx-tenant-summary"
+        aria-label={pageCopy.summaryAriaLabel}
+      >
+        <AccountSummaryItem
+          icon="user"
+          label="账号总数"
+          value={formatNumber(accounts.length)}
+          tags={[`活跃 ${formatNumber(activeAccounts)}`]}
+        />
+        <AccountSummaryItem
+          icon="clock"
+          label="待激活"
+          value={formatNumber(invitedAccounts)}
+          tags={["邀请中"]}
+          tone="amber"
+        />
+        <AccountSummaryItem
+          icon="warning"
+          label="已锁定"
+          value={formatNumber(lockedAccounts)}
+          tags={["临时锁定"]}
+          tone={lockedAccounts ? "amber" : "green"}
+        />
+        <AccountSummaryItem
+          icon="x"
+          label="已停用"
+          value={formatNumber(disabledAccounts)}
+          tags={["长期未用"]}
+          tone={disabledAccounts ? "rose" : "green"}
+        />
       </section>
 
       <div className="vx-tenant-list-shell">
-        <section className="vx-tenant-toolbar" aria-label={pageCopy.toolbarAriaLabel}>
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel={`${pageCopy.title}展示方式`} />
-          <span className="vx-tenant-view-count">{formatNumber(filteredAccounts.length)}</span>
+        <section
+          className="vx-tenant-toolbar"
+          aria-label={pageCopy.toolbarAriaLabel}
+        >
+          <ViewModeSwitch
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel={`${pageCopy.title}展示方式`}
+          />
+          <span className="vx-tenant-view-count">
+            {formatNumber(filteredAccounts.length)}
+          </span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
             value={query}
@@ -567,9 +772,18 @@ export function AccountsPage({
             className="vx-tenant-search"
             aria-label={pageCopy.searchAriaLabel}
           />
-          <Button variant="outline" onClick={handleReset}>重置</Button>
+          <Button variant="outline" onClick={handleReset}>
+            重置
+          </Button>
           <div className="vx-tenant-filters">
-            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label={pageCopy.statusAriaLabel}>
+            <NativeSelect
+              className="vx-input vx-tenant-select"
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as StatusFilter)
+              }
+              aria-label={pageCopy.statusAriaLabel}
+            >
               <option value="all">全部状态</option>
               <option value="active">正常</option>
               <option value="invited">待激活</option>
@@ -577,14 +791,28 @@ export function AccountsPage({
               <option value="disabled">已停用</option>
             </NativeSelect>
             {showTenantContext ? (
-              <NativeSelect className="vx-input vx-tenant-select" value={tenantTypeFilter} onChange={(event) => setTenantTypeFilter(event.target.value as TenantTypeFilter)} aria-label={pageCopy.tenantTypeAriaLabel}>
+              <NativeSelect
+                className="vx-input vx-tenant-select"
+                value={tenantTypeFilter}
+                onChange={(event) =>
+                  setTenantTypeFilter(event.target.value as TenantTypeFilter)
+                }
+                aria-label={pageCopy.tenantTypeAriaLabel}
+              >
                 <option value="all">全部租户</option>
                 <option value="individual">个人</option>
                 <option value="company">组织</option>
                 <option value="mixed">个人+组织</option>
               </NativeSelect>
             ) : null}
-            <NativeSelect className="vx-input vx-tenant-select" value={roleFilter} onChange={(event) => setRoleFilter(event.target.value as RoleFilter)} aria-label={pageCopy.roleAriaLabel}>
+            <NativeSelect
+              className="vx-input vx-tenant-select"
+              value={roleFilter}
+              onChange={(event) =>
+                setRoleFilter(event.target.value as RoleFilter)
+              }
+              aria-label={pageCopy.roleAriaLabel}
+            >
               <option value="all">全部权限</option>
               <option value="owner">Owner</option>
               <option value="admin">Admin</option>
@@ -596,7 +824,10 @@ export function AccountsPage({
           </ActionButton>
         </section>
 
-        <section className="vx-tenant-directory" aria-label={pageCopy.directoryAriaLabel}>
+        <section
+          className="vx-tenant-directory"
+          aria-label={pageCopy.directoryAriaLabel}
+        >
           {loading ? (
             <header className="vx-tenant-directory__header">
               <span>读取中</span>
@@ -604,7 +835,7 @@ export function AccountsPage({
           ) : null}
 
           {visibleAccounts.length ? (
-            viewMode === 'list' ? (
+            viewMode === "list" ? (
               <AccountListRows
                 accounts={visibleAccounts}
                 startIndex={(Math.min(currentPage, pageCount) - 1) * pageSize}
@@ -624,9 +855,17 @@ export function AccountsPage({
             <section className="vx-tenant-empty">
               <EmptyState
                 title={loading ? pageCopy.loadingTitle : pageCopy.emptyTitle}
-                description={loading ? pageCopy.loadingDescription : pageCopy.emptyDescription}
+                description={
+                  loading
+                    ? pageCopy.loadingDescription
+                    : pageCopy.emptyDescription
+                }
                 action={
-                  <ActionButton variant="outline" icon="x" onClick={handleReset}>
+                  <ActionButton
+                    variant="outline"
+                    icon="x"
+                    onClick={handleReset}
+                  >
                     清空筛选
                   </ActionButton>
                 }
@@ -640,7 +879,9 @@ export function AccountsPage({
             total={filteredAccounts.length}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
-            onPageChange={(page) => setCurrentPage(Math.min(Math.max(page, 1), pageCount))}
+            onPageChange={(page) =>
+              setCurrentPage(Math.min(Math.max(page, 1), pageCount))
+            }
           />
         </section>
       </div>

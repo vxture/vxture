@@ -40,6 +40,8 @@ export * from "./page-stack";
 export * from "./page-actions";
 export * from "./entity-list-page";
 export * from "./settings-split-page";
+export * from "./page-size-picker";
+export * from "./detail-section-heading";
 export * from "./table-toolbar";
 export * from "./entity-table-section";
 export * from "./detail-panel";

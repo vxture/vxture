@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * ResetPasswordForm.tsx - 控制台密码重置表单
@@ -12,27 +12,24 @@
  * @date 2026-05-16
  */
 
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent } from "react";
 import {
   AuthChromeFooter,
-  AuthChromeHeader,
   AuthLoginTemplate,
   Button,
   Input,
-  useTheme,
-} from '@vxture/design-system';
-import { resetPassword } from '@/api/console-bff';
-import { usePathname, useRouter } from '@/lib/i18n/navigation';
-import { setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
-import type { Locale, Theme } from '@vxture/shared';
-import { useSearchParams } from 'next/navigation';
-import { useLocale, useTranslations } from 'next-intl';
+} from "@vxture/design-system";
+import { resetPassword } from "@/api/console-bff";
+import { useRouter } from "@/lib/i18n/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { AuthAppHeader } from "./AuthAppHeader";
 
 // ============================================================================
 // Types
 // ============================================================================
 
-type ResetStep = 'form' | 'done' | 'invalid';
+type ResetStep = "form" | "done" | "invalid";
 
 interface FormStepProps {
   readonly newPassword: string;
@@ -48,7 +45,7 @@ interface FormStepProps {
 // Constants
 // ============================================================================
 
-const BG_SRC = '/images/login-bg-light.jpg';
+const BG_SRC = "/images/login-bg-light.jpg";
 
 // ============================================================================
 // Components
@@ -56,35 +53,35 @@ const BG_SRC = '/images/login-bg-light.jpg';
 
 export function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const token = searchParams.get('token') ?? '';
+  const token = searchParams.get("token") ?? "";
   const router = useRouter();
 
-  const [step, setStep] = useState<ResetStep>(token ? 'form' : 'invalid');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [step, setStep] = useState<ResetStep>(token ? "form" : "invalid");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    setError('');
+    setError("");
 
     if (newPassword.length < 8) {
-      setError('密码至少 8 位字符');
+      setError("密码至少 8 位字符");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError('两次输入的密码不一致');
+      setError("两次输入的密码不一致");
       return;
     }
 
     setLoading(true);
     try {
       await resetPassword({ token, newPassword });
-      setStep('done');
+      setStep("done");
     } catch {
-      setStep('invalid');
+      setStep("invalid");
     } finally {
       setLoading(false);
     }
@@ -94,14 +91,14 @@ export function ResetPasswordForm() {
     <AuthLoginTemplate
       className="vx-auth-page--console"
       pageBackgroundImage={BG_SRC}
-      header={<AuthHeader />}
+      header={<AuthAppHeader />}
       footer={<AuthFooter />}
       title="设置新密码"
       useLoginLayout={false}
       ariaLabel="console reset password"
     >
       <div className="vx-auth-form-panel">
-        {step === 'form' ? (
+        {step === "form" ? (
           <FormStep
             newPassword={newPassword}
             confirmPassword={confirmPassword}
@@ -112,8 +109,12 @@ export function ResetPasswordForm() {
             onSubmit={handleSubmit}
           />
         ) : null}
-        {step === 'done' ? <DoneStep onSignIn={() => router.push('/signin')} /> : null}
-        {step === 'invalid' ? <InvalidStep onRetry={() => router.push('/signin')} /> : null}
+        {step === "done" ? (
+          <DoneStep onSignIn={() => router.push("/signin")} />
+        ) : null}
+        {step === "invalid" ? (
+          <InvalidStep onRetry={() => router.push("/signin")} />
+        ) : null}
       </div>
     </AuthLoginTemplate>
   );
@@ -171,7 +172,7 @@ function FormStep({
               重置中...
             </>
           ) : (
-            '确认重置密码'
+            "确认重置密码"
           )}
         </Button>
       </form>
@@ -205,47 +206,16 @@ function InvalidStep({ onRetry }: { readonly onRetry: () => void }) {
   );
 }
 
-function AuthHeader() {
-  const locale = useLocale() as Locale;
-  const router = useRouter();
-  const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
-  const isZh = locale === 'zh-CN';
-
-  return (
-    <AuthChromeHeader
-      brandHref="/"
-      brandLogoSrc="/brand/vxture-logo-white.png"
-      brandLogoAlt="vxture.ai"
-      brandLabel="vxture.ai"
-      currentLocale={locale}
-      currentTheme={theme}
-      localeButtonLabel={isZh ? '选择语言' : 'Language'}
-      localePanelLabel={isZh ? '语言选择' : 'Language'}
-      lightThemeLabel={isZh ? '浅色模式' : 'Light mode'}
-      darkThemeLabel={isZh ? '深色模式' : 'Dark mode'}
-      onLocaleChange={(nextLocale) => {
-        setGlobalLocalePreference(nextLocale);
-        router.replace(pathname, { locale: nextLocale });
-      }}
-      onThemeChange={(nextTheme) => {
-        setTheme(nextTheme);
-        setGlobalThemePreference(nextTheme as Theme);
-      }}
-    />
-  );
-}
-
 function AuthFooter() {
-  const t = useTranslations('login');
+  const t = useTranslations("login");
 
   return (
     <AuthChromeFooter
-      copyright={t('footer.copyright')}
+      copyright={t("footer.copyright")}
       links={[
-        { href: '/legal/terms', label: t('footer.terms') },
-        { href: '/legal/privacy', label: t('footer.privacy') },
-        { href: '/legal/cookies', label: t('footer.cookies') },
+        { href: "/legal/terms", label: t("footer.terms") },
+        { href: "/legal/privacy", label: t("footer.privacy") },
+        { href: "/legal/cookies", label: t("footer.cookies") },
       ]}
     />
   );

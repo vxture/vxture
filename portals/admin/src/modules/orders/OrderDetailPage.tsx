@@ -1,99 +1,108 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Icon } from '@vxture/design-system';
-import type { IconName } from '@vxture/design-system';
-import { Badge, Button } from '@vxture/design-system';
-import { confirmOrderOfflinePayment, fetchOrderOperation } from '@/api/admin-bff';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Icon } from "@vxture/design-system";
+import type { IconName } from "@vxture/design-system";
+import { Badge, Button } from "@vxture/design-system";
+import {
+  confirmOrderOfflinePayment,
+  fetchOrderOperation,
+} from "@/api/admin-bff";
 import type {
   OrderOperationDetailRecord,
   OrderOperationStatus,
   OrderPaymentStatus,
   OrderPaySource,
-} from '@/entities/console';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
+} from "@/entities/console";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import { DetailSectionHeading } from "@/modules/shared/DetailSectionHeading";
 import {
   canConfirmOrderOfflinePayment,
   confirmOfflinePaymentDisabledReason,
   OrderOfflinePaymentDialog,
-} from '@/modules/orders/OrderOfflinePaymentDialog';
-import { formatDate, formatNumber, typeLabel } from '@/modules/tenants/tenant-utils';
+} from "@/modules/orders/OrderOfflinePaymentDialog";
+import {
+  formatDate,
+  formatNumber,
+  typeLabel,
+} from "@/modules/tenants/tenant-utils";
 
 function formatCurrency(value: number, currency: string) {
-  return new Intl.NumberFormat('zh-CN', {
-    style: 'currency',
-    currency: currency || 'CNY',
+  return new Intl.NumberFormat("zh-CN", {
+    style: "currency",
+    currency: currency || "CNY",
     maximumFractionDigits: 2,
   }).format(value);
 }
 
-function cycleLabel(cycle: OrderOperationDetailRecord['cycleType']) {
-  if (cycle === 'yearly') return '年付';
-  if (cycle === 'once') return '一次性';
-  return '月付';
+function cycleLabel(cycle: OrderOperationDetailRecord["cycleType"]) {
+  if (cycle === "yearly") return "年付";
+  if (cycle === "once") return "一次性";
+  return "月付";
 }
 
 function orderStatusLabel(status: OrderOperationStatus) {
-  if (status === 'pending') return '待付款';
-  if (status === 'pending_verify') return '待复核';
-  if (status === 'confirmed') return '已确认';
-  if (status === 'overdue') return '逾期';
-  if (status === 'closed') return '已关闭';
-  return '异常';
+  if (status === "pending") return "待付款";
+  if (status === "pending_verify") return "待复核";
+  if (status === "confirmed") return "已确认";
+  if (status === "overdue") return "逾期";
+  if (status === "closed") return "已关闭";
+  return "异常";
 }
 
 function paymentStatusLabel(status: OrderPaymentStatus) {
-  if (status === 'not_required') return '无需支付';
-  if (status === 'unpaid') return '未支付';
-  if (status === 'pending') return '支付中';
-  if (status === 'pending_verify') return '线下待核';
-  if (status === 'paid') return '已支付';
-  if (status === 'partial') return '部分支付';
-  if (status === 'failed') return '支付失败';
-  if (status === 'closed') return '已关闭';
-  return '退款中';
+  if (status === "not_required") return "无需支付";
+  if (status === "unpaid") return "未支付";
+  if (status === "pending") return "支付中";
+  if (status === "pending_verify") return "线下待核";
+  if (status === "paid") return "已支付";
+  if (status === "partial") return "部分支付";
+  if (status === "failed") return "支付失败";
+  if (status === "closed") return "已关闭";
+  return "退款中";
 }
 
 function paySourceLabel(source: OrderPaySource) {
-  if (source === 'online') return '线上';
-  if (source === 'offline') return '线下';
-  return '无';
+  if (source === "online") return "线上";
+  if (source === "offline") return "线下";
+  return "无";
 }
 
-function subscriptionStatusLabel(status: OrderOperationDetailRecord['subscriptionStatus']) {
-  if (status === 'trial') return '试用';
-  if (status === 'active') return '已生效';
-  if (status === 'expiring') return '即将到期';
-  if (status === 'overdue') return '逾期';
-  if (status === 'suspended') return '暂停';
-  return '已取消';
+function subscriptionStatusLabel(
+  status: OrderOperationDetailRecord["subscriptionStatus"],
+) {
+  if (status === "trial") return "试用";
+  if (status === "active") return "已生效";
+  if (status === "expiring") return "即将到期";
+  if (status === "overdue") return "逾期";
+  if (status === "suspended") return "暂停";
+  return "已取消";
 }
 
 function SectionHeading({ icon, title }: { icon: IconName; title: string }) {
-  return (
-    <div className="admin-overview-heading">
-      <span className="admin-overview-heading__icon" aria-hidden="true">
-        <Icon name={icon} size="lg" fallback="placeholder" />
-      </span>
-      <div className="admin-overview-heading__copy">
-        <h2>{title}</h2>
-      </div>
-    </div>
-  );
+  return <DetailSectionHeading icon={icon} title={title} />;
 }
 
 function DetailField({ label, value }: { label: string; value: string }) {
   return (
     <div className="vx-product-capability-field">
       <span>{label}</span>
-      <strong>{value || '未设置'}</strong>
+      <strong>{value || "未设置"}</strong>
     </div>
   );
 }
 
-function DetailMetric({ label, value, tag }: { label: string; value: string; tag?: string }) {
+function DetailMetric({
+  label,
+  value,
+  tag,
+}: {
+  label: string;
+  value: string;
+  tag?: string;
+}) {
   return (
     <div className="vx-product-capability-metric">
       <span>{label}</span>
@@ -109,23 +118,52 @@ function OrderSummary({ order }: { order: OrderOperationDetailRecord }) {
   return (
     <section className="vx-product-capability-summary">
       <div className="vx-product-capability-summary__identity">
-        <span className="vx-product-capability-summary__icon" aria-hidden="true">
+        <span
+          className="vx-product-capability-summary__icon"
+          aria-hidden="true"
+        >
           <Icon name="table" size="lg" fallback="placeholder" />
         </span>
         <div>
           <h2>{order.orderNo}</h2>
-          <p>{order.tenantName} / {order.tierName}</p>
+          <p>
+            {order.tenantName} / {order.tierName}
+          </p>
           <div className="vx-product-capability-summary__badges">
-            <Badge className={`vx-tenant-pill vx-order-pill--${order.orderStatus}`}>{orderStatusLabel(order.orderStatus)}</Badge>
-            <Badge className={`vx-tenant-pill vx-order-pill--payment-${order.paymentStatus}`}>{paymentStatusLabel(order.paymentStatus)}</Badge>
+            <Badge
+              className={`vx-tenant-pill vx-order-pill--${order.orderStatus}`}
+            >
+              {orderStatusLabel(order.orderStatus)}
+            </Badge>
+            <Badge
+              className={`vx-tenant-pill vx-order-pill--payment-${order.paymentStatus}`}
+            >
+              {paymentStatusLabel(order.paymentStatus)}
+            </Badge>
           </div>
         </div>
       </div>
       <div className="vx-product-capability-summary__metrics">
-        <DetailMetric label="订单金额" value={formatCurrency(order.amount, order.currency)} tag={cycleLabel(order.cycleType)} />
-        <DetailMetric label="已收金额" value={formatCurrency(order.paidAmount, order.currency)} tag={paySourceLabel(order.paySource)} />
-        <DetailMetric label="业务方案" value={order.solutionName} tag={order.servicePlanName} />
-        <DetailMetric label="运营动作" value={order.operationHint} tag={order.operatorName} />
+        <DetailMetric
+          label="订单金额"
+          value={formatCurrency(order.amount, order.currency)}
+          tag={cycleLabel(order.cycleType)}
+        />
+        <DetailMetric
+          label="已收金额"
+          value={formatCurrency(order.paidAmount, order.currency)}
+          tag={paySourceLabel(order.paySource)}
+        />
+        <DetailMetric
+          label="业务方案"
+          value={order.solutionName}
+          tag={order.servicePlanName}
+        />
+        <DetailMetric
+          label="运营动作"
+          value={order.operationHint}
+          tag={order.operatorName}
+        />
       </div>
     </section>
   );
@@ -133,15 +171,27 @@ function OrderSummary({ order }: { order: OrderOperationDetailRecord }) {
 
 function OrderDetails({ order }: { order: OrderOperationDetailRecord }) {
   return (
-    <section className="vx-product-capability-detail" aria-label={`${order.orderNo} 订单详情`}>
+    <section
+      className="vx-product-capability-detail"
+      aria-label={`${order.orderNo} 订单详情`}
+    >
       <section className="vx-product-capability-section">
         <SectionHeading icon="table" title="基础资料" />
         <div className="vx-product-capability-fields">
           <DetailField label="订单编号" value={order.orderNo} />
-          <DetailField label="订单状态" value={orderStatusLabel(order.orderStatus)} />
-          <DetailField label="支付状态" value={paymentStatusLabel(order.paymentStatus)} />
-          <DetailField label="支付来源" value={paySourceLabel(order.paySource)} />
-          <DetailField label="支付方式" value={order.payMethod ?? '未设置'} />
+          <DetailField
+            label="订单状态"
+            value={orderStatusLabel(order.orderStatus)}
+          />
+          <DetailField
+            label="支付状态"
+            value={paymentStatusLabel(order.paymentStatus)}
+          />
+          <DetailField
+            label="支付来源"
+            value={paySourceLabel(order.paySource)}
+          />
+          <DetailField label="支付方式" value={order.payMethod ?? "未设置"} />
           <DetailField label="创建时间" value={formatDate(order.createdAt)} />
           <DetailField label="确认时间" value={formatDate(order.confirmedAt)} />
           <DetailField label="更新时间" value={formatDate(order.updatedAt)} />
@@ -166,15 +216,24 @@ function OrderDetails({ order }: { order: OrderOperationDetailRecord }) {
         <SectionHeading icon="star" title="关联订阅" />
         <div className="vx-product-capability-fields">
           <DetailField label="订阅 ID" value={order.subscriptionId} />
-          <DetailField label="订阅状态" value={subscriptionStatusLabel(order.subscriptionStatus)} />
+          <DetailField
+            label="订阅状态"
+            value={subscriptionStatusLabel(order.subscriptionStatus)}
+          />
           <DetailField label="计费周期" value={cycleLabel(order.cycleType)} />
         </div>
         <div className="vx-product-capability-actions vx-subscription-detail-links">
-          <Link href={`/subscriptions/${encodeURIComponent(order.subscriptionId)}`} className="vx-btn vx-btn--outline vx-btn--default">
+          <Link
+            href={`/subscriptions/${encodeURIComponent(order.subscriptionId)}`}
+            className="vx-btn vx-btn--outline vx-btn--default"
+          >
             <Icon name="star" size="xs" fallback="placeholder" />
             订阅详情
           </Link>
-          <Link href={`/tenants/${encodeURIComponent(order.tenantId)}`} className="vx-btn vx-btn--outline vx-btn--default">
+          <Link
+            href={`/tenants/${encodeURIComponent(order.tenantId)}`}
+            className="vx-btn vx-btn--outline vx-btn--default"
+          >
             <Icon name="buildings" size="xs" fallback="placeholder" />
             租户详情
           </Link>
@@ -184,12 +243,24 @@ function OrderDetails({ order }: { order: OrderOperationDetailRecord }) {
       <section className="vx-product-capability-section">
         <SectionHeading icon="key" title="账单与收款" />
         <div className="vx-product-capability-fields">
-          <DetailField label="账单编号" value={order.billNo ?? '未生成'} />
-          <DetailField label="账单状态" value={order.billStatus ?? '未生成'} />
-          <DetailField label="支付单号" value={order.paymentNo ?? '未生成'} />
-          <DetailField label="订单金额" value={formatCurrency(order.amount, order.currency)} />
-          <DetailField label="已收金额" value={formatCurrency(order.paidAmount, order.currency)} />
-          <DetailField label="剩余应收" value={formatCurrency(Math.max(0, order.amount - order.paidAmount), order.currency)} />
+          <DetailField label="账单编号" value={order.billNo ?? "未生成"} />
+          <DetailField label="账单状态" value={order.billStatus ?? "未生成"} />
+          <DetailField label="支付单号" value={order.paymentNo ?? "未生成"} />
+          <DetailField
+            label="订单金额"
+            value={formatCurrency(order.amount, order.currency)}
+          />
+          <DetailField
+            label="已收金额"
+            value={formatCurrency(order.paidAmount, order.currency)}
+          />
+          <DetailField
+            label="剩余应收"
+            value={formatCurrency(
+              Math.max(0, order.amount - order.paidAmount),
+              order.currency,
+            )}
+          />
         </div>
       </section>
 
@@ -202,9 +273,15 @@ function OrderDetails({ order }: { order: OrderOperationDetailRecord }) {
                 <Icon name="table" size="sm" fallback="placeholder" />
                 <strong>{item.itemName}</strong>
               </span>
-              <small>{item.itemType} | {formatNumber(item.quantity)} {item.itemUnit ?? ''}</small>
+              <small>
+                {item.itemType} | {formatNumber(item.quantity)}{" "}
+                {item.itemUnit ?? ""}
+              </small>
               <em>{formatCurrency(item.totalAmount, order.currency)}</em>
-              <p>{item.remark ?? `单价 ${formatCurrency(item.unitPrice, order.currency)}`}</p>
+              <p>
+                {item.remark ??
+                  `单价 ${formatCurrency(item.unitPrice, order.currency)}`}
+              </p>
             </div>
           ))}
         </div>
@@ -213,17 +290,23 @@ function OrderDetails({ order }: { order: OrderOperationDetailRecord }) {
       <section className="vx-product-capability-section">
         <SectionHeading icon="check" title="支付记录" />
         <div className="vx-product-detail-list vx-product-detail-list--entitlements">
-          {order.paymentRecords.length ? order.paymentRecords.map((payment) => (
-            <div key={payment.id} className="vx-product-detail-list__row">
-              <span>
-                <Icon name="check" size="sm" fallback="placeholder" />
-                <strong>{payment.paymentNo}</strong>
-              </span>
-              <small>{paySourceLabel(payment.paySource)} | {paymentStatusLabel(payment.paymentStatus)} | {formatDate(payment.paidAt)}</small>
-              <em>{formatCurrency(payment.paidAmount, payment.currency)}</em>
-              <p>{payment.remark ?? payment.operatorName}</p>
-            </div>
-          )) : (
+          {order.paymentRecords.length ? (
+            order.paymentRecords.map((payment) => (
+              <div key={payment.id} className="vx-product-detail-list__row">
+                <span>
+                  <Icon name="check" size="sm" fallback="placeholder" />
+                  <strong>{payment.paymentNo}</strong>
+                </span>
+                <small>
+                  {paySourceLabel(payment.paySource)} |{" "}
+                  {paymentStatusLabel(payment.paymentStatus)} |{" "}
+                  {formatDate(payment.paidAt)}
+                </small>
+                <em>{formatCurrency(payment.paidAmount, payment.currency)}</em>
+                <p>{payment.remark ?? payment.operatorName}</p>
+              </div>
+            ))
+          ) : (
             <div className="vx-product-detail-list__row">
               <span>
                 <Icon name="clock" size="sm" fallback="placeholder" />
@@ -241,14 +324,29 @@ function OrderDetails({ order }: { order: OrderOperationDetailRecord }) {
         <SectionHeading icon="clock" title="运营记录" />
         <div className="vx-subscription-timeline">
           {order.operationTimeline.map((event) => (
-            <article key={event.id} className={`vx-subscription-timeline__item vx-subscription-timeline__item--${event.tone}`}>
+            <article
+              key={event.id}
+              className={`vx-subscription-timeline__item vx-subscription-timeline__item--${event.tone}`}
+            >
               <span aria-hidden="true">
-                <Icon name={event.tone === 'danger' ? 'warning' : event.tone === 'success' ? 'check' : 'info'} size="xs" fallback="placeholder" />
+                <Icon
+                  name={
+                    event.tone === "danger"
+                      ? "warning"
+                      : event.tone === "success"
+                        ? "check"
+                        : "info"
+                  }
+                  size="xs"
+                  fallback="placeholder"
+                />
               </span>
               <div>
                 <strong>{event.title}</strong>
                 <p>{event.description}</p>
-                <small>{event.actor} · {formatDate(event.at)}</small>
+                <small>
+                  {event.actor} · {formatDate(event.at)}
+                </small>
               </div>
             </article>
           ))}
@@ -264,7 +362,9 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [submittingPayment, setSubmittingPayment] = useState(false);
   const [operationError, setOperationError] = useState<string | null>(null);
-  const [operationFeedback, setOperationFeedback] = useState<string | null>(null);
+  const [operationFeedback, setOperationFeedback] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     let active = true;
@@ -283,7 +383,9 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
     };
   }, [orderId]);
 
-  async function handleConfirmOfflinePayment(payload: Parameters<typeof confirmOrderOfflinePayment>[1]) {
+  async function handleConfirmOfflinePayment(
+    payload: Parameters<typeof confirmOrderOfflinePayment>[1],
+  ) {
     if (!order) return;
 
     setSubmittingPayment(true);
@@ -292,10 +394,14 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
     try {
       const updatedOrder = await confirmOrderOfflinePayment(order.id, payload);
       setOrder(updatedOrder);
-      setOperationFeedback('线下收款已确认。');
+      setOperationFeedback("线下收款已确认。");
       setPaymentDialogOpen(false);
     } catch (error) {
-      setOperationError(error instanceof Error ? error.message : '确认线下收款失败，请稍后重试。');
+      setOperationError(
+        error instanceof Error
+          ? error.message
+          : "确认线下收款失败，请稍后重试。",
+      );
     } finally {
       setSubmittingPayment(false);
     }
@@ -309,13 +415,19 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
           title="订单详情"
           description="未找到对应的订单记录。"
           action={
-            <Link href="/orders" className="vx-btn vx-btn--outline vx-btn--default">
+            <Link
+              href="/orders"
+              className="vx-btn vx-btn--outline vx-btn--default"
+            >
               <Icon name="arrow-left" size="xs" fallback="placeholder" />
               返回列表
             </Link>
           }
         />
-        <EmptyState title="订单不存在" description="该订单可能已归档，或当前账号无权访问。" />
+        <EmptyState
+          title="订单不存在"
+          description="该订单可能已归档，或当前账号无权访问。"
+        />
       </div>
     );
   }
@@ -324,17 +436,27 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
     <div className="vx-page-stack vx-product-capability-page vx-order-detail-page">
       <PageHeader
         icon="table"
-        title={order ? order.orderNo : '订单详情'}
-        description={order ? `${order.tenantName} · ${order.solutionName} · ${order.servicePlanName}` : '正在读取订单、账单和支付记录。'}
+        title={order ? order.orderNo : "订单详情"}
+        description={
+          order
+            ? `${order.tenantName} · ${order.solutionName} · ${order.servicePlanName}`
+            : "正在读取订单、账单和支付记录。"
+        }
         action={
           <div className="vx-product-capability-actions">
-            <Link href="/orders" className="vx-btn vx-btn--outline vx-btn--default">
+            <Link
+              href="/orders"
+              className="vx-btn vx-btn--outline vx-btn--default"
+            >
               <Icon name="arrow-left" size="xs" fallback="placeholder" />
               返回列表
             </Link>
             {order ? (
               <>
-                <Link href={`/subscriptions/${encodeURIComponent(order.subscriptionId)}`} className="vx-btn vx-btn--outline vx-btn--default">
+                <Link
+                  href={`/subscriptions/${encodeURIComponent(order.subscriptionId)}`}
+                  className="vx-btn vx-btn--outline vx-btn--default"
+                >
                   <Icon name="star" size="xs" fallback="placeholder" />
                   订阅详情
                 </Link>
@@ -346,7 +468,9 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
                     setPaymentDialogOpen(true);
                   }}
                   disabled={!canConfirmOrderOfflinePayment(order)}
-                  title={confirmOfflinePaymentDisabledReason(order) ?? undefined}
+                  title={
+                    confirmOfflinePaymentDisabledReason(order) ?? undefined
+                  }
                 >
                   <Icon name="check" size="xs" fallback="placeholder" />
                   确认收款
@@ -357,7 +481,11 @@ export function OrderDetailPage({ orderId }: { orderId: string }) {
         }
       />
 
-      {operationFeedback ? <div className="vx-subscription-operation-feedback">{operationFeedback}</div> : null}
+      {operationFeedback ? (
+        <div className="vx-subscription-operation-feedback">
+          {operationFeedback}
+        </div>
+      ) : null}
 
       {order ? (
         <>
