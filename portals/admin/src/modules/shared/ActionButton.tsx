@@ -1,21 +1,2 @@
-import type { ComponentProps, ReactNode } from 'react';
-import { Button, Icon, type IconName } from '@vxture/design-system';
-
-type ActionButtonProps = Omit<ComponentProps<typeof Button>, 'children'> & {
-  children: ReactNode;
-  icon: IconName;
-};
-
-export function ActionButton({
-  children,
-  icon,
-  size = 'sm',
-  ...props
-}: ActionButtonProps) {
-  return (
-    <Button size={size} {...props}>
-      <Icon name={icon} size="xs" fallback="placeholder" className="vx-btn__icon" />
-      <span>{children}</span>
-    </Button>
-  );
-}
+export { ActionButton } from '@vxture/design-system';
+export type { ActionButtonProps } from '@vxture/design-system';

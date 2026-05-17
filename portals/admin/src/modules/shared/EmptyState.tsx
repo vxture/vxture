@@ -1,19 +1,2 @@
-import type { ReactNode } from 'react';
-
-export function EmptyState({
-  title,
-  description,
-  action,
-}: {
-  title: string;
-  description?: string;
-  action?: ReactNode;
-}) {
-  return (
-    <div className="vx-empty-state">
-      <strong>{title}</strong>
-      {description ? <p>{description}</p> : null}
-      {action ? <div>{action}</div> : null}
-    </div>
-  );
-}
+export { EmptyState } from '@vxture/design-system';
+export type { EmptyStateProps } from '@vxture/design-system';
