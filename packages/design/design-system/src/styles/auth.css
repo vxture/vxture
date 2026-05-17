@@ -9,11 +9,8 @@
 @import "./auth-page-shell.css";
 @import "./auth-header-locale.css";
 @import "./auth-visual-panel.css";
-@import "./auth-form-layout.css";
 @import "./auth-fields-controls.css";
 @import "./auth-actions-social.css";
 @import "./auth-tabs-footer-dark.css";
-@import "./auth-motion-fade.css";
 @import "./auth-signup.css";
-@import "./auth-captcha.css";
 @import "./auth-responsive-motion.css";

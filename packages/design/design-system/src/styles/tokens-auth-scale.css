@@ -8,11 +8,5 @@
  */
 
 @import "./tokens-auth-scale-core.css";
-@import "./tokens-auth-actions-scale.css";
-@import "./tokens-auth-captcha-scale.css";
-@import "./tokens-auth-fields-scale.css";
-@import "./tokens-auth-form-scale.css";
-@import "./tokens-auth-responsive-scale.css";
-@import "./tokens-auth-signup-scale.css";
-@import "./tokens-auth-tabs-scale.css";
-@import "./tokens-auth-visual-scale.css";
+@import "./tokens-auth-controls-scale.css";
+@import "./tokens-auth-experience-scale.css";

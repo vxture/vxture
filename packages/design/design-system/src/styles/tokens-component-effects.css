@@ -39,13 +39,6 @@
   --vx-auth-primary-hover-shadow: 0 var(--vx-component-metric-6p) var(--vx-component-metric-28p) color-mix(in srgb, var(--vx-color-auth-accent) 45%, transparent);
   --vx-auth-visual-scan-animation: vx-auth-scan 6500ms var(--vx-ease-in-out) infinite;
   --vx-auth-status-dot-shadow: 0 0 0 var(--vx-component-metric-5p) color-mix(in srgb, var(--vx-color-success-400) 15%, transparent);
-  --vx-auth-captcha-backdrop-animation: vx-auth-fade-in var(--vx-duration-base) var(--vx-ease-out);
-  --vx-auth-captcha-card-shadow: 0 var(--vx-component-metric-20p) 60px color-mix(in srgb, var(--vx-color-black) 20%, transparent);
-  --vx-auth-captcha-hole-shadow: inset 0 0 0 var(--vx-control-border-width) color-mix(in srgb, var(--vx-color-white) 50%, transparent);
-  --vx-auth-captcha-piece-shadow: inset 0 0 0 var(--vx-control-border-width) color-mix(in srgb, var(--vx-color-white) 80%, transparent);
-  --vx-auth-captcha-piece-filter: drop-shadow(0 var(--vx-component-metric-2p) var(--vx-component-metric-6p) color-mix(in srgb, var(--vx-color-black) 25%, transparent));
-  --vx-auth-captcha-piece-transition: left var(--vx-duration-instant) var(--vx-ease-standard);
-  --vx-auth-captcha-handle-shadow: 0 var(--vx-component-metric-2p) var(--vx-component-metric-8p) color-mix(in srgb, var(--vx-color-black) 15%, transparent);
 
   --vx-shell-user-trigger-hover-shadow: 0 0 0 var(--vx-shell-user-trigger-hover-ring) color-mix(in srgb, var(--vx-color-brand-300) 70%, transparent);
   --vx-shell-user-avatar-shadow: 0 var(--vx-shell-user-avatar-shadow-y) var(--vx-shell-user-avatar-shadow-blur) color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);

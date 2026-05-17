@@ -6,7 +6,4 @@
  */
 
 @import "./console-shell-chrome-surface.css";
-@import "./console-shell-chrome-header.css";
-@import "./console-shell-chrome-sidebar.css";
 @import "./console-shell-chrome-nav.css";
-@import "./console-shell-chrome-assistant.css";
