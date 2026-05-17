@@ -1,0 +1,119 @@
+/**
+ * platform-access-identity-member.css - 平台访问页成员身份、头像和文本语义样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-member-table__avatar {
+  width: var(--vx-access-avatar-size);
+  height: var(--vx-access-avatar-size);
+  flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: var(--vx-radius-full);
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--vx-platform-inset-line-shadow);
+}
+
+.vx-member-table__avatar-label {
+  position: absolute;
+  width: var(--vx-access-sr-only-size);
+  height: var(--vx-access-sr-only-size);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.vx-member-table__person,
+.vx-role-row__identity-copy {
+  display: grid;
+  min-width: 0;
+  gap: var(--vx-access-identity-copy-gap);
+}
+
+.vx-member-table__person-line,
+.vx-role-row__identity {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.vx-member-table__person-line {
+  gap: var(--vx-access-person-line-gap);
+}
+
+.vx-role-row__identity {
+  gap: var(--vx-access-role-identity-gap);
+}
+
+.vx-member-table__person-line strong,
+.vx-member-table__person p,
+.vx-member-table__text,
+.vx-member-table__muted,
+.vx-role-row__identity strong,
+.vx-role-row__identity p,
+.vx-role-row__text,
+.vx-role-row__muted {
+  overflow: hidden;
+  min-width: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-member-table__person-line strong,
+.vx-role-row__identity strong {
+  color: var(--vx-console-text);
+  font-size: var(--vx-members-text-size);
+  font-weight: 730;
+}
+
+.vx-role-row__identity strong {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-member-table__person-line span {
+  flex: 0 0 auto;
+  border-radius: var(--vx-radius-full);
+  padding: var(--vx-access-person-badge-padding);
+  color: var(--vx-console-brand-strong);
+  background: var(--vx-console-brand-soft);
+  font-size: var(--vx-members-meta-size);
+  font-weight: 720;
+}
+
+.vx-member-table__person p,
+.vx-role-row__identity p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-members-meta-size);
+  line-height: 1.2;
+}
+
+.vx-role-row__identity p {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-member-table__text,
+.vx-member-table__muted,
+.vx-role-row__text,
+.vx-role-row__muted {
+  font-size: var(--vx-members-text-size);
+}
+
+.vx-role-row__text,
+.vx-role-row__muted {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-member-table__text,
+.vx-role-row__text {
+  color: var(--vx-console-text);
+}
+
+.vx-member-table__muted,
+.vx-role-row__muted {
+  color: var(--vx-console-muted);
+}
