@@ -1,0 +1,86 @@
+/**
+ * platform-models-shell-toolbar.css - 平台模型页工具栏样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+.vx-models-toolbar {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: var(--vx-models-toolbar-justify, space-between);
+  gap: var(--vx-models-toolbar-gap);
+  padding: var(--vx-models-toolbar-padding);
+}
+
+.vx-models-toolbar__spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.vx-models-toolbar__search {
+  width: var(--vx-models-toolbar-search-width);
+  flex: var(--vx-models-toolbar-search-flex, initial);
+  max-width: var(--vx-models-toolbar-search-max-width, none);
+  min-width: var(--vx-models-toolbar-search-min-width);
+  height: var(--vx-models-toolbar-search-height);
+  min-height: var(--vx-models-toolbar-search-height);
+  padding: var(--vx-models-toolbar-search-padding);
+  border: var(--vx-models-toolbar-search-border);
+  border-radius: var(--vx-models-toolbar-search-radius, var(--vx-radius-full));
+  background: var(--vx-models-toolbar-search-background, var(--vx-color-shell-panel));
+  color: var(--vx-models-toolbar-search-color, var(--vx-console-text));
+  font-size: var(--vx-models-toolbar-search-font-size, var(--vx-models-text-size));
+  font-weight: var(--vx-models-toolbar-search-font-weight, inherit);
+}
+
+.dark .vx-models-toolbar__search {
+  border-color: var(--vx-models-toolbar-search-border-color-dark, var(--vx-color-border));
+  background: var(
+    --vx-models-toolbar-search-background-dark,
+    color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent)
+  );
+}
+
+.vx-models-toolbar__search::placeholder {
+  color: var(--vx-models-toolbar-search-placeholder-color, var(--vx-color-gray-400));
+  font-weight: var(--vx-models-toolbar-search-placeholder-font-weight, 400);
+}
+
+.vx-models-toolbar__filters {
+  display: flex;
+  flex-wrap: var(--vx-models-toolbar-filters-wrap, nowrap);
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vx-models-toolbar-filters-gap);
+  min-width: 0;
+}
+
+.vx-models-toolbar__count {
+  display: inline-flex;
+  align-items: center;
+  height: var(--vx-models-toolbar-count-height);
+  min-height: var(--vx-models-toolbar-count-min-height);
+  white-space: nowrap;
+  border: var(--vx-models-toolbar-count-border, var(--vx-models-summary-item-border-width) solid var(--vx-color-border));
+  border-radius: var(--vx-models-toolbar-count-radius, var(--vx-radius-full));
+  padding: var(--vx-models-toolbar-count-padding);
+  color: var(--vx-models-toolbar-count-color, var(--vx-console-muted));
+  background: var(
+    --vx-models-toolbar-count-background,
+    color-mix(in srgb, var(--vx-color-shell-surface-muted) 88%, transparent)
+  );
+  font-size: var(--vx-models-toolbar-count-font-size, var(--vx-models-meta-size));
+  font-weight: var(--vx-models-toolbar-count-font-weight, 680);
+}
+
+.dark .vx-models-toolbar__count {
+  border-color: var(--vx-models-toolbar-count-border-color-dark, color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent));
+  background: var(
+    --vx-models-toolbar-count-background-dark,
+    color-mix(in srgb, var(--vx-color-gray-900) 58%, transparent)
+  );
+}
