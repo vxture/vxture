@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 
-import { prisma, type AiGatewayPrismaClient } from '../prisma';
+import { prisma, type AiGatewayPrismaClient } from "../prisma";
 import type {
   AiModelGrantRecord,
   AiModelRecord,
@@ -13,9 +13,9 @@ import type {
   UpdateAiModelGrantInput,
   UpdateAiModelInput,
   UsageLogInput,
-} from '../types/gateway.types';
+} from "../types/gateway.types";
 
-const COMMERCE_SENTINEL_UUID = '00000000-0000-0000-0000-000000000000';
+const COMMERCE_SENTINEL_UUID = "00000000-0000-0000-0000-000000000000";
 
 type UsagePersistenceInput = UsageLogInput & {
   normalizedAgentId: string;
@@ -43,18 +43,20 @@ export class ModelRegistryRepository {
         deletedAt: null,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
   }
 
   listModels(includeInactive = false): Promise<AiModelRecord[]> {
     return prisma.modelDefinition.findMany({
-      where: includeInactive ? { deletedAt: null } : { isActive: true, deletedAt: null },
+      where: includeInactive
+        ? { deletedAt: null }
+        : { isActive: true, deletedAt: null },
       orderBy: [
-        { isActive: 'desc' },
-        { provider: 'asc' },
-        { createdAt: 'desc' },
+        { isActive: "desc" },
+        { provider: "asc" },
+        { createdAt: "desc" },
       ],
     });
   }
@@ -74,12 +76,25 @@ export class ModelRegistryRepository {
     });
   }
 
-  updateModel(modelId: string, input: UpdateAiModelInput): Promise<AiModelRecord> {
+  updateModel(
+    modelId: string,
+    input: UpdateAiModelInput,
+  ): Promise<AiModelRecord> {
     return prisma.modelDefinition.update({
       where: {
         id: modelId,
       },
       data: input,
+    });
+  }
+
+  deleteGrant(grantId: string): Promise<AiModelGrantRecord> {
+    return prisma.modelGrant.update({
+      where: { id: grantId },
+      data: {
+        isActive: false,
+        deletedAt: new Date(),
+      },
     });
   }
 
@@ -121,43 +136,39 @@ export class ModelRegistryRepository {
         tenantId,
         deletedAt: null,
         isActive: true,
-        OR: [
-          { agentId: agentId ?? null },
-          { agentId: null },
-        ],
+        OR: [{ agentId: agentId ?? null }, { agentId: null }],
         AND: [
           {
-            OR: [
-              { expiresAt: null },
-              { expiresAt: { gt: new Date() } },
-            ],
+            OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
           },
         ],
       },
       orderBy: [
-        { agentId: 'desc' },
-        { priority: 'asc' },
-        { createdAt: 'desc' },
+        { agentId: "desc" },
+        { priority: "asc" },
+        { createdAt: "desc" },
       ],
       take: 2,
     });
 
-    return grants.find((grant) => grant.agentId === (agentId ?? null))
-      ?? grants.find((grant) => grant.agentId === null)
-      ?? null;
+    return (
+      grants.find((grant) => grant.agentId === (agentId ?? null)) ??
+      grants.find((grant) => grant.agentId === null) ??
+      null
+    );
   }
 
-  listGrants(filters: { tenantId?: string; modelId?: string }): Promise<AiModelGrantRecord[]> {
+  listGrants(filters: {
+    tenantId?: string;
+    modelId?: string;
+  }): Promise<AiModelGrantRecord[]> {
     return prisma.modelGrant.findMany({
       where: {
         ...(filters.tenantId ? { tenantId: filters.tenantId } : {}),
         ...(filters.modelId ? { modelId: filters.modelId } : {}),
         deletedAt: null,
       },
-      orderBy: [
-        { isActive: 'desc' },
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ isActive: "desc" }, { createdAt: "desc" }],
     });
   }
 
@@ -184,7 +195,10 @@ export class ModelRegistryRepository {
     });
   }
 
-  updateGrant(grantId: string, input: UpdateAiModelGrantInput): Promise<AiModelGrantRecord> {
+  updateGrant(
+    grantId: string,
+    input: UpdateAiModelGrantInput,
+  ): Promise<AiModelGrantRecord> {
     return prisma.modelGrant.update({
       where: {
         id: grantId,
@@ -193,20 +207,17 @@ export class ModelRegistryRepository {
     });
   }
 
-  findCurrentSubscriptionQuota(tenantId: string, at: Date): Promise<TenantSubscriptionQuotaRecord | null> {
+  findCurrentSubscriptionQuota(
+    tenantId: string,
+    at: Date,
+  ): Promise<TenantSubscriptionQuotaRecord | null> {
     return prisma.tenantSubscriptionQuota.findFirst({
       where: {
         tenantId,
         effectiveAt: { lte: at },
-        OR: [
-          { expiresAt: null },
-          { expiresAt: { gt: at } },
-        ],
+        OR: [{ expiresAt: null }, { expiresAt: { gt: at } }],
       },
-      orderBy: [
-        { effectiveAt: 'desc' },
-        { createdAt: 'desc' },
-      ],
+      orderBy: [{ effectiveAt: "desc" }, { createdAt: "desc" }],
     });
   }
 
@@ -222,7 +233,9 @@ export class ModelRegistryRepository {
     });
   }
 
-  async recordUsage(input: UsagePersistenceInput): Promise<TenantUsageEventRecord | null> {
+  async recordUsage(
+    input: UsagePersistenceInput,
+  ): Promise<TenantUsageEventRecord | null> {
     try {
       return await prisma.$transaction(async (tx) => {
         const event = await tx.tenantUsageEvent.create({
@@ -236,7 +249,7 @@ export class ModelRegistryRepository {
             outputQuota: BigInt(input.usage.completionTokens),
             requestId: input.requestId,
             businessId: input.businessId ?? null,
-            usageType: input.usageType ?? 'normal',
+            usageType: input.usageType ?? "normal",
             cycleDate: input.cycleDate,
             cycleMonth: input.cycleMonth,
             modelCode: input.modelCode,
@@ -250,7 +263,7 @@ export class ModelRegistryRepository {
             agentId: input.normalizedAgentId,
             featureId: input.normalizedFeatureId,
             cycleMonth: input.cycleMonth,
-            statType: 'detail',
+            statType: "detail",
             usage: input.usage,
           }),
           this.upsertUsageSummaryWithClient(tx, {
@@ -258,41 +271,12 @@ export class ModelRegistryRepository {
             agentId: COMMERCE_SENTINEL_UUID,
             featureId: COMMERCE_SENTINEL_UUID,
             cycleMonth: input.cycleMonth,
-            statType: 'summary',
+            statType: "summary",
             usage: input.usage,
           }),
         ]);
 
         return event;
-      });
-    } catch (error) {
-      if (isUniqueConstraintError(error) && input.requestId) {
-        return null;
-      }
-
-      throw error;
-    }
-  }
-
-  async createUsageEvent(input: UsagePersistenceInput): Promise<TenantUsageEventRecord | null> {
-    try {
-      return await prisma.tenantUsageEvent.create({
-        data: {
-          tenantId: input.tenantId,
-          agentId: input.normalizedAgentId,
-          featureId: input.normalizedFeatureId,
-          userId: input.userId ?? null,
-          usedQuota: BigInt(input.usage.totalTokens),
-          inputQuota: BigInt(input.usage.promptTokens),
-          outputQuota: BigInt(input.usage.completionTokens),
-          requestId: input.requestId,
-          businessId: input.businessId ?? null,
-          usageType: input.usageType ?? 'normal',
-          cycleDate: input.cycleDate,
-          cycleMonth: input.cycleMonth,
-          modelCode: input.modelCode,
-          latencyMs: input.latencyMs,
-        },
       });
     } catch (error) {
       if (isUniqueConstraintError(error) && input.requestId) {
@@ -319,7 +303,7 @@ export class ModelRegistryRepository {
   }
 
   private upsertUsageSummaryWithClient(
-    client: Pick<AiGatewayPrismaClient, 'tenantUsageSummary'>,
+    client: Pick<AiGatewayPrismaClient, "tenantUsageSummary">,
     input: {
       tenantId: string;
       agentId: string;
@@ -365,6 +349,11 @@ export class ModelRegistryRepository {
   }
 }
 
-function isUniqueConstraintError(error: unknown): error is Prisma.PrismaClientKnownRequestError {
-  return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
+function isUniqueConstraintError(
+  error: unknown,
+): error is Prisma.PrismaClientKnownRequestError {
+  return (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    error.code === "P2002"
+  );
 }

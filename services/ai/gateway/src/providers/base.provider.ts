@@ -3,7 +3,7 @@ import type {
   ProviderChatRequest,
   ProviderChatResponse,
   StreamEvent,
-} from '../types/gateway.types';
+} from "../types/gateway.types";
 
 export class ProviderHttpError extends Error {
   constructor(
@@ -13,7 +13,7 @@ export class ProviderHttpError extends Error {
     readonly responseBody?: string,
   ) {
     super(message);
-    this.name = 'ProviderHttpError';
+    this.name = "ProviderHttpError";
   }
 }
 
@@ -23,8 +23,10 @@ export abstract class BaseProvider implements IModelProvider {
   abstract chat(request: ProviderChatRequest): Promise<ProviderChatResponse>;
 
   // 默认抛错；具体 provider 根据是否支持流式自行覆盖。
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, require-yield
-  async *chatStream(_request: ProviderChatRequest): AsyncGenerator<StreamEvent> {
+
+  async *chatStream(
+    _request: ProviderChatRequest,
+  ): AsyncGenerator<StreamEvent> {
     throw new Error(`${this.providerName} stream chat is not enabled yet`);
   }
 
@@ -34,9 +36,9 @@ export abstract class BaseProvider implements IModelProvider {
     body: Record<string, unknown>,
   ): Promise<TResponse> {
     const response = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'content-type': 'application/json',
+        "content-type": "application/json",
         ...headers,
       },
       body: JSON.stringify(body),
@@ -58,14 +60,14 @@ export abstract class BaseProvider implements IModelProvider {
 }
 
 export function joinEndpoint(baseUrl: string, suffix: string): string {
-  const normalizedBase = baseUrl.replace(/\/+$/, '');
-  const normalizedSuffix = suffix.replace(/^\/+/, '');
+  const normalizedBase = baseUrl.replace(/\/+$/, "");
+  const normalizedSuffix = suffix.replace(/^\/+/, "");
   return `${normalizedBase}/${normalizedSuffix}`;
 }
 
 export function parseJson<TResponse>(text: string): TResponse {
   if (!text.trim()) {
-    throw new Error('Provider returned an empty response');
+    throw new Error("Provider returned an empty response");
   }
 
   return JSON.parse(text) as TResponse;

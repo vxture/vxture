@@ -1,9 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
-import { ClaudeProvider } from '../providers/claude.provider';
-import { DoubaoProvider } from '../providers/doubao.provider';
-import { PrivateModelProvider } from '../providers/private.provider';
-import type { IModelProvider } from '../types/gateway.types';
+import { ClaudeProvider } from "../providers/claude.provider";
+import { DoubaoProvider } from "../providers/doubao.provider";
+import { PrivateModelProvider } from "../providers/private.provider";
+import type { IModelProvider } from "../types/gateway.types";
 
 @Injectable()
 export class ModelRouterService {
@@ -19,11 +19,12 @@ export class ModelRouterService {
   ) {
     this.providers = new Map<string, IModelProvider>([
       [doubaoProvider.providerName, doubaoProvider],
+      ["openai", doubaoProvider],
       [claudeProvider.providerName, claudeProvider],
-      ['anthropic', claudeProvider],
+      ["anthropic", claudeProvider],
       [privateProvider.providerName, privateProvider],
-      ['custom', privateProvider],
-      ['self-hosted', privateProvider],
+      ["custom", privateProvider],
+      ["self-hosted", privateProvider],
     ]);
   }
 
@@ -31,7 +32,9 @@ export class ModelRouterService {
     const provider = this.providers.get(providerName);
 
     if (!provider) {
-      throw new NotFoundException(`AI provider "${providerName}" is not supported`);
+      throw new NotFoundException(
+        `AI provider "${providerName}" is not supported`,
+      );
     }
 
     return provider;

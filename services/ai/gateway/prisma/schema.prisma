@@ -16,7 +16,7 @@ datasource db {
 
 model TenantSubscriptionQuota {
   id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  tenantId           String    @unique @map("tenant_id") @db.Uuid
+  tenantId           String    @map("tenant_id") @db.Uuid
   subscriptionId     String?   @map("subscription_id") @db.Uuid
   maxUsers           Int       @default(10) @map("max_users")
   maxApiKeys         Int       @default(5) @map("max_api_keys")
