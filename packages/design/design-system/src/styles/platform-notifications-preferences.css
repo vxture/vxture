@@ -1,0 +1,83 @@
+/**
+ * platform-notifications-preferences.css - 通知设置页偏好摘要样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+.vx-notification-preferences {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-notification-preferences-gap);
+  padding: var(--vx-notification-preferences-padding);
+  border-bottom: var(--vx-notification-preferences-border);
+}
+
+.vx-notification-preferences__status {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-notification-preferences-status-gap);
+}
+
+.vx-notification-preferences__status > svg {
+  width: var(--vx-notification-preferences-icon-size);
+  height: var(--vx-notification-preferences-icon-size);
+  padding: var(--vx-notification-preferences-icon-padding);
+  border: var(--vx-notification-preferences-icon-border);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-notification-preferences__status span {
+  display: block;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-notification-meta-size);
+}
+
+.vx-notification-preferences__status strong {
+  display: block;
+  margin-top: var(--vx-notification-preferences-strong-margin-top);
+  color: var(--vx-console-text);
+  font-size: var(--vx-notification-preferences-strong-size);
+  font-weight: 760;
+}
+
+.vx-notification-preferences__stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--vx-notification-preferences-stats-gap);
+}
+
+.vx-notification-preferences__stats div {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-notification-preferences-stat-gap);
+  min-height: var(--vx-notification-preferences-stat-min-height);
+  padding: var(--vx-notification-preferences-stat-padding);
+  border: var(--vx-notification-preferences-stat-border);
+  border-radius: var(--vx-radius-full);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 76%, transparent);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-notification-meta-size);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dark .vx-notification-preferences__stats div {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 50%, transparent);
+}
+
+.vx-notification-preferences__stats svg {
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-notification-preferences__stats strong {
+  color: var(--vx-console-text);
+  font-weight: 760;
+}
