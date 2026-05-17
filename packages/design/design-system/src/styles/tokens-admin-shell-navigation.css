@@ -1,0 +1,24 @@
+/**
+ * tokens-admin-shell-navigation.css - Admin Shell 导航与助手入口 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-admin-shell-assistant-gap: var(--vx-component-metric-1r);
+  --vx-admin-shell-assistant-copy-gap: var(--vx-component-metric-035r);
+  --vx-admin-shell-assistant-tag-gap: var(--vx-component-metric-02r);
+  --vx-admin-shell-nav-gap: var(--vx-component-metric-1r);
+  --vx-admin-shell-nav-section-gap: var(--vx-component-metric-05r);
+  --vx-admin-shell-nav-section-action-track: var(--vx-component-metric-15r);
+  --vx-admin-shell-nav-section-trigger-gap: var(--vx-component-metric-05r);
+  --vx-admin-shell-nav-label-gap: var(--vx-component-metric-0375r);
+  --vx-admin-shell-nav-item-gap: var(--vx-component-metric-1r);
+  --vx-admin-shell-nav-item-height: var(--vx-component-metric-25r);
+  --vx-admin-shell-footer-height: var(--vx-component-metric-25r);
+  --vx-admin-shell-footer-divider-height: var(--vx-component-metric-1p);
+  --vx-admin-shell-collapsed-nav-gap: var(--vx-component-metric-025r);
+}
