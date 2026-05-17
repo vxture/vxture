@@ -1,0 +1,19 @@
+/**
+ * tokens-component-metrics-em.css - 组件 em/tracking 兜底尺度 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  /* 组件兜底尺度：历史 tracking 精确尺度集中在此。 */
+  --vx-component-metric-001e: 0.01em;
+  --vx-component-metric-002e: 0.02em;
+  --vx-component-metric-004e: 0.04em;
+  --vx-component-metric-005e: 0.05em;
+  --vx-component-metric-008e: 0.08em;
+  --vx-component-metric-01e: 0.1em;
+  --vx-component-metric-018e: 0.18em;
+}

@@ -1,0 +1,59 @@
+/**
+ * tokens-component-metrics-px.css - 组件 px 兜底尺度 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  /* 组件兜底尺度：历史语义类的 px 精确尺度集中在此。 */
+  --vx-component-metric-05p: 0.5px;
+  --vx-component-metric-1p: 1px;
+  --vx-component-metric-15p: 1.5px;
+  --vx-component-metric-2p: 2px;
+  --vx-component-metric-3p: 3px;
+  --vx-component-metric-4p: 4px;
+  --vx-component-metric-5p: 5px;
+  --vx-component-metric-6p: 6px;
+  --vx-component-metric-8p: 8px;
+  --vx-component-metric-10p: 10px;
+  --vx-component-metric-12p: 12px;
+  --vx-component-metric-14p: 14px;
+  --vx-component-metric-16p: 16px;
+  --vx-component-metric-18p: 18px;
+  --vx-component-metric-20p: 20px;
+  --vx-component-metric-21p: 21px;
+  --vx-component-metric-22p: 22px;
+  --vx-component-metric-24p: 24px;
+  --vx-component-metric-28p: 28px;
+  --vx-component-metric-32p: 32px;
+  --vx-component-metric-36p: 36px;
+  --vx-component-metric-40p: 40px;
+  --vx-component-metric-42p: 42px;
+  --vx-component-metric-44p: 44px;
+  --vx-component-metric-45p: 45px;
+  --vx-component-metric-48p: 48px;
+  --vx-component-metric-56p: 56px;
+  --vx-component-metric-64p: 64px;
+  --vx-component-metric-68p: 68px;
+  --vx-component-metric-70p: 70px;
+  --vx-component-metric-72p: 72px;
+  --vx-component-metric-80p: 80px;
+  --vx-component-metric-88p: 88px;
+  --vx-component-metric-96p: 96px;
+  --vx-component-metric-120p: 120px;
+  --vx-component-metric-180p: 180px;
+  --vx-component-metric-220p: 220px;
+  --vx-component-metric-360p: 360px;
+  --vx-component-metric-380p: 380px;
+  --vx-component-metric-540p: 540px;
+  --vx-component-metric-560p: 560px;
+  --vx-component-metric-720p: 720px;
+  --vx-component-metric-780p: 780px;
+  --vx-component-metric-920p: 920px;
+  --vx-component-metric-1180p: 1180px;
+  --vx-component-metric-1280p: 1280px;
+  --vx-component-metric-1536p: 1536px;
+}
