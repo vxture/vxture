@@ -62,7 +62,6 @@ const DS_EFFECT_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/platform-shell-assistant.css"),
   normalize("packages/design/design-system/src/styles/platform-shell-bindings.css"),
   normalize("packages/design/design-system/src/styles/platform-shell-header-buttons.css"),
-  normalize("packages/design/design-system/src/styles/platform-shell-header-user.css"),
   normalize("packages/design/design-system/src/styles/platform-access-list.css"),
   normalize("packages/design/design-system/src/styles/platform-access-shared-panels.css"),
   normalize("packages/design/design-system/src/styles/platform-models-actions.css"),

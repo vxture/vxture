@@ -1,5 +1,5 @@
 /**
- * platform-shell-assistant.css - 平台 shell 侧边助手面板和内部滚动区域。
+ * platform-shell-assistant.css - 平台 shell 侧边助手面板、内部滚动区域和窄屏覆盖。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
@@ -182,4 +182,14 @@
   grid-template-rows: var(--vx-assistant-panel-composer-rows, auto minmax(0, 1fr) auto);
   gap: var(--vx-assistant-panel-composer-gap);
   padding: var(--vx-assistant-panel-composer-padding);
+}
+
+@media (max-width: 1180px) {
+  :where(.admin-shell) {
+    --vx-admin-content-margin-x: 0;
+    --vx-admin-content-padding-x: var(--vx-shell-responsive-content-padding-x);
+    --vx-admin-content-padding-top: var(--vx-shell-responsive-content-padding-top);
+    --vx-admin-content-padding-bottom: var(--vx-shell-responsive-content-padding-bottom);
+    --vx-admin-content-max-width: none;
+  }
 }
