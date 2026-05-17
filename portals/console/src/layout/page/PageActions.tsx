@@ -1,5 +1,2 @@
-import type { ReactNode } from 'react';
-
-export function PageActions({ children }: { children: ReactNode }) {
-  return <div className="vx-detail-actions">{children}</div>;
-}
+export { PageActions } from '@vxture/design-system';
+export type { PageActionsProps } from '@vxture/design-system';
