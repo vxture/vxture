@@ -23,8 +23,8 @@ export const typography = {
   /**
    * 字体大小
    *
-   * 实际渲染值通过 CSS 变量 --vx-font-size-* 控制，
-   * 支持 density 动态缩放 (compact/default/comfortable)
+   * 实际渲染值通过 CSS 变量 --vx-font-size-* 控制。
+   * Density 只调整界面松紧和行距；字号缩放由独立可读性维度处理。
    */
   fontSize: {
     xs: "var(--vx-font-size-xs)",
