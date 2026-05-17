@@ -40,6 +40,22 @@ const DS_TOKEN_PATHS = [
   normalize("packages/design/design-system/src/styles/tokens.css"),
 ];
 const DS_RUNTIME_TOKEN_STYLE_PATTERN = /^packages\/design\/design-system\/src\/styles\/tokens(?:-[\w-]+)?\.css$/;
+const LEGACY_SCALE_TOKEN_STYLE_PATHS = new Set(
+  [
+    "tokens-auth-controls-scale.css",
+    "tokens-auth-experience-scale.css",
+    "tokens-component-scale.css",
+    "tokens-console-scale.css",
+    "tokens-platform-access-scale.css",
+    "tokens-platform-account-scale.css",
+    "tokens-platform-common-scale.css",
+    "tokens-platform-layout-scale.css",
+    "tokens-platform-models-scale.css",
+    "tokens-platform-notifications-scale.css",
+    "tokens-platform-shell-scale.css",
+    "tokens-platform-tenant-settings-scale.css",
+  ].map((name) => normalize(`${DS_ROOT}/src/styles/${name}`)),
+);
 const DS_SEMANTIC_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/components.css"),
   normalize("packages/design/design-system/src/styles/platform.css"),
@@ -896,6 +912,14 @@ for (const item of collectMissingCssImportViolations(files)) {
   violations.push({ rule: missingCssImportRule, ...item });
 }
 
+const legacyScaleTokenStyleRule = {
+  id: "ds/no-legacy-scale-token-style",
+  description: "已收敛的叶子 scale token 文件不能恢复或重新导入。",
+};
+for (const item of collectLegacyScaleTokenStyleViolations(files)) {
+  violations.push({ rule: legacyScaleTokenStyleRule, ...item });
+}
+
 const unreachableAppStyleRule = {
   id: "ds/no-unreachable-app-style-module",
   description: "应用 src/styles 下的样式模块必须能从对应 app/globals.css 的 @import 图谱到达。",
@@ -1203,6 +1227,40 @@ function collectMissingCssImportViolations(sourceFiles) {
           file,
           item.line,
           `${item.specifier} 指向的 CSS 文件不存在；请修正 @import 或恢复对应模块。`,
+          item.source,
+        ),
+      );
+    }
+  }
+  return items;
+}
+
+function collectLegacyScaleTokenStyleViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (LEGACY_SCALE_TOKEN_STYLE_PATHS.has(normalized)) {
+      items.push(
+        violation(
+          file,
+          1,
+          "已收敛的叶子 scale token 文件不得恢复；请使用 tokens-auth-scale.css 或 tokens-platform-scale.css 的 core 尺度入口。",
+          normalized,
+        ),
+      );
+    }
+
+    if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) continue;
+    const content = readFileSync(file, "utf8");
+    for (const item of findCssImports(content)) {
+      if (!item.specifier.startsWith(".")) continue;
+      const target = normalize(path.relative(ROOT, path.resolve(path.dirname(file), item.specifier)));
+      if (!LEGACY_SCALE_TOKEN_STYLE_PATHS.has(target)) continue;
+      items.push(
+        violation(
+          file,
+          item.line,
+          `${item.specifier} 指向已淘汰的叶子 scale token 文件；请改用 auth/platform core scale 或更具体的语义 token。`,
           item.source,
         ),
       );
