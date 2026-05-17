@@ -1,0 +1,51 @@
+/**
+ * platform-core-lists-danger.css - Platform 列表和危险区语义。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+.vx-action-list,
+.vx-signal-list,
+.vx-toggle-list {
+  display: grid;
+  gap: var(--vx-platform-list-gap);
+}
+
+.vx-action-item,
+.vx-signal-list__item,
+.vx-toggle-list__item {
+  display: flex;
+  gap: var(--vx-platform-action-item-gap);
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: var(--vx-platform-action-item-padding);
+  border-bottom: var(--vx-platform-action-item-border);
+}
+
+.vx-action-item:last-child,
+.vx-signal-list__item:last-child,
+.vx-toggle-list__item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.vx-settings-card--danger {
+  border-color: color-mix(in srgb, var(--vx-color-error-700) 16%, transparent);
+  background: color-mix(in srgb, var(--vx-color-error-surface) 86%, transparent);
+}
+
+.vx-danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-platform-danger-zone-gap);
+}
+
+.vx-danger-zone p {
+  margin: 0;
+  color: var(--vx-color-error-800);
+  font-size: var(--vx-platform-danger-copy-size);
+}

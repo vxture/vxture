@@ -1,0 +1,79 @@
+/**
+ * platform-core-sections.css - Platform 区块、卡片和内联元信息语义。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+.vx-dashboard-layout {
+  display: grid;
+  grid-template-columns: 1.25fr 0.95fr;
+  gap: var(--vx-shell-section-gap);
+}
+
+.vx-page-section {
+  display: grid;
+  gap: var(--vx-shell-section-gap);
+  padding: var(--vx-platform-page-section-padding);
+  border-radius: var(--vx-shell-panel-radius);
+  background: color-mix(in srgb, var(--vx-color-white) 84%, transparent);
+  box-shadow: var(--vx-console-shadow);
+}
+
+.vx-page-section--muted {
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 96%, transparent);
+}
+
+.vx-page-section__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--vx-platform-page-section-header-gap);
+}
+
+.vx-page-section__title {
+  margin: 0;
+  font-size: var(--vx-admin-section-title-size);
+  letter-spacing: 0;
+}
+
+.vx-page-section__description {
+  margin: var(--vx-platform-page-section-description-margin);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-admin-meta-size);
+}
+
+.vx-page-section__body {
+  min-width: 0;
+}
+
+.vx-card-title {
+  font-size: var(--vx-platform-card-title-size);
+}
+
+.vx-inline-between {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--vx-platform-inline-between-gap);
+  align-items: center;
+}
+
+.vx-inline-meta {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--vx-platform-inline-meta-min-height);
+  padding: var(--vx-platform-inline-meta-padding);
+  border-radius: var(--vx-radius-full);
+  background: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  border: var(--vx-platform-inline-meta-border);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-platform-inline-meta-size);
+  font-weight: 600;
+}
+
+.vx-stack-sm {
+  display: grid;
+  gap: var(--vx-platform-stack-sm-gap);
+}
