@@ -118,6 +118,6 @@
   --vx-switch-thumb-shadow-y: var(--vx-component-metric-1p);
   --vx-switch-thumb-shadow-blur: var(--vx-component-metric-3p);
   --vx-switch-checked-translate: var(--vx-component-metric-12r);
-  --vx-fullscreen-viewport-width: var(--vx-component-fullscreen-scale-100vw);
-  --vx-fullscreen-viewport-height: var(--vx-component-fullscreen-scale-100vh);
+  --vx-fullscreen-viewport-width: var(--vx-scale-100vw);
+  --vx-fullscreen-viewport-height: var(--vx-scale-100vh);
 }

@@ -91,16 +91,16 @@
   --vx-console-pattern-12r-large: var(--vx-component-metric-12r-large);
   --vx-console-motion-10p: var(--vx-component-metric-10p);
   --vx-console-motion-8p: var(--vx-component-metric-8p);
-  --vx-console-viewport-min-height: var(--vx-console-common-scale-100vh);
-  --vx-console-shell-viewport-min-height: var(--vx-console-shell-scale-100vh);
-  --vx-console-shell-body-available-height: calc(var(--vx-console-shell-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-responsive-panel-available-height: calc(var(--vx-console-responsive-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-assistant-available-height: calc(var(--vx-console-assistant-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-shell-header-padding-fluid: var(--vx-console-shell-scale-1-1vw);
-  --vx-console-shell-header-gap-fluid: var(--vx-console-shell-scale-2-4vw);
-  --vx-console-shell-title-max-width-fluid: var(--vx-console-shell-scale-42vw);
-  --vx-console-tenant-trigger-max-width-fluid: var(--vx-console-tenant-switcher-scale-32vw);
-  --vx-console-tenant-trigger-width-available: calc(var(--vx-console-tenant-switcher-scale-100vw) - var(--vx-console-size-15r));
-  --vx-console-tenant-panel-width-available: calc(var(--vx-console-tenant-switcher-scale-100vw) - var(--vx-console-size-2r));
-  --vx-console-tenant-panel-max-height-available: calc(var(--vx-console-tenant-switcher-scale-100vh) - var(--vx-shell-header-height) - var(--vx-console-size-1r));
+  --vx-console-viewport-min-height: var(--vx-scale-100vh);
+  --vx-console-shell-viewport-min-height: var(--vx-scale-100vh);
+  --vx-console-shell-body-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
+  --vx-console-responsive-panel-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
+  --vx-console-assistant-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
+  --vx-console-shell-header-padding-fluid: var(--vx-scale-1-1vw);
+  --vx-console-shell-header-gap-fluid: var(--vx-scale-2-4vw);
+  --vx-console-shell-title-max-width-fluid: var(--vx-scale-42vw);
+  --vx-console-tenant-trigger-max-width-fluid: var(--vx-scale-32vw);
+  --vx-console-tenant-trigger-width-available: calc(var(--vx-scale-100vw) - var(--vx-console-size-15r));
+  --vx-console-tenant-panel-width-available: calc(var(--vx-scale-100vw) - var(--vx-console-size-2r));
+  --vx-console-tenant-panel-max-height-available: calc(var(--vx-scale-100vh) - var(--vx-shell-header-height) - var(--vx-console-size-1r));
 }
