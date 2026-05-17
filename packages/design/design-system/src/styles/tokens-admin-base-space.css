@@ -1,0 +1,52 @@
+/**
+ * tokens-admin-base-space.css - Admin 基础 space 语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-admin-space-00625r: var(--vx-component-metric-00625r);
+  --vx-admin-space-0125r: var(--vx-component-metric-0125r);
+  --vx-admin-space-015r: var(--vx-component-metric-015r);
+  --vx-admin-space-01875r: var(--vx-component-metric-01875r);
+  --vx-admin-space-01r: var(--vx-component-metric-01r);
+  --vx-admin-space-024r: var(--vx-component-metric-024r);
+  --vx-admin-space-025r: var(--vx-component-metric-025r);
+  --vx-admin-space-02r: var(--vx-component-metric-02r);
+  --vx-admin-space-03125r: var(--vx-component-metric-03125r);
+  --vx-admin-space-035r: var(--vx-component-metric-035r);
+  --vx-admin-space-0375r: var(--vx-component-metric-0375r);
+  --vx-admin-space-03r: var(--vx-component-metric-03r);
+  --vx-admin-space-045r: var(--vx-component-metric-045r);
+  --vx-admin-space-04r: var(--vx-component-metric-04r);
+  --vx-admin-space-055r: var(--vx-component-metric-055r);
+  --vx-admin-space-05r: var(--vx-component-metric-05r);
+  --vx-admin-space-0625r: var(--vx-component-metric-0625r);
+  --vx-admin-space-062r: var(--vx-component-metric-062r);
+  --vx-admin-space-065r: var(--vx-component-metric-065r);
+  --vx-admin-space-06r: var(--vx-component-metric-06r);
+  --vx-admin-space-074r: var(--vx-component-metric-074r);
+  --vx-admin-space-075r: var(--vx-component-metric-075r);
+  --vx-admin-space-08125r: var(--vx-component-metric-08125r);
+  --vx-admin-space-085r: var(--vx-component-metric-085r);
+  --vx-admin-space-0875r: var(--vx-component-metric-0875r);
+  --vx-admin-space-095r: var(--vx-component-metric-095r);
+  --vx-admin-space-09r: var(--vx-component-metric-09r);
+  --vx-admin-space-125r: var(--vx-component-metric-125r);
+  --vx-admin-space-135r: var(--vx-component-metric-135r);
+  --vx-admin-space-1375r: var(--vx-component-metric-1375r);
+  --vx-admin-space-15r: var(--vx-component-metric-15r);
+  --vx-admin-space-175r: var(--vx-component-metric-175r);
+  --vx-admin-space-1r: var(--vx-component-metric-1r);
+  --vx-admin-space-21p: var(--vx-component-metric-21p);
+  --vx-admin-space-225r: var(--vx-component-metric-225r);
+  --vx-admin-space-2r: var(--vx-component-metric-2r);
+  --vx-admin-space-35r: var(--vx-component-metric-35r);
+  --vx-admin-space-3r: var(--vx-component-metric-3r);
+  --vx-admin-space-45r: var(--vx-component-metric-45r);
+  --vx-admin-space-4r: var(--vx-component-metric-4r);
+  --vx-admin-space-96p: var(--vx-component-metric-96p);
+}

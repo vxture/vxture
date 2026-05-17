@@ -1,110 +1,12 @@
 /**
- * tokens-admin-base-space-size.css - Admin 基础 space 和 size 语义 token。
+ * tokens-admin-base-space-size.css - Admin layout、space 和 size token 稳定聚合入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-15
+ * @date 2026-05-18
  */
 
-:root {
-  /* Admin 语义尺寸：按 CSS 职责归类的 DS 门户契约。 */
-  --vx-admin-layout-1r: var(--vx-component-metric-1r);
-  --vx-admin-layout-2r: var(--vx-component-metric-2r);
-  --vx-admin-layout-4r: var(--vx-component-metric-4r);
-  --vx-admin-space-00625r: var(--vx-component-metric-00625r);
-  --vx-admin-space-0125r: var(--vx-component-metric-0125r);
-  --vx-admin-space-015r: var(--vx-component-metric-015r);
-  --vx-admin-space-01875r: var(--vx-component-metric-01875r);
-  --vx-admin-space-01r: var(--vx-component-metric-01r);
-  --vx-admin-space-024r: var(--vx-component-metric-024r);
-  --vx-admin-space-025r: var(--vx-component-metric-025r);
-  --vx-admin-space-02r: var(--vx-component-metric-02r);
-  --vx-admin-space-03125r: var(--vx-component-metric-03125r);
-  --vx-admin-space-035r: var(--vx-component-metric-035r);
-  --vx-admin-space-0375r: var(--vx-component-metric-0375r);
-  --vx-admin-space-03r: var(--vx-component-metric-03r);
-  --vx-admin-space-045r: var(--vx-component-metric-045r);
-  --vx-admin-space-04r: var(--vx-component-metric-04r);
-  --vx-admin-space-055r: var(--vx-component-metric-055r);
-  --vx-admin-space-05r: var(--vx-component-metric-05r);
-  --vx-admin-space-0625r: var(--vx-component-metric-0625r);
-  --vx-admin-space-062r: var(--vx-component-metric-062r);
-  --vx-admin-space-065r: var(--vx-component-metric-065r);
-  --vx-admin-space-06r: var(--vx-component-metric-06r);
-  --vx-admin-space-074r: var(--vx-component-metric-074r);
-  --vx-admin-space-075r: var(--vx-component-metric-075r);
-  --vx-admin-space-08125r: var(--vx-component-metric-08125r);
-  --vx-admin-space-085r: var(--vx-component-metric-085r);
-  --vx-admin-space-0875r: var(--vx-component-metric-0875r);
-  --vx-admin-space-095r: var(--vx-component-metric-095r);
-  --vx-admin-space-09r: var(--vx-component-metric-09r);
-  --vx-admin-space-125r: var(--vx-component-metric-125r);
-  --vx-admin-space-135r: var(--vx-component-metric-135r);
-  --vx-admin-space-1375r: var(--vx-component-metric-1375r);
-  --vx-admin-space-15r: var(--vx-component-metric-15r);
-  --vx-admin-space-175r: var(--vx-component-metric-175r);
-  --vx-admin-space-1r: var(--vx-component-metric-1r);
-  --vx-admin-space-21p: var(--vx-component-metric-21p);
-  --vx-admin-space-225r: var(--vx-component-metric-225r);
-  --vx-admin-space-2r: var(--vx-component-metric-2r);
-  --vx-admin-space-35r: var(--vx-component-metric-35r);
-  --vx-admin-space-3r: var(--vx-component-metric-3r);
-  --vx-admin-space-45r: var(--vx-component-metric-45r);
-  --vx-admin-space-4r: var(--vx-component-metric-4r);
-  --vx-admin-space-96p: var(--vx-component-metric-96p);
-  --vx-admin-size-025r: var(--vx-component-metric-025r);
-  --vx-admin-size-048r: var(--vx-component-metric-048r);
-  --vx-admin-size-05r: var(--vx-component-metric-05r);
-  --vx-admin-size-06875r: var(--vx-component-metric-06875r);
-  --vx-admin-size-072r: var(--vx-component-metric-072r);
-  --vx-admin-size-0875r: var(--vx-component-metric-0875r);
-  --vx-admin-size-10r: var(--vx-component-metric-10r);
-  --vx-admin-size-1125r: var(--vx-component-metric-1125r);
-  --vx-admin-size-1180p: var(--vx-component-metric-1180p);
-  --vx-admin-size-11r-large: var(--vx-component-metric-11r-large);
-  --vx-admin-size-12r-large: var(--vx-component-metric-12r-large);
-  --vx-admin-size-135r: var(--vx-component-metric-135r);
-  --vx-admin-size-1375r: var(--vx-component-metric-1375r);
-  --vx-admin-size-13r: var(--vx-component-metric-13r);
-  --vx-admin-size-15r: var(--vx-component-metric-15r);
-  --vx-admin-size-1625r: var(--vx-component-metric-1625r);
-  --vx-admin-size-16r: var(--vx-component-metric-16r);
-  --vx-admin-size-175r: var(--vx-component-metric-175r);
-  --vx-admin-size-17r: var(--vx-component-metric-17r);
-  --vx-admin-size-185r: var(--vx-component-metric-185r);
-  --vx-admin-size-1875r: var(--vx-component-metric-1875r);
-  --vx-admin-size-18r-large: var(--vx-component-metric-18r-large);
-  --vx-admin-size-1p: var(--vx-component-metric-1p);
-  --vx-admin-size-1r: var(--vx-component-metric-1r);
-  --vx-admin-size-20r: var(--vx-component-metric-20r);
-  --vx-admin-size-2125r: var(--vx-component-metric-2125r);
-  --vx-admin-size-225r: var(--vx-component-metric-225r);
-  --vx-admin-size-22r: var(--vx-component-metric-22r);
-  --vx-admin-size-235r: var(--vx-component-metric-235r);
-  --vx-admin-size-24r: var(--vx-component-metric-24r);
-  --vx-admin-size-25r: var(--vx-component-metric-25r);
-  --vx-admin-size-2625r: var(--vx-component-metric-2625r);
-  --vx-admin-size-26r: var(--vx-component-metric-26r);
-  --vx-admin-size-275r: var(--vx-component-metric-275r);
-  --vx-admin-size-2875r: var(--vx-component-metric-2875r);
-  --vx-admin-size-28r-large: var(--vx-component-metric-28r-large);
-  --vx-admin-size-2p: var(--vx-component-metric-2p);
-  --vx-admin-size-2r: var(--vx-component-metric-2r);
-  --vx-admin-size-325r: var(--vx-component-metric-325r);
-  --vx-admin-size-35r: var(--vx-component-metric-35r);
-  --vx-admin-size-3r: var(--vx-component-metric-3r);
-  --vx-admin-size-40p: var(--vx-component-metric-40p);
-  --vx-admin-size-42p: var(--vx-component-metric-42p);
-  --vx-admin-size-45r: var(--vx-component-metric-45r);
-  --vx-admin-size-46r: var(--vx-component-metric-46r);
-  --vx-admin-size-475r: var(--vx-component-metric-475r);
-  --vx-admin-size-48r-large: var(--vx-component-metric-48r-large);
-  --vx-admin-size-4r: var(--vx-component-metric-4r);
-  --vx-admin-size-540p: var(--vx-component-metric-540p);
-  --vx-admin-size-55r: var(--vx-component-metric-55r);
-  --vx-admin-size-56r: var(--vx-component-metric-56r);
-  --vx-admin-size-5r: var(--vx-component-metric-5r);
-  --vx-admin-size-62r: var(--vx-component-metric-62r);
-  --vx-admin-size-65r: var(--vx-component-metric-65r);
-}
+@import "./tokens-admin-base-layout.css";
+@import "./tokens-admin-base-space.css";
+@import "./tokens-admin-base-size.css";
