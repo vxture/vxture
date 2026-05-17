@@ -21,7 +21,8 @@ import { PageHeader } from '@/modules/shared/PageHeader';
 
 type MemberStatusFilter = 'all' | 'active' | 'invited' | 'suspended';
 
-const DEFAULT_MEMBER_AVATAR = '/assets/icon/avatar-default.png';
+const DEFAULT_MEMBER_AVATAR_ONLINE_SRC = '/assets/icon/avatar-default-online.png';
+const DEFAULT_MEMBER_AVATAR_OFFLINE_SRC = '/assets/icon/avatar-default-offline.png';
 const MEMBERS_PAGE_SIZE = 10;
 
 const statusClassMap: Record<MemberRecord['status'], string> = {
@@ -35,7 +36,7 @@ function memberUsername(member: MemberRecord) {
 }
 
 function memberAvatar(member: MemberRecord) {
-  return member.avatarUrl?.trim() || DEFAULT_MEMBER_AVATAR;
+  return member.avatarUrl?.trim() || (member.status === 'Active' ? DEFAULT_MEMBER_AVATAR_ONLINE_SRC : DEFAULT_MEMBER_AVATAR_OFFLINE_SRC);
 }
 
 function memberSearchText(member: MemberRecord) {

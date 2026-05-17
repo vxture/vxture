@@ -20,6 +20,8 @@ import {
 } from '@vxture/platform-browser';
 import type { Locale, Theme } from '@vxture/shared';
 
+const DEFAULT_USER_AVATAR_ONLINE_SRC = '/assets/icon/avatar-default-online.png';
+
 function isDensity(value: unknown): value is Density {
   return value === 'compact' || value === 'default' || value === 'comfortable';
 }
@@ -96,10 +98,13 @@ export function UserPanel() {
         displayName,
         uniqueLine,
         meta: tenantLabel,
+        avatarSrc: DEFAULT_USER_AVATAR_ONLINE_SRC,
+        avatarAlt: displayName,
         avatarFallback: displayName.slice(0, 2).toUpperCase(),
         badges: user.roleLabel ? [{ key: 'role', label: user.roleLabel }] : undefined,
       }}
       openLabel={displayName}
+      online
       portalReturn={portalEntry ? {
         label: t('returnTo', { caller: portalEntry.caller }),
         dismissLabel: t('dismissReturn'),
