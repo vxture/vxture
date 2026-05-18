@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 import { prisma, type AiGatewayPrismaClient } from "../prisma";
 import type {
@@ -351,9 +351,8 @@ export class ModelRegistryRepository {
 
 function isUniqueConstraintError(
   error: unknown,
-): error is Prisma.PrismaClientKnownRequestError {
+): error is PrismaClientKnownRequestError {
   return (
-    error instanceof Prisma.PrismaClientKnownRequestError &&
-    error.code === "P2002"
+    error instanceof PrismaClientKnownRequestError && error.code === "P2002"
   );
 }
