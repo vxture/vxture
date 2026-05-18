@@ -63,9 +63,7 @@ function makeQuota(
 }
 
 // Bypass private access for Phase 1 testing
-const svc = new QuotaService(
-  {} as Parameters<typeof QuotaService.prototype.constructor>[0],
-);
+const svc = new QuotaService(null as any);
 const isModelAllowed = (
   model: AiModelRecord,
   quota: TenantSubscriptionQuotaRecord,
