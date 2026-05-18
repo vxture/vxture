@@ -1,0 +1,68 @@
+/**
+ * platform-account-profile-field-list.css - 平台账号资料字段列表、图标、标签和值样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-account-profile-field-list {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+.vx-account-profile-field {
+  display: grid;
+  grid-template-columns: var(--vx-account-profile-field-columns);
+  gap: var(--vx-account-profile-field-gap);
+  align-items: center;
+  min-height: var(--vx-account-profile-field-min-height);
+  padding: var(--vx-account-profile-field-padding);
+  border-top: var(--vx-account-profile-field-border);
+}
+
+.dark .vx-account-profile-field {
+  border-top-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-account-profile-field--multiline {
+  align-items: flex-start;
+}
+
+.vx-account-profile-field__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--vx-account-profile-field-icon-size);
+  height: var(--vx-account-profile-field-icon-size);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+}
+
+.vx-account-profile-field__label {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+  font-weight: 650;
+}
+
+.vx-account-profile-field__value {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--vx-console-text);
+  font-size: var(--vx-account-profile-text-size);
+  font-weight: 660;
+  overflow-wrap: anywhere;
+  text-overflow: ellipsis;
+}
+
+.vx-account-profile-field:not(.vx-account-profile-field--multiline) .vx-account-profile-field__value {
+  white-space: nowrap;
+}
+
+.vx-account-profile-field__value--empty {
+  color: var(--vx-console-muted);
+  font-weight: 560;
+}

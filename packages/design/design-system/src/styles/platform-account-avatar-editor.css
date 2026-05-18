@@ -1,0 +1,55 @@
+/**
+ * platform-account-avatar-editor.css - 平台账号头像编辑器和预览样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-account-avatar-editor {
+  display: grid;
+  justify-items: center;
+  gap: var(--vx-account-avatar-editor-gap);
+  min-width: 0;
+  padding: var(--vx-account-avatar-editor-padding);
+  border: var(--vx-account-avatar-editor-border);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 82%, transparent);
+  text-align: center;
+}
+
+.dark .vx-account-avatar-editor {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 54%, transparent);
+}
+
+.vx-account-avatar-editor__preview {
+  width: var(--vx-account-avatar-editor-preview-size);
+  height: var(--vx-account-avatar-editor-preview-size);
+  border-radius: var(--vx-radius-full);
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--vx-platform-account-media-shadow);
+}
+
+.vx-account-avatar-editor strong,
+.vx-account-avatar-editor span {
+  display: block;
+  overflow: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-account-avatar-editor strong {
+  color: var(--vx-console-text);
+  font-size: var(--vx-account-profile-text-size);
+  font-weight: 740;
+}
+
+.vx-account-avatar-editor span {
+  margin-top: var(--vx-account-avatar-editor-copy-margin-top);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+}
