@@ -1,0 +1,18 @@
+/**
+ * tokens-admin-operations-controls.css - Admin Operations 控件语义尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-admin-operations-control-height: var(--vx-component-metric-25r);
+  --vx-admin-operations-control-padding-x: var(--vx-component-metric-075r);
+  --vx-admin-operations-control-border-width: var(--vx-component-metric-1p);
+  --vx-admin-operations-view-toggle-button-size: var(--vx-component-metric-225r);
+  --vx-admin-operations-action-button-gap: var(--vx-component-metric-04r);
+  --vx-admin-operations-action-button-height: var(--vx-component-metric-225r);
+  --vx-admin-operations-action-button-padding-x: var(--vx-component-metric-1r);
+}

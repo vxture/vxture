@@ -1,0 +1,22 @@
+/**
+ * tokens-admin-operations-skills.css - Admin Operations 技能列表语义尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-admin-operations-skill-grid: var(--vx-component-metric-3r) 1fr var(--vx-admin-grid-column-xs) var(--vx-component-metric-5r) var(--vx-admin-grid-column-md) var(--vx-admin-grid-column-xs) var(--vx-component-metric-9r) var(--vx-component-metric-10r) var(--vx-component-metric-4r);
+  --vx-admin-operations-skill-grid-compact: var(--vx-component-metric-3r) 1fr var(--vx-admin-grid-column-xs) var(--vx-component-metric-5r) 0 var(--vx-admin-grid-column-xs) var(--vx-component-metric-9r) var(--vx-component-metric-10r) var(--vx-component-metric-4r);
+  --vx-admin-operations-skill-row-info-gap: var(--vx-component-metric-01r);
+  --vx-admin-operations-skill-row-status-gap: var(--vx-component-metric-035r);
+  --vx-admin-operations-skill-card-grid-min-width: var(--vx-admin-card-grid-min-width-md);
+  --vx-admin-operations-skill-card-grid-gap: var(--vx-component-metric-1r);
+  --vx-admin-operations-skill-card-gap: var(--vx-component-metric-05r);
+  --vx-admin-operations-skill-card-padding: var(--vx-component-metric-125r);
+  --vx-admin-operations-skill-card-border-width: var(--vx-component-metric-1p);
+  --vx-admin-operations-skill-card-badges-gap: var(--vx-component-metric-035r);
+  --vx-admin-operations-skill-card-meta-gap: var(--vx-component-metric-1r);
+}

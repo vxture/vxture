@@ -28,7 +28,11 @@
 @import "./tokens-admin-shell.css";
 @import "./tokens-admin-assistant-workspace.css";
 @import "./tokens-admin-directory-governance.css";
-@import "./tokens-admin-operations.css";
+@import "./tokens-admin-operations-controls.css";
+@import "./tokens-admin-operations-audit.css";
+@import "./tokens-admin-operations-announcements.css";
+@import "./tokens-admin-operations-skills.css";
+@import "./tokens-admin-operations-dialog.css";
 @import "./tokens-admin-service-health.css";
 @import "./tokens-admin-platform-autonomy.css";
 @import "./tokens-admin-feature-aliases.css";
