@@ -5,6 +5,8 @@
  * @category styles
  */
 
-@import "./platform-shell-bindings.css";
+@import "./platform-shell-core-bindings.css";
+@import "./platform-shell-assistant-bindings.css";
+@import "./platform-shell-dark-bindings.css";
 @import "./platform-shell-header.css";
 @import "./platform-shell-assistant.css";
