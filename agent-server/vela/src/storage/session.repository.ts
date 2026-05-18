@@ -11,16 +11,16 @@
  * @date 2026-04-30
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
-import { PrismaService } from '../prisma/prisma.service';
+import { Inject, Injectable } from "@nestjs/common";
+import { randomUUID } from "node:crypto";
+import { PrismaService } from "../prisma/prisma.service";
 
 export interface VelaSessionRecord {
-  id:        string;
-  userId:    string;
-  tenantId:  string | null;
-  surface:   string;
-  title:     string | null;
+  id: string;
+  userId: string;
+  tenantId: string | null;
+  surface: string;
+  title: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,18 +30,18 @@ export class SessionRepository {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
   async findSession(id: string): Promise<VelaSessionRecord | null> {
-    const rows = await this.prisma.$queryRawUnsafe<VelaSessionRecord[]>(
+    const rows = (await this.prisma.$queryRawUnsafe(
       'SELECT id, "userId", "tenantId", surface, title, "createdAt", "updatedAt" FROM "VelaSession" WHERE id = $1 LIMIT 1',
       id,
-    );
+    )) as VelaSessionRecord[];
     return rows[0] ?? null;
   }
 
   async createSession(
-    data: Omit<VelaSessionRecord, 'id' | 'createdAt' | 'updatedAt'>,
+    data: Omit<VelaSessionRecord, "id" | "createdAt" | "updatedAt">,
   ): Promise<VelaSessionRecord> {
     const id = randomUUID();
-    const rows = await this.prisma.$queryRawUnsafe<VelaSessionRecord[]>(
+    const rows = (await this.prisma.$queryRawUnsafe(
       `INSERT INTO "VelaSession" (id, "userId", "tenantId", surface, title, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
        RETURNING id, "userId", "tenantId", surface, title, "createdAt", "updatedAt"`,
@@ -50,7 +50,7 @@ export class SessionRepository {
       data.tenantId,
       data.surface,
       data.title,
-    );
+    )) as VelaSessionRecord[];
     return rows[0]!;
   }
 
@@ -66,7 +66,9 @@ export class SessionRepository {
     return this.findSession(id);
   }
 
-  async create(data: Omit<VelaSessionRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<VelaSessionRecord> {
+  async create(
+    data: Omit<VelaSessionRecord, "id" | "createdAt" | "updatedAt">,
+  ): Promise<VelaSessionRecord> {
     return this.createSession(data);
   }
 }

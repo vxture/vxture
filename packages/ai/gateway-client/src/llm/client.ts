@@ -380,7 +380,11 @@ function normalizeGatewayUrl(url: string | undefined): string {
     );
   }
 
-  return url.replace(/\/+$/, "");
+  let normalized = url;
+  while (normalized.endsWith("/")) {
+    normalized = normalized.slice(0, -1);
+  }
+  return normalized;
 }
 
 function parseJson<TResponse>(text: string): TResponse {

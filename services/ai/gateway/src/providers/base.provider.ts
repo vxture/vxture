@@ -60,8 +60,14 @@ export abstract class BaseProvider implements IModelProvider {
 }
 
 export function joinEndpoint(baseUrl: string, suffix: string): string {
-  const normalizedBase = baseUrl.replace(/\/+$/, "");
-  const normalizedSuffix = suffix.replace(/^\/+/, "");
+  let normalizedBase = baseUrl;
+  while (normalizedBase.endsWith("/")) {
+    normalizedBase = normalizedBase.slice(0, -1);
+  }
+  let normalizedSuffix = suffix;
+  while (normalizedSuffix.startsWith("/")) {
+    normalizedSuffix = normalizedSuffix.slice(1);
+  }
   return `${normalizedBase}/${normalizedSuffix}`;
 }
 
