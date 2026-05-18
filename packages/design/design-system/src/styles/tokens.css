@@ -23,7 +23,10 @@
 @import "./tokens-platform-scale.css";
 @import "./tokens-auth-scale.css";
 @import "./tokens-component-semantics.css";
-@import "./tokens-component-effects.css";
+@import "./tokens-component-control-effects.css";
+@import "./tokens-component-shell-effects.css";
+@import "./tokens-component-ai-effects.css";
+@import "./tokens-component-auth-effects.css";
 @import "./tokens-auth-semantics.css";
 @import "./tokens-platform-semantics.css";
 @import "./tokens-platform-admin-layout.css";
