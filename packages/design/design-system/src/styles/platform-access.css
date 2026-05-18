@@ -9,4 +9,7 @@
 @import "./platform-access-list.css";
 @import "./platform-access-identity.css";
 @import "./platform-access-actions.css";
-@import "./platform-access-shared-panels.css";
+@import "./platform-access-shared-controls.css";
+@import "./platform-access-drawer-detail.css";
+@import "./platform-access-role-panels.css";
+@import "./platform-access-feedback-panels.css";
