@@ -5,7 +5,11 @@
  * @category styles
  */
 
-@import "./platform-account-profile-base.css";
+@import "./platform-account-profile-page.css";
+@import "./platform-account-profile-feedback.css";
+@import "./platform-account-profile-groups.css";
+@import "./platform-account-profile-avatar.css";
+@import "./platform-account-profile-dialog-base.css";
 @import "./platform-account-profile-card-layout.css";
 @import "./platform-account-profile-card-avatar.css";
 @import "./platform-account-profile-card-summary.css";
