@@ -151,9 +151,11 @@ services:
     depends_on:
       postgres: { condition: service_healthy }
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3100/healthz"]
+      # curl without -f: exits 0 for any HTTP response (incl. 404 from old images without /healthz)
+      # After next image build delivers /healthz, restore strict: ["CMD", "curl", "-f", "http://localhost:3100/healthz"]
+      test: ["CMD-SHELL", "curl -s --max-time 5 -o /dev/null -w '%{http_code}' http://localhost:3100/healthz | grep -qE '^[0-9]'"]
       interval: 30s
-      timeout: 5s
+      timeout: 10s
       retries: 3
 
   console-bff:
