@@ -23,9 +23,7 @@ export abstract class BaseProvider implements IModelProvider {
   abstract chat(request: ProviderChatRequest): Promise<ProviderChatResponse>;
 
   // 默认抛错；具体 provider 根据是否支持流式自行覆盖。
-  async *chatStream(
-    _request: ProviderChatRequest,
-  ): AsyncGenerator<StreamEvent> {
+  chatStream(_request: ProviderChatRequest): AsyncGenerator<StreamEvent> {
     throw new Error(`${this.providerName} stream chat is not enabled yet`);
   }
 

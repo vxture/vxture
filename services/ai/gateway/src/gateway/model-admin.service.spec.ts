@@ -12,13 +12,13 @@ import type {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const svc = new ModelAdminService(null as any);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const normalizeCreate = (body: unknown) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (svc as any).normalizeCreateModel(body) as ReturnType<
     ModelAdminService["createModel"]
   >;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const normalizeUpdate = (body: unknown) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (svc as any).normalizeUpdateModel(body) as ReturnType<
     ModelAdminService["updateModel"]
   >;
