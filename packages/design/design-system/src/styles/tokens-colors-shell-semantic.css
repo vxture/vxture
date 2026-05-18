@@ -1,0 +1,32 @@
+/**
+ * tokens-colors-shell-semantic.css - Shell 场景语义颜色 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-color-shell-bg: #f5f7fb;
+  --vx-color-shell-surface: var(--vx-color-white);
+  --vx-color-shell-surface-muted: #fbfcfe;
+  --vx-color-shell-border: rgba(15, 23, 42, 0.07);
+  --vx-color-shell-text: #162033;
+  --vx-color-shell-muted: #6b7a90;
+  --vx-color-shell-brand: var(--vx-color-brand-600);
+  --vx-color-shell-ink: var(--vx-color-brand-950);
+  --vx-color-shell-subtle: #93a0b4;
+  --vx-color-shell-icon: #5f7088;
+  --vx-color-shell-icon-muted: #8a9ab0;
+  --vx-color-shell-panel: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  --vx-color-shell-panel-strong: color-mix(in srgb, var(--vx-color-white) 96%, transparent);
+  --vx-color-shell-panel-soft: color-mix(in srgb, var(--vx-color-white) 74%, transparent);
+  --vx-color-shell-glass: color-mix(in srgb, var(--vx-color-brand-50) 92%, transparent);
+  --vx-color-shell-hover: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  --vx-color-shell-line-soft: color-mix(in srgb, var(--vx-color-brand-800) 8%, transparent);
+  --vx-color-shell-divider: color-mix(in srgb, var(--vx-color-gray-500) 32%, transparent);
+  --vx-color-shell-focus-ring: color-mix(in srgb, var(--vx-color-auth-accent-light) 20%, transparent);
+  --vx-color-scrollbar: color-mix(in srgb, var(--vx-color-shell-muted) 28%, transparent);
+  --vx-color-scrollbar-hover: color-mix(in srgb, var(--vx-color-shell-muted) 44%, transparent);
+}
