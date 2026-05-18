@@ -6,7 +6,9 @@
  */
 
 @import "./platform-account-profile-base.css";
-@import "./platform-account-profile-card.css";
+@import "./platform-account-profile-card-layout.css";
+@import "./platform-account-profile-card-avatar.css";
+@import "./platform-account-profile-card-summary.css";
 @import "./platform-account-profile-fields.css";
 @import "./platform-account-connected.css";
 @import "./platform-account-organization.css";
