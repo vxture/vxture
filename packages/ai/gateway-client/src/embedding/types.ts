@@ -1,6 +1,6 @@
 /**
  * embedding/types.ts - Embedding 相关类型定义
- * @package @vxture/ai-sdk
+ * @package @vxture/ai-gateway-client
  *
  * Description: 文本向量化模块的类型定义
  *

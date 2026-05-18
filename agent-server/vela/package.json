@@ -20,7 +20,7 @@
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "@prisma/client": "^6.0.0",
-    "@vxture/ai-sdk": "workspace:*",
+    "@vxture/ai-gateway-client": "workspace:*",
     "@vxture/core-auth": "workspace:*",
     "@vxture/core-config": "workspace:*",
     "@vxture/service-billing": "workspace:*",

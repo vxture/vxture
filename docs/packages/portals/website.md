@@ -7,14 +7,14 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/website` |
-| 路径 | `portals/website/` |
-| @layer | `Presentation` |
-| 框架 | Next.js 15.5.6（App Router + Turbopack） |
-| 端口 | 3010 |
-| 版本 | 2.0.0（2026-05-06） |
+| 项     | 值                                       |
+| ------ | ---------------------------------------- |
+| 包名   | `@vxture/website`                        |
+| 路径   | `portals/website/`                       |
+| @layer | `Presentation`                           |
+| 框架   | Next.js 15.5.6（App Router + Turbopack） |
+| 端口   | 3010                                     |
+| 版本   | 2.0.0（2026-05-06）                      |
 
 ## 依赖约束
 
@@ -24,7 +24,7 @@
 ✅ @vxture/core-locale（i18n 格式化工具，唯一允许的 core 包）
 ✅ BFF（HTTP only，禁止包引用）
 ❌ @vxture/service-* / core-api / core-auth / core-config / core-tenant / core-utils
-❌ @vxture/ai-sdk / agent-server/*
+❌ @vxture/ai-gateway-client / agent-server/*
 ```
 
 ## 核心路由结构
@@ -43,10 +43,10 @@
 
 ```typescript
 CONTENT_REGISTRY = {
-  legal:  { loader: legalLoader,  staticParams: legalStaticParams },
-  blog:   { loader: blogLoader,   staticParams: blogStaticParams },
-  faq:    { loader: createStubLoader('faq') },
-}
+  legal: { loader: legalLoader, staticParams: legalStaticParams },
+  blog: { loader: blogLoader, staticParams: blogStaticParams },
+  faq: { loader: createStubLoader("faq") },
+};
 ```
 
 扩展三步：`types.ts` 追加 key → 实现 Loader → `registry.ts` 注册。
@@ -77,6 +77,7 @@ src/
 ## Middleware 设计
 
 固定三个关注点顺序：
+
 1. 认证重定向（读取 `vx_tenant_refresh_token`，保护 /dashboard）
 2. `intlMiddleware`（next-intl 语言前缀路由）
 3. `response.headers.set('x-pathname', ...)`（供 request.ts 按需加载翻译）

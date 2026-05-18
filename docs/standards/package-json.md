@@ -9,27 +9,27 @@ AI 工具在新建或修改任何包时必须遵守本规范。
 
 ## 1. 包类型分类
 
-| 类型 | 目录 | 构建工具 | 输出格式 |
-|------|------|---------|---------|
-| Library | `packages/shared/`, `packages/core/`, `packages/ai/`, `packages/platform/`, `packages/design/` | tsup | ESM + CJS 双格式 |
-| BFF | `bff/*` | esbuild | `dist/main.cjs`（CJS） |
-| Agent Server | `agent-server/*` | esbuild | `dist/main.cjs`（CJS） |
-| Portal | `portals/*`, `agent-studio/*`, `business/*` | next build | N/A（Next.js 应用） |
-| Service（部署态） | `services/*/*`（已实现） | esbuild | `dist/main.cjs`（CJS） |
-| Service（占位态） | `services/*/*`（未实现） | — | 源码直引 |
+| 类型              | 目录                                                                                           | 构建工具   | 输出格式               |
+| ----------------- | ---------------------------------------------------------------------------------------------- | ---------- | ---------------------- |
+| Library           | `packages/shared/`, `packages/core/`, `packages/ai/`, `packages/platform/`, `packages/design/` | tsup       | ESM + CJS 双格式       |
+| BFF               | `bff/*`                                                                                        | esbuild    | `dist/main.cjs`（CJS） |
+| Agent Server      | `agent-server/*`                                                                               | esbuild    | `dist/main.cjs`（CJS） |
+| Portal            | `portals/*`, `agent-studio/*`, `business/*`                                                    | next build | N/A（Next.js 应用）    |
+| Service（部署态） | `services/*/*`（已实现）                                                                       | esbuild    | `dist/main.cjs`（CJS） |
+| Service（占位态） | `services/*/*`（未实现）                                                                       | —          | 源码直引               |
 
 ---
 
 ## 2. 必填字段（所有包）
 
-| 字段 | 规则 |
-|------|------|
-| `name` | `@vxture/{group}-{name}` 格式，见第 3 节 |
-| `version` | SemVer，遵循第 4 节版本策略 |
-| `description` | 一行英文（或中英文）描述 |
-| `private` | 必须为 `true`（防止意外 publish） |
-| `license` | `"MIT"` |
-| `engines` | `{ "node": ">=22.0.0" }` |
+| 字段          | 规则                                     |
+| ------------- | ---------------------------------------- |
+| `name`        | `@vxture/{group}-{name}` 格式，见第 3 节 |
+| `version`     | SemVer，遵循第 4 节版本策略              |
+| `description` | 一行英文（或中英文）描述                 |
+| `private`     | 必须为 `true`（防止意外 publish）        |
+| `license`     | `"MIT"`                                  |
+| `engines`     | `{ "node": ">=22.0.0" }`                 |
 
 > 根 `package.json`（`name: "vxture"`）和 `packages/core/database`（纯脚本包）可省略 `exports`/`files`，但其他必填字段不可省略。
 
@@ -42,7 +42,7 @@ AI 工具在新建或修改任何包时必须遵守本规范。
 ```
 @vxture/shared                    # packages/shared/shared
 @vxture/core-{name}               # packages/core/{name}
-@vxture/ai-sdk                    # packages/ai/ai-sdk
+@vxture/ai-gateway-client                    # packages/ai/ai-sdk
 @vxture/platform-{name}           # packages/platform/{name}
 @vxture/design-system             # packages/design/design-system
 @vxture/bff-{name}                # bff/{name}-bff
@@ -58,11 +58,11 @@ AI 工具在新建或修改任何包时必须遵守本规范。
 
 ## 4. 版本策略
 
-| 状态 | 版本 | 说明 |
-|------|------|------|
+| 状态        | 版本    | 说明                   |
+| ----------- | ------- | ---------------------- |
 | 占位/未实现 | `0.1.0` | 有骨架结构但无业务实现 |
-| 开发中 | `0.x.y` | 接口尚不稳定 |
-| 稳定 | `1.x.y` | 接口稳定，有消费者 |
+| 开发中      | `0.x.y` | 接口尚不稳定           |
+| 稳定        | `1.x.y` | 接口稳定，有消费者     |
 
 **禁止使用 `0.0.0`**：使工具链无法区分已发布包与未初始化包。
 
@@ -82,8 +82,8 @@ AI 工具在新建或修改任何包时必须遵守本规范。
   "type": "module",
   "exports": {
     ".": {
-      "types":   "./dist/index.d.ts",
-      "import":  "./dist/index.mjs",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
   },
@@ -218,6 +218,7 @@ AI 工具在新建或修改任何包时必须遵守本规范。
 ```
 
 **占位服务规则**：
+
 - 无 `build` / `dev` script（直到正式实现）
 - 禁止 `echo "Build for ..."` 作为 script 值
 - `version` 从 `0.1.0` 开始，不用 `0.0.0`
@@ -228,40 +229,41 @@ AI 工具在新建或修改任何包时必须遵守本规范。
 
 以下依赖在全项目范围内必须使用统一版本约束：
 
-| 包 | 版本约束 | 用途 |
-|----|---------|------|
-| `typescript` | `^5.9.3` | 编译器 |
-| `@nestjs/*` | `^11.0.0` | 所有 NestJS 包保持同 major |
-| `@prisma/client` | `^6.0.0` | ORM 客户端（用 `^` 范围，禁止 exact pin） |
-| `prisma` | `^6.0.0` | devDependencies CLI |
-| `esbuild` | `^0.27.4` | BFF / Service 打包 |
-| `tsup` | `^8.5.1` | Library 打包 |
-| `rimraf` | `^6.0.1` | 清理工具 |
-| `reflect-metadata` | `^0.2.0` | NestJS DI 元数据 |
-| `class-validator` | `^0.14.0` | DTO 校验 |
-| `class-transformer` | `^0.5.1` | DTO 转换 |
-| `ioredis` | `^5.0.0` | Redis 客户端 |
-| `express` | `^4.22.1` | HTTP 服务器（NestJS 底层） |
-| `cookie-parser` | `^1.4.7` | Cookie 解析中间件 |
-| `zod` | `^3.24.0` | Schema 校验 |
-| `axios` | `^1.7.0` | HTTP 客户端 |
-| `next` | `^15.5.6` | Portal 框架 |
-| `react` / `react-dom` | `^19.2.0` | React 运行时 |
-| `@types/node` | `^22.0.0` | Node.js 类型（匹配 engines 最低版本） |
-| `@types/express` | `^4.17.21` | Express 4 类型 |
-| `@types/cookie-parser` | `^1.4.7` | cookie-parser 类型 |
+| 包                     | 版本约束   | 用途                                      |
+| ---------------------- | ---------- | ----------------------------------------- |
+| `typescript`           | `^5.9.3`   | 编译器                                    |
+| `@nestjs/*`            | `^11.0.0`  | 所有 NestJS 包保持同 major                |
+| `@prisma/client`       | `^6.0.0`   | ORM 客户端（用 `^` 范围，禁止 exact pin） |
+| `prisma`               | `^6.0.0`   | devDependencies CLI                       |
+| `esbuild`              | `^0.27.4`  | BFF / Service 打包                        |
+| `tsup`                 | `^8.5.1`   | Library 打包                              |
+| `rimraf`               | `^6.0.1`   | 清理工具                                  |
+| `reflect-metadata`     | `^0.2.0`   | NestJS DI 元数据                          |
+| `class-validator`      | `^0.14.0`  | DTO 校验                                  |
+| `class-transformer`    | `^0.5.1`   | DTO 转换                                  |
+| `ioredis`              | `^5.0.0`   | Redis 客户端                              |
+| `express`              | `^4.22.1`  | HTTP 服务器（NestJS 底层）                |
+| `cookie-parser`        | `^1.4.7`   | Cookie 解析中间件                         |
+| `zod`                  | `^3.24.0`  | Schema 校验                               |
+| `axios`                | `^1.7.0`   | HTTP 客户端                               |
+| `next`                 | `^15.5.6`  | Portal 框架                               |
+| `react` / `react-dom`  | `^19.2.0`  | React 运行时                              |
+| `@types/node`          | `^22.0.0`  | Node.js 类型（匹配 engines 最低版本）     |
+| `@types/express`       | `^4.17.21` | Express 4 类型                            |
+| `@types/cookie-parser` | `^1.4.7`   | cookie-parser 类型                        |
 
 ---
 
 ## 11. 依赖分类规则
 
-| 字段 | 放什么 |
-|------|--------|
-| `dependencies` | 运行时必需（含 `workspace:*` 内部包） |
-| `devDependencies` | 仅构建/测试需要（tsc, eslint, tsup, esbuild, `@types/*`） |
-| `peerDependencies` | Library 包的框架依赖（NestJS, React 等） |
+| 字段               | 放什么                                                    |
+| ------------------ | --------------------------------------------------------- |
+| `dependencies`     | 运行时必需（含 `workspace:*` 内部包）                     |
+| `devDependencies`  | 仅构建/测试需要（tsc, eslint, tsup, esbuild, `@types/*`） |
+| `peerDependencies` | Library 包的框架依赖（NestJS, React 等）                  |
 
 **`@types/*` 规则**：
+
 - 始终放 `devDependencies`
 - Portal 应用必须显式声明 `@types/node: ^22.0.0`
 - BFF/Service 可依赖 workspace 根提供的 `@types/node`，但建议显式声明
@@ -270,12 +272,12 @@ AI 工具在新建或修改任何包时必须遵守本规范。
 
 ## 12. 禁止事项
 
-| 禁止 | 正确做法 |
-|------|---------|
-| `version: "0.0.0"` | 使用 `0.1.0` |
-| `echo "..."` 作为 script 实现 | 删除该 script 或真正实现它 |
-| 非 `@vxture/` 命名的内部包 | 遵循第 3 节命名规范 |
-| Library 包在 `dependencies` 中声明框架依赖 | 放 `peerDependencies` |
-| 省略 `private: true` | 防止意外 publish |
-| 省略 `engines` | 确保 CI 和本地环境一致性 |
+| 禁止                                       | 正确做法                   |
+| ------------------------------------------ | -------------------------- |
+| `version: "0.0.0"`                         | 使用 `0.1.0`               |
+| `echo "..."` 作为 script 实现              | 删除该 script 或真正实现它 |
+| 非 `@vxture/` 命名的内部包                 | 遵循第 3 节命名规范        |
+| Library 包在 `dependencies` 中声明框架依赖 | 放 `peerDependencies`      |
+| 省略 `private: true`                       | 防止意外 publish           |
+| 省略 `engines`                             | 确保 CI 和本地环境一致性   |
 | `@prisma/client` 精确版本（如 `"6.19.3"`） | 使用范围约束（`"^6.0.0"`） |

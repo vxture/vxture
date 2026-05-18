@@ -14,11 +14,11 @@ The customer does not buy "Doubao tokens" or "Claude SDKs" directly from Vxture.
 
 The system is therefore split into three layers:
 
-| Layer | Owner | Main Question | Data Location |
-| --- | --- | --- | --- |
-| Upstream provider | Doubao, Claude, private/self-hosted endpoint | Which model endpoint does Vxture call and what does Vxture pay? | `ai_gateway` |
-| Vxture platform | Vxture | Which models are connected, routed, authorized, and costed? | `ai_gateway` + `product` |
-| Customer tenant | Vxture customer | Which plan, quota, agent, and fee does the customer see? | `product` + `commerce` |
+| Layer             | Owner                                        | Main Question                                                   | Data Location            |
+| ----------------- | -------------------------------------------- | --------------------------------------------------------------- | ------------------------ |
+| Upstream provider | Doubao, Claude, private/self-hosted endpoint | Which model endpoint does Vxture call and what does Vxture pay? | `ai_gateway`             |
+| Vxture platform   | Vxture                                       | Which models are connected, routed, authorized, and costed?     | `ai_gateway` + `product` |
+| Customer tenant   | Vxture customer                              | Which plan, quota, agent, and fee does the customer see?        | `product` + `commerce`   |
 
 No business-domain data is stored in AI Gateway. Business records stay in their own domains. Gateway metering only writes technical usage facts such as tenant, agent, feature, model code, token counts, latency, request id, and business id.
 
@@ -30,10 +30,10 @@ No business-domain data is stored in AI Gateway. Business records stay in their 
 
 ### 隔离维度
 
-| 维度 | 隔离由谁保证 | 机制 |
-|------|------------|------|
-| **租户（Tenant）** | ai-gateway | `ai_model_grant` 鉴权：每次调用必须通过租户级技术授权 + `tenant_subscription_quota` 配额校验；计量数据以 `tenant_id` 为主键独立写入 |
-| **应用（Agent）** | agent-server | 每个 Agent 实例是独立进程，持有独立 system prompt、独立工具集（ToolRegistry）、独立数据库 schema；agent-server 之间禁止跨实例 import |
+| 维度                | 隔离由谁保证 | 机制                                                                                                                                              |
+| ------------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **租户（Tenant）**  | ai-gateway   | `ai_model_grant` 鉴权：每次调用必须通过租户级技术授权 + `tenant_subscription_quota` 配额校验；计量数据以 `tenant_id` 为主键独立写入               |
+| **应用（Agent）**   | agent-server | 每个 Agent 实例是独立进程，持有独立 system prompt、独立工具集（ToolRegistry）、独立数据库 schema；agent-server 之间禁止跨实例 import              |
 | **会话（Session）** | agent-server | 每个 session 的对话历史独立存储于数据库；发起 LLM 调用时由 agent-server 从当前 session 组装 messages 数组，Gateway 本身无状态，不持有任何对话历史 |
 
 ### API Key 隔离机制
@@ -50,6 +50,7 @@ Provider（Doubao / Claude / 私有模型）
 ```
 
 同一个 API Key 对应多个租户的请求，隔离由以下保证：
+
 - LLM API 是**无状态 HTTP 接口**：每次请求携带完整 messages，Provider 不在调用间保留任何上下文
 - messages 数组由 agent-server 组装，只包含当前 session 的历史，天然隔离其他 session
 - 计费和配额在 ai-gateway 层按 `tenant_id + agent_id` 独立统计，串不到其他租户
@@ -60,7 +61,7 @@ Provider（Doubao / Claude / 私有模型）
 
 ```text
 business agent / app
-  -> @vxture/ai-sdk
+  -> @vxture/ai-gateway-client
   -> services/ai/gateway
      -> model registry
      -> technical grant check
@@ -110,12 +111,12 @@ portals/admin/src/modules/ai/ModelGatewayPage.tsx
 
 `ai_gateway` is the model control-plane schema. It stores platform-managed technical configuration.
 
-| Table | Purpose |
-| --- | --- |
-| `ai_gateway.ai_provider` | Upstream provider registry, for example `doubao`, `claude`, `private`. |
-| `ai_gateway.ai_model` | Vxture model registry. Stores model code, endpoint URL, protocol, capabilities, API-key env var name, and non-sensitive config. |
-| `ai_gateway.ai_model_grant` | Technical allowlist / gray release. Controls whether a tenant or tenant-agent scope may call a model. |
-| `ai_gateway.ai_model_cost_rate` | Vxture upstream provider cost rate for gross-margin and provider settlement analysis. |
+| Table                           | Purpose                                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `ai_gateway.ai_provider`        | Upstream provider registry, for example `doubao`, `claude`, `private`.                                                          |
+| `ai_gateway.ai_model`           | Vxture model registry. Stores model code, endpoint URL, protocol, capabilities, API-key env var name, and non-sensitive config. |
+| `ai_gateway.ai_model_grant`     | Technical allowlist / gray release. Controls whether a tenant or tenant-agent scope may call a model.                           |
+| `ai_gateway.ai_model_cost_rate` | Vxture upstream provider cost rate for gross-margin and provider settlement analysis.                                           |
 
 Important boundaries:
 
@@ -128,25 +129,25 @@ Important boundaries:
 
 `product` describes what Vxture sells or exposes.
 
-| Table | AI Gateway Usage |
-| --- | --- |
-| `product.feature` | Features such as `ai.tokens`, `ai.online_models`, `ai.private_model`, `ai.business_agents`. |
-| `product.agent` | Customer-facing business agents such as contract review, digital legal, operation analysis, emergency command. |
-| `product.plan` | Customer plan definition, for example starter/growth/enterprise. |
-| `product.plan_price` | Customer-facing plan price. |
-| `product.plan_feature` | Feature quota and plan capability. |
-| `product.plan_agent` | Which agents are included in a plan. |
+| Table                  | AI Gateway Usage                                                                                               |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `product.feature`      | Features such as `ai.tokens`, `ai.online_models`, `ai.private_model`, `ai.business_agents`.                    |
+| `product.agent`        | Customer-facing business agents such as contract review, digital legal, operation analysis, emergency command. |
+| `product.plan`         | Customer plan definition, for example starter/growth/enterprise.                                               |
+| `product.plan_price`   | Customer-facing plan price.                                                                                    |
+| `product.plan_feature` | Feature quota and plan capability.                                                                             |
+| `product.plan_agent`   | Which agents are included in a plan.                                                                           |
 
 ### 4.3 `commerce`
 
 `commerce` is the customer subscription, quota, usage, and billing domain.
 
-| Table | AI Gateway Usage |
-| --- | --- |
-| `commerce.tenant_subscription` | Customer's active subscription and plan. |
+| Table                                | AI Gateway Usage                                                                             |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- |
+| `commerce.tenant_subscription`       | Customer's active subscription and plan.                                                     |
 | `commerce.tenant_subscription_quota` | Effective tenant quota, allowed models, rate limits, and whether private models are allowed. |
-| `commerce.tenant_usage_event` | Append-only usage events for successful calls. |
-| `commerce.tenant_usage_summary` | Aggregated usage cache for quota checks and dashboards. |
+| `commerce.tenant_usage_event`        | Append-only usage events for successful calls.                                               |
+| `commerce.tenant_usage_summary`      | Aggregated usage cache for quota checks and dashboards.                                      |
 
 Current quota check reads `tenant_usage_summary` summary rows for the current cycle. Metering writes both detailed and tenant-level summary rows after successful model calls.
 
@@ -156,10 +157,10 @@ Current quota check reads `tenant_usage_summary` summary rows for the current cy
 
 There are two different prices and they must not be mixed:
 
-| Topic | Meaning | Stored In |
-| --- | --- | --- |
-| Provider cost | What Vxture pays to Doubao, Claude, or another provider. | `ai_gateway.ai_model_cost_rate` |
-| Customer fee | What the customer pays Vxture for plans, quotas, private model access, and agent applications. | `product.plan_price`, `product.plan_feature`, `commerce.tenant_subscription` |
+| Topic         | Meaning                                                                                        | Stored In                                                                    |
+| ------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Provider cost | What Vxture pays to Doubao, Claude, or another provider.                                       | `ai_gateway.ai_model_cost_rate`                                              |
+| Customer fee  | What the customer pays Vxture for plans, quotas, private model access, and agent applications. | `product.plan_price`, `product.plan_feature`, `commerce.tenant_subscription` |
 
 Customer-visible fees are expected to include:
 
@@ -176,7 +177,7 @@ The phase-1 seed only provides initial product and provider cost records. Contra
 
 ## 7. Request Contract
 
-`@vxture/ai-sdk` sends a normalized request to AI Gateway:
+`@vxture/ai-gateway-client` sends a normalized request to AI Gateway:
 
 ```ts
 export interface ChatRequest {
@@ -191,7 +192,7 @@ export interface ChatRequest {
   featureId?: string;
   requestId?: string;
   businessId?: string;
-  usageType?: 'normal' | 'retry' | 'test';
+  usageType?: "normal" | "retry" | "test";
 }
 ```
 

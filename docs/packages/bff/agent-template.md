@@ -7,13 +7,13 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/bff-agent01`（分叉后按 `@vxture/bff-{name}` 命名） |
-| 路径 | `bff/agent-template-bff/` |
-| @layer | `Application` |
-| 服务对象 | 对应 `agent-studio/agent-template` 前端 |
-| 端口 | 按 `docs/ai/port-allocation.md` 登记新端口 |
+| 项       | 值                                                          |
+| -------- | ----------------------------------------------------------- |
+| 包名     | `@vxture/bff-agent01`（分叉后按 `@vxture/bff-{name}` 命名） |
+| 路径     | `bff/agent-template-bff/`                                   |
+| @layer   | `Application`                                               |
+| 服务对象 | 对应 `agent-studio/agent-template` 前端                     |
+| 端口     | 按 `docs/ai/port-allocation.md` 登记新端口                  |
 
 ## 唯一职责
 
@@ -50,10 +50,12 @@ src/
 ## 依赖约束
 
 **允许：**
+
 - `@vxture/core-auth`（JWT 类型，不引入签发逻辑）
 - `@vxture/core-config` / `@vxture/shared`
 - NestJS / `@nestjs/jwt` / `cookie-parser`
 
 **禁止：**
-- `@vxture/ai-sdk` / `@vxture/service-*` / `design-system` / `platform-*`
+
+- `@vxture/ai-gateway-client` / `@vxture/service-*` / `design-system` / `platform-*`
 - 跨 BFF 导入 / JWT 签发逻辑

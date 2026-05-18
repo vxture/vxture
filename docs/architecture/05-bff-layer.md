@@ -54,11 +54,13 @@ POST /auth/internal/sign   →   auth-bff 验证凭据并返回 signed JWT
 ```
 
 **设计意图**：
+
 - 集中化密钥管理，私钥只存在于 auth-bff 的环境变量中
 - 其他 BFF 仅验证（verify）JWT，不签发（sign）
 - 第三方 OAuth（DingTalk、Feishu）回调统一在 auth-bff 中处理
 
 **约束**：
+
 - admin-bff 禁止配置第三方 OAuth — 运营后台仅支持邮箱密码登录
 - website-bff 支持第三方 OAuth（DingTalk）通过 auth-bff 处理回调
 
@@ -221,10 +223,10 @@ void this.mailService.send({
 
 **当前 BFF 使用情况**:
 
-| BFF | 触发场景 | 收件人 |
-| --- | -------- | ------ |
-| `admin-bff` | 离线付款核销 / 驳回 | 租户联系邮箱（`org.contact_email`） |
-| `console-bff` | 订阅升级 / 暂停 / 恢复 / 取消 | 操作者邮箱（`req.user.email`） |
+| BFF           | 触发场景                      | 收件人                              |
+| ------------- | ----------------------------- | ----------------------------------- |
+| `admin-bff`   | 离线付款核销 / 驳回           | 租户联系邮箱（`org.contact_email`） |
+| `console-bff` | 订阅升级 / 暂停 / 恢复 / 取消 | 操作者邮箱（`req.user.email`）      |
 
 ---
 
@@ -233,10 +235,12 @@ void this.mailService.send({
 Aggregator 负责**跨域数据聚合**，组合来自多个 router 或服务的数据。
 
 **使用场景**：
+
 - 前端某个页面需要同时展示来自 billing、subscription、user 三个域的数据
 - 单次 HTTP 请求需要并发调用多个下游服务并合并结果
 
 **约束**：
+
 - Aggregator 只做数据组合，不包含业务决策逻辑
 - 跨域的业务编排属于业务逻辑，应在 `services/` 中处理
 
@@ -279,7 +283,7 @@ Forbidden:
 other bff-*               (BFF 之间不互相调用)
 @vxture/design-system
 @vxture/platform-*
-@vxture/ai-sdk            (AI 能力属于 agent-server，不直接进 BFF)
+@vxture/ai-gateway-client            (AI 能力属于 agent-server，不直接进 BFF)
 React / 任何浏览器 API
 ```
 
@@ -290,13 +294,13 @@ React / 任何浏览器 API
 
 # 11. Expansion Rules
 
-| 场景 | 正确做法 |
-| ---- | -------- |
-| 现有 BFF 需要新业务域 | 在 `routers/` 下新增 `{domain}.router.ts` |
-| 现有 router 变得非常大 | 将 router 拆分为多个子 router，仍在同一 BFF 内 |
-| 两个 portal 需要共享逻辑 | 提取到 `@vxture/service-*`，两个 BFF 分别导入 |
-| 需要新的消费者（新 portal 或新 agent） | 创建新的 BFF 包 `bff/{name}-bff/` |
-| 现有 BFF 路由规模超大，需要独立部署 | 将部分 router 提取为独立 BFF 微服务 |
+| 场景                                   | 正确做法                                       |
+| -------------------------------------- | ---------------------------------------------- |
+| 现有 BFF 需要新业务域                  | 在 `routers/` 下新增 `{domain}.router.ts`      |
+| 现有 router 变得非常大                 | 将 router 拆分为多个子 router，仍在同一 BFF 内 |
+| 两个 portal 需要共享逻辑               | 提取到 `@vxture/service-*`，两个 BFF 分别导入  |
+| 需要新的消费者（新 portal 或新 agent） | 创建新的 BFF 包 `bff/{name}-bff/`              |
+| 现有 BFF 路由规模超大，需要独立部署    | 将部分 router 提取为独立 BFF 微服务            |
 
 ---
 
@@ -304,7 +308,7 @@ React / 任何浏览器 API
 
 AI 在操作 `bff/*` 时必须：
 
-1. 禁止在 BFF 中导入 `@vxture/design-system`、`@vxture/platform-*`、`@vxture/ai-sdk`
+1. 禁止在 BFF 中导入 `@vxture/design-system`、`@vxture/platform-*`、`@vxture/ai-gateway-client`
 2. 禁止在 BFF 中写业务逻辑 — 业务逻辑属于 `services/` 或 `agent-server/`
 3. 每个 router 模块必须独立处理自己的错误
 4. 新增业务域通过新增 router 文件实现 — 不创建新 BFF 包

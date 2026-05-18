@@ -75,13 +75,13 @@
 
 ## 二、外部依赖（非容器）
 
-| 依赖 | 用途 | 相关服务 | 关键环境变量 |
-|------|------|---------|------------|
-| 阿里云 SMTP | 验证码/重置邮件（465 SSL） | website-bff | `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS` |
-| ARK / Doubao API | LLM 推理 | ai-gateway | `ARK_API_KEY` / `DOUBAO_API_KEY` |
-| 飞书 OAuth | 租户用户登录 | website-bff | `FEISHU_APP_ID` / `FEISHU_APP_SECRET` |
-| 钉钉 OAuth | 租户用户登录 | website-bff | `DINGTALK_APP_KEY` / `DINGTALK_APP_SECRET` |
-| Tailscale | worker 跨节点通信 / SSH | 全部 | 节点 IP 见 [overview.md § 节点信息](overview.md) |
+| 依赖             | 用途                       | 相关服务    | 关键环境变量                                     |
+| ---------------- | -------------------------- | ----------- | ------------------------------------------------ |
+| 阿里云 SMTP      | 验证码/重置邮件（465 SSL） | website-bff | `SMTP_HOST` / `SMTP_USER` / `SMTP_PASS`          |
+| ARK / Doubao API | LLM 推理                   | ai-gateway  | `ARK_API_KEY` / `DOUBAO_API_KEY`                 |
+| 飞书 OAuth       | 租户用户登录               | website-bff | `FEISHU_APP_ID` / `FEISHU_APP_SECRET`            |
+| 钉钉 OAuth       | 租户用户登录               | website-bff | `DINGTALK_APP_KEY` / `DINGTALK_APP_SECRET`       |
+| Tailscale        | worker 跨节点通信 / SSH    | 全部        | 节点 IP 见 [overview.md § 节点信息](overview.md) |
 
 ---
 
@@ -104,7 +104,7 @@ Step 2（并行，依赖 shared）
 
 Step 3（并行，依赖 core-*）
   @vxture/design-system
-  @vxture/ai-sdk
+  @vxture/ai-gateway-client
   @vxture/service-iam
   @vxture/service-organization
   @vxture/service-billing
@@ -198,21 +198,21 @@ CMD ["node", "portals/website/server.js"]
 
 ## 五、健康检查约定
 
-| 服务 | 路径 | 预期响应 |
-|------|------|---------|
-| vx-gateway-bff | `GET /health` | HTTP 200 |
-| vx-auth-bff | `GET /health` | HTTP 200 |
-| vx-website-bff | `GET /health` | HTTP 200 |
-| vx-console-bff | `GET /health` | HTTP 200 |
-| vx-admin-bff | `GET /health` | HTTP 200 |
-| vx-ai-gateway | `GET /health` | HTTP 200 |
-| vx-vela-bff | `GET /health` | HTTP 200 |
-| vx-vela-server | `GET /health` | HTTP 200 |
-| vx-ruyin-bff | `GET /health` | HTTP 200 |
-| vx-ruyin-server | `GET /health` | HTTP 200 |
-| vx-website / vx-console / vx-admin | `GET /api/health` | HTTP 200 |
-| postgres | `pg_isready -U <user>` | exit 0 |
-| redis | `redis-cli ping` | PONG |
+| 服务                               | 路径                   | 预期响应 |
+| ---------------------------------- | ---------------------- | -------- |
+| vx-gateway-bff                     | `GET /health`          | HTTP 200 |
+| vx-auth-bff                        | `GET /health`          | HTTP 200 |
+| vx-website-bff                     | `GET /health`          | HTTP 200 |
+| vx-console-bff                     | `GET /health`          | HTTP 200 |
+| vx-admin-bff                       | `GET /health`          | HTTP 200 |
+| vx-ai-gateway                      | `GET /health`          | HTTP 200 |
+| vx-vela-bff                        | `GET /health`          | HTTP 200 |
+| vx-vela-server                     | `GET /health`          | HTTP 200 |
+| vx-ruyin-bff                       | `GET /health`          | HTTP 200 |
+| vx-ruyin-server                    | `GET /health`          | HTTP 200 |
+| vx-website / vx-console / vx-admin | `GET /api/health`      | HTTP 200 |
+| postgres                           | `pg_isready -U <user>` | exit 0   |
+| redis                              | `redis-cli ping`       | PONG     |
 
 所有 NestJS 服务统一使用 `/health`；Next.js 门户使用 `/api/health`（Next.js Route Handler）。
 
@@ -224,34 +224,35 @@ CMD ["node", "portals/website/server.js"]
 
 > 内存紧张，建议开启 2G swap。详见 [infrastructure.md § 内存优化](infrastructure.md)。
 
-| 容器 | `--memory` 上限 |
-|------|----------------|
-| vx-platform-pg | 400MB |
-| vx-platform-redis | 128MB |
-| vx-nginx | 64MB |
-| vx-website / vx-console / vx-admin | 各 256MB |
-| vx-website-bff / vx-console-bff / vx-admin-bff | 各 192MB |
-| vx-auth-bff | 128MB |
-| vx-gateway-bff | 64MB |
-| **合计** | **~2,100MB** |
+| 容器                                           | `--memory` 上限 |
+| ---------------------------------------------- | --------------- |
+| vx-platform-pg                                 | 400MB           |
+| vx-platform-redis                              | 128MB           |
+| vx-nginx                                       | 64MB            |
+| vx-website / vx-console / vx-admin             | 各 256MB        |
+| vx-website-bff / vx-console-bff / vx-admin-bff | 各 192MB        |
+| vx-auth-bff                                    | 128MB           |
+| vx-gateway-bff                                 | 64MB            |
+| **合计**                                       | **~2,100MB**    |
 
 ### worker-02（8C 24G，业务层）
 
-| 容器 | `--memory` 上限 | 备注 |
-|------|----------------|------|
-| vx-ai-gateway | 1GB | |
-| vx-ai-gateway-pg | 512MB | |
-| vx-vela-bff-prod | 512MB | |
-| vx-vela-server-prod | 2GB | LLM 编排，内存峰值较高 |
-| vx-vela-pg-prod | 512MB | |
-| vx-vela-redis-prod | 256MB | |
-| vx-ruyin-bff-prod | 512MB | |
-| vx-ruyin-server-prod | 2GB | BullMQ + LLM |
-| vx-ruyin-pg-prod | 512MB | |
-| vx-ruyin-redis-prod | 512MB | `noeviction`（BullMQ 禁逐出） |
-| **prod 合计** | **~8.8GB** | beta 再加约 4GB，总 ~13GB，低于 24GB |
+| 容器                 | `--memory` 上限 | 备注                                 |
+| -------------------- | --------------- | ------------------------------------ |
+| vx-ai-gateway        | 1GB             |                                      |
+| vx-ai-gateway-pg     | 512MB           |                                      |
+| vx-vela-bff-prod     | 512MB           |                                      |
+| vx-vela-server-prod  | 2GB             | LLM 编排，内存峰值较高               |
+| vx-vela-pg-prod      | 512MB           |                                      |
+| vx-vela-redis-prod   | 256MB           |                                      |
+| vx-ruyin-bff-prod    | 512MB           |                                      |
+| vx-ruyin-server-prod | 2GB             | BullMQ + LLM                         |
+| vx-ruyin-pg-prod     | 512MB           |                                      |
+| vx-ruyin-redis-prod  | 512MB           | `noeviction`（BullMQ 禁逐出）        |
+| **prod 合计**        | **~8.8GB**      | beta 再加约 4GB，总 ~13GB，低于 24GB |
 
 **Ruyin Redis 专项配置（BullMQ 场景）：**
+
 ```
 appendonly yes           # AOF 持久化，防任务丢失
 maxmemory-policy noeviction  # 禁止 key 被驱逐

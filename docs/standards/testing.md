@@ -29,13 +29,13 @@
 
 ```typescript
 // ✅ 正确：纯函数直接测
-import { resolveLocale } from './locale.utils';
-test('resolves zh-CN from Accept-Language', () => {
-  expect(resolveLocale('zh-CN,zh;q=0.9')).toBe('zh-CN');
+import { resolveLocale } from "./locale.utils";
+test("resolves zh-CN from Accept-Language", () => {
+  expect(resolveLocale("zh-CN,zh;q=0.9")).toBe("zh-CN");
 });
 
 // ❌ 错误：在 shared 层测试中使用 jest.mock()
-jest.mock('@vxture/core-database'); // shared 根本不应该依赖 database
+jest.mock("@vxture/core-database"); // shared 根本不应该依赖 database
 ```
 
 ---
@@ -57,13 +57,13 @@ beforeAll(async () => {
   await prisma.$executeRaw`TRUNCATE TABLE "User" CASCADE`;
 });
 
-test('createTenant assigns trial plan', async () => {
-  const tenant = await iamService.createTenant({ ownerId: 'user-1' });
-  expect(tenant.plan).toBe('trial');
+test("createTenant assigns trial plan", async () => {
+  const tenant = await iamService.createTenant({ ownerId: "user-1" });
+  expect(tenant.plan).toBe("trial");
 });
 
 // ❌ 错误：mock PrismaClient
-jest.mock('@prisma/client');
+jest.mock("@prisma/client");
 ```
 
 ---
@@ -85,11 +85,11 @@ const app = await Test.createTestingModule({
   imports: [AuthModule],
 }).compile();
 
-const token = signTestJwt({ userId: 'u1', userType: 'tenant_user' });
+const token = signTestJwt({ userId: "u1", userType: "tenant_user" });
 
 await request(app.getHttpServer())
-  .post('/auth/session')
-  .set('Cookie', `vx_tenant_access_token=${token}`)
+  .post("/auth/session")
+  .set("Cookie", `vx_tenant_access_token=${token}`)
   .expect(200);
 ```
 
@@ -101,7 +101,7 @@ await request(app.getHttpServer())
 **框架**：Vitest + NestJS Test Module
 **特殊规则**：
 
-- `@vxture/ai-sdk` LLM 调用：**必须 mock**（调用真实 LLM 成本高、结果不确定）
+- `@vxture/ai-gateway-client` LLM 调用：**必须 mock**（调用真实 LLM 成本高、结果不确定）
 - 数据库（Prisma）：使用真实测试 DB
 - 测试重点：CallerContext 二次校验、ToolRegistry 白名单、会话持久化
 
@@ -115,11 +115,13 @@ const mockLlm = { stream: vi.fn().mockReturnValue(fakeStream()) };
 ### 前端层（portals / agent-studio）
 
 **组件测试**：
+
 - 框架：Vitest + React Testing Library
 - 范围：独立纯 UI 组件（按钮、表单、输入框）
 - 禁止：为每个页面写完整渲染测试（成本极高，与 E2E 重叠）
 
 **E2E 测试**：
+
 - 框架：Playwright
 - 范围：**仅关键用户路径**，每个 Portal 不超过 5-10 个核心 flow
 
@@ -144,11 +146,11 @@ E2E 覆盖的场景（示例）：
 ```typescript
 // ✅ Factory（灵活，可组合）
 function createTestUser(overrides?: Partial<User>): User {
-  return { id: randomUUID(), email: 'test@example.com', ...overrides };
+  return { id: randomUUID(), email: "test@example.com", ...overrides };
 }
 
 // ❌ Fixture（JSON 文件，脆弱，与 Schema 变更不同步）
-import testUser from './fixtures/user.json';
+import testUser from "./fixtures/user.json";
 ```
 
 ---

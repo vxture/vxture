@@ -1,6 +1,6 @@
 /**
  * index.ts - AI SDK 主入口
- * @package @vxture/ai-sdk
+ * @package @vxture/ai-gateway-client
  *
  * Description: Vxture AI SDK 入口，导出所有 AI 能力模块
  *
@@ -16,7 +16,7 @@
  */
 
 // 导出模块
-export * from './llm';
-export * from './rag';
-export * from './embedding';
-export * from './workflow';
+export * from "./llm";
+export * from "./rag";
+export * from "./embedding";
+export * from "./workflow";

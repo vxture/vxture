@@ -1,6 +1,6 @@
 /**
  * embedding/index.ts - Embedding 模块入口
- * @package @vxture/ai-sdk
+ * @package @vxture/ai-gateway-client
  *
  * Description: 文本向量化模块
  *
@@ -16,4 +16,4 @@
  */
 
 // 导出类型
-export * from './types';
+export * from "./types";

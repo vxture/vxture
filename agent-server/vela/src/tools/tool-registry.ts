@@ -8,19 +8,19 @@
  * @date 2026-04-30
  */
 
-import { Injectable } from '@nestjs/common';
-import type { CallerContext } from '../context/caller-context.types';
-import type { LLMTool } from '@vxture/ai-sdk/llm';
-import { AuditRepository } from '../audit/audit.repository';
-import type { VelaTool, VelaToolResult } from './tool.types';
+import { Injectable } from "@nestjs/common";
+import type { CallerContext } from "../context/caller-context.types";
+import type { LLMTool } from "@vxture/ai-gateway-client/llm";
+import { AuditRepository } from "../audit/audit.repository";
+import type { VelaTool, VelaToolResult } from "./tool.types";
 
 // ============================================================================
 // 内部类型
 // ============================================================================
 
 export type PrepareResult =
-  | { status: 'ready' }
-  | { status: 'confirmation_required'; auditId: string; summary: string };
+  | { status: "ready" }
+  | { status: "confirmation_required"; auditId: string; summary: string };
 
 // ============================================================================
 // ToolRegistry
@@ -42,20 +42,21 @@ export class ToolRegistry {
    */
   getAvailableTools(ctx: CallerContext): VelaTool[] {
     return ctx.allowedTools
-      .map(id => this.tools.get(id))
-      .filter((t): t is VelaTool =>
-        !!t &&
-        t.surfaces.includes(ctx.surface) &&
-        t.dataScope === ctx.dataScope,
+      .map((id) => this.tools.get(id))
+      .filter(
+        (t): t is VelaTool =>
+          !!t &&
+          t.surfaces.includes(ctx.surface) &&
+          t.dataScope === ctx.dataScope,
       );
   }
 
-  /** 将工具列表转换为 @vxture/ai-sdk 的 LLMTool 格式 */
+  /** 将工具列表转换为 @vxture/ai-gateway-client 的 LLMTool 格式 */
   toLLMTools(tools: VelaTool[]): LLMTool[] {
-    return tools.map(tool => ({
-      name:        tool.id,
+    return tools.map((tool) => ({
+      name: tool.id,
       description: tool.description,
-      parameters:  tool.inputSchema,
+      parameters: tool.inputSchema,
     }));
   }
 
@@ -68,28 +69,32 @@ export class ToolRegistry {
    */
   async prepareExecution(
     toolId: string,
-    input:  unknown,
-    ctx:    CallerContext,
+    input: unknown,
+    ctx: CallerContext,
   ): Promise<PrepareResult> {
     const tool = this.tools.get(toolId);
-    if (!tool || !ctx.allowedTools.includes(toolId) || !tool.requiresConfirmation) {
-      return { status: 'ready' };
+    if (
+      !tool ||
+      !ctx.allowedTools.includes(toolId) ||
+      !tool.requiresConfirmation
+    ) {
+      return { status: "ready" };
     }
 
     const auditRecord = await this.auditRepository.create({
-      userId:    ctx.userId,
-      tenantId:  ctx.tenantId,
-      surface:   ctx.surface,
+      userId: ctx.userId,
+      tenantId: ctx.tenantId,
+      surface: ctx.surface,
       toolId,
       input,
-      result:    {},
+      result: {},
       confirmed: false,
     });
 
     return {
-      status:   'confirmation_required',
-      auditId:  auditRecord.id,
-      summary:  tool.confirmSummary?.(input) ?? `执行工具：${tool.name}`,
+      status: "confirmation_required",
+      auditId: auditRecord.id,
+      summary: tool.confirmSummary?.(input) ?? `执行工具：${tool.name}`,
     };
   }
 
@@ -99,17 +104,23 @@ export class ToolRegistry {
    */
   async execute(
     toolId: string,
-    input:  unknown,
-    ctx:    CallerContext,
+    input: unknown,
+    ctx: CallerContext,
   ): Promise<VelaToolResult> {
     const tool = this.tools.get(toolId);
 
     if (!tool || !ctx.allowedTools.includes(toolId)) {
-      return { success: false, error: `Tool '${toolId}' not allowed in current context` };
+      return {
+        success: false,
+        error: `Tool '${toolId}' not allowed in current context`,
+      };
     }
 
     if (tool.requiresConfirmation) {
-      return { success: false, error: `Tool '${toolId}' requires user confirmation before execution` };
+      return {
+        success: false,
+        error: `Tool '${toolId}' requires user confirmation before execution`,
+      };
     }
 
     try {
@@ -124,16 +135,21 @@ export class ToolRegistry {
    * 执行工具，更新审计记录（confirmed=true + 实际 result）。
    */
   async executeAfterConfirm(
-    toolId:  string,
+    toolId: string,
     auditId: string,
-    input:   unknown,
-    ctx:     CallerContext,
+    input: unknown,
+    ctx: CallerContext,
   ): Promise<VelaToolResult> {
     const tool = this.tools.get(toolId);
 
     if (!tool || !ctx.allowedTools.includes(toolId)) {
-      await this.auditRepository.updateExecution(auditId, false, { error: `Tool '${toolId}' not allowed in current context` });
-      return { success: false, error: `Tool '${toolId}' not allowed in current context` };
+      await this.auditRepository.updateExecution(auditId, false, {
+        error: `Tool '${toolId}' not allowed in current context`,
+      });
+      return {
+        success: false,
+        error: `Tool '${toolId}' not allowed in current context`,
+      };
     }
 
     let result: VelaToolResult;
