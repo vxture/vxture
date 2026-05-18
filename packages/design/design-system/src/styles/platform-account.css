@@ -14,5 +14,7 @@
 @import "./platform-account-profile-card-avatar.css";
 @import "./platform-account-profile-card-summary.css";
 @import "./platform-account-profile-fields.css";
-@import "./platform-account-connected.css";
+@import "./platform-account-connected-summary.css";
+@import "./platform-account-connected-list.css";
+@import "./platform-account-connected-details.css";
 @import "./platform-account-organization.css";

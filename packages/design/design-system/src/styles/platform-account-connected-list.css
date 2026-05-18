@@ -1,0 +1,72 @@
+/**
+ * platform-account-connected-list.css - 平台账号外部账号绑定列表和标识。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-account-connected-list {
+  display: grid;
+  gap: 0;
+  min-width: 0;
+}
+
+.vx-account-connected-row {
+  display: grid;
+  grid-template-columns: var(--vx-account-connected-row-columns);
+  gap: var(--vx-account-connected-row-gap);
+  align-items: center;
+  min-height: var(--vx-account-connected-row-min-height);
+  padding: var(--vx-account-connected-row-padding);
+  border-top: var(--vx-account-connected-row-border);
+}
+
+.dark .vx-account-connected-row {
+  border-top-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}
+
+.vx-account-connected-row--connected {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--vx-color-shell-brand) 3%, transparent), transparent 46%);
+}
+
+.vx-account-connected-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--vx-account-connected-logo-size);
+  height: var(--vx-account-connected-logo-size);
+  border-radius: var(--vx-platform-radius-sm);
+  border: var(--vx-account-connected-logo-border);
+  background: var(--vx-color-shell-panel);
+  color: var(--vx-console-brand-strong);
+  font-size: var(--vx-account-connected-logo-text-size);
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.vx-account-connected-logo--wechat {
+  color: var(--vx-color-success-700);
+  background: color-mix(in srgb, var(--vx-color-success) 12%, transparent);
+}
+
+.vx-account-connected-logo--dingtalk {
+  color: var(--vx-color-brand-700);
+  background: color-mix(in srgb, var(--vx-color-auth-accent-light) 12%, transparent);
+}
+
+.vx-account-connected-logo--feishu {
+  color: var(--vx-color-teal-700);
+  background: var(--vx-color-teal-surface);
+}
+
+.vx-account-connected-logo--google {
+  color: var(--vx-color-warning-700);
+  background: color-mix(in srgb, var(--vx-color-warning) 14%, transparent);
+}
+
+.dark .vx-account-connected-logo {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 58%, transparent);
+}
