@@ -1,92 +1,11 @@
 /**
- * tokens-admin-directory-governance.css - Admin Directory 和 Governance 语义尺寸 token。
+ * tokens-admin-directory-governance.css - Admin directory/governance 语义 token 入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-15
+ * @date 2026-05-17
  */
 
-:root {
-  --vx-admin-directory-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-header-gap: var(--vx-component-metric-075r);
-  --vx-admin-directory-pagination-min-height: var(--vx-component-metric-2r);
-  --vx-admin-directory-pagination-padding-top: var(--vx-component-metric-075r);
-  --vx-admin-directory-pagination-padding-bottom: var(--vx-component-metric-095r);
-  --vx-admin-directory-page-size-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-page-size-button-size: var(--vx-component-metric-2r);
-  --vx-admin-directory-page-size-button-padding-x: var(--vx-component-metric-05r);
-  --vx-admin-directory-list-border-width: var(--vx-component-metric-1p);
-  --vx-admin-directory-row-default-grid: var(--vx-component-metric-275r) minmax(0, 1.8fr) minmax(0, 0.5fr) minmax(0, 0.85fr) minmax(0, 1.15fr) minmax(0, 1fr) var(--vx-component-metric-3r);
-  --vx-admin-directory-row-gap: var(--vx-component-metric-075r);
-  --vx-admin-directory-row-padding-y: var(--vx-component-metric-1r);
-  --vx-admin-directory-row-cell-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-row-identity-track: var(--vx-component-metric-2r);
-  --vx-admin-directory-row-identity-gap: var(--vx-component-metric-1r);
-  --vx-admin-directory-row-inline-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-row-badge-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-status-dot-size: var(--vx-component-metric-1125r);
-  --vx-admin-directory-status-dot-halo-width: var(--vx-component-metric-0125r);
-  --vx-admin-directory-status-dot-icon-size: var(--vx-component-metric-06875r);
-  --vx-admin-directory-card-grid-gap: var(--vx-component-metric-2r);
-  --vx-admin-directory-card-grid-padding-top: var(--vx-component-metric-125r);
-  --vx-admin-directory-card-grid-padding-bottom: var(--vx-component-metric-15r);
-  --vx-admin-directory-card-gap: var(--vx-component-metric-15r);
-  --vx-admin-directory-card-padding: var(--vx-component-metric-15r);
-  --vx-admin-directory-card-border-width: var(--vx-component-metric-1p);
-  --vx-admin-directory-card-accent-border-width: var(--vx-component-metric-2p);
-  --vx-admin-directory-card-header-track: var(--vx-component-metric-25r);
-  --vx-admin-directory-card-header-gap: var(--vx-component-metric-1r);
-  --vx-admin-directory-card-body-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-card-metrics-gap: var(--vx-component-metric-1r);
-  --vx-admin-directory-card-metric-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-card-footer-gap: var(--vx-component-metric-1r);
-  --vx-admin-directory-card-footer-padding-top: var(--vx-component-metric-1r);
-  --vx-admin-directory-actions-trigger-size: var(--vx-component-metric-25r);
-  --vx-admin-directory-actions-trigger-icon-size: var(--vx-component-metric-15r);
-  --vx-admin-directory-actions-menu-offset: var(--vx-component-metric-0125r);
-  --vx-admin-directory-actions-menu-width: var(--vx-component-metric-10r);
-  --vx-admin-directory-actions-menu-gap: var(--vx-component-metric-025r);
-  --vx-admin-directory-actions-menu-padding: var(--vx-component-metric-05r);
-  --vx-admin-directory-actions-menu-border-width: var(--vx-component-metric-1p);
-  --vx-admin-directory-actions-menu-shadow-y: var(--vx-component-metric-18p);
-  --vx-admin-directory-actions-menu-shadow-blur: var(--vx-component-metric-42p);
-  --vx-admin-directory-actions-menu-hit-area-height: var(--vx-component-metric-025r);
-  --vx-admin-directory-actions-menu-button-height: var(--vx-component-metric-25r);
-  --vx-admin-directory-actions-menu-button-gap: var(--vx-component-metric-05r);
-  --vx-admin-directory-actions-menu-button-padding-x: var(--vx-component-metric-075r);
-  --vx-admin-directory-pagination-actions-gap: var(--vx-component-metric-1r);
-  --vx-admin-governance-page-max-width: var(--vx-admin-directory-row-max-width);
-  --vx-admin-governance-row-min-width: var(--vx-admin-directory-row-min-width);
-  --vx-admin-governance-list-grid: var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.25fr) minmax(0, 0.5fr) minmax(0, 0.68fr) minmax(0, 0.68fr) minmax(0, 0.9fr) var(--vx-component-metric-5r);
-  --vx-admin-governance-list-grid-compact: var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(var(--vx-component-metric-18r-large), 1.25fr) minmax(var(--vx-admin-grid-column-xs), 0.5fr) minmax(var(--vx-component-metric-8r), 0.68fr) minmax(var(--vx-component-metric-8r), 0.68fr) minmax(var(--vx-component-metric-10r), 0.9fr) var(--vx-component-metric-5r);
-  --vx-admin-governance-row-min-height: var(--vx-component-metric-4r);
-  --vx-admin-governance-sticky-shadow-width: var(--vx-component-metric-1p);
-  --vx-admin-governance-row-identity-gap: var(--vx-component-metric-05r);
-  --vx-admin-governance-row-identity-icon-size: var(--vx-component-metric-1625r);
-  --vx-admin-governance-row-identity-icon-padding: var(--vx-component-metric-03r);
-  --vx-admin-governance-row-copy-gap: var(--vx-component-metric-0125r);
-  --vx-admin-governance-row-title-line: var(--vx-component-metric-125r);
-  --vx-admin-governance-row-meta-line: var(--vx-component-metric-1r);
-  --vx-admin-governance-row-meta-gap: var(--vx-component-metric-05r);
-  --vx-admin-governance-status-gap: var(--vx-component-metric-025r);
-  --vx-admin-governance-status-line: var(--vx-component-metric-1125r);
-  --vx-admin-governance-card-grid-gap: var(--vx-component-metric-1r);
-  --vx-admin-governance-card-gap: var(--vx-component-metric-0875r);
-  --vx-admin-governance-card-padding: var(--vx-component-metric-1r);
-  --vx-admin-governance-card-border-width: var(--vx-component-metric-1p);
-  --vx-admin-governance-card-header-grid: var(--vx-component-metric-2r) minmax(0, 1fr) auto;
-  --vx-admin-governance-card-header-gap: var(--vx-component-metric-0625r);
-  --vx-admin-governance-card-icon-size: var(--vx-component-metric-2r);
-  --vx-admin-governance-card-icon-padding: var(--vx-component-metric-0375r);
-  --vx-admin-governance-card-header-copy-gap: var(--vx-component-metric-0125r);
-  --vx-admin-governance-card-title-size: var(--vx-component-metric-09375r);
-  --vx-admin-governance-card-title-line: var(--vx-component-metric-125r);
-  --vx-admin-governance-card-copy-size: var(--vx-component-metric-08125r);
-  --vx-admin-governance-card-copy-line: var(--vx-component-metric-125r);
-  --vx-admin-governance-card-body-min-height: var(--vx-component-metric-25r);
-  --vx-admin-governance-card-tags-gap: var(--vx-component-metric-0375r);
-  --vx-admin-governance-card-footer-gap: var(--vx-component-metric-075r);
-  --vx-admin-governance-card-footer-padding-top: var(--vx-component-metric-075r);
-  --vx-admin-governance-card-footer-value-size: var(--vx-component-metric-075r);
-}
+@import "./tokens-admin-directory.css";
+@import "./tokens-admin-governance.css";

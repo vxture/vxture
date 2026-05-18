@@ -5,7 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination as DsPagination,
+} from "@vxture/design-system";
 import {
   fetchInvoiceLedgerRecords,
   submitBillingInvoiceReceiptAction,
@@ -20,6 +28,10 @@ import type {
 import { ActionButton } from "@/modules/shared/ActionButton";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  PageSizePicker as AdminPageSizePicker,
+  type PageSize,
+} from "@/modules/shared/PageSizePicker";
 import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
 import {
   canRunInvoiceReceiptAction,
@@ -43,9 +55,6 @@ type InvoiceStatusFilter =
 type InvoiceTypeFilter = "all" | BillingInvoiceType;
 type InvoiceTaxFilter = "all" | BillingInvoiceTaxType;
 type DeliveryFilter = "all" | "not_sent" | "sent" | "finished";
-
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
 function formatCurrency(
   value: number,
@@ -194,32 +203,6 @@ function SummaryItem({
   );
 }
 
-function PageSizePicker({
-  value,
-  onChange,
-}: {
-  value: PageSize;
-  onChange: (value: PageSize) => void;
-}) {
-  return (
-    <div className="vx-tenant-page-size" aria-label="每页条数">
-      {PAGE_SIZE_OPTIONS.map((option) => (
-        <span key={option}>
-          <Button
-            variant={value === option ? "secondary" : "ghost"}
-            size="sm"
-            className={value === option ? "is-active" : undefined}
-            onClick={() => onChange(option)}
-            aria-label={`每页 ${option} 条`}
-          >
-            {option}
-          </Button>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 function InvoiceActionsMenu({
   invoice,
   onReceiptAction,
@@ -233,7 +216,10 @@ function InvoiceActionsMenu({
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${invoice.invoiceNo} 发票操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -243,26 +229,35 @@ function InvoiceActionsMenu({
             id: "bill",
             label: "账单详情",
             icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/billing/${encodeURIComponent(invoice.billId)}`),
+            onSelect: () =>
+              router.push(`/billing/${encodeURIComponent(invoice.billId)}`),
           },
           {
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(invoice.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(invoice.tenantId)}`),
           },
           ...(["update_shipping", "finish", "red"] as const).map((action) => ({
             id: action,
             label: invoiceReceiptActionLabel(action),
             icon: (
               <Icon
-                name={action === "red" ? "warning" : action === "finish" ? "check" : "table"}
+                name={
+                  action === "red"
+                    ? "warning"
+                    : action === "finish"
+                      ? "check"
+                      : "table"
+                }
                 size="xs"
                 fallback="placeholder"
               />
             ),
             disabled: !canRunInvoiceReceiptAction(action, invoice),
-            title: invoiceReceiptActionDisabledReason(action, invoice) ?? undefined,
+            title:
+              invoiceReceiptActionDisabledReason(action, invoice) ?? undefined,
             danger: action === "red",
             onSelect: () => onReceiptAction(invoice, action),
           })),
@@ -307,7 +302,13 @@ function InvoiceListRows({
         <span>
           <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            checked={
+              isPageSelected
+                ? true
+                : selectedOnPage > 0
+                  ? "indeterminate"
+                  : false
+            }
             onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页发票"
           />
@@ -348,7 +349,9 @@ function InvoiceListRows({
               <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onCheckedChange={(value) => onToggleInvoice(invoice.id, value === true)}
+                onCheckedChange={(value) =>
+                  onToggleInvoice(invoice.id, value === true)
+                }
                 aria-label={`选择发票 ${invoice.invoiceNo}`}
               />
             </span>
@@ -582,8 +585,13 @@ function Pagination({
         共 {formatNumber(total)} 条发票记录
       </span>
       <div className="vx-tenant-pagination__actions">
-        <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
+        <AdminPageSizePicker value={pageSize} onChange={onPageSizeChange} />
+        <DsPagination
+          className="vx-tenant-pagination__pager"
+          page={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </footer>
   );

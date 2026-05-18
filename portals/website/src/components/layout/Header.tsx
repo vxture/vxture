@@ -48,6 +48,7 @@ import {
 
 const PAGE_FULLSCREEN_ID = 'page-root-native';
 const FONT_SIZE_PREFERENCE_KEY = 'vxture-font-size-preference';
+const DEFAULT_AVATAR_ONLINE_SRC = '/assets/icon/avatar-default-online.png';
 
 function getDisplayName(user: UserInfo, fallback: string): string {
   return user.displayName?.trim() || user.username?.trim() || user.name?.trim() || fallback;
@@ -274,12 +275,15 @@ function UserMenu({
   const roleLabel = getRoleLabel(user, t);
   const showPersonalBadge = hasPersonalVerification(user);
   const showOrganizationBadge = hasOrganizationVerification(user);
+  const avatarSrc = user.avatarUrl?.trim() || DEFAULT_AVATAR_ONLINE_SRC;
 
   return (
     <ShellUserMenu
       user={{
         displayName,
         uniqueLine,
+        avatarSrc,
+        avatarAlt: displayName,
         avatarFallback: Array.from(displayName.trim() || 'V')[0]?.toLocaleUpperCase() ?? 'V',
         badges: [
           { key: 'role', label: roleLabel },
@@ -288,6 +292,7 @@ function UserMenu({
         ],
       }}
       openLabel={t('open')}
+      online={!disabled}
       settings={<QuickSettings />}
       actions={[
         { key: 'switch-user', label: t('switchUser'), icon: 'user-switch', disabled, onClick: onSwitchUser },

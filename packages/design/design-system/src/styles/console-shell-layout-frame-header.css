@@ -1,0 +1,101 @@
+/**
+ * console-shell-layout-frame-header.css - Console shell 顶栏布局。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+.vx-shell-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vx-console-space-1r);
+  min-height: var(--vx-shell-header-height);
+  padding: 0 var(--vx-console-space-1r);
+  border-bottom: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  background: transparent;
+  box-shadow: none;
+}
+
+.vx-shell-header__brand {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-06r);
+  max-width: min(var(--vx-console-size-28r-large), var(--vx-console-shell-title-max-width-fluid));
+}
+
+.vx-shell-header__brand-mark {
+  width: var(--vx-console-size-185r);
+  height: var(--vx-console-size-185r);
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: var(--vx-console-radius-07r);
+  background: linear-gradient(135deg, var(--vx-color-shell-brand), var(--vx-color-brand-300));
+  color: var(--vx-color-white);
+  font-size: var(--vx-console-text-size-088r);
+  font-weight: 700;
+}
+
+.vx-shell-header__brand-copy {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-045r);
+  flex-wrap: nowrap;
+}
+
+.vx-shell-header__brand-title,
+.vx-shell-header__workspace-name {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--vx-console-size-1r);
+  font-size: var(--vx-console-text-size-096r);
+  line-height: 1;
+  letter-spacing: calc(var(--vx-console-text-tracking-002e) * -1);
+  color: var(--vx-console-text);
+}
+
+.vx-shell-header__brand-title {
+  font-family: var(--font-brand);
+  font-weight: 700;
+}
+
+.vx-shell-header__brand-divider {
+  color: color-mix(in srgb, var(--vx-color-shell-muted) 50%, transparent);
+  font-size: var(--vx-console-text-size-08r);
+  line-height: 1;
+  user-select: none;
+}
+
+.vx-shell-header__tenant-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-042r);
+  min-height: var(--vx-console-size-128r);
+  padding: 0 var(--vx-console-space-056r);
+  border-radius: var(--vx-radius-sm);
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  color: color-mix(in srgb, var(--vx-color-shell-brand) 92%, transparent);
+  font-size: var(--vx-console-text-size-067r);
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.vx-shell-header__tenant-tag-icon {
+  color: currentColor;
+  opacity: 0.9;
+  margin-right: var(--vx-console-space-002r);
+}
+
+.vx-shell-header__workspace-name {
+  min-width: 0;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -1,106 +1,14 @@
 /**
- * tokens-console-size-effect.css - Console size、文字、效果和 motion token。
+ * tokens-console-size-effect.css - Console 尺度、文字、效果和视口 token 入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-15
+ * @date 2026-05-17
  */
 
-:root {
-  --vx-console-size-105r-large: var(--vx-component-metric-105r-large);
-  --vx-console-size-11r-large: var(--vx-component-metric-11r-large);
-  --vx-console-size-128r: var(--vx-component-metric-128r);
-  --vx-console-size-12r-large: var(--vx-component-metric-12r-large);
-  --vx-console-size-15p: var(--vx-component-metric-15p);
-  --vx-console-size-15r: var(--vx-component-metric-15r);
-  --vx-console-size-175r: var(--vx-component-metric-175r);
-  --vx-console-size-185r: var(--vx-component-metric-185r);
-  --vx-console-size-18r-large: var(--vx-component-metric-18r-large);
-  --vx-console-size-1r: var(--vx-component-metric-1r);
-  --vx-console-size-21r: var(--vx-component-metric-21r);
-  --vx-console-size-225r: var(--vx-component-metric-225r);
-  --vx-console-size-228r: var(--vx-component-metric-228r);
-  --vx-console-size-245r: var(--vx-component-metric-245r);
-  --vx-console-size-24r: var(--vx-component-metric-24r);
-  --vx-console-size-255r: var(--vx-component-metric-255r);
-  --vx-console-size-25r: var(--vx-component-metric-25r);
-  --vx-console-size-28r-large: var(--vx-component-metric-28r-large);
-  --vx-console-size-2r: var(--vx-component-metric-2r);
-  --vx-console-size-31r: var(--vx-component-metric-31r);
-  --vx-console-size-325r: var(--vx-component-metric-325r);
-  --vx-console-size-360p: var(--vx-component-metric-360p);
-  --vx-console-size-3p: var(--vx-component-metric-3p);
-  --vx-console-size-3r: var(--vx-component-metric-3r);
-  --vx-console-size-4p: var(--vx-component-metric-4p);
-  --vx-console-size-540p: var(--vx-component-metric-540p);
-  --vx-console-size-8r: var(--vx-component-metric-8r);
-  --vx-console-track-12r-large: var(--vx-component-metric-12r-large);
-  --vx-console-track-18r-large: var(--vx-component-metric-18r-large);
-  --vx-console-radius-07r: var(--vx-component-metric-07r);
-  --vx-console-radius-10p: var(--vx-component-metric-10p);
-  --vx-console-radius-14p: var(--vx-component-metric-14p);
-  --vx-console-radius-16p: var(--vx-component-metric-16p);
-  --vx-console-radius-18p: var(--vx-component-metric-18p);
-  --vx-console-radius-5p: var(--vx-component-metric-5p);
-  --vx-console-line-width-2p: var(--vx-component-metric-2p);
-  --vx-console-text-size-062r: var(--vx-component-metric-062r);
-  --vx-console-text-size-064r: var(--vx-component-metric-064r);
-  --vx-console-text-size-066r: var(--vx-component-metric-066r);
-  --vx-console-text-size-067r: var(--vx-component-metric-067r);
-  --vx-console-text-size-068r: var(--vx-component-metric-068r);
-  --vx-console-text-size-072r: var(--vx-component-metric-072r);
-  --vx-console-text-size-076r: var(--vx-component-metric-076r);
-  --vx-console-text-size-078r: var(--vx-component-metric-078r);
-  --vx-console-text-size-07r: var(--vx-component-metric-07r);
-  --vx-console-text-size-082r: var(--vx-component-metric-082r);
-  --vx-console-text-size-084r: var(--vx-component-metric-084r);
-  --vx-console-text-size-086r: var(--vx-component-metric-086r);
-  --vx-console-text-size-088r: var(--vx-component-metric-088r);
-  --vx-console-text-size-08r: var(--vx-component-metric-08r);
-  --vx-console-text-size-092r: var(--vx-component-metric-092r);
-  --vx-console-text-size-094r: var(--vx-component-metric-094r);
-  --vx-console-text-size-096r: var(--vx-component-metric-096r);
-  --vx-console-text-size-09r: var(--vx-component-metric-09r);
-  --vx-console-text-size-105r: var(--vx-component-metric-105r);
-  --vx-console-text-size-15r: var(--vx-component-metric-15r);
-  --vx-console-text-size-1r: var(--vx-component-metric-1r);
-  --vx-console-text-line-2r: var(--vx-component-metric-2r);
-  --vx-console-text-tracking-001e: var(--vx-component-metric-001e);
-  --vx-console-text-tracking-002e: var(--vx-component-metric-002e);
-  --vx-console-text-tracking-008e: var(--vx-component-metric-008e);
-  --vx-console-text-tracking-018e: var(--vx-component-metric-018e);
-  --vx-console-text-tracking-01e: var(--vx-component-metric-01e);
-  --vx-console-effect-14p: var(--vx-component-metric-14p);
-  --vx-console-effect-16p: var(--vx-component-metric-16p);
-  --vx-console-effect-18p: var(--vx-component-metric-18p);
-  --vx-console-effect-20p: var(--vx-component-metric-20p);
-  --vx-console-effect-22p: var(--vx-component-metric-22p);
-  --vx-console-effect-28p: var(--vx-component-metric-28p);
-  --vx-console-effect-36p: var(--vx-component-metric-36p);
-  --vx-console-effect-44p: var(--vx-component-metric-44p);
-  --vx-console-effect-4p: var(--vx-component-metric-4p);
-  --vx-console-effect-56p: var(--vx-component-metric-56p);
-  --vx-console-effect-68p: var(--vx-component-metric-68p);
-  --vx-console-effect-6p: var(--vx-component-metric-6p);
-  --vx-console-assistant-panel-shadow: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-ai) 24%, transparent);
-  --vx-console-assistant-panel-shadow-dark: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-ai) 22%, transparent);
-  --vx-console-brand-logo-filter: drop-shadow(0 var(--vx-console-effect-6p) var(--vx-console-effect-14p) color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent));
-  --vx-console-tenant-dialog-shadow: 0 var(--vx-console-effect-28p) var(--vx-console-effect-68p) color-mix(in srgb, var(--vx-color-brand-950) 18%, transparent);
-  --vx-console-tenant-panel-shadow: 0 var(--vx-console-effect-22p) var(--vx-console-effect-56p) color-mix(in srgb, var(--vx-color-brand-950) 16%, transparent);
-  --vx-console-pattern-12r-large: var(--vx-component-metric-12r-large);
-  --vx-console-motion-10p: var(--vx-component-metric-10p);
-  --vx-console-motion-8p: var(--vx-component-metric-8p);
-  --vx-console-viewport-min-height: var(--vx-console-common-scale-100vh);
-  --vx-console-shell-viewport-min-height: var(--vx-console-shell-scale-100vh);
-  --vx-console-shell-body-available-height: calc(var(--vx-console-shell-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-responsive-panel-available-height: calc(var(--vx-console-responsive-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-assistant-available-height: calc(var(--vx-console-assistant-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-shell-header-padding-fluid: var(--vx-console-shell-scale-1-1vw);
-  --vx-console-shell-header-gap-fluid: var(--vx-console-shell-scale-2-4vw);
-  --vx-console-shell-title-max-width-fluid: var(--vx-console-shell-scale-42vw);
-  --vx-console-tenant-trigger-max-width-fluid: var(--vx-console-tenant-switcher-scale-32vw);
-  --vx-console-tenant-trigger-width-available: calc(var(--vx-console-tenant-switcher-scale-100vw) - var(--vx-console-size-15r));
-  --vx-console-tenant-panel-width-available: calc(var(--vx-console-tenant-switcher-scale-100vw) - var(--vx-console-size-2r));
-  --vx-console-tenant-panel-max-height-available: calc(var(--vx-console-tenant-switcher-scale-100vh) - var(--vx-shell-header-height) - var(--vx-console-size-1r));
-}
+@import "./tokens-console-size.css";
+@import "./tokens-console-radius.css";
+@import "./tokens-console-text.css";
+@import "./tokens-console-effect.css";
+@import "./tokens-console-viewport.css";

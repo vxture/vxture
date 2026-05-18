@@ -1,0 +1,27 @@
+/**
+ * tokens-dark-marketing.css - 暗色营销页面区块和 hero token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.dark,
+:root.dark {
+  --vx-color-section-page-bg: #020617;
+  --vx-color-section-odd-bg: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --vx-color-section-even-bg: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+  --vx-color-section-border: rgba(71, 85, 105, 0.72);
+  --vx-page-bg: var(--vx-color-section-page-bg);
+  --vx-section-odd-bg: var(--vx-color-section-odd-bg);
+  --vx-section-even-bg: var(--vx-color-section-even-bg);
+  --vx-section-border: var(--vx-color-section-border);
+
+  --vx-color-hero-bg: linear-gradient(145deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%);
+  --vx-color-hero-grid: rgba(255, 255, 255, 0.04);
+  --vx-color-hero-node-rgb: 147 197 253;
+  --vx-color-hero-line-rgb: 147 197 253;
+  --vx-color-hero-scan: rgba(147, 197, 253, 0.45);
+  --vx-color-hero-fade: rgba(15, 23, 42, 0.52);
+}

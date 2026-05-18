@@ -1,6 +1,11 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 
-import { ModelRegistryRepository } from '../registry/model-registry.repository';
+import { ModelRegistryRepository } from "../registry/model-registry.repository";
 import type {
   AiModelGrantRecord,
   AiModelRecord,
@@ -9,7 +14,7 @@ import type {
   ModelConfig,
   UpdateAiModelGrantInput,
   UpdateAiModelInput,
-} from '../types/gateway.types';
+} from "../types/gateway.types";
 
 export interface AiModelAdminRecord {
   id: string;
@@ -20,7 +25,12 @@ export interface AiModelAdminRecord {
   endpointUrl: string;
   protocol: string;
   modelType: string;
+  description: string | null;
+  contextWindow: number | null;
+  maxOutputTokens: number | null;
   capabilities: string[];
+  supportsStreaming: boolean;
+  sort: number;
   isActive: boolean;
   config: ModelConfig | null;
   createdAt: string;
@@ -40,11 +50,11 @@ export interface AiModelGrantAdminRecord {
   updatedAt: string;
 }
 
-export type CreateAiModelBody = Partial<Omit<CreateAiModelInput, 'config'>> & {
+export type CreateAiModelBody = Partial<Omit<CreateAiModelInput, "config">> & {
   config?: ModelConfig | null;
 };
 
-export type UpdateAiModelBody = Partial<Omit<UpdateAiModelInput, 'config'>> & {
+export type UpdateAiModelBody = Partial<Omit<UpdateAiModelInput, "config">> & {
   config?: ModelConfig | null;
 };
 
@@ -68,7 +78,10 @@ export type UpdateAiModelGrantBody = {
 
 @Injectable()
 export class ModelAdminService {
-  constructor(@Inject(ModelRegistryRepository) private readonly repository: ModelRegistryRepository) {}
+  constructor(
+    @Inject(ModelRegistryRepository)
+    private readonly repository: ModelRegistryRepository,
+  ) {}
 
   async listModels(includeInactive = true): Promise<AiModelAdminRecord[]> {
     const models = await this.repository.listModels(includeInactive);
@@ -81,14 +94,20 @@ export class ModelAdminService {
     return mapModel(model);
   }
 
-  async updateModel(modelId: string, body: UpdateAiModelBody): Promise<AiModelAdminRecord> {
+  async updateModel(
+    modelId: string,
+    body: UpdateAiModelBody,
+  ): Promise<AiModelAdminRecord> {
     await this.assertModelExists(modelId);
     const input = this.normalizeUpdateModel(body);
     const model = await this.repository.updateModel(modelId, input);
     return mapModel(model);
   }
 
-  async setModelActive(modelId: string, isActive: boolean): Promise<AiModelAdminRecord> {
+  async setModelActive(
+    modelId: string,
+    isActive: boolean,
+  ): Promise<AiModelAdminRecord> {
     await this.assertModelExists(modelId);
     const model = await this.repository.updateModel(modelId, { isActive });
     return mapModel(model);
@@ -100,27 +119,44 @@ export class ModelAdminService {
     return mapModel(model);
   }
 
-  async listGrants(filters: { tenantId?: string; modelId?: string }): Promise<AiModelGrantAdminRecord[]> {
+  async listGrants(filters: {
+    tenantId?: string;
+    modelId?: string;
+  }): Promise<AiModelGrantAdminRecord[]> {
     const grants = await this.repository.listGrants(filters);
     return grants.map(mapGrant);
   }
 
-  async createGrant(body: CreateAiModelGrantBody): Promise<AiModelGrantAdminRecord> {
+  async createGrant(
+    body: CreateAiModelGrantBody,
+  ): Promise<AiModelGrantAdminRecord> {
     const input = await this.normalizeCreateGrant(body);
     const grant = await this.repository.createGrant(input);
     return mapGrant(grant);
   }
 
-  async updateGrant(grantId: string, body: UpdateAiModelGrantBody): Promise<AiModelGrantAdminRecord> {
+  async updateGrant(
+    grantId: string,
+    body: UpdateAiModelGrantBody,
+  ): Promise<AiModelGrantAdminRecord> {
     await this.assertGrantExists(grantId);
     const input = this.normalizeUpdateGrant(body);
     const grant = await this.repository.updateGrant(grantId, input);
     return mapGrant(grant);
   }
 
-  async setGrantActive(grantId: string, isActive: boolean): Promise<AiModelGrantAdminRecord> {
+  async setGrantActive(
+    grantId: string,
+    isActive: boolean,
+  ): Promise<AiModelGrantAdminRecord> {
     await this.assertGrantExists(grantId);
     const grant = await this.repository.updateGrant(grantId, { isActive });
+    return mapGrant(grant);
+  }
+
+  async deleteGrant(grantId: string): Promise<AiModelGrantAdminRecord> {
+    await this.assertGrantExists(grantId);
+    const grant = await this.repository.deleteGrant(grantId);
     return mapGrant(grant);
   }
 
@@ -128,14 +164,19 @@ export class ModelAdminService {
     const capabilities = normalizeCapabilities(body.capabilities);
 
     return {
-      modelCode: requiredString(body.modelCode, 'modelCode'),
+      modelCode: requiredString(body.modelCode, "modelCode"),
       providerId: optionalString(body.providerId),
-      modelName: requiredString(body.modelName, 'modelName'),
-      provider: requiredString(body.provider, 'provider'),
-      endpointUrl: requiredUrl(body.endpointUrl, 'endpointUrl'),
-      protocol: requiredString(body.protocol, 'protocol'),
-      modelType: body.modelType ?? 'chat',
+      modelName: requiredString(body.modelName, "modelName"),
+      provider: requiredString(body.provider, "provider"),
+      endpointUrl: requiredUrl(body.endpointUrl, "endpointUrl"),
+      protocol: requiredString(body.protocol, "protocol"),
+      modelType: body.modelType ?? "chat",
+      description: optionalString(body.description),
+      contextWindow: optionalInt(body.contextWindow, "contextWindow"),
+      maxOutputTokens: optionalInt(body.maxOutputTokens, "maxOutputTokens"),
       capabilities,
+      supportsStreaming: body.supportsStreaming ?? true,
+      sort: body.sort ?? 999,
       config: body.config ?? null,
     };
   }
@@ -143,27 +184,49 @@ export class ModelAdminService {
   private normalizeUpdateModel(body: UpdateAiModelBody): UpdateAiModelInput {
     const input: UpdateAiModelInput = {};
 
-    if (body.modelCode !== undefined) input.modelCode = requiredString(body.modelCode, 'modelCode');
-    if (body.providerId !== undefined) input.providerId = optionalString(body.providerId);
-    if (body.modelName !== undefined) input.modelName = requiredString(body.modelName, 'modelName');
-    if (body.provider !== undefined) input.provider = requiredString(body.provider, 'provider');
-    if (body.endpointUrl !== undefined) input.endpointUrl = requiredUrl(body.endpointUrl, 'endpointUrl');
-    if (body.protocol !== undefined) input.protocol = requiredString(body.protocol, 'protocol');
-    if (body.modelType !== undefined) input.modelType = requiredString(body.modelType, 'modelType');
-    if (body.capabilities !== undefined) input.capabilities = normalizeCapabilities(body.capabilities);
+    if (body.modelCode !== undefined)
+      input.modelCode = requiredString(body.modelCode, "modelCode");
+    if (body.providerId !== undefined)
+      input.providerId = optionalString(body.providerId);
+    if (body.modelName !== undefined)
+      input.modelName = requiredString(body.modelName, "modelName");
+    if (body.provider !== undefined)
+      input.provider = requiredString(body.provider, "provider");
+    if (body.endpointUrl !== undefined)
+      input.endpointUrl = requiredUrl(body.endpointUrl, "endpointUrl");
+    if (body.protocol !== undefined)
+      input.protocol = requiredString(body.protocol, "protocol");
+    if (body.modelType !== undefined)
+      input.modelType = requiredString(body.modelType, "modelType");
+    if (body.description !== undefined)
+      input.description = optionalString(body.description);
+    if (body.contextWindow !== undefined)
+      input.contextWindow = optionalInt(body.contextWindow, "contextWindow");
+    if (body.maxOutputTokens !== undefined)
+      input.maxOutputTokens = optionalInt(
+        body.maxOutputTokens,
+        "maxOutputTokens",
+      );
+    if (body.capabilities !== undefined)
+      input.capabilities = normalizeCapabilities(body.capabilities);
+    if (body.supportsStreaming !== undefined)
+      input.supportsStreaming = body.supportsStreaming;
+    if (body.sort !== undefined) input.sort = body.sort;
     if (body.config !== undefined) input.config = body.config;
     if (body.isActive !== undefined) input.isActive = body.isActive;
 
     return input;
   }
 
-  private async normalizeCreateGrant(body: CreateAiModelGrantBody): Promise<CreateAiModelGrantInput> {
-    const modelId = requiredString(body.modelId, 'modelId');
+  private async normalizeCreateGrant(
+    body: CreateAiModelGrantBody,
+  ): Promise<CreateAiModelGrantInput> {
+    const modelId = requiredString(body.modelId, "modelId");
     await this.assertModelExists(modelId);
 
     return {
       modelId,
-      tenantId: requiredString(body.tenantId, 'tenantId'),
+      tenantId: requiredString(body.tenantId, "tenantId"),
       agentId: optionalString(body.agentId),
       priority: parsePriority(body.priority),
       reason: optionalString(body.reason),
@@ -172,13 +235,18 @@ export class ModelAdminService {
     };
   }
 
-  private normalizeUpdateGrant(body: UpdateAiModelGrantBody): UpdateAiModelGrantInput {
+  private normalizeUpdateGrant(
+    body: UpdateAiModelGrantBody,
+  ): UpdateAiModelGrantInput {
     const input: UpdateAiModelGrantInput = {};
 
-    if (body.agentId !== undefined) input.agentId = optionalString(body.agentId);
-    if (body.priority !== undefined) input.priority = parsePriority(body.priority);
+    if (body.agentId !== undefined)
+      input.agentId = optionalString(body.agentId);
+    if (body.priority !== undefined)
+      input.priority = parsePriority(body.priority);
     if (body.reason !== undefined) input.reason = optionalString(body.reason);
-    if (body.expiresAt !== undefined) input.expiresAt = parseDateOrNull(body.expiresAt);
+    if (body.expiresAt !== undefined)
+      input.expiresAt = parseDateOrNull(body.expiresAt);
     if (body.isActive !== undefined) input.isActive = body.isActive;
 
     return input;
@@ -194,7 +262,9 @@ export class ModelAdminService {
     return model;
   }
 
-  private async assertGrantExists(grantId: string): Promise<AiModelGrantRecord> {
+  private async assertGrantExists(
+    grantId: string,
+  ): Promise<AiModelGrantRecord> {
     const grant = await this.repository.findGrantById(grantId);
 
     if (!grant) {
@@ -215,7 +285,12 @@ function mapModel(model: AiModelRecord): AiModelAdminRecord {
     endpointUrl: model.endpointUrl,
     protocol: model.protocol,
     modelType: model.modelType,
+    description: model.description,
+    contextWindow: model.contextWindow,
+    maxOutputTokens: model.maxOutputTokens,
     capabilities: model.capabilities,
+    supportsStreaming: model.supportsStreaming,
+    sort: model.sort,
     isActive: model.isActive,
     config: model.config,
     createdAt: model.createdAt.toISOString(),
@@ -239,7 +314,7 @@ function mapGrant(grant: AiModelGrantRecord): AiModelGrantAdminRecord {
 }
 
 function requiredString(value: unknown, field: string): string {
-  if (typeof value !== 'string' || !value.trim()) {
+  if (typeof value !== "string" || !value.trim()) {
     throw new BadRequestException(`${field} is required`);
   }
 
@@ -247,7 +322,18 @@ function requiredString(value: unknown, field: string): string {
 }
 
 function optionalString(value: unknown): string | null {
-  return typeof value === 'string' && value.trim() ? value.trim() : null;
+  return typeof value === "string" && value.trim() ? value.trim() : null;
+}
+
+function optionalInt(
+  value: number | null | undefined,
+  field: string,
+): number | null {
+  if (value === null || value === undefined) return null;
+  if (!Number.isSafeInteger(value) || value < 0) {
+    throw new BadRequestException(`${field} must be a non-negative integer`);
+  }
+  return value;
 }
 
 function requiredUrl(value: unknown, field: string): string {
@@ -264,16 +350,16 @@ function requiredUrl(value: unknown, field: string): string {
 
 function normalizeCapabilities(value: unknown): string[] {
   if (!Array.isArray(value)) {
-    throw new BadRequestException('capabilities must be an array');
+    throw new BadRequestException("capabilities must be an array");
   }
 
   const capabilities = value
-    .filter((item): item is string => typeof item === 'string')
+    .filter((item): item is string => typeof item === "string")
     .map((item) => item.trim())
     .filter(Boolean);
 
   if (capabilities.length === 0) {
-    throw new BadRequestException('capabilities cannot be empty');
+    throw new BadRequestException("capabilities cannot be empty");
   }
 
   return [...new Set(capabilities)];
@@ -285,7 +371,7 @@ function parsePriority(value: number | null | undefined): number {
   }
 
   if (!Number.isSafeInteger(value) || value < 0) {
-    throw new BadRequestException('priority must be a positive integer');
+    throw new BadRequestException("priority must be a positive integer");
   }
 
   return value;
@@ -299,7 +385,7 @@ function parseDateOrNull(value: string | null | undefined): Date | null {
   const date = new Date(value);
 
   if (Number.isNaN(date.getTime())) {
-    throw new BadRequestException('expiresAt must be a valid date');
+    throw new BadRequestException("expiresAt must be a valid date");
   }
 
   return date;

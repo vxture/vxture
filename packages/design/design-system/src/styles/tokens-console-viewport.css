@@ -1,0 +1,23 @@
+/**
+ * tokens-console-viewport.css - Console 视口和流体布局 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-console-viewport-min-height: var(--vx-scale-100vh);
+  --vx-console-shell-viewport-min-height: var(--vx-scale-100vh);
+  --vx-console-shell-body-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
+  --vx-console-responsive-panel-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
+  --vx-console-assistant-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
+  --vx-console-shell-header-padding-fluid: var(--vx-scale-1-1vw);
+  --vx-console-shell-header-gap-fluid: var(--vx-scale-2-4vw);
+  --vx-console-shell-title-max-width-fluid: var(--vx-scale-42vw);
+  --vx-console-tenant-trigger-max-width-fluid: var(--vx-scale-32vw);
+  --vx-console-tenant-trigger-width-available: calc(var(--vx-scale-100vw) - var(--vx-console-size-15r));
+  --vx-console-tenant-panel-width-available: calc(var(--vx-scale-100vw) - var(--vx-console-size-2r));
+  --vx-console-tenant-panel-max-height-available: calc(var(--vx-scale-100vh) - var(--vx-shell-header-height) - var(--vx-console-size-1r));
+}

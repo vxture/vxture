@@ -1,0 +1,35 @@
+/**
+ * tokens-dark-base.css - 暗色基础色与文字 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.dark,
+:root.dark {
+  color-scheme: dark;
+
+  --vx-color-background: #0a0e1a;
+  --vx-color-foreground: #e6ebff;
+  --vx-color-page: #0a0e1a;
+  --vx-color-surface: #12172a;
+  --vx-color-surface-muted: #1a2038;
+  --vx-color-surface-soft: #161b2e;
+  --vx-color-surface-raised: #1c2440;
+  --vx-color-surface-inverse: #f8faff;
+  --vx-color-border: rgba(148, 163, 200, 0.1);
+  --vx-color-border-muted: rgba(148, 163, 200, 0.06);
+  --vx-color-border-strong: rgba(120, 156, 255, 0.32);
+  --vx-color-ring: rgba(120, 156, 255, 0.18);
+  --vx-color-ring-strong: rgba(120, 156, 255, 0.55);
+  --vx-color-overlay: rgba(2, 6, 23, 0.72);
+
+  --vx-color-text-primary: #e6ebff;
+  --vx-color-text-secondary: #aab4d4;
+  --vx-color-text-muted: #6b7794;
+  --vx-color-text-disabled: #4a5474;
+  --vx-color-text-inverse: #0f172a;
+  --vx-color-text-strong: #ffffff;
+}

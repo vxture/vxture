@@ -9,6 +9,4 @@
 @import "./platform-access-list.css";
 @import "./platform-access-identity.css";
 @import "./platform-access-actions.css";
-@import "./platform-access-role-permissions.css";
 @import "./platform-access-shared-panels.css";
-@import "./platform-access-token-scopes.css";

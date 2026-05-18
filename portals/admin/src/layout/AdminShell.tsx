@@ -46,7 +46,7 @@ const PAGE_FULLSCREEN_ID = 'admin-page-root-native';
 const ADMIN_SIDEBAR_ANIMATION_MS = 420;
 const ADMIN_SIDEBAR_TEXT_REVEAL_MS = 140;
 const ADMIN_SIDEBAR_AUTO_COLLAPSE_QUERY = '(max-width: 1360px)';
-const DEFAULT_AVATAR_SRC = '/assets/icon/avatar-default.png';
+const DEFAULT_AVATAR_ONLINE_SRC = '/assets/icon/avatar-default-online.png';
 const FONT_SIZE_PREFERENCE_KEY = 'vxture-font-size-preference';
 
 function isActivePath(pathname: string, href: string) {
@@ -323,11 +323,12 @@ function UserMenu({
       user={{
         displayName,
         uniqueLine,
-        avatarSrc: DEFAULT_AVATAR_SRC,
+        avatarSrc: DEFAULT_AVATAR_ONLINE_SRC,
         avatarAlt: displayName,
         avatarFallback: displayName.slice(0, 2).toUpperCase(),
         badges: [{ key: 'role', label: roleLabel }],
       }}
+      online={!disabled}
       openLabel={t('open')}
       settings={<QuickSettings />}
       actions={[

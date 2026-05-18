@@ -12,7 +12,7 @@
   align-items: center;
   gap: var(--vx-shell-brand-gap);
   min-width: 0;
-  color: var(--vx-console-text, var(--vx-color-shell-text));
+  color: var(--vx-shell-brand-color);
   font-weight: 760;
 }
 
@@ -40,7 +40,7 @@
   border: 0;
   border-radius: var(--vx-shell-tool-button-radius);
   background: transparent;
-  color: var(--vx-console-muted, var(--vx-color-shell-muted));
+  color: var(--vx-shell-tool-button-color);
   cursor: pointer;
   transition:
     background var(--vx-control-transition),
@@ -50,8 +50,8 @@
 
 :where(.vx-shell-tool-button:hover),
 :where(.vx-shell-tool-button--active) {
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 9%, transparent);
-  color: var(--vx-console-brand, var(--vx-color-shell-brand));
+  background: var(--vx-shell-tool-button-hover-background);
+  color: var(--vx-shell-tool-button-hover-color);
 }
 
 :where(.vx-shell-tool-button:disabled) {
@@ -61,6 +61,6 @@
 
 :where(.vx-shell-tool-button:focus-visible),
 :where(.vx-shell-user-trigger:focus-visible) {
-  outline: var(--vx-control-focus-ring-width) solid var(--vx-color-ring);
+  outline: var(--vx-control-focus-ring-width) solid var(--vx-shell-tool-button-focus-ring);
   outline-offset: var(--vx-control-focus-ring-offset);
 }

@@ -11,65 +11,65 @@
   /* ============================================================================
    * 标签页
    * ========================================================================== */
-  --vx-auth-tabs-border-width: var(--vx-auth-tabs-scale-1p);
-  --vx-auth-tabs-margin-bottom: var(--vx-auth-tabs-scale-22p);
-  --vx-auth-tabs-item-padding: var(--vx-auth-tabs-scale-10p) 0;
-  --vx-auth-tabs-item-active-border-width: var(--vx-auth-tabs-scale-2p);
-  --vx-auth-tabs-item-active-offset: var(--vx-auth-tabs-scale-neg-1p);
-  --vx-auth-tabs-item-size: var(--vx-auth-tabs-scale-13-5p);
-  --vx-auth-send-code-width: var(--vx-auth-tabs-scale-128p);
-  --vx-auth-send-code-height: var(--vx-auth-tabs-scale-42p);
-  --vx-auth-send-code-margin-top: var(--vx-auth-tabs-scale-24p);
-  --vx-auth-send-code-padding-x: var(--vx-auth-tabs-scale-12p);
-  --vx-auth-send-code-border-width: var(--vx-auth-tabs-scale-1p);
-  --vx-auth-reset-margin-top: var(--vx-auth-tabs-scale-14p);
-  --vx-auth-reset-avatar-size: var(--vx-auth-tabs-scale-52p);
-  --vx-auth-reset-avatar-tracking: var(--vx-auth-tabs-scale-0-04e);
-  --vx-auth-footer-max-width: var(--vx-auth-tabs-scale-80r);
-  --vx-auth-footer-padding-x: var(--vx-auth-tabs-scale-1r);
-  --vx-auth-qr-gap: var(--vx-auth-tabs-scale-16p);
+  --vx-auth-tabs-border-width: var(--vx-auth-scale-1p);
+  --vx-auth-tabs-margin-bottom: var(--vx-auth-scale-22p);
+  --vx-auth-tabs-item-padding: var(--vx-auth-scale-10p) 0;
+  --vx-auth-tabs-item-active-border-width: var(--vx-auth-scale-2p);
+  --vx-auth-tabs-item-active-offset: var(--vx-auth-scale-neg-1p);
+  --vx-auth-tabs-item-size: var(--vx-auth-scale-13-5p);
+  --vx-auth-send-code-width: var(--vx-auth-scale-128p);
+  --vx-auth-send-code-height: var(--vx-auth-scale-42p);
+  --vx-auth-send-code-margin-top: var(--vx-auth-scale-24p);
+  --vx-auth-send-code-padding-x: var(--vx-auth-scale-12p);
+  --vx-auth-send-code-border-width: var(--vx-auth-scale-1p);
+  --vx-auth-reset-margin-top: var(--vx-auth-scale-14p);
+  --vx-auth-reset-avatar-size: var(--vx-auth-scale-52p);
+  --vx-auth-reset-avatar-tracking: var(--vx-auth-scale-0-04e);
+  --vx-auth-footer-max-width: var(--vx-auth-scale-80r);
+  --vx-auth-footer-padding-x: var(--vx-auth-scale-1r);
+  --vx-auth-qr-gap: var(--vx-auth-scale-16p);
 
   /* ============================================================================
    * 视觉面板
    * ========================================================================== */
-  --vx-auth-visual-orb-top: var(--vx-auth-visual-scale-26p);
-  --vx-auth-visual-orb-left: var(--vx-auth-visual-scale-28p);
-  --vx-auth-visual-border-width: var(--vx-auth-visual-scale-1p);
-  --vx-auth-visual-orb-blur: var(--vx-auth-visual-scale-10p);
-  --vx-auth-visual-dot-size: var(--vx-auth-visual-scale-7p);
-  --vx-auth-visual-content-inset-inline: var(--vx-auth-visual-scale-42p);
-  --vx-auth-visual-content-inset-block-end: var(--vx-auth-visual-scale-38p);
-  --vx-auth-visual-heading-max-width: var(--vx-auth-visual-scale-560p);
-  --vx-auth-visual-heading-margin-bottom: var(--vx-auth-visual-scale-14p);
-  --vx-auth-visual-heading-size: clamp(var(--vx-auth-visual-scale-30p), var(--vx-auth-visual-scale-4vw), var(--vx-auth-visual-scale-56p));
-  --vx-auth-visual-copy-max-width: var(--vx-auth-visual-scale-500p);
-  --vx-auth-visual-metrics-width: min(var(--vx-auth-visual-scale-520p), 100%);
-  --vx-auth-visual-metrics-margin-top: var(--vx-auth-visual-scale-24p);
-  --vx-auth-visual-metrics-border-width: var(--vx-auth-visual-scale-1p);
-  --vx-auth-visual-metrics-blur: var(--vx-auth-visual-scale-12p);
-  --vx-auth-visual-value-margin-top: var(--vx-auth-visual-scale-3p);
-  --vx-auth-visual-divider-width: var(--vx-auth-visual-scale-1p);
+  --vx-auth-visual-orb-top: var(--vx-auth-scale-26p);
+  --vx-auth-visual-orb-left: var(--vx-auth-scale-28p);
+  --vx-auth-visual-border-width: var(--vx-auth-scale-1p);
+  --vx-auth-visual-orb-blur: var(--vx-auth-scale-10p);
+  --vx-auth-visual-dot-size: var(--vx-auth-scale-7p);
+  --vx-auth-visual-content-inset-inline: var(--vx-auth-scale-42p);
+  --vx-auth-visual-content-inset-block-end: var(--vx-auth-scale-38p);
+  --vx-auth-visual-heading-max-width: var(--vx-auth-scale-560p);
+  --vx-auth-visual-heading-margin-bottom: var(--vx-auth-scale-14p);
+  --vx-auth-visual-heading-size: clamp(var(--vx-auth-scale-30p), var(--vx-auth-scale-4vw), var(--vx-auth-scale-56p));
+  --vx-auth-visual-copy-max-width: var(--vx-auth-scale-500p);
+  --vx-auth-visual-metrics-width: min(var(--vx-auth-scale-520p), 100%);
+  --vx-auth-visual-metrics-margin-top: var(--vx-auth-scale-24p);
+  --vx-auth-visual-metrics-border-width: var(--vx-auth-scale-1p);
+  --vx-auth-visual-metrics-blur: var(--vx-auth-scale-12p);
+  --vx-auth-visual-value-margin-top: var(--vx-auth-scale-3p);
+  --vx-auth-visual-divider-width: var(--vx-auth-scale-1p);
 
   /* ============================================================================
    * 响应式
    * ========================================================================== */
-  --vx-auth-responsive-visual-mobile-size: var(--vx-auth-responsive-scale-64p);
-  --vx-auth-responsive-visual-tablet-size: var(--vx-auth-responsive-scale-56p);
-  --vx-auth-responsive-mobile-card-padding: var(--vx-auth-responsive-scale-10p) var(--vx-auth-responsive-scale-16p) var(--vx-auth-responsive-scale-22p);
-  --vx-auth-responsive-mobile-visual-min-height: var(--vx-auth-responsive-scale-220p);
-  --vx-auth-responsive-divider-size: var(--vx-auth-responsive-scale-1p);
-  --vx-auth-responsive-form-padding: var(--vx-auth-responsive-scale-28p) var(--vx-auth-responsive-scale-24p);
-  --vx-auth-responsive-form-action-min-height: var(--vx-auth-responsive-scale-52p);
-  --vx-auth-responsive-form-padding-y: var(--vx-auth-responsive-scale-12p);
-  --vx-auth-responsive-compact-card-padding: var(--vx-auth-responsive-scale-24p);
-  --vx-auth-responsive-dialog-width: calc(var(--vx-auth-responsive-scale-100vw) - var(--vx-auth-responsive-scale-32p));
-  --vx-auth-responsive-compact-form-padding: var(--vx-auth-responsive-scale-22p) var(--vx-auth-responsive-scale-42p);
-  --vx-auth-responsive-heading-margin-bottom: var(--vx-auth-responsive-scale-14p);
-  --vx-auth-responsive-divider-margin: var(--vx-auth-responsive-scale-10p) 0;
-  --vx-auth-responsive-social-size: var(--vx-auth-responsive-scale-36p);
-  --vx-auth-responsive-social-min-height: var(--vx-auth-responsive-scale-38p);
-  --vx-auth-responsive-social-margin-top: var(--vx-auth-responsive-scale-8p);
-  --vx-auth-responsive-medium-padding-x: var(--vx-auth-responsive-scale-1-5r);
-  --vx-auth-responsive-large-padding-x: var(--vx-auth-responsive-scale-2r);
-  --vx-auth-responsive-content-max-width: var(--vx-auth-responsive-scale-96r);
+  --vx-auth-responsive-visual-mobile-size: var(--vx-auth-scale-64p);
+  --vx-auth-responsive-visual-tablet-size: var(--vx-auth-scale-56p);
+  --vx-auth-responsive-mobile-card-padding: var(--vx-auth-scale-10p) var(--vx-auth-scale-16p) var(--vx-auth-scale-22p);
+  --vx-auth-responsive-mobile-visual-min-height: var(--vx-auth-scale-220p);
+  --vx-auth-responsive-divider-size: var(--vx-auth-scale-1p);
+  --vx-auth-responsive-form-padding: var(--vx-auth-scale-28p) var(--vx-auth-scale-24p);
+  --vx-auth-responsive-form-action-min-height: var(--vx-auth-scale-52p);
+  --vx-auth-responsive-form-padding-y: var(--vx-auth-scale-12p);
+  --vx-auth-responsive-compact-card-padding: var(--vx-auth-scale-24p);
+  --vx-auth-responsive-dialog-width: calc(var(--vx-auth-scale-100vw) - var(--vx-auth-scale-32p));
+  --vx-auth-responsive-compact-form-padding: var(--vx-auth-scale-22p) var(--vx-auth-scale-42p);
+  --vx-auth-responsive-heading-margin-bottom: var(--vx-auth-scale-14p);
+  --vx-auth-responsive-divider-margin: var(--vx-auth-scale-10p) 0;
+  --vx-auth-responsive-social-size: var(--vx-auth-scale-36p);
+  --vx-auth-responsive-social-min-height: var(--vx-auth-scale-38p);
+  --vx-auth-responsive-social-margin-top: var(--vx-auth-scale-8p);
+  --vx-auth-responsive-medium-padding-x: var(--vx-auth-scale-1-5r);
+  --vx-auth-responsive-large-padding-x: var(--vx-auth-scale-2r);
+  --vx-auth-responsive-content-max-width: var(--vx-auth-scale-96r);
 }

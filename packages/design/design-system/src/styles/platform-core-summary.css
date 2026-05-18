@@ -1,0 +1,51 @@
+/**
+ * platform-core-summary.css - Platform 汇总条语义。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+.vx-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--vx-platform-summary-strip-gap);
+}
+
+.vx-summary-strip__item {
+  display: grid;
+  gap: var(--vx-platform-summary-item-gap);
+  padding: var(--vx-platform-summary-item-padding);
+  border-radius: var(--vx-platform-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 74%, transparent);
+  box-shadow: var(--vx-console-shadow-soft);
+}
+
+.vx-summary-strip__top {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--vx-platform-summary-top-gap);
+  align-items: flex-start;
+}
+
+.vx-summary-strip__aside {
+  display: inline-flex;
+  align-items: center;
+}
+
+.vx-summary-strip__item span {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-platform-summary-label-size);
+}
+
+.vx-summary-strip__item strong {
+  font-size: var(--vx-platform-summary-value-size);
+  letter-spacing: var(--vx-platform-summary-value-letter-spacing);
+}
+
+.vx-summary-strip__item p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-platform-summary-copy-size);
+}

@@ -29,7 +29,7 @@ type ConnectedAccountRecord = {
   enabled: boolean;
 };
 
-const DEFAULT_PROFILE_AVATAR = '/assets/icon/avatar-default.png';
+const DEFAULT_PROFILE_AVATAR_ONLINE_SRC = '/assets/icon/avatar-default-online.png';
 const CONNECTED_ACCOUNTS_STORAGE_PREFIX = 'vxture.console.connectedAccounts';
 const DEFAULT_CONNECTED_ACCOUNTS: ConnectedAccountRecord[] = [
   {
@@ -76,7 +76,7 @@ function normalizeOptional(value: string) {
 }
 
 function avatarUrl(value?: string | null) {
-  return value?.trim() || DEFAULT_PROFILE_AVATAR;
+  return value?.trim() || DEFAULT_PROFILE_AVATAR_ONLINE_SRC;
 }
 
 function avatarStyle(value?: string | null): CSSProperties {

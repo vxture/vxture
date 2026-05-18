@@ -1,0 +1,56 @@
+/**
+ * console-shell-layout-frame-sidebar.css - Console shell 侧栏槽位布局。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+.vx-shell-sidebar {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  gap: var(--vx-console-space-048r);
+  min-width: 0;
+  height: var(--vx-console-shell-body-available-height);
+  max-height: var(--vx-console-shell-body-available-height);
+  min-height: var(--vx-console-shell-body-available-height);
+  padding: 0;
+  background: transparent;
+  overflow: visible;
+  align-self: start;
+  position: sticky;
+  top: var(--vx-shell-header-height);
+}
+
+.vx-shell-sidebar--collapsed {
+  gap: var(--vx-shell-column-gap);
+}
+
+.vx-shell-sidebar__topbar,
+.vx-shell-sidebar__rail {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--vx-console-space-045r);
+  min-height: var(--vx-shell-rail-height);
+  padding-left: 0;
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+}
+
+.vx-shell-sidebar__rail {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.vx-shell-sidebar__tenant-switcher {
+  min-width: 0;
+  padding: 0 var(--vx-console-space-055r) var(--vx-console-space-005r) var(--vx-shell-sidebar-content-inset);
+  transition:
+    opacity var(--vx-shell-fade-transition),
+    transform var(--vx-shell-slide-transition);
+}

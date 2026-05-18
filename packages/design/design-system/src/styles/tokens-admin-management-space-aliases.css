@@ -1,0 +1,34 @@
+/**
+ * tokens-admin-management-space-aliases.css - Admin management spacing 别名 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-admin-management-space-0125r: var(--vx-admin-space-0125r);
+  --vx-admin-management-space-01r: var(--vx-admin-space-01r);
+  --vx-admin-management-space-025r: var(--vx-admin-space-025r);
+  --vx-admin-management-space-035r: var(--vx-admin-space-035r);
+  --vx-admin-management-space-0375r: var(--vx-admin-space-0375r);
+  --vx-admin-management-space-045r: var(--vx-admin-space-045r);
+  --vx-admin-management-space-055r: var(--vx-admin-space-055r);
+  --vx-admin-management-space-05r: var(--vx-admin-space-05r);
+  --vx-admin-management-space-0625r: var(--vx-admin-space-0625r);
+  --vx-admin-management-space-074r: var(--vx-admin-space-074r);
+  --vx-admin-management-space-075r: var(--vx-admin-space-075r);
+  --vx-admin-management-space-085r: var(--vx-admin-space-085r);
+  --vx-admin-management-space-0875r: var(--vx-admin-space-0875r);
+  --vx-admin-management-space-095r: var(--vx-admin-space-095r);
+  --vx-admin-management-space-09r: var(--vx-admin-space-09r);
+  --vx-admin-management-space-125r: var(--vx-admin-space-125r);
+  --vx-admin-management-space-15r: var(--vx-admin-space-15r);
+  --vx-admin-management-space-175r: var(--vx-admin-space-175r);
+  --vx-admin-management-space-1r: var(--vx-admin-space-1r);
+  --vx-admin-management-space-225r: var(--vx-admin-space-225r);
+  --vx-admin-management-space-2r: var(--vx-admin-space-2r);
+  --vx-admin-management-space-3r: var(--vx-admin-space-3r);
+  --vx-admin-management-space-45r: var(--vx-admin-space-45r);
+}

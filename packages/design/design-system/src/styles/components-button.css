@@ -31,38 +31,38 @@
 }
 
 :where(.vx-btn--default) {
-  background: var(--vx-console-brand, var(--vx-color-shell-brand));
-  color: var(--vx-color-white);
+  background: var(--vx-control-brand);
+  color: var(--vx-control-on-brand);
   box-shadow: none;
 }
 
 :where(.vx-btn--default:hover:not(:disabled)) {
-  background: color-mix(in srgb, var(--vx-console-brand, var(--vx-color-shell-brand)) 88%, var(--vx-color-black));
+  background: var(--vx-control-brand-hover);
 }
 
 :where(.vx-btn--outline) {
-  background: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
-  color: var(--vx-console-brand, var(--vx-color-shell-brand));
-  border-color: color-mix(in srgb, var(--vx-color-shell-brand) 20%, transparent);
+  background: var(--vx-control-surface-muted);
+  color: var(--vx-control-brand);
+  border-color: var(--vx-control-outline-border);
 }
 
 :where(.vx-btn--outline:hover:not(:disabled)) {
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 6%, transparent);
-  border-color: color-mix(in srgb, var(--vx-color-shell-brand) 30%, transparent);
+  background: var(--vx-control-brand-soft);
+  border-color: var(--vx-control-outline-hover-border);
 }
 
 :where(.dark .vx-btn--outline) {
-  background: var(--vx-color-gray-900);
-  border-color: color-mix(in srgb, var(--vx-color-primary) 24%, transparent);
+  background: var(--vx-control-surface-dark);
+  border-color: var(--vx-control-outline-border);
 }
 
 :where(.vx-btn--ghost) {
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
-  color: var(--vx-console-brand, var(--vx-color-shell-brand));
+  background: var(--vx-control-brand-soft);
+  color: var(--vx-control-brand);
 }
 
 :where(.vx-btn--ghost:hover:not(:disabled)) {
-  background: color-mix(in srgb, var(--vx-color-shell-brand) 14%, transparent);
+  background: var(--vx-control-brand-soft-hover);
 }
 
 :where(.vx-btn--sm) {

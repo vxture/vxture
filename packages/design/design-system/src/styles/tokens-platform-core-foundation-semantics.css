@@ -1,0 +1,27 @@
+/**
+ * tokens-platform-core-foundation-semantics.css - 平台通用文本、圆角和间距语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  /* 平台语义尺度：platform.css 共享模式优先消费的契约。 */
+  --vx-platform-text-size-xs: var(--vx-component-metric-078r);
+  --vx-platform-text-size-sm: var(--vx-component-metric-082r);
+  --vx-platform-text-size-md: var(--vx-component-metric-084r);
+  --vx-platform-text-size-lg: var(--vx-component-metric-088r);
+  --vx-platform-text-size-xl: var(--vx-component-metric-09r);
+  --vx-platform-text-size-2xl: var(--vx-component-metric-096r);
+  --vx-platform-radius-sm: var(--vx-component-metric-10p);
+  --vx-platform-radius-md: var(--vx-component-metric-14p);
+  --vx-platform-radius-lg: var(--vx-component-metric-18p);
+  --vx-platform-border-width: var(--vx-component-metric-1p);
+  --vx-platform-gap-2xs: var(--vx-component-metric-02r);
+  --vx-platform-gap-xs: var(--vx-component-metric-035r);
+  --vx-platform-gap-sm: var(--vx-component-metric-05r);
+  --vx-platform-gap-md: var(--vx-component-metric-075r);
+  --vx-platform-gap-lg: var(--vx-component-metric-1r);
+}

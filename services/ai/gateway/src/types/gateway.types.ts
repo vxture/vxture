@@ -1,4 +1,4 @@
-export type ChatRole = 'system' | 'user' | 'assistant' | 'tool';
+export type ChatRole = "system" | "user" | "assistant" | "tool";
 
 export interface ChatMessage {
   role: ChatRole;
@@ -24,10 +24,10 @@ export interface ToolDefinition {
  * 工具选择策略
  */
 export type ToolChoice =
-  | 'auto'
-  | 'none'
-  | 'required'
-  | { type: 'function'; name: string };
+  | "auto"
+  | "none"
+  | "required"
+  | { type: "function"; name: string };
 
 /**
  * 模型发起的一次工具调用
@@ -41,7 +41,7 @@ export interface ToolCall {
 /**
  * 模型结束原因
  */
-export type FinishReason = 'stop' | 'tool_calls' | 'length' | 'content_filter';
+export type FinishReason = "stop" | "tool_calls" | "length" | "content_filter";
 
 export interface ChatRequest {
   modelCode: string;
@@ -58,7 +58,7 @@ export interface ChatRequest {
   featureId?: string;
   requestId?: string;
   businessId?: string;
-  usageType?: 'normal' | 'retry' | 'test';
+  usageType?: "normal" | "retry" | "test";
 }
 
 export interface ChatResponse {
@@ -77,10 +77,10 @@ export interface ChatResponse {
  * 流尾以 `data: [DONE]` 结束。
  */
 export type StreamEvent =
-  | { type: 'text';      delta: string }
-  | { type: 'tool_call'; toolCall: ToolCall }
-  | { type: 'done';      usage?: TokenUsage; finishReason?: FinishReason }
-  | { type: 'error';     code: string; message: string };
+  | { type: "text"; delta: string }
+  | { type: "tool_call"; toolCall: ToolCall }
+  | { type: "done"; usage?: TokenUsage; finishReason?: FinishReason }
+  | { type: "error"; code: string; message: string };
 
 export interface TokenUsage {
   promptTokens: number;
@@ -220,7 +220,7 @@ export interface UsageLogInput {
   modelCode: string;
   usage: TokenUsage;
   latencyMs: number;
-  usageType?: 'normal' | 'retry' | 'test';
+  usageType?: "normal" | "retry" | "test";
 }
 
 export interface CreateAiModelInput {
@@ -231,7 +231,12 @@ export interface CreateAiModelInput {
   endpointUrl: string;
   protocol: string;
   modelType?: string;
+  description?: string | null;
+  contextWindow?: number | null;
+  maxOutputTokens?: number | null;
   capabilities: string[];
+  supportsStreaming?: boolean;
+  sort?: number;
   config?: ModelConfig | null;
 }
 
@@ -243,7 +248,12 @@ export interface UpdateAiModelInput {
   endpointUrl?: string;
   protocol?: string;
   modelType?: string;
+  description?: string | null;
+  contextWindow?: number | null;
+  maxOutputTokens?: number | null;
   capabilities?: string[];
+  supportsStreaming?: boolean;
+  sort?: number;
   config?: ModelConfig | null;
   isActive?: boolean;
 }

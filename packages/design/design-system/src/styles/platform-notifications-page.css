@@ -1,0 +1,66 @@
+/**
+ * platform-notifications-page.css - 通知设置页页面框架样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:where(.vx-notifications-page) {
+  --vx-notification-text-size: var(--vx-platform-text-size-lg);
+  --vx-notification-meta-size: var(--vx-platform-text-size-xs);
+  --vx-notification-panel: color-mix(in srgb, var(--vx-color-white) 72%, transparent);
+  --vx-notification-panel-strong: color-mix(in srgb, var(--vx-color-shell-surface-muted) 90%, transparent);
+  --vx-notification-line: var(--vx-color-auth-border);
+  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-auth-accent) 22%, transparent);
+  --vx-notification-title-line-height: 1.25;
+  --vx-notification-title-weight: 760;
+}
+
+:where(.dark .vx-notifications-page) {
+  --vx-notification-panel: var(--vx-color-shell-panel);
+  --vx-notification-panel-strong: var(--vx-color-shell-panel-strong);
+  --vx-notification-line: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  --vx-notification-line-strong: color-mix(in srgb, var(--vx-color-primary) 28%, transparent);
+}
+
+.vx-notifications-page {
+  gap: var(--vx-notification-page-gap);
+}
+
+.vx-notifications-page .vx-page-header {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: flex-start;
+  gap: var(--vx-notification-page-header-gap);
+  margin-bottom: var(--vx-notification-page-header-margin-bottom);
+}
+
+.vx-notifications-page .vx-page-header__copy {
+  gap: var(--vx-notification-page-header-copy-gap);
+}
+
+.vx-notifications-page .vx-page-header__description {
+  display: none;
+}
+
+.vx-notifications-page .vx-page-header h1 {
+  font-size: var(--vx-notification-title-size);
+  line-height: var(--vx-notification-title-line-height);
+  font-weight: var(--vx-notification-title-weight);
+}
+
+.vx-notifications-page .vx-page-header__title-row .vx-badge {
+  border-color: var(--vx-color-auth-border);
+  background: var(--vx-console-brand-soft);
+  color: var(--vx-console-brand-strong);
+  font-size: var(--vx-notification-meta-size);
+  font-weight: 720;
+}
+
+.vx-notification-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--vx-notification-header-actions-gap);
+}

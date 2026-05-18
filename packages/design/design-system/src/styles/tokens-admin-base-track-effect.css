@@ -1,109 +1,15 @@
 /**
- * tokens-admin-base-track-effect.css - Admin track、文字、效果和 motion 语义 token。
+ * tokens-admin-base-track-effect.css - Admin track、文字、效果和 motion token 稳定聚合入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-15
+ * @date 2026-05-18
  */
 
-:root {
-  --vx-admin-size-6r: var(--vx-component-metric-6r);
-  --vx-admin-size-75r: var(--vx-component-metric-75r);
-  --vx-admin-size-85r: var(--vx-component-metric-85r);
-  --vx-admin-size-875r: var(--vx-component-metric-875r);
-  --vx-admin-size-8r: var(--vx-component-metric-8r);
-  --vx-admin-size-95r: var(--vx-component-metric-95r);
-  --vx-admin-size-9r: var(--vx-component-metric-9r);
-  --vx-admin-track-10r: var(--vx-component-metric-10r);
-  --vx-admin-track-115r: var(--vx-component-metric-115r);
-  --vx-admin-track-11r-large: var(--vx-component-metric-11r-large);
-  --vx-admin-track-125r: var(--vx-component-metric-125r);
-  --vx-admin-track-12r-large: var(--vx-component-metric-12r-large);
-  --vx-admin-track-13r: var(--vx-component-metric-13r);
-  --vx-admin-track-15r: var(--vx-component-metric-15r);
-  --vx-admin-track-16r: var(--vx-component-metric-16r);
-  --vx-admin-track-175r: var(--vx-component-metric-175r);
-  --vx-admin-track-17r: var(--vx-component-metric-17r);
-  --vx-admin-track-18r-large: var(--vx-component-metric-18r-large);
-  --vx-admin-track-20r: var(--vx-component-metric-20r);
-  --vx-admin-track-22r: var(--vx-component-metric-22r);
-  --vx-admin-track-25r: var(--vx-component-metric-25r);
-  --vx-admin-track-275r: var(--vx-component-metric-275r);
-  --vx-admin-track-2r: var(--vx-component-metric-2r);
-  --vx-admin-track-325r: var(--vx-component-metric-325r);
-  --vx-admin-track-3r: var(--vx-component-metric-3r);
-  --vx-admin-track-475r: var(--vx-component-metric-475r);
-  --vx-admin-track-4r: var(--vx-component-metric-4r);
-  --vx-admin-track-55r: var(--vx-component-metric-55r);
-  --vx-admin-track-5r: var(--vx-component-metric-5r);
-  --vx-admin-track-65r: var(--vx-component-metric-65r);
-  --vx-admin-track-6r: var(--vx-component-metric-6r);
-  --vx-admin-track-85r: var(--vx-component-metric-85r);
-  --vx-admin-track-8r: var(--vx-component-metric-8r);
-  --vx-admin-track-9r: var(--vx-component-metric-9r);
-  --vx-admin-radius-012r: var(--vx-component-metric-012r);
-  --vx-admin-radius-04375r: var(--vx-component-metric-04375r);
-  --vx-admin-radius-05r: var(--vx-component-metric-05r);
-  --vx-admin-radius-075r: var(--vx-component-metric-075r);
-  --vx-admin-radius-10p: var(--vx-component-metric-10p);
-  --vx-admin-radius-16p: var(--vx-component-metric-16p);
-  --vx-admin-radius-1r: var(--vx-component-metric-1r);
-  --vx-admin-line-width-1p: var(--vx-component-metric-1p);
-  --vx-admin-line-width-2p: var(--vx-component-metric-2p);
-  --vx-admin-text-size-0625r: var(--vx-component-metric-0625r);
-  --vx-admin-text-size-068r: var(--vx-component-metric-068r);
-  --vx-admin-text-size-072r: var(--vx-component-metric-072r);
-  --vx-admin-text-size-075r: var(--vx-component-metric-075r);
-  --vx-admin-text-size-078r: var(--vx-component-metric-078r);
-  --vx-admin-text-size-08125r: var(--vx-component-metric-08125r);
-  --vx-admin-text-size-0875r: var(--vx-component-metric-0875r);
-  --vx-admin-text-size-09375r: var(--vx-component-metric-09375r);
-  --vx-admin-text-size-094r: var(--vx-component-metric-094r);
-  --vx-admin-text-size-095r: var(--vx-component-metric-095r);
-  --vx-admin-text-size-098r: var(--vx-component-metric-098r);
-  --vx-admin-text-size-11r: var(--vx-component-metric-11r);
-  --vx-admin-text-size-125r: var(--vx-component-metric-125r);
-  --vx-admin-text-size-15r: var(--vx-component-metric-15r);
-  --vx-admin-text-size-1r: var(--vx-component-metric-1r);
-  --vx-admin-text-line-1125r: var(--vx-component-metric-1125r);
-  --vx-admin-text-line-125r: var(--vx-component-metric-125r);
-  --vx-admin-text-line-1375r: var(--vx-component-metric-1375r);
-  --vx-admin-text-line-15r: var(--vx-component-metric-15r);
-  --vx-admin-text-line-1r: var(--vx-component-metric-1r);
-  --vx-admin-text-line-2r: var(--vx-component-metric-2r);
-  --vx-admin-text-tracking-018e: var(--vx-component-metric-018e);
-  --vx-admin-effect-0125r: var(--vx-component-metric-0125r);
-  --vx-admin-effect-075r: var(--vx-component-metric-075r);
-  --vx-admin-effect-10p: var(--vx-component-metric-10p);
-  --vx-admin-effect-12p: var(--vx-component-metric-12p);
-  --vx-admin-effect-14p: var(--vx-component-metric-14p);
-  --vx-admin-effect-15r: var(--vx-component-metric-15r);
-  --vx-admin-effect-16p: var(--vx-component-metric-16p);
-  --vx-admin-effect-18p: var(--vx-component-metric-18p);
-  --vx-admin-effect-1p: var(--vx-component-metric-1p);
-  --vx-admin-effect-1r: var(--vx-component-metric-1r);
-  --vx-admin-effect-22p: var(--vx-component-metric-22p);
-  --vx-admin-effect-24p: var(--vx-component-metric-24p);
-  --vx-admin-effect-2p: var(--vx-component-metric-2p);
-  --vx-admin-effect-2r: var(--vx-component-metric-2r);
-  --vx-admin-effect-3p: var(--vx-component-metric-3p);
-  --vx-admin-effect-42p: var(--vx-component-metric-42p);
-  --vx-admin-effect-48p: var(--vx-component-metric-48p);
-  --vx-admin-effect-64p: var(--vx-component-metric-64p);
-  --vx-admin-effect-6p: var(--vx-component-metric-6p);
-  --vx-admin-effect-70p: var(--vx-component-metric-70p);
-  --vx-admin-effect-8p: var(--vx-component-metric-8p);
-  --vx-admin-pattern-028r: var(--vx-component-metric-028r);
-  --vx-admin-pattern-036r: var(--vx-component-metric-036r);
-  --vx-admin-pattern-0625r: var(--vx-component-metric-0625r);
-  --vx-admin-pattern-075r: var(--vx-component-metric-075r);
-  --vx-admin-pattern-0875r: var(--vx-component-metric-0875r);
-  --vx-admin-motion-0125r: var(--vx-component-metric-0125r);
-  --vx-admin-motion-018r: var(--vx-component-metric-018r);
-  --vx-admin-motion-025r: var(--vx-component-metric-025r);
-  --vx-admin-motion-035r: var(--vx-component-metric-035r);
-  --vx-admin-motion-05r: var(--vx-component-metric-05r);
-  --vx-admin-motion-1p: var(--vx-component-metric-1p);
-  --vx-admin-motion-2p: var(--vx-component-metric-2p);
-}
+@import "./tokens-admin-base-track-size.css";
+@import "./tokens-admin-base-track.css";
+@import "./tokens-admin-base-radius-line.css";
+@import "./tokens-admin-base-text.css";
+@import "./tokens-admin-base-effect-pattern.css";
+@import "./tokens-admin-base-motion.css";

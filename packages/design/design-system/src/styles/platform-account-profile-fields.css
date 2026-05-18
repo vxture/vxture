@@ -1,5 +1,5 @@
 /**
- * platform-account-profile-fields.css - 平台账号资料页信息区块和字段列表。
+ * platform-account-profile-fields.css - 平台账号资料页字段列表、编辑弹窗和头像编辑器。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
@@ -103,4 +103,104 @@
 .vx-account-profile-field__value--empty {
   color: var(--vx-console-muted);
   font-weight: 560;
+}
+
+/* ============================================================================
+ * 编辑弹窗
+ * ========================================================================== */
+
+.vx-account-profile-dialog {
+  width: var(--vx-account-profile-dialog-width);
+}
+
+.vx-account-profile-dialog--wide {
+  width: var(--vx-account-profile-dialog-wide-width);
+}
+
+.vx-account-profile-dialog__header {
+  display: grid;
+  gap: var(--vx-account-profile-dialog-header-gap);
+}
+
+.vx-account-profile-dialog__header p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+}
+
+.vx-account-profile-dialog-grid {
+  display: grid;
+  grid-template-columns: var(--vx-account-profile-dialog-grid-columns);
+  gap: var(--vx-account-profile-dialog-grid-gap);
+  align-items: flex-start;
+}
+
+.vx-account-avatar-editor {
+  display: grid;
+  justify-items: center;
+  gap: var(--vx-account-avatar-editor-gap);
+  min-width: 0;
+  padding: var(--vx-account-avatar-editor-padding);
+  border: var(--vx-account-avatar-editor-border);
+  border-radius: var(--vx-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 82%, transparent);
+  text-align: center;
+}
+
+.dark .vx-account-avatar-editor {
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 54%, transparent);
+}
+
+.vx-account-avatar-editor__preview {
+  width: var(--vx-account-avatar-editor-preview-size);
+  height: var(--vx-account-avatar-editor-preview-size);
+  border-radius: var(--vx-radius-full);
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--vx-platform-account-media-shadow);
+}
+
+.vx-account-avatar-editor strong,
+.vx-account-avatar-editor span {
+  display: block;
+  overflow: hidden;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.vx-account-avatar-editor strong {
+  color: var(--vx-console-text);
+  font-size: var(--vx-account-profile-text-size);
+  font-weight: 740;
+}
+
+.vx-account-avatar-editor span {
+  margin-top: var(--vx-account-avatar-editor-copy-margin-top);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-account-profile-meta-size);
+}
+
+.vx-account-profile-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--vx-account-profile-form-grid-gap);
+  min-width: 0;
+}
+
+.vx-account-profile-form-grid__wide {
+  grid-column: 1 / -1;
+}
+
+.vx-account-profile-input-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--vx-account-profile-input-row-gap);
+  align-items: center;
+}
+
+.vx-account-profile-input-row .vx-btn {
+  min-height: var(--vx-account-profile-input-row-button-min-height);
+  white-space: nowrap;
 }

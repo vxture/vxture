@@ -1,0 +1,18 @@
+/**
+ * tokens-console-radius.css - Console 圆角与线宽 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-console-radius-07r: var(--vx-component-metric-07r);
+  --vx-console-radius-10p: var(--vx-component-metric-10p);
+  --vx-console-radius-14p: var(--vx-component-metric-14p);
+  --vx-console-radius-16p: var(--vx-component-metric-16p);
+  --vx-console-radius-18p: var(--vx-component-metric-18p);
+  --vx-console-radius-5p: var(--vx-component-metric-5p);
+  --vx-console-line-width-2p: var(--vx-component-metric-2p);
+}

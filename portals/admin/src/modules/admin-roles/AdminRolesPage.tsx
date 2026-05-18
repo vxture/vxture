@@ -1,30 +1,52 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import type { CSSProperties } from 'react';
-import { createPortal } from 'react-dom';
-import { Icon } from '@vxture/design-system';
-import type { IconName } from '@vxture/design-system';
-import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
-import { fetchPlatformPermissions, fetchPlatformRoles, replacePlatformRolePermissions } from '@/api/admin-bff';
-import type { PlatformAdminPermissionRecord, PlatformPermissionType, PlatformRoleRecord } from '@/entities/console';
-import { useConsoleTranslations } from '@/lib/console-intl';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
-import { formatDate, formatNumber, joinClasses } from '@/modules/tenants/tenant-utils';
+import { useEffect, useMemo, useState } from "react";
+import type { CSSProperties } from "react";
+import { createPortal } from "react-dom";
+import { Icon } from "@vxture/design-system";
+import type { IconName } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination,
+} from "@vxture/design-system";
+import {
+  fetchPlatformPermissions,
+  fetchPlatformRoles,
+  replacePlatformRolePermissions,
+} from "@/api/admin-bff";
+import type {
+  PlatformAdminPermissionRecord,
+  PlatformPermissionType,
+  PlatformRoleRecord,
+} from "@/entities/console";
+import { useConsoleTranslations } from "@/lib/console-intl";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  PageSizePicker as AdminPageSizePicker,
+  type PageSize,
+} from "@/modules/shared/PageSizePicker";
+import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
+import {
+  formatDate,
+  formatNumber,
+  joinClasses,
+} from "@/modules/tenants/tenant-utils";
 
-type ViewMode = 'list' | 'cards';
-type PlatformRoleStatusCode = PlatformRoleRecord['statusCode'];
-type StatusFilter = 'all' | PlatformRoleStatusCode;
-type RoleKindFilter = 'all' | 'system' | 'custom';
-type PermissionFilter = 'all' | PlatformPermissionType | 'empty';
-type RoleStatusTone = 'normal' | 'closed' | 'attention';
+type ViewMode = "list" | "cards";
+type PlatformRoleStatusCode = PlatformRoleRecord["statusCode"];
+type StatusFilter = "all" | PlatformRoleStatusCode;
+type RoleKindFilter = "all" | "system" | "custom";
+type PermissionFilter = "all" | PlatformPermissionType | "empty";
+type RoleStatusTone = "normal" | "closed" | "attention";
 
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
-const EMPTY_MARK = '-';
+const EMPTY_MARK = "-";
 
 interface PermissionTreeNode {
   permission: PlatformAdminPermissionRecord;
@@ -32,43 +54,62 @@ interface PermissionTreeNode {
   depth: number;
 }
 
-function roleDisplayName(role: PlatformRoleRecord, t: ReturnType<typeof useConsoleTranslations>) {
+function roleDisplayName(
+  role: PlatformRoleRecord,
+  t: ReturnType<typeof useConsoleTranslations>,
+) {
   return t(role.nameI18nKey, role.nameEn || role.roleCode || EMPTY_MARK);
 }
 
-function roleDescription(role: PlatformRoleRecord, t: ReturnType<typeof useConsoleTranslations>) {
-  return role.descriptionI18nKey ? t(role.descriptionI18nKey, role.description || '') : role.description || '';
+function roleDescription(
+  role: PlatformRoleRecord,
+  t: ReturnType<typeof useConsoleTranslations>,
+) {
+  return role.descriptionI18nKey
+    ? t(role.descriptionI18nKey, role.description || "")
+    : role.description || "";
 }
 
 function roleStatusCode(role: PlatformRoleRecord): PlatformRoleStatusCode {
   const statusCode = role.statusCode;
-  if (statusCode === 'active' || statusCode === 'disabled' || statusCode === 'archived') {
+  if (
+    statusCode === "active" ||
+    statusCode === "disabled" ||
+    statusCode === "archived"
+  ) {
     return statusCode;
   }
-  return role.status ? 'active' : 'disabled';
+  return role.status ? "active" : "disabled";
 }
 
 function permissionDisplayName(value: string) {
   return value
-    .replace(/^(BTN|API|MENU)_/, '')
-    .split('_')
+    .replace(/^(BTN|API|MENU)_/, "")
+    .split("_")
     .filter(Boolean)
     .map((part) => part.toLowerCase())
-    .join('.');
+    .join(".");
 }
 
-function roleStatusIndicator(role: PlatformRoleRecord): { tone: RoleStatusTone; label: string; icon: IconName } {
+function roleStatusIndicator(role: PlatformRoleRecord): {
+  tone: RoleStatusTone;
+  label: string;
+  icon: IconName;
+} {
   const statusCode = roleStatusCode(role);
-  if (statusCode === 'active') return { tone: 'normal', label: '启用', icon: 'check' };
-  if (statusCode === 'archived') return { tone: 'attention', label: '归档', icon: 'info' };
-  return { tone: 'closed', label: '停用', icon: 'x' };
+  if (statusCode === "active")
+    return { tone: "normal", label: "启用", icon: "check" };
+  if (statusCode === "archived")
+    return { tone: "attention", label: "归档", icon: "info" };
+  return { tone: "closed", label: "停用", icon: "x" };
 }
 
 function roleStatusPillClass(role: PlatformRoleRecord) {
   const statusCode = roleStatusCode(role);
-  if (statusCode === 'active') return 'vx-admin-role-status-pill--enabled';
-  if (statusCode === 'archived') return 'vx-platform-user-status-pill--attention';
-  return 'vx-admin-role-status-pill--disabled';
+  if (statusCode === "active") return "vx-admin-role-status-pill--enabled";
+  if (statusCode === "archived")
+    return "vx-platform-user-status-pill--attention";
+  return "vx-admin-role-status-pill--disabled";
 }
 
 function roleSearchText(role: PlatformRoleRecord) {
@@ -79,16 +120,24 @@ function roleSearchText(role: PlatformRoleRecord) {
     role.nameEn,
     role.descriptionI18nKey,
     role.description,
-    role.isSystem ? 'system 系统角色' : 'custom 自定义角色',
+    role.isSystem ? "system 系统角色" : "custom 自定义角色",
     roleStatusCode(role),
     roleStatusIndicator(role).label,
-    ...role.permissions.map((permission) => `${permission.permCode} ${permission.permName} ${permission.permType} ${permission.description}`),
-  ].join(' ').toLowerCase();
+    ...role.permissions.map(
+      (permission) =>
+        `${permission.permCode} ${permission.permName} ${permission.permType} ${permission.description}`,
+    ),
+  ]
+    .join(" ")
+    .toLowerCase();
 }
 
-function roleMatchesPermission(role: PlatformRoleRecord, filter: PermissionFilter) {
-  if (filter === 'all') return true;
-  if (filter === 'empty') return role.permissionCount === 0;
+function roleMatchesPermission(
+  role: PlatformRoleRecord,
+  filter: PermissionFilter,
+) {
+  if (filter === "all") return true;
+  if (filter === "empty") return role.permissionCount === 0;
   return role.permissions.some((permission) => permission.permType === filter);
 }
 
@@ -104,7 +153,9 @@ function buildPermissionTree(permissions: PlatformAdminPermissionRecord[]) {
 
   const roots: PermissionTreeNode[] = [];
   for (const node of nodeById.values()) {
-    const parent = node.permission.parentId ? nodeById.get(node.permission.parentId) : null;
+    const parent = node.permission.parentId
+      ? nodeById.get(node.permission.parentId)
+      : null;
     if (parent) {
       parent.children.push(node);
     } else {
@@ -113,7 +164,11 @@ function buildPermissionTree(permissions: PlatformAdminPermissionRecord[]) {
   }
 
   const sortNodes = (nodes: PermissionTreeNode[], depth = 0) => {
-    nodes.sort((left, right) => left.permission.sort - right.permission.sort || left.permission.permCode.localeCompare(right.permission.permCode));
+    nodes.sort(
+      (left, right) =>
+        left.permission.sort - right.permission.sort ||
+        left.permission.permCode.localeCompare(right.permission.permCode),
+    );
     nodes.forEach((node) => {
       node.depth = depth;
       sortNodes(node.children, depth + 1);
@@ -133,7 +188,10 @@ function collectDescendantPermissionIds(node: PermissionTreeNode) {
   return ids;
 }
 
-function collectAncestorPermissionIds(permission: PlatformAdminPermissionRecord, permissionById: Map<string, PlatformAdminPermissionRecord>) {
+function collectAncestorPermissionIds(
+  permission: PlatformAdminPermissionRecord,
+  permissionById: Map<string, PlatformAdminPermissionRecord>,
+) {
   const ids: string[] = [];
   let current: PlatformAdminPermissionRecord | undefined = permission;
   const visited = new Set<string>();
@@ -154,45 +212,34 @@ function AdminRoleSummaryItem({
   label,
   value,
   tags,
-  tone = 'blue',
+  tone = "blue",
 }: {
   icon: IconName;
   label: string;
   value: string;
   tags?: string[];
-  tone?: 'blue' | 'green' | 'amber' | 'rose';
+  tone?: "blue" | "green" | "amber" | "rose";
 }) {
   return (
-    <article className={joinClasses(`vx-tenant-summary__item vx-tenant-tone--${tone}`, icon === 'user' || icon === 'role' ? 'vx-tenant-summary__item--identity-icon' : '')}>
+    <article
+      className={joinClasses(
+        `vx-tenant-summary__item vx-tenant-tone--${tone}`,
+        icon === "user" || icon === "role"
+          ? "vx-tenant-summary__item--identity-icon"
+          : "",
+      )}
+    >
       <Icon name={icon} size="lg" fallback="placeholder" />
       <div>
         <span>{label}</span>
         <p>
           <strong>{value}</strong>
-          {tags?.map((tag) => <em key={tag}>{tag}</em>)}
+          {tags?.map((tag) => (
+            <em key={tag}>{tag}</em>
+          ))}
         </p>
       </div>
     </article>
-  );
-}
-
-function AdminRolePageSizePicker({ value, onChange }: { value: PageSize; onChange: (value: PageSize) => void }) {
-  return (
-    <div className="vx-tenant-page-size" aria-label="每页条数">
-      {PAGE_SIZE_OPTIONS.map((option) => (
-        <span key={option}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={value === option ? 'is-active' : undefined}
-            onClick={() => onChange(option)}
-            aria-label={`每页 ${option} 条`}
-          >
-            {option}
-          </Button>
-        </span>
-      ))}
-    </div>
   );
 }
 
@@ -208,40 +255,49 @@ function AdminRoleActionsMenu({
   onOpenAuthorization: (role: PlatformRoleRecord) => void;
 }) {
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${roleLabel} 操作`}
         triggerClassName="vx-tenant-actions__trigger"
-        triggerProps={{ title: '操作' }}
+        triggerProps={{ title: "操作" }}
         items={[
           {
-            id: 'authorization',
-            label: '角色授权',
+            id: "authorization",
+            label: "角色授权",
             icon: <Icon name="key" size="xs" fallback="placeholder" />,
             onSelect: () => onOpenAuthorization(role),
           },
           {
-            id: 'permissions',
-            label: '权限详情',
+            id: "permissions",
+            label: "权限详情",
             icon: <Icon name="table" size="xs" fallback="placeholder" />,
             onSelect: () => onOpenPermissions(role),
           },
           {
-            id: 'edit',
-            label: '编辑角色',
+            id: "edit",
+            label: "编辑角色",
             icon: <Icon name="edit" size="xs" fallback="placeholder" />,
             disabled: true,
           },
           {
-            id: 'copy',
-            label: '复制角色',
+            id: "copy",
+            label: "复制角色",
             icon: <Icon name="copy" size="xs" fallback="placeholder" />,
             disabled: true,
           },
           {
-            id: 'toggle',
-            label: roleStatusCode(role) === 'active' ? '停用角色' : '启用角色',
-            icon: <Icon name={roleStatusCode(role) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            id: "toggle",
+            label: roleStatusCode(role) === "active" ? "停用角色" : "启用角色",
+            icon: (
+              <Icon
+                name={roleStatusCode(role) === "active" ? "x" : "check"}
+                size="xs"
+                fallback="placeholder"
+              />
+            ),
             disabled: true,
           },
         ]}
@@ -260,7 +316,10 @@ function AdminRolePermissionDialog({
   onClose: () => void;
 }) {
   const permissionsByType = useMemo(() => {
-    const groups: Record<PlatformPermissionType, PlatformRoleRecord['permissions']> = {
+    const groups: Record<
+      PlatformPermissionType,
+      PlatformRoleRecord["permissions"]
+    > = {
       MENU: [],
       BUTTON: [],
       API: [],
@@ -273,43 +332,82 @@ function AdminRolePermissionDialog({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
   return createPortal(
-    <div className="vx-admin-role-permission-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-role-permission-dialog-title" onMouseDown={onClose}>
-      <section className="vx-admin-role-permission-dialog__panel" onMouseDown={(event) => event.stopPropagation()}>
+    <div
+      className="vx-admin-role-permission-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="admin-role-permission-dialog-title"
+      onMouseDown={onClose}
+    >
+      <section
+        className="vx-admin-role-permission-dialog__panel"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <header>
-          <span className="vx-admin-role-permission-dialog__icon" aria-hidden="true">
+          <span
+            className="vx-admin-role-permission-dialog__icon"
+            aria-hidden="true"
+          >
             <Icon name="role" size="lg" fallback="placeholder" />
           </span>
           <div>
             <h2 id="admin-role-permission-dialog-title">{roleLabel}</h2>
             <p>{role.roleCode}</p>
           </div>
-          <Button variant="ghost" size="icon" className="vx-admin-role-permission-dialog__close" aria-label="关闭权限详情" onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="vx-admin-role-permission-dialog__close"
+            aria-label="关闭权限详情"
+            onClick={onClose}
+          >
             <Icon name="x" size="sm" fallback="placeholder" />
           </Button>
         </header>
         <div className="vx-admin-role-permission-dialog__summary">
-          <Badge className="vx-tenant-pill vx-admin-role-pill--menu">菜单 {formatNumber(role.menuPermissionCount)}</Badge>
-          <Badge className="vx-tenant-pill vx-admin-role-pill--button">按钮 {formatNumber(role.buttonPermissionCount)}</Badge>
-          <Badge className="vx-tenant-pill vx-admin-role-pill--api">接口 {formatNumber(role.apiPermissionCount)}</Badge>
+          <Badge className="vx-tenant-pill vx-admin-role-pill--menu">
+            菜单 {formatNumber(role.menuPermissionCount)}
+          </Badge>
+          <Badge className="vx-tenant-pill vx-admin-role-pill--button">
+            按钮 {formatNumber(role.buttonPermissionCount)}
+          </Badge>
+          <Badge className="vx-tenant-pill vx-admin-role-pill--api">
+            接口 {formatNumber(role.apiPermissionCount)}
+          </Badge>
         </div>
         <div className="vx-admin-role-permission-dialog__body">
-          {(['MENU', 'BUTTON', 'API'] as const).map((type) => (
-            <section key={type} className="vx-admin-role-permission-dialog__group">
-              <h3>{type === 'MENU' ? '菜单权限' : type === 'BUTTON' ? '按钮权限' : '接口权限'}</h3>
+          {(["MENU", "BUTTON", "API"] as const).map((type) => (
+            <section
+              key={type}
+              className="vx-admin-role-permission-dialog__group"
+            >
+              <h3>
+                {type === "MENU"
+                  ? "菜单权限"
+                  : type === "BUTTON"
+                    ? "按钮权限"
+                    : "接口权限"}
+              </h3>
               {permissionsByType[type].length ? (
                 <div className="vx-admin-role-permission-dialog__list">
                   {permissionsByType[type].map((permission) => (
                     <article key={permission.id}>
-                      <strong>{permissionDisplayName(permission.permName || permission.permCode)}</strong>
+                      <strong>
+                        {permissionDisplayName(
+                          permission.permName || permission.permCode,
+                        )}
+                      </strong>
                       <code>{permission.permCode}</code>
-                      {permission.description ? <small>{permission.description}</small> : null}
+                      {permission.description ? (
+                        <small>{permission.description}</small>
+                      ) : null}
                     </article>
                   ))}
                 </div>
@@ -336,29 +434,61 @@ function PermissionAuthorizationNode({
   permissionById: Map<string, PlatformAdminPermissionRecord>;
   onToggle: (node: PermissionTreeNode, checked: boolean) => void;
 }) {
-  const descendantIds = useMemo(() => collectDescendantPermissionIds(node), [node]);
-  const selectedDescendantCount = descendantIds.filter((permissionId) => selectedIds.has(permissionId)).length;
+  const descendantIds = useMemo(
+    () => collectDescendantPermissionIds(node),
+    [node],
+  );
+  const selectedDescendantCount = descendantIds.filter((permissionId) =>
+    selectedIds.has(permissionId),
+  ).length;
   const checked = selectedIds.has(node.permission.id);
-  const indeterminate = selectedDescendantCount > 0 && selectedDescendantCount < descendantIds.length;
-  const parent = node.permission.parentId ? permissionById.get(node.permission.parentId) : null;
+  const indeterminate =
+    selectedDescendantCount > 0 &&
+    selectedDescendantCount < descendantIds.length;
+  const parent = node.permission.parentId
+    ? permissionById.get(node.permission.parentId)
+    : null;
 
   return (
-    <article className="vx-admin-role-auth-node" style={{ '--permission-depth': node.depth } as CSSProperties}>
+    <article
+      className="vx-admin-role-auth-node"
+      style={{ "--permission-depth": node.depth } as CSSProperties}
+    >
       <label>
         <Checkbox
           className="vx-model-select-checkbox"
-          checked={indeterminate ? 'indeterminate' : checked}
+          checked={indeterminate ? "indeterminate" : checked}
           disabled={!node.permission.status}
-          onCheckedChange={(nextChecked) => onToggle(node, nextChecked === true)}
+          onCheckedChange={(nextChecked) =>
+            onToggle(node, nextChecked === true)
+          }
         />
         <span className="vx-admin-role-auth-node__main">
           <strong>{permissionLabel(node.permission)}</strong>
           <span>
-            <Badge className={`vx-tenant-pill vx-admin-role-pill--${node.permission.permType.toLowerCase()}`}>{node.permission.permType === 'MENU' ? '菜单' : node.permission.permType === 'BUTTON' ? '按钮' : '接口'}</Badge>
-            <Badge className="vx-tenant-pill vx-tenant-pill--system">{node.depth === 0 ? '根权限' : `L${node.depth}`}</Badge>
-            {!node.permission.status ? <Badge className="vx-tenant-pill vx-admin-role-status-pill--disabled">停用</Badge> : null}
+            <Badge
+              className={`vx-tenant-pill vx-admin-role-pill--${node.permission.permType.toLowerCase()}`}
+            >
+              {node.permission.permType === "MENU"
+                ? "菜单"
+                : node.permission.permType === "BUTTON"
+                  ? "按钮"
+                  : "接口"}
+            </Badge>
+            <Badge className="vx-tenant-pill vx-tenant-pill--system">
+              {node.depth === 0 ? "根权限" : `L${node.depth}`}
+            </Badge>
+            {!node.permission.status ? (
+              <Badge className="vx-tenant-pill vx-admin-role-status-pill--disabled">
+                停用
+              </Badge>
+            ) : null}
           </span>
-          <small>{parent ? parent.permName || parent.permCode : node.permission.permCode}</small>
+          <small>
+            {parent
+              ? parent.permName || parent.permCode
+              : node.permission.permCode}
+          </small>
         </span>
       </label>
       {node.children.length ? (
@@ -395,10 +525,18 @@ function AdminRoleAuthorizationDialog({
   onClose: () => void;
   onSave: (permissionIds: string[]) => void;
 }) {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set(role.permissions.map((permission) => permission.id)));
-  const [query, setQuery] = useState('');
-  const permissionById = useMemo(() => new Map(permissions.map((permission) => [permission.id, permission])), [permissions]);
-  const permissionTree = useMemo(() => buildPermissionTree(permissions), [permissions]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(
+    () => new Set(role.permissions.map((permission) => permission.id)),
+  );
+  const [query, setQuery] = useState("");
+  const permissionById = useMemo(
+    () => new Map(permissions.map((permission) => [permission.id, permission])),
+    [permissions],
+  );
+  const permissionTree = useMemo(
+    () => buildPermissionTree(permissions),
+    [permissions],
+  );
   const normalizedQuery = query.trim().toLowerCase();
   const visibleTree = useMemo(() => {
     if (!normalizedQuery) return permissionTree;
@@ -411,32 +549,52 @@ function AdminRoleAuthorizationDialog({
         permission.routePath,
         permission.component,
         permission.permType,
-      ].filter(Boolean).join(' ').toLowerCase().includes(normalizedQuery);
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase()
+        .includes(normalizedQuery);
     };
 
-    const filterNode = (node: PermissionTreeNode): PermissionTreeNode | null => {
-      const children = node.children.map(filterNode).filter((child): child is PermissionTreeNode => Boolean(child));
+    const filterNode = (
+      node: PermissionTreeNode,
+    ): PermissionTreeNode | null => {
+      const children = node.children
+        .map(filterNode)
+        .filter((child): child is PermissionTreeNode => Boolean(child));
       if (matches(node.permission) || children.length) {
         return { ...node, children };
       }
       return null;
     };
 
-    return permissionTree.map(filterNode).filter((node): node is PermissionTreeNode => Boolean(node));
+    return permissionTree
+      .map(filterNode)
+      .filter((node): node is PermissionTreeNode => Boolean(node));
   }, [normalizedQuery, permissionTree]);
 
-  const selectedPermissions = permissions.filter((permission) => selectedIds.has(permission.id));
-  const selectedMenuCount = selectedPermissions.filter((permission) => permission.permType === 'MENU').length;
-  const selectedButtonCount = selectedPermissions.filter((permission) => permission.permType === 'BUTTON').length;
-  const selectedApiCount = selectedPermissions.filter((permission) => permission.permType === 'API').length;
-  const changed = role.permissions.length !== selectedIds.size || role.permissions.some((permission) => !selectedIds.has(permission.id));
+  const selectedPermissions = permissions.filter((permission) =>
+    selectedIds.has(permission.id),
+  );
+  const selectedMenuCount = selectedPermissions.filter(
+    (permission) => permission.permType === "MENU",
+  ).length;
+  const selectedButtonCount = selectedPermissions.filter(
+    (permission) => permission.permType === "BUTTON",
+  ).length;
+  const selectedApiCount = selectedPermissions.filter(
+    (permission) => permission.permType === "API",
+  ).length;
+  const changed =
+    role.permissions.length !== selectedIds.size ||
+    role.permissions.some((permission) => !selectedIds.has(permission.id));
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !saving) onClose();
+      if (event.key === "Escape" && !saving) onClose();
     };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose, saving]);
 
   function toggleNode(node: PermissionTreeNode, checked: boolean) {
@@ -444,53 +602,124 @@ function AdminRoleAuthorizationDialog({
       const next = new Set(current);
       if (checked) {
         next.add(node.permission.id);
-        collectAncestorPermissionIds(node.permission, permissionById).forEach((permissionId) => next.add(permissionId));
+        collectAncestorPermissionIds(node.permission, permissionById).forEach(
+          (permissionId) => next.add(permissionId),
+        );
       } else {
-        collectDescendantPermissionIds(node).forEach((permissionId) => next.delete(permissionId));
+        collectDescendantPermissionIds(node).forEach((permissionId) =>
+          next.delete(permissionId),
+        );
       }
       return next;
     });
   }
 
   return createPortal(
-    <div className="vx-admin-role-permission-dialog vx-admin-role-auth-dialog" role="dialog" aria-modal="true" aria-labelledby="admin-role-auth-dialog-title" onMouseDown={() => !saving && onClose()}>
-      <section className="vx-admin-role-permission-dialog__panel vx-admin-role-auth-dialog__panel" onMouseDown={(event) => event.stopPropagation()}>
+    <div
+      className="vx-admin-role-permission-dialog vx-admin-role-auth-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="admin-role-auth-dialog-title"
+      onMouseDown={() => !saving && onClose()}
+    >
+      <section
+        className="vx-admin-role-permission-dialog__panel vx-admin-role-auth-dialog__panel"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <header>
-          <span className="vx-admin-role-permission-dialog__icon" aria-hidden="true">
+          <span
+            className="vx-admin-role-permission-dialog__icon"
+            aria-hidden="true"
+          >
             <Icon name="key" size="lg" fallback="placeholder" />
           </span>
           <div>
             <h2 id="admin-role-auth-dialog-title">角色授权</h2>
-            <p>{roleLabel} / {role.roleCode}</p>
+            <p>
+              {roleLabel} / {role.roleCode}
+            </p>
           </div>
-          <Button variant="ghost" size="icon" className="vx-admin-role-permission-dialog__close" aria-label="关闭角色授权" disabled={saving} onClick={onClose}>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="vx-admin-role-permission-dialog__close"
+            aria-label="关闭角色授权"
+            disabled={saving}
+            onClick={onClose}
+          >
             <Icon name="x" size="sm" fallback="placeholder" />
           </Button>
         </header>
         <div className="vx-admin-role-permission-dialog__summary">
-          <Badge className="vx-tenant-pill vx-admin-role-pill--menu">菜单 {formatNumber(selectedMenuCount)}</Badge>
-          <Badge className="vx-tenant-pill vx-admin-role-pill--button">按钮 {formatNumber(selectedButtonCount)}</Badge>
-          <Badge className="vx-tenant-pill vx-admin-role-pill--api">接口 {formatNumber(selectedApiCount)}</Badge>
-          <Badge className="vx-tenant-pill vx-tenant-pill--system">合计 {formatNumber(selectedIds.size)}</Badge>
+          <Badge className="vx-tenant-pill vx-admin-role-pill--menu">
+            菜单 {formatNumber(selectedMenuCount)}
+          </Badge>
+          <Badge className="vx-tenant-pill vx-admin-role-pill--button">
+            按钮 {formatNumber(selectedButtonCount)}
+          </Badge>
+          <Badge className="vx-tenant-pill vx-admin-role-pill--api">
+            接口 {formatNumber(selectedApiCount)}
+          </Badge>
+          <Badge className="vx-tenant-pill vx-tenant-pill--system">
+            合计 {formatNumber(selectedIds.size)}
+          </Badge>
         </div>
-        <section className="vx-admin-role-auth-dialog__toolbar" aria-label="授权筛选">
-          <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索权限 code、名称、路径" aria-label="搜索权限" />
-          <Button variant="outline" disabled={saving} onClick={() => setSelectedIds(new Set(role.permissions.map((permission) => permission.id)))}>还原</Button>
+        <section
+          className="vx-admin-role-auth-dialog__toolbar"
+          aria-label="授权筛选"
+        >
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="搜索权限 code、名称、路径"
+            aria-label="搜索权限"
+          />
+          <Button
+            variant="outline"
+            disabled={saving}
+            onClick={() =>
+              setSelectedIds(
+                new Set(role.permissions.map((permission) => permission.id)),
+              )
+            }
+          >
+            还原
+          </Button>
         </section>
-        {error ? <p className="vx-admin-role-auth-dialog__error">{error}</p> : null}
-        <div className="vx-admin-role-auth-dialog__tree" role="tree" aria-label={`${roleLabel} 权限授权树`}>
+        {error ? (
+          <p className="vx-admin-role-auth-dialog__error">{error}</p>
+        ) : null}
+        <div
+          className="vx-admin-role-auth-dialog__tree"
+          role="tree"
+          aria-label={`${roleLabel} 权限授权树`}
+        >
           {visibleTree.length ? (
             visibleTree.map((node) => (
-              <PermissionAuthorizationNode key={node.permission.id} node={node} selectedIds={selectedIds} permissionById={permissionById} onToggle={toggleNode} />
+              <PermissionAuthorizationNode
+                key={node.permission.id}
+                node={node}
+                selectedIds={selectedIds}
+                permissionById={permissionById}
+                onToggle={toggleNode}
+              />
             ))
           ) : (
-            <p className="vx-admin-role-permission-dialog__empty">没有匹配的权限</p>
+            <p className="vx-admin-role-permission-dialog__empty">
+              没有匹配的权限
+            </p>
           )}
         </div>
         <footer className="vx-admin-role-auth-dialog__footer">
-          <Button variant="outline" disabled={saving} onClick={onClose}>取消</Button>
-          <ActionButton icon="check" disabled={saving || !changed} onClick={() => onSave([...selectedIds])}>
-            {saving ? '保存中' : '保存授权'}
+          <Button variant="outline" disabled={saving} onClick={onClose}>
+            取消
+          </Button>
+          <ActionButton
+            icon="check"
+            disabled={saving || !changed}
+            onClick={() => onSave([...selectedIds])}
+          >
+            {saving ? "保存中" : "保存授权"}
           </ActionButton>
         </footer>
       </section>
@@ -502,9 +731,15 @@ function AdminRoleAuthorizationDialog({
 function PermissionTags({ role }: { role: PlatformRoleRecord }) {
   return (
     <span className="vx-admin-role-permission-tags">
-      <Badge className="vx-tenant-pill vx-admin-role-pill--menu">菜单 {formatNumber(role.menuPermissionCount)}</Badge>
-      <Badge className="vx-tenant-pill vx-admin-role-pill--button">按钮 {formatNumber(role.buttonPermissionCount)}</Badge>
-      <Badge className="vx-tenant-pill vx-admin-role-pill--api">接口 {formatNumber(role.apiPermissionCount)}</Badge>
+      <Badge className="vx-tenant-pill vx-admin-role-pill--menu">
+        菜单 {formatNumber(role.menuPermissionCount)}
+      </Badge>
+      <Badge className="vx-tenant-pill vx-admin-role-pill--button">
+        按钮 {formatNumber(role.buttonPermissionCount)}
+      </Badge>
+      <Badge className="vx-tenant-pill vx-admin-role-pill--api">
+        接口 {formatNumber(role.apiPermissionCount)}
+      </Badge>
     </span>
   );
 }
@@ -532,16 +767,23 @@ function AdminRoleListRows({
   onOpenPermissions: (role: PlatformRoleRecord) => void;
   onOpenAuthorization: (role: PlatformRoleRecord) => void;
 }) {
-  const selectedOnPage = roles.filter((role) => selectedRoleIds.has(role.id)).length;
-  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < roles.length;
+  const selectedOnPage = roles.filter((role) =>
+    selectedRoleIds.has(role.id),
+  ).length;
+  const isPagePartiallySelected =
+    selectedOnPage > 0 && selectedOnPage < roles.length;
 
   return (
-    <div className="vx-tenant-directory-list vx-admin-role-directory-list" role="region" aria-label="平台角色清单">
+    <div
+      className="vx-tenant-directory-list vx-admin-role-directory-list"
+      role="region"
+      aria-label="平台角色清单"
+    >
       <div className="vx-tenant-directory-list__header">
         <span>
           <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPagePartiallySelected ? 'indeterminate' : isPageSelected}
+            checked={isPagePartiallySelected ? "indeterminate" : isPageSelected}
             onCheckedChange={(checked) => onTogglePage(checked === true)}
             aria-label="选择当前页角色"
           />
@@ -556,19 +798,30 @@ function AdminRoleListRows({
       </div>
       {roles.map((role, index) => {
         const indicator = roleStatusIndicator(role);
-        const roleLabel = roleLabels.get(role.id) ?? role.nameEn ?? role.roleCode ?? EMPTY_MARK;
+        const roleLabel =
+          roleLabels.get(role.id) ?? role.nameEn ?? role.roleCode ?? EMPTY_MARK;
 
         return (
           <div
             key={role.id}
             className={joinClasses(
-              'vx-tenant-directory-row',
-              'vx-admin-role-operation-row',
-              roleStatusCode(role) === 'active' ? 'vx-admin-role-row--active' : 'vx-admin-role-row--disabled',
-              selectedRoleIds.has(role.id) ? 'vx-admin-role-operation-row--selected' : '',
+              "vx-tenant-directory-row",
+              "vx-admin-role-operation-row",
+              roleStatusCode(role) === "active"
+                ? "vx-admin-role-row--active"
+                : "vx-admin-role-row--disabled",
+              selectedRoleIds.has(role.id)
+                ? "vx-admin-role-operation-row--selected"
+                : "",
             )}
             onClick={(event) => {
-              if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+              if (
+                event.target instanceof HTMLElement &&
+                event.target.closest(
+                  'button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]',
+                )
+              )
+                return;
               onToggleRole(role.id, !selectedRoleIds.has(role.id));
             }}
           >
@@ -577,33 +830,64 @@ function AdminRoleListRows({
                 className="vx-model-select-checkbox"
                 checked={selectedRoleIds.has(role.id)}
                 onClick={(event) => event.stopPropagation()}
-                onCheckedChange={(checked) => onToggleRole(role.id, checked === true)}
+                onCheckedChange={(checked) =>
+                  onToggleRole(role.id, checked === true)
+                }
                 aria-label={`选择 ${roleLabel}`}
               />
             </span>
-            <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
-            <span className="vx-tenant-directory-row__tenant vx-admin-role-row__identity" title={roleDescription(role, t) || undefined}>
+            <span className="vx-tenant-directory-row__index">
+              {formatNumber(startIndex + index + 1)}
+            </span>
+            <span
+              className="vx-tenant-directory-row__tenant vx-admin-role-row__identity"
+              title={roleDescription(role, t) || undefined}
+            >
               <Icon name="role" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                  <Button
+                    variant="link"
+                    className="vx-model-name-button"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     {roleLabel}
                   </Button>
-                  {role.isSystem ? <Badge className="vx-tenant-pill vx-tenant-pill--system">系统</Badge> : null}
+                  {role.isSystem ? (
+                    <Badge className="vx-tenant-pill vx-tenant-pill--system">
+                      系统
+                    </Badge>
+                  ) : null}
                 </span>
                 <small>{role.roleCode}</small>
               </span>
             </span>
             <span className="vx-admin-role-row__status">
               <span className="vx-tenant-directory-row__status-line">
-                <span className={`vx-tenant-status-dot vx-tenant-status-dot--${indicator.tone}`} role="img" aria-label={indicator.label} title={indicator.label}>
-                  <Icon name={indicator.icon} size="xs" fallback="placeholder" />
+                <span
+                  className={`vx-tenant-status-dot vx-tenant-status-dot--${indicator.tone}`}
+                  role="img"
+                  aria-label={indicator.label}
+                  title={indicator.label}
+                >
+                  <Icon
+                    name={indicator.icon}
+                    size="xs"
+                    fallback="placeholder"
+                  />
                 </span>
-                <Badge className={`vx-tenant-pill ${roleStatusPillClass(role)}`}>{indicator.label}</Badge>
+                <Badge
+                  className={`vx-tenant-pill ${roleStatusPillClass(role)}`}
+                >
+                  {indicator.label}
+                </Badge>
               </span>
             </span>
             <span className="vx-admin-role-row__admins">
-              <strong>{formatNumber(role.activeAdminCount)} / {formatNumber(role.adminCount)}</strong>
+              <strong>
+                {formatNumber(role.activeAdminCount)} /{" "}
+                {formatNumber(role.adminCount)}
+              </strong>
               <small>启用 / 全部</small>
             </span>
             <span className="vx-admin-role-row__permissions">
@@ -640,27 +924,59 @@ function AdminRoleCards({
   onOpenAuthorization: (role: PlatformRoleRecord) => void;
 }) {
   return (
-    <div className="vx-tenant-directory-cards vx-admin-role-cards" aria-label="平台角色卡片">
+    <div
+      className="vx-tenant-directory-cards vx-admin-role-cards"
+      aria-label="平台角色卡片"
+    >
       {roles.map((role) => (
-        <article key={role.id} className={joinClasses('vx-tenant-directory-card', roleStatusCode(role) === 'active' ? 'vx-admin-role-card--active' : 'vx-admin-role-card--disabled')}>
+        <article
+          key={role.id}
+          className={joinClasses(
+            "vx-tenant-directory-card",
+            roleStatusCode(role) === "active"
+              ? "vx-admin-role-card--active"
+              : "vx-admin-role-card--disabled",
+          )}
+        >
           <header>
             <Icon name="role" size="lg" fallback="placeholder" />
             <div title={roleDescription(role, t) || undefined}>
-              <strong>{roleLabels.get(role.id) ?? role.nameEn ?? role.roleCode ?? EMPTY_MARK}</strong>
+              <strong>
+                {roleLabels.get(role.id) ??
+                  role.nameEn ??
+                  role.roleCode ??
+                  EMPTY_MARK}
+              </strong>
               <span>{role.roleCode}</span>
             </div>
             <AdminRoleActionsMenu
               role={role}
-              roleLabel={roleLabels.get(role.id) ?? role.nameEn ?? role.roleCode ?? EMPTY_MARK}
+              roleLabel={
+                roleLabels.get(role.id) ??
+                role.nameEn ??
+                role.roleCode ??
+                EMPTY_MARK
+              }
               onOpenPermissions={onOpenPermissions}
               onOpenAuthorization={onOpenAuthorization}
             />
           </header>
           <div className="vx-tenant-directory-card__badges">
-            <Badge className={`vx-tenant-pill ${roleStatusPillClass(role)}`}>{roleStatusIndicator(role).label}</Badge>
-            {role.isSystem ? <Badge className="vx-tenant-pill vx-tenant-pill--system">系统</Badge> : null}
+            <Badge className={`vx-tenant-pill ${roleStatusPillClass(role)}`}>
+              {roleStatusIndicator(role).label}
+            </Badge>
+            {role.isSystem ? (
+              <Badge className="vx-tenant-pill vx-tenant-pill--system">
+                系统
+              </Badge>
+            ) : null}
           </div>
-          <p className="vx-admin-role-card__description" title={roleDescription(role, t) || undefined}>{role.roleCode}</p>
+          <p
+            className="vx-admin-role-card__description"
+            title={roleDescription(role, t) || undefined}
+          >
+            {role.roleCode}
+          </p>
           <div className="vx-tenant-directory-card__metrics">
             <span>
               <b>{formatNumber(role.permissionCount)}</b>
@@ -703,10 +1019,17 @@ function AdminRolePagination({
 }) {
   return (
     <footer className="vx-tenant-pagination">
-      <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
+      <span className="vx-tenant-pagination__total">
+        共 {formatNumber(total)} 条记录
+      </span>
       <div className="vx-tenant-pagination__actions">
-        <AdminRolePageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
+        <AdminPageSizePicker value={pageSize} onChange={onPageSizeChange} />
+        <Pagination
+          className="vx-tenant-pagination__pager"
+          page={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </footer>
   );
@@ -715,21 +1038,32 @@ function AdminRolePagination({
 export function AdminRolesPage() {
   const t = useConsoleTranslations();
   const [roles, setRoles] = useState<PlatformRoleRecord[]>([]);
-  const [permissions, setPermissions] = useState<PlatformAdminPermissionRecord[]>([]);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [selectedRoleIds, setSelectedRoleIds] = useState<Set<string>>(() => new Set());
-  const [query, setQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [roleKindFilter, setRoleKindFilter] = useState<RoleKindFilter>('all');
-  const [permissionFilter, setPermissionFilter] = useState<PermissionFilter>('all');
+  const [permissions, setPermissions] = useState<
+    PlatformAdminPermissionRecord[]
+  >([]);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [selectedRoleIds, setSelectedRoleIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [roleKindFilter, setRoleKindFilter] = useState<RoleKindFilter>("all");
+  const [permissionFilter, setPermissionFilter] =
+    useState<PermissionFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [permissionDialogRoleId, setPermissionDialogRoleId] = useState<string | null>(null);
-  const [authorizationRoleId, setAuthorizationRoleId] = useState<string | null>(null);
+  const [permissionDialogRoleId, setPermissionDialogRoleId] = useState<
+    string | null
+  >(null);
+  const [authorizationRoleId, setAuthorizationRoleId] = useState<string | null>(
+    null,
+  );
   const [authorizationSaving, setAuthorizationSaving] = useState(false);
-  const [authorizationError, setAuthorizationError] = useState<string | null>(null);
+  const [authorizationError, setAuthorizationError] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     let active = true;
@@ -743,7 +1077,12 @@ export function AdminRolesPage() {
         setPermissions(permissionRecords);
       })
       .catch((error) => {
-        if (active) setLoadError(error instanceof Error ? error.message : '平台角色权限数据库读取失败');
+        if (active)
+          setLoadError(
+            error instanceof Error
+              ? error.message
+              : "平台角色权限数据库读取失败",
+          );
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -762,37 +1101,75 @@ export function AdminRolesPage() {
     const normalizedQuery = query.trim().toLowerCase();
 
     return roles.filter((role) => {
-      if (statusFilter !== 'all' && roleStatusCode(role) !== statusFilter) return false;
-      if (roleKindFilter === 'system' && !role.isSystem) return false;
-      if (roleKindFilter === 'custom' && role.isSystem) return false;
+      if (statusFilter !== "all" && roleStatusCode(role) !== statusFilter)
+        return false;
+      if (roleKindFilter === "system" && !role.isSystem) return false;
+      if (roleKindFilter === "custom" && role.isSystem) return false;
       if (!roleMatchesPermission(role, permissionFilter)) return false;
-      if (normalizedQuery && !`${roleSearchText(role)} ${roleLabels.get(role.id) ?? ''}`.toLowerCase().includes(normalizedQuery)) return false;
+      if (
+        normalizedQuery &&
+        !`${roleSearchText(role)} ${roleLabels.get(role.id) ?? ""}`
+          .toLowerCase()
+          .includes(normalizedQuery)
+      )
+        return false;
       return true;
     });
-  }, [permissionFilter, query, roleKindFilter, roleLabels, roles, statusFilter]);
+  }, [
+    permissionFilter,
+    query,
+    roleKindFilter,
+    roleLabels,
+    roles,
+    statusFilter,
+  ]);
 
   const pageCount = Math.max(1, Math.ceil(filteredRoles.length / pageSize));
-  const visibleRoles = filteredRoles.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-  const permissionDialogRole = permissionDialogRoleId ? roles.find((role) => role.id === permissionDialogRoleId) ?? null : null;
-  const authorizationRole = authorizationRoleId ? roles.find((role) => role.id === authorizationRoleId) ?? null : null;
+  const visibleRoles = filteredRoles.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize,
+  );
+  const permissionDialogRole = permissionDialogRoleId
+    ? (roles.find((role) => role.id === permissionDialogRoleId) ?? null)
+    : null;
+  const authorizationRole = authorizationRoleId
+    ? (roles.find((role) => role.id === authorizationRoleId) ?? null)
+    : null;
   const visibleRoleIds = visibleRoles.map((role) => role.id);
-  const selectedVisibleRoleCount = visibleRoleIds.filter((roleId) => selectedRoleIds.has(roleId)).length;
-  const isRolePageSelected = visibleRoleIds.length > 0 && selectedVisibleRoleCount === visibleRoleIds.length;
-  const enabledRoles = roles.filter((role) => roleStatusCode(role) === 'active').length;
+  const selectedVisibleRoleCount = visibleRoleIds.filter((roleId) =>
+    selectedRoleIds.has(roleId),
+  ).length;
+  const isRolePageSelected =
+    visibleRoleIds.length > 0 &&
+    selectedVisibleRoleCount === visibleRoleIds.length;
+  const enabledRoles = roles.filter(
+    (role) => roleStatusCode(role) === "active",
+  ).length;
   const systemRoles = roles.filter((role) => role.isSystem).length;
-  const disabledRoles = roles.filter((role) => roleStatusCode(role) === 'disabled').length;
-  const archivedRoles = roles.filter((role) => roleStatusCode(role) === 'archived').length;
+  const disabledRoles = roles.filter(
+    (role) => roleStatusCode(role) === "disabled",
+  ).length;
+  const archivedRoles = roles.filter(
+    (role) => roleStatusCode(role) === "archived",
+  ).length;
   const otherRoleCount = disabledRoles + archivedRoles;
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [pageSize, permissionFilter, query, roleKindFilter, statusFilter, viewMode]);
+  }, [
+    pageSize,
+    permissionFilter,
+    query,
+    roleKindFilter,
+    statusFilter,
+    viewMode,
+  ]);
 
   function handleReset() {
-    setQuery('');
-    setStatusFilter('all');
-    setRoleKindFilter('all');
-    setPermissionFilter('all');
+    setQuery("");
+    setStatusFilter("all");
+    setRoleKindFilter("all");
+    setPermissionFilter("all");
   }
 
   function toggleRoleSelection(roleId: string, checked: boolean) {
@@ -827,11 +1204,20 @@ export function AdminRolesPage() {
     setAuthorizationSaving(true);
     setAuthorizationError(null);
     try {
-      const updatedRole = await replacePlatformRolePermissions(authorizationRole.id, permissionIds);
-      setRoles((current) => current.map((role) => (role.id === updatedRole.id ? updatedRole : role)));
+      const updatedRole = await replacePlatformRolePermissions(
+        authorizationRole.id,
+        permissionIds,
+      );
+      setRoles((current) =>
+        current.map((role) =>
+          role.id === updatedRole.id ? updatedRole : role,
+        ),
+      );
       setAuthorizationRoleId(null);
     } catch (error) {
-      setAuthorizationError(error instanceof Error ? error.message : '角色授权保存失败');
+      setAuthorizationError(
+        error instanceof Error ? error.message : "角色授权保存失败",
+      );
     } finally {
       setAuthorizationSaving(false);
     }
@@ -845,9 +1231,23 @@ export function AdminRolesPage() {
         description="管理平台用户角色、权限集合和授权覆盖；不参与租户成员角色流转。"
       />
 
-      <section className="vx-tenant-summary vx-admin-roles-summary" aria-label="平台角色统计">
-        <AdminRoleSummaryItem icon="role" label="角色总数" value={formatNumber(roles.length)} tags={[`系统预置 ${formatNumber(systemRoles)}`]} />
-        <AdminRoleSummaryItem icon="check" label="启用角色" value={formatNumber(enabledRoles)} tags={['可授权']} tone="green" />
+      <section
+        className="vx-tenant-summary vx-admin-roles-summary"
+        aria-label="平台角色统计"
+      >
+        <AdminRoleSummaryItem
+          icon="role"
+          label="角色总数"
+          value={formatNumber(roles.length)}
+          tags={[`系统预置 ${formatNumber(systemRoles)}`]}
+        />
+        <AdminRoleSummaryItem
+          icon="check"
+          label="启用角色"
+          value={formatNumber(enabledRoles)}
+          tags={["可授权"]}
+          tone="green"
+        />
         <AdminRoleSummaryItem
           icon="x"
           label="其他角色"
@@ -862,8 +1262,14 @@ export function AdminRolesPage() {
 
       <div className="vx-tenant-list-shell">
         <section className="vx-tenant-toolbar" aria-label="平台角色筛选">
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="平台角色展示方式" />
-          <span className="vx-tenant-view-count">{formatNumber(filteredRoles.length)}</span>
+          <ViewModeSwitch
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="平台角色展示方式"
+          />
+          <span className="vx-tenant-view-count">
+            {formatNumber(filteredRoles.length)}
+          </span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
             value={query}
@@ -872,20 +1278,43 @@ export function AdminRolesPage() {
             className="vx-tenant-search vx-admin-role-search"
             aria-label="搜索平台角色"
           />
-          <Button variant="outline" onClick={handleReset}>重置</Button>
+          <Button variant="outline" onClick={handleReset}>
+            重置
+          </Button>
           <div className="vx-tenant-filters">
-            <NativeSelect className="vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="角色状态">
+            <NativeSelect
+              className="vx-tenant-select"
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as StatusFilter)
+              }
+              aria-label="角色状态"
+            >
               <option value="all">全部状态</option>
               <option value="active">启用</option>
               <option value="disabled">停用</option>
               <option value="archived">归档</option>
             </NativeSelect>
-            <NativeSelect className="vx-tenant-select" value={roleKindFilter} onChange={(event) => setRoleKindFilter(event.target.value as RoleKindFilter)} aria-label="角色类型">
+            <NativeSelect
+              className="vx-tenant-select"
+              value={roleKindFilter}
+              onChange={(event) =>
+                setRoleKindFilter(event.target.value as RoleKindFilter)
+              }
+              aria-label="角色类型"
+            >
               <option value="all">全部类型</option>
               <option value="system">系统角色</option>
               <option value="custom">自定义角色</option>
             </NativeSelect>
-            <NativeSelect className="vx-tenant-select" value={permissionFilter} onChange={(event) => setPermissionFilter(event.target.value as PermissionFilter)} aria-label="权限类型">
+            <NativeSelect
+              className="vx-tenant-select"
+              value={permissionFilter}
+              onChange={(event) =>
+                setPermissionFilter(event.target.value as PermissionFilter)
+              }
+              aria-label="权限类型"
+            >
               <option value="all">全部权限</option>
               <option value="MENU">菜单</option>
               <option value="BUTTON">按钮</option>
@@ -906,7 +1335,7 @@ export function AdminRolesPage() {
           ) : null}
 
           {visibleRoles.length ? (
-            viewMode === 'list' ? (
+            viewMode === "list" ? (
               <AdminRoleListRows
                 roles={visibleRoles}
                 startIndex={(Math.min(currentPage, pageCount) - 1) * pageSize}
@@ -937,10 +1366,24 @@ export function AdminRolesPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? '正在加载平台角色' : loadError ? '平台角色读取失败' : '没有匹配的平台角色'}
-                description={loading ? '正在从 platform.platform_role 读取平台角色。' : loadError ?? '清空筛选条件后可查看全部平台角色。'}
+                title={
+                  loading
+                    ? "正在加载平台角色"
+                    : loadError
+                      ? "平台角色读取失败"
+                      : "没有匹配的平台角色"
+                }
+                description={
+                  loading
+                    ? "正在从 platform.platform_role 读取平台角色。"
+                    : (loadError ?? "清空筛选条件后可查看全部平台角色。")
+                }
                 action={
-                  <ActionButton variant="outline" icon="x" onClick={handleReset}>
+                  <ActionButton
+                    variant="outline"
+                    icon="x"
+                    onClick={handleReset}
+                  >
                     清空筛选
                   </ActionButton>
                 }
@@ -954,21 +1397,33 @@ export function AdminRolesPage() {
             total={filteredRoles.length}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
-            onPageChange={(page) => setCurrentPage(Math.min(Math.max(page, 1), pageCount))}
+            onPageChange={(page) =>
+              setCurrentPage(Math.min(Math.max(page, 1), pageCount))
+            }
           />
         </section>
       </div>
       {permissionDialogRole ? (
         <AdminRolePermissionDialog
           role={permissionDialogRole}
-          roleLabel={roleLabels.get(permissionDialogRole.id) ?? permissionDialogRole.nameEn ?? permissionDialogRole.roleCode ?? EMPTY_MARK}
+          roleLabel={
+            roleLabels.get(permissionDialogRole.id) ??
+            permissionDialogRole.nameEn ??
+            permissionDialogRole.roleCode ??
+            EMPTY_MARK
+          }
           onClose={() => setPermissionDialogRoleId(null)}
         />
       ) : null}
       {authorizationRole ? (
         <AdminRoleAuthorizationDialog
           role={authorizationRole}
-          roleLabel={roleLabels.get(authorizationRole.id) ?? authorizationRole.nameEn ?? authorizationRole.roleCode ?? EMPTY_MARK}
+          roleLabel={
+            roleLabels.get(authorizationRole.id) ??
+            authorizationRole.nameEn ??
+            authorizationRole.roleCode ??
+            EMPTY_MARK
+          }
           permissions={permissions}
           saving={authorizationSaving}
           error={authorizationError}

@@ -1,0 +1,47 @@
+/**
+ * tokens-admin-shell-header.css - Admin Shell 顶栏 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-admin-shell-header-height: var(--vx-component-metric-4r);
+  --vx-admin-shell-header-center-min-width: var(--vx-component-metric-18r-large);
+  --vx-admin-shell-header-columns: minmax(0, 1fr) minmax(var(--vx-admin-shell-header-center-min-width), var(--vx-admin-shell-center-column-width)) auto;
+  --vx-admin-shell-header-gap: var(--vx-component-metric-15r);
+  --vx-admin-shell-header-padding-x: var(--vx-component-metric-1r);
+  --vx-admin-shell-header-blur: var(--vx-component-metric-24p);
+  --vx-admin-shell-header-search-height: var(--vx-component-metric-225r);
+  --vx-admin-shell-header-search-highlight-width: var(--vx-component-metric-1p);
+  --vx-admin-shell-header-search-focus-ring-width: var(--vx-component-metric-2p);
+  --vx-admin-shell-header-left-gap: var(--vx-component-metric-075r);
+  --vx-admin-shell-brand-gap: var(--vx-component-metric-05r);
+  --vx-admin-shell-brand-logo-size: var(--vx-component-metric-15r);
+  --vx-admin-shell-brand-logo-shadow-y: var(--vx-component-metric-6p);
+  --vx-admin-shell-brand-logo-shadow-blur: var(--vx-component-metric-14p);
+  --vx-admin-shell-brand-title-size: var(--vx-component-metric-15r);
+  --vx-admin-shell-brand-title-line: var(--vx-component-metric-2r);
+  --vx-admin-shell-divider-width: var(--vx-component-metric-1p);
+  --vx-admin-shell-context-max-width: var(--vx-component-metric-12r-large);
+  --vx-admin-shell-actions-gap: var(--vx-component-metric-1r);
+  --vx-admin-shell-action-group-gap: var(--vx-component-metric-025r);
+  --vx-admin-shell-action-group-padding: var(--vx-component-metric-0125r);
+  --vx-admin-shell-section-gap: var(--vx-component-metric-1r);
+  --vx-admin-shell-control-size: var(--vx-component-metric-2r);
+  --vx-admin-shell-rail-size: var(--vx-component-metric-25r);
+  --vx-admin-shell-rail-track: var(--vx-component-metric-25r);
+  --vx-admin-shell-compact-icon-box-size: var(--vx-component-metric-15r);
+  --vx-admin-shell-icon-size: var(--vx-component-metric-1r);
+  --vx-admin-shell-border-width: var(--vx-component-metric-1p);
+  --vx-admin-shell-status-min-width: var(--vx-component-metric-185r);
+  --vx-admin-shell-status-padding-x: var(--vx-component-metric-0375r);
+  --vx-admin-shell-status-font-size: var(--vx-component-metric-0625r);
+  --vx-admin-shell-status-line: var(--vx-component-metric-1r);
+  --vx-admin-shell-workspace-title-size: var(--vx-component-metric-1r);
+  --vx-admin-shell-sidebar-title-padding-start: var(--vx-component-metric-1r);
+  --vx-admin-shell-hidden-offset: var(--vx-component-metric-025r);
+  --vx-admin-shell-badge-offset: var(--vx-component-metric-018r);
+}

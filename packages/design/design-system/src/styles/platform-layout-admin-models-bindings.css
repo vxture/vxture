@@ -1,121 +1,13 @@
 /**
- * platform-layout-admin-models-bindings.css - Admin shell 模型页面变量绑定。
+ * platform-layout-admin-models-bindings.css - Admin shell 模型页面变量绑定入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-15
+ * @date 2026-05-17
  */
 
-:where(.admin-shell) {
-  --vx-models-page-width: 100%;
-  --vx-models-page-gap: var(--vx-admin-layout-models-page-gap);
-  --vx-models-page-header-margin-bottom: var(--vx-admin-layout-models-page-header-margin-bottom);
-  --vx-models-page-title-size: var(--vx-admin-page-title-size);
-  --vx-models-page-title-line-height: 1.24;
-  --vx-models-page-title-weight: 740;
-  --vx-models-summary-gap: var(--vx-admin-layout-models-summary-gap);
-  --vx-models-summary-margin-bottom: var(--vx-admin-layout-models-summary-margin-bottom);
-  --vx-models-summary-item-gap: var(--vx-admin-layout-models-summary-item-gap);
-  --vx-models-summary-item-radius: var(--vx-admin-layout-models-summary-item-radius);
-  --vx-models-summary-item-padding: var(--vx-admin-layout-models-summary-item-padding);
-  --vx-models-workspace-gap: var(--vx-admin-layout-models-workspace-gap);
-  --vx-models-header-actions-gap: var(--vx-admin-layout-models-header-actions-gap);
-  --vx-models-header-primary-gap: var(--vx-admin-layout-models-header-primary-gap);
-  --vx-models-toolbar-justify: flex-start;
-  --vx-models-toolbar-gap: var(--vx-admin-layout-models-toolbar-gap);
-  --vx-models-toolbar-padding: var(--vx-admin-layout-models-toolbar-padding);
-  --vx-models-toolbar-search-width: var(--vx-admin-layout-models-toolbar-search-width);
-  --vx-models-toolbar-search-flex: var(--vx-admin-layout-models-toolbar-search-flex);
-  --vx-models-toolbar-search-min-width: 0;
-  --vx-models-toolbar-search-height: var(--vx-admin-layout-models-toolbar-search-height);
-  --vx-models-toolbar-search-padding: var(--vx-admin-layout-models-toolbar-search-padding);
-  --vx-models-toolbar-search-radius: var(--vx-radius-lg);
-  --vx-models-toolbar-search-border: var(--vx-admin-layout-models-toolbar-search-border);
-  --vx-models-toolbar-search-background: transparent;
-  --vx-models-toolbar-search-background-dark: transparent;
-  --vx-models-toolbar-search-color: var(--vx-color-text-secondary);
-  --vx-models-toolbar-search-font-size: var(--vx-admin-meta-size);
-  --vx-models-toolbar-search-font-weight: 400;
-  --vx-models-toolbar-filters-gap: var(--vx-admin-layout-models-toolbar-filters-gap);
-  --vx-models-toolbar-filters-wrap: wrap;
-  --vx-models-toolbar-count-padding: var(--vx-admin-layout-models-toolbar-count-padding);
-  --vx-models-toolbar-count-color: var(--vx-color-text-secondary);
-  --vx-models-toolbar-count-background: transparent;
-  --vx-models-toolbar-count-background-dark: transparent;
-  --vx-models-toolbar-count-border: 0;
-  --vx-models-toolbar-count-font-size: var(--vx-admin-body-size);
-  --vx-models-toolbar-count-font-weight: 800;
-  --vx-models-segmented-min-height: var(--vx-admin-layout-models-segmented-min-height);
-  --vx-models-segmented-padding: 0;
-  --vx-models-segmented-gap: var(--vx-admin-layout-models-segmented-gap);
-  --vx-models-segmented-radius: 0;
-  --vx-models-segmented-background: transparent;
-  --vx-models-segmented-background-dark: transparent;
-  --vx-models-segmented-border: 0;
-  --vx-models-segmented-border-dark: 0;
-  --vx-models-segmented-item-min-height: var(--vx-admin-layout-models-segmented-item-min-height);
-  --vx-models-segmented-item-padding: var(--vx-admin-layout-models-segmented-item-padding);
-  --vx-models-segmented-item-border: var(--vx-admin-layout-models-segmented-item-border);
-  --vx-models-segmented-item-radius: var(--vx-radius-lg);
-  --vx-models-segmented-item-background: transparent;
-  --vx-models-segmented-item-color: var(--vx-color-text-secondary);
-  --vx-models-segmented-item-font-size: var(--vx-admin-meta-size);
-  --vx-models-segmented-item-font-weight: 400;
-  --vx-models-segmented-item-active-background: color-mix(in srgb, var(--vx-color-auth-accent) 10%, transparent);
-  --vx-models-segmented-item-active-color: var(--vx-color-auth-accent);
-  --vx-models-segmented-item-active-font-weight: 800;
-  --vx-model-list-columns: var(--vx-admin-layout-model-list-columns);
-  --vx-model-grant-list-columns: var(--vx-admin-layout-model-grant-list-columns);
-  --vx-model-policy-list-columns: var(--vx-admin-layout-model-policy-list-columns);
-  --vx-model-row-gap: var(--vx-admin-layout-model-row-gap);
-  --vx-model-header-padding: var(--vx-admin-layout-model-header-padding);
-  --vx-model-header-justify: center;
-  --vx-model-header-text-align: center;
-  --vx-model-row-min-height: var(--vx-admin-layout-model-row-min-height);
-  --vx-model-row-padding: var(--vx-admin-layout-model-row-padding);
-  --vx-model-row-justify: start;
-  --vx-model-row-text-align: left;
-  --vx-model-row-active-shadow: var(--vx-platform-list-row-active-shadow);
-  --vx-model-identity-gap: var(--vx-admin-layout-model-identity-gap);
-  --vx-model-grant-model-gap: var(--vx-admin-layout-model-grant-model-gap);
-  --vx-model-icon-size: var(--vx-admin-layout-model-icon-size);
-  --vx-model-icon-radius: var(--vx-admin-layout-model-icon-radius);
-  --vx-model-copy-margin-top: var(--vx-admin-layout-model-copy-margin-top);
-  --vx-model-chip-gap: var(--vx-admin-layout-model-chip-gap);
-  --vx-model-chip-padding: var(--vx-admin-layout-model-chip-padding);
-  --vx-model-status-padding: var(--vx-admin-layout-model-status-padding);
-  --vx-model-menu-justify: center;
-  --vx-model-menu-justify-self: center;
-  --vx-model-menu-button-size: var(--vx-admin-layout-model-menu-button-size);
-  --vx-model-menu-button-radius: var(--vx-admin-layout-model-menu-button-radius);
-  --vx-model-menu-button-color: var(--vx-color-text-secondary);
-  --vx-model-menu-button-hover-background: color-mix(in srgb, var(--vx-color-shell-brand) 6%, transparent);
-  --vx-model-menu-button-hover-color: var(--vx-console-brand-strong);
-  --vx-model-menu-icon-size: var(--vx-admin-layout-model-menu-icon-size);
-  --vx-model-actions-menu-top: var(--vx-admin-layout-model-actions-menu-top);
-  --vx-model-actions-menu-min-width: var(--vx-admin-layout-model-actions-menu-min-width);
-  --vx-model-actions-menu-gap: var(--vx-admin-layout-model-actions-menu-gap);
-  --vx-model-actions-menu-radius: var(--vx-admin-layout-model-actions-menu-radius);
-  --vx-model-actions-menu-padding: var(--vx-admin-layout-model-actions-menu-padding);
-  --vx-model-actions-menu-button-radius: var(--vx-admin-layout-model-actions-menu-button-radius);
-  --vx-model-actions-menu-button-font-size: var(--vx-admin-meta-size);
-  --vx-model-actions-menu-button-font-weight: 400;
-  --vx-model-actions-menu-button-padding: var(--vx-admin-layout-model-actions-menu-button-padding);
-  --vx-models-pagination-justify: space-between;
-  --vx-models-pagination-padding: var(--vx-admin-layout-models-pagination-padding);
-  --vx-models-pagination-border-top: var(--vx-admin-layout-models-pagination-border-top);
-  --vx-models-pagination-font-size: var(--vx-admin-meta-size);
-  --vx-models-pagination-actions-gap: var(--vx-admin-layout-models-pagination-actions-gap);
-  --vx-models-pagination-actions-margin-left: auto;
-  --vx-model-grants-margin-top: var(--vx-admin-layout-model-grants-margin-top);
-  --vx-model-grants-header-padding: var(--vx-admin-layout-model-grants-header-padding);
-  --vx-model-dialog-grid-gap: var(--vx-admin-layout-model-dialog-grid-gap);
-  --vx-model-dialog-check-gap: var(--vx-admin-layout-model-dialog-check-gap);
-  --vx-models-toolbar-tablet-wrap: wrap;
-  --vx-models-toolbar-filters-tablet-flex: 1 1 100%;
-  --vx-models-row-mobile-gap: var(--vx-admin-layout-models-row-mobile-gap);
-  --vx-models-toolbar-mobile-direction: row;
-  --vx-models-pagination-actions-mobile-width: 100%;
-  --vx-models-pagination-actions-mobile-justify: flex-end;
-}
+@import "./platform-layout-admin-models-page-bindings.css";
+@import "./platform-layout-admin-models-toolbar-bindings.css";
+@import "./platform-layout-admin-models-list-bindings.css";
+@import "./platform-layout-admin-models-actions-bindings.css";

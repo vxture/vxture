@@ -8,25 +8,25 @@
  */
 
 :root {
-  --vx-auth-signup-page-height: var(--vx-auth-signup-scale-100vh);
-  --vx-auth-signup-main-padding: var(--vx-auth-signup-scale-18p) clamp(var(--vx-auth-signup-scale-24p), var(--vx-auth-signup-scale-5vw), var(--vx-auth-signup-scale-80p));
-  --vx-auth-signup-card-width: min(var(--vx-auth-signup-scale-640p), 100%);
-  --vx-auth-signup-card-padding: var(--vx-auth-signup-scale-34p) var(--vx-auth-signup-scale-56p);
-  --vx-auth-signup-card-border-width: var(--vx-auth-signup-scale-1p);
-  --vx-auth-signup-card-radius: var(--vx-auth-signup-scale-16p);
-  --vx-auth-signup-header-margin-bottom: var(--vx-auth-signup-scale-24p);
-  --vx-auth-signup-title-margin-bottom: var(--vx-auth-signup-scale-5p);
-  --vx-auth-signup-title-size: var(--vx-auth-signup-scale-22p);
-  --vx-auth-signup-section-margin: var(--vx-auth-signup-scale-18p) 0 var(--vx-auth-signup-scale-12p);
-  --vx-auth-signup-label-margin-bottom: var(--vx-auth-signup-scale-6p);
-  --vx-auth-signup-label-tracking: var(--vx-auth-signup-scale-0-1e);
-  --vx-auth-signup-field-height: var(--vx-auth-signup-scale-42p);
-  --vx-auth-signup-field-padding-x: var(--vx-auth-signup-scale-14p);
-  --vx-auth-signup-field-border-width: var(--vx-auth-signup-scale-1p);
-  --vx-auth-signup-hint-margin-top: var(--vx-auth-signup-scale-5p);
-  --vx-auth-signup-submit-min-height: var(--vx-auth-signup-scale-46p);
-  --vx-auth-signup-submit-margin-top: var(--vx-auth-signup-scale-2p);
-  --vx-auth-signup-terms-margin-top: var(--vx-auth-signup-scale-14p);
-  --vx-auth-signup-footer-margin-top: var(--vx-auth-signup-scale-12p);
-  --vx-auth-signup-link-indent: var(--vx-auth-signup-scale-4p);
+  --vx-auth-signup-page-height: var(--vx-auth-scale-100vh);
+  --vx-auth-signup-main-padding: var(--vx-auth-scale-18p) clamp(var(--vx-auth-scale-24p), var(--vx-auth-scale-5vw), var(--vx-auth-scale-80p));
+  --vx-auth-signup-card-width: min(var(--vx-auth-scale-640p), 100%);
+  --vx-auth-signup-card-padding: var(--vx-auth-scale-34p) var(--vx-auth-scale-56p);
+  --vx-auth-signup-card-border-width: var(--vx-auth-scale-1p);
+  --vx-auth-signup-card-radius: var(--vx-auth-scale-16p);
+  --vx-auth-signup-header-margin-bottom: var(--vx-auth-scale-24p);
+  --vx-auth-signup-title-margin-bottom: var(--vx-auth-scale-5p);
+  --vx-auth-signup-title-size: var(--vx-auth-scale-22p);
+  --vx-auth-signup-section-margin: var(--vx-auth-scale-18p) 0 var(--vx-auth-scale-12p);
+  --vx-auth-signup-label-margin-bottom: var(--vx-auth-scale-6p);
+  --vx-auth-signup-label-tracking: var(--vx-auth-scale-0-1e);
+  --vx-auth-signup-field-height: var(--vx-auth-scale-42p);
+  --vx-auth-signup-field-padding-x: var(--vx-auth-scale-14p);
+  --vx-auth-signup-field-border-width: var(--vx-auth-scale-1p);
+  --vx-auth-signup-hint-margin-top: var(--vx-auth-scale-5p);
+  --vx-auth-signup-submit-min-height: var(--vx-auth-scale-46p);
+  --vx-auth-signup-submit-margin-top: var(--vx-auth-scale-2p);
+  --vx-auth-signup-terms-margin-top: var(--vx-auth-scale-14p);
+  --vx-auth-signup-footer-margin-top: var(--vx-auth-scale-12p);
+  --vx-auth-signup-link-indent: var(--vx-auth-scale-4p);
 }

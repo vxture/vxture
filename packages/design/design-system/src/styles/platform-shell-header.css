@@ -5,6 +5,5 @@
  * @category styles
  */
 
-@import "./platform-shell-header-search.css";
+@import "./platform-shell-header-controls.css";
 @import "./platform-shell-header-buttons.css";
-@import "./platform-shell-header-user.css";

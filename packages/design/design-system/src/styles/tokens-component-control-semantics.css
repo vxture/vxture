@@ -1,0 +1,73 @@
+/**
+ * tokens-component-control-semantics.css - 基础控件与展示组件语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  /* 基础组件通过语义 token 消费颜色和尺度，避免绑定具体 shell 实现。 */
+  --vx-control-text: var(--vx-color-shell-text);
+  --vx-control-muted: var(--vx-color-shell-muted);
+  --vx-control-brand: var(--vx-color-shell-brand);
+  --vx-control-on-brand: var(--vx-color-white);
+  --vx-control-brand-hover: color-mix(in srgb, var(--vx-control-brand) 88%, var(--vx-color-black));
+  --vx-control-brand-soft: color-mix(in srgb, var(--vx-control-brand) 8%, transparent);
+  --vx-control-brand-soft-hover: color-mix(in srgb, var(--vx-control-brand) 14%, transparent);
+  --vx-control-border-width: var(--vx-component-metric-1p);
+  --vx-control-border: color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  --vx-control-outline-border: color-mix(in srgb, var(--vx-control-brand) 20%, transparent);
+  --vx-control-outline-hover-border: color-mix(in srgb, var(--vx-control-brand) 30%, transparent);
+  --vx-control-focus-ring-width: var(--vx-component-metric-2p);
+  --vx-control-focus-ring-offset: var(--vx-component-metric-2p);
+  --vx-control-focus-ring: color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  --vx-control-focus-border: var(--vx-color-brand-300);
+  --vx-control-surface: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
+  --vx-control-surface-muted: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  --vx-control-surface-dark: var(--vx-color-gray-900);
+  --vx-button-gap: var(--vx-component-metric-056r);
+  --vx-button-height: var(--vx-component-metric-225r);
+  --vx-button-radius: var(--vx-component-metric-10p);
+  --vx-button-padding-y: var(--vx-component-metric-056r);
+  --vx-button-padding-x: var(--vx-component-metric-088r);
+  --vx-button-font-size: var(--vx-component-metric-084r);
+  --vx-button-sm-height: var(--vx-component-metric-2r);
+  --vx-button-sm-padding-y: var(--vx-component-metric-046r);
+  --vx-button-sm-padding-x: var(--vx-component-metric-074r);
+  --vx-button-sm-radius: var(--vx-component-metric-8p);
+  --vx-button-sm-font-size: var(--vx-component-metric-08r);
+  --vx-button-icon-size: var(--vx-component-metric-2r);
+  --vx-field-height: var(--vx-component-metric-275r);
+  --vx-field-padding-y: var(--vx-component-metric-074r);
+  --vx-field-padding-x: var(--vx-component-metric-095r);
+  --vx-field-radius: var(--vx-component-metric-14p);
+  --vx-select-height: var(--vx-component-metric-225r);
+  --vx-select-padding-start: var(--vx-component-metric-085r);
+  --vx-select-padding-end: var(--vx-component-metric-2r);
+  --vx-page-size-picker-gap: var(--vx-component-metric-05r);
+  --vx-page-size-picker-min-height: var(--vx-component-metric-2r);
+  --vx-page-size-picker-button-size: var(--vx-component-metric-2r);
+  --vx-page-size-picker-button-padding-x: var(--vx-component-metric-05r);
+  --vx-label-font-size: var(--vx-component-metric-095r);
+  --vx-badge-gap: var(--vx-component-metric-035r);
+  --vx-badge-height: var(--vx-component-metric-18r);
+  --vx-badge-padding-y: var(--vx-component-metric-02r);
+  --vx-badge-padding-x: var(--vx-component-metric-065r);
+  --vx-badge-font-size: var(--vx-component-metric-082r);
+  --vx-card-border: color-mix(in srgb, var(--vx-color-gray-900) 5%, transparent);
+  --vx-card-background: color-mix(in srgb, var(--vx-color-white) 88%, transparent);
+  --vx-card-shadow: var(--vx-shadow-sm);
+  --vx-card-radius: var(--vx-component-metric-20p);
+  --vx-card-header-gap: var(--vx-component-metric-04r);
+  --vx-card-padding: var(--vx-component-metric-115r);
+  --vx-card-title-size: var(--vx-component-metric-105r);
+  --vx-ai-surface-shadow-y: var(--vx-component-metric-18p);
+  --vx-ai-surface-shadow-blur: var(--vx-component-metric-44p);
+  --vx-ai-dot-size: var(--vx-component-metric-05r);
+  --vx-ai-ambient-opacity: 0.7;
+  --vx-avatar-size: var(--vx-component-metric-225r);
+  --vx-avatar-fallback-size: var(--vx-component-metric-082r);
+  --vx-avatar-fallback-letter-spacing: var(--vx-component-metric-004e);
+}

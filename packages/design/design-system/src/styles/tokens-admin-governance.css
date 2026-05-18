@@ -1,0 +1,44 @@
+/**
+ * tokens-admin-governance.css - Admin governance 语义尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-17
+ */
+
+:root {
+  --vx-admin-governance-page-max-width: var(--vx-admin-directory-row-max-width);
+  --vx-admin-governance-row-min-width: var(--vx-admin-directory-row-min-width);
+  --vx-admin-governance-list-grid: var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(0, 1.25fr) minmax(0, 0.5fr) minmax(0, 0.68fr) minmax(0, 0.68fr) minmax(0, 0.9fr) var(--vx-component-metric-5r);
+  --vx-admin-governance-list-grid-compact: var(--vx-component-metric-25r) var(--vx-component-metric-275r) minmax(var(--vx-component-metric-18r-large), 1.25fr) minmax(var(--vx-admin-grid-column-xs), 0.5fr) minmax(var(--vx-component-metric-8r), 0.68fr) minmax(var(--vx-component-metric-8r), 0.68fr) minmax(var(--vx-component-metric-10r), 0.9fr) var(--vx-component-metric-5r);
+  --vx-admin-governance-row-min-height: var(--vx-component-metric-4r);
+  --vx-admin-governance-sticky-shadow-width: var(--vx-component-metric-1p);
+  --vx-admin-governance-row-identity-gap: var(--vx-component-metric-05r);
+  --vx-admin-governance-row-identity-icon-size: var(--vx-component-metric-1625r);
+  --vx-admin-governance-row-identity-icon-padding: var(--vx-component-metric-03r);
+  --vx-admin-governance-row-copy-gap: var(--vx-component-metric-0125r);
+  --vx-admin-governance-row-title-line: var(--vx-component-metric-125r);
+  --vx-admin-governance-row-meta-line: var(--vx-component-metric-1r);
+  --vx-admin-governance-row-meta-gap: var(--vx-component-metric-05r);
+  --vx-admin-governance-status-gap: var(--vx-component-metric-025r);
+  --vx-admin-governance-status-line: var(--vx-component-metric-1125r);
+  --vx-admin-governance-card-grid-gap: var(--vx-component-metric-1r);
+  --vx-admin-governance-card-gap: var(--vx-component-metric-0875r);
+  --vx-admin-governance-card-padding: var(--vx-component-metric-1r);
+  --vx-admin-governance-card-border-width: var(--vx-component-metric-1p);
+  --vx-admin-governance-card-header-grid: var(--vx-component-metric-2r) minmax(0, 1fr) auto;
+  --vx-admin-governance-card-header-gap: var(--vx-component-metric-0625r);
+  --vx-admin-governance-card-icon-size: var(--vx-component-metric-2r);
+  --vx-admin-governance-card-icon-padding: var(--vx-component-metric-0375r);
+  --vx-admin-governance-card-header-copy-gap: var(--vx-component-metric-0125r);
+  --vx-admin-governance-card-title-size: var(--vx-component-metric-09375r);
+  --vx-admin-governance-card-title-line: var(--vx-component-metric-125r);
+  --vx-admin-governance-card-copy-size: var(--vx-component-metric-08125r);
+  --vx-admin-governance-card-copy-line: var(--vx-component-metric-125r);
+  --vx-admin-governance-card-body-min-height: var(--vx-component-metric-25r);
+  --vx-admin-governance-card-tags-gap: var(--vx-component-metric-0375r);
+  --vx-admin-governance-card-footer-gap: var(--vx-component-metric-075r);
+  --vx-admin-governance-card-footer-padding-top: var(--vx-component-metric-075r);
+  --vx-admin-governance-card-footer-value-size: var(--vx-component-metric-075r);
+}

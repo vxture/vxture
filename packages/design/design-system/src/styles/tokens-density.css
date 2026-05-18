@@ -4,38 +4,49 @@
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-15
+ * @date 2026-05-18
  */
 
-/* ============================================
-   密度：紧凑（0.875x）
-   ============================================ */
+/* ============================================================================
+ * 密度：紧凑
+ * ========================================================================== */
+
 .density-compact {
-  /* 间距：紧凑 */
-  --vx-space-xs: 3.5px;
-  --vx-space-sm: 7px;
-  --vx-space-md: 10.5px;
+  /* 间距：高密度界面优先压缩留白，不压缩字号。 */
+  --vx-space-xs: 4px;
+  --vx-space-sm: 6px;
+  --vx-space-md: 10px;
   --vx-space-lg: 14px;
-  --vx-space-xl: 21px;
+  --vx-space-xl: 20px;
   --vx-space-2xl: 28px;
-  --vx-space-3xl: 42px;
+  --vx-space-3xl: 40px;
   --vx-space-4xl: 56px;
   --vx-space-5xl: 80px;
 
-  /* 字号：紧凑 */
-  --vx-font-size-xs: 10.5px;
-  --vx-font-size-sm: 12.25px;
-  --vx-font-size-md: 14px;
-  --vx-font-size-lg: 15.75px;
-  --vx-font-size-xl: 17.5px;
-  --vx-font-size-2xl: 21px;
+  /* 行距：紧凑模式降低垂直节奏，但保留阅读底线。 */
+  --vx-typography-body-line-height: 1.5;
+  --vx-typography-body-lg-line-height: 1.58;
+  --vx-typography-body-sm-line-height: 1.45;
+  --vx-typography-code-line-height: 1.45;
+
+  /* 控件与列表：用于后续组件语义 token 逐步消费。 */
+  --vx-density-control-min-height: 32px;
+  --vx-density-control-padding-x: 10px;
+  --vx-density-control-padding-y: 6px;
+  --vx-density-row-min-height: 36px;
+  --vx-density-row-padding-y: 8px;
+  --vx-density-toolbar-gap: 8px;
+  --vx-density-section-gap: 16px;
+  --vx-density-card-padding: 16px;
+  --vx-density-page-gap: 20px;
 }
 
-/* ============================================
-   密度：默认（1x）
-   ============================================ */
+/* ============================================================================
+ * 密度：默认
+ * ========================================================================== */
+
 .density-default {
-  /* 间距：默认 */
+  /* 间距：默认模式对应 foundation 的基础节奏。 */
   --vx-space-xs: 4px;
   --vx-space-sm: 8px;
   --vx-space-md: 12px;
@@ -46,35 +57,52 @@
   --vx-space-4xl: 64px;
   --vx-space-5xl: 96px;
 
-  /* 字号：默认 */
-  --vx-font-size-xs: 12px;
-  --vx-font-size-sm: 14px;
-  --vx-font-size-md: 16px;
-  --vx-font-size-lg: 18px;
-  --vx-font-size-xl: 20px;
-  --vx-font-size-2xl: 24px;
+  /* 行距：默认排版节奏。 */
+  --vx-typography-body-line-height: 1.6;
+  --vx-typography-body-lg-line-height: 1.7;
+  --vx-typography-body-sm-line-height: 1.55;
+  --vx-typography-code-line-height: 1.55;
+
+  --vx-density-control-min-height: 36px;
+  --vx-density-control-padding-x: 12px;
+  --vx-density-control-padding-y: 8px;
+  --vx-density-row-min-height: 44px;
+  --vx-density-row-padding-y: 10px;
+  --vx-density-toolbar-gap: 12px;
+  --vx-density-section-gap: 24px;
+  --vx-density-card-padding: 20px;
+  --vx-density-page-gap: 28px;
 }
 
-/* ============================================
-   密度：舒适（1.125x）
-   ============================================ */
+/* ============================================================================
+ * 密度：舒适
+ * ========================================================================== */
+
 .density-comfortable {
-  /* 间距：舒适 */
-  --vx-space-xs: 4.5px;
-  --vx-space-sm: 9px;
-  --vx-space-md: 13.5px;
-  --vx-space-lg: 18px;
-  --vx-space-xl: 27px;
-  --vx-space-2xl: 36px;
-  --vx-space-3xl: 54px;
+  /* 间距：舒适模式增加触达面积和页面呼吸感，不放大字号。 */
+  --vx-space-xs: 6px;
+  --vx-space-sm: 10px;
+  --vx-space-md: 14px;
+  --vx-space-lg: 20px;
+  --vx-space-xl: 28px;
+  --vx-space-2xl: 40px;
+  --vx-space-3xl: 56px;
   --vx-space-4xl: 72px;
   --vx-space-5xl: 112px;
 
-  /* 字号：舒适 */
-  --vx-font-size-xs: 13.5px;
-  --vx-font-size-sm: 15.75px;
-  --vx-font-size-md: 18px;
-  --vx-font-size-lg: 20.25px;
-  --vx-font-size-xl: 22.5px;
-  --vx-font-size-2xl: 27px;
+  /* 行距：舒适模式提升阅读节奏，但不改变字体尺寸。 */
+  --vx-typography-body-line-height: 1.68;
+  --vx-typography-body-lg-line-height: 1.78;
+  --vx-typography-body-sm-line-height: 1.62;
+  --vx-typography-code-line-height: 1.62;
+
+  --vx-density-control-min-height: 42px;
+  --vx-density-control-padding-x: 16px;
+  --vx-density-control-padding-y: 10px;
+  --vx-density-row-min-height: 52px;
+  --vx-density-row-padding-y: 14px;
+  --vx-density-toolbar-gap: 16px;
+  --vx-density-section-gap: 32px;
+  --vx-density-card-padding: 24px;
+  --vx-density-page-gap: 36px;
 }

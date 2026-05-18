@@ -9,5 +9,6 @@
 @import "./platform-layout-page-header.css";
 @import "./platform-layout-cards-actions.css";
 @import "./platform-layout-settings.css";
-@import "./platform-layout-admin-bindings.css";
+@import "./platform-layout-admin-core-bindings.css";
+@import "./platform-layout-admin-models-bindings.css";
 @import "./platform-layout-shell-bindings.css";

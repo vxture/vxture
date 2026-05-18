@@ -58,14 +58,14 @@ BEGIN
   WHERE tenant_code = 'zhangsan-org'
   LIMIT 1;
 
-  INSERT INTO ai_gateway.ai_provider (
-    id, provider_code, provider_name, provider_type, homepage_url, console_url, billing_url, config, created_by, updated_by
+  INSERT INTO model.provider (
+    id, provider_code, provider_type, provider_name, homepage_url, console_url, billing_url, config, created_by, updated_by
   ) VALUES
     (
       v_provider_doubao,
       'doubao',
-      'Doubao / Volcengine Ark',
       'online',
+      'Doubao / Volcengine Ark',
       'https://www.volcengine.com/product/ark',
       'https://console.volcengine.com/ark',
       'https://console.volcengine.com/finance',
@@ -76,8 +76,8 @@ BEGIN
     (
       v_provider_claude,
       'claude',
-      'Anthropic Claude',
       'online',
+      'Anthropic Claude',
       'https://www.anthropic.com/claude',
       'https://console.anthropic.com',
       'https://console.anthropic.com/settings/billing',
@@ -88,8 +88,8 @@ BEGIN
     (
       v_provider_private,
       'private',
-      'Private / Self-hosted Model',
       'private',
+      'Private / Self-hosted Model',
       NULL,
       NULL,
       NULL,
@@ -109,7 +109,7 @@ BEGIN
     updated_at = now(),
     deleted_at = NULL;
 
-  UPDATE ai_gateway.ai_model
+  UPDATE model.model
   SET
     model_code = 'doubao-seed-2-0-lite-260215',
     model_name = 'Doubao Seed 2.0 Lite',
@@ -118,7 +118,7 @@ BEGIN
   WHERE id = v_model_doubao_lite
     AND model_code = 'doubao-lite-32k';
 
-  UPDATE ai_gateway.ai_model
+  UPDATE model.model
   SET
     model_code = 'doubao-seed-2-0-pro-260215',
     model_name = 'Doubao Seed 2.0 Pro',
@@ -127,8 +127,8 @@ BEGIN
   WHERE id = v_model_doubao_pro
     AND model_code = 'doubao-pro-32k';
 
-  INSERT INTO ai_gateway.ai_model (
-    id, provider_id, model_code, model_name, provider, endpoint_url, protocol, capabilities, api_key_env_var, config, created_by, updated_by
+  INSERT INTO model.model (
+    id, provider_id, model_code, model_name, provider, model_type, endpoint_url, protocol, capabilities, config, created_by, updated_by
   ) VALUES
     (
       v_model_doubao_lite,
@@ -136,11 +136,11 @@ BEGIN
       'doubao-seed-2-0-lite-260215',
       'Doubao Seed 2.0 Lite',
       'doubao',
+      'chat',
       'https://ark.cn-beijing.volces.com/api/v3',
       'openai-compatible',
       ARRAY['text','tool-call'],
-      'DOUBAO_API_KEY',
-      '{"tier":"economy","vendorModel":"doubao-seed-2-0-lite-260215","customerVisible":false}'::jsonb,
+      '{"tier":"economy","vendorModel":"doubao-seed-2-0-lite-260215","customerVisible":false,"apiKeyEnvVar":"DOUBAO_API_KEY"}'::jsonb,
       v_system_admin,
       v_system_admin
     ),
@@ -150,11 +150,11 @@ BEGIN
       'doubao-seed-2-0-pro-260215',
       'Doubao Seed 2.0 Pro',
       'doubao',
+      'chat',
       'https://ark.cn-beijing.volces.com/api/v3',
       'openai-compatible',
       ARRAY['text','tool-call','reasoning'],
-      'DOUBAO_API_KEY',
-      '{"tier":"standard","vendorModel":"doubao-seed-2-0-pro-260215","customerVisible":false}'::jsonb,
+      '{"tier":"standard","vendorModel":"doubao-seed-2-0-pro-260215","customerVisible":false,"apiKeyEnvVar":"DOUBAO_API_KEY"}'::jsonb,
       v_system_admin,
       v_system_admin
     ),
@@ -164,11 +164,11 @@ BEGIN
       'doubao-seed-2-0-code-preview-260215',
       'Doubao Seed 2.0 Code',
       'doubao',
+      'chat',
       'https://ark.cn-beijing.volces.com/api/v3',
       'openai-compatible',
       ARRAY['text','tool-call','code'],
-      'DOUBAO_API_KEY',
-      '{"tier":"code","vendorModel":"doubao-seed-2-0-code-preview-260215","customerVisible":false}'::jsonb,
+      '{"tier":"code","vendorModel":"doubao-seed-2-0-code-preview-260215","customerVisible":false,"apiKeyEnvVar":"DOUBAO_API_KEY"}'::jsonb,
       v_system_admin,
       v_system_admin
     ),
@@ -178,11 +178,11 @@ BEGIN
       'claude-sonnet-4-20250514',
       'Claude Sonnet',
       'claude',
+      'chat',
       'https://api.anthropic.com',
       'anthropic-messages',
       ARRAY['text','reasoning','long-context'],
-      'ANTHROPIC_API_KEY',
-      '{"anthropicVersion":"2023-06-01","customerVisible":false}'::jsonb,
+      '{"anthropicVersion":"2023-06-01","customerVisible":false,"apiKeyEnvVar":"ANTHROPIC_API_KEY"}'::jsonb,
       v_system_admin,
       v_system_admin
     ),
@@ -192,11 +192,11 @@ BEGIN
       'private-qwen-72b',
       'Private Qwen 72B',
       'private',
+      'chat',
       'http://localhost:8008/v1',
       'openai-compatible',
       ARRAY['text','private','tool-call'],
-      'PRIVATE_QWEN_API_KEY',
-      '{"deployment":"vxture-managed","customerVisible":false}'::jsonb,
+      '{"deployment":"vxture-managed","customerVisible":false,"apiKeyEnvVar":"PRIVATE_QWEN_API_KEY"}'::jsonb,
       v_system_admin,
       v_system_admin
     )
@@ -204,17 +204,17 @@ BEGIN
     provider_id = EXCLUDED.provider_id,
     model_name = EXCLUDED.model_name,
     provider = EXCLUDED.provider,
+    model_type = EXCLUDED.model_type,
     endpoint_url = EXCLUDED.endpoint_url,
     protocol = EXCLUDED.protocol,
     capabilities = EXCLUDED.capabilities,
-    api_key_env_var = EXCLUDED.api_key_env_var,
     config = EXCLUDED.config,
     is_active = true,
     updated_by = EXCLUDED.updated_by,
     updated_at = now(),
     deleted_at = NULL;
 
-  INSERT INTO ai_gateway.ai_model_cost_rate (
+  INSERT INTO model.model_price_rule (
     id, model_id, currency, unit_tokens, input_unit_price, output_unit_price, request_unit_price, billing_mode, effective_at, is_active, created_by, updated_by
   ) VALUES
     ('606eea4d-5fd0-4d21-b6e7-930000000001', v_model_doubao_lite, 'CNY', 1000000, 0.30000000, 0.60000000, 0, 'token', now(), true, v_system_admin, v_system_admin),
@@ -401,7 +401,7 @@ BEGIN
       now(),
       NULL
     )
-    ON CONFLICT (tenant_id) DO UPDATE SET
+    ON CONFLICT (id) DO UPDATE SET
       subscription_id = EXCLUDED.subscription_id,
       max_users = EXCLUDED.max_users,
       max_api_keys = EXCLUDED.max_api_keys,
@@ -417,7 +417,7 @@ BEGIN
       effective_at = EXCLUDED.effective_at,
       expires_at = EXCLUDED.expires_at;
 
-    INSERT INTO ai_gateway.ai_model_grant (
+    INSERT INTO model.model_grant (
       id, model_id, tenant_id, agent_id, priority, reason, is_active, created_by, updated_by
     ) VALUES (
       'bb99b8f6-095a-4cb8-95c1-970000000001',
@@ -490,7 +490,7 @@ BEGIN
       now(),
       NULL
     )
-    ON CONFLICT (tenant_id) DO UPDATE SET
+    ON CONFLICT (id) DO UPDATE SET
       subscription_id = EXCLUDED.subscription_id,
       max_users = EXCLUDED.max_users,
       max_api_keys = EXCLUDED.max_api_keys,
@@ -506,7 +506,7 @@ BEGIN
       effective_at = EXCLUDED.effective_at,
       expires_at = EXCLUDED.expires_at;
 
-    INSERT INTO ai_gateway.ai_model_grant (
+    INSERT INTO model.model_grant (
       id, model_id, tenant_id, agent_id, priority, reason, is_active, created_by, updated_by
     ) VALUES
       ('bb99b8f6-095a-4cb8-95c1-970000000002', v_model_doubao_lite, v_org_tenant, NULL, 50, 'Growth tenant default online lite model.', true, v_system_admin, v_system_admin),
@@ -1035,7 +1035,7 @@ BEGIN
       now() - (v_tenant.idx || ' days')::interval,
       CASE WHEN v_subscription_status = 'cancelled' THEN now() - interval '1 day' ELSE NULL END
     )
-    ON CONFLICT (tenant_id) DO UPDATE SET
+    ON CONFLICT (id) DO UPDATE SET
       subscription_id = EXCLUDED.subscription_id,
       max_users = EXCLUDED.max_users,
       max_api_keys = EXCLUDED.max_api_keys,
@@ -1145,7 +1145,7 @@ BEGIN
       ELSE ('bb99b8f6-095a-4cb8-95c1-98' || lpad((v_tenant.idx * 10 + 1)::text, 10, '0'))::uuid
     END;
 
-    INSERT INTO ai_gateway.ai_model_grant (
+    INSERT INTO model.model_grant (
       id, model_id, tenant_id, agent_id, priority, reason, is_active, created_by, updated_by
     ) VALUES (
       v_lite_grant_id,
@@ -1175,7 +1175,7 @@ BEGIN
         ELSE ('bb99b8f6-095a-4cb8-95c1-98' || lpad((v_tenant.idx * 10 + 2)::text, 10, '0'))::uuid
       END;
 
-      INSERT INTO ai_gateway.ai_model_grant (
+      INSERT INTO model.model_grant (
         id, model_id, tenant_id, agent_id, priority, reason, is_active, created_by, updated_by
       ) VALUES (
         v_pro_grant_id,
@@ -1206,7 +1206,7 @@ BEGIN
         ELSE ('bb99b8f6-095a-4cb8-95c1-98' || lpad((v_tenant.idx * 10 + 3)::text, 10, '0'))::uuid
       END;
 
-      INSERT INTO ai_gateway.ai_model_grant (
+      INSERT INTO model.model_grant (
         id, model_id, tenant_id, agent_id, priority, reason, is_active, created_by, updated_by
       ) VALUES (
         v_claude_grant_id,
@@ -1228,7 +1228,7 @@ BEGIN
         is_active = EXCLUDED.is_active,
         updated_by = EXCLUDED.updated_by,
         updated_at = now(),
-      deleted_at = NULL;
+        deleted_at = NULL;
     END IF;
   END LOOP;
 

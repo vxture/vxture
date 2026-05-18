@@ -1,92 +1,13 @@
 /**
- * tokens-platform-account-profile-semantics.css - Platform account profile、organization 和字段语义 token。
+ * tokens-platform-account-profile-semantics.css - Platform account profile 语义 token 入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
  * @author AI-Generated
- * @date 2026-05-16
+ * @date 2026-05-17
  */
 
-:root {
-  --vx-account-profile-title-size: clamp(var(--vx-platform-account-scale-1-08r), var(--vx-platform-account-scale-1-28vw), var(--vx-platform-account-scale-1-32r));
-  --vx-profile-page-max-width: var(--vx-platform-account-scale-980p);
-  --vx-account-profile-page-gap: var(--vx-platform-account-scale-0-45r);
-  --vx-account-profile-page-header-gap: var(--vx-platform-account-scale-1r);
-  --vx-account-profile-page-header-margin-bottom: var(--vx-platform-account-scale-1-55r);
-  --vx-account-profile-page-header-copy-gap: var(--vx-platform-account-scale-0-62r);
-  --vx-profile-message-padding: var(--vx-platform-account-scale-0-62r) 0;
-  --vx-profile-message-border: var(--vx-platform-account-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
-  --vx-profile-message-size: var(--vx-platform-account-scale-0-84r);
-  --vx-profile-group-border: var(--vx-platform-account-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 9%, transparent);
-  --vx-profile-group-header-gap: var(--vx-platform-account-scale-1r);
-  --vx-profile-group-header-padding: var(--vx-platform-account-scale-1-1r) 0 var(--vx-platform-account-scale-0-8r);
-  --vx-profile-group-title-size: var(--vx-platform-account-scale-0-98r);
-  --vx-profile-group-copy-margin: var(--vx-platform-account-scale-0-32r) 0 0;
-  --vx-profile-group-copy-size: var(--vx-platform-account-scale-0-82r);
-  --vx-profile-row-columns: minmax(var(--vx-platform-account-scale-120p), 0.24fr) minmax(0, 1fr);
-  --vx-profile-row-gap: var(--vx-platform-account-scale-1-2r);
-  --vx-profile-row-min-height: var(--vx-platform-account-scale-2-85r);
-  --vx-profile-row-padding: var(--vx-platform-account-scale-0-72r) 0;
-  --vx-profile-row-border: var(--vx-platform-account-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  --vx-profile-row-label-size: var(--vx-platform-account-scale-0-82r);
-  --vx-profile-row-value-size: var(--vx-platform-account-scale-0-9r);
-  --vx-profile-avatar-size: var(--vx-platform-account-scale-3r);
-  --vx-profile-avatar-initial-size: var(--vx-platform-account-scale-0-9r);
-  --vx-profile-dialog-padding: var(--vx-platform-account-scale-1r);
-  --vx-profile-dialog-backdrop-blur: var(--vx-platform-account-scale-3p);
-  --vx-profile-dialog-content-width: min(var(--vx-platform-account-scale-460p), 100%);
-  --vx-profile-dialog-content-gap: var(--vx-platform-account-scale-0-82r);
-  --vx-profile-dialog-content-padding: var(--vx-platform-account-scale-1r);
-  --vx-profile-dialog-content-border: var(--vx-platform-account-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 10%, transparent);
-  --vx-profile-dialog-title-margin: 0 0 var(--vx-platform-account-scale-0-15r);
-  --vx-profile-dialog-title-size: var(--vx-platform-account-scale-1r);
-  --vx-profile-dialog-label-gap: var(--vx-platform-account-scale-0-36r);
-  --vx-profile-dialog-label-size: var(--vx-platform-account-scale-0-78r);
-  --vx-profile-dialog-input-min-height: var(--vx-platform-account-scale-2-42r);
-  --vx-profile-dialog-textarea-padding: var(--vx-platform-account-scale-0-74r) var(--vx-platform-account-scale-0-95r);
-  --vx-profile-dialog-textarea-border: var(--vx-platform-account-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  --vx-profile-dialog-focus-outline: var(--vx-platform-account-scale-2p) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
-  --vx-profile-dialog-actions-gap: var(--vx-platform-account-scale-0-55r);
-  --vx-profile-dialog-actions-padding-top: var(--vx-platform-account-scale-0-25r);
-  --vx-account-profile-layout-columns: minmax(var(--vx-platform-account-scale-17-5r), 0.38fr) minmax(0, 1fr);
-  --vx-account-profile-layout-gap: var(--vx-platform-account-scale-1-1r);
-  --vx-account-profile-identity-gap: var(--vx-platform-account-scale-0-78r);
-  --vx-account-profile-card-border: var(--vx-platform-account-scale-1p) solid var(--vx-color-border);
-  --vx-account-profile-avatar-card-gap: var(--vx-platform-account-scale-0-86r);
-  --vx-account-profile-avatar-card-padding: var(--vx-platform-account-scale-1-15r) var(--vx-platform-account-scale-1r);
-  --vx-account-profile-avatar-size: var(--vx-platform-account-scale-7-25r);
-  --vx-account-profile-sr-only-size: var(--vx-platform-account-scale-1p);
-  --vx-account-profile-avatar-edit-inline-end: var(--vx-platform-account-scale-0-24r);
-  --vx-account-profile-avatar-edit-block-end: var(--vx-platform-account-scale-0-34r);
-  --vx-account-profile-avatar-edit-size: var(--vx-platform-account-scale-2r);
-  --vx-account-profile-avatar-edit-border: var(--vx-platform-account-scale-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
-  --vx-account-profile-avatar-copy-gap: var(--vx-platform-account-scale-0-28r);
-  --vx-account-profile-avatar-copy-title-size: var(--vx-platform-account-scale-1r);
-  --vx-account-profile-avatar-badge-margin-top: var(--vx-platform-account-scale-0-1r);
-  --vx-account-profile-avatar-actions-gap: var(--vx-platform-account-scale-0-5r);
-  --vx-account-profile-summary-row-columns: minmax(var(--vx-platform-account-scale-5-3r), 0.38fr) minmax(0, 1fr);
-  --vx-account-profile-summary-row-gap: var(--vx-platform-account-scale-0-68r);
-  --vx-account-profile-summary-row-min-height: var(--vx-platform-account-scale-2-62r);
-  --vx-account-profile-summary-row-padding: var(--vx-platform-account-scale-0-62r) var(--vx-platform-account-scale-0-78r);
-  --vx-account-profile-summary-row-border: var(--vx-platform-account-scale-1p) dashed color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
-  --vx-account-profile-main-gap: var(--vx-platform-account-scale-0-92r);
-  --vx-account-profile-section-border: var(--vx-platform-account-scale-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
-  --vx-account-profile-section-header-gap: var(--vx-platform-account-scale-1r);
-  --vx-account-profile-section-header-padding: var(--vx-platform-account-scale-1-02r) 0 var(--vx-platform-account-scale-0-76r);
-  --vx-account-profile-section-title-size: var(--vx-platform-account-scale-0-98r);
-  --vx-account-profile-section-copy-margin: var(--vx-platform-account-scale-0-28r) 0 0;
-  --vx-account-profile-field-columns: var(--vx-platform-account-scale-2r) minmax(var(--vx-platform-account-scale-7-2r), 0.24fr) minmax(0, 1fr);
-  --vx-account-profile-field-gap: var(--vx-platform-account-scale-0-85r);
-  --vx-account-profile-field-min-height: var(--vx-platform-account-scale-3-05r);
-  --vx-account-profile-field-padding: var(--vx-platform-account-scale-0-72r) 0;
-  --vx-account-profile-field-border: var(--vx-platform-account-scale-1p) dashed var(--vx-color-border);
-  --vx-account-profile-field-icon-size: var(--vx-platform-account-scale-2r);
-  --vx-organization-profile-layout-columns: minmax(var(--vx-platform-account-scale-18r), 0.38fr) minmax(0, 1fr);
-  --vx-organization-profile-card-padding-top: var(--vx-platform-account-scale-1-05r);
-  --vx-organization-logo-size: var(--vx-platform-account-scale-7-25r);
-  --vx-organization-logo-title-size: var(--vx-platform-account-scale-1-7r);
-  --vx-organization-logo-editor-size: var(--vx-platform-account-scale-8r);
-  --vx-organization-logo-upload-gap: var(--vx-platform-account-scale-0-45r);
-  --vx-organization-logo-button-min-height: var(--vx-platform-account-scale-2-42r);
-  --vx-organization-status-margin-top: var(--vx-platform-account-scale-0-1r);
-}
+@import "./tokens-platform-profile-page-semantics.css";
+@import "./tokens-platform-profile-dialog-semantics.css";
+@import "./tokens-platform-account-profile-card-semantics.css";
+@import "./tokens-platform-organization-profile-semantics.css";

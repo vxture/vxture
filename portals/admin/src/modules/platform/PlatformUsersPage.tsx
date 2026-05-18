@@ -1,47 +1,74 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { Icon } from '@vxture/design-system';
-import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination } from '@vxture/design-system';
-import { fetchPlatformAdmins } from '@/api/admin-bff';
-import type { PlatformAdminRecord } from '@/entities/console';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
-import { useConsoleTranslations } from '@/lib/console-intl';
-import { formatDate, formatNumber, joinClasses } from '@/modules/tenants/tenant-utils';
+import { useEffect, useMemo, useState } from "react";
+import { Icon } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination,
+} from "@vxture/design-system";
+import { fetchPlatformAdmins } from "@/api/admin-bff";
+import type { PlatformAdminRecord } from "@/entities/console";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  PageSizePicker as AdminPageSizePicker,
+  type PageSize,
+} from "@/modules/shared/PageSizePicker";
+import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
+import { useConsoleTranslations } from "@/lib/console-intl";
+import {
+  formatDate,
+  formatNumber,
+  joinClasses,
+} from "@/modules/tenants/tenant-utils";
 
-type ViewMode = 'list' | 'cards';
-type PlatformAdminStatusCode = PlatformAdminRecord['statusCode'];
-type StatusFilter = 'all' | PlatformAdminStatusCode;
-type UserTypeFilter = 'all' | 'system' | 'normal';
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
-const EMPTY_MARK = '-';
+type ViewMode = "list" | "cards";
+type PlatformAdminStatusCode = PlatformAdminRecord["statusCode"];
+type StatusFilter = "all" | PlatformAdminStatusCode;
+type UserTypeFilter = "all" | "system" | "normal";
+const EMPTY_MARK = "-";
 
-function platformRoleDisplayName(admin: PlatformAdminRecord, t: ReturnType<typeof useConsoleTranslations>) {
+function platformRoleDisplayName(
+  admin: PlatformAdminRecord,
+  t: ReturnType<typeof useConsoleTranslations>,
+) {
   return t(admin.roleNameI18nKey, admin.roleNameEn);
 }
 
 function platformRoleStatusLabel(admin: PlatformAdminRecord) {
-  if (admin.roleStatusCode === 'active') return '启用';
-  if (admin.roleStatusCode === 'archived') return '归档';
-  return '停用';
+  if (admin.roleStatusCode === "active") return "启用";
+  if (admin.roleStatusCode === "archived") return "归档";
+  return "停用";
 }
 
 function platformRoleStatusPillClass(admin: PlatformAdminRecord) {
-  if (admin.roleStatusCode === 'active') return 'vx-admin-role-status-pill--enabled';
-  if (admin.roleStatusCode === 'archived') return 'vx-platform-user-status-pill--attention';
-  return 'vx-admin-role-status-pill--disabled';
+  if (admin.roleStatusCode === "active")
+    return "vx-admin-role-status-pill--enabled";
+  if (admin.roleStatusCode === "archived")
+    return "vx-platform-user-status-pill--attention";
+  return "vx-admin-role-status-pill--disabled";
 }
 
-function platformAdminStatusCode(admin: PlatformAdminRecord): PlatformAdminStatusCode {
+function platformAdminStatusCode(
+  admin: PlatformAdminRecord,
+): PlatformAdminStatusCode {
   const statusCode = admin.statusCode;
-  if (statusCode === 'active' || statusCode === 'disabled' || statusCode === 'locked' || statusCode === 'pending' || statusCode === 'suspended') {
+  if (
+    statusCode === "active" ||
+    statusCode === "disabled" ||
+    statusCode === "locked" ||
+    statusCode === "pending" ||
+    statusCode === "suspended"
+  ) {
     return statusCode;
   }
-  return admin.status ? 'active' : 'disabled';
+  return admin.status ? "active" : "disabled";
 }
 
 function platformAdminSearchText(admin: PlatformAdminRecord) {
@@ -58,62 +85,86 @@ function platformAdminSearchText(admin: PlatformAdminRecord) {
     admin.remark,
     platformAdminStatusCode(admin),
     platformAdminStatusLabel(admin),
-    admin.isSystem ? 'system 系统用户' : 'normal 普通用户',
-  ].filter(Boolean).join(' ').toLowerCase();
+    admin.isSystem ? "system 系统用户" : "normal 普通用户",
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }
 
 function platformAdminStatusLabel(admin: PlatformAdminRecord) {
   const labels: Record<PlatformAdminStatusCode, string> = {
-    active: '启用',
-    disabled: '停用',
-    locked: '锁定',
-    pending: '待激活',
-    suspended: '暂停',
+    active: "启用",
+    disabled: "停用",
+    locked: "锁定",
+    pending: "待激活",
+    suspended: "暂停",
   };
   return labels[platformAdminStatusCode(admin)];
 }
 
 function platformAdminStatusTone(admin: PlatformAdminRecord) {
   const statusCode = platformAdminStatusCode(admin);
-  if (statusCode === 'active') return 'normal';
-  if (statusCode === 'pending') return 'progress';
-  if (statusCode === 'locked' || statusCode === 'suspended') return 'attention';
-  return 'closed';
+  if (statusCode === "active") return "normal";
+  if (statusCode === "pending") return "progress";
+  if (statusCode === "locked" || statusCode === "suspended") return "attention";
+  return "closed";
 }
 
 function platformAdminStatusIcon(admin: PlatformAdminRecord) {
   const statusCode = platformAdminStatusCode(admin);
-  if (statusCode === 'active') return 'check';
-  if (statusCode === 'pending') return 'clock';
-  return 'x';
+  if (statusCode === "active") return "check";
+  if (statusCode === "pending") return "clock";
+  return "x";
 }
 
 function platformAdminStatusPillClass(admin: PlatformAdminRecord) {
   const statusCode = platformAdminStatusCode(admin);
-  if (statusCode === 'active') return 'vx-admin-role-status-pill--enabled';
-  if (statusCode === 'pending') return 'vx-platform-user-status-pill--pending';
-  if (statusCode === 'locked' || statusCode === 'suspended') return 'vx-platform-user-status-pill--attention';
-  return 'vx-admin-role-status-pill--disabled';
+  if (statusCode === "active") return "vx-admin-role-status-pill--enabled";
+  if (statusCode === "pending") return "vx-platform-user-status-pill--pending";
+  if (statusCode === "locked" || statusCode === "suspended")
+    return "vx-platform-user-status-pill--attention";
+  return "vx-admin-role-status-pill--disabled";
 }
 
-function PlatformUserActionsMenu({
-  admin,
-}: {
-  admin: PlatformAdminRecord;
-}) {
+function PlatformUserActionsMenu({ admin }: { admin: PlatformAdminRecord }) {
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${admin.displayName} 操作`}
         triggerClassName="vx-tenant-actions__trigger"
-        triggerProps={{ title: '操作' }}
+        triggerProps={{ title: "操作" }}
         items={[
-          { id: 'profile', label: '查看用户', icon: <Icon name="user" size="xs" fallback="placeholder" />, disabled: true },
-          { id: 'role', label: '调整角色', icon: <Icon name="shield-check" size="xs" fallback="placeholder" />, disabled: true },
           {
-            id: 'toggle-status',
-            label: platformAdminStatusCode(admin) === 'active' ? '停用用户' : '启用用户',
-            icon: <Icon name={platformAdminStatusCode(admin) === 'active' ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+            id: "profile",
+            label: "查看用户",
+            icon: <Icon name="user" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: "role",
+            label: "调整角色",
+            icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+            disabled: true,
+          },
+          {
+            id: "toggle-status",
+            label:
+              platformAdminStatusCode(admin) === "active"
+                ? "停用用户"
+                : "启用用户",
+            icon: (
+              <Icon
+                name={
+                  platformAdminStatusCode(admin) === "active" ? "x" : "check"
+                }
+                size="xs"
+                fallback="placeholder"
+              />
+            ),
             disabled: true,
           },
         ]}
@@ -137,17 +188,25 @@ function PlatformUsersList({
   onTogglePage: (checked: boolean) => void;
   t: ReturnType<typeof useConsoleTranslations>;
 }) {
-  const selectedCount = admins.filter((admin) => selectedIds.has(admin.id)).length;
+  const selectedCount = admins.filter((admin) =>
+    selectedIds.has(admin.id),
+  ).length;
   const pageSelected = admins.length > 0 && selectedCount === admins.length;
   const pagePartial = selectedCount > 0 && selectedCount < admins.length;
 
   return (
-    <div className="vx-tenant-directory-list vx-tenant-operation-directory-list vx-platform-user-directory-list" role="region" aria-label="平台用户清单">
+    <div
+      className="vx-tenant-directory-list vx-tenant-operation-directory-list vx-platform-user-directory-list"
+      role="region"
+      aria-label="平台用户清单"
+    >
       <div className="vx-tenant-directory-list__header">
         <span>
           <Checkbox
             className="vx-model-select-checkbox"
-            checked={pageSelected ? true : pagePartial ? 'indeterminate' : false}
+            checked={
+              pageSelected ? true : pagePartial ? "indeterminate" : false
+            }
             onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页平台用户"
           />
@@ -165,9 +224,22 @@ function PlatformUsersList({
         return (
           <div
             key={admin.id}
-            className={joinClasses('vx-tenant-directory-row', 'vx-tenant-operation-row', 'vx-platform-user-row', selected ? 'vx-tenant-operation-row--selected vx-platform-user-row--selected' : '')}
+            className={joinClasses(
+              "vx-tenant-directory-row",
+              "vx-tenant-operation-row",
+              "vx-platform-user-row",
+              selected
+                ? "vx-tenant-operation-row--selected vx-platform-user-row--selected"
+                : "",
+            )}
             onClick={(event) => {
-              if (event.target instanceof HTMLElement && event.target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]')) return;
+              if (
+                event.target instanceof HTMLElement &&
+                event.target.closest(
+                  'button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]',
+                )
+              )
+                return;
               onToggleSelected(admin.id, !selected);
             }}
           >
@@ -176,39 +248,72 @@ function PlatformUsersList({
                 className="vx-model-select-checkbox"
                 checked={selected}
                 onClick={(event) => event.stopPropagation()}
-                onCheckedChange={(value) => onToggleSelected(admin.id, value === true)}
+                onCheckedChange={(value) =>
+                  onToggleSelected(admin.id, value === true)
+                }
                 aria-label={`选择 ${admin.displayName || admin.username}`}
               />
             </span>
-            <span className="vx-tenant-directory-row__index">{formatNumber(startIndex + index + 1)}</span>
+            <span className="vx-tenant-directory-row__index">
+              {formatNumber(startIndex + index + 1)}
+            </span>
             <span className="vx-tenant-directory-row__tenant">
               <Icon name="user" size="sm" fallback="placeholder" />
               <span>
                 <span className="vx-tenant-directory-row__title-line">
-                  <Button variant="link" className="vx-model-name-button" onClick={(event) => event.stopPropagation()}>
+                  <Button
+                    variant="link"
+                    className="vx-model-name-button"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     {admin.displayName || admin.username}
                   </Button>
-                  {admin.isSystem ? <Badge className="vx-tenant-pill vx-tenant-pill--system">系统</Badge> : null}
+                  {admin.isSystem ? (
+                    <Badge className="vx-tenant-pill vx-tenant-pill--system">
+                      系统
+                    </Badge>
+                  ) : null}
                 </span>
-                <small>{admin.username ? `@${admin.username}` : EMPTY_MARK}</small>
+                <small>
+                  {admin.username ? `@${admin.username}` : EMPTY_MARK}
+                </small>
               </span>
             </span>
             <span className="vx-tenant-directory-row__status">
               <span className="vx-tenant-directory-row__status-line">
-                <span className={`vx-tenant-status-dot vx-tenant-status-dot--${platformAdminStatusTone(admin)}`} role="img" aria-label={platformAdminStatusLabel(admin)} title={platformAdminStatusLabel(admin)}>
-                  <Icon name={platformAdminStatusIcon(admin)} size="xs" fallback="placeholder" />
+                <span
+                  className={`vx-tenant-status-dot vx-tenant-status-dot--${platformAdminStatusTone(admin)}`}
+                  role="img"
+                  aria-label={platformAdminStatusLabel(admin)}
+                  title={platformAdminStatusLabel(admin)}
+                >
+                  <Icon
+                    name={platformAdminStatusIcon(admin)}
+                    size="xs"
+                    fallback="placeholder"
+                  />
                 </span>
-                <Badge className={`vx-tenant-pill ${platformAdminStatusPillClass(admin)}`}>{platformAdminStatusLabel(admin)}</Badge>
+                <Badge
+                  className={`vx-tenant-pill ${platformAdminStatusPillClass(admin)}`}
+                >
+                  {platformAdminStatusLabel(admin)}
+                </Badge>
               </span>
             </span>
             <span className="vx-platform-user-row__role">
               <span className="vx-platform-user-row__role-line">
                 <strong>{platformRoleDisplayName(admin, t)}</strong>
-                <Badge className={`vx-tenant-pill ${platformRoleStatusPillClass(admin)}`}>{platformRoleStatusLabel(admin)}</Badge>
+                <Badge
+                  className={`vx-tenant-pill ${platformRoleStatusPillClass(admin)}`}
+                >
+                  {platformRoleStatusLabel(admin)}
+                </Badge>
               </span>
             </span>
             <span className="vx-platform-user-row__login">
-              <strong>{admin.lastLoginAt ? formatDate(admin.lastLoginAt) : EMPTY_MARK}</strong>
+              <strong>
+                {admin.lastLoginAt ? formatDate(admin.lastLoginAt) : EMPTY_MARK}
+              </strong>
               <small>{admin.lastLoginIp || EMPTY_MARK}</small>
             </span>
             <span className="vx-platform-user-row__contact">
@@ -223,7 +328,13 @@ function PlatformUsersList({
   );
 }
 
-function PlatformUsersCards({ admins, t }: { admins: PlatformAdminRecord[]; t: ReturnType<typeof useConsoleTranslations> }) {
+function PlatformUsersCards({
+  admins,
+  t,
+}: {
+  admins: PlatformAdminRecord[];
+  t: ReturnType<typeof useConsoleTranslations>;
+}) {
   return (
     <div className="vx-tenant-directory-cards" aria-label="平台用户卡片">
       {admins.map((admin) => (
@@ -234,16 +345,32 @@ function PlatformUsersCards({ admins, t }: { admins: PlatformAdminRecord[]; t: R
               <strong>{admin.displayName || admin.username}</strong>
               <span>{admin.username ? `@${admin.username}` : EMPTY_MARK}</span>
             </div>
-            <Badge className={`vx-tenant-pill ${platformAdminStatusPillClass(admin)}`}>{platformAdminStatusLabel(admin)}</Badge>
+            <Badge
+              className={`vx-tenant-pill ${platformAdminStatusPillClass(admin)}`}
+            >
+              {platformAdminStatusLabel(admin)}
+            </Badge>
           </header>
           <div className="vx-tenant-directory-card__badges">
-            <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--permission">{platformRoleDisplayName(admin, t)}</Badge>
-            <Badge className={`vx-tenant-pill ${platformRoleStatusPillClass(admin)}`}>{platformRoleStatusLabel(admin)}</Badge>
-            {admin.isSystem ? <Badge className="vx-tenant-pill vx-tenant-pill--system">系统</Badge> : null}
+            <Badge className="vx-tenant-pill vx-account-muted-pill vx-tenant-pill--permission">
+              {platformRoleDisplayName(admin, t)}
+            </Badge>
+            <Badge
+              className={`vx-tenant-pill ${platformRoleStatusPillClass(admin)}`}
+            >
+              {platformRoleStatusLabel(admin)}
+            </Badge>
+            {admin.isSystem ? (
+              <Badge className="vx-tenant-pill vx-tenant-pill--system">
+                系统
+              </Badge>
+            ) : null}
           </div>
           <div className="vx-tenant-directory-card__metrics">
             <span>
-              <b>{admin.lastLoginAt ? formatDate(admin.lastLoginAt) : EMPTY_MARK}</b>
+              <b>
+                {admin.lastLoginAt ? formatDate(admin.lastLoginAt) : EMPTY_MARK}
+              </b>
               <small>最后登录</small>
             </span>
             <span>
@@ -260,26 +387,6 @@ function PlatformUsersCards({ admins, t }: { admins: PlatformAdminRecord[]; t: R
             <strong>{admin.phone || EMPTY_MARK}</strong>
           </footer>
         </article>
-      ))}
-    </div>
-  );
-}
-
-function PlatformUserPageSizePicker({ value, onChange }: { value: PageSize; onChange: (value: PageSize) => void }) {
-  return (
-    <div className="vx-tenant-page-size" aria-label="每页条数">
-      {PAGE_SIZE_OPTIONS.map((option) => (
-        <span key={option}>
-          <Button
-            variant={value === option ? 'secondary' : 'ghost'}
-            size="sm"
-            className={value === option ? 'is-active' : undefined}
-            onClick={() => onChange(option)}
-            aria-label={`每页 ${option} 条`}
-          >
-            {option}
-          </Button>
-        </span>
       ))}
     </div>
   );
@@ -302,10 +409,17 @@ function PlatformUserPagination({
 }) {
   return (
     <footer className="vx-tenant-pagination">
-      <span className="vx-tenant-pagination__total">共 {formatNumber(total)} 条记录</span>
+      <span className="vx-tenant-pagination__total">
+        共 {formatNumber(total)} 条记录
+      </span>
       <div className="vx-tenant-pagination__actions">
-        <PlatformUserPageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <Pagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
+        <AdminPageSizePicker value={pageSize} onChange={onPageSizeChange} />
+        <Pagination
+          className="vx-tenant-pagination__pager"
+          page={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </footer>
   );
@@ -314,10 +428,10 @@ function PlatformUserPagination({
 export function PlatformUsersPage() {
   const t = useConsoleTranslations();
   const [admins, setAdmins] = useState<PlatformAdminRecord[]>([]);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [query, setQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [typeFilter, setTypeFilter] = useState<UserTypeFilter>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [typeFilter, setTypeFilter] = useState<UserTypeFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState<PageSize>(20);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
@@ -333,7 +447,10 @@ export function PlatformUsersPage() {
         if (active) setAdmins(records);
       })
       .catch((error) => {
-        if (active) setLoadError(error instanceof Error ? error.message : '平台用户数据库读取失败');
+        if (active)
+          setLoadError(
+            error instanceof Error ? error.message : "平台用户数据库读取失败",
+          );
       })
       .finally(() => {
         if (active) setLoading(false);
@@ -347,24 +464,46 @@ export function PlatformUsersPage() {
   const filteredAdmins = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     return admins.filter((admin) => {
-      if (statusFilter !== 'all' && platformAdminStatusCode(admin) !== statusFilter) return false;
-      if (typeFilter === 'system' && !admin.isSystem) return false;
-      if (typeFilter === 'normal' && admin.isSystem) return false;
-      if (normalizedQuery && !platformAdminSearchText(admin).includes(normalizedQuery)) return false;
+      if (
+        statusFilter !== "all" &&
+        platformAdminStatusCode(admin) !== statusFilter
+      )
+        return false;
+      if (typeFilter === "system" && !admin.isSystem) return false;
+      if (typeFilter === "normal" && admin.isSystem) return false;
+      if (
+        normalizedQuery &&
+        !platformAdminSearchText(admin).includes(normalizedQuery)
+      )
+        return false;
       return true;
     });
   }, [admins, query, statusFilter, typeFilter]);
 
-  const enabledCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'active').length;
+  const enabledCount = admins.filter(
+    (admin) => platformAdminStatusCode(admin) === "active",
+  ).length;
   const systemCount = admins.filter((admin) => admin.isSystem).length;
-  const disabledCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'disabled').length;
-  const lockedCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'locked').length;
-  const pendingCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'pending').length;
-  const suspendedCount = admins.filter((admin) => platformAdminStatusCode(admin) === 'suspended').length;
-  const otherUserCount = disabledCount + lockedCount + pendingCount + suspendedCount;
+  const disabledCount = admins.filter(
+    (admin) => platformAdminStatusCode(admin) === "disabled",
+  ).length;
+  const lockedCount = admins.filter(
+    (admin) => platformAdminStatusCode(admin) === "locked",
+  ).length;
+  const pendingCount = admins.filter(
+    (admin) => platformAdminStatusCode(admin) === "pending",
+  ).length;
+  const suspendedCount = admins.filter(
+    (admin) => platformAdminStatusCode(admin) === "suspended",
+  ).length;
+  const otherUserCount =
+    disabledCount + lockedCount + pendingCount + suspendedCount;
   const pageCount = Math.max(1, Math.ceil(filteredAdmins.length / pageSize));
   const clampedCurrentPage = Math.min(currentPage, pageCount);
-  const visibleAdmins = filteredAdmins.slice((clampedCurrentPage - 1) * pageSize, clampedCurrentPage * pageSize);
+  const visibleAdmins = filteredAdmins.slice(
+    (clampedCurrentPage - 1) * pageSize,
+    clampedCurrentPage * pageSize,
+  );
 
   function toggleSelected(id: string, checked: boolean) {
     setSelectedIds((current) => {
@@ -391,9 +530,9 @@ export function PlatformUsersPage() {
   }, [pageSize, query, statusFilter, typeFilter, viewMode]);
 
   function resetFilters() {
-    setQuery('');
-    setStatusFilter('all');
-    setTypeFilter('all');
+    setQuery("");
+    setStatusFilter("all");
+    setTypeFilter("all");
   }
 
   return (
@@ -405,14 +544,29 @@ export function PlatformUsersPage() {
         description="管理平台内部管理员、运营人员和运维人员；平台用户不归属于任何租户。"
       />
 
-      <section className="vx-tenant-summary vx-platform-users-summary" aria-label="平台用户统计">
+      <section
+        className="vx-tenant-summary vx-platform-users-summary"
+        aria-label="平台用户统计"
+      >
         <article className="vx-tenant-summary__item vx-tenant-summary__item--identity-icon vx-tenant-tone--blue">
           <Icon name="user" size="lg" fallback="placeholder" />
-          <div><span>用户总数</span><p><strong>{formatNumber(admins.length)}</strong><em>系统用户 {formatNumber(systemCount)}人</em></p></div>
+          <div>
+            <span>用户总数</span>
+            <p>
+              <strong>{formatNumber(admins.length)}</strong>
+              <em>系统用户 {formatNumber(systemCount)}人</em>
+            </p>
+          </div>
         </article>
         <article className="vx-tenant-summary__item vx-tenant-tone--green">
           <Icon name="check" size="lg" fallback="placeholder" />
-          <div><span>启用用户</span><p><strong>{formatNumber(enabledCount)}</strong><em>可登录</em></p></div>
+          <div>
+            <span>启用用户</span>
+            <p>
+              <strong>{formatNumber(enabledCount)}</strong>
+              <em>可登录</em>
+            </p>
+          </div>
         </article>
         <article className="vx-tenant-summary__item vx-tenant-tone--rose">
           <Icon name="x" size="lg" fallback="placeholder" />
@@ -420,10 +574,16 @@ export function PlatformUsersPage() {
             <span>其他用户</span>
             <p>
               <strong>{formatNumber(otherUserCount)}</strong>
-              {disabledCount ? <em>停用 {formatNumber(disabledCount)}</em> : null}
+              {disabledCount ? (
+                <em>停用 {formatNumber(disabledCount)}</em>
+              ) : null}
               {lockedCount ? <em>锁定 {formatNumber(lockedCount)}</em> : null}
-              {pendingCount ? <em>待激活 {formatNumber(pendingCount)}</em> : null}
-              {suspendedCount ? <em>暂停 {formatNumber(suspendedCount)}</em> : null}
+              {pendingCount ? (
+                <em>待激活 {formatNumber(pendingCount)}</em>
+              ) : null}
+              {suspendedCount ? (
+                <em>暂停 {formatNumber(suspendedCount)}</em>
+              ) : null}
             </p>
           </div>
         </article>
@@ -431,13 +591,34 @@ export function PlatformUsersPage() {
 
       <div className="vx-tenant-list-shell">
         <section className="vx-tenant-toolbar" aria-label="平台用户筛选">
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="平台用户展示方式" />
-          <span className="vx-tenant-view-count">{formatNumber(filteredAdmins.length)}</span>
+          <ViewModeSwitch
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="平台用户展示方式"
+          />
+          <span className="vx-tenant-view-count">
+            {formatNumber(filteredAdmins.length)}
+          </span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
-          <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜索用户名、显示名、邮箱、手机、角色" className="vx-tenant-search" aria-label="搜索平台用户" />
-          <Button variant="outline" onClick={resetFilters}>重置</Button>
+          <Input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="搜索用户名、显示名、邮箱、手机、角色"
+            className="vx-tenant-search"
+            aria-label="搜索平台用户"
+          />
+          <Button variant="outline" onClick={resetFilters}>
+            重置
+          </Button>
           <div className="vx-tenant-filters">
-            <NativeSelect className="vx-input vx-tenant-select" value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} aria-label="用户状态">
+            <NativeSelect
+              className="vx-input vx-tenant-select"
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as StatusFilter)
+              }
+              aria-label="用户状态"
+            >
               <option value="all">全部状态</option>
               <option value="active">启用</option>
               <option value="disabled">停用</option>
@@ -445,13 +626,22 @@ export function PlatformUsersPage() {
               <option value="pending">待激活</option>
               <option value="suspended">暂停</option>
             </NativeSelect>
-            <NativeSelect className="vx-input vx-tenant-select" value={typeFilter} onChange={(event) => setTypeFilter(event.target.value as UserTypeFilter)} aria-label="用户类型">
+            <NativeSelect
+              className="vx-input vx-tenant-select"
+              value={typeFilter}
+              onChange={(event) =>
+                setTypeFilter(event.target.value as UserTypeFilter)
+              }
+              aria-label="用户类型"
+            >
               <option value="all">全部类型</option>
               <option value="system">系统用户</option>
               <option value="normal">普通用户</option>
             </NativeSelect>
           </div>
-          <ActionButton variant="outline" icon="plus" disabled>新建用户</ActionButton>
+          <ActionButton variant="outline" icon="plus" disabled>
+            新建用户
+          </ActionButton>
         </section>
 
         <section className="vx-tenant-directory" aria-label="平台用户清单">
@@ -462,7 +652,7 @@ export function PlatformUsersPage() {
           ) : null}
 
           {filteredAdmins.length ? (
-            viewMode === 'list' ? (
+            viewMode === "list" ? (
               <PlatformUsersList
                 admins={visibleAdmins}
                 startIndex={(clampedCurrentPage - 1) * pageSize}
@@ -477,9 +667,27 @@ export function PlatformUsersPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? '正在加载平台用户' : loadError ? '平台用户读取失败' : '没有匹配的平台用户'}
-                description={loading ? '正在读取 platform.platform_admin。' : loadError ?? '清空筛选条件后可查看全部平台用户。'}
-                action={<ActionButton variant="outline" icon="x" onClick={resetFilters}>清空筛选</ActionButton>}
+                title={
+                  loading
+                    ? "正在加载平台用户"
+                    : loadError
+                      ? "平台用户读取失败"
+                      : "没有匹配的平台用户"
+                }
+                description={
+                  loading
+                    ? "正在读取 platform.platform_admin。"
+                    : (loadError ?? "清空筛选条件后可查看全部平台用户。")
+                }
+                action={
+                  <ActionButton
+                    variant="outline"
+                    icon="x"
+                    onClick={resetFilters}
+                  >
+                    清空筛选
+                  </ActionButton>
+                }
               />
             </section>
           )}
@@ -490,7 +698,9 @@ export function PlatformUsersPage() {
             total={filteredAdmins.length}
             pageSize={pageSize}
             onPageSizeChange={setPageSize}
-            onPageChange={(page) => setCurrentPage(Math.min(Math.max(page, 1), pageCount))}
+            onPageChange={(page) =>
+              setCurrentPage(Math.min(Math.max(page, 1), pageCount))
+            }
           />
         </section>
       </div>

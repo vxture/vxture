@@ -1,5 +1,2 @@
-import type { ReactNode } from 'react';
-
-export function PageCluster({ children }: { children: ReactNode }) {
-  return <div className="vx-page-stack">{children}</div>;
-}
+export { PageStack as PageCluster } from '@vxture/design-system';
+export type { PageStackProps as PageClusterProps } from '@vxture/design-system';

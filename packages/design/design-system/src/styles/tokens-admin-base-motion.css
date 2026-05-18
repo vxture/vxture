@@ -1,0 +1,18 @@
+/**
+ * tokens-admin-base-motion.css - Admin 基础 motion 语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-admin-motion-0125r: var(--vx-component-metric-0125r);
+  --vx-admin-motion-018r: var(--vx-component-metric-018r);
+  --vx-admin-motion-025r: var(--vx-component-metric-025r);
+  --vx-admin-motion-035r: var(--vx-component-metric-035r);
+  --vx-admin-motion-05r: var(--vx-component-metric-05r);
+  --vx-admin-motion-1p: var(--vx-component-metric-1p);
+  --vx-admin-motion-2p: var(--vx-component-metric-2p);
+}

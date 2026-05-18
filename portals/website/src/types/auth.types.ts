@@ -10,6 +10,7 @@ export interface UserInfo {
   name: string;
   displayName?: string | null;
   username?: string;
+  avatarUrl?: string | null;
   email: string;
   phone?: string | null;
   role: string;

@@ -4,7 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination as DsPagination,
+} from "@vxture/design-system";
 import {
   confirmOrderOfflinePayment,
   fetchOrderOperations,
@@ -23,6 +31,10 @@ import {
   OrderOfflinePaymentDialog,
 } from "@/modules/orders/OrderOfflinePaymentDialog";
 import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  PageSizePicker as AdminPageSizePicker,
+  type PageSize,
+} from "@/modules/shared/PageSizePicker";
 import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
 import {
   formatDate,
@@ -36,9 +48,6 @@ type OrderStatusFilter = "all" | OrderOperationStatus;
 type PaymentStatusFilter = "all" | OrderPaymentStatus;
 type PaySourceFilter = "all" | OrderPaySource;
 type TierFilter = "all" | "free" | "pro" | "enterprise" | "other";
-
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
 function formatCurrency(value: number, currency: string) {
   return new Intl.NumberFormat("zh-CN", {
@@ -150,32 +159,6 @@ function SummaryItem({
   );
 }
 
-function PageSizePicker({
-  value,
-  onChange,
-}: {
-  value: PageSize;
-  onChange: (value: PageSize) => void;
-}) {
-  return (
-    <div className="vx-tenant-page-size" aria-label="每页条数">
-      {PAGE_SIZE_OPTIONS.map((option) => (
-        <span key={option}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={value === option ? "is-active" : undefined}
-            onClick={() => onChange(option)}
-            aria-label={`每页 ${option} 条`}
-          >
-            {option}
-          </Button>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 function OrderActionsMenu({
   order,
   onConfirmPayment,
@@ -186,7 +169,10 @@ function OrderActionsMenu({
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${order.orderNo} 订单操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -196,13 +182,15 @@ function OrderActionsMenu({
             id: "details",
             label: "订单详情",
             icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/orders/${encodeURIComponent(order.id)}`),
+            onSelect: () =>
+              router.push(`/orders/${encodeURIComponent(order.id)}`),
           },
           {
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(order.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(order.tenantId)}`),
           },
           {
             id: "confirm-payment",
@@ -216,7 +204,10 @@ function OrderActionsMenu({
             id: "subscription",
             label: "查看订阅",
             icon: <Icon name="star" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/subscriptions/${encodeURIComponent(order.subscriptionId)}`),
+            onSelect: () =>
+              router.push(
+                `/subscriptions/${encodeURIComponent(order.subscriptionId)}`,
+              ),
           },
         ]}
       />
@@ -245,7 +236,8 @@ function OrderListRows({
   const selectedOnPage = orders.filter((order) =>
     selectedOrderIds.has(order.id),
   ).length;
-  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < orders.length;
+  const isPagePartiallySelected =
+    selectedOnPage > 0 && selectedOnPage < orders.length;
 
   return (
     <div
@@ -298,7 +290,9 @@ function OrderListRows({
               <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onCheckedChange={(checked) => onToggleOrder(order.id, checked === true)}
+                onCheckedChange={(checked) =>
+                  onToggleOrder(order.id, checked === true)
+                }
                 aria-label={`选择订单 ${order.orderNo}`}
               />
             </span>
@@ -499,8 +493,13 @@ function Pagination({
         共 {formatNumber(total)} 条订单记录
       </span>
       <div className="vx-tenant-pagination__actions">
-        <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
+        <AdminPageSizePicker value={pageSize} onChange={onPageSizeChange} />
+        <DsPagination
+          className="vx-tenant-pagination__pager"
+          page={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </footer>
   );

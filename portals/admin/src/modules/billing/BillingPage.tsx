@@ -4,7 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination as DsPagination,
+} from "@vxture/design-system";
 import { fetchBillingRecords, syncOfflineInvoice } from "@/api/admin-bff";
 import type {
   BillingBillStatus,
@@ -15,6 +23,10 @@ import type {
 import { ActionButton } from "@/modules/shared/ActionButton";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  PageSizePicker as AdminPageSizePicker,
+  type PageSize,
+} from "@/modules/shared/PageSizePicker";
 import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
 import {
   canSyncOfflineInvoice,
@@ -42,9 +54,6 @@ type BillingExceptionFilter =
   | "supplement"
   | "cancelled"
   | "invoice_exception";
-
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
 function formatCurrency(
   value: number,
@@ -244,32 +253,6 @@ function SummaryItem({
   );
 }
 
-function PageSizePicker({
-  value,
-  onChange,
-}: {
-  value: PageSize;
-  onChange: (value: PageSize) => void;
-}) {
-  return (
-    <div className="vx-tenant-page-size" aria-label="每页条数">
-      {PAGE_SIZE_OPTIONS.map((option) => (
-        <span key={option}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={value === option ? "is-active" : undefined}
-            onClick={() => onChange(option)}
-            aria-label={`每页 ${option} 条`}
-          >
-            {option}
-          </Button>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 function BillingActionsMenu({
   bill,
   onSyncInvoice,
@@ -281,7 +264,10 @@ function BillingActionsMenu({
   const invoiceDisabledReason = offlineInvoiceDisabledReason(bill) ?? undefined;
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${bill.billNo} 账单操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -291,13 +277,15 @@ function BillingActionsMenu({
             id: "details",
             label: "账单详情",
             icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/billing/${encodeURIComponent(bill.id)}`),
+            onSelect: () =>
+              router.push(`/billing/${encodeURIComponent(bill.id)}`),
           },
           {
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(bill.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(bill.tenantId)}`),
           },
           {
             id: "subscription",
@@ -306,7 +294,9 @@ function BillingActionsMenu({
             disabled: !bill.subscriptionId,
             onSelect: () => {
               if (!bill.subscriptionId) return;
-              router.push(`/subscriptions/${encodeURIComponent(bill.subscriptionId)}`);
+              router.push(
+                `/subscriptions/${encodeURIComponent(bill.subscriptionId)}`,
+              );
             },
           },
           {
@@ -354,7 +344,8 @@ function BillingListRows({
   const selectedOnPage = bills.filter((bill) =>
     selectedBillIds.has(bill.id),
   ).length;
-  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < bills.length;
+  const isPagePartiallySelected =
+    selectedOnPage > 0 && selectedOnPage < bills.length;
 
   return (
     <div
@@ -408,7 +399,9 @@ function BillingListRows({
               <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onCheckedChange={(checked) => onToggleBill(bill.id, checked === true)}
+                onCheckedChange={(checked) =>
+                  onToggleBill(bill.id, checked === true)
+                }
                 aria-label={`选择账单 ${bill.billNo}`}
               />
             </span>
@@ -523,10 +516,7 @@ function BillingListRows({
                   `已登记 ${formatCurrency(bill.invoicedAmount, bill.currency)}`}
               </small>
             </span>
-            <BillingActionsMenu
-              bill={bill}
-              onSyncInvoice={onSyncInvoice}
-            />
+            <BillingActionsMenu bill={bill} onSyncInvoice={onSyncInvoice} />
           </div>
         );
       })}
@@ -571,10 +561,7 @@ function BillingCards({
                 {bill.tenantName} · {bill.tierName ?? "未关联套餐"}
               </span>
             </div>
-            <BillingActionsMenu
-              bill={bill}
-              onSyncInvoice={onSyncInvoice}
-            />
+            <BillingActionsMenu bill={bill} onSyncInvoice={onSyncInvoice} />
           </header>
           <div className="vx-tenant-directory-card__badges">
             <Badge
@@ -648,8 +635,13 @@ function Pagination({
         共 {formatNumber(total)} 条账单记录
       </span>
       <div className="vx-tenant-pagination__actions">
-        <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
+        <AdminPageSizePicker value={pageSize} onChange={onPageSizeChange} />
+        <DsPagination
+          className="vx-tenant-pagination__pager"
+          page={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </footer>
   );

@@ -4,8 +4,25 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { IconName } from "@vxture/design-system";
-import { ActionMenu, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect, Pagination as DsPagination, Textarea } from "@vxture/design-system";
-import { AdminBffError, fetchPaymentOperations, rejectPayment, verifyPayment } from "@/api/admin-bff";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  DialogForm,
+  Icon,
+  Input,
+  Label,
+  NativeSelect,
+  Pagination as DsPagination,
+  Textarea,
+} from "@vxture/design-system";
+import {
+  AdminBffError,
+  fetchPaymentOperations,
+  rejectPayment,
+  verifyPayment,
+} from "@/api/admin-bff";
 import type {
   OrderOfflinePaymentType,
   OrderPaymentStatus,
@@ -16,6 +33,10 @@ import type {
 import { ActionButton } from "@/modules/shared/ActionButton";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  PageSizePicker as AdminPageSizePicker,
+  type PageSize,
+} from "@/modules/shared/PageSizePicker";
 import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
 import {
   formatDate,
@@ -29,9 +50,6 @@ type PaymentStatusFilter = "all" | OrderPaymentStatus;
 type PaySourceFilter = "all" | OrderPaySource;
 type ReconciliationFilter = "all" | "attention" | PaymentReconciliationStatus;
 type OfflineTypeFilter = "all" | OrderOfflinePaymentType | "online" | "none";
-
-const PAGE_SIZE_OPTIONS = [10, 20, 50, 100] as const;
-type PageSize = (typeof PAGE_SIZE_OPTIONS)[number];
 
 function formatCurrency(
   value: number,
@@ -186,32 +204,6 @@ function SummaryItem({
   );
 }
 
-function PageSizePicker({
-  value,
-  onChange,
-}: {
-  value: PageSize;
-  onChange: (value: PageSize) => void;
-}) {
-  return (
-    <div className="vx-tenant-page-size" aria-label="每页条数">
-      {PAGE_SIZE_OPTIONS.map((option) => (
-        <span key={option}>
-          <Button
-            variant="ghost"
-            size="sm"
-            className={value === option ? "is-active" : undefined}
-            onClick={() => onChange(option)}
-            aria-label={`每页 ${option} 条`}
-          >
-            {option}
-          </Button>
-        </span>
-      ))}
-    </div>
-  );
-}
-
 function PaymentRemarkDialog({
   title,
   payment,
@@ -235,12 +227,12 @@ function PaymentRemarkDialog({
     <DialogForm
       open
       title={title}
-      description={(
+      description={
         <>
           流水号：<strong>{payment.paymentNo}</strong>
-          {payment.tenantName ? `  ·  ${payment.tenantName}` : ''}
+          {payment.tenantName ? `  ·  ${payment.tenantName}` : ""}
         </>
-      )}
+      }
       submitLabel="确认"
       cancelLabel="取消"
       submitting={loading}
@@ -282,7 +274,10 @@ function PaymentActionsMenu({
   const isPendingVerify = payment.paymentStatus === "pending_verify";
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${payment.paymentNo} 收款操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -321,14 +316,17 @@ function PaymentActionsMenu({
             disabled: !payment.subscriptionId,
             onSelect: () => {
               if (!payment.subscriptionId) return;
-              router.push(`/orders/${encodeURIComponent(payment.subscriptionId)}`);
+              router.push(
+                `/orders/${encodeURIComponent(payment.subscriptionId)}`,
+              );
             },
           },
           {
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(payment.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(payment.tenantId)}`),
           },
           {
             id: "evidence",
@@ -373,7 +371,8 @@ function PaymentListRows({
   const selectedOnPage = payments.filter((payment) =>
     selectedPaymentIds.has(payment.id),
   ).length;
-  const isPagePartiallySelected = selectedOnPage > 0 && selectedOnPage < payments.length;
+  const isPagePartiallySelected =
+    selectedOnPage > 0 && selectedOnPage < payments.length;
 
   return (
     <div
@@ -426,7 +425,9 @@ function PaymentListRows({
               <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onCheckedChange={(checked) => onTogglePayment(payment.id, checked === true)}
+                onCheckedChange={(checked) =>
+                  onTogglePayment(payment.id, checked === true)
+                }
                 aria-label={`选择收款 ${payment.paymentNo}`}
               />
             </span>
@@ -660,8 +661,13 @@ function Pagination({
         共 {formatNumber(total)} 条收款记录
       </span>
       <div className="vx-tenant-pagination__actions">
-        <PageSizePicker value={pageSize} onChange={onPageSizeChange} />
-        <DsPagination className="vx-tenant-pagination__pager" page={currentPage} pageCount={pageCount} onPageChange={onPageChange} />
+        <AdminPageSizePicker value={pageSize} onChange={onPageSizeChange} />
+        <DsPagination
+          className="vx-tenant-pagination__pager"
+          page={currentPage}
+          pageCount={pageCount}
+          onPageChange={onPageChange}
+        />
       </div>
     </footer>
   );
@@ -685,9 +691,11 @@ export function PaymentsPage() {
   const [selectedPaymentIds, setSelectedPaymentIds] = useState<Set<string>>(
     () => new Set(),
   );
-  const [verifyTarget, setVerifyTarget] = useState<PaymentOperationRecord | null>(null);
-  const [rejectTarget, setRejectTarget] = useState<PaymentOperationRecord | null>(null);
-  const [remarkInput, setRemarkInput] = useState('');
+  const [verifyTarget, setVerifyTarget] =
+    useState<PaymentOperationRecord | null>(null);
+  const [rejectTarget, setRejectTarget] =
+    useState<PaymentOperationRecord | null>(null);
+  const [remarkInput, setRemarkInput] = useState("");
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
 
@@ -795,21 +803,21 @@ export function PaymentsPage() {
   function handleOpenVerify(payment: PaymentOperationRecord) {
     setVerifyTarget(payment);
     setRejectTarget(null);
-    setRemarkInput('');
+    setRemarkInput("");
     setActionError(null);
   }
 
   function handleOpenReject(payment: PaymentOperationRecord) {
     setRejectTarget(payment);
     setVerifyTarget(null);
-    setRemarkInput('');
+    setRemarkInput("");
     setActionError(null);
   }
 
   function handleCloseDialog() {
     setVerifyTarget(null);
     setRejectTarget(null);
-    setRemarkInput('');
+    setRemarkInput("");
     setActionError(null);
   }
 
@@ -819,11 +827,18 @@ export function PaymentsPage() {
     setActionLoading(true);
     setActionError(null);
     try {
-      const updated = await (verifyTarget ? verifyPayment : rejectPayment)(target.id, remarkInput.trim());
-      setPayments((current) => current.map((p) => (p.id === updated.id ? updated : p)));
+      const updated = await (verifyTarget ? verifyPayment : rejectPayment)(
+        target.id,
+        remarkInput.trim(),
+      );
+      setPayments((current) =>
+        current.map((p) => (p.id === updated.id ? updated : p)),
+      );
       handleCloseDialog();
     } catch (err) {
-      setActionError(err instanceof AdminBffError ? err.message : '操作失败，请重试');
+      setActionError(
+        err instanceof AdminBffError ? err.message : "操作失败，请重试",
+      );
     } finally {
       setActionLoading(false);
     }
@@ -1052,7 +1067,7 @@ export function PaymentsPage() {
 
       {(verifyTarget ?? rejectTarget) ? (
         <PaymentRemarkDialog
-          title={verifyTarget ? '核销线下收款' : '驳回线下收款'}
+          title={verifyTarget ? "核销线下收款" : "驳回线下收款"}
           payment={(verifyTarget ?? rejectTarget)!}
           remark={remarkInput}
           loading={actionLoading}

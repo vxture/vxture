@@ -24,6 +24,7 @@ export interface AuthUserDto {
   name: string;
   displayName?: string | null;
   username?: string;
+  avatarUrl?: string | null;
   email: string;
   phone?: string | null;
   role: string;
