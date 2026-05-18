@@ -1,0 +1,33 @@
+/**
+ * auth-visual-panel-status.css - 认证页视觉面板状态标记。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-auth-status {
+  position: absolute;
+  top: var(--vx-auth-visual-orb-top);
+  left: var(--vx-auth-visual-orb-left);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-auth-gap-xs);
+  padding: var(--vx-auth-badge-padding);
+  border: var(--vx-auth-visual-border-width) solid color-mix(in srgb, var(--vx-color-white) 18%, transparent);
+  border-radius: var(--vx-auth-radius-pill);
+  background: color-mix(in srgb, var(--vx-color-gray-900) 22%, transparent);
+  color: color-mix(in srgb, var(--vx-color-white) 82%, transparent);
+  font-size: var(--vx-auth-text-xs);
+  backdrop-filter: blur(var(--vx-auth-visual-orb-blur));
+}
+
+.vx-auth-status-dot {
+  width: var(--vx-auth-visual-dot-size);
+  height: var(--vx-auth-visual-dot-size);
+  border-radius: var(--vx-auth-radius-pill);
+  background: var(--vx-color-success-400);
+  box-shadow: var(--vx-auth-status-dot-shadow);
+}

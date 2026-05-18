@@ -1,0 +1,67 @@
+/**
+ * auth-visual-panel-copy.css - 认证页视觉面板文案和统计信息。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-auth-copy {
+  position: absolute;
+  inset: auto var(--vx-auth-visual-content-inset-inline) var(--vx-auth-visual-content-inset-block-end);
+  z-index: 4;
+  color: var(--vx-color-white);
+}
+
+.vx-auth-copy h2 {
+  max-width: var(--vx-auth-visual-heading-max-width);
+  margin: 0 0 var(--vx-auth-visual-heading-margin-bottom);
+  font-family: var(--font-display);
+  font-size: var(--vx-auth-visual-heading-size);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: 0;
+}
+
+.vx-auth-copy p {
+  max-width: var(--vx-auth-visual-copy-max-width);
+  margin: 0;
+  color: color-mix(in srgb, var(--vx-color-white) 76%, transparent);
+  font-size: var(--vx-auth-text-md);
+  line-height: 1.7;
+}
+
+.vx-auth-stats {
+  width: var(--vx-auth-visual-metrics-width);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--vx-auth-gap-md);
+  margin-top: var(--vx-auth-visual-metrics-margin-top);
+}
+
+.vx-auth-stats div {
+  padding: var(--vx-auth-padding-lg);
+  border: var(--vx-auth-visual-metrics-border-width) solid color-mix(in srgb, var(--vx-color-white) 16%, transparent);
+  border-radius: var(--vx-auth-radius-lg);
+  background: color-mix(in srgb, var(--vx-color-white) 10%, transparent);
+  backdrop-filter: blur(var(--vx-auth-visual-metrics-blur));
+}
+
+.vx-auth-stats strong,
+.vx-auth-stats span {
+  display: block;
+}
+
+.vx-auth-stats strong {
+  color: var(--vx-color-white);
+  font-size: var(--vx-auth-text-lg);
+}
+
+.vx-auth-stats span {
+  margin-top: var(--vx-auth-visual-value-margin-top);
+  color: color-mix(in srgb, var(--vx-color-white) 62%, transparent);
+  font-size: var(--vx-auth-text-3xs);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}

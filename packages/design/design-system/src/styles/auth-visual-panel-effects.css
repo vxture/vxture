@@ -1,0 +1,46 @@
+/**
+ * auth-visual-panel-effects.css - 认证页视觉面板背景效果。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-auth-nodegraph,
+.vx-auth-grid,
+.vx-auth-scan,
+.vx-auth-fade {
+  position: absolute;
+  inset: 0;
+}
+
+.vx-auth-nodegraph {
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.vx-auth-grid {
+  z-index: 1;
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--vx-color-white) 6%, transparent) var(--vx-auth-grid-line-width), transparent var(--vx-auth-grid-line-width)),
+    linear-gradient(90deg, color-mix(in srgb, var(--vx-color-white) 6%, transparent) var(--vx-auth-grid-line-width), transparent var(--vx-auth-grid-line-width));
+  background-size: var(--vx-auth-grid-size) var(--vx-auth-grid-size);
+  mask-image: radial-gradient(circle at 50% 50%, black, transparent 74%);
+}
+
+.vx-auth-scan {
+  z-index: 2;
+  background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--vx-color-white) 12%, transparent) 50%, transparent 100%);
+  transform: translateY(-70%);
+  animation: var(--vx-auth-visual-scan-animation);
+}
+
+.vx-auth-fade {
+  z-index: 3;
+  background:
+    radial-gradient(circle at 20% 15%, color-mix(in srgb, var(--vx-color-white) 22%, transparent), transparent 22%),
+    radial-gradient(circle at 78% 72%, color-mix(in srgb, var(--vx-color-primary) 28%, transparent), transparent 30%),
+    linear-gradient(180deg, transparent 52%, color-mix(in srgb, var(--vx-color-brand-800) 42%, transparent) 100%);
+}
