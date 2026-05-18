@@ -6,4 +6,7 @@
  */
 
 @import "./platform-notifications-shell.css";
-@import "./platform-notifications-table.css";
+@import "./platform-notifications-board.css";
+@import "./platform-notifications-groups.css";
+@import "./platform-notifications-table-grid.css";
+@import "./platform-notifications-topic-cell.css";
