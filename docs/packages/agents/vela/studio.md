@@ -7,13 +7,13 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/agent-studio-vela` |
-| 路径 | `agent-studio/vela/` |
-| @layer | `Presentation` |
-| 端口 | 3120 |
-| 框架 | Next.js（嵌入式微前端） |
+| 项     | 值                          |
+| ------ | --------------------------- |
+| 包名   | `@vxture/agent-studio-vela` |
+| 路径   | `agent-studio/vela/`        |
+| @layer | `Presentation`              |
+| 端口   | 3120                        |
+| 框架   | Next.js（嵌入式微前端）     |
 
 ## 职责
 
@@ -38,7 +38,7 @@ src/
 ```typescript
 ✅ @vxture/design-system / @vxture/shared / @vxture/platform-browser
 ✅ vela-bff（HTTP / SSE only，禁止包引用）
-❌ @vxture/ai-sdk / agent-server/* / @vxture/core-*（core-locale 除外）
+❌ @vxture/ai-gateway-client / agent-server/* / @vxture/core-*（core-locale 除外）
 ```
 
 ## 待核查

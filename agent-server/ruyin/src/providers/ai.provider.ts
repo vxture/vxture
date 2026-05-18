@@ -2,7 +2,7 @@
  * ai.provider.ts - AI 模型 Provider 配置
  * @package agent-server/ruyin
  *
- * Description: 通过 @vxture/ai-sdk 统一配置 AI 模型 provider，不在业务代码中硬编码
+ * Description: 通过 @vxture/ai-gateway-client 统一配置 AI 模型 provider，不在业务代码中硬编码
  *
  * @author AI-Generated
  * @date 2026-03-11 22:00:00
@@ -46,10 +46,10 @@ export class AiProvider {
 
     try {
       this.initialized = true;
-      console.log('AI Provider 初始化成功');
+      console.log("AI Provider 初始化成功");
     } catch (error) {
-      console.error('AI Provider 初始化失败:', error);
-      throw new Error('AI 模型初始化失败');
+      console.error("AI Provider 初始化失败:", error);
+      throw new Error("AI 模型初始化失败");
     }
   }
 
@@ -76,17 +76,17 @@ export const aiProvider = AiProvider.getInstance();
 export const generatePrompt = (
   systemPrompt: string,
   userMessages: string[],
-  context?: string[]
+  context?: string[],
 ): string => {
   const promptParts = [systemPrompt];
 
   if (context) {
-    promptParts.push('\n## 上下文信息\n');
+    promptParts.push("\n## 上下文信息\n");
     promptParts.push(...context);
   }
 
-  promptParts.push('\n## 用户输入\n');
+  promptParts.push("\n## 用户输入\n");
   promptParts.push(...userMessages);
 
-  return promptParts.join('\n');
+  return promptParts.join("\n");
 };

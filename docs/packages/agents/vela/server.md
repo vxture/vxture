@@ -8,19 +8,19 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 名称 | `vela-server`（无 @vxture 包名，独立应用） |
-| 路径 | `agent-server/vela/` |
-| @layer | `Application` / `Domain`（agent 私有） |
-| 端口 | 3122 |
+| 项       | 值                                             |
+| -------- | ---------------------------------------------- |
+| 名称     | `vela-server`（无 @vxture 包名，独立应用）     |
+| 路径     | `agent-server/vela/`                           |
+| @layer   | `Application` / `Domain`（agent 私有）         |
+| 端口     | 3122                                           |
 | 对外接口 | `POST /internal/vela/chat`（仅 vela-bff 调用） |
 
 ## 职责
 
 1. 接收 vela-bff 内部请求，解码并二次校验 `CallerContext`
 2. 通过 `ToolRegistry` 过滤当前 context 允许的工具
-3. 调用 `@vxture/ai-sdk/llm` 执行 Tool Use Loop
+3. 调用 `@vxture/ai-gateway-client/llm` 执行 Tool Use Loop
 4. 流式返回 SSE 事件给 vela-bff（透传给前端）
 5. 会话 + 消息持久化（Prisma → PostgreSQL）
 
@@ -47,7 +47,7 @@ src/
 ## 核心约束（违反破坏安全）
 
 1. 禁止 import 其他 `agent-server/*` 目录
-2. 所有 LLM 调用通过 `@vxture/ai-sdk/llm`，禁止直接 import provider SDK
+2. 所有 LLM 调用通过 `@vxture/ai-gateway-client/llm`，禁止直接 import provider SDK
 3. `console` surface 工具执行时必须以 `ctx.tenantId` 作为数据过滤条件
 4. 工具执行前必须经过 `ToolRegistry` 的 `allowedTools` 白名单校验
 5. 收到 `CallerContext` 后必须二次校验 surface × userType 合法性
@@ -56,7 +56,8 @@ src/
 ## 依赖约束
 
 **允许：**
-- `@vxture/ai-sdk` / `@vxture/service-billing` / `@vxture/service-subscription` / `@vxture/service-ticket`
+
+- `@vxture/ai-gateway-client` / `@vxture/service-billing` / `@vxture/service-subscription` / `@vxture/service-ticket`
 - `@vxture/core-auth` / `@vxture/core-config` / `@vxture/shared`
 - NestJS / `@prisma/client`
 

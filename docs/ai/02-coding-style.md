@@ -76,9 +76,9 @@ Example:
 
 ```ts
 type User = {
-  id: string
-  name: string
-}
+  id: string;
+  name: string;
+};
 ```
 
 Avoid implicit any.
@@ -96,7 +96,7 @@ Functions should:
 Example:
 
 ```ts
-function formatDate(date: Date): string
+function formatDate(date: Date): string;
 ```
 
 ---
@@ -127,9 +127,9 @@ Allowed:
 portals/*          → bff/* (HTTP only)
 agent-studio/*     → bff/* (HTTP only)
 bff/*              → agent-server/*, services/*/*, core-*, shared
-agent-server/*     → @vxture/ai-sdk, services/*/*, core-*, shared
+agent-server/*     → @vxture/ai-gateway-client, services/*/*, core-*, shared
 services/*/*       → core-*, shared
-@vxture/ai-sdk     → shared
+@vxture/ai-gateway-client     → shared
 packages/core/*    → shared
 packages/platform/* → shared, design-system (optional)
 @vxture/design-system → shared

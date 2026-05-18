@@ -2,7 +2,7 @@
  * ruyin.workflow.ts - Ruyin 工作流定义
  * @package agent-server/ruyin
  *
- * Description: 使用 @vxture/ai-sdk/workflow 定义 AI 工作流，当前阶段使用简单串行调用
+ * Description: 使用 @vxture/ai-gateway-client/workflow 定义 AI 工作流，当前阶段使用简单串行调用
  *
  * @author AI-Generated
  * @date 2026-03-11 22:00:00
@@ -15,7 +15,7 @@
  * @category Workflow
  */
 
-import type { WorkflowTask } from '../types/ruyin.types';
+import type { WorkflowTask } from "../types/ruyin.types";
 
 // ============================================================================
 // 工作流步骤定义
@@ -75,36 +75,36 @@ export class DocumentAnalysisWorkflow {
   private getSteps(): WorkflowStep[] {
     return [
       {
-        name: 'text-extraction',
+        name: "text-extraction",
         execute: async (input: any) => {
           return {
-            extractedText: input.content || '',
+            extractedText: input.content || "",
             metadata: {
               timestamp: new Date().toISOString(),
-              sourceType: 'text',
+              sourceType: "text",
             },
           };
         },
       },
       {
-        name: 'content-analysis',
+        name: "content-analysis",
         execute: async (_input: any) => {
           return {
-            analysis: '模拟分析结果（AI SDK 尚未完整实现）',
+            analysis: "模拟分析结果（AI SDK 尚未完整实现）",
             completedAt: new Date(),
           };
         },
       },
       {
-        name: 'recommendation',
+        name: "recommendation",
         execute: async () => {
           return {
             recommendations: [
-              '继续深入分析相关主题',
-              '补充更多上下文信息',
-              '验证关键数据的准确性',
+              "继续深入分析相关主题",
+              "补充更多上下文信息",
+              "验证关键数据的准确性",
             ],
-            priority: 'medium',
+            priority: "medium",
           };
         },
         optional: true,
@@ -117,12 +117,12 @@ export class DocumentAnalysisWorkflow {
    */
   async execute(
     context: WorkflowContext,
-    initialInput: any
+    initialInput: any,
   ): Promise<WorkflowTask> {
     const task: WorkflowTask = {
       taskId: context.taskId,
-      type: 'document-analysis',
-      status: 'running',
+      type: "document-analysis",
+      status: "running",
       params: initialInput,
       createdAt: new Date(),
     };
@@ -142,13 +142,13 @@ export class DocumentAnalysisWorkflow {
         currentInput = { ...currentInput, ...stepResult };
       }
 
-      task.status = 'completed';
+      task.status = "completed";
       task.result = results;
       task.completedAt = new Date();
     } catch (error) {
-      task.status = 'failed';
+      task.status = "failed";
       task.result = {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
 
@@ -190,7 +190,7 @@ export class WorkflowTaskManager {
     const task: WorkflowTask = {
       taskId,
       type,
-      status: 'pending',
+      status: "pending",
       params,
       createdAt: new Date(),
     };
@@ -209,7 +209,11 @@ export class WorkflowTaskManager {
   /**
    * 更新任务状态
    */
-  updateTaskStatus(taskId: string, status: WorkflowTask['status'], result?: any): void {
+  updateTaskStatus(
+    taskId: string,
+    status: WorkflowTask["status"],
+    result?: any,
+  ): void {
     const task = this.tasks.get(taskId);
     if (!task) {
       return;
@@ -219,7 +223,7 @@ export class WorkflowTaskManager {
     if (result !== undefined) {
       task.result = result;
     }
-    if (status === 'completed' || status === 'failed') {
+    if (status === "completed" || status === "failed") {
       task.completedAt = new Date();
     }
   }

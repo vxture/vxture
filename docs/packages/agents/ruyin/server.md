@@ -8,12 +8,12 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/agent-server-ruyin` |
-| 路径 | `agent-server/ruyin/` |
+| 项     | 值                                     |
+| ------ | -------------------------------------- |
+| 包名   | `@vxture/agent-server-ruyin`           |
+| 路径   | `agent-server/ruyin/`                  |
 | @layer | `Application` / `Domain`（agent 私有） |
-| 端口 | 3112 |
+| 端口   | 3112                                   |
 
 ## 当前状态
 
@@ -22,17 +22,19 @@
 ## 已知特性
 
 - 使用 BullMQ（Redis）处理异步任务队列
-- 依赖 `@vxture/ai-sdk` 进行 LLM 调用
+- 依赖 `@vxture/ai-gateway-client` 进行 LLM 调用
 - 与 AI Gateway（端口 3100）通信
 
 ## 依赖约束
 
 **允许：**
-- `@vxture/ai-sdk` / `@vxture/service-billing` / `@vxture/service-subscription`
+
+- `@vxture/ai-gateway-client` / `@vxture/service-billing` / `@vxture/service-subscription`
 - `@vxture/core-*` / `@vxture/shared`
 - NestJS / BullMQ / `@prisma/client`
 
 **禁止：**
+
 - 其他 `agent-server/*`（ruyin 独立治理）
 - `bff-*` / `design-system` / `platform-*` / React / Next.js
 

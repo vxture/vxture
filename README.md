@@ -22,7 +22,7 @@ portals/* / agent-studio/* / business/*   ← Presentation（展示层）
          │             │
          └──────┬───────┘
                 ▼
-         @vxture/ai-sdk                    ← Infrastructure
+         @vxture/ai-gateway-client                    ← Infrastructure
                 ▼
          packages/core/*                   ← Infrastructure
                 ▼
@@ -31,18 +31,18 @@ portals/* / agent-studio/* / business/*   ← Presentation（展示层）
 
 ### 层目录对照
 
-| 目录 | @layer | 变更频率 |
-|------|--------|---------|
-| `portals/*` | Presentation | Slow |
-| `agent-studio/*` `business/*` | Presentation | Fast |
-| `bff/*` | Application | Medium |
-| `agent-server/*` | Application / Domain | Fast |
-| `services/*/*` | Domain | Slow |
-| `packages/core/*` | Infrastructure | Very Slow |
-| `packages/ai/ai-sdk` | Infrastructure | Medium |
-| `packages/platform/*` | Infrastructure | Low |
-| `packages/design/design-system` | Presentation | Slow |
-| `packages/shared/shared` | Shared | Very Slow |
+| 目录                            | @layer               | 变更频率  |
+| ------------------------------- | -------------------- | --------- |
+| `portals/*`                     | Presentation         | Slow      |
+| `agent-studio/*` `business/*`   | Presentation         | Fast      |
+| `bff/*`                         | Application          | Medium    |
+| `agent-server/*`                | Application / Domain | Fast      |
+| `services/*/*`                  | Domain               | Slow      |
+| `packages/core/*`               | Infrastructure       | Very Slow |
+| `packages/ai/ai-sdk`            | Infrastructure       | Medium    |
+| `packages/platform/*`           | Infrastructure       | Low       |
+| `packages/design/design-system` | Presentation         | Slow      |
+| `packages/shared/shared`        | Shared               | Very Slow |
 
 ---
 
@@ -50,20 +50,20 @@ portals/* / agent-studio/* / business/*   ← Presentation（展示层）
 
 面向管理员，Next.js 15 App Router，慢迭代。
 
-| 包 | 端口 | 职责 |
-|----|------|------|
+| 包                | 端口 | 职责                                                                                     |
+| ----------------- | ---- | ---------------------------------------------------------------------------------------- |
 | `@vxture/website` | 3010 | 公开营销站 + 认证页。Content Registry 机制统一接管所有内容类页面（legal / blog / faq）。 |
-| `@vxture/console` | 3020 | 租户工作台：成员、订阅、权限、设置管理。嵌入 Vela 智能助手（console surface）。 |
-| `@vxture/admin` | 3030 | 平台运营后台：租户、账单、用户、配置、工单管理。嵌入 Vela 智能助手（admin surface）。 |
+| `@vxture/console` | 3020 | 租户工作台：成员、订阅、权限、设置管理。嵌入 Vela 智能助手（console surface）。          |
+| `@vxture/admin`   | 3030 | 平台运营后台：租户、账单、用户、配置、工单管理。嵌入 Vela 智能助手（admin surface）。    |
 
 ## 展示层 — Agent Studio（agent-studio/ + business/）
 
 面向终端用户，快迭代。
 
-| 包 | 端口 | 职责 |
-|----|------|------|
-| `@vxture/agent-studio-vela` | 3120 | Vela 智能助手前端（嵌入式微前端，随 portal 加载） |
-| `@vxture/ruyin` | 3110 | Ruyin 智能体独立应用（Next.js，`business/ruyin/`） |
+| 包                          | 端口 | 职责                                               |
+| --------------------------- | ---- | -------------------------------------------------- |
+| `@vxture/agent-studio-vela` | 3120 | Vela 智能助手前端（嵌入式微前端，随 portal 加载）  |
+| `@vxture/ruyin`             | 3110 | Ruyin 智能体独立应用（Next.js，`business/ruyin/`） |
 
 ---
 
@@ -71,24 +71,24 @@ portals/* / agent-studio/* / business/*   ← Presentation（展示层）
 
 只做请求聚合 + 鉴权，零业务逻辑。**JWT 签发唯一入口：`@vxture/bff-auth`**，所有其他 BFF 委托此服务完成 token 签发，不自行生成 JWT。
 
-| 包 | 职责 |
-|----|------|
-| `@vxture/bff-auth` | JWT 签发、刷新、吊销；OAuth（Google / 钉钉）回调；跨域 SSO；Cookie 管理 |
-| `@vxture/bff-gateway` | 浏览器侧统一 API 入口网关，端口聚合 |
-| `@vxture/bff-website` | 官网 BFF：JWT 验证 only，鉴权逻辑代理至 auth-bff |
-| `@vxture/bff-console` | 租户工作台 BFF：服务聚合，委托 auth-bff 签发 JWT |
-| `@vxture/bff-admin` | 运营后台 BFF：服务聚合，委托 auth-bff 签发 JWT |
-| `@vxture/bff-vela` | Vela 智能助手 BFF：构建 CallerContext（surface / userId / tenantId / allowedTools），SSE 流式代理 |
-| `@vxture/bff-ruyin` | Ruyin Agent BFF：跨域 SSO via auth-bff，BullMQ 任务状态查询 |
+| 包                    | 职责                                                                                              |
+| --------------------- | ------------------------------------------------------------------------------------------------- |
+| `@vxture/bff-auth`    | JWT 签发、刷新、吊销；OAuth（Google / 钉钉）回调；跨域 SSO；Cookie 管理                           |
+| `@vxture/bff-gateway` | 浏览器侧统一 API 入口网关，端口聚合                                                               |
+| `@vxture/bff-website` | 官网 BFF：JWT 验证 only，鉴权逻辑代理至 auth-bff                                                  |
+| `@vxture/bff-console` | 租户工作台 BFF：服务聚合，委托 auth-bff 签发 JWT                                                  |
+| `@vxture/bff-admin`   | 运营后台 BFF：服务聚合，委托 auth-bff 签发 JWT                                                    |
+| `@vxture/bff-vela`    | Vela 智能助手 BFF：构建 CallerContext（surface / userId / tenantId / allowedTools），SSE 流式代理 |
+| `@vxture/bff-ruyin`   | Ruyin Agent BFF：跨域 SSO via auth-bff，BullMQ 任务状态查询                                       |
 
 ## 应用层 — Agent Server（agent-server/）
 
 每个 agent-server 独立治理，禁止跨 agent-server 的包引用。
 
-| 包 | 端口 | 职责 |
-|----|------|------|
-| `vela-server` | 3122 | Vela 私有后端：接收 vela-bff 的 CallerContext，经 ToolRegistry 白名单过滤，执行 Tool Use Loop，流式返回 SSE，持久化会话与消息。 |
-| `@vxture/agent-server-ruyin` | 3112 | Ruyin 私有后端：BullMQ 异步任务队列，依赖 @vxture/ai-sdk 调用 AI Gateway。 |
+| 包                           | 端口 | 职责                                                                                                                            |
+| ---------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `vela-server`                | 3122 | Vela 私有后端：接收 vela-bff 的 CallerContext，经 ToolRegistry 白名单过滤，执行 Tool Use Loop，流式返回 SSE，持久化会话与消息。 |
+| `@vxture/agent-server-ruyin` | 3112 | Ruyin 私有后端：BullMQ 异步任务队列，依赖 @vxture/ai-gateway-client 调用 AI Gateway。                                           |
 
 ---
 
@@ -96,16 +96,16 @@ portals/* / agent-studio/* / business/*   ← Presentation（展示层）
 
 跨 agent 共享的领域服务。**promote-when-ready 原则**：logic 在 agent-server 中被 2+ agent 验证复用后，才提升至此层。
 
-| 分类 | 包 | 职责 |
-|------|----|------|
-| AI | `@vxture/service-ai-gateway` | 端口 3100。模型注册与路由调度，配额计量，LLM 调用统一出口。 |
-| 身份 | `@vxture/service-iam` | 身份与账户认证，账户隔离管理。 |
-| 商务 | `@vxture/service-billing` | 发票、支付记录、账单管理。 |
-| 商务 | `@vxture/service-subscription` | 方案管理、订阅生命周期、功能门控（`hasFeature()`）。 |
-| 通知 | `@vxture/service-mail` | 邮件发送（阿里云 SMTP / DirectMail）+ Redis 验证码限流。 |
-| 通知 | `@vxture/service-sms` | 短信发送（阿里云 Dysmsapi）。 |
-| 支持 | `@vxture/service-ticket` | 工单管理，状态机：`open → in_progress → resolved → closed`。 |
-| 租户 | `@vxture/service-organization` | 租户组织数据只读服务。 |
+| 分类 | 包                             | 职责                                                         |
+| ---- | ------------------------------ | ------------------------------------------------------------ |
+| AI   | `@vxture/service-ai-gateway`   | 端口 3100。模型注册与路由调度，配额计量，LLM 调用统一出口。  |
+| 身份 | `@vxture/service-iam`          | 身份与账户认证，账户隔离管理。                               |
+| 商务 | `@vxture/service-billing`      | 发票、支付记录、账单管理。                                   |
+| 商务 | `@vxture/service-subscription` | 方案管理、订阅生命周期、功能门控（`hasFeature()`）。         |
+| 通知 | `@vxture/service-mail`         | 邮件发送（阿里云 SMTP / DirectMail）+ Redis 验证码限流。     |
+| 通知 | `@vxture/service-sms`          | 短信发送（阿里云 Dysmsapi）。                                |
+| 支持 | `@vxture/service-ticket`       | 工单管理，状态机：`open → in_progress → resolved → closed`。 |
+| 租户 | `@vxture/service-organization` | 租户组织数据只读服务。                                       |
 
 ---
 
@@ -121,20 +121,20 @@ portals/* / agent-studio/* / business/*   ← Presentation（展示层）
 
 平台级基础设施原语，极低变更频率。Core 包之间禁止互相依赖。
 
-| 包 | 职责 |
-|----|------|
-| `@vxture/core-auth` | JWT 验证客户端、OAuth Provider 类型、NestJS Guards/Decorators、角色枚举 |
-| `@vxture/core-api` | Node.js HTTP 客户端基础设施，基于 `@nestjs/axios`，含重试与错误处理 |
-| `@vxture/core-tenant` | tenantId 解析（header → subdomain → JWT → fallback），AsyncLocalStorage 上下文传播 |
-| `@vxture/core-config` | `process.env` → Zod schema 验证 → 类型安全 config 对象，唯一运行时依赖 zod |
-| `@vxture/core-locale` | 服务端 locale 解析与内容本地化，无任何 NestJS 依赖 |
-| `@vxture/core-mail` | 事务邮件发送基础能力（Nodemailer），被 service-mail 消费 |
-| `@vxture/core-database` | Prisma DDL 管理，覆盖 6 个 schema：账户 / 租户 / 产品 / 平台 / 支持 / 商务 |
-| `@vxture/core-utils` | 结构化日志（VxLogger）、环境检测、平台级工具函数 |
+| 包                      | 职责                                                                               |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| `@vxture/core-auth`     | JWT 验证客户端、OAuth Provider 类型、NestJS Guards/Decorators、角色枚举            |
+| `@vxture/core-api`      | Node.js HTTP 客户端基础设施，基于 `@nestjs/axios`，含重试与错误处理                |
+| `@vxture/core-tenant`   | tenantId 解析（header → subdomain → JWT → fallback），AsyncLocalStorage 上下文传播 |
+| `@vxture/core-config`   | `process.env` → Zod schema 验证 → 类型安全 config 对象，唯一运行时依赖 zod         |
+| `@vxture/core-locale`   | 服务端 locale 解析与内容本地化，无任何 NestJS 依赖                                 |
+| `@vxture/core-mail`     | 事务邮件发送基础能力（Nodemailer），被 service-mail 消费                           |
+| `@vxture/core-database` | Prisma DDL 管理，覆盖 6 个 schema：账户 / 租户 / 产品 / 平台 / 支持 / 商务         |
+| `@vxture/core-utils`    | 结构化日志（VxLogger）、环境检测、平台级工具函数                                   |
 
 ### AI SDK
 
-**`@vxture/ai-sdk`**（`packages/ai/ai-sdk/`）
+**`@vxture/ai-gateway-client`**（`packages/ai/ai-sdk/`）
 
 LLM / RAG / Embedding / Workflow SDK。所有 agent-server 通过此包调用大模型，禁止直接引入 Anthropic / Doubao 等 provider SDK。
 
@@ -164,12 +164,12 @@ LLM / RAG / Embedding / Workflow SDK。所有 agent-server 通过此包调用大
 
 ### 环境要求
 
-| 工具 | 版本要求 |
-|------|---------|
-| Node.js | ≥ 22.0.0 |
-| pnpm | ≥ 10.0.0 |
-| PostgreSQL | ≥ 13 |
-| Redis | ≥ 6 |
+| 工具       | 版本要求 |
+| ---------- | -------- |
+| Node.js    | ≥ 22.0.0 |
+| pnpm       | ≥ 10.0.0 |
+| PostgreSQL | ≥ 13     |
+| Redis      | ≥ 6      |
 
 ### 初始化
 
@@ -228,17 +228,17 @@ pnpm db:seed          # 填充测试数据
 
 ## 端口总表
 
-| 服务 | 端口 | 层 |
-|------|------|----|
-| `@vxture/website` | 3010 | Presentation |
-| `@vxture/console` | 3020 | Presentation |
-| `@vxture/admin` | 3030 | Presentation |
-| `@vxture/ruyin` (business) | 3110 | Presentation |
-| `@vxture/agent-studio-vela` | 3120 | Presentation |
-| `@vxture/agent-server-ruyin` | 3112 | Application |
-| `vela-server` | 3122 | Application |
-| `@vxture/service-ai-gateway` | 3100 | Domain |
-| `@vxture/dev-panel` | 8090 | Tools |
+| 服务                         | 端口 | 层           |
+| ---------------------------- | ---- | ------------ |
+| `@vxture/website`            | 3010 | Presentation |
+| `@vxture/console`            | 3020 | Presentation |
+| `@vxture/admin`              | 3030 | Presentation |
+| `@vxture/ruyin` (business)   | 3110 | Presentation |
+| `@vxture/agent-studio-vela`  | 3120 | Presentation |
+| `@vxture/agent-server-ruyin` | 3112 | Application  |
+| `vela-server`                | 3122 | Application  |
+| `@vxture/service-ai-gateway` | 3100 | Domain       |
+| `@vxture/dev-panel`          | 8090 | Tools        |
 
 > 完整端口分配规则（含 BFF 端口）见 [`docs/ai/port-allocation.md`](docs/ai/port-allocation.md)。
 
@@ -248,15 +248,15 @@ pnpm db:seed          # 填充测试数据
 
 以 [`docs/agent.md`](docs/agent.md) 为入口，所有文档统一在 `docs/` 管理。
 
-| 目录 | 内容 |
-|------|------|
-| [`docs/architecture/`](docs/architecture/) | 层级结构与依赖边界（权威参考） |
-| [`docs/design/`](docs/design/) | 跨包能力域技术设计（Auth / Locale / 权限 / 多租户） |
-| [`docs/packages/`](docs/packages/) | 各包实现上下文（AI 编码时的主要参考） |
-| [`docs/product/`](docs/product/) | 产品规格（Vela / Ruyin / Admin） |
-| [`docs/deployment/`](docs/deployment/) | 部署方案（基础设施 / 环境变量 / CI-CD） |
-| [`docs/ai/`](docs/ai/) | AI 编码规范与审计清单 |
-| [`docs/standards/`](docs/standards/) | 工程规范（Git / Locale / Utils） |
+| 目录                                       | 内容                                                |
+| ------------------------------------------ | --------------------------------------------------- |
+| [`docs/architecture/`](docs/architecture/) | 层级结构与依赖边界（权威参考）                      |
+| [`docs/design/`](docs/design/)             | 跨包能力域技术设计（Auth / Locale / 权限 / 多租户） |
+| [`docs/packages/`](docs/packages/)         | 各包实现上下文（AI 编码时的主要参考）               |
+| [`docs/product/`](docs/product/)           | 产品规格（Vela / Ruyin / Admin）                    |
+| [`docs/deployment/`](docs/deployment/)     | 部署方案（基础设施 / 环境变量 / CI-CD）             |
+| [`docs/ai/`](docs/ai/)                     | AI 编码规范与审计清单                               |
+| [`docs/standards/`](docs/standards/)       | 工程规范（Git / Locale / Utils）                    |
 
 ---
 

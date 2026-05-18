@@ -83,7 +83,7 @@ vxture/
 │   │   ├── tenant/             # @vxture/core-tenant
 │   │   └── utils/              # @vxture/core-utils
 │   ├── ai/
-│   │   └── ai-sdk/             # @vxture/ai-sdk
+│   │   └── ai-sdk/             # @vxture/ai-gateway-client
 │   ├── platform/
 │   │   ├── browser/            # @vxture/platform-browser（浏览器工具，已实现）
 │   │   ├── amap/               # @vxture/platform-amap（计划中）
@@ -140,10 +140,10 @@ design-system, platform-* (maps, 3D)
 ```
 
 `agent-studio/` additionally has a paired backend in `agent-server/` that consumes
-**AI capabilities** from `@vxture/ai-sdk`:
+**AI capabilities** from `@vxture/ai-gateway-client`:
 
 ```
-llm, rag, embedding, workflow  (modules within @vxture/ai-sdk)
+llm, rag, embedding, workflow  (modules within @vxture/ai-gateway-client)
 ```
 
 ---
@@ -223,7 +223,7 @@ Each agent backend:
 
 - Contains agent-private logic: AI model invocations, storage, workflow orchestration
 - Accesses data sources: private data, public platform data, open network data
-- Calls `@vxture/ai-sdk` for shared AI capabilities (llm, rag, embedding, workflow)
+- Calls `@vxture/ai-gateway-client` for shared AI capabilities (llm, rag, embedding, workflow)
 - Calls `@vxture/service-*` for platform capabilities (billing, subscription, ticket)
 - Is consumed by its paired BFF (`bff/agent{N}-bff`) — never directly by the frontend
 
@@ -233,13 +233,13 @@ Each agent backend:
 Authentication & session     → @vxture/core-auth
 Tenant context               → @vxture/core-tenant
 Billing & subscription       → @vxture/service-billing, @vxture/service-subscription
-LLM / RAG / embedding        → @vxture/ai-sdk (llm, rag, embedding modules)
-Workflow orchestration       → @vxture/ai-sdk (workflow module)
+LLM / RAG / embedding        → @vxture/ai-gateway-client (llm, rag, embedding modules)
+Workflow orchestration       → @vxture/ai-gateway-client (workflow module)
 ```
 
 **Cross-agent sharing rules**:
 
-- Shared AI capabilities → `@vxture/ai-sdk`
+- Shared AI capabilities → `@vxture/ai-gateway-client`
 - Shared domain logic → promote to `@vxture/service-*`
 - Direct imports between agent backend directories → **forbidden**
 
@@ -388,7 +388,7 @@ packages/
 │   └── utils/                   # @vxture/core-utils
 │
 ├── ai/
-│   └── ai-sdk/                  # @vxture/ai-sdk — LLM, RAG, embedding, workflow
+│   └── ai-sdk/                  # @vxture/ai-gateway-client — LLM, RAG, embedding, workflow
 │
 ├── platform/                    # Third-party client SDK wrappers (browser-only)
 │   ├── amap/                    # @vxture/platform-amap
@@ -428,7 +428,7 @@ Examples:
 @vxture/core-tenant
 @vxture/core-utils
 
-@vxture/ai-sdk
+@vxture/ai-gateway-client
 
 @vxture/service-ai-gateway
 @vxture/service-billing
@@ -486,7 +486,7 @@ New AI capabilities are added as modules inside `ai-sdk`, not as new top-level p
 unless a capability requires independent versioning or deployment.
 
 ```
-@vxture/ai-sdk
+@vxture/ai-gateway-client
   └── modules: llm, rag, embedding, workflow
 ```
 

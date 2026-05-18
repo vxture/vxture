@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@nestjs/jwt": "^11.0.0",
-    "@vxture/ai-sdk": "workspace:*",
+    "@vxture/ai-gateway-client": "workspace:*",
     "@vxture/shared": "workspace:*",
     "@vxture/core-api": "workspace:*",
     "@vxture/core-auth": "workspace:*",

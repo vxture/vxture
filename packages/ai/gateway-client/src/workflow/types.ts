@@ -1,6 +1,6 @@
 /**
  * workflow/types.ts - Workflow 相关类型定义
- * @package @vxture/ai-sdk
+ * @package @vxture/ai-gateway-client
  *
  * Description: 多步骤工作流编排模块的类型定义
  *
@@ -19,22 +19,22 @@
  * 工作流步骤状态
  */
 export enum WorkflowStepStatus {
-  PENDING = 'pending',
-  RUNNING = 'running',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  SKIPPED = 'skipped',
+  PENDING = "pending",
+  RUNNING = "running",
+  COMPLETED = "completed",
+  FAILED = "failed",
+  SKIPPED = "skipped",
 }
 
 /**
  * 工作流状态
  */
 export enum WorkflowStatus {
-  IDLE = 'idle',
-  RUNNING = 'running',
-  PAUSED = 'paused',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
+  IDLE = "idle",
+  RUNNING = "running",
+  PAUSED = "paused",
+  COMPLETED = "completed",
+  FAILED = "failed",
 }
 
 /**

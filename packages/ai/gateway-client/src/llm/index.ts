@@ -1,6 +1,6 @@
 /**
  * llm/index.ts - LLM 模块入口
- * @package @vxture/ai-sdk
+ * @package @vxture/ai-gateway-client
  *
  * Description: LLM 客户端模块，提供统一的大语言模型调用接口
  *
@@ -16,5 +16,5 @@
  */
 
 // 导出类型
-export * from './client';
-export * from './types';
+export * from "./client";
+export * from "./types";

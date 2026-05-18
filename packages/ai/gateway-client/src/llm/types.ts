@@ -1,6 +1,6 @@
 /**
  * llm/types.ts - LLM 相关类型定义
- * @package @vxture/ai-sdk
+ * @package @vxture/ai-gateway-client
  *
  * Description: LLM 客户端的类型定义，包括模型配置、请求参数、响应格式等
  *
@@ -19,9 +19,9 @@
  * LLM 模型类型
  */
 export enum LLMModel {
-  CLAUDE = 'claude',
-  DOUBAO = 'doubao',
-  CUSTOM = 'custom',
+  CLAUDE = "claude",
+  DOUBAO = "doubao",
+  CUSTOM = "custom",
 }
 
 /**
@@ -68,7 +68,7 @@ export interface LLMMessage {
    * 角色：system / user / assistant / tool
    * 'tool' 用于把工具执行结果回填给模型，需配合 toolCallId 使用
    */
-  role: 'system' | 'user' | 'assistant' | 'tool';
+  role: "system" | "user" | "assistant" | "tool";
 
   /**
    * 消息内容
@@ -145,7 +145,11 @@ export interface LLMResponse {
  * - length：超过 maxTokens 截断
  * - content_filter：被安全/合规过滤
  */
-export type LLMFinishReason = 'stop' | 'tool_calls' | 'length' | 'content_filter';
+export type LLMFinishReason =
+  | "stop"
+  | "tool_calls"
+  | "length"
+  | "content_filter";
 
 /**
  * 工具定义（function calling）
@@ -170,10 +174,10 @@ export interface LLMTool {
  * - { type: 'function', name }：强制调用指定工具
  */
 export type LLMToolChoice =
-  | 'auto'
-  | 'none'
-  | 'required'
-  | { type: 'function'; name: string };
+  | "auto"
+  | "none"
+  | "required"
+  | { type: "function"; name: string };
 
 /**
  * 模型发起的一次工具调用请求
@@ -197,10 +201,14 @@ export interface LLMToolCall {
  * - error 事件：流中错误（HTTP 层错误以异常形式抛出）
  */
 export type LLMStreamChunk =
-  | { type: 'text';      delta: string }
-  | { type: 'tool_call'; toolCall: LLMToolCall }
-  | { type: 'done';      usage?: LLMResponse['usage']; finishReason?: LLMFinishReason }
-  | { type: 'error';     code: string; message: string };
+  | { type: "text"; delta: string }
+  | { type: "tool_call"; toolCall: LLMToolCall }
+  | {
+      type: "done";
+      usage?: LLMResponse["usage"];
+      finishReason?: LLMFinishReason;
+    }
+  | { type: "error"; code: string; message: string };
 
 /**
  * LLM 错误类型

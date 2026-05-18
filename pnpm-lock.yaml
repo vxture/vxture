@@ -53,9 +53,9 @@ importers:
 
   agent-server/agent-template:
     dependencies:
-      '@vxture/ai-sdk':
+      '@vxture/ai-gateway-client':
         specifier: workspace:*
-        version: link:../../packages/ai/ai-sdk
+        version: link:../../packages/ai/gateway-client
       '@vxture/core-api':
         specifier: workspace:*
         version: link:../../packages/core/api
@@ -81,9 +81,9 @@ importers:
       '@nestjs/jwt':
         specifier: ^11.0.0
         version: 11.0.2(@nestjs/common@11.1.16(class-transformer@0.5.1)(class-validator@0.14.4)(reflect-metadata@0.2.2)(rxjs@7.8.2))
-      '@vxture/ai-sdk':
+      '@vxture/ai-gateway-client':
         specifier: workspace:*
-        version: link:../../packages/ai/ai-sdk
+        version: link:../../packages/ai/gateway-client
       '@vxture/core-api':
         specifier: workspace:*
         version: link:../../packages/core/api
@@ -136,9 +136,9 @@ importers:
       '@prisma/client':
         specifier: ^6.0.0
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
-      '@vxture/ai-sdk':
+      '@vxture/ai-gateway-client':
         specifier: workspace:*
-        version: link:../../packages/ai/ai-sdk
+        version: link:../../packages/ai/gateway-client
       '@vxture/core-auth':
         specifier: workspace:*
         version: link:../../packages/core/auth
@@ -705,7 +705,7 @@ importers:
         specifier: ^5.9.3
         version: 5.9.3
 
-  packages/ai/ai-sdk:
+  packages/ai/gateway-client:
     dependencies:
       '@vxture/shared':
         specifier: workspace:*
@@ -1114,7 +1114,7 @@ importers:
         version: 15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3)
       next-intl:
         specifier: ^4.8.3
-        version: 4.8.3(next@15.5.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3))(react@19.2.4)(typescript@5.9.3)
+        version: 4.8.3(next@15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3))(react@19.2.4)(typescript@5.9.3)
       react:
         specifier: ^19.2.0
         version: 19.2.4
@@ -1184,7 +1184,7 @@ importers:
         version: 15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3)
       next-intl:
         specifier: ^4.8.3
-        version: 4.8.3(next@15.5.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3))(react@19.2.4)(typescript@5.9.3)
+        version: 4.8.3(next@15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3))(react@19.2.4)(typescript@5.9.3)
       react:
         specifier: ^19.2.0
         version: 19.2.4
@@ -11841,7 +11841,7 @@ snapshots:
 
   next-intl-swc-plugin-extractor@4.8.3: {}
 
-  next-intl@4.8.3(next@15.5.12(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3))(react@19.2.4)(typescript@5.9.3):
+  next-intl@4.8.3(next@15.5.12(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.97.3))(react@19.2.4)(typescript@5.9.3):
     dependencies:
       '@formatjs/intl-localematcher': 0.8.1
       '@parcel/watcher': 2.5.6

@@ -89,14 +89,14 @@ It does not appear in the package name. Consumers always import using `@vxture/s
 
 # 3. Current Domain Groups
 
-| Domain         | Directory                | Services                                                                  |
-| -------------- | ------------------------ | ------------------------------------------------------------------------- |
-| `ai`           | `services/ai/`           | `@vxture/service-ai-gateway`                                              |
-| `commerce`     | `services/commerce/`     | `@vxture/service-billing`, `@vxture/service-subscription`                 |
-| `identity`     | `services/identity/`     | `@vxture/service-iam`                                                     |
-| `notification` | `services/notification/` | `@vxture/service-mail`, `@vxture/service-sms`                             |
-| `support`      | `services/support/`      | `@vxture/service-ticket`, `@vxture/workers`                               |
-| `tenant`       | `services/tenant/`       | `@vxture/service-organization`                                            |
+| Domain         | Directory                | Services                                                  |
+| -------------- | ------------------------ | --------------------------------------------------------- |
+| `ai`           | `services/ai/`           | `@vxture/service-ai-gateway`                              |
+| `commerce`     | `services/commerce/`     | `@vxture/service-billing`, `@vxture/service-subscription` |
+| `identity`     | `services/identity/`     | `@vxture/service-iam`                                     |
+| `notification` | `services/notification/` | `@vxture/service-mail`, `@vxture/service-sms`             |
+| `support`      | `services/support/`      | `@vxture/service-ticket`, `@vxture/workers`               |
+| `tenant`       | `services/tenant/`       | `@vxture/service-organization`                            |
 
 **Adding a new service**:
 
@@ -183,7 +183,7 @@ Forbidden:
 ```
 Other @vxture/service-*   (no cross-service imports)
 @vxture/bff-*
-@vxture/ai-sdk
+@vxture/ai-gateway-client
 @vxture/design-system
 @vxture/platform-*
 Any frontend code
@@ -212,9 +212,9 @@ Frontend layers access service data through their BFF over HTTP.
 
 ```ts
 // Inside bff/* or agent-server/* only
-import { createTicket } from '@vxture/service-ticket';
-import { getBillingStatus } from '@vxture/service-billing';
-import { getSubscription } from '@vxture/service-subscription';
+import { createTicket } from "@vxture/service-ticket";
+import { getBillingStatus } from "@vxture/service-billing";
+import { getSubscription } from "@vxture/service-subscription";
 ```
 
 Import paths use the package name `@vxture/service-{name}` only.
@@ -274,16 +274,19 @@ Prisma ORM → Database
 ## 12.2 强制规则
 
 **Repository 必须：**
+
 - 封装该聚合根（aggregate）的所有 Prisma 查询，包括关联查询
 - 将 Prisma 返回的原始类型映射为领域类型（Domain Type），再返回给 UseCase
 - 每个聚合根对应一个 Repository 类（`*.repository.ts`）
 
 **Repository 禁止：**
+
 - 包含任何业务逻辑（条件判断、规则计算）
 - 跨聚合根做复杂联查——需要多聚合数据时，由 UseCase 多次调用不同 Repository 再合并
 - 直接返回 Prisma 生成类型（`Prisma.XxxGetPayload<...>`）给 UseCase
 
 **UseCase / Service 禁止：**
+
 - `import { PrismaClient } from '@prisma/client'` 或任何 Prisma 类型
 - 直接执行 `db.xxx.findMany(...)` 等 Prisma 调用
 - 感知表名、字段名、`@@schema` 等数据库细节
@@ -315,13 +318,13 @@ const tenant = await this.db.tenant.findUnique({ ... });   // 禁止
 
 ## 12.4 变更影响面规则
 
-| 变化类型 | 需要修改 | 止步层 | 前端感知 |
-|---------|---------|--------|---------|
-| DB 列改名（`@map` 更新） | Repository 映射逻辑 | Repository | 无 |
-| DB 表拆分 / 合并 | Repository 查询逻辑 | Repository | 无 |
-| 领域类型字段改名 | Repository + UseCase | Service 内部 | 无 |
-| Service HTTP API 响应结构变更 | BFF 适配层 | BFF | 无 |
-| BFF 响应字段删除 / 改名 | 前端代码 | **前端** | **有** |
+| 变化类型                      | 需要修改             | 止步层       | 前端感知 |
+| ----------------------------- | -------------------- | ------------ | -------- |
+| DB 列改名（`@map` 更新）      | Repository 映射逻辑  | Repository   | 无       |
+| DB 表拆分 / 合并              | Repository 查询逻辑  | Repository   | 无       |
+| 领域类型字段改名              | Repository + UseCase | Service 内部 | 无       |
+| Service HTTP API 响应结构变更 | BFF 适配层           | BFF          | 无       |
+| BFF 响应字段删除 / 改名       | 前端代码             | **前端**     | **有**   |
 
 **结论**：只有 BFF 响应结构变化才会影响前端。Repository / UseCase 层的任何重构对前端透明。
 
@@ -334,11 +337,13 @@ BFF 是前端唯一可见的接口。BFF 响应字段一旦被前端消费，即
 ## 13.1 契约演进规则
 
 **允许（向后兼容）：**
+
 - 新增响应字段（前端可选择消费）
 - 将字段值范围扩大（如枚举新增值）
 - 新增可选的请求参数
 
 **不允许（破坏性变更）：**
+
 - 删除响应字段
 - 重命名响应字段
 - 改变字段数据类型
@@ -358,10 +363,10 @@ BFF 是前端唯一可见的接口。BFF 响应字段一旦被前端消费，即
 
 BFF 响应中部分字段是内部实现细节，不应暴露为稳定契约。区分原则：
 
-| 类型 | 特征 | 处理 |
-|------|------|------|
-| 契约字段 | 前端业务逻辑依赖的字段（展示 / 判断 / 路由） | 按规则 13.1 保护 |
-| 内部字段 | 仅用于调试 / 运维的字段 | 通过 `_debug` 前缀标识，前端不应依赖 |
+| 类型     | 特征                                         | 处理                                 |
+| -------- | -------------------------------------------- | ------------------------------------ |
+| 契约字段 | 前端业务逻辑依赖的字段（展示 / 判断 / 路由） | 按规则 13.1 保护                     |
+| 内部字段 | 仅用于调试 / 运维的字段                      | 通过 `_debug` 前缀标识，前端不应依赖 |
 
 ## 13.4 跨层隔离的完整路径
 
@@ -385,14 +390,14 @@ Frontend
 
 Repository 层配合以下迁移原则，保证线上零停机：
 
-| 操作 | 允许 | 注意 |
-|------|------|------|
-| 新增列（nullable 或有默认值） | ✅ | 存量数据自动兼容 |
-| 新增表 | ✅ | 无影响 |
-| 列改名（双写过渡） | ⚠️ | 先新增列 → 双写 → 迁移数据 → 删旧列 |
-| 删除列 | ⚠️ | Repository 必须先停止读写该列，再发布迁移 |
-| 新增非空列（无默认值） | ❌ | 禁止直接操作，必须先设默认值或分步迁移 |
-| Platform DB 锁表超过 1 秒 | ❌ | 必须使用 `CONCURRENTLY` 或分批操作 |
+| 操作                          | 允许 | 注意                                      |
+| ----------------------------- | ---- | ----------------------------------------- |
+| 新增列（nullable 或有默认值） | ✅   | 存量数据自动兼容                          |
+| 新增表                        | ✅   | 无影响                                    |
+| 列改名（双写过渡）            | ⚠️   | 先新增列 → 双写 → 迁移数据 → 删旧列       |
+| 删除列                        | ⚠️   | Repository 必须先停止读写该列，再发布迁移 |
+| 新增非空列（无默认值）        | ❌   | 禁止直接操作，必须先设默认值或分步迁移    |
+| Platform DB 锁表超过 1 秒     | ❌   | 必须使用 `CONCURRENTLY` 或分批操作        |
 
 ---
 

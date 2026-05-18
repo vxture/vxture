@@ -1,6 +1,6 @@
 /**
  * rag/types.ts - RAG 相关类型定义
- * @package @vxture/ai-sdk
+ * @package @vxture/ai-gateway-client
  *
  * Description: 检索增强生成模块的类型定义
  *

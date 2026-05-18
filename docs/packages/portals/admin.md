@@ -6,13 +6,13 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/admin` |
-| 路径 | `portals/admin/` |
-| @layer | `Presentation` |
-| 框架 | Next.js 15（App Router） |
-| 端口 | 3030 |
+| 项     | 值                       |
+| ------ | ------------------------ |
+| 包名   | `@vxture/admin`          |
+| 路径   | `portals/admin/`         |
+| @layer | `Presentation`           |
+| 框架   | Next.js 15（App Router） |
+| 端口   | 3030                     |
 
 ## 职责
 
@@ -74,7 +74,7 @@ app/
 ✅ @vxture/design-system / @vxture/shared / @vxture/core-locale
 ✅ admin-bff（HTTP only）
 ❌ @vxture/service-* / core-auth / core-api / core-config / core-tenant
-❌ @vxture/ai-sdk / agent-server/*
+❌ @vxture/ai-gateway-client / agent-server/*
 ```
 
 ## Vela 接入

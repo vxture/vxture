@@ -9,7 +9,7 @@ import type {
   LLMTool,
   LLMToolCall,
   LLMToolChoice,
-} from './types';
+} from "./types";
 
 export interface GatewayLLMClientOptions {
   gatewayUrl?: string;
@@ -25,7 +25,7 @@ export interface GatewayLLMChatOptions extends LLMOptions {
 }
 
 interface GatewayChatMessage {
-  role: LLMMessage['role'];
+  role: LLMMessage["role"];
   content: string;
   toolCalls?: LLMToolCall[];
   toolCallId?: string;
@@ -49,7 +49,7 @@ interface GatewayChatResponse {
   id: string;
   modelCode: string;
   message: {
-    role: 'assistant';
+    role: "assistant";
     content: string;
     toolCalls?: LLMToolCall[];
   };
@@ -69,7 +69,7 @@ export class GatewayLLMError extends Error implements LLMError {
     readonly originalError?: unknown,
   ) {
     super(message);
-    this.name = 'GatewayLLMError';
+    this.name = "GatewayLLMError";
   }
 }
 
@@ -81,9 +81,14 @@ export class GatewayLLMClient {
   private readonly fetchImpl: typeof fetch;
 
   constructor(options: GatewayLLMClientOptions) {
-    this.gatewayUrl = normalizeGatewayUrl(options.gatewayUrl ?? process.env.AI_GATEWAY_URL);
+    this.gatewayUrl = normalizeGatewayUrl(
+      options.gatewayUrl ?? process.env.AI_GATEWAY_URL,
+    );
     if (!options.tenantId.trim()) {
-      throw new GatewayLLMError('MISSING_TENANT_ID', 'tenantId is required for GatewayLLMClient');
+      throw new GatewayLLMError(
+        "MISSING_TENANT_ID",
+        "tenantId is required for GatewayLLMClient",
+      );
     }
 
     this.tenantId = options.tenantId;
@@ -99,22 +104,26 @@ export class GatewayLLMClient {
   ): Promise<LLMResponse> {
     if (options.stream) {
       throw new GatewayLLMError(
-        'STREAM_NOT_SUPPORTED',
-        'Use chatStream() for streaming responses',
+        "STREAM_NOT_SUPPORTED",
+        "Use chatStream() for streaming responses",
       );
     }
 
     const request = this.buildRequest(messages, config, options, false);
     const response = await this.post<GatewayChatResponse>(
-      '/ai/gateway/chat',
+      "/ai/gateway/chat",
       request,
       options.timeout ?? this.defaultTimeoutMs,
     );
 
     return {
       content: response.message.content,
-      ...(response.message.toolCalls !== undefined ? { toolCalls: response.message.toolCalls } : {}),
-      ...(response.finishReason      !== undefined ? { finishReason: response.finishReason }  : {}),
+      ...(response.message.toolCalls !== undefined
+        ? { toolCalls: response.message.toolCalls }
+        : {}),
+      ...(response.finishReason !== undefined
+        ? { finishReason: response.finishReason }
+        : {}),
       usage: response.usage,
       model: response.modelCode,
       latency: response.latencyMs,
@@ -149,10 +158,10 @@ export class GatewayLLMClient {
     let response: Response;
     try {
       response = await this.fetchImpl(`${this.gatewayUrl}/ai/gateway/chat`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'content-type': 'application/json',
-          accept: 'text/event-stream',
+          "content-type": "application/json",
+          accept: "text/event-stream",
         },
         body: JSON.stringify(request),
         signal: controller.signal,
@@ -160,8 +169,8 @@ export class GatewayLLMClient {
     } catch (error) {
       clearTimeout(timer);
       throw new GatewayLLMError(
-        'GATEWAY_REQUEST_FAILED',
-        'AI gateway streaming request failed',
+        "GATEWAY_REQUEST_FAILED",
+        "AI gateway streaming request failed",
         error,
       );
     }
@@ -177,7 +186,10 @@ export class GatewayLLMClient {
 
     if (!response.body) {
       clearTimeout(timer);
-      throw new GatewayLLMError('EMPTY_GATEWAY_STREAM', 'AI gateway returned an empty stream');
+      throw new GatewayLLMError(
+        "EMPTY_GATEWAY_STREAM",
+        "AI gateway returned an empty stream",
+      );
     }
 
     try {
@@ -197,11 +209,17 @@ export class GatewayLLMClient {
     return {
       modelCode: String(config.model),
       messages: messages.map(toWireMessage),
-      ...(config.temperature   !== undefined ? { temperature:  config.temperature }   : {}),
-      ...(config.maxTokens     !== undefined ? { maxTokens:    config.maxTokens }     : {}),
-      ...(config.topP          !== undefined ? { topP:         config.topP }          : {}),
-      ...(options.tools        !== undefined ? { tools:        options.tools }        : {}),
-      ...(options.toolChoice   !== undefined ? { toolChoice:   options.toolChoice }   : {}),
+      ...(config.temperature !== undefined
+        ? { temperature: config.temperature }
+        : {}),
+      ...(config.maxTokens !== undefined
+        ? { maxTokens: config.maxTokens }
+        : {}),
+      ...(config.topP !== undefined ? { topP: config.topP } : {}),
+      ...(options.tools !== undefined ? { tools: options.tools } : {}),
+      ...(options.toolChoice !== undefined
+        ? { toolChoice: options.toolChoice }
+        : {}),
       stream,
       tenantId: options.tenantId ?? this.tenantId,
       ...(resolvedAgentId !== undefined ? { agentId: resolvedAgentId } : {}),
@@ -218,9 +236,9 @@ export class GatewayLLMClient {
 
     try {
       const response = await this.fetchImpl(`${this.gatewayUrl}${path}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'content-type': 'application/json',
+          "content-type": "application/json",
         },
         body: JSON.stringify(body),
         signal: controller.signal,
@@ -240,7 +258,11 @@ export class GatewayLLMClient {
         throw error;
       }
 
-      throw new GatewayLLMError('GATEWAY_REQUEST_FAILED', 'AI gateway request failed', error);
+      throw new GatewayLLMError(
+        "GATEWAY_REQUEST_FAILED",
+        "AI gateway request failed",
+        error,
+      );
     } finally {
       clearTimeout(timeout);
     }
@@ -268,7 +290,7 @@ async function safeReadText(response: Response): Promise<string> {
   try {
     return await response.text();
   } catch {
-    return '';
+    return "";
   }
 }
 
@@ -283,7 +305,7 @@ async function* parseSseStream(
 ): AsyncGenerator<LLMStreamChunk, void, void> {
   const reader = body.getReader();
   const decoder = new TextDecoder();
-  let buffer = '';
+  let buffer = "";
 
   try {
     while (true) {
@@ -296,9 +318,9 @@ async function* parseSseStream(
       let separatorIndex = findEventBoundary(buffer);
       while (separatorIndex !== -1) {
         const rawEvent = buffer.slice(0, separatorIndex);
-        buffer = buffer.slice(separatorIndex).replace(/^(\r?\n){1,2}/, '');
+        buffer = buffer.slice(separatorIndex).replace(/^(\r?\n){1,2}/, "");
         const chunk = parseSseEvent(rawEvent);
-        if (chunk === 'done') {
+        if (chunk === "done") {
           return;
         }
         if (chunk) {
@@ -313,30 +335,34 @@ async function* parseSseStream(
 }
 
 function findEventBoundary(buffer: string): number {
-  const lf = buffer.indexOf('\n\n');
-  const crlf = buffer.indexOf('\r\n\r\n');
+  const lf = buffer.indexOf("\n\n");
+  const crlf = buffer.indexOf("\r\n\r\n");
   if (lf === -1) return crlf;
   if (crlf === -1) return lf;
   return Math.min(lf, crlf);
 }
 
-function parseSseEvent(raw: string): LLMStreamChunk | 'done' | null {
+function parseSseEvent(raw: string): LLMStreamChunk | "done" | null {
   const dataLines: string[] = [];
   for (const line of raw.split(/\r?\n/)) {
-    if (line.startsWith('data:')) {
-      dataLines.push(line.slice(5).replace(/^ /, ''));
+    if (line.startsWith("data:")) {
+      dataLines.push(line.slice(5).replace(/^ /, ""));
     }
   }
   if (dataLines.length === 0) return null;
 
-  const payload = dataLines.join('\n').trim();
+  const payload = dataLines.join("\n").trim();
   if (!payload) return null;
-  if (payload === '[DONE]') return 'done';
+  if (payload === "[DONE]") return "done";
 
   try {
     return JSON.parse(payload) as LLMStreamChunk;
   } catch {
-    return { type: 'error', code: 'PARSE_FAILED', message: `Invalid SSE payload: ${payload}` };
+    return {
+      type: "error",
+      code: "PARSE_FAILED",
+      message: `Invalid SSE payload: ${payload}`,
+    };
   }
 }
 
@@ -349,17 +375,20 @@ export function createGatewayLLMClient(
 function normalizeGatewayUrl(url: string | undefined): string {
   if (!url?.trim()) {
     throw new GatewayLLMError(
-      'MISSING_GATEWAY_URL',
-      'AI_GATEWAY_URL is required for GatewayLLMClient',
+      "MISSING_GATEWAY_URL",
+      "AI_GATEWAY_URL is required for GatewayLLMClient",
     );
   }
 
-  return url.replace(/\/+$/, '');
+  return url.replace(/\/+$/, "");
 }
 
 function parseJson<TResponse>(text: string): TResponse {
   if (!text.trim()) {
-    throw new GatewayLLMError('EMPTY_GATEWAY_RESPONSE', 'AI gateway returned an empty response');
+    throw new GatewayLLMError(
+      "EMPTY_GATEWAY_RESPONSE",
+      "AI gateway returned an empty response",
+    );
   }
 
   return JSON.parse(text) as TResponse;
@@ -372,7 +401,7 @@ function parseErrorMessage(responseText: string, status: number): string {
 
   try {
     const parsed = JSON.parse(responseText) as { message?: unknown };
-    return typeof parsed.message === 'string'
+    return typeof parsed.message === "string"
       ? parsed.message
       : `AI gateway request failed with status ${status}`;
   } catch {

@@ -1,11 +1,11 @@
 {
-  "name": "@vxture/ai-sdk",
+  "name": "@vxture/ai-gateway-client",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
-  "description": "Vxture AI SDK - LLM / RAG / Embedding / Workflow",
+  "description": "Vxture AI Gateway Client - LLM / RAG / Embedding / Workflow client for the internal AI Gateway service",
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "echo \"No lint yet\"",

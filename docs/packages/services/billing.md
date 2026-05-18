@@ -7,12 +7,12 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/service-billing` |
-| 路径 | `services/commerce/billing/` |
-| @layer | `Domain` |
-| 所属域 | `commerce` |
+| 项     | 值                           |
+| ------ | ---------------------------- |
+| 包名   | `@vxture/service-billing`    |
+| 路径   | `services/commerce/billing/` |
+| @layer | `Domain`                     |
+| 所属域 | `commerce`                   |
 
 ## 职责
 
@@ -36,8 +36,9 @@ src/
 **允许：** `@vxture/core-*` / `@vxture/shared` / NestJS / Prisma / class-validator / @nestjs/swagger
 
 **禁止：**
+
 - `@vxture/service-subscription` / `@vxture/service-ticket`（跨 service 隔离）
-- `@vxture/ai-sdk` / `design-system` / `platform-*` / `bff-*` / React / Next.js
+- `@vxture/ai-gateway-client` / `design-system` / `platform-*` / `bff-*` / React / Next.js
 
 ## 分层职责约束
 
@@ -48,8 +49,8 @@ src/
 ## Barrel Export 规则
 
 ```typescript
-export { BillingModule } from './module/billing.module'
-export { BillingService } from './service/billing.service'
-export type { BillingRecord, BillingStatus } from './types/billing.types'
+export { BillingModule } from "./module/billing.module";
+export { BillingService } from "./service/billing.service";
+export type { BillingRecord, BillingStatus } from "./types/billing.types";
 // 禁止导出 BillingRepository
 ```

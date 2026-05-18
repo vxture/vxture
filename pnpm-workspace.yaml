@@ -7,7 +7,7 @@ packages:
   - 'services/*/*'
   - 'packages/shared/shared'
   - 'packages/core/*'
-  - 'packages/ai/ai-sdk'
+  - 'packages/ai/gateway-client'
   - 'packages/platform/*'
   - 'packages/design/design-system'
   - 'tools/*'
