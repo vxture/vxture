@@ -1,0 +1,104 @@
+/**
+ * components-toast.css - Toast 组件视口、内容和状态样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:where(.vx-toast-viewport) {
+  position: fixed;
+  inset-block-start: var(--vx-space-lg);
+  inset-inline-end: var(--vx-space-lg);
+  z-index: var(--vx-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vx-space-sm);
+  inline-size: min(100%, var(--vx-container-md));
+  pointer-events: none;
+}
+
+:where(.vx-toast) {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--vx-space-sm);
+  padding: var(--vx-space-md);
+  border: var(--vx-control-border-width) solid var(--vx-color-border);
+  border-radius: var(--vx-radius-lg);
+  background: var(--vx-color-surface);
+  box-shadow: var(--vx-shadow-lg);
+  animation: var(--animate-vx-fade-up);
+  pointer-events: auto;
+}
+
+:where(.vx-toast__icon) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: var(--vx-space-xl);
+  block-size: var(--vx-space-xl);
+  padding-inline: var(--vx-space-xs);
+  border-radius: var(--vx-radius-full);
+  color: var(--vx-color-white);
+  font-size: var(--vx-font-size-xs);
+  font-weight: 700;
+}
+
+:where(.vx-toast--success .vx-toast__icon) {
+  background: var(--vx-color-success);
+}
+
+:where(.vx-toast--error .vx-toast__icon) {
+  background: var(--vx-color-error);
+}
+
+:where(.vx-toast--warning .vx-toast__icon) {
+  background: var(--vx-color-warning);
+}
+
+:where(.vx-toast--info .vx-toast__icon) {
+  background: var(--vx-color-info);
+}
+
+:where(.vx-toast--ai .vx-toast__icon) {
+  background: var(--vx-gradient-ai-duo);
+}
+
+:where(.vx-toast__body) {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+:where(.vx-toast__title) {
+  color: var(--vx-color-text-primary);
+  font-family: var(--vx-font-sans);
+  font-size: var(--vx-font-size-sm);
+  font-weight: 600;
+}
+
+:where(.vx-toast__desc) {
+  margin-block-start: var(--vx-space-xs);
+  color: var(--vx-color-text-secondary);
+  font-family: var(--vx-font-sans);
+  font-size: var(--vx-font-size-xs);
+  line-height: 1.55;
+}
+
+:where(.vx-toast__close) {
+  border: 0;
+  border-radius: var(--vx-radius-sm);
+  background: transparent;
+  color: var(--vx-color-text-muted);
+  cursor: pointer;
+  font-size: var(--vx-font-size-xs);
+  line-height: 1;
+  padding: var(--vx-space-xs);
+  transition: var(--vx-motion-button-hover);
+  transition-property: background, color;
+}
+
+:where(.vx-toast__close:hover) {
+  background: var(--vx-color-surface-muted);
+  color: var(--vx-color-text-primary);
+}

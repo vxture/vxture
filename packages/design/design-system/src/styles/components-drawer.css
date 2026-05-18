@@ -1,0 +1,117 @@
+/**
+ * components-drawer.css - Drawer 组件根节点、遮罩、面板和布局区域样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:where(.vx-drawer-root) {
+  position: fixed;
+  inset: 0;
+  z-index: var(--vx-z-drawer);
+}
+
+:where(.vx-drawer__scrim) {
+  position: absolute;
+  inset: 0;
+  z-index: var(--vx-z-modal-bg);
+  border: 0;
+  background: var(--vx-color-overlay);
+  animation: var(--animate-vx-fade-in);
+  cursor: pointer;
+}
+
+:where(.vx-drawer__panel) {
+  position: absolute;
+  inset-block: 0;
+  z-index: var(--vx-z-drawer);
+  display: flex;
+  flex-direction: column;
+  inline-size: var(--vx-drawer-width, min(100%, var(--vx-container-md)));
+  max-inline-size: 100%;
+  border-inline-start: var(--vx-control-border-width) solid var(--vx-color-border);
+  background: var(--vx-color-surface);
+  box-shadow: var(--vx-shadow-xl);
+}
+
+:where(.vx-drawer-root--right .vx-drawer__panel) {
+  inset-inline-end: 0;
+  animation: vx-drawer-in-right var(--vx-motion-modal-open) both;
+}
+
+:where(.vx-drawer-root--left .vx-drawer__panel) {
+  inset-inline-start: 0;
+  border-inline-start: 0;
+  border-inline-end: var(--vx-control-border-width) solid var(--vx-color-border);
+  animation: vx-drawer-in-left var(--vx-motion-modal-open) both;
+}
+
+@keyframes vx-drawer-in-right {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes vx-drawer-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+:where(.vx-drawer__header) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-space-md);
+  padding: var(--vx-space-md) var(--vx-space-lg);
+  border-block-end: var(--vx-control-border-width) solid var(--vx-color-border);
+  flex-shrink: 0;
+}
+
+:where(.vx-drawer__title) {
+  color: var(--vx-color-text-primary);
+  font-family: var(--vx-font-display);
+  font-size: var(--vx-font-size-lg);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+:where(.vx-drawer__close) {
+  border: 0;
+  border-radius: var(--vx-radius-md);
+  background: transparent;
+  color: var(--vx-color-text-muted);
+  cursor: pointer;
+  font-size: var(--vx-font-size-xs);
+  line-height: 1;
+  padding: var(--vx-space-sm);
+  transition: var(--vx-motion-button-hover);
+  transition-property: background, color;
+}
+
+:where(.vx-drawer__close:hover) {
+  background: var(--vx-color-surface-muted);
+  color: var(--vx-color-text-primary);
+}
+
+:where(.vx-drawer__body) {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--vx-space-lg);
+}
+
+:where(.vx-drawer__footer) {
+  flex-shrink: 0;
+  padding: var(--vx-space-md) var(--vx-space-lg);
+  border-block-start: var(--vx-control-border-width) solid var(--vx-color-border);
+}
