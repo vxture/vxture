@@ -11,9 +11,19 @@
  * @category Components - Common
  */
 
-import { ThemeProvider as NextThemeProvider, useTheme as useNextTheme } from "next-themes";
+import {
+  ThemeProvider as NextThemeProvider,
+  useTheme as useNextTheme,
+} from "next-themes";
 import type { ReactNode } from "react";
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { Density } from "../density";
 import { DEFAULT_DENSITY, DENSITY_STORAGE_KEY } from "../density";
 import { THEME_CONSTANTS } from "@vxture/shared";
@@ -46,10 +56,6 @@ type ThemeContextValue = {
 export type ThemeProviderProps = {
   /** 子组件 */
   readonly children: ReactNode;
-  /**
-   * @deprecated 请使用 `defaultMode` 代替
-   */
-  readonly defaultTheme?: string;
   /** 默认主题模式 */
   readonly defaultMode?: "light" | "dark" | "system";
   /** 默认密度 */
@@ -83,7 +89,10 @@ function DensityProvider({
   useEffect(() => {
     mountedRef.current = true;
     const saved = localStorage.getItem(DENSITY_STORAGE_KEY) as Density | null;
-    if (saved && (["compact", "default", "comfortable"] as Density[]).includes(saved)) {
+    if (
+      saved &&
+      (["compact", "default", "comfortable"] as Density[]).includes(saved)
+    ) {
       setDensityState(saved);
     }
   }, []);
@@ -101,7 +110,11 @@ function DensityProvider({
   useEffect(() => {
     if (!mountedRef.current) return;
     const root = document.documentElement;
-    root.classList.remove("density-compact", "density-default", "density-comfortable");
+    root.classList.remove(
+      "density-compact",
+      "density-default",
+      "density-comfortable",
+    );
     root.classList.add(`density-${density}`);
   }, [density]);
 
@@ -136,9 +149,12 @@ function ThemeContextBridge({
   const mode = normalizeThemeMode(selectedTheme);
   const theme = resolvedTheme === "dark" ? "dark" : "light";
 
-  const setMode = useCallback((nextMode: "light" | "dark" | "system") => {
-    setTheme(nextMode);
-  }, [setTheme]);
+  const setMode = useCallback(
+    (nextMode: "light" | "dark" | "system") => {
+      setTheme(nextMode);
+    },
+    [setTheme],
+  );
 
   const toggle = useCallback(() => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -171,23 +187,20 @@ function ThemeContextBridge({
  *
  * @example
  * ```tsx
- * <ThemeProvider defaultTheme="system" defaultDensity="default">
+ * <ThemeProvider defaultMode="system" defaultDensity="default">
  *   <App />
  * </ThemeProvider>
  * ```
  */
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  defaultMode,
+  defaultMode = "system",
   defaultDensity = DEFAULT_DENSITY,
 }: ThemeProviderProps) {
-  const resolvedDefaultTheme = defaultMode ?? normalizeThemeMode(defaultTheme);
-
   return (
     <NextThemeProvider
       attribute="class"
-      defaultTheme={resolvedDefaultTheme}
+      defaultTheme={defaultMode}
       storageKey={THEME_CONSTANTS.STORAGE_KEY}
       enableSystem
     >
@@ -220,7 +233,9 @@ export function useTheme(): ThemeContextValue {
   return context;
 }
 
-function normalizeThemeMode(value: string | undefined): "light" | "dark" | "system" {
+function normalizeThemeMode(
+  value: string | undefined,
+): "light" | "dark" | "system" {
   if (value === "light" || value === "dark" || value === "system") {
     return value;
   }
