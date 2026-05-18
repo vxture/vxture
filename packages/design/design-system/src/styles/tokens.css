@@ -12,7 +12,10 @@
 @import "./tokens-gradients.css";
 @import "./tokens-colors-semantic.css";
 @import "./tokens-colors-shell.css";
-@import "./tokens-foundation.css";
+@import "./tokens-foundation-radius-space.css";
+@import "./tokens-foundation-shadow.css";
+@import "./tokens-foundation-motion.css";
+@import "./tokens-foundation-type-layout.css";
 @import "./tokens-component-metrics.css";
 @import "./tokens-scale-flow.css";
 @import "./tokens-scale-rem.css";
