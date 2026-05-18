@@ -7,6 +7,7 @@
  * @date 2026-05-18
  */
 
+.vx-bulk-action-bar,
 .vx-members-header-actions,
 .vx-roles-header-actions {
   display: flex;
@@ -24,6 +25,7 @@
   padding-bottom: var(--vx-access-actionbar-padding-bottom);
 }
 
+.vx-bulk-action-bar__primary,
 .vx-members-header-primary,
 .vx-roles-header-primary {
   display: flex;
@@ -34,6 +36,7 @@
   margin-left: auto;
 }
 
+.vx-bulk-action-bar__selection,
 .vx-members-header-selection,
 .vx-roles-header-selection {
   display: inline-flex;
@@ -44,6 +47,7 @@
   min-width: 0;
 }
 
+.vx-bulk-action-bar__selection-label,
 .vx-members-header-selection span,
 .vx-roles-header-selection span {
   color: var(--vx-console-brand-strong);
