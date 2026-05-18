@@ -1,5 +1,5 @@
 /**
- * tokens-component-shell-semantics.css - Shell 工具组件语义 token。
+ * tokens-component-shell-semantics.css - Shell 工具组件语义 token 入口。
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
@@ -7,82 +7,9 @@
  * @date 2026-05-17
  */
 
-:root {
-  --vx-shell-brand-color: var(--vx-color-shell-text);
-  --vx-shell-brand-gap: var(--vx-component-metric-05r);
-  --vx-shell-brand-logo-size: var(--vx-component-metric-15r);
-  --vx-shell-tool-button-color: var(--vx-color-shell-muted);
-  --vx-shell-tool-button-hover-background: color-mix(in srgb, var(--vx-color-shell-brand) 9%, transparent);
-  --vx-shell-tool-button-hover-color: var(--vx-color-shell-brand);
-  --vx-shell-tool-button-focus-ring: var(--vx-color-ring);
-  --vx-shell-tool-button-size: var(--vx-component-metric-2r);
-  --vx-shell-tool-button-radius: var(--vx-component-metric-8p);
-  --vx-shell-locale-popover-offset: var(--vx-component-metric-05r);
-  --vx-shell-locale-popover-min-width: var(--vx-component-metric-10r);
-  --vx-shell-preferences-gap: var(--vx-component-metric-05r);
-  --vx-shell-preferences-title-margin-bottom: var(--vx-component-metric-015r);
-  --vx-shell-preferences-title-size: var(--vx-component-metric-085r);
-  --vx-shell-preferences-row-height: var(--vx-component-metric-25r);
-  --vx-shell-preferences-row-gap: var(--vx-component-metric-075r);
-  --vx-shell-preferences-icon-size: var(--vx-component-metric-125r);
-  --vx-shell-preferences-select-height: var(--vx-component-metric-225r);
-  --vx-shell-preferences-select-radius: var(--vx-component-metric-8p);
-  --vx-shell-preferences-select-padding-start: var(--vx-component-metric-075r);
-  --vx-shell-preferences-select-padding-end: var(--vx-component-metric-2r);
-  --vx-shell-preferences-select-size: var(--vx-component-metric-082r);
-  --vx-shell-preferences-select-icon-inset: var(--vx-component-metric-065r);
-  --vx-shell-preferences-select-icon-size: var(--vx-component-metric-1r);
-  --vx-shell-segmented-radius: var(--vx-component-metric-8p);
-  --vx-shell-segmented-padding: var(--vx-component-metric-0125r);
-  --vx-shell-segmented-item-radius: var(--vx-component-metric-6p);
-  --vx-shell-segmented-item-padding-y: var(--vx-component-metric-042r);
-  --vx-shell-segmented-item-padding-x: var(--vx-component-metric-05r);
-  --vx-shell-segmented-item-size: var(--vx-component-metric-076r);
-  --vx-shell-segmented-active-shadow-y: var(--vx-component-metric-1p);
-  --vx-shell-segmented-active-shadow-blur: var(--vx-component-metric-3p);
-  --vx-shell-user-trigger-size: var(--vx-component-metric-25r);
-  --vx-shell-user-trigger-hover-ring: var(--vx-component-metric-2p);
-  --vx-shell-user-status-offset: var(--vx-component-metric-0125r);
-  --vx-shell-user-status-size: var(--vx-component-metric-075r);
-  --vx-shell-user-status-border-width: var(--vx-component-metric-2p);
-  --vx-shell-user-avatar-size: var(--vx-component-metric-25r);
-  --vx-shell-user-avatar-lg-size: var(--vx-component-metric-35r);
-  --vx-shell-user-avatar-shadow-y: var(--vx-component-metric-2p);
-  --vx-shell-user-avatar-shadow-blur: var(--vx-component-metric-6p);
-  --vx-shell-user-menu-width: var(--vx-component-metric-20r);
-  --vx-shell-user-menu-radius: var(--vx-component-metric-10p);
-  --vx-shell-user-menu-shadow-y: var(--vx-component-metric-18p);
-  --vx-shell-user-menu-shadow-blur: var(--vx-component-metric-45p);
-  --vx-shell-user-menu-profile-gap: var(--vx-component-metric-075r);
-  --vx-shell-user-menu-padding: var(--vx-component-metric-1r);
-  --vx-shell-user-menu-name-size: var(--vx-component-metric-096r);
-  --vx-shell-user-menu-line-margin-top: var(--vx-component-metric-02r);
-  --vx-shell-user-menu-line-size: var(--vx-component-metric-084r);
-  --vx-shell-user-menu-meta-margin-top: var(--vx-component-metric-012r);
-  --vx-shell-user-menu-meta-size: var(--vx-component-metric-076r);
-  --vx-shell-user-menu-badge-gap: var(--vx-component-metric-05r);
-  --vx-shell-user-menu-badge-indent: var(--vx-component-metric-425r);
-  --vx-shell-user-badge-padding-y: var(--vx-component-metric-025r);
-  --vx-shell-user-badge-padding-x: var(--vx-component-metric-062r);
-  --vx-shell-user-badge-size: var(--vx-component-metric-075r);
-  --vx-shell-user-menu-action-gap: var(--vx-component-metric-065r);
-  --vx-shell-user-menu-action-radius: var(--vx-component-metric-8p);
-  --vx-shell-user-menu-action-padding-y: var(--vx-component-metric-062r);
-  --vx-shell-user-menu-action-padding-x: var(--vx-component-metric-075r);
-  --vx-shell-user-menu-action-size: var(--vx-component-metric-085r);
-  --vx-shell-user-menu-action-icon-size: var(--vx-component-metric-1r);
-  --vx-shell-user-menu-return-gap: var(--vx-component-metric-04r);
-  --vx-shell-user-menu-dismiss-size: var(--vx-component-metric-125r);
-  --vx-shell-user-menu-dismiss-radius: var(--vx-component-metric-6p);
-  --vx-shell-legal-footer-gap: var(--vx-component-metric-1r);
-  --vx-shell-legal-footer-link-gap: var(--vx-component-metric-085r);
-  --vx-switch-width: var(--vx-component-metric-31r);
-  --vx-switch-height: var(--vx-component-metric-19r);
-  --vx-switch-thumb-inset: var(--vx-component-metric-02r);
-  --vx-switch-thumb-size: var(--vx-component-metric-15r);
-  --vx-switch-thumb-shadow-y: var(--vx-component-metric-1p);
-  --vx-switch-thumb-shadow-blur: var(--vx-component-metric-3p);
-  --vx-switch-checked-translate: var(--vx-component-metric-12r);
-  --vx-fullscreen-viewport-width: var(--vx-scale-100vw);
-  --vx-fullscreen-viewport-height: var(--vx-scale-100vh);
-}
+@import "./tokens-component-shell-tools-semantics.css";
+@import "./tokens-component-shell-preferences-semantics.css";
+@import "./tokens-component-shell-segmented-semantics.css";
+@import "./tokens-component-shell-user-menu-semantics.css";
+@import "./tokens-component-shell-footer-switch-semantics.css";
+@import "./tokens-component-fullscreen-semantics.css";

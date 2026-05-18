@@ -1,0 +1,20 @@
+/**
+ * tokens-component-shell-footer-switch-semantics.css - Shell 页脚与开关组件语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-shell-legal-footer-gap: var(--vx-component-metric-1r);
+  --vx-shell-legal-footer-link-gap: var(--vx-component-metric-085r);
+  --vx-switch-width: var(--vx-component-metric-31r);
+  --vx-switch-height: var(--vx-component-metric-19r);
+  --vx-switch-thumb-inset: var(--vx-component-metric-02r);
+  --vx-switch-thumb-size: var(--vx-component-metric-15r);
+  --vx-switch-thumb-shadow-y: var(--vx-component-metric-1p);
+  --vx-switch-thumb-shadow-blur: var(--vx-component-metric-3p);
+  --vx-switch-checked-translate: var(--vx-component-metric-12r);
+}

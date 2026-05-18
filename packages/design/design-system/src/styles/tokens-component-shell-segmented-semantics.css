@@ -1,0 +1,19 @@
+/**
+ * tokens-component-shell-segmented-semantics.css - Shell segmented control 语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-shell-segmented-radius: var(--vx-component-metric-8p);
+  --vx-shell-segmented-padding: var(--vx-component-metric-0125r);
+  --vx-shell-segmented-item-radius: var(--vx-component-metric-6p);
+  --vx-shell-segmented-item-padding-y: var(--vx-component-metric-042r);
+  --vx-shell-segmented-item-padding-x: var(--vx-component-metric-05r);
+  --vx-shell-segmented-item-size: var(--vx-component-metric-076r);
+  --vx-shell-segmented-active-shadow-y: var(--vx-component-metric-1p);
+  --vx-shell-segmented-active-shadow-blur: var(--vx-component-metric-3p);
+}
