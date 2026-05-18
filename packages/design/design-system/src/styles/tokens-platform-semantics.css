@@ -12,7 +12,12 @@
 @import "./tokens-platform-models-layout-semantics.css";
 @import "./tokens-platform-notifications-semantics.css";
 @import "./tokens-platform-access-semantics.css";
-@import "./tokens-platform-access-layout-semantics.css";
+@import "./tokens-platform-access-page-semantics.css";
+@import "./tokens-platform-access-toolbar-semantics.css";
+@import "./tokens-platform-access-segmented-semantics.css";
+@import "./tokens-platform-access-list-semantics.css";
+@import "./tokens-platform-access-panels-semantics.css";
+@import "./tokens-platform-access-feedback-semantics.css";
 @import "./tokens-platform-tenant-settings-semantics.css";
 @import "./tokens-platform-shell-semantics.css";
 @import "./tokens-platform-layout-semantics.css";
