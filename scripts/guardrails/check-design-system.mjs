@@ -58,6 +58,18 @@ const LEGACY_SCALE_TOKEN_STYLE_PATHS = new Set(
     "tokens-platform-tenant-settings-scale.css",
   ].map((name) => normalize(`${DS_ROOT}/src/styles/${name}`)),
 );
+const LEGACY_COMPONENT_METRIC_TOKEN_STYLE_PATHS = new Set(
+  [
+    "tokens-component-metrics.css",
+    "tokens-component-metrics-em.css",
+    "tokens-component-metrics-px.css",
+    "tokens-component-metrics-rem.css",
+    "tokens-component-metrics-rem-controls.css",
+    "tokens-component-metrics-rem-fine.css",
+    "tokens-component-metrics-rem-layout.css",
+    "tokens-component-metrics-rem-ui.css",
+  ].map((name) => normalize(`${DS_ROOT}/src/styles/${name}`)),
+);
 const DS_SEMANTIC_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/components.css"),
   normalize("packages/design/design-system/src/styles/platform.css"),
@@ -965,6 +977,14 @@ for (const item of collectLegacyScaleTokenStyleViolations(files)) {
   violations.push({ rule: legacyScaleTokenStyleRule, ...item });
 }
 
+const legacyComponentMetricTokenStyleRule = {
+  id: "ds/no-legacy-component-metric-token-style",
+  description: "已清零的 component metric token 文件不能恢复或重新导入。",
+};
+for (const item of collectLegacyComponentMetricTokenStyleViolations(files)) {
+  violations.push({ rule: legacyComponentMetricTokenStyleRule, ...item });
+}
+
 const runtimeScaleBridgeVarRule = {
   id: "ds/no-runtime-scale-bridge-var-usage",
   description: "DS 样式层不得重新通过 var() 消费 scale bridge token；运行时值应在 token 层直接落到实际值。",
@@ -1330,6 +1350,40 @@ function collectLegacyScaleTokenStyleViolations(sourceFiles) {
           file,
           item.line,
           `${item.specifier} 指向已淘汰的叶子 scale token 文件；请改用 auth/platform core scale 或更具体的语义 token。`,
+          item.source,
+        ),
+      );
+    }
+  }
+  return items;
+}
+
+function collectLegacyComponentMetricTokenStyleViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (LEGACY_COMPONENT_METRIC_TOKEN_STYLE_PATHS.has(normalized)) {
+      items.push(
+        violation(
+          file,
+          1,
+          "已清零的 component metric token 文件不得恢复；请在具体 token owner 中直接定义运行时值。",
+          normalized,
+        ),
+      );
+    }
+
+    if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) continue;
+    const content = readFileSync(file, "utf8");
+    for (const item of findCssImports(content)) {
+      if (!item.specifier.startsWith(".")) continue;
+      const target = normalize(path.relative(ROOT, path.resolve(path.dirname(file), item.specifier)));
+      if (!LEGACY_COMPONENT_METRIC_TOKEN_STYLE_PATHS.has(target)) continue;
+      items.push(
+        violation(
+          file,
+          item.line,
+          `${item.specifier} 指向已清零的 component metric token 文件；请直接使用具体 token owner 的运行时值。`,
           item.source,
         ),
       );

@@ -584,6 +584,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 44. 已完成：Component metric 回流守卫；新增 `ds/no-runtime-component-metric-var-usage`，禁止 DS 样式层重新通过 `var()` 消费 `--vx-component-metric-*` 兜底 token。至此 scale bridge 与 component metric bridge 两类运行时 var 债务均进入 0 baseline 回流拦截。
 45. 已完成：Component metric 批次验收；`pnpm lint:design`、`node --check scripts/guardrails/check-design-system.mjs`、`pnpm --filter @vxture/design-system lint`、`pnpm --filter @vxture/design-system type-check`、`pnpm --filter @vxture/shared build`、`pnpm --filter @vxture/design-system build`、`git diff --check` 均通过；当前 scale bridge 与 component metric bridge 命中均为 0。
 46. 已完成：Raw color / effect 口径复核；非 token owner raw color 命中为 0，raw color 仅保留在 `tokens-colors-*`、`tokens-dark-*`、shadow/effect 等 runtime token owner 内。粗略 effect 扫描中的 `transition`、`box-shadow` 命中主要来自已 token 化的多行声明或 token owner 定义，现有 `ds/no-ds-style-hardcoded-shadow`、`ds/no-ds-style-hardcoded-motion` 与已锁定 effect 规则继续负责回流拦截；本批不做样式实现改动。
+47. 已完成：Component metric 定义文件退场；删除已无消费者的 `tokens-component-metrics.css`、`tokens-component-metrics-em.css`、`tokens-component-metrics-px.css`、`tokens-component-metrics-rem.css`、`tokens-component-metrics-rem-controls.css`、`tokens-component-metrics-rem-fine.css`、`tokens-component-metrics-rem-layout.css`、`tokens-component-metrics-rem-ui.css`，并从 `tokens.css` 移除聚合入口。新增 `ds/no-legacy-component-metric-token-style`，禁止这些兜底 metric token 文件或 import 恢复。
 
 ## 后续验收清单
 
