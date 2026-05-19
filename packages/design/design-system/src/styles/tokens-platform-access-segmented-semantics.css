@@ -8,9 +8,9 @@
  */
 
 :root {
-  --vx-access-page-segmented-min-height: var(--vx-platform-scale-2-25r);
-  --vx-access-page-segmented-padding: var(--vx-platform-scale-0-16r);
-  --vx-access-page-segmented-gap: var(--vx-platform-scale-0-12r);
-  --vx-access-page-segmented-item-min-height: var(--vx-platform-scale-1-88r);
-  --vx-access-page-segmented-item-padding: 0 var(--vx-platform-scale-0-72r);
+  --vx-access-page-segmented-min-height: 2.25rem;
+  --vx-access-page-segmented-padding: 0.16rem;
+  --vx-access-page-segmented-gap: 0.12rem;
+  --vx-access-page-segmented-item-min-height: 1.88rem;
+  --vx-access-page-segmented-item-padding: 0 0.72rem;
 }

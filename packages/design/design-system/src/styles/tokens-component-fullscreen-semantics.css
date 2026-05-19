@@ -8,6 +8,6 @@
  */
 
 :root {
-  --vx-fullscreen-viewport-width: var(--vx-scale-100vw);
-  --vx-fullscreen-viewport-height: var(--vx-scale-100vh);
+  --vx-fullscreen-viewport-width: 100vw;
+  --vx-fullscreen-viewport-height: 100vh;
 }

@@ -8,12 +8,12 @@
  */
 
 :root {
-  --vx-organization-profile-layout-columns: minmax(var(--vx-platform-scale-18r), 0.38fr) minmax(0, 1fr);
-  --vx-organization-profile-card-padding-top: var(--vx-platform-scale-1-05r);
-  --vx-organization-logo-size: var(--vx-platform-scale-7-25r);
-  --vx-organization-logo-title-size: var(--vx-platform-scale-1-7r);
-  --vx-organization-logo-editor-size: var(--vx-platform-scale-8r);
-  --vx-organization-logo-upload-gap: var(--vx-platform-scale-0-45r);
-  --vx-organization-logo-button-min-height: var(--vx-platform-scale-2-42r);
-  --vx-organization-status-margin-top: var(--vx-platform-scale-0-1r);
+  --vx-organization-profile-layout-columns: minmax(18rem, 0.38fr) minmax(0, 1fr);
+  --vx-organization-profile-card-padding-top: 1.05rem;
+  --vx-organization-logo-size: 7.25rem;
+  --vx-organization-logo-title-size: 1.7rem;
+  --vx-organization-logo-editor-size: 8rem;
+  --vx-organization-logo-upload-gap: 0.45rem;
+  --vx-organization-logo-button-min-height: 2.42rem;
+  --vx-organization-status-margin-top: 0.1rem;
 }

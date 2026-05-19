@@ -8,15 +8,15 @@
  */
 
 :root {
-  --vx-access-toolbar-gap: var(--vx-platform-scale-0-85r);
-  --vx-access-toolbar-padding: var(--vx-platform-scale-0-1r) 0 var(--vx-platform-scale-0-45r);
-  --vx-access-toolbar-search-width: min(var(--vx-platform-scale-28r), 100%);
-  --vx-access-toolbar-search-min-width: var(--vx-platform-scale-18r);
-  --vx-access-toolbar-search-height: var(--vx-platform-scale-2-25r);
-  --vx-access-toolbar-search-border: var(--vx-platform-scale-1p) solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
-  --vx-access-toolbar-search-padding: var(--vx-platform-scale-0-3r) var(--vx-platform-scale-0-85r);
-  --vx-access-toolbar-filters-gap: var(--vx-platform-scale-0-9r);
-  --vx-access-toolbar-count-height: var(--vx-platform-scale-2-25r);
-  --vx-access-toolbar-count-padding: 0 var(--vx-platform-scale-0-8r);
-  --vx-access-toolbar-count-border: var(--vx-platform-scale-1p) solid var(--vx-color-border);
+  --vx-access-toolbar-gap: 0.85rem;
+  --vx-access-toolbar-padding: 0.1rem 0 0.45rem;
+  --vx-access-toolbar-search-width: min(28rem, 100%);
+  --vx-access-toolbar-search-min-width: 18rem;
+  --vx-access-toolbar-search-height: 2.25rem;
+  --vx-access-toolbar-search-border: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  --vx-access-toolbar-search-padding: 0.3rem 0.85rem;
+  --vx-access-toolbar-filters-gap: 0.9rem;
+  --vx-access-toolbar-count-height: 2.25rem;
+  --vx-access-toolbar-count-padding: 0 0.8rem;
+  --vx-access-toolbar-count-border: 1px solid var(--vx-color-border);
 }

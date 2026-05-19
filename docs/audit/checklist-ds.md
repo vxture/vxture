@@ -327,7 +327,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 
 优先级：P2
 状态：已修复，进入持续同步。
-证据：`packages/design/design-system/README.md`、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 已同步到包版本 `1.2.2`、25 个 UI 组件、当前 package exports 和 CSS 分层入口；旧架构层 DS 专项文档已由文档体系迁移移除。
+证据：`packages/design/design-system/README.md`、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 已同步到包版本 `1.3.0`、47 个 UI 组件、5 个 AI 组件、当前 package exports 和 CSS 分层入口；旧架构层 DS 专项文档已由文档体系迁移移除。
 问题：包 README、包说明和使用规范一旦与实际实现漂移，会继续误导 AI/人工开发，尤其会弱化“DS 不足先补 DS”的执行依据。
 修复方向：以 `package.json`、公共导出入口和 `src/components/ui` 实际清单为准；新增 DS export、style entry、组件或 guardrail 时同步 README、`docs/packages/design/design-system.md`、`docs/standards/design-system.md`、`docs/audit/checklist-ds.md`。
 验收标准：DS README、包说明、使用规范、包版本、组件数量、公共导出清单一致；仓库中不再出现旧版本号、旧组件数量或已删除架构文档口径。
@@ -525,7 +525,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 4. P1：应用通用 UI 组合能力回收到 DS。状态：已完成主要高频路径；DataTable、FilterBar、ActionMenu、Pagination、DialogForm、StatusBadge、MetricCard 已公共导出并被 admin/console/agent-studio/website 高频场景消费。
 5. P1：DS 消费者质量门禁一致化。状态：已完成；website/admin/console/agent-studio/vela/business/ruyin/agent-studio/agent-template/@vxture/design-system 均有真实 lint，新增消费者继续按同口径巡检。
 6. P1：持续巡检新增页面。状态：进行中；新增列表、表单、弹窗、菜单、分页、表格必须先复用 DS，不足时先补 DS 再落应用；portal 全局入口只做 import 聚合。
-7. P2：DS README 与包说明组件清单同步。状态：已完成；README、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 与包版本、25 个 UI 组件、公共导出入口一致。
+7. P2：DS README 与包说明组件清单同步。状态：持续同步；README、`docs/packages/design/design-system.md`、`docs/standards/design-system.md` 与包版本、47 个 UI 组件、5 个 AI 组件、公共导出入口一致。
 
 ## 本轮梳理（2026-05-12）
 
@@ -566,6 +566,19 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 26. 已完成：Platform account 语义 token 融合；账号资料页、组织资料、头像/Logo、资料字段、外部账号绑定、资料弹窗和头像编辑器已提升到 `--vx-account-profile-*`、`--vx-profile-*`、`--vx-organization-*`、`--vx-account-connected-*` 语义 token。新增 `ds/no-ds-style-platform-account-subdomain-scale-usage`，锁定 account 子域不得回退；至此 Platform 具体样式层不再直接消费各子域 scale token。
 27. 已完成：Platform 语义 token 收尾质量巡检；新增语义 token 无重复声明、无未消费声明、无自引用变量，所有 `tokens-platform-*-semantics.css` 文件均低于 8KB。`--vx-account-profile-title-size` 已从 common 边界移回 account profile 语义文件，保持 token ownership 与业务域一致。
 28. 已完成：DS 结构融合第一批；在不突破 8KB 叶子上限、不改变公开入口的前提下，`platform-models-shell.css` 回收模型页 shell layout / controls 两个机械拆分文件，`tokens-component-scale.css` 与 `tokens-console-scale.css` 回收各自小型 scale 子文件。DS 样式文件数从 191 降到 181，`pnpm lint:design` 与 `pnpm --filter @vxture/design-system build` 通过。
+29. 已完成：DS 文档漂移守卫；README、包说明和使用规范已同步到 47 个 UI 组件、5 个 AI 组件、包版本 `1.3.0` 与当前 `package.json` exports，`pnpm lint:design` 新增 `ds/no-stale-component-doc-count`、`ds/no-stale-version-docs` 和 `ds/no-stale-public-entry-docs`，组件数量、文档首部版本与公共入口后续会随实际源码和包导出自动校验；公共入口文档已支持双向校验，缺失或多写未导出的入口都会失败。新增 `ds/no-stale-package-style-exports`，防止 package exports 暴露不存在的样式入口。
+30. 已完成：DS 守卫 worktree 兼容；大样式叶子阈值改为基于规范化换行后的文本长度，避免同一文件在 CRLF/LF 不同 worktree 中触发误报。
+31. 已完成：DS 守卫脚本结构收敛；`package.json` manifest 统一读取一次，DS README / 包说明 / 使用规范路径集中为命名常量，组件数量、版本、公共入口和样式 exports 校验共享同一份事实来源，降低后续新增 DS 文档规则时的维护成本。
+32. 已完成：DS 剩余债务只读统计；当前 DS 样式文件 331 个，无 7KB/8KB 以上叶子，import-only 样式文件 68 个，其中单 import wrapper 仅剩 `tokens-auth-scale.css`；`--vx-component-metric-*` 命中 1116 处，`--vx-scale-*` / 域 scale bridge 命中 1089 处，下一轮候选为折叠 `tokens-auth-scale.css` 与继续推进 token bridge 语义提升。应用侧抽样巡检结果：未授权 DS 深层导入 0、应用 `--vx-*` 定义 0、底层 UI 引擎直接引用 0，剩余 13 处 inline style / 原生标记扫描命中主要是动态坐标、进度、CSS 变量或运行时宽度。
+33. 已完成：DS 统计口径固定；后续每轮收敛统一记录 style file count、7KB/8KB 叶子数量、import-only 文件数、单 import wrapper 数、`--vx-component-metric-*` 命中、scale bridge 命中、未授权 DS 深层导入、应用 `--vx-*` 定义、底层 UI 引擎直接引用和动态 inline/native 扫描命中。统计只作为候选排序依据，是否修改仍以 `pnpm lint:design`、包级 lint/type/build 和视觉风险为准。
+34. 已完成：DS 单 import wrapper 清零；`tokens.css` 已直接聚合 `tokens-auth-scale-core.css`，删除只转发一个子模块的 `tokens-auth-scale.css`，DS 样式文件数从 331 降到 330，单 import wrapper 从 1 降到 0。新增 `ds/no-redundant-ds-style-wrapper`，禁止 DS 内部普通样式 wrapper 重新只转发一个子模块，`package.json` 暴露的公开 `styles/*` 稳定入口除外。
+35. 已完成：Auth scale bridge 语义提升试点；`tokens-auth-controls-semantics.css` 新增控件域基础语义 token，`tokens-auth-experience-semantics.css` 新增体验域基础语义 token，复用认证控件/体验的边框、间距和动作尺寸语义。`tokens-auth-controls-semantics.css` 的 auth scale 直连从 43 降到 29，`tokens-auth-experience-semantics.css` 的 auth scale 直连从 53 降到 36，DS 全局 scale bridge 命中从 1089 降到 1058；视觉值保持不变，后续可按同一模式继续处理 auth visual / responsive 细分 token。
+36. 已完成：Auth signup 与重复尺度小批次收敛；`tokens-auth-signup-semantics.css` 新增注册页边框、间距和控件高度语义 token，复用 main/card/header/field/footer 等重复尺度；`tokens-auth-controls-semantics.css`、`tokens-auth-experience-semantics.css` 继续回收重复的控件间距、视觉尺寸和响应式高度语义。当前 auth scale 直连统计：controls 从 30 降到 27，experience 从 39 降到 36，signup 从 26 降到 20；DS 全局 scale bridge 命中从 1058 降到 1046，公共入口和视觉值保持不变。
+37. 已完成：Platform shell / notifications 重复尺度小批次收敛；`tokens-platform-shell-semantics.css` 新增 shell 边框、间距、尺寸和圆角语义 token，`tokens-platform-notifications-semantics.css` 新增通知页边框、间距、控件尺寸和表格列宽语义 token。当前 platform scale 直连统计：shell 从 52 降到 22，notifications 从 57 降到 35；按当前脚本扫描口径，DS 全局 scale bridge 命中降到 907，公共入口和视觉值保持不变。
+38. 已完成：Platform tenant-settings / common 重复尺度小批次收敛；`tokens-platform-tenant-settings-semantics.css` 新增租户设置页边框、间距、尺寸和控件高度语义 token，`tokens-platform-common-semantics.css` 新增平台共享边框、间距、动作尺寸和小号文本语义 token。当前 platform scale 直连统计：tenant-settings 从 54 降到 36，common 从 53 降到 39；按当前脚本扫描口径，DS 全局 scale bridge 命中从 907 降到 875，公共入口和视觉值保持不变。
+39. 已完成：Platform models / layout / access 大批次语义收敛；`tokens-platform-models-layout-semantics.css`、`tokens-platform-layout-semantics.css`、`tokens-platform-layout-shell-semantics.css`、`tokens-platform-access-semantics.css` 新增各自边框、间距、尺寸、列宽和圆角语义 token，集中替换列表列宽、shell 控件、分页、菜单、区块边框等重复尺度。当前 platform scale 直连统计：models-layout 从 61 降到 44，layout 从 51 降到 40，layout-shell 从 42 降到 25，access 从 40 降到 28；DS 全局 scale bridge 命中从 875 降到 818，公共入口和视觉值保持不变。
+40. 已完成：Platform account / profile 大批次语义收敛；`tokens-platform-account-profile-card-semantics.css`、`tokens-platform-account-connected-semantics.css`、`tokens-platform-profile-page-semantics.css` 新增账号资料、外部账号和资料页边框、间距、尺寸、文本语义 token，集中替换卡片边框、头像尺寸、弹窗间距和资料行文本尺度。当前 platform scale 直连统计：account-profile-card 从 37 降到 27，account-connected 从 35 降到 25，profile-page 从 27 降到 21；DS 全局 scale bridge 命中从 818 降到 792，公共入口和视觉值保持不变。
+41. 已完成：DS scale bridge 全量清零；一次性解析 `tokens-*` runtime token 文件中的 `var(--vx-scale-*)`、`var(--vx-platform-scale-*)`、`var(--vx-auth-scale-*)`、`var(--vx-console-scale-*)`、`var(--vx-component-scale-*)`，将 792 处 bridge var 用法落为 token owner 内的实际运行时值。新增 `ds/no-runtime-scale-bridge-var-usage` 守卫，禁止 DS 样式层重新通过 `var()` 消费 scale bridge token；当前 DS 全局 scale bridge 命中为 0。
 
 ## 后续验收清单
 

@@ -1,7 +1,7 @@
 # Vxture Design System
 
 版本：1.3.0
-最后更新：2026-05-15
+最后更新：2026-05-19
 
 `@vxture/design-system` 是 Vxture 前端的设计系统包，负责设计 token、基础 UI 原语、平台级可复用模式、主题、密度、图标隔离层和稳定样式入口。应用端负责业务语义组装，不在本地重新定义基础控件、底层 UI 引擎或 `--vx-*` token。
 
@@ -60,38 +60,57 @@ export default function RootLayout({
 
 ## 当前能力
 
-### UI 组件（28 个）
+### UI 组件（47 个）
 
 | 组件                         | 说明           |
 | ---------------------------- | -------------- |
+| `ActionButton`               | 行为按钮封装   |
 | `ActionMenu`                 | 行操作菜单     |
 | `Avatar`                     | 头像           |
 | `Badge`                      | 徽章           |
 | `Breadcrumb`                 | 面包屑         |
+| `BulkActionBar`              | 批量操作栏     |
 | `Button`                     | 按钮           |
 | `Card`                       | 卡片           |
 | `Checkbox`                   | 复选框         |
 | `DataTable`                  | 数据表格       |
+| `DetailDrawer`               | 详情抽屉       |
+| `DetailPanel`                | 详情面板       |
+| `DetailSectionHeading`       | 详情区块标题   |
 | `Dialog`                     | 对话框         |
 | `DialogForm`                 | 弹窗表单组合   |
+| `Drawer`                     | 侧滑面板       |
 | `DropdownMenu`               | 下拉菜单       |
+| `EmptyState`                 | 空状态         |
+| `EntityListPage`             | 实体列表页框架 |
+| `EntityTableSection`         | 实体表格区块   |
 | `FilterBar`                  | 筛选工具栏     |
 | `Input`                      | 输入框         |
 | `Label`                      | 标签           |
 | `MetricCard`                 | 指标卡         |
+| `MetricGrid`                 | 指标栅格       |
 | `NativeSelect`               | 原生选择器封装 |
+| `PageActions`                | 页面动作区     |
+| `PageHeader`                 | 页面标题区     |
+| `PageSection`                | 页面区块       |
+| `PageSizePicker`             | 分页大小选择   |
+| `PageStack`                  | 页面纵向栈     |
 | `Pagination`                 | 分页           |
 | `Popover`                    | 弹出层         |
 | `Select`                     | 选择器         |
 | `Separator`                  | 分隔线         |
+| `SectionCard`                | 区块卡片       |
+| `SectionNav`                 | 区块导航       |
+| `SettingsSplitPage`          | 设置分栏页     |
+| `Skeleton`                   | 加载占位       |
 | `StatusBadge`                | 状态徽章       |
 | `Switch`                     | 开关           |
 | `Tabs`                       | 标签页         |
+| `TableToolbar`               | 表格工具栏     |
 | `Textarea`                   | 多行输入       |
 | `Tooltip`                    | 提示           |
 | `ToastProvider` / `useToast` | 全局通知       |
-| `Drawer`                     | 侧滑面板       |
-| `Skeleton`                   | 加载占位       |
+| `ViewModeSwitch`             | 视图模式切换   |
 
 ### AI 组件（5 个）
 

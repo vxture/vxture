@@ -8,14 +8,14 @@
  */
 
 :root {
-  --vx-access-page-gap: var(--vx-platform-scale-0-45r);
-  --vx-access-page-header-gap: var(--vx-platform-scale-1r);
-  --vx-access-page-header-margin-bottom: var(--vx-platform-scale-1-55r);
-  --vx-access-page-header-copy-gap: var(--vx-platform-scale-0-62r);
-  --vx-access-header-actions-gap: var(--vx-platform-scale-0-75r);
-  --vx-access-header-actions-padding-top: var(--vx-platform-scale-0-05r);
-  --vx-access-actionbar-padding-bottom: var(--vx-platform-scale-0-05r);
-  --vx-access-header-primary-gap: var(--vx-platform-scale-0-55r);
-  --vx-access-header-selection-gap: var(--vx-platform-scale-0-45r);
-  --vx-access-workspace-gap: var(--vx-platform-scale-0-72r);
+  --vx-access-page-gap: 0.45rem;
+  --vx-access-page-header-gap: 1rem;
+  --vx-access-page-header-margin-bottom: 1.55rem;
+  --vx-access-page-header-copy-gap: 0.62rem;
+  --vx-access-header-actions-gap: 0.75rem;
+  --vx-access-header-actions-padding-top: 0.05rem;
+  --vx-access-actionbar-padding-bottom: 0.05rem;
+  --vx-access-header-primary-gap: 0.55rem;
+  --vx-access-header-selection-gap: 0.45rem;
+  --vx-access-workspace-gap: 0.72rem;
 }

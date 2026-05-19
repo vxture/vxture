@@ -8,10 +8,10 @@
  */
 
 :root {
-  --vx-access-empty-gap: var(--vx-platform-scale-0-65r);
-  --vx-access-empty-padding: var(--vx-platform-scale-1-2r) 0 var(--vx-platform-scale-0-2r);
-  --vx-access-metric-header-gap: var(--vx-platform-scale-0-75r);
-  --vx-access-metric-value-size: var(--vx-platform-scale-1-9r);
-  --vx-access-badge-border: var(--vx-platform-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  --vx-access-badge-positive-border: var(--vx-platform-scale-1p) solid var(--vx-color-success-border);
+  --vx-access-empty-gap: 0.65rem;
+  --vx-access-empty-padding: 1.2rem 0 0.2rem;
+  --vx-access-metric-header-gap: 0.75rem;
+  --vx-access-metric-value-size: 1.9rem;
+  --vx-access-badge-border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  --vx-access-badge-positive-border: 1px solid var(--vx-color-success-border);
 }

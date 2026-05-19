@@ -8,16 +8,16 @@
  */
 
 :root {
-  --vx-console-viewport-min-height: var(--vx-scale-100vh);
-  --vx-console-shell-viewport-min-height: var(--vx-scale-100vh);
-  --vx-console-shell-body-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-responsive-panel-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-assistant-available-height: calc(var(--vx-scale-100dvh) - var(--vx-shell-header-height));
-  --vx-console-shell-header-padding-fluid: var(--vx-scale-1-1vw);
-  --vx-console-shell-header-gap-fluid: var(--vx-scale-2-4vw);
-  --vx-console-shell-title-max-width-fluid: var(--vx-scale-42vw);
-  --vx-console-tenant-trigger-max-width-fluid: var(--vx-scale-32vw);
-  --vx-console-tenant-trigger-width-available: calc(var(--vx-scale-100vw) - var(--vx-console-size-15r));
-  --vx-console-tenant-panel-width-available: calc(var(--vx-scale-100vw) - var(--vx-console-size-2r));
-  --vx-console-tenant-panel-max-height-available: calc(var(--vx-scale-100vh) - var(--vx-shell-header-height) - var(--vx-console-size-1r));
+  --vx-console-viewport-min-height: 100vh;
+  --vx-console-shell-viewport-min-height: 100vh;
+  --vx-console-shell-body-available-height: calc(100dvh - var(--vx-shell-header-height));
+  --vx-console-responsive-panel-available-height: calc(100dvh - var(--vx-shell-header-height));
+  --vx-console-assistant-available-height: calc(100dvh - var(--vx-shell-header-height));
+  --vx-console-shell-header-padding-fluid: 1.1vw;
+  --vx-console-shell-header-gap-fluid: 2.4vw;
+  --vx-console-shell-title-max-width-fluid: 42vw;
+  --vx-console-tenant-trigger-max-width-fluid: 32vw;
+  --vx-console-tenant-trigger-width-available: calc(100vw - var(--vx-console-size-15r));
+  --vx-console-tenant-panel-width-available: calc(100vw - var(--vx-console-size-2r));
+  --vx-console-tenant-panel-max-height-available: calc(100vh - var(--vx-shell-header-height) - var(--vx-console-size-1r));
 }

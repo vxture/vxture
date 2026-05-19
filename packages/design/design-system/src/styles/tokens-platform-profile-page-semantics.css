@@ -8,28 +8,34 @@
  */
 
 :root {
-  --vx-account-profile-title-size: clamp(var(--vx-platform-scale-1-08r), var(--vx-platform-scale-1-28vw), var(--vx-platform-scale-1-32r));
-  --vx-profile-page-max-width: var(--vx-platform-scale-980p);
-  --vx-account-profile-page-gap: var(--vx-platform-scale-0-45r);
-  --vx-account-profile-page-header-gap: var(--vx-platform-scale-1r);
-  --vx-account-profile-page-header-margin-bottom: var(--vx-platform-scale-1-55r);
-  --vx-account-profile-page-header-copy-gap: var(--vx-platform-scale-0-62r);
-  --vx-profile-message-padding: var(--vx-platform-scale-0-62r) 0;
-  --vx-profile-message-border: var(--vx-platform-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
-  --vx-profile-message-size: var(--vx-platform-scale-0-84r);
-  --vx-profile-group-border: var(--vx-platform-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 9%, transparent);
-  --vx-profile-group-header-gap: var(--vx-platform-scale-1r);
-  --vx-profile-group-header-padding: var(--vx-platform-scale-1-1r) 0 var(--vx-platform-scale-0-8r);
-  --vx-profile-group-title-size: var(--vx-platform-scale-0-98r);
-  --vx-profile-group-copy-margin: var(--vx-platform-scale-0-32r) 0 0;
-  --vx-profile-group-copy-size: var(--vx-platform-scale-0-82r);
-  --vx-profile-row-columns: minmax(var(--vx-platform-scale-120p), 0.24fr) minmax(0, 1fr);
-  --vx-profile-row-gap: var(--vx-platform-scale-1-2r);
-  --vx-profile-row-min-height: var(--vx-platform-scale-2-85r);
-  --vx-profile-row-padding: var(--vx-platform-scale-0-72r) 0;
-  --vx-profile-row-border: var(--vx-platform-scale-1p) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
-  --vx-profile-row-label-size: var(--vx-platform-scale-0-82r);
-  --vx-profile-row-value-size: var(--vx-platform-scale-0-9r);
-  --vx-profile-avatar-size: var(--vx-platform-scale-3r);
-  --vx-profile-avatar-initial-size: var(--vx-platform-scale-0-9r);
+  --vx-profile-border-width: 1px;
+  --vx-profile-space-sm: 0.62rem;
+  --vx-profile-space-lg: 1rem;
+  --vx-profile-text-size-sm: 0.82rem;
+  --vx-profile-text-size-md: 0.9rem;
+
+  --vx-account-profile-title-size: clamp(1.08rem, 1.28vw, 1.32rem);
+  --vx-profile-page-max-width: 980px;
+  --vx-account-profile-page-gap: 0.45rem;
+  --vx-account-profile-page-header-gap: var(--vx-profile-space-lg);
+  --vx-account-profile-page-header-margin-bottom: 1.55rem;
+  --vx-account-profile-page-header-copy-gap: var(--vx-profile-space-sm);
+  --vx-profile-message-padding: var(--vx-profile-space-sm) 0;
+  --vx-profile-message-border: var(--vx-profile-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 8%, transparent);
+  --vx-profile-message-size: 0.84rem;
+  --vx-profile-group-border: var(--vx-profile-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 9%, transparent);
+  --vx-profile-group-header-gap: var(--vx-profile-space-lg);
+  --vx-profile-group-header-padding: 1.1rem 0 0.8rem;
+  --vx-profile-group-title-size: 0.98rem;
+  --vx-profile-group-copy-margin: 0.32rem 0 0;
+  --vx-profile-group-copy-size: var(--vx-profile-text-size-sm);
+  --vx-profile-row-columns: minmax(120px, 0.24fr) minmax(0, 1fr);
+  --vx-profile-row-gap: 1.2rem;
+  --vx-profile-row-min-height: 2.85rem;
+  --vx-profile-row-padding: 0.72rem 0;
+  --vx-profile-row-border: var(--vx-profile-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  --vx-profile-row-label-size: var(--vx-profile-text-size-sm);
+  --vx-profile-row-value-size: var(--vx-profile-text-size-md);
+  --vx-profile-avatar-size: 3rem;
+  --vx-profile-avatar-initial-size: var(--vx-profile-text-size-md);
 }
