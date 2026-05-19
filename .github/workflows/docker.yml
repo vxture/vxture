@@ -44,6 +44,7 @@ jobs:
             build-args: |
               PORTAL_PATH=portals/admin
               PACKAGE_FILTER=@vxture/admin
+              NEXT_PUBLIC_API_URL=https://api.vxture.com
 
           # ── 平台 BFF ─────────────────────────────────────────────────────
           - name: bff-gateway

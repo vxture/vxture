@@ -1,24 +1,60 @@
 /**
- * Monorepo root ESLint config (ESLint v9 flat config).
- *
- * Used by lint-staged when it runs `eslint --fix` from the repo root.
- * Per-package eslint.config.mjs files are used by each package's own
- * `pnpm lint` script (run with CWD = package directory).
- *
- * Rules here intentionally stay minimal: the authoritative rule sets live
- * in per-package configs. This file only exists so ESLint can find a config
- * when invoked from the root (e.g. via lint-staged).
+ * Root ESLint flat config (ESLint v9)
+ * Covers all TypeScript source files across the monorepo.
+ * Per-directory configs (bff/, services/, portals/, etc.) that existed under
+ * the old file-lookup model are superseded by this root config.
  */
+
+// @ts-check
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 
 export default [
   {
     ignores: [
-      '**/node_modules/**',
       '**/dist/**',
+      '**/node_modules/**',
       '**/.next/**',
       '**/build/**',
       '**/.turbo/**',
       '**/coverage/**',
+      '**/*.js',
+      '**/*.mjs',
+      '**/*.cjs',
     ],
+  },
+  {
+    files: [
+      'bff/**/src/**/*.ts',
+      'services/**/src/**/*.ts',
+      'agent-server/**/src/**/*.ts',
+      'packages/**/src/**/*.ts',
+      'business/**/src/**/*.ts',
+    ],
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 2023,
+        sourceType: 'module',
+      },
+      globals: {
+        process: 'readonly',
+        console: 'readonly',
+        Buffer: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+      },
+    },
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
+      'no-trailing-spaces': ['error', { ignoreComments: true }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'error',
+    },
   },
 ];

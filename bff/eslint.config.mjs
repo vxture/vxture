@@ -13,7 +13,7 @@ export default [
     ignores: ['dist/**', 'node_modules/**'],
   },
   {
-    files: ['src/**/*.ts'],
+    files: ['**/src/**/*.ts'],
     plugins: {
       '@typescript-eslint': tsPlugin,
     },
