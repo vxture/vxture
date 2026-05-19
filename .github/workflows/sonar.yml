@@ -28,9 +28,15 @@ jobs:
       - name: Build shared & core packages
         run: pnpm build:backend-deps
 
+      # @vitest/coverage-v8 必须与 vitest 同 major 版本
+      - name: Generate Prisma clients
+        run: |
+          pnpm --filter @vxture/service-ai-gateway db:generate
+          pnpm --filter @vxture/agent-server-vela prisma:generate
+
       - name: Install coverage provider
         working-directory: services/ai/gateway
-        run: pnpm add -D @vitest/coverage-v8 --ignore-workspace-root-check
+        run: pnpm add -D "@vitest/coverage-v8@^3.2.4" --ignore-workspace-root-check
 
       - name: Run tests with coverage
         run: pnpm --filter @vxture/service-ai-gateway test:coverage

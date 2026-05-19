@@ -38,6 +38,12 @@ jobs:
       - name: Build shared & core packages
         run: pnpm build:backend-deps
 
+      # @prisma/client 需要先 generate 才有类型导出
+      - name: Generate Prisma clients
+        run: |
+          pnpm --filter @vxture/service-ai-gateway db:generate
+          pnpm --filter @vxture/agent-server-vela prisma:generate
+
       - name: Type check (all packages)
         run: pnpm type-check:all
 
