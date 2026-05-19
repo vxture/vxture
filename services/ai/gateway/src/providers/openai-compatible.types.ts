@@ -3,7 +3,7 @@
  */
 export interface OpenAiToolCall {
   id?: string;
-  type?: 'function';
+  type?: "function";
   function?: {
     name?: string;
     arguments?: string;
@@ -43,7 +43,7 @@ export interface OpenAiCompatibleChatStreamChunk {
       tool_calls?: Array<{
         index?: number;
         id?: string;
-        type?: 'function';
+        type?: "function";
         function?: {
           name?: string;
           arguments?: string;

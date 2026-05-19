@@ -4,7 +4,7 @@
  * @description Global configuration constants for language and localization, shared across all layers. Contains supported locales, default locale, and complete language configurations.
  */
 
-import type { Locale, LocaleConfig } from '../types/locale.types';
+import type { Locale, LocaleConfig } from "../types/locale.types";
 
 // =============================================================================
 // 语言枚举定义
@@ -14,13 +14,13 @@ import type { Locale, LocaleConfig } from '../types/locale.types';
  * 全平台支持的语言列表
  * @description 这是全平台唯一的语言定义 - 使用完整的 BCP47 标签
  */
-export const SUPPORTED_LOCALES = ['zh-CN', 'en-US'] as const;
+export const SUPPORTED_LOCALES = ["zh-CN", "en-US"] as const;
 
 /**
  * 默认语言
  * @description 全平台统一的默认语言
  */
-export const DEFAULT_LOCALE: Locale = 'zh-CN';
+export const DEFAULT_LOCALE: Locale = "zh-CN";
 
 // =============================================================================
 // 语言配置常量
@@ -31,26 +31,26 @@ export const DEFAULT_LOCALE: Locale = 'zh-CN';
  * @description 提供语言的显示名称、本地名称、国旗等信息
  */
 export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
-  'zh-CN': {
-    locale: 'zh-CN',
-    displayName: '简体中文',
-    nativeName: '简体中文',
-    flag: '🇨🇳'
+  "zh-CN": {
+    locale: "zh-CN",
+    displayName: "简体中文",
+    nativeName: "简体中文",
+    flag: "🇨🇳",
   },
-  'en-US': {
-    locale: 'en-US',
-    displayName: 'English (US)',
-    nativeName: 'English (US)',
-    flag: '🇺🇸'
-  }
+  "en-US": {
+    locale: "en-US",
+    displayName: "English (US)",
+    nativeName: "English (US)",
+    flag: "🇺🇸",
+  },
 };
 
 /**
  * Locale 的默认货币，调用方未指定货币时使用
  */
 export const LOCALE_DEFAULT_CURRENCY: Record<Locale, string> = {
-  'zh-CN': 'CNY',
-  'en-US': 'USD',
+  "zh-CN": "CNY",
+  "en-US": "USD",
 } as const;
 
 // =============================================================================
@@ -63,13 +63,13 @@ export const LOCALE_DEFAULT_CURRENCY: Record<Locale, string> = {
  */
 export const LOCALE_CONSTANTS = {
   /** localStorage key */
-  STORAGE_KEY: 'locale-storage',
+  STORAGE_KEY: "locale-storage",
 
   /** Cookie key */
-  COOKIE_KEY: 'NEXT_LOCALE',
+  COOKIE_KEY: "NEXT_LOCALE",
 
   /** HTML lang attribute */
-  HTML_LANG_ATTRIBUTE: 'lang',
+  HTML_LANG_ATTRIBUTE: "lang",
 
   /** Meta tag selector for content-language */
   META_SELECTOR: 'meta[http-equiv="content-language"]',

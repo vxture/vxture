@@ -61,7 +61,7 @@ export const HERO_DATA: HeroData = {
   titleHighlightKey: "titleHighlight",
   descriptionKey: "description",
   cta: {
-    href: "/products"
+    href: "/products",
   },
   media: {
     type: "image",
@@ -69,9 +69,9 @@ export const HERO_DATA: HeroData = {
     url: "/images/herosection/banner-hero-poster-light-01.png",
     urlDark: "/images/herosection/banner-hero-poster-dark-01.png",
     posterImage: "/images/herosection/banner-hero-poster-light-01.png",
-    posterImageDark: "/images/herosection/banner-hero-poster-dark-01.png"
+    posterImageDark: "/images/herosection/banner-hero-poster-dark-01.png",
   },
   scrollIndicator: {
-    enabled: true
-  }
+    enabled: true,
+  },
 };

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { Link } from '@/lib/i18n/navigation';
-import { Button, Icon } from '@vxture/design-system';
-import { useTenant, type TenantType } from '@/features/tenant';
-import { TenantSwitcherItem } from './tenant-switcher-item';
+import { Link } from "@/lib/i18n/navigation";
+import { Button, Icon } from "@vxture/design-system";
+import { useTenant, type TenantType } from "@/features/tenant";
+import { TenantSwitcherItem } from "./tenant-switcher-item";
 
 export function TenantSwitcherPanel({
   onClose,
@@ -12,8 +12,10 @@ export function TenantSwitcherPanel({
   onClose: () => void;
   onCreate: (type: TenantType) => void;
 }) {
-  const { currentTenant, tenantList, hasPersonalTenant, switchTenantContext } = useTenant();
-  const canManage = currentTenant?.role === 'owner' || currentTenant?.role === 'admin';
+  const { currentTenant, tenantList, hasPersonalTenant, switchTenantContext } =
+    useTenant();
+  const canManage =
+    currentTenant?.role === "owner" || currentTenant?.role === "admin";
 
   async function handleSelect(tenantId: string) {
     await switchTenantContext(tenantId);
@@ -21,16 +23,29 @@ export function TenantSwitcherPanel({
   }
 
   return (
-    <div className="vx-tenant-switcher__panel" role="menu" aria-label="Switch workspace">
+    <div
+      className="vx-tenant-switcher__panel"
+      role="menu"
+      aria-label="Switch workspace"
+    >
       <div className="vx-tenant-switcher__panel-header">
         <strong>Switch workspace</strong>
-        <Button variant="ghost" size="icon" className="vx-tenant-switcher__close" aria-label="Close workspace switcher" onClick={onClose}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="vx-tenant-switcher__close"
+          aria-label="Close workspace switcher"
+          onClick={onClose}
+        >
           x
         </Button>
       </div>
 
       {currentTenant ? (
-        <section className="vx-tenant-switcher__current" aria-label="Current workspace">
+        <section
+          className="vx-tenant-switcher__current"
+          aria-label="Current workspace"
+        >
           <p>Current workspace</p>
           <TenantSwitcherItem tenant={currentTenant} compact />
           <span className="vx-tenant-switcher__status">
@@ -40,7 +55,10 @@ export function TenantSwitcherPanel({
         </section>
       ) : null}
 
-      <section className="vx-tenant-switcher__list" aria-label="Available workspaces">
+      <section
+        className="vx-tenant-switcher__list"
+        aria-label="Available workspaces"
+      >
         {tenantList.map((tenant) => {
           const itemProps = tenant.isCurrent
             ? {}
@@ -56,14 +74,25 @@ export function TenantSwitcherPanel({
         })}
       </section>
 
-      <section className="vx-tenant-switcher__actions" aria-label="Workspace actions">
-        <Button variant="ghost" size="sm" onClick={() => onCreate('organization')}>
+      <section
+        className="vx-tenant-switcher__actions"
+        aria-label="Workspace actions"
+      >
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => onCreate("organization")}
+        >
           <Icon name="plus" size="xs" fallback="plus" />
           Create workspace
         </Button>
 
         {!hasPersonalTenant ? (
-          <Button variant="ghost" size="sm" onClick={() => onCreate('personal')}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onCreate("personal")}
+          >
             <Icon name="user" size="xs" fallback="user" />
             Create personal workspace
           </Button>
@@ -76,7 +105,11 @@ export function TenantSwitcherPanel({
 
         <Link
           href="/tenant-settings"
-          className={canManage ? 'vx-tenant-switcher__action-link' : 'vx-tenant-switcher__action-link vx-tenant-switcher__action-link--muted'}
+          className={
+            canManage
+              ? "vx-tenant-switcher__action-link"
+              : "vx-tenant-switcher__action-link vx-tenant-switcher__action-link--muted"
+          }
           aria-disabled={!canManage}
           onClick={onClose}
         >

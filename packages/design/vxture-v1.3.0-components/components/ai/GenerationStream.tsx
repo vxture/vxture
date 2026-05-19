@@ -1,6 +1,6 @@
-'use client';
-import * as React from 'react';
-import { cn } from '../../utils/cn';
+"use client";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type GenerationStreamProps = {
   /** The text being streamed in (incrementally appended by parent) */
@@ -50,11 +50,17 @@ export function GenerationStream({
   const hasMeta = modelId || tokensProduced != null || tokensPerSecond != null;
 
   return (
-    <div className={cn('vx-gen-stream', streaming && 'vx-gen-stream--streaming', className)}>
+    <div
+      className={cn(
+        "vx-gen-stream",
+        streaming && "vx-gen-stream--streaming",
+        className,
+      )}
+    >
       <div className="vx-gen-stream__header">
         {streaming && <span className="vx-gen-stream__spark" aria-hidden />}
         <span className="vx-gen-stream__label">
-          {label ?? (streaming ? 'GENERATING · STREAMING' : 'COMPLETE')}
+          {label ?? (streaming ? "GENERATING · STREAMING" : "COMPLETE")}
         </span>
       </div>
       <div className="vx-gen-stream__body">
@@ -63,7 +69,9 @@ export function GenerationStream({
       </div>
       {hasMeta && (
         <div className="vx-gen-stream__meta">
-          {tokensProduced != null && <span>tokens: {tokensProduced.toLocaleString()}</span>}
+          {tokensProduced != null && (
+            <span>tokens: {tokensProduced.toLocaleString()}</span>
+          )}
           {tokensPerSecond != null && <span>{tokensPerSecond} tok/s</span>}
           {modelId && <span>{modelId}</span>}
         </div>

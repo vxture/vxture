@@ -13,7 +13,10 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-export interface FilterBarProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface FilterBarProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "title"
+> {
   readonly title?: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly filters?: React.ReactNode;

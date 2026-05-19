@@ -14,13 +14,16 @@ import {
   OnModuleInit,
   ServiceUnavailableException,
   UnauthorizedException,
-} from '@nestjs/common';
-import Redis from 'ioredis';
-import { JwtAuthScope, JwtUserType, type JwtAccessPayload } from '../types';
+} from "@nestjs/common";
+import Redis from "ioredis";
+import { JwtAuthScope, JwtUserType, type JwtAccessPayload } from "../types";
 
-export type AccessRevocationSurface = 'tenant' | 'operator';
+export type AccessRevocationSurface = "tenant" | "operator";
 
-export function buildAccessTokenBlacklistKey(prefix: string, jti: string): string {
+export function buildAccessTokenBlacklistKey(
+  prefix: string,
+  jti: string,
+): string {
   return `${prefix}blacklist:${jti}`;
 }
 
@@ -33,36 +36,47 @@ export function buildSubjectRevokedBeforeKey(
 }
 
 export function resolveAccessRevocationSurface(
-  payload: Pick<JwtAccessPayload, 'authScope' | 'userType'>,
+  payload: Pick<JwtAccessPayload, "authScope" | "userType">,
 ): AccessRevocationSurface {
-  if (payload.userType === JwtUserType.OPERATOR || payload.authScope === JwtAuthScope.PLATFORM_ADMIN) {
-    return 'operator';
+  if (
+    payload.userType === JwtUserType.OPERATOR ||
+    payload.authScope === JwtAuthScope.PLATFORM_ADMIN
+  ) {
+    return "operator";
   }
-  return 'tenant';
+  return "tenant";
 }
 
 @Injectable()
-export class AccessTokenRevocationService implements OnModuleInit, OnModuleDestroy {
+export class AccessTokenRevocationService
+  implements OnModuleInit, OnModuleDestroy
+{
   private readonly logger = new Logger(AccessTokenRevocationService.name);
   private client: Redis | null = null;
-  private keyPrefix = 'vx:';
+  private keyPrefix = "vx:";
 
   async onModuleInit(): Promise<void> {
-    const { REDIS_URL, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_KEY_PREFIX } =
-      resolveRedisRuntimeConfig();
+    const {
+      REDIS_URL,
+      REDIS_HOST,
+      REDIS_PORT,
+      REDIS_PASSWORD,
+      REDIS_DB,
+      REDIS_KEY_PREFIX,
+    } = resolveRedisRuntimeConfig();
 
-    this.keyPrefix = REDIS_KEY_PREFIX ?? 'vx:';
+    this.keyPrefix = REDIS_KEY_PREFIX ?? "vx:";
     this.client = REDIS_URL
       ? new Redis(REDIS_URL, { lazyConnect: true })
       : new Redis({
-          host: REDIS_HOST ?? 'localhost',
+          host: REDIS_HOST ?? "localhost",
           port: REDIS_PORT ?? 6379,
           password: REDIS_PASSWORD,
           db: REDIS_DB,
           lazyConnect: true,
         });
 
-    this.client.on('error', (err: Error) => {
+    this.client.on("error", (err: Error) => {
       this.logger.warn(`Redis connection error: ${err.message}`);
     });
 
@@ -70,7 +84,9 @@ export class AccessTokenRevocationService implements OnModuleInit, OnModuleDestr
       await this.client.connect();
     } catch (err) {
       this.logger.error(`Redis initial connection failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Token revocation store unavailable');
+      throw new ServiceUnavailableException(
+        "Token revocation store unavailable",
+      );
     }
   }
 
@@ -92,7 +108,7 @@ export class AccessTokenRevocationService implements OnModuleInit, OnModuleDestr
       return result === 1;
     } catch (err) {
       this.logger.error(`Access token revocation check failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Token revocation check failed');
+      throw new ServiceUnavailableException("Token revocation check failed");
     }
   }
 
@@ -110,7 +126,7 @@ export class AccessTokenRevocationService implements OnModuleInit, OnModuleDestr
       return Number.isFinite(timestamp) ? timestamp : null;
     } catch (err) {
       this.logger.error(`Subject revocation check failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Token revocation check failed');
+      throw new ServiceUnavailableException("Token revocation check failed");
     }
   }
 
@@ -120,23 +136,31 @@ export class AccessTokenRevocationService implements OnModuleInit, OnModuleDestr
   ): Promise<void> {
     const jti = payload.jti?.trim();
     if (!jti) {
-      throw new UnauthorizedException('Access token missing jti');
+      throw new UnauthorizedException("Access token missing jti");
     }
 
     if (await this.isAccessTokenRevoked(jti)) {
-      throw new UnauthorizedException('Access token has been revoked');
+      throw new UnauthorizedException("Access token has been revoked");
     }
 
     const surface = expectedSurface ?? resolveAccessRevocationSurface(payload);
-    const revokedBefore = await this.getSubjectRevokedBefore(surface, payload.sub);
-    if (revokedBefore !== null && (!payload.iat || payload.iat <= revokedBefore)) {
-      throw new UnauthorizedException('Access token has been revoked');
+    const revokedBefore = await this.getSubjectRevokedBefore(
+      surface,
+      payload.sub,
+    );
+    if (
+      revokedBefore !== null &&
+      (!payload.iat || payload.iat <= revokedBefore)
+    ) {
+      throw new UnauthorizedException("Access token has been revoked");
     }
   }
 
   private requireReadyClient(): Redis {
-    if (!this.client || this.client.status !== 'ready') {
-      throw new ServiceUnavailableException('Token revocation store unavailable');
+    if (!this.client || this.client.status !== "ready") {
+      throw new ServiceUnavailableException(
+        "Token revocation store unavailable",
+      );
     }
     return this.client;
   }
@@ -154,11 +178,11 @@ function resolveRedisRuntimeConfig(): {
   const password = process.env.REDIS_PASSWORD?.trim();
   return {
     ...(url ? { REDIS_URL: url } : {}),
-    REDIS_HOST: process.env.REDIS_HOST?.trim() || 'localhost',
+    REDIS_HOST: process.env.REDIS_HOST?.trim() || "localhost",
     REDIS_PORT: parseInteger(process.env.REDIS_PORT, 6379),
     ...(password ? { REDIS_PASSWORD: password } : {}),
     REDIS_DB: parseInteger(process.env.REDIS_DB, 0),
-    REDIS_KEY_PREFIX: process.env.REDIS_KEY_PREFIX?.trim() || 'vx:',
+    REDIS_KEY_PREFIX: process.env.REDIS_KEY_PREFIX?.trim() || "vx:",
   };
 }
 

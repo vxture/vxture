@@ -6,4 +6,4 @@
  * @date 2026-05-05
  */
 
-export const REDIS_CLIENT = Symbol('SMS_REDIS_CLIENT');
+export const REDIS_CLIENT = Symbol("SMS_REDIS_CLIENT");

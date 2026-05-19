@@ -1,11 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { PlatformAuthService } from '../auth/auth.service';
+import { Inject, Injectable } from "@nestjs/common";
+import { PlatformAuthService } from "../auth/auth.service";
 import type {
   ConsoleTenantPermission,
   ConsoleTenantRole,
   ConsoleUserProfile,
   MemberRecord,
-} from '../types/console.types';
+} from "../types/console.types";
 
 @Injectable()
 export class SessionAggregator {
@@ -22,7 +22,9 @@ export class SessionAggregator {
     return this.platformAuthService.getCapabilities(accountId);
   }
 
-  async getCurrentUserProfile(accountId: string): Promise<ConsoleUserProfile | null> {
+  async getCurrentUserProfile(
+    accountId: string,
+  ): Promise<ConsoleUserProfile | null> {
     const user = await this.platformAuthService.getCurrentUser(accountId);
     if (!user) {
       return null;
@@ -37,8 +39,8 @@ export class SessionAggregator {
       bio: null,
       email: user.email,
       phone: user.phone ?? null,
-      timezone: 'Asia/Shanghai',
-      language: 'zh-CN',
+      timezone: "Asia/Shanghai",
+      language: "zh-CN",
       profileUpdatedAt: null,
     };
   }

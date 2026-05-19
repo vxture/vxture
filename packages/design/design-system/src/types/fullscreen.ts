@@ -34,9 +34,17 @@ export interface FullscreenState {
 }
 
 export interface FullscreenContextValue extends FullscreenState {
-  enterFullscreen: (id: string, element: HTMLElement, options?: FullscreenOptions) => void;
+  enterFullscreen: (
+    id: string,
+    element: HTMLElement,
+    options?: FullscreenOptions,
+  ) => void;
   exitFullscreen: () => void;
-  toggleFullscreen: (id: string, element: HTMLElement, options?: FullscreenOptions) => void;
+  toggleFullscreen: (
+    id: string,
+    element: HTMLElement,
+    options?: FullscreenOptions,
+  ) => void;
 }
 
 export interface FullscreenProviderProps {

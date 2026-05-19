@@ -6,7 +6,12 @@
  */
 
 // Types
-export { OAuthProviderType, PlatformRole, JwtAuthScope, JwtUserType } from './types';
+export {
+  OAuthProviderType,
+  PlatformRole,
+  JwtAuthScope,
+  JwtUserType,
+} from "./types";
 export type {
   JwtAccessPayload,
   JwtRefreshPayload,
@@ -16,16 +21,22 @@ export type {
   OAuthProvider,
   AuthTokenPair,
   PermissionCheckOptions,
-} from './types';
+} from "./types";
 
 // JWT Client
-export { VxJwtClient } from './client';
+export { VxJwtClient } from "./client";
 
 // Guards
-export { JwtAuthGuard, RolesGuard, InternalAuthGuard } from './guards';
+export { JwtAuthGuard, RolesGuard, InternalAuthGuard } from "./guards";
 
 // Decorators
-export { Public, IS_PUBLIC_KEY, Roles, ROLES_KEY, CurrentUser } from './decorators';
+export {
+  Public,
+  IS_PUBLIC_KEY,
+  Roles,
+  ROLES_KEY,
+  CurrentUser,
+} from "./decorators";
 
 // Utils
 export {
@@ -42,7 +53,7 @@ export {
   generateJti,
   resolveInternalAuthToken,
   assertInternalAuth,
-} from './utils';
+} from "./utils";
 
 // Session
 export {
@@ -50,17 +61,14 @@ export {
   buildAccessTokenBlacklistKey,
   buildSubjectRevokedBeforeKey,
   resolveAccessRevocationSurface,
-} from './session';
-export type { AccessRevocationSurface } from './session';
+} from "./session";
+export type { AccessRevocationSurface } from "./session";
 
 // Human verification
-export {
-  TurnstileVerifier,
-  TurnstileVerificationError,
-} from './turnstile';
+export { TurnstileVerifier, TurnstileVerificationError } from "./turnstile";
 export type {
   TurnstileSurface,
   TurnstileSiteverifyResponse,
   TurnstileVerifierOptions,
   TurnstileVerifyInput,
-} from './turnstile';
+} from "./turnstile";

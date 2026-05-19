@@ -1,8 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { ActionMenu, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect, Pagination } from '@vxture/design-system';
-import type { IconName } from '@vxture/design-system';
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  DialogForm,
+  Icon,
+  Input,
+  Label,
+  NativeSelect,
+  Pagination,
+} from "@vxture/design-system";
+import type { IconName } from "@vxture/design-system";
 import {
   createAiModelGrant,
   fetchAiModelGrants,
@@ -11,61 +22,74 @@ import {
   fetchProductModelPolicies,
   setAiModelGrantActive,
   updateAiModelGrant,
-} from '@/api/admin-bff';
+} from "@/api/admin-bff";
 import type {
   AiModelGrantRecord,
   AiModelRecord,
   ProductAgentRecord,
   ProductModelPolicyRecord,
-} from '@/entities/console';
-import { useConsoleTranslations } from '@/lib/console-intl';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { ViewModeSwitch } from '@/modules/shared/ViewModeSwitch';
+} from "@/entities/console";
+import { useConsoleTranslations } from "@/lib/console-intl";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import { ViewModeSwitch } from "@/modules/shared/ViewModeSwitch";
 
-type ViewMode = 'list' | 'cards';
-type PolicyFilter = 'all' | 'platform' | 'product' | 'defaults' | 'undefined' | 'usable';
-type DialogMode = 'createGrant' | 'editGrant' | null;
-type PolicyStatus = 'usable' | 'zeroQuota' | 'inactive' | 'undefined';
-type Feedback = { tone: 'success' | 'error'; key: string; values?: Record<string, number | string> } | null;
+type ViewMode = "list" | "cards";
+type PolicyFilter =
+  | "all"
+  | "platform"
+  | "product"
+  | "defaults"
+  | "undefined"
+  | "usable";
+type DialogMode = "createGrant" | "editGrant" | null;
+type PolicyStatus = "usable" | "zeroQuota" | "inactive" | "undefined";
+type Feedback = {
+  tone: "success" | "error";
+  key: string;
+  values?: Record<string, number | string>;
+} | null;
 
 const POLICY_PAGE_SIZE = 12;
 const OVERRIDE_PREVIEW_SIZE = 8;
 
 function formatNumber(value: number) {
-  return new Intl.NumberFormat('zh-CN').format(value);
+  return new Intl.NumberFormat("zh-CN").format(value);
 }
 
-function defaultGrantForm(modelId = '') {
+function defaultGrantForm(modelId = "") {
   return {
     modelId,
-    tenantId: '',
-    agentId: '',
-    priority: '100',
-    reason: '',
-    expiresAt: '',
+    tenantId: "",
+    agentId: "",
+    priority: "100",
+    reason: "",
+    expiresAt: "",
     isActive: true,
   };
 }
 
 function policyStatus(policy: ProductModelPolicyRecord): PolicyStatus {
   if (!policy.isDefined) {
-    return 'undefined';
+    return "undefined";
   }
 
   if (!policy.isActive) {
-    return 'inactive';
+    return "inactive";
   }
 
   if (!policy.isUnlimited && policy.quotaTokens <= 0) {
-    return 'zeroQuota';
+    return "zeroQuota";
   }
 
-  return 'usable';
+  return "usable";
 }
 
-function policySearchText(policy: ProductModelPolicyRecord, model: AiModelRecord | undefined) {
+function policySearchText(
+  policy: ProductModelPolicyRecord,
+  model: AiModelRecord | undefined,
+) {
   return [
     policy.scopeCode,
     policy.scopeName,
@@ -83,16 +107,19 @@ function policySearchText(policy: ProductModelPolicyRecord, model: AiModelRecord
     model?.provider,
   ]
     .filter(Boolean)
-    .join(' ')
+    .join(" ")
     .toLowerCase();
 }
 
 function isDefaultPolicy(policy: ProductModelPolicyRecord) {
-  return policy.scopeType === 'new_product_default' || policy.scopeType === 'tenant_default';
+  return (
+    policy.scopeType === "new_product_default" ||
+    policy.scopeType === "tenant_default"
+  );
 }
 
 function policySubjectLabel(policy: ProductModelPolicyRecord) {
-  return policy.subjectType === 'platform' ? '平台主体' : '租户主体';
+  return policy.subjectType === "platform" ? "平台主体" : "租户主体";
 }
 
 function grantSearchText(
@@ -111,24 +138,35 @@ function grantSearchText(
     model?.provider,
   ]
     .filter(Boolean)
-    .join(' ')
+    .join(" ")
     .toLowerCase();
 }
 
 function toDateInputValue(value: string | null) {
-  return value ? value.slice(0, 10) : '';
+  return value ? value.slice(0, 10) : "";
 }
 
-function formatTokens(value: number, unlimited: boolean, unlimitedLabel: string) {
+function formatTokens(
+  value: number,
+  unlimited: boolean,
+  unlimitedLabel: string,
+) {
   if (unlimited) {
     return unlimitedLabel;
   }
 
-  return new Intl.NumberFormat('zh-CN').format(value);
+  return new Intl.NumberFormat("zh-CN").format(value);
 }
 
 function isInteractiveTarget(target: EventTarget | null) {
-  return target instanceof HTMLElement && Boolean(target.closest('button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]'));
+  return (
+    target instanceof HTMLElement &&
+    Boolean(
+      target.closest(
+        'button, input, select, textarea, a, [role="button"], [role="menu"], [role="menuitem"]',
+      ),
+    )
+  );
 }
 
 function ModelStrategySummaryItem({
@@ -136,13 +174,13 @@ function ModelStrategySummaryItem({
   label,
   value,
   tags,
-  tone = 'blue',
+  tone = "blue",
 }: {
   icon: IconName;
   label: string;
   value: string;
   tags?: string[];
-  tone?: 'blue' | 'green' | 'amber' | 'rose';
+  tone?: "blue" | "green" | "amber" | "rose";
 }) {
   return (
     <article className={`vx-tenant-summary__item vx-tenant-tone--${tone}`}>
@@ -151,7 +189,9 @@ function ModelStrategySummaryItem({
         <span>{label}</span>
         <p>
           <strong>{value}</strong>
-          {tags?.map((tag) => <em key={tag}>{tag}</em>)}
+          {tags?.map((tag) => (
+            <em key={tag}>{tag}</em>
+          ))}
         </p>
       </div>
     </article>
@@ -159,7 +199,7 @@ function ModelStrategySummaryItem({
 }
 
 export function ModelGrantsPage() {
-  const t = useConsoleTranslations('modelGrantsPage');
+  const t = useConsoleTranslations("modelGrantsPage");
   const [models, setModels] = useState<AiModelRecord[]>([]);
   const [agents, setAgents] = useState<ProductAgentRecord[]>([]);
   const [policies, setPolicies] = useState<ProductModelPolicyRecord[]>([]);
@@ -167,12 +207,16 @@ export function ModelGrantsPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<Feedback>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
-  const [query, setQuery] = useState('');
-  const [filter, setFilter] = useState<PolicyFilter>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<PolicyFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedPolicyIds, setSelectedPolicyIds] = useState<Set<string>>(() => new Set());
-  const [selectedGrantIds, setSelectedGrantIds] = useState<Set<string>>(() => new Set());
+  const [selectedPolicyIds, setSelectedPolicyIds] = useState<Set<string>>(
+    () => new Set(),
+  );
+  const [selectedGrantIds, setSelectedGrantIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [selectedGrantId, setSelectedGrantId] = useState<string | null>(null);
   const [dialogMode, setDialogMode] = useState<DialogMode>(null);
   const [grantForm, setGrantForm] = useState(defaultGrantForm);
@@ -199,7 +243,7 @@ export function ModelGrantsPage() {
       })
       .catch(() => {
         if (active) {
-          setFeedback({ tone: 'error', key: 'feedback.loadError' });
+          setFeedback({ tone: "error", key: "feedback.loadError" });
         }
       })
       .finally(() => {
@@ -242,15 +286,19 @@ export function ModelGrantsPage() {
 
     return policies.filter((policy) => {
       const status = policyStatus(policy);
-      const model = policy.modelCode ? modelByCode.get(policy.modelCode) : undefined;
-      const matchesQuery = !normalizedQuery || policySearchText(policy, model).includes(normalizedQuery);
+      const model = policy.modelCode
+        ? modelByCode.get(policy.modelCode)
+        : undefined;
+      const matchesQuery =
+        !normalizedQuery ||
+        policySearchText(policy, model).includes(normalizedQuery);
       const matchesFilter =
-        filter === 'all' ||
-        (filter === 'product' && policy.scopeType === 'product') ||
-        (filter === 'platform' && policy.subjectType === 'platform') ||
-        (filter === 'defaults' && isDefaultPolicy(policy)) ||
-        (filter === 'undefined' && status === 'undefined') ||
-        (filter === 'usable' && status === 'usable');
+        filter === "all" ||
+        (filter === "product" && policy.scopeType === "product") ||
+        (filter === "platform" && policy.subjectType === "platform") ||
+        (filter === "defaults" && isDefaultPolicy(policy)) ||
+        (filter === "undefined" && status === "undefined") ||
+        (filter === "usable" && status === "usable");
 
       return matchesQuery && matchesFilter;
     });
@@ -262,35 +310,66 @@ export function ModelGrantsPage() {
     return grants.filter((grant) => {
       const model = modelById.get(grant.modelId);
       const agent = grant.agentId ? agentById.get(grant.agentId) : undefined;
-      return !normalizedQuery || grantSearchText(grant, model, agent).includes(normalizedQuery);
+      return (
+        !normalizedQuery ||
+        grantSearchText(grant, model, agent).includes(normalizedQuery)
+      );
     });
   }, [agentById, grants, modelById, query]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredPolicies.length / POLICY_PAGE_SIZE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredPolicies.length / POLICY_PAGE_SIZE),
+  );
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const pageStart = (safeCurrentPage - 1) * POLICY_PAGE_SIZE;
-  const pagedPolicies = filteredPolicies.slice(pageStart, pageStart + POLICY_PAGE_SIZE);
-  const visibleOverrideGrants = filteredOverrides.slice(0, OVERRIDE_PREVIEW_SIZE);
+  const pagedPolicies = filteredPolicies.slice(
+    pageStart,
+    pageStart + POLICY_PAGE_SIZE,
+  );
+  const visibleOverrideGrants = filteredOverrides.slice(
+    0,
+    OVERRIDE_PREVIEW_SIZE,
+  );
   const pagedPolicyIds = pagedPolicies.map((policy) => policy.id);
   const visibleGrantIds = visibleOverrideGrants.map((grant) => grant.id);
-  const selectedPoliciesOnPage = pagedPolicyIds.filter((id) => selectedPolicyIds.has(id)).length;
-  const selectedGrantsOnPage = visibleGrantIds.filter((id) => selectedGrantIds.has(id)).length;
-  const isPolicyPageSelected = pagedPolicyIds.length > 0 && selectedPoliciesOnPage === pagedPolicyIds.length;
-  const isPolicyPagePartiallySelected = selectedPoliciesOnPage > 0 && selectedPoliciesOnPage < pagedPolicyIds.length;
-  const isGrantPageSelected = visibleGrantIds.length > 0 && selectedGrantsOnPage === visibleGrantIds.length;
-  const isGrantPagePartiallySelected = selectedGrantsOnPage > 0 && selectedGrantsOnPage < visibleGrantIds.length;
-  const selectedGrant = selectedGrantId ? grantById.get(selectedGrantId) ?? null : null;
-  const usablePolicies = policies.filter((policy) => policyStatus(policy) === 'usable').length;
-  const platformPolicyCount = policies.filter((policy) => policy.subjectType === 'platform').length;
-  const undefinedPolicies = policies.filter((policy) => policyStatus(policy) === 'undefined').length;
+  const selectedPoliciesOnPage = pagedPolicyIds.filter((id) =>
+    selectedPolicyIds.has(id),
+  ).length;
+  const selectedGrantsOnPage = visibleGrantIds.filter((id) =>
+    selectedGrantIds.has(id),
+  ).length;
+  const isPolicyPageSelected =
+    pagedPolicyIds.length > 0 &&
+    selectedPoliciesOnPage === pagedPolicyIds.length;
+  const isPolicyPagePartiallySelected =
+    selectedPoliciesOnPage > 0 &&
+    selectedPoliciesOnPage < pagedPolicyIds.length;
+  const isGrantPageSelected =
+    visibleGrantIds.length > 0 &&
+    selectedGrantsOnPage === visibleGrantIds.length;
+  const isGrantPagePartiallySelected =
+    selectedGrantsOnPage > 0 && selectedGrantsOnPage < visibleGrantIds.length;
+  const selectedGrant = selectedGrantId
+    ? (grantById.get(selectedGrantId) ?? null)
+    : null;
+  const usablePolicies = policies.filter(
+    (policy) => policyStatus(policy) === "usable",
+  ).length;
+  const platformPolicyCount = policies.filter(
+    (policy) => policy.subjectType === "platform",
+  ).length;
+  const undefinedPolicies = policies.filter(
+    (policy) => policyStatus(policy) === "undefined",
+  ).length;
 
   const filters = [
-    { value: 'all', label: t('filters.all') },
-    { value: 'platform', label: '平台主体' },
-    { value: 'product', label: t('filters.product') },
-    { value: 'defaults', label: t('filters.defaults') },
-    { value: 'undefined', label: t('filters.undefined') },
-    { value: 'usable', label: t('filters.usable') },
+    { value: "all", label: t("filters.all") },
+    { value: "platform", label: "平台主体" },
+    { value: "product", label: t("filters.product") },
+    { value: "defaults", label: t("filters.defaults") },
+    { value: "undefined", label: t("filters.undefined") },
+    { value: "usable", label: t("filters.usable") },
   ] as const;
 
   function resetFeedback() {
@@ -299,7 +378,7 @@ export function ModelGrantsPage() {
 
   function agentLabel(agentId: string | null) {
     if (!agentId) {
-      return t('table.allAgents');
+      return t("table.allAgents");
     }
 
     const agent = agentById.get(agentId);
@@ -317,9 +396,9 @@ export function ModelGrantsPage() {
   }
 
   function openCreateGrantDialog() {
-    setGrantForm(defaultGrantForm(models[0]?.id ?? ''));
+    setGrantForm(defaultGrantForm(models[0]?.id ?? ""));
     resetFeedback();
-    setDialogMode('createGrant');
+    setDialogMode("createGrant");
   }
 
   function openEditGrantDialog(grant: AiModelGrantRecord) {
@@ -327,14 +406,14 @@ export function ModelGrantsPage() {
     setGrantForm({
       modelId: grant.modelId,
       tenantId: grant.tenantId,
-      agentId: grant.agentId ?? '',
+      agentId: grant.agentId ?? "",
       priority: String(grant.priority),
-      reason: grant.reason ?? '',
+      reason: grant.reason ?? "",
       expiresAt: toDateInputValue(grant.expiresAt),
       isActive: grant.isActive,
     });
     resetFeedback();
-    setDialogMode('editGrant');
+    setDialogMode("editGrant");
   }
 
   async function submitGrant(event: FormEvent<HTMLFormElement>) {
@@ -351,23 +430,23 @@ export function ModelGrantsPage() {
         isActive: grantForm.isActive,
       };
 
-      if (dialogMode === 'createGrant') {
+      if (dialogMode === "createGrant") {
         const created = await createAiModelGrant({
           ...payload,
           modelId: grantForm.modelId,
           tenantId: grantForm.tenantId,
         });
         await reload(created.id);
-        setFeedback({ tone: 'success', key: 'feedback.grantCreated' });
-      } else if (dialogMode === 'editGrant' && selectedGrant) {
+        setFeedback({ tone: "success", key: "feedback.grantCreated" });
+      } else if (dialogMode === "editGrant" && selectedGrant) {
         const updated = await updateAiModelGrant(selectedGrant.id, payload);
         await reload(updated.id);
-        setFeedback({ tone: 'success', key: 'feedback.grantUpdated' });
+        setFeedback({ tone: "success", key: "feedback.grantUpdated" });
       }
 
       setDialogMode(null);
     } catch {
-      setFeedback({ tone: 'error', key: 'feedback.grantSaveError' });
+      setFeedback({ tone: "error", key: "feedback.grantSaveError" });
     } finally {
       setSubmitting(false);
     }
@@ -380,9 +459,14 @@ export function ModelGrantsPage() {
     try {
       const updated = await setAiModelGrantActive(grant.id, !grant.isActive);
       await reload(updated.id);
-      setFeedback({ tone: 'success', key: updated.isActive ? 'feedback.grantEnabled' : 'feedback.grantDisabled' });
+      setFeedback({
+        tone: "success",
+        key: updated.isActive
+          ? "feedback.grantEnabled"
+          : "feedback.grantDisabled",
+      });
     } catch {
-      setFeedback({ tone: 'error', key: 'feedback.grantStateError' });
+      setFeedback({ tone: "error", key: "feedback.grantStateError" });
     } finally {
       setSubmitting(false);
     }
@@ -444,112 +528,170 @@ export function ModelGrantsPage() {
     <div className="vx-page-stack vx-tenant-management-page vx-model-strategy-page">
       <PageHeader
         icon="shield-check"
-        eyebrow={t('header.eyebrow')}
-        title={t('header.title')}
-        description={t('header.description')}
-        secondary={<Badge>{t('header.badge')}</Badge>}
+        eyebrow={t("header.eyebrow")}
+        title={t("header.title")}
+        description={t("header.description")}
+        secondary={<Badge>{t("header.badge")}</Badge>}
       />
 
       {feedback ? (
-        <p className={feedback.tone === 'success' ? 'vx-profile-message' : 'vx-profile-error'}>
+        <p
+          className={
+            feedback.tone === "success"
+              ? "vx-profile-message"
+              : "vx-profile-error"
+          }
+        >
           {t(feedback.key, feedback.values)}
         </p>
       ) : null}
 
-      <section className="vx-tenant-summary vx-model-strategy-summary" aria-label={t('summary.ariaLabel')}>
+      <section
+        className="vx-tenant-summary vx-model-strategy-summary"
+        aria-label={t("summary.ariaLabel")}
+      >
         <ModelStrategySummaryItem
           icon="shield-check"
-          label={t('summary.policies')}
+          label={t("summary.policies")}
           value={formatNumber(policies.length)}
-          tags={[`${t('filters.usable')} ${formatNumber(usablePolicies)}`]}
+          tags={[`${t("filters.usable")} ${formatNumber(usablePolicies)}`]}
         />
         <ModelStrategySummaryItem
           icon="play"
-          label={t('overrides.title')}
+          label={t("overrides.title")}
           value={formatNumber(grants.length)}
-          tags={[`${t('status.active')} ${formatNumber(grants.filter((grant) => grant.isActive).length)}`, `平台主体 ${formatNumber(platformPolicyCount)}`]}
+          tags={[
+            `${t("status.active")} ${formatNumber(grants.filter((grant) => grant.isActive).length)}`,
+            `平台主体 ${formatNumber(platformPolicyCount)}`,
+          ]}
           tone="green"
         />
         <ModelStrategySummaryItem
           icon="clock-counter-clockwise"
-          label={t('summary.undefinedPolicies')}
+          label={t("summary.undefinedPolicies")}
           value={formatNumber(undefinedPolicies)}
-          tags={[t('filters.undefined')]}
-          tone={undefinedPolicies ? 'amber' : 'green'}
+          tags={[t("filters.undefined")]}
+          tone={undefinedPolicies ? "amber" : "green"}
         />
       </section>
 
       <div className="vx-tenant-list-shell">
-        <section className="vx-tenant-toolbar" aria-label={t('policyTable.filterAriaLabel')}>
-          <ViewModeSwitch value={viewMode} onChange={setViewMode} ariaLabel="模型授权展示方式" />
-          <span className="vx-tenant-view-count">{formatNumber(filteredPolicies.length)}</span>
+        <section
+          className="vx-tenant-toolbar"
+          aria-label={t("policyTable.filterAriaLabel")}
+        >
+          <ViewModeSwitch
+            value={viewMode}
+            onChange={setViewMode}
+            ariaLabel="模型授权展示方式"
+          />
+          <span className="vx-tenant-view-count">
+            {formatNumber(filteredPolicies.length)}
+          </span>
           <span className="vx-tenant-toolbar__spacer" aria-hidden="true" />
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={t('policyTable.searchPlaceholder')}
+            placeholder={t("policyTable.searchPlaceholder")}
             className="vx-tenant-search"
-            aria-label={t('policyTable.searchAriaLabel')}
+            aria-label={t("policyTable.searchAriaLabel")}
           />
           <Button
             variant="outline"
             onClick={() => {
-              setQuery('');
-              setFilter('all');
+              setQuery("");
+              setFilter("all");
             }}
           >
             重置
           </Button>
           <div className="vx-tenant-filters">
-            <NativeSelect className="vx-tenant-select vx-model-strategy-filter" value={filter} onChange={(event) => setFilter(event.target.value as PolicyFilter)} aria-label={t('policyTable.filterAriaLabel')}>
+            <NativeSelect
+              className="vx-tenant-select vx-model-strategy-filter"
+              value={filter}
+              onChange={(event) =>
+                setFilter(event.target.value as PolicyFilter)
+              }
+              aria-label={t("policyTable.filterAriaLabel")}
+            >
               {filters.map((item) => (
-                <option key={item.value} value={item.value}>{item.label}</option>
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
               ))}
             </NativeSelect>
           </div>
-          <ActionButton icon="plus" onClick={openCreateGrantDialog}>{t('actions.addGrant')}</ActionButton>
+          <ActionButton icon="plus" onClick={openCreateGrantDialog}>
+            {t("actions.addGrant")}
+          </ActionButton>
         </section>
 
-        <section className="vx-tenant-directory" aria-label={t('policyTable.toolbarTitle', { count: filteredPolicies.length })}>
-          {pagedPolicies.length && viewMode === 'list' ? (
-            <div className="vx-tenant-directory-list vx-model-strategy-directory-list" role="region" aria-label={t('policyTable.toolbarTitle', { count: filteredPolicies.length })}>
+        <section
+          className="vx-tenant-directory"
+          aria-label={t("policyTable.toolbarTitle", {
+            count: filteredPolicies.length,
+          })}
+        >
+          {pagedPolicies.length && viewMode === "list" ? (
+            <div
+              className="vx-tenant-directory-list vx-model-strategy-directory-list"
+              role="region"
+              aria-label={t("policyTable.toolbarTitle", {
+                count: filteredPolicies.length,
+              })}
+            >
               <div className="vx-tenant-directory-list__header">
                 <span>
                   <Checkbox
                     className="vx-model-select-checkbox"
-                    checked={isPolicyPagePartiallySelected ? 'indeterminate' : isPolicyPageSelected}
-                    onCheckedChange={(checked) => togglePolicyPageSelection(checked === true)}
+                    checked={
+                      isPolicyPagePartiallySelected
+                        ? "indeterminate"
+                        : isPolicyPageSelected
+                    }
+                    onCheckedChange={(checked) =>
+                      togglePolicyPageSelection(checked === true)
+                    }
                     aria-label="选择当前页策略"
                   />
                 </span>
                 <span>序号</span>
-                <span>{t('policyTable.columns.scope')}</span>
-                <span>{t('policyTable.columns.status')}</span>
-                <span>{t('policyTable.columns.model')}</span>
-                <span>{t('policyTable.columns.agent')}</span>
-                <span>{t('policyTable.columns.quota')}</span>
-                <span>{t('policyTable.columns.priority')}</span>
+                <span>{t("policyTable.columns.scope")}</span>
+                <span>{t("policyTable.columns.status")}</span>
+                <span>{t("policyTable.columns.model")}</span>
+                <span>{t("policyTable.columns.agent")}</span>
+                <span>{t("policyTable.columns.quota")}</span>
+                <span>{t("policyTable.columns.priority")}</span>
                 <span>操作</span>
               </div>
               {pagedPolicies.map((policy, index) => {
-                const model = policy.modelCode ? modelByCode.get(policy.modelCode) : undefined;
+                const model = policy.modelCode
+                  ? modelByCode.get(policy.modelCode)
+                  : undefined;
                 const status = policyStatus(policy);
-                const scopeMeta = policy.scopeType === 'product'
-                  ? `${policy.productCode} · ${policy.productRegion ? t(`policyTable.region.${policy.productRegion}`) : t('policyTable.region.none')}`
-                  : policy.scopeCode;
+                const scopeMeta =
+                  policy.scopeType === "product"
+                    ? `${policy.productCode} · ${policy.productRegion ? t(`policyTable.region.${policy.productRegion}`) : t("policyTable.region.none")}`
+                    : policy.scopeCode;
                 const subjectMeta = `${policySubjectLabel(policy)} · ${policy.subjectId}`;
-                const agentMeta = policy.agentCode ?? t('table.allAgents');
-                const modelName = policy.modelCode ? model?.modelName ?? policy.modelCode : t('policyTable.undefinedModel');
-                const modelCode = policy.modelCode ?? t('policyTable.defaultDeny');
+                const agentMeta = policy.agentCode ?? t("table.allAgents");
+                const modelName = policy.modelCode
+                  ? (model?.modelName ?? policy.modelCode)
+                  : t("policyTable.undefinedModel");
+                const modelCode =
+                  policy.modelCode ?? t("policyTable.defaultDeny");
 
                 return (
                   <div
                     key={policy.id}
-                    className={`vx-tenant-directory-row vx-model-strategy-row vx-model-strategy-row--${status} ${selectedPolicyIds.has(policy.id) ? 'vx-model-strategy-row--selected' : ''}`}
+                    className={`vx-tenant-directory-row vx-model-strategy-row vx-model-strategy-row--${status} ${selectedPolicyIds.has(policy.id) ? "vx-model-strategy-row--selected" : ""}`}
                     title={policy.note ?? undefined}
                     onClick={(event) => {
                       if (isInteractiveTarget(event.target)) return;
-                      togglePolicySelection(policy.id, !selectedPolicyIds.has(policy.id));
+                      togglePolicySelection(
+                        policy.id,
+                        !selectedPolicyIds.has(policy.id),
+                      );
                     }}
                   >
                     <span className="vx-model-strategy-row__select">
@@ -557,20 +699,34 @@ export function ModelGrantsPage() {
                         className="vx-model-select-checkbox"
                         checked={selectedPolicyIds.has(policy.id)}
                         onClick={(event) => event.stopPropagation()}
-                        onCheckedChange={(checked) => togglePolicySelection(policy.id, checked === true)}
+                        onCheckedChange={(checked) =>
+                          togglePolicySelection(policy.id, checked === true)
+                        }
                         aria-label={`选择 ${policy.scopeName}`}
                       />
                     </span>
-                    <span className="vx-tenant-directory-row__index">{formatNumber(pageStart + index + 1)}</span>
+                    <span className="vx-tenant-directory-row__index">
+                      {formatNumber(pageStart + index + 1)}
+                    </span>
                     <span className="vx-tenant-directory-row__tenant">
-                      <Icon name="shield-check" size={20} fallback="placeholder" />
+                      <Icon
+                        name="shield-check"
+                        size={20}
+                        fallback="placeholder"
+                      />
                       <span>
-                        <span className="vx-tenant-directory-row__title-line">{policy.scopeName}</span>
-                        <small>{subjectMeta} · {scopeMeta}</small>
+                        <span className="vx-tenant-directory-row__title-line">
+                          {policy.scopeName}
+                        </span>
+                        <small>
+                          {subjectMeta} · {scopeMeta}
+                        </small>
                       </span>
                     </span>
                     <span className="vx-model-strategy-row__status">
-                      <Badge className={`vx-tenant-pill vx-model-strategy-pill--${status}`}>
+                      <Badge
+                        className={`vx-tenant-pill vx-model-strategy-pill--${status}`}
+                      >
                         {t(`status.${status}`)}
                       </Badge>
                     </span>
@@ -582,18 +738,35 @@ export function ModelGrantsPage() {
                       <strong>{policy.agentName}</strong>
                       <small>{agentMeta}</small>
                     </span>
-                    <span className="vx-model-strategy-row__quota">{formatTokens(policy.quotaTokens, policy.isUnlimited, t('policyTable.unlimited'))}</span>
-                    <span className="vx-model-strategy-row__priority">{policy.priority}</span>
-                    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+                    <span className="vx-model-strategy-row__quota">
+                      {formatTokens(
+                        policy.quotaTokens,
+                        policy.isUnlimited,
+                        t("policyTable.unlimited"),
+                      )}
+                    </span>
+                    <span className="vx-model-strategy-row__priority">
+                      {policy.priority}
+                    </span>
+                    <div
+                      className="vx-tenant-actions"
+                      onClick={(event) => event.stopPropagation()}
+                    >
                       <ActionMenu
                         label={`${policy.scopeName} 操作`}
                         triggerClassName="vx-tenant-actions__trigger"
-                        triggerProps={{ title: '操作' }}
+                        triggerProps={{ title: "操作" }}
                         items={[
                           {
-                            id: 'readonly',
-                            label: '策略只读',
-                            icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+                            id: "readonly",
+                            label: "策略只读",
+                            icon: (
+                              <Icon
+                                name="shield-check"
+                                size="xs"
+                                fallback="placeholder"
+                              />
+                            ),
                             disabled: true,
                           },
                         ]}
@@ -604,41 +777,72 @@ export function ModelGrantsPage() {
               })}
             </div>
           ) : pagedPolicies.length ? (
-            <div className="vx-tenant-directory-cards vx-model-strategy-cards" aria-label={t('policyTable.toolbarTitle', { count: filteredPolicies.length })}>
+            <div
+              className="vx-tenant-directory-cards vx-model-strategy-cards"
+              aria-label={t("policyTable.toolbarTitle", {
+                count: filteredPolicies.length,
+              })}
+            >
               {pagedPolicies.map((policy) => {
-                const model = policy.modelCode ? modelByCode.get(policy.modelCode) : undefined;
+                const model = policy.modelCode
+                  ? modelByCode.get(policy.modelCode)
+                  : undefined;
                 const status = policyStatus(policy);
-                const modelName = policy.modelCode ? model?.modelName ?? policy.modelCode : t('policyTable.undefinedModel');
-                const modelCode = policy.modelCode ?? t('policyTable.defaultDeny');
+                const modelName = policy.modelCode
+                  ? (model?.modelName ?? policy.modelCode)
+                  : t("policyTable.undefinedModel");
+                const modelCode =
+                  policy.modelCode ?? t("policyTable.defaultDeny");
 
                 return (
-                  <article key={policy.id} className={`vx-tenant-directory-card vx-model-strategy-card vx-model-strategy-card--${status}`}>
+                  <article
+                    key={policy.id}
+                    className={`vx-tenant-directory-card vx-model-strategy-card vx-model-strategy-card--${status}`}
+                  >
                     <header>
-                      <Icon name="shield-check" size={24} fallback="placeholder" />
+                      <Icon
+                        name="shield-check"
+                        size={24}
+                        fallback="placeholder"
+                      />
                       <div>
                         <strong>{policy.scopeName}</strong>
-                        <span>{policySubjectLabel(policy)} · {policy.scopeCode}</span>
+                        <span>
+                          {policySubjectLabel(policy)} · {policy.scopeCode}
+                        </span>
                       </div>
-                      <Badge className={`vx-tenant-pill vx-model-strategy-pill--${status}`}>
+                      <Badge
+                        className={`vx-tenant-pill vx-model-strategy-pill--${status}`}
+                      >
                         {t(`status.${status}`)}
                       </Badge>
                     </header>
                     <div className="vx-tenant-directory-card__badges">
-                      <Badge className="vx-tenant-pill vx-tenant-pill--permission">{modelName}</Badge>
-                      <Badge className="vx-tenant-pill vx-tenant-pill--quota">{formatTokens(policy.quotaTokens, policy.isUnlimited, t('policyTable.unlimited'))}</Badge>
+                      <Badge className="vx-tenant-pill vx-tenant-pill--permission">
+                        {modelName}
+                      </Badge>
+                      <Badge className="vx-tenant-pill vx-tenant-pill--quota">
+                        {formatTokens(
+                          policy.quotaTokens,
+                          policy.isUnlimited,
+                          t("policyTable.unlimited"),
+                        )}
+                      </Badge>
                     </div>
                     <div className="vx-tenant-directory-card__metrics">
                       <span>
                         <b>{policy.priority}</b>
-                        <small>{t('policyTable.columns.priority')}</small>
+                        <small>{t("policyTable.columns.priority")}</small>
                       </span>
                       <span>
                         <b>{policy.agentName}</b>
-                        <small>{policy.agentCode ?? t('table.allAgents')}</small>
+                        <small>
+                          {policy.agentCode ?? t("table.allAgents")}
+                        </small>
                       </span>
                       <span>
                         <b>{modelCode}</b>
-                        <small>{t('policyTable.columns.model')}</small>
+                        <small>{t("policyTable.columns.model")}</small>
                       </span>
                     </div>
                   </article>
@@ -648,18 +852,24 @@ export function ModelGrantsPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? t('empty.loadingTitle') : t('empty.policyTitle')}
-                description={loading ? t('empty.loadingDescription') : t('empty.policyDescription')}
+                title={
+                  loading ? t("empty.loadingTitle") : t("empty.policyTitle")
+                }
+                description={
+                  loading
+                    ? t("empty.loadingDescription")
+                    : t("empty.policyDescription")
+                }
                 action={
                   <ActionButton
                     variant="outline"
                     icon="x"
                     onClick={() => {
-                      setQuery('');
-                      setFilter('all');
+                      setQuery("");
+                      setFilter("all");
                     }}
                   >
-                    {t('empty.resetFilters')}
+                    {t("empty.resetFilters")}
                   </ActionButton>
                 }
               />
@@ -667,9 +877,20 @@ export function ModelGrantsPage() {
           )}
 
           <footer className="vx-tenant-pagination">
-            <span className="vx-tenant-pagination__total">{t('pagination.policySummary', { page: safeCurrentPage, totalPages, total: filteredPolicies.length })}</span>
+            <span className="vx-tenant-pagination__total">
+              {t("pagination.policySummary", {
+                page: safeCurrentPage,
+                totalPages,
+                total: filteredPolicies.length,
+              })}
+            </span>
             <div className="vx-tenant-pagination__actions">
-              <Pagination className="vx-tenant-pagination__pager" page={safeCurrentPage} pageCount={totalPages} onPageChange={setCurrentPage} />
+              <Pagination
+                className="vx-tenant-pagination__pager"
+                page={safeCurrentPage}
+                pageCount={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </footer>
         </section>
@@ -677,27 +898,39 @@ export function ModelGrantsPage() {
 
       <section className="vx-tenant-list-shell vx-model-strategy-overrides">
         <header className="vx-tenant-directory__header vx-model-strategy-overrides__header">
-          <strong>{t('overrides.title')}</strong>
-          <span>{t('overrides.count', { count: filteredOverrides.length })}</span>
+          <strong>{t("overrides.title")}</strong>
+          <span>
+            {t("overrides.count", { count: filteredOverrides.length })}
+          </span>
         </header>
 
-        <div className="vx-tenant-directory-list vx-model-strategy-override-list" role="region" aria-label={t('overrides.title')}>
+        <div
+          className="vx-tenant-directory-list vx-model-strategy-override-list"
+          role="region"
+          aria-label={t("overrides.title")}
+        >
           <div className="vx-tenant-directory-list__header">
             <span>
               <Checkbox
                 className="vx-model-select-checkbox"
-                checked={isGrantPagePartiallySelected ? 'indeterminate' : isGrantPageSelected}
-                onCheckedChange={(checked) => toggleGrantPageSelection(checked === true)}
+                checked={
+                  isGrantPagePartiallySelected
+                    ? "indeterminate"
+                    : isGrantPageSelected
+                }
+                onCheckedChange={(checked) =>
+                  toggleGrantPageSelection(checked === true)
+                }
                 aria-label="选择当前覆盖授权"
               />
             </span>
             <span>序号</span>
-            <span>{t('table.columns.model')}</span>
-            <span>{t('table.columns.status')}</span>
-            <span>{t('table.columns.tenant')}</span>
-            <span>{t('table.columns.agent')}</span>
-            <span>{t('table.columns.priority')}</span>
-            <span>{t('table.columns.expires')}</span>
+            <span>{t("table.columns.model")}</span>
+            <span>{t("table.columns.status")}</span>
+            <span>{t("table.columns.tenant")}</span>
+            <span>{t("table.columns.agent")}</span>
+            <span>{t("table.columns.priority")}</span>
+            <span>{t("table.columns.expires")}</span>
             <span>操作</span>
           </div>
           {filteredOverrides.length ? (
@@ -708,11 +941,14 @@ export function ModelGrantsPage() {
               return (
                 <div
                   key={grant.id}
-                  className={`vx-tenant-directory-row vx-model-strategy-override-row ${selectedGrantIds.has(grant.id) ? 'vx-model-strategy-override-row--selected' : ''}`}
+                  className={`vx-tenant-directory-row vx-model-strategy-override-row ${selectedGrantIds.has(grant.id) ? "vx-model-strategy-override-row--selected" : ""}`}
                   title={`${grant.tenantId} · ${modelName}`}
                   onClick={(event) => {
                     if (isInteractiveTarget(event.target)) return;
-                    toggleGrantSelection(grant.id, !selectedGrantIds.has(grant.id));
+                    toggleGrantSelection(
+                      grant.id,
+                      !selectedGrantIds.has(grant.id),
+                    );
                   }}
                 >
                   <span className="vx-model-strategy-row__select">
@@ -720,16 +956,28 @@ export function ModelGrantsPage() {
                       className="vx-model-select-checkbox"
                       checked={selectedGrantIds.has(grant.id)}
                       onClick={(event) => event.stopPropagation()}
-                      onCheckedChange={(checked) => toggleGrantSelection(grant.id, checked === true)}
+                      onCheckedChange={(checked) =>
+                        toggleGrantSelection(grant.id, checked === true)
+                      }
                       aria-label={`选择 ${modelName}`}
                     />
                   </span>
-                  <span className="vx-tenant-directory-row__index">{formatNumber(index + 1)}</span>
+                  <span className="vx-tenant-directory-row__index">
+                    {formatNumber(index + 1)}
+                  </span>
                   <span className="vx-tenant-directory-row__tenant">
-                    <Icon name={grant.isActive ? 'play' : 'stop'} size={20} fallback="placeholder" />
+                    <Icon
+                      name={grant.isActive ? "play" : "stop"}
+                      size={20}
+                      fallback="placeholder"
+                    />
                     <span>
                       <span className="vx-tenant-directory-row__title-line">
-                        <Button variant="link" className="vx-model-name-button" onClick={() => openEditGrantDialog(grant)}>
+                        <Button
+                          variant="link"
+                          className="vx-model-name-button"
+                          onClick={() => openEditGrantDialog(grant)}
+                        >
                           {modelName}
                         </Button>
                       </span>
@@ -737,30 +985,61 @@ export function ModelGrantsPage() {
                     </span>
                   </span>
                   <span className="vx-model-strategy-row__status">
-                    <Badge className={`vx-tenant-pill vx-tenant-pill--${grant.isActive ? 'active' : 'disabled'}`}>
-                      {grant.isActive ? t('status.active') : t('status.inactive')}
+                    <Badge
+                      className={`vx-tenant-pill vx-tenant-pill--${grant.isActive ? "active" : "disabled"}`}
+                    >
+                      {grant.isActive
+                        ? t("status.active")
+                        : t("status.inactive")}
                     </Badge>
                   </span>
-                  <span className="vx-model-strategy-row__tenant">{grant.tenantId}</span>
-                  <span className="vx-model-strategy-row__agent">{agentLabel(grant.agentId)}</span>
-                  <span className="vx-model-strategy-row__priority">{grant.priority}</span>
-                  <span className="vx-model-strategy-row__expires">{grant.expiresAt ? grant.expiresAt.slice(0, 10) : t('table.permanent')}</span>
-                  <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+                  <span className="vx-model-strategy-row__tenant">
+                    {grant.tenantId}
+                  </span>
+                  <span className="vx-model-strategy-row__agent">
+                    {agentLabel(grant.agentId)}
+                  </span>
+                  <span className="vx-model-strategy-row__priority">
+                    {grant.priority}
+                  </span>
+                  <span className="vx-model-strategy-row__expires">
+                    {grant.expiresAt
+                      ? grant.expiresAt.slice(0, 10)
+                      : t("table.permanent")}
+                  </span>
+                  <div
+                    className="vx-tenant-actions"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <ActionMenu
-                      label={t('actions.grantMenu')}
+                      label={t("actions.grantMenu")}
                       triggerClassName="vx-tenant-actions__trigger"
-                      triggerProps={{ title: t('actions.grantMenu') }}
+                      triggerProps={{ title: t("actions.grantMenu") }}
                       items={[
                         {
-                          id: 'edit',
-                          label: t('actions.editGrant'),
-                          icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+                          id: "edit",
+                          label: t("actions.editGrant"),
+                          icon: (
+                            <Icon
+                              name="edit"
+                              size="xs"
+                              fallback="placeholder"
+                            />
+                          ),
                           onSelect: () => openEditGrantDialog(grant),
                         },
                         {
-                          id: 'toggle',
-                          label: grant.isActive ? t('actions.disableGrant') : t('actions.enableGrant'),
-                          icon: <Icon name={grant.isActive ? 'x' : 'check'} size="xs" fallback="placeholder" />,
+                          id: "toggle",
+                          label: grant.isActive
+                            ? t("actions.disableGrant")
+                            : t("actions.enableGrant"),
+                          icon: (
+                            <Icon
+                              name={grant.isActive ? "x" : "check"}
+                              size="xs"
+                              fallback="placeholder"
+                            />
+                          ),
                           disabled: submitting,
                           onSelect: () => void handleToggleGrant(grant),
                         },
@@ -773,20 +1052,26 @@ export function ModelGrantsPage() {
           ) : (
             <section className="vx-tenant-empty">
               <EmptyState
-                title={loading ? t('empty.loadingTitle') : t('empty.overrideTitle')}
-                description={loading ? t('empty.loadingDescription') : t('empty.overrideDescription')}
+                title={
+                  loading ? t("empty.loadingTitle") : t("empty.overrideTitle")
+                }
+                description={
+                  loading
+                    ? t("empty.loadingDescription")
+                    : t("empty.overrideDescription")
+                }
               />
             </section>
           )}
         </div>
       </section>
 
-      {dialogMode === 'createGrant' || dialogMode === 'editGrant' ? (
+      {dialogMode === "createGrant" || dialogMode === "editGrant" ? (
         <DialogForm
           open
           title={t(`dialogs.${dialogMode}.title`)}
-          submitLabel={t('dialogs.actions.save')}
-          cancelLabel={t('dialogs.actions.cancel')}
+          submitLabel={t("dialogs.actions.save")}
+          cancelLabel={t("dialogs.actions.cancel")}
           submitting={submitting}
           contentClassName="max-w-3xl"
           onOpenChange={(open) => {
@@ -794,65 +1079,113 @@ export function ModelGrantsPage() {
           }}
           onSubmit={(event) => void submitGrant(event)}
         >
-            <div className="vx-model-dialog__grid">
-              <Label>
-                {t('dialogs.fields.grantModel')}
-                <NativeSelect
-                  value={grantForm.modelId}
-                  disabled={dialogMode === 'editGrant'}
-                  onChange={(event) => setGrantForm((old) => ({ ...old, modelId: event.target.value }))}
-                  required
-                >
-                  {models.map((model) => (
-                    <option key={model.id} value={model.id}>{model.modelName}</option>
-                  ))}
-                </NativeSelect>
-              </Label>
-              <Label>
-                {t('dialogs.fields.tenantId')}
-                <Input
-                  value={grantForm.tenantId}
-                  disabled={dialogMode === 'editGrant'}
-                  onChange={(event) => setGrantForm((old) => ({ ...old, tenantId: event.target.value }))}
-                  required
-                />
-              </Label>
-            </div>
-            <div className="vx-model-dialog__grid">
-              <Label>
-                {t('dialogs.fields.agentId')}
-                <NativeSelect
-                  value={grantForm.agentId}
-                  onChange={(event) => setGrantForm((old) => ({ ...old, agentId: event.target.value }))}
-                >
-                  <option value="">{t('table.allAgents')}</option>
-                  {agents.map((agent) => (
-                    <option key={agent.id} value={agent.id}>{agent.agentName}</option>
-                  ))}
-                </NativeSelect>
-              </Label>
-              <Label>
-                {t('dialogs.fields.priority')}
-                <Input type="number" value={grantForm.priority} onChange={(event) => setGrantForm((old) => ({ ...old, priority: event.target.value }))} required />
-              </Label>
-            </div>
+          <div className="vx-model-dialog__grid">
             <Label>
-              {t('dialogs.fields.reason')}
-              <Input value={grantForm.reason} onChange={(event) => setGrantForm((old) => ({ ...old, reason: event.target.value }))} />
+              {t("dialogs.fields.grantModel")}
+              <NativeSelect
+                value={grantForm.modelId}
+                disabled={dialogMode === "editGrant"}
+                onChange={(event) =>
+                  setGrantForm((old) => ({
+                    ...old,
+                    modelId: event.target.value,
+                  }))
+                }
+                required
+              >
+                {models.map((model) => (
+                  <option key={model.id} value={model.id}>
+                    {model.modelName}
+                  </option>
+                ))}
+              </NativeSelect>
             </Label>
-            <div className="vx-model-dialog__grid">
-              <Label>
-                {t('dialogs.fields.expiresAt')}
-                <Input type="date" value={grantForm.expiresAt} onChange={(event) => setGrantForm((old) => ({ ...old, expiresAt: event.target.value }))} />
-              </Label>
-              <label className="vx-model-dialog__check">
-                <Checkbox
-                  checked={grantForm.isActive}
-                  onCheckedChange={(checked) => setGrantForm((old) => ({ ...old, isActive: checked === true }))}
-                />
-                {t('dialogs.fields.grantActive')}
-              </label>
-            </div>
+            <Label>
+              {t("dialogs.fields.tenantId")}
+              <Input
+                value={grantForm.tenantId}
+                disabled={dialogMode === "editGrant"}
+                onChange={(event) =>
+                  setGrantForm((old) => ({
+                    ...old,
+                    tenantId: event.target.value,
+                  }))
+                }
+                required
+              />
+            </Label>
+          </div>
+          <div className="vx-model-dialog__grid">
+            <Label>
+              {t("dialogs.fields.agentId")}
+              <NativeSelect
+                value={grantForm.agentId}
+                onChange={(event) =>
+                  setGrantForm((old) => ({
+                    ...old,
+                    agentId: event.target.value,
+                  }))
+                }
+              >
+                <option value="">{t("table.allAgents")}</option>
+                {agents.map((agent) => (
+                  <option key={agent.id} value={agent.id}>
+                    {agent.agentName}
+                  </option>
+                ))}
+              </NativeSelect>
+            </Label>
+            <Label>
+              {t("dialogs.fields.priority")}
+              <Input
+                type="number"
+                value={grantForm.priority}
+                onChange={(event) =>
+                  setGrantForm((old) => ({
+                    ...old,
+                    priority: event.target.value,
+                  }))
+                }
+                required
+              />
+            </Label>
+          </div>
+          <Label>
+            {t("dialogs.fields.reason")}
+            <Input
+              value={grantForm.reason}
+              onChange={(event) =>
+                setGrantForm((old) => ({ ...old, reason: event.target.value }))
+              }
+            />
+          </Label>
+          <div className="vx-model-dialog__grid">
+            <Label>
+              {t("dialogs.fields.expiresAt")}
+              <Input
+                type="date"
+                value={grantForm.expiresAt}
+                onChange={(event) =>
+                  setGrantForm((old) => ({
+                    ...old,
+                    expiresAt: event.target.value,
+                  }))
+                }
+              />
+            </Label>
+            <label className="vx-model-dialog__check">
+              <Checkbox
+                checked={grantForm.isActive}
+                onCheckedChange={(checked) =>
+                  setGrantForm((old) => ({
+                    ...old,
+                    isActive: checked === true,
+                  }))
+                }
+              />
+              {t("dialogs.fields.grantActive")}
+            </label>
+          </div>
         </DialogForm>
       ) : null}
     </div>

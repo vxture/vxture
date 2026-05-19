@@ -28,7 +28,10 @@ export interface PaginationProps extends React.HTMLAttributes<HTMLElement> {
 function getVisiblePages(page: number, pageCount: number) {
   const start = Math.max(1, Math.min(page - 2, pageCount - 4));
   const end = Math.min(pageCount, start + 4);
-  return Array.from({ length: Math.max(0, end - start + 1) }, (_, index) => start + index);
+  return Array.from(
+    { length: Math.max(0, end - start + 1) },
+    (_, index) => start + index,
+  );
 }
 
 function Pagination({
@@ -46,16 +49,22 @@ function Pagination({
   const safePage = Math.min(Math.max(1, page), safePageCount);
   const pages = getVisiblePages(safePage, safePageCount);
   const from = total && pageSize ? (safePage - 1) * pageSize + 1 : undefined;
-  const to = total && pageSize ? Math.min(safePage * pageSize, total) : undefined;
+  const to =
+    total && pageSize ? Math.min(safePage * pageSize, total) : undefined;
 
   return (
     <nav
-      className={cn("vx-pagination flex flex-wrap items-center justify-between gap-3", className)}
+      className={cn(
+        "vx-pagination flex flex-wrap items-center justify-between gap-3",
+        className,
+      )}
       aria-label="Pagination"
       {...props}
     >
       <div className="text-sm text-vx-text-muted">
-        {typeof from === "number" && typeof to === "number" && typeof total === "number"
+        {typeof from === "number" &&
+        typeof to === "number" &&
+        typeof total === "number"
           ? `${from}-${to} / ${total}`
           : `第 ${safePage} / ${safePageCount} 页`}
       </div>

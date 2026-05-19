@@ -1,4 +1,4 @@
-import { SubscriptionDetailPage } from '@/modules/subscriptions/SubscriptionDetailPage';
+import { SubscriptionDetailPage } from "@/modules/subscriptions/SubscriptionDetailPage";
 
 export default async function Page({
   params,
@@ -8,5 +8,9 @@ export default async function Page({
   }>;
 }) {
   const { subscriptionId } = await params;
-  return <SubscriptionDetailPage subscriptionId={decodeURIComponent(subscriptionId)} />;
+  return (
+    <SubscriptionDetailPage
+      subscriptionId={decodeURIComponent(subscriptionId)}
+    />
+  );
 }

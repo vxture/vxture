@@ -14,14 +14,14 @@
  * @version 1.3
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import type { JwtAccessPayload } from '@vxture/core-auth';
-import { JwtAuthScope, JwtUserType } from '@vxture/core-auth';
-import { VxConfigService } from '@vxture/core-config';
-import { AccountAuthService } from '@vxture/service-iam';
-import { MailService } from '@vxture/service-mail';
-import type { AuthUserDto } from '../types/auth.types';
+import { Inject, Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import type { JwtAccessPayload } from "@vxture/core-auth";
+import { JwtAuthScope, JwtUserType } from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
+import { AccountAuthService } from "@vxture/service-iam";
+import { MailService } from "@vxture/service-mail";
+import type { AuthUserDto } from "../types/auth.types";
 
 @Injectable()
 export class WebsiteAuthService {
@@ -42,10 +42,10 @@ export class WebsiteAuthService {
     });
 
     if (payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
-      throw new Error('Invalid website token scope');
+      throw new Error("Invalid website token scope");
     }
     if (payload.userType !== JwtUserType.TENANT_USER) {
-      throw new Error('Invalid website token user type');
+      throw new Error("Invalid website token user type");
     }
 
     return payload;
@@ -64,8 +64,8 @@ export class WebsiteAuthService {
       username: account.username,
       email: account.email ?? `${account.username}@local.vxture`,
       phone: account.phone,
-      role: 'member',
-      roleLabel: 'Member',
+      role: "member",
+      roleLabel: "Member",
       personalVerified: true,
       organizationVerified: false,
     };
@@ -75,7 +75,9 @@ export class WebsiteAuthService {
     const result = await this.accountAuthService.requestPasswordReset(email);
     if (!result) return null;
 
-    const baseUrl = process.env['WEBSITE_BASE_URL']?.replace(/\/$/, '') ?? 'http://localhost:3010';
+    const baseUrl =
+      process.env["WEBSITE_BASE_URL"]?.replace(/\/$/, "") ??
+      "http://localhost:3010";
     const resetUrl = `${baseUrl}/reset-password?token=${result}`;
 
     await this.mailService.sendPasswordReset(email, resetUrl);
@@ -83,7 +85,10 @@ export class WebsiteAuthService {
     return null;
   }
 
-  async resetPasswordWithToken(token: string, newPassword: string): Promise<boolean> {
+  async resetPasswordWithToken(
+    token: string,
+    newPassword: string,
+  ): Promise<boolean> {
     return this.accountAuthService.resetPasswordWithToken(token, newPassword);
   }
 }

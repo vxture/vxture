@@ -78,7 +78,7 @@ export const SOLUTIONS_DATA: SolutionsData = {
   ui: {
     viewDetailsKey: "ui.viewDetails",
     prevKey: "ui.prev",
-    nextKey: "ui.next"
+    nextKey: "ui.next",
   },
   items: [
     {
@@ -90,14 +90,14 @@ export const SOLUTIONS_DATA: SolutionsData = {
       variant: "grid",
       capabilities: ["data-graph-building", "multi-source-data-fusion"],
       cover: {
-        url: "/images/productssection/product-intro-01.jpg"
+        url: "/images/productssection/product-intro-01.jpg",
       },
       bgImage: {
-        url: "/images/solutionssection/bg-01.jpg"
+        url: "/images/solutionssection/bg-01.jpg",
       },
       cta: {
-        href: "/solutions/data-integration-platform"
-      }
+        href: "/solutions/data-integration-platform",
+      },
     },
     {
       id: "solution-intro-02",
@@ -106,16 +106,20 @@ export const SOLUTIONS_DATA: SolutionsData = {
       intent: "solution",
       theme: "brand",
       variant: "grid",
-      capabilities: ["data-graph-building", "ontology-modeling", "fusion-analysis"],
+      capabilities: [
+        "data-graph-building",
+        "ontology-modeling",
+        "fusion-analysis",
+      ],
       cover: {
-        url: "/images/productssection/product-intro-02.jpg"
+        url: "/images/productssection/product-intro-02.jpg",
       },
       bgImage: {
-        url: "/images/solutionssection/bg-02.jpg"
+        url: "/images/solutionssection/bg-02.jpg",
       },
       cta: {
-        href: "/solutions/knowledge-graph-engine"
-      }
+        href: "/solutions/knowledge-graph-engine",
+      },
     },
     {
       id: "solution-intro-03",
@@ -124,16 +128,20 @@ export const SOLUTIONS_DATA: SolutionsData = {
       intent: "solution",
       theme: "info",
       variant: "grid",
-      capabilities: ["intelligent-decision-dispatch", "real-time-assessment", "incident-response"],
+      capabilities: [
+        "intelligent-decision-dispatch",
+        "real-time-assessment",
+        "incident-response",
+      ],
       cover: {
-        url: "/images/productssection/product-intro-03.jpg"
+        url: "/images/productssection/product-intro-03.jpg",
       },
       bgImage: {
-        url: "/images/solutionssection/bg-03.jpg"
+        url: "/images/solutionssection/bg-03.jpg",
       },
       cta: {
-        href: "/solutions/intelligent-dispatch-system"
-      }
+        href: "/solutions/intelligent-dispatch-system",
+      },
     },
     {
       id: "solution-intro-04",
@@ -142,16 +150,20 @@ export const SOLUTIONS_DATA: SolutionsData = {
       intent: "solution",
       theme: "success",
       variant: "grid",
-      capabilities: ["digital-twin-simulation", "scenario-simulation", "predictive-analysis"],
+      capabilities: [
+        "digital-twin-simulation",
+        "scenario-simulation",
+        "predictive-analysis",
+      ],
       cover: {
-        url: "/images/productssection/product-intro-04.jpg"
+        url: "/images/productssection/product-intro-04.jpg",
       },
       bgImage: {
-        url: "/images/solutionssection/bg-04.jpg"
+        url: "/images/solutionssection/bg-04.jpg",
       },
       cta: {
-        href: "/solutions/digital-twin-simulation-platform"
-      }
-    }
-  ]
+        href: "/solutions/digital-twin-simulation-platform",
+      },
+    },
+  ],
 };

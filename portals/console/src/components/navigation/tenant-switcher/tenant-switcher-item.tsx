@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Avatar, AvatarFallback, Button, Icon } from '@vxture/design-system';
-import type { TenantListItem } from '@/features/tenant';
+import { Avatar, AvatarFallback, Button, Icon } from "@vxture/design-system";
+import type { TenantListItem } from "@/features/tenant";
 
 function getInitials(name: string) {
   return name.slice(0, 2).toUpperCase();
@@ -16,15 +16,15 @@ export function TenantSwitcherItem({
   compact?: boolean;
   onSelect?: (tenantId: string) => void;
 }) {
-  const typeLabel = tenant.type === 'personal' ? 'Personal' : 'Organization';
+  const typeLabel = tenant.type === "personal" ? "Personal" : "Organization";
 
   return (
     <Button
       variant="ghost"
       className={
         tenant.isCurrent
-          ? 'vx-tenant-switcher__item vx-tenant-switcher__item--current'
-          : 'vx-tenant-switcher__item'
+          ? "vx-tenant-switcher__item vx-tenant-switcher__item--current"
+          : "vx-tenant-switcher__item"
       }
       disabled={!onSelect}
       onClick={() => onSelect?.(tenant.id)}
@@ -42,7 +42,10 @@ export function TenantSwitcherItem({
       </span>
 
       {tenant.isCurrent ? (
-        <span className="vx-tenant-switcher__check" aria-label="Current workspace">
+        <span
+          className="vx-tenant-switcher__check"
+          aria-label="Current workspace"
+        >
           <Icon name="check" size="xs" fallback="check" />
         </span>
       ) : null}

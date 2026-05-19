@@ -8,8 +8,8 @@
  * @date 2026-05-05
  */
 
-import { getRequestConfig } from 'next-intl/server';
-import { routing } from './routing';
+import { getRequestConfig } from "next-intl/server";
+import { routing } from "./routing";
 
 export default getRequestConfig(async ({ requestLocale }) => {
   let locale = await requestLocale;
@@ -19,9 +19,15 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   const messages =
-    locale === 'en-US'
-      ? ((await import('@/../messages/en-US.json')).default as Record<string, unknown>)
-      : ((await import('@/../messages/zh-CN.json')).default as Record<string, unknown>);
+    locale === "en-US"
+      ? ((await import("@/../messages/en-US.json")).default as Record<
+          string,
+          unknown
+        >)
+      : ((await import("@/../messages/zh-CN.json")).default as Record<
+          string,
+          unknown
+        >);
 
   return { locale, messages };
 });

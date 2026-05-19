@@ -3,7 +3,7 @@
  * @package @vxture/core-auth
  * @description
  *   Platform-level authentication related types: JWT payloads, AuthUser, OAuth Provider interfaces, role enums, etc.
- * 
+ *
  * @author AI-Generated
  * @date 2026-03-15
  */
@@ -14,21 +14,22 @@
 // ============================================================================
 
 export const OAuthProviderType = {
-  PASSWORD:  'password',   // Password authentication
-  DINGTALK:  'dingtalk',   // DingTalk
-  FEISHU:    'feishu',     // Feishu
-  WECHAT:    'wechat',     // WeChat
+  PASSWORD: "password", // Password authentication
+  DINGTALK: "dingtalk", // DingTalk
+  FEISHU: "feishu", // Feishu
+  WECHAT: "wechat", // WeChat
 } as const;
 
 export const PlatformRole = {
-  ADMIN:         'admin',
-  TENANT_ADMIN:  'tenant_admin',
-  MEMBER:        'member',
+  ADMIN: "admin",
+  TENANT_ADMIN: "tenant_admin",
+  MEMBER: "member",
 } as const;
 
-export type PlatformRole = typeof PlatformRole[keyof typeof PlatformRole];
+export type PlatformRole = (typeof PlatformRole)[keyof typeof PlatformRole];
 
-export type OAuthProviderType = typeof OAuthProviderType[keyof typeof OAuthProviderType];
+export type OAuthProviderType =
+  (typeof OAuthProviderType)[keyof typeof OAuthProviderType];
 
 // ============================================================================
 // JWT User Type
@@ -37,18 +38,18 @@ export type OAuthProviderType = typeof OAuthProviderType[keyof typeof OAuthProvi
 // ============================================================================
 
 export const JwtUserType = {
-  OPERATOR:    'operator',
-  TENANT_USER: 'tenant_user',
+  OPERATOR: "operator",
+  TENANT_USER: "tenant_user",
 } as const;
 
-export type JwtUserType = typeof JwtUserType[keyof typeof JwtUserType];
+export type JwtUserType = (typeof JwtUserType)[keyof typeof JwtUserType];
 
 export const JwtAuthScope = {
-  PLATFORM_ADMIN: 'platform-admin',
-  TENANT_CONSOLE: 'tenant-console',
+  PLATFORM_ADMIN: "platform-admin",
+  TENANT_CONSOLE: "tenant-console",
 } as const;
 
-export type JwtAuthScope = typeof JwtAuthScope[keyof typeof JwtAuthScope];
+export type JwtAuthScope = (typeof JwtAuthScope)[keyof typeof JwtAuthScope];
 
 // ============================================================================
 // JWT Payload
@@ -61,13 +62,13 @@ export type JwtAuthScope = typeof JwtAuthScope[keyof typeof JwtAuthScope];
  */
 export interface JwtAccessPayload {
   /** User ID */
-  sub:        string;
+  sub: string;
   /** Tenant ID */
-  tenantId:   string;
+  tenantId: string;
   /** User email */
-  email:      string;
+  email: string;
   /** User role (single role model) */
-  role:       string;
+  role: string;
   /**
    * 用户身份类型：operator（平台运营）/ tenant_user（租户用户）
    * 用于 surface 路由（admin / console / vela）做权限隔离。
@@ -82,9 +83,9 @@ export interface JwtAccessPayload {
   /** Permission list (optional, omitted to reduce token size, queried by server) */
   permissions?: string[];
   /** Login method */
-  provider:   OAuthProviderType;
+  provider: OAuthProviderType;
   /** Access token unique ID, used for logout blacklist and session revocation */
-  jti?:       string;
+  jti?: string;
   /** Standard JWT fields */
   iat?: number;
   exp?: number;
@@ -94,10 +95,10 @@ export interface JwtAccessPayload {
  * Refresh Token Payload (minimized, no business data)
  */
 export interface JwtRefreshPayload {
-  sub:       string;
-  tenantId:  string;
+  sub: string;
+  tenantId: string;
   /** Refresh token unique ID, used for Redis blacklist comparison */
-  jti:       string;
+  jti: string;
   /** Authentication surface that issued the refresh token. */
   authScope?: string;
   iat?: number;
@@ -110,14 +111,14 @@ export interface JwtRefreshPayload {
 // ============================================================================
 
 export interface AuthUser {
-  userId:      string;
-  tenantId:    string;
-  email:       string;
-  role:        string;
+  userId: string;
+  tenantId: string;
+  email: string;
+  role: string;
   /** 用户身份类型，由 JWT payload 的 userType 字段透传 */
-  userType?:   JwtUserType;
+  userType?: JwtUserType;
   permissions: string[];
-  provider:    OAuthProviderType;
+  provider: OAuthProviderType;
 }
 
 // ============================================================================
@@ -128,22 +129,22 @@ export interface AuthUser {
 
 /** OAuth authorization code exchanged for token result */
 export interface OAuthTokens {
-  accessToken:   string;
+  accessToken: string;
   refreshToken?: string;
-  expiresIn:     number;
-  scope?:        string;
+  expiresIn: number;
+  scope?: string;
 }
 
 /** OAuth obtained user basic info (standardized structure across providers) */
 export interface OAuthUserProfile {
   /** Provider side user unique ID */
-  providerId:    string;
-  provider:      OAuthProviderType;
-  email?:        string;
-  name:          string;
-  avatar?:       string;
+  providerId: string;
+  provider: OAuthProviderType;
+  email?: string;
+  name: string;
+  avatar?: string;
   /** Raw data returned by provider, used by upper layers as needed */
-  raw:           Record<string, unknown>;
+  raw: Record<string, unknown>;
 }
 
 /**
@@ -181,10 +182,10 @@ export interface OAuthProvider {
 // ============================================================================
 
 export interface AuthTokenPair {
-  accessToken:   string;
-  refreshToken:  string;
+  accessToken: string;
+  refreshToken: string;
   /** Access token expiry (seconds) */
-  expiresIn:     number;
+  expiresIn: number;
   /** Refresh token expiry (seconds) */
   refreshExpiresIn: number;
 }
@@ -195,5 +196,5 @@ export interface AuthTokenPair {
 
 export interface PermissionCheckOptions {
   /** 'all' = AND, 'any' = OR, default 'any' */
-  mode?: 'all' | 'any';
+  mode?: "all" | "any";
 }

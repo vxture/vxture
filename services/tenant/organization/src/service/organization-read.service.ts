@@ -1,5 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ORGANIZATION_REPOSITORY } from '../tokens';
+import { Inject, Injectable } from "@nestjs/common";
+import { ORGANIZATION_REPOSITORY } from "../tokens";
 import type {
   CreateTenantInput,
   OrganizationProfileView,
@@ -9,7 +9,7 @@ import type {
   TenantMemberSummary,
   TenantRoleStatus,
   UpsertTenantMemberInput,
-} from '../types/organization.types';
+} from "../types/organization.types";
 
 @Injectable()
 export class OrganizationReadService {
@@ -18,12 +18,17 @@ export class OrganizationReadService {
     private readonly repository: OrganizationReadRepository,
   ) {}
 
-  async createTenantForAccount(input: CreateTenantInput): Promise<TenantContextView> {
+  async createTenantForAccount(
+    input: CreateTenantInput,
+  ): Promise<TenantContextView> {
     return this.repository.createTenant(input);
   }
 
-  async resolveTenantContextForAccount(accountId: string): Promise<TenantContextView | null> {
-    const memberships = await this.repository.getTenantMembershipsByAccountId(accountId);
+  async resolveTenantContextForAccount(
+    accountId: string,
+  ): Promise<TenantContextView | null> {
+    const memberships =
+      await this.repository.getTenantMembershipsByAccountId(accountId);
     const primaryMembership = memberships[0];
 
     if (!primaryMembership) {
@@ -33,8 +38,12 @@ export class OrganizationReadService {
     return this.repository.getTenantContextById(primaryMembership.tenantId);
   }
 
-  async resolveTenantContextForAccountById(accountId: string, tenantId: string): Promise<TenantContextView | null> {
-    const memberships = await this.repository.getTenantMembershipsByAccountId(accountId);
+  async resolveTenantContextForAccountById(
+    accountId: string,
+    tenantId: string,
+  ): Promise<TenantContextView | null> {
+    const memberships =
+      await this.repository.getTenantMembershipsByAccountId(accountId);
     const membership = memberships.find((item) => item.tenantId === tenantId);
 
     if (!membership) {
@@ -44,16 +53,25 @@ export class OrganizationReadService {
     return this.repository.getTenantContextById(membership.tenantId);
   }
 
-  async listTenantContextsForAccount(accountId: string): Promise<TenantContextView[]> {
-    const memberships = await this.repository.getTenantMembershipsByAccountId(accountId);
+  async listTenantContextsForAccount(
+    accountId: string,
+  ): Promise<TenantContextView[]> {
+    const memberships =
+      await this.repository.getTenantMembershipsByAccountId(accountId);
     const contexts = await Promise.all(
-      memberships.map((membership) => this.repository.getTenantContextById(membership.tenantId)),
+      memberships.map((membership) =>
+        this.repository.getTenantContextById(membership.tenantId),
+      ),
     );
 
-    return contexts.filter((context): context is TenantContextView => Boolean(context));
+    return contexts.filter((context): context is TenantContextView =>
+      Boolean(context),
+    );
   }
 
-  async getOrganizationProfile(tenantId: string): Promise<OrganizationProfileView | null> {
+  async getOrganizationProfile(
+    tenantId: string,
+  ): Promise<OrganizationProfileView | null> {
     return this.repository.getOrganizationProfileByTenantId(tenantId);
   }
 
@@ -93,26 +111,47 @@ export class OrganizationReadService {
       permissionIds?: string[];
     },
   ) {
-    return this.repository.updateTenantRole(tenantId, roleId, operatorAccountId, input);
+    return this.repository.updateTenantRole(
+      tenantId,
+      roleId,
+      operatorAccountId,
+      input,
+    );
   }
 
-  async removeTenantRole(tenantId: string, roleId: string, operatorAccountId: string) {
-    return this.repository.removeTenantRole(tenantId, roleId, operatorAccountId);
+  async removeTenantRole(
+    tenantId: string,
+    roleId: string,
+    operatorAccountId: string,
+  ) {
+    return this.repository.removeTenantRole(
+      tenantId,
+      roleId,
+      operatorAccountId,
+    );
   }
 
-  async createTenantMember(tenantId: string, operatorAccountId: string, input: Omit<UpsertTenantMemberInput, 'status' | 'joinedSource'>) {
+  async createTenantMember(
+    tenantId: string,
+    operatorAccountId: string,
+    input: Omit<UpsertTenantMemberInput, "status" | "joinedSource">,
+  ) {
     return this.repository.upsertTenantMember(tenantId, operatorAccountId, {
       ...input,
-      status: 'active',
-      joinedSource: 'created',
+      status: "active",
+      joinedSource: "created",
     });
   }
 
-  async inviteTenantMember(tenantId: string, operatorAccountId: string, input: Omit<UpsertTenantMemberInput, 'status' | 'joinedSource'>) {
+  async inviteTenantMember(
+    tenantId: string,
+    operatorAccountId: string,
+    input: Omit<UpsertTenantMemberInput, "status" | "joinedSource">,
+  ) {
     return this.repository.upsertTenantMember(tenantId, operatorAccountId, {
       ...input,
-      status: 'inactive',
-      joinedSource: 'invited',
+      status: "inactive",
+      joinedSource: "invited",
     });
   }
 
@@ -127,11 +166,24 @@ export class OrganizationReadService {
       status?: TenantMemberStatus;
     },
   ) {
-    return this.repository.updateTenantMember(tenantId, memberId, operatorAccountId, input);
+    return this.repository.updateTenantMember(
+      tenantId,
+      memberId,
+      operatorAccountId,
+      input,
+    );
   }
 
-  async removeTenantMember(tenantId: string, memberId: string, operatorAccountId: string) {
-    return this.repository.removeTenantMember(tenantId, memberId, operatorAccountId);
+  async removeTenantMember(
+    tenantId: string,
+    memberId: string,
+    operatorAccountId: string,
+  ) {
+    return this.repository.removeTenantMember(
+      tenantId,
+      memberId,
+      operatorAccountId,
+    );
   }
 
   async getTenantMemberSummary(tenantId: string): Promise<TenantMemberSummary> {

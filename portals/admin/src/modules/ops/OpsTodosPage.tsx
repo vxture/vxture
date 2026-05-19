@@ -5,9 +5,15 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { fetchSupportTicketsStrict, fetchTenantOperationsStrict } from "@/api/admin-bff";
+import {
+  fetchSupportTicketsStrict,
+  fetchTenantOperationsStrict,
+} from "@/api/admin-bff";
 import { ActionMenu, Badge, Button, Checkbox } from "@vxture/design-system";
-import type { SupportTicketRecord, TenantOperationRecord } from "@/entities/console";
+import type {
+  SupportTicketRecord,
+  TenantOperationRecord,
+} from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
 import {
@@ -99,100 +105,98 @@ function buildOpsTodos(
   tenants: TenantOperationRecord[],
   tickets: SupportTicketRecord[],
 ): OpsTodoItem[] {
-  const tenantTodos = tenants
-    .flatMap((tenant) => {
-      const items: OpsTodoItem[] = [];
-      const tenantMeta = buildTenantMeta(tenant);
-      const tenantHref = `/tenants/${tenant.id}`;
+  const tenantTodos = tenants.flatMap((tenant) => {
+    const items: OpsTodoItem[] = [];
+    const tenantMeta = buildTenantMeta(tenant);
+    const tenantHref = `/tenants/${tenant.id}`;
 
-      if (tenant.verifiedStatus === "pending") {
-        items.push({
-          id: `${tenant.id}-verification`,
-          type: "verification",
-          title: `${tenant.displayName} 认证待审核`,
-          description: `当前认证状态为${verifiedLabel(tenant.verifiedStatus)}，需要核验资质材料与联系人信息。`,
-          tenantId: tenant.id,
-          tenantName: tenant.displayName,
-          tenantMeta,
-          href: "/verifications",
-          severity: "amber",
-          priority: 20,
-          updatedAt: tenant.verificationSubmittedAt ?? tenant.lastActiveAt,
-          icon: TODO_TYPE_ICON.verification,
-          tags: [tenant.industry, tenant.scale],
-        });
-      }
+    if (tenant.verifiedStatus === "pending") {
+      items.push({
+        id: `${tenant.id}-verification`,
+        type: "verification",
+        title: `${tenant.displayName} 认证待审核`,
+        description: `当前认证状态为${verifiedLabel(tenant.verifiedStatus)}，需要核验资质材料与联系人信息。`,
+        tenantId: tenant.id,
+        tenantName: tenant.displayName,
+        tenantMeta,
+        href: "/verifications",
+        severity: "amber",
+        priority: 20,
+        updatedAt: tenant.verificationSubmittedAt ?? tenant.lastActiveAt,
+        icon: TODO_TYPE_ICON.verification,
+        tags: [tenant.industry, tenant.scale],
+      });
+    }
 
-      if (tenant.riskLevel !== "normal" || tenant.status === "suspended") {
+    if (tenant.riskLevel !== "normal" || tenant.status === "suspended") {
+      items.push({
+        id: `${tenant.id}-risk`,
+        type: "risk",
+        title: `${tenant.displayName} 风险状态需复核`,
+        description: tenant.notes,
+        tenantId: tenant.id,
+        tenantName: tenant.displayName,
+        tenantMeta,
+        href: tenantHref,
+        severity:
+          tenant.riskLevel === "high" || tenant.status === "suspended"
+            ? "rose"
+            : "amber",
+        priority: tenant.riskLevel === "high" ? 5 : 25,
+        updatedAt: tenant.lastActiveAt,
+        icon: TODO_TYPE_ICON.risk,
+        tags: [`风险 ${riskLabel(tenant.riskLevel)}`, `SLA ${tenant.sla}`],
+      });
+    }
+
+    tenant.usage
+      .filter((usage) => usage.status !== "normal")
+      .forEach((usage) => {
+        const usageRate = usage.quota
+          ? Math.round((usage.used / usage.quota) * 100)
+          : 0;
         items.push({
-          id: `${tenant.id}-risk`,
-          type: "risk",
-          title: `${tenant.displayName} 风险状态需复核`,
-          description: tenant.notes,
+          id: `${tenant.id}-usage-${usage.code}`,
+          type: "usage",
+          title: `${tenant.displayName} ${usage.label} ${usage.status === "danger" ? "超限" : "预警"}`,
+          description: `${usage.label} 已使用 ${formatNumber(usage.used)} ${usage.unit}，额度 ${usage.quota ? formatNumber(usage.quota) : "未配置"}，当前 ${usageRate}%。`,
           tenantId: tenant.id,
           tenantName: tenant.displayName,
           tenantMeta,
           href: tenantHref,
-          severity:
-            tenant.riskLevel === "high" || tenant.status === "suspended"
-              ? "rose"
-              : "amber",
-          priority: tenant.riskLevel === "high" ? 5 : 25,
+          severity: usage.status === "danger" ? "rose" : "amber",
+          priority: usage.status === "danger" ? 8 : 35,
           updatedAt: tenant.lastActiveAt,
-          icon: TODO_TYPE_ICON.risk,
-          tags: [`风险 ${riskLabel(tenant.riskLevel)}`, `SLA ${tenant.sla}`],
+          icon: TODO_TYPE_ICON.usage,
+          tags: [usage.label, usage.trend],
         });
-      }
+      });
 
-      tenant.usage
-        .filter((usage) => usage.status !== "normal")
-        .forEach((usage) => {
-          const usageRate = usage.quota
-            ? Math.round((usage.used / usage.quota) * 100)
-            : 0;
-          items.push({
-            id: `${tenant.id}-usage-${usage.code}`,
-            type: "usage",
-            title: `${tenant.displayName} ${usage.label} ${usage.status === "danger" ? "超限" : "预警"}`,
-            description: `${usage.label} 已使用 ${formatNumber(usage.used)} ${usage.unit}，额度 ${usage.quota ? formatNumber(usage.quota) : "未配置"}，当前 ${usageRate}%。`,
-            tenantId: tenant.id,
-            tenantName: tenant.displayName,
-            tenantMeta,
-            href: tenantHref,
-            severity: usage.status === "danger" ? "rose" : "amber",
-            priority: usage.status === "danger" ? 8 : 35,
-            updatedAt: tenant.lastActiveAt,
-            icon: TODO_TYPE_ICON.usage,
-            tags: [usage.label, usage.trend],
-          });
+    tenant.subscriptions
+      .filter(
+        (subscription) =>
+          subscription.status === "past_due" || subscription.status === "trial",
+      )
+      .forEach((subscription) => {
+        items.push({
+          id: `${tenant.id}-subscription-${subscription.id}`,
+          type: "subscription",
+          title: `${tenant.displayName} ${subscription.status === "past_due" ? "订阅逾期" : "试用跟进"}`,
+          description: `${subscription.productName} / ${subscription.planName}，月收入 ${formatNumber(subscription.monthlyRevenue)}，需要运营确认续费或转正动作。`,
+          tenantId: tenant.id,
+          tenantName: tenant.displayName,
+          tenantMeta,
+          href: tenantHref,
+          severity: subscription.status === "past_due" ? "rose" : "amber",
+          priority: subscription.status === "past_due" ? 6 : 40,
+          updatedAt: subscription.renewsAt ?? subscription.startedAt,
+          icon: TODO_TYPE_ICON.subscription,
+          tags: [subscription.productName, subscription.planName],
         });
+      });
 
-      tenant.subscriptions
-        .filter(
-          (subscription) =>
-            subscription.status === "past_due" ||
-            subscription.status === "trial",
-        )
-        .forEach((subscription) => {
-          items.push({
-            id: `${tenant.id}-subscription-${subscription.id}`,
-            type: "subscription",
-            title: `${tenant.displayName} ${subscription.status === "past_due" ? "订阅逾期" : "试用跟进"}`,
-            description: `${subscription.productName} / ${subscription.planName}，月收入 ${formatNumber(subscription.monthlyRevenue)}，需要运营确认续费或转正动作。`,
-            tenantId: tenant.id,
-            tenantName: tenant.displayName,
-            tenantMeta,
-            href: tenantHref,
-            severity: subscription.status === "past_due" ? "rose" : "amber",
-            priority: subscription.status === "past_due" ? 6 : 40,
-            updatedAt: subscription.renewsAt ?? subscription.startedAt,
-            icon: TODO_TYPE_ICON.subscription,
-            tags: [subscription.productName, subscription.planName],
-          });
-        });
-
-      return items;
-    });
+    return items;
+  });
 
   const ticketTodos = tickets
     .filter((ticket) => ticket.status !== "closed")
@@ -274,15 +278,14 @@ function TodoTypeSummary({ type, count }: { type: TodoType; count: number }) {
   );
 }
 
-function TodoActionsMenu({
-  item,
-}: {
-  item: OpsTodoItem;
-}) {
+function TodoActionsMenu({ item }: { item: OpsTodoItem }) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${item.title} 待办操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -298,7 +301,8 @@ function TodoActionsMenu({
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(item.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(item.tenantId)}`),
           },
         ]}
       />
@@ -386,7 +390,10 @@ export function OpsTodosPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [tenantLoadError, setTenantLoadError] = useState<string | null>(null);
   const [ticketLoadError, setTicketLoadError] = useState<string | null>(null);
-  const todos = useMemo(() => buildOpsTodos(tenants, tickets), [tenants, tickets]);
+  const todos = useMemo(
+    () => buildOpsTodos(tenants, tickets),
+    [tenants, tickets],
+  );
   const [selectedTodoIds, setSelectedTodoIds] = useState<Set<string>>(
     () => new Set(),
   );
@@ -419,7 +426,9 @@ export function OpsTodosPage() {
       fetchTenantOperationsStrict(),
       fetchSupportTicketsStrict().catch((error) => {
         if (!cancelled) {
-          setTicketLoadError(error instanceof Error ? error.message : "工单数据读取失败");
+          setTicketLoadError(
+            error instanceof Error ? error.message : "工单数据读取失败",
+          );
         }
         return [];
       }),
@@ -434,7 +443,9 @@ export function OpsTodosPage() {
         if (!cancelled) {
           setTenants([]);
           setTickets([]);
-          setTenantLoadError(error instanceof Error ? error.message : "租户运营数据读取失败");
+          setTenantLoadError(
+            error instanceof Error ? error.message : "租户运营数据读取失败",
+          );
         }
       })
       .finally(() => {
@@ -561,8 +572,16 @@ export function OpsTodosPage() {
                   <span>
                     <Checkbox
                       className="vx-model-select-checkbox"
-                      checked={isTodoPageSelected ? true : selectedVisibleTodoCount > 0 ? "indeterminate" : false}
-                      onCheckedChange={(value) => toggleTodoPageSelection(value === true)}
+                      checked={
+                        isTodoPageSelected
+                          ? true
+                          : selectedVisibleTodoCount > 0
+                            ? "indeterminate"
+                            : false
+                      }
+                      onCheckedChange={(value) =>
+                        toggleTodoPageSelection(value === true)
+                      }
                       aria-label="选择全部待办"
                     />
                   </span>
@@ -589,7 +608,9 @@ export function OpsTodosPage() {
               <div className="vx-service-health-empty">
                 <EmptyState
                   title="当前没有待办"
-                  description={ticketLoadError ?? "数据库中没有匹配的运营待办。"}
+                  description={
+                    ticketLoadError ?? "数据库中没有匹配的运营待办。"
+                  }
                 />
               </div>
             )}

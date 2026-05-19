@@ -3,4 +3,4 @@
  * @package @vxture/core-auth
  */
 
-export { VxJwtClient } from './jwt.client';
+export { VxJwtClient } from "./jwt.client";

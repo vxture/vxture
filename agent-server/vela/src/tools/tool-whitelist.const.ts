@@ -14,25 +14,25 @@
  */
 
 export const ADMIN_TOOLS = [
-  'tenant_search',
-  'tenant_detail',
-  'billing_overview',
-  'subscription_list',
-  'ticket_list',
+  "tenant_search",
+  "tenant_detail",
+  "billing_overview",
+  "subscription_list",
+  "ticket_list",
   // 二期执行类工具（requiresConfirmation=true）
-  'tenant_pause_subscription',
-  'tenant_resume_subscription',
-  'tenant_change_plan',
+  "tenant_pause_subscription",
+  "tenant_resume_subscription",
+  "tenant_change_plan",
 ] as const;
 
 export const CONSOLE_TOOLS = [
-  'my_subscription',
-  'my_billing',
-  'my_usage',
-  'my_tickets',
+  "my_subscription",
+  "my_billing",
+  "my_usage",
+  "my_tickets",
   // 二期执行类工具（requiresConfirmation=true）
-  'my_change_plan',
+  "my_change_plan",
 ] as const;
 
-export type AdminToolId   = typeof ADMIN_TOOLS[number];
-export type ConsoleToolId = typeof CONSOLE_TOOLS[number];
+export type AdminToolId = (typeof ADMIN_TOOLS)[number];
+export type ConsoleToolId = (typeof CONSOLE_TOOLS)[number];

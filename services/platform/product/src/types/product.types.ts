@@ -98,26 +98,64 @@ export interface PlanFeatureItem {
 export interface PlanDetail extends PlanRecord {
   prices: PlanPriceRecord[];
   features: PlanFeatureItem[];
-  agents: { agentId: string; agentCode: string; agentName: string; isAllowed: boolean }[];
+  agents: {
+    agentId: string;
+    agentCode: string;
+    agentName: string;
+    isAllowed: boolean;
+  }[];
 }
 
-export interface ListAgentsParams { status?: string; visibility?: string; keyword?: string; page?: number; pageSize?: number; }
-export interface ListPlansParams { status?: boolean; planType?: string; page?: number; pageSize?: number; }
-export interface ListFeaturesParams { featureType?: string; parentCode?: string; }
+export interface ListAgentsParams {
+  status?: string;
+  visibility?: string;
+  keyword?: string;
+  page?: number;
+  pageSize?: number;
+}
+export interface ListPlansParams {
+  status?: boolean;
+  planType?: string;
+  page?: number;
+  pageSize?: number;
+}
+export interface ListFeaturesParams {
+  featureType?: string;
+  parentCode?: string;
+}
 
 export interface CreateAgentInput {
-  agentCode: string; agentName: string; description?: string; status?: string;
-  visibility?: string; agentCategory?: number; tags?: string[]; sort?: number;
-  iconUrl?: string; configJson?: Record<string, unknown>; createdBy: string;
+  agentCode: string;
+  agentName: string;
+  description?: string;
+  status?: string;
+  visibility?: string;
+  agentCategory?: number;
+  tags?: string[];
+  sort?: number;
+  iconUrl?: string;
+  configJson?: Record<string, unknown>;
+  createdBy: string;
 }
 
 export interface CreatePlanInput {
-  planCode: string; planName: string; description?: string; planType?: string;
-  level?: number; isFree?: boolean; isPublic?: boolean; createdBy: string;
+  planCode: string;
+  planName: string;
+  description?: string;
+  planType?: string;
+  level?: number;
+  isFree?: boolean;
+  isPublic?: boolean;
+  createdBy: string;
 }
 
 export interface SetPlanFeaturesInput {
   planId: string;
-  features: { featureId: string; quotaValue?: number; isUnlimited?: boolean; configJson?: Record<string, unknown> }[];
+  features: {
+    featureId: string;
+    quotaValue?: number;
+    isUnlimited?: boolean;
+    configJson?: Record<string, unknown>;
+  }[];
   operatorId: string;
 }

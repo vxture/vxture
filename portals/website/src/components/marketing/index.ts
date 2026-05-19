@@ -5,17 +5,17 @@
  * @category Components - Marketing
  */
 
-export { default as CTASection } from './CTASection';
-export { default as CaseSection } from './CaseSection';
-export { default as FeaturesSection } from './FeaturesSection';
-export { default as HeroSection } from './HeroSection';
-export { default as SolutionSection } from './SolutionSection';
-export { default as StatsSection } from './StatsSection';
-export { default as TestSection } from './TestSection';
-export { default as ProductDetailPartOne } from './ProductDetailPartOne';
-export { default as EmergencySolutionPage } from './EmergencySolutionPage';
-export { default as BestPracticePage } from './BestPracticePage';
-export { default as AgentMarketplacePage } from './AgentMarketplacePage';
-export { default as AboutUsPage } from './AboutUsPage';
-export { default as ThemedHeroImage } from './ThemedHeroImage';
-export { default as AnimatedHeroBg } from './AnimatedHeroBg';
+export { default as CTASection } from "./CTASection";
+export { default as CaseSection } from "./CaseSection";
+export { default as FeaturesSection } from "./FeaturesSection";
+export { default as HeroSection } from "./HeroSection";
+export { default as SolutionSection } from "./SolutionSection";
+export { default as StatsSection } from "./StatsSection";
+export { default as TestSection } from "./TestSection";
+export { default as ProductDetailPartOne } from "./ProductDetailPartOne";
+export { default as EmergencySolutionPage } from "./EmergencySolutionPage";
+export { default as BestPracticePage } from "./BestPracticePage";
+export { default as AgentMarketplacePage } from "./AgentMarketplacePage";
+export { default as AboutUsPage } from "./AboutUsPage";
+export { default as ThemedHeroImage } from "./ThemedHeroImage";
+export { default as AnimatedHeroBg } from "./AnimatedHeroBg";

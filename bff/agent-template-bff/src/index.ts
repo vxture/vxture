@@ -15,7 +15,7 @@
  * @category Agent01 - BFF
  */
 
-import { createServer } from 'http';
+import { createServer } from "http";
 
 /**
  * Agent01 BFF 服务器
@@ -34,13 +34,15 @@ class Agent01BFF {
   start(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.server = createServer((_req, res) => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
-          message: 'Agent01 BFF server is running',
-          timestamp: new Date().toISOString(),
-          agent: 'agent01',
-          mode: 'bff',
-        }));
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: "Agent01 BFF server is running",
+            timestamp: new Date().toISOString(),
+            agent: "agent01",
+            mode: "bff",
+          }),
+        );
       });
 
       this.server.listen(this.port, () => {
@@ -48,8 +50,8 @@ class Agent01BFF {
         resolve();
       });
 
-      this.server.on('error', (error) => {
-        console.error('Server error:', error);
+      this.server.on("error", (error) => {
+        console.error("Server error:", error);
         reject(error);
       });
     });
@@ -63,10 +65,10 @@ class Agent01BFF {
       if (this.server) {
         this.server.close((error) => {
           if (error) {
-            console.error('Error closing server:', error);
+            console.error("Error closing server:", error);
             reject(error);
           } else {
-            console.log('Agent01 BFF server stopped');
+            console.log("Agent01 BFF server stopped");
             resolve();
           }
         });

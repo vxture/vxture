@@ -12,19 +12,24 @@
  * @date 2026-04-30
  */
 
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { AccessTokenRevocationService } from '@vxture/core-auth';
-import { VxConfigModule } from '@vxture/core-config';
-import { AuthMiddleware } from './middleware/auth.middleware';
-import { SurfaceMiddleware } from './middleware/surface.middleware';
-import { ChatRouter } from './routers/chat.router';
-import { ConfirmRouter } from './routers/confirm.router';
-import { HealthRouter } from './routers/health.router';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
+import { AccessTokenRevocationService } from "@vxture/core-auth";
+import { VxConfigModule } from "@vxture/core-config";
+import { AuthMiddleware } from "./middleware/auth.middleware";
+import { SurfaceMiddleware } from "./middleware/surface.middleware";
+import { ChatRouter } from "./routers/chat.router";
+import { ConfirmRouter } from "./routers/confirm.router";
+import { HealthRouter } from "./routers/health.router";
 
 @Module({
   imports: [
-    VxConfigModule.register({ domains: ['app', 'auth', 'redis'] }),
+    VxConfigModule.register({ domains: ["app", "auth", "redis"] }),
     JwtModule.register({}),
   ],
   controllers: [HealthRouter, ChatRouter, ConfirmRouter],
@@ -34,6 +39,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware, SurfaceMiddleware)
-      .forRoutes({ path: 'vela/*path', method: RequestMethod.ALL });
+      .forRoutes({ path: "vela/*path", method: RequestMethod.ALL });
   }
 }

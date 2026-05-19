@@ -10,20 +10,24 @@
  * @version 1.3
  */
 
-import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
-import type { Request, Response, NextFunction } from 'express';
-import { AUTH_CONSTANTS } from '@vxture/shared';
-import { WebsiteAuthService } from '../auth/auth.service';
-import type { RequestContext } from '../types/auth.types';
+import { Inject, Injectable, NestMiddleware } from "@nestjs/common";
+import type { Request, Response, NextFunction } from "express";
+import { AUTH_CONSTANTS } from "@vxture/shared";
+import { WebsiteAuthService } from "../auth/auth.service";
+import type { RequestContext } from "../types/auth.types";
 
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {
-  constructor(@Inject(WebsiteAuthService) private readonly websiteAuthService: WebsiteAuthService) {}
+  constructor(
+    @Inject(WebsiteAuthService)
+    private readonly websiteAuthService: WebsiteAuthService,
+  ) {}
 
   use(req: Request, _res: Response, next: NextFunction) {
-    const accessToken = req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN]
-      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN]
-      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
+    const accessToken =
+      req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN] ??
+      req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN] ??
+      req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
     if (!accessToken) {
       next();
       return;

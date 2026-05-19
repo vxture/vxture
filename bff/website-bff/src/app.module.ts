@@ -13,27 +13,32 @@
  * @version 1.3
  */
 
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { AccessTokenRevocationService } from '@vxture/core-auth';
-import { VxConfigModule } from '@vxture/core-config';
-import { IamModule } from '@vxture/service-iam';
-import { OrganizationModule } from '@vxture/service-organization';
-import { MailModule } from '@vxture/service-mail';
-import { WebsiteAuthService } from './auth/auth.service';
-import { SessionAggregator } from './aggregators/session.aggregator';
-import { AuthMiddleware } from './middleware/auth.middleware';
-import { TenantMiddleware } from './middleware/tenant.middleware';
-import { AuthRouter } from './routers/auth.router';
-import { HealthRouter } from './routers/health.router';
-import { MeRouter } from './routers/me.router';
-import { VerifyCodeRouter } from './routers/verifycode.router';
-import { PhoneAuthRouter } from './routers/phone-auth.router';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
+import { AccessTokenRevocationService } from "@vxture/core-auth";
+import { VxConfigModule } from "@vxture/core-config";
+import { IamModule } from "@vxture/service-iam";
+import { OrganizationModule } from "@vxture/service-organization";
+import { MailModule } from "@vxture/service-mail";
+import { WebsiteAuthService } from "./auth/auth.service";
+import { SessionAggregator } from "./aggregators/session.aggregator";
+import { AuthMiddleware } from "./middleware/auth.middleware";
+import { TenantMiddleware } from "./middleware/tenant.middleware";
+import { AuthRouter } from "./routers/auth.router";
+import { HealthRouter } from "./routers/health.router";
+import { MeRouter } from "./routers/me.router";
+import { VerifyCodeRouter } from "./routers/verifycode.router";
+import { PhoneAuthRouter } from "./routers/phone-auth.router";
 
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ['app', 'auth', 'database', 'redis'],
+      domains: ["app", "auth", "database", "redis"],
     }),
     JwtModule.register({}),
     IamModule,
@@ -47,12 +52,16 @@ import { PhoneAuthRouter } from './routers/phone-auth.router';
     PhoneAuthRouter,
     MeRouter,
   ],
-  providers: [WebsiteAuthService, SessionAggregator, AccessTokenRevocationService],
+  providers: [
+    WebsiteAuthService,
+    SessionAggregator,
+    AccessTokenRevocationService,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware, TenantMiddleware)
-      .forRoutes({ path: 'api/(.*)', method: RequestMethod.ALL });
+      .forRoutes({ path: "api/(.*)", method: RequestMethod.ALL });
   }
 }

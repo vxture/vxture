@@ -7,9 +7,13 @@
  * @date 2026-05-06
  */
 
-import { Footer, Header } from '@/components/layout';
+import { Footer, Header } from "@/components/layout";
 
-export default function ContentLayout({ children }: { children: React.ReactNode }) {
+export default function ContentLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // TODO: 目录移入 (public)/ 后，删除 Header/Footer，改为 return <>{children}</>;
   return (
     <>

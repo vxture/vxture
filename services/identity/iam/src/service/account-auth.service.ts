@@ -1,7 +1,12 @@
-import { compare, hash } from 'bcryptjs';
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { createHash, timingSafeEqual } from 'node:crypto';
-import { ACCOUNT_REPOSITORY } from '../tokens';
+import { compare, hash } from "bcryptjs";
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { createHash, timingSafeEqual } from "node:crypto";
+import { ACCOUNT_REPOSITORY } from "../tokens";
 import type {
   AccountCredentialRecord,
   AccountProfileView,
@@ -9,7 +14,7 @@ import type {
   AuthenticatedAccountView,
   FindOrCreateByOAuthInput,
   UpdateAccountProfileInput,
-} from '../types/iam.types';
+} from "../types/iam.types";
 
 @Injectable()
 export class AccountAuthService {
@@ -18,19 +23,22 @@ export class AccountAuthService {
     private readonly repository: AccountReadRepository,
   ) {}
 
-  async authenticate(identifier: string, password: string): Promise<AuthenticatedAccountView> {
+  async authenticate(
+    identifier: string,
+    password: string,
+  ): Promise<AuthenticatedAccountView> {
     if (!identifier.trim() || !password) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const account = await this.repository.findByIdentifier(identifier);
     if (!account || !account.passwordHash) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const isValid = await this.verifyPassword(password, account);
     if (!isValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     return {
@@ -41,7 +49,9 @@ export class AccountAuthService {
     };
   }
 
-  async getAccountById(accountId: string): Promise<AuthenticatedAccountView | null> {
+  async getAccountById(
+    accountId: string,
+  ): Promise<AuthenticatedAccountView | null> {
     return this.repository.findById(accountId);
   }
 
@@ -49,7 +59,9 @@ export class AccountAuthService {
    * 通过手机号查找账号（不验证密码，用于验证码登录场景）。
    * 手机号不存在时返回 null，由调用方决定是否抛出业务错误。
    */
-  async getAccountByPhone(phone: string): Promise<AuthenticatedAccountView | null> {
+  async getAccountByPhone(
+    phone: string,
+  ): Promise<AuthenticatedAccountView | null> {
     const record = await this.repository.findByIdentifier(phone.trim());
     if (!record || !record.phone) {
       return null;
@@ -62,31 +74,44 @@ export class AccountAuthService {
     };
   }
 
-  async getAccountProfile(accountId: string): Promise<AccountProfileView | null> {
+  async getAccountProfile(
+    accountId: string,
+  ): Promise<AccountProfileView | null> {
     return this.repository.getProfile(accountId);
   }
 
-  async updateAccountProfile(accountId: string, input: UpdateAccountProfileInput): Promise<AccountProfileView | null> {
+  async updateAccountProfile(
+    accountId: string,
+    input: UpdateAccountProfileInput,
+  ): Promise<AccountProfileView | null> {
     return this.repository.updateProfile(accountId, input);
   }
 
-  async changePassword(accountId: string, currentPassword: string, nextPassword: string): Promise<void> {
+  async changePassword(
+    accountId: string,
+    currentPassword: string,
+    nextPassword: string,
+  ): Promise<void> {
     if (!currentPassword || !nextPassword) {
-      throw new BadRequestException('Current password and next password are required.');
+      throw new BadRequestException(
+        "Current password and next password are required.",
+      );
     }
 
     if (nextPassword.length < 6) {
-      throw new BadRequestException('New password must contain at least 6 characters.');
+      throw new BadRequestException(
+        "New password must contain at least 6 characters.",
+      );
     }
 
     const account = await this.repository.findCredentialById(accountId);
     if (!account || !account.passwordHash) {
-      throw new UnauthorizedException('Account is unavailable.');
+      throw new UnauthorizedException("Account is unavailable.");
     }
 
     const isValid = await this.verifyPassword(currentPassword, account);
     if (!isValid) {
-      throw new UnauthorizedException('Current password is invalid.');
+      throw new UnauthorizedException("Current password is invalid.");
     }
 
     const nextPasswordHash = await hash(nextPassword, 10);
@@ -95,7 +120,9 @@ export class AccountAuthService {
 
   async resetPassword(accountId: string, nextPassword: string): Promise<void> {
     if (!nextPassword || nextPassword.length < 6) {
-      throw new BadRequestException('New password must contain at least 6 characters.');
+      throw new BadRequestException(
+        "New password must contain at least 6 characters.",
+      );
     }
 
     const nextPasswordHash = await hash(nextPassword, 10);
@@ -106,21 +133,29 @@ export class AccountAuthService {
    * 生成密码重置 token，返回 { accountId, rawToken } 供 BFF 构建重置链接并发邮件。
    * 若 identifier 不存在，返回 null（调用方不应泄露此信息）。
    */
-  async requestPasswordReset(identifier: string): Promise<{ accountId: string; rawToken: string } | null> {
+  async requestPasswordReset(
+    identifier: string,
+  ): Promise<{ accountId: string; rawToken: string } | null> {
     const account = await this.repository.findByIdentifier(identifier);
     if (!account) {
       return null;
     }
 
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 分钟
-    const rawToken = await this.repository.createPasswordResetToken(account.id, expiresAt);
+    const rawToken = await this.repository.createPasswordResetToken(
+      account.id,
+      expiresAt,
+    );
     return { accountId: account.id, rawToken };
   }
 
   /** 用 token 重置密码，token 消费后立即失效。token 无效或已过期返回 false。 */
-  async resetPasswordWithToken(rawToken: string, newPassword: string): Promise<boolean> {
+  async resetPasswordWithToken(
+    rawToken: string,
+    newPassword: string,
+  ): Promise<boolean> {
     if (!newPassword || newPassword.length < 8) {
-      throw new BadRequestException('密码至少 8 位字符');
+      throw new BadRequestException("密码至少 8 位字符");
     }
 
     const accountId = await this.repository.consumePasswordResetToken(rawToken);
@@ -133,27 +168,44 @@ export class AccountAuthService {
   }
 
   /** OAuth 登录：通过 provider + providerId 查找或自动创建账号。*/
-  async loginWithOAuth(input: FindOrCreateByOAuthInput): Promise<AuthenticatedAccountView> {
+  async loginWithOAuth(
+    input: FindOrCreateByOAuthInput,
+  ): Promise<AuthenticatedAccountView> {
     return this.repository.findOrCreateByOAuth(input);
   }
 
-  async registerWithPassword(email: string, name: string, password: string): Promise<AuthenticatedAccountView> {
+  async registerWithPassword(
+    email: string,
+    name: string,
+    password: string,
+  ): Promise<AuthenticatedAccountView> {
     if (!email?.trim() || !name?.trim() || !password) {
-      throw new BadRequestException('邮箱、姓名和密码均为必填项');
+      throw new BadRequestException("邮箱、姓名和密码均为必填项");
     }
 
     if (password.length < 8) {
-      throw new BadRequestException('密码至少 8 位字符');
+      throw new BadRequestException("密码至少 8 位字符");
     }
 
     const passwordHash = await hash(password, 10);
-    return this.repository.createAccount({ email: email.trim(), name: name.trim(), passwordHash });
+    return this.repository.createAccount({
+      email: email.trim(),
+      name: name.trim(),
+      passwordHash,
+    });
   }
 
-  private async verifyPassword(password: string, account: AccountCredentialRecord): Promise<boolean> {
-    const hash = account.passwordHash ?? '';
+  private async verifyPassword(
+    password: string,
+    account: AccountCredentialRecord,
+  ): Promise<boolean> {
+    const hash = account.passwordHash ?? "";
 
-    if (hash.startsWith('$2a$') || hash.startsWith('$2b$') || hash.startsWith('$2y$')) {
+    if (
+      hash.startsWith("$2a$") ||
+      hash.startsWith("$2b$") ||
+      hash.startsWith("$2y$")
+    ) {
       return compare(password, hash);
     }
 
@@ -162,7 +214,7 @@ export class AccountAuthService {
 }
 
 function safeStringCompare(left: string, right: string): boolean {
-  const leftBuffer = createHash('sha256').update(left).digest();
-  const rightBuffer = createHash('sha256').update(right).digest();
+  const leftBuffer = createHash("sha256").update(left).digest();
+  const rightBuffer = createHash("sha256").update(right).digest();
   return timingSafeEqual(leftBuffer, rightBuffer);
 }

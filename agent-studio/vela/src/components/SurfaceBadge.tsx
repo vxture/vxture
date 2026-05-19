@@ -8,16 +8,16 @@
  * @date 2026-04-30
  */
 
-import { Badge } from '@vxture/design-system';
-import type { VelaSurface } from '../types/vela.types';
+import { Badge } from "@vxture/design-system";
+import type { VelaSurface } from "../types/vela.types";
 
 // ============================================================================
 // 常量
 // ============================================================================
 
 const LABEL: Record<VelaSurface, string> = {
-  admin:   '运营后台',
-  console: '工作台',
+  admin: "运营后台",
+  console: "工作台",
 };
 
 // ============================================================================

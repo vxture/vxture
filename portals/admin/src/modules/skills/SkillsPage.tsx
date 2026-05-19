@@ -1,47 +1,65 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { Badge, Button, Icon, Input, NativeSelect, Pagination } from '@vxture/design-system';
-import { fetchSkills } from '@/api/admin-bff';
-import type { SkillRecord } from '@/entities/console';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { formatDate, formatNumber, joinClasses } from '@/modules/tenants/tenant-utils';
+import { useEffect, useMemo, useState } from "react";
+import {
+  Badge,
+  Button,
+  Icon,
+  Input,
+  NativeSelect,
+  Pagination,
+} from "@vxture/design-system";
+import { fetchSkills } from "@/api/admin-bff";
+import type { SkillRecord } from "@/entities/console";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import {
+  formatDate,
+  formatNumber,
+  joinClasses,
+} from "@/modules/tenants/tenant-utils";
 
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
 
-type SkillStatusFilter = SkillRecord['status'] | 'all';
-type ViewMode = 'list' | 'cards';
+type SkillStatusFilter = SkillRecord["status"] | "all";
+type ViewMode = "list" | "cards";
 
 const PAGE_SIZE = 20;
-const EMPTY_MARK = '-';
+const EMPTY_MARK = "-";
 
 // ─── 辅助函数 ──────────────────────────────────────────────────────────────────
 
-const STATUS_LABELS: Record<SkillRecord['status'], string> = {
-  active: '已上线',
-  disabled: '已停用',
-  draft: '草稿',
+const STATUS_LABELS: Record<SkillRecord["status"], string> = {
+  active: "已上线",
+  disabled: "已停用",
+  draft: "草稿",
 };
 
-function statusBadgeClass(status: SkillRecord['status']) {
-  if (status === 'active') return 'vx-admin-role-status-pill--enabled';
-  if (status === 'draft') return 'vx-platform-user-status-pill--pending';
-  return 'vx-admin-role-status-pill--disabled';
+function statusBadgeClass(status: SkillRecord["status"]) {
+  if (status === "active") return "vx-admin-role-status-pill--enabled";
+  if (status === "draft") return "vx-platform-user-status-pill--pending";
+  return "vx-admin-role-status-pill--disabled";
 }
 
 function skillSearchText(skill: SkillRecord) {
-  return [skill.skillCode, skill.skillName, skill.description, skill.category, skill.version, skill.endpointUrl]
+  return [
+    skill.skillCode,
+    skill.skillName,
+    skill.description,
+    skill.category,
+    skill.version,
+    skill.endpointUrl,
+  ]
     .filter(Boolean)
-    .join(' ')
+    .join(" ")
     .toLowerCase();
 }
 
 // ─── 子组件：汇总卡片 ──────────────────────────────────────────────────────────
 
 function SkillSummary({ skills }: { skills: SkillRecord[] }) {
-  const activeCount = skills.filter((s) => s.status === 'active').length;
-  const disabledCount = skills.filter((s) => s.status === 'disabled').length;
+  const activeCount = skills.filter((s) => s.status === "active").length;
+  const disabledCount = skills.filter((s) => s.status === "disabled").length;
   const totalInvocations = skills.reduce((sum, s) => sum + s.invocations, 0);
 
   return (
@@ -103,7 +121,9 @@ function SkillToolbar({
         <NativeSelect
           className="vx-admin-filter-select"
           value={statusFilter}
-          onChange={(e) => onStatusFilterChange(e.target.value as SkillStatusFilter)}
+          onChange={(e) =>
+            onStatusFilterChange(e.target.value as SkillStatusFilter)
+          }
         >
           <option value="all">全部状态</option>
           <option value="active">已上线</option>
@@ -118,7 +138,9 @@ function SkillToolbar({
           >
             <option value="">全部分类</option>
             {categories.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
           </NativeSelect>
         )}
@@ -126,8 +148,11 @@ function SkillToolbar({
           <Button
             variant="ghost"
             size="icon"
-            className={joinClasses('vx-admin-view-toggle__btn', viewMode === 'list' ? 'vx-admin-view-toggle__btn--active' : '')}
-            onClick={() => onViewModeChange('list')}
+            className={joinClasses(
+              "vx-admin-view-toggle__btn",
+              viewMode === "list" ? "vx-admin-view-toggle__btn--active" : "",
+            )}
+            onClick={() => onViewModeChange("list")}
             title="列表视图"
           >
             <Icon name="rows" size="sm" fallback="placeholder" />
@@ -135,8 +160,11 @@ function SkillToolbar({
           <Button
             variant="ghost"
             size="icon"
-            className={joinClasses('vx-admin-view-toggle__btn', viewMode === 'cards' ? 'vx-admin-view-toggle__btn--active' : '')}
-            onClick={() => onViewModeChange('cards')}
+            className={joinClasses(
+              "vx-admin-view-toggle__btn",
+              viewMode === "cards" ? "vx-admin-view-toggle__btn--active" : "",
+            )}
+            onClick={() => onViewModeChange("cards")}
             title="卡片视图"
           >
             <Icon name="squares-four" size="sm" fallback="placeholder" />
@@ -151,9 +179,19 @@ function SkillToolbar({
 
 // ─── 子组件：列表视图 ──────────────────────────────────────────────────────────
 
-function SkillList({ skills, startIndex }: { skills: SkillRecord[]; startIndex: number }) {
+function SkillList({
+  skills,
+  startIndex,
+}: {
+  skills: SkillRecord[];
+  startIndex: number;
+}) {
   return (
-    <div className="vx-tenant-directory-list vx-skills-directory-list" role="region" aria-label="技能列表">
+    <div
+      className="vx-tenant-directory-list vx-skills-directory-list"
+      role="region"
+      aria-label="技能列表"
+    >
       <div className="vx-tenant-directory-list__header">
         <span>序号</span>
         <span>技能</span>
@@ -174,22 +212,37 @@ function SkillList({ skills, startIndex }: { skills: SkillRecord[]; startIndex: 
           </span>
           <span className="vx-skill-row__category">{skill.category}</span>
           <span className="vx-skill-row__version">{skill.version}</span>
-          <span className="vx-skill-row__endpoint" title={skill.endpointUrl ?? EMPTY_MARK}>
+          <span
+            className="vx-skill-row__endpoint"
+            title={skill.endpointUrl ?? EMPTY_MARK}
+          >
             {skill.endpointUrl ?? EMPTY_MARK}
           </span>
-          <span className="vx-skill-row__invocations">{formatNumber(skill.invocations)}</span>
-          <span className="vx-skill-row__status">
-            <Badge className={statusBadgeClass(skill.status)}>{STATUS_LABELS[skill.status]}</Badge>
-            {skill.isSystem && <Badge className="vx-platform-user-status-pill--pending">系统</Badge>}
+          <span className="vx-skill-row__invocations">
+            {formatNumber(skill.invocations)}
           </span>
-          <span className="vx-skill-row__updated">{formatDate(skill.updatedAt)}</span>
+          <span className="vx-skill-row__status">
+            <Badge className={statusBadgeClass(skill.status)}>
+              {STATUS_LABELS[skill.status]}
+            </Badge>
+            {skill.isSystem && (
+              <Badge className="vx-platform-user-status-pill--pending">
+                系统
+              </Badge>
+            )}
+          </span>
+          <span className="vx-skill-row__updated">
+            {formatDate(skill.updatedAt)}
+          </span>
           <span className="vx-tenant-actions">
             <Button
               variant="ghost"
               size="icon"
               className="vx-tenant-actions__trigger"
               disabled={skill.isSystem}
-              title={skill.isSystem ? '系统技能不可修改' : '操作（数据层待接入）'}
+              title={
+                skill.isSystem ? "系统技能不可修改" : "操作（数据层待接入）"
+              }
             >
               <Icon name="more-vertical" size="lg" fallback="placeholder" />
             </Button>
@@ -212,8 +265,14 @@ function SkillCards({ skills }: { skills: SkillRecord[] }) {
               <Icon name="cube" size="md" fallback="placeholder" />
             </span>
             <div className="vx-skill-card__badges">
-              <Badge className={statusBadgeClass(skill.status)}>{STATUS_LABELS[skill.status]}</Badge>
-              {skill.isSystem && <Badge className="vx-platform-user-status-pill--pending">系统</Badge>}
+              <Badge className={statusBadgeClass(skill.status)}>
+                {STATUS_LABELS[skill.status]}
+              </Badge>
+              {skill.isSystem && (
+                <Badge className="vx-platform-user-status-pill--pending">
+                  系统
+                </Badge>
+              )}
             </div>
           </div>
           <h3 className="vx-skill-card__name">{skill.skillName}</h3>
@@ -235,10 +294,10 @@ function SkillCards({ skills }: { skills: SkillRecord[] }) {
 export function SkillsPage() {
   const [skills, setSkills] = useState<SkillRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<SkillStatusFilter>('all');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<SkillStatusFilter>("all");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -247,12 +306,17 @@ export function SkillsPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  const categories = useMemo(() => [...new Set(skills.map((s) => s.category))].sort(), [skills]);
+  const categories = useMemo(
+    () => [...new Set(skills.map((s) => s.category))].sort(),
+    [skills],
+  );
 
   const filtered = useMemo(() => {
     let result = skills;
-    if (statusFilter !== 'all') result = result.filter((s) => s.status === statusFilter);
-    if (categoryFilter) result = result.filter((s) => s.category === categoryFilter);
+    if (statusFilter !== "all")
+      result = result.filter((s) => s.status === statusFilter);
+    if (categoryFilter)
+      result = result.filter((s) => s.category === categoryFilter);
     if (search.trim()) {
       const q = search.trim().toLowerCase();
       result = result.filter((s) => skillSearchText(s).includes(q));
@@ -266,12 +330,21 @@ export function SkillsPage() {
   }, [filtered, page]);
   const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
 
-  const handleSearch = (v: string) => { setSearch(v); setPage(1); };
-  const handleStatusFilter = (v: SkillStatusFilter) => { setStatusFilter(v); setPage(1); };
-  const handleCategoryFilter = (v: string) => { setCategoryFilter(v); setPage(1); };
+  const handleSearch = (v: string) => {
+    setSearch(v);
+    setPage(1);
+  };
+  const handleStatusFilter = (v: SkillStatusFilter) => {
+    setStatusFilter(v);
+    setPage(1);
+  };
+  const handleCategoryFilter = (v: string) => {
+    setCategoryFilter(v);
+    setPage(1);
+  };
 
   return (
-    <div className={joinClasses('vx-page-stack', 'vx-skills-page')}>
+    <div className={joinClasses("vx-page-stack", "vx-skills-page")}>
       <PageHeader
         icon="cube"
         title="技能市场"
@@ -295,12 +368,19 @@ export function SkillsPage() {
       ) : filtered.length === 0 ? (
         <EmptyState
           title="暂无技能"
-          description={search || statusFilter !== 'all' || categoryFilter ? '尝试调整筛选条件' : '尚未接入任何 AI 技能，请通过 API 注册技能'}
+          description={
+            search || statusFilter !== "all" || categoryFilter
+              ? "尝试调整筛选条件"
+              : "尚未接入任何 AI 技能，请通过 API 注册技能"
+          }
         />
       ) : (
         <>
-          {viewMode === 'list' ? (
-            <SkillList skills={pageSkills} startIndex={(page - 1) * PAGE_SIZE} />
+          {viewMode === "list" ? (
+            <SkillList
+              skills={pageSkills}
+              startIndex={(page - 1) * PAGE_SIZE}
+            />
           ) : (
             <SkillCards skills={pageSkills} />
           )}

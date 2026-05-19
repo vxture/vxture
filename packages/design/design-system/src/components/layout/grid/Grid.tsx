@@ -50,16 +50,17 @@ export const Grid = forwardRef<HTMLDivElement, GridProps>(
         ref={ref}
         className={cn(
           "grid",
-          columnsClasses[columns as keyof typeof columnsClasses] || "grid-cols-3",
+          columnsClasses[columns as keyof typeof columnsClasses] ||
+            "grid-cols-3",
           gapClasses[gap],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </div>
     );
-  }
+  },
 );
 
 Grid.displayName = "Grid";

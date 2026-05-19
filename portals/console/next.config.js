@@ -1,19 +1,19 @@
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { existsSync, readFileSync } from 'fs';
-import createNextIntlPlugin from 'next-intl/plugin';
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import { existsSync, readFileSync } from "fs";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 function loadRootEnv() {
-  const envPath = join(__dirname, '../../.env.local');
+  const envPath = join(__dirname, "../../.env.local");
   if (!existsSync(envPath)) return;
 
-  for (const rawLine of readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+  for (const rawLine of readFileSync(envPath, "utf8").split(/\r?\n/)) {
     const line = rawLine.trim();
-    if (!line || line.startsWith('#')) continue;
-    const sep = line.indexOf('=');
+    if (!line || line.startsWith("#")) continue;
+    const sep = line.indexOf("=");
     if (sep <= 0) continue;
 
     const key = line.slice(0, sep).trim();
@@ -35,27 +35,34 @@ function unwrapEnvValue(value) {
 loadRootEnv();
 
 const internalAliases = {
-  '@vxture/shared': join(__dirname, '../../packages/shared/shared/src'),
-  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/src/client.ts'),
-  '@vxture/platform-browser': join(__dirname, '../../packages/platform/browser/src'),
+  "@vxture/shared": join(__dirname, "../../packages/shared/shared/src"),
+  "@vxture/design-system": join(
+    __dirname,
+    "../../packages/design/design-system/src/client.ts",
+  ),
+  "@vxture/platform-browser": join(
+    __dirname,
+    "../../packages/platform/browser/src",
+  ),
 };
 
 const turboAliases = {
-  '@vxture/shared': '../../packages/shared/shared/src',
-  '@vxture/design-system': '../../packages/design/design-system/src/client.ts',
-  '@vxture/platform-browser': '../../packages/platform/browser/src',
+  "@vxture/shared": "../../packages/shared/shared/src",
+  "@vxture/design-system": "../../packages/design/design-system/src/client.ts",
+  "@vxture/platform-browser": "../../packages/platform/browser/src",
 };
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: ['@vxture/design-system'],
-  output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
+  transpilePackages: ["@vxture/design-system"],
+  output: process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined,
   experimental: {
     webpackBuildWorker: false,
   },
   env: {
-    NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY: process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? '',
+    NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY:
+      process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? "",
   },
   turbopack: {
     resolveAlias: turboAliases,
@@ -63,8 +70,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/vela/:path*',
-        destination: `${process.env.VELA_BFF_DEV_URL ?? 'http://localhost:3121'}/vela/:path*`,
+        source: "/vela/:path*",
+        destination: `${process.env.VELA_BFF_DEV_URL ?? "http://localhost:3121"}/vela/:path*`,
       },
     ];
   },
@@ -74,6 +81,6 @@ const nextConfig = {
   },
 };
 
-const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');
+const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
 export default withNextIntl(nextConfig);

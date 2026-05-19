@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * ModelBadge.tsx - AI 模型身份徽章
@@ -12,14 +12,14 @@
  * @date 2026-05-16
  */
 
-import type { KeyboardEvent } from 'react';
-import { cn } from '../../utils/cn';
+import type { KeyboardEvent } from "react";
+import { cn } from "../../utils/cn";
 
-export type ModelBadgeStatus = 'active' | 'idle' | 'deploying' | 'error';
+export type ModelBadgeStatus = "active" | "idle" | "deploying" | "error";
 
 export interface ModelBadgeProps {
   readonly modelId: string;
-  readonly variant?: 'default' | 'flagship';
+  readonly variant?: "default" | "flagship";
   readonly status?: ModelBadgeStatus;
   readonly onClick?: () => void;
   readonly disabled?: boolean;
@@ -27,16 +27,16 @@ export interface ModelBadgeProps {
 }
 
 const STATUS_LABEL: Record<ModelBadgeStatus, string> = {
-  active: 'ACTIVE',
-  idle: 'IDLE',
-  deploying: 'DEPLOYING',
-  error: 'ERROR',
+  active: "ACTIVE",
+  idle: "IDLE",
+  deploying: "DEPLOYING",
+  error: "ERROR",
 };
 
 export function ModelBadge({
   modelId,
-  variant = 'default',
-  status = 'active',
+  variant = "default",
+  status = "active",
   onClick,
   disabled = false,
   className,
@@ -45,33 +45,33 @@ export function ModelBadge({
 
   const handleKeyDown = (event: KeyboardEvent<HTMLSpanElement>) => {
     if (!isInteractive) return;
-    if (event.key === ' ') {
+    if (event.key === " ") {
       event.preventDefault(); // prevent page scroll on Space
-    } else if (event.key === 'Enter') {
+    } else if (event.key === "Enter") {
       event.preventDefault();
       onClick!();
     }
   };
 
   const handleKeyUp = (event: KeyboardEvent<HTMLSpanElement>) => {
-    if (!isInteractive || event.key !== ' ') return;
+    if (!isInteractive || event.key !== " ") return;
     onClick!();
   };
 
   return (
     <span
       className={cn(
-        'vx-model-badge',
+        "vx-model-badge",
         `vx-model-badge--${variant}`,
         `vx-model-badge--${status}`,
-        isInteractive ? 'vx-model-badge--interactive' : undefined,
-        disabled ? 'vx-model-badge--disabled' : undefined,
+        isInteractive ? "vx-model-badge--interactive" : undefined,
+        disabled ? "vx-model-badge--disabled" : undefined,
         className,
       )}
       onClick={isInteractive ? onClick : undefined}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
-      role={onClick ? 'button' : undefined}
+      role={onClick ? "button" : undefined}
       tabIndex={isInteractive ? 0 : undefined}
       aria-disabled={disabled || undefined}
     >

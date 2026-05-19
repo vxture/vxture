@@ -1,6 +1,6 @@
-'use client';
-import * as React from 'react';
-import { cn } from '../../utils/cn';
+"use client";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type DrawerProps = {
   /** Whether the drawer is open */
@@ -8,7 +8,7 @@ export type DrawerProps = {
   /** Called when the user requests close (scrim click / Esc) */
   onClose: () => void;
   /** Side to slide in from */
-  side?: 'right' | 'left';
+  side?: "right" | "left";
   /** Width in px or any CSS length — default 420px */
   width?: number | string;
   /** Drawer title — shown in header bar */
@@ -35,7 +35,7 @@ export type DrawerProps = {
 export function Drawer({
   open,
   onClose,
-  side = 'right',
+  side = "right",
   width = 420,
   title,
   footer,
@@ -45,25 +45,29 @@ export function Drawer({
   /* Esc to close */
   React.useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
   /* Lock body scroll while open */
   React.useEffect(() => {
     if (!open) return;
     const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = prev; };
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
   }, [open]);
 
   if (!open) return null;
 
-  const widthCss = typeof width === 'number' ? `${width}px` : width;
+  const widthCss = typeof width === "number" ? `${width}px` : width;
 
   return (
-    <div className={cn('vx-drawer-root', `vx-drawer-root--${side}`, className)}>
+    <div className={cn("vx-drawer-root", `vx-drawer-root--${side}`, className)}>
       <div className="vx-drawer__scrim" onClick={onClose} aria-hidden />
       <div
         className="vx-drawer__panel"
@@ -79,7 +83,9 @@ export function Drawer({
               className="vx-drawer__close"
               onClick={onClose}
               aria-label="Close drawer"
-            >✕</button>
+            >
+              ✕
+            </button>
           </div>
         )}
         <div className="vx-drawer__body">{children}</div>

@@ -17,12 +17,12 @@
  * All responses from BFF to frontend follow this structure
  */
 export interface ApiResponse<T = unknown> {
-  success:   boolean;
-  data:      T | null;
-  code:      string;
-  message?:  string;
+  success: boolean;
+  data: T | null;
+  code: string;
+  message?: string;
   requestId?: string;
-  timestamp:  string;
+  timestamp: string;
 }
 
 /**
@@ -30,21 +30,21 @@ export interface ApiResponse<T = unknown> {
  * Received by BFF router for frontend pagination requests
  */
 export interface PageQuery {
-  page:       number;
-  pageSize:   number;
-  sortBy?:    string;
-  sortOrder?: 'asc' | 'desc';
+  page: number;
+  pageSize: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }
 
 /**
  * Pagination result
  */
 export interface PageResult<T = unknown> {
-  items:       T[];
-  total:       number;
-  page:        number;
-  pageSize:    number;
-  totalPages:  number;
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
   hasNextPage: boolean;
   hasPrevPage: boolean;
 }
@@ -53,9 +53,9 @@ export interface PageResult<T = unknown> {
  * Standard error response body
  */
 export interface ApiErrorBody {
-  code:       string;
-  message:    string;
-  details?:   unknown;
+  code: string;
+  message: string;
+  details?: unknown;
   requestId?: string;
 }
 
@@ -69,17 +69,17 @@ export interface ApiErrorBody {
  */
 export interface RequestOptions {
   /** Overrides global baseURL for third-party API calls */
-  baseURL?:  string;
+  baseURL?: string;
   /** Additional request headers merged with global headers */
-  headers?:  Record<string, string>;
+  headers?: Record<string, string>;
   /** Timeout in milliseconds, overrides global config */
-  timeout?:  number;
+  timeout?: number;
   /** Number of retries, overrides global config */
-  retries?:  number;
+  retries?: number;
   /** Skip automatic response unwrapping, return raw axios response */
-  raw?:      boolean;
+  raw?: boolean;
   /** Response type for file download */
-  responseType?: 'json' | 'arraybuffer' | 'stream' | 'blob';
+  responseType?: "json" | "arraybuffer" | "stream" | "blob";
 }
 
 /**
@@ -102,7 +102,7 @@ export interface RequestContext {
   /** Bearer token automatically injected into Authorization header */
   accessToken?: string;
   /** Tenant ID automatically injected into x-tenant-id header */
-  tenantId?:    string;
+  tenantId?: string;
   /** Request ID for distributed tracing */
-  requestId?:   string;
+  requestId?: string;
 }

@@ -7,7 +7,7 @@
  * @date 2026-05-06
  */
 
-import type { ContentLoader } from '../types';
+import type { ContentLoader } from "../types";
 
 /**
  * Blog loader 占位实现
@@ -18,7 +18,7 @@ import type { ContentLoader } from '../types';
 export const blogLoader: ContentLoader = async (slug) => {
   // /blog（列表页）
   if (slug.length === 0) {
-    return { type: 'blog-index', layout: 'article' };
+    return { type: "blog-index", layout: "article" };
   }
 
   // /blog/[slug]：占位阶段无文章，返回 null 触发 404

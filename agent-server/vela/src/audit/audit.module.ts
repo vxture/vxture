@@ -12,12 +12,12 @@
  * @date 2026-05-01
  */
 
-import { Global, Module } from '@nestjs/common';
-import { AuditRepository } from './audit.repository';
+import { Global, Module } from "@nestjs/common";
+import { AuditRepository } from "./audit.repository";
 
 @Global()
 @Module({
   providers: [AuditRepository],
-  exports:   [AuditRepository],
+  exports: [AuditRepository],
 })
 export class AuditModule {}

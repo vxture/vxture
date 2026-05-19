@@ -35,14 +35,14 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
         className={cn(
           "w-full mx-auto px-4 sm:px-6 lg:px-8",
           sizeClasses[size],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </div>
     );
-  }
+  },
 );
 
 Container.displayName = "Container";

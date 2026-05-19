@@ -14,9 +14,9 @@
  * @date 2026-05-03
  */
 
-import { Injectable, Logger } from '@nestjs/common';
-import nodemailer from 'nodemailer';
-import type { MailPayload, SmtpConfig } from './mail.types';
+import { Injectable, Logger } from "@nestjs/common";
+import nodemailer from "nodemailer";
+import type { MailPayload, SmtpConfig } from "./mail.types";
 
 // ============================================================================
 // MailService
@@ -25,7 +25,9 @@ import type { MailPayload, SmtpConfig } from './mail.types';
 @Injectable()
 export class MailService {
   private readonly logger = new Logger(MailService.name);
-  private readonly transporter: ReturnType<typeof nodemailer.createTransport> | null;
+  private readonly transporter: ReturnType<
+    typeof nodemailer.createTransport
+  > | null;
   private readonly from: string;
 
   constructor() {
@@ -33,15 +35,17 @@ export class MailService {
 
     if (!config) {
       this.transporter = null;
-      this.from = '';
-      this.logger.warn('SMTP_HOST 未配置，邮件服务以 no-op 模式运行，所有 send() 调用将被静默跳过');
+      this.from = "";
+      this.logger.warn(
+        "SMTP_HOST 未配置，邮件服务以 no-op 模式运行，所有 send() 调用将被静默跳过",
+      );
       return;
     }
 
     this.from = config.from;
     this.transporter = nodemailer.createTransport({
-      host:   config.host,
-      port:   config.port,
+      host: config.host,
+      port: config.port,
       secure: config.secure,
       auth: {
         user: config.user,
@@ -49,7 +53,9 @@ export class MailService {
       },
     });
 
-    this.logger.log(`邮件服务已初始化 [${config.host}:${config.port}，from: ${config.from}]`);
+    this.logger.log(
+      `邮件服务已初始化 [${config.host}:${config.port}，from: ${config.from}]`,
+    );
   }
 
   // ============================================================================
@@ -63,19 +69,23 @@ export class MailService {
    */
   async send(payload: MailPayload): Promise<void> {
     if (!this.transporter) {
-      this.logger.warn(`[no-op] 跳过发送邮件：subject="${payload.subject}" to="${[payload.to].flat().join(', ')}"`);
+      this.logger.warn(
+        `[no-op] 跳过发送邮件：subject="${payload.subject}" to="${[payload.to].flat().join(", ")}"`,
+      );
       return;
     }
 
     await this.transporter.sendMail({
-      from:    this.from,
-      to:      Array.isArray(payload.to) ? payload.to.join(', ') : payload.to,
+      from: this.from,
+      to: Array.isArray(payload.to) ? payload.to.join(", ") : payload.to,
       subject: payload.subject,
-      html:    payload.html,
-      text:    payload.text,
+      html: payload.html,
+      text: payload.text,
     });
 
-    this.logger.log(`邮件已发送：subject="${payload.subject}" to="${[payload.to].flat().join(', ')}"`);
+    this.logger.log(
+      `邮件已发送：subject="${payload.subject}" to="${[payload.to].flat().join(", ")}"`,
+    );
   }
 }
 
@@ -84,14 +94,14 @@ export class MailService {
 // ============================================================================
 
 function resolveSmtpConfig(): SmtpConfig | null {
-  const host = process.env['SMTP_HOST']?.trim();
+  const host = process.env["SMTP_HOST"]?.trim();
   if (!host) return null;
 
-  const user = process.env['SMTP_USER']?.trim() ?? '';
-  const pass = process.env['SMTP_PASS']?.trim() ?? '';
-  const from = process.env['SMTP_FROM']?.trim() || `Vxture <noreply@${host}>`;
-  const port = Number(process.env['SMTP_PORT'] ?? 465);
-  const secure = process.env['SMTP_SECURE'] !== 'false';
+  const user = process.env["SMTP_USER"]?.trim() ?? "";
+  const pass = process.env["SMTP_PASS"]?.trim() ?? "";
+  const from = process.env["SMTP_FROM"]?.trim() || `Vxture <noreply@${host}>`;
+  const port = Number(process.env["SMTP_PORT"] ?? 465);
+  const secure = process.env["SMTP_SECURE"] !== "false";
 
   return { host, port, secure, user, pass, from };
 }

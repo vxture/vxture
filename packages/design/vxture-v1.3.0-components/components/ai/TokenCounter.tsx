@@ -1,6 +1,6 @@
-'use client';
-import * as React from 'react';
-import { cn } from '../../utils/cn';
+"use client";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type TokenCounterProps = {
   /** Tokens used so far */
@@ -30,23 +30,35 @@ export type TokenCounterProps = {
 export function TokenCounter({
   used,
   total,
-  label = 'USAGE',
+  label = "USAGE",
   showNumbers = true,
   className,
 }: TokenCounterProps) {
   const pct = Math.min(100, Math.max(0, (used / total) * 100));
-  const tone = pct >= 85 ? 'danger' : pct >= 60 ? 'warn' : 'ok';
+  const tone = pct >= 85 ? "danger" : pct >= 60 ? "warn" : "ok";
 
   return (
-    <div className={cn('vx-token-counter', `vx-token-counter--${tone}`, className)}>
+    <div
+      className={cn("vx-token-counter", `vx-token-counter--${tone}`, className)}
+    >
       <span className="vx-token-counter__label">{label}</span>
-      <div className="vx-token-counter__track" role="progressbar" aria-valuenow={used} aria-valuemax={total}>
+      <div
+        className="vx-token-counter__track"
+        role="progressbar"
+        aria-valuenow={used}
+        aria-valuemax={total}
+      >
         <div className="vx-token-counter__fill" style={{ width: `${pct}%` }} />
       </div>
       {showNumbers ? (
         <span className="vx-token-counter__stats">
-          <span className="vx-token-counter__used">{used.toLocaleString()}</span>
-          <span className="vx-token-counter__total"> / {total.toLocaleString()} tokens</span>
+          <span className="vx-token-counter__used">
+            {used.toLocaleString()}
+          </span>
+          <span className="vx-token-counter__total">
+            {" "}
+            / {total.toLocaleString()} tokens
+          </span>
         </span>
       ) : (
         <span className="vx-token-counter__stats">{pct.toFixed(0)}%</span>

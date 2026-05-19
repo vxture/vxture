@@ -1,5 +1,5 @@
-import type { Capability } from '@/entities/console';
-import type { IconName } from '@vxture/design-system';
+import type { Capability } from "@/entities/console";
+import type { IconName } from "@vxture/design-system";
 
 export interface NavigationItem {
   href: string;
@@ -7,7 +7,7 @@ export interface NavigationItem {
   icon: IconName;
   descriptionKey: string;
   capability?: Capability;
-  tenantTypes?: Array<'individual' | 'company'>;
+  tenantTypes?: Array<"individual" | "company">;
 }
 
 export interface NavigationSection {
@@ -17,121 +17,121 @@ export interface NavigationSection {
 
 export const navigationSections: NavigationSection[] = [
   {
-    titleKey: 'workspace',
+    titleKey: "workspace",
     items: [
       {
-        href: '/',
-        labelKey: 'overview.label',
-        icon: 'home',
-        descriptionKey: 'overview.description',
+        href: "/",
+        labelKey: "overview.label",
+        icon: "home",
+        descriptionKey: "overview.description",
       },
       {
-        href: '/todos',
-        labelKey: 'todos.label',
-        icon: 'calendar',
-        descriptionKey: 'todos.description',
+        href: "/todos",
+        labelKey: "todos.label",
+        icon: "calendar",
+        descriptionKey: "todos.description",
       },
     ],
   },
   {
-    titleKey: 'accountTenant',
+    titleKey: "accountTenant",
     items: [
       {
-        href: '/profile',
-        labelKey: 'profile.label',
-        icon: 'user',
-        descriptionKey: 'profile.description',
+        href: "/profile",
+        labelKey: "profile.label",
+        icon: "user",
+        descriptionKey: "profile.description",
       },
       {
-        href: '/personal-tenant',
-        labelKey: 'personalTenant.label',
-        icon: 'user',
-        descriptionKey: 'personalTenant.description',
-        tenantTypes: ['individual'],
+        href: "/personal-tenant",
+        labelKey: "personalTenant.label",
+        icon: "user",
+        descriptionKey: "personalTenant.description",
+        tenantTypes: ["individual"],
       },
       {
-        href: '/organization',
-        labelKey: 'organization.label',
-        icon: 'building-library',
-        descriptionKey: 'organization.description',
-        tenantTypes: ['company'],
+        href: "/organization",
+        labelKey: "organization.label",
+        icon: "building-library",
+        descriptionKey: "organization.description",
+        tenantTypes: ["company"],
       },
     ],
   },
   {
-    titleKey: 'membersPermissions',
+    titleKey: "membersPermissions",
     items: [
       {
-        href: '/members',
-        labelKey: 'members.label',
-        icon: 'users',
-        descriptionKey: 'members.description',
-        capability: 'tenant.user.manage',
-        tenantTypes: ['company'],
+        href: "/members",
+        labelKey: "members.label",
+        icon: "users",
+        descriptionKey: "members.description",
+        capability: "tenant.user.manage",
+        tenantTypes: ["company"],
       },
       {
-        href: '/roles',
-        labelKey: 'roles.label',
-        icon: 'shield-check',
-        descriptionKey: 'roles.description',
-        capability: 'tenant.role.manage',
-        tenantTypes: ['company'],
+        href: "/roles",
+        labelKey: "roles.label",
+        icon: "shield-check",
+        descriptionKey: "roles.description",
+        capability: "tenant.role.manage",
+        tenantTypes: ["company"],
       },
       {
-        href: '/invitations',
-        labelKey: 'invitations.label',
-        icon: 'mail',
-        descriptionKey: 'invitations.description',
-        tenantTypes: ['company'],
+        href: "/invitations",
+        labelKey: "invitations.label",
+        icon: "mail",
+        descriptionKey: "invitations.description",
+        tenantTypes: ["company"],
       },
     ],
   },
   {
-    titleKey: 'subscriptionBilling',
+    titleKey: "subscriptionBilling",
     items: [
       {
-        href: '/subscription',
-        labelKey: 'subscription.label',
-        icon: 'chart-bar',
-        descriptionKey: 'subscription.description',
-        capability: 'tenant.subscription.read',
+        href: "/subscription",
+        labelKey: "subscription.label",
+        icon: "chart-bar",
+        descriptionKey: "subscription.description",
+        capability: "tenant.subscription.read",
       },
       {
-        href: '/billing',
-        labelKey: 'billing.label',
-        icon: 'calendar',
-        descriptionKey: 'billing.description',
-        capability: 'tenant.billing.read',
+        href: "/billing",
+        labelKey: "billing.label",
+        icon: "calendar",
+        descriptionKey: "billing.description",
+        capability: "tenant.billing.read",
       },
       {
-        href: '/quotas',
-        labelKey: 'quotas.label',
-        icon: 'database',
-        descriptionKey: 'quotas.description',
-        capability: 'tenant.quota.read',
+        href: "/quotas",
+        labelKey: "quotas.label",
+        icon: "database",
+        descriptionKey: "quotas.description",
+        capability: "tenant.quota.read",
       },
     ],
   },
   {
-    titleKey: 'advancedSettings',
+    titleKey: "advancedSettings",
     items: [
       {
-        href: '/notifications',
-        labelKey: 'notifications.label',
-        icon: 'mail',
-        descriptionKey: 'notifications.description',
+        href: "/notifications",
+        labelKey: "notifications.label",
+        icon: "mail",
+        descriptionKey: "notifications.description",
       },
       {
-        href: '/security',
-        labelKey: 'security.label',
-        icon: 'shield-check',
-        descriptionKey: 'security.description',
+        href: "/security",
+        labelKey: "security.label",
+        icon: "shield-check",
+        descriptionKey: "security.description",
       },
       {
-        href: '/tenant-settings',
-        labelKey: 'tenantSettings.label',
-        icon: 'settings',
-        descriptionKey: 'tenantSettings.description',
+        href: "/tenant-settings",
+        labelKey: "tenantSettings.label",
+        icon: "settings",
+        descriptionKey: "tenantSettings.description",
       },
     ],
   },

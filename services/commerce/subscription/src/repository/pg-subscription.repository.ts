@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { Pool } from 'pg';
-import { COMMERCE_PG_POOL } from '../tokens';
+import { Inject, Injectable } from "@nestjs/common";
+import type { Pool } from "pg";
+import { COMMERCE_PG_POOL } from "../tokens";
 import type {
   SubscriptionRecord,
   SubscriptionHistoryRecord,
@@ -8,7 +8,7 @@ import type {
   ListSubscriptionsResult,
   CreateSubscriptionInput,
   UpdateSubscriptionInput,
-} from '../types/subscription.types';
+} from "../types/subscription.types";
 
 interface SubscriptionRow {
   id: string;
@@ -50,17 +50,31 @@ interface HistoryRow {
 export class PgSubscriptionRepository {
   constructor(@Inject(COMMERCE_PG_POOL) private readonly pool: Pool) {}
 
-  async listSubscriptions(params: ListSubscriptionsParams): Promise<ListSubscriptionsResult> {
-    const conditions: string[] = ['deleted_at is null'];
+  async listSubscriptions(
+    params: ListSubscriptionsParams,
+  ): Promise<ListSubscriptionsResult> {
+    const conditions: string[] = ["deleted_at is null"];
     const values: unknown[] = [];
     let idx = 1;
 
-    if (params.tenantId) { conditions.push(`tenant_id = $${idx++}`); values.push(params.tenantId); }
-    if (params.planId) { conditions.push(`plan_id = $${idx++}`); values.push(params.planId); }
-    if (params.status) { conditions.push(`status = $${idx++}`); values.push(params.status); }
-    if (params.cycleType) { conditions.push(`cycle_type = $${idx++}`); values.push(params.cycleType); }
+    if (params.tenantId) {
+      conditions.push(`tenant_id = $${idx++}`);
+      values.push(params.tenantId);
+    }
+    if (params.planId) {
+      conditions.push(`plan_id = $${idx++}`);
+      values.push(params.planId);
+    }
+    if (params.status) {
+      conditions.push(`status = $${idx++}`);
+      values.push(params.status);
+    }
+    if (params.cycleType) {
+      conditions.push(`cycle_type = $${idx++}`);
+      values.push(params.cycleType);
+    }
 
-    const where = conditions.join(' and ');
+    const where = conditions.join(" and ");
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 20;
     const offset = (page - 1) * pageSize;
@@ -78,7 +92,7 @@ export class PgSubscriptionRepository {
     ]);
 
     return {
-      total: parseInt(countResult.rows[0]?.count ?? '0', 10),
+      total: parseInt(countResult.rows[0]?.count ?? "0", 10),
       items: rowsResult.rows.map(this.mapSubscription),
     };
   }
@@ -92,7 +106,9 @@ export class PgSubscriptionRepository {
     return row ? this.mapSubscription(row) : null;
   }
 
-  async getActiveByTenantId(tenantId: string): Promise<SubscriptionRecord | null> {
+  async getActiveByTenantId(
+    tenantId: string,
+  ): Promise<SubscriptionRecord | null> {
     const result = await this.pool.query<SubscriptionRow>(
       `select * from commerce.tenant_subscription
        where tenant_id = $1 and status = 'active' and deleted_at is null
@@ -106,7 +122,7 @@ export class PgSubscriptionRepository {
   async create(input: CreateSubscriptionInput): Promise<SubscriptionRecord> {
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       const result = await client.query<SubscriptionRow>(
         `insert into commerce.tenant_subscription (
@@ -126,7 +142,7 @@ export class PgSubscriptionRepository {
           input.autoRenew ?? true,
           input.orderNo ?? null,
           input.payAmount ?? null,
-          input.currency ?? 'CNY',
+          input.currency ?? "CNY",
           input.createdBy,
         ],
       );
@@ -141,20 +157,24 @@ export class PgSubscriptionRepository {
         [input.tenantId, subscription.id, input.planId, input.createdBy],
       );
 
-      await client.query('commit');
+      await client.query("commit");
       return this.mapSubscription(subscription);
     } catch (err) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw err;
     } finally {
       client.release();
     }
   }
 
-  async update(id: string, subscription: SubscriptionRecord, input: UpdateSubscriptionInput): Promise<SubscriptionRecord | null> {
+  async update(
+    id: string,
+    subscription: SubscriptionRecord,
+    input: UpdateSubscriptionInput,
+  ): Promise<SubscriptionRecord | null> {
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       const result = await client.query<SubscriptionRow>(
         `update commerce.tenant_subscription set
@@ -178,15 +198,19 @@ export class PgSubscriptionRepository {
 
       const updated = result.rows[0];
       if (!updated) {
-        await client.query('rollback');
+        await client.query("rollback");
         return null;
       }
 
-      const changeType = input.toPlanId ? 'plan_changed'
-        : input.status === 'cancelled' ? 'cancelled'
-        : input.status === 'paused' ? 'paused'
-        : input.status === 'active' ? 'resumed'
-        : 'updated';
+      const changeType = input.toPlanId
+        ? "plan_changed"
+        : input.status === "cancelled"
+          ? "cancelled"
+          : input.status === "paused"
+            ? "paused"
+            : input.status === "active"
+              ? "resumed"
+              : "updated";
 
       await client.query(
         `insert into commerce.tenant_subscription_history (
@@ -202,24 +226,26 @@ export class PgSubscriptionRepository {
           input.toPlanId ?? subscription.planId,
           subscription.status,
           input.status ?? subscription.status,
-          input.operatorType ?? 'operator',
+          input.operatorType ?? "operator",
           input.operatorId ?? null,
           input.operatorRemark ?? null,
           input.clientIp ?? null,
         ],
       );
 
-      await client.query('commit');
+      await client.query("commit");
       return this.mapSubscription(updated);
     } catch (err) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw err;
     } finally {
       client.release();
     }
   }
 
-  async getHistory(subscriptionId: string): Promise<SubscriptionHistoryRecord[]> {
+  async getHistory(
+    subscriptionId: string,
+  ): Promise<SubscriptionHistoryRecord[]> {
     const result = await this.pool.query<HistoryRow>(
       `select * from commerce.tenant_subscription_history
        where subscription_id = $1

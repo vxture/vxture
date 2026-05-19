@@ -3,10 +3,10 @@ export type ShellLayoutMode = {
   assistantDefaultOpen: boolean;
 };
 
-const OPEN_ASSISTANT_ROUTES = new Set(['/', '/settings']);
+const OPEN_ASSISTANT_ROUTES = new Set(["/", "/settings"]);
 
 export function getShellLayoutMode(pathname: string): ShellLayoutMode {
-  const normalizedPath = pathname === '' ? '/' : pathname;
+  const normalizedPath = pathname === "" ? "/" : pathname;
 
   return {
     assistantEnabled: true,

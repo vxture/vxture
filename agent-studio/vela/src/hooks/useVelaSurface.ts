@@ -8,11 +8,11 @@
  * @date 2026-04-30
  */
 
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useVelaStore } from '../stores/vela.store';
-import type { VelaSurface } from '../types/vela.types';
+import { useEffect } from "react";
+import { useVelaStore } from "../stores/vela.store";
+import type { VelaSurface } from "../types/vela.types";
 
 /**
  * 宿主 portal 通过 prop 传入 surface，此 hook 负责将其写入全局 store。

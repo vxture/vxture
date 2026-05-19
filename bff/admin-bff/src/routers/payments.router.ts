@@ -10,11 +10,11 @@ import {
   Post,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import { MailService } from '@vxture/core-mail';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from '../tokens';
+} from "@nestjs/common";
+import { MailService } from "@vxture/core-mail";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from "../tokens";
 import type {
   BillingBillStatus,
   BillingBillType,
@@ -24,9 +24,9 @@ import type {
   PaymentOperationRecord,
   PaymentReconciliationStatus,
   RequestContext,
-} from '../types/console.types';
+} from "../types/console.types";
 
-@Controller('api/payments')
+@Controller("api/payments")
 export class PaymentsRouter {
   constructor(
     @Inject(ADMIN_BFF_RO_POOL) private readonly roPool: Pool,
@@ -35,45 +35,48 @@ export class PaymentsRouter {
   ) {}
 
   @Get()
-  async listPayments(@Req() req: Request & RequestContext): Promise<PaymentOperationRecord[]> {
+  async listPayments(
+    @Req() req: Request & RequestContext,
+  ): Promise<PaymentOperationRecord[]> {
     assertCanManagePayments(req);
 
     const rows = await this.roPool.query<PaymentLedgerRow>(PAYMENT_LEDGER_SQL);
     return rows.rows.map(mapPaymentLedgerRow);
   }
 
-  @Post(':paymentId/verify')
+  @Post(":paymentId/verify")
   async verifyPayment(
     @Req() req: Request & RequestContext,
-    @Param('paymentId') paymentId: string,
+    @Param("paymentId") paymentId: string,
     @Body() body: PaymentActionBody,
   ): Promise<PaymentOperationRecord> {
     assertCanManagePayments(req);
 
-    const remark = normalizeRemark(body?.remark, '核销原因');
+    const remark = normalizeRemark(body?.remark, "核销原因");
     const operatorId = req.user?.id ?? null;
     const client = await this.rwPool.connect();
 
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       // 查询当前支付记录并锁行（FOR UPDATE），防止并发双核销
-      const lookupResult = await client.query<PaymentLookupRow>(PAYMENT_LOOKUP_FOR_UPDATE_SQL, [paymentId]);
+      const lookupResult = await client.query<PaymentLookupRow>(
+        PAYMENT_LOOKUP_FOR_UPDATE_SQL,
+        [paymentId],
+      );
       const current = lookupResult.rows[0];
 
       if (!current) {
         throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
       }
-      if (current.pay_status !== 'pending_verify') {
-        throw new BadRequestException(`当前状态（${current.pay_status}）不允许核销，仅 pending_verify 状态可核销`);
+      if (current.pay_status !== "pending_verify") {
+        throw new BadRequestException(
+          `当前状态（${current.pay_status}）不允许核销，仅 pending_verify 状态可核销`,
+        );
       }
 
       // 更新支付状态为已收款
-      await client.query(PAYMENT_VERIFY_SQL, [
-        remark,
-        operatorId,
-        paymentId,
-      ]);
+      await client.query(PAYMENT_VERIFY_SQL, [remark, operatorId, paymentId]);
 
       // 联动更新账单收款金额和状态
       if (current.bill_id) {
@@ -84,75 +87,92 @@ export class PaymentsRouter {
         ]);
       }
 
-      await client.query('commit');
+      await client.query("commit");
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
     }
 
-    const updated = await this.roPool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
-    if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+    const updated = await this.roPool.query<PaymentLedgerRow>(
+      PAYMENT_LEDGER_BY_ID_SQL,
+      [paymentId],
+    );
+    if (!updated.rows[0])
+      throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
 
     const result = mapPaymentLedgerRow(updated.rows[0]);
     const tenantEmail = updated.rows[0].contact_email;
     if (tenantEmail) {
-      void this.mailService.send({
-        to: tenantEmail,
-        subject: `[Vxture] 付款已核销确认 — ${result.paymentNo}`,
-        html: buildPaymentEmail('verify', result),
-      }).catch(() => {});
+      void this.mailService
+        .send({
+          to: tenantEmail,
+          subject: `[Vxture] 付款已核销确认 — ${result.paymentNo}`,
+          html: buildPaymentEmail("verify", result),
+        })
+        .catch(() => {});
     }
 
     return result;
   }
 
-  @Post(':paymentId/reject')
+  @Post(":paymentId/reject")
   async rejectPayment(
     @Req() req: Request & RequestContext,
-    @Param('paymentId') paymentId: string,
+    @Param("paymentId") paymentId: string,
     @Body() body: PaymentActionBody,
   ): Promise<PaymentOperationRecord> {
     assertCanManagePayments(req);
 
-    const remark = normalizeRemark(body?.remark, '驳回原因');
+    const remark = normalizeRemark(body?.remark, "驳回原因");
     const operatorId = req.user?.id ?? null;
     const client = await this.rwPool.connect();
 
     try {
-      await client.query('begin');
+      await client.query("begin");
 
-      const lookupResult = await client.query<PaymentLookupRow>(PAYMENT_LOOKUP_FOR_UPDATE_SQL, [paymentId]);
+      const lookupResult = await client.query<PaymentLookupRow>(
+        PAYMENT_LOOKUP_FOR_UPDATE_SQL,
+        [paymentId],
+      );
       const current = lookupResult.rows[0];
 
       if (!current) {
         throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
       }
-      if (current.pay_status !== 'pending_verify') {
-        throw new BadRequestException(`当前状态（${current.pay_status}）不允许驳回，仅 pending_verify 状态可驳回`);
+      if (current.pay_status !== "pending_verify") {
+        throw new BadRequestException(
+          `当前状态（${current.pay_status}）不允许驳回，仅 pending_verify 状态可驳回`,
+        );
       }
 
       await client.query(PAYMENT_REJECT_SQL, [remark, operatorId, paymentId]);
-      await client.query('commit');
+      await client.query("commit");
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
     }
 
-    const updated = await this.roPool.query<PaymentLedgerRow>(PAYMENT_LEDGER_BY_ID_SQL, [paymentId]);
-    if (!updated.rows[0]) throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
+    const updated = await this.roPool.query<PaymentLedgerRow>(
+      PAYMENT_LEDGER_BY_ID_SQL,
+      [paymentId],
+    );
+    if (!updated.rows[0])
+      throw new NotFoundException(`支付记录 ${paymentId} 不存在`);
 
     const result = mapPaymentLedgerRow(updated.rows[0]);
     const tenantEmail = updated.rows[0].contact_email;
     if (tenantEmail) {
-      void this.mailService.send({
-        to: tenantEmail,
-        subject: `[Vxture] 付款申请驳回通知 — ${result.paymentNo}`,
-        html: buildPaymentEmail('reject', result),
-      }).catch(() => {});
+      void this.mailService
+        .send({
+          to: tenantEmail,
+          subject: `[Vxture] 付款申请驳回通知 — ${result.paymentNo}`,
+          html: buildPaymentEmail("reject", result),
+        })
+        .catch(() => {});
     }
 
     return result;
@@ -161,18 +181,26 @@ export class PaymentsRouter {
 
 function assertCanManagePayments(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
   const capabilities = req.capabilities ?? [];
-  if (capabilities.length && !capabilities.some((item) => item === 'platform.pricing.manage' || item === 'platform.tenant.manage')) {
-    throw new ForbiddenException('Missing platform.pricing.manage capability');
+  if (
+    capabilities.length &&
+    !capabilities.some(
+      (item) =>
+        item === "platform.pricing.manage" || item === "platform.tenant.manage",
+    )
+  ) {
+    throw new ForbiddenException("Missing platform.pricing.manage capability");
   }
 }
 
 function toIso(value: Date | string | null): string {
   if (!value) return new Date(0).toISOString();
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
 function nullableIso(value: Date | string | null): string | null {
@@ -180,53 +208,94 @@ function nullableIso(value: Date | string | null): string | null {
 }
 
 function normalizeBillStatus(value: string | null): BillingBillStatus | null {
-  if (value === 'paying' || value === 'paid' || value === 'partial' || value === 'cancelled' || value === 'overdue' || value === 'unpaid') return value;
+  if (
+    value === "paying" ||
+    value === "paid" ||
+    value === "partial" ||
+    value === "cancelled" ||
+    value === "overdue" ||
+    value === "unpaid"
+  )
+    return value;
   return null;
 }
 
 function normalizeBillType(value: string | null): BillingBillType | null {
-  if (value === 'normal' || value === 'adjust' || value === 'supplement' || value === 'prepaid') return value;
+  if (
+    value === "normal" ||
+    value === "adjust" ||
+    value === "supplement" ||
+    value === "prepaid"
+  )
+    return value;
   return null;
 }
 
 function normalizePaymentStatus(value: string | null): OrderPaymentStatus {
-  if (value === 'pending_verify' || value === 'paid' || value === 'failed' || value === 'closed' || value === 'refunding' || value === 'pending') {
+  if (
+    value === "pending_verify" ||
+    value === "paid" ||
+    value === "failed" ||
+    value === "closed" ||
+    value === "refunding" ||
+    value === "pending"
+  ) {
     return value;
   }
-  return 'pending';
+  return "pending";
 }
 
 function normalizePaySource(value: string | null): OrderPaySource {
-  if (value === 'offline') return 'offline';
-  if (value === 'online') return 'online';
-  return 'none';
+  if (value === "offline") return "offline";
+  if (value === "online") return "online";
+  return "none";
 }
 
-function normalizePaymentTypeOrNull(value: string | null): OrderOfflinePaymentType | null {
-  if (value === 'bank_transfer' || value === 'cash' || value === 'other') return value;
+function normalizePaymentTypeOrNull(
+  value: string | null,
+): OrderOfflinePaymentType | null {
+  if (value === "bank_transfer" || value === "cash" || value === "other")
+    return value;
   return null;
 }
 
-function tierNameForPlan(planCode: string | null, planName: string | null): string | null {
+function tierNameForPlan(
+  planCode: string | null,
+  planName: string | null,
+): string | null {
   if (!planCode || !planName) return null;
-  if (planCode === 'starter') return 'Free';
-  if (planCode === 'growth') return 'Pro';
-  if (planCode === 'enterprise') return 'Enterprise';
+  if (planCode === "starter") return "Free";
+  if (planCode === "growth") return "Pro";
+  if (planCode === "enterprise") return "Enterprise";
   return planName;
 }
 
-function reconciliationStatusFor(row: PaymentLedgerRow, paymentStatus: OrderPaymentStatus): PaymentReconciliationStatus {
+function reconciliationStatusFor(
+  row: PaymentLedgerRow,
+  paymentStatus: OrderPaymentStatus,
+): PaymentReconciliationStatus {
   const paidAmount = Number(row.paid_amount ?? 0);
   const billPayableAmount = Number(row.payable_amount ?? 0);
   const billPaidAmount = Number(row.bill_paid_amount ?? 0);
 
-  if (!row.bill_id) return 'unlinked';
-  if (paymentStatus === 'pending_verify') return 'pending_verify';
-  if (paymentStatus === 'failed' || paymentStatus === 'refunding' || paymentStatus === 'closed') return 'failed';
-  if (row.bill_status === 'cancelled') return 'bill_cancelled';
-  if (billPayableAmount > 0 && paidAmount > billPayableAmount + 0.01) return 'overpaid';
-  if (billPayableAmount > 0 && billPaidAmount > 0 && billPaidAmount < billPayableAmount) return 'partial';
-  return 'normal';
+  if (!row.bill_id) return "unlinked";
+  if (paymentStatus === "pending_verify") return "pending_verify";
+  if (
+    paymentStatus === "failed" ||
+    paymentStatus === "refunding" ||
+    paymentStatus === "closed"
+  )
+    return "failed";
+  if (row.bill_status === "cancelled") return "bill_cancelled";
+  if (billPayableAmount > 0 && paidAmount > billPayableAmount + 0.01)
+    return "overpaid";
+  if (
+    billPayableAmount > 0 &&
+    billPaidAmount > 0 &&
+    billPaidAmount < billPayableAmount
+  )
+    return "partial";
+  return "normal";
 }
 
 function mapPaymentLedgerRow(row: PaymentLedgerRow): PaymentOperationRecord {
@@ -238,9 +307,9 @@ function mapPaymentLedgerRow(row: PaymentLedgerRow): PaymentOperationRecord {
     tenantId: row.tenant_id,
     tenantCode: row.tenant_code,
     tenantName: row.display_name ?? row.tenant_name,
-    tenantType: row.tenant_type === 'individual' ? 'individual' : 'company',
-    region: [row.province, row.city].filter(Boolean).join(' / ') || '未设置',
-    industry: row.industry ?? '未设置',
+    tenantType: row.tenant_type === "individual" ? "individual" : "company",
+    region: [row.province, row.city].filter(Boolean).join(" / ") || "未设置",
+    industry: row.industry ?? "未设置",
     billId: row.bill_id,
     billNo: row.bill_no,
     billStatus: normalizeBillStatus(row.bill_status),
@@ -258,7 +327,7 @@ function mapPaymentLedgerRow(row: PaymentLedgerRow): PaymentOperationRecord {
     offlinePayerName: row.offline_payer_name,
     totalAmount: Number(row.total_amount ?? 0),
     paidAmount: Number(row.paid_amount ?? 0),
-    currency: row.currency ?? row.bill_currency ?? 'CNY',
+    currency: row.currency ?? row.bill_currency ?? "CNY",
     paymentStatus,
     reconciliationStatus: reconciliationStatusFor(row, paymentStatus),
     transactionId: row.transaction_id,
@@ -267,7 +336,7 @@ function mapPaymentLedgerRow(row: PaymentLedgerRow): PaymentOperationRecord {
     offlineEvidenceUrl: row.offline_evidence_url,
     statusMessage: row.status_msg,
     remark: row.operate_remark,
-    operatorName: row.operator_display_name ?? row.operator_username ?? '系统',
+    operatorName: row.operator_display_name ?? row.operator_username ?? "系统",
     paidAt: nullableIso(row.paid_at),
     createdAt: toIso(row.created_at),
     updatedAt: toIso(row.updated_at),
@@ -399,8 +468,8 @@ const PAYMENT_LEDGER_SQL = `
 // ─── 单条查询（verify / reject 后重新读取）────────────────────────────────────
 
 const PAYMENT_LEDGER_BY_ID_SQL = PAYMENT_LEDGER_SQL.replace(
-  'order by',
-  'where pay.id = $1\n  order by',
+  "order by",
+  "where pay.id = $1\n  order by",
 );
 
 // ─── 核销前状态查询 ────────────────────────────────────────────────────────────
@@ -471,7 +540,7 @@ interface PaymentActionBody {
 // ─── 辅助：文本规范化 ──────────────────────────────────────────────────────────
 
 function normalizeRemark(value: unknown, fieldName: string): string {
-  const text = typeof value === 'string' ? value.trim() : '';
+  const text = typeof value === "string" ? value.trim() : "";
   if (text.length < 4) {
     throw new BadRequestException(`${fieldName}至少填写 4 个字`);
   }
@@ -483,11 +552,14 @@ function normalizeRemark(value: unknown, fieldName: string): string {
 
 // ─── 付款操作通知邮件 ──────────────────────────────────────────────────────────
 
-function buildPaymentEmail(type: 'verify' | 'reject', rec: PaymentOperationRecord): string {
-  const isVerify = type === 'verify';
-  const statusColor = isVerify ? '#16a34a' : '#dc2626';
-  const statusText  = isVerify ? '核销确认' : '驳回通知';
-  const bodyText    = isVerify
+function buildPaymentEmail(
+  type: "verify" | "reject",
+  rec: PaymentOperationRecord,
+): string {
+  const isVerify = type === "verify";
+  const statusColor = isVerify ? "#16a34a" : "#dc2626";
+  const statusText = isVerify ? "核销确认" : "驳回通知";
+  const bodyText = isVerify
     ? `您于 ${rec.createdAt.slice(0, 10)} 提交的离线付款申请已由平台管理员审核通过，款项已确认收款。`
     : `您于 ${rec.createdAt.slice(0, 10)} 提交的离线付款申请未通过审核，请根据以下备注重新处理。`;
 
@@ -502,17 +574,21 @@ function buildPaymentEmail(type: 'verify' | 'reject', rec: PaymentOperationRecor
     </tr>
     <tr>
       <td style="padding:10px 12px;color:#888">套餐</td>
-      <td style="padding:10px 12px">${rec.servicePlanName ?? '—'}</td>
+      <td style="padding:10px 12px">${rec.servicePlanName ?? "—"}</td>
     </tr>
     <tr style="background:#f5f5f5">
       <td style="padding:10px 12px;color:#888">付款金额</td>
       <td style="padding:10px 12px">${rec.currency} ${rec.paidAmount.toFixed(2)}</td>
     </tr>
-    ${rec.remark ? `
+    ${
+      rec.remark
+        ? `
     <tr>
       <td style="padding:10px 12px;color:#888">备注</td>
       <td style="padding:10px 12px">${rec.remark}</td>
-    </tr>` : ''}
+    </tr>`
+        : ""
+    }
   </table>
   <p style="color:#aaa;font-size:12px;margin-top:24px">
     如有疑问，请联系 Vxture 支持团队。<br>

@@ -3,18 +3,18 @@
  * @package @vxture/core-config
  * @description
  *   Core config types and constants
- * 
+ *
  * @author AI-Generated
  * @date 2026-03-15
  */
 
-import type { 
+import type {
   AppConfig,
   AuthConfig,
   DatabaseConfig,
   RedisConfig,
   AiConfig,
-} from '../schemas';
+} from "../schemas";
 
 // ============================================================================
 // Configuration Types
@@ -29,11 +29,11 @@ export interface VxConfig {
 }
 
 export const CONFIG_TOKEN = {
-  APP: Symbol('VX_CONFIG_APP'),
-  DATABASE: Symbol('VX_CONFIG_DATABASE'),
-  REDIS: Symbol('VX_CONFIG_REDIS'),
-  AUTH: Symbol('VX_CONFIG_AUTH'),
-  AI: Symbol('VX_CONFIG_AI'),
+  APP: Symbol("VX_CONFIG_APP"),
+  DATABASE: Symbol("VX_CONFIG_DATABASE"),
+  REDIS: Symbol("VX_CONFIG_REDIS"),
+  AUTH: Symbol("VX_CONFIG_AUTH"),
+  AI: Symbol("VX_CONFIG_AI"),
 } as const;
 
 export interface ConfigLoadResult {

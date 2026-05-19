@@ -5,8 +5,8 @@
  * @category Types
  */
 
-export * from './common.types';
-export * from './components.types';
-export * from './api.types';
-export * from './auth.types';
-export * from './i18n.types';
+export * from "./common.types";
+export * from "./components.types";
+export * from "./api.types";
+export * from "./auth.types";
+export * from "./i18n.types";

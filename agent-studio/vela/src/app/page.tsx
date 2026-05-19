@@ -8,7 +8,7 @@
  * @date 2026-04-30
  */
 
-import { VelaChat } from '../components/VelaChat';
+import { VelaChat } from "../components/VelaChat";
 
 /**
  * 仅用于开发调试，生产环境由宿主 portal 通过 dynamic import 嵌入。

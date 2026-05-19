@@ -8,7 +8,7 @@
  * @date 2026-03-15
  */
 
-import type { ApiResponse, PageResult, PageQuery } from '../types/api.types';
+import type { ApiResponse, PageResult, PageQuery } from "../types/api.types";
 
 // ============================================================================
 // Response Builders (For BFF to build standard responses)
@@ -23,9 +23,9 @@ import type { ApiResponse, PageResult, PageQuery } from '../types/api.types';
  */
 export function ok<T>(data: T, requestId?: string): ApiResponse<T> {
   return {
-    success:   true,
+    success: true,
     data,
-    code:      'OK',
+    code: "OK",
     timestamp: new Date().toISOString(),
     ...(requestId !== undefined ? { requestId } : {}),
   };
@@ -38,13 +38,13 @@ export function ok<T>(data: T, requestId?: string): ApiResponse<T> {
  * return fail('NOT_FOUND', 'User not found');
  */
 export function fail(
-  code:       string,
-  message:    string,
+  code: string,
+  message: string,
   requestId?: string,
 ): ApiResponse<null> {
   return {
-    success:   false,
-    data:      null,
+    success: false,
+    data: null,
     code,
     message,
     timestamp: new Date().toISOString(),
@@ -63,17 +63,17 @@ export function fail(
  * const result = buildPageResult(users, total, { page: 1, pageSize: 20 });
  */
 export function buildPageResult<T>(
-  items:    T[],
-  total:    number,
-  query:    PageQuery,
+  items: T[],
+  total: number,
+  query: PageQuery,
 ): PageResult<T> {
   const totalPages = Math.ceil(total / query.pageSize);
 
   return {
     items,
     total,
-    page:        query.page,
-    pageSize:    query.pageSize,
+    page: query.page,
+    pageSize: query.pageSize,
     totalPages,
     hasNextPage: query.page < totalPages,
     hasPrevPage: query.page > 1,
@@ -96,9 +96,9 @@ export function pageToOffset(query: PageQuery): number {
  */
 export function safePageQuery(query: Partial<PageQuery>): PageQuery {
   return {
-    page:      Math.max(1, query.page      ?? 1),
-    pageSize:  Math.min(100, Math.max(1, query.pageSize ?? 20)),
+    page: Math.max(1, query.page ?? 1),
+    pageSize: Math.min(100, Math.max(1, query.pageSize ?? 20)),
     ...(query.sortBy !== undefined ? { sortBy: query.sortBy } : {}),
-    sortOrder: query.sortOrder ?? 'desc',
+    sortOrder: query.sortOrder ?? "desc",
   };
 }

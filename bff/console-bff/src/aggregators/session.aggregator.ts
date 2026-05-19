@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { AccountAuthService } from '@vxture/service-iam';
-import { OrganizationReadService } from '@vxture/service-organization';
+import { Inject, Injectable } from "@nestjs/common";
+import { AccountAuthService } from "@vxture/service-iam";
+import { OrganizationReadService } from "@vxture/service-organization";
 import type {
   ConsoleOrganizationProfile,
   ConsoleTenantPermission,
@@ -8,21 +8,21 @@ import type {
   ConsoleUserProfile,
   MemberRecord,
   TenantContext,
-} from '../types/console.types';
+} from "../types/console.types";
 
 const TENANT_CAPABILITIES = [
-  'tenant.user.manage',
-  'tenant.role.manage',
-  'tenant.subscription.read',
-  'tenant.billing.read',
-  'tenant.quota.read',
+  "tenant.user.manage",
+  "tenant.role.manage",
+  "tenant.subscription.read",
+  "tenant.billing.read",
+  "tenant.quota.read",
 ] as const;
 
 const PLATFORM_CAPABILITIES = [
-  'platform.tenant.manage',
-  'platform.product.manage',
-  'platform.pricing.manage',
-  'platform.model.manage',
+  "platform.tenant.manage",
+  "platform.product.manage",
+  "platform.pricing.manage",
+  "platform.model.manage",
   ...TENANT_CAPABILITIES,
 ] as const;
 
@@ -50,13 +50,15 @@ export class SessionAggregator {
       name: account.username,
       displayName: profile?.displayName ?? null,
       email: account.email ?? `${account.username}@local.vxture`,
-      roleLabel: 'Authenticated User',
+      roleLabel: "Authenticated User",
       username: account.username,
       phone: account.phone,
     };
   }
 
-  async getCurrentUserProfile(accountId: string): Promise<ConsoleUserProfile | null> {
+  async getCurrentUserProfile(
+    accountId: string,
+  ): Promise<ConsoleUserProfile | null> {
     const profile = await this.accountAuthService.getAccountProfile(accountId);
     if (!profile) {
       return null;
@@ -73,7 +75,9 @@ export class SessionAggregator {
       phone: profile.phone,
       timezone: profile.timezone,
       language: profile.language,
-      profileUpdatedAt: profile.profileUpdatedAt ? profile.profileUpdatedAt.toISOString() : null,
+      profileUpdatedAt: profile.profileUpdatedAt
+        ? profile.profileUpdatedAt.toISOString()
+        : null,
     };
   }
 
@@ -90,7 +94,10 @@ export class SessionAggregator {
       language?: string | null;
     },
   ): Promise<ConsoleUserProfile | null> {
-    const profile = await this.accountAuthService.updateAccountProfile(accountId, input);
+    const profile = await this.accountAuthService.updateAccountProfile(
+      accountId,
+      input,
+    );
     if (!profile) {
       return null;
     }
@@ -106,17 +113,24 @@ export class SessionAggregator {
       phone: profile.phone,
       timezone: profile.timezone,
       language: profile.language,
-      profileUpdatedAt: profile.profileUpdatedAt ? profile.profileUpdatedAt.toISOString() : null,
+      profileUpdatedAt: profile.profileUpdatedAt
+        ? profile.profileUpdatedAt.toISOString()
+        : null,
     };
   }
 
-  async getCurrentOrganizationProfile(accountId: string, tenantId?: string): Promise<ConsoleOrganizationProfile | null> {
+  async getCurrentOrganizationProfile(
+    accountId: string,
+    tenantId?: string,
+  ): Promise<ConsoleOrganizationProfile | null> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return null;
     }
 
-    const profile = await this.organizationReadService.getOrganizationProfile(tenantContext.id);
+    const profile = await this.organizationReadService.getOrganizationProfile(
+      tenantContext.id,
+    );
     if (!profile) {
       return null;
     }
@@ -154,28 +168,44 @@ export class SessionAggregator {
     };
   }
 
-  async changeCurrentUserPassword(accountId: string, currentPassword: string, nextPassword: string) {
-    await this.accountAuthService.changePassword(accountId, currentPassword, nextPassword);
+  async changeCurrentUserPassword(
+    accountId: string,
+    currentPassword: string,
+    nextPassword: string,
+  ) {
+    await this.accountAuthService.changePassword(
+      accountId,
+      currentPassword,
+      nextPassword,
+    );
   }
 
-  async getTenantContext(accountId: string, tenantId?: string): Promise<TenantContext> {
+  async getTenantContext(
+    accountId: string,
+    tenantId?: string,
+  ): Promise<TenantContext> {
     const tenantContext = tenantId
-      ? await this.organizationReadService.resolveTenantContextForAccountById(accountId, tenantId)
-      : await this.organizationReadService.resolveTenantContextForAccount(accountId);
+      ? await this.organizationReadService.resolveTenantContextForAccountById(
+          accountId,
+          tenantId,
+        )
+      : await this.organizationReadService.resolveTenantContextForAccount(
+          accountId,
+        );
 
     if (!tenantContext) {
       return {
         id: `platform:${accountId}`,
-        name: 'Vxture Platform',
-        mode: 'platform',
-        workspace: 'PLATFORM',
+        name: "Vxture Platform",
+        mode: "platform",
+        workspace: "PLATFORM",
       };
     }
 
     return {
       id: tenantContext.tenantId,
       name: tenantContext.displayName,
-      mode: 'tenant',
+      mode: "tenant",
       workspace: tenantContext.workspace,
       tenantType: tenantContext.tenantType,
       tenantCode: tenantContext.tenantCode,
@@ -184,11 +214,14 @@ export class SessionAggregator {
   }
 
   async getTenantContexts(accountId: string): Promise<TenantContext[]> {
-    const contexts = await this.organizationReadService.listTenantContextsForAccount(accountId);
+    const contexts =
+      await this.organizationReadService.listTenantContextsForAccount(
+        accountId,
+      );
     return contexts.map((tenantContext) => ({
       id: tenantContext.tenantId,
       name: tenantContext.displayName,
-      mode: 'tenant',
+      mode: "tenant",
       workspace: tenantContext.workspace,
       tenantType: tenantContext.tenantType,
       tenantCode: tenantContext.tenantCode,
@@ -198,12 +231,14 @@ export class SessionAggregator {
 
   async getCapabilities(accountId: string, tenantId?: string) {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    return tenantContext.mode === 'tenant' ? [...TENANT_CAPABILITIES] : [...PLATFORM_CAPABILITIES];
+    return tenantContext.mode === "tenant"
+      ? [...TENANT_CAPABILITIES]
+      : [...PLATFORM_CAPABILITIES];
   }
 
   async getIamSummary(accountId: string, tenantId?: string) {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return {
         totalMembers: 0,
         activeMembers: 0,
@@ -212,36 +247,55 @@ export class SessionAggregator {
       };
     }
 
-    return this.organizationReadService.getTenantMemberSummary(tenantContext.id);
+    return this.organizationReadService.getTenantMemberSummary(
+      tenantContext.id,
+    );
   }
 
-  async listMembers(accountId: string, tenantId?: string): Promise<MemberRecord[]> {
+  async listMembers(
+    accountId: string,
+    tenantId?: string,
+  ): Promise<MemberRecord[]> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return [];
     }
 
-    const members = await this.organizationReadService.listTenantMembers(tenantContext.id);
+    const members = await this.organizationReadService.listTenantMembers(
+      tenantContext.id,
+    );
     return members.map(mapMemberRecord);
   }
 
-  async getMember(accountId: string, tenantId: string | undefined, memberId: string): Promise<MemberRecord | null> {
+  async getMember(
+    accountId: string,
+    tenantId: string | undefined,
+    memberId: string,
+  ): Promise<MemberRecord | null> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return null;
     }
 
-    const member = await this.organizationReadService.getTenantMember(tenantContext.id, memberId);
+    const member = await this.organizationReadService.getTenantMember(
+      tenantContext.id,
+      memberId,
+    );
     return member ? mapMemberRecord(member) : null;
   }
 
-  async listTenantRoles(accountId: string, tenantId?: string): Promise<ConsoleTenantRole[]> {
+  async listTenantRoles(
+    accountId: string,
+    tenantId?: string,
+  ): Promise<ConsoleTenantRole[]> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return [];
     }
 
-    const roles = await this.organizationReadService.listTenantRoles(tenantContext.id);
+    const roles = await this.organizationReadService.listTenantRoles(
+      tenantContext.id,
+    );
     return roles.map((role) => ({
       id: role.id,
       roleCode: role.roleCode,
@@ -253,27 +307,42 @@ export class SessionAggregator {
     }));
   }
 
-  async listTenantPermissions(accountId: string, tenantId?: string): Promise<ConsoleTenantPermission[]> {
+  async listTenantPermissions(
+    accountId: string,
+    tenantId?: string,
+  ): Promise<ConsoleTenantPermission[]> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return [];
     }
 
-    const permissions = await this.organizationReadService.listTenantPermissions(tenantContext.id);
+    const permissions =
+      await this.organizationReadService.listTenantPermissions(
+        tenantContext.id,
+      );
     return permissions.map(mapTenantPermission);
   }
 
   async createRole(
     accountId: string,
     tenantId: string | undefined,
-    input: { roleCode: string; roleName: string; description?: string | null; permissionIds?: string[] },
+    input: {
+      roleCode: string;
+      roleName: string;
+      description?: string | null;
+      permissionIds?: string[];
+    },
   ): Promise<ConsoleTenantRole | null> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return null;
     }
 
-    const role = await this.organizationReadService.createTenantRole(tenantContext.id, accountId, input);
+    const role = await this.organizationReadService.createTenantRole(
+      tenantContext.id,
+      accountId,
+      input,
+    );
     return {
       id: role.id,
       roleCode: role.roleCode,
@@ -289,14 +358,24 @@ export class SessionAggregator {
     accountId: string,
     tenantId: string | undefined,
     roleId: string,
-    input: { roleName?: string | null; description?: string | null; status?: 'active' | 'disabled'; permissionIds?: string[] },
+    input: {
+      roleName?: string | null;
+      description?: string | null;
+      status?: "active" | "disabled";
+      permissionIds?: string[];
+    },
   ): Promise<ConsoleTenantRole | null> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return null;
     }
 
-    const role = await this.organizationReadService.updateTenantRole(tenantContext.id, roleId, accountId, input);
+    const role = await this.organizationReadService.updateTenantRole(
+      tenantContext.id,
+      roleId,
+      accountId,
+      input,
+    );
     return role
       ? {
           id: role.id,
@@ -310,40 +389,68 @@ export class SessionAggregator {
       : null;
   }
 
-  async deleteRole(accountId: string, tenantId: string | undefined, roleId: string): Promise<boolean> {
+  async deleteRole(
+    accountId: string,
+    tenantId: string | undefined,
+    roleId: string,
+  ): Promise<boolean> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return false;
     }
 
-    return this.organizationReadService.removeTenantRole(tenantContext.id, roleId, accountId);
+    return this.organizationReadService.removeTenantRole(
+      tenantContext.id,
+      roleId,
+      accountId,
+    );
   }
 
   async createMember(
     accountId: string,
     tenantId: string | undefined,
-    input: { email: string; nickname?: string | null; remark?: string | null; roleId?: string | null; roleCode?: string | null },
+    input: {
+      email: string;
+      nickname?: string | null;
+      remark?: string | null;
+      roleId?: string | null;
+      roleCode?: string | null;
+    },
   ): Promise<MemberRecord | null> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return null;
     }
 
-    const member = await this.organizationReadService.createTenantMember(tenantContext.id, accountId, input);
+    const member = await this.organizationReadService.createTenantMember(
+      tenantContext.id,
+      accountId,
+      input,
+    );
     return mapMemberRecord(member);
   }
 
   async inviteMember(
     accountId: string,
     tenantId: string | undefined,
-    input: { email: string; nickname?: string | null; remark?: string | null; roleId?: string | null; roleCode?: string | null },
+    input: {
+      email: string;
+      nickname?: string | null;
+      remark?: string | null;
+      roleId?: string | null;
+      roleCode?: string | null;
+    },
   ): Promise<MemberRecord | null> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return null;
     }
 
-    const member = await this.organizationReadService.inviteTenantMember(tenantContext.id, accountId, input);
+    const member = await this.organizationReadService.inviteTenantMember(
+      tenantContext.id,
+      accountId,
+      input,
+    );
     return mapMemberRecord(member);
   }
 
@@ -351,19 +458,35 @@ export class SessionAggregator {
     accountId: string,
     tenantId: string | undefined,
     memberId: string,
-    input: { nickname?: string | null; remark?: string | null; roleId?: string | null; status?: 'active' | 'inactive' | 'banned' },
+    input: {
+      nickname?: string | null;
+      remark?: string | null;
+      roleId?: string | null;
+      status?: "active" | "inactive" | "banned";
+    },
   ): Promise<MemberRecord | null> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return null;
     }
 
-    const member = await this.organizationReadService.updateTenantMember(tenantContext.id, memberId, accountId, input);
+    const member = await this.organizationReadService.updateTenantMember(
+      tenantContext.id,
+      memberId,
+      accountId,
+      input,
+    );
     return member ? mapMemberRecord(member) : null;
   }
 
-  async disableMember(accountId: string, tenantId: string | undefined, memberId: string): Promise<MemberRecord | null> {
-    return this.updateMember(accountId, tenantId, memberId, { status: 'banned' });
+  async disableMember(
+    accountId: string,
+    tenantId: string | undefined,
+    memberId: string,
+  ): Promise<MemberRecord | null> {
+    return this.updateMember(accountId, tenantId, memberId, {
+      status: "banned",
+    });
   }
 
   async resetMemberPassword(
@@ -373,11 +496,14 @@ export class SessionAggregator {
     nextPassword: string,
   ): Promise<boolean> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return false;
     }
 
-    const member = await this.organizationReadService.getTenantMember(tenantContext.id, memberId);
+    const member = await this.organizationReadService.getTenantMember(
+      tenantContext.id,
+      memberId,
+    );
     if (!member) {
       return false;
     }
@@ -386,24 +512,32 @@ export class SessionAggregator {
     return true;
   }
 
-  async removeMember(accountId: string, tenantId: string | undefined, memberId: string): Promise<boolean> {
+  async removeMember(
+    accountId: string,
+    tenantId: string | undefined,
+    memberId: string,
+  ): Promise<boolean> {
     const tenantContext = await this.getTenantContext(accountId, tenantId);
-    if (tenantContext.mode === 'platform') {
+    if (tenantContext.mode === "platform") {
       return false;
     }
 
-    return this.organizationReadService.removeTenantMember(tenantContext.id, memberId, accountId);
+    return this.organizationReadService.removeTenantMember(
+      tenantContext.id,
+      memberId,
+      accountId,
+    );
   }
 }
 
-function mapMemberStatus(status: 'active' | 'inactive' | 'banned') {
-  if (status === 'active') {
-    return 'Active';
+function mapMemberStatus(status: "active" | "inactive" | "banned") {
+  if (status === "active") {
+    return "Active";
   }
-  if (status === 'inactive') {
-    return 'Invited';
+  if (status === "inactive") {
+    return "Invited";
   }
-  return 'Suspended';
+  return "Suspended";
 }
 
 function mapMemberRecord(member: {
@@ -417,7 +551,7 @@ function mapMemberRecord(member: {
   remark: string | null;
   roleCode: string | null;
   roleName: string | null;
-  status: 'active' | 'inactive' | 'banned';
+  status: "active" | "inactive" | "banned";
   isPrimaryOwner: boolean;
   joinedAt: Date;
   lastActiveAt: Date | null;
@@ -430,13 +564,13 @@ function mapMemberRecord(member: {
     avatarUrl: member.avatarUrl,
     email: member.email ?? `${member.username}@local.vxture`,
     phone: member.phone,
-    role: member.roleName ?? member.roleCode ?? 'Member',
+    role: member.roleName ?? member.roleCode ?? "Member",
     roleCode: member.roleCode,
     roleId: null,
     status: mapMemberStatus(member.status),
     statusCode: member.status,
     lastActive: formatLastActive(member.lastActiveAt),
-    team: member.remark ?? 'Workspace',
+    team: member.remark ?? "Workspace",
     joinedAt: member.joinedAt.toISOString(),
     isPrimaryOwner: member.isPrimaryOwner,
   };
@@ -444,7 +578,7 @@ function mapMemberRecord(member: {
 
 function formatLastActive(value: Date | null) {
   if (!value) {
-    return 'Invitation sent';
+    return "Invitation sent";
   }
 
   const diffMs = Date.now() - value.getTime();

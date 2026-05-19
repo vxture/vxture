@@ -1,3 +1,7 @@
-export default function SolutionsLayout({ children }: { children: React.ReactNode }) {
+export default function SolutionsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }

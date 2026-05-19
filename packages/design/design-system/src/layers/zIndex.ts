@@ -16,8 +16,8 @@ export const Z_INDEX = {
   popover: 1200,
   overlay: 1300,
   fullscreen: 1400,
-  toast: 1500
+  toast: 1500,
 } as const;
 
 export type ZIndexKey = keyof typeof Z_INDEX;
-export type ZIndexValue = typeof Z_INDEX[ZIndexKey];
+export type ZIndexValue = (typeof Z_INDEX)[ZIndexKey];

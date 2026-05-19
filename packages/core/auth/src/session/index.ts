@@ -3,5 +3,5 @@ export {
   buildAccessTokenBlacklistKey,
   buildSubjectRevokedBeforeKey,
   resolveAccessRevocationSurface,
-} from './token-revocation.service';
-export type { AccessRevocationSurface } from './token-revocation.service';
+} from "./token-revocation.service";
+export type { AccessRevocationSurface } from "./token-revocation.service";

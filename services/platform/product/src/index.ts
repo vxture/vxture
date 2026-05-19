@@ -1,5 +1,5 @@
-export { ProductModule } from './module/product.module';
-export { ProductService } from './service/product.service';
+export { ProductModule } from "./module/product.module";
+export { ProductService } from "./service/product.service";
 export type {
   AgentRecord,
   AgentDetail,
@@ -15,4 +15,4 @@ export type {
   CreateAgentInput,
   CreatePlanInput,
   SetPlanFeaturesInput,
-} from './types/product.types';
+} from "./types/product.types";

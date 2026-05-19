@@ -1,4 +1,4 @@
-import { BillingDetailPage } from '@/modules/billing/BillingDetailPage';
+import { BillingDetailPage } from "@/modules/billing/BillingDetailPage";
 
 export default async function Page({
   params,

@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type FormEvent,
+  type ReactNode,
+} from "react";
 import { DEFAULT_LOCALE, type Locale, type Theme } from "@vxture/shared";
 import {
   ShellBrand,
@@ -181,27 +188,29 @@ export interface AuthLoginOptionsProps {
   onForgetMe?: (() => void) | undefined;
 }
 
-export interface AuthLoginTemplateProps extends Omit<UnifiedAuthPageProps, "children"> {
+export interface AuthLoginTemplateProps extends Omit<
+  UnifiedAuthPageProps,
+  "children"
+> {
   title?: string;
   useLoginLayout?: boolean;
   children: ReactNode;
 }
 
-export interface AuthLoginOptionOverrides
-  extends Pick<
-    AuthLoginOptionsProps,
-    | "rememberLabel"
-    | "agreementPrefix"
-    | "agreementJoiner"
-    | "termsLabel"
-    | "privacyLabel"
-    | "termsHref"
-    | "privacyHref"
-    | "forgotLabel"
-    | "forgotHref"
-    | "forgetMeLabel"
-    | "forgetMeTitle"
-  > {}
+export interface AuthLoginOptionOverrides extends Pick<
+  AuthLoginOptionsProps,
+  | "rememberLabel"
+  | "agreementPrefix"
+  | "agreementJoiner"
+  | "termsLabel"
+  | "privacyLabel"
+  | "termsHref"
+  | "privacyHref"
+  | "forgotLabel"
+  | "forgotHref"
+  | "forgetMeLabel"
+  | "forgetMeTitle"
+> {}
 
 export interface AuthPasswordLoginPanelProps {
   tabs?: ReactNode;
@@ -209,11 +218,13 @@ export interface AuthPasswordLoginPanelProps {
   password: string;
   rememberChecked: boolean;
   agreementChecked: boolean;
-  errors?: {
-    identifier?: string | undefined;
-    password?: string | undefined;
-    form?: string | undefined;
-  } | undefined;
+  errors?:
+    | {
+        identifier?: string | undefined;
+        password?: string | undefined;
+        form?: string | undefined;
+      }
+    | undefined;
   loading: boolean;
   turnstile?: ReactNode;
   social?: ReactNode;
@@ -248,11 +259,13 @@ export interface AuthPhoneLoginPanelProps {
   code: string;
   rememberChecked: boolean;
   agreementChecked: boolean;
-  errors?: {
-    phone?: string | undefined;
-    code?: string | undefined;
-    form?: string | undefined;
-  } | undefined;
+  errors?:
+    | {
+        phone?: string | undefined;
+        code?: string | undefined;
+        form?: string | undefined;
+      }
+    | undefined;
   loading: boolean;
   codeSending?: boolean;
   codeCountdown?: number;
@@ -314,9 +327,12 @@ const DEFAULT_PAGE_BACKGROUND = "/images/login-bg-light.jpg";
 const DEFAULT_AUTH_BRAND_LOGO = "/brand/vxture-logo-white.png";
 const DEFAULT_AUTH_BRAND_LABEL = "vxture.ai";
 
-const DEFAULT_AUTH_VISUAL: Required<Omit<AuthVisualConfig, "leftBackgroundImage" | "pageBackgroundImage">> = {
+const DEFAULT_AUTH_VISUAL: Required<
+  Omit<AuthVisualConfig, "leftBackgroundImage" | "pageBackgroundImage">
+> = {
   title: "Build intelligence into everything.",
-  description: "Orchestrate models, manage pipelines, and deploy AI workflows at scale from a single workspace.",
+  description:
+    "Orchestrate models, manage pipelines, and deploy AI workflows at scale from a single workspace.",
   statusText: "All systems operational",
   stats: [
     { value: "40ms", label: "avg latency" },
@@ -331,7 +347,13 @@ const DEFAULT_SOCIAL_ICON_SRC: Record<AuthSocialProvider, string> = {
   wechat: "/brand/wechat_logo_icon.svg",
 };
 
-const AUTH_FIELD_ICONS: AuthFieldIcon[] = ["user", "lock", "phone", "shield", "mail"];
+const AUTH_FIELD_ICONS: AuthFieldIcon[] = [
+  "user",
+  "lock",
+  "phone",
+  "shield",
+  "mail",
+];
 
 interface TurnstileRenderOptions {
   sitekey: string;
@@ -371,7 +393,8 @@ export function UnifiedAuthPage({
   children,
   ariaLabel = "vxture authentication",
 }: UnifiedAuthPageProps) {
-  const style: CSSProperties & Partial<Record<"--vx-auth-bg" | "--vx-auth-visual-bg", string>> = {};
+  const style: CSSProperties &
+    Partial<Record<"--vx-auth-bg" | "--vx-auth-visual-bg", string>> = {};
   if (pageBackgroundImage) {
     style["--vx-auth-bg"] = `url(${pageBackgroundImage})`;
   }
@@ -396,10 +419,16 @@ export function UnifiedAuthPage({
   );
 }
 
-export function AuthLoginLayout({ title = "欢迎回来", children }: AuthLoginLayoutProps) {
+export function AuthLoginLayout({
+  title = "欢迎回来",
+  children,
+}: AuthLoginLayoutProps) {
   return (
     <div className="vx-auth-login-layout">
-      <section className="vx-auth-section vx-auth-section-title" aria-label="登录标题">
+      <section
+        className="vx-auth-section vx-auth-section-title"
+        aria-label="登录标题"
+      >
         <div className="vx-auth-panel-heading">
           <h1>{title}</h1>
         </div>
@@ -417,7 +446,11 @@ export function AuthLoginTemplate({
 }: AuthLoginTemplateProps) {
   return (
     <UnifiedAuthPage {...pageProps}>
-      {useLoginLayout ? <AuthLoginLayout title={title}>{children}</AuthLoginLayout> : children}
+      {useLoginLayout ? (
+        <AuthLoginLayout title={title}>{children}</AuthLoginLayout>
+      ) : (
+        children
+      )}
     </UnifiedAuthPage>
   );
 }
@@ -437,37 +470,64 @@ export function AuthFlowForm({
   onSubmit,
 }: AuthFlowFormProps) {
   return (
-    <form className="vx-auth-flow-form" onSubmit={onSubmit} autoComplete={autoComplete}>
-      <section className="vx-auth-section vx-auth-section-inputs" aria-label={inputAriaLabel}>
+    <form
+      className="vx-auth-flow-form"
+      onSubmit={onSubmit}
+      autoComplete={autoComplete}
+    >
+      <section
+        className="vx-auth-section vx-auth-section-inputs"
+        aria-label={inputAriaLabel}
+      >
         {input}
       </section>
 
       <div className="vx-auth-bottom-stack">
-        <section className="vx-auth-section vx-auth-section-primary" aria-label={primaryAriaLabel}>
+        <section
+          className="vx-auth-section vx-auth-section-primary"
+          aria-label={primaryAriaLabel}
+        >
           {primary}
         </section>
 
         {social ? (
-          <section className="vx-auth-section vx-auth-section-social" aria-label={socialAriaLabel}>
+          <section
+            className="vx-auth-section vx-auth-section-social"
+            aria-label={socialAriaLabel}
+          >
             {social}
           </section>
         ) : reserveSocialSpace ? (
-          <section className="vx-auth-section vx-auth-section-social vx-auth-section-placeholder" aria-hidden="true" />
+          <section
+            className="vx-auth-section vx-auth-section-social vx-auth-section-placeholder"
+            aria-hidden="true"
+          />
         ) : null}
 
         {footer ? (
-          <section className="vx-auth-section vx-auth-section-footer" aria-label={footerAriaLabel}>
+          <section
+            className="vx-auth-section vx-auth-section-footer"
+            aria-label={footerAriaLabel}
+          >
             {footer}
           </section>
         ) : reserveFooterSpace ? (
-          <section className="vx-auth-section vx-auth-section-footer vx-auth-section-placeholder" aria-hidden="true" />
+          <section
+            className="vx-auth-section vx-auth-section-footer vx-auth-section-placeholder"
+            aria-hidden="true"
+          />
         ) : null}
       </div>
     </form>
   );
 }
 
-export function AuthTabs({ active, onChange, passwordLabel = "密码登录", phoneLabel = "验证码登录" }: AuthTabsProps) {
+export function AuthTabs({
+  active,
+  onChange,
+  passwordLabel = "密码登录",
+  phoneLabel = "验证码登录",
+}: AuthTabsProps) {
   return (
     <div className="vx-auth-tabs">
       <button
@@ -599,32 +659,35 @@ export function AuthTurnstile({
 
     let mounted = true;
 
-    void loadTurnstileScript().then(() => {
-      if (!mounted || !containerRef.current || !window.turnstile) {
-        return;
-      }
+    void loadTurnstileScript()
+      .then(() => {
+        if (!mounted || !containerRef.current || !window.turnstile) {
+          return;
+        }
 
-      if (widgetIdRef.current) {
-        window.turnstile.remove(widgetIdRef.current);
-        widgetIdRef.current = null;
-      }
+        if (widgetIdRef.current) {
+          window.turnstile.remove(widgetIdRef.current);
+          widgetIdRef.current = null;
+        }
 
-      widgetIdRef.current = window.turnstile.render(containerRef.current, {
-        sitekey: siteKey,
-        action,
-        cData,
-        appearance,
-        size,
-        theme,
-        language,
-        callback: (token) => handlersRef.current.onToken(token),
-        "expired-callback": () => handlersRef.current.onExpire?.(),
-        "timeout-callback": () => handlersRef.current.onExpire?.(),
-        "error-callback": (errorCode) => handlersRef.current.onError?.(errorCode),
+        widgetIdRef.current = window.turnstile.render(containerRef.current, {
+          sitekey: siteKey,
+          action,
+          cData,
+          appearance,
+          size,
+          theme,
+          language,
+          callback: (token) => handlersRef.current.onToken(token),
+          "expired-callback": () => handlersRef.current.onExpire?.(),
+          "timeout-callback": () => handlersRef.current.onExpire?.(),
+          "error-callback": (errorCode) =>
+            handlersRef.current.onError?.(errorCode),
+        });
+      })
+      .catch(() => {
+        if (mounted) handlersRef.current.onError?.("script-load-failed");
       });
-    }).catch(() => {
-      if (mounted) handlersRef.current.onError?.("script-load-failed");
-    });
 
     return () => {
       mounted = false;
@@ -653,7 +716,20 @@ export function AuthTurnstile({
   );
 }
 
-export function AuthField({ label, name, type, placeholder, icon, value, error, hint, autoComplete, autoFocus, disabled, onChange }: AuthFieldProps) {
+export function AuthField({
+  label,
+  name,
+  type,
+  placeholder,
+  icon,
+  value,
+  error,
+  hint,
+  autoComplete,
+  autoFocus,
+  disabled,
+  onChange,
+}: AuthFieldProps) {
   return (
     <div className="vx-auth-field">
       <label htmlFor={`vx-auth-${name}`}>{label}</label>
@@ -683,7 +759,9 @@ export function AuthField({ label, name, type, placeholder, icon, value, error, 
 }
 
 function isAuthFieldIcon(icon: AuthFieldProps["icon"]): icon is AuthFieldIcon {
-  return typeof icon === "string" && AUTH_FIELD_ICONS.includes(icon as AuthFieldIcon);
+  return (
+    typeof icon === "string" && AUTH_FIELD_ICONS.includes(icon as AuthFieldIcon)
+  );
 }
 
 function loadTurnstileScript(): Promise<void> {
@@ -700,15 +778,22 @@ function loadTurnstileScript(): Promise<void> {
   }
 
   turnstileScriptPromise = new Promise((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>('script[data-vx-turnstile="true"]');
+    const existing = document.querySelector<HTMLScriptElement>(
+      'script[data-vx-turnstile="true"]',
+    );
     if (existing) {
       existing.addEventListener("load", () => resolve(), { once: true });
-      existing.addEventListener("error", () => reject(new Error("Turnstile script failed to load")), { once: true });
+      existing.addEventListener(
+        "error",
+        () => reject(new Error("Turnstile script failed to load")),
+        { once: true },
+      );
       return;
     }
 
     const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.src =
+      "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
     script.async = true;
     script.defer = true;
     script.dataset.vxTurnstile = "true";
@@ -720,7 +805,13 @@ function loadTurnstileScript(): Promise<void> {
   return turnstileScriptPromise;
 }
 
-export function AuthPrimaryButton({ loading, label, loadingLabel, disabled = false, disabledLabel }: AuthPrimaryButtonProps) {
+export function AuthPrimaryButton({
+  loading,
+  label,
+  loadingLabel,
+  disabled = false,
+  disabledLabel,
+}: AuthPrimaryButtonProps) {
   const blocked = loading || disabled;
 
   return (
@@ -739,7 +830,10 @@ export function AuthPrimaryButton({ loading, label, loadingLabel, disabled = fal
   );
 }
 
-export function AuthSocialButtons({ providers, separatorLabel = "其他方式登录" }: AuthSocialButtonsProps) {
+export function AuthSocialButtons({
+  providers,
+  separatorLabel = "其他方式登录",
+}: AuthSocialButtonsProps) {
   if (providers.length === 0) {
     return null;
   }
@@ -760,7 +854,10 @@ export function AuthSocialButtons({ providers, separatorLabel = "其他方式登
             onClick={provider.onClick}
             disabled={provider.disabled}
           >
-            <BrandProviderIcon provider={provider.provider} src={provider.iconSrc} />
+            <BrandProviderIcon
+              provider={provider.provider}
+              src={provider.iconSrc}
+            />
             {provider.label}
           </button>
         ))}
@@ -803,7 +900,11 @@ export function AuthLoginOptions({
         </label>
         <div className="vx-auth-control-links">
           {onForgot ? (
-            <button type="button" className="vx-auth-control-link" onClick={onForgot}>
+            <button
+              type="button"
+              className="vx-auth-control-link"
+              onClick={onForgot}
+            >
               {forgotLabel}
             </button>
           ) : (
@@ -926,7 +1027,9 @@ export function AuthPasswordLoginPanel({
       primary={
         <>
           {turnstile}
-          {errors?.form ? <p className="vx-auth-error vx-auth-form-error">{errors.form}</p> : null}
+          {errors?.form ? (
+            <p className="vx-auth-error vx-auth-form-error">{errors.form}</p>
+          ) : null}
           <AuthPrimaryButton
             loading={loading}
             disabled={primaryDisabled}
@@ -1034,7 +1137,12 @@ export function AuthPhoneLoginPanel({
                   type="button"
                   className="vx-auth-send-code"
                   onClick={onSendCode}
-                  disabled={loading || codeSending || codeCountdown > 0 || sendCodeDisabled}
+                  disabled={
+                    loading ||
+                    codeSending ||
+                    codeCountdown > 0 ||
+                    sendCodeDisabled
+                  }
                 >
                   {resolvedSendCodeLabel}
                 </button>
@@ -1057,7 +1165,9 @@ export function AuthPhoneLoginPanel({
       primary={
         <>
           {turnstile}
-          {errors?.form ? <p className="vx-auth-error vx-auth-form-error">{errors.form}</p> : null}
+          {errors?.form ? (
+            <p className="vx-auth-error vx-auth-form-error">{errors.form}</p>
+          ) : null}
           <AuthPrimaryButton
             loading={loading}
             disabled={primaryDisabled}
@@ -1107,7 +1217,8 @@ export function AuthForgotPasswordPanel({
           <p>
             {sentDescription ?? (
               <>
-                重置链接已发送至 <strong>{email || sentEmailFallback}</strong>，请在 15 分钟内查收并完成重置。
+                重置链接已发送至 <strong>{email || sentEmailFallback}</strong>
+                ，请在 15 分钟内查收并完成重置。
               </>
             )}
           </p>
@@ -1142,13 +1253,23 @@ export function AuthForgotPasswordPanel({
           disabled={loading}
           onChange={onChangeEmail}
         />
-        <AuthPrimaryButton loading={loading} label={submitLabel} loadingLabel={submitLoadingLabel} />
+        <AuthPrimaryButton
+          loading={loading}
+          label={submitLabel}
+          loadingLabel={submitLoadingLabel}
+        />
       </form>
     </>
   );
 }
 
-function AuthBackButton({ children, onClick }: { children: ReactNode; onClick: () => void }) {
+function AuthBackButton({
+  children,
+  onClick,
+}: {
+  children: ReactNode;
+  onClick: () => void;
+}) {
   return (
     <button type="button" className="vx-auth-back" onClick={onClick}>
       <span>←</span>
@@ -1157,7 +1278,13 @@ function AuthBackButton({ children, onClick }: { children: ReactNode; onClick: (
   );
 }
 
-export function BrandProviderIcon({ provider, src }: { provider: AuthSocialProvider; src?: string | undefined }) {
+export function BrandProviderIcon({
+  provider,
+  src,
+}: {
+  provider: AuthSocialProvider;
+  src?: string | undefined;
+}) {
   return (
     <img
       className="vx-auth-social-icon"
@@ -1173,7 +1300,11 @@ export function BrandProviderIcon({ provider, src }: { provider: AuthSocialProvi
   );
 }
 
-function AuthVisualPanel({ visual }: { visual?: AuthVisualConfig | undefined }) {
+function AuthVisualPanel({
+  visual,
+}: {
+  visual?: AuthVisualConfig | undefined;
+}) {
   const title = visual?.title ?? DEFAULT_AUTH_VISUAL.title;
   const description = visual?.description ?? DEFAULT_AUTH_VISUAL.description;
   const statusText = visual?.statusText ?? DEFAULT_AUTH_VISUAL.statusText;
@@ -1215,9 +1346,30 @@ function AuthFieldIconGlyph({ icon }: { icon: AuthFieldIcon }) {
   if (icon === "lock") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="5" y="10" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M8 10V8a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-        <path d="M12 14v2" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+        <rect
+          x="5"
+          y="10"
+          width="14"
+          height="10"
+          rx="2.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M8 10V8a4 4 0 0 1 8 0v2"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M12 14v2"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
       </svg>
     );
   }
@@ -1225,8 +1377,19 @@ function AuthFieldIconGlyph({ icon }: { icon: AuthFieldIcon }) {
   if (icon === "phone") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M10 6h4M11 18h2" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+        <path
+          d="M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="M10 6h4M11 18h2"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="1.8"
+        />
       </svg>
     );
   }
@@ -1234,8 +1397,21 @@ function AuthFieldIconGlyph({ icon }: { icon: AuthFieldIcon }) {
   if (icon === "shield") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M12 3 19 6v5c0 4.5-2.8 8.2-7 10-4.2-1.8-7-5.5-7-10V6l7-3Z" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="1.8" />
-        <path d="m9.5 12 1.7 1.7 3.5-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+        <path
+          d="M12 3 19 6v5c0 4.5-2.8 8.2-7 10-4.2-1.8-7-5.5-7-10V6l7-3Z"
+          fill="none"
+          stroke="currentColor"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
+        <path
+          d="m9.5 12 1.7 1.7 3.5-4"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
       </svg>
     );
   }
@@ -1243,16 +1419,43 @@ function AuthFieldIconGlyph({ icon }: { icon: AuthFieldIcon }) {
   if (icon === "mail") {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true">
-        <rect x="4" y="6" width="16" height="12" rx="2.5" fill="none" stroke="currentColor" strokeWidth="1.8" />
-        <path d="m6.5 8.5 5.5 4 5.5-4" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.8" />
+        <rect
+          x="4"
+          y="6"
+          width="16"
+          height="12"
+          rx="2.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+        />
+        <path
+          d="m6.5 8.5 5.5 4 5.5-4"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.8"
+        />
       </svg>
     );
   }
 
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M4.8 20a7.2 7.2 0 0 1 14.4 0" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+      <path
+        d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M4.8 20a7.2 7.2 0 0 1 14.4 0"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.8"
+      />
     </svg>
   );
 }
@@ -1278,7 +1481,14 @@ function NodeGraph() {
     let frame = 0;
     let width = 0;
     let height = 0;
-    let nodes: Array<{ x: number; y: number; vx: number; vy: number; radius: number; phase: number }> = [];
+    let nodes: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      phase: number;
+    }> = [];
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -1341,7 +1551,13 @@ function NodeGraph() {
         const pulse = (Math.sin(node.phase) + 1) / 2;
         context.fillStyle = graphColor(0.45 + pulse * 0.4);
         context.beginPath();
-        context.arc(node.x, node.y, node.radius * (1 + pulse * 0.35), 0, Math.PI * 2);
+        context.arc(
+          node.x,
+          node.y,
+          node.radius * (1 + pulse * 0.35),
+          0,
+          Math.PI * 2,
+        );
         context.fill();
       }
 
@@ -1350,7 +1566,10 @@ function NodeGraph() {
 
     const handleMouseMove = (event: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
-      mouseRef.current = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      mouseRef.current = {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
+      };
     };
 
     const handleMouseLeave = () => {
@@ -1371,5 +1590,7 @@ function NodeGraph() {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="vx-auth-nodegraph" aria-hidden="true" />;
+  return (
+    <canvas ref={canvasRef} className="vx-auth-nodegraph" aria-hidden="true" />
+  );
 }

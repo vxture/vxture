@@ -8,20 +8,20 @@
  * @date 2026-04-30
  */
 
-import { Module } from '@nestjs/common';
-import { VxConfigModule } from '@vxture/core-config';
-import { BillingModule } from '@vxture/service-billing';
-import { SubscriptionModule } from '@vxture/service-subscription';
-import { TicketModule } from '@vxture/service-ticket';
-import { AuditModule } from './audit/audit.module';
-import { ChatModule } from './chat/chat.module';
-import { ConfirmModule } from './confirm/confirm.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { ToolsModule } from './tools/tools.module';
+import { Module } from "@nestjs/common";
+import { VxConfigModule } from "@vxture/core-config";
+import { BillingModule } from "@vxture/service-billing";
+import { SubscriptionModule } from "@vxture/service-subscription";
+import { TicketModule } from "@vxture/service-ticket";
+import { AuditModule } from "./audit/audit.module";
+import { ChatModule } from "./chat/chat.module";
+import { ConfirmModule } from "./confirm/confirm.module";
+import { PrismaModule } from "./prisma/prisma.module";
+import { ToolsModule } from "./tools/tools.module";
 
 @Module({
   imports: [
-    VxConfigModule.register({ domains: ['app', 'auth'] }),
+    VxConfigModule.register({ domains: ["app", "auth"] }),
     BillingModule,
     SubscriptionModule,
     TicketModule,

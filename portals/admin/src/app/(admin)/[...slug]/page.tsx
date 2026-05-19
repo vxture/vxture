@@ -1,4 +1,4 @@
-import { AdminRoutePlaceholderPage } from '@/modules/shared/AdminRoutePlaceholderPage';
+import { AdminRoutePlaceholderPage } from "@/modules/shared/AdminRoutePlaceholderPage";
 
 type AdminPlaceholderRouteProps = {
   params: Promise<{
@@ -6,7 +6,9 @@ type AdminPlaceholderRouteProps = {
   }>;
 };
 
-export default async function AdminPlaceholderRoute({ params }: AdminPlaceholderRouteProps) {
+export default async function AdminPlaceholderRoute({
+  params,
+}: AdminPlaceholderRouteProps) {
   const { slug = [] } = await params;
-  return <AdminRoutePlaceholderPage href={`/${slug.join('/')}`} />;
+  return <AdminRoutePlaceholderPage href={`/${slug.join("/")}`} />;
 }

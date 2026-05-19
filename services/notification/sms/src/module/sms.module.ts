@@ -14,24 +14,24 @@
  * @date 2026-05-05
  */
 
-import { Module } from '@nestjs/common';
-import Redis from 'ioredis';
-import { REDIS_CLIENT } from '../constants/tokens';
-import { SmsService } from '../service/sms.service';
-import { PhoneCodeService } from '../service/phone-code.service';
+import { Module } from "@nestjs/common";
+import Redis from "ioredis";
+import { REDIS_CLIENT } from "../constants/tokens";
+import { SmsService } from "../service/sms.service";
+import { PhoneCodeService } from "../service/phone-code.service";
 
 @Module({
   providers: [
     {
       provide: REDIS_CLIENT,
       useFactory: () => {
-        const url = process.env['REDIS_URL'];
+        const url = process.env["REDIS_URL"];
         if (url) {
           return new Redis(url);
         }
         return new Redis({
-          host: process.env['REDIS_HOST'] ?? 'localhost',
-          port: Number(process.env['REDIS_PORT'] ?? 6379),
+          host: process.env["REDIS_HOST"] ?? "localhost",
+          port: Number(process.env["REDIS_PORT"] ?? 6379),
         });
       },
     },

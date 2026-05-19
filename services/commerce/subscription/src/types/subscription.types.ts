@@ -1,16 +1,16 @@
 export enum BillingCycle {
-  MONTHLY   = 'monthly',
-  QUARTERLY = 'quarterly',
-  ANNUAL    = 'annual',
-  YEARLY    = 'yearly',
+  MONTHLY = "monthly",
+  QUARTERLY = "quarterly",
+  ANNUAL = "annual",
+  YEARLY = "yearly",
 }
 
 export enum SubscriptionStatus {
-  ACTIVE    = 'active',
-  TRIALING  = 'trialing',
-  PAUSED    = 'paused',
-  CANCELLED = 'cancelled',
-  EXPIRED   = 'expired',
+  ACTIVE = "active",
+  TRIALING = "trialing",
+  PAUSED = "paused",
+  CANCELLED = "cancelled",
+  EXPIRED = "expired",
 }
 
 export interface SubscriptionRecord {

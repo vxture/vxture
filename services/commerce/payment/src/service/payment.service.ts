@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PgPaymentRepository } from '../repository/pg-payment.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PgPaymentRepository } from "../repository/pg-payment.repository";
 import type {
   PaymentRecord,
   RefundRecord,
@@ -12,7 +16,7 @@ import type {
   UpdatePaymentStatusInput,
   CreateRefundInput,
   AuditRefundInput,
-} from '../types/payment.types';
+} from "../types/payment.types";
 
 @Injectable()
 export class PaymentService {
@@ -42,11 +46,12 @@ export class PaymentService {
     },
   ): Promise<PaymentRecord> {
     const payment = await this.getPayment(id);
-    if (payment.payStatus === 'paid') throw new ConflictException('支付已完成');
-    if (payment.payStatus === 'closed') throw new ConflictException('支付订单已关闭');
+    if (payment.payStatus === "paid") throw new ConflictException("支付已完成");
+    if (payment.payStatus === "closed")
+      throw new ConflictException("支付订单已关闭");
 
     const result = await this.repo.updatePaymentStatus(id, {
-      payStatus: 'paid',
+      payStatus: "paid",
       paidAmount: data.paidAmount,
       channelOrderNo: data.channelOrderNo,
       channelTransactionNo: data.channelTransactionNo,
@@ -56,13 +61,19 @@ export class PaymentService {
     return result!;
   }
 
-  async closePayment(id: string, operatorId?: string, remark?: string): Promise<PaymentRecord> {
+  async closePayment(
+    id: string,
+    operatorId?: string,
+    remark?: string,
+  ): Promise<PaymentRecord> {
     const payment = await this.getPayment(id);
-    if (payment.payStatus === 'paid') throw new ConflictException('已支付订单不可关闭');
-    if (payment.payStatus === 'closed') throw new ConflictException('支付订单已关闭');
+    if (payment.payStatus === "paid")
+      throw new ConflictException("已支付订单不可关闭");
+    if (payment.payStatus === "closed")
+      throw new ConflictException("支付订单已关闭");
 
     const result = await this.repo.updatePaymentStatus(id, {
-      payStatus: 'closed',
+      payStatus: "closed",
       closedAt: new Date(),
       operatorId,
       operateRemark: remark,
@@ -70,7 +81,10 @@ export class PaymentService {
     return result!;
   }
 
-  async updatePaymentStatus(id: string, input: UpdatePaymentStatusInput): Promise<PaymentRecord> {
+  async updatePaymentStatus(
+    id: string,
+    input: UpdatePaymentStatusInput,
+  ): Promise<PaymentRecord> {
     await this.getPayment(id);
     const result = await this.repo.updatePaymentStatus(id, input);
     return result!;
@@ -90,17 +104,25 @@ export class PaymentService {
     return this.repo.createRefund(input);
   }
 
-  async auditRefund(id: string, input: AuditRefundInput): Promise<RefundRecord> {
+  async auditRefund(
+    id: string,
+    input: AuditRefundInput,
+  ): Promise<RefundRecord> {
     await this.getRefund(id);
     const result = await this.repo.auditRefund(id, input);
     return result!;
   }
 
-  async listTransactions(tenantId: string, limit?: number): Promise<TransactionRecord[]> {
+  async listTransactions(
+    tenantId: string,
+    limit?: number,
+  ): Promise<TransactionRecord[]> {
     return this.repo.listTransactionsByTenantId(tenantId, limit);
   }
 
-  async appendTransaction(input: Omit<TransactionRecord, 'id' | 'createdAt'>): Promise<TransactionRecord> {
+  async appendTransaction(
+    input: Omit<TransactionRecord, "id" | "createdAt">,
+  ): Promise<TransactionRecord> {
     return this.repo.appendTransaction(input);
   }
 }

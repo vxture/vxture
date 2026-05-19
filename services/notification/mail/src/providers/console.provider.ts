@@ -13,18 +13,18 @@
  * @license MIT
  */
 
-import { Injectable } from '@nestjs/common';
-import type { IMailProvider, MailMessage } from '../types/mail.types';
+import { Injectable } from "@nestjs/common";
+import type { IMailProvider, MailMessage } from "../types/mail.types";
 
 @Injectable()
 export class ConsoleMailProvider implements IMailProvider {
   async send(message: MailMessage): Promise<void> {
     console.log(
-      '[mail:dev] ─────────────────────────────────────',
+      "[mail:dev] ─────────────────────────────────────",
       `\n  To      : ${message.to}`,
       `\n  Subject : ${message.subject}`,
       `\n  Body    : ${message.text}`,
-      '\n─────────────────────────────────────────────────',
+      "\n─────────────────────────────────────────────────",
     );
   }
 }

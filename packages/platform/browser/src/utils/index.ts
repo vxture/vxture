@@ -5,6 +5,6 @@
  * @description Browser environment utilities
  */
 
-export * from './resetScrollTop.utils';
-export * from './preferences.utils';
-export * from './portal-entry.utils';
+export * from "./resetScrollTop.utils";
+export * from "./preferences.utils";
+export * from "./portal-entry.utils";

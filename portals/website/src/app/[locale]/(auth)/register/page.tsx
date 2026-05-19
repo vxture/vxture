@@ -3,9 +3,9 @@
  * @package @vxture/website
  */
 
-'use client';
+"use client";
 
-import { SignupForm } from '@/components/auth/SignupForm';
+import { SignupForm } from "@/components/auth/SignupForm";
 
 export default function RegisterAliasPage() {
   return <SignupForm />;

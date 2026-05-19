@@ -7,20 +7,16 @@
  * @date 2026-05-06
  */
 
-import { notFound } from 'next/navigation';
-import { getTranslations } from 'next-intl/server';
-import { Link } from '@/lib/i18n/navigation';
-import { FooterPlaceholderPage } from '@/components/marketing/FooterPlaceholderPage';
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/lib/i18n/navigation";
+import { FooterPlaceholderPage } from "@/components/marketing/FooterPlaceholderPage";
 import {
   CONTENT_REGISTRY,
   isContentSection,
   aggregateContentStaticParams,
-} from '@/lib/content';
-import type {
-  ContentEntry,
-  LegalDetailEntry,
-  StubEntry,
-} from '@/lib/content';
+} from "@/lib/content";
+import type { ContentEntry, LegalDetailEntry, StubEntry } from "@/lib/content";
 
 // =============================================================================
 // 静态生成
@@ -37,19 +33,30 @@ export async function generateStaticParams() {
 // =============================================================================
 
 async function renderLegalIndex() {
-  const t = await getTranslations('legal');
-  type LegalPolicySummary = { label: string; title: string; summary: string; updatedAt: string };
-  const POLICY_KEYS = ['terms', 'privacy', 'copyright', 'brand', 'cookies'] as const;
+  const t = await getTranslations("legal");
+  type LegalPolicySummary = {
+    label: string;
+    title: string;
+    summary: string;
+    updatedAt: string;
+  };
+  const POLICY_KEYS = [
+    "terms",
+    "privacy",
+    "copyright",
+    "brand",
+    "cookies",
+  ] as const;
 
   return (
     <section className="vx-legal-page">
       <div className="vx-legal-container">
         <header className="vx-legal-hero">
-          <span>{t('eyebrow')}</span>
-          <h1>{t('index.title')}</h1>
-          <p>{t('index.description')}</p>
+          <span>{t("eyebrow")}</span>
+          <h1>{t("index.title")}</h1>
+          <p>{t("index.description")}</p>
         </header>
-        <div className="vx-legal-grid" aria-label={t('index.title')}>
+        <div className="vx-legal-grid" aria-label={t("index.title")}>
           {POLICY_KEYS.map((key) => {
             const policy = t.raw(`policies.${key}`) as LegalPolicySummary;
             return (
@@ -57,7 +64,7 @@ async function renderLegalIndex() {
                 <span>{policy.label}</span>
                 <strong>{policy.title}</strong>
                 <p>{policy.summary}</p>
-                <small>{t('updatedAt', { date: policy.updatedAt })}</small>
+                <small>{t("updatedAt", { date: policy.updatedAt })}</small>
               </Link>
             );
           })}
@@ -68,7 +75,7 @@ async function renderLegalIndex() {
 }
 
 async function renderLegalDetail({ policyKey }: LegalDetailEntry) {
-  const t = await getTranslations('legal');
+  const t = await getTranslations("legal");
   type LegalPolicy = {
     label: string;
     title: string;
@@ -82,8 +89,8 @@ async function renderLegalDetail({ policyKey }: LegalDetailEntry) {
   return (
     <article className="vx-legal-page">
       <div className="vx-legal-container vx-legal-document">
-        <nav className="vx-legal-breadcrumb" aria-label={t('breadcrumbLabel')}>
-          <Link href="/legal">{t('index.title')}</Link>
+        <nav className="vx-legal-breadcrumb" aria-label={t("breadcrumbLabel")}>
+          <Link href="/legal">{t("index.title")}</Link>
           <span>/</span>
           <span>{policy.label}</span>
         </nav>
@@ -91,7 +98,7 @@ async function renderLegalDetail({ policyKey }: LegalDetailEntry) {
           <span>{policy.label}</span>
           <h1>{policy.title}</h1>
           <p>{policy.summary}</p>
-          <small>{t('updatedAt', { date: policy.updatedAt })}</small>
+          <small>{t("updatedAt", { date: policy.updatedAt })}</small>
         </header>
         <aside className="vx-legal-notice">{policy.notice}</aside>
         <div className="vx-legal-sections">
@@ -123,13 +130,13 @@ async function renderBlogIndex() {
 
 // 区段标识 → 显示标题映射（占位阶段，未来迁移至 i18n）
 const STUB_TITLES: Record<string, string> = {
-  faq: 'FAQ',
-  support: '支持中心',
-  insights: '行业洞察',
-  careers: '加入我们',
-  certifications: '认证与合规',
-  contact: '联系我们',
-  changelog: '更新日志',
+  faq: "FAQ",
+  support: "支持中心",
+  insights: "行业洞察",
+  careers: "加入我们",
+  certifications: "认证与合规",
+  contact: "联系我们",
+  changelog: "更新日志",
 };
 
 function renderStub({ section }: StubEntry) {
@@ -143,11 +150,16 @@ function renderStub({ section }: StubEntry) {
 
 async function renderEntry(entry: ContentEntry): Promise<React.ReactElement> {
   switch (entry.type) {
-    case 'legal-index':  return renderLegalIndex();
-    case 'legal-detail': return renderLegalDetail(entry);
-    case 'blog-index':   return renderBlogIndex();
-    case 'blog-post':    notFound();
-    case 'stub':         return renderStub(entry);
+    case "legal-index":
+      return renderLegalIndex();
+    case "legal-detail":
+      return renderLegalDetail(entry);
+    case "blog-index":
+      return renderBlogIndex();
+    case "blog-post":
+      notFound();
+    case "stub":
+      return renderStub(entry);
   }
 }
 

@@ -1,4 +1,4 @@
-import { ProductSolutionDetailPage } from '@/modules/products/ProductSolutionDetailPage';
+import { ProductSolutionDetailPage } from "@/modules/products/ProductSolutionDetailPage";
 
 export default async function Page({
   params,
@@ -8,5 +8,9 @@ export default async function Page({
   }>;
 }) {
   const { solutionCode } = await params;
-  return <ProductSolutionDetailPage solutionCode={decodeURIComponent(solutionCode)} />;
+  return (
+    <ProductSolutionDetailPage
+      solutionCode={decodeURIComponent(solutionCode)}
+    />
+  );
 }

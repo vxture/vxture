@@ -10,14 +10,13 @@
 // ============================================================================
 
 // Export Locale type and constants defined in shared package
-export type { Locale } from '@vxture/shared';
-export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
+export type { Locale } from "@vxture/shared";
+export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@vxture/shared";
 
-
-export type { LocaleRequest } from './types';
+export type { LocaleRequest } from "./types";
 
 // ============================================================================
 // Service-side Locale Utils
 // ============================================================================
 
-export { resolveLocale, localizeContent } from './utils';
+export { resolveLocale, localizeContent } from "./utils";

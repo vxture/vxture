@@ -13,16 +13,22 @@
  * @layer Presentation
  * @category Pages
  */
-'use client';
+"use client";
 
 // ============================================================================
 // 导入
 // ============================================================================
 
-import { HeroSection, FeaturesSection, SolutionSection, CaseSection, CTASection } from '@/components/marketing';
-import ScrollToButton from '@/components/marketing/ScrollToButton';
-import { SnapChoicePanel, SnapDebugPanel } from '@/components/marketing/debug';
-import { useWindowScrollSnap } from '@/hooks';
+import {
+  HeroSection,
+  FeaturesSection,
+  SolutionSection,
+  CaseSection,
+  CTASection,
+} from "@/components/marketing";
+import ScrollToButton from "@/components/marketing/ScrollToButton";
+import { SnapChoicePanel, SnapDebugPanel } from "@/components/marketing/debug";
+import { useWindowScrollSnap } from "@/hooks";
 
 // ============================================================================
 // 常量定义
@@ -30,21 +36,29 @@ import { useWindowScrollSnap } from '@/hooks';
 
 /** 区块信息列表 */
 const SECTIONS = [
-  { id: 'section-01', name: 'Hero' },
-  { id: 'section-02', name: 'Features' },
-  { id: 'section-03', name: 'Solutions' },
-  { id: 'section-04', name: 'Cases' },
-  { id: 'section-05', name: 'CTA' },
+  { id: "section-01", name: "Hero" },
+  { id: "section-02", name: "Features" },
+  { id: "section-03", name: "Solutions" },
+  { id: "section-04", name: "Cases" },
+  { id: "section-05", name: "CTA" },
 ] as const;
 
 /** 调试面板位置 */
-const DEBUG_PANEL_POSITION = { top: '80px', right: '20px', zIndex: 50 } as const;
+const DEBUG_PANEL_POSITION = {
+  top: "80px",
+  right: "20px",
+  zIndex: 50,
+} as const;
 
 /** 选择面板位置 */
-const CHOICE_PANEL_POSITION = { top: '80px', left: '20px', zIndex: 50 } as const;
+const CHOICE_PANEL_POSITION = {
+  top: "80px",
+  left: "20px",
+  zIndex: 50,
+} as const;
 
 /** 是否开发环境 */
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+const IS_DEVELOPMENT = process.env.NODE_ENV === "development";
 
 // ============================================================================
 // 组件实现
@@ -57,10 +71,10 @@ export default function HomePage() {
 
   const { activeTarget, snapToTarget, snapdebugInfo } = useWindowScrollSnap({
     debugFlag: IS_DEVELOPMENT,
-    targetSelector: '.snap-section',
-    targetAlignTo: 'top',
+    targetSelector: ".snap-section",
+    targetAlignTo: "top",
     snapThreshold: 280,
-    enabledDirections: ['up', 'down'],
+    enabledDirections: ["up", "down"],
   });
 
   // ==========================================================================
@@ -68,8 +82,7 @@ export default function HomePage() {
   // ==========================================================================
 
   return (
-    <div className='relative'>
-      
+    <div className="relative">
       {/* 调试面板信息组件 */}
       <SnapDebugPanel
         position={DEBUG_PANEL_POSITION}

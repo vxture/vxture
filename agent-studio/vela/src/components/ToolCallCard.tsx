@@ -8,8 +8,8 @@
  * @date 2026-04-30
  */
 
-import type { VelaToolMessage } from '../types/vela.types';
-import { DataTable } from '@vxture/design-system';
+import type { VelaToolMessage } from "../types/vela.types";
+import { DataTable } from "@vxture/design-system";
 
 // ============================================================================
 // 子渲染：按 displayHint 选择展示形式
@@ -21,9 +21,10 @@ function renderData(data: unknown, hint?: string) {
     return <span className="vx-vela-tool__disabled">运行中…</span>;
   }
 
-  if (hint === 'table' && Array.isArray(data)) {
+  if (hint === "table" && Array.isArray(data)) {
     const rows = data as Record<string, unknown>[];
-    if (!rows.length) return <span className="vx-vela-tool__muted">暂无数据</span>;
+    if (!rows.length)
+      return <span className="vx-vela-tool__muted">暂无数据</span>;
     const keys = Object.keys(rows[0]!);
     return (
       <DataTable
@@ -31,7 +32,7 @@ function renderData(data: unknown, hint?: string) {
         columns={keys.map((key) => ({
           id: key,
           header: key,
-          cell: (row: Record<string, unknown>) => String(row[key] ?? ''),
+          cell: (row: Record<string, unknown>) => String(row[key] ?? ""),
         }))}
         rows={rows}
         rowKey={(_row, index) => index}
@@ -39,25 +40,25 @@ function renderData(data: unknown, hint?: string) {
     );
   }
 
-  if (hint === 'list' && Array.isArray(data)) {
+  if (hint === "list" && Array.isArray(data)) {
     return (
       <ul className="vx-vela-tool__list">
         {(data as unknown[]).map((item, i) => (
-          <li key={i}>{typeof item === 'object' ? JSON.stringify(item) : String(item)}</li>
+          <li key={i}>
+            {typeof item === "object" ? JSON.stringify(item) : String(item)}
+          </li>
         ))}
       </ul>
     );
   }
 
-  if (hint === 'text' && typeof data === 'string') {
+  if (hint === "text" && typeof data === "string") {
     return <p className="vx-vela-tool__text">{data}</p>;
   }
 
   // 默认：JSON 原始输出
   return (
-    <pre className="vx-vela-tool__pre">
-      {JSON.stringify(data, null, 2)}
-    </pre>
+    <pre className="vx-vela-tool__pre">{JSON.stringify(data, null, 2)}</pre>
   );
 }
 
@@ -73,12 +74,8 @@ export function ToolCallCard({ message }: Props) {
   return (
     <div className="vx-vela-tool">
       <div className="vx-vela-tool__header">
-        <span className="vx-vela-tool__label">
-          工具
-        </span>
-        <code className="vx-vela-tool__code">
-          {message.toolId}
-        </code>
+        <span className="vx-vela-tool__label">工具</span>
+        <code className="vx-vela-tool__code">{message.toolId}</code>
       </div>
       {renderData(message.data, message.displayHint)}
     </div>

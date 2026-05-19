@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { Pool } from 'pg';
-import { PG_POOL } from '../tokens';
+import { Inject, Injectable } from "@nestjs/common";
+import type { Pool } from "pg";
+import { PG_POOL } from "../tokens";
 import type {
   CreateTenantInput,
   OrganizationProfileView,
@@ -12,14 +12,14 @@ import type {
   TenantPermissionView,
   TenantRoleView,
   UpsertTenantMemberInput,
-} from '../types/organization.types';
+} from "../types/organization.types";
 
 interface TenantMembershipRow {
   tenant_id: string;
   account_id: string;
   role: string | null;
   is_primary_owner: boolean;
-  status: 'active' | 'inactive' | 'banned';
+  status: "active" | "inactive" | "banned";
   joined_at: Date;
 }
 
@@ -28,8 +28,8 @@ interface TenantContextRow {
   tenant_code: string;
   tenant_name: string;
   display_name: string | null;
-  tenant_type: 'company' | 'individual';
-  status: 'trial' | 'active' | 'suspended' | 'cancelled';
+  tenant_type: "company" | "individual";
+  status: "trial" | "active" | "suspended" | "cancelled";
   language: string | null;
   time_zone: string | null;
   company_name: string | null;
@@ -48,8 +48,8 @@ interface OrganizationProfileRow {
   tenant_code: string;
   tenant_name: string;
   display_name: string | null;
-  tenant_type: 'company' | 'individual';
-  status: 'trial' | 'active' | 'suspended' | 'cancelled';
+  tenant_type: "company" | "individual";
+  status: "trial" | "active" | "suspended" | "cancelled";
   logo_url: string | null;
   description: string | null;
   language: string | null;
@@ -68,7 +68,7 @@ interface OrganizationProfileRow {
   district: string | null;
   address: string | null;
   postal_code: string | null;
-  verified_status: 'unverified' | 'pending' | 'verified' | 'rejected' | null;
+  verified_status: "unverified" | "pending" | "verified" | "rejected" | null;
   verified_at: Date | null;
   rejected_reason: string | null;
   primary_domain: string | null;
@@ -87,7 +87,7 @@ interface TenantMemberRow {
   remark: string | null;
   role_code: string | null;
   role_name: string | null;
-  status: 'active' | 'inactive' | 'banned';
+  status: "active" | "inactive" | "banned";
   is_primary_owner: boolean;
   joined_at: Date;
   last_active_at: Date | null;
@@ -100,7 +100,7 @@ interface TenantRoleRow {
   role_name: string;
   description: string | null;
   is_system: boolean;
-  status: 'active' | 'disabled';
+  status: "active" | "disabled";
   sort: number;
 }
 
@@ -125,7 +125,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   async createTenant(input: CreateTenantInput): Promise<TenantContextView> {
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       const tenantCode = deriveTenantCode(input.displayName);
 
@@ -144,12 +144,18 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           values ($1, $2, $3, $4, 'trial', $5, now(), now())
           returning id
         `,
-        [tenantCode, input.displayName.trim(), input.displayName.trim(), input.type, input.accountId],
+        [
+          tenantCode,
+          input.displayName.trim(),
+          input.displayName.trim(),
+          input.type,
+          input.accountId,
+        ],
       );
 
       const tenantId = tenantResult.rows[0]?.id;
       if (!tenantId) {
-        throw new Error('Tenant creation completed without a returned id.');
+        throw new Error("Tenant creation completed without a returned id.");
       }
 
       await client.query(
@@ -172,23 +178,27 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
         [tenantId, input.accountId, input.accountId],
       );
 
-      await client.query('commit');
+      await client.query("commit");
 
       const context = await this.getTenantContextById(tenantId);
       if (!context) {
-        throw new Error('Tenant creation completed but context could not be reloaded.');
+        throw new Error(
+          "Tenant creation completed but context could not be reloaded.",
+        );
       }
 
       return context;
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
     }
   }
 
-  async getTenantMembershipsByAccountId(accountId: string): Promise<TenantMembershipView[]> {
+  async getTenantMembershipsByAccountId(
+    accountId: string,
+  ): Promise<TenantMembershipView[]> {
     const result = await this.pool.query<TenantMembershipRow>(
       `
         select
@@ -223,7 +233,9 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     }));
   }
 
-  async getTenantContextById(tenantId: string): Promise<TenantContextView | null> {
+  async getTenantContextById(
+    tenantId: string,
+  ): Promise<TenantContextView | null> {
     const result = await this.pool.query<TenantContextRow>(
       `
         select
@@ -264,15 +276,17 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       displayName: row.display_name ?? row.tenant_name,
       tenantType: row.tenant_type,
       status: row.status,
-      language: row.language ?? 'zh-CN',
-      timeZone: row.time_zone ?? 'Asia/Shanghai',
+      language: row.language ?? "zh-CN",
+      timeZone: row.time_zone ?? "Asia/Shanghai",
       companyName: row.company_name,
       primaryDomain: row.primary_domain,
       workspace: row.tenant_code.toUpperCase(),
     };
   }
 
-  async getOrganizationProfileByTenantId(tenantId: string): Promise<OrganizationProfileView | null> {
+  async getOrganizationProfileByTenantId(
+    tenantId: string,
+  ): Promise<OrganizationProfileView | null> {
     const result = await this.pool.query<OrganizationProfileRow>(
       `
         select
@@ -334,8 +348,8 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       status: row.status,
       logoUrl: row.logo_url,
       description: row.description,
-      language: row.language ?? 'zh-CN',
-      timeZone: row.time_zone ?? 'Asia/Shanghai',
+      language: row.language ?? "zh-CN",
+      timeZone: row.time_zone ?? "Asia/Shanghai",
       companyName: row.company_name,
       unifiedSocialCreditCode: row.unified_social_credit_code,
       businessLicenseUrl: row.business_license_url,
@@ -358,7 +372,10 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     };
   }
 
-  async getTenantMemberById(tenantId: string, memberId: string): Promise<TenantMemberView | null> {
+  async getTenantMemberById(
+    tenantId: string,
+    memberId: string,
+  ): Promise<TenantMemberView | null> {
     const result = await this.pool.query<TenantMemberRow>(
       `
         select
@@ -470,7 +487,9 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     }));
   }
 
-  async listTenantPermissions(_tenantId: string): Promise<TenantPermissionView[]> {
+  async listTenantPermissions(
+    _tenantId: string,
+  ): Promise<TenantPermissionView[]> {
     const result = await this.pool.query<TenantPermissionRow>(
       `
         select
@@ -509,7 +528,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
   ): Promise<TenantRoleView> {
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       const roleResult = await client.query<{ id: string }>(
         `
@@ -529,25 +548,41 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           values ($1, $2, $3, $4, false, $5, $5, now(), now(), 'active', 999)
           returning id
         `,
-        [tenantId, input.roleCode.trim(), input.roleName.trim(), normalizeNullable(input.description), operatorAccountId],
+        [
+          tenantId,
+          input.roleCode.trim(),
+          input.roleName.trim(),
+          normalizeNullable(input.description),
+          operatorAccountId,
+        ],
       );
 
       const roleId = roleResult.rows[0]?.id;
       if (!roleId) {
-        throw new Error('Role creation completed without a returned id.');
+        throw new Error("Role creation completed without a returned id.");
       }
 
-      await this.replaceRolePermissions(client, tenantId, roleId, operatorAccountId, input.permissionIds ?? []);
-      await client.query('commit');
+      await this.replaceRolePermissions(
+        client,
+        tenantId,
+        roleId,
+        operatorAccountId,
+        input.permissionIds ?? [],
+      );
+      await client.query("commit");
 
-      const role = (await this.listTenantRoles(tenantId)).find((item) => item.id === roleId);
+      const role = (await this.listTenantRoles(tenantId)).find(
+        (item) => item.id === roleId,
+      );
       if (!role) {
-        throw new Error('Role creation completed but record could not be reloaded.');
+        throw new Error(
+          "Role creation completed but record could not be reloaded.",
+        );
       }
 
       return role;
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
@@ -561,13 +596,13 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     input: {
       roleName?: string | null;
       description?: string | null;
-      status?: 'active' | 'disabled';
+      status?: "active" | "disabled";
       permissionIds?: string[];
     },
   ): Promise<TenantRoleView | null> {
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
       await client.query(
         `
           update iam.role
@@ -581,25 +616,46 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
             and id = $2
             and deleted_at is null
         `,
-        [tenantId, roleId, normalizeNullable(input.roleName), normalizeNullable(input.description), input.status ?? null, operatorAccountId],
+        [
+          tenantId,
+          roleId,
+          normalizeNullable(input.roleName),
+          normalizeNullable(input.description),
+          input.status ?? null,
+          operatorAccountId,
+        ],
       );
 
       if (input.permissionIds) {
-        await this.replaceRolePermissions(client, tenantId, roleId, operatorAccountId, input.permissionIds);
+        await this.replaceRolePermissions(
+          client,
+          tenantId,
+          roleId,
+          operatorAccountId,
+          input.permissionIds,
+        );
       }
 
-      await client.query('commit');
+      await client.query("commit");
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
     }
 
-    return (await this.listTenantRoles(tenantId)).find((item) => item.id === roleId) ?? null;
+    return (
+      (await this.listTenantRoles(tenantId)).find(
+        (item) => item.id === roleId,
+      ) ?? null
+    );
   }
 
-  async removeTenantRole(tenantId: string, roleId: string, operatorAccountId: string): Promise<boolean> {
+  async removeTenantRole(
+    tenantId: string,
+    roleId: string,
+    operatorAccountId: string,
+  ): Promise<boolean> {
     const result = await this.pool.query(
       `
         update iam.role
@@ -618,11 +674,15 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
     return (result.rowCount ?? 0) > 0;
   }
 
-  async upsertTenantMember(tenantId: string, operatorAccountId: string, input: UpsertTenantMemberInput): Promise<TenantMemberView> {
+  async upsertTenantMember(
+    tenantId: string,
+    operatorAccountId: string,
+    input: UpsertTenantMemberInput,
+  ): Promise<TenantMemberView> {
     const client = await this.pool.connect();
 
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       const accountId = await this.resolveAccountId(client, input.email);
 
@@ -661,7 +721,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
         [
           tenantId,
           accountId,
-          input.roleCode ?? 'member',
+          input.roleCode ?? "member",
           input.status,
           normalizeNullable(input.nickname),
           normalizeNullable(input.remark),
@@ -670,21 +730,23 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
         ],
       );
 
-      await client.query('commit');
+      await client.query("commit");
 
       const insertedMemberId = result.rows[0]?.id;
       if (!insertedMemberId) {
-        throw new Error('Member upsert completed without a returned id.');
+        throw new Error("Member upsert completed without a returned id.");
       }
 
       const member = await this.getTenantMemberById(tenantId, insertedMemberId);
       if (!member) {
-        throw new Error('Member upsert completed but record could not be reloaded.');
+        throw new Error(
+          "Member upsert completed but record could not be reloaded.",
+        );
       }
 
       return member;
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
@@ -699,7 +761,7 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       nickname?: string | null;
       remark?: string | null;
       role?: string | null;
-      status?: 'active' | 'inactive' | 'banned';
+      status?: "active" | "inactive" | "banned";
     },
   ): Promise<TenantMemberView | null> {
     await this.pool.query(
@@ -716,13 +778,25 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
           and id = $2
           and deleted_at is null
       `,
-      [tenantId, memberId, operatorAccountId, normalizeNullable(input.nickname), normalizeNullable(input.remark), input.role ?? null, input.status ?? null],
+      [
+        tenantId,
+        memberId,
+        operatorAccountId,
+        normalizeNullable(input.nickname),
+        normalizeNullable(input.remark),
+        input.role ?? null,
+        input.status ?? null,
+      ],
     );
 
     return this.getTenantMemberById(tenantId, memberId);
   }
 
-  async removeTenantMember(tenantId: string, memberId: string, operatorAccountId: string): Promise<boolean> {
+  async removeTenantMember(
+    tenantId: string,
+    memberId: string,
+    operatorAccountId: string,
+  ): Promise<boolean> {
     const result = await this.pool.query(
       `
         update tenant.tenant_member
@@ -801,10 +875,15 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
       [tenantId],
     );
 
-    return result.rows.map(mapTenantMember).filter((member): member is TenantMemberView => Boolean(member));
+    return result.rows
+      .map(mapTenantMember)
+      .filter((member): member is TenantMemberView => Boolean(member));
   }
 
-  private async resolveAccountId(client: Pool | { query: Pool['query'] }, email: string) {
+  private async resolveAccountId(
+    client: Pool | { query: Pool["query"] },
+    email: string,
+  ) {
     const normalizedEmail = email.trim().toLowerCase();
 
     const existing = await client.query<AccountLookupRow>(
@@ -840,14 +919,14 @@ export class PgOrganizationRepository implements OrganizationReadRepository {
 
     const insertedAccountId = inserted.rows[0]?.id;
     if (!insertedAccountId) {
-      throw new Error('Account creation completed without a returned id.');
+      throw new Error("Account creation completed without a returned id.");
     }
 
     return insertedAccountId;
   }
 
   private async replaceRolePermissions(
-    client: Pool | { query: Pool['query'] },
+    client: Pool | { query: Pool["query"] },
     tenantId: string,
     roleId: string,
     operatorAccountId: string,
@@ -910,17 +989,27 @@ function normalizeNullable(value: string | null | undefined) {
     return null;
   }
 
-  const normalized = value?.trim() ?? '';
+  const normalized = value?.trim() ?? "";
   return normalized ? normalized : null;
 }
 
 function buildUsernameFromEmail(email: string) {
-  const base = email.split('@')[0]?.replace(/[^a-z0-9._-]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'user';
+  const base =
+    email
+      .split("@")[0]
+      ?.replace(/[^a-z0-9._-]/gi, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "user";
   return `${base}-${Date.now().toString(36)}`.slice(0, 64);
 }
 
 function deriveTenantCode(displayName: string): string {
-  const base = displayName.trim().toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 6) || 'tx';
+  const base =
+    displayName
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "")
+      .slice(0, 6) || "tx";
   const suffix = Date.now().toString(36).slice(-5);
   return `${base}${suffix}`.slice(0, 16);
 }

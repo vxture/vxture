@@ -60,7 +60,7 @@ export interface WorkflowTask {
   /** 任务类型 */
   type: string;
   /** 任务状态 */
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   /** 任务参数 */
   params: Record<string, any>;
   /** 任务结果 */
@@ -92,11 +92,11 @@ export interface ChatMessage {
   /** 消息ID */
   id: string;
   /** 发送方 */
-  sender: 'user' | 'agent' | 'system';
+  sender: "user" | "agent" | "system";
   /** 消息内容 */
   content: string;
   /** 消息类型 */
-  type: 'text' | 'image' | 'document' | 'action';
+  type: "text" | "image" | "document" | "action";
   /** 发送时间 */
   timestamp: Date;
   /** 相关任务ID */
@@ -178,7 +178,7 @@ export interface SendMessageRequest {
   /** 消息内容 */
   content: string;
   /** 消息类型 */
-  type: 'text' | 'image' | 'document' | 'action';
+  type: "text" | "image" | "document" | "action";
   /** 相关任务ID */
   taskId?: string;
 }
@@ -208,7 +208,7 @@ export interface GetTaskStatusRequest {
  */
 export interface GetTaskStatusResponse {
   /** 任务状态 */
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   /** 任务进度 */
   progress?: number;
   /** 任务结果 */

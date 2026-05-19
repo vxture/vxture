@@ -1,4 +1,4 @@
-import { AgentMarketplacePage } from '@/components/marketing';
+import { AgentMarketplacePage } from "@/components/marketing";
 
 export default function AppCenterPage() {
   return <AgentMarketplacePage />;

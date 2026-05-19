@@ -1,1 +1,1 @@
-export { TenantSwitcher } from './tenant-switcher';
+export { TenantSwitcher } from "./tenant-switcher";

@@ -15,16 +15,23 @@
  * @date 2026-04-30
  */
 
-import { BadRequestException, Body, Controller, Post, Req, Res } from '@nestjs/common';
-import type { Request, Response } from 'express';
-import type { ChatRequestDto, VelaRequest } from '../types/chat.types';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+} from "@nestjs/common";
+import type { Request, Response } from "express";
+import type { ChatRequestDto, VelaRequest } from "../types/chat.types";
 
 // ============================================================================
 // 辅助：构造 SSE 错误事件（在流已打开时回传错误）
 // ============================================================================
 
 function writeSseError(res: Response, message: string): void {
-  res.write(`data: ${JSON.stringify({ type: 'error', message })}\n\n`);
+  res.write(`data: ${JSON.stringify({ type: "error", message })}\n\n`);
   res.end();
 }
 
@@ -32,44 +39,53 @@ function writeSseError(res: Response, message: string): void {
 // ChatRouter
 // ============================================================================
 
-@Controller('vela')
+@Controller("vela")
 export class ChatRouter {
-  @Post('chat')
+  @Post("chat")
   async chat(
     @Req() req: Request,
     @Res() res: Response,
     @Body() body: ChatRequestDto,
   ): Promise<void> {
-    if (!body.message || typeof body.message !== 'string' || body.message.trim() === '') {
-      throw new BadRequestException({ statusCode: 400, code: 'BAD_REQUEST', message: 'message is required' });
+    if (
+      !body.message ||
+      typeof body.message !== "string" ||
+      body.message.trim() === ""
+    ) {
+      throw new BadRequestException({
+        statusCode: 400,
+        code: "BAD_REQUEST",
+        message: "message is required",
+      });
     }
 
     const ctx = (req as VelaRequest).callerContext;
-    const encoded = Buffer.from(JSON.stringify(ctx)).toString('base64');
+    const encoded = Buffer.from(JSON.stringify(ctx)).toString("base64");
 
-    const serverUrl = process.env['VELA_SERVER_INTERNAL_URL'] ?? 'http://localhost:3122';
+    const serverUrl =
+      process.env["VELA_SERVER_INTERNAL_URL"] ?? "http://localhost:3122";
 
     // SSE 响应头，Nginx 需配置 proxy_buffering off
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
     res.flushHeaders();
 
     let upstream: globalThis.Response;
     try {
       upstream = await fetch(`${serverUrl}/internal/vela/chat`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'X-Vela-Context': encoded,
+          "Content-Type": "application/json",
+          "X-Vela-Context": encoded,
         },
         body: JSON.stringify({
           sessionId: body.sessionId ?? null,
-          message:   body.message,
+          message: body.message,
         }),
       });
     } catch {
-      writeSseError(res, 'Upstream service unavailable');
+      writeSseError(res, "Upstream service unavailable");
       return;
     }
 
@@ -89,7 +105,7 @@ export class ChatRouter {
         res.write(decoder.decode(value, { stream: true }));
       }
     } catch {
-      writeSseError(res, 'Stream interrupted');
+      writeSseError(res, "Stream interrupted");
     } finally {
       reader.releaseLock();
       res.end();

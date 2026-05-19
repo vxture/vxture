@@ -18,12 +18,17 @@
  * @date 2026-05-01
  */
 
-import { Injectable, ForbiddenException, Logger, NotFoundException } from '@nestjs/common';
-import type { CallerContext } from '../context/caller-context.types';
-import { AuditRepository } from '../audit/audit.repository';
-import { MessageRepository } from '../storage/message.repository';
-import { ToolRegistry } from '../tools/tool-registry';
-import type { VelaToolResult } from '../tools/tool.types';
+import {
+  Injectable,
+  ForbiddenException,
+  Logger,
+  NotFoundException,
+} from "@nestjs/common";
+import type { CallerContext } from "../context/caller-context.types";
+import { AuditRepository } from "../audit/audit.repository";
+import { MessageRepository } from "../storage/message.repository";
+import { ToolRegistry } from "../tools/tool-registry";
+import type { VelaToolResult } from "../tools/tool.types";
 
 // ============================================================================
 // ConfirmService
@@ -34,15 +39,15 @@ export class ConfirmService {
   private readonly logger = new Logger(ConfirmService.name);
 
   constructor(
-    private readonly auditRepository:   AuditRepository,
-    private readonly toolRegistry:      ToolRegistry,
+    private readonly auditRepository: AuditRepository,
+    private readonly toolRegistry: ToolRegistry,
     private readonly messageRepository: MessageRepository,
   ) {}
 
   async confirm(
-    auditId:    string,
-    confirmed:  boolean,
-    ctx:        CallerContext,
+    auditId: string,
+    confirmed: boolean,
+    ctx: CallerContext,
     sessionId?: string,
   ): Promise<VelaToolResult | { cancelled: true }> {
     const record = await this.auditRepository.findById(auditId);
@@ -53,19 +58,23 @@ export class ConfirmService {
 
     // 校验记录归属：只允许同一用户、同一 surface、同一租户操作
     if (
-      record.userId   !== ctx.userId   ||
-      record.surface  !== ctx.surface  ||
+      record.userId !== ctx.userId ||
+      record.surface !== ctx.surface ||
       record.tenantId !== ctx.tenantId
     ) {
-      throw new ForbiddenException('Audit record does not belong to current context');
+      throw new ForbiddenException(
+        "Audit record does not belong to current context",
+      );
     }
 
     if (!confirmed) {
       if (record.confirmed) {
-        throw new ForbiddenException('Audit record already confirmed, cannot cancel');
+        throw new ForbiddenException(
+          "Audit record already confirmed, cannot cancel",
+        );
       }
       if (record.cancelledAt) {
-        throw new ForbiddenException('Audit record already cancelled');
+        throw new ForbiddenException("Audit record already cancelled");
       }
       await this.auditRepository.markCancelled(auditId);
       return { cancelled: true };
@@ -74,7 +83,7 @@ export class ConfirmService {
     // 原子领取执行权：并发请求只有一个能拿到 claimed 记录
     const claimed = await this.auditRepository.claimForExecution(auditId);
     if (!claimed) {
-      throw new ForbiddenException('Audit record already confirmed');
+      throw new ForbiddenException("Audit record already confirmed");
     }
 
     const result = await this.toolRegistry.executeAfterConfirm(
@@ -98,25 +107,31 @@ export class ConfirmService {
 
   private async persistResultToSession(
     sessionId: string,
-    toolId:    string,
-    result:    VelaToolResult,
+    toolId: string,
+    result: VelaToolResult,
   ): Promise<void> {
     try {
       const summary = result.success
         ? `已确认执行 ${toolId}，操作成功。`
-        : `已确认执行 ${toolId}，操作失败：${result.error ?? '未知错误'}。`;
+        : `已确认执行 ${toolId}，操作失败：${result.error ?? "未知错误"}。`;
 
-      await this.messageRepository.saveMessages([{
-        sessionId,
-        role:       'assistant',
-        content:    summary,
-        toolId,
-        toolResult: result,
-        ...(result.displayHint !== undefined ? { displayHint: result.displayHint } : {}),
-      }]);
+      await this.messageRepository.saveMessages([
+        {
+          sessionId,
+          role: "assistant",
+          content: summary,
+          toolId,
+          toolResult: result,
+          ...(result.displayHint !== undefined
+            ? { displayHint: result.displayHint }
+            : {}),
+        },
+      ]);
     } catch (err) {
       // 写入失败不影响主流程，但记录警告便于排查
-      this.logger.warn(`persistResultToSession failed [session=${sessionId}, tool=${toolId}]: ${String(err)}`);
+      this.logger.warn(
+        `persistResultToSession failed [session=${sessionId}, tool=${toolId}]: ${String(err)}`,
+      );
     }
   }
 }

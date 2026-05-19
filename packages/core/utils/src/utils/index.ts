@@ -11,9 +11,9 @@ export {
   isStaging,
   isNode,
   isBrowser,
-} from './env.utils';
+} from "./env.utils";
 
-export { VxLogger, logger } from './logger.utils';
+export { VxLogger, logger } from "./logger.utils";
 
 export {
   isString,
@@ -31,4 +31,4 @@ export {
   isNonEmptyString,
   isValidUrl,
   isUuid,
-} from './type-guards.utils';
+} from "./type-guards.utils";

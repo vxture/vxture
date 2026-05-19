@@ -16,16 +16,16 @@
  * @category Router
  */
 
-import { Controller, Get, Req, UnauthorizedException } from '@nestjs/common';
-import type { Request } from 'express';
-import type { RequestContext, SkillRecord } from '../types/console.types';
+import { Controller, Get, Req, UnauthorizedException } from "@nestjs/common";
+import type { Request } from "express";
+import type { RequestContext, SkillRecord } from "../types/console.types";
 
-@Controller('api/skills')
+@Controller("api/skills")
 export class SkillsRouter {
   @Get()
   listSkills(@Req() req: Request & RequestContext): SkillRecord[] {
     if (!req.user) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
     // 数据层待接入，暂返回空列表
     return [];

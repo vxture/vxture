@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { Pool } from 'pg';
-import { COMMERCE_PG_POOL } from '../tokens';
+import { Inject, Injectable } from "@nestjs/common";
+import type { Pool } from "pg";
+import { COMMERCE_PG_POOL } from "../tokens";
 import type {
   InvoiceReceiptRecord,
   BillingAddressRecord,
@@ -10,7 +10,7 @@ import type {
   AuditInvoiceReceiptInput,
   ShipInvoiceReceiptInput,
   UpsertBillingAddressInput,
-} from '../types/invoice.types';
+} from "../types/invoice.types";
 
 interface ReceiptRow {
   id: string;
@@ -65,15 +65,24 @@ export class PgInvoiceRepository {
   constructor(@Inject(COMMERCE_PG_POOL) private readonly pool: Pool) {}
 
   async listReceipts(params: ListReceiptsParams): Promise<ListReceiptsResult> {
-    const conditions: string[] = ['deleted_at is null'];
+    const conditions: string[] = ["deleted_at is null"];
     const values: unknown[] = [];
     let idx = 1;
 
-    if (params.tenantId) { conditions.push(`tenant_id = $${idx++}`); values.push(params.tenantId); }
-    if (params.billId) { conditions.push(`bill_id = $${idx++}`); values.push(params.billId); }
-    if (params.invoiceStatus) { conditions.push(`invoice_status = $${idx++}`); values.push(params.invoiceStatus); }
+    if (params.tenantId) {
+      conditions.push(`tenant_id = $${idx++}`);
+      values.push(params.tenantId);
+    }
+    if (params.billId) {
+      conditions.push(`bill_id = $${idx++}`);
+      values.push(params.billId);
+    }
+    if (params.invoiceStatus) {
+      conditions.push(`invoice_status = $${idx++}`);
+      values.push(params.invoiceStatus);
+    }
 
-    const where = conditions.join(' and ');
+    const where = conditions.join(" and ");
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 20;
     const offset = (page - 1) * pageSize;
@@ -91,7 +100,7 @@ export class PgInvoiceRepository {
     ]);
 
     return {
-      total: parseInt(countResult.rows[0]?.count ?? '0', 10),
+      total: parseInt(countResult.rows[0]?.count ?? "0", 10),
       items: rowsResult.rows.map(this.mapReceipt),
     };
   }
@@ -105,7 +114,9 @@ export class PgInvoiceRepository {
     return row ? this.mapReceipt(row) : null;
   }
 
-  async applyReceipt(input: ApplyInvoiceReceiptInput): Promise<InvoiceReceiptRecord> {
+  async applyReceipt(
+    input: ApplyInvoiceReceiptInput,
+  ): Promise<InvoiceReceiptRecord> {
     const invoiceNo = generateInvoiceNo();
     const result = await this.pool.query<ReceiptRow>(
       `insert into commerce.tenant_invoice_receipt (
@@ -133,14 +144,17 @@ export class PgInvoiceRepository {
         input.addressInfo ? JSON.stringify(input.addressInfo) : null,
         input.invoiceAmount,
         input.taxAmount ?? 0,
-        input.currency ?? 'CNY',
+        input.currency ?? "CNY",
         input.createdBy,
       ],
     );
     return this.mapReceipt(result.rows[0]!);
   }
 
-  async auditReceipt(id: string, input: AuditInvoiceReceiptInput): Promise<InvoiceReceiptRecord | null> {
+  async auditReceipt(
+    id: string,
+    input: AuditInvoiceReceiptInput,
+  ): Promise<InvoiceReceiptRecord | null> {
     const result = await this.pool.query<ReceiptRow>(
       `update commerce.tenant_invoice_receipt set
         invoice_status       = $2,
@@ -169,7 +183,10 @@ export class PgInvoiceRepository {
     return row ? this.mapReceipt(row) : null;
   }
 
-  async shipReceipt(id: string, input: ShipInvoiceReceiptInput): Promise<InvoiceReceiptRecord | null> {
+  async shipReceipt(
+    id: string,
+    input: ShipInvoiceReceiptInput,
+  ): Promise<InvoiceReceiptRecord | null> {
     const result = await this.pool.query<ReceiptRow>(
       `update commerce.tenant_invoice_receipt set
         express_company = $2,
@@ -185,7 +202,9 @@ export class PgInvoiceRepository {
     return row ? this.mapReceipt(row) : null;
   }
 
-  async listBillingAddresses(tenantId: string): Promise<BillingAddressRecord[]> {
+  async listBillingAddresses(
+    tenantId: string,
+  ): Promise<BillingAddressRecord[]> {
     const result = await this.pool.query<AddressRow>(
       `select * from commerce.tenant_billing_address
        where tenant_id = $1 and deleted_at is null
@@ -195,7 +214,10 @@ export class PgInvoiceRepository {
     return result.rows.map(this.mapAddress);
   }
 
-  async upsertBillingAddress(id: string | null, input: UpsertBillingAddressInput): Promise<BillingAddressRecord> {
+  async upsertBillingAddress(
+    id: string | null,
+    input: UpsertBillingAddressInput,
+  ): Promise<BillingAddressRecord> {
     if (id) {
       const result = await this.pool.query<AddressRow>(
         `update commerce.tenant_billing_address set
@@ -206,9 +228,14 @@ export class PgInvoiceRepository {
          where id = $1 and tenant_id = $10 and deleted_at is null
          returning *`,
         [
-          id, input.invoiceType, input.title, input.taxNo ?? null,
-          input.phone ?? null, input.address ?? null,
-          input.bankName ?? null, input.bankAccount ?? null,
+          id,
+          input.invoiceType,
+          input.title,
+          input.taxNo ?? null,
+          input.phone ?? null,
+          input.address ?? null,
+          input.bankName ?? null,
+          input.bankAccount ?? null,
           input.isDefault ?? null,
           input.tenantId,
         ],
@@ -224,9 +251,14 @@ export class PgInvoiceRepository {
       ) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,now(),now())
       returning *`,
       [
-        input.tenantId, input.invoiceType, input.title, input.taxNo ?? null,
-        input.phone ?? null, input.address ?? null,
-        input.bankName ?? null, input.bankAccount ?? null,
+        input.tenantId,
+        input.invoiceType,
+        input.title,
+        input.taxNo ?? null,
+        input.phone ?? null,
+        input.address ?? null,
+        input.bankName ?? null,
+        input.bankAccount ?? null,
         input.isDefault ?? false,
       ],
     );

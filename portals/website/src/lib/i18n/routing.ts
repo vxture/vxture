@@ -5,8 +5,8 @@
  * @category I18n
  */
 
-import { defineRouting } from 'next-intl/routing';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
+import { defineRouting } from "next-intl/routing";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@vxture/shared";
 
 export const routing = defineRouting({
   /** 支持的语言列表 */
@@ -16,7 +16,7 @@ export const routing = defineRouting({
   defaultLocale: DEFAULT_LOCALE,
 
   /** 前缀模式 */
-  localePrefix: 'always',
+  localePrefix: "always",
 
   /** 备用语言 */
   localeDetection: true,
@@ -26,5 +26,5 @@ export const routing = defineRouting({
  * 生成静态参数类型
  */
 export type LocaleParams = {
-  locale: typeof SUPPORTED_LOCALES[number];
+  locale: (typeof SUPPORTED_LOCALES)[number];
 };

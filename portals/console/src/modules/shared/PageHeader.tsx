@@ -1,1 +1,1 @@
-export { PageHeader } from '@vxture/design-system';
+export { PageHeader } from "@vxture/design-system";

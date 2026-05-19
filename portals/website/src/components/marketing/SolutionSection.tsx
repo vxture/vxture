@@ -13,14 +13,17 @@
  * @layer Presentation
  * @category Components - Home
  */
-'use client';
+"use client";
 
-import { useState, memo, useCallback } from 'react';
-import Image from 'next/image';
-import { Button, Icon } from '@vxture/design-system';
-import { useTranslations } from 'next-intl';
-import { debugLog } from '@vxture/shared';
-import { SOLUTIONS_DATA, type SolutionItem } from '@/data/home/home.solutions.data';
+import { useState, memo, useCallback } from "react";
+import Image from "next/image";
+import { Button, Icon } from "@vxture/design-system";
+import { useTranslations } from "next-intl";
+import { debugLog } from "@vxture/shared";
+import {
+  SOLUTIONS_DATA,
+  type SolutionItem,
+} from "@/data/home/home.solutions.data";
 
 // ============================================================================
 // 类型定义
@@ -69,43 +72,45 @@ const SolutionCard = memo(function SolutionCard({
   prev,
   next,
 }: SolutionCardProps) {
-  const t = useTranslations('home.solutions');
+  const t = useTranslations("home.solutions");
 
   return (
-    <div className='w-full transition-all duration-500'>
-      <div className='vx-solution-card-grid grid h-full overflow-hidden rounded-2xl shadow-lg'>
+    <div className="w-full transition-all duration-500">
+      <div className="vx-solution-card-grid grid h-full overflow-hidden rounded-2xl shadow-lg">
         {/* 左侧文本内容 */}
-        <div className='relative flex h-full items-center justify-start px-4 py-4 bg-vx-white dark:bg-vx-gray-700'>
-          <div className='relative w-full h-full flex flex-col gap-4 justify-items-start'>
+        <div className="relative flex h-full items-center justify-start px-4 py-4 bg-vx-white dark:bg-vx-gray-700">
+          <div className="relative w-full h-full flex flex-col gap-4 justify-items-start">
             {/* 标题与副标题 */}
-            <div className='relative flex items-center h-20 min-h-20'>
+            <div className="relative flex items-center h-20 min-h-20">
               {/* 背景数字 */}
               <span
-                className='vx-solution-index absolute left-0 top-1/2 z-0 -translate-y-1/2 select-none font-semibold text-vx-brand-300 opacity-70 drop-shadow-lg pointer-events-none dark:text-vx-brand-500'
-                aria-hidden='true'
+                className="vx-solution-index absolute left-0 top-1/2 z-0 -translate-y-1/2 select-none font-semibold text-vx-brand-300 opacity-70 drop-shadow-lg pointer-events-none dark:text-vx-brand-500"
+                aria-hidden="true"
               >
                 {idx + 1}
               </span>
               {/* 标题内容 */}
-              <div className='relative z-10 flex-1 flex flex-col items-start py-6 pl-12'>
-                <h3 className='text-xl font-bold text-vx-brand-700 dark:text-vx-brand-200 text-left'>
+              <div className="relative z-10 flex-1 flex flex-col items-start py-6 pl-12">
+                <h3 className="text-xl font-bold text-vx-brand-700 dark:text-vx-brand-200 text-left">
                   {t(`items.${solution.id}.title`)}
                 </h3>
-                <p className='text-sm text-vx-gray-600 dark:text-vx-gray-300 mt-1 text-left'>
+                <p className="text-sm text-vx-gray-600 dark:text-vx-gray-300 mt-1 text-left">
                   {t(`items.${solution.id}.subtitle`)}
                 </p>
               </div>
             </div>
             {/* 方案描述 */}
-            <div className='items-center justify-left ml-12'>
-              <p className='text-base text-vx-gray-600 dark:text-vx-gray-300 leading-relaxed'>
+            <div className="items-center justify-left ml-12">
+              <p className="text-base text-vx-gray-600 dark:text-vx-gray-300 leading-relaxed">
                 {t(`items.${solution.id}.description`)}
               </p>
             </div>
             {/* 特色标签 */}
-            <div className='items-center justify-left mt-4 ml-12'>
-              <h4 className='text-lg font-semibold text-vx-brand-700 dark:text-vx-brand-200'>{featuresTitle}</h4>
-              <div className='grid grid-cols-2 gap-3 justify-items-left my-2'>
+            <div className="items-center justify-left mt-4 ml-12">
+              <h4 className="text-lg font-semibold text-vx-brand-700 dark:text-vx-brand-200">
+                {featuresTitle}
+              </h4>
+              <div className="grid grid-cols-2 gap-3 justify-items-left my-2">
                 {[
                   t(`items.${solution.id}.tags.0`),
                   t(`items.${solution.id}.tags.1`),
@@ -113,46 +118,65 @@ const SolutionCard = memo(function SolutionCard({
                 ].map(
                   (tag, tagIdx) =>
                     tag && (
-                      <div key={tagIdx} className='flex items-center justify-start space-x-2'>
-                        <div className='w-2 h-2 rounded-full bg-linear-to-r from-vx-brand-500 to-vx-info-500'></div>
-                        <span className='text-base text-vx-gray-600 dark:text-vx-gray-300'>{tag}</span>
+                      <div
+                        key={tagIdx}
+                        className="flex items-center justify-start space-x-2"
+                      >
+                        <div className="w-2 h-2 rounded-full bg-linear-to-r from-vx-brand-500 to-vx-info-500"></div>
+                        <span className="text-base text-vx-gray-600 dark:text-vx-gray-300">
+                          {tag}
+                        </span>
                       </div>
-                    )
+                    ),
                 )}
               </div>
             </div>
             {/* 了解更多与导航按钮 */}
-            <div className='flex flex-col gap-4 mt-auto mb-4'>
+            <div className="flex flex-col gap-4 mt-auto mb-4">
               {/* 了解更多 */}
-              <div className='flex justify-start items-center ml-12'>
-                <Button asChild variant="default" className='rounded-lg px-5 py-2 h-auto w-max bg-vx-brand-500 hover:bg-vx-brand-600 dark:bg-vx-brand-500/80 dark:hover:bg-vx-brand-500'>
+              <div className="flex justify-start items-center ml-12">
+                <Button
+                  asChild
+                  variant="default"
+                  className="rounded-lg px-5 py-2 h-auto w-max bg-vx-brand-500 hover:bg-vx-brand-600 dark:bg-vx-brand-500/80 dark:hover:bg-vx-brand-500"
+                >
                   <a href={solution.cta.href}>{uiTexts.viewDetails}</a>
                 </Button>
               </div>
               {/* 分割线 */}
-              <div className='w-full h-px bg-vx-gray-200 dark:bg-vx-gray-600'></div>
+              <div className="w-full h-px bg-vx-gray-200 dark:bg-vx-gray-600"></div>
               {/* 导航按钮 */}
-              <div className='flex justify-center'>
-                <div className='flex gap-6'>
+              <div className="flex justify-center">
+                <div className="flex gap-6">
                   <Button
                     variant="ghost"
                     size="sm"
-                    aria-label='Previous'
+                    aria-label="Previous"
                     onClick={prev}
-                    className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-vx-gray-100 dark:hover:bg-vx-gray-600 transition-all duration-300 hover:shadow-md'
+                    className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-vx-gray-100 dark:hover:bg-vx-gray-600 transition-all duration-300 hover:shadow-md"
                   >
-                    <Icon name='caret-left-bold' className='w-4 h-4 text-vx-gray-400 dark:text-vx-gray-400' />
-                    <span className='text-vx-gray-400 dark:text-vx-gray-400 font-medium text-sm'>{uiTexts.prev}</span>
+                    <Icon
+                      name="caret-left-bold"
+                      className="w-4 h-4 text-vx-gray-400 dark:text-vx-gray-400"
+                    />
+                    <span className="text-vx-gray-400 dark:text-vx-gray-400 font-medium text-sm">
+                      {uiTexts.prev}
+                    </span>
                   </Button>
                   <Button
                     variant="ghost"
                     size="sm"
-                    aria-label='Next'
+                    aria-label="Next"
                     onClick={next}
-                    className='flex items-center gap-2 px-3 py-2 rounded-full hover:bg-vx-gray-100 dark:hover:bg-vx-gray-600 transition-all duration-300 hover:shadow-md'
+                    className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-vx-gray-100 dark:hover:bg-vx-gray-600 transition-all duration-300 hover:shadow-md"
                   >
-                    <span className='text-vx-gray-400 dark:text-vx-gray-400 font-medium text-sm'>{uiTexts.next}</span>
-                    <Icon name='caret-right-bold' className='w-4 h-4 text-vx-gray-400 dark:text-vx-gray-400' />
+                    <span className="text-vx-gray-400 dark:text-vx-gray-400 font-medium text-sm">
+                      {uiTexts.next}
+                    </span>
+                    <Icon
+                      name="caret-right-bold"
+                      className="w-4 h-4 text-vx-gray-400 dark:text-vx-gray-400"
+                    />
                   </Button>
                 </div>
               </div>
@@ -160,20 +184,20 @@ const SolutionCard = memo(function SolutionCard({
           </div>
         </div>
         {/* 右侧图片内容 */}
-        <div className='bg-linear-to-r from-vx-brand-50 via-vx-brand-100 to-vx-brand-50 dark:from-vx-gray-600 dark:via-vx-gray-500 dark:to-vx-gray-600'>
-          <div className='relative flex items-center justify-center px-38'>
-            <div className='relative w-full max-w-2xl h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300 py-6'>
-              <div className='relative w-full pointer-events-none select-none'>
-                <div className='vx-solution-cover-frame absolute flex items-center justify-center'>
-                  <div className='w-full h-full overflow-hidden z-10'>
+        <div className="bg-linear-to-r from-vx-brand-50 via-vx-brand-100 to-vx-brand-50 dark:from-vx-gray-600 dark:via-vx-gray-500 dark:to-vx-gray-600">
+          <div className="relative flex items-center justify-center px-38">
+            <div className="relative w-full max-w-2xl h-auto flex flex-col items-center justify-start hover:scale-105 transition-all duration-300 py-6">
+              <div className="relative w-full pointer-events-none select-none">
+                <div className="vx-solution-cover-frame absolute flex items-center justify-center">
+                  <div className="w-full h-full overflow-hidden z-10">
                     <Image
                       src={solution.cover.url}
                       alt={t(`items.${solution.id}.cover.alt`)}
                       width={1}
                       height={1}
-                      sizes='100vw'
+                      sizes="100vw"
                       priority
-                      className='w-full h-auto object-contain select-none pointer-events-none block'
+                      className="w-full h-auto object-contain select-none pointer-events-none block"
                       draggable={false}
                       onContextMenu={(e) => e.preventDefault()}
                     />
@@ -201,12 +225,12 @@ const SolutionCard = memo(function SolutionCard({
  */
 const SolutionSection = memo(function SolutionSection({
   id,
-  name = 'Solutions',
+  name = "Solutions",
 }: SolutionSectionProps) {
   const [current, setCurrent] = useState<number>(0);
-  const t = useTranslations('home.solutions');
+  const t = useTranslations("home.solutions");
 
-  debugLog('Solutions data:', SOLUTIONS_DATA);
+  debugLog("Solutions data:", SOLUTIONS_DATA);
 
   const total = SOLUTIONS_DATA.items.length;
 
@@ -237,31 +261,35 @@ const SolutionSection = memo(function SolutionSection({
     <section
       id={id}
       data-name={name}
-      className='vx-section-even relative snap-section min-h-screen flex flex-col'
+      className="vx-section-even relative snap-section min-h-screen flex flex-col"
     >
-      <div className='w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen'>
+      <div className="w-full max-w-7xl xl:max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col h-full min-h-screen">
         {/* 1. 标题区 */}
-        <div className='text-center pt-28'>
-          <h2 className='font-display text-3xl lg:text-4xl font-bold text-vx-brand-700 dark:text-vx-brand-200 mb-4'>{title}</h2>
-          <p className='text-lg text-vx-gray-600 dark:text-vx-gray-300 max-w-4xl mx-auto'>{subtitle}</p>
+        <div className="text-center pt-28">
+          <h2 className="font-display text-3xl lg:text-4xl font-bold text-vx-brand-700 dark:text-vx-brand-200 mb-4">
+            {title}
+          </h2>
+          <p className="text-lg text-vx-gray-600 dark:text-vx-gray-300 max-w-4xl mx-auto">
+            {subtitle}
+          </p>
         </div>
 
         {/* 2. 内容区 */}
-        <div className='flex flex-1 items-center justify-center py-8'>
-          <div className='w-full'>
+        <div className="flex flex-1 items-center justify-center py-8">
+          <div className="w-full">
             {/* 方案标题导航 */}
-            <div className='flex justify-center mb-4'>
-              <div className='flex items-center gap-2 sm:gap-4'>
+            <div className="flex justify-center mb-4">
+              <div className="flex items-center gap-2 sm:gap-4">
                 {items.map((solution, idx) => (
                   <Button
                     key={solution.id}
-                    variant={idx === current ? 'secondary' : 'ghost'}
+                    variant={idx === current ? "secondary" : "ghost"}
                     size="sm"
                     onClick={() => setCurrent(idx)}
                     className={`text-xs sm:text-sm transition-all duration-300 px-2 sm:px-3 py-1 rounded-full ${
                       idx === current
-                        ? 'text-vx-brand-700 dark:text-vx-brand-200 font-semibold bg-vx-brand-100 dark:bg-vx-brand-800/40'
-                        : 'text-vx-gray-400 dark:text-vx-gray-400 hover:text-vx-gray-600 dark:hover:text-vx-gray-300'
+                        ? "text-vx-brand-700 dark:text-vx-brand-200 font-semibold bg-vx-brand-100 dark:bg-vx-brand-800/40"
+                        : "text-vx-gray-400 dark:text-vx-gray-400 hover:text-vx-gray-600 dark:hover:text-vx-gray-300"
                     }`}
                   >
                     {t(`items.${solution.id}.title`)}
@@ -271,7 +299,7 @@ const SolutionSection = memo(function SolutionSection({
             </div>
 
             {/* 方案轮播区块 */}
-            <div className='w-full flex justify-center'>
+            <div className="w-full flex justify-center">
               {items.map((solution, idx) => {
                 if (idx !== current) return null;
                 return (
@@ -292,11 +320,13 @@ const SolutionSection = memo(function SolutionSection({
 
         {/* 3. 底部 tagline */}
         {tagline && (
-          <div className='text-center pb-12'>
-            <div className='inline-flex items-center space-x-2'>
-              <div className='w-8 h-0.5 bg-linear-to-r from-transparent to-vx-brand-200 dark:to-vx-brand-600'></div>
-              <span className='text-sm font-medium text-vx-brand-500 dark:text-vx-brand-300'>{tagline}</span>
-              <div className='w-8 h-0.5 bg-linear-to-l from-transparent to-vx-brand-200 dark:to-vx-brand-600'></div>
+          <div className="text-center pb-12">
+            <div className="inline-flex items-center space-x-2">
+              <div className="w-8 h-0.5 bg-linear-to-r from-transparent to-vx-brand-200 dark:to-vx-brand-600"></div>
+              <span className="text-sm font-medium text-vx-brand-500 dark:text-vx-brand-300">
+                {tagline}
+              </span>
+              <div className="w-8 h-0.5 bg-linear-to-l from-transparent to-vx-brand-200 dark:to-vx-brand-600"></div>
             </div>
           </div>
         )}

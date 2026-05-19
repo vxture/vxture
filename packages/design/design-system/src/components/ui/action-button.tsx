@@ -34,7 +34,12 @@ const ActionButton = React.forwardRef<HTMLButtonElement, ActionButtonProps>(
   ) {
     return (
       <Button ref={ref} size={size} {...props}>
-        <Icon name={icon} size={iconSize} fallback={iconFallback} className="vx-btn__icon" />
+        <Icon
+          name={icon}
+          size={iconSize}
+          fallback={iconFallback}
+          className="vx-btn__icon"
+        />
         <span>{children}</span>
       </Button>
     );

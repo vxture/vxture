@@ -8,8 +8,8 @@
  * @date 2026-03-16
  */
 
-import type { Locale } from '@vxture/shared';
-import { SUPPORTED_LOCALES } from '@vxture/shared';
+import type { Locale } from "@vxture/shared";
+import { SUPPORTED_LOCALES } from "@vxture/shared";
 
 // ============================================================================
 // Accept-Language parsing
@@ -24,12 +24,12 @@ import { SUPPORTED_LOCALES } from '@vxture/shared';
  */
 export function parseAcceptLanguage(header: string): string[] {
   return header
-    .split(',')
+    .split(",")
     .map((entry) => {
-      const [lang, q] = entry.trim().split(';q=');
+      const [lang, q] = entry.trim().split(";q=");
       return {
-        lang:     lang?.trim().toLowerCase() ?? '',
-        quality:  q ? parseFloat(q) : 1.0,
+        lang: lang?.trim().toLowerCase() ?? "",
+        quality: q ? parseFloat(q) : 1.0,
       };
     })
     .filter((e) => e.lang.length > 0)
@@ -56,9 +56,9 @@ export function normalizeLocale(raw: string): Locale | undefined {
   if (isSupportedLocale(lower)) return lower as Locale;
 
   // Prefix match: map language primary tag to default region
-  const primary = lower.split('-')[0];
-  if (primary === 'zh') return 'zh-CN';
-  if (primary === 'en') return 'en-US';
+  const primary = lower.split("-")[0];
+  if (primary === "zh") return "zh-CN";
+  if (primary === "en") return "en-US";
 
   return undefined;
 }
@@ -82,11 +82,14 @@ export function isSupportedLocale(value: string): value is Locale {
  * parseCookieValue('NEXT_LOCALE=en; session=abc123', 'NEXT_LOCALE')
  * // → 'en'
  */
-export function parseCookieValue(cookieHeader: string, key: string): string | undefined {
+export function parseCookieValue(
+  cookieHeader: string,
+  key: string,
+): string | undefined {
   const entry = cookieHeader
-    .split(';')
+    .split(";")
     .map((c) => c.trim())
     .find((c) => c.startsWith(`${key}=`));
 
-  return entry?.split('=')[1];
+  return entry?.split("=")[1];
 }

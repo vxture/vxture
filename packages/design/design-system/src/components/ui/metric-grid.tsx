@@ -33,14 +33,7 @@ function metricTone(tone: MetricGridTone | undefined): StatusBadgeTone {
 }
 
 const MetricGrid = React.forwardRef<HTMLDivElement, MetricGridProps>(
-  function MetricGrid(
-    {
-      className,
-      items,
-      ...props
-    },
-    ref,
-  ) {
+  function MetricGrid({ className, items, ...props }, ref) {
     return (
       <div ref={ref} className={cn("vx-metric-grid", className)} {...props}>
         {items.map((item) => (

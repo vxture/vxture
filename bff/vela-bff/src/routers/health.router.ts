@@ -8,12 +8,12 @@
  * @date 2026-04-30
  */
 
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
 
-@Controller('health')
+@Controller("health")
 export class HealthRouter {
   @Get()
   check() {
-    return { status: 'ok', service: 'vela-bff' };
+    return { status: "ok", service: "vela-bff" };
   }
 }

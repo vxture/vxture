@@ -11,29 +11,29 @@
  * @date 2026-05-02
  */
 
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Button, Input } from '@vxture/design-system';
-import { AuthFooter, AuthHeader } from '@/components/auth/AuthChrome';
-import { resetPassword } from '@/api/auth.api';
-import { useRouter } from '@/lib/i18n/navigation';
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Button, Input } from "@vxture/design-system";
+import { AuthFooter, AuthHeader } from "@/components/auth/AuthChrome";
+import { resetPassword } from "@/api/auth.api";
+import { useRouter } from "@/lib/i18n/navigation";
 
 // ─── 类型 ──────────────────────────────────────────────────────────────────────
 
-type ResetStep = 'form' | 'done' | 'invalid';
+type ResetStep = "form" | "done" | "invalid";
 
 // ─── 主组件 ────────────────────────────────────────────────────────────────────
 
 export function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const token = searchParams.get('token') ?? '';
+  const token = searchParams.get("token") ?? "";
 
-  const [step, setStep] = useState<ResetStep>(token ? 'form' : 'invalid');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [step, setStep] = useState<ResetStep>(token ? "form" : "invalid");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -42,25 +42,25 @@ export function ResetPasswordForm() {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setError('');
+    setError("");
 
     if (newPassword.length < 8) {
-      setError('密码至少 8 位字符');
+      setError("密码至少 8 位字符");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError('两次输入的密码不一致');
+      setError("两次输入的密码不一致");
       return;
     }
 
     setLoading(true);
     try {
       await resetPassword({ token, newPassword });
-      setStep('done');
+      setStep("done");
     } catch {
       // token 无效或已过期
-      setStep('invalid');
+      setStep("invalid");
     } finally {
       setLoading(false);
     }
@@ -69,13 +69,13 @@ export function ResetPasswordForm() {
   // ─── 渲染 ─────────────────────────────────────────────────────────────────────
 
   return (
-    <section className='vx-auth-page vx-auth-page--default-bg'>
+    <section className="vx-auth-page vx-auth-page--default-bg">
       <AuthHeader />
 
-      <main className='vx-auth-main'>
-        <div className='vx-auth-card' aria-label='reset password'>
-          <div className='vx-auth-form-panel'>
-            {step === 'form' && (
+      <main className="vx-auth-main">
+        <div className="vx-auth-card" aria-label="reset password">
+          <div className="vx-auth-form-panel">
+            {step === "form" && (
               <FormStep
                 newPassword={newPassword}
                 confirmPassword={confirmPassword}
@@ -86,11 +86,11 @@ export function ResetPasswordForm() {
                 onSubmit={handleSubmit}
               />
             )}
-            {step === 'done' && (
-              <DoneStep onSignIn={() => router.push('/signin')} />
+            {step === "done" && (
+              <DoneStep onSignIn={() => router.push("/signin")} />
             )}
-            {step === 'invalid' && (
-              <InvalidStep onRetry={() => router.push('/signin')} />
+            {step === "invalid" && (
+              <InvalidStep onRetry={() => router.push("/signin")} />
             )}
           </div>
         </div>
@@ -122,48 +122,48 @@ function FormStep({
 }) {
   return (
     <>
-      <div className='vx-auth-panel-heading'>
+      <div className="vx-auth-panel-heading">
         <h1>设置新密码</h1>
         <p>请输入您的新密码，至少 8 位字符</p>
       </div>
 
-      <form onSubmit={onSubmit} autoComplete='off'>
-        <div className='vx-auth-field'>
+      <form onSubmit={onSubmit} autoComplete="off">
+        <div className="vx-auth-field">
           <label>新密码</label>
           <Input
-            type='password'
+            type="password"
             value={newPassword}
-            placeholder='至少 8 位字符'
-            autoComplete='new-password'
+            placeholder="至少 8 位字符"
+            autoComplete="new-password"
             autoFocus
             disabled={loading}
             onChange={(e) => onChangeNew(e.target.value)}
             aria-invalid={Boolean(error)}
           />
         </div>
-        <div className='vx-auth-field'>
+        <div className="vx-auth-field">
           <label>确认密码</label>
           <Input
-            type='password'
+            type="password"
             value={confirmPassword}
-            placeholder='再次输入新密码'
-            autoComplete='new-password'
+            placeholder="再次输入新密码"
+            autoComplete="new-password"
             disabled={loading}
             onChange={(e) => onChangeConfirm(e.target.value)}
             aria-invalid={Boolean(error)}
           />
         </div>
 
-        {error ? <p className='vx-auth-error'>{error}</p> : null}
+        {error ? <p className="vx-auth-error">{error}</p> : null}
 
-        <Button type='submit' className='vx-auth-primary' disabled={loading}>
+        <Button type="submit" className="vx-auth-primary" disabled={loading}>
           {loading ? (
             <>
-              <span className='vx-auth-spinner' />
+              <span className="vx-auth-spinner" />
               重置中...
             </>
           ) : (
-            '确认重置密码'
+            "确认重置密码"
           )}
         </Button>
       </form>
@@ -173,11 +173,11 @@ function FormStep({
 
 function DoneStep({ onSignIn }: { onSignIn: () => void }) {
   return (
-    <div className='vx-auth-reset-done'>
-      <div className='vx-auth-check'>✓</div>
+    <div className="vx-auth-reset-done">
+      <div className="vx-auth-check">✓</div>
       <h1>密码已重置</h1>
       <p>您的密码已成功更新，请使用新密码登录。</p>
-      <Button className='vx-auth-primary' onClick={onSignIn}>
+      <Button className="vx-auth-primary" onClick={onSignIn}>
         去登录
       </Button>
     </div>
@@ -186,11 +186,11 @@ function DoneStep({ onSignIn }: { onSignIn: () => void }) {
 
 function InvalidStep({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className='vx-auth-reset-done'>
-      <div className='vx-auth-check vx-auth-check--error'>✕</div>
+    <div className="vx-auth-reset-done">
+      <div className="vx-auth-check vx-auth-check--error">✕</div>
       <h1>链接已失效</h1>
       <p>该重置链接已过期或已使用。请重新申请密码重置。</p>
-      <Button className='vx-auth-primary' onClick={onRetry}>
+      <Button className="vx-auth-primary" onClick={onRetry}>
         重新申请
       </Button>
     </div>

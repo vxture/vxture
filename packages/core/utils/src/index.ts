@@ -19,11 +19,8 @@ export type {
   DeepReadonly,
   LogRecord,
   LoggerConfig,
-} from './types/utils.types';
-export {
-  LogLevel,
-  DEFAULT_LOGGER_CONFIG,
-} from './types/utils.types';
+} from "./types/utils.types";
+export { LogLevel, DEFAULT_LOGGER_CONFIG } from "./types/utils.types";
 
 // ============================================
 // Utils Functions & Classes
@@ -54,4 +51,4 @@ export {
   isNonEmptyString,
   isValidUrl,
   isUuid,
-} from './utils';
+} from "./utils";

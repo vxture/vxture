@@ -8,14 +8,14 @@
  * @date 2026-04-30
  */
 
-'use client';
+"use client";
 
-import { useCallback } from 'react';
-import { useVelaStore } from '../stores/vela.store';
-import { streamChat } from '../lib/vela.client';
-import type { VelaMessage, VelaToolMessage } from '../types/vela.types';
+import { useCallback } from "react";
+import { useVelaStore } from "../stores/vela.store";
+import { streamChat } from "../lib/vela.client";
+import type { VelaMessage, VelaToolMessage } from "../types/vela.types";
 
-type VelaDisplayHint = NonNullable<VelaToolMessage['displayHint']>;
+type VelaDisplayHint = NonNullable<VelaToolMessage["displayHint"]>;
 
 // ============================================================================
 // Hook
@@ -39,8 +39,8 @@ export function useVelaChat() {
 
       // 立即追加用户消息
       const userMsg: VelaMessage = {
-        id:      crypto.randomUUID(),
-        role:    'user',
+        id: crypto.randomUUID(),
+        role: "user",
         content: text.trim(),
       };
       appendMessage(userMsg);
@@ -48,42 +48,50 @@ export function useVelaChat() {
       // 预先创建助手消息占位
       const assistantId = crypto.randomUUID();
       const assistantMsg: VelaMessage = {
-        id:      assistantId,
-        role:    'assistant',
-        content: '',
+        id: assistantId,
+        role: "assistant",
+        content: "",
       };
       appendMessage(assistantMsg);
       setStreaming(true);
 
       try {
-        for await (const event of streamChat({ message: text.trim(), sessionId, surface })) {
+        for await (const event of streamChat({
+          message: text.trim(),
+          sessionId,
+          surface,
+        })) {
           switch (event.type) {
-            case 'text':
+            case "text":
               appendTextDelta(assistantId, event.delta);
               break;
 
-            case 'tool_call': {
+            case "tool_call": {
               const toolMsg: VelaMessage = {
-                id:     event.toolId,
-                role:   'tool',
+                id: event.toolId,
+                role: "tool",
                 toolId: event.toolId,
-                data:   null,
+                data: null,
               };
               appendMessage(toolMsg);
               break;
             }
 
-            case 'tool_result': {
+            case "tool_result": {
               // 找到对应 tool 消息，更新 data 和 displayHint
               useVelaStore.setState((s) => ({
                 messages: s.messages.map((m) => {
-                  if (m.role !== 'tool' || m.toolId !== event.toolId) {
+                  if (m.role !== "tool" || m.toolId !== event.toolId) {
                     return m;
                   }
 
-                  const nextMessage: VelaToolMessage = { ...m, data: event.data };
+                  const nextMessage: VelaToolMessage = {
+                    ...m,
+                    data: event.data,
+                  };
                   if (event.displayHint) {
-                    nextMessage.displayHint = event.displayHint as VelaDisplayHint;
+                    nextMessage.displayHint =
+                      event.displayHint as VelaDisplayHint;
                   }
                   return nextMessage;
                 }),
@@ -91,19 +99,19 @@ export function useVelaChat() {
               break;
             }
 
-            case 'confirm_required':
+            case "confirm_required":
               setPendingConfirm({
                 auditId: event.auditId,
-                toolId:  event.toolId,
+                toolId: event.toolId,
                 summary: event.summary,
               });
               break;
 
-            case 'done':
+            case "done":
               if (event.sessionId) setSessionId(event.sessionId);
               break;
 
-            case 'error':
+            case "error":
               appendTextDelta(assistantId, `\n\n[错误：${event.message}]`);
               break;
           }
@@ -112,7 +120,16 @@ export function useVelaChat() {
         setStreaming(false);
       }
     },
-    [surface, sessionId, isStreaming, appendMessage, appendTextDelta, setSessionId, setStreaming, setPendingConfirm],
+    [
+      surface,
+      sessionId,
+      isStreaming,
+      appendMessage,
+      appendTextDelta,
+      setSessionId,
+      setStreaming,
+      setPendingConfirm,
+    ],
   );
 
   return { sendMessage, isStreaming };

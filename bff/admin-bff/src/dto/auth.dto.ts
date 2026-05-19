@@ -1,25 +1,25 @@
 export class LoginDto {
-  identifier = '';
-  password = '';
-  captchaToken = '';
+  identifier = "";
+  password = "";
+  captchaToken = "";
   captchaPosition = 0;
 }
 
 export class SendPhoneCodeDto {
-  phone = '';
+  phone = "";
 }
 
 export class PhoneLoginDto {
-  phone = '';
-  code = '';
+  phone = "";
+  code = "";
 }
 
 export class CaptchaChallengeDto {
-  token = '';
+  token = "";
   targetRatio = 0;
 }
 
 export class AuthResultDto {
-  userId = '';
-  status = 'authenticated';
+  userId = "";
+  status = "authenticated";
 }

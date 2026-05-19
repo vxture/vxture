@@ -1,5 +1,5 @@
-export { OpsModule } from './module/ops.module';
-export { OpsService } from './service/ops.service';
+export { OpsModule } from "./module/ops.module";
+export { OpsService } from "./service/ops.service";
 export type {
   AdminRecord,
   AdminView,
@@ -17,4 +17,4 @@ export type {
   UpsertGovernanceInput,
   AnnouncementRecord,
   ListAnnouncementsParams,
-} from './types/ops.types';
+} from "./types/ops.types";

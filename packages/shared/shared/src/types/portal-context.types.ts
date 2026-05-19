@@ -12,7 +12,7 @@
  * 已知 Portal 来源标识符。
  * 使用 `string & {}` 兜底，保留类型提示同时允许未来扩展新 Portal。
  */
-export type PortalSource = 'website' | 'agent-studio' | 'admin' | (string & {});
+export type PortalSource = "website" | "agent-studio" | "admin" | (string & {});
 
 // =============================================================================
 // 跨 Portal 导航上下文

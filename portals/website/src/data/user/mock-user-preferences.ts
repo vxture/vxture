@@ -8,18 +8,18 @@
  * @date 2026-03-21
  */
 
-import type { Locale } from '@vxture/shared';
-import type { Density } from '@vxture/design-system';
+import type { Locale } from "@vxture/shared";
+import type { Density } from "@vxture/design-system";
 
 /**
  * 全屏模式类型
  */
-export type FullscreenMode = 'workspace' | 'browser';
+export type FullscreenMode = "workspace" | "browser";
 
 /**
  * 主题类型（扩展 design-system 的主题，增加 system 选项）
  */
-export type ThemePreference = 'light' | 'dark' | 'system';
+export type ThemePreference = "light" | "dark" | "system";
 
 /**
  * 用户偏好配置接口
@@ -43,24 +43,24 @@ export interface UserPreferences {
  * 模拟已登录用户的偏好数据
  */
 export const MOCK_USER_PREFERENCES: UserPreferences = {
-  userId: 'user-001',
-  locale: 'zh-CN',
-  theme: 'system',
-  density: 'default',
-  fullscreenMode: 'workspace',
-  updatedAt: '2026-03-21T10:30:00Z',
+  userId: "user-001",
+  locale: "zh-CN",
+  theme: "system",
+  density: "default",
+  fullscreenMode: "workspace",
+  updatedAt: "2026-03-21T10:30:00Z",
 };
 
 /**
  * 模拟未登录用户的临时偏好（localStorage 存储）
  */
-export const GUEST_PREFERENCES_KEY = 'vxture-guest-preferences';
+export const GUEST_PREFERENCES_KEY = "vxture-guest-preferences";
 
 /**
  * 获取未登录用户的临时偏好
  */
 export function getGuestPreferences(): Partial<UserPreferences> {
-  if (typeof window === 'undefined') return {};
+  if (typeof window === "undefined") return {};
   try {
     const stored = localStorage.getItem(GUEST_PREFERENCES_KEY);
     return stored ? JSON.parse(stored) : {};
@@ -73,7 +73,7 @@ export function getGuestPreferences(): Partial<UserPreferences> {
  * 保存未登录用户的临时偏好
  */
 export function setGuestPreferences(prefs: Partial<UserPreferences>): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   try {
     const existing = getGuestPreferences();
     const merged = { ...existing, ...prefs };

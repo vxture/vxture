@@ -25,7 +25,7 @@ export interface AdminRecord {
   deletedAt: Date | null;
 }
 
-export interface AdminView extends Omit<AdminRecord, 'passwordHash'> {
+export interface AdminView extends Omit<AdminRecord, "passwordHash"> {
   roleName?: string;
 }
 

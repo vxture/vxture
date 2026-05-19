@@ -12,22 +12,22 @@
  * @date 2026-04-30
  */
 
-export type VelaSurface = 'admin' | 'console';
+export type VelaSurface = "admin" | "console";
 
-export type VelaUserType = 'operator' | 'tenant_user';
+export type VelaUserType = "operator" | "tenant_user";
 
 /** surface × userType 合法组合（此文件是 server 侧的唯一权威） */
 export const VALID_COMBINATIONS: Record<VelaSurface, VelaUserType> = {
-  admin:   'operator',
-  console: 'tenant_user',
+  admin: "operator",
+  console: "tenant_user",
 };
 
 export interface CallerContext {
-  surface:      VelaSurface;
-  userId:       string;
-  userType:     VelaUserType;
-  role:         string;
-  tenantId:     string | null;
+  surface: VelaSurface;
+  userId: string;
+  userType: VelaUserType;
+  role: string;
+  tenantId: string | null;
   allowedTools: readonly string[];
-  dataScope:    'global' | 'tenant';
+  dataScope: "global" | "tenant";
 }

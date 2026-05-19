@@ -1,5 +1,5 @@
-export { PaymentModule } from './module/payment.module';
-export { PaymentService } from './service/payment.service';
+export { PaymentModule } from "./module/payment.module";
+export { PaymentService } from "./service/payment.service";
 export type {
   PaymentRecord,
   RefundRecord,
@@ -13,4 +13,4 @@ export type {
   UpdatePaymentStatusInput,
   CreateRefundInput,
   AuditRefundInput,
-} from './types/payment.types';
+} from "./types/payment.types";

@@ -19,9 +19,15 @@
  * @date 2026-05-01
  */
 
-import { Inject, Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
-import Redis from 'ioredis';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  OnModuleDestroy,
+  OnModuleInit,
+} from "@nestjs/common";
+import { VxConfigService } from "@vxture/core-config";
+import Redis from "ioredis";
 
 // ============================================================================
 // RedisService
@@ -33,30 +39,40 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client!: Redis;
   private keyPrefix!: string;
 
-  constructor(@Inject(VxConfigService) private readonly config: VxConfigService) {}
+  constructor(
+    @Inject(VxConfigService) private readonly config: VxConfigService,
+  ) {}
 
   onModuleInit(): void {
-    const { REDIS_URL, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_KEY_PREFIX } =
-      this.config.redis;
+    const {
+      REDIS_URL,
+      REDIS_HOST,
+      REDIS_PORT,
+      REDIS_PASSWORD,
+      REDIS_DB,
+      REDIS_KEY_PREFIX,
+    } = this.config.redis;
 
-    this.keyPrefix = REDIS_KEY_PREFIX ?? 'vx:';
+    this.keyPrefix = REDIS_KEY_PREFIX ?? "vx:";
 
     this.client = REDIS_URL
       ? new Redis(REDIS_URL, { lazyConnect: true })
       : new Redis({
-          host:      REDIS_HOST,
-          port:      REDIS_PORT,
-          password:  REDIS_PASSWORD,
-          db:        REDIS_DB,
+          host: REDIS_HOST,
+          port: REDIS_PORT,
+          password: REDIS_PASSWORD,
+          db: REDIS_DB,
           lazyConnect: true,
         });
 
-    this.client.on('error', (err: Error) => {
+    this.client.on("error", (err: Error) => {
       this.logger.warn(`Redis connection error: ${err.message}`);
     });
 
     this.client.connect().catch((err: Error) => {
-      this.logger.warn(`Redis initial connection failed: ${err.message} — jti checks will be skipped (fail-open)`);
+      this.logger.warn(
+        `Redis initial connection failed: ${err.message} — jti checks will be skipped (fail-open)`,
+      );
     });
   }
 
@@ -74,7 +90,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       const result = await this.client.exists(key);
       return result === 1;
     } catch (err) {
-      this.logger.warn(`jti blacklist check failed (fail-open): ${String(err)}`);
+      this.logger.warn(
+        `jti blacklist check failed (fail-open): ${String(err)}`,
+      );
       return false;
     }
   }

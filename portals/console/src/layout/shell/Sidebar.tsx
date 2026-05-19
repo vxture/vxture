@@ -1,11 +1,11 @@
-'use client';
-import { Link, usePathname } from '@/lib/i18n/navigation';
-import { useTranslations } from 'next-intl';
-import { Button, Icon } from '@vxture/design-system';
-import { TenantSwitcher } from '@/components/navigation/tenant-switcher';
-import { navigationSections } from '@/config/navigation';
-import { hasCapability } from '@/features/permissions/can';
-import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
+"use client";
+import { Link, usePathname } from "@/lib/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { Button, Icon } from "@vxture/design-system";
+import { TenantSwitcher } from "@/components/navigation/tenant-switcher";
+import { navigationSections } from "@/config/navigation";
+import { hasCapability } from "@/features/permissions/can";
+import { useConsoleSession } from "@/features/session/ConsoleSessionProvider";
 
 export function Sidebar({
   collapsed,
@@ -16,20 +16,41 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const { session } = useConsoleSession();
-  const headerT = useTranslations('header');
-  const t = useTranslations('sidebar');
+  const headerT = useTranslations("header");
+  const t = useTranslations("sidebar");
 
   return (
-    <aside id="vx-console-sidebar" className={collapsed ? 'vx-shell-sidebar vx-shell-sidebar--collapsed' : 'vx-shell-sidebar'}>
-      <div className={collapsed ? 'vx-shell-sidebar__topbar vx-shell-sidebar__topbar--collapsed' : 'vx-shell-sidebar__topbar'}>
+    <aside
+      id="vx-console-sidebar"
+      className={
+        collapsed
+          ? "vx-shell-sidebar vx-shell-sidebar--collapsed"
+          : "vx-shell-sidebar"
+      }
+    >
+      <div
+        className={
+          collapsed
+            ? "vx-shell-sidebar__topbar vx-shell-sidebar__topbar--collapsed"
+            : "vx-shell-sidebar__topbar"
+        }
+      >
         <Button
           variant="ghost"
           size="icon"
           className="vx-shell-icon-button vx-shell-icon-button--rail"
-          aria-label={collapsed ? headerT('openNavigation') : headerT('collapseNavigation')}
-          aria-expanded={collapsed ? 'false' : 'true'}
+          aria-label={
+            collapsed
+              ? headerT("openNavigation")
+              : headerT("collapseNavigation")
+          }
+          aria-expanded={collapsed ? "false" : "true"}
           aria-controls="vx-console-sidebar"
-          title={collapsed ? headerT('openNavigation') : headerT('collapseNavigation')}
+          title={
+            collapsed
+              ? headerT("openNavigation")
+              : headerT("collapseNavigation")
+          }
           onClick={onToggleCollapse}
         >
           <span className="vx-shell-sidebar__toggle-icon" aria-hidden="true">
@@ -44,11 +65,17 @@ export function Sidebar({
         <TenantSwitcher />
       </div>
 
-      <nav className="vx-shell-nav" aria-label={t('ariaLabel')}>
+      <nav className="vx-shell-nav" aria-label={t("ariaLabel")}>
         {navigationSections.map((section) => {
           const items = section.items.filter((item) => {
-            const allowedByCapability = hasCapability(session.capabilities, item.capability);
-            const tenantType = session.tenant?.mode === 'tenant' ? session.tenant.tenantType : undefined;
+            const allowedByCapability = hasCapability(
+              session.capabilities,
+              item.capability,
+            );
+            const tenantType =
+              session.tenant?.mode === "tenant"
+                ? session.tenant.tenantType
+                : undefined;
             const allowedByTenantType =
               !item.tenantTypes ||
               (tenantType ? item.tenantTypes.includes(tenantType) : false);
@@ -61,7 +88,9 @@ export function Sidebar({
 
           return (
             <div key={section.titleKey} className="vx-shell-nav__group">
-              <p className="vx-shell-nav__group-title">{t(`sections.${section.titleKey}`)}</p>
+              <p className="vx-shell-nav__group-title">
+                {t(`sections.${section.titleKey}`)}
+              </p>
               <div className="vx-shell-nav__items">
                 {items.map((item) => {
                   const isActive = pathname === item.href;
@@ -72,9 +101,18 @@ export function Sidebar({
                       key={item.href}
                       href={item.href}
                       title={label}
-                      className={isActive ? 'vx-shell-nav__item vx-shell-nav__item--active' : 'vx-shell-nav__item'}
+                      className={
+                        isActive
+                          ? "vx-shell-nav__item vx-shell-nav__item--active"
+                          : "vx-shell-nav__item"
+                      }
                     >
-                      <Icon name={item.icon} size={20} className="vx-shell-nav__icon" fallback="placeholder" />
+                      <Icon
+                        name={item.icon}
+                        size={20}
+                        className="vx-shell-nav__icon"
+                        fallback="placeholder"
+                      />
                       <span>{label}</span>
                     </Link>
                   );
@@ -87,8 +125,8 @@ export function Sidebar({
 
       <div className="vx-shell-sidebar__footer" aria-hidden={collapsed}>
         <div>
-          <span>{t('footer.label')}</span>
-          <strong>{t('footer.value')}</strong>
+          <span>{t("footer.label")}</span>
+          <strong>{t("footer.value")}</strong>
         </div>
       </div>
     </aside>

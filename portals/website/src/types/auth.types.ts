@@ -18,7 +18,7 @@ export interface UserInfo {
   personalVerified?: boolean | null;
   organizationVerified?: boolean | null;
   organizationName?: string | null;
-  tenantType?: 'individual' | 'company' | 'organization' | string | null;
+  tenantType?: "individual" | "company" | "organization" | string | null;
 }
 
 export interface RestoreSessionOptions {
@@ -33,8 +33,17 @@ export interface AuthState {
 
   // Methods
   setUser: (user: UserInfo | null) => void;
-  login: (identifier: string, password: string, turnstileToken?: string) => Promise<void>;
-  signup: (email: string, name: string, password: string, turnstileToken?: string) => Promise<void>;
+  login: (
+    identifier: string,
+    password: string,
+    turnstileToken?: string,
+  ) => Promise<void>;
+  signup: (
+    email: string,
+    name: string,
+    password: string,
+    turnstileToken?: string,
+  ) => Promise<void>;
   logout: () => Promise<void>;
   restoreSession: (options?: RestoreSessionOptions) => Promise<UserInfo | null>;
   clearError: () => void;

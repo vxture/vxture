@@ -4,8 +4,8 @@
  * @description Number, date, and currency formatting functions based on locale, supporting automatic or manual currency specification.
  */
 
-import type { Locale } from '../types/locale.types';
-import { LOCALE_DEFAULT_CURRENCY } from '../constants/locale.constants';
+import type { Locale } from "../types/locale.types";
+import { LOCALE_DEFAULT_CURRENCY } from "../constants/locale.constants";
 
 /**
  * 格式化货币
@@ -21,7 +21,7 @@ export function formatCurrency(
   try {
     const resolvedCurrency = currency ?? LOCALE_DEFAULT_CURRENCY[locale];
     return new Intl.NumberFormat(locale, {
-      style: 'currency',
+      style: "currency",
       currency: resolvedCurrency,
     }).format(amount);
   } catch {

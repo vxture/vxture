@@ -16,13 +16,13 @@
  * @category Service
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 // ─── 配置常量 ─────────────────────────────────────────────────────────────────
 
 const WINDOW_MS = 15 * 60 * 1000; // 固定窗口：15 分钟
-const IP_LIMIT = 10;               // IP 维度：15 分钟内最多 10 次失败
-const ACCOUNT_LIMIT = 5;           // 账号维度：15 分钟内最多 5 次失败
+const IP_LIMIT = 10; // IP 维度：15 分钟内最多 10 次失败
+const ACCOUNT_LIMIT = 5; // 账号维度：15 分钟内最多 5 次失败
 
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
 
@@ -48,7 +48,12 @@ export class LoginRateLimiterService {
     const now = Date.now();
     const ipResult = this.checkBucket(this.ipBuckets, ip, IP_LIMIT, now);
     if (!ipResult.allowed) return ipResult;
-    return this.checkBucket(this.accountBuckets, account.toLowerCase(), ACCOUNT_LIMIT, now);
+    return this.checkBucket(
+      this.accountBuckets,
+      account.toLowerCase(),
+      ACCOUNT_LIMIT,
+      now,
+    );
   }
 
   /** 登录失败后调用：IP + 账号计数各加一 */
@@ -81,14 +86,20 @@ export class LoginRateLimiterService {
     }
 
     if (bucket.attempts >= limit) {
-      const retryAfter = Math.ceil((bucket.windowStart + WINDOW_MS - now) / 1000);
+      const retryAfter = Math.ceil(
+        (bucket.windowStart + WINDOW_MS - now) / 1000,
+      );
       return { allowed: false, retryAfter };
     }
 
     return { allowed: true };
   }
 
-  private increment(buckets: Map<string, Bucket>, key: string, now: number): void {
+  private increment(
+    buckets: Map<string, Bucket>,
+    key: string,
+    now: number,
+  ): void {
     const bucket = buckets.get(key);
     if (!bucket || now - bucket.windowStart > WINDOW_MS) {
       buckets.set(key, { attempts: 1, windowStart: now });

@@ -26,10 +26,10 @@
  * @layer Presentation
  */
 
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import { useTheme } from '@vxture/design-system';
+import { useEffect, useRef } from "react";
+import { useTheme } from "@vxture/design-system";
 
 // ============================================================================
 // 类型定义区
@@ -41,7 +41,7 @@ export interface SidebarProps {
   /** 关闭侧边栏的回调 */
   onClose: () => void;
   /** 侧边栏位置 */
-  position?: 'left' | 'right';
+  position?: "left" | "right";
   /** 侧边栏宽度 */
   width?: string;
   /** 子内容 */
@@ -59,14 +59,14 @@ export interface SidebarProps {
 export default function Sidebar({
   isOpen,
   onClose,
-  position = 'right',
-  width = '300px',
+  position = "right",
+  width = "300px",
   children,
-  className = '',
+  className = "",
   showOverlay = true,
 }: SidebarProps) {
   const { theme } = useTheme();
-  const isDarkMode = theme === 'dark';
+  const isDarkMode = theme === "dark";
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   // 点击外部关闭
@@ -81,42 +81,42 @@ export default function Sidebar({
     };
 
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'hidden';
+      document.addEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = '';
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.body.style.overflow = "";
     };
   }, [isOpen, onClose]);
 
   // ESC 键关闭
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEscKey);
+      document.addEventListener("keydown", handleEscKey);
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscKey);
+      document.removeEventListener("keydown", handleEscKey);
     };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 z-50'>
+    <div className="fixed inset-0 z-50">
       {/* 遮罩层 */}
       {showOverlay && (
         <div
           className={`absolute inset-0 transition-opacity duration-300 ${
-            isDarkMode ? 'bg-vx-black/60' : 'bg-vx-black/40'
+            isDarkMode ? "bg-vx-black/60" : "bg-vx-black/40"
           }`}
           onClick={onClose}
         />
@@ -126,13 +126,13 @@ export default function Sidebar({
       <div
         ref={sidebarRef}
         className={`absolute top-0 h-full transition-transform duration-300 ease-out ${
-          position === 'right' ? 'right-0' : 'left-0'
+          position === "right" ? "right-0" : "left-0"
         } ${className}`}
         style={{ width }}
       >
         <div
           className={`h-full ${
-            isDarkMode ? 'bg-vx-gray-900' : 'bg-vx-surface'
+            isDarkMode ? "bg-vx-gray-900" : "bg-vx-surface"
           } shadow-xl`}
         >
           {children}

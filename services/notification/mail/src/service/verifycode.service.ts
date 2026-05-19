@@ -22,17 +22,17 @@
  * @license MIT
  */
 
-import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import type Redis from 'ioredis';
-import { REDIS_CLIENT } from '../constants/tokens';
-import { MailService } from './mail.service';
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import type Redis from "ioredis";
+import { REDIS_CLIENT } from "../constants/tokens";
+import { MailService } from "./mail.service";
 
 // ─── 常量 ──────────────────────────────────────────────────────────────────────
 
-const CODE_TTL = 600;        // 验证码有效期，秒
-const RL_1M_LIMIT = 1;       // 每分钟上限
-const RL_1H_LIMIT = 5;       // 每小时上限
-const RL_1D_LIMIT = 10;      // 每天上限
+const CODE_TTL = 600; // 验证码有效期，秒
+const RL_1M_LIMIT = 1; // 每分钟上限
+const RL_1H_LIMIT = 5; // 每小时上限
+const RL_1D_LIMIT = 10; // 每天上限
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
@@ -52,7 +52,7 @@ export class VerifyCodeService {
     await this.checkRateLimits(key);
 
     const code = this.generateCode();
-    await this.redis.set(`vc:code:${key}`, code, 'EX', CODE_TTL);
+    await this.redis.set(`vc:code:${key}`, code, "EX", CODE_TTL);
 
     await this.mailService.sendVerifyCode(email, code);
 
@@ -91,13 +91,22 @@ export class VerifyCodeService {
     ]);
 
     if (Number(per1m ?? 0) >= RL_1M_LIMIT) {
-      throw new HttpException('操作过于频繁，请 1 分钟后再试', HttpStatus.TOO_MANY_REQUESTS);
+      throw new HttpException(
+        "操作过于频繁，请 1 分钟后再试",
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
     if (Number(per1h ?? 0) >= RL_1H_LIMIT) {
-      throw new HttpException('1 小时内发送次数已达上限，请稍后再试', HttpStatus.TOO_MANY_REQUESTS);
+      throw new HttpException(
+        "1 小时内发送次数已达上限，请稍后再试",
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
     if (Number(per1d ?? 0) >= RL_1D_LIMIT) {
-      throw new HttpException('今日验证码发送次数已达上限', HttpStatus.TOO_MANY_REQUESTS);
+      throw new HttpException(
+        "今日验证码发送次数已达上限",
+        HttpStatus.TOO_MANY_REQUESTS,
+      );
     }
   }
 
@@ -111,7 +120,10 @@ export class VerifyCodeService {
   }
 
   /** INCR + 仅在第一次自增时设置 TTL（保证窗口从首次发送开始计算） */
-  private async incrWithTtl(redisKey: string, ttlSeconds: number): Promise<void> {
+  private async incrWithTtl(
+    redisKey: string,
+    ttlSeconds: number,
+  ): Promise<void> {
     const count = await this.redis.incr(redisKey);
     if (count === 1) {
       await this.redis.expire(redisKey, ttlSeconds);

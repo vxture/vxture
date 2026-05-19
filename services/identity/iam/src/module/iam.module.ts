@@ -1,14 +1,14 @@
-import { Module } from '@nestjs/common';
-import { VxConfigModule, VxConfigService } from '@vxture/core-config';
-import { Pool } from 'pg';
-import { MockAccountRepository, PgAccountRepository } from '../repository';
-import { AccountAuthService } from '../service/account-auth.service';
-import { ACCOUNT_REPOSITORY, IAM_PG_POOL } from '../tokens';
+import { Module } from "@nestjs/common";
+import { VxConfigModule, VxConfigService } from "@vxture/core-config";
+import { Pool } from "pg";
+import { MockAccountRepository, PgAccountRepository } from "../repository";
+import { AccountAuthService } from "../service/account-auth.service";
+import { ACCOUNT_REPOSITORY, IAM_PG_POOL } from "../tokens";
 
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ['database'],
+      domains: ["database"],
     }),
   ],
   providers: [
@@ -29,7 +29,10 @@ import { ACCOUNT_REPOSITORY, IAM_PG_POOL } from '../tokens';
                 user: database.DB_USER,
                 password: database.DB_PASSWORD,
                 max: database.DB_POOL_MAX,
-                ssl: database.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
+                ssl:
+                  database.DB_SSL === "require"
+                    ? { rejectUnauthorized: false }
+                    : undefined,
               },
         );
       },
@@ -45,7 +48,9 @@ import { ACCOUNT_REPOSITORY, IAM_PG_POOL } from '../tokens';
         mockRepository: MockAccountRepository,
       ) => {
         const database = config.database;
-        const hasDatabaseConfig = Boolean(database.DATABASE_URL || database.DB_PASSWORD);
+        const hasDatabaseConfig = Boolean(
+          database.DATABASE_URL || database.DB_PASSWORD,
+        );
         return hasDatabaseConfig ? pgRepository : mockRepository;
       },
     },

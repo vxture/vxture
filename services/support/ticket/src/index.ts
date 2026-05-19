@@ -1,5 +1,5 @@
-export { TicketModule } from './module/ticket.module';
-export { TicketService } from './service/ticket.service';
+export { TicketModule } from "./module/ticket.module";
+export { TicketService } from "./service/ticket.service";
 export type {
   TicketRecord,
   TicketEventRecord,
@@ -10,4 +10,4 @@ export type {
   UpdateTicketInput,
   AddTicketEventInput,
   AppendAuditLogInput,
-} from './types/ticket.types';
+} from "./types/ticket.types";

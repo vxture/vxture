@@ -5,12 +5,19 @@
  * @category Types
  */
 
-import type { Locale } from '@vxture/shared';
+import type { Locale } from "@vxture/shared";
 
 /**
  * 翻译命名空间类型
  */
-export type TranslationNamespace = 'common' | 'auth' | 'home' | 'pricing' | 'features' | 'about' | 'contact';
+export type TranslationNamespace =
+  | "common"
+  | "auth"
+  | "home"
+  | "pricing"
+  | "features"
+  | "about"
+  | "contact";
 
 /**
  * i18n 配置类型

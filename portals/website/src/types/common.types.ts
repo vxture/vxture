@@ -11,4 +11,4 @@ export interface LocaleType {
   flag: string;
 }
 
-export type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeMode = "light" | "dark" | "system";

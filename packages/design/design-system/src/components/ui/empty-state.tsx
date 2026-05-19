@@ -10,7 +10,10 @@
 import * as React from "react";
 import { cn } from "../../utils/cn";
 
-export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface EmptyStateProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "title"
+> {
   readonly title: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly action?: React.ReactNode;
@@ -18,13 +21,7 @@ export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLDivElemen
 
 const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(
   function EmptyState(
-    {
-      className,
-      title,
-      description,
-      action,
-      ...props
-    },
+    { className, title, description, action, ...props },
     ref,
   ) {
     return (

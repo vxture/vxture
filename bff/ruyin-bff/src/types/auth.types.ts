@@ -15,7 +15,7 @@
  * @category Types
  */
 
-import type { OAuthProviderType } from '@vxture/core-auth';
+import type { OAuthProviderType } from "@vxture/core-auth";
 
 export interface AgentViewer {
   id: string;

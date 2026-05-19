@@ -15,8 +15,8 @@
  * @category Components - Panels
  */
 
-import React, { useMemo, useCallback, useState, useEffect } from 'react';
-import { Button } from '@vxture/design-system';
+import React, { useMemo, useCallback, useState, useEffect } from "react";
+import { Button } from "@vxture/design-system";
 
 // ============================================================================
 // 类型定义
@@ -60,11 +60,15 @@ export interface SnapChoicePanelProps {
 // ============================================================================
 
 /** 默认位置 */
-const DEFAULT_POSITION = { top: '80px', left: '20px', zIndex: 'var(--vx-z-toast)' };
+const DEFAULT_POSITION = {
+  top: "80px",
+  left: "20px",
+  zIndex: "var(--vx-z-toast)",
+};
 /** 默认可见性 */
 const DEFAULT_VISIBLE = true;
 /** 默认目标选择器 */
-const DEFAULT_TARGET_SELECTOR = '.snap-section';
+const DEFAULT_TARGET_SELECTOR = ".snap-section";
 
 // ============================================================================
 // 组件实现
@@ -73,7 +77,9 @@ const DEFAULT_TARGET_SELECTOR = '.snap-section';
 /**
  * SnapChoicePanel - 吸附选择调试面板组件
  */
-export default function SnapChoicePanel(props: SnapChoicePanelProps): React.ReactElement | null {
+export default function SnapChoicePanel(
+  props: SnapChoicePanelProps,
+): React.ReactElement | null {
   // ==========================================================================
   // Props 解构
   // ==========================================================================
@@ -94,26 +100,33 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
   // ==========================================================================
 
   /** 自动发现的 section 列表 */
-  const [discoveredSections, setDiscoveredSections] = useState<SectionInfo[]>([]);
+  const [discoveredSections, setDiscoveredSections] = useState<SectionInfo[]>(
+    [],
+  );
 
   // ==========================================================================
   // 计算属性
   // ==========================================================================
 
   /** 合并位置配置 */
-  const panelPosition = useMemo(() => ({ ...DEFAULT_POSITION, ...position }), [position]);
+  const panelPosition = useMemo(
+    () => ({ ...DEFAULT_POSITION, ...position }),
+    [position],
+  );
 
   /** 合并最终 style（只放动态样式） */
   const finalStyle = useMemo<React.CSSProperties>(
     () => ({ ...panelPosition, ...style }),
-    [panelPosition, style]
+    [panelPosition, style],
   );
 
   /** 标准化 sections 为 SectionInfo 数组 */
   const normalizedSections = useMemo((): SectionInfo[] => {
     // 优先级1：传入的 sections
     if (sections && sections.length > 0) {
-      return sections.map((s) => (typeof s === 'string' ? { id: s, name: s } : s));
+      return sections.map((s) =>
+        typeof s === "string" ? { id: s, name: s } : s,
+      );
     }
     // 优先级2：自动发现的 sections
     return discoveredSections;
@@ -155,7 +168,7 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['id'],
+      attributeFilter: ["id"],
     });
 
     return () => observer.disconnect();
@@ -175,7 +188,7 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
         snapToTarget(target);
       }
     },
-    [snapToTarget]
+    [snapToTarget],
   );
 
   // ==========================================================================
@@ -186,10 +199,10 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
 
   return (
     <div
-      className={`fixed flex flex-col gap-1 w-auto bg-vx-black/25 text-vx-white/80 p-2 rounded shadow text-xs ${className || ''}`}
+      className={`fixed flex flex-col gap-1 w-auto bg-vx-black/25 text-vx-white/80 p-2 rounded shadow text-xs ${className || ""}`}
       style={finalStyle}
     >
-      <h3 className='font-semibold mb-1 text-vx-white/70'>Sections Choice</h3>
+      <h3 className="font-semibold mb-1 text-vx-white/70">Sections Choice</h3>
 
       {normalizedSections.map(({ id, name }) => {
         const isActive = activeTarget?.id === id;
@@ -197,11 +210,13 @@ export default function SnapChoicePanel(props: SnapChoicePanelProps): React.Reac
         return (
           <Button
             key={id}
-            variant={isActive ? 'default' : 'secondary'}
+            variant={isActive ? "default" : "secondary"}
             size="sm"
             onClick={() => handleButtonClick(id)}
             className={`min-w-20 px-2 py-2 rounded transition text-left ${
-              isActive ? 'bg-vx-primary/60 text-vx-white' : 'bg-vx-white/20 text-vx-white/70 hover:bg-vx-white/30'
+              isActive
+                ? "bg-vx-primary/60 text-vx-white"
+                : "bg-vx-white/20 text-vx-white/70 hover:bg-vx-white/30"
             }`}
           >
             {id} - {name}

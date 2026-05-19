@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { Pool } from 'pg';
-import { SUPPORT_PG_POOL } from '../tokens';
+import { Inject, Injectable } from "@nestjs/common";
+import type { Pool } from "pg";
+import { SUPPORT_PG_POOL } from "../tokens";
 import type {
   TicketRecord,
   TicketEventRecord,
@@ -11,7 +11,7 @@ import type {
   UpdateTicketInput,
   AddTicketEventInput,
   AppendAuditLogInput,
-} from '../types/ticket.types';
+} from "../types/ticket.types";
 
 interface TicketRow {
   id: string;
@@ -75,22 +75,37 @@ export class PgTicketRepository {
   constructor(@Inject(SUPPORT_PG_POOL) private readonly pool: Pool) {}
 
   async listTickets(params: ListTicketsParams): Promise<ListTicketsResult> {
-    const conditions: string[] = ['deleted_at is null'];
+    const conditions: string[] = ["deleted_at is null"];
     const values: unknown[] = [];
     let idx = 1;
 
-    if (params.tenantId) { conditions.push(`tenant_id = $${idx++}`); values.push(params.tenantId); }
-    if (params.status) { conditions.push(`status = $${idx++}`); values.push(params.status); }
-    if (params.priority) { conditions.push(`priority = $${idx++}`); values.push(params.priority); }
-    if (params.category) { conditions.push(`category = $${idx++}`); values.push(params.category); }
-    if (params.assigneeId) { conditions.push(`assignee_id = $${idx++}`); values.push(params.assigneeId); }
+    if (params.tenantId) {
+      conditions.push(`tenant_id = $${idx++}`);
+      values.push(params.tenantId);
+    }
+    if (params.status) {
+      conditions.push(`status = $${idx++}`);
+      values.push(params.status);
+    }
+    if (params.priority) {
+      conditions.push(`priority = $${idx++}`);
+      values.push(params.priority);
+    }
+    if (params.category) {
+      conditions.push(`category = $${idx++}`);
+      values.push(params.category);
+    }
+    if (params.assigneeId) {
+      conditions.push(`assignee_id = $${idx++}`);
+      values.push(params.assigneeId);
+    }
     if (params.keyword) {
       conditions.push(`(title ilike $${idx} or ticket_no ilike $${idx})`);
       values.push(`%${params.keyword}%`);
       idx++;
     }
 
-    const where = conditions.join(' and ');
+    const where = conditions.join(" and ");
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 20;
     const offset = (page - 1) * pageSize;
@@ -109,7 +124,7 @@ export class PgTicketRepository {
     ]);
 
     return {
-      total: parseInt(countResult.rows[0]?.count ?? '0', 10),
+      total: parseInt(countResult.rows[0]?.count ?? "0", 10),
       items: rowsResult.rows.map(this.mapTicket),
     };
   }
@@ -139,11 +154,11 @@ export class PgTicketRepository {
         input.tenantId,
         input.accountId ?? null,
         ticketNo,
-        input.category ?? 'general',
-        input.priority ?? 'p2',
-        input.source ?? 'console',
+        input.category ?? "general",
+        input.priority ?? "p2",
+        input.source ?? "console",
         input.title,
-        input.description ?? '',
+        input.description ?? "",
         input.reporterName ?? null,
         input.tags ?? [],
         input.dueAt ?? null,
@@ -152,25 +167,61 @@ export class PgTicketRepository {
     return this.mapTicket(result.rows[0]!);
   }
 
-  async update(id: string, input: UpdateTicketInput): Promise<TicketRecord | null> {
-    const sets: string[] = ['updated_at = now()'];
+  async update(
+    id: string,
+    input: UpdateTicketInput,
+  ): Promise<TicketRecord | null> {
+    const sets: string[] = ["updated_at = now()"];
     const values: unknown[] = [id];
     let idx = 2;
 
-    if (input.status !== undefined) { sets.push(`status = $${idx++}`); values.push(input.status); }
-    if (input.priority !== undefined) { sets.push(`priority = $${idx++}`); values.push(input.priority); }
-    if (input.assigneeId !== undefined) { sets.push(`assignee_id = $${idx++}`); values.push(input.assigneeId); }
-    if (input.assigneeName !== undefined) { sets.push(`assignee_name = $${idx++}`); values.push(input.assigneeName); }
-    if (input.title !== undefined) { sets.push(`title = $${idx++}`); values.push(input.title); }
-    if (input.description !== undefined) { sets.push(`description = $${idx++}`); values.push(input.description); }
-    if (input.tags !== undefined) { sets.push(`tags = $${idx++}`); values.push(input.tags); }
-    if (input.resolvedAt !== undefined) { sets.push(`resolved_at = $${idx++}`); values.push(input.resolvedAt); }
-    if (input.closedAt !== undefined) { sets.push(`closed_at = $${idx++}`); values.push(input.closedAt); }
-    if (input.satisfactionScore !== undefined) { sets.push(`satisfaction_score = $${idx++}`); values.push(input.satisfactionScore); }
-    if (input.satisfactionComment !== undefined) { sets.push(`satisfaction_comment = $${idx++}`); values.push(input.satisfactionComment); }
+    if (input.status !== undefined) {
+      sets.push(`status = $${idx++}`);
+      values.push(input.status);
+    }
+    if (input.priority !== undefined) {
+      sets.push(`priority = $${idx++}`);
+      values.push(input.priority);
+    }
+    if (input.assigneeId !== undefined) {
+      sets.push(`assignee_id = $${idx++}`);
+      values.push(input.assigneeId);
+    }
+    if (input.assigneeName !== undefined) {
+      sets.push(`assignee_name = $${idx++}`);
+      values.push(input.assigneeName);
+    }
+    if (input.title !== undefined) {
+      sets.push(`title = $${idx++}`);
+      values.push(input.title);
+    }
+    if (input.description !== undefined) {
+      sets.push(`description = $${idx++}`);
+      values.push(input.description);
+    }
+    if (input.tags !== undefined) {
+      sets.push(`tags = $${idx++}`);
+      values.push(input.tags);
+    }
+    if (input.resolvedAt !== undefined) {
+      sets.push(`resolved_at = $${idx++}`);
+      values.push(input.resolvedAt);
+    }
+    if (input.closedAt !== undefined) {
+      sets.push(`closed_at = $${idx++}`);
+      values.push(input.closedAt);
+    }
+    if (input.satisfactionScore !== undefined) {
+      sets.push(`satisfaction_score = $${idx++}`);
+      values.push(input.satisfactionScore);
+    }
+    if (input.satisfactionComment !== undefined) {
+      sets.push(`satisfaction_comment = $${idx++}`);
+      values.push(input.satisfactionComment);
+    }
 
     const result = await this.pool.query<TicketRow>(
-      `update support.ticket set ${sets.join(', ')}
+      `update support.ticket set ${sets.join(", ")}
        where id = $1 and deleted_at is null
        returning *`,
       values,
@@ -223,7 +274,7 @@ export class PgTicketRepository {
         input.actorId,
         input.tenantId ?? null,
         input.action,
-        input.result ?? 'success',
+        input.result ?? "success",
         input.resourceType,
         input.resourceId,
         input.errorCode ?? null,
@@ -250,12 +301,24 @@ export class PgTicketRepository {
     const values: unknown[] = [];
     let idx = 1;
 
-    if (params.actorId) { conditions.push(`actor_id = $${idx++}`); values.push(params.actorId); }
-    if (params.tenantId) { conditions.push(`tenant_id = $${idx++}`); values.push(params.tenantId); }
-    if (params.action) { conditions.push(`action = $${idx++}`); values.push(params.action); }
-    if (params.resourceType) { conditions.push(`resource_type = $${idx++}`); values.push(params.resourceType); }
+    if (params.actorId) {
+      conditions.push(`actor_id = $${idx++}`);
+      values.push(params.actorId);
+    }
+    if (params.tenantId) {
+      conditions.push(`tenant_id = $${idx++}`);
+      values.push(params.tenantId);
+    }
+    if (params.action) {
+      conditions.push(`action = $${idx++}`);
+      values.push(params.action);
+    }
+    if (params.resourceType) {
+      conditions.push(`resource_type = $${idx++}`);
+      values.push(params.resourceType);
+    }
 
-    const where = conditions.length ? conditions.join(' and ') : 'true';
+    const where = conditions.length ? conditions.join(" and ") : "true";
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 50;
     const offset = (page - 1) * pageSize;
@@ -273,7 +336,7 @@ export class PgTicketRepository {
     ]);
 
     return {
-      total: parseInt(countResult.rows[0]?.count ?? '0', 10),
+      total: parseInt(countResult.rows[0]?.count ?? "0", 10),
       items: rowsResult.rows.map(this.mapAudit),
     };
   }

@@ -58,19 +58,30 @@ function ActionMenu({
           size="icon"
           aria-label={label}
           {...triggerProps}
-          className={cn("vx-action-menu__trigger", triggerClassName, triggerProps?.className)}
+          className={cn(
+            "vx-action-menu__trigger",
+            triggerClassName,
+            triggerProps?.className,
+          )}
         >
           <Icon name="more-vertical" size={18} aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={align} className={cn("vx-action-menu__content", contentClassName)}>
+      <DropdownMenuContent
+        align={align}
+        className={cn("vx-action-menu__content", contentClassName)}
+      >
         {items.map((item) => (
           <React.Fragment key={item.id}>
             {item.separatorBefore ? <DropdownMenuSeparator /> : null}
             <DropdownMenuItem
-              {...(item.disabled !== undefined ? { disabled: item.disabled } : {})}
+              {...(item.disabled !== undefined
+                ? { disabled: item.disabled }
+                : {})}
               {...(item.title !== undefined ? { title: item.title } : {})}
-              {...(item.onSelect !== undefined ? { onSelect: item.onSelect } : {})}
+              {...(item.onSelect !== undefined
+                ? { onSelect: item.onSelect }
+                : {})}
               className={cn(
                 "vx-action-menu__item gap-2",
                 item.danger && "text-vx-danger focus:text-vx-danger",

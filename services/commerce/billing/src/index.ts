@@ -1,5 +1,5 @@
-export { BillingModule } from './module/billing.module';
-export { BillingService } from './service/billing.service';
+export { BillingModule } from "./module/billing.module";
+export { BillingService } from "./service/billing.service";
 export type {
   InvoiceRecord,
   InvoiceItemRecord,
@@ -10,4 +10,4 @@ export type {
   CreateInvoiceInput,
   CreateInvoiceItemInput,
   UpdateInvoiceStatusInput,
-} from './types/billing.types';
+} from "./types/billing.types";

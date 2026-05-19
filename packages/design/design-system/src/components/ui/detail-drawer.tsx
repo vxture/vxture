@@ -14,7 +14,10 @@ import { Button } from "./button";
 import { DetailPanel } from "./detail-panel";
 import type { DetailField, DetailPanelProps } from "./detail-panel";
 
-export interface DetailDrawerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface DetailDrawerProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "title"
+> {
   readonly title: string;
   readonly description?: React.ReactNode;
   readonly fields?: readonly DetailField[];
@@ -22,7 +25,10 @@ export interface DetailDrawerProps extends Omit<React.HTMLAttributes<HTMLDivElem
   readonly onClose: () => void;
   readonly closeLabel?: string;
   readonly panelClassName?: string;
-  readonly detailProps?: Omit<DetailPanelProps, "title" | "description" | "fields" | "children">;
+  readonly detailProps?: Omit<
+    DetailPanelProps,
+    "title" | "description" | "fields" | "children"
+  >;
 }
 
 const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(
@@ -52,17 +58,35 @@ const DetailDrawer = React.forwardRef<HTMLDivElement, DetailDrawerProps>(
         {...props}
       >
         <aside
-          className={cn("vx-card vx-card__content vx-drawer-like", panelClassName)}
+          className={cn(
+            "vx-card vx-card__content vx-drawer-like",
+            panelClassName,
+          )}
           aria-label={`${title} details`}
           onClick={(event) => event.stopPropagation()}
         >
           <div className="vx-drawer-like__header">
             <div />
-            <Button variant="ghost" size="icon" aria-label={closeLabel} onClick={onClose}>
-              <Icon name="x" size="xs" fallback="placeholder" className="vx-btn__icon" />
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={closeLabel}
+              onClick={onClose}
+            >
+              <Icon
+                name="x"
+                size="xs"
+                fallback="placeholder"
+                className="vx-btn__icon"
+              />
             </Button>
           </div>
-          <DetailPanel title={title} {...descriptionProps} {...fieldProps} {...detailProps}>
+          <DetailPanel
+            title={title}
+            {...descriptionProps}
+            {...fieldProps}
+            {...detailProps}
+          >
             {children}
           </DetailPanel>
         </aside>

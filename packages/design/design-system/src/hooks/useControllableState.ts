@@ -37,9 +37,11 @@ export interface UseControllableStateProps<T> {
 export function useControllableState<T>({
   value,
   defaultValue,
-  onChange
+  onChange,
 }: UseControllableStateProps<T>): [T, (value: T) => void] {
-  const [internalValue, setInternalValue] = useState<T | undefined>(defaultValue);
+  const [internalValue, setInternalValue] = useState<T | undefined>(
+    defaultValue,
+  );
 
   const isControlled = value !== undefined;
 

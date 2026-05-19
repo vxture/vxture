@@ -3,9 +3,9 @@
  * @package @vxture/core-auth
  * @description
  *   Verifies access token from request, attaches AuthUser to request.user after verification
- * 
+ *
  * @author AI-Generated
- * @date 2026-03-15 
+ * @date 2026-03-15
  */
 
 import {
@@ -13,19 +13,19 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from '@nestjs/common';
-import { Reflector }  from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
+} from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { JwtService } from "@nestjs/jwt";
 
-import { extractBearerTokenFromHeaders } from '../utils/auth.utils';
-import { IS_PUBLIC_KEY }                 from '../decorators/public.decorator';
-import type { JwtAccessPayload, AuthUser } from '../types/auth.types';
+import { extractBearerTokenFromHeaders } from "../utils/auth.utils";
+import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
+import type { JwtAccessPayload, AuthUser } from "../types/auth.types";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly reflector:  Reflector,
+    private readonly reflector: Reflector,
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
@@ -44,7 +44,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = extractBearerTokenFromHeaders(request.headers);
 
     if (!token) {
-      throw new UnauthorizedException('Missing access token');
+      throw new UnauthorizedException("Missing access token");
     }
 
     try {
@@ -52,17 +52,17 @@ export class JwtAuthGuard implements CanActivate {
 
       // Attach standardized AuthUser to request.user
       request.user = {
-        userId:      payload.sub,
-        tenantId:    payload.tenantId,
-        email:       payload.email,
-        role:        payload.role,
+        userId: payload.sub,
+        tenantId: payload.tenantId,
+        email: payload.email,
+        role: payload.role,
         permissions: payload.permissions ?? [],
-        provider:    payload.provider,
+        provider: payload.provider,
       };
 
       return true;
     } catch {
-      throw new UnauthorizedException('Invalid or expired access token');
+      throw new UnauthorizedException("Invalid or expired access token");
     }
   }
 }

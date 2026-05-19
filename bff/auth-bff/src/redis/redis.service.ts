@@ -30,14 +30,14 @@ import {
   OnModuleDestroy,
   OnModuleInit,
   ServiceUnavailableException,
-} from '@nestjs/common';
+} from "@nestjs/common";
 import {
   buildAccessTokenBlacklistKey,
   buildSubjectRevokedBeforeKey,
   type AccessRevocationSurface,
-} from '@vxture/core-auth';
-import { VxConfigService } from '@vxture/core-config';
-import Redis from 'ioredis';
+} from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
+import Redis from "ioredis";
 
 // ============================================================================
 // 类型
@@ -56,7 +56,7 @@ export interface CrossDomainPayload {
   provider?: string;
 }
 
-export type TenantRefreshSurface = 'platform' | 'ruyin';
+export type TenantRefreshSurface = "platform" | "ruyin";
 
 // ============================================================================
 // RedisService
@@ -68,25 +68,33 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private client!: Redis;
   private prefix!: string;
 
-  constructor(@Inject(VxConfigService) private readonly config: VxConfigService) {}
+  constructor(
+    @Inject(VxConfigService) private readonly config: VxConfigService,
+  ) {}
 
   async onModuleInit(): Promise<void> {
-    const { REDIS_URL, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB, REDIS_KEY_PREFIX } =
-      this.config.redis;
+    const {
+      REDIS_URL,
+      REDIS_HOST,
+      REDIS_PORT,
+      REDIS_PASSWORD,
+      REDIS_DB,
+      REDIS_KEY_PREFIX,
+    } = this.config.redis;
 
-    this.prefix = REDIS_KEY_PREFIX ?? 'vx:';
+    this.prefix = REDIS_KEY_PREFIX ?? "vx:";
 
     this.client = REDIS_URL
       ? new Redis(REDIS_URL, { lazyConnect: true })
       : new Redis({
-          host: REDIS_HOST ?? 'localhost',
+          host: REDIS_HOST ?? "localhost",
           port: REDIS_PORT ?? 6379,
           password: REDIS_PASSWORD,
           db: REDIS_DB,
           lazyConnect: true,
         });
 
-    this.client.on('error', (err: Error) => {
+    this.client.on("error", (err: Error) => {
       this.logger.warn(`Redis connection error: ${err.message}`);
     });
 
@@ -94,7 +102,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       await this.client.connect();
     } catch (err) {
       this.logger.error(`Redis initial connection failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Auth session store unavailable');
+      throw new ServiceUnavailableException("Auth session store unavailable");
     }
   }
 
@@ -107,15 +115,19 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   private requireReadyClient(): Redis {
-    if (this.client.status !== 'ready') {
-      throw new ServiceUnavailableException('Auth session store unavailable');
+    if (this.client.status !== "ready") {
+      throw new ServiceUnavailableException("Auth session store unavailable");
     }
     return this.client;
   }
 
   // ─── Refresh Token 存储 ────────────────────────────────────────────────
 
-  private refreshKey(userId: string, isOperator: boolean, surface: TenantRefreshSurface = 'platform'): string {
+  private refreshKey(
+    userId: string,
+    isOperator: boolean,
+    surface: TenantRefreshSurface = "platform",
+  ): string {
     if (isOperator) return `${this.prefix}refresh:operator:${userId}`;
     return `${this.prefix}refresh:tenant:${surface}:${userId}`;
   }
@@ -129,7 +141,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     token: string,
     ttlSeconds: number,
     isOperator = false,
-    surface: TenantRefreshSurface = 'platform',
+    surface: TenantRefreshSurface = "platform",
   ): Promise<void> {
     const client = this.requireReadyClient();
     const key = this.refreshKey(userId, isOperator, surface);
@@ -137,14 +149,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       await client.setex(key, ttlSeconds, token);
     } catch (err) {
       this.logger.error(`storeRefreshToken failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Refresh token persistence failed');
+      throw new ServiceUnavailableException("Refresh token persistence failed");
     }
   }
 
   async getRefreshToken(
     userId: string,
     isOperator = false,
-    surface: TenantRefreshSurface = 'platform',
+    surface: TenantRefreshSurface = "platform",
   ): Promise<string | null> {
     const client = this.requireReadyClient();
     const key = this.refreshKey(userId, isOperator, surface);
@@ -152,7 +164,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       return await client.get(key);
     } catch (err) {
       this.logger.error(`getRefreshToken failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Refresh token lookup failed');
+      throw new ServiceUnavailableException("Refresh token lookup failed");
     }
   }
 
@@ -171,14 +183,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       const keys = surface
         ? [this.refreshKey(userId, false, surface)]
         : [
-            this.refreshKey(userId, false, 'platform'),
-            this.refreshKey(userId, false, 'ruyin'),
+            this.refreshKey(userId, false, "platform"),
+            this.refreshKey(userId, false, "ruyin"),
             this.legacyTenantRefreshKey(userId),
           ];
       await client.del(...keys);
     } catch (err) {
       this.logger.error(`deleteRefreshToken failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Refresh token revocation failed');
+      throw new ServiceUnavailableException("Refresh token revocation failed");
     }
   }
 
@@ -188,10 +200,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     const client = this.requireReadyClient();
     const key = buildAccessTokenBlacklistKey(this.prefix, jti);
     try {
-      await client.setex(key, ttlSeconds, '1');
+      await client.setex(key, ttlSeconds, "1");
     } catch (err) {
       this.logger.error(`addToBlacklist failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Access token revocation failed');
+      throw new ServiceUnavailableException("Access token revocation failed");
     }
   }
 
@@ -203,7 +215,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       return result === 1;
     } catch (err) {
       this.logger.error(`isBlacklisted check failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Access token revocation check failed');
+      throw new ServiceUnavailableException(
+        "Access token revocation check failed",
+      );
     }
   }
 
@@ -213,7 +227,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     ttlSeconds: number,
   ): Promise<void> {
     const client = this.requireReadyClient();
-    const surface: AccessRevocationSurface = isOperator ? 'operator' : 'tenant';
+    const surface: AccessRevocationSurface = isOperator ? "operator" : "tenant";
     const key = buildSubjectRevokedBeforeKey(this.prefix, surface, userId);
     const revokedBefore = String(Math.floor(Date.now() / 1000));
 
@@ -221,7 +235,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       await client.setex(key, ttlSeconds, revokedBefore);
     } catch (err) {
       this.logger.error(`revokeSubjectAccessTokens failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Subject access token revocation failed');
+      throw new ServiceUnavailableException(
+        "Subject access token revocation failed",
+      );
     }
   }
 
@@ -231,7 +247,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     issuedAt?: number,
   ): Promise<boolean> {
     const client = this.requireReadyClient();
-    const surface: AccessRevocationSurface = isOperator ? 'operator' : 'tenant';
+    const surface: AccessRevocationSurface = isOperator ? "operator" : "tenant";
     const key = buildSubjectRevokedBeforeKey(this.prefix, surface, userId);
 
     try {
@@ -242,7 +258,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       return !issuedAt || issuedAt <= revokedBefore;
     } catch (err) {
       this.logger.error(`isSubjectAccessRevoked failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Subject access token revocation check failed');
+      throw new ServiceUnavailableException(
+        "Subject access token revocation check failed",
+      );
     }
   }
 
@@ -250,7 +268,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
   /** 生成跨域 token（随机 UUID），存入 Redis，返回 token 字符串 */
   async storeCrossDomainToken(payload: CrossDomainPayload): Promise<string> {
-    const { randomUUID } = await import('node:crypto');
+    const { randomUUID } = await import("node:crypto");
     const token = randomUUID();
     const key = `${this.prefix}crossdomain:${token}`;
     const value = JSON.stringify(payload);
@@ -259,7 +277,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       await client.setex(key, 30, value); // TTL 30 秒
     } catch (err) {
       this.logger.error(`storeCrossDomainToken failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Cross-domain token persistence failed');
+      throw new ServiceUnavailableException(
+        "Cross-domain token persistence failed",
+      );
     }
     return token;
   }
@@ -268,7 +288,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
    * 原子性取出并删除跨域 token（GETDEL）。
    * 返回 null 表示 token 不存在或已过期。
    */
-  async consumeCrossDomainToken(token: string): Promise<CrossDomainPayload | null> {
+  async consumeCrossDomainToken(
+    token: string,
+  ): Promise<CrossDomainPayload | null> {
     const client = this.requireReadyClient();
     const key = `${this.prefix}crossdomain:${token}`;
     try {
@@ -278,7 +300,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       return JSON.parse(raw) as CrossDomainPayload;
     } catch (err) {
       this.logger.error(`consumeCrossDomainToken failed: ${String(err)}`);
-      throw new ServiceUnavailableException('Cross-domain token verification failed');
+      throw new ServiceUnavailableException(
+        "Cross-domain token verification failed",
+      );
     }
   }
 
@@ -291,7 +315,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       await client.setex(key, 600, data); // TTL 10 分钟
     } catch (err) {
       this.logger.error(`storeOAuthState failed: ${String(err)}`);
-      throw new ServiceUnavailableException('OAuth state persistence failed');
+      throw new ServiceUnavailableException("OAuth state persistence failed");
     }
   }
 
@@ -302,7 +326,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       return await client.getdel(key);
     } catch (err) {
       this.logger.error(`getAndDeleteOAuthState failed: ${String(err)}`);
-      throw new ServiceUnavailableException('OAuth state verification failed');
+      throw new ServiceUnavailableException("OAuth state verification failed");
     }
   }
 }

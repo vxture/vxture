@@ -15,30 +15,37 @@
  * @license MIT
  */
 
-import { Body, Controller, HttpCode, HttpStatus, Inject, Post } from '@nestjs/common';
-import { IsEmail, IsNotEmpty, IsString, Length } from 'class-validator';
-import { VerifyCodeService } from '@vxture/service-mail';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Post,
+} from "@nestjs/common";
+import { IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
+import { VerifyCodeService } from "@vxture/service-mail";
 
 // ─── DTO ──────────────────────────────────────────────────────────────────────
 
 class SendCodeDto {
-  @IsEmail({}, { message: '请输入有效的邮箱地址' })
+  @IsEmail({}, { message: "请输入有效的邮箱地址" })
   email!: string;
 }
 
 class VerifyCodeDto {
-  @IsEmail({}, { message: '请输入有效的邮箱地址' })
+  @IsEmail({}, { message: "请输入有效的邮箱地址" })
   email!: string;
 
   @IsString()
   @IsNotEmpty()
-  @Length(6, 6, { message: '验证码为 6 位数字' })
+  @Length(6, 6, { message: "验证码为 6 位数字" })
   code!: string;
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-@Controller('api')
+@Controller("api")
 export class VerifyCodeRouter {
   constructor(
     @Inject(VerifyCodeService)
@@ -46,15 +53,15 @@ export class VerifyCodeRouter {
   ) {}
 
   /** 发送验证码；限流命中时返回 429 */
-  @Post('send-code')
+  @Post("send-code")
   @HttpCode(HttpStatus.OK)
   async sendCode(@Body() dto: SendCodeDto): Promise<{ message: string }> {
     await this.verifyCodeService.sendCode(dto.email);
-    return { message: '验证码已发送，请注意查收' };
+    return { message: "验证码已发送，请注意查收" };
   }
 
   /** 校验验证码；返回 valid 布尔值 */
-  @Post('verify-code')
+  @Post("verify-code")
   @HttpCode(HttpStatus.OK)
   async verifyCode(@Body() dto: VerifyCodeDto): Promise<{ valid: boolean }> {
     const valid = await this.verifyCodeService.verifyCode(dto.email, dto.code);

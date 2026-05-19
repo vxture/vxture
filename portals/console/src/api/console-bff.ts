@@ -10,7 +10,7 @@ import type {
   TenantContext,
   TenantPermissionRecord,
   TenantRoleRecord,
-} from '@/entities/console';
+} from "@/entities/console";
 
 // ── 订阅与账单 DTO（与 BFF 响应结构对齐）────────────────────────────────────
 
@@ -35,7 +35,12 @@ export interface ConsoleInvoice {
   totalAmount: number;
   currency: string;
   dueDate: string;
-  lineItems: Array<{ description: string; quantity: number; unitPrice: number; amount: number }>;
+  lineItems: Array<{
+    description: string;
+    quantity: number;
+    unitPrice: number;
+    amount: number;
+  }>;
 }
 
 export interface ConsoleBillingOverview {
@@ -48,27 +53,29 @@ export interface ConsoleBillingOverview {
 }
 
 function normalizeOrigin(value: string | undefined): string {
-  const normalized = value?.trim().replace(/\/+$/, '');
+  const normalized = value?.trim().replace(/\/+$/, "");
   if (!normalized) {
-    return 'http://localhost:3021';
+    return "http://localhost:3021";
   }
   return normalized;
 }
 
 const DEFAULT_BFF_URL = normalizeOrigin(
-  process.env.NEXT_PUBLIC_CONSOLE_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL
+  process.env.NEXT_PUBLIC_CONSOLE_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL,
 );
 const CONSOLE_API_PREFIX = resolveConsoleApiPrefix();
 
 function resolveConsoleApiPrefix(): string {
   const explicitPrefix = process.env.NEXT_PUBLIC_CONSOLE_API_PREFIX;
   if (explicitPrefix !== undefined) {
-    return explicitPrefix.trim().replace(/\/+$/, '');
+    return explicitPrefix.trim().replace(/\/+$/, "");
   }
 
   // 默认直连 console-bff；只有显式配置统一 API 网关时才保留 /console-api 前缀。
-  const usesDirectConsoleBff = Boolean(process.env.NEXT_PUBLIC_CONSOLE_BFF_URL?.trim()) || !process.env.NEXT_PUBLIC_API_URL?.trim();
-  return usesDirectConsoleBff ? '' : '/console-api';
+  const usesDirectConsoleBff =
+    Boolean(process.env.NEXT_PUBLIC_CONSOLE_BFF_URL?.trim()) ||
+    !process.env.NEXT_PUBLIC_API_URL?.trim();
+  return usesDirectConsoleBff ? "" : "/console-api";
 }
 
 interface LoginPayload {
@@ -86,18 +93,24 @@ const ANONYMOUS_SESSION: SessionSnapshot = {
 };
 
 export class ConsoleBffError extends Error {
-  constructor(message: string, readonly status?: number) {
+  constructor(
+    message: string,
+    readonly status?: number,
+  ) {
     super(message);
-    this.name = 'ConsoleBffError';
+    this.name = "ConsoleBffError";
   }
 }
 
 async function readJson<T>(path: string, fallback: T): Promise<T> {
   try {
-    const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${path}`, {
-      credentials: 'include',
-      cache: 'no-store',
-    });
+    const response = await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${path}`,
+      {
+        credentials: "include",
+        cache: "no-store",
+      },
+    );
 
     if (!response.ok) {
       return fallback;
@@ -114,50 +127,67 @@ function withTenant(path: string) {
 }
 
 export async function fetchCurrentUser(): Promise<ConsoleUser | null> {
-  return readJson<ConsoleUser | null>('/api/me', null);
+  return readJson<ConsoleUser | null>("/api/me", null);
 }
 
 export async function fetchTenantContext(): Promise<TenantContext | null> {
-  return readJson<TenantContext | null>(withTenant('/api/tenant-context'), null);
+  return readJson<TenantContext | null>(
+    withTenant("/api/tenant-context"),
+    null,
+  );
 }
 
 export async function fetchTenantOptions(): Promise<TenantContext[]> {
-  return readJson<TenantContext[]>('/api/tenant-context/options', []);
+  return readJson<TenantContext[]>("/api/tenant-context/options", []);
 }
 
 export async function fetchCapabilities(): Promise<Capability[]> {
-  return readJson<Capability[]>('/api/capabilities', []);
+  return readJson<Capability[]>("/api/capabilities", []);
 }
 
 export async function fetchMembers(): Promise<MemberRecord[]> {
-  return readJson<MemberRecord[]>(withTenant('/api/iam/members'), []);
+  return readJson<MemberRecord[]>(withTenant("/api/iam/members"), []);
 }
 
-export async function fetchMember(memberId: string): Promise<MemberRecord | null> {
-  return readJson<MemberRecord | null>(withTenant(`/api/iam/members/${memberId}`), null);
+export async function fetchMember(
+  memberId: string,
+): Promise<MemberRecord | null> {
+  return readJson<MemberRecord | null>(
+    withTenant(`/api/iam/members/${memberId}`),
+    null,
+  );
 }
 
 export async function fetchTenantRoles(): Promise<TenantRoleRecord[]> {
-  return readJson<TenantRoleRecord[]>(withTenant('/api/iam/roles'), []);
+  return readJson<TenantRoleRecord[]>(withTenant("/api/iam/roles"), []);
 }
 
-export async function fetchTenantPermissions(): Promise<TenantPermissionRecord[]> {
-  return readJson<TenantPermissionRecord[]>(withTenant('/api/iam/permissions'), []);
-}
-
-export async function fetchAiModels(includeInactive = true): Promise<AiModelRecord[]> {
-  return readJson<AiModelRecord[]>(
-    `/api/ai-gateway/models?includeInactive=${includeInactive ? 'true' : 'false'}`,
+export async function fetchTenantPermissions(): Promise<
+  TenantPermissionRecord[]
+> {
+  return readJson<TenantPermissionRecord[]>(
+    withTenant("/api/iam/permissions"),
     [],
   );
 }
 
-export async function fetchAiModelGrants(filters: { modelId?: string } = {}): Promise<AiModelGrantRecord[]> {
+export async function fetchAiModels(
+  includeInactive = true,
+): Promise<AiModelRecord[]> {
+  return readJson<AiModelRecord[]>(
+    `/api/ai-gateway/models?includeInactive=${includeInactive ? "true" : "false"}`,
+    [],
+  );
+}
+
+export async function fetchAiModelGrants(
+  filters: { modelId?: string } = {},
+): Promise<AiModelGrantRecord[]> {
   const params = new URLSearchParams();
-  if (filters.modelId) params.set('modelId', filters.modelId);
+  if (filters.modelId) params.set("modelId", filters.modelId);
 
   return readJson<AiModelGrantRecord[]>(
-    `/api/ai-gateway/grants${params.size ? `?${params.toString()}` : ''}`,
+    `/api/ai-gateway/grants${params.size ? `?${params.toString()}` : ""}`,
     [],
   );
 }
@@ -173,16 +203,19 @@ export async function createAiModel(payload: {
   providerId?: string | null;
   config?: Record<string, unknown> | null;
 }): Promise<AiModelRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models`, {
-    method: 'POST',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models`,
+    {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('AI model creation failed', response.status);
+    throw new ConsoleBffError("AI model creation failed", response.status);
   }
 
   return (await response.json()) as AiModelRecord;
@@ -203,33 +236,39 @@ export async function updateAiModel(
     isActive?: boolean;
   },
 ): Promise<AiModelRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models/${modelId}`, {
-    method: 'PUT',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models/${modelId}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('AI model update failed', response.status);
+    throw new ConsoleBffError("AI model update failed", response.status);
   }
 
   return (await response.json()) as AiModelRecord;
 }
 
-export async function setAiModelActive(modelId: string, active: boolean): Promise<AiModelRecord> {
+export async function setAiModelActive(
+  modelId: string,
+  active: boolean,
+): Promise<AiModelRecord> {
   const response = await fetch(
-    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models/${modelId}/${active ? 'activate' : 'deactivate'}`,
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/models/${modelId}/${active ? "activate" : "deactivate"}`,
     {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
     },
   );
 
   if (!response.ok) {
-    throw new ConsoleBffError('AI model state update failed', response.status);
+    throw new ConsoleBffError("AI model state update failed", response.status);
   }
 
   return (await response.json()) as AiModelRecord;
@@ -244,16 +283,22 @@ export async function createAiModelGrant(payload: {
   expiresAt?: string | null;
   isActive?: boolean;
 }): Promise<AiModelGrantRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants`, {
-    method: 'POST',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants`,
+    {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('AI model grant creation failed', response.status);
+    throw new ConsoleBffError(
+      "AI model grant creation failed",
+      response.status,
+    );
   }
 
   return (await response.json()) as AiModelGrantRecord;
@@ -269,51 +314,66 @@ export async function updateAiModelGrant(
     isActive?: boolean;
   },
 ): Promise<AiModelGrantRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants/${grantId}`, {
-    method: 'PUT',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    throw new ConsoleBffError('AI model grant update failed', response.status);
-  }
-
-  return (await response.json()) as AiModelGrantRecord;
-}
-
-export async function setAiModelGrantActive(grantId: string, active: boolean): Promise<AiModelGrantRecord> {
   const response = await fetch(
-    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants/${grantId}${active ? '/activate' : ''}`,
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants/${grantId}`,
     {
-      method: active ? 'POST' : 'DELETE',
-      credentials: 'include',
-      cache: 'no-store',
+      method: "PUT",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     },
   );
 
   if (!response.ok) {
-    throw new ConsoleBffError('AI model grant state update failed', response.status);
+    throw new ConsoleBffError("AI model grant update failed", response.status);
   }
 
   return (await response.json()) as AiModelGrantRecord;
 }
 
-export async function createTenantRole(
-  payload: { roleCode: string; roleName: string; description?: string | null; permissionIds?: string[] },
-): Promise<TenantRoleRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant('/api/iam/roles')}`, {
-    method: 'POST',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+export async function setAiModelGrantActive(
+  grantId: string,
+  active: boolean,
+): Promise<AiModelGrantRecord> {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/ai-gateway/grants/${grantId}${active ? "/activate" : ""}`,
+    {
+      method: active ? "POST" : "DELETE",
+      credentials: "include",
+      cache: "no-store",
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Role creation failed', response.status);
+    throw new ConsoleBffError(
+      "AI model grant state update failed",
+      response.status,
+    );
+  }
+
+  return (await response.json()) as AiModelGrantRecord;
+}
+
+export async function createTenantRole(payload: {
+  roleCode: string;
+  roleName: string;
+  description?: string | null;
+  permissionIds?: string[];
+}): Promise<TenantRoleRecord> {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant("/api/iam/roles")}`,
+    {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!response.ok) {
+    throw new ConsoleBffError("Role creation failed", response.status);
   }
 
   return (await response.json()) as TenantRoleRecord;
@@ -321,66 +381,91 @@ export async function createTenantRole(
 
 export async function updateTenantRole(
   roleId: string,
-  payload: { roleName?: string | null; description?: string | null; status?: 'active' | 'disabled'; permissionIds?: string[] },
+  payload: {
+    roleName?: string | null;
+    description?: string | null;
+    status?: "active" | "disabled";
+    permissionIds?: string[];
+  },
 ): Promise<TenantRoleRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/roles/${roleId}`)}`, {
-    method: 'PUT',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/roles/${roleId}`)}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Role update failed', response.status);
+    throw new ConsoleBffError("Role update failed", response.status);
   }
 
   return (await response.json()) as TenantRoleRecord;
 }
 
 export async function deleteTenantRole(roleId: string) {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/roles/${roleId}`)}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    cache: 'no-store',
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/roles/${roleId}`)}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      cache: "no-store",
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Role delete failed', response.status);
+    throw new ConsoleBffError("Role delete failed", response.status);
   }
 }
 
-export async function createMember(
-  payload: { email: string; nickname?: string | null; remark?: string | null; roleId?: string | null; roleCode?: string | null },
-): Promise<MemberRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant('/api/iam/members')}`, {
-    method: 'POST',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+export async function createMember(payload: {
+  email: string;
+  nickname?: string | null;
+  remark?: string | null;
+  roleId?: string | null;
+  roleCode?: string | null;
+}): Promise<MemberRecord> {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant("/api/iam/members")}`,
+    {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Member creation failed', response.status);
+    throw new ConsoleBffError("Member creation failed", response.status);
   }
 
   return (await response.json()) as MemberRecord;
 }
 
-export async function inviteMember(
-  payload: { email: string; nickname?: string | null; remark?: string | null; roleId?: string | null; roleCode?: string | null },
-): Promise<MemberRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant('/api/iam/members/invite')}`, {
-    method: 'POST',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+export async function inviteMember(payload: {
+  email: string;
+  nickname?: string | null;
+  remark?: string | null;
+  roleId?: string | null;
+  roleCode?: string | null;
+}): Promise<MemberRecord> {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant("/api/iam/members/invite")}`,
+    {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Member invite failed', response.status);
+    throw new ConsoleBffError("Member invite failed", response.status);
   }
 
   return (await response.json()) as MemberRecord;
@@ -388,85 +473,116 @@ export async function inviteMember(
 
 export async function updateMember(
   memberId: string,
-  payload: { nickname?: string | null; remark?: string | null; roleId?: string | null; status?: 'active' | 'inactive' | 'banned' },
+  payload: {
+    nickname?: string | null;
+    remark?: string | null;
+    roleId?: string | null;
+    status?: "active" | "inactive" | "banned";
+  },
 ): Promise<MemberRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}`)}`, {
-    method: 'PUT',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}`)}`,
+    {
+      method: "PUT",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Member update failed', response.status);
+    throw new ConsoleBffError("Member update failed", response.status);
   }
 
   return (await response.json()) as MemberRecord;
 }
 
 export async function disableMember(memberId: string): Promise<MemberRecord> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}/disable`)}`, {
-    method: 'POST',
-    credentials: 'include',
-    cache: 'no-store',
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}/disable`)}`,
+    {
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Member disable failed', response.status);
+    throw new ConsoleBffError("Member disable failed", response.status);
   }
 
   return (await response.json()) as MemberRecord;
 }
 
-export async function resetMemberPassword(memberId: string, payload: { nextPassword: string }) {
+export async function resetMemberPassword(
+  memberId: string,
+  payload: { nextPassword: string },
+) {
   const response = await fetch(
     `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}/reset-password`)}`,
     {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     },
   );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Member password reset failed', response.status);
+    throw new ConsoleBffError("Member password reset failed", response.status);
   }
 }
 
 export async function unlinkMember(memberId: string) {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}`)}`, {
-    method: 'DELETE',
-    credentials: 'include',
-    cache: 'no-store',
-  });
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}${withTenant(`/api/iam/members/${memberId}`)}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      cache: "no-store",
+    },
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Member unlink failed', response.status);
+    throw new ConsoleBffError("Member unlink failed", response.status);
   }
 }
 
 export async function fetchMySubscriptions(): Promise<ConsoleSubscription[]> {
-  return readJson<ConsoleSubscription[]>(withTenant('/api/subscription/my'), []);
+  return readJson<ConsoleSubscription[]>(
+    withTenant("/api/subscription/my"),
+    [],
+  );
 }
 
-export async function fetchBillingInvoices(limit = 20): Promise<ConsoleInvoice[]> {
+export async function fetchBillingInvoices(
+  limit = 20,
+): Promise<ConsoleInvoice[]> {
   const params = new URLSearchParams({ limit: String(limit) });
-  return readJson<ConsoleInvoice[]>(`/api/billing/invoices?${params.toString()}`, []);
+  return readJson<ConsoleInvoice[]>(
+    `/api/billing/invoices?${params.toString()}`,
+    [],
+  );
 }
 
 export async function fetchBillingOverview(): Promise<ConsoleBillingOverview | null> {
-  return readJson<ConsoleBillingOverview | null>(withTenant('/api/billing/overview'), null);
+  return readJson<ConsoleBillingOverview | null>(
+    withTenant("/api/billing/overview"),
+    null,
+  );
 }
 
 export async function fetchUserProfile(): Promise<ConsoleUserProfile | null> {
-  return readJson<ConsoleUserProfile | null>('/api/me/profile', null);
+  return readJson<ConsoleUserProfile | null>("/api/me/profile", null);
 }
 
 export async function fetchOrganizationProfile(): Promise<ConsoleOrganizationProfile | null> {
-  return readJson<ConsoleOrganizationProfile | null>(withTenant('/api/me/organization'), null);
+  return readJson<ConsoleOrganizationProfile | null>(
+    withTenant("/api/me/organization"),
+    null,
+  );
 }
 
 export async function updateUserProfile(payload: {
@@ -479,45 +595,57 @@ export async function updateUserProfile(payload: {
   timezone?: string | null;
   language?: string | null;
 }): Promise<ConsoleUserProfile> {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/me/profile`, {
-    method: 'PUT',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: {
-      'Content-Type': 'application/json',
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/me/profile`,
+    {
+      method: "PUT",
+      credentials: "include",
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     },
-    body: JSON.stringify(payload),
-  });
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Profile update failed', response.status);
+    throw new ConsoleBffError("Profile update failed", response.status);
   }
 
   return (await response.json()) as ConsoleUserProfile;
 }
 
-export async function changeUserPassword(payload: { currentPassword: string; nextPassword: string }) {
-  const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/me/password`, {
-    method: 'PUT',
-    credentials: 'include',
-    cache: 'no-store',
-    headers: {
-      'Content-Type': 'application/json',
+export async function changeUserPassword(payload: {
+  currentPassword: string;
+  nextPassword: string;
+}) {
+  const response = await fetch(
+    `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/me/password`,
+    {
+      method: "PUT",
+      credentials: "include",
+      cache: "no-store",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     },
-    body: JSON.stringify(payload),
-  });
+  );
 
   if (!response.ok) {
-    throw new ConsoleBffError('Password update failed', response.status);
+    throw new ConsoleBffError("Password update failed", response.status);
   }
 }
 
 async function hasActiveSession(): Promise<boolean | null> {
   try {
-    const response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/session`, {
-      credentials: 'include',
-      cache: 'no-store',
-    });
+    const response = await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/session`,
+      {
+        credentials: "include",
+        cache: "no-store",
+      },
+    );
 
     return response.ok;
   } catch {
@@ -528,7 +656,7 @@ async function hasActiveSession(): Promise<boolean | null> {
 export async function restoreSession(): Promise<SessionSnapshot> {
   const active = await hasActiveSession();
   if (active === null) {
-    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+    throw new ConsoleBffError("Console BFF is unavailable.", 503);
   }
 
   if (!active) {
@@ -557,21 +685,24 @@ export async function login(payload: LoginPayload): Promise<SessionSnapshot> {
   let response: Response;
 
   try {
-    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/login`, {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
+    response = await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/login`,
+      {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       },
-      body: JSON.stringify(payload),
-    });
+    );
   } catch {
-    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+    throw new ConsoleBffError("Console BFF is unavailable.", 503);
   }
 
   if (!response.ok) {
-    let message = 'Login failed';
+    let message = "Login failed";
 
     try {
       const body = (await response.json()) as { message?: string | string[] };
@@ -589,31 +720,39 @@ export async function login(payload: LoginPayload): Promise<SessionSnapshot> {
 
   const snapshot = await restoreSession();
   if (!snapshot.isAuthenticated) {
-    throw new ConsoleBffError('Authenticated session could not be restored after login.', 500);
+    throw new ConsoleBffError(
+      "Authenticated session could not be restored after login.",
+      500,
+    );
   }
 
   return snapshot;
 }
 
-export async function switchTenantSession(tenantId: string): Promise<SessionSnapshot> {
+export async function switchTenantSession(
+  tenantId: string,
+): Promise<SessionSnapshot> {
   let response: Response;
 
   try {
-    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/tenant/switch`, {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
+    response = await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/tenant/switch`,
+      {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tenantId }),
       },
-      body: JSON.stringify({ tenantId }),
-    });
+    );
   } catch {
-    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+    throw new ConsoleBffError("Console BFF is unavailable.", 503);
   }
 
   if (!response.ok) {
-    let message = 'Tenant switch failed';
+    let message = "Tenant switch failed";
 
     try {
       const body = (await response.json()) as { message?: string | string[] };
@@ -631,101 +770,135 @@ export async function switchTenantSession(tenantId: string): Promise<SessionSnap
 
   const snapshot = await restoreSession();
   if (!snapshot.isAuthenticated) {
-    throw new ConsoleBffError('Authenticated session could not be restored after tenant switch.', 500);
+    throw new ConsoleBffError(
+      "Authenticated session could not be restored after tenant switch.",
+      500,
+    );
   }
 
   return snapshot;
 }
 
 /** 发送手机验证码 */
-export async function sendPhoneCode(phone: string, turnstileToken?: string): Promise<void> {
+export async function sendPhoneCode(
+  phone: string,
+  turnstileToken?: string,
+): Promise<void> {
   let response: Response;
   try {
-    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/send-phone-code`, {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, turnstileToken }),
-    });
+    response = await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/send-phone-code`,
+      {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, turnstileToken }),
+      },
+    );
   } catch {
-    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+    throw new ConsoleBffError("Console BFF is unavailable.", 503);
   }
 
   if (!response.ok) {
-    let message = '发送验证码失败';
+    let message = "发送验证码失败";
     try {
       const body = (await response.json()) as { message?: string | string[] };
       if (Array.isArray(body.message)) message = body.message[0] ?? message;
       else if (body.message) message = body.message;
-    } catch { /* 忽略 */ }
+    } catch {
+      /* 忽略 */
+    }
     throw new ConsoleBffError(message, response.status);
   }
 }
 
 /** 手机验证码登录 */
-export async function loginWithPhone(payload: { phone: string; code: string; turnstileToken?: string | undefined }): Promise<SessionSnapshot> {
+export async function loginWithPhone(payload: {
+  phone: string;
+  code: string;
+  turnstileToken?: string | undefined;
+}): Promise<SessionSnapshot> {
   let response: Response;
   try {
-    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/login-with-phone`, {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    response = await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/login-with-phone`,
+      {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
   } catch {
-    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+    throw new ConsoleBffError("Console BFF is unavailable.", 503);
   }
 
   if (!response.ok) {
-    let message = '登录失败';
+    let message = "登录失败";
     try {
       const body = (await response.json()) as { message?: string | string[] };
       if (Array.isArray(body.message)) message = body.message[0] ?? message;
       else if (body.message) message = body.message;
-    } catch { /* 忽略 */ }
+    } catch {
+      /* 忽略 */
+    }
     throw new ConsoleBffError(message, response.status);
   }
 
   const snapshot = await restoreSession();
   if (!snapshot.isAuthenticated) {
-    throw new ConsoleBffError('Authenticated session could not be restored after login.', 500);
+    throw new ConsoleBffError(
+      "Authenticated session could not be restored after login.",
+      500,
+    );
   }
   return snapshot;
 }
 
-export async function forgotPassword(payload: { email: string }): Promise<void> {
+export async function forgotPassword(payload: {
+  email: string;
+}): Promise<void> {
   try {
-    await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/forgot-password`, {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/forgot-password`,
+      {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
   } catch {
     // 防止邮箱枚举，忽略所有错误
   }
 }
 
-export async function resetPassword(payload: { token: string; newPassword: string }): Promise<void> {
+export async function resetPassword(payload: {
+  token: string;
+  newPassword: string;
+}): Promise<void> {
   let response: Response;
 
   try {
-    response = await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/reset-password`, {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    response = await fetch(
+      `${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/reset-password`,
+      {
+        method: "POST",
+        credentials: "include",
+        cache: "no-store",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      },
+    );
   } catch {
-    throw new ConsoleBffError('Console BFF is unavailable.', 503);
+    throw new ConsoleBffError("Console BFF is unavailable.", 503);
   }
 
   if (!response.ok) {
-    let message = 'Password reset failed';
+    let message = "Password reset failed";
 
     try {
       const body = (await response.json()) as { message?: string | string[] };
@@ -745,9 +918,9 @@ export async function resetPassword(payload: { token: string; newPassword: strin
 export async function logout() {
   try {
     await fetch(`${DEFAULT_BFF_URL}${CONSOLE_API_PREFIX}/api/auth/logout`, {
-      method: 'POST',
-      credentials: 'include',
-      cache: 'no-store',
+      method: "POST",
+      credentials: "include",
+      cache: "no-store",
     });
   } catch {
     // Keep local sign-out resilient even if the BFF is unavailable.

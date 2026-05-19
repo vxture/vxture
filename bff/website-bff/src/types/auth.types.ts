@@ -11,7 +11,14 @@
  * @category Types
  */
 
-import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from "class-validator";
 
 export class LoginDto {
   @IsOptional()
@@ -28,20 +35,20 @@ export class LoginDto {
 }
 
 export class SignupDto {
-  @IsEmail({}, { message: '请输入有效邮箱' })
+  @IsEmail({}, { message: "请输入有效邮箱" })
   email!: string;
 
   @IsString()
-  @IsNotEmpty({ message: '姓名不能为空' })
+  @IsNotEmpty({ message: "姓名不能为空" })
   name!: string;
 
   @IsString()
-  @MinLength(8, { message: '密码至少 8 位字符' })
+  @MinLength(8, { message: "密码至少 8 位字符" })
   password!: string;
 }
 
 export class ForgotPasswordDto {
-  @IsEmail({}, { message: '请输入有效邮箱' })
+  @IsEmail({}, { message: "请输入有效邮箱" })
   email!: string;
 }
 
@@ -51,14 +58,14 @@ export class ResetPasswordDto {
   token!: string;
 
   @IsString()
-  @MinLength(8, { message: '密码至少 8 位字符' })
+  @MinLength(8, { message: "密码至少 8 位字符" })
   newPassword!: string;
 }
 
 export class InitTenantDto {
   @IsString()
-  @IsIn(['individual', 'organization'], { message: '请选择个人或企业' })
-  type!: 'individual' | 'organization';
+  @IsIn(["individual", "organization"], { message: "请选择个人或企业" })
+  type!: "individual" | "organization";
 }
 
 export interface AuthUserDto {
@@ -133,10 +140,10 @@ export class UpdateProfileDto {
 
 export class ChangePasswordDto {
   @IsString()
-  @IsNotEmpty({ message: '当前密码不能为空' })
+  @IsNotEmpty({ message: "当前密码不能为空" })
   currentPassword!: string;
 
   @IsString()
-  @MinLength(8, { message: '新密码至少 8 位字符' })
+  @MinLength(8, { message: "新密码至少 8 位字符" })
   nextPassword!: string;
 }

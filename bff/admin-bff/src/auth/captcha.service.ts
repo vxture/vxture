@@ -17,16 +17,16 @@
  * @category Service
  */
 
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { randomBytes, randomUUID } from 'node:crypto';
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import { randomBytes, randomUUID } from "node:crypto";
 
 // ─── 配置常量 ─────────────────────────────────────────────────────────────────
 
-const CAPTCHA_TTL_SECONDS = 300;      // 令牌有效期：5 分钟
-const TOLERANCE_RATIO = 0.06;         // 允许 ±6% 位置偏差（约 ±12px / 200px 宽滑块）
-const TARGET_MIN = 0.42;              // 目标位置最小比例
-const TARGET_RANGE = 0.36;            // 目标位置随机范围（上限 0.78）
+const CAPTCHA_TTL_SECONDS = 300; // 令牌有效期：5 分钟
+const TOLERANCE_RATIO = 0.06; // 允许 ±6% 位置偏差（约 ±12px / 200px 宽滑块）
+const TARGET_MIN = 0.42; // 目标位置最小比例
+const TARGET_RANGE = 0.36; // 目标位置随机范围（上限 0.78）
 
 // ─── 类型 ─────────────────────────────────────────────────────────────────────
 
@@ -47,7 +47,7 @@ export interface CaptchaChallenge {
 @Injectable()
 export class CaptchaService {
   /** 进程级一次性密钥，重启后旧令牌自动失效 */
-  private readonly secret = randomBytes(32).toString('hex');
+  private readonly secret = randomBytes(32).toString("hex");
   /** jti 黑名单：已使用或已失效的令牌 ID → 过期时间戳 */
   private readonly usedJtis = new Map<string, number>();
 
@@ -59,7 +59,7 @@ export class CaptchaService {
     const targetRatio = TARGET_MIN + Math.random() * TARGET_RANGE;
     const jti = randomUUID();
     const token = this.jwtService.sign(
-      { targetRatio, jti } satisfies Omit<CaptchaPayload, 'iat' | 'exp'>,
+      { targetRatio, jti } satisfies Omit<CaptchaPayload, "iat" | "exp">,
       { secret: this.secret, expiresIn: CAPTCHA_TTL_SECONDS },
     );
     return { token, targetRatio };
@@ -75,9 +75,11 @@ export class CaptchaService {
     let payload: CaptchaPayload;
 
     try {
-      payload = this.jwtService.verify<CaptchaPayload>(token, { secret: this.secret });
+      payload = this.jwtService.verify<CaptchaPayload>(token, {
+        secret: this.secret,
+      });
     } catch {
-      throw new UnauthorizedException('验证码已过期，请重新获取');
+      throw new UnauthorizedException("验证码已过期，请重新获取");
     }
 
     // 记录 jti（无论成功与否），防止用同一令牌枚举位置
@@ -86,11 +88,11 @@ export class CaptchaService {
     this.usedJtis.set(payload.jti, expiry);
 
     if (alreadyUsed) {
-      throw new UnauthorizedException('验证码已使用，请重新获取');
+      throw new UnauthorizedException("验证码已使用，请重新获取");
     }
 
     if (Math.abs(captchaPosition - payload.targetRatio) > TOLERANCE_RATIO) {
-      throw new UnauthorizedException('验证码位置不正确，请重试');
+      throw new UnauthorizedException("验证码位置不正确，请重试");
     }
   }
 

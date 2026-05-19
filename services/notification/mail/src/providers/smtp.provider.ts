@@ -14,17 +14,18 @@
  * @license MIT
  */
 
-import { Injectable } from '@nestjs/common';
-import nodemailer from 'nodemailer';
-import type { IMailProvider, MailMessage } from '../types/mail.types';
+import { Injectable } from "@nestjs/common";
+import nodemailer from "nodemailer";
+import type { IMailProvider, MailMessage } from "../types/mail.types";
 
 // ─── 环境变量读取 ──────────────────────────────────────────────────────────────
 
-const SMTP_HOST = process.env['SMTP_HOST'] ?? 'smtpdm.aliyun.com';
-const SMTP_PORT = Number(process.env['SMTP_PORT'] ?? 465);
-const SMTP_USER = process.env['SMTP_USER'] ?? 'no-reply@mail.vxture.com';
-const SMTP_PASS = process.env['SMTP_PASS'] ?? '';
-const SMTP_FROM = process.env['SMTP_FROM'] ?? '"vxture studio" <no-reply@mail.vxture.com>';
+const SMTP_HOST = process.env["SMTP_HOST"] ?? "smtpdm.aliyun.com";
+const SMTP_PORT = Number(process.env["SMTP_PORT"] ?? 465);
+const SMTP_USER = process.env["SMTP_USER"] ?? "no-reply@mail.vxture.com";
+const SMTP_PASS = process.env["SMTP_PASS"] ?? "";
+const SMTP_FROM =
+  process.env["SMTP_FROM"] ?? '"vxture studio" <no-reply@mail.vxture.com>';
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
 

@@ -1,20 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
-import { BaseProvider } from './base.provider';
+import { BaseProvider } from "./base.provider";
 import {
   buildOpenAiCompatibleBody,
   normalizeOpenAiCompatibleResponse,
   resolveChatCompletionsEndpoint,
-} from './doubao.provider';
-import type { OpenAiCompatibleChatResponse } from './openai-compatible.types';
+} from "./doubao.provider";
+import type { OpenAiCompatibleChatResponse } from "./openai-compatible.types";
 import type {
   ProviderChatRequest,
   ProviderChatResponse,
-} from '../types/gateway.types';
+} from "../types/gateway.types";
 
 @Injectable()
 export class PrivateModelProvider extends BaseProvider {
-  readonly providerName = 'private';
+  readonly providerName = "private";
 
   async chat(request: ProviderChatRequest): Promise<ProviderChatResponse> {
     const headers: Record<string, string> = {};

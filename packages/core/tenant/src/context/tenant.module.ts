@@ -14,20 +14,20 @@ import {
   MiddlewareConsumer,
   Module,
   NestModule,
-} from '@nestjs/common';
+} from "@nestjs/common";
 
-import { TenantMiddleware }         from '../middleware/tenant.middleware';
-import { TenantContext }            from './tenant.context';
-import type { TenantResolveOptions } from '../types/tenant.types';
+import { TenantMiddleware } from "../middleware/tenant.middleware";
+import { TenantContext } from "./tenant.context";
+import type { TenantResolveOptions } from "../types/tenant.types";
 
-export const TENANT_OPTIONS = Symbol('TENANT_OPTIONS');
+export const TENANT_OPTIONS = Symbol("TENANT_OPTIONS");
 
 @Global()
 @Module({})
 export class TenantModule implements NestModule {
   static register(options: TenantResolveOptions = {}): DynamicModule {
     return {
-      module:    TenantModule,
+      module: TenantModule,
       providers: [
         { provide: TENANT_OPTIONS, useValue: options },
         TenantMiddleware,
@@ -38,6 +38,6 @@ export class TenantModule implements NestModule {
   }
 
   configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(TenantMiddleware).forRoutes('*');
+    consumer.apply(TenantMiddleware).forRoutes("*");
   }
 }

@@ -76,7 +76,7 @@ import {
   TableIcon,
   CodeIcon,
   PiIcon,
-  GitForkIcon,      // graph：有向图/节点图，语义更准确
+  GitForkIcon, // graph：有向图/节点图，语义更准确
   LightbulbIcon,
   SparkleIcon,
   ShieldCheckIcon,
@@ -120,10 +120,10 @@ import {
   SunIcon,
   MoonIcon,
   GlobeIcon,
-  ArrowsOutSimpleIcon,  // maximize：原生全屏展开
-  ArrowsInSimpleIcon,   // minimize：原生全屏收起
-  CornersOutIcon,       // corners-out：伪全屏展开
-  CornersInIcon,        // corners-in：伪全屏收起
+  ArrowsOutSimpleIcon, // maximize：原生全屏展开
+  ArrowsInSimpleIcon, // minimize：原生全屏收起
+  CornersOutIcon, // corners-out：伪全屏展开
+  CornersInIcon, // corners-in：伪全屏收起
   ListIcon,
   RowsIcon,
   SignOutIcon,
@@ -157,38 +157,38 @@ export const iconRegistry: Record<IconName, PhosphorIcon> = {
   // ==========================================================================
   // 通用交互 - 导航
   // ==========================================================================
-  home:               HouseIcon,
-  "arrow-left":       ArrowLeftIcon,
-  "arrow-right":      ArrowRightIcon,
-  "arrow-up":         ArrowUpIcon,
-  "arrow-down":       ArrowDownIcon,
+  home: HouseIcon,
+  "arrow-left": ArrowLeftIcon,
+  "arrow-right": ArrowRightIcon,
+  "arrow-up": ArrowUpIcon,
+  "arrow-down": ArrowDownIcon,
   "arrow-long-right": ArrowRightIcon,
-  "chevron-left":     CaretLeftIcon,
-  "chevron-right":    CaretRightIcon,
-  "chevron-up":       CaretUpIcon,
-  "chevron-down":     CaretDownIcon,
-  "caret-double-up":   CaretDoubleUpIcon,
+  "chevron-left": CaretLeftIcon,
+  "chevron-right": CaretRightIcon,
+  "chevron-up": CaretUpIcon,
+  "chevron-down": CaretDownIcon,
+  "caret-double-up": CaretDoubleUpIcon,
   "caret-double-down": CaretDoubleDownIcon,
-  "squares-four":     SquaresFourIcon,
+  "squares-four": SquaresFourIcon,
 
   // ==========================================================================
   // 通用交互 - 操作
   // ==========================================================================
-  search:    MagnifyingGlassIcon,
+  search: MagnifyingGlassIcon,
   "app-grid": DotsNineIcon,
-  settings:  GearIcon,
-  help:      QuestionIcon,
-  bell:      BellIcon,
+  settings: GearIcon,
+  help: QuestionIcon,
+  bell: BellIcon,
   "more-vertical": DotsThreeVerticalIcon,
-  edit:      PencilIcon,
-  key:       KeyIcon,
-  trash:     TrashIcon,
-  plus:      PlusIcon,
-  x:         XIcon,
-  check:     CheckIcon,
-  copy:      CopyIcon,
-  play:      PlayIcon,
-  stop:      StopIcon,
+  edit: PencilIcon,
+  key: KeyIcon,
+  trash: TrashIcon,
+  plus: PlusIcon,
+  x: XIcon,
+  check: CheckIcon,
+  copy: CopyIcon,
+  play: PlayIcon,
+  stop: StopIcon,
   "text-indent": TextIndentIcon,
   "text-outdent": TextOutdentIcon,
 
@@ -196,62 +196,62 @@ export const iconRegistry: Record<IconName, PhosphorIcon> = {
   // 通用交互 - 状态
   // ==========================================================================
   success: CheckCircleIcon,
-  error:   XCircleIcon,
+  error: XCircleIcon,
   warning: WarningCircleIcon,
-  info:    InfoIcon,
+  info: InfoIcon,
 
   // ==========================================================================
   // 云服务/智能体 - 平台
   // ==========================================================================
-  agent:              RobotIcon,
-  workflow:           TimerIcon,
-  trigger:            TimerIcon,
-  database:           DatabaseIcon,
-  cloud:              CloudIcon,
-  plug:               PlugIcon,
-  server:             EraserIcon,
-  cube:               CubeIcon,
+  agent: RobotIcon,
+  workflow: TimerIcon,
+  trigger: TimerIcon,
+  database: DatabaseIcon,
+  cloud: CloudIcon,
+  plug: PlugIcon,
+  server: EraserIcon,
+  cube: CubeIcon,
   "building-library": BuildingIcon,
 
   // ==========================================================================
   // 云服务/智能体 - 数据
   // ==========================================================================
-  "chart-bar":    ChartBarIcon,
-  table:          TableIcon,
-  code:           CodeIcon,
-  api:            PiIcon,
-  graph:          GitForkIcon,
-  lightbulb:      LightbulbIcon,
-  sparkles:       SparkleIcon,
+  "chart-bar": ChartBarIcon,
+  table: TableIcon,
+  code: CodeIcon,
+  api: PiIcon,
+  graph: GitForkIcon,
+  lightbulb: LightbulbIcon,
+  sparkles: SparkleIcon,
   "shield-check": ShieldCheckIcon,
 
   // ==========================================================================
   // 用户/组织
   // ==========================================================================
-  user:          UserIcon,
-  role:          UsersIcon,
+  user: UserIcon,
+  role: UsersIcon,
   "user-switch": UserSwitchIcon,
-  buildings:     BuildingsIcon,
-  users:         UsersIcon,
-  medal:         MedalIcon,
-  star:          StarIcon,
+  buildings: BuildingsIcon,
+  users: UsersIcon,
+  medal: MedalIcon,
+  star: StarIcon,
 
   // ==========================================================================
   // 通讯/联系
   // ==========================================================================
-  mail:              EnvelopeIcon,
-  phone:             PhoneIcon,
-  wechat:            WechatLogoIcon,
-  github:            GithubLogoIcon,
-  linkedin:          LinkedinLogoIcon,
-  "chat-circle":     ChatCircleIcon,
+  mail: EnvelopeIcon,
+  phone: PhoneIcon,
+  wechat: WechatLogoIcon,
+  github: GithubLogoIcon,
+  linkedin: LinkedinLogoIcon,
+  "chat-circle": ChatCircleIcon,
   "paperplane-tilt": PaperPlaneTiltIcon,
 
   // ==========================================================================
   // 时间/日历
   // ==========================================================================
   calendar: CalendarIcon,
-  clock:    ClockIcon,
+  clock: ClockIcon,
   "clock-counter-clockwise": ClockCounterClockwiseIcon,
 
   // ==========================================================================
@@ -262,21 +262,21 @@ export const iconRegistry: Record<IconName, PhosphorIcon> = {
   // ==========================================================================
   // 主题/显示
   // ==========================================================================
-  sun:          SunIcon,
-  moon:         MoonIcon,
-  globe:        GlobeIcon,
-  maximize:     ArrowsOutSimpleIcon,
-  minimize:     ArrowsInSimpleIcon,
+  sun: SunIcon,
+  moon: MoonIcon,
+  globe: GlobeIcon,
+  maximize: ArrowsOutSimpleIcon,
+  minimize: ArrowsInSimpleIcon,
   "corners-out": CornersOutIcon,
-  "corners-in":  CornersInIcon,
-  list:          ListIcon,
-  rows:          RowsIcon,
-  "sign-out":    SignOutIcon,
+  "corners-in": CornersInIcon,
+  list: ListIcon,
+  rows: RowsIcon,
+  "sign-out": SignOutIcon,
 
   // ==========================================================================
   // 其他
   // ==========================================================================
-  "caret-left-bold":  CaretLeftBoldIcon,
+  "caret-left-bold": CaretLeftBoldIcon,
   "caret-right-bold": CaretRightBoldIcon,
 
   // ==========================================================================

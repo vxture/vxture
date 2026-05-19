@@ -1,4 +1,4 @@
-import { ProductCapabilityDetailPage } from '@/modules/products/ProductCapabilityDetailPage';
+import { ProductCapabilityDetailPage } from "@/modules/products/ProductCapabilityDetailPage";
 
 export default async function Page({
   params,
@@ -8,5 +8,9 @@ export default async function Page({
   }>;
 }) {
   const { productCode } = await params;
-  return <ProductCapabilityDetailPage productCode={decodeURIComponent(productCode)} />;
+  return (
+    <ProductCapabilityDetailPage
+      productCode={decodeURIComponent(productCode)}
+    />
+  );
 }

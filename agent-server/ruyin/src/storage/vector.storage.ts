@@ -15,7 +15,7 @@
  * @category Storage
  */
 
-import type { VectorData } from '../types/ruyin.types';
+import type { VectorData } from "../types/ruyin.types";
 
 // ============================================================================
 // 向量存储接口
@@ -26,10 +26,10 @@ import type { VectorData } from '../types/ruyin.types';
  */
 export interface VectorStorage {
   /** 存储向量数据 */
-  storeVector(data: Omit<VectorData, 'id'>): Promise<VectorData>;
+  storeVector(data: Omit<VectorData, "id">): Promise<VectorData>;
 
   /** 批量存储向量 */
-  storeVectors(dataList: Omit<VectorData, 'id'>[]): Promise<VectorData[]>;
+  storeVectors(dataList: Omit<VectorData, "id">[]): Promise<VectorData[]>;
 
   /** 根据 ID 获取向量 */
   getVector(id: string): Promise<VectorData | null>;
@@ -38,14 +38,14 @@ export interface VectorStorage {
   similaritySearch(
     queryEmbedding: number[],
     limit?: number,
-    threshold?: number
+    threshold?: number,
   ): Promise<VectorData[]>;
 
   /** 文本相似度搜索 */
   similaritySearchByText(
     queryText: string,
     limit?: number,
-    threshold?: number
+    threshold?: number,
   ): Promise<VectorData[]>;
 
   /** 删除向量 */
@@ -73,7 +73,7 @@ export class MemoryVectorStorage implements VectorStorage {
    */
   private cosineSimilarity(a: number[], b: number[]): number {
     if (a.length !== b.length) {
-      throw new Error('Vectors must have the same dimension');
+      throw new Error("Vectors must have the same dimension");
     }
 
     const dotProduct = a.reduce((sum, ai, i) => sum + ai * (b[i] ?? 0), 0);
@@ -87,7 +87,7 @@ export class MemoryVectorStorage implements VectorStorage {
     return dotProduct / (normA * normB);
   }
 
-  async storeVector(data: Omit<VectorData, 'id'>): Promise<VectorData> {
+  async storeVector(data: Omit<VectorData, "id">): Promise<VectorData> {
     const id = `vec_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const vectorData: VectorData = {
       ...data,
@@ -98,7 +98,9 @@ export class MemoryVectorStorage implements VectorStorage {
     return vectorData;
   }
 
-  async storeVectors(dataList: Omit<VectorData, 'id'>[]): Promise<VectorData[]> {
+  async storeVectors(
+    dataList: Omit<VectorData, "id">[],
+  ): Promise<VectorData[]> {
     const results: VectorData[] = [];
     for (const data of dataList) {
       const result = await this.storeVector(data);
@@ -114,7 +116,7 @@ export class MemoryVectorStorage implements VectorStorage {
   async similaritySearch(
     queryEmbedding: number[],
     limit: number = 10,
-    threshold: number = 0.5
+    threshold: number = 0.5,
   ): Promise<VectorData[]> {
     const results: Array<{ vector: VectorData; score: number }> = [];
 
@@ -132,10 +134,12 @@ export class MemoryVectorStorage implements VectorStorage {
   async similaritySearchByText(
     _queryText: string,
     limit: number = 10,
-    threshold: number = 0.5
+    threshold: number = 0.5,
   ): Promise<VectorData[]> {
     // 简单的模拟实现（实际项目中会调用真实的 embedding）
-    const mockEmbedding = Array(1536).fill(0).map(() => Math.random());
+    const mockEmbedding = Array(1536)
+      .fill(0)
+      .map(() => Math.random());
     return this.similaritySearch(mockEmbedding, limit, threshold);
   }
 
@@ -166,13 +170,15 @@ export class MemoryVectorStorage implements VectorStorage {
 /**
  * 创建向量存储实例
  */
-export function createVectorStorage(type: 'memory' | 'pgvector' = 'memory'): VectorStorage {
+export function createVectorStorage(
+  type: "memory" | "pgvector" = "memory",
+): VectorStorage {
   switch (type) {
-    case 'memory':
+    case "memory":
       return new MemoryVectorStorage();
-    case 'pgvector':
+    case "pgvector":
       // 未来支持 pgvector 存储
-      throw new Error('pgvector storage not implemented yet');
+      throw new Error("pgvector storage not implemented yet");
     default:
       throw new Error(`Unknown vector storage type: ${type}`);
   }
@@ -181,4 +187,4 @@ export function createVectorStorage(type: 'memory' | 'pgvector' = 'memory'): Vec
 /**
  * 全局向量存储实例
  */
-export const vectorStorage = createVectorStorage('memory');
+export const vectorStorage = createVectorStorage("memory");

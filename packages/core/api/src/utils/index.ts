@@ -3,10 +3,7 @@
  * @package @vxture/core-api
  */
 
-export {
-  normalizeHttpError,
-  isRetryableError,
-} from './error.utils';
+export { normalizeHttpError, isRetryableError } from "./error.utils";
 
 export {
   ok,
@@ -14,4 +11,4 @@ export {
   buildPageResult,
   pageToOffset,
   safePageQuery,
-} from './response.utils';
+} from "./response.utils";

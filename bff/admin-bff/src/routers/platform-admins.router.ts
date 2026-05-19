@@ -5,18 +5,23 @@ import {
   Inject,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL } from '../tokens';
-import type { PlatformAdminRecord, RequestContext } from '../types/console.types';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL } from "../tokens";
+import type {
+  PlatformAdminRecord,
+  RequestContext,
+} from "../types/console.types";
 
-@Controller('api/platform-admins')
+@Controller("api/platform-admins")
 export class PlatformAdminsRouter {
   constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get()
-  async listPlatformAdmins(@Req() req: Request & RequestContext): Promise<PlatformAdminRecord[]> {
+  async listPlatformAdmins(
+    @Req() req: Request & RequestContext,
+  ): Promise<PlatformAdminRecord[]> {
     assertCanManagePlatformAdmins(req);
 
     const result = await this.pool.query<PlatformAdminRow>(PLATFORM_ADMIN_SQL);
@@ -26,17 +31,19 @@ export class PlatformAdminsRouter {
 
 function assertCanManagePlatformAdmins(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
-  if (req.capabilities && !req.capabilities.includes('platform.admin.manage')) {
-    throw new ForbiddenException('Missing platform.admin.manage capability');
+  if (req.capabilities && !req.capabilities.includes("platform.admin.manage")) {
+    throw new ForbiddenException("Missing platform.admin.manage capability");
   }
 }
 
 function toIso(value: Date | string | null): string | null {
   if (!value) return null;
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
 function mapPlatformAdminRow(row: PlatformAdminRow): PlatformAdminRecord {
@@ -51,7 +58,10 @@ function mapPlatformAdminRow(row: PlatformAdminRow): PlatformAdminRecord {
     roleCode: row.role_code,
     roleNameI18nKey: row.name_i18n_key,
     roleNameEn: row.name_en,
-    roleStatusCode: normalizeRoleStatusCode(row.role_status_code, row.role_status),
+    roleStatusCode: normalizeRoleStatusCode(
+      row.role_status_code,
+      row.role_status,
+    ),
     roleStatus: row.role_status,
     statusCode: normalizeStatusCode(row.status_code, row.status),
     status: row.status,
@@ -64,11 +74,20 @@ function mapPlatformAdminRow(row: PlatformAdminRow): PlatformAdminRecord {
   };
 }
 
-function normalizeStatusCode(value: string | null, legacyStatus: boolean): PlatformAdminRecord['statusCode'] {
-  if (value === 'active' || value === 'disabled' || value === 'locked' || value === 'pending' || value === 'suspended') {
+function normalizeStatusCode(
+  value: string | null,
+  legacyStatus: boolean,
+): PlatformAdminRecord["statusCode"] {
+  if (
+    value === "active" ||
+    value === "disabled" ||
+    value === "locked" ||
+    value === "pending" ||
+    value === "suspended"
+  ) {
     return value;
   }
-  return legacyStatus ? 'active' : 'disabled';
+  return legacyStatus ? "active" : "disabled";
 }
 
 interface PlatformAdminRow {
@@ -123,9 +142,12 @@ const PLATFORM_ADMIN_SQL = `
   order by a.sort asc, a.created_at asc
 `;
 
-function normalizeRoleStatusCode(value: string | null, legacyStatus: boolean): PlatformAdminRecord['roleStatusCode'] {
-  if (value === 'active' || value === 'disabled' || value === 'archived') {
+function normalizeRoleStatusCode(
+  value: string | null,
+  legacyStatus: boolean,
+): PlatformAdminRecord["roleStatusCode"] {
+  if (value === "active" || value === "disabled" || value === "archived") {
     return value;
   }
-  return legacyStatus ? 'active' : 'disabled';
+  return legacyStatus ? "active" : "disabled";
 }

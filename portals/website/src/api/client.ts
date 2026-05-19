@@ -5,12 +5,12 @@
  * @category API
  */
 
-import axios from 'axios';
+import axios from "axios";
 
 function normalizeOrigin(value: string | undefined): string {
-  const normalized = value?.trim().replace(/\/+$/, '');
+  const normalized = value?.trim().replace(/\/+$/, "");
   if (!normalized) {
-    return 'http://localhost:3011';
+    return "http://localhost:3011";
   }
   return normalized;
 }
@@ -18,15 +18,19 @@ function normalizeOrigin(value: string | undefined): string {
 function resolveWebsiteApiPrefix(): string {
   const explicitPrefix = process.env.NEXT_PUBLIC_WEBSITE_API_PREFIX;
   if (explicitPrefix !== undefined) {
-    return explicitPrefix.trim().replace(/\/+$/, '');
+    return explicitPrefix.trim().replace(/\/+$/, "");
   }
 
   // 默认直连 website-bff；只有显式配置统一 API 网关时才保留 /website-api 前缀。
-  const usesDirectWebsiteBff = Boolean(process.env.NEXT_PUBLIC_WEBSITE_BFF_URL?.trim()) || !process.env.NEXT_PUBLIC_API_URL?.trim();
-  return usesDirectWebsiteBff ? '' : '/website-api';
+  const usesDirectWebsiteBff =
+    Boolean(process.env.NEXT_PUBLIC_WEBSITE_BFF_URL?.trim()) ||
+    !process.env.NEXT_PUBLIC_API_URL?.trim();
+  return usesDirectWebsiteBff ? "" : "/website-api";
 }
 
-const API_ORIGIN = normalizeOrigin(process.env.NEXT_PUBLIC_WEBSITE_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL);
+const API_ORIGIN = normalizeOrigin(
+  process.env.NEXT_PUBLIC_WEBSITE_BFF_URL ?? process.env.NEXT_PUBLIC_API_URL,
+);
 const API_PREFIX = resolveWebsiteApiPrefix();
 const API_BASE_URL = `${API_ORIGIN}${API_PREFIX}`;
 
@@ -35,8 +39,8 @@ export const apiClient = axios.create({
   timeout: 10000,
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 // ─── 响应拦截器 ───────────────────────────────────────────────────────────────
@@ -50,7 +54,7 @@ apiClient.interceptors.response.use(
     }
 
     // 其他非预期错误才打印，方便排查真实问题
-    console.error('[api] 请求错误:', error);
+    console.error("[api] 请求错误:", error);
     return Promise.reject(error);
   },
 );

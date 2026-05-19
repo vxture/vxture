@@ -12,6 +12,6 @@ export class UpdateRoleDto {
   nameEn?: string | null;
   descriptionI18nKey?: string | null;
   description?: string | null;
-  status?: 'active' | 'disabled';
+  status?: "active" | "disabled";
   permissionIds?: string[];
 }

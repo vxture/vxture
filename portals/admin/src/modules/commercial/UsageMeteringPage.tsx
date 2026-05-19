@@ -4,7 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { ActionMenu, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination as DsPagination,
+} from "@vxture/design-system";
 import { fetchUsageMeteringRecords } from "@/api/admin-bff";
 import type {
   UsageMeteringRecord,
@@ -85,15 +92,14 @@ function formatUsageValue(value: number, unit: string) {
   return `${formatNumber(value)} ${unit}`;
 }
 
-function UsageActionsMenu({
-  record,
-}: {
-  record: UsageMeteringRecord;
-}) {
+function UsageActionsMenu({ record }: { record: UsageMeteringRecord }) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${record.tenantName} 用量操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -103,7 +109,8 @@ function UsageActionsMenu({
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(record.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(record.tenantId)}`),
           },
           {
             id: "subscription",
@@ -112,7 +119,9 @@ function UsageActionsMenu({
             disabled: !record.subscriptionId,
             onSelect: () => {
               if (!record.subscriptionId) return;
-              router.push(`/subscriptions/${encodeURIComponent(record.subscriptionId)}`);
+              router.push(
+                `/subscriptions/${encodeURIComponent(record.subscriptionId)}`,
+              );
             },
           },
           {
@@ -122,7 +131,9 @@ function UsageActionsMenu({
             disabled: !record.subscriptionId,
             onSelect: () => {
               if (!record.subscriptionId) return;
-              router.push(`/orders/${encodeURIComponent(record.subscriptionId)}`);
+              router.push(
+                `/orders/${encodeURIComponent(record.subscriptionId)}`,
+              );
             },
           },
         ]}
@@ -161,7 +172,13 @@ function UsageListRows({
         <span>
           <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            checked={
+              isPageSelected
+                ? true
+                : selectedOnPage > 0
+                  ? "indeterminate"
+                  : false
+            }
             onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页用量记录"
           />
@@ -202,7 +219,9 @@ function UsageListRows({
               <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onCheckedChange={(value) => onToggleRecord(record.id, value === true)}
+                onCheckedChange={(value) =>
+                  onToggleRecord(record.id, value === true)
+                }
                 aria-label={`选择用量记录 ${record.tenantName}`}
               />
             </span>
@@ -284,11 +303,7 @@ function UsageListRows({
   );
 }
 
-function UsageCards({
-  records,
-}: {
-  records: UsageMeteringRecord[];
-}) {
+function UsageCards({ records }: { records: UsageMeteringRecord[] }) {
   const router = useRouter();
 
   return (
@@ -618,7 +633,12 @@ export function UsageMeteringPage() {
             </span>
             <div className="vx-tenant-pagination__actions">
               <PageSizePicker value={pageSize} onChange={setPageSize} />
-              <DsPagination className="vx-tenant-pagination__pager" page={activePage} pageCount={pageCount} onPageChange={setCurrentPage} />
+              <DsPagination
+                className="vx-tenant-pagination__pager"
+                page={activePage}
+                pageCount={pageCount}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </footer>
         </section>

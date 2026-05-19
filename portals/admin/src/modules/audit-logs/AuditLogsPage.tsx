@@ -1,35 +1,53 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { Badge, Button, Icon, Input, NativeSelect, Pagination } from '@vxture/design-system';
-import { fetchAuditLogs } from '@/api/admin-bff';
-import type { AuditLogRecord } from '@/entities/console';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { formatDate, joinClasses } from '@/modules/tenants/tenant-utils';
+import { useEffect, useMemo, useState } from "react";
+import {
+  Badge,
+  Button,
+  Icon,
+  Input,
+  NativeSelect,
+  Pagination,
+} from "@vxture/design-system";
+import { fetchAuditLogs } from "@/api/admin-bff";
+import type { AuditLogRecord } from "@/entities/console";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import { formatDate, joinClasses } from "@/modules/tenants/tenant-utils";
 
 // ─── 辅助函数 ──────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 50;
-const EMPTY_MARK = '-';
+const EMPTY_MARK = "-";
 
-function resultLabel(result: AuditLogRecord['result']) {
-  return result === 'success' ? '成功' : '失败';
+function resultLabel(result: AuditLogRecord["result"]) {
+  return result === "success" ? "成功" : "失败";
 }
 
-function resultBadgeClass(result: AuditLogRecord['result']) {
-  return result === 'success' ? 'vx-admin-role-status-pill--enabled' : 'vx-admin-role-status-pill--disabled';
+function resultBadgeClass(result: AuditLogRecord["result"]) {
+  return result === "success"
+    ? "vx-admin-role-status-pill--enabled"
+    : "vx-admin-role-status-pill--disabled";
 }
 
-function resultIcon(result: AuditLogRecord['result']) {
-  return result === 'success' ? 'check' : 'x';
+function resultIcon(result: AuditLogRecord["result"]) {
+  return result === "success" ? "check" : "x";
 }
 
 function auditLogSearchText(log: AuditLogRecord) {
-  return [log.operatorName, log.operatorEmail, log.action, log.actionLabel, log.targetType, log.targetLabel, log.ip, log.module]
+  return [
+    log.operatorName,
+    log.operatorEmail,
+    log.action,
+    log.actionLabel,
+    log.targetType,
+    log.targetLabel,
+    log.ip,
+    log.module,
+  ]
     .filter(Boolean)
-    .join(' ')
+    .join(" ")
     .toLowerCase();
 }
 
@@ -37,23 +55,46 @@ function auditLogSearchText(log: AuditLogRecord) {
 
 function AuditSummary({ logs }: { logs: AuditLogRecord[] }) {
   const todayStr = new Date().toDateString();
-  const todayLogs = logs.filter((l) => new Date(l.createdAt).toDateString() === todayStr);
-  const failureCount = logs.filter((l) => l.result === 'failure').length;
+  const todayLogs = logs.filter(
+    (l) => new Date(l.createdAt).toDateString() === todayStr,
+  );
+  const failureCount = logs.filter((l) => l.result === "failure").length;
   const operatorSet = new Set(logs.map((l) => l.operatorId));
 
   return (
-    <section className="vx-tenant-summary vx-audit-summary" aria-label="审计日志统计">
+    <section
+      className="vx-tenant-summary vx-audit-summary"
+      aria-label="审计日志统计"
+    >
       <article className="vx-tenant-summary__item vx-tenant-tone--blue">
         <Icon name="list" size="lg" fallback="placeholder" />
-        <div><span>日志总数</span><p><strong>{logs.length}</strong><em>操作员 {operatorSet.size}</em></p></div>
+        <div>
+          <span>日志总数</span>
+          <p>
+            <strong>{logs.length}</strong>
+            <em>操作员 {operatorSet.size}</em>
+          </p>
+        </div>
       </article>
       <article className="vx-tenant-summary__item vx-tenant-tone--green">
         <Icon name="check" size="lg" fallback="placeholder" />
-        <div><span>今日操作</span><p><strong>{todayLogs.length}</strong><em>当日写入</em></p></div>
+        <div>
+          <span>今日操作</span>
+          <p>
+            <strong>{todayLogs.length}</strong>
+            <em>当日写入</em>
+          </p>
+        </div>
       </article>
       <article className="vx-tenant-summary__item vx-tenant-tone--rose">
         <Icon name="x" size="lg" fallback="placeholder" />
-        <div><span>失败操作</span><p><strong>{failureCount}</strong><em>需复核</em></p></div>
+        <div>
+          <span>失败操作</span>
+          <p>
+            <strong>{failureCount}</strong>
+            <em>需复核</em>
+          </p>
+        </div>
       </article>
     </section>
   );
@@ -61,7 +102,7 @@ function AuditSummary({ logs }: { logs: AuditLogRecord[] }) {
 
 // ─── 子组件：工具栏 ────────────────────────────────────────────────────────────
 
-type ResultFilter = 'all' | 'success' | 'failure';
+type ResultFilter = "all" | "success" | "failure";
 
 function AuditToolbar({
   search,
@@ -89,7 +130,9 @@ function AuditToolbar({
         className="vx-tenant-search"
         aria-label="搜索审计日志"
       />
-      <Button variant="outline" onClick={onReset}>重置</Button>
+      <Button variant="outline" onClick={onReset}>
+        重置
+      </Button>
       <div className="vx-tenant-filters">
         <NativeSelect
           className="vx-input vx-tenant-select"
@@ -102,16 +145,28 @@ function AuditToolbar({
           <option value="failure">失败</option>
         </NativeSelect>
       </div>
-      <ActionButton icon="shield-check" variant="outline" disabled>导出审计</ActionButton>
+      <ActionButton icon="shield-check" variant="outline" disabled>
+        导出审计
+      </ActionButton>
     </section>
   );
 }
 
 // ─── 子组件：列表 ──────────────────────────────────────────────────────────────
 
-function AuditList({ logs, startIndex }: { logs: AuditLogRecord[]; startIndex: number }) {
+function AuditList({
+  logs,
+  startIndex,
+}: {
+  logs: AuditLogRecord[];
+  startIndex: number;
+}) {
   return (
-    <div className="vx-tenant-directory-list vx-audit-directory-list" role="region" aria-label="审计日志列表">
+    <div
+      className="vx-tenant-directory-list vx-audit-directory-list"
+      role="region"
+      aria-label="审计日志列表"
+    >
       <div className="vx-tenant-directory-list__header">
         <span>序号</span>
         <span>操作员</span>
@@ -126,18 +181,28 @@ function AuditList({ logs, startIndex }: { logs: AuditLogRecord[]; startIndex: n
         <div key={log.id} className="vx-tenant-directory-row vx-audit-row">
           <span className="vx-audit-row__index">{startIndex + index + 1}</span>
           <span className="vx-audit-row__operator">
-            <span className="vx-audit-row__operator-name">{log.operatorName}</span>
-            <span className="vx-audit-row__operator-email">{log.operatorEmail}</span>
+            <span className="vx-audit-row__operator-name">
+              {log.operatorName}
+            </span>
+            <span className="vx-audit-row__operator-email">
+              {log.operatorEmail}
+            </span>
           </span>
           <span className="vx-audit-row__action">
-            <span className="vx-audit-row__action-label">{log.actionLabel}</span>
+            <span className="vx-audit-row__action-label">
+              {log.actionLabel}
+            </span>
             <span className="vx-audit-row__action-code">{log.action}</span>
           </span>
           <span className="vx-audit-row__target">
             {log.targetLabel ? (
               <>
-                <span className="vx-audit-row__target-label">{log.targetLabel}</span>
-                <span className="vx-audit-row__target-type">{log.targetType}</span>
+                <span className="vx-audit-row__target-label">
+                  {log.targetLabel}
+                </span>
+                <span className="vx-audit-row__target-type">
+                  {log.targetType}
+                </span>
               </>
             ) : (
               <span className="vx-audit-row__target-empty">{EMPTY_MARK}</span>
@@ -146,10 +211,21 @@ function AuditList({ logs, startIndex }: { logs: AuditLogRecord[]; startIndex: n
           <span className="vx-audit-row__module">{log.module}</span>
           <span className="vx-audit-row__result">
             <span className="vx-tenant-directory-row__status-line">
-              <span className={`vx-model-state-icon vx-model-state-icon--${log.result === 'success' ? 'active' : 'inactive'}`} role="img" aria-label={resultLabel(log.result)} title={resultLabel(log.result)}>
-                <Icon name={resultIcon(log.result)} size="xs" fallback="placeholder" />
+              <span
+                className={`vx-model-state-icon vx-model-state-icon--${log.result === "success" ? "active" : "inactive"}`}
+                role="img"
+                aria-label={resultLabel(log.result)}
+                title={resultLabel(log.result)}
+              >
+                <Icon
+                  name={resultIcon(log.result)}
+                  size="xs"
+                  fallback="placeholder"
+                />
               </span>
-              <Badge className={resultBadgeClass(log.result)}>{resultLabel(log.result)}</Badge>
+              <Badge className={resultBadgeClass(log.result)}>
+                {resultLabel(log.result)}
+              </Badge>
             </span>
             {log.errorMessage ? (
               <span className="vx-audit-row__error" title={log.errorMessage}>
@@ -158,7 +234,9 @@ function AuditList({ logs, startIndex }: { logs: AuditLogRecord[]; startIndex: n
             ) : null}
           </span>
           <span className="vx-audit-row__ip">{log.ip ?? EMPTY_MARK}</span>
-          <span className="vx-audit-row__time">{formatDate(log.createdAt)}</span>
+          <span className="vx-audit-row__time">
+            {formatDate(log.createdAt)}
+          </span>
         </div>
       ))}
     </div>
@@ -170,8 +248,8 @@ function AuditList({ logs, startIndex }: { logs: AuditLogRecord[]; startIndex: n
 export function AuditLogsPage() {
   const [logs, setLogs] = useState<AuditLogRecord[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [resultFilter, setResultFilter] = useState<ResultFilter>('all');
+  const [search, setSearch] = useState("");
+  const [resultFilter, setResultFilter] = useState<ResultFilter>("all");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -182,7 +260,8 @@ export function AuditLogsPage() {
 
   const filtered = useMemo(() => {
     let result = logs;
-    if (resultFilter !== 'all') result = result.filter((l) => l.result === resultFilter);
+    if (resultFilter !== "all")
+      result = result.filter((l) => l.result === resultFilter);
     if (search.trim()) {
       const q = search.trim().toLowerCase();
       result = result.filter((l) => auditLogSearchText(l).includes(q));
@@ -196,16 +275,28 @@ export function AuditLogsPage() {
   }, [filtered, page]);
   const pageCount = Math.ceil(filtered.length / PAGE_SIZE);
 
-  const handleSearch = (v: string) => { setSearch(v); setPage(1); };
-  const handleResultFilter = (v: ResultFilter) => { setResultFilter(v); setPage(1); };
+  const handleSearch = (v: string) => {
+    setSearch(v);
+    setPage(1);
+  };
+  const handleResultFilter = (v: ResultFilter) => {
+    setResultFilter(v);
+    setPage(1);
+  };
   const handleReset = () => {
-    setSearch('');
-    setResultFilter('all');
+    setSearch("");
+    setResultFilter("all");
     setPage(1);
   };
 
   return (
-    <div className={joinClasses('vx-page-stack', 'vx-tenant-management-page', 'vx-audit-page')}>
+    <div
+      className={joinClasses(
+        "vx-page-stack",
+        "vx-tenant-management-page",
+        "vx-audit-page",
+      )}
+    >
       <PageHeader
         icon="info"
         title="审计日志"
@@ -231,8 +322,20 @@ export function AuditLogsPage() {
             <section className="vx-tenant-empty">
               <EmptyState
                 title="暂无审计记录"
-                description={search || resultFilter !== 'all' ? '尝试调整筛选条件' : '后台操作记录将在此处显示'}
-                action={<ActionButton variant="outline" icon="x" onClick={handleReset}>重置筛选</ActionButton>}
+                description={
+                  search || resultFilter !== "all"
+                    ? "尝试调整筛选条件"
+                    : "后台操作记录将在此处显示"
+                }
+                action={
+                  <ActionButton
+                    variant="outline"
+                    icon="x"
+                    onClick={handleReset}
+                  >
+                    重置筛选
+                  </ActionButton>
+                }
               />
             </section>
           ) : filtered.length ? (

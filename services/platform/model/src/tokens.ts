@@ -1,1 +1,1 @@
-export const MODEL_PG_POOL = 'MODEL_PG_POOL';
+export const MODEL_PG_POOL = "MODEL_PG_POOL";

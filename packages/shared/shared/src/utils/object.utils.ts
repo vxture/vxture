@@ -57,7 +57,7 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
  * const clone = deepClone({ a: { b: 1 }, c: [1, 2] });
  */
 export function deepClone<T>(obj: T): T {
-  if (obj === null || typeof obj !== 'object') return obj;
+  if (obj === null || typeof obj !== "object") return obj;
   if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
   if (Array.isArray(obj)) return obj.map(deepClone) as unknown as T;
 
@@ -83,8 +83,10 @@ export function deepClone<T>(obj: T): T {
  * isPlainObject(new Date())  // false
  * isPlainObject(null)        // false
  */
-export function isPlainObject(value: unknown): value is Record<string, unknown> {
-  if (typeof value !== 'object' || value === null) return false;
+export function isPlainObject(
+  value: unknown,
+): value is Record<string, unknown> {
+  if (typeof value !== "object" || value === null) return false;
   if (Array.isArray(value)) return false;
   if (value instanceof Date) return false;
 

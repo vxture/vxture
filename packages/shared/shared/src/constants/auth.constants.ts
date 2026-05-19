@@ -10,46 +10,46 @@
  */
 export const AUTH_CONSTANTS = {
   /** localStorage key */
-  STORAGE_KEY: 'auth-storage',
+  STORAGE_KEY: "auth-storage",
 
   /** Tenant-side HttpOnly cookie keys（website / console 共用租户登录态） */
   TENANT_COOKIE_KEYS: {
-    ACCESS_TOKEN: 'vx_tenant_access_token',
-    REFRESH_TOKEN: 'vx_tenant_refresh_token',
+    ACCESS_TOKEN: "vx_tenant_access_token",
+    REFRESH_TOKEN: "vx_tenant_refresh_token",
   } as const,
 
   /** Website-BFF HttpOnly cookie keys（兼容旧命名，值指向统一租户登录态） */
   COOKIE_KEYS: {
-    ACCESS_TOKEN: 'vx_tenant_access_token',
-    REFRESH_TOKEN: 'vx_tenant_refresh_token',
+    ACCESS_TOKEN: "vx_tenant_access_token",
+    REFRESH_TOKEN: "vx_tenant_refresh_token",
   } as const,
 
   /** Console-BFF HttpOnly cookie keys（兼容旧命名，值指向统一租户登录态） */
   CONSOLE_COOKIE_KEYS: {
-    ACCESS_TOKEN: 'vx_tenant_access_token',
-    REFRESH_TOKEN: 'vx_tenant_refresh_token',
+    ACCESS_TOKEN: "vx_tenant_access_token",
+    REFRESH_TOKEN: "vx_tenant_refresh_token",
   } as const,
 
   /** Ruyin HttpOnly cookie keys（ruyin.ai 本域承载同一租户登录态） */
   RUYIN_COOKIE_KEYS: {
-    ACCESS_TOKEN: 'ry_access_token',
-    REFRESH_TOKEN: 'ry_refresh_token',
+    ACCESS_TOKEN: "ry_access_token",
+    REFRESH_TOKEN: "ry_refresh_token",
   } as const,
 
   /** Legacy cookie keys to read and clear during the auth naming migration. */
   LEGACY_COOKIE_KEYS: {
     WEBSITE: {
-      ACCESS_TOKEN: 'vx_access_token',
-      REFRESH_TOKEN: 'vx_refresh_token',
+      ACCESS_TOKEN: "vx_access_token",
+      REFRESH_TOKEN: "vx_refresh_token",
     },
     CONSOLE: {
-      ACCESS_TOKEN: 'vx_console_access_token',
-      REFRESH_TOKEN: 'vx_console_refresh_token',
+      ACCESS_TOKEN: "vx_console_access_token",
+      REFRESH_TOKEN: "vx_console_refresh_token",
     },
   } as const,
 
   /** Session storage key prefix for server-side session adapters */
-  SESSION_KEY_PREFIX: 'session:',
+  SESSION_KEY_PREFIX: "session:",
 
   /** Token refresh buffer time in milliseconds - refresh 30 seconds before expiry */
   TOKEN_REFRESH_BUFFER: 30 * 1000,
@@ -62,18 +62,18 @@ export const AUTH_CONSTANTS = {
 
   /** Permission constants */
   PERMISSIONS: {
-    ADMIN: 'admin',
-    EDIT: 'edit',
-    VIEW: 'view',
-    DELETE: 'delete',
+    ADMIN: "admin",
+    EDIT: "edit",
+    VIEW: "view",
+    DELETE: "delete",
   } as const,
 
   /** API endpoints */
   API_ENDPOINTS: {
-    LOGIN: '/api/auth/login',
-    LOGOUT: '/api/auth/logout',
-    REFRESH: '/api/auth/refresh',
-    ME: '/api/me',
-    SESSION: '/api/auth/session',
+    LOGIN: "/api/auth/login",
+    LOGOUT: "/api/auth/logout",
+    REFRESH: "/api/auth/refresh",
+    ME: "/api/me",
+    SESSION: "/api/auth/session",
   },
 } as const;

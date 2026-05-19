@@ -26,9 +26,9 @@ import {
   Query,
   Res,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Response } from 'express';
-import { resolveInternalAuthToken } from '@vxture/core-auth';
+} from "@nestjs/common";
+import type { Response } from "express";
+import { resolveInternalAuthToken } from "@vxture/core-auth";
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
@@ -38,29 +38,34 @@ type RedirectResponse = Response & {
 };
 
 function resolveAuthBffUrl(): string {
-  const configured = process.env['AUTH_BFF_URL']?.trim();
-  if (configured) return configured.replace(/\/+$/, '');
-  return 'http://localhost:3090';
+  const configured = process.env["AUTH_BFF_URL"]?.trim();
+  if (configured) return configured.replace(/\/+$/, "");
+  return "http://localhost:3090";
 }
 
 const AUTH_BFF = resolveAuthBffUrl();
 
-function forwardSetCookie(res: RedirectResponse, upstream: globalThis.Response): void {
+function forwardSetCookie(
+  res: RedirectResponse,
+  upstream: globalThis.Response,
+): void {
   const setCookie = readSetCookie(upstream);
-  if (setCookie.length) res.setHeader('set-cookie', setCookie);
+  if (setCookie.length) res.setHeader("set-cookie", setCookie);
 }
 
 function readSetCookie(upstream: globalThis.Response): string[] {
-  const headers = upstream.headers as Headers & { getSetCookie?: () => string[] };
+  const headers = upstream.headers as Headers & {
+    getSetCookie?: () => string[];
+  };
   const setCookie = headers.getSetCookie?.();
   if (setCookie?.length) return setCookie;
-  const single = upstream.headers.get('set-cookie');
+  const single = upstream.headers.get("set-cookie");
   return single ? [single] : [];
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-@Controller('api/auth')
+@Controller("api/auth")
 export class CrossDomainRouter {
   /**
    * 跨域 SSO 回调
@@ -69,54 +74,67 @@ export class CrossDomainRouter {
    * 前端从 vxture.com 跳转到 ruyin.ai 时携带 one-time token，
    * ruyin-bff 调用 auth-bff 验证 token 后，委托 auth-bff 签发 ruyin Cookie。
    */
-  @Get('callback')
+  @Get("callback")
   @HttpCode(HttpStatus.OK)
-  async callback(@Query('token') token: string, @Res() res: RedirectResponse): Promise<void> {
+  async callback(
+    @Query("token") token: string,
+    @Res() res: RedirectResponse,
+  ): Promise<void> {
     if (!token) {
-      throw new BadRequestException('Missing crossdomain token');
+      throw new BadRequestException("Missing crossdomain token");
     }
 
     // Step 1: 调用 auth-bff verify 接口，校验一次性 token
     const verifyResponse = await fetch(`${AUTH_BFF}/auth/crossdomain/verify`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'x-vxture-internal-auth': resolveInternalAuthToken(),
+        "Content-Type": "application/json",
+        "x-vxture-internal-auth": resolveInternalAuthToken(),
       },
-      body: JSON.stringify({ token, source: 'ruyin.ai' }),
+      body: JSON.stringify({ token, source: "ruyin.ai" }),
     });
 
     if (!verifyResponse.ok) {
-      const err = await verifyResponse.json().catch(() => ({ message: 'Token verification failed' })) as { message?: string };
-      throw new UnauthorizedException(err.message || 'Invalid crossdomain token');
+      const err = (await verifyResponse
+        .json()
+        .catch(() => ({ message: "Token verification failed" }))) as {
+        message?: string;
+      };
+      throw new UnauthorizedException(
+        err.message || "Invalid crossdomain token",
+      );
     }
 
-    const payload = await verifyResponse.json() as { sub?: string; tenantId?: string };
+    const payload = (await verifyResponse.json()) as {
+      sub?: string;
+      tenantId?: string;
+    };
 
     // Step 2: 委托 auth-bff 签发 ruyin domain Cookie
     const signResponse = await fetch(`${AUTH_BFF}/auth/internal/sign`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'x-vxture-internal-auth': resolveInternalAuthToken(),
+        "Content-Type": "application/json",
+        "x-vxture-internal-auth": resolveInternalAuthToken(),
       },
       body: JSON.stringify({
         sub: payload.sub,
-        email: '',
-        role: 'member',
-        source: 'ruyin',
+        email: "",
+        role: "member",
+        source: "ruyin",
         tenantId: payload.tenantId,
       }),
     });
 
     if (!signResponse.ok) {
-      throw new UnauthorizedException('Failed to establish session');
+      throw new UnauthorizedException("Failed to establish session");
     }
 
     forwardSetCookie(res, signResponse);
 
     // Step 3: 重定向到 ruyin 首页
-    const ruyinBase = (process.env['RUYIN_BASE_URL'] ?? '').replace(/\/$/, '') || '/';
+    const ruyinBase =
+      (process.env["RUYIN_BASE_URL"] ?? "").replace(/\/$/, "") || "/";
     res.redirect(302, ruyinBase);
   }
 }

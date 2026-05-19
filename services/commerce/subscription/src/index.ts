@@ -1,5 +1,5 @@
-export { SubscriptionModule } from './module/subscription.module';
-export { SubscriptionService } from './service/subscription.service';
+export { SubscriptionModule } from "./module/subscription.module";
+export { SubscriptionService } from "./service/subscription.service";
 export type {
   SubscriptionRecord,
   SubscriptionHistoryRecord,
@@ -7,4 +7,4 @@ export type {
   ListSubscriptionsResult,
   CreateSubscriptionInput,
   UpdateSubscriptionInput,
-} from './types/subscription.types';
+} from "./types/subscription.types";

@@ -3,12 +3,12 @@
  * @package @vxture/core-config
  * @description
  *   Zod schema for AI (LLM provider) configuration
- * 
+ *
  * @author AI-Generated
  * @date 2026-03-15
  */
 
-import { z } from 'zod';
+import { z } from "zod";
 
 // ============================================================================
 // AI Schema (LLM provider credentials + endpoints)
@@ -27,16 +27,16 @@ const doubaoSchema = z.object({
   DOUBAO_API_URL: z
     .string()
     .url()
-    .default('https://ark.cn-beijing.volces.com/api/v3'),
+    .default("https://ark.cn-beijing.volces.com/api/v3"),
 
   /**
    * Default model ID (Doubao ARK model endpoint ID)
    * Different tenants may have different endpoints, this is the platform-level default
    */
-  DOUBAO_DEFAULT_MODEL: z.string().default('doubao-seed-2-0-lite-260215'),
+  DOUBAO_DEFAULT_MODEL: z.string().default("doubao-seed-2-0-lite-260215"),
 
   /** Embedding model ID */
-  DOUBAO_EMBEDDING_MODEL: z.string().default('doubao-embedding'),
+  DOUBAO_EMBEDDING_MODEL: z.string().default("doubao-embedding"),
 });
 
 // ----------------------------------------------------------------------------
@@ -47,13 +47,10 @@ const claudeSchema = z.object({
   ANTHROPIC_API_KEY: z.string().min(1),
 
   /** Anthropic API Base URL, can be overridden for private deployments */
-  ANTHROPIC_API_URL: z
-    .string()
-    .url()
-    .default('https://api.anthropic.com'),
+  ANTHROPIC_API_URL: z.string().url().default("https://api.anthropic.com"),
 
   /** Default model */
-  ANTHROPIC_DEFAULT_MODEL: z.string().default('claude-sonnet-4-20250514'),
+  ANTHROPIC_DEFAULT_MODEL: z.string().default("claude-sonnet-4-20250514"),
 });
 
 // ----------------------------------------------------------------------------
@@ -64,16 +61,13 @@ const chatgptSchema = z.object({
   OPENAI_API_KEY: z.string().min(1),
 
   /** OpenAI API Base URL, can be overridden for private deployments */
-  OPENAI_API_URL: z
-    .string()
-    .url()
-    .default('https://api.openai.com/v1'),
+  OPENAI_API_URL: z.string().url().default("https://api.openai.com/v1"),
 
   /** Default model */
-  OPENAI_DEFAULT_MODEL: z.string().default('gpt-4o'),
+  OPENAI_DEFAULT_MODEL: z.string().default("gpt-4o"),
 
   /** Embedding model */
-  OPENAI_EMBEDDING_MODEL: z.string().default('text-embedding-3-small'),
+  OPENAI_EMBEDDING_MODEL: z.string().default("text-embedding-3-small"),
 });
 
 // ----------------------------------------------------------------------------
@@ -87,13 +81,13 @@ const qwenSchema = z.object({
   QWEN_API_URL: z
     .string()
     .url()
-    .default('https://dashscope.aliyuncs.com/compatible-mode'),
+    .default("https://dashscope.aliyuncs.com/compatible-mode"),
 
   /** Default model */
-  QWEN_DEFAULT_MODEL: z.string().default('qwen-plus'),
+  QWEN_DEFAULT_MODEL: z.string().default("qwen-plus"),
 
   /** Embedding model */
-  QWEN_EMBEDDING_MODEL: z.string().default('text-embedding-v2'),
+  QWEN_EMBEDDING_MODEL: z.string().default("text-embedding-v2"),
 });
 
 // ----------------------------------------------------------------------------

@@ -35,14 +35,14 @@ export const iconDictionary = [
   // ==========================================================================
   "search",
   "app-grid",
-  "settings",   // 齿轮/设置（原 cog 已合并）
+  "settings", // 齿轮/设置（原 cog 已合并）
   "help",
   "bell",
   "more-vertical",
   "edit",
   "key",
-  "trash",      // 删除（原 delete 已合并）
-  "plus",       // 新增（原 add 已合并）
+  "trash", // 删除（原 delete 已合并）
+  "plus", // 新增（原 add 已合并）
   "x",
   "check",
   "copy",
@@ -75,7 +75,7 @@ export const iconDictionary = [
   // ==========================================================================
   // 云服务/智能体 - 数据
   // ==========================================================================
-  "chart-bar",  // 图表（原 chart 已合并）
+  "chart-bar", // 图表（原 chart 已合并）
   "table",
   "code",
   "api",
@@ -88,10 +88,10 @@ export const iconDictionary = [
   // 用户/组织
   // ==========================================================================
   "user",
-  "role",       // 角色/权限主体
+  "role", // 角色/权限主体
   "user-switch",
   "buildings",
-  "users",      // 用户组（原 user-group 已合并）
+  "users", // 用户组（原 user-group 已合并）
   "medal",
   "star",
 
@@ -109,14 +109,14 @@ export const iconDictionary = [
   // ==========================================================================
   // 时间/日历
   // ==========================================================================
-  "calendar",   // 日历（原 calendar-days 已合并）
+  "calendar", // 日历（原 calendar-days 已合并）
   "clock",
   "clock-counter-clockwise",
 
   // ==========================================================================
   // 地图/位置
   // ==========================================================================
-  "map-pin",    // 地图标记（原 map-marker 已合并）
+  "map-pin", // 地图标记（原 map-marker 已合并）
 
   // ==========================================================================
   // 主题/显示
@@ -124,13 +124,13 @@ export const iconDictionary = [
   "sun",
   "moon",
   "globe",
-  "corners-out",  // 伪全屏展开
-  "corners-in",   // 伪全屏收起
-  "maximize",     // 原生全屏展开（ArrowsOutSimple）
-  "minimize",     // 原生全屏收起（ArrowsInSimple）
-  "list",         // 列表视图
-  "rows",         // 密度切换
-  "sign-out",     // 退出登录
+  "corners-out", // 伪全屏展开
+  "corners-in", // 伪全屏收起
+  "maximize", // 原生全屏展开（ArrowsOutSimple）
+  "minimize", // 原生全屏收起（ArrowsInSimple）
+  "list", // 列表视图
+  "rows", // 密度切换
+  "sign-out", // 退出登录
 
   // ==========================================================================
   // 其他

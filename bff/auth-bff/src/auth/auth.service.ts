@@ -12,15 +12,24 @@
  * @version 1.0
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
-import { JwtService } from '@nestjs/jwt';
-import type { AuthTokenPair, JwtAccessPayload, JwtRefreshPayload, OAuthUserProfile } from '@vxture/core-auth';
-import { JwtAuthScope, JwtUserType, OAuthProviderType } from '@vxture/core-auth';
-import { VxConfigService } from '@vxture/core-config';
-import { AccountAuthService } from '@vxture/service-iam';
-import { OrganizationReadService } from '@vxture/service-organization';
-import type { AuthUserDto } from '../types/auth.types';
+import { Inject, Injectable } from "@nestjs/common";
+import { randomUUID } from "node:crypto";
+import { JwtService } from "@nestjs/jwt";
+import type {
+  AuthTokenPair,
+  JwtAccessPayload,
+  JwtRefreshPayload,
+  OAuthUserProfile,
+} from "@vxture/core-auth";
+import {
+  JwtAuthScope,
+  JwtUserType,
+  OAuthProviderType,
+} from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
+import { AccountAuthService } from "@vxture/service-iam";
+import { OrganizationReadService } from "@vxture/service-organization";
+import type { AuthUserDto } from "../types/auth.types";
 
 /**
  * 登录来源，决定写入哪组 Cookie key 以及 JWT 的 userType
@@ -28,7 +37,7 @@ import type { AuthUserDto } from '../types/auth.types';
  * - 'admin'              → operator（运营账号）
  * - 'ruyin'              → tenant_user（租户账号，独立 domain）
  */
-export type LoginSource = 'website' | 'console' | 'admin' | 'ruyin';
+export type LoginSource = "website" | "console" | "admin" | "ruyin";
 
 /**
  * 密码登录结果
@@ -69,11 +78,16 @@ function parseExpiresToSeconds(value: string): number {
   if (!m) return 900;
   const n = Number(m[1]);
   switch (m[2]) {
-    case 's': return n;
-    case 'm': return n * 60;
-    case 'h': return n * 3600;
-    case 'd': return n * 86400;
-    default:  return 900;
+    case "s":
+      return n;
+    case "m":
+      return n * 60;
+    case "h":
+      return n * 3600;
+    case "d":
+      return n * 86400;
+    default:
+      return 900;
   }
 }
 
@@ -81,7 +95,9 @@ function newJti(): string {
   return randomUUID();
 }
 
-type AccessPayloadInput = Omit<JwtAccessPayload, 'iat' | 'exp'> & { jti: string };
+type AccessPayloadInput = Omit<JwtAccessPayload, "iat" | "exp"> & {
+  jti: string;
+};
 
 // =============================================================================
 // AuthService
@@ -106,7 +122,7 @@ export class AuthService {
 
   private signTokenPair(
     accessPayload: AccessPayloadInput,
-    refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'>,
+    refreshPayload: Omit<JwtRefreshPayload, "iat" | "exp">,
   ): AuthTokenPair {
     const accessToken = this.jwtService.sign(accessPayload, {
       secret: this.configService.auth.JWT_SECRET,
@@ -119,8 +135,12 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
-      expiresIn: parseExpiresToSeconds(this.configService.auth.JWT_ACCESS_EXPIRES_IN),
-      refreshExpiresIn: parseExpiresToSeconds(this.configService.auth.JWT_REFRESH_EXPIRES_IN),
+      expiresIn: parseExpiresToSeconds(
+        this.configService.auth.JWT_ACCESS_EXPIRES_IN,
+      ),
+      refreshExpiresIn: parseExpiresToSeconds(
+        this.configService.auth.JWT_REFRESH_EXPIRES_IN,
+      ),
     };
   }
 
@@ -130,21 +150,27 @@ export class AuthService {
   async loginWithPassword(
     identifier: string,
     password: string,
-    source: LoginSource = 'website',
+    source: LoginSource = "website",
   ): Promise<LoginResult> {
-    if (source === 'admin') {
-      throw new Error('Operator password login must be completed by admin-bff');
+    if (source === "admin") {
+      throw new Error("Operator password login must be completed by admin-bff");
     }
 
-    const account = await this.accountAuthService.authenticate(identifier, password);
+    const account = await this.accountAuthService.authenticate(
+      identifier,
+      password,
+    );
 
-    let tenantId = '';
-    let role = 'member';
+    let tenantId = "";
+    let role = "member";
     const authScope = JwtAuthScope.TENANT_CONSOLE;
     const userType = JwtUserType.TENANT_USER;
-    const tenantContext = await this.organizationReadService.resolveTenantContextForAccount(account.id);
-    tenantId = tenantContext?.tenantId ?? '';
-    role = tenantContext ? 'tenant_admin' : 'member';
+    const tenantContext =
+      await this.organizationReadService.resolveTenantContextForAccount(
+        account.id,
+      );
+    tenantId = tenantContext?.tenantId ?? "";
+    role = tenantContext ? "tenant_admin" : "member";
 
     const accessPayload: AccessPayloadInput = {
       sub: account.id,
@@ -158,7 +184,7 @@ export class AuthService {
       jti: newJti(),
     };
 
-    const refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'> = {
+    const refreshPayload: Omit<JwtRefreshPayload, "iat" | "exp"> = {
       sub: account.id,
       tenantId,
       authScope,
@@ -178,7 +204,7 @@ export class AuthService {
         email: account.email ?? `${account.username}@local.vxture`,
         phone: account.phone,
         role,
-        roleLabel: role === 'tenant_admin' ? 'Tenant Administrator' : 'Member',
+        roleLabel: role === "tenant_admin" ? "Tenant Administrator" : "Member",
         personalVerified: true,
         organizationVerified: false,
       },
@@ -190,21 +216,24 @@ export class AuthService {
 
   async loginWithPhoneCode(
     phone: string,
-    source: LoginSource = 'website',
+    source: LoginSource = "website",
   ): Promise<LoginResult | null> {
-    if (source === 'admin') {
-      throw new Error('Operator phone login is not supported');
+    if (source === "admin") {
+      throw new Error("Operator phone login is not supported");
     }
 
     const account = await this.accountAuthService.getAccountByPhone(phone);
     if (!account) return null;
 
-    let tenantId = '';
-    let role = 'member';
+    let tenantId = "";
+    let role = "member";
 
-    const tenantContext = await this.organizationReadService.resolveTenantContextForAccount(account.id);
-    tenantId = tenantContext?.tenantId ?? '';
-    role = tenantContext ? 'tenant_admin' : 'member';
+    const tenantContext =
+      await this.organizationReadService.resolveTenantContextForAccount(
+        account.id,
+      );
+    tenantId = tenantContext?.tenantId ?? "";
+    role = tenantContext ? "tenant_admin" : "member";
 
     const accessPayload: AccessPayloadInput = {
       sub: account.id,
@@ -218,7 +247,7 @@ export class AuthService {
       jti: newJti(),
     };
 
-    const refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'> = {
+    const refreshPayload: Omit<JwtRefreshPayload, "iat" | "exp"> = {
       sub: account.id,
       tenantId,
       authScope: JwtAuthScope.TENANT_CONSOLE,
@@ -238,7 +267,7 @@ export class AuthService {
         email: account.email ?? `${account.username}@local.vxture`,
         phone: account.phone,
         role,
-        roleLabel: role === 'tenant_admin' ? 'Tenant Administrator' : 'Member',
+        roleLabel: role === "tenant_admin" ? "Tenant Administrator" : "Member",
         personalVerified: true,
         organizationVerified: false,
       },
@@ -253,14 +282,18 @@ export class AuthService {
     name: string,
     password: string,
   ): Promise<LoginResult> {
-    const account = await this.accountAuthService.registerWithPassword(email, name, password);
+    const account = await this.accountAuthService.registerWithPassword(
+      email,
+      name,
+      password,
+    );
 
     const tokens = this.signTokenPair(
       {
         sub: account.id,
-        tenantId: '',
+        tenantId: "",
         email: account.email ?? email,
-        role: 'member',
+        role: "member",
         userType: JwtUserType.TENANT_USER,
         authScope: JwtAuthScope.TENANT_CONSOLE,
         permissions: [],
@@ -269,7 +302,7 @@ export class AuthService {
       },
       {
         sub: account.id,
-        tenantId: '',
+        tenantId: "",
         authScope: JwtAuthScope.TENANT_CONSOLE,
         jti: newJti(),
       },
@@ -284,8 +317,8 @@ export class AuthService {
         username: account.username,
         email: account.email ?? email,
         phone: null,
-        role: 'member',
-        roleLabel: 'Member',
+        role: "member",
+        roleLabel: "Member",
         personalVerified: false,
         organizationVerified: false,
       },
@@ -304,9 +337,12 @@ export class AuthService {
       avatarUrl: profile.avatar ?? null,
     });
 
-    const tenantContext = await this.organizationReadService.resolveTenantContextForAccount(account.id);
-    const tenantId = tenantContext?.tenantId ?? '';
-    const role = tenantContext ? 'tenant_admin' : 'member';
+    const tenantContext =
+      await this.organizationReadService.resolveTenantContextForAccount(
+        account.id,
+      );
+    const tenantId = tenantContext?.tenantId ?? "";
+    const role = tenantContext ? "tenant_admin" : "member";
 
     const tokens = this.signTokenPair(
       {
@@ -328,7 +364,9 @@ export class AuthService {
       },
     );
 
-    const accountProfile = await this.accountAuthService.getAccountProfile(account.id);
+    const accountProfile = await this.accountAuthService.getAccountProfile(
+      account.id,
+    );
 
     return {
       tokens,
@@ -340,7 +378,7 @@ export class AuthService {
         email: account.email ?? `${account.username}@local.vxture`,
         phone: account.phone,
         role,
-        roleLabel: role === 'tenant_admin' ? 'Tenant Administrator' : 'Member',
+        roleLabel: role === "tenant_admin" ? "Tenant Administrator" : "Member",
         personalVerified: true,
         organizationVerified: false,
       },
@@ -354,23 +392,29 @@ export class AuthService {
   async initTenant(
     accountId: string,
     email: string,
-    type: 'individual' | 'organization',
+    type: "individual" | "organization",
   ): Promise<{ tokens: AuthTokenPair; tenantId: string }> {
     let tenantId: string;
-    const existing = await this.organizationReadService.resolveTenantContextForAccount(accountId);
+    const existing =
+      await this.organizationReadService.resolveTenantContextForAccount(
+        accountId,
+      );
 
     if (existing) {
       tenantId = existing.tenantId;
     } else {
-      const profile = await this.accountAuthService.getAccountProfile(accountId);
-      const displayName = profile?.displayName ?? email.split('@')[0] ?? 'user';
-      const dbType = type === 'organization' ? 'company' : 'individual';
-      const context = await this.organizationReadService.createTenantForAccount({
-        accountId,
-        email,
-        displayName,
-        type: dbType as 'individual' | 'company',
-      });
+      const profile =
+        await this.accountAuthService.getAccountProfile(accountId);
+      const displayName = profile?.displayName ?? email.split("@")[0] ?? "user";
+      const dbType = type === "organization" ? "company" : "individual";
+      const context = await this.organizationReadService.createTenantForAccount(
+        {
+          accountId,
+          email,
+          displayName,
+          type: dbType as "individual" | "company",
+        },
+      );
       tenantId = context.tenantId;
     }
 
@@ -379,7 +423,7 @@ export class AuthService {
         sub: accountId,
         tenantId,
         email,
-        role: 'member',
+        role: "member",
         userType: JwtUserType.TENANT_USER,
         authScope: JwtAuthScope.TENANT_CONSOLE,
         permissions: [],
@@ -401,14 +445,14 @@ export class AuthService {
   // operator 来自 platform.platform_admin，不属于 tenant account 体系。
 
   issueOperatorTokens(input: OperatorTokenInput): LoginResult {
-    const role = input.role?.trim() || 'admin';
+    const role = input.role?.trim() || "admin";
     const email = input.email?.trim() || `${input.sub}@operator.local.vxture`;
-    const username = input.username?.trim() || email.split('@')[0] || input.sub;
+    const username = input.username?.trim() || email.split("@")[0] || input.sub;
 
     const tokens = this.signTokenPair(
       {
         sub: input.sub,
-        tenantId: '',
+        tenantId: "",
         email,
         role,
         userType: JwtUserType.OPERATOR,
@@ -419,7 +463,7 @@ export class AuthService {
       },
       {
         sub: input.sub,
-        tenantId: '',
+        tenantId: "",
         authScope: JwtAuthScope.PLATFORM_ADMIN,
         jti: newJti(),
       },
@@ -435,7 +479,7 @@ export class AuthService {
         email,
         phone: null,
         role,
-        roleLabel: input.roleLabel ?? 'Platform Operator',
+        roleLabel: input.roleLabel ?? "Platform Operator",
         personalVerified: null,
         organizationVerified: null,
       },
@@ -448,28 +492,35 @@ export class AuthService {
 
   async reissueTokensForUser(
     userId: string,
-    source: LoginSource = 'website',
+    source: LoginSource = "website",
     selectedTenantId?: string | null,
   ): Promise<LoginResult> {
-    if (source === 'admin') {
-      throw new Error('Operator tokens must be issued with issueOperatorTokens');
+    if (source === "admin") {
+      throw new Error(
+        "Operator tokens must be issued with issueOperatorTokens",
+      );
     }
 
     const account = await this.accountAuthService.getAccountById(userId);
     if (!account) throw new Error(`Account not found: ${userId}`);
 
-    let tenantId = '';
-    let role = 'member';
+    let tenantId = "";
+    let role = "member";
     const authScope = JwtAuthScope.TENANT_CONSOLE;
     const userType = JwtUserType.TENANT_USER;
     const tenantContext = selectedTenantId?.trim()
-      ? await this.organizationReadService.resolveTenantContextForAccountById(account.id, selectedTenantId)
-      : await this.organizationReadService.resolveTenantContextForAccount(account.id);
+      ? await this.organizationReadService.resolveTenantContextForAccountById(
+          account.id,
+          selectedTenantId,
+        )
+      : await this.organizationReadService.resolveTenantContextForAccount(
+          account.id,
+        );
     if (selectedTenantId?.trim() && !tenantContext) {
-      throw new Error('Tenant is not accessible for this account');
+      throw new Error("Tenant is not accessible for this account");
     }
-    tenantId = tenantContext?.tenantId ?? '';
-    role = tenantContext ? 'tenant_admin' : 'member';
+    tenantId = tenantContext?.tenantId ?? "";
+    role = tenantContext ? "tenant_admin" : "member";
 
     const accessPayload: AccessPayloadInput = {
       sub: account.id,
@@ -483,7 +534,7 @@ export class AuthService {
       jti: newJti(),
     };
 
-    const refreshPayload: Omit<JwtRefreshPayload, 'iat' | 'exp'> = {
+    const refreshPayload: Omit<JwtRefreshPayload, "iat" | "exp"> = {
       sub: account.id,
       tenantId,
       authScope,
@@ -503,7 +554,7 @@ export class AuthService {
         email: account.email ?? `${account.username}@local.vxture`,
         phone: account.phone,
         role,
-        roleLabel: role === 'tenant_admin' ? 'Tenant Administrator' : 'Member',
+        roleLabel: role === "tenant_admin" ? "Tenant Administrator" : "Member",
         personalVerified: true,
         organizationVerified: false,
       },
@@ -513,13 +564,18 @@ export class AuthService {
 
   // ─── JWT 验证（供内部使用） ────────────────────────────────────────────
 
-  verifyAccessToken(token: string, expectedScope?: JwtAuthScope): JwtAccessPayload {
+  verifyAccessToken(
+    token: string,
+    expectedScope?: JwtAuthScope,
+  ): JwtAccessPayload {
     const payload = this.jwtService.verify<JwtAccessPayload>(token, {
       secret: this.configService.auth.JWT_SECRET,
     });
 
     if (expectedScope && payload.authScope !== expectedScope) {
-      throw new Error(`Invalid token scope: expected ${expectedScope}, got ${payload.authScope}`);
+      throw new Error(
+        `Invalid token scope: expected ${expectedScope}, got ${payload.authScope}`,
+      );
     }
 
     return payload;

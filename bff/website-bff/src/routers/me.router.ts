@@ -32,22 +32,22 @@ import {
   Put,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import { SessionAggregator } from '../aggregators/session.aggregator';
+} from "@nestjs/common";
+import type { Request } from "express";
+import { SessionAggregator } from "../aggregators/session.aggregator";
 import {
   ChangePasswordDto,
   UpdateProfileDto,
   type AccountProfileDto,
   type AuthUserDto,
   type RequestContext,
-} from '../types/auth.types';
+} from "../types/auth.types";
 
 // ============================================================================
 // MeRouter
 // ============================================================================
 
-@Controller('api/me')
+@Controller("api/me")
 export class MeRouter {
   constructor(
     @Inject(SessionAggregator)
@@ -61,14 +61,16 @@ export class MeRouter {
    * 从数据库实时拉取，保证数据最新（不依赖 JWT payload 缓存）。
    */
   @Get()
-  async getCurrentUser(@Req() req: Request & RequestContext): Promise<AuthUserDto> {
+  async getCurrentUser(
+    @Req() req: Request & RequestContext,
+  ): Promise<AuthUserDto> {
     if (!req.user) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
 
     const user = await this.sessionAggregator.getCurrentUser(req.user.id);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException("User not found");
     }
 
     return user;
@@ -79,15 +81,19 @@ export class MeRouter {
   /**
    * 返回当前登录用户的完整 Profile，含扩展字段（bio、headline、timezone、language）。
    */
-  @Get('profile')
-  async getCurrentUserProfile(@Req() req: Request & RequestContext): Promise<AccountProfileDto> {
+  @Get("profile")
+  async getCurrentUserProfile(
+    @Req() req: Request & RequestContext,
+  ): Promise<AccountProfileDto> {
     if (!req.user) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
 
-    const profile = await this.sessionAggregator.getCurrentUserProfile(req.user.id);
+    const profile = await this.sessionAggregator.getCurrentUserProfile(
+      req.user.id,
+    );
     if (!profile) {
-      throw new NotFoundException('Account profile not found');
+      throw new NotFoundException("Account profile not found");
     }
 
     return profile;
@@ -99,19 +105,22 @@ export class MeRouter {
    * 更新当前登录用户的 Profile。
    * 所有字段均可选，只更新传入的字段。
    */
-  @Put('profile')
+  @Put("profile")
   @HttpCode(HttpStatus.OK)
   async updateCurrentUserProfile(
     @Req() req: Request & RequestContext,
     @Body() body: UpdateProfileDto,
   ): Promise<AccountProfileDto> {
     if (!req.user) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
 
-    const profile = await this.sessionAggregator.updateCurrentUserProfile(req.user.id, body);
+    const profile = await this.sessionAggregator.updateCurrentUserProfile(
+      req.user.id,
+      body,
+    );
     if (!profile) {
-      throw new NotFoundException('Account profile not found');
+      throw new NotFoundException("Account profile not found");
     }
 
     return profile;
@@ -123,18 +132,22 @@ export class MeRouter {
    * 修改当前登录用户的密码。
    * 需要验证当前密码，当前密码错误时返回 401。
    */
-  @Put('password')
+  @Put("password")
   @HttpCode(HttpStatus.OK)
   async changePassword(
     @Req() req: Request & RequestContext,
     @Body() body: ChangePasswordDto,
-  ): Promise<{ status: 'ok' }> {
+  ): Promise<{ status: "ok" }> {
     if (!req.user) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
 
-    await this.sessionAggregator.changePassword(req.user.id, body.currentPassword, body.nextPassword);
+    await this.sessionAggregator.changePassword(
+      req.user.id,
+      body.currentPassword,
+      body.nextPassword,
+    );
 
-    return { status: 'ok' };
+    return { status: "ok" };
   }
 }

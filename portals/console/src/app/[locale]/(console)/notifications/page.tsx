@@ -1,4 +1,4 @@
-import { NotificationsPage } from '@/modules/settings/NotificationsPage';
+import { NotificationsPage } from "@/modules/settings/NotificationsPage";
 
 export default function Page() {
   return <NotificationsPage />;

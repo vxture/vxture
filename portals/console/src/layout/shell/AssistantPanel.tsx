@@ -1,9 +1,14 @@
-'use client';
+"use client";
 
-import { Icon } from '@vxture/design-system';
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
-import { Badge, Button, Textarea } from '@vxture/design-system';
-import { useTranslations } from 'next-intl';
+import { Icon } from "@vxture/design-system";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
+import { Badge, Button, Textarea } from "@vxture/design-system";
+import { useTranslations } from "next-intl";
 
 const ASSISTANT_BAR_HEIGHT = 44;
 const ASSISTANT_OUTPUT_MIN_HEIGHT = 180;
@@ -11,7 +16,7 @@ const ASSISTANT_INPUT_MIN_HEIGHT = 156;
 const ASSISTANT_DIVIDER_HEIGHT = 10;
 const ASSISTANT_DEFAULT_INPUT_HEIGHT = 216;
 
-type DragHandle = 'bottom' | 'width' | null;
+type DragHandle = "bottom" | "width" | null;
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -38,12 +43,14 @@ export function AssistantPanel({
   onWidthChange: (width: number) => void;
   onClose: () => void;
 }) {
-  const t = useTranslations('assistant');
+  const t = useTranslations("assistant");
   const panelRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useState("");
   const [fullscreen, setFullscreen] = useState(false);
-  const [inputHeight, setInputHeight] = useState(ASSISTANT_DEFAULT_INPUT_HEIGHT);
+  const [inputHeight, setInputHeight] = useState(
+    ASSISTANT_DEFAULT_INPUT_HEIGHT,
+  );
   const [dragHandle, setDragHandle] = useState<DragHandle>(null);
 
   const insertPrompt = (prompt: string) => {
@@ -63,7 +70,7 @@ export function AssistantPanel({
     }
 
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = previousOverflow;
@@ -76,21 +83,21 @@ export function AssistantPanel({
     }
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setFullscreen(false);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [fullscreen]);
 
   useEffect(() => {
     const inner = innerRef.current;
 
-    if (!inner || typeof ResizeObserver === 'undefined') {
+    if (!inner || typeof ResizeObserver === "undefined") {
       return;
     }
 
@@ -98,9 +105,16 @@ export function AssistantPanel({
       const height = inner.getBoundingClientRect().height;
       const maxInput = Math.max(
         ASSISTANT_INPUT_MIN_HEIGHT,
-        height - ASSISTANT_BAR_HEIGHT - ASSISTANT_DIVIDER_HEIGHT - ASSISTANT_OUTPUT_MIN_HEIGHT,
+        height -
+          ASSISTANT_BAR_HEIGHT -
+          ASSISTANT_DIVIDER_HEIGHT -
+          ASSISTANT_OUTPUT_MIN_HEIGHT,
       );
-      const nextInput = clamp(inputHeight, ASSISTANT_INPUT_MIN_HEIGHT, maxInput);
+      const nextInput = clamp(
+        inputHeight,
+        ASSISTANT_INPUT_MIN_HEIGHT,
+        maxInput,
+      );
 
       if (nextInput !== inputHeight) {
         setInputHeight(nextInput);
@@ -131,7 +145,7 @@ export function AssistantPanel({
 
       const rect = inner.getBoundingClientRect();
 
-      if (dragHandle === 'width') {
+      if (dragHandle === "width") {
         const panel = panelRef.current;
 
         if (!panel) {
@@ -139,32 +153,43 @@ export function AssistantPanel({
         }
 
         const panelRect = panel.getBoundingClientRect();
-        const nextWidth = clamp(panelRect.right - event.clientX, minWidth, maxWidth);
+        const nextWidth = clamp(
+          panelRect.right - event.clientX,
+          minWidth,
+          maxWidth,
+        );
         onWidthChange(nextWidth);
         return;
       }
 
       const maxInput = Math.max(
         ASSISTANT_INPUT_MIN_HEIGHT,
-        rect.height - ASSISTANT_BAR_HEIGHT - ASSISTANT_DIVIDER_HEIGHT - ASSISTANT_OUTPUT_MIN_HEIGHT,
+        rect.height -
+          ASSISTANT_BAR_HEIGHT -
+          ASSISTANT_DIVIDER_HEIGHT -
+          ASSISTANT_OUTPUT_MIN_HEIGHT,
       );
-      const nextInput = clamp(rect.bottom - event.clientY, ASSISTANT_INPUT_MIN_HEIGHT, maxInput);
+      const nextInput = clamp(
+        rect.bottom - event.clientY,
+        ASSISTANT_INPUT_MIN_HEIGHT,
+        maxInput,
+      );
       setInputHeight(nextInput);
     };
 
     const handlePointerUp = () => {
-      document.body.style.userSelect = '';
+      document.body.style.userSelect = "";
       setDragHandle(null);
     };
 
-    document.body.style.userSelect = 'none';
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerup', handlePointerUp);
+    document.body.style.userSelect = "none";
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
 
     return () => {
-      document.body.style.userSelect = '';
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerup', handlePointerUp);
+      document.body.style.userSelect = "";
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
     };
   }, [dragHandle, inputHeight, maxWidth, minWidth, onWidthChange]);
 
@@ -172,14 +197,15 @@ export function AssistantPanel({
     return null;
   }
 
-  const summaryPrompt = buildPrompt(t('suggestions.summary'), routeLabel);
-  const risksPrompt = buildPrompt(t('suggestions.risks'), routeLabel);
-  const nextPrompt = buildPrompt(t('suggestions.next'), routeLabel);
-  const draftOnePrompt = buildPrompt(t('drafts.one'), routeLabel);
-  const draftTwoPrompt = buildPrompt(t('drafts.two'), routeLabel);
+  const summaryPrompt = buildPrompt(t("suggestions.summary"), routeLabel);
+  const risksPrompt = buildPrompt(t("suggestions.risks"), routeLabel);
+  const nextPrompt = buildPrompt(t("suggestions.next"), routeLabel);
+  const draftOnePrompt = buildPrompt(t("drafts.one"), routeLabel);
+  const draftTwoPrompt = buildPrompt(t("drafts.two"), routeLabel);
 
   const handleDividerPointerDown =
-    (handle: Exclude<DragHandle, null>) => (event: ReactPointerEvent<HTMLButtonElement>) => {
+    (handle: Exclude<DragHandle, null>) =>
+    (event: ReactPointerEvent<HTMLButtonElement>) => {
       event.preventDefault();
       setDragHandle(handle);
     };
@@ -188,15 +214,15 @@ export function AssistantPanel({
     <aside
       ref={panelRef}
       id={id}
-      className={`vx-assistant-panel ${fullscreen ? 'vx-assistant-panel--fullscreen' : ''}`}
-      aria-label={t('title')}
+      className={`vx-assistant-panel ${fullscreen ? "vx-assistant-panel--fullscreen" : ""}`}
+      aria-label={t("title")}
     >
       {!fullscreen ? (
         <Button
           variant="ghost"
-          className={`vx-assistant-panel__resize-edge ${dragHandle === 'width' ? 'vx-assistant-panel__resize-edge--active' : ''}`}
-          aria-label={t('resizeWidth')}
-          onPointerDown={handleDividerPointerDown('width')}
+          className={`vx-assistant-panel__resize-edge ${dragHandle === "width" ? "vx-assistant-panel__resize-edge--active" : ""}`}
+          aria-label={t("resizeWidth")}
+          onPointerDown={handleDividerPointerDown("width")}
         />
       ) : null}
 
@@ -208,28 +234,34 @@ export function AssistantPanel({
         }}
       >
         <header className="vx-assistant-panel__bar">
-          <h2>{t('title')}</h2>
+          <h2>{t("title")}</h2>
 
           <div className="vx-assistant-panel__bar-actions">
             <Button
               variant="ghost"
               size="icon"
               className="vx-shell-icon-button vx-shell-icon-button--toolbar"
-              aria-label={fullscreen ? t('exitFullscreen') : t('enterFullscreen')}
-              title={fullscreen ? t('exitFullscreen') : t('enterFullscreen')}
+              aria-label={
+                fullscreen ? t("exitFullscreen") : t("enterFullscreen")
+              }
+              title={fullscreen ? t("exitFullscreen") : t("enterFullscreen")}
               onClick={() => {
                 setFullscreen((current) => !current);
               }}
             >
-              <Icon name={fullscreen ? 'minimize' : 'maximize'} size="sm" fallback="maximize" />
+              <Icon
+                name={fullscreen ? "minimize" : "maximize"}
+                size="sm"
+                fallback="maximize"
+              />
             </Button>
 
             <Button
               variant="ghost"
               size="icon"
               className="vx-shell-icon-button vx-shell-icon-button--toolbar"
-              aria-label={t('close')}
-              title={t('close')}
+              aria-label={t("close")}
+              title={t("close")}
               onClick={onClose}
             >
               <Icon name="x" size="sm" fallback="x" />
@@ -240,46 +272,66 @@ export function AssistantPanel({
         <section className="vx-assistant-panel__output">
           <div className="vx-assistant-panel__output-head">
             <Badge className="vx-badge-neutral">{routeLabel}</Badge>
-            <p>{t('description', { page: routeLabel })}</p>
+            <p>{t("description", { page: routeLabel })}</p>
           </div>
 
           <div className="vx-assistant-panel__output-scroll">
             <div className="vx-assistant-panel__stack">
               <section className="vx-assistant-block">
                 <div className="vx-inline-between">
-                  <h3>{t('suggestions.title')}</h3>
+                  <h3>{t("suggestions.title")}</h3>
                 </div>
                 <div className="vx-assistant-actions">
-                  <Button variant="ghost" className="vx-assistant-action" onClick={() => insertPrompt(summaryPrompt)}>
-                    {t('suggestions.summary')}
+                  <Button
+                    variant="ghost"
+                    className="vx-assistant-action"
+                    onClick={() => insertPrompt(summaryPrompt)}
+                  >
+                    {t("suggestions.summary")}
                   </Button>
-                  <Button variant="ghost" className="vx-assistant-action" onClick={() => insertPrompt(risksPrompt)}>
-                    {t('suggestions.risks')}
+                  <Button
+                    variant="ghost"
+                    className="vx-assistant-action"
+                    onClick={() => insertPrompt(risksPrompt)}
+                  >
+                    {t("suggestions.risks")}
                   </Button>
-                  <Button variant="ghost" className="vx-assistant-action" onClick={() => insertPrompt(nextPrompt)}>
-                    {t('suggestions.next')}
+                  <Button
+                    variant="ghost"
+                    className="vx-assistant-action"
+                    onClick={() => insertPrompt(nextPrompt)}
+                  >
+                    {t("suggestions.next")}
                   </Button>
                 </div>
               </section>
 
               <section className="vx-assistant-block">
-                <h3>{t('brief.title')}</h3>
-                <p>{t('brief.description')}</p>
+                <h3>{t("brief.title")}</h3>
+                <p>{t("brief.description")}</p>
                 <ul className="vx-assistant-list">
-                  <li>{t('brief.items.focus')}</li>
-                  <li>{t('brief.items.owners')}</li>
-                  <li>{t('brief.items.followUp')}</li>
+                  <li>{t("brief.items.focus")}</li>
+                  <li>{t("brief.items.owners")}</li>
+                  <li>{t("brief.items.followUp")}</li>
                 </ul>
               </section>
 
               <section className="vx-assistant-block">
-                <h3>{t('drafts.title')}</h3>
+                <h3>{t("drafts.title")}</h3>
                 <div className="vx-assistant-drafts">
-                  <Button variant="ghost" className="vx-assistant-draft" onClick={() => insertPrompt(draftOnePrompt)}>
-                    {t('drafts.one')}
+                  <Button
+                    variant="ghost"
+                    className="vx-assistant-draft"
+                    onClick={() => insertPrompt(draftOnePrompt)}
+                  >
+                    {t("drafts.one")}
                   </Button>
-                  <Button variant="ghost" className="vx-assistant-draft" onClick={() => insertPrompt(draftTwoPrompt)}>
-                    {t('drafts.two')}
+                  <Button
+                    variant="ghost"
+                    className="vx-assistant-draft"
+                    onClick={() => insertPrompt(draftTwoPrompt)}
+                  >
+                    {t("drafts.two")}
                   </Button>
                 </div>
               </section>
@@ -289,32 +341,34 @@ export function AssistantPanel({
 
         <Button
           variant="ghost"
-          className={`vx-assistant-panel__divider ${dragHandle === 'bottom' ? 'vx-assistant-panel__divider--active' : ''}`}
-          aria-label={t('resizeBottom')}
-          onPointerDown={handleDividerPointerDown('bottom')}
+          className={`vx-assistant-panel__divider ${dragHandle === "bottom" ? "vx-assistant-panel__divider--active" : ""}`}
+          aria-label={t("resizeBottom")}
+          onPointerDown={handleDividerPointerDown("bottom")}
         >
           <span aria-hidden="true" />
         </Button>
 
         <section className="vx-assistant-panel__composer">
           <div className="vx-assistant-panel__composer-head">
-            <span>{t('composer.title')}</span>
+            <span>{t("composer.title")}</span>
             <Badge className="vx-badge-neutral">{routeLabel}</Badge>
           </div>
 
           <Textarea
             className="vx-assistant-panel__composer-input"
             value={draft}
-            placeholder={t('composer.placeholder', { page: routeLabel })}
+            placeholder={t("composer.placeholder", { page: routeLabel })}
             onChange={(event) => {
               setDraft(event.target.value);
             }}
           />
 
           <div className="vx-assistant-panel__composer-actions">
-            <span className="vx-assistant-panel__composer-hint">{t('composer.hint')}</span>
+            <span className="vx-assistant-panel__composer-hint">
+              {t("composer.hint")}
+            </span>
             <Button size="sm" disabled={!draft.trim()}>
-              {t('composer.send')}
+              {t("composer.send")}
             </Button>
           </div>
         </section>

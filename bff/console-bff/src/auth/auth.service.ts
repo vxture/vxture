@@ -1,10 +1,15 @@
-import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import type { JwtAccessPayload } from '@vxture/core-auth';
-import { JwtAuthScope, JwtUserType } from '@vxture/core-auth';
-import { VxConfigService } from '@vxture/core-config';
-import { AccountAuthService } from '@vxture/service-iam';
-import type { ConsoleUser } from '../types/console.types';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import type { JwtAccessPayload } from "@vxture/core-auth";
+import { JwtAuthScope, JwtUserType } from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
+import { AccountAuthService } from "@vxture/service-iam";
+import type { ConsoleUser } from "../types/console.types";
 
 /**
  * 【重构 v1.4】Console Auth Service
@@ -33,7 +38,7 @@ export class ConsoleAuthService {
       id: account.id,
       name: account.username,
       email: account.email ?? `${account.username}@local.vxture`,
-      roleLabel: 'Authenticated User',
+      roleLabel: "Authenticated User",
       username: account.username,
       phone: account.phone,
     };
@@ -45,13 +50,13 @@ export class ConsoleAuthService {
     });
 
     if (payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
-      throw new ForbiddenException('Invalid console token scope');
+      throw new ForbiddenException("Invalid console token scope");
     }
     if (payload.userType !== JwtUserType.TENANT_USER) {
-      throw new ForbiddenException('Invalid console token user type');
+      throw new ForbiddenException("Invalid console token user type");
     }
     if (!payload.tenantId?.trim()) {
-      throw new UnauthorizedException('Console token requires tenantId');
+      throw new UnauthorizedException("Console token requires tenantId");
     }
 
     return payload;

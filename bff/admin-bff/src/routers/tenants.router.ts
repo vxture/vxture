@@ -5,10 +5,10 @@ import {
   Inject,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL } from '../tokens';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL } from "../tokens";
 import type {
   RequestContext,
   TenantOperationAuditEvent,
@@ -18,40 +18,61 @@ import type {
   TenantOperationSubscription,
   TenantOperationUsageMetric,
   TenantRiskLevel,
-} from '../types/console.types';
+} from "../types/console.types";
 
-const CURRENT_USAGE_MONTH = new Date().toISOString().slice(0, 7).replace('-', '');
-const ZERO_UUID = '00000000-0000-0000-0000-000000000000';
+const CURRENT_USAGE_MONTH = new Date()
+  .toISOString()
+  .slice(0, 7)
+  .replace("-", "");
+const ZERO_UUID = "00000000-0000-0000-0000-000000000000";
 
-@Controller('api/tenants')
+@Controller("api/tenants")
 export class TenantsRouter {
   constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get()
-  async listTenants(@Req() req: Request & RequestContext): Promise<TenantOperationRecord[]> {
+  async listTenants(
+    @Req() req: Request & RequestContext,
+  ): Promise<TenantOperationRecord[]> {
     assertCanManageTenants(req);
 
-    const [tenantRows, memberRows, subscriptionRows, usageRows, modelRows] = await Promise.all([
-      this.pool.query<TenantRow>(TENANT_SQL),
-      this.pool.query<MemberRow>(MEMBER_SQL),
-      this.pool.query<SubscriptionRow>(SUBSCRIPTION_SQL),
-      this.pool.query<UsageRow>(USAGE_SQL, [CURRENT_USAGE_MONTH]),
-      this.pool.query<ModelPolicyRow>(MODEL_POLICY_SQL),
-    ]);
+    const [tenantRows, memberRows, subscriptionRows, usageRows, modelRows] =
+      await Promise.all([
+        this.pool.query<TenantRow>(TENANT_SQL),
+        this.pool.query<MemberRow>(MEMBER_SQL),
+        this.pool.query<SubscriptionRow>(SUBSCRIPTION_SQL),
+        this.pool.query<UsageRow>(USAGE_SQL, [CURRENT_USAGE_MONTH]),
+        this.pool.query<ModelPolicyRow>(MODEL_POLICY_SQL),
+      ]);
 
     const membersByTenant = groupBy(memberRows.rows, (row) => row.tenant_id);
-    const subscriptionsByTenant = groupBy(subscriptionRows.rows, (row) => row.tenant_id);
+    const subscriptionsByTenant = groupBy(
+      subscriptionRows.rows,
+      (row) => row.tenant_id,
+    );
     const usageByTenant = groupBy(usageRows.rows, (row) => row.tenant_id);
     const modelsByTenant = groupBy(modelRows.rows, (row) => row.tenant_id);
 
     return tenantRows.rows.map((tenant) => {
-      const usage = mapUsageRows(usageByTenant.get(tenant.id) ?? [], tenant.period_tokens, tenant.max_users, tenant.member_count);
-      const tokenUsed = usage.find((item) => item.code === 'tokens')?.used ?? 0;
+      const usage = mapUsageRows(
+        usageByTenant.get(tenant.id) ?? [],
+        tenant.period_tokens,
+        tenant.max_users,
+        tenant.member_count,
+      );
+      const tokenUsed = usage.find((item) => item.code === "tokens")?.used ?? 0;
       const tokenQuota = tenant.period_tokens;
       const monthlyRevenue = Number(tenant.monthly_revenue ?? 0);
       const riskLevel = normalizeTenantRiskLevel(tenant.risk_level);
-      const monthlyCost = Math.round(monthlyRevenue * costRateForRisk(riskLevel));
-      const grossMarginRate = monthlyRevenue > 0 ? Math.round(((monthlyRevenue - monthlyCost) / monthlyRevenue) * 100) : tenant.status === 'active' ? 0 : -100;
+      const monthlyCost = Math.round(
+        monthlyRevenue * costRateForRisk(riskLevel),
+      );
+      const grossMarginRate =
+        monthlyRevenue > 0
+          ? Math.round(((monthlyRevenue - monthlyCost) / monthlyRevenue) * 100)
+          : tenant.status === "active"
+            ? 0
+            : -100;
 
       return {
         id: tenant.id,
@@ -60,17 +81,28 @@ export class TenantsRouter {
         displayName: tenant.display_name ?? tenant.tenant_name,
         tenantType: tenant.tenant_type,
         status: tenant.status,
-        verifiedStatus: tenant.verified_status ?? 'unverified',
-        verificationSubmittedAt: toIso(tenant.verification_submitted_at ?? tenant.created_at),
+        verifiedStatus: tenant.verified_status ?? "unverified",
+        verificationSubmittedAt: toIso(
+          tenant.verification_submitted_at ?? tenant.created_at,
+        ),
         verifiedAt: tenant.verified_at ? toIso(tenant.verified_at) : null,
         riskLevel,
-        region: [tenant.province, tenant.city].filter(Boolean).join(' / ') || '未设置',
-        industry: tenant.industry ?? '未设置',
-        scale: tenant.scale ?? '未设置',
-        ownerName: tenant.owner_display_name ?? tenant.owner_username ?? '未设置',
-        ownerEmail: tenant.owner_email ?? `${tenant.owner_username ?? tenant.tenant_code}@local.vxture`,
-        contactName: tenant.contact_name ?? tenant.owner_display_name ?? tenant.owner_username ?? '未设置',
-        contactPhone: tenant.contact_phone ?? tenant.owner_phone ?? '',
+        region:
+          [tenant.province, tenant.city].filter(Boolean).join(" / ") ||
+          "未设置",
+        industry: tenant.industry ?? "未设置",
+        scale: tenant.scale ?? "未设置",
+        ownerName:
+          tenant.owner_display_name ?? tenant.owner_username ?? "未设置",
+        ownerEmail:
+          tenant.owner_email ??
+          `${tenant.owner_username ?? tenant.tenant_code}@local.vxture`,
+        contactName:
+          tenant.contact_name ??
+          tenant.owner_display_name ??
+          tenant.owner_username ??
+          "未设置",
+        contactPhone: tenant.contact_phone ?? tenant.owner_phone ?? "",
         createdAt: toIso(tenant.created_at),
         lastActiveAt: toIso(tenant.last_active_at ?? tenant.updated_at),
         memberCount: tenant.member_count,
@@ -87,11 +119,16 @@ export class TenantsRouter {
         satisfaction: satisfactionForRisk(riskLevel),
         sla: slaForRisk(riskLevel),
         tags: tenantTags(tenant, riskLevel),
-        notes: tenant.description ?? `${tenant.tenant_name} 的平台运营测试数据。`,
+        notes:
+          tenant.description ?? `${tenant.tenant_name} 的平台运营测试数据。`,
         members: (membersByTenant.get(tenant.id) ?? []).map(mapMemberRow),
-        subscriptions: (subscriptionsByTenant.get(tenant.id) ?? []).map(mapSubscriptionRow),
+        subscriptions: (subscriptionsByTenant.get(tenant.id) ?? []).map(
+          mapSubscriptionRow,
+        ),
         usage,
-        modelPolicies: (modelsByTenant.get(tenant.id) ?? []).map((row) => mapModelPolicyRow(row, tokenUsed, tokenQuota)),
+        modelPolicies: (modelsByTenant.get(tenant.id) ?? []).map((row) =>
+          mapModelPolicyRow(row, tokenUsed, tokenQuota),
+        ),
         auditEvents: buildAuditEvents(tenant, riskLevel),
         tickets: [],
       };
@@ -101,11 +138,14 @@ export class TenantsRouter {
 
 function assertCanManageTenants(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
-  if (req.capabilities && !req.capabilities.includes('platform.tenant.manage')) {
-    throw new ForbiddenException('Missing platform.tenant.manage capability');
+  if (
+    req.capabilities &&
+    !req.capabilities.includes("platform.tenant.manage")
+  ) {
+    throw new ForbiddenException("Missing platform.tenant.manage capability");
   }
 }
 
@@ -122,52 +162,66 @@ function groupBy<T>(rows: T[], keyFn: (row: T) => string) {
 
 function toIso(value: Date | string | null): string {
   if (!value) return new Date(0).toISOString();
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
-function mapMemberStatus(status: string): TenantOperationMember['status'] {
-  if (status === 'active') return 'active';
-  if (status === 'inactive') return 'invited';
-  return 'suspended';
+function mapMemberStatus(status: string): TenantOperationMember["status"] {
+  if (status === "active") return "active";
+  if (status === "inactive") return "invited";
+  return "suspended";
 }
 
-function mapSubscriptionStatus(status: string): TenantOperationSubscription['status'] {
-  if (status === 'trial') return 'trial';
-  if (status === 'active') return 'active';
-  if (status === 'cancelled') return 'cancelled';
-  return 'past_due';
+function mapSubscriptionStatus(
+  status: string,
+): TenantOperationSubscription["status"] {
+  if (status === "trial") return "trial";
+  if (status === "active") return "active";
+  if (status === "cancelled") return "cancelled";
+  return "past_due";
 }
 
-function usageStatus(used: number, quota: number | null): TenantOperationUsageMetric['status'] {
-  if (!quota || quota <= 0) return used > 0 ? 'danger' : 'normal';
+function usageStatus(
+  used: number,
+  quota: number | null,
+): TenantOperationUsageMetric["status"] {
+  if (!quota || quota <= 0) return used > 0 ? "danger" : "normal";
   const ratio = used / quota;
-  if (ratio >= 0.9) return 'danger';
-  if (ratio >= 0.75) return 'warning';
-  return 'normal';
+  if (ratio >= 0.9) return "danger";
+  if (ratio >= 0.75) return "warning";
+  return "normal";
 }
 
-function mapUsageRows(rows: UsageRow[], tokenQuota: number, maxUsers: number, memberCount: number): TenantOperationUsageMetric[] {
+function mapUsageRows(
+  rows: UsageRow[],
+  tokenQuota: number,
+  maxUsers: number,
+  memberCount: number,
+): TenantOperationUsageMetric[] {
   const tokenUsed = rows
-    .filter((row) => row.stat_type === 'summary' && row.feature_id === ZERO_UUID)
+    .filter(
+      (row) => row.stat_type === "summary" && row.feature_id === ZERO_UUID,
+    )
     .reduce((total, row) => total + Number(row.total_quota), 0);
 
   return [
     {
-      code: 'tokens',
-      label: '模型 Token',
+      code: "tokens",
+      label: "模型 Token",
       used: tokenUsed,
       quota: tokenQuota,
-      unit: 'tokens',
-      trend: tokenUsed > 0 ? '+测试' : '冻结',
+      unit: "tokens",
+      trend: tokenUsed > 0 ? "+测试" : "冻结",
       status: usageStatus(tokenUsed, tokenQuota),
     },
     {
-      code: 'members',
-      label: '成员席位',
+      code: "members",
+      label: "成员席位",
       used: memberCount,
       quota: maxUsers,
-      unit: 'seats',
-      trend: memberCount > 0 ? '+同步' : '无',
+      unit: "seats",
+      trend: memberCount > 0 ? "+同步" : "无",
       status: usageStatus(memberCount, maxUsers),
     },
   ];
@@ -198,40 +252,52 @@ function mapSubscriptionRow(row: SubscriptionRow): TenantOperationSubscription {
   };
 }
 
-function mapModelPolicyRow(row: ModelPolicyRow, tokenUsed: number, tokenQuota: number): TenantOperationModelPolicy {
+function mapModelPolicyRow(
+  row: ModelPolicyRow,
+  tokenUsed: number,
+  tokenQuota: number,
+): TenantOperationModelPolicy {
   const ratio = tokenQuota > 0 ? tokenUsed / tokenQuota : 0;
   return {
     id: row.id,
-    agentName: row.agent_name ?? '全部智能体',
-    productName: row.plan_name ?? '租户默认',
+    agentName: row.agent_name ?? "全部智能体",
+    productName: row.plan_name ?? "租户默认",
     modelCode: row.model_code,
     quotaTokens: tokenQuota,
     usedTokens: tokenUsed,
-    state: !row.is_active ? 'disabled' : ratio >= 0.9 ? 'limited' : 'effective',
-    source: row.agent_id ? 'tenant' : 'default',
+    state: !row.is_active ? "disabled" : ratio >= 0.9 ? "limited" : "effective",
+    source: row.agent_id ? "tenant" : "default",
   };
 }
 
 function normalizeTenantRiskLevel(risk: RawTenantRiskLevel): TenantRiskLevel {
-  if (risk === 'high') return 'high';
-  if (risk === 'medium' || risk === 'follow_up') return 'follow_up';
-  return 'normal';
+  if (risk === "high") return "high";
+  if (risk === "medium" || risk === "follow_up") return "follow_up";
+  return "normal";
 }
 
-function buildAuditEvents(row: TenantRow, riskLevel: TenantRiskLevel): TenantOperationAuditEvent[] {
-  const result = riskLevel === 'high' ? 'danger' : riskLevel === 'follow_up' ? 'warning' : 'success';
+function buildAuditEvents(
+  row: TenantRow,
+  riskLevel: TenantRiskLevel,
+): TenantOperationAuditEvent[] {
+  const result =
+    riskLevel === "high"
+      ? "danger"
+      : riskLevel === "follow_up"
+        ? "warning"
+        : "success";
   return [
     {
       id: `${row.id}:created`,
-      action: '租户创建',
-      actor: row.owner_username ?? 'system',
+      action: "租户创建",
+      actor: row.owner_username ?? "system",
       at: toIso(row.created_at),
-      result: 'success',
+      result: "success",
     },
     {
       id: `${row.id}:status`,
-      action: '状态同步',
-      actor: 'system',
+      action: "状态同步",
+      actor: "system",
       at: toIso(row.updated_at),
       result,
     },
@@ -239,55 +305,56 @@ function buildAuditEvents(row: TenantRow, riskLevel: TenantRiskLevel): TenantOpe
 }
 
 function tenantTags(row: TenantRow, riskLevel: TenantRiskLevel): string[] {
-  const tags = [row.tenant_type === 'company' ? '企业租户' : '个人租户'];
-  if (row.verified_status === 'pending') tags.push('认证待审');
-  if (riskLevel !== 'normal') tags.push(riskLevel === 'high' ? '高风险' : '需跟进');
-  if (row.status === 'trial') tags.push('试用期');
-  if (row.status === 'suspended') tags.push('服务暂停');
-  if (row.status === 'cancelled') tags.push('已注销');
+  const tags = [row.tenant_type === "company" ? "企业租户" : "个人租户"];
+  if (row.verified_status === "pending") tags.push("认证待审");
+  if (riskLevel !== "normal")
+    tags.push(riskLevel === "high" ? "高风险" : "需跟进");
+  if (row.status === "trial") tags.push("试用期");
+  if (row.status === "suspended") tags.push("服务暂停");
+  if (row.status === "cancelled") tags.push("已注销");
   return tags;
 }
 
 function costRateForRisk(risk: TenantRiskLevel) {
-  if (risk === 'high') return 0.42;
-  if (risk === 'follow_up') return 0.34;
+  if (risk === "high") return 0.42;
+  if (risk === "follow_up") return 0.34;
   return 0.26;
 }
 
 function ticketCountForRisk(risk: TenantRiskLevel, status: string) {
-  if (status === 'cancelled') return 2;
-  if (status === 'suspended') return 4;
-  if (risk === 'high') return 3;
-  if (risk === 'follow_up') return 1;
+  if (status === "cancelled") return 2;
+  if (status === "suspended") return 4;
+  if (risk === "high") return 3;
+  if (risk === "follow_up") return 1;
   return 0;
 }
 
 function satisfactionForRisk(risk: TenantRiskLevel) {
-  if (risk === 'high') return 3.4;
-  if (risk === 'follow_up') return 4.2;
+  if (risk === "high") return 3.4;
+  if (risk === "follow_up") return 4.2;
   return 4.8;
 }
 
 function slaForRisk(risk: TenantRiskLevel) {
-  if (risk === 'high') return '98.40%';
-  if (risk === 'follow_up') return '99.82%';
-  return '99.96%';
+  if (risk === "high") return "98.40%";
+  if (risk === "follow_up") return "99.82%";
+  return "99.96%";
 }
 
-type RawTenantRiskLevel = TenantRiskLevel | 'low' | 'medium';
+type RawTenantRiskLevel = TenantRiskLevel | "low" | "medium";
 
 interface TenantRow {
   id: string;
   tenant_code: string;
   tenant_name: string;
   display_name: string | null;
-  tenant_type: 'company' | 'individual';
-  status: 'trial' | 'active' | 'suspended' | 'cancelled';
+  tenant_type: "company" | "individual";
+  status: "trial" | "active" | "suspended" | "cancelled";
   description: string | null;
   created_at: Date;
   updated_at: Date;
   last_active_at: Date | null;
-  verified_status: 'unverified' | 'pending' | 'verified' | 'rejected' | null;
+  verified_status: "unverified" | "pending" | "verified" | "rejected" | null;
   verification_submitted_at: Date | null;
   verified_at: Date | null;
   province: string | null;

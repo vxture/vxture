@@ -42,8 +42,8 @@
 // ============================================================================
 // 依赖导入
 // ============================================================================
-import { create } from 'zustand';
-import { v4 as uuidv4 } from 'uuid';
+import { create } from "zustand";
+import { v4 as uuidv4 } from "uuid";
 
 // ============================================================================
 // 类型定义区 - 通知类型、状态类型
@@ -53,7 +53,7 @@ import { v4 as uuidv4 } from 'uuid';
  * 通知类型
  * - 支持 success/error/warning/info
  */
-type NotificationType = 'success' | 'error' | 'warning' | 'info';
+type NotificationType = "success" | "error" | "warning" | "info";
 
 /**
  * 通知项类型
@@ -79,7 +79,11 @@ interface NotificationState {
    * @param duration 自动关闭时间（毫秒）
    * @returns 通知ID
    */
-  addNotification: (message: string, type: NotificationType, duration?: number) => string;
+  addNotification: (
+    message: string,
+    type: NotificationType,
+    duration?: number,
+  ) => string;
   /**
    * 移除通知
    * @param id 通知ID
@@ -101,7 +105,9 @@ export const useNotificationStore = create<NotificationState>()((set, get) => ({
   addNotification: (message, type, duration = 3000) => {
     const id = uuidv4();
     const newNotification: Notification = { id, message, type, duration };
-    set((state) => ({ notifications: [...state.notifications, newNotification] }));
+    set((state) => ({
+      notifications: [...state.notifications, newNotification],
+    }));
     if (duration > 0) {
       setTimeout(() => {
         get().removeNotification(id);

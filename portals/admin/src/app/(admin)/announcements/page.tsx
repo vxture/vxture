@@ -1,4 +1,4 @@
-import { AnnouncementsPage } from '@/modules/announcements/AnnouncementsPage';
+import { AnnouncementsPage } from "@/modules/announcements/AnnouncementsPage";
 
 export default function Page() {
   return <AnnouncementsPage />;

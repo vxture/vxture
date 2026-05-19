@@ -5,9 +5,9 @@
  *   使用 URLSearchParams + JSON，兼容 Node.js 18+ 和现代浏览器。
  */
 
-import type { PortalNavContext } from '../types/portal-context.types';
+import type { PortalNavContext } from "../types/portal-context.types";
 
-const CTX_PARAM = 'ctx';
+const CTX_PARAM = "ctx";
 
 // =============================================================================
 // 序列化
@@ -40,7 +40,7 @@ export function encodePortalContext(ctx: PortalNavContext): string {
  */
 export function decodePortalContext(search: string): PortalNavContext | null {
   try {
-    const params = new URLSearchParams(search.replace(/^\?/, ''));
+    const params = new URLSearchParams(search.replace(/^\?/, ""));
     const raw = params.get(CTX_PARAM);
     if (!raw) return null;
 
@@ -48,9 +48,9 @@ export function decodePortalContext(search: string): PortalNavContext | null {
 
     // 必填字段校验
     if (
-      typeof decoded.from !== 'string' ||
-      typeof decoded.returnTo !== 'string' ||
-      typeof decoded.caller !== 'string'
+      typeof decoded.from !== "string" ||
+      typeof decoded.returnTo !== "string" ||
+      typeof decoded.caller !== "string"
     ) {
       return null;
     }

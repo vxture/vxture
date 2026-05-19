@@ -1,10 +1,10 @@
-'use client';
-import * as React from 'react';
-import { cn } from '../../utils/cn';
+"use client";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type SkeletonProps = {
   /** Visual variant */
-  variant?: 'line' | 'rect' | 'circle';
+  variant?: "line" | "rect" | "circle";
   /** Width (number → px, string → as-is) */
   width?: number | string;
   /** Height (number → px, string → as-is) */
@@ -23,24 +23,24 @@ export type SkeletonProps = {
  *   <Skeleton variant="rect" width="100%" height={120} />
  */
 export function Skeleton({
-  variant = 'line',
+  variant = "line",
   width,
   height,
   lines,
   className,
 }: SkeletonProps) {
-  const widthCss = typeof width === 'number' ? `${width}px` : width;
-  const heightCss = typeof height === 'number' ? `${height}px` : height;
+  const widthCss = typeof width === "number" ? `${width}px` : width;
+  const heightCss = typeof height === "number" ? `${height}px` : height;
 
-  if (variant === 'line' && lines && lines > 1) {
+  if (variant === "line" && lines && lines > 1) {
     return (
-      <div className={cn('vx-skeleton-group', className)}>
+      <div className={cn("vx-skeleton-group", className)}>
         {Array.from({ length: lines }).map((_, i) => (
           <div
             key={i}
             className="vx-skeleton vx-skeleton--line"
             style={{
-              width: widthCss ?? (i === lines - 1 ? '60%' : '100%'),
+              width: widthCss ?? (i === lines - 1 ? "60%" : "100%"),
               height: heightCss ?? undefined,
             }}
           />
@@ -51,7 +51,7 @@ export function Skeleton({
 
   return (
     <div
-      className={cn('vx-skeleton', `vx-skeleton--${variant}`, className)}
+      className={cn("vx-skeleton", `vx-skeleton--${variant}`, className)}
       style={{ width: widthCss, height: heightCss }}
       aria-hidden
     />

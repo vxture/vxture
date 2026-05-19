@@ -1,1 +1,1 @@
-export { TableToolbar } from '@vxture/design-system';
+export { TableToolbar } from "@vxture/design-system";

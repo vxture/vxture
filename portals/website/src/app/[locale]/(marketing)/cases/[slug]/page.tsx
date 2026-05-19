@@ -7,7 +7,7 @@
  * @date 2026-05-06
  */
 
-import CaseDetail from '@/components/cases/CaseDetail';
+import CaseDetail from "@/components/cases/CaseDetail";
 
 interface CaseDetailRouteProps {
   params: {

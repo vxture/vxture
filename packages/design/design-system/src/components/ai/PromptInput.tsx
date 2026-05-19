@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * PromptInput.tsx - AI Prompt 输入框
@@ -12,8 +12,8 @@
  * @date 2026-05-16
  */
 
-import type { KeyboardEvent } from 'react';
-import { cn } from '../../utils/cn';
+import type { KeyboardEvent } from "react";
+import { cn } from "../../utils/cn";
 
 export interface PromptInputChip {
   readonly label: string;
@@ -38,16 +38,16 @@ export function PromptInput({
   value,
   onChange,
   onSubmit,
-  placeholder = 'Ask anything...',
+  placeholder = "Ask anything...",
   label,
   chips,
-  hint = 'Cmd+Enter to send',
-  submitLabel = 'Generate',
+  hint = "Cmd+Enter to send",
+  submitLabel = "Generate",
   busy = false,
   className,
 }: PromptInputProps) {
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key !== 'Enter' || (!event.metaKey && !event.ctrlKey)) return;
+    if (event.key !== "Enter" || (!event.metaKey && !event.ctrlKey)) return;
     event.preventDefault();
     if (!busy) {
       onSubmit?.(value);
@@ -55,14 +55,23 @@ export function PromptInput({
   };
 
   return (
-    <div className={cn('vx-prompt-input', busy ? 'vx-prompt-input--busy' : undefined, className)}>
+    <div
+      className={cn(
+        "vx-prompt-input",
+        busy ? "vx-prompt-input--busy" : undefined,
+        className,
+      )}
+    >
       {chips && chips.length > 0 ? (
         <div className="vx-prompt-input__toolbar">
           {chips.map((chip) => (
             <button
               key={chip.label}
               type="button"
-              className={cn('vx-prompt-input__chip', chip.active ? 'vx-prompt-input__chip--active' : undefined)}
+              className={cn(
+                "vx-prompt-input__chip",
+                chip.active ? "vx-prompt-input__chip--active" : undefined,
+              )}
               onClick={chip.onClick}
             >
               {chip.label}

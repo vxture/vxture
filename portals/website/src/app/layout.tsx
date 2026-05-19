@@ -18,43 +18,59 @@
  * @date 2026-03-18
  */
 
-import type { Metadata } from 'next';
-import { Funnel_Display, Geist_Mono, Inter } from 'next/font/google';
-import { cookies } from 'next/headers';
-import { ThemeProvider, FullscreenProvider, themeBootstrapScript } from '@vxture/design-system';
-import { DEFAULT_LOCALE, PREFERENCE_CONSTANTS, THEME_CONSTANTS } from '@vxture/shared';
-import './globals.css';
+import type { Metadata } from "next";
+import { Funnel_Display, Geist_Mono, Inter } from "next/font/google";
+import { cookies } from "next/headers";
+import {
+  ThemeProvider,
+  FullscreenProvider,
+  themeBootstrapScript,
+} from "@vxture/design-system";
+import {
+  DEFAULT_LOCALE,
+  PREFERENCE_CONSTANTS,
+  THEME_CONSTANTS,
+} from "@vxture/shared";
+import "./globals.css";
 
 const fontBrand = Funnel_Display({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  display: 'swap',
-  variable: '--vx-font-loader-brand',
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--vx-font-loader-brand",
 });
 
 const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800', '900'],
-  display: 'swap',
-  variable: '--vx-font-loader-sans',
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
+  variable: "--vx-font-loader-sans",
 });
 
 const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  display: 'swap',
-  variable: '--vx-font-loader-mono',
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  display: "swap",
+  variable: "--vx-font-loader-mono",
 });
 
 export const metadata: Metadata = {
-  title: 'vxture AI',
-  description: 'AI-based virtual nature exploration platform',
+  title: "vxture AI",
+  description: "AI-based virtual nature exploration platform",
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const cookieStore = await cookies();
-  const defaultTheme = cookieStore.get(THEME_CONSTANTS.COOKIE_KEY)?.value ?? THEME_CONSTANTS.DEFAULT_THEME;
-  const defaultDensity = cookieStore.get(PREFERENCE_CONSTANTS.DENSITY_COOKIE_KEY)?.value;
+  const defaultTheme =
+    cookieStore.get(THEME_CONSTANTS.COOKIE_KEY)?.value ??
+    THEME_CONSTANTS.DEFAULT_THEME;
+  const defaultDensity = cookieStore.get(
+    PREFERENCE_CONSTANTS.DENSITY_COOKIE_KEY,
+  )?.value;
 
   return (
     // suppressHydrationWarning 是 next-themes 官方要求，避免 SSR/CSR class 不一致警告
@@ -62,11 +78,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
       </head>
-      <body className={`${fontBrand.variable} ${inter.variable} ${geistMono.variable}`}>
+      <body
+        className={`${fontBrand.variable} ${inter.variable} ${geistMono.variable}`}
+      >
         {/* ThemeProvider 管理全站多主题模式，默认跟随系统偏好 */}
         <ThemeProvider
-          defaultMode={defaultTheme === 'light' || defaultTheme === 'dark' || defaultTheme === 'system' ? defaultTheme : 'system'}
-          defaultDensity={defaultDensity === 'compact' || defaultDensity === 'comfortable' ? defaultDensity : 'default'}
+          defaultMode={
+            defaultTheme === "light" ||
+            defaultTheme === "dark" ||
+            defaultTheme === "system"
+              ? defaultTheme
+              : "system"
+          }
+          defaultDensity={
+            defaultDensity === "compact" || defaultDensity === "comfortable"
+              ? defaultDensity
+              : "default"
+          }
         >
           {/* FullscreenProvider 管理全站全屏状态，默认 pseudo 模式 */}
           <FullscreenProvider defaultMode="native" defaultLockScroll={false}>

@@ -6,15 +6,15 @@
 
 function isDev(): boolean {
   // Node.js 环境
-  if (typeof process !== 'undefined' && process.env['NODE_ENV'] !== undefined) {
-    return process.env['NODE_ENV'] === 'development';
+  if (typeof process !== "undefined" && process.env["NODE_ENV"] !== undefined) {
+    return process.env["NODE_ENV"] === "development";
   }
 
   // 浏览器环境（仅 ESM 格式） — use dynamic access to avoid DOM lib requirement
-  const loc = (globalThis as Record<string, unknown>)['location'];
-  if (typeof loc === 'object' && loc !== null) {
-    const hostname = String((loc as Record<string, unknown>)['hostname'] ?? '');
-    return hostname === 'localhost' || hostname === '127.0.0.1';
+  const loc = (globalThis as Record<string, unknown>)["location"];
+  if (typeof loc === "object" && loc !== null) {
+    const hostname = String((loc as Record<string, unknown>)["hostname"] ?? "");
+    return hostname === "localhost" || hostname === "127.0.0.1";
   }
 
   // 默认返回 false
@@ -22,13 +22,13 @@ function isDev(): boolean {
 }
 
 export function debugLog(...args: unknown[]): void {
-  if (isDev()) console.log('[debug]', ...args);
+  if (isDev()) console.log("[debug]", ...args);
 }
 
 export function debugWarn(...args: unknown[]): void {
-  if (isDev()) console.warn('[warn]', ...args);
+  if (isDev()) console.warn("[warn]", ...args);
 }
 
 export function debugError(...args: unknown[]): void {
-  if (isDev()) console.error('[error]', ...args);
+  if (isDev()) console.error("[error]", ...args);
 }

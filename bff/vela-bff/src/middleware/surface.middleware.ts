@@ -13,34 +13,42 @@
  * @date 2026-04-30
  */
 
-import { ForbiddenException, Injectable, type NestMiddleware } from '@nestjs/common';
-import type { NextFunction, Request, Response } from 'express';
-import { ADMIN_TOOLS, CONSOLE_TOOLS } from '../tools/tool-whitelist.const';
-import type { CallerContext, VelaSurface, VelaUserType } from '../types/caller-context.types';
-import type { VelaRequest } from '../types/chat.types';
+import {
+  ForbiddenException,
+  Injectable,
+  type NestMiddleware,
+} from "@nestjs/common";
+import type { NextFunction, Request, Response } from "express";
+import { ADMIN_TOOLS, CONSOLE_TOOLS } from "../tools/tool-whitelist.const";
+import type {
+  CallerContext,
+  VelaSurface,
+  VelaUserType,
+} from "../types/caller-context.types";
+import type { VelaRequest } from "../types/chat.types";
 
 // ============================================================================
 // Surface × userType 合法矩阵（唯一权威定义，与 spec §4.3 保持一致）
 // ============================================================================
 
 const VALID_COMBINATIONS: Record<VelaSurface, VelaUserType> = {
-  admin:   'operator',
-  console: 'tenant_user',
+  admin: "operator",
+  console: "tenant_user",
 };
 
-const VALID_SURFACES = new Set<string>(['admin', 'console']);
+const VALID_SURFACES = new Set<string>(["admin", "console"]);
 
 @Injectable()
 export class SurfaceMiddleware implements NestMiddleware {
   use(req: Request, _res: Response, next: NextFunction): void {
-    const surface = req.headers['x-vela-surface'] as string | undefined;
+    const surface = req.headers["x-vela-surface"] as string | undefined;
     const { userType, userId, role, tenantId } = (req as VelaRequest).user;
 
     if (!surface || !VALID_SURFACES.has(surface)) {
       throw new ForbiddenException({
         statusCode: 403,
-        code: 'SURFACE_FORBIDDEN',
-        message: 'Missing or invalid X-Vela-Surface header',
+        code: "SURFACE_FORBIDDEN",
+        message: "Missing or invalid X-Vela-Surface header",
       });
     }
 
@@ -48,21 +56,21 @@ export class SurfaceMiddleware implements NestMiddleware {
     if (validUserType !== userType) {
       throw new ForbiddenException({
         statusCode: 403,
-        code: 'SURFACE_FORBIDDEN',
-        message: 'Surface and userType mismatch',
+        code: "SURFACE_FORBIDDEN",
+        message: "Surface and userType mismatch",
       });
     }
 
     const velaSurface = surface as VelaSurface;
 
     const callerContext: CallerContext = {
-      surface:      velaSurface,
+      surface: velaSurface,
       userId,
       userType,
       role,
-      tenantId:     tenantId ?? null,
-      allowedTools: velaSurface === 'admin' ? ADMIN_TOOLS : CONSOLE_TOOLS,
-      dataScope:    velaSurface === 'admin' ? 'global' : 'tenant',
+      tenantId: tenantId ?? null,
+      allowedTools: velaSurface === "admin" ? ADMIN_TOOLS : CONSOLE_TOOLS,
+      dataScope: velaSurface === "admin" ? "global" : "tenant",
     };
 
     (req as VelaRequest).callerContext = callerContext;

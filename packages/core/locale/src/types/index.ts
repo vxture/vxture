@@ -3,4 +3,8 @@
  * @package @vxture/core-locale
  */
 
-export type { LocaleRequest, LocalizationOptions, ResolveLocaleOptions } from './locale.types';
+export type {
+  LocaleRequest,
+  LocalizationOptions,
+  ResolveLocaleOptions,
+} from "./locale.types";

@@ -13,7 +13,7 @@
  * @date 2026-05-02
  */
 
-import type { TenantContextView } from '../types/organization.types';
+import type { TenantContextView } from "../types/organization.types";
 
 // ============================================================================
 // Mock 数据
@@ -21,56 +21,56 @@ import type { TenantContextView } from '../types/organization.types';
 
 const mockTenants: TenantContextView[] = [
   {
-    tenantId:      'tenant_acme',
-    tenantCode:    'acme',
-    tenantName:    'ACME Corp',
-    displayName:   'ACME Corp',
-    tenantType:    'company',
-    status:        'active',
-    language:      'zh-CN',
-    timeZone:      'Asia/Shanghai',
-    companyName:   'ACME 科技有限公司',
-    primaryDomain: 'acme.example.com',
-    workspace:     'ACME',
+    tenantId: "tenant_acme",
+    tenantCode: "acme",
+    tenantName: "ACME Corp",
+    displayName: "ACME Corp",
+    tenantType: "company",
+    status: "active",
+    language: "zh-CN",
+    timeZone: "Asia/Shanghai",
+    companyName: "ACME 科技有限公司",
+    primaryDomain: "acme.example.com",
+    workspace: "ACME",
   },
   {
-    tenantId:      'tenant_demo',
-    tenantCode:    'demo',
-    tenantName:    '演示租户',
-    displayName:   '演示租户',
-    tenantType:    'company',
-    status:        'trial',
-    language:      'zh-CN',
-    timeZone:      'Asia/Shanghai',
-    companyName:   null,
+    tenantId: "tenant_demo",
+    tenantCode: "demo",
+    tenantName: "演示租户",
+    displayName: "演示租户",
+    tenantType: "company",
+    status: "trial",
+    language: "zh-CN",
+    timeZone: "Asia/Shanghai",
+    companyName: null,
     primaryDomain: null,
-    workspace:     'DEMO',
+    workspace: "DEMO",
   },
   {
-    tenantId:      'tenant_beta',
-    tenantCode:    'beta',
-    tenantName:    'Beta Team',
-    displayName:   'Beta Team',
-    tenantType:    'company',
-    status:        'active',
-    language:      'en-US',
-    timeZone:      'UTC',
-    companyName:   'Beta Technologies Ltd.',
-    primaryDomain: 'beta.io',
-    workspace:     'BETA',
+    tenantId: "tenant_beta",
+    tenantCode: "beta",
+    tenantName: "Beta Team",
+    displayName: "Beta Team",
+    tenantType: "company",
+    status: "active",
+    language: "en-US",
+    timeZone: "UTC",
+    companyName: "Beta Technologies Ltd.",
+    primaryDomain: "beta.io",
+    workspace: "BETA",
   },
   {
-    tenantId:      'tenant_suspended',
-    tenantCode:    'suspended-co',
-    tenantName:    '已暂停企业',
-    displayName:   '已暂停企业',
-    tenantType:    'company',
-    status:        'suspended',
-    language:      'zh-CN',
-    timeZone:      'Asia/Shanghai',
-    companyName:   '暂停企业有限公司',
+    tenantId: "tenant_suspended",
+    tenantCode: "suspended-co",
+    tenantName: "已暂停企业",
+    displayName: "已暂停企业",
+    tenantType: "company",
+    status: "suspended",
+    language: "zh-CN",
+    timeZone: "Asia/Shanghai",
+    companyName: "暂停企业有限公司",
     primaryDomain: null,
-    workspace:     'SUSPENDED-CO',
+    workspace: "SUSPENDED-CO",
   },
 ];
 
@@ -89,7 +89,7 @@ export class TenantService {
    */
   async searchTenants(query: string, limit = 10): Promise<TenantContextView[]> {
     if (!query.trim()) {
-      throw new Error('搜索关键词不能为空');
+      throw new Error("搜索关键词不能为空");
     }
 
     const q = query.trim().toLowerCase();
@@ -113,7 +113,7 @@ export class TenantService {
    */
   async getTenantById(tenantId: string): Promise<TenantContextView | null> {
     if (!tenantId.trim()) {
-      throw new Error('tenantId 不能为空');
+      throw new Error("tenantId 不能为空");
     }
 
     return mockTenants.find((t) => t.tenantId === tenantId) ?? null;

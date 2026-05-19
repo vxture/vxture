@@ -11,21 +11,26 @@
  * @version 1.4
  */
 
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
-import { AccessTokenRevocationService } from '@vxture/core-auth';
-import { VxConfigModule } from '@vxture/core-config';
-import { RuyinAggregator } from './aggregators/ruyin.aggregator';
-import { AgentAuthService } from './auth/auth.service';
-import { AuthMiddleware } from './middleware/auth.middleware';
-import { AuthRouter } from './routers/auth.router';
-import { CrossDomainRouter } from './routers/crossdomain.router';
-import { SessionRouter } from './routers/session.router';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
+import { AccessTokenRevocationService } from "@vxture/core-auth";
+import { VxConfigModule } from "@vxture/core-config";
+import { RuyinAggregator } from "./aggregators/ruyin.aggregator";
+import { AgentAuthService } from "./auth/auth.service";
+import { AuthMiddleware } from "./middleware/auth.middleware";
+import { AuthRouter } from "./routers/auth.router";
+import { CrossDomainRouter } from "./routers/crossdomain.router";
+import { SessionRouter } from "./routers/session.router";
 
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ['app', 'auth', 'redis'],
+      domains: ["app", "auth", "redis"],
     }),
     JwtModule.register({}),
   ],
@@ -36,6 +41,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthMiddleware)
-      .forRoutes({ path: 'api/(.*)', method: RequestMethod.ALL });
+      .forRoutes({ path: "api/(.*)", method: RequestMethod.ALL });
   }
 }

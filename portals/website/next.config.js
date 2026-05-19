@@ -1,26 +1,24 @@
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
-import { existsSync, readFileSync } from 'fs';
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import { existsSync, readFileSync } from "fs";
 
 /** @type {import('next').NextConfig} */
 
-import createNextIntlPlugin from 'next-intl/plugin';
+import createNextIntlPlugin from "next-intl/plugin";
 
-const withNextIntl = createNextIntlPlugin(
-  './src/lib/i18n/request.ts'
-);
+const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 function loadRootEnv() {
-  const envPath = join(__dirname, '../../.env.local');
+  const envPath = join(__dirname, "../../.env.local");
   if (!existsSync(envPath)) return;
 
-  for (const rawLine of readFileSync(envPath, 'utf8').split(/\r?\n/)) {
+  for (const rawLine of readFileSync(envPath, "utf8").split(/\r?\n/)) {
     const line = rawLine.trim();
-    if (!line || line.startsWith('#')) continue;
-    const sep = line.indexOf('=');
+    if (!line || line.startsWith("#")) continue;
+    const sep = line.indexOf("=");
     if (sep <= 0) continue;
 
     const key = line.slice(0, sep).trim();
@@ -61,31 +59,41 @@ loadRootEnv();
 // Webpack 用：绝对路径
 // 只保留 portal 层允许引用的包（shared / core-locale / design-system）
 const internalAliases = {
-  '@vxture/shared':        join(__dirname, '../../packages/shared/shared/src'),
-  '@vxture/core-locale':   join(__dirname, '../../packages/core/locale/src'),
-  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/src/client.ts'),
-  '@vxture/platform-browser': join(__dirname, '../../packages/platform/browser/src'),
+  "@vxture/shared": join(__dirname, "../../packages/shared/shared/src"),
+  "@vxture/core-locale": join(__dirname, "../../packages/core/locale/src"),
+  "@vxture/design-system": join(
+    __dirname,
+    "../../packages/design/design-system/src/client.ts",
+  ),
+  "@vxture/platform-browser": join(
+    __dirname,
+    "../../packages/platform/browser/src",
+  ),
 };
 
 // Turbopack 用：相对路径（Windows 限制，不可改为绝对路径）
 // 只保留 portal 层允许引用的包（shared / core-locale / design-system）
 const turboAliases = {
-  '@vxture/shared':        '../../packages/shared/shared/src',
-  '@vxture/core-locale':   '../../packages/core/locale/src',
-  '@vxture/design-system': '../../packages/design/design-system/src/client.ts',
-  '@vxture/platform-browser': '../../packages/platform/browser/src',
+  "@vxture/shared": "../../packages/shared/shared/src",
+  "@vxture/core-locale": "../../packages/core/locale/src",
+  "@vxture/design-system": "../../packages/design/design-system/src/client.ts",
+  "@vxture/platform-browser": "../../packages/platform/browser/src",
 };
 
 const nextConfig = {
   typedRoutes: true,
 
-  transpilePackages: ['@vxture/design-system'],
+  transpilePackages: ["@vxture/design-system"],
 
-  output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
+  output: process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined,
 
   env: {
-    CUSTOM_API_URL: process.env.NEXT_PUBLIC_WEBSITE_BFF_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3011',
-    NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY: process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? '',
+    CUSTOM_API_URL:
+      process.env.NEXT_PUBLIC_WEBSITE_BFF_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:3011",
+    NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY:
+      process.env.NEXT_PUBLIC_CF_TURNSTILE_TENANT_SITE_KEY ?? "",
   },
 
   async redirects() {
@@ -94,11 +102,11 @@ const nextConfig = {
 
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: '**' },
-      { protocol: 'http', hostname: 'localhost' },
-      { protocol: 'http', hostname: '127.0.0.1' },
+      { protocol: "https", hostname: "**" },
+      { protocol: "http", hostname: "localhost" },
+      { protocol: "http", hostname: "127.0.0.1" },
     ],
-    formats: ['image/webp', 'image/avif'],
+    formats: ["image/webp", "image/avif"],
   },
 
   // ─── Turbopack 配置（next dev --turbo 专用）──────────────────────────────────
@@ -116,11 +124,11 @@ const nextConfig = {
   },
 
   devIndicators: {
-    position: 'bottom-right',
+    position: "bottom-right",
   },
 
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    removeConsole: process.env.NODE_ENV === "production",
   },
 };
 

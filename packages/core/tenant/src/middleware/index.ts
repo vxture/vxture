@@ -3,4 +3,4 @@
  * @package @vxture/core-tenant
  */
 
-export { TenantMiddleware } from './tenant.middleware';
+export { TenantMiddleware } from "./tenant.middleware";

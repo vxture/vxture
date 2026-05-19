@@ -5,23 +5,25 @@ import {
   Inject,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL } from '../tokens';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL } from "../tokens";
 import type {
   AccountOperationRecord,
   AccountOperationStatus,
   AccountTenantBinding,
   RequestContext,
-} from '../types/console.types';
+} from "../types/console.types";
 
-@Controller('api/accounts')
+@Controller("api/accounts")
 export class AccountsRouter {
   constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get()
-  async listAccounts(@Req() req: Request & RequestContext): Promise<AccountOperationRecord[]> {
+  async listAccounts(
+    @Req() req: Request & RequestContext,
+  ): Promise<AccountOperationRecord[]> {
     assertCanManageAccounts(req);
 
     const rows = await this.pool.query<AccountRow>(ACCOUNT_SQL);
@@ -31,54 +33,63 @@ export class AccountsRouter {
 
 function assertCanManageAccounts(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
-  if (req.capabilities && !req.capabilities.includes('platform.tenant.manage')) {
-    throw new ForbiddenException('Missing platform.tenant.manage capability');
+  if (
+    req.capabilities &&
+    !req.capabilities.includes("platform.tenant.manage")
+  ) {
+    throw new ForbiddenException("Missing platform.tenant.manage capability");
   }
 }
 
 function toIso(value: Date | string | null): string {
   if (!value) return new Date(0).toISOString();
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
 function isPrivateIp(ip: string): boolean {
-  if (ip.startsWith('10.') || ip.startsWith('192.168.')) return true;
+  if (ip.startsWith("10.") || ip.startsWith("192.168.")) return true;
 
-  const [first = Number.NaN, second = Number.NaN] = ip.split('.').map((segment) => Number(segment));
+  const [first = Number.NaN, second = Number.NaN] = ip
+    .split(".")
+    .map((segment) => Number(segment));
   return first === 172 && second >= 16 && second <= 31;
 }
 
 function resolveIpLocation(ip?: string | null): string {
-  if (!ip) return '未知地址';
-  if (isPrivateIp(ip)) return '内网地址';
+  if (!ip) return "未知地址";
+  if (isPrivateIp(ip)) return "内网地址";
 
   const prefixes: Array<[string, string]> = [
-    ['101.33.', '上海'],
-    ['111.206.', '北京'],
-    ['183.129.', '杭州'],
-    ['112.93.', '深圳'],
-    ['115.236.', '杭州'],
-    ['221.12.', '杭州'],
-    ['58.247.', '上海'],
-    ['123.125.', '北京'],
-    ['36.112.', '北京'],
-    ['120.92.', '北京'],
-    ['171.221.', '成都'],
-    ['182.150.', '成都'],
-    ['119.29.', '深圳'],
+    ["101.33.", "上海"],
+    ["111.206.", "北京"],
+    ["183.129.", "杭州"],
+    ["112.93.", "深圳"],
+    ["115.236.", "杭州"],
+    ["221.12.", "杭州"],
+    ["58.247.", "上海"],
+    ["123.125.", "北京"],
+    ["36.112.", "北京"],
+    ["120.92.", "北京"],
+    ["171.221.", "成都"],
+    ["182.150.", "成都"],
+    ["119.29.", "深圳"],
   ];
 
-  return prefixes.find(([prefix]) => ip.startsWith(prefix))?.[1] ?? '未知地址';
+  return prefixes.find(([prefix]) => ip.startsWith(prefix))?.[1] ?? "未知地址";
 }
 
 function memberStatus(row: AccountRow): AccountOperationStatus {
-  if (!row.account_enabled) return 'disabled';
-  if (row.member_status === 'banned' || row.member_status === 'suspended') return 'locked';
-  if (row.member_status === 'inactive' || row.member_status === 'invited') return 'invited';
-  return 'active';
+  if (!row.account_enabled) return "disabled";
+  if (row.member_status === "banned" || row.member_status === "suspended")
+    return "locked";
+  if (row.member_status === "inactive" || row.member_status === "invited")
+    return "invited";
+  return "active";
 }
 
 function mapAccountRows(rows: AccountRow[]): AccountOperationRecord[] {
@@ -91,27 +102,36 @@ function mapAccountRows(rows: AccountRow[]): AccountOperationRecord[] {
 
   return Array.from(groups.values()).map((accountRows) => {
     const sortedRows = [...accountRows].sort((left, right) => {
-      if (left.is_primary_owner !== right.is_primary_owner) return left.is_primary_owner ? -1 : 1;
-      return new Date(toIso(right.last_active_at ?? right.joined_at)).getTime() - new Date(toIso(left.last_active_at ?? left.joined_at)).getTime();
+      if (left.is_primary_owner !== right.is_primary_owner)
+        return left.is_primary_owner ? -1 : 1;
+      return (
+        new Date(toIso(right.last_active_at ?? right.joined_at)).getTime() -
+        new Date(toIso(left.last_active_at ?? left.joined_at)).getTime()
+      );
     });
     const primary = sortedRows[0]!;
     const statuses = sortedRows.map(memberStatus);
-    const status: AccountOperationStatus = statuses.includes('disabled')
-      ? 'disabled'
-      : statuses.includes('locked')
-        ? 'locked'
-        : statuses.includes('active')
-          ? 'active'
-          : 'invited';
+    const status: AccountOperationStatus = statuses.includes("disabled")
+      ? "disabled"
+      : statuses.includes("locked")
+        ? "locked"
+        : statuses.includes("active")
+          ? "active"
+          : "invited";
     const registeredAt = sortedRows
       .map((row) => toIso(row.joined_at))
-      .sort((left, right) => new Date(left).getTime() - new Date(right).getTime())[0]!;
+      .sort(
+        (left, right) => new Date(left).getTime() - new Date(right).getTime(),
+      )[0]!;
     const lastActiveAt = sortedRows
       .flatMap((row) => [row.last_active_at, row.last_login_at, row.joined_at])
       .filter((value): value is Date => Boolean(value))
       .map((value) => toIso(value))
-      .sort((left, right) => new Date(right).getTime() - new Date(left).getTime())[0]!;
-    const lastLoginIp = sortedRows.find((row) => row.last_login_ip)?.last_login_ip ?? null;
+      .sort(
+        (left, right) => new Date(right).getTime() - new Date(left).getTime(),
+      )[0]!;
+    const lastLoginIp =
+      sortedRows.find((row) => row.last_login_ip)?.last_login_ip ?? null;
     const bindings: AccountTenantBinding[] = sortedRows.map((row) => ({
       tenantId: row.tenant_id,
       tenantCode: row.tenant_code,
@@ -135,11 +155,12 @@ function mapAccountRows(rows: AccountRow[]): AccountOperationRecord[] {
       role: primary.role_name ?? primary.role,
       tenantCount: bindings.length,
       registeredAt,
-      activatedAt: status === 'invited' ? null : registeredAt,
+      activatedAt: status === "invited" ? null : registeredAt,
       lastActiveAt,
       lastActiveIp: lastLoginIp,
       lastActiveLocation: resolveIpLocation(lastLoginIp),
-      loginCount30d: status === 'active' ? Math.max(1, bindings.length * 12) : 0,
+      loginCount30d:
+        status === "active" ? Math.max(1, bindings.length * 12) : 0,
       tenantBindings: bindings,
     };
   });
@@ -164,7 +185,7 @@ interface AccountRow {
   tenant_code: string;
   tenant_name: string;
   tenant_display_name: string | null;
-  tenant_type: 'company' | 'individual';
+  tenant_type: "company" | "individual";
 }
 
 const ACCOUNT_SQL = `

@@ -15,7 +15,10 @@ export interface DetailField {
   readonly value: React.ReactNode;
 }
 
-export interface DetailPanelProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "title"> {
+export interface DetailPanelProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "title"
+> {
   readonly title: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly fields?: readonly DetailField[];
@@ -24,15 +27,7 @@ export interface DetailPanelProps extends Omit<React.HTMLAttributes<HTMLDivEleme
 
 const DetailPanel = React.forwardRef<HTMLDivElement, DetailPanelProps>(
   function DetailPanel(
-    {
-      className,
-      title,
-      description,
-      fields,
-      children,
-      actions,
-      ...props
-    },
+    { className, title, description, fields, children, actions, ...props },
     ref,
   ) {
     return (
@@ -40,7 +35,9 @@ const DetailPanel = React.forwardRef<HTMLDivElement, DetailPanelProps>(
         <div className="vx-detail-panel__header">
           <div>
             <h3 className="vx-card-title">{title}</h3>
-            {description ? <p className="vx-card__description">{description}</p> : null}
+            {description ? (
+              <p className="vx-card__description">{description}</p>
+            ) : null}
           </div>
         </div>
         {fields?.length ? (
@@ -53,8 +50,12 @@ const DetailPanel = React.forwardRef<HTMLDivElement, DetailPanelProps>(
             ))}
           </div>
         ) : null}
-        {children ? <div className="vx-detail-panel__body">{children}</div> : null}
-        {actions ? <div className="vx-detail-panel__actions">{actions}</div> : null}
+        {children ? (
+          <div className="vx-detail-panel__body">{children}</div>
+        ) : null}
+        {actions ? (
+          <div className="vx-detail-panel__actions">{actions}</div>
+        ) : null}
       </div>
     );
   },

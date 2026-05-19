@@ -16,16 +16,21 @@
  * @category Router
  */
 
-import { Controller, Get, Req, UnauthorizedException } from '@nestjs/common';
-import type { Request } from 'express';
-import type { AnnouncementRecord, RequestContext } from '../types/console.types';
+import { Controller, Get, Req, UnauthorizedException } from "@nestjs/common";
+import type { Request } from "express";
+import type {
+  AnnouncementRecord,
+  RequestContext,
+} from "../types/console.types";
 
-@Controller('api/announcements')
+@Controller("api/announcements")
 export class AnnouncementsRouter {
   @Get()
-  listAnnouncements(@Req() req: Request & RequestContext): AnnouncementRecord[] {
+  listAnnouncements(
+    @Req() req: Request & RequestContext,
+  ): AnnouncementRecord[] {
     if (!req.user) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
     // 数据层待接入，暂返回空列表
     return [];

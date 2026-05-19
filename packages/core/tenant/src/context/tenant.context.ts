@@ -8,10 +8,10 @@
  * @date 2026-03-15
  */
 
-import { Inject, Injectable, Scope } from '@nestjs/common';
-import { REQUEST } from '@nestjs/core';
-import type { Request } from 'express';
-import type { TenantInfo, TenantRequest } from '../types';
+import { Inject, Injectable, Scope } from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
+import type { Request } from "express";
+import type { TenantInfo, TenantRequest } from "../types";
 
 @Injectable({ scope: Scope.REQUEST })
 export class TenantContext {
@@ -25,8 +25,8 @@ export class TenantContext {
   get id(): string {
     if (!this._tenant) {
       throw new Error(
-        '[TenantContext] tenantId not available. ' +
-        'Ensure TenantMiddleware runs before TenantContext is accessed.',
+        "[TenantContext] tenantId not available. " +
+          "Ensure TenantMiddleware runs before TenantContext is accessed.",
       );
     }
     return this._tenant.id;

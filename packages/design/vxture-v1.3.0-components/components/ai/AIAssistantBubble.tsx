@@ -1,10 +1,10 @@
-'use client';
-import * as React from 'react';
-import { cn } from '../../utils/cn';
+"use client";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type AIAssistantBubbleProps = {
   /** Who's speaking */
-  role: 'user' | 'ai';
+  role: "user" | "ai";
   /** Message content (string or rich node) */
   children: React.ReactNode;
   /** Avatar text — defaults to first letter of role */
@@ -38,14 +38,18 @@ export function AIAssistantBubble({
   timestamp,
   className,
 }: AIAssistantBubbleProps) {
-  const fallbackAvatar = avatar ?? (role === 'ai' ? '✦' : 'U');
-  const time = timestamp instanceof Date
-    ? timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    : timestamp;
+  const fallbackAvatar = avatar ?? (role === "ai" ? "✦" : "U");
+  const time =
+    timestamp instanceof Date
+      ? timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      : timestamp;
 
   return (
-    <div className={cn('vx-bubble', `vx-bubble--${role}`, className)}>
-      <div className={cn('vx-bubble__avatar', `vx-bubble__avatar--${role}`)} aria-hidden>
+    <div className={cn("vx-bubble", `vx-bubble--${role}`, className)}>
+      <div
+        className={cn("vx-bubble__avatar", `vx-bubble__avatar--${role}`)}
+        aria-hidden
+      >
         {avatarSrc ? <img src={avatarSrc} alt="" /> : fallbackAvatar}
       </div>
       <div className="vx-bubble__content">

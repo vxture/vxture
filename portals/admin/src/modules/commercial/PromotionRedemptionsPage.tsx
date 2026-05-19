@@ -4,7 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
-import { ActionMenu, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination as DsPagination,
+} from "@vxture/design-system";
 import { fetchPromotionRedemptionRecords } from "@/api/admin-bff";
 import type {
   BillingBillStatus,
@@ -106,7 +113,10 @@ function RedemptionActionsMenu({
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${record.redemptionNo} 核销操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -116,13 +126,15 @@ function RedemptionActionsMenu({
             id: "bill",
             label: "账单详情",
             icon: <Icon name="arrow-right" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/billing/${encodeURIComponent(record.billId)}`),
+            onSelect: () =>
+              router.push(`/billing/${encodeURIComponent(record.billId)}`),
           },
           {
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(record.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(record.tenantId)}`),
           },
           {
             id: "orders",
@@ -172,7 +184,13 @@ function RedemptionRows({
         <span>
           <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            checked={
+              isPageSelected
+                ? true
+                : selectedOnPage > 0
+                  ? "indeterminate"
+                  : false
+            }
             onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页核销记录"
           />
@@ -213,7 +231,9 @@ function RedemptionRows({
               <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onCheckedChange={(value) => onToggleRecord(record.id, value === true)}
+                onCheckedChange={(value) =>
+                  onToggleRecord(record.id, value === true)
+                }
                 aria-label={`选择核销记录 ${record.redemptionNo}`}
               />
             </span>
@@ -640,7 +660,12 @@ export function PromotionRedemptionsPage() {
             </span>
             <div className="vx-tenant-pagination__actions">
               <PageSizePicker value={pageSize} onChange={setPageSize} />
-              <DsPagination className="vx-tenant-pagination__pager" page={activePage} pageCount={pageCount} onPageChange={setCurrentPage} />
+              <DsPagination
+                className="vx-tenant-pagination__pager"
+                page={activePage}
+                pageCount={pageCount}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </footer>
         </section>
