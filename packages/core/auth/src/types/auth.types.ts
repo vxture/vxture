@@ -84,7 +84,11 @@ export interface JwtAccessPayload {
   permissions?: string[];
   /** Login method */
   provider: OAuthProviderType;
-  /** Access token unique ID, used for logout blacklist and session revocation */
+  /**
+   * Access token unique ID, required for logout blacklist and session revocation.
+   * Must be included when signing if the BFF uses AccessTokenRevocationService.
+   * Generated via generateJti() in provider.utils.ts.
+   */
   jti?: string;
   /** Standard JWT fields */
   iat?: number;

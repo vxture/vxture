@@ -1,6 +1,5 @@
 # @vxture/core-auth
 
-> ⚠️ 待大版本重构 | 迁移自 `packages/core/auth/AGENTS.md`
 > 架构层参考：[`docs/architecture/03-core-layer.md`](../../architecture/03-core-layer.md)
 
 ---
@@ -15,17 +14,22 @@
 
 ## 职责
 
-平台级认证原语：JWT token 验证、session 工具、角色权限基础类型。
-只提供平台基础设施，不包含任何业务级权限逻辑（业务权限属于 Service 层）。
+平台级认证原语：JWT 签发与验证、访问 token 吊销（Redis）、NestJS Guard/Decorator、
+OAuth provider 抽象接口、Cloudflare Turnstile 验证。
+只提供平台基础设施，不包含任何业务级权限逻辑。
 
 ## 目录结构
 
 ```
 src/
-├── client/       # *.client.ts  — token 验证、session 工具
-├── types/        # *.types.ts   — 认证相关类型（TokenPayload、Role 等）
-├── utils/        # *.utils.ts   — token 解析、权限工具函数
-└── index.ts      # 单一公共出口
+├── client/     # VxJwtClient（JWT 签发/验证）
+├── decorators/ # @Public、@Roles、@CurrentUser
+├── guards/     # JwtAuthGuard、RolesGuard、InternalAuthGuard
+├── session/    # AccessTokenRevocationService（Redis）
+├── turnstile/  # TurnstileVerifier（Cloudflare 人机验证）
+├── types/      # JwtAccessPayload、AuthUser、OAuthProvider 等
+├── utils/      # token 解析、权限检查、provider 工具
+└── index.ts
 ```
 
 ## 依赖约束
@@ -33,34 +37,29 @@ src/
 **允许：**
 
 - `@vxture/shared`
-- `jsonwebtoken` + `@types/jsonwebtoken`
+- `@nestjs/common` / `@nestjs/core` / `@nestjs/jwt`
+- `ioredis`（仅 `AccessTokenRevocationService` 使用）
 
 **禁止：**
 
-- NestJS / Passport.js（属于上层 BFF）
-- Next.js / React / Prisma / Redis
-- `@vxture/service-*` / `bff-*` / `ai-sdk` / `design-system` / `platform-*`
+- Next.js / React / Prisma
+- `@vxture/service-*` / `bff-*` / `ai-sdk` / `design-system`
 - 业务级权限逻辑（如「是否有购买权限」属于 service-billing）
-
-## 文件命名
-
-| 类型       | 规范          |
-| ---------- | ------------- |
-| 认证客户端 | `*.client.ts` |
-| 类型定义   | `*.types.ts`  |
-| 工具函数   | `*.utils.ts`  |
 
 ## 核心设计约束
 
-- token 验证返回标准 `TokenPayload` 类型，不返回原始 decoded 对象
-- 角色类型只定义平台级角色枚举（`PlatformRole`），业务角色在 service 层定义
-- 不持久化任何状态（无 Redis、无 DB）
+- `JwtAuthGuard` 只验签、挂 `AuthUser`，不检查 revocation（revocation 由各 BFF 在需要时显式调用 `assertAccessTokenActive()`）
+- `JwtAccessPayload.jti` 虽为 optional 类型（兼容旧 token），但启用 revocation 的 BFF 必须在签发时传入；通过 `generateJti()` 生成（`crypto.randomUUID()`，128 bit 熵）
+- `OAuthProvider` 是抽象接口，具体实现（DingtalkProvider 等）放各 BFF / agent-server，core-auth 不依赖具体 SDK
+- `userType` 字段从 JWT payload 透传到 `AuthUser`；surface guard 按 `userType ?? 'tenant_user'` 兜底推断
 
-## Barrel Export 规则
+## 关键类型
 
-```typescript
-// src/index.ts
-export { verifyToken, signToken } from "./client/token.client";
-export type { TokenPayload, PlatformRole } from "./types/auth.types";
-export { extractBearerToken } from "./utils/token.utils";
-```
+| 类型               | 说明                                                      |
+| ------------------ | --------------------------------------------------------- |
+| `JwtUserType`      | `'operator' \| 'tenant_user'`，surface 路由隔离核心       |
+| `JwtAuthScope`     | `'platform-admin' \| 'tenant-console'`                    |
+| `PlatformRole`     | `'admin' \| 'tenant_admin' \| 'member'`                   |
+| `AuthUser`         | `request.user` 的类型，Guard 验签后挂载                   |
+| `JwtAccessPayload` | access token payload，含 `userType`、`jti`、`authScope`   |
+| `OAuthProvider`    | OAuth provider 抽象接口（`exchangeCode` / `getUserInfo`） |
