@@ -24,3 +24,6 @@ export type {
   CustomModelConfig,
 } from "./ai.schema";
 export { aiSchema } from "./ai.schema";
+
+export type { MailEnvConfig } from "./mail.schema";
+export { mailSchema, toSmtpConfig } from "./mail.schema";

@@ -24,7 +24,7 @@ export interface MailPayload {
 }
 
 // ============================================================================
-// 内部 SMTP 配置（读自 process.env，不对外暴露）
+// SMTP 配置（由消费方通过 MailModule.forRoot / forRootAsync 注入）
 // ============================================================================
 
 export interface SmtpConfig {
@@ -34,4 +34,19 @@ export interface SmtpConfig {
   user: string;
   pass: string;
   from: string;
+}
+
+// ============================================================================
+// 模块异步配置（用于 MailModule.forRootAsync）
+// ============================================================================
+
+export interface MailModuleAsyncOptions {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  inject?: any[];
+  useFactory: (
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ...args: any[]
+  ) => SmtpConfig | null | Promise<SmtpConfig | null>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  imports?: any[];
 }
