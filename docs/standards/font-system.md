@@ -34,14 +34,14 @@ Funnel Display 负责品牌记忆点，Inter 负责产品可读性，Noto Sans S
 
 成熟科技品牌通常不会用一个字体覆盖所有场景，而是使用具备明确职责的字体系统。
 
-| 品牌 / 体系 | 字体策略 | 可借鉴点 |
-|---|---|---|
-| Apple | San Francisco 作为系统字体，强调一致、清晰、友好，以及不同字号下的可读性 | 产品字体要服务于界面可读性，而不是只追求风格 |
-| Microsoft Fluent | Web 使用 Segoe UI；Windows 使用 Segoe UI Variable；通过 type ramp 定义语义化层级 | 字号、行高、字重应语义化，而不是临时手调 |
-| Vercel | Geist 面向开发者和设计师，包含 Sans、Mono、Pixel 等子族 | SaaS / Developer Tool 需要单独规划代码字体与界面字体 |
-| IBM | IBM Plex 是全球化、通用、具有品牌辨识度的企业字体体系 | 品牌字体需要兼顾多语言、多媒介和长期维护 |
-| OpenAI | OpenAI Sans 强调几何精度、功能性和圆润亲和 | AI 品牌字体不应过冷，应兼具科技感与亲和感 |
-| Google / Noto | Noto 覆盖多语言文字系统 | 中文与国际化不应依赖单一拉丁字体 fallback |
+| 品牌 / 体系      | 字体策略                                                                         | 可借鉴点                                             |
+| ---------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| Apple            | San Francisco 作为系统字体，强调一致、清晰、友好，以及不同字号下的可读性         | 产品字体要服务于界面可读性，而不是只追求风格         |
+| Microsoft Fluent | Web 使用 Segoe UI；Windows 使用 Segoe UI Variable；通过 type ramp 定义语义化层级 | 字号、行高、字重应语义化，而不是临时手调             |
+| Vercel           | Geist 面向开发者和设计师，包含 Sans、Mono、Pixel 等子族                          | SaaS / Developer Tool 需要单独规划代码字体与界面字体 |
+| IBM              | IBM Plex 是全球化、通用、具有品牌辨识度的企业字体体系                            | 品牌字体需要兼顾多语言、多媒介和长期维护             |
+| OpenAI           | OpenAI Sans 强调几何精度、功能性和圆润亲和                                       | AI 品牌字体不应过冷，应兼具科技感与亲和感            |
+| Google / Noto    | Noto 覆盖多语言文字系统                                                          | 中文与国际化不应依赖单一拉丁字体 fallback            |
 
 Virtual Nature Studio 的方向是：
 
@@ -62,14 +62,14 @@ AI / virtual / creative / nature / studio
 
 ### 2.1 字体角色定义
 
-| Token | 字体 | 角色 | 主要场景 | 使用优先级 |
-|---|---|---|---|---:|
-| `--font-brand` | Funnel Display | 品牌字体 | Logo、品牌名、Hero 主标题、营销页大标题 | P0 |
-| `--font-display` | Funnel Display | 展示标题字体 | Landing Page、Section Title、Campaign 标题 | P0 |
-| `--font-sans` | Inter + CJK fallback | 产品通用字体 | 正文、按钮、导航、表单、产品界面 | P0 |
-| `--font-cjk` | Noto Sans SC + 系统中文 | 中文专用字体 | 中文正文、帮助文档、中文标题、中文界面 | P0 |
-| `--font-mono` | Geist Mono + system mono | 等宽字体 | 代码、API Key、JSON、Prompt、日志、命令行 | P1 |
-| `--font-number` | Inter | 数字场景 | 价格、指标、表格数字、Dashboard | P1 |
+| Token            | 字体                     | 角色         | 主要场景                                   | 使用优先级 |
+| ---------------- | ------------------------ | ------------ | ------------------------------------------ | ---------: |
+| `--font-brand`   | Funnel Display           | 品牌字体     | Logo、品牌名、Hero 主标题、营销页大标题    |         P0 |
+| `--font-display` | Funnel Display           | 展示标题字体 | Landing Page、Section Title、Campaign 标题 |         P0 |
+| `--font-sans`    | Inter + CJK fallback     | 产品通用字体 | 正文、按钮、导航、表单、产品界面           |         P0 |
+| `--font-cjk`     | Noto Sans SC + 系统中文  | 中文专用字体 | 中文正文、帮助文档、中文标题、中文界面     |         P0 |
+| `--font-mono`    | Geist Mono + system mono | 等宽字体     | 代码、API Key、JSON、Prompt、日志、命令行  |         P1 |
+| `--font-number`  | Inter                    | 数字场景     | 价格、指标、表格数字、Dashboard            |         P1 |
 
 ### 2.2 核心决策
 
@@ -166,15 +166,26 @@ code snippet
 @import "tailwindcss";
 
 @theme {
-  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-brand:
+    "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
 
-  --font-display: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
 
-  --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  --font-cjk: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
+  --font-cjk:
+    "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
 
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 ```
 
@@ -182,11 +193,22 @@ code snippet
 
 ```css
 :root {
-  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-cjk: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-brand:
+    "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-cjk:
+    "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 ```
 
@@ -236,12 +258,12 @@ samp,
 
 ### 4.1 加载优先级
 
-| 优先级 | 字体 | 建议加载方式 | 说明 |
-|---|---|---|---|
-| P0 | Funnel Display | preload / self-host / variable font | 首屏品牌字体，影响第一印象 |
-| P0 | Inter | self-host / variable font | 全站 UI 与正文主力字体 |
-| P1 | Geist Mono | 按需加载或全局轻量加载 | 代码、API、Prompt 场景 |
-| P1 / P2 | Noto Sans SC | 谨慎加载；优先系统 fallback 或子集化 | CJK 文件较大，避免一次加载完整字体全家桶 |
+| 优先级  | 字体           | 建议加载方式                         | 说明                                     |
+| ------- | -------------- | ------------------------------------ | ---------------------------------------- |
+| P0      | Funnel Display | preload / self-host / variable font  | 首屏品牌字体，影响第一印象               |
+| P0      | Inter          | self-host / variable font            | 全站 UI 与正文主力字体                   |
+| P1      | Geist Mono     | 按需加载或全局轻量加载               | 代码、API、Prompt 场景                   |
+| P1 / P2 | Noto Sans SC   | 谨慎加载；优先系统 fallback 或子集化 | CJK 文件较大，避免一次加载完整字体全家桶 |
 
 ### 4.2 性能要求
 
@@ -309,21 +331,21 @@ Geist Mono: 400 / 500 / 600
 
 ### 5.1 Typography Scale
 
-| Token | 字体 | 字重 | 字号 | 行高 | 字距 | 用途 |
-|---|---|---:|---:|---:|---:|---|
-| `display-hero` | Funnel Display | 800 | `clamp(56px, 8vw, 128px)` | 0.95 | `-0.048em` | 首页 Hero 主标题 |
-| `display-xl` | Funnel Display | 800 | `clamp(44px, 6vw, 88px)` | 0.98 | `-0.045em` | 营销页大标题 |
-| `display-lg` | Funnel Display | 700 | `48px` | 1.02 | `-0.04em` | 页面主标题 |
-| `heading-1` | Funnel Display / Inter | 700 | `40px` | 1.1 | `-0.035em` | H1 |
-| `heading-2` | Funnel Display / Inter | 700 | `32px` | 1.15 | `-0.025em` | H2 |
-| `heading-3` | Inter | 600 | `24px` | 1.25 | `-0.015em` | H3 / 卡片标题 |
-| `body-lg` | Inter | 400 / 500 | `18px` | 1.7 | `0` | 营销页段落 |
-| `body` | Inter | 400 | `16px` | 1.6 | `0` | 正文 / UI |
-| `body-sm` | Inter | 400 / 500 | `14px` | 1.55 | `0` | 辅助说明 |
-| `caption` | Inter | 500 | `12px` | 1.45 | `0.01em` | 标签 / 说明 |
-| `cjk-body` | Noto Sans SC | 400 | `16px` | 1.75 | `0.01em` | 中文正文 |
-| `cjk-heading` | Noto Sans SC | 600 / 700 | `32px` | 1.25 | `0` | 中文标题 |
-| `code` | Geist Mono | 400 | `13px` | 1.55 | `0` | 代码 / API |
+| Token          | 字体                   |      字重 |                      字号 | 行高 |       字距 | 用途             |
+| -------------- | ---------------------- | --------: | ------------------------: | ---: | ---------: | ---------------- |
+| `display-hero` | Funnel Display         |       800 | `clamp(56px, 8vw, 128px)` | 0.95 | `-0.048em` | 首页 Hero 主标题 |
+| `display-xl`   | Funnel Display         |       800 |  `clamp(44px, 6vw, 88px)` | 0.98 | `-0.045em` | 营销页大标题     |
+| `display-lg`   | Funnel Display         |       700 |                    `48px` | 1.02 |  `-0.04em` | 页面主标题       |
+| `heading-1`    | Funnel Display / Inter |       700 |                    `40px` |  1.1 | `-0.035em` | H1               |
+| `heading-2`    | Funnel Display / Inter |       700 |                    `32px` | 1.15 | `-0.025em` | H2               |
+| `heading-3`    | Inter                  |       600 |                    `24px` | 1.25 | `-0.015em` | H3 / 卡片标题    |
+| `body-lg`      | Inter                  | 400 / 500 |                    `18px` |  1.7 |        `0` | 营销页段落       |
+| `body`         | Inter                  |       400 |                    `16px` |  1.6 |        `0` | 正文 / UI        |
+| `body-sm`      | Inter                  | 400 / 500 |                    `14px` | 1.55 |        `0` | 辅助说明         |
+| `caption`      | Inter                  |       500 |                    `12px` | 1.45 |   `0.01em` | 标签 / 说明      |
+| `cjk-body`     | Noto Sans SC           |       400 |                    `16px` | 1.75 |   `0.01em` | 中文正文         |
+| `cjk-heading`  | Noto Sans SC           | 600 / 700 |                    `32px` | 1.25 |        `0` | 中文标题         |
+| `code`         | Geist Mono             |       400 |                    `13px` | 1.55 |        `0` | 代码 / API       |
 
 ### 5.2 CSS 类建议
 
@@ -403,12 +425,12 @@ Virtual Nature Studio
 
 建议优先级：
 
-| 形态 | 推荐度 | 说明 |
-|---|---:|---|
-| `virtual nature studio` | 高 | 更像创意工作室、生成式自然影像品牌 |
-| `Virtual Nature Studio` | 高 | 更像 AI SaaS / B2B 品牌 |
-| `VIRTUAL NATURE STUDIO` | 中 | 可以用于徽章、标签，不建议作为主 logo |
-| `VirtualNatureStudio` | 低 | 可读性下降，不建议 |
+| 形态                    | 推荐度 | 说明                                  |
+| ----------------------- | -----: | ------------------------------------- |
+| `virtual nature studio` |     高 | 更像创意工作室、生成式自然影像品牌    |
+| `Virtual Nature Studio` |     高 | 更像 AI SaaS / B2B 品牌               |
+| `VIRTUAL NATURE STUDIO` |     中 | 可以用于徽章、标签，不建议作为主 logo |
+| `VirtualNatureStudio`   |     低 | 可读性下降，不建议                    |
 
 Logo CSS：
 
@@ -459,13 +481,9 @@ Hero Title 规则：
 示例：
 
 ```html
-<h1 class="text-display-hero">
-  Virtual Nature<br />Studio
-</h1>
+<h1 class="text-display-hero">Virtual Nature<br />Studio</h1>
 
-<p class="text-cjk-body">
-  用 AI 生成自然场景、环境视觉与虚拟空间资产。
-</p>
+<p class="text-cjk-body">用 AI 生成自然场景、环境视觉与虚拟空间资产。</p>
 ```
 
 ### 6.3 中文品牌副标题
@@ -624,9 +642,7 @@ Placeholder 不应使用过轻字重；最低使用 400。
 推荐：
 
 ```html
-<h1 class="font-brand tracking-brand-tight">
-  Virtual Nature Studio
-</h1>
+<h1 class="font-brand tracking-brand-tight">Virtual Nature Studio</h1>
 
 <p class="font-cjk leading-loose">
   一个用于生成自然场景、环境视觉与虚拟空间资产的 AI Studio。
@@ -773,7 +789,9 @@ font-mono
 示例：
 
 ```html
-<h1 class="font-brand text-7xl font-extrabold tracking-[-0.048em] leading-[0.95]">
+<h1
+  class="font-brand text-7xl font-extrabold tracking-[-0.048em] leading-[0.95]"
+>
   Virtual Nature Studio
 </h1>
 
@@ -785,24 +803,22 @@ font-mono
   用 AI 生成自然场景、环境视觉与虚拟空间资产。
 </p>
 
-<code class="font-mono text-sm">
-  model: virtual-nature-v1
-</code>
+<code class="font-mono text-sm"> model: virtual-nature-v1 </code>
 ```
 
 ### 11.2 组件级规范
 
-| 组件 | Font Class | Weight | Tracking |
-|---|---|---:|---:|
-| Logo | `font-brand` | 700 / 800 | `-0.025em` 到 `-0.04em` |
-| Hero Title | `font-brand` | 800 | `-0.04em` 到 `-0.048em` |
-| Marketing H2 | `font-display` | 700 | `-0.025em` 到 `-0.04em` |
-| Product H1 | `font-sans` | 700 | `-0.025em` |
-| Body | `font-sans` | 400 | `0` |
-| CN Body | `font-cjk` | 400 | `0.01em` |
-| Button | `font-sans` | 600 | `0` |
-| Code | `font-mono` | 400 / 500 | `0` |
-| Metric | `font-sans` | 600 / 700 | `tabular-nums` |
+| 组件         | Font Class     |    Weight |                Tracking |
+| ------------ | -------------- | --------: | ----------------------: |
+| Logo         | `font-brand`   | 700 / 800 | `-0.025em` 到 `-0.04em` |
+| Hero Title   | `font-brand`   |       800 | `-0.04em` 到 `-0.048em` |
+| Marketing H2 | `font-display` |       700 | `-0.025em` 到 `-0.04em` |
+| Product H1   | `font-sans`    |       700 |              `-0.025em` |
+| Body         | `font-sans`    |       400 |                     `0` |
+| CN Body      | `font-cjk`     |       400 |                `0.01em` |
+| Button       | `font-sans`    |       600 |                     `0` |
+| Code         | `font-mono`    | 400 / 500 |                     `0` |
+| Metric       | `font-sans`    | 600 / 700 |          `tabular-nums` |
 
 ### 11.3 禁止项
 
@@ -830,16 +846,16 @@ font-family: var(--font-mono);
 
 ### 12.1 官网首页
 
-| 区域 | 字体 |
-|---|---|
-| Logo | Funnel Display |
-| Navigation | Inter |
-| Hero Title | Funnel Display |
+| 区域          | 字体                 |
+| ------------- | -------------------- |
+| Logo          | Funnel Display       |
+| Navigation    | Inter                |
+| Hero Title    | Funnel Display       |
 | Hero Subtitle | Inter / Noto Sans SC |
-| CTA | Inter 600 |
-| Section Title | Funnel Display |
-| Feature Card | Inter |
-| Footer | Inter |
+| CTA           | Inter 600            |
+| Section Title | Funnel Display       |
+| Feature Card  | Inter                |
+| Footer        | Inter                |
 
 ### 12.2 营销页 / Landing Page
 
@@ -878,13 +894,13 @@ Noto Sans SC：按中文内容需要
 
 ### 12.4 文档中心 / Docs
 
-| 内容 | 字体 |
-|---|---|
+| 内容     | 字体                            |
+| -------- | ------------------------------- |
 | 文档标题 | Inter 700 或 Funnel Display 700 |
-| 文档正文 | Inter / Noto Sans SC |
-| 代码块 | Geist Mono |
-| API 参数 | Geist Mono |
-| 表格 | Inter |
+| 文档正文 | Inter / Noto Sans SC            |
+| 代码块   | Geist Mono                      |
+| API 参数 | Geist Mono                      |
+| 表格     | Inter                           |
 
 规则：
 
@@ -945,15 +961,15 @@ Metric/LG
 
 ### 13.3 设计与代码映射
 
-| Figma Style | CSS Class | Font Token |
-|---|---|---|
-| `Display/Hero` | `.text-display-hero` | `--font-brand` |
-| `Display/XL` | `.text-display-xl` | `--font-display` |
-| `Heading/H1` | `.text-heading-1` | `--font-display` |
-| `Body/MD` | `.text-body` | `--font-sans` |
-| `Body/CN` | `.text-cjk-body` | `--font-cjk` |
-| `Code/MD` | `.text-code` | `--font-mono` |
-| `Metric/LG` | `.text-metric-lg` | `--font-sans` + tabular nums |
+| Figma Style    | CSS Class            | Font Token                   |
+| -------------- | -------------------- | ---------------------------- |
+| `Display/Hero` | `.text-display-hero` | `--font-brand`               |
+| `Display/XL`   | `.text-display-xl`   | `--font-display`             |
+| `Heading/H1`   | `.text-heading-1`    | `--font-display`             |
+| `Body/MD`      | `.text-body`         | `--font-sans`                |
+| `Body/CN`      | `.text-cjk-body`     | `--font-cjk`                 |
+| `Code/MD`      | `.text-code`         | `--font-mono`                |
+| `Metric/LG`    | `.text-metric-lg`    | `--font-sans` + tabular nums |
 
 ---
 
@@ -979,13 +995,13 @@ Metric/LG
 必须设置页面语言：
 
 ```html
-<html lang="zh-CN">
+<html lang="zh-CN"></html>
 ```
 
 英文页面：
 
 ```html
-<html lang="en">
+<html lang="en"></html>
 ```
 
 局部混排：
@@ -1023,12 +1039,8 @@ Metric/LG
 </header>
 
 <section class="hero">
-  <h1 class="text-display-hero">
-    Virtual Nature<br />Studio
-  </h1>
-  <p class="text-cjk-body">
-    用 AI 生成自然场景、环境视觉与虚拟空间资产。
-  </p>
+  <h1 class="text-display-hero">Virtual Nature<br />Studio</h1>
+  <p class="text-cjk-body">用 AI 生成自然场景、环境视觉与虚拟空间资产。</p>
 </section>
 ```
 
@@ -1042,7 +1054,9 @@ Metric/LG
 
 <main class="font-sans">
   <h1 class="text-heading-product">Scene Generator</h1>
-  <p class="text-body">Create and manage your generated natural environments.</p>
+  <p class="text-body">
+    Create and manage your generated natural environments.
+  </p>
 
   <code class="font-mono">model: virtual-nature-v1</code>
 </main>
@@ -1205,11 +1219,22 @@ public/
 }
 
 :root {
-  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-cjk: "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-brand:
+    "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "Funnel Display", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-cjk:
+    "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 ```
 
@@ -1297,10 +1322,18 @@ Virtual Nature Studio 字体体系定案：
 
 ```css
 @theme {
-  --font-brand: "Funnel Display", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-cjk: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-brand:
+    "Funnel Display", "Noto Sans SC", "PingFang SC", "Microsoft YaHei",
+    ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif,
+    system-ui, sans-serif;
+  --font-cjk:
+    "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui,
+    sans-serif;
+  --font-mono:
+    "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 }
 ```
 
@@ -1331,4 +1364,3 @@ Virtual Nature Studio 字体体系定案：
 - IBM Plex: https://www.ibm.com/plex/
 - IBM Design Language Typeface: https://www.ibm.com/design/language/typography/typeface/
 - OpenAI Brand Typography: https://openai.com/brand/
-

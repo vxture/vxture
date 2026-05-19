@@ -13,6 +13,7 @@
 **架构：** 阿里云 SMTP（DirectMail）+ Nodemailer，独立包 `@vxture/service-mail`
 
 **已完成：**
+
 - [x] `@vxture/service-mail` 包（`services/notification/mail/`）
 - [x] `SmtpMailProvider`（Nodemailer，端口 465 SSL）+ `ConsoleMailProvider`（开发 fallback）
 - [x] `MailService`：发送失败自动重试 1 次，支持验证码 / 密码重置两类模板
@@ -20,6 +21,7 @@
 - [x] `POST /api/send-code` 和 `POST /api/verify-code` 接入 website-bff
 
 **环境变量（填入 `.env.local`）：**
+
 ```
 SMTP_HOST=smtpdm.aliyun.com
 SMTP_PORT=465
@@ -31,11 +33,13 @@ WEBSITE_BASE_URL=https://vxture.com
 ```
 
 **已完成所有接入点：**
+
 - [x] `requestPasswordReset` 已接入 `MailService.sendPasswordReset`（`bff/website-bff/src/auth/auth.service.ts:81`）
 - [x] `console-bff` 订阅变更通知（升级 / 暂停 / 恢复 / 取消）→ 收件人 `req.user.email`
 - [x] `admin-bff` 离线付款核销确认 / 驳回通知 → 收件人 `org.contact_email`
 
 **代码入口：**
+
 - `services/notification/mail/src/` — 核心服务
 - `bff/website-bff/src/routers/verifycode.router.ts` — 验证码 API 路由
 - `bff/console-bff/src/routers/subscription.router.ts:117` — 订阅变更邮件（fire-and-forget）
@@ -65,6 +69,7 @@ WEBSITE_BASE_URL=https://vxture.com
 - [ ] ⚠️ 尚未实现：为租户分配默认配额（依赖 service-billing，T05 后再补）
 
 **代码入口：**
+
 - `services/tenant/organization/src/repository/pg-organization.repository.ts` → `createTenant`
 - `bff/website-bff/src/routers/auth.router.ts` → `POST api/auth/tenant/init`
 - `portals/website/src/components/auth/VerifyForm.tsx` → `handleChoose`
@@ -116,6 +121,7 @@ WEBSITE_BASE_URL=https://vxture.com
 **注：** BFF 路由（`audit-logs.router.ts` / `announcements.router.ts` / `skills.router.ts`）已注册，当前返回空列表；数据层（DB 查询）接入后页面自动生效。
 
 **代码入口：**
+
 - `portals/admin/src/modules/audit-logs/AuditLogsPage.tsx`
 - `portals/admin/src/modules/announcements/AnnouncementsPage.tsx`
 - `portals/admin/src/modules/skills/SkillsPage.tsx`
@@ -130,10 +136,12 @@ WEBSITE_BASE_URL=https://vxture.com
 - [ ] 接入微信 OAuth2
 
 **已完成架构：**
+
 - `GET /auth-api/auth/oauth/:provider/start` — 生成 state 存 Redis（10 分钟 TTL），重定向至第三方授权页
 - `GET /auth-api/auth/oauth/:provider/callback` — 验证 CSRF state，exchangeCode 换 token，getUserInfo 获取用户信息，loginWithOAuth 签发 JWT，写 HttpOnly Cookie，重定向回原页面
 
 **代码入口：**
+
 - `bff/auth-bff/src/routers/oauth.router.ts` — 路由（`startOAuth` L120 / `handleCallback` L145）
 - `bff/auth-bff/src/providers/dingtalk.provider.ts` — 钉钉 API 封装（exchangeCode / getUserInfo）
 - `bff/auth-bff/src/providers/feishu.provider.ts` — 飞书 API 封装（exchangeCode / getUserInfo）
@@ -156,21 +164,23 @@ WEBSITE_BASE_URL=https://vxture.com
 
 **核查结论：** 所有 BFF router 与 service 接口签名完全对齐，无断链。
 
-| 模块 | Router | 状态 |
-|------|--------|------|
-| 账单 | `billing.router.ts` | ✅ `queryInvoices` / `getBillingOverview` 签名一致 |
-| 订阅 | `subscription.router.ts` | ✅ `getTenantSubscriptions` / `upgradePlan` / `pauseSubscription` / `resumeSubscription` / `cancelSubscription` 签名一致 |
-| 成员 | `iam.router.ts` → SessionAggregator | ✅ 所有 CRUD 方法与 OrganizationReadService 完全对齐 |
-| 角色 | `iam.router.ts` → SessionAggregator | ✅ `createRole` / `updateRole` / `deleteRole` 签名一致 |
-| 个人信息 | `me.router.ts` | ✅ 与 AccountAuthService 对齐 |
-| 租户上下文 | `tenant-context.router.ts` | ✅ `/api/tenant-context` |
-| 能力列表 | `capabilities.router.ts` | ✅ |
+| 模块       | Router                              | 状态                                                                                                                     |
+| ---------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 账单       | `billing.router.ts`                 | ✅ `queryInvoices` / `getBillingOverview` 签名一致                                                                       |
+| 订阅       | `subscription.router.ts`            | ✅ `getTenantSubscriptions` / `upgradePlan` / `pauseSubscription` / `resumeSubscription` / `cancelSubscription` 签名一致 |
+| 成员       | `iam.router.ts` → SessionAggregator | ✅ 所有 CRUD 方法与 OrganizationReadService 完全对齐                                                                     |
+| 角色       | `iam.router.ts` → SessionAggregator | ✅ `createRole` / `updateRole` / `deleteRole` 签名一致                                                                   |
+| 个人信息   | `me.router.ts`                      | ✅ 与 AccountAuthService 对齐                                                                                            |
+| 租户上下文 | `tenant-context.router.ts`          | ✅ `/api/tenant-context`                                                                                                 |
+| 能力列表   | `capabilities.router.ts`            | ✅                                                                                                                       |
 
 **已修复：**
+
 - `BillingService` / `SubscriptionService` 补加 `@Injectable()` 装饰器
 - 文档 `console-bff.md` 路径前缀 `/api/tenant` → `/api/tenant-context`
 
 **技术债（不影响运行）：**
+
 - billing / subscription 仍使用内存 mock 数据，真实 DB 接入后需切换 Repository 实现
 - BillingModule / SubscriptionModule 注册的 Repository NestJS provider 与服务内部单例不一致
 
@@ -229,6 +239,7 @@ WEBSITE_BASE_URL=https://vxture.com
 > 架构背景见 [`docs/deployment/00-overview.md`](deployment/00-overview.md)。
 
 ### 🔴 基础设施整理（优先）
+
 - [ ] worker-01：按规范重建 `/data/platform/` 目录结构
 - [ ] worker-01：`vxture-pg-prod` → 迁至 `/data/platform/db/postgres/`，重命名容器
 - [ ] worker-01：`vxture-redis-prod` → 迁至 `/data/platform/db/redis/`，重命名容器
@@ -237,16 +248,19 @@ WEBSITE_BASE_URL=https://vxture.com
 - [ ] worker-02：清理 `test-web`
 
 ### 🟠 平台服务部署（worker-01）
+
 - [ ] 部署 website-bff / console-bff / admin-bff（对接平台数据库）
 - [ ] Nginx 补充子域名：admin、console、api
 - [ ] Cloudflare SSL 模式确认为 Full Strict
 
 ### 🟠 业务服务部署（worker-02）
+
 - [ ] Vela：vela-bff + vela-server + postgres + redis（prod + beta）
 - [ ] Ruyin：ruyin-bff + ruyin-server + postgres + redis（prod + beta）
 - [ ] ai-gateway：独立 postgres（ai_gateway schema）
 
 ### 🟡 运维
+
 - [ ] worker-01 `/data/platform/backups/` 自动备份脚本（cron pg_dump → 同步阿里云 OSS）
 - [ ] worker-01 开启 2G swap（缓解内存压力）
 - [ ] `ruyin.ai` Cloudflare Geo 路由（国内重定向至 ruyin.vxture.com）
@@ -255,13 +269,13 @@ WEBSITE_BASE_URL=https://vxture.com
 
 ## 附：关键代码入口索引
 
-| 编号 | 文件 | 说明 |
-|------|------|------|
-| T01 | `bff/website-bff/src/auth/auth.service.ts` | 邮件发送预留点 |
-| T02 | `portals/website/src/components/auth/LoginForm.tsx` | 忘记密码 UI 已就绪 |
-| T03 | `bff/website-bff/src/routers/auth.router.ts` → `POST /api/auth/tenant/init` | ✅ 已完成 |
-| T04 | `bff/website-bff/src/middleware/tenant.middleware.ts` | ✅ 已完成 |
-| T05 | `bff/admin-bff/src/routers/payments.router.ts` | 纯内部数据，无 SDK |
-| T06 | `docs/product/agents/vela/status.md` | ✅ 一期完成，二期见状态文档 |
-| T11 | `agent-server/vela/prisma/schema.prisma:45` | 注释标注二期 |
-| T12 | `bff/admin-bff/src/routers/products.router.ts:53` | 静态 mock |
+| 编号 | 文件                                                                        | 说明                        |
+| ---- | --------------------------------------------------------------------------- | --------------------------- |
+| T01  | `bff/website-bff/src/auth/auth.service.ts`                                  | 邮件发送预留点              |
+| T02  | `portals/website/src/components/auth/LoginForm.tsx`                         | 忘记密码 UI 已就绪          |
+| T03  | `bff/website-bff/src/routers/auth.router.ts` → `POST /api/auth/tenant/init` | ✅ 已完成                   |
+| T04  | `bff/website-bff/src/middleware/tenant.middleware.ts`                       | ✅ 已完成                   |
+| T05  | `bff/admin-bff/src/routers/payments.router.ts`                              | 纯内部数据，无 SDK          |
+| T06  | `docs/product/agents/vela/status.md`                                        | ✅ 一期完成，二期见状态文档 |
+| T11  | `agent-server/vela/prisma/schema.prisma:45`                                 | 注释标注二期                |
+| T12  | `bff/admin-bff/src/routers/products.router.ts:53`                           | 静态 mock                   |

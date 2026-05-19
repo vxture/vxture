@@ -7,14 +7,14 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/bff-auth` |
-| 路径 | `bff/auth-bff/` |
-| @layer | `Application` |
-| 框架 | NestJS |
-| 端口 | 3090 |
-| 服务对象 | 所有 BFF（内部）+ portal 前端（部分直接调用）|
+| 项       | 值                                            |
+| -------- | --------------------------------------------- |
+| 包名     | `@vxture/bff-auth`                            |
+| 路径     | `bff/auth-bff/`                               |
+| @layer   | `Application`                                 |
+| 框架     | NestJS                                        |
+| 端口     | 3090                                          |
+| 服务对象 | 所有 BFF（内部）+ portal 前端（部分直接调用） |
 
 ---
 
@@ -33,12 +33,12 @@
 
 ### Cookie 策略
 
-| source | Cookie 组 | Domain |
-|--------|-----------|--------|
+| source    | Cookie 组                                            | Domain                   |
+| --------- | ---------------------------------------------------- | ------------------------ |
 | `website` | `vx_tenant_access_token` / `vx_tenant_refresh_token` | `COOKIE_DOMAIN_PLATFORM` |
 | `console` | `vx_tenant_access_token` / `vx_tenant_refresh_token` | `COOKIE_DOMAIN_PLATFORM` |
-| `admin` | `vx_admin_access_token` / `vx_admin_refresh_token` | `COOKIE_DOMAIN_PLATFORM` |
-| `ruyin` | `ry_access_token` / `ry_refresh_token` | `COOKIE_DOMAIN_RUYIN` |
+| `admin`   | `vx_admin_access_token` / `vx_admin_refresh_token`   | `COOKIE_DOMAIN_PLATFORM` |
+| `ruyin`   | `ry_access_token` / `ry_refresh_token`               | `COOKIE_DOMAIN_RUYIN`    |
 
 website 和 console 共享同一组 `vx_tenant_*` cookie，是同一登录态的两个入口。
 
@@ -101,7 +101,9 @@ website 和 console 共享同一组 `vx_tenant_*` cookie，是同一登录态的
 // Request body: 无
 
 // Response 200
-{ status: 'logged_out' }
+{
+  status: "logged_out";
+}
 
 // 副作用：
 //   - access token jti 写入 Redis 黑名单（TTL = token 剩余有效期）
@@ -116,7 +118,9 @@ website 和 console 共享同一组 `vx_tenant_*` cookie，是同一登录态的
 // Request body: 无（从 Cookie 读取 refresh token）
 
 // Response 200
-{ status: 'refreshed' }
+{
+  status: "refreshed";
+}
 // 副作用：重新写入对应 source 的 Cookie，更新 Redis 中的 refresh token
 
 // Response 401 — refresh token 不存在、已过期、Redis 中已吊销
@@ -146,15 +150,19 @@ website 和 console 共享同一组 `vx_tenant_*` cookie，是同一登录态的
 ```typescript
 // Request body
 {
-  token: string;       // 邮件链接中的 reset token
+  token: string; // 邮件链接中的 reset token
   newPassword: string;
 }
 
 // Response 200
-{ status: 'ok' }
+{
+  status: "ok";
+}
 
 // Response 400 — token 无效或已过期
-{ message: 'Invalid or expired reset token' }
+{
+  message: "Invalid or expired reset token";
+}
 ```
 
 ---
@@ -167,10 +175,14 @@ website 和 console 共享同一组 `vx_tenant_*` cookie，是同一登录态的
 // 需要有效的 vx_tenant_access_token Cookie（注册后的临时 session）
 
 // Request body
-{ type: 'individual' | 'organization' }
+{
+  type: "individual" | "organization";
+}
 
 // Response 200 — 更新 Cookie（写入新 tenantId 的 JWT）
-{ tenantId: string }
+{
+  tenantId: string;
+}
 
 // 行为：
 //   - 若该账号已有租户，直接复用（幂等）
@@ -209,7 +221,7 @@ website 和 console 共享同一组 `vx_tenant_*` cookie，是同一登录态的
 
 // Response 200
 {
-  status: 'active';
+  status: "active";
   userId: string;
   userType: string;
   tenantId: string;

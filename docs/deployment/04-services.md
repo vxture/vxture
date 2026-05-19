@@ -37,7 +37,6 @@ networks:
     driver: bridge
 
 services:
-
   # ── 数据层 ────────────────────────────────────────────────────────────────
 
   postgres:
@@ -127,7 +126,7 @@ services:
     restart: unless-stopped
     networks: [vx-platform]
     ports:
-      - "3090:3090"   # UFW 限制仅 Tailscale 子网（100.64.0.0/10）可达
+      - "3090:3090" # UFW 限制仅 Tailscale 子网（100.64.0.0/10）可达
     env_file: .env.auth-bff
     depends_on:
       redis: { condition: service_healthy }
@@ -244,7 +243,6 @@ networks:
     driver: bridge
 
 services:
-
   postgres:
     image: postgres:17-alpine
     container_name: vx-ai-gateway-pg
@@ -269,7 +267,7 @@ services:
     restart: unless-stopped
     networks: [vx-ai-gateway]
     ports:
-      - "127.0.0.1:3100:3100"   # 业务 server 通过 host.docker.internal:3100 访问
+      - "127.0.0.1:3100:3100" # 业务 server 通过 host.docker.internal:3100 访问
     env_file: .env.ai-gateway
     depends_on:
       postgres: { condition: service_healthy }
@@ -300,7 +298,6 @@ networks:
     driver: bridge
 
 services:
-
   postgres:
     image: postgres:17-alpine
     container_name: vx-vela-pg-prod
@@ -358,7 +355,7 @@ services:
     restart: unless-stopped
     networks: [vx-vela-prod]
     extra_hosts:
-      - "host.docker.internal:host-gateway"   # 访问宿主机 127.0.0.1:3100 (ai-gateway)
+      - "host.docker.internal:host-gateway" # 访问宿主机 127.0.0.1:3100 (ai-gateway)
     ports:
       - "127.0.0.1:3122:3122"
     env_file: .env.vela.prod.server
@@ -391,7 +388,6 @@ networks:
     driver: bridge
 
 services:
-
   postgres:
     image: postgres:17-alpine
     container_name: vx-ruyin-pg-prod
@@ -432,7 +428,7 @@ services:
     restart: unless-stopped
     networks: [vx-ruyin-prod]
     ports:
-      - "0.0.0.0:3111:3111"   # Cloudflare Tunnel 直连此端口（无 ICP 备案路径）
+      - "0.0.0.0:3111:3111" # Cloudflare Tunnel 直连此端口（无 ICP 备案路径）
     env_file: .env.ruyin.prod.bff
     depends_on:
       postgres: { condition: service_healthy }
@@ -505,22 +501,22 @@ docker compose -f compose.ruyin.prod.yml up -d
 
 ## 端口分配总表
 
-| 服务 | 端口 | 节点 | 对外可达方式 |
-|------|------|------|------------|
-| Nginx | 80 / 443 | worker-01 | 公网（Cloudflare 代理） |
-| website-portal | 3010 | worker-01 | 容器网络（Nginx 代理） |
-| console-portal | 3020 | worker-01 | 容器网络（Nginx 代理） |
-| admin-portal | 3030 | worker-01 | 容器网络（Nginx 代理） |
-| gateway-bff | 8000 | worker-01 | 容器网络（Nginx 代理） |
-| auth-bff | 3090 | worker-01 | 宿主机（UFW 限 Tailscale 子网） |
-| website-bff | 3011 | worker-01 | 容器网络内部 |
-| console-bff | 3021 | worker-01 | 容器网络内部 |
-| admin-bff | 3031 | worker-01 | 容器网络内部 |
-| ai-gateway | 3100 | worker-02 | 127.0.0.1（同宿主机 server 访问） |
-| vela-bff | 3121 | worker-02 | 127.0.0.1（Tailscale 访问） |
-| vela-server | 3122 | worker-02 | 127.0.0.1（内部调用） |
-| ruyin-bff | 3111 | worker-02 | 0.0.0.0（Cloudflare Tunnel 直连） |
-| ruyin-server | 3112 | worker-02 | 127.0.0.1（内部调用） |
+| 服务           | 端口     | 节点      | 对外可达方式                      |
+| -------------- | -------- | --------- | --------------------------------- |
+| Nginx          | 80 / 443 | worker-01 | 公网（Cloudflare 代理）           |
+| website-portal | 3010     | worker-01 | 容器网络（Nginx 代理）            |
+| console-portal | 3020     | worker-01 | 容器网络（Nginx 代理）            |
+| admin-portal   | 3030     | worker-01 | 容器网络（Nginx 代理）            |
+| gateway-bff    | 8000     | worker-01 | 容器网络（Nginx 代理）            |
+| auth-bff       | 3090     | worker-01 | 宿主机（UFW 限 Tailscale 子网）   |
+| website-bff    | 3011     | worker-01 | 容器网络内部                      |
+| console-bff    | 3021     | worker-01 | 容器网络内部                      |
+| admin-bff      | 3031     | worker-01 | 容器网络内部                      |
+| ai-gateway     | 3100     | worker-02 | 127.0.0.1（同宿主机 server 访问） |
+| vela-bff       | 3121     | worker-02 | 127.0.0.1（Tailscale 访问）       |
+| vela-server    | 3122     | worker-02 | 127.0.0.1（内部调用）             |
+| ruyin-bff      | 3111     | worker-02 | 0.0.0.0（Cloudflare Tunnel 直连） |
+| ruyin-server   | 3112     | worker-02 | 127.0.0.1（内部调用）             |
 
 ---
 

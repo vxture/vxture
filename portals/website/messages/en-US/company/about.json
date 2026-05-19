@@ -8,7 +8,12 @@
     "secondaryAction": "View Positioning",
     "panelTitle": "Current Positioning",
     "panelDescription": "Vxture is not only a tool provider or a generic model provider. We combine industry knowledge, intelligent data, model engineering, and agent orchestration to help organizations bring AI into specific roles, workflows, and scenarios.",
-    "highlights": ["Industry LLMs", "Business Agents", "Close Service", "Customer Co-creation"]
+    "highlights": [
+      "Industry LLMs",
+      "Business Agents",
+      "Close Service",
+      "Customer Co-creation"
+    ]
   },
   "positioning": {
     "eyebrow": "Positioning",

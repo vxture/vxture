@@ -10,8 +10,6 @@ The goal is to ensure:
 - clear prioritization
 - reliable CI merge decisions
 
-
-
 # Severity Levels
 
 Three severity levels are defined:
@@ -19,8 +17,6 @@ Three severity levels are defined:
 Critical
 Major
 Minor
-
-
 
 # Critical Issues
 
@@ -44,8 +40,6 @@ CI Action:
 
 BLOCK MERGE
 
-
-
 # Major Issues
 
 Major issues affect maintainability or correctness but do not immediately break architecture.
@@ -67,8 +61,6 @@ CI Action:
 
 MERGE WITH WARNING
 
-
-
 # Minor Issues
 
 Minor issues affect code readability, documentation, or style.
@@ -88,8 +80,6 @@ CI Action:
 
 ALLOW MERGE
 
-
-
 # Severity Assignment Rules
 
 AI must classify issues according to the following priority:
@@ -101,8 +91,6 @@ AI must classify issues according to the following priority:
 5. Folder structure inconsistencies → Major
 6. Comment or style issues → Minor
 
-
-
 # Example Issue Classification
 
 Example 1
@@ -113,8 +101,6 @@ core-api importing from service layer
 Severity:
 Critical
 
-
-
 Example 2
 
 Issue:
@@ -122,8 +108,6 @@ package missing index.ts export
 
 Severity:
 Major
-
-
 
 Example 3
 
@@ -133,21 +117,17 @@ missing file header comment
 Severity:
 Minor
 
-
-
 # Reporting Requirements
 
 All AI audit reports must include severity classification.
 
 Example table:
 
-| ID | Severity | Rule | Package | File | Issue |
-|----|--------|------|--------|------|------|
-| VX-001 | Critical | Dependency Rule | core-api | apiClient.ts | Illegal dependency on service layer |
-| VX-002 | Major | Import Rule | core-tenant | tenant.ts | Invalid relative import |
-| VX-003 | Minor | Comment Rule | core-utils | string.ts | Missing file header comment |
-
-
+| ID     | Severity | Rule            | Package     | File         | Issue                               |
+| ------ | -------- | --------------- | ----------- | ------------ | ----------------------------------- |
+| VX-001 | Critical | Dependency Rule | core-api    | apiClient.ts | Illegal dependency on service layer |
+| VX-002 | Major    | Import Rule     | core-tenant | tenant.ts    | Invalid relative import             |
+| VX-003 | Minor    | Comment Rule    | core-utils  | string.ts    | Missing file header comment         |
 
 # Issue ID Format
 
@@ -162,8 +142,6 @@ VX-003
 Prefix:
 
 VX = Vxture
-
-
 
 # Goal
 

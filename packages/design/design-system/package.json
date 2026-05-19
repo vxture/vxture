@@ -7,23 +7,23 @@
   "type": "module",
   "exports": {
     ".": {
-      "types":   "./dist/index.d.ts",
-      "import":  "./dist/index.mjs",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
     "./tokens": {
-      "types":   "./dist/tokens.d.ts",
-      "import":  "./dist/tokens.mjs",
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.mjs",
       "require": "./dist/tokens.cjs"
     },
     "./types": {
-      "types":   "./dist/types.d.ts",
-      "import":  "./dist/types.mjs",
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.mjs",
       "require": "./dist/types.cjs"
     },
     "./server": {
-      "types":   "./dist/server.d.ts",
-      "import":  "./dist/server.mjs",
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.mjs",
       "require": "./dist/server.cjs"
     },
     "./styles/auth.css": "./src/styles/auth.css",
@@ -34,14 +34,17 @@
     "./styles/tokens.css": "./src/styles/tokens.css",
     "./styles/typography.css": "./src/styles/typography.css"
   },
-  "files": ["dist", "src/styles", "assets"],
+  "files": [
+    "dist",
+    "src/styles",
+    "assets"
+  ],
   "scripts": {
     "build": "rimraf dist && tsup",
     "dev": "tsup --watch",
     "lint": "eslint .",
     "type-check": "tsc --noEmit"
   },
-
   "dependencies": {
     "@vxture/shared": "workspace:*",
     "@radix-ui/react-avatar": "^1.1.11",
@@ -59,7 +62,6 @@
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.5.0"
   },
-
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -68,7 +70,6 @@
     "tailwindcss-animate": "^1.0.7",
     "@phosphor-icons/react": "^2.1.10"
   },
-
   "devDependencies": {
     "@eslint/js": "^9.39.3",
     "@types/react": "^19.0.0",
@@ -82,7 +83,6 @@
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
-
   "engines": {
     "node": ">=22.0.0"
   }

@@ -8,11 +8,11 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/core-tenant` |
-| 路径 | `packages/core/tenant/` |
-| @layer | `Infrastructure` |
+| 项     | 值                      |
+| ------ | ----------------------- |
+| 包名   | `@vxture/core-tenant`   |
+| 路径   | `packages/core/tenant/` |
+| @layer | `Infrastructure`        |
 
 ## 职责
 

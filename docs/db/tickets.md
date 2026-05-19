@@ -20,25 +20,25 @@
 
 核心表：`support.ticket`
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `id` | `uuid` | 主键 |
-| `ticket_no` | `varchar(64)` | 业务编号，唯一 |
-| `tenant_id` | `uuid` | 关联 `tenant.tenant.id` |
-| `title` | `varchar(200)` | 工单标题 |
-| `description` | `text` | 工单说明 |
-| `status` | `varchar(32)` | `open / processing / blocked / closed` |
-| `priority` | `varchar(16)` | `p0 / p1 / p2 / p3` |
-| `category` | `varchar(64)` | 工单分类 |
-| `source` | `varchar(64)` | 来源渠道 |
-| `reporter_name` | `varchar(100)` | 提交人快照 |
-| `assignee_name` | `varchar(100)` | 处理人快照 |
-| `created_at` | `timestamptz` | 创建时间 |
-| `updated_at` | `timestamptz` | 更新时间 |
-| `due_at` | `timestamptz` | SLA 截止时间 |
-| `resolved_at` | `timestamptz` | 解决时间 |
-| `closed_at` | `timestamptz` | 关闭时间 |
-| `deleted_at` | `timestamptz` | 软删除时间 |
+| 字段            | 类型           | 说明                                   |
+| --------------- | -------------- | -------------------------------------- |
+| `id`            | `uuid`         | 主键                                   |
+| `ticket_no`     | `varchar(64)`  | 业务编号，唯一                         |
+| `tenant_id`     | `uuid`         | 关联 `tenant.tenant.id`                |
+| `title`         | `varchar(200)` | 工单标题                               |
+| `description`   | `text`         | 工单说明                               |
+| `status`        | `varchar(32)`  | `open / processing / blocked / closed` |
+| `priority`      | `varchar(16)`  | `p0 / p1 / p2 / p3`                    |
+| `category`      | `varchar(64)`  | 工单分类                               |
+| `source`        | `varchar(64)`  | 来源渠道                               |
+| `reporter_name` | `varchar(100)` | 提交人快照                             |
+| `assignee_name` | `varchar(100)` | 处理人快照                             |
+| `created_at`    | `timestamptz`  | 创建时间                               |
+| `updated_at`    | `timestamptz`  | 更新时间                               |
+| `due_at`        | `timestamptz`  | SLA 截止时间                           |
+| `resolved_at`   | `timestamptz`  | 解决时间                               |
+| `closed_at`     | `timestamptz`  | 关闭时间                               |
+| `deleted_at`    | `timestamptz`  | 软删除时间                             |
 
 建议索引：
 
@@ -53,15 +53,15 @@
 
 用于记录状态流转、评论、指派、优先级变更。
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `id` | `uuid` | 主键 |
-| `ticket_id` | `uuid` | 关联 `support.ticket.id` |
-| `event_type` | `varchar(64)` | 事件类型 |
-| `actor_id` | `uuid` | 操作人 |
-| `actor_name` | `varchar(100)` | 操作人快照 |
-| `payload` | `jsonb` | 事件内容 |
-| `created_at` | `timestamptz` | 创建时间 |
+| 字段         | 类型           | 说明                     |
+| ------------ | -------------- | ------------------------ |
+| `id`         | `uuid`         | 主键                     |
+| `ticket_id`  | `uuid`         | 关联 `support.ticket.id` |
+| `event_type` | `varchar(64)`  | 事件类型                 |
+| `actor_id`   | `uuid`         | 操作人                   |
+| `actor_name` | `varchar(100)` | 操作人快照               |
+| `payload`    | `jsonb`        | 事件内容                 |
+| `created_at` | `timestamptz`  | 创建时间                 |
 
 ## 运营待办
 
@@ -75,17 +75,17 @@
 
 如后续需要人工分派、认领、忽略、延期，再新增 `operation.todo`：
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `id` | `uuid` | 主键 |
-| `source_type` | `varchar(64)` | 来源类型 |
-| `source_id` | `uuid` | 来源记录 |
-| `tenant_id` | `uuid` | 关联租户 |
-| `status` | `varchar(32)` | `open / claimed / done / ignored` |
-| `assignee_id` | `uuid` | 处理人 |
-| `due_at` | `timestamptz` | 截止时间 |
-| `created_at` | `timestamptz` | 创建时间 |
-| `updated_at` | `timestamptz` | 更新时间 |
+| 字段          | 类型          | 说明                              |
+| ------------- | ------------- | --------------------------------- |
+| `id`          | `uuid`        | 主键                              |
+| `source_type` | `varchar(64)` | 来源类型                          |
+| `source_id`   | `uuid`        | 来源记录                          |
+| `tenant_id`   | `uuid`        | 关联租户                          |
+| `status`      | `varchar(32)` | `open / claimed / done / ignored` |
+| `assignee_id` | `uuid`        | 处理人                            |
+| `due_at`      | `timestamptz` | 截止时间                          |
+| `created_at`  | `timestamptz` | 创建时间                          |
+| `updated_at`  | `timestamptz` | 更新时间                          |
 
 ## 接口约束
 

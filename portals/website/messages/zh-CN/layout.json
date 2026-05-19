@@ -1,6 +1,6 @@
 {
-    "layout": {
-        "header": "./layout/header.json",
-        "footer": "./layout/footer.json"
-    }
+  "layout": {
+    "header": "./layout/header.json",
+    "footer": "./layout/footer.json"
+  }
 }

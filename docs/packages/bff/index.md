@@ -9,26 +9,26 @@
 
 ### 功能型 BFF
 
-| 包 | 路径 | 端口 | 职责 |
-|----|------|------|------|
-| [`auth.md`](auth.md) | `bff/auth-bff/` | 3090 | JWT 唯一签发源，OAuth 回调，Token 吊销 |
+| 包                         | 路径               | 端口 | 职责                                       |
+| -------------------------- | ------------------ | ---- | ------------------------------------------ |
+| [`auth.md`](auth.md)       | `bff/auth-bff/`    | 3090 | JWT 唯一签发源，OAuth 回调，Token 吊销     |
 | [`gateway.md`](gateway.md) | `bff/gateway-bff/` | 8000 | 路径前缀路由转发，零鉴权零业务逻辑（Hono） |
 
 ### Platform BFF（有独立登录页，直接签发 JWT）
 
-| 包 | 路径 | 端口 | 职责 |
-|----|------|------|------|
-| [`website.md`](website.md) | `bff/website-bff/` | 3011 | 注册、登录、租户初始化 |
-| [`console.md`](console.md) | `bff/console-bff/` | 3021 | 租户管理、成员、账单、订阅 |
-| [`admin.md`](admin.md) | `bff/admin-bff/` | 3031 | 平台运营：用户、租户、配置、工单、AI 模型管理 |
+| 包                         | 路径               | 端口 | 职责                                          |
+| -------------------------- | ------------------ | ---- | --------------------------------------------- |
+| [`website.md`](website.md) | `bff/website-bff/` | 3011 | 注册、登录、租户初始化                        |
+| [`console.md`](console.md) | `bff/console-bff/` | 3021 | 租户管理、成员、账单、订阅                    |
+| [`admin.md`](admin.md)     | `bff/admin-bff/`   | 3031 | 平台运营：用户、租户、配置、工单、AI 模型管理 |
 
 ### Business BFF（复用 console Cookie，未登录跳转 console 登录页）
 
-| 包 | 路径 | 端口 | 职责 |
-|----|------|------|------|
-| [`vela.md`](vela.md) | `bff/vela-bff/` | 3121 | Vela 智能助手 BFF，SSE 流式转发，CallerContext 组装 |
-| [`ruyin.md`](ruyin.md) | `bff/ruyin-bff/` | 3111 | Ruyin 超级智能体 BFF，Cloudflare Tunnel 直连 |
-| [`agent-template.md`](agent-template.md) | `bff/agent-template-bff/` | TBD | 新 Agent BFF fork 起点 |
+| 包                                       | 路径                      | 端口 | 职责                                                |
+| ---------------------------------------- | ------------------------- | ---- | --------------------------------------------------- |
+| [`vela.md`](vela.md)                     | `bff/vela-bff/`           | 3121 | Vela 智能助手 BFF，SSE 流式转发，CallerContext 组装 |
+| [`ruyin.md`](ruyin.md)                   | `bff/ruyin-bff/`          | 3111 | Ruyin 超级智能体 BFF，Cloudflare Tunnel 直连        |
+| [`agent-template.md`](agent-template.md) | `bff/agent-template-bff/` | TBD  | 新 Agent BFF fork 起点                              |
 
 ---
 

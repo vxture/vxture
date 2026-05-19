@@ -17,22 +17,22 @@
 
 建议新增：`ops.governance_record`
 
-| 字段 | 类型 | 说明 |
-| --- | --- | --- |
-| `id` | `varchar(64)` | 业务主键 |
-| `kind` | `varchar(32)` | `admins / secrets / jobs / approvals` |
-| `name` | `varchar(160)` | 显示名称 |
-| `status` | `varchar(32)` | `normal / warning / blocked / pending` |
-| `scope` | `varchar(160)` | 作用域、对象或队列 |
-| `owner` | `varchar(120)` | 负责人、角色或发起人 |
-| `policy` | `varchar(200)` | 策略摘要 |
-| `description` | `text` | 生产环境说明 |
-| `tags` | `text[]` | 标签 |
-| `source_table` | `varchar(128)` | 可选，来源表 |
-| `source_id` | `varchar(128)` | 可选，来源记录 |
-| `created_at` | `timestamptz` | 创建时间 |
-| `updated_at` | `timestamptz` | 更新时间 |
-| `deleted_at` | `timestamptz` | 软删除时间 |
+| 字段           | 类型           | 说明                                   |
+| -------------- | -------------- | -------------------------------------- |
+| `id`           | `varchar(64)`  | 业务主键                               |
+| `kind`         | `varchar(32)`  | `admins / secrets / jobs / approvals`  |
+| `name`         | `varchar(160)` | 显示名称                               |
+| `status`       | `varchar(32)`  | `normal / warning / blocked / pending` |
+| `scope`        | `varchar(160)` | 作用域、对象或队列                     |
+| `owner`        | `varchar(120)` | 负责人、角色或发起人                   |
+| `policy`       | `varchar(200)` | 策略摘要                               |
+| `description`  | `text`         | 生产环境说明                           |
+| `tags`         | `text[]`       | 标签                                   |
+| `source_table` | `varchar(128)` | 可选，来源表                           |
+| `source_id`    | `varchar(128)` | 可选，来源记录                         |
+| `created_at`   | `timestamptz`  | 创建时间                               |
+| `updated_at`   | `timestamptz`  | 更新时间                               |
+| `deleted_at`   | `timestamptz`  | 软删除时间                             |
 
 建议索引：
 

@@ -9,11 +9,11 @@
 
 平台 BFF 层按认证方式分为三类：
 
-| 类型 | BFF | 登录方式 |
-|------|-----|---------|
-| **Platform（控制面）** | website-bff / admin-bff / console-bff | 有独立 login 页，auth-bff 直接签发 JWT |
+| 类型                   | BFF                                       | 登录方式                                         |
+| ---------------------- | ----------------------------------------- | ------------------------------------------------ |
+| **Platform（控制面）** | website-bff / admin-bff / console-bff     | 有独立 login 页，auth-bff 直接签发 JWT           |
 | **Business（应用层）** | ruyin-bff / vela-bff / agent-template-bff | 无独立登录页，跳转 console 登录，凭已有 JWT 访问 |
-| **功能型** | auth-bff / gateway-bff | 独立职责，不参与上述分类 |
+| **功能型**             | auth-bff / gateway-bff                    | 独立职责，不参与上述分类                         |
 
 如果每个 BFF 独立持有签发逻辑，会导致：
 
@@ -45,9 +45,9 @@ auth-bff 负责所有 JWT 签发。其他 BFF 需要签发时通过内部接口 
 
 ### 实施范围
 
-| 类型 | 状态 |
-|------|------|
-| Platform BFF（website / admin / console） | ✅ 已实施 |
+| 类型                                          | 状态                                            |
+| --------------------------------------------- | ----------------------------------------------- |
+| Platform BFF（website / admin / console）     | ✅ 已实施                                       |
 | Business BFF（ruyin / vela / agent-template） | 🔲 规划中（跳转 console 登录，凭已有 JWT 访问） |
 
 Business BFF 无需独立签发——认证流程如下：
@@ -68,11 +68,11 @@ Business BFF 只做验证，不签发，不持有签发密钥。
 
 auth-bff 对 Redis 有三种用途，不同场景采用不同的 fail 策略：
 
-| Redis 用途 | 故障策略 | 理由 |
-|-----------|---------|------|
-| jti 黑名单（logout 吊销） | **fail-open** | access token 15min 自然过期，故障窗口风险可控；fail-closed 会导致所有在线用户被踢 |
-| refresh token 验证 | **fail-closed** | 无法验证刷新凭证真实性，不可发放新 token |
-| 空闲超时检查 | **fail-open** | 不因基础设施故障踢用户下线，可用性优先 |
+| Redis 用途                | 故障策略        | 理由                                                                              |
+| ------------------------- | --------------- | --------------------------------------------------------------------------------- |
+| jti 黑名单（logout 吊销） | **fail-open**   | access token 15min 自然过期，故障窗口风险可控；fail-closed 会导致所有在线用户被踢 |
+| refresh token 验证        | **fail-closed** | 无法验证刷新凭证真实性，不可发放新 token                                          |
+| 空闲超时检查              | **fail-open**   | 不因基础设施故障踢用户下线，可用性优先                                            |
 
 > JWT 签名验证为纯加密运算，不依赖 Redis，始终可用。
 
@@ -96,6 +96,7 @@ auth-bff 对 Redis 有三种用途，不同场景采用不同的 fail 策略：
 **适用范围**：Platform BFF 全部启用；Business BFF 继承 console 会话，不独立计时。
 
 **配置项：**
+
 ```bash
 SESSION_IDLE_TIMEOUT=14400  # 秒，默认 4h
 ```
@@ -105,6 +106,7 @@ SESSION_IDLE_TIMEOUT=14400  # 秒，默认 4h
 ## 后果
 
 **正面：**
+
 - JWT claims schema 改一处即全局生效
 - 黑名单/吊销逻辑唯一实现，logout 一致性有保证
 - 签发密钥只在 auth-bff 持有，Secret rotation 只改一处
@@ -112,6 +114,7 @@ SESSION_IDLE_TIMEOUT=14400  # 秒，默认 4h
 - 空闲超时有效防范 stolen token 和无人值守终端风险
 
 **负面：**
+
 - OAuth 回调后需额外调用一次 auth-bff 内部接口（同 Docker 网络，延迟 < 1ms）
 - auth-bff 不可用时，所有新登录失败（已有 JWT 的存量用户不受影响）
 - 空闲超时每次认证请求增加一次 Redis 读写（延迟 ~0.1ms，可忽略）

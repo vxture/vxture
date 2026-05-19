@@ -8,11 +8,11 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/core-mail` |
-| 路径 | `packages/core/mail/` |
-| @layer | `Infrastructure` |
+| 项     | 值                                |
+| ------ | --------------------------------- |
+| 包名   | `@vxture/core-mail`               |
+| 路径   | `packages/core/mail/`             |
+| @layer | `Infrastructure`                  |
 | 消费方 | `bff/website-bff`（密码重置邮件） |
 
 ---
@@ -30,7 +30,7 @@
 在 NestJS 模块中注册：
 
 ```typescript
-import { MailModule } from '@vxture/core-mail';
+import { MailModule } from "@vxture/core-mail";
 
 @Module({
   imports: [MailModule], // @Global()，全应用注册一次即可
@@ -41,8 +41,8 @@ export class AppModule {}
 注入并发送：
 
 ```typescript
-import { MailService } from '@vxture/core-mail';
-import type { MailPayload } from '@vxture/core-mail';
+import { MailService } from "@vxture/core-mail";
+import type { MailPayload } from "@vxture/core-mail";
 
 @Injectable()
 export class MyService {
@@ -51,9 +51,9 @@ export class MyService {
   async sendWelcome(to: string) {
     await this.mail.send({
       to,
-      subject: '欢迎加入 Vxture',
-      html: '<p>欢迎！</p>',
-      text: '欢迎！',
+      subject: "欢迎加入 Vxture",
+      html: "<p>欢迎！</p>",
+      text: "欢迎！",
     });
   }
 }
@@ -67,10 +67,10 @@ export class MyService {
 
 ```typescript
 interface MailPayload {
-  to: string | string[];  // 收件人（单个或数组）
-  subject: string;        // 邮件主题
-  html: string;           // HTML 正文（优先显示）
-  text?: string;          // 纯文本降级（可选）
+  to: string | string[]; // 收件人（单个或数组）
+  subject: string; // 邮件主题
+  html: string; // HTML 正文（优先显示）
+  text?: string; // 纯文本降级（可选）
 }
 ```
 
@@ -84,14 +84,14 @@ interface MailPayload {
 
 ## 环境变量
 
-| 变量 | 必填 | 说明 |
-|------|------|------|
-| `SMTP_HOST` | ✅ | 未设置时进入 no-op 模式 |
-| `SMTP_PORT` | ⚪ | 默认 `465` |
-| `SMTP_USER` | ⚪ | SMTP 认证用户名 |
-| `SMTP_PASS` | ⚪ | SMTP 认证密码 |
-| `SMTP_FROM` | ⚪ | 发件人，默认 `Vxture <noreply@{SMTP_HOST}>` |
-| `SMTP_SECURE` | ⚪ | `false` 关闭 TLS，默认 `true`（465 端口 SSL） |
+| 变量          | 必填 | 说明                                          |
+| ------------- | ---- | --------------------------------------------- |
+| `SMTP_HOST`   | ✅   | 未设置时进入 no-op 模式                       |
+| `SMTP_PORT`   | ⚪   | 默认 `465`                                    |
+| `SMTP_USER`   | ⚪   | SMTP 认证用户名                               |
+| `SMTP_PASS`   | ⚪   | SMTP 认证密码                                 |
+| `SMTP_FROM`   | ⚪   | 发件人，默认 `Vxture <noreply@{SMTP_HOST}>`   |
+| `SMTP_SECURE` | ⚪   | `false` 关闭 TLS，默认 `true`（465 端口 SSL） |
 
 生产环境使用阿里云 DirectMail，`SMTP_HOST=smtpdm.aliyun.com`，端口 465 SSL。
 
@@ -99,9 +99,9 @@ interface MailPayload {
 
 ## 与 service-mail 的区别
 
-| 包 | 层 | 职责 |
-|----|----|----|
-| `@vxture/core-mail` | Infrastructure | 通用 send()，无业务逻辑 |
-| `@vxture/service-mail` | Domain | 验证码发送 + Redis 限流 + 邮件模板（注册/重置密码） |
+| 包                     | 层             | 职责                                                |
+| ---------------------- | -------------- | --------------------------------------------------- |
+| `@vxture/core-mail`    | Infrastructure | 通用 send()，无业务逻辑                             |
+| `@vxture/service-mail` | Domain         | 验证码发送 + Redis 限流 + 邮件模板（注册/重置密码） |
 
 当前仅 `website-bff` 引用 `core-mail`（密码重置邮件发送）。`service-mail` 单独处理验证码场景。

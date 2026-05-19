@@ -7,11 +7,11 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/core-api` |
-| 路径 | `packages/core/api/` |
-| @layer | `Infrastructure` |
+| 项     | 值                   |
+| ------ | -------------------- |
+| 包名   | `@vxture/core-api`   |
+| 路径   | `packages/core/api/` |
+| @layer | `Infrastructure`     |
 
 ## 职责
 
@@ -32,12 +32,14 @@ src/
 ## 依赖约束
 
 **允许：**
+
 - `@vxture/shared`
 - `@nestjs/common` / `@nestjs/core` / `@nestjs/axios`（peerDependencies）
 - `axios`（peerDependency）
 - `form-data`（文件上传）
 
 **禁止：**
+
 - 浏览器 API（fetch、localStorage、window）
 - `@vxture/service-*` / `bff-*` / `ai-sdk` / `design-system` / `platform-*`
 - 业务逻辑

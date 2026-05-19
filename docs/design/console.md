@@ -12,6 +12,7 @@
 **视觉目标：** 接近 Vercel / Stripe 的现代云控制台——轻量、精确、专业，风格参考但不照搬。
 
 **禁止倾向：**
+
 - 传统 admin 模板外观 / 大面积深色顶栏或左侧栏
 - ERP 式密集表格铺满整屏
 - 卡片墙 + 无层级大屏仪表板
@@ -43,14 +44,14 @@
 
 ### 尺寸目标
 
-| 元素 | 范围 |
-|------|------|
-| Header 高度 | 64px – 72px |
-| Sidebar 宽度 | 248px – 272px（折叠：icon-only） |
-| Assistant 宽度 | 320px – 360px |
-| 页面水平内边距 | 20px – 24px |
-| Section 间距 | 16px |
-| 卡片 / 面板圆角 | 16px – 24px |
+| 元素            | 范围                             |
+| --------------- | -------------------------------- |
+| Header 高度     | 64px – 72px                      |
+| Sidebar 宽度    | 248px – 272px（折叠：icon-only） |
+| Assistant 宽度  | 320px – 360px                    |
+| 页面水平内边距  | 20px – 24px                      |
+| Section 间距    | 16px                             |
+| 卡片 / 面板圆角 | 16px – 24px                      |
 
 ### Shell 模型
 
@@ -61,7 +62,7 @@
     <Header />
     <Body>
       <Content />
-      <AssistantPanel />   {/* 路由感知，大多数页面默认隐藏 */}
+      <AssistantPanel /> {/* 路由感知，大多数页面默认隐藏 */}
     </Body>
   </Main>
 </AppShell>
@@ -153,14 +154,14 @@ Settings
 
 ### 色彩
 
-| 层次 | 方向 |
-|------|------|
-| 页面背景 | `#F5F7FB` – `#F8FAFC`（极浅灰蓝） |
-| 表面（卡片） | `#FFFFFF` |
-| 主色 | `#2F6FED` – `#3B82F6`（科技蓝，偏清透） |
-| 文字 | 深石板色，非纯黑 |
-| 辅助文字 | 冷中性 |
-| 边框 | 低对比度中性色 |
+| 层次         | 方向                                    |
+| ------------ | --------------------------------------- |
+| 页面背景     | `#F5F7FB` – `#F8FAFC`（极浅灰蓝）       |
+| 表面（卡片） | `#FFFFFF`                               |
+| 主色         | `#2F6FED` – `#3B82F6`（科技蓝，偏清透） |
+| 文字         | 深石板色，非纯黑                        |
+| 辅助文字     | 冷中性                                  |
+| 边框         | 低对比度中性色                          |
 
 背景 → 表面 → 浮层 → 遮罩须有清晰视觉分层，禁止所有层用同一白色。
 
@@ -200,11 +201,11 @@ Settings
 
 每个核心页面必须覆盖：
 
-| 状态 | 要求 |
-|------|------|
-| Loading | 骨架屏，保留页面布局结构 |
-| Empty | 说明缺失原因 + 引导下一步操作 |
-| Error | 平白语言解释失败 + 保留用户上下文 + 暴露重试 |
+| 状态          | 要求                                                         |
+| ------------- | ------------------------------------------------------------ |
+| Loading       | 骨架屏，保留页面布局结构                                     |
+| Empty         | 说明缺失原因 + 引导下一步操作                                |
+| Error         | 平白语言解释失败 + 保留用户上下文 + 暴露重试                 |
 | No-permission | 明确说明是角色 / capability / 上下文原因，不作为通用报错展示 |
 
 ---
@@ -243,8 +244,8 @@ type WorkspaceListItem = {
   name: string;
   slug: string;
   avatar?: string;
-  type: 'personal' | 'organization';
-  role: 'owner' | 'admin' | 'member';
+  type: "personal" | "organization";
+  role: "owner" | "admin" | "member";
   isCurrent: boolean;
 };
 
@@ -268,12 +269,12 @@ type WorkspaceContextState = {
 
 宽度 320px – 360px，中间列表区可滚动，分 4 个区域：
 
-| 区域 | 内容 |
-|------|------|
-| Header | 标题 "Switch workspace" + 关闭按钮 |
-| 当前 Workspace | 头像、名称、类型标签、"使用中"高亮，视觉区别于普通列表项 |
-| Workspace 列表 | 全部可访问 workspace；每项：头像、名称、类型标签、角色、当前项勾选态 |
-| 操作区 | Create workspace / Create personal workspace（无 personal 时显示）/ Join workspace（预留）/ Manage workspace |
+| 区域           | 内容                                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| Header         | 标题 "Switch workspace" + 关闭按钮                                                                           |
+| 当前 Workspace | 头像、名称、类型标签、"使用中"高亮，视觉区别于普通列表项                                                     |
+| Workspace 列表 | 全部可访问 workspace；每项：头像、名称、类型标签、角色、当前项勾选态                                         |
+| 操作区         | Create workspace / Create personal workspace（无 personal 时显示）/ Join workspace（预留）/ Manage workspace |
 
 ### 切换逻辑
 

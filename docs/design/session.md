@@ -16,12 +16,12 @@ updated: 2026-05-10
 
 ## Cookie 命名规范
 
-| Cookie 名称                | 域           | 用途                       |
-| -------------------------- | ------------ | -------------------------- |
-| `vx_tenant_access_token`   | `.vxture.com`| 租户用户 Access Token       |
-| `vx_tenant_refresh_token`  | `.vxture.com`| 租户用户 Refresh Token      |
-| `ry_access_token`          | `.ruyin.ai`  | Ruyin 域 Access Token       |
-| `ry_refresh_token`         | `.ruyin.ai`  | Ruyin 域 Refresh Token      |
+| Cookie 名称               | 域            | 用途                   |
+| ------------------------- | ------------- | ---------------------- |
+| `vx_tenant_access_token`  | `.vxture.com` | 租户用户 Access Token  |
+| `vx_tenant_refresh_token` | `.vxture.com` | 租户用户 Refresh Token |
+| `ry_access_token`         | `.ruyin.ai`   | Ruyin 域 Access Token  |
+| `ry_refresh_token`        | `.ruyin.ai`   | Ruyin 域 Refresh Token |
 
 `vx_tenant_*` 同时用于 website 和 console，两个门户共享同一套 Cookie（同域）。
 
@@ -32,15 +32,15 @@ updated: 2026-05-10
 ## LoginSource 与 Token 类型
 
 ```typescript
-type LoginSource = 'website' | 'console' | 'admin' | 'ruyin';
+type LoginSource = "website" | "console" | "admin" | "ruyin";
 ```
 
-| LoginSource | Token 类型      | Cookie 域       |
-| ----------- | --------------- | --------------- |
-| `website`   | `tenant_user`   | `.vxture.com`   |
-| `console`   | `tenant_user`   | `.vxture.com`   |
-| `admin`     | `operator`      | `.vxture.com`   |
-| `ruyin`     | `tenant_user`   | `.ruyin.ai`     |
+| LoginSource | Token 类型    | Cookie 域     |
+| ----------- | ------------- | ------------- |
+| `website`   | `tenant_user` | `.vxture.com` |
+| `console`   | `tenant_user` | `.vxture.com` |
+| `admin`     | `operator`    | `.vxture.com` |
+| `ruyin`     | `tenant_user` | `.ruyin.ai`   |
 
 代码入口：`bff/auth-bff/src/auth/auth.service.ts`
 
@@ -50,14 +50,14 @@ type LoginSource = 'website' | 'console' | 'admin' | 'ruyin';
 
 `bff/auth-bff/src/redis/redis.service.ts` 使用以下键模式（含可配置前缀）：
 
-| 键模式 | 用途 | TTL |
-|--------|------|-----|
-| `{prefix}refresh:tenant:platform:{userId}` | 租户 Refresh Token（.vxture.com） | Refresh TTL |
-| `{prefix}refresh:tenant:ruyin:{userId}` | 租户 Refresh Token（ruyin.ai） | Refresh TTL |
-| `{prefix}refresh:operator:{userId}` | 运营 Refresh Token | Refresh TTL |
-| `{prefix}blacklist:{jti}` | 已吊销 Access Token（jti 索引） | Access TTL 剩余时长 |
-| `{prefix}crossdomain:{token}` | 跨域一次性令牌 | 30s |
-| `{prefix}oauth:state:{state}` | OAuth CSRF 防重放 state | 10min |
+| 键模式                                     | 用途                              | TTL                 |
+| ------------------------------------------ | --------------------------------- | ------------------- |
+| `{prefix}refresh:tenant:platform:{userId}` | 租户 Refresh Token（.vxture.com） | Refresh TTL         |
+| `{prefix}refresh:tenant:ruyin:{userId}`    | 租户 Refresh Token（ruyin.ai）    | Refresh TTL         |
+| `{prefix}refresh:operator:{userId}`        | 运营 Refresh Token                | Refresh TTL         |
+| `{prefix}blacklist:{jti}`                  | 已吊销 Access Token（jti 索引）   | Access TTL 剩余时长 |
+| `{prefix}crossdomain:{token}`              | 跨域一次性令牌                    | 30s                 |
+| `{prefix}oauth:state:{state}`              | OAuth CSRF 防重放 state           | 10min               |
 
 ---
 

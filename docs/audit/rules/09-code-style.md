@@ -40,8 +40,8 @@ Service cannot import Portal
 Allowed imports must use package aliases:
 
 @vxture/shared
-@vxture/core-*
-@vxture/platform-*
+@vxture/core-_
+@vxture/platform-_
 @vxture/design-system
 
 Do not use deep relative imports.

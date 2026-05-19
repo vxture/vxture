@@ -8,11 +8,11 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/core-locale` |
-| 路径 | `packages/core/locale/` |
-| @layer | `Infrastructure` |
+| 项     | 值                      |
+| ------ | ----------------------- |
+| 包名   | `@vxture/core-locale`   |
+| 路径   | `packages/core/locale/` |
+| @layer | `Infrastructure`        |
 
 ## 职责
 
@@ -22,6 +22,7 @@
 - `localizeContent`：从多语言对象中取对应语言的字符串
 
 **与 `@vxture/shared` 的区别：**
+
 - shared：仅定义类型和常量（Locale、SUPPORTED_LOCALES）
 - core-locale：提供服务端解析和查找逻辑
 

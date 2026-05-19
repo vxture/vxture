@@ -8,21 +8,22 @@
 
 ## 1. 日志级别
 
-| 级别 | 场景 | 示例 |
-|------|------|------|
-| `error` | 需要人工介入的异常：请求失败、数据库连接断开、外部 API 调用失败 | 500 响应、LLM 调用超时 |
-| `warn` | 降级或异常但不中断服务：重试成功、配置缺失但有默认值、接近配额上限 | Redis 不可用但 fail-open、token 即将过期 |
-| `info` | 服务生命周期、关键业务事件 | 服务启动/停止、用户登录、租户创建 |
-| `debug` | 开发调试信息，生产默认关闭 | SQL 参数、HTTP 请求体、中间件执行路径 |
+| 级别    | 场景                                                               | 示例                                     |
+| ------- | ------------------------------------------------------------------ | ---------------------------------------- |
+| `error` | 需要人工介入的异常：请求失败、数据库连接断开、外部 API 调用失败    | 500 响应、LLM 调用超时                   |
+| `warn`  | 降级或异常但不中断服务：重试成功、配置缺失但有默认值、接近配额上限 | Redis 不可用但 fail-open、token 即将过期 |
+| `info`  | 服务生命周期、关键业务事件                                         | 服务启动/停止、用户登录、租户创建        |
+| `debug` | 开发调试信息，生产默认关闭                                         | SQL 参数、HTTP 请求体、中间件执行路径    |
 
 **生产环境默认级别：`info`**（仅输出 info / warn / error）。`debug` 仅在排查问题时临时开启。
 
 ```typescript
 // 日志级别设置（NestJS）
 const app = await NestFactory.create(AppModule, {
-  logger: process.env.NODE_ENV === 'production'
-    ? ['error', 'warn', 'info']
-    : ['error', 'warn', 'info', 'debug'],
+  logger:
+    process.env.NODE_ENV === "production"
+      ? ["error", "warn", "info"]
+      : ["error", "warn", "info", "debug"],
 });
 ```
 
@@ -34,18 +35,19 @@ const app = await NestFactory.create(AppModule, {
 
 ```typescript
 interface LogEntry {
-  timestamp: string;    // ISO 8601，UTC（例：2026-05-14T08:30:00.000Z）
-  level: 'error' | 'warn' | 'info' | 'debug';
-  service: string;      // 服务名（例：'auth-bff'、'vela-server'、'ai-gateway'）
-  requestId?: string;   // 链路追踪 ID（见 error-handling.md §4）
-  userId?: string;      // 已脱敏处理，仅前 8 位 UUID
-  tenantId?: string;    // 租户 ID（完整，非敏感）
-  message: string;      // 可读描述，一句话
+  timestamp: string; // ISO 8601，UTC（例：2026-05-14T08:30:00.000Z）
+  level: "error" | "warn" | "info" | "debug";
+  service: string; // 服务名（例：'auth-bff'、'vela-server'、'ai-gateway'）
+  requestId?: string; // 链路追踪 ID（见 error-handling.md §4）
+  userId?: string; // 已脱敏处理，仅前 8 位 UUID
+  tenantId?: string; // 租户 ID（完整，非敏感）
+  message: string; // 可读描述，一句话
   data?: Record<string, unknown>; // 附加结构化数据
-  error?: {             // 仅 level=error 时填写
-    name: string;       // 异常类名
-    message: string;    // 异常消息
-    stack?: string;     // 仅开发环境包含
+  error?: {
+    // 仅 level=error 时填写
+    name: string; // 异常类名
+    message: string; // 异常消息
+    stack?: string; // 仅开发环境包含
   };
 }
 ```
@@ -73,7 +75,10 @@ interface LogEntry {
   "tenantId": "t-xyz789",
   "message": "LLM provider 调用失败",
   "data": { "model": "doubao-seed-2-0-lite", "latencyMs": 30000 },
-  "error": { "name": "GatewayTimeoutError", "message": "Request timed out after 30000ms" }
+  "error": {
+    "name": "GatewayTimeoutError",
+    "message": "Request timed out after 30000ms"
+  }
 }
 ```
 
@@ -86,27 +91,27 @@ interface LogEntry {
 ```typescript
 // 全局 logger 配置中注册脱敏列表
 const REDACT_KEYS = [
-  'password',
-  'token',
-  'accessToken',
-  'refreshToken',
-  'secret',
-  'authorization',
-  'cookie',
-  'x-vxture-internal-auth',
-  'apiKey',
-  'cardNumber',
-  'idCard',
+  "password",
+  "token",
+  "accessToken",
+  "refreshToken",
+  "secret",
+  "authorization",
+  "cookie",
+  "x-vxture-internal-auth",
+  "apiKey",
+  "cardNumber",
+  "idCard",
 ];
 
 // 手机号脱敏（保留前 3 后 4）
 function maskPhone(phone: string) {
-  return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+  return phone.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
 }
 
 // 邮箱脱敏
 function maskEmail(email: string) {
-  const [name, domain] = email.split('@');
+  const [name, domain] = email.split("@");
   return `${name[0]}***@${domain}`;
 }
 ```
@@ -131,17 +136,19 @@ function maskEmail(email: string) {
 ### 4.1 BFF 层
 
 **必须记录（info）：**
+
 - 每个请求的入口：method、path、statusCode、latencyMs、requestId
 - 认证结果：成功或失败（含失败原因 code，不含 token 内容）
 
 **禁止记录：**
+
 - 完整 request body（可能含密码、手机号）
 - JWT token 内容
 - response body 中的敏感字段
 
 ```typescript
 // ✅ BFF 请求日志（仅记录必要字段）
-this.logger.info('HTTP 请求完成', {
+this.logger.info("HTTP 请求完成", {
   requestId,
   method: req.method,
   path: req.path,
@@ -154,24 +161,28 @@ this.logger.info('HTTP 请求完成', {
 ### 4.2 Service 层
 
 **必须记录（info）：**
+
 - 关键业务事件：账号创建、租户创建、订阅变更、权限变更
 
 **禁止记录：**
+
 - 每次数据库查询的完整 SQL（debug 模式下可以记录参数化 SQL，但不含实际参数值）
 - 加密字段的原始值
 
 ### 4.3 AI Gateway 层
 
 **必须记录（info）：**
+
 - 每次 LLM 调用的 model、tenantId、agentId、inputTokens、outputTokens、latencyMs、usageType
 
 **禁止记录：**
+
 - prompt 内容（对话历史、系统提示词）
 - LLM 返回的内容（response text）
 
 ```typescript
 // ✅ AI Gateway 调用日志（记录计量数据，不记录内容）
-this.logger.info('LLM 调用完成', {
+this.logger.info("LLM 调用完成", {
   requestId,
   model: req.modelCode,
   tenantId: req.tenantId,
@@ -185,10 +196,12 @@ this.logger.info('LLM 调用完成', {
 ### 4.4 agent-server 层
 
 **必须记录（info）：**
+
 - Tool Use Loop 的开始和结束：sessionId、loopRound、finishReason
 - 工具调用：toolName、success、latencyMs（不记录工具输入/输出内容）
 
 **禁止记录：**
+
 - 用户对话内容（message 文本）
 - 工具返回数据（可能含用户业务数据）
 
@@ -196,12 +209,13 @@ this.logger.info('LLM 调用完成', {
 
 ## 5. 日志 vs 错误报告
 
-| 类型 | 用途 | 工具 |
-|------|------|------|
-| 结构化日志 | 请求追踪、业务审计、计量 | 本地 stdout → 日志平台 |
-| 错误报告（待接入） | 未处理异常聚合、告警 | Sentry（规划中） |
+| 类型               | 用途                     | 工具                   |
+| ------------------ | ------------------------ | ---------------------- |
+| 结构化日志         | 请求追踪、业务审计、计量 | 本地 stdout → 日志平台 |
+| 错误报告（待接入） | 未处理异常聚合、告警     | Sentry（规划中）       |
 
 **当前阶段**（Sentry 未接入）：
+
 - `error` 级别日志即为告警信号，通过 `docker logs` 或日志平台监控
 - 部署后 24h 监控：`docker logs vx-auth-bff --tail 200 | grep '"level":"error"'`
 

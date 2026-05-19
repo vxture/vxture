@@ -27,11 +27,13 @@ const title = localizeContent({ zh: "专业版", en: "Pro" }, locale);
 Resolves locale from HTTP request.
 
 **Priority order:**
+
 1. Cookie (NEXT_LOCALE)
 2. Accept-Language header
 3. DEFAULT_LOCALE
 
 **Parameters:**
+
 - `request`: LocaleRequest (framework-agnostic request interface)
 
 **Returns:** Locale
@@ -41,11 +43,13 @@ Resolves locale from HTTP request.
 Retrieves string for corresponding language from multi-language object.
 
 **Fallback strategy:**
+
 1. Returns content[locale]
 2. Falls back to content[DEFAULT_LOCALE] if target language doesn't exist
 3. Returns empty string if DEFAULT_LOCALE also doesn't exist
 
 **Parameters:**
+
 - `content`: Partial<Record<Locale, string>> (multi-language content object)
 - `locale`: Locale (target language)
 
@@ -56,6 +60,7 @@ Retrieves string for corresponding language from multi-language object.
 Parses Accept-Language header string, returns language list sorted by q value.
 
 **Parameters:**
+
 - `header`: string (Accept-Language header value)
 
 **Returns:** string[]
@@ -65,6 +70,7 @@ Parses Accept-Language header string, returns language list sorted by q value.
 Extracts value for specified key from raw Cookie header string.
 
 **Parameters:**
+
 - `cookieHeader`: string (raw Cookie header)
 - `key`: string (cookie key to extract)
 
@@ -75,11 +81,13 @@ Extracts value for specified key from raw Cookie header string.
 Normalizes various language string formats to platform-supported Locale.
 
 **Supported input formats:**
+
 - 'zh' / 'zh-CN' / 'zh-Hans' / 'zh-TW' → 'zh'
 - 'en' / 'en-US' / 'en-GB' → 'en'
 - Other unknown languages → undefined
 
 **Parameters:**
+
 - `raw`: string (raw language string)
 
 **Returns:** Locale | undefined
@@ -89,6 +97,7 @@ Normalizes various language string formats to platform-supported Locale.
 Type guard to check if a string is a supported Locale.
 
 **Parameters:**
+
 - `value`: string
 
 **Returns:** value is Locale
@@ -101,9 +110,18 @@ export type { Locale } from "@vxture/shared";
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@vxture/shared";
 
 // core-locale specific types
-export type { LocaleRequest, ResolveLocaleOptions, LocalizationOptions } from "./types";
+export type {
+  LocaleRequest,
+  ResolveLocaleOptions,
+  LocalizationOptions,
+} from "./types";
 
 // core-locale utility functions
 export { resolveLocale, localizeContent } from "./utils";
-export { parseAcceptLanguage, parseCookieValue, normalizeLocale, isSupportedLocale } from "./utils";
+export {
+  parseAcceptLanguage,
+  parseCookieValue,
+  normalizeLocale,
+  isSupportedLocale,
+} from "./utils";
 ```

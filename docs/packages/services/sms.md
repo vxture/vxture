@@ -6,12 +6,12 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/service-sms` |
-| 路径 | `services/notification/sms/` |
-| @layer | `Domain` |
-| 框架 | NestJS |
+| 项     | 值                           |
+| ------ | ---------------------------- |
+| 包名   | `@vxture/service-sms`        |
+| 路径   | `services/notification/sms/` |
+| @layer | `Domain`                     |
+| 框架   | NestJS                       |
 
 ## 职责
 
@@ -38,11 +38,11 @@ src/
 
 与 service-mail 完全一致，Redis key 格式为 `svc:rl:{scope}:{period}:{phone}`：
 
-| 限制 | 周期 |
-|------|------|
-| 1 次 | 每分钟 |
-| 5 次 | 每小时 |
-| 10 次 | 每天 |
+| 限制  | 周期   |
+| ----- | ------ |
+| 1 次  | 每分钟 |
+| 5 次  | 每小时 |
+| 10 次 | 每天   |
 
 验证码 Redis key：`svc:code:{scope}:{phone}`，TTL 600s。
 

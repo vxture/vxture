@@ -38,7 +38,7 @@ Account ──┬── TenantMember ── Tenant (individual)
 对应代码：`packages/core/tenant/src/utils/tenant.utils.ts` → `resolveTenantId()`
 
 ```typescript
-export type TenantResolveSource = 'header' | 'subdomain' | 'jwt' | 'fallback';
+export type TenantResolveSource = "header" | "subdomain" | "jwt" | "fallback";
 
 export interface TenantInfo {
   id: string;
@@ -92,8 +92,8 @@ export function tenantKey(tenantId: string, key: string): string {
 }
 
 // 示例
-tenantKey('acme', 'user:123')    // → "tenant:acme:user:123"
-tenantKey('acme', 'quota:llm')   // → "tenant:acme:quota:llm"
+tenantKey("acme", "user:123"); // → "tenant:acme:user:123"
+tenantKey("acme", "quota:llm"); // → "tenant:acme:quota:llm"
 ```
 
 此约定确保不同租户的缓存/状态数据物理隔离，防止串租。
@@ -118,6 +118,7 @@ tenantKey('acme', 'quota:llm')   // → "tenant:acme:quota:llm"
 ```
 
 代码入口：
+
 - `bff/website-bff/src/routers/auth.router.ts` → `POST /api/auth/tenant/init`
 - `services/tenant/organization/src/repository/pg-organization.repository.ts` → `createTenant()`
 
@@ -125,13 +126,13 @@ tenantKey('acme', 'quota:llm')   // → "tenant:acme:quota:llm"
 
 ## 跨包职责划分
 
-| 包 | 职责 |
-|----|------|
-| `packages/core/tenant` | 解析逻辑、TenantContext、tenantKey 工具 |
-| `services/tenant/organization` | 租户 CRUD（Postgres），只读仓储层 |
-| `bff/website-bff` | 租户初始化 API、TenantMiddleware 注册 |
-| `bff/console-bff` | TenantMiddleware 注册，租户上下文路由 |
-| `bff/admin-bff` | 平台侧租户管理（跨租户查询） |
+| 包                             | 职责                                    |
+| ------------------------------ | --------------------------------------- |
+| `packages/core/tenant`         | 解析逻辑、TenantContext、tenantKey 工具 |
+| `services/tenant/organization` | 租户 CRUD（Postgres），只读仓储层       |
+| `bff/website-bff`              | 租户初始化 API、TenantMiddleware 注册   |
+| `bff/console-bff`              | TenantMiddleware 注册，租户上下文路由   |
+| `bff/admin-bff`                | 平台侧租户管理（跨租户查询）            |
 
 ---
 

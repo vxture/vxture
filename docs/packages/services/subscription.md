@@ -7,12 +7,12 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/service-subscription` |
-| 路径 | `services/commerce/subscription/` |
-| @layer | `Domain` |
-| 所属域 | `commerce` |
+| 项     | 值                                |
+| ------ | --------------------------------- |
+| 包名   | `@vxture/service-subscription`    |
+| 路径   | `services/commerce/subscription/` |
+| @layer | `Domain`                          |
+| 所属域 | `commerce`                        |
 
 ## 职责
 
@@ -39,8 +39,12 @@ src/
 ## Barrel Export 规则
 
 ```typescript
-export { SubscriptionModule } from './module/subscription.module'
-export { SubscriptionService } from './service/subscription.service'
-export type { SubscriptionPlan, SubscriptionStatus, PlatformFeature } from './types/subscription.types'
+export { SubscriptionModule } from "./module/subscription.module";
+export { SubscriptionService } from "./service/subscription.service";
+export type {
+  SubscriptionPlan,
+  SubscriptionStatus,
+  PlatformFeature,
+} from "./types/subscription.types";
 // 禁止导出 SubscriptionRepository
 ```

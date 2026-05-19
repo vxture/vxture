@@ -6,12 +6,12 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/service-mail` |
-| 路径 | `services/notification/mail/` |
-| @layer | `Domain` |
-| 框架 | NestJS |
+| 项     | 值                            |
+| ------ | ----------------------------- |
+| 包名   | `@vxture/service-mail`        |
+| 路径   | `services/notification/mail/` |
+| @layer | `Domain`                      |
+| 框架   | NestJS                        |
 
 ## 职责
 

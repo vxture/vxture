@@ -12,6 +12,7 @@ Unified HTTP request infrastructure: request encapsulation, interceptors, error 
 Used by BFF, Service, and Agent Server layers. **Node.js only** (due to NestJS integration).
 
 **Core Features:**
+
 - Based on @nestjs/axios with NestJS DI integration
 - Type-safe HTTP methods
 - Automatic retry on 429 and 5xx errors
@@ -38,17 +39,17 @@ First, register the module in your NestJS AppModule:
 
 ```typescript
 // app.module.ts
-import { Module } from '@nestjs/common';
-import { VxHttpModule } from '@vxture/core-api';
+import { Module } from "@nestjs/common";
+import { VxHttpModule } from "@vxture/core-api";
 
 @Module({
   imports: [
     VxHttpModule.register({
-      baseURL: 'http://agent-server:3000',
-      timeout: 30000,       // 30 seconds
-      retries: 2,           // retry 2 times on failures
+      baseURL: "http://agent-server:3000",
+      timeout: 30000, // 30 seconds
+      retries: 2, // retry 2 times on failures
       headers: {
-        'x-api-version': 'v1',
+        "x-api-version": "v1",
       },
     }),
   ],
@@ -60,32 +61,32 @@ export class AppModule {}
 
 ```typescript
 // user.service.ts
-import { Injectable } from '@nestjs/common';
-import { VxHttpClient } from '@vxture/core-api';
-import type { ApiResponse, User } from '../types';
+import { Injectable } from "@nestjs/common";
+import { VxHttpClient } from "@vxture/core-api";
+import type { ApiResponse, User } from "../types";
 
 @Injectable()
 export class UserService {
   constructor(private readonly httpClient: VxHttpClient) {}
 
   async getUsers(): Promise<User[]> {
-    return this.httpClient.get<User[]>('/users');
+    return this.httpClient.get<User[]>("/users");
   }
 
   async createUser(userData: Partial<User>): Promise<User> {
-    return this.httpClient.post<User>('/users', userData);
+    return this.httpClient.post<User>("/users", userData);
   }
 
   async uploadAvatar(fileBuffer: Buffer, filename: string): Promise<string> {
     return this.httpClient.upload<string>(
-      '/users/avatar',
+      "/users/avatar",
       fileBuffer,
       filename,
       {
         headers: {
-          'content-type': 'image/jpeg',
+          "content-type": "image/jpeg",
         },
-      }
+      },
     );
   }
 }
@@ -97,27 +98,27 @@ For BFF applications that need to pass through authentication and tenant context
 
 ```typescript
 // user.router.ts
-import { Controller, Get, Headers } from '@nestjs/common';
-import { VxHttpClient } from '@vxture/core-api';
-import type { RequestContext } from '@vxture/core-api';
+import { Controller, Get, Headers } from "@nestjs/common";
+import { VxHttpClient } from "@vxture/core-api";
+import type { RequestContext } from "@vxture/core-api";
 
-@Controller('users')
+@Controller("users")
 export class UserController {
   constructor(private readonly httpClient: VxHttpClient) {}
 
   @Get()
   async getUsers(
-    @Headers('authorization') token: string,
-    @Headers('x-tenant-id') tenantId: string,
+    @Headers("authorization") token: string,
+    @Headers("x-tenant-id") tenantId: string,
   ) {
     const context: RequestContext = {
-      accessToken: token.replace('Bearer ', ''),
+      accessToken: token.replace("Bearer ", ""),
       tenantId,
     };
 
     return this.httpClient.getWithContext<ApiResponse<User[]>>(
-      '/api/users',
-      context
+      "/api/users",
+      context,
     );
   }
 }
@@ -139,6 +140,7 @@ async downloadReport(): Promise<Buffer> {
 ### VxHttpClient Methods
 
 #### Standard HTTP Methods
+
 ```typescript
 // GET request
 async get<T>(path: string, options?: RequestOptions): Promise<T>
@@ -157,6 +159,7 @@ async delete<T>(path: string, options?: RequestOptions): Promise<T>
 ```
 
 #### File Operations
+
 ```typescript
 // File upload
 async upload<T>(
@@ -171,6 +174,7 @@ async download(path: string, options?: RequestOptions): Promise<Buffer>
 ```
 
 #### Context-Aware Methods
+
 ```typescript
 // GET with context
 async getWithContext<T>(
@@ -189,6 +193,7 @@ async postWithContext<T>(
 ```
 
 #### Raw Response Access
+
 ```typescript
 // Return full AxiosResponse without unwrapping
 async rawRequest<T = unknown>(
@@ -204,32 +209,32 @@ async rawRequest<T = unknown>(
 ```typescript
 // Request options
 interface RequestOptions {
-  baseURL?: string
-  headers?: Record<string, string>
-  timeout?: number
-  retries?: number
-  raw?: boolean              // return full response if true
-  responseType?: 'json' | 'arraybuffer' | 'stream' | 'blob'
+  baseURL?: string;
+  headers?: Record<string, string>;
+  timeout?: number;
+  retries?: number;
+  raw?: boolean; // return full response if true
+  responseType?: "json" | "arraybuffer" | "stream" | "blob";
 }
 
 // Upload options
 interface UploadOptions extends RequestOptions {
-  onProgress?: (percent: number) => void
+  onProgress?: (percent: number) => void;
 }
 
 // Request context
 interface RequestContext {
-  accessToken?: string       // automatically added to Authorization header
-  tenantId?: string          // automatically added to x-tenant-id header
-  requestId?: string         // automatically added to x-request-id header
+  accessToken?: string; // automatically added to Authorization header
+  tenantId?: string; // automatically added to x-tenant-id header
+  requestId?: string; // automatically added to x-request-id header
 }
 
 // HTTP module options
 interface VxHttpModuleOptions {
-  baseURL?: string
-  timeout?: number
-  retries?: number
-  headers?: Record<string, string>
+  baseURL?: string;
+  timeout?: number;
+  retries?: number;
+  headers?: Record<string, string>;
 }
 ```
 
@@ -240,14 +245,14 @@ interface VxHttpModuleOptions {
 The `@vxture/core-api` package provides utilities for building standard API responses:
 
 ```typescript
-import { ok, fail, buildPageResult, safePageQuery } from '@vxture/core-api';
+import { ok, fail, buildPageResult, safePageQuery } from "@vxture/core-api";
 
 // Success response
-return ok({ id: 1, name: 'John Doe' });
+return ok({ id: 1, name: "John Doe" });
 // Returns: { success: true, data: {...}, code: 'OK', timestamp: '2026-03-15T10:30:00Z' }
 
 // Failure response
-return fail('NOT_FOUND', 'User with id=123 not found');
+return fail("NOT_FOUND", "User with id=123 not found");
 // Returns: { success: false, data: null, code: 'NOT_FOUND', message: 'User not found', ... }
 
 // Pagination
@@ -292,10 +297,10 @@ packages/core/api/
 All HTTP errors are automatically normalized to `@vxture/shared` VxtureError subclasses:
 
 ```typescript
-import { NotFoundError, ValidationError } from '@vxture/shared';
+import { NotFoundError, ValidationError } from "@vxture/shared";
 
 try {
-  await client.get('/nonexistent');
+  await client.get("/nonexistent");
 } catch (error) {
   if (error instanceof NotFoundError) {
     // Handle 404
@@ -310,21 +315,25 @@ try {
 ## 📝 Update Log
 
 ### v1.2.2
+
 - Update all file comments to English
 - Standardize package version
 - Fix TypeScript definitions
 
 ### v1.2.0
+
 - Add context-aware request methods
 - File upload/download support
 - Improve error normalization
 
 ### v1.1.0
+
 - Add raw request access
 - Enhance retry logic
 - Add response type support
 
 ### v1.0.0
+
 - Initial version
 - Basic HTTP methods
 - Error normalization

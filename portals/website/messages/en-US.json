@@ -1,4 +1,4 @@
 {
-    "layout": "./en-US/layout.json",
-    "common": "./en-US/common.json"
+  "layout": "./en-US/layout.json",
+  "common": "./en-US/common.json"
 }

@@ -34,12 +34,20 @@
       {
         "title": "Data access and governance",
         "description": "Connect databases, files, APIs, and business systems with standardization, quality checks, and permission isolation.",
-        "points": ["Connector management", "Quality rules", "Security classification"]
+        "points": [
+          "Connector management",
+          "Quality rules",
+          "Security classification"
+        ]
       },
       {
         "title": "Semantic modeling and knowledge graph",
         "description": "Build a semantic layer around entities, relationships, metrics, and events so teams share one business language.",
-        "points": ["Ontology modeling", "Entity relationships", "Metric definitions"]
+        "points": [
+          "Ontology modeling",
+          "Entity relationships",
+          "Metric definitions"
+        ]
       },
       {
         "title": "Intelligent analytics and Q&A",
@@ -49,7 +57,11 @@
       {
         "title": "Application orchestration",
         "description": "Package data capabilities as reusable services for dashboards, workflow collaboration, and agent workspaces.",
-        "points": ["Service orchestration", "Permission audit", "Operations monitoring"]
+        "points": [
+          "Service orchestration",
+          "Permission audit",
+          "Operations monitoring"
+        ]
       }
     ]
   },

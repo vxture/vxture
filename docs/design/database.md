@@ -471,11 +471,11 @@ Beta 数据生命周期：
 > 详细分层规则、PostgreSQL GRANT 脚本、BFF 访问矩阵、演进路线图见
 > **[`docs/design/data-access.md`](data-access.md)**（执行级别：强制）。
 
-| 数据库        | 应用账号权限                                   | 禁止                                            |
-| ------------- | ---------------------------------------------- | ----------------------------------------------- |
-| Platform DB   | 各 schema 独立 PG 角色，最小权限（见 §3 GRANT） | DDL 操作、BFF 绕过 Domain Service 直连           |
-| AI Gateway DB | `aigateway_svc` 专属账号                       | 其他服务直接访问                                |
-| Business DB   | 各 product service 专属账号                    | 跨产品访问、直接读 Platform DB                  |
+| 数据库        | 应用账号权限                                    | 禁止                                   |
+| ------------- | ----------------------------------------------- | -------------------------------------- |
+| Platform DB   | 各 schema 独立 PG 角色，最小权限（见 §3 GRANT） | DDL 操作、BFF 绕过 Domain Service 直连 |
+| AI Gateway DB | `aigateway_svc` 专属账号                        | 其他服务直接访问                       |
+| Business DB   | 各 product service 专属账号                     | 跨产品访问、直接读 Platform DB         |
 
 ### 8.3 Schema 迁移原则
 

@@ -34,7 +34,11 @@
       "title": "Intelligent Emergency Command Platform",
       "subtitle": "AI-based Emergency Command Decision Support System",
       "description": "This system uses artificial intelligence technology to automate and intelligentize the emergency command process. By analyzing, predicting, and evaluating emergencies, it provides scientific decision support for commanders, including pre-plan management, resource scheduling, and visualization modules.",
-      "tags": ["Emergency Management", "Data Integration", "Intelligent Decision"],
+      "tags": [
+        "Emergency Management",
+        "Data Integration",
+        "Intelligent Decision"
+      ],
       "cover": { "alt": "Intelligent Emergency Command Platform" },
       "customer": "Provincial Emergency Department"
     },
@@ -66,7 +70,11 @@
       "title": "Smart Healthcare Solution",
       "subtitle": "AI-based Smart Healthcare Service Platform",
       "description": "This platform integrates hospital information systems, electronic medical records, and medical device data resources. Through AI technology, it achieves intelligent diagnosis, health management, and telemedicine, improving medical service efficiency and reducing costs.",
-      "tags": ["Smart Healthcare", "Artificial Intelligence", "Health Management"],
+      "tags": [
+        "Smart Healthcare",
+        "Artificial Intelligence",
+        "Health Management"
+      ],
       "cover": { "alt": "Smart Healthcare Solution" },
       "customer": "Municipal Health Commission"
     }
@@ -80,7 +88,12 @@
       "primaryAction": "Open Console",
       "secondaryAction": "View Practices",
       "panelTitle": "Practice Assets",
-      "highlights": ["Business Needs", "Technical Architecture", "Customer Feedback", "Repeatable Delivery"],
+      "highlights": [
+        "Business Needs",
+        "Technical Architecture",
+        "Customer Feedback",
+        "Repeatable Delivery"
+      ],
       "metrics": [
         { "value": "4", "label": "Core intelligent technologies" },
         { "value": "3", "label": "Representative industry practices" },
@@ -153,7 +166,12 @@
           "demand": "The customer needed to quickly consolidate cross-agency information after incidents, unify situation, plans, teams, supplies, and field feedback, and reduce delays caused by manual relay.",
           "architecture": "An intelligent data base connects emergency, weather, traffic, video, and IoT data. A digital twin presents the live situation. The LLM handles summaries, risk assessment, and plan matching. Dispatch agents track teams, supplies, notices, and acknowledgements.",
           "evaluation": "The customer noted that information once scattered across departments is now compressed into one situation map and one task chain, helping commanders judge faster and track whether actions are actually executed.",
-          "technologies": ["LLM Assessment", "Dispatch Agents", "Intelligent Data Fusion", "Digital Twin Situation"]
+          "technologies": [
+            "LLM Assessment",
+            "Dispatch Agents",
+            "Intelligent Data Fusion",
+            "Digital Twin Situation"
+          ]
         },
         {
           "image": "/images/casessection/case-intro-03.jpg",
@@ -164,7 +182,12 @@
           "demand": "The customer needed to fuse public security, traffic, fire, and public service data to continuously identify urban safety risks and support key-area control, large-event protection, and incident response.",
           "architecture": "The intelligent data platform builds a relationship graph across people, vehicles, places, events, and risk sources. The LLM turns unstructured intelligence into searchable clues. Analysis agents generate risk briefs. The digital twin map shows spatial distribution and impact range.",
           "evaluation": "The customer valued that cross-agency intelligence no longer depends only on manual comparison. The system actively highlights risk clues and turns complex relationships into command-level conclusions.",
-          "technologies": ["LLM Intelligence Summary", "Risk Analysis Agents", "Intelligent Data Graph", "Urban Digital Twin"]
+          "technologies": [
+            "LLM Intelligence Summary",
+            "Risk Analysis Agents",
+            "Intelligent Data Graph",
+            "Urban Digital Twin"
+          ]
         },
         {
           "image": "/images/casessection/case-intro-01.jpg",
@@ -175,7 +198,12 @@
           "demand": "The customer needed to integrate weather, geography, seismic, hazard-site, and patrol data for continuous monitoring, graded warning, and assisted response, improving disaster prevention and mitigation.",
           "architecture": "Intelligent data governance unifies multi-source disaster data and builds risk indicators. The LLM explains warning causes and response suggestions. Patrol agents track hazard-site tasks. The digital twin supports terrain, risk-site, and impact simulation.",
           "evaluation": "The customer said risk identification is shifting from experience-only judgment to data-and-model-driven decisions. Field staff can understand warning evidence, while management can better prioritize patrol and remediation work.",
-          "technologies": ["Disaster LLM", "Patrol Agents", "Intelligent Data Governance", "Risk Twin Simulation"]
+          "technologies": [
+            "Disaster LLM",
+            "Patrol Agents",
+            "Intelligent Data Governance",
+            "Risk Twin Simulation"
+          ]
         }
       ]
     },

@@ -9,6 +9,7 @@
 Platform-level general utilities: logging, environment detection, type guards, and utility types.
 
 Difference from `@vxture/shared`:
+
 - **shared**: Pure general utilities, platform-agnostic
 - **core-utils**: Platform-aware utilities (structured logging, environment detection)
 
@@ -27,25 +28,30 @@ pnpm add @vxture/core-utils
 ### Logging Utilities
 
 ```typescript
-import { VxLogger, logger, LogLevel, DEFAULT_LOGGER_CONFIG } from '@vxture/core-utils';
+import {
+  VxLogger,
+  logger,
+  LogLevel,
+  DEFAULT_LOGGER_CONFIG,
+} from "@vxture/core-utils";
 
 // Use default logger
-logger.info('Hello', { user: '123' });
+logger.info("Hello", { user: "123" });
 
 // Create custom logger
 const customLogger = new VxLogger({
   level: LogLevel.DEBUG,
-  context: 'MyApp',
+  context: "MyApp",
   enableTimestamp: true,
   enableColors: true,
 });
-customLogger.debug('Debug message');
+customLogger.debug("Debug message");
 
 // Child logger with fixed context
-const childLogger = customLogger.child('SubModule');
-childLogger.warn('Warning');
-childLogger.error('Error occurred');
-childLogger.fatal('Fatal error');
+const childLogger = customLogger.child("SubModule");
+childLogger.warn("Warning");
+childLogger.error("Error occurred");
+childLogger.fatal("Fatal error");
 ```
 
 ### Environment Detection
@@ -59,7 +65,7 @@ import {
   isStaging,
   isNode,
   isBrowser,
-} from '@vxture/core-utils';
+} from "@vxture/core-utils";
 
 console.log(getNodeEnv()); // 'development'
 console.log(isProduction()); // true/false
@@ -86,7 +92,7 @@ import {
   isNonEmptyString,
   isValidUrl,
   isUuid,
-} from '@vxture/core-utils';
+} from "@vxture/core-utils";
 
 function processValue(value: unknown) {
   if (isString(value)) {
@@ -113,58 +119,58 @@ function processValue(value: unknown) {
 
 ### Logging
 
-| Export | Type | Description |
-|--------|------|-------------|
-| `VxLogger` | Class | Logger class with context binding |
-| `logger` | Instance | Default logger instance |
-| `LogLevel` | Const | Log level enum (DEBUG, INFO, WARN, ERROR, FATAL) |
-| `DEFAULT_LOGGER_CONFIG` | Const | Default logger configuration |
+| Export                  | Type     | Description                                      |
+| ----------------------- | -------- | ------------------------------------------------ |
+| `VxLogger`              | Class    | Logger class with context binding                |
+| `logger`                | Instance | Default logger instance                          |
+| `LogLevel`              | Const    | Log level enum (DEBUG, INFO, WARN, ERROR, FATAL) |
+| `DEFAULT_LOGGER_CONFIG` | Const    | Default logger configuration                     |
 
 ### VxLogger Methods
 
-| Method | Description |
-|--------|-------------|
-| `debug(message, metadata?)` | Debug level log |
-| `info(message, metadata?)` | Info level log |
-| `warn(message, metadata?)` | Warn level log |
-| `error(message, metadata?)` | Error level log |
-| `fatal(message, metadata?)` | Fatal level log |
-| `child(context)` | Create child logger with fixed context |
+| Method                      | Description                            |
+| --------------------------- | -------------------------------------- |
+| `debug(message, metadata?)` | Debug level log                        |
+| `info(message, metadata?)`  | Info level log                         |
+| `warn(message, metadata?)`  | Warn level log                         |
+| `error(message, metadata?)` | Error level log                        |
+| `fatal(message, metadata?)` | Fatal level log                        |
+| `child(context)`            | Create child logger with fixed context |
 
 ### Environment
 
-| Export | Type | Description |
-|--------|------|-------------|
-| `getNodeEnv()` | Function | Get NODE_ENV value |
-| `isProduction()` | Function | Is production environment |
+| Export            | Type     | Description                |
+| ----------------- | -------- | -------------------------- |
+| `getNodeEnv()`    | Function | Get NODE_ENV value         |
+| `isProduction()`  | Function | Is production environment  |
 | `isDevelopment()` | Function | Is development environment |
-| `isTest()` | Function | Is test environment |
-| `isStaging()` | Function | Is staging environment |
-| `isNode()` | Function | Is Node.js environment |
-| `isBrowser()` | Function | Is browser environment |
+| `isTest()`        | Function | Is test environment        |
+| `isStaging()`     | Function | Is staging environment     |
+| `isNode()`        | Function | Is Node.js environment     |
+| `isBrowser()`     | Function | Is browser environment     |
 
 ### Type Guards
 
-| Category | Exports |
-|----------|---------|
-| Basic types | `isString`, `isNumber`, `isBoolean`, `isFunction`, `isSymbol` |
-| null/undefined | `isDefined`, `isNotNull`, `isPresent` |
-| Object/Array | `isObject`, `isArray`, `isEmptyObject`, `isEmptyArray` |
-| String content | `isNonEmptyString`, `isValidUrl`, `isUuid` |
+| Category       | Exports                                                       |
+| -------------- | ------------------------------------------------------------- |
+| Basic types    | `isString`, `isNumber`, `isBoolean`, `isFunction`, `isSymbol` |
+| null/undefined | `isDefined`, `isNotNull`, `isPresent`                         |
+| Object/Array   | `isObject`, `isArray`, `isEmptyObject`, `isEmptyArray`        |
+| String content | `isNonEmptyString`, `isValidUrl`, `isUuid`                    |
 
 ### Utility Types
 
-| Export | Description |
-|--------|-------------|
-| `Maybe<T>` | `T \| null \| undefined` |
-| `Nullable<T>` | `T \| null` |
-| `Optional<T>` | `T \| undefined` |
-| `Class<T>` | Constructor type |
-| `FunctionType` | Any function type |
-| `DeepPartial<T>` | Deep partial |
-| `DeepReadonly<T>` | Deep readonly |
-| `LogRecord` | Log record type |
-| `LoggerConfig` | Logger configuration type |
+| Export            | Description               |
+| ----------------- | ------------------------- |
+| `Maybe<T>`        | `T \| null \| undefined`  |
+| `Nullable<T>`     | `T \| null`               |
+| `Optional<T>`     | `T \| undefined`          |
+| `Class<T>`        | Constructor type          |
+| `FunctionType`    | Any function type         |
+| `DeepPartial<T>`  | Deep partial              |
+| `DeepReadonly<T>` | Deep readonly             |
+| `LogRecord`       | Log record type           |
+| `LoggerConfig`    | Logger configuration type |
 
 ---
 

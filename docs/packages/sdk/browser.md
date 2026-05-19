@@ -6,10 +6,10 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/platform-browser` |
-| 路径 | `packages/platform/browser/` |
+| 项     | 值                               |
+| ------ | -------------------------------- |
+| 包名   | `@vxture/platform-browser`       |
+| 路径   | `packages/platform/browser/`     |
 | @layer | `Infrastructure`（浏览器端专用） |
 
 ## 职责
@@ -37,8 +37,8 @@ src/utils/
 ## 使用方式
 
 ```typescript
-import { resetScrollTop } from '@vxture/platform-browser'
-import { getPreference, setPreference } from '@vxture/platform-browser'
+import { resetScrollTop } from "@vxture/platform-browser";
+import { getPreference, setPreference } from "@vxture/platform-browser";
 ```
 
 ## 扩展原则

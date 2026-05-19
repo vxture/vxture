@@ -72,12 +72,19 @@ pnpm --filter @vxture/design-system build
 ```tsx
 import {
   // AI family
-  ModelBadge, GenerationStream, PromptInput, AIAssistantBubble, TokenCounter,
+  ModelBadge,
+  GenerationStream,
+  PromptInput,
+  AIAssistantBubble,
+  TokenCounter,
   // Basics
-  Toast, ToastProvider, useToast,
+  Toast,
+  ToastProvider,
+  useToast,
   Drawer,
   Skeleton,
   // Theme
-  ThemeProvider, useTheme,
-} from '@vxture/design-system';
+  ThemeProvider,
+  useTheme,
+} from "@vxture/design-system";
 ```

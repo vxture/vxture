@@ -127,16 +127,16 @@ docker run -d \
 
 **Schema 分布：**
 
-| Schema | 管理方 | 主要表 |
-|--------|--------|--------|
-| `identity` | auth-bff / website-bff | account, account_credential, account_session, login_attempt, oauth_provider |
-| `iam` | console-bff | role, permission, role_permission, member_role_binding, capability |
-| `tenant` | website-bff / console-bff | tenant, tenant_member, tenant_setting, tenant_invitation |
-| `product` | admin-bff | product_agent, product_plan, product_feature, product_plan_price |
-| `commerce` | admin-bff / console-bff | tenant_invoice, tenant_payment, tenant_subscription, tenant_transaction, tenant_credit |
-| `model` | admin-bff | model_provider, model_definition, model_grant, model_price_rule, model_policy |
-| `ops` | admin-bff | admin, role, permission, setting, governance_record, feature_flag |
-| `support` | admin-bff | ticket, ticket_event, audit_log, notification_log |
+| Schema     | 管理方                    | 主要表                                                                                 |
+| ---------- | ------------------------- | -------------------------------------------------------------------------------------- |
+| `identity` | auth-bff / website-bff    | account, account_credential, account_session, login_attempt, oauth_provider            |
+| `iam`      | console-bff               | role, permission, role_permission, member_role_binding, capability                     |
+| `tenant`   | website-bff / console-bff | tenant, tenant_member, tenant_setting, tenant_invitation                               |
+| `product`  | admin-bff                 | product_agent, product_plan, product_feature, product_plan_price                       |
+| `commerce` | admin-bff / console-bff   | tenant_invoice, tenant_payment, tenant_subscription, tenant_transaction, tenant_credit |
+| `model`    | admin-bff                 | model_provider, model_definition, model_grant, model_price_rule, model_policy          |
+| `ops`      | admin-bff                 | admin, role, permission, setting, governance_record, feature_flag                      |
+| `support`  | admin-bff                 | ticket, ticket_event, audit_log, notification_log                                      |
 
 ### Redis — platform
 
@@ -153,13 +153,13 @@ docker run -d \
 
 **Platform Redis 用途：**
 
-| Key 前缀 | 用途 | 管理方 |
-|---------|------|--------|
-| `refresh:*` | JWT Refresh Token | auth-bff |
-| `blacklist:*` | 已吊销 Access Token | auth-bff |
-| `crossdomain:*` | 跨域一次性 SSO Token（TTL 30s） | auth-bff |
-| `vc:*` | 邮件验证码 + 限流 | website-bff |
-| `svc:*` | 短信验证码 + 限流 | website-bff |
+| Key 前缀        | 用途                            | 管理方      |
+| --------------- | ------------------------------- | ----------- |
+| `refresh:*`     | JWT Refresh Token               | auth-bff    |
+| `blacklist:*`   | 已吊销 Access Token             | auth-bff    |
+| `crossdomain:*` | 跨域一次性 SSO Token（TTL 30s） | auth-bff    |
+| `vc:*`          | 邮件验证码 + 限流               | website-bff |
+| `svc:*`         | 短信验证码 + 限流               | website-bff |
 
 ---
 
@@ -296,6 +296,7 @@ find "${BACKUP_DIR}" -name "*.sql.gz" -o -name "*.rdb" | sort | head -n -14 | xa
 ### 阿里云 ESSD 快照
 
 在阿里云控制台为 `/data` 所在的 ESSD 设置自动快照策略：
+
 - 频率：每日凌晨 3:00
 - 保留：7 天
 - 注意：快照与 pg_dump 互补（快照可快速回滚磁盘，pg_dump 可细粒度恢复数据）
@@ -321,15 +322,15 @@ sudo sysctl -p
 
 各容器设置内存上限（`--memory`）防止单容器吃满内存导致 OOM：
 
-| 容器 | 建议上限 |
-|------|---------|
-| platform-postgres | 400MB |
-| platform-redis | 128MB |
-| nginx | 64MB |
-| website / console / admin | 各 256MB |
+| 容器                                  | 建议上限 |
+| ------------------------------------- | -------- |
+| platform-postgres                     | 400MB    |
+| platform-redis                        | 128MB    |
+| nginx                                 | 64MB     |
+| website / console / admin             | 各 256MB |
 | website-bff / console-bff / admin-bff | 各 192MB |
-| auth-bff | 128MB |
-| gateway-bff | 64MB |
+| auth-bff                              | 128MB    |
+| gateway-bff                           | 64MB     |
 
 ---
 

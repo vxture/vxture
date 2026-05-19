@@ -30,20 +30,20 @@ DATABASE_URL
 
 ### 1.3 Secrets 存放位置
 
-| 环境 | Secrets 存放 |
-|------|-------------|
-| 本地开发 | `.env.local`（不提交，已 gitignore） |
-| CI/CD | GitHub Actions Secrets |
-| 生产 | 服务器 `.env.production`（仅 root 可读，`chmod 600`） |
+| 环境     | Secrets 存放                                          |
+| -------- | ----------------------------------------------------- |
+| 本地开发 | `.env.local`（不提交，已 gitignore）                  |
+| CI/CD    | GitHub Actions Secrets                                |
+| 生产     | 服务器 `.env.production`（仅 root 可读，`chmod 600`） |
 
 ### 1.4 密钥强度要求
 
-| Secret | 最小长度 | 生成方式 |
-|--------|---------|---------|
-| `JWT_ACCESS_SECRET` | 64 字符 | `openssl rand -base64 48` |
-| `JWT_REFRESH_SECRET` | 64 字符 | 与 access 不同值 |
-| `AUTH_INTERNAL_TOKEN` | 32 字符 | `openssl rand -hex 16` |
-| OAuth App Secret | 由提供商决定 | 不自定义 |
+| Secret                | 最小长度     | 生成方式                  |
+| --------------------- | ------------ | ------------------------- |
+| `JWT_ACCESS_SECRET`   | 64 字符      | `openssl rand -base64 48` |
+| `JWT_REFRESH_SECRET`  | 64 字符      | 与 access 不同值          |
+| `AUTH_INTERNAL_TOKEN` | 32 字符      | `openssl rand -hex 16`    |
+| OAuth App Secret      | 由提供商决定 | 不自定义                  |
 
 ---
 
@@ -74,7 +74,7 @@ Domain: .vxture.com     # 跨子域共享（admin/console/api）
 ```typescript
 // Redis 不可用时必须拒绝请求，禁止退化为"无状态验证"
 if (!redis.isConnected()) {
-  throw new ServiceUnavailableException('Auth service unavailable');
+  throw new ServiceUnavailableException("Auth service unavailable");
 }
 ```
 
@@ -100,7 +100,7 @@ Header：x-vxture-internal-auth: {AUTH_INTERNAL_TOKEN}
 
 ```typescript
 // ✅ 正确
-if (req.headers['x-vxture-internal-auth'] !== process.env.AUTH_INTERNAL_TOKEN) {
+if (req.headers["x-vxture-internal-auth"] !== process.env.AUTH_INTERNAL_TOKEN) {
   throw new UnauthorizedException();
 }
 
@@ -111,7 +111,7 @@ if (req.headers['x-vxture-internal-auth'] !== process.env.AUTH_INTERNAL_TOKEN) {
 
 ## 4. 各层安全边界
 
-### Portal 层（portals/* / agent-studio/*）
+### Portal 层（portals/_ / agent-studio/_）
 
 ```
 ✅ 所有 API 调用通过 gateway-bff 或直连专属 BFF
@@ -176,14 +176,22 @@ Credentials：true（Cookie 跨域传递）
 await prisma.user.findMany({ where: { email: userInput } });
 
 // ❌ 危险
-await prisma.$queryRawUnsafe(`SELECT * FROM "User" WHERE email = '${userInput}'`);
+await prisma.$queryRawUnsafe(
+  `SELECT * FROM "User" WHERE email = '${userInput}'`,
+);
 ```
 
 ### 敏感数据日志过滤
 
 ```typescript
 // logger 配置中屏蔽敏感字段
-const REDACTED_KEYS = ['password', 'token', 'secret', 'authorization', 'cookie'];
+const REDACTED_KEYS = [
+  "password",
+  "token",
+  "secret",
+  "authorization",
+  "cookie",
+];
 ```
 
 ### 个人信息处理

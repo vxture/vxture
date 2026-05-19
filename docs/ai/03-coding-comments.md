@@ -118,7 +118,7 @@ export function functionName(param: Type): ReturnType {
  */
 export enum EExample {
   /** Member description */
-  MEMBER = 'value',
+  MEMBER = "value",
 }
 ```
 
@@ -130,10 +130,10 @@ export enum EExample {
 
 ```typescript
 // ⚠️ 跨层引用：仅引入类型，不引入运行时依赖
-import type { SomeType } from '@vxture/bff-website'
+import type { SomeType } from "@vxture/bff-website";
 
 // ⚠️ 跨层引用：设计系统内部模块共享，已在 AGENTS.md G2 说明
-import { tokens } from '../design-tokens'
+import { tokens } from "../design-tokens";
 ```
 
 无理由的跨层引用视为架构违规，会被 dep-cruiser 拦截。
