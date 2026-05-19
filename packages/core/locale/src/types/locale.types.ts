@@ -10,10 +10,16 @@
 
 import type { Locale } from "@vxture/shared";
 
+/** Fetch API Headers (Next.js / Web standard) */
+type FetchHeaders = { get(name: string): string | null | undefined };
+
+/** Express / Node.js IncomingHttpHeaders (plain object, keys already lowercase) */
+type ExpressHeaders = Record<string, string | string[] | undefined>;
+
+export type LocaleHeaders = FetchHeaders | ExpressHeaders;
+
 export interface LocaleRequest {
-  headers: {
-    get(name: string): string | null | undefined;
-  };
+  headers: LocaleHeaders;
   cookies?: Record<string, string>;
 }
 
