@@ -582,6 +582,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 42. 已完成：Component metric 债务只读排序；当前 `var(--vx-component-metric-*)` 命中 1017 处，最高集中在 `tokens-website.css` 57、`tokens-admin-base-size.css` 54、`tokens-admin-service-health.css` 51、`tokens-admin-directory.css` 49、`tokens-console-space.css` 44、`tokens-component-control-semantics.css` 42、`tokens-admin-base-space.css` 41、`tokens-admin-governance.css` 39、`tokens-admin-captcha.css` 37、`tokens-admin-shell-header.css` 35、`tokens-admin-platform-autonomy.css` 35。下一批采用 token owner 内直接落运行时值的方式一次性清理 metric bridge var，并追加回流守卫。
 43. 已完成：Component metric bridge 全量清零；一次性解析 46 个 `tokens-*` runtime token 文件中的 1017 处 `var(--vx-component-metric-*)`，将其落为 token owner 内的实际运行时值。当前 `var(--vx-component-metric-*)` 命中为 0；本批只改变 token runtime 值源表达方式，不改变公共入口和消费者选择器。
 44. 已完成：Component metric 回流守卫；新增 `ds/no-runtime-component-metric-var-usage`，禁止 DS 样式层重新通过 `var()` 消费 `--vx-component-metric-*` 兜底 token。至此 scale bridge 与 component metric bridge 两类运行时 var 债务均进入 0 baseline 回流拦截。
+45. 已完成：Component metric 批次验收；`pnpm lint:design`、`node --check scripts/guardrails/check-design-system.mjs`、`pnpm --filter @vxture/design-system lint`、`pnpm --filter @vxture/design-system type-check`、`pnpm --filter @vxture/shared build`、`pnpm --filter @vxture/design-system build`、`git diff --check` 均通过；当前 scale bridge 与 component metric bridge 命中均为 0。
 
 ## 后续验收清单
 
