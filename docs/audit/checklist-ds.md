@@ -587,6 +587,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 47. 已完成：Component metric 定义文件退场；删除已无消费者的 `tokens-component-metrics.css`、`tokens-component-metrics-em.css`、`tokens-component-metrics-px.css`、`tokens-component-metrics-rem.css`、`tokens-component-metrics-rem-controls.css`、`tokens-component-metrics-rem-fine.css`、`tokens-component-metrics-rem-layout.css`、`tokens-component-metrics-rem-ui.css`，并从 `tokens.css` 移除聚合入口。新增 `ds/no-legacy-component-metric-token-style`，禁止这些兜底 metric token 文件或 import 恢复。
 48. 已完成：Scale bridge 定义文件退场；删除已无消费者的 `tokens-scale-flow.css`、`tokens-scale-rem.css`、`tokens-scale-px.css`、`tokens-platform-scale.css`、`tokens-platform-scale-core.css`、`tokens-platform-scale-layout.css`、`tokens-auth-scale-core.css`，并从 `tokens.css` 移除聚合入口。扩展 `ds/no-legacy-scale-token-style`，禁止这些已清零 bridge token 文件或 import 恢复；DS 样式文件数从 322 降到 315。
 49. 已完成：Scale bridge 守卫文案同步；`ds/no-ds-style-*-scale-bridge-usage` 仍保留回流拦截职责，但提示不再引导迁移到已删除的桥接 token，统一改为落到具体语义 token。当前 `var(--vx-scale-*)`、`var(--vx-platform-scale-*)`、`var(--vx-auth-scale-*)`、`var(--vx-console-scale-*)`、`var(--vx-component-scale-*)` 运行时消费维持 0。
+50. 已完成：DS 当前状态快照；当前 DS 样式文件 315 个，7KB/8KB 以上叶子 0，单 import wrapper 0，`var(--vx-component-metric-*)` 0，`var(--vx-*-scale-*)` 0，`--vx-component-metric-*` 定义 0，`--vx-scale-*` / `--vx-platform-scale-*` / `--vx-auth-scale-*` 定义 0。跨应用巡检未发现业务源码 DS 深层导入、应用侧 `--vx-*` 定义或底层 UI primitive 直连；剩余扫描命中仅来自 `packages/design/foundation-v1.3.0-complete.css` 和 `packages/design/vxture-v1.3.0-components/*` 历史素材包，已在守卫忽略清单内。
 
 ## 后续验收清单
 
