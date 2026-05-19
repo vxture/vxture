@@ -1709,5 +1709,8 @@ function violation(file, line, message, source = "") {
 }
 
 function normalize(value) {
-  return value.replaceAll("\\", "/").replace(/^([A-Za-z]:)?\/?MyWebSite\/vxture\//, "");
+  const forward = value.replaceAll("\\", "/");
+  const rootForward = ROOT.replaceAll("\\", "/").replace(/\/?$/, "/");
+  if (forward.startsWith(rootForward)) return forward.slice(rootForward.length);
+  return forward.replace(/^([A-Za-z]:)?\/?MyWebSite\/vxture\//, "");
 }
