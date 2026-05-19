@@ -54,13 +54,13 @@ import {
 
 ```typescript
 // 支持的语言列表（只读）
-console.log(SUPPORTED_LOCALES); // ['zh', 'en']
+console.log(SUPPORTED_LOCALES); // ['zh-CN', 'en-US']
 
 // 默认语言
-console.log(DEFAULT_LOCALE); // 'zh'
+console.log(DEFAULT_LOCALE); // 'zh-CN'
 
 // 类型安全的语言变量
-const locale: Locale = "en";
+const locale: Locale = "en-US";
 
 // 检查语言支持
 const isSupported = SUPPORTED_LOCALES.includes(locale);
@@ -143,12 +143,13 @@ const customTheme: ThemeValue = "tenant-blue"; // ✅
 
 ```typescript
 // 默认主题
-THEME_CONSTANTS.DEFAULT_THEME; // 'light'
+THEME_CONSTANTS.DEFAULT_THEME; // 'system'
 
-// 可用主题
+// 可用主题（isExplicitDark：是否显式指定为深色，system 主题不确定，故为 false）
 THEME_CONSTANTS.AVAILABLE_THEMES; // [
-//   { name: 'light', displayName: '浅色', isDark: false },
-//   { name: 'dark', displayName: '深色', isDark: true }
+//   { name: 'system', displayName: '跟随系统', isExplicitDark: false },
+//   { name: 'light',  displayName: '浅色',     isExplicitDark: false },
+//   { name: 'dark',   displayName: '深色',     isExplicitDark: true  },
 // ]
 
 // 存储键
@@ -224,16 +225,83 @@ type SemanticColor =
 const buttonColor: SemanticColor = "primary";
 ```
 
+### 7. 错误类型
+
+```typescript
+import {
+  VxtureError,
+  ValidationError,
+  UnauthorizedError,
+  isVxtureError,
+} from "@vxture/shared";
+
+// 抛出语义化错误
+throw new ValidationError("邮箱格式不正确");
+throw new UnauthorizedError(); // 默认 message: 'Unauthorized'
+
+// 所有子类继承 VxtureError，携带 status / code / details / requestId
+try {
+  await someOp();
+} catch (err) {
+  if (isVxtureError(err)) {
+    console.log(err.status, err.code); // 400, 'VALIDATION_ERROR'
+    console.log(err.toJSON());
+  }
+}
+```
+
+可用子类：`ValidationError`(400) / `UnauthorizedError`(401) / `ForbiddenError`(403) / `NotFoundError`(404) / `ConflictError`(409) / `InternalServerError`(500)
+
+### 8. 对象工具
+
+```typescript
+import { deepMerge, deepClone, isPlainObject } from "@vxture/shared";
+
+// 深度合并（source 优先，数组替换不追加）
+const merged = deepMerge({ a: 1, b: { c: 2 } }, { b: { d: 3 } });
+// → { a: 1, b: { c: 2, d: 3 } }
+
+// 深度克隆（基于 structuredClone，支持 Map/Set/循环引用）
+const clone = deepClone({ a: { b: 1 } });
+```
+
+### 9. 跨 Portal 导航上下文
+
+```typescript
+import { encodePortalContext, decodePortalContext } from "@vxture/shared";
+
+// 序列化（用于构造跳转 URL）
+const qs = encodePortalContext({
+  from: "website",
+  returnTo: "https://...",
+  caller: "Vxture 官网",
+});
+const url = `${CONSOLE_URL}?${qs}`;
+
+// 反序列化（在目标 portal 入口调用）
+// ⚠️ returnTo 仅验证类型，消费方必须自行校验 URL 合法性和 origin 白名单
+const ctx = decodePortalContext(window.location.search); // null | PortalNavContext
+```
+
+### 10. 用户偏好常量
+
+```typescript
+import { PREFERENCE_CONSTANTS } from "@vxture/shared";
+
+PREFERENCE_CONSTANTS.SYNC_STORAGE_KEY; // 'vx-user-preferences'（跨标签页同步用）
+PREFERENCE_CONSTANTS.SYNC_EVENT; // 'vx:user-preferences'（同文档通知用）
+PREFERENCE_CONSTANTS.DENSITY_COOKIE_KEY; // 'vx-density'
+PREFERENCE_CONSTANTS.COOKIE_MAX_AGE; // 31536000（1 年，秒）
+```
+
 ## 脚本命令
 
 ```bash
+# 构建产物（dist/）
+pnpm build
+
 # 类型检查
 pnpm type-check
-
-# Lint 检查
-pnpm lint
-
-# 无构建命令（直接使用源代码）
 ```
 
 ## 依赖和边界

@@ -1,6 +1,5 @@
 # @vxture/shared
 
-> ⚠️ 待大版本重构 | 迁移自 `packages/shared/shared/AGENTS.md`
 > 架构层：`Shared`（见 `docs/architecture/02-package-boundaries.md`）
 
 ---
@@ -25,9 +24,10 @@
 
 ```
 src/
-├── utils/        # *.utils.ts   — 纯工具函数
-├── types/        # *.types.ts   — 全局通用类型
-├── constants/    # *.constants.ts — 全局常量
+├── utils/        # *.utils.ts      — 纯工具函数
+├── types/        # *.types.ts      — 全局通用类型
+├── constants/    # *.constants.ts  — 全局常量
+├── errors/       # *.error.ts      — 语义化错误类（VxtureError 及子类）
 └── index.ts
 ```
 
@@ -46,30 +46,41 @@ src/
 
 ### 工具函数
 
-| 文件              | 内容                                      |
-| ----------------- | ----------------------------------------- |
-| `debug.utils.ts`  | 调试工具（开发环境，生产无副作用）        |
-| `format.utils.ts` | 货币 / 日期 / 数字格式化（基于 Intl API） |
+| 文件                      | 内容                                                            |
+| ------------------------- | --------------------------------------------------------------- |
+| `debug.utils.ts`          | 调试工具（开发环境，生产无副作用；检测 `[::1]` 回环）           |
+| `format.utils.ts`         | 货币 / 日期 / 数字格式化（基于 Intl API）                       |
+| `object.utils.ts`         | `deepMerge` / `deepClone`（structuredClone）/ `isPlainObject`   |
+| `portal-context.utils.ts` | `encodePortalContext` / `decodePortalContext`（跨 Portal 跳转） |
 
 ### 类型定义
 
-| 文件              | 内容                                                |
-| ----------------- | --------------------------------------------------- |
-| `auth.types.ts`   | UserInfo / TokenData                                |
-| `locale.types.ts` | Locale / LocaleConfig                               |
-| `theme.types.ts`  | Theme / ThemeValue                                  |
-| `api.types.ts`    | ApiResponse / ApiSuccessResponse / ApiErrorResponse |
-| `ui.types.ts`     | SemanticColor                                       |
-| `common.types.ts` | Link / Action                                       |
+| 文件                      | 内容                                                        |
+| ------------------------- | ----------------------------------------------------------- |
+| `auth.types.ts`           | UserInfo（`lastLogin` ms）/ TokenData（`expiresIn` s）      |
+| `locale.types.ts`         | Locale / LocaleConfig                                       |
+| `theme.types.ts`          | Theme / ThemeValue                                          |
+| `api.types.ts`            | ApiSuccessResponse / ApiErrorResponse / ApiResponse（联合） |
+| `ui.types.ts`             | SemanticColor                                               |
+| `common.types.ts`         | Link / Action                                               |
+| `portal-context.types.ts` | PortalSource / PortalNavContext                             |
+| `error.types.ts`          | ErrorMetadata                                               |
 
 ### 常量配置
 
-| 文件                  | 内容                                                 |
-| --------------------- | ---------------------------------------------------- |
-| `auth.constants.ts`   | AUTH_CONSTANTS                                       |
-| `locale.constants.ts` | SUPPORTED_LOCALES / DEFAULT_LOCALE / LOCALE_INTL_MAP |
-| `theme.constants.ts`  | THEME_CONSTANTS                                      |
-| `ui.constants.ts`     | SEMANTIC_COLORS                                      |
+| 文件                      | 内容                                                                                             |
+| ------------------------- | ------------------------------------------------------------------------------------------------ |
+| `auth.constants.ts`       | AUTH_CONSTANTS（含 `TENANT_COOKIE_KEYS`、`RUYIN_COOKIE_KEYS`）                                   |
+| `locale.constants.ts`     | SUPPORTED_LOCALES / DEFAULT_LOCALE / LOCALE_CONFIGS / LOCALE_DEFAULT_CURRENCY / LOCALE_CONSTANTS |
+| `theme.constants.ts`      | THEME_CONSTANTS（`isExplicitDark`，默认主题 `system`）                                           |
+| `ui.constants.ts`         | SEMANTIC_COLORS                                                                                  |
+| `preference.constants.ts` | PREFERENCE_CONSTANTS（跨 portal 偏好同步键）                                                     |
+
+### 错误类
+
+| 文件              | 内容                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `common.error.ts` | VxtureError（基类）/ ValidationError / UnauthorizedError / ForbiddenError / NotFoundError / ConflictError / InternalServerError / `isVxtureError` |
 
 ## 文件命名规范
 
