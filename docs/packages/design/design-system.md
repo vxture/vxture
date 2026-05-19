@@ -67,7 +67,7 @@ AI：`AIAssistantBubble`、`GenerationStream`、`ModelBadge`、`PromptInput`、`
 ## CSS 分层
 
 - `tokens.css` 是 token runtime 稳定入口，只聚合 `tokens-*` 分层模块；外部消费者不得直接引用 `tokens-*`。
-- `tokens-foundation.css` 持有 spacing、radius、shadow、motion、keyframes 与默认字号运行时值；`tokens-density.css` 只覆盖密度相关尺度；`tokens-theme-foundation.css` 只负责 Tailwind spacing/radius/shadow/text/animate 映射。
+- `tokens-foundation-radius-space.css`、`tokens-foundation-shadow.css`、`tokens-foundation-motion.css` 与 `tokens-foundation-type-layout.css` 持有 spacing、radius、shadow、motion、keyframes 与默认字号运行时值；`tokens-density.css` 只覆盖密度相关尺度；`tokens-theme-foundation.css` 只负责 Tailwind spacing/radius/shadow/text/animate 映射。
 - `tokens-colors-primitives.css` 持有品牌、状态和 AI primitive 色阶；`tokens-colors-semantic.css` 才是应用消费边界。
 - `tokens-gradients.css` 只定义品牌和 AI 场景渐变 token，不承载组件结构规则；`tokens-theme-gradients.css` 只负责 Tailwind `bg-vx-gradient-*` 映射。
 - `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。

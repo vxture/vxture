@@ -97,13 +97,10 @@ const DS_EFFECT_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/console-assistant.css"),
   normalize("packages/design/design-system/src/styles/console-shell-layout-nav.css"),
   normalize("packages/design/design-system/src/styles/platform-shell-assistant.css"),
-  normalize("packages/design/design-system/src/styles/platform-shell-bindings.css"),
   normalize("packages/design/design-system/src/styles/platform-shell-header-buttons.css"),
   normalize("packages/design/design-system/src/styles/platform-access-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-access-shared-panels.css"),
   normalize("packages/design/design-system/src/styles/platform-models-actions.css"),
   normalize("packages/design/design-system/src/styles/platform-models-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-notifications-table.css"),
 ]);
 const DS_SHADOW_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/auth-actions-social.css"),
@@ -117,10 +114,8 @@ const DS_SHADOW_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/components-shell-preferences.css"),
   normalize("packages/design/design-system/src/styles/components-shell-user-menu.css"),
   normalize("packages/design/design-system/src/styles/platform-access-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-access-shared-panels.css"),
   normalize("packages/design/design-system/src/styles/platform-models-actions.css"),
   normalize("packages/design/design-system/src/styles/platform-models-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-notifications-table.css"),
 ]);
 const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("agent-studio/vela/src/app/globals.css"), "Vela globals.css"],
@@ -1016,6 +1011,14 @@ for (const item of collectUnreachableAppStyleViolations(files)) {
   violations.push({ rule: unreachableAppStyleRule, ...item });
 }
 
+const unreachableDsStyleRule = {
+  id: "ds/no-unreachable-ds-style-module",
+  description: "DS src/styles 下的样式模块必须能从 package exports 暴露的公共样式入口到达。",
+};
+for (const item of collectUnreachableDsStyleViolations(files)) {
+  violations.push({ rule: unreachableDsStyleRule, ...item });
+}
+
 const redundantStyleWrapperRule = {
   id: "ds/no-redundant-style-wrapper",
   description: "应用 src/styles 非顶层样式 wrapper 不能只转发一个子模块。",
@@ -1476,6 +1479,30 @@ function collectUnreachableAppStyleViolations(sourceFiles) {
   }
 
   return items;
+}
+
+function collectUnreachableDsStyleViolations(sourceFiles) {
+  const fileByPath = new Map(sourceFiles.map((file) => [normalize(path.relative(ROOT, file)), file]));
+  const dsStyleFiles = [...fileByPath.keys()].filter(
+    (file) => file.startsWith(`${DS_ROOT}/src/styles/`) && file.endsWith(".css"),
+  );
+  const reachable = new Set();
+  for (const entry of DS_EXPORTED_STYLE_PATHS) {
+    for (const item of collectReachableCssFiles(entry, fileByPath)) {
+      reachable.add(item);
+    }
+  }
+
+  return dsStyleFiles
+    .filter((file) => !reachable.has(file))
+    .map((file) =>
+      violation(
+        fileByPath.get(file),
+        1,
+        "该 DS 样式模块无法从 package exports 的公共样式入口 @import 图谱到达；请接入稳定入口或移除陈旧文件。",
+        file,
+      ),
+    );
 }
 
 function collectRedundantStyleWrapperViolations(sourceFiles) {
