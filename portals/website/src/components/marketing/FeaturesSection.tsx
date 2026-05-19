@@ -78,12 +78,13 @@ const FeatureCard = memo(function FeatureCard({ feature }: FeatureCardProps) {
         {/* 主图标 */}
         <div className="flex justify-center">
           <div className="w-24 h-24 bg-linear-to-r from-vx-brand-50 to-vx-brand-100 dark:from-vx-brand-600/40 dark:to-vx-brand-700/40 rounded-2xl flex items-center justify-center transition-transform duration-300 border-0">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+            {/* eslint-disable @typescript-eslint/no-explicit-any */}
             <Icon
               name={t(`items.${feature.id}.icon`) as any}
               fallback="placeholder"
               className="w-16 h-16"
             />
+            {/* eslint-enable @typescript-eslint/no-explicit-any */}
           </div>
         </div>
 
