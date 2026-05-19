@@ -7,6 +7,10 @@
  * @date 2026-05-03
  */
 
-export { MailModule } from "./mail.module";
+export { MailModule, MAIL_SMTP_OPTIONS } from "./mail.module";
 export { MailService } from "./mail.service";
-export type { MailPayload } from "./mail.types";
+export type {
+  MailPayload,
+  SmtpConfig,
+  MailModuleAsyncOptions,
+} from "./mail.types";
