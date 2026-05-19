@@ -10,6 +10,7 @@
 
 import { LogLevel } from "../types/utils.types";
 import type { LogRecord, LoggerConfig } from "../types/utils.types";
+import { isBrowser } from "./env.utils";
 
 // ============================================================================
 // Log Level Priority
@@ -47,7 +48,7 @@ export class VxLogger {
     this.config = {
       level: config.level ?? LogLevel.INFO,
       enableTimestamp: config.enableTimestamp ?? true,
-      enableColors: config.enableColors ?? true,
+      enableColors: config.enableColors ?? !isBrowser(),
       context: config.context ?? "",
     };
   }
