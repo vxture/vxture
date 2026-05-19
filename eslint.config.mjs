@@ -18,6 +18,7 @@ export default [
       '**/build/**',
       '**/.turbo/**',
       '**/coverage/**',
+      '**/src/generated/**',
       '**/*.js',
       '**/*.mjs',
       '**/*.cjs',
