@@ -1,0 +1,45 @@
+/**
+ * tokens-component-shell-user-menu-semantics.css - Shell 用户菜单组件语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-shell-user-trigger-size: var(--vx-component-metric-25r);
+  --vx-shell-user-trigger-hover-ring: var(--vx-component-metric-2p);
+  --vx-shell-user-status-offset: var(--vx-component-metric-0125r);
+  --vx-shell-user-status-size: var(--vx-component-metric-075r);
+  --vx-shell-user-status-border-width: var(--vx-component-metric-2p);
+  --vx-shell-user-avatar-size: var(--vx-component-metric-25r);
+  --vx-shell-user-avatar-lg-size: var(--vx-component-metric-35r);
+  --vx-shell-user-avatar-shadow-y: var(--vx-component-metric-2p);
+  --vx-shell-user-avatar-shadow-blur: var(--vx-component-metric-6p);
+  --vx-shell-user-menu-width: var(--vx-component-metric-20r);
+  --vx-shell-user-menu-radius: var(--vx-component-metric-10p);
+  --vx-shell-user-menu-shadow-y: var(--vx-component-metric-18p);
+  --vx-shell-user-menu-shadow-blur: var(--vx-component-metric-45p);
+  --vx-shell-user-menu-profile-gap: var(--vx-component-metric-075r);
+  --vx-shell-user-menu-padding: var(--vx-component-metric-1r);
+  --vx-shell-user-menu-name-size: var(--vx-component-metric-096r);
+  --vx-shell-user-menu-line-margin-top: var(--vx-component-metric-02r);
+  --vx-shell-user-menu-line-size: var(--vx-component-metric-084r);
+  --vx-shell-user-menu-meta-margin-top: var(--vx-component-metric-012r);
+  --vx-shell-user-menu-meta-size: var(--vx-component-metric-076r);
+  --vx-shell-user-menu-badge-gap: var(--vx-component-metric-05r);
+  --vx-shell-user-menu-badge-indent: var(--vx-component-metric-425r);
+  --vx-shell-user-badge-padding-y: var(--vx-component-metric-025r);
+  --vx-shell-user-badge-padding-x: var(--vx-component-metric-062r);
+  --vx-shell-user-badge-size: var(--vx-component-metric-075r);
+  --vx-shell-user-menu-action-gap: var(--vx-component-metric-065r);
+  --vx-shell-user-menu-action-radius: var(--vx-component-metric-8p);
+  --vx-shell-user-menu-action-padding-y: var(--vx-component-metric-062r);
+  --vx-shell-user-menu-action-padding-x: var(--vx-component-metric-075r);
+  --vx-shell-user-menu-action-size: var(--vx-component-metric-085r);
+  --vx-shell-user-menu-action-icon-size: var(--vx-component-metric-1r);
+  --vx-shell-user-menu-return-gap: var(--vx-component-metric-04r);
+  --vx-shell-user-menu-dismiss-size: var(--vx-component-metric-125r);
+  --vx-shell-user-menu-dismiss-radius: var(--vx-component-metric-6p);
+}

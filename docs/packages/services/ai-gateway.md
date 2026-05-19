@@ -6,13 +6,13 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/service-ai-gateway` |
-| 路径 | `services/ai/gateway/` |
-| @layer | `Domain` |
-| 端口 | 3100 |
-| 框架 | NestJS |
+| 项     | 值                           |
+| ------ | ---------------------------- |
+| 包名   | `@vxture/service-ai-gateway` |
+| 路径   | `services/ai/gateway/`       |
+| @layer | `Domain`                     |
+| 端口   | 3100                         |
+| 框架   | NestJS                       |
 
 ## 职责
 
@@ -36,7 +36,7 @@ src/
 ```typescript
 ✅ @vxture/core-* / @vxture/shared
 ✅ @prisma/client（计量数据持久化）
-❌ @vxture/ai-sdk（ai-sdk 调用 gateway，非反向）
+❌ @vxture/ai-gateway-client（ai-sdk 调用 gateway，非反向）
 ❌ agent-server/* / bff-* / portals/*
 ```
 

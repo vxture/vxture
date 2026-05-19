@@ -8,13 +8,13 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/bff-vela` |
-| 路径 | `bff/vela-bff/` |
-| @layer | `Application` |
+| 项       | 值                                                  |
+| -------- | --------------------------------------------------- |
+| 包名     | `@vxture/bff-vela`                                  |
+| 路径     | `bff/vela-bff/`                                     |
+| @layer   | `Application`                                       |
 | 服务对象 | `agent-studio/vela`（admin + console 两个 surface） |
-| 端口 | 3121 |
+| 端口     | 3121                                                |
 
 ## 唯一职责
 
@@ -27,12 +27,12 @@
 
 ## Surface × userType 矩阵
 
-| X-Vela-Surface | JWT userType | 结果 |
-|---------------|-------------|------|
-| `admin` | `operator` | ✅ dataScope = global |
-| `admin` | `tenant_user` | ❌ 403 SURFACE_FORBIDDEN |
-| `console` | `tenant_user` | ✅ dataScope = tenant |
-| `console` | `operator` | ❌ 403 SURFACE_FORBIDDEN |
+| X-Vela-Surface | JWT userType  | 结果                     |
+| -------------- | ------------- | ------------------------ |
+| `admin`        | `operator`    | ✅ dataScope = global    |
+| `admin`        | `tenant_user` | ❌ 403 SURFACE_FORBIDDEN |
+| `console`      | `tenant_user` | ✅ dataScope = tenant    |
+| `console`      | `operator`    | ❌ 403 SURFACE_FORBIDDEN |
 
 ## 目录结构
 
@@ -84,7 +84,10 @@ data: { type: 'error'; code: string; message: string }
 
 ```typescript
 // Response 200
-{ status: 'ok'; version: string }
+{
+  status: "ok";
+  version: string;
+}
 ```
 
 ## 核心约束（违反破坏安全隔离）
@@ -98,10 +101,12 @@ data: { type: 'error'; code: string; message: string }
 ## 依赖约束
 
 **允许：**
+
 - `@vxture/core-auth`（JWT 类型，不引入签发逻辑）
 - `@vxture/core-config` / `@vxture/shared`
 - NestJS / `@nestjs/jwt` / `cookie-parser`
 
 **禁止：**
-- `@vxture/ai-sdk` / `@vxture/service-*` / `design-system` / `platform-*`
+
+- `@vxture/ai-gateway-client` / `@vxture/service-*` / `design-system` / `platform-*`
 - 跨 BFF 导入 / JWT 签发逻辑

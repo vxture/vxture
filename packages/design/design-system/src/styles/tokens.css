@@ -12,7 +12,10 @@
 @import "./tokens-gradients.css";
 @import "./tokens-colors-semantic.css";
 @import "./tokens-colors-shell.css";
-@import "./tokens-foundation.css";
+@import "./tokens-foundation-radius-space.css";
+@import "./tokens-foundation-shadow.css";
+@import "./tokens-foundation-motion.css";
+@import "./tokens-foundation-type-layout.css";
 @import "./tokens-component-metrics.css";
 @import "./tokens-scale-flow.css";
 @import "./tokens-scale-rem.css";
@@ -20,7 +23,10 @@
 @import "./tokens-platform-scale.css";
 @import "./tokens-auth-scale.css";
 @import "./tokens-component-semantics.css";
-@import "./tokens-component-effects.css";
+@import "./tokens-component-control-effects.css";
+@import "./tokens-component-shell-effects.css";
+@import "./tokens-component-ai-effects.css";
+@import "./tokens-component-auth-effects.css";
 @import "./tokens-auth-semantics.css";
 @import "./tokens-platform-semantics.css";
 @import "./tokens-platform-admin-layout.css";
@@ -28,7 +34,11 @@
 @import "./tokens-admin-shell.css";
 @import "./tokens-admin-assistant-workspace.css";
 @import "./tokens-admin-directory-governance.css";
-@import "./tokens-admin-operations.css";
+@import "./tokens-admin-operations-controls.css";
+@import "./tokens-admin-operations-audit.css";
+@import "./tokens-admin-operations-announcements.css";
+@import "./tokens-admin-operations-skills.css";
+@import "./tokens-admin-operations-dialog.css";
 @import "./tokens-admin-service-health.css";
 @import "./tokens-admin-platform-autonomy.css";
 @import "./tokens-admin-feature-aliases.css";

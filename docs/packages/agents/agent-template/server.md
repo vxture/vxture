@@ -7,19 +7,19 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 名称 | `agent-template-server`（分叉后按 `{name}-server` 命名，无 @vxture 包名） |
-| 路径 | `agent-server/agent-template/` |
-| @layer | `Application` / `Domain`（agent 私有） |
-| 端口 | 按 `docs/ai/port-allocation.md` 登记（比 bff 端口 +1） |
-| 对外接口 | `POST /internal/{name}/chat`（仅对应 bff 调用） |
+| 项       | 值                                                                        |
+| -------- | ------------------------------------------------------------------------- |
+| 名称     | `agent-template-server`（分叉后按 `{name}-server` 命名，无 @vxture 包名） |
+| 路径     | `agent-server/agent-template/`                                            |
+| @layer   | `Application` / `Domain`（agent 私有）                                    |
+| 端口     | 按 `docs/ai/port-allocation.md` 登记（比 bff 端口 +1）                    |
+| 对外接口 | `POST /internal/{name}/chat`（仅对应 bff 调用）                           |
 
 ## 职责
 
 1. 接收 bff 内部请求，解码并二次校验 `CallerContext`
 2. 通过 `ToolRegistry` 过滤当前 context 允许的工具
-3. 调用 `@vxture/ai-sdk/llm` 执行 Tool Use Loop
+3. 调用 `@vxture/ai-gateway-client/llm` 执行 Tool Use Loop
 4. 流式返回 SSE 事件给 bff（透传给前端）
 5. 会话 + 消息持久化（Prisma → PostgreSQL）
 
@@ -53,14 +53,15 @@ src/
 ## 核心约束
 
 1. 禁止 import 其他 `agent-server/*` 目录
-2. 所有 LLM 调用通过 `@vxture/ai-sdk/llm`，禁止直接 import provider SDK
+2. 所有 LLM 调用通过 `@vxture/ai-gateway-client/llm`，禁止直接 import provider SDK
 3. `CallerContext` 必须在入口处二次校验 surface × userType 合法性
 4. 工具执行前必须经过 `ToolRegistry` 的 `allowedTools` 白名单校验
 
 ## 依赖约束
 
 **允许：**
-- `@vxture/ai-sdk` / `@vxture/service-*`（按需）
+
+- `@vxture/ai-gateway-client` / `@vxture/service-*`（按需）
 - `@vxture/core-auth` / `@vxture/core-config` / `@vxture/shared`
 - NestJS / `@prisma/client`
 

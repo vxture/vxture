@@ -1,0 +1,19 @@
+/**
+ * tokens-admin-operations-announcements.css - Admin Operations 公告语义尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-admin-operations-announcement-grid: var(--vx-component-metric-3r) 1fr var(--vx-component-metric-6r) var(--vx-admin-grid-column-xs) var(--vx-admin-grid-column-xs) var(--vx-component-metric-10r) var(--vx-component-metric-10r) var(--vx-component-metric-4r);
+  --vx-admin-operations-announcement-card-grid-min-width: var(--vx-admin-card-grid-min-width-lg);
+  --vx-admin-operations-announcement-card-grid-gap: var(--vx-component-metric-1r);
+  --vx-admin-operations-announcement-card-gap: var(--vx-component-metric-05r);
+  --vx-admin-operations-announcement-card-padding: var(--vx-component-metric-125r);
+  --vx-admin-operations-announcement-card-border-width: var(--vx-component-metric-1p);
+  --vx-admin-operations-announcement-card-header-gap: var(--vx-component-metric-05r);
+  --vx-admin-operations-announcement-card-meta-gap: var(--vx-component-metric-1r);
+}

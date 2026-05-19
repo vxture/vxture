@@ -1,0 +1,16 @@
+/**
+ * tokens-colors-primary-semantic.css - 品牌主色应用语义 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-color-primary: var(--vx-color-brand-600);
+  --vx-color-primary-hover: var(--vx-color-brand-700);
+  --vx-color-primary-strong: var(--vx-color-brand-700);
+  --vx-color-primary-soft: var(--vx-color-brand-100);
+  --vx-color-primary-subtle: rgba(30, 81, 255, 0.08);
+}

@@ -2,7 +2,7 @@
   "compilerOptions": {
     // ─── 编译目标 ───────────────────────────────────────────────────────────
     "target": "ES2023",
-    "lib": ["ES2023"],          // 默认不含 DOM；前端包在本地覆盖为 ["DOM", "DOM.Iterable", "ES2023"]
+    "lib": ["ES2023"], // 默认不含 DOM；前端包在本地覆盖为 ["DOM", "DOM.Iterable", "ES2023"]
     "module": "ESNext",
     "moduleResolution": "bundler",
 
@@ -27,46 +27,58 @@
 
     // ─── 路径别名（monorepo 内部包统一入口） ────────────────────────────────
     "paths": {
-      "@vxture/shared":               ["./packages/shared/shared/src"],
-      "@vxture/shared/*":             ["./packages/shared/shared/src/*"],
-      "@vxture/core-api":             ["./packages/core/api/src"],
-      "@vxture/core-api/*":           ["./packages/core/api/src/*"],
-      "@vxture/core-config":          ["./packages/core/config/src"],
-      "@vxture/core-config/*":        ["./packages/core/config/src/*"],
-      "@vxture/core-locale":          ["./packages/core/locale/src"],
-      "@vxture/core-locale/*":        ["./packages/core/locale/src/*"],
-      "@vxture/core-tenant":          ["./packages/core/tenant/src"],
-      "@vxture/core-tenant/*":        ["./packages/core/tenant/src/*"],
-      "@vxture/core-auth":            ["./packages/core/auth/src"],
-      "@vxture/core-auth/*":          ["./packages/core/auth/src/*"],
-      "@vxture/core-utils":           ["./packages/core/utils/src"],
-      "@vxture/core-utils/*":         ["./packages/core/utils/src/*"],
-      "@vxture/design-system":        ["./packages/design/design-system/src/client.ts"],
-      "@vxture/design-system/tokens": ["./packages/design/design-system/src/tokens-entry.ts"],
-      "@vxture/design-system/types":  ["./packages/design/design-system/src/types-entry.ts"],
-      "@vxture/design-system/server": ["./packages/design/design-system/src/server.ts"],
-      "@vxture/ai-sdk":               ["./packages/ai/ai-sdk/src"],
-      "@vxture/ai-sdk/*":             ["./packages/ai/ai-sdk/src/*"],
-      "@vxture/service-ticket":       ["./services/support/ticket/src"],
-      "@vxture/service-ticket/*":     ["./services/support/ticket/src/*"],
-      "@vxture/service-billing":      ["./services/commerce/billing/src"],
-      "@vxture/service-billing/*":    ["./services/commerce/billing/src/*"],
+      "@vxture/shared": ["./packages/shared/shared/src"],
+      "@vxture/shared/*": ["./packages/shared/shared/src/*"],
+      "@vxture/core-api": ["./packages/core/api/src"],
+      "@vxture/core-api/*": ["./packages/core/api/src/*"],
+      "@vxture/core-config": ["./packages/core/config/src"],
+      "@vxture/core-config/*": ["./packages/core/config/src/*"],
+      "@vxture/core-locale": ["./packages/core/locale/src"],
+      "@vxture/core-locale/*": ["./packages/core/locale/src/*"],
+      "@vxture/core-tenant": ["./packages/core/tenant/src"],
+      "@vxture/core-tenant/*": ["./packages/core/tenant/src/*"],
+      "@vxture/core-auth": ["./packages/core/auth/src"],
+      "@vxture/core-auth/*": ["./packages/core/auth/src/*"],
+      "@vxture/core-utils": ["./packages/core/utils/src"],
+      "@vxture/core-utils/*": ["./packages/core/utils/src/*"],
+      "@vxture/design-system": [
+        "./packages/design/design-system/src/client.ts"
+      ],
+      "@vxture/design-system/tokens": [
+        "./packages/design/design-system/src/tokens-entry.ts"
+      ],
+      "@vxture/design-system/types": [
+        "./packages/design/design-system/src/types-entry.ts"
+      ],
+      "@vxture/design-system/server": [
+        "./packages/design/design-system/src/server.ts"
+      ],
+      "@vxture/ai-gateway-client": ["./packages/ai/gateway-client/src"],
+      "@vxture/ai-gateway-client/*": ["./packages/ai/gateway-client/src/*"],
+      "@vxture/service-ticket": ["./services/support/ticket/src"],
+      "@vxture/service-ticket/*": ["./services/support/ticket/src/*"],
+      "@vxture/service-billing": ["./services/commerce/billing/src"],
+      "@vxture/service-billing/*": ["./services/commerce/billing/src/*"],
       "@vxture/service-subscription": ["./services/commerce/subscription/src"],
-      "@vxture/service-subscription/*": ["./services/commerce/subscription/src/*"],
+      "@vxture/service-subscription/*": [
+        "./services/commerce/subscription/src/*"
+      ],
       "@vxture/service-organization": ["./services/tenant/organization/src"],
-      "@vxture/service-organization/*": ["./services/tenant/organization/src/*"],
-      "@vxture/service-iam":          ["./services/identity/iam/src"],
-      "@vxture/service-iam/*":        ["./services/identity/iam/src/*"],
-      "@vxture/service-mail":         ["./services/notification/mail/src"],
-      "@vxture/service-mail/*":       ["./services/notification/mail/src/*"],
-      "@vxture/service-ai-gateway":   ["./services/ai/gateway/src"],
+      "@vxture/service-organization/*": [
+        "./services/tenant/organization/src/*"
+      ],
+      "@vxture/service-iam": ["./services/identity/iam/src"],
+      "@vxture/service-iam/*": ["./services/identity/iam/src/*"],
+      "@vxture/service-mail": ["./services/notification/mail/src"],
+      "@vxture/service-mail/*": ["./services/notification/mail/src/*"],
+      "@vxture/service-ai-gateway": ["./services/ai/gateway/src"],
       "@vxture/service-ai-gateway/*": ["./services/ai/gateway/src/*"],
-      "@vxture/platform-amap":        ["./packages/platform/amap/src"],
-      "@vxture/platform-amap/*":      ["./packages/platform/amap/src/*"],
-      "@vxture/platform-cesium":      ["./packages/platform/cesium/src"],
-      "@vxture/platform-cesium/*":    ["./packages/platform/cesium/src/*"],
-      "@vxture/platform-browser":     ["./packages/platform/browser/src"],
-      "@vxture/platform-browser/*":   ["./packages/platform/browser/src/*"]
+      "@vxture/platform-amap": ["./packages/platform/amap/src"],
+      "@vxture/platform-amap/*": ["./packages/platform/amap/src/*"],
+      "@vxture/platform-cesium": ["./packages/platform/cesium/src"],
+      "@vxture/platform-cesium/*": ["./packages/platform/cesium/src/*"],
+      "@vxture/platform-browser": ["./packages/platform/browser/src"],
+      "@vxture/platform-browser/*": ["./packages/platform/browser/src/*"]
     }
   },
   "include": [],

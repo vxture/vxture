@@ -1,0 +1,72 @@
+/**
+ * auth-fields-links.css - 认证页辅助链接和字段控制链接。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-auth-switch button,
+.vx-auth-back,
+.vx-auth-terms a,
+.vx-auth-footer a,
+.vx-auth-forgot-link,
+.vx-auth-forget-me-link,
+.vx-auth-control-link {
+  border: 0;
+  background: none;
+  color: var(--vx-auth-muted);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color var(--vx-control-transition);
+}
+
+.vx-auth-link-group {
+  display: flex;
+  align-items: center;
+  gap: var(--vx-auth-gap-md);
+  flex: 0 0 auto;
+}
+
+.vx-auth-control-links {
+  min-width: max-content;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vx-auth-gap-md);
+  flex: 0 0 auto;
+}
+
+.vx-auth-forgot-link,
+.vx-auth-forget-me-link,
+.vx-auth-control-link {
+  flex: 0 0 auto;
+  padding: 0;
+  font-size: var(--vx-auth-text-xs);
+}
+
+.vx-auth-forget-me-link,
+.vx-auth-control-link--quiet {
+  opacity: 0.6;
+}
+
+.vx-auth-forget-me-link:hover,
+.vx-auth-control-link--quiet:hover {
+  opacity: 1;
+}
+
+.vx-auth-switch button:hover,
+.vx-auth-back:hover,
+.vx-auth-terms a:hover,
+.vx-auth-footer a:hover,
+.vx-auth-forgot-link:hover,
+.vx-auth-forget-me-link:hover,
+.vx-auth-control-link:hover {
+  color: var(--vx-auth-accent);
+}
+
+.vx-auth-control-link:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}

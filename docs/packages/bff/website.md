@@ -6,14 +6,14 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/bff-website` |
-| 路径 | `bff/website-bff/` |
-| @layer | `Application` |
-| 框架 | NestJS |
-| 端口 | 3011 |
-| 服务对象 | `portals/website` |
+| 项       | 值                    |
+| -------- | --------------------- |
+| 包名     | `@vxture/bff-website` |
+| 路径     | `bff/website-bff/`    |
+| @layer   | `Application`         |
+| 框架     | NestJS                |
+| 端口     | 3011                  |
+| 服务对象 | `portals/website`     |
 
 ---
 
@@ -68,7 +68,9 @@ website-bff 在认证路由上只做"管道"：原样转发请求体至 auth-bff
 ```typescript
 // Request body: 无
 // Response 200（auth-bff 清除 Cookie）
-{ status: 'logged_out' }
+{
+  status: "logged_out";
+}
 ```
 
 **POST `/api/auth/refresh`** — 续期 access token
@@ -76,28 +78,39 @@ website-bff 在认证路由上只做"管道"：原样转发请求体至 auth-bff
 ```typescript
 // Request body: 无（从 Cookie 读取）
 // Response 200（更新 Cookie）
-{ status: 'refreshed' }
+{
+  status: "refreshed";
+}
 ```
 
 **POST `/api/auth/forgot-password`** — 发送密码重置邮件
 
 ```typescript
 // Request body
-{ email: string }
+{
+  email: string;
+}
 // BFF 固定注入 source='website'，重置链接指向 WEBSITE_BASE_URL/reset-password
 
 // Response 200 — 始终成功（防枚举）
-{ status: 'ok' }
+{
+  status: "ok";
+}
 ```
 
 **POST `/api/auth/reset-password`** — 重置密码
 
 ```typescript
 // Request body
-{ token: string; newPassword: string }
+{
+  token: string;
+  newPassword: string;
+}
 
 // Response 200
-{ status: 'ok' }
+{
+  status: "ok";
+}
 // Response 400 — token 无效或已过期
 ```
 
@@ -106,10 +119,14 @@ website-bff 在认证路由上只做"管道"：原样转发请求体至 auth-bff
 ```typescript
 // 需要有效的 vx_tenant_access_token Cookie
 // Request body
-{ type: 'individual' | 'organization' }
+{
+  type: "individual" | "organization";
+}
 
 // Response 200（更新 Cookie 中的 tenantId）
-{ tenantId: string }
+{
+  tenantId: string;
+}
 // Response 401 — 未登录或 token 已过期
 ```
 
@@ -192,9 +209,14 @@ website-bff 在认证路由上只做"管道"：原样转发请求体至 auth-bff
 
 ```typescript
 // Request body
-{ currentPassword: string; nextPassword: string }
+{
+  currentPassword: string;
+  nextPassword: string;
+}
 // Response 200
-{ status: 'ok' }
+{
+  status: "ok";
+}
 // Response 401 — 当前密码错误
 ```
 
@@ -206,9 +228,13 @@ website-bff 在认证路由上只做"管道"：原样转发请求体至 auth-bff
 
 ```typescript
 // Request body
-{ email: string }  // 须为合法邮箱
+{
+  email: string;
+} // 须为合法邮箱
 // Response 200
-{ message: '验证码已发送，请注意查收' }
+{
+  message: "验证码已发送，请注意查收";
+}
 // Response 429 — 限流触发
 ```
 
@@ -216,9 +242,14 @@ website-bff 在认证路由上只做"管道"：原样转发请求体至 auth-bff
 
 ```typescript
 // Request body
-{ email: string; code: string }  // code 为 6 位数字
+{
+  email: string;
+  code: string;
+} // code 为 6 位数字
 // Response 200
-{ valid: boolean }  // true = 验证通过并消耗，false = 错误或已过期
+{
+  valid: boolean;
+} // true = 验证通过并消耗，false = 错误或已过期
 ```
 
 ---
@@ -289,6 +320,6 @@ ALLOWED_ORIGIN=https://vxture.com
 ✅ @vxture/service-mail     — 验证码发送
 ✅ auth-bff（HTTP 代理）    — 认证操作委托
 ❌ JWT 签发                 — 严禁
-❌ @vxture/ai-sdk / agent-server/*
+❌ @vxture/ai-gateway-client / agent-server/*
 ❌ @vxture/design-system / platform-*
 ```

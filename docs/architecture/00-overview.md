@@ -114,7 +114,7 @@ portals/* / agent-studio/* / business/*
 SERVER-ONLY BRANCH (agent backends)
 
 agent-server/*
-   └──► @vxture/ai-sdk
+   └──► @vxture/ai-gateway-client
            ├── llm       (Doubao, Claude, custom models)
            ├── rag       (retrieval-augmented generation)
            ├── embedding (vectorization)
@@ -340,13 +340,13 @@ All shared code lives in `packages/` under a consistent two-level structure:
 packages/{group}/{name}/   →   @vxture/{group}-{name}
 ```
 
-| Group      | Purpose                              | Key packages                                                                                    |
-| ---------- | ------------------------------------ | ----------------------------------------------------------------------------------------------- |
-| `shared`   | Cross-cutting utilities and types    | `@vxture/shared`                                                                                |
+| Group      | Purpose                              | Key packages                                                                                                     |
+| ---------- | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `shared`   | Cross-cutting utilities and types    | `@vxture/shared`                                                                                                 |
 | `core`     | Platform infrastructure primitives   | `core-api`, `core-auth`, `core-tenant`, `core-locale`, `core-config`, `core-utils`, `core-mail`, `core-database` |
-| `ai`       | Shared AI capabilities (server-side) | `@vxture/ai-sdk` (llm, rag, embedding, workflow)                                                |
-| `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`, `platform-browser`                                          |
-| `design`   | UI design system                     | `@vxture/design-system`                                                                         |
+| `ai`       | Shared AI capabilities (server-side) | `@vxture/ai-gateway-client` (llm, rag, embedding, workflow)                                                      |
+| `platform` | 3rd-party client SDK wrappers        | `platform-amap`, `platform-cesium`, `platform-browser`                                                           |
+| `design`   | UI design system                     | `@vxture/design-system`                                                                                          |
 
 Dependency direction within packages is strict:
 
@@ -367,7 +367,7 @@ ai-sdk         →  shared
 
 # 10. Agent Lifecycle
 
-Agent-server 逻辑遵循"成熟后晋升"路径：`agent-server/{agent}/` → `services/{domain}/{name}/`，经 BFF 后供全平台使用。AI 能力成熟后作为模块加入 `@vxture/ai-sdk`。
+Agent-server 逻辑遵循"成熟后晋升"路径：`agent-server/{agent}/` → `services/{domain}/{name}/`，经 BFF 后供全平台使用。AI 能力成熟后作为模块加入 `@vxture/ai-gateway-client`。
 
 详见 [`04-service-layer.md`](04-service-layer.md)。
 

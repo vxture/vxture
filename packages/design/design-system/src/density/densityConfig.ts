@@ -16,7 +16,16 @@ import type { Density } from "./density.types";
 // 类型
 // ============================================================================
 
-type DensitySpaceToken = "xs" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
+type DensitySpaceToken =
+  | "xs"
+  | "sm"
+  | "md"
+  | "lg"
+  | "xl"
+  | "2xl"
+  | "3xl"
+  | "4xl"
+  | "5xl";
 
 type DensityPreset = {
   readonly space: Record<DensitySpaceToken, string>;
@@ -162,18 +171,6 @@ export const DENSITY_PRESETS = {
     },
   },
 } as const satisfies Record<Density, DensityPreset>;
-
-/**
- * Density 缩放配置
- *
- * @deprecated 仅保留旧 API 兼容。Density 不再使用比例缩放，实际模式值由
- * DENSITY_PRESETS 与 tokens-density.css 独立定义。
- */
-export const DENSITY_SCALE = {
-  compact: 1,
-  default: 1,
-  comfortable: 1,
-} as const satisfies Record<Density, number>;
 
 /**
  * Density localStorage key

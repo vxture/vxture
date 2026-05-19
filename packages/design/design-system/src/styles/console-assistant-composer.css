@@ -1,0 +1,60 @@
+/**
+ * console-assistant-composer.css - Console assistant composer 输入和操作区。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-assistant-panel__composer-head,
+.vx-assistant-panel__composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-console-space-075r);
+}
+
+.vx-assistant-panel__composer-actions {
+  flex-wrap: wrap;
+}
+
+.vx-assistant-panel__composer-head span,
+.vx-assistant-panel__composer-hint {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-console-text-size-08r);
+}
+
+.vx-assistant-panel__composer-hint {
+  flex: 1 1 var(--vx-console-size-11r-large);
+}
+
+.vx-assistant-panel__composer-input {
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  resize: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vx-color-scrollbar) transparent;
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  border-radius: var(--vx-console-radius-14p);
+  background: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  color: var(--vx-console-text);
+  padding: var(--vx-console-space-085r) var(--vx-console-space-09r);
+  font: inherit;
+  line-height: 1.55;
+}
+
+.vx-assistant-panel__composer-input:focus {
+  outline: var(--vx-console-line-width-2p) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  outline-offset: 0;
+  border-color: var(--vx-color-brand-300);
+}
+
+.dark .vx-assistant-panel__composer-input {
+  background: var(--vx-color-gray-900);
+}

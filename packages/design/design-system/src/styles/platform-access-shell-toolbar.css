@@ -1,0 +1,93 @@
+/**
+ * platform-access-shell-toolbar.css - 平台成员与角色访问页工具栏、搜索和计数样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-members-toolbar,
+.vx-roles-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-access-toolbar-gap);
+  padding: var(--vx-access-toolbar-padding);
+  border: 0;
+  background: transparent;
+}
+
+.dark .vx-members-toolbar,
+.dark .vx-roles-toolbar {
+  background: transparent;
+}
+
+.vx-members-toolbar__search,
+.vx-roles-toolbar__search {
+  width: var(--vx-access-toolbar-search-width);
+  min-width: var(--vx-access-toolbar-search-min-width);
+  height: var(--vx-access-toolbar-search-height);
+  min-height: var(--vx-access-toolbar-search-height);
+  border: var(--vx-access-toolbar-search-border);
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-shell-panel);
+  box-shadow: var(--vx-platform-surface-highlight-shadow);
+  padding: var(--vx-access-toolbar-search-padding);
+  font-size: var(--vx-members-text-size);
+}
+
+.vx-roles-toolbar__search {
+  font-size: var(--vx-roles-text-size);
+}
+
+.dark .vx-members-toolbar__search,
+.dark .vx-roles-toolbar__search {
+  background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  border-color: var(--vx-color-border);
+}
+
+.vx-members-toolbar__search::placeholder,
+.vx-roles-toolbar__search::placeholder {
+  color: var(--vx-color-shell-subtle);
+  font-size: var(--vx-members-meta-size);
+}
+
+.vx-roles-toolbar__search::placeholder {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.vx-members-toolbar__filters,
+.vx-roles-toolbar__filters {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--vx-access-toolbar-filters-gap);
+  min-width: 0;
+}
+
+.vx-members-toolbar__count,
+.vx-roles-toolbar__count {
+  display: inline-flex;
+  align-items: center;
+  height: var(--vx-access-toolbar-count-height);
+  min-height: var(--vx-access-toolbar-count-height);
+  white-space: nowrap;
+  border-radius: var(--vx-radius-full);
+  padding: var(--vx-access-toolbar-count-padding);
+  color: var(--vx-console-muted);
+  background: color-mix(in srgb, var(--vx-color-shell-surface-muted) 88%, transparent);
+  border: var(--vx-access-toolbar-count-border);
+  font-size: var(--vx-members-meta-size);
+  font-weight: 680;
+}
+
+.vx-roles-toolbar__count {
+  font-size: var(--vx-roles-meta-size);
+}
+
+.dark .vx-members-toolbar__count,
+.dark .vx-roles-toolbar__count {
+  background: color-mix(in srgb, var(--vx-color-gray-900) 58%, transparent);
+  border-color: color-mix(in srgb, var(--vx-color-gray-400) 14%, transparent);
+}

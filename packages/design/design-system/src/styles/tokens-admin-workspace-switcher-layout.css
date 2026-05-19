@@ -1,0 +1,16 @@
+/**
+ * tokens-admin-workspace-switcher-layout.css - Admin 工作区切换器容器和列表 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-admin-workspace-switcher-header-min-height: var(--vx-component-metric-225r);
+  --vx-admin-workspace-switcher-header-padding-bottom: var(--vx-component-metric-1r);
+  --vx-admin-workspace-switcher-header-title-size: var(--vx-component-metric-08125r);
+  --vx-admin-workspace-switcher-header-title-line: var(--vx-component-metric-1125r);
+  --vx-admin-workspace-switcher-list-gap: var(--vx-component-metric-0875r);
+}

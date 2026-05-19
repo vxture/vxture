@@ -1,0 +1,28 @@
+/**
+ * console-tenant-switcher-panel-shell.css - Console 租户切换器面板壳层。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-tenant-switcher__panel {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + var(--vx-console-space-055r));
+  left: 0;
+  width: min(var(--vx-console-size-360p), var(--vx-console-tenant-panel-width-available));
+  max-height: min(var(--vx-console-popover-max-height), var(--vx-console-tenant-panel-max-height-available));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: var(--vx-console-space-065r);
+  padding: var(--vx-console-space-075r);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-600) 12%, transparent);
+  border-radius: var(--vx-console-radius-16p);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent), transparent var(--vx-console-pattern-12r-large)),
+    color-mix(in srgb, var(--vx-color-white) 97%, transparent);
+  box-shadow: var(--vx-console-tenant-panel-shadow);
+  backdrop-filter: blur(var(--vx-console-effect-18p));
+}

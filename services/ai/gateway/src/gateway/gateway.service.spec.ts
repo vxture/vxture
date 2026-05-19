@@ -7,19 +7,20 @@ import type { AiModelRecord, ChatRequest } from "../types/gateway.types";
 // ── helpers ───────────────────────────────────────────────────────────────────
 
 // Direct instantiation — constructor deps are unused by the methods under test.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const svc = new GatewayService(
   null as any,
   null as any,
   null as any,
   null as any,
 );
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const validate = (req: unknown): void => (svc as any).validateChatRequest(req);
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const resolveKey = (model: AiModelRecord): string =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (svc as any).resolveApiKey(model) as string;
 
 function makeModel(overrides: Partial<AiModelRecord> = {}): AiModelRecord {

@@ -6,14 +6,14 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/bff-console` |
-| 路径 | `bff/console-bff/` |
-| @layer | `Application` |
-| 框架 | NestJS |
-| 端口 | 3021 |
-| 服务对象 | `portals/console` |
+| 项       | 值                    |
+| -------- | --------------------- |
+| 包名     | `@vxture/bff-console` |
+| 路径     | `bff/console-bff/`    |
+| @layer   | `Application`         |
+| 框架     | NestJS                |
+| 端口     | 3021                  |
+| 服务对象 | `portals/console`     |
 
 ---
 
@@ -48,10 +48,15 @@ auth → tenant → permission → router
 
 ```typescript
 // Request body
-{ token: string; newPassword: string }
+{
+  token: string;
+  newPassword: string;
+}
 
 // Response 200
-{ status: 'ok' }
+{
+  status: "ok";
+}
 // Response 400 — token 无效或已过期
 ```
 
@@ -71,21 +76,27 @@ auth → tenant → permission → router
 
 ```typescript
 // Response 200（清除 Cookie）
-{ status: 'logged_out' }
+{
+  status: "logged_out";
+}
 ```
 
 **POST `/api/auth/refresh`** — 续期
 
 ```typescript
 // Response 200（更新 Cookie）
-{ status: 'refreshed' }
+{
+  status: "refreshed";
+}
 ```
 
 **POST `/api/auth/tenant/switch`** — 切换租户
 
 ```typescript
 // Request body
-{ tenantId: string }
+{
+  tenantId: string;
+}
 // BFF 固定注入 source='console'
 
 // Response 200（重新签发包含新 tenantId 的 JWT，更新 Cookie）
@@ -95,11 +106,15 @@ auth → tenant → permission → router
 
 ```typescript
 // Request body
-{ email: string }
+{
+  email: string;
+}
 // BFF 固定注入 source='console'，重置链接指向 CONSOLE_BASE_URL/reset-password
 
 // Response 200 — 始终成功（防枚举）
-{ status: 'ok' }
+{
+  status: "ok";
+}
 ```
 
 **POST `/api/auth/send-phone-code`** — 发送手机验证码（代理至 auth-bff）
@@ -110,7 +125,10 @@ auth → tenant → permission → router
 
 ```typescript
 // Response 200
-{ status: 'active'; userId: string }
+{
+  status: "active";
+  userId: string;
+}
 // Response 401
 ```
 
@@ -128,9 +146,14 @@ auth → tenant → permission → router
 
 ```typescript
 // Request body
-{ currentPassword: string; nextPassword: string }
+{
+  currentPassword: string;
+  nextPassword: string;
+}
 // Response 200
-{ status: 'ok' }
+{
+  status: "ok";
+}
 ```
 
 ---
@@ -141,7 +164,12 @@ auth → tenant → permission → router
 
 ```typescript
 // Response 200
-{ members: number; activeMembers: number; primaryOwners: number; roles: number }
+{
+  members: number;
+  activeMembers: number;
+  primaryOwners: number;
+  roles: number;
+}
 ```
 
 **GET `/api/iam/members`** — 成员列表
@@ -160,7 +188,9 @@ auth → tenant → permission → router
 
 ```typescript
 // Request body
-{ nextPassword: string }
+{
+  nextPassword: string;
+}
 ```
 
 **DELETE `/api/iam/members/:memberId`** — 移除成员
@@ -252,13 +282,13 @@ auth → tenant → permission → router
 interface AiModelRecord {
   id: string;
   providerId: string | null;
-  modelCode: string;           // 如 'gpt-4o'
-  modelName: string;           // 如 'GPT-4o'
-  provider: string;            // 如 'openai'
+  modelCode: string; // 如 'gpt-4o'
+  modelName: string; // 如 'GPT-4o'
+  provider: string; // 如 'openai'
   endpointUrl: string;
-  protocol: string;            // 如 'openai'
-  capabilities: string[];      // 如 ['chat', 'vision']
-  apiKeyEnvVar: string;        // 服务端读取 API Key 的环境变量名
+  protocol: string; // 如 'openai'
+  capabilities: string[]; // 如 ['chat', 'vision']
+  apiKeyEnvVar: string; // 服务端读取 API Key 的环境变量名
   isActive: boolean;
   config: Record<string, unknown> | null;
   createdAt: string;
@@ -327,10 +357,10 @@ interface AiModelGrantRecord {
   id: string;
   modelId: string;
   tenantId: string;
-  agentId: string | null;     // null 表示租户级别授权（不限 agent）
+  agentId: string | null; // null 表示租户级别授权（不限 agent）
   priority: number;
   reason: string | null;
-  expiresAt: string | null;   // ISO 时间戳，null 表示永不过期
+  expiresAt: string | null; // ISO 时间戳，null 表示永不过期
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -469,6 +499,6 @@ ALLOWED_ORIGIN=https://console.vxture.com
 ✅ auth-bff（HTTP 代理）       — 认证操作委托
 ✅ ai-gateway（HTTP 代理）     — AI 模型 / 授权管理
 ❌ JWT 签发                    — 严禁
-❌ @vxture/ai-sdk / agent-server/*
+❌ @vxture/ai-gateway-client / agent-server/*
 ❌ @vxture/design-system / platform-*
 ```

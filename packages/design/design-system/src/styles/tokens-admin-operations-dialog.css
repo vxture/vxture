@@ -1,0 +1,25 @@
+/**
+ * tokens-admin-operations-dialog.css - Admin Operations 对话框语义尺寸 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-admin-operations-dialog-overlay-padding: var(--vx-component-metric-15r);
+  --vx-admin-operations-dialog-overlay-blur: var(--vx-component-metric-2p);
+  --vx-admin-operations-dialog-border-width: var(--vx-component-metric-1p);
+  --vx-admin-operations-dialog-shadow: 0 var(--vx-component-metric-24p) var(--vx-component-metric-48p) calc(var(--vx-component-metric-12p) * -1) color-mix(in srgb, var(--vx-color-gray-900) 28%, transparent);
+  --vx-admin-operations-dialog-max-width: var(--vx-component-metric-28r-large);
+  --vx-admin-operations-dialog-header-padding: var(--vx-component-metric-1r) var(--vx-component-metric-125r) var(--vx-component-metric-075r);
+  --vx-admin-operations-dialog-body-gap: var(--vx-component-metric-06r);
+  --vx-admin-operations-dialog-body-padding: var(--vx-component-metric-1r) var(--vx-component-metric-125r);
+  --vx-admin-operations-dialog-close-size: var(--vx-component-metric-175r);
+  --vx-admin-operations-dialog-textarea-min-height: var(--vx-component-metric-5r);
+  --vx-admin-operations-dialog-textarea-padding: var(--vx-component-metric-05r) var(--vx-component-metric-075r);
+  --vx-admin-operations-dialog-textarea-focus-shadow-width: var(--vx-component-metric-3p);
+  --vx-admin-operations-dialog-footer-gap: var(--vx-component-metric-05r);
+  --vx-admin-operations-dialog-footer-padding: var(--vx-component-metric-075r) var(--vx-component-metric-125r) var(--vx-component-metric-1r);
+}

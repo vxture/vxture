@@ -18,7 +18,7 @@ bff/{name}-bff
        ↓
 agent-server/{name}
        ↓
-@vxture/ai-sdk, @vxture/service-*, @vxture/core-*
+@vxture/ai-gateway-client, @vxture/service-*, @vxture/core-*
 ```
 
 ---
@@ -59,7 +59,7 @@ agent-server/{name}/
 
 **Agent Server handles**:
 
-- AI model invocations via `@vxture/ai-sdk` (llm, rag, embedding, workflow modules)
+- AI model invocations via `@vxture/ai-gateway-client` (llm, rag, embedding, workflow modules)
 - Agent-private workflow orchestration and multi-step processing
 - Agent-private storage: read/write private data, public platform data, open network data
 - Consuming platform capabilities: billing, subscription via `@vxture/service-*`
@@ -88,24 +88,24 @@ Agent backends can access multiple data source categories:
 
 # 5. AI Capabilities
 
-Agent backends consume `@vxture/ai-sdk` for all AI operations.
+Agent backends consume `@vxture/ai-gateway-client` for all AI operations.
 Each module is imported independently — agents use only what they need.
 
 ```ts
-import { llmClient } from '@vxture/ai-sdk/llm';
-import { createRagPipeline } from '@vxture/ai-sdk/rag';
-import { embed } from '@vxture/ai-sdk/embedding';
-import { defineWorkflow } from '@vxture/ai-sdk/workflow';
+import { llmClient } from "@vxture/ai-gateway-client/llm";
+import { createRagPipeline } from "@vxture/ai-gateway-client/rag";
+import { embed } from "@vxture/ai-gateway-client/embedding";
+import { defineWorkflow } from "@vxture/ai-gateway-client/workflow";
 ```
 
-Supported model providers (via `@vxture/ai-sdk/llm`):
+Supported model providers (via `@vxture/ai-gateway-client/llm`):
 
 - Doubao (豆包)
 - Claude (Anthropic)
 - Custom / private models
 
 Agent backends must not integrate model providers directly.
-All model calls go through `@vxture/ai-sdk`.
+All model calls go through `@vxture/ai-gateway-client`.
 
 ---
 
@@ -114,7 +114,7 @@ All model calls go through `@vxture/ai-sdk`.
 Allowed:
 
 ```
-@vxture/ai-sdk
+@vxture/ai-gateway-client
 @vxture/service-*
 @vxture/core-*
 @vxture/shared
@@ -133,7 +133,7 @@ Any frontend code
 
 **Cross-agent sharing rule**: Agent backends must not import each other directly.
 
-- Shared AI capabilities → `@vxture/ai-sdk`
+- Shared AI capabilities → `@vxture/ai-gateway-client`
 - Shared domain logic → promote to `services/{domain}/{name}/`
 
 ---
@@ -206,16 +206,16 @@ Each agent backend is fully independent. Independence means:
 
 Agent backends consume platform capabilities through packages, not through the BFF:
 
-| Capability                | Package                        | Notes                             |
-| ------------------------- | ------------------------------ | --------------------------------- |
-| Authentication primitives | `@vxture/core-auth`            | Token validation, session helpers |
-| Tenant context            | `@vxture/core-tenant`          | Tenant ID resolution              |
-| Configuration             | `@vxture/core-config`          | Environment-aware config          |
-| API infrastructure        | `@vxture/core-api`             | HTTP client, interceptors         |
-| Billing                   | `@vxture/service-billing`      | Billing status, usage tracking    |
-| Subscription              | `@vxture/service-subscription` | Plan validation, feature gating   |
-| LLM / RAG / Embedding     | `@vxture/ai-sdk`               | All AI model operations           |
-| Workflow                  | `@vxture/ai-sdk/workflow`      | Multi-step orchestration          |
+| Capability                | Package                              | Notes                             |
+| ------------------------- | ------------------------------------ | --------------------------------- |
+| Authentication primitives | `@vxture/core-auth`                  | Token validation, session helpers |
+| Tenant context            | `@vxture/core-tenant`                | Tenant ID resolution              |
+| Configuration             | `@vxture/core-config`                | Environment-aware config          |
+| API infrastructure        | `@vxture/core-api`                   | HTTP client, interceptors         |
+| Billing                   | `@vxture/service-billing`            | Billing status, usage tracking    |
+| Subscription              | `@vxture/service-subscription`       | Plan validation, feature gating   |
+| LLM / RAG / Embedding     | `@vxture/ai-gateway-client`          | All AI model operations           |
+| Workflow                  | `@vxture/ai-gateway-client/workflow` | Multi-step orchestration          |
 
 ---
 
@@ -235,14 +235,14 @@ bff/vela-bff
       ↓ internal HTTP
 agent-server/vela
       ↓
-@vxture/ai-sdk, @vxture/service-billing, @vxture/service-subscription, @vxture/service-ticket
+@vxture/ai-gateway-client, @vxture/service-billing, @vxture/service-subscription, @vxture/service-ticket
 ```
 
 Vela follows the normal Agent Server rules, with these concrete responsibilities:
 
 - Validates `CallerContext` from `vela-bff` before every chat request
 - Resolves tool availability by surface (`admin` or `console`), role, and tenant context
-- Runs the tool-use loop through `@vxture/ai-sdk`
+- Runs the tool-use loop through `@vxture/ai-gateway-client`
 - Uses platform services for billing, subscription, and ticket data instead of duplicating domain logic
 - Persists sessions and messages in Vela-owned storage through repository classes
 - Exposes internal chat endpoints only to `vela-bff`; browsers never call `agent-server/vela` directly
@@ -257,13 +257,13 @@ Vela tools or promoted service APIs, not to portal-local assistant routers.
 When AI tools generate code for `agent-server/*`:
 
 1. Never import from other `agent-server/*` directories
-2. All AI model calls go through `@vxture/ai-sdk` — never integrate providers directly
+2. All AI model calls go through `@vxture/ai-gateway-client` — never integrate providers directly
 3. Never import `@vxture/design-system`, `@vxture/platform-*`, or any frontend package
 4. Never expose routes that are called directly by `agent-studio/` — always via BFF
 5. Agent-private business logic stays in `src/services/` — promote to `services/{domain}/{name}/` when reusable
 6. Storage access stays in `src/storage/` — no inline DB queries in route handlers
 7. All public entry points typed — no `any` types
-8. Use `@vxture/ai-sdk` modules selectively — import only what the agent needs
+8. Use `@vxture/ai-gateway-client` modules selectively — import only what the agent needs
 9. When promoting logic, identify the correct business domain before creating the service directory
 
 ---

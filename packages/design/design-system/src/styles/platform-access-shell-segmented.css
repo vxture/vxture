@@ -1,0 +1,44 @@
+/**
+ * platform-access-shell-segmented.css - 平台成员与角色访问页分段控件样式。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-members-page .vx-segmented-control,
+.vx-roles-page .vx-segmented-control {
+  min-height: var(--vx-access-page-segmented-min-height);
+  padding: var(--vx-access-page-segmented-padding);
+  gap: var(--vx-access-page-segmented-gap);
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-shell-panel);
+  border-color: var(--vx-color-border);
+  box-shadow: var(--vx-platform-surface-highlight-shadow-soft);
+}
+
+.dark .vx-members-page .vx-segmented-control,
+.dark .vx-roles-page .vx-segmented-control {
+  background: color-mix(in srgb, var(--vx-color-gray-900) 72%, transparent);
+  border-color: var(--vx-color-border);
+  box-shadow: none;
+}
+
+.vx-members-page .vx-segmented-control__item,
+.vx-roles-page .vx-segmented-control__item {
+  min-height: var(--vx-access-page-segmented-item-min-height);
+  padding: var(--vx-access-page-segmented-item-padding);
+  border-radius: var(--vx-radius-full);
+  font-size: var(--vx-members-text-size);
+  line-height: 1;
+}
+
+.vx-roles-page .vx-segmented-control__item {
+  font-size: var(--vx-roles-text-size);
+}
+
+.vx-members-page .vx-segmented-control__item--active,
+.vx-roles-page .vx-segmented-control__item--active {
+  box-shadow: none;
+}

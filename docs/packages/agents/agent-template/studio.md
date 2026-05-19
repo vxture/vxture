@@ -7,13 +7,13 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/agent-studio-agent01`（分叉后按 `@vxture/agent-studio-{name}` 命名） |
-| 路径 | `agent-studio/agent-template/` |
-| @layer | `Presentation` |
-| 端口 | 按 `docs/ai/port-allocation.md` 登记（比 server 端口 -2） |
-| 框架 | Next.js（可嵌入式或独立部署） |
+| 项     | 值                                                                            |
+| ------ | ----------------------------------------------------------------------------- |
+| 包名   | `@vxture/agent-studio-agent01`（分叉后按 `@vxture/agent-studio-{name}` 命名） |
+| 路径   | `agent-studio/agent-template/`                                                |
+| @layer | `Presentation`                                                                |
+| 端口   | 按 `docs/ai/port-allocation.md` 登记（比 server 端口 -2）                     |
+| 框架   | Next.js（可嵌入式或独立部署）                                                 |
 
 ## 职责
 
@@ -46,5 +46,5 @@ src/
 ```typescript
 ✅ @vxture/design-system / @vxture/shared / @vxture/platform-browser
 ✅ 对应 bff（HTTP / SSE only，禁止包引用）
-❌ @vxture/ai-sdk / agent-server/* / @vxture/core-*（core-locale 除外）
+❌ @vxture/ai-gateway-client / agent-server/* / @vxture/core-*（core-locale 除外）
 ```

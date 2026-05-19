@@ -1,0 +1,27 @@
+/**
+ * tokens-colors-auth-semantic.css - Auth 场景语义颜色 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  --vx-color-auth-background: #cde4f5;
+  --vx-color-auth-text: var(--vx-color-gray-900);
+  --vx-color-auth-secondary: #4a5a7a;
+  --vx-color-auth-muted: var(--vx-color-gray-400);
+  --vx-color-auth-accent: var(--vx-color-brand-600);
+  --vx-color-auth-accent-light: var(--vx-color-brand-500);
+  --vx-color-auth-border: rgba(30, 81, 255, 0.12);
+  --vx-color-auth-border-active: rgba(30, 81, 255, 0.55);
+  --vx-color-auth-card: var(--vx-color-white);
+  --vx-color-auth-card-soft: #f8faff;
+  --vx-color-auth-visual-bg: var(--vx-gradient-aurora);
+  --vx-color-auth-node-rgb: 168 85 247;
+  --vx-color-auth-visual-grid: rgba(255, 255, 255, 0.06);
+  --vx-color-auth-visual-panel: rgba(15, 23, 42, 0.22);
+  --vx-color-auth-visual-text: var(--vx-color-white);
+  --vx-color-auth-visual-text-muted: rgba(255, 255, 255, 0.76);
+}

@@ -1,0 +1,42 @@
+/**
+ * tokens-component-metrics-rem-layout.css - 组件 rem 布局尺度 token。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+:root {
+  /* 组件兜底尺度：4rem 以上的布局、面板和页面宽度尺寸集中在此。 */
+  --vx-component-metric-4r: 4rem;
+  --vx-component-metric-425r: 4.25rem;
+  --vx-component-metric-45r: 4.5rem;
+  --vx-component-metric-475r: 4.75rem;
+  --vx-component-metric-5r: 5rem;
+  --vx-component-metric-55r: 5.5rem;
+  --vx-component-metric-6r: 6rem;
+  --vx-component-metric-65r: 6.5rem;
+  --vx-component-metric-75r: 7.5rem;
+  --vx-component-metric-8r: 8rem;
+  --vx-component-metric-85r: 8.5rem;
+  --vx-component-metric-875r: 8.75rem;
+  --vx-component-metric-9r: 9rem;
+  --vx-component-metric-95r: 9.5rem;
+  --vx-component-metric-10r: 10rem;
+  --vx-component-metric-105r-large: 10.5rem;
+  --vx-component-metric-11r-large: 11rem;
+  --vx-component-metric-12r-large: 12rem;
+  --vx-component-metric-13r: 13rem;
+  --vx-component-metric-16r: 16rem;
+  --vx-component-metric-17r: 17rem;
+  --vx-component-metric-18r-large: 18rem;
+  --vx-component-metric-20r: 20rem;
+  --vx-component-metric-22r: 22rem;
+  --vx-component-metric-26r: 26rem;
+  --vx-component-metric-28r-large: 28rem;
+  --vx-component-metric-46r: 46rem;
+  --vx-component-metric-48r-large: 48rem;
+  --vx-component-metric-56r: 56rem;
+  --vx-component-metric-62r: 62rem;
+}

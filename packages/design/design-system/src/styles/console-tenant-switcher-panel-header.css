@@ -1,0 +1,40 @@
+/**
+ * console-tenant-switcher-panel-header.css - Console 租户切换器面板头部。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-tenant-switcher__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-console-space-1r);
+  padding: var(--vx-console-space-015r) var(--vx-console-space-015r) var(--vx-console-space-005r) var(--vx-console-space-025r);
+}
+
+.vx-tenant-switcher__panel-header strong {
+  font-size: var(--vx-console-text-size-09r);
+  letter-spacing: calc(var(--vx-console-text-tracking-001e) * -1);
+}
+
+.vx-tenant-switcher__close,
+.vx-tenant-dialog__close {
+  display: inline-grid;
+  width: var(--vx-console-size-185r);
+  height: var(--vx-console-size-185r);
+  place-items: center;
+  border: 0;
+  border-radius: var(--vx-radius-full);
+  background: transparent;
+  color: color-mix(in srgb, var(--vx-color-gray-500) 82%, transparent);
+  cursor: pointer;
+}
+
+.vx-tenant-switcher__close:hover,
+.vx-tenant-dialog__close:hover {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  color: var(--vx-console-text);
+}

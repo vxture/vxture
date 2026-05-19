@@ -1,0 +1,98 @@
+/**
+ * console-tenant-switcher-panel-list.css - Console 租户切换器租户列表。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-tenant-switcher__list {
+  display: grid;
+  align-content: start;
+  gap: var(--vx-console-space-025r);
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: var(--vx-console-space-02r);
+  scrollbar-width: thin;
+  scrollbar-color: var(--vx-color-scrollbar) transparent;
+}
+
+.vx-tenant-switcher__list::-webkit-scrollbar {
+  width: var(--vx-console-size-4p);
+}
+
+.vx-tenant-switcher__list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.vx-tenant-switcher__list::-webkit-scrollbar-thumb {
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-scrollbar);
+}
+
+.vx-tenant-switcher__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--vx-console-space-065r);
+  width: 100%;
+  min-height: var(--vx-console-size-31r);
+  padding: var(--vx-console-space-05r) var(--vx-console-space-055r);
+  border: 0;
+  border-radius: var(--vx-radius-xl);
+  background: transparent;
+  color: var(--vx-console-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.vx-tenant-switcher__item:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 6%, transparent);
+}
+
+.vx-tenant-switcher__item:disabled {
+  cursor: default;
+}
+
+.vx-tenant-switcher__item--current {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+}
+
+.vx-tenant-switcher__item-copy {
+  display: grid;
+  min-width: 0;
+  gap: var(--vx-console-space-024r);
+}
+
+.vx-tenant-switcher__item-copy strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--vx-console-text-size-084r);
+  line-height: 1;
+}
+
+.vx-tenant-switcher__item-copy span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-045r);
+  color: var(--vx-console-muted);
+  font-size: var(--vx-console-text-size-068r);
+  line-height: 1;
+}
+
+.vx-tenant-switcher__item-copy small {
+  padding: var(--vx-console-space-012r) var(--vx-console-space-035r);
+  border-radius: var(--vx-console-radius-5p);
+  background: color-mix(in srgb, var(--vx-color-shell-muted) 10%, transparent);
+  color: color-mix(in srgb, var(--vx-color-gray-600) 90%, transparent);
+  font-size: var(--vx-console-text-size-062r);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.vx-tenant-switcher__check {
+  display: inline-flex;
+  color: var(--vx-console-brand);
+}

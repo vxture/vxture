@@ -1,0 +1,60 @@
+/**
+ * console-assistant-shell.css - Console assistant 关联 shell 尺寸与侧栏折叠控制。
+ * @package @vxture/design-system
+ * @layer Presentation
+ * @category styles
+ * @author AI-Generated
+ * @date 2026-05-18
+ */
+
+.vx-shell__content {
+  min-width: 0;
+  min-height: var(--vx-console-assistant-available-height);
+}
+
+.vx-shell-sidebar__toggle-icon {
+  width: var(--vx-shell-sidebar-icon-size);
+  min-width: var(--vx-shell-sidebar-icon-size);
+  height: var(--vx-shell-sidebar-icon-size);
+  display: inline-grid;
+  gap: var(--vx-console-space-022r);
+  align-items: center;
+  justify-items: center;
+  transform: translateY(0);
+}
+
+.vx-shell-sidebar__toggle-icon span {
+  display: block;
+  width: 100%;
+  height: var(--vx-console-size-15p);
+  border-radius: var(--vx-radius-full);
+  background: currentColor;
+}
+
+.vx-shell-sidebar__toggle-icon span:nth-child(2) {
+  width: 82%;
+}
+
+.vx-shell-sidebar__toggle-icon span:nth-child(3) {
+  width: 92%;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__tenant-switcher,
+.vx-shell-sidebar--collapsed .vx-shell-nav,
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__footer {
+  opacity: 0;
+  transform: translateX(calc(var(--vx-console-motion-10p) * -1));
+  pointer-events: none;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__tenant-switcher,
+.vx-shell-sidebar--collapsed .vx-shell-nav,
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__footer {
+  overflow: hidden;
+  max-height: 0;
+  min-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top-color: transparent;
+}

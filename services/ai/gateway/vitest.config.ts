@@ -4,5 +4,11 @@ export default defineConfig({
   test: {
     environment: "node",
     include: ["src/**/*.spec.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["lcov", "text-summary"],
+      include: ["src/**/*.ts"],
+      exclude: ["src/**/*.spec.ts", "src/main.ts"],
+    },
   },
 });

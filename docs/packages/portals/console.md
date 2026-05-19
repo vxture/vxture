@@ -6,13 +6,13 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/console` |
-| 路径 | `portals/console/` |
-| @layer | `Presentation` |
-| 框架 | Next.js 15（App Router） |
-| 端口 | 3020 |
+| 项     | 值                       |
+| ------ | ------------------------ |
+| 包名   | `@vxture/console`        |
+| 路径   | `portals/console/`       |
+| @layer | `Presentation`           |
+| 框架   | Next.js 15（App Router） |
+| 端口   | 3020                     |
 
 ## 职责
 
@@ -51,25 +51,25 @@ app/
 
 ## BFF 接口（console-bff）
 
-| Router 文件 | 职责 |
-|-------------|------|
-| `auth.router.ts` | 登录 / 登出 / token 刷新 |
-| `me.router.ts` | 当前用户信息 |
-| `iam.router.ts` | 成员 / 角色 / 权限查询 |
-| `billing.router.ts` | 账单信息 |
-| `subscription.router.ts` | 订阅信息 / feature 开关 |
-| `capabilities.router.ts` | 功能能力列表 |
-| `tenant-context.router.ts` | 租户上下文 |
-| `phone-auth.router.ts` | 手机号认证 |
+| Router 文件                | 职责                     |
+| -------------------------- | ------------------------ |
+| `auth.router.ts`           | 登录 / 登出 / token 刷新 |
+| `me.router.ts`             | 当前用户信息             |
+| `iam.router.ts`            | 成员 / 角色 / 权限查询   |
+| `billing.router.ts`        | 账单信息                 |
+| `subscription.router.ts`   | 订阅信息 / feature 开关  |
+| `capabilities.router.ts`   | 功能能力列表             |
+| `tenant-context.router.ts` | 租户上下文               |
+| `phone-auth.router.ts`     | 手机号认证               |
 
 ## UI 分层框架
 
-| 层 | 路径 | 职责 |
-|----|------|------|
-| Shell | `src/layout/shell/` | AppShell / Header / Sidebar / AssistantPanel / 跨页面布局 |
-| Page Layout | `src/layout/page/` | ConsolePage / PageCluster / PageActions / EntityListPage / SettingsSplitPage |
-| Shared Module UI | `src/modules/shared/` | PageHeader / MetricGrid / TableToolbar / EmptyState / EntityTableSection / DetailDrawer / SectionNav |
-| Module | `src/modules/{domain}/` | 业务组合，路由级装配，仅消费上层原语 |
+| 层               | 路径                    | 职责                                                                                                 |
+| ---------------- | ----------------------- | ---------------------------------------------------------------------------------------------------- |
+| Shell            | `src/layout/shell/`     | AppShell / Header / Sidebar / AssistantPanel / 跨页面布局                                            |
+| Page Layout      | `src/layout/page/`      | ConsolePage / PageCluster / PageActions / EntityListPage / SettingsSplitPage                         |
+| Shared Module UI | `src/modules/shared/`   | PageHeader / MetricGrid / TableToolbar / EmptyState / EntityTableSection / DetailDrawer / SectionNav |
+| Module           | `src/modules/{domain}/` | 业务组合，路由级装配，仅消费上层原语                                                                 |
 
 导入顺序：`@/layout` → `@/modules/shared` → `@vxture/design-system` → 语义业务组件 → 模块本地。
 
@@ -79,14 +79,14 @@ app/
 
 ## 模块规划
 
-| 一级模块 | 二级页面 | 权限要求 |
-|---------|---------|---------|
-| Overview | Dashboard、关键指标 | — |
-| Workspace | Members / Roles / Organization / Access Control | `tenant.user.manage` / `tenant.role.manage` |
-| Commerce | Subscription / Billing / Quotas | `tenant.subscription.read` / `tenant.billing.read` |
-| Platform | Tenants / Products / Pricing / Models | `platform.*` 系列能力 |
-| Usage | 用量概览 / 消耗记录 | `tenant.quota.read` |
-| Settings | 租户设置 / 通知 / 个人偏好 | — |
+| 一级模块  | 二级页面                                        | 权限要求                                           |
+| --------- | ----------------------------------------------- | -------------------------------------------------- |
+| Overview  | Dashboard、关键指标                             | —                                                  |
+| Workspace | Members / Roles / Organization / Access Control | `tenant.user.manage` / `tenant.role.manage`        |
+| Commerce  | Subscription / Billing / Quotas                 | `tenant.subscription.read` / `tenant.billing.read` |
+| Platform  | Tenants / Products / Pricing / Models           | `platform.*` 系列能力                              |
+| Usage     | 用量概览 / 消耗记录                             | `tenant.quota.read`                                |
+| Settings  | 租户设置 / 通知 / 个人偏好                      | —                                                  |
 
 设计规范见 [`docs/design/console.md`](../../design/console.md)。
 
@@ -98,5 +98,5 @@ app/
 ✅ @vxture/design-system / @vxture/shared / @vxture/core-locale
 ✅ console-bff（HTTP only）
 ❌ @vxture/service-* / core-auth / core-api / core-config / core-tenant
-❌ @vxture/ai-sdk / agent-server/*
+❌ @vxture/ai-gateway-client / agent-server/*
 ```

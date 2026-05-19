@@ -11,44 +11,50 @@
  * @date 2026-04-30
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
-import { PrismaService } from '../prisma/prisma.service';
+import { Inject, Injectable } from "@nestjs/common";
+import { randomUUID } from "node:crypto";
+import { PrismaService } from "../prisma/prisma.service";
 
 export interface VelaMessageRecord {
-  id:           string;
-  sessionId:    string;
-  role:         'user' | 'assistant' | 'tool';
-  content:      string;
-  toolId?:      string;
-  toolCallId?:  string;
-  toolInput?:   unknown;
-  toolResult?:  unknown;
+  id: string;
+  sessionId: string;
+  role: "user" | "assistant" | "tool";
+  content: string;
+  toolId?: string;
+  toolCallId?: string;
+  toolInput?: unknown;
+  toolResult?: unknown;
   displayHint?: string;
-  createdAt:    Date;
+  createdAt: Date;
 }
 
-export type VelaMessageCreateInput = Omit<VelaMessageRecord, 'id' | 'createdAt'>;
+export type VelaMessageCreateInput = Omit<
+  VelaMessageRecord,
+  "id" | "createdAt"
+>;
 
 interface VelaMessageRow {
-  id:          string;
-  sessionId:   string;
-  role:        string;
-  content:     string;
-  toolId:      string | null;
-  toolCallId:  string | null;
-  toolInput:   unknown;
-  toolResult:  unknown;
+  id: string;
+  sessionId: string;
+  role: string;
+  content: string;
+  toolId: string | null;
+  toolCallId: string | null;
+  toolInput: unknown;
+  toolResult: unknown;
   displayHint: string | null;
-  createdAt:   Date;
+  createdAt: Date;
 }
 
 @Injectable()
 export class MessageRepository {
   constructor(@Inject(PrismaService) private readonly prisma: PrismaService) {}
 
-  async findMessages(sessionId: string, limit = 50): Promise<VelaMessageRecord[]> {
-    const rows = await this.prisma.$queryRawUnsafe<VelaMessageRow[]>(
+  async findMessages(
+    sessionId: string,
+    limit = 50,
+  ): Promise<VelaMessageRecord[]> {
+    const rows = (await this.prisma.$queryRawUnsafe(
       `SELECT id, "sessionId", role, content, "toolId", "toolCallId", "toolInput", "toolResult", "displayHint", "createdAt"
        FROM "VelaMessage"
        WHERE "sessionId" = $1
@@ -56,7 +62,7 @@ export class MessageRepository {
        LIMIT $2`,
       sessionId,
       limit,
-    );
+    )) as VelaMessageRow[];
 
     return rows.map(toMessageRecord);
   }
@@ -69,20 +75,20 @@ export class MessageRepository {
     const values = messages
       .map((_, i) => {
         const b = i * 9;
-        return `($${b+1},$${b+2},$${b+3},$${b+4},$${b+5},$${b+6},$${b+7}::jsonb,$${b+8}::jsonb,$${b+9},NOW())`;
+        return `($${b + 1},$${b + 2},$${b + 3},$${b + 4},$${b + 5},$${b + 6},$${b + 7}::jsonb,$${b + 8}::jsonb,$${b + 9},NOW())`;
       })
-      .join(',');
+      .join(",");
 
     const params = messages.flatMap((m) => [
       randomUUID(),
       m.sessionId,
       m.role,
       m.content,
-      m.toolId       ?? null,
-      m.toolCallId   ?? null,
+      m.toolId ?? null,
+      m.toolCallId ?? null,
       toJsonText(m.toolInput),
       toJsonText(m.toolResult),
-      m.displayHint  ?? null,
+      m.displayHint ?? null,
     ]);
 
     await this.prisma.$executeRawUnsafe(
@@ -98,8 +104,10 @@ export class MessageRepository {
     return toMessageRecord(row);
   }
 
-  private async insertMessage(data: VelaMessageCreateInput): Promise<VelaMessageRow> {
-    const rows = await this.prisma.$queryRawUnsafe<VelaMessageRow[]>(
+  private async insertMessage(
+    data: VelaMessageCreateInput,
+  ): Promise<VelaMessageRow> {
+    const rows = (await this.prisma.$queryRawUnsafe(
       `INSERT INTO "VelaMessage" (
         id, "sessionId", role, content, "toolId", "toolCallId", "toolInput", "toolResult", "displayHint", "createdAt"
       )
@@ -114,7 +122,7 @@ export class MessageRepository {
       toJsonText(data.toolInput),
       toJsonText(data.toolResult),
       data.displayHint ?? null,
-    );
+    )) as VelaMessageRow[];
     return rows[0]!;
   }
 }
@@ -126,20 +134,20 @@ function toJsonText(value: unknown): string | null {
 
 function toMessageRecord(row: VelaMessageRow): VelaMessageRecord {
   return {
-    id:        row.id,
+    id: row.id,
     sessionId: row.sessionId,
-    role:      toMessageRole(row.role),
-    content:   row.content,
-    ...(row.toolId      != null ? { toolId:      row.toolId }      : {}),
-    ...(row.toolCallId  != null ? { toolCallId:  row.toolCallId }  : {}),
-    ...(row.toolInput   != null ? { toolInput:   row.toolInput }   : {}),
-    ...(row.toolResult  != null ? { toolResult:  row.toolResult }  : {}),
+    role: toMessageRole(row.role),
+    content: row.content,
+    ...(row.toolId != null ? { toolId: row.toolId } : {}),
+    ...(row.toolCallId != null ? { toolCallId: row.toolCallId } : {}),
+    ...(row.toolInput != null ? { toolInput: row.toolInput } : {}),
+    ...(row.toolResult != null ? { toolResult: row.toolResult } : {}),
     ...(row.displayHint != null ? { displayHint: row.displayHint } : {}),
     createdAt: row.createdAt,
   };
 }
 
-function toMessageRole(role: string): VelaMessageRecord['role'] {
-  if (role === 'user' || role === 'assistant' || role === 'tool') return role;
-  return 'assistant';
+function toMessageRole(role: string): VelaMessageRecord["role"] {
+  if (role === "user" || role === "assistant" || role === "tool") return role;
+  return "assistant";
 }

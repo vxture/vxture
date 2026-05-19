@@ -18,48 +18,48 @@
  * @date 2026-05-01
  */
 
-import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'node:crypto';
-import { PrismaService } from '../prisma/prisma.service';
+import { Injectable } from "@nestjs/common";
+import { randomUUID } from "node:crypto";
+import { PrismaService } from "../prisma/prisma.service";
 
 // ============================================================================
 // 类型定义
 // ============================================================================
 
 export interface VelaAuditLogRecord {
-  id:          string;
-  userId:      string;
-  tenantId:    string | null;
-  surface:     string;
-  toolId:      string;
-  input:       unknown;
-  result:      unknown;
-  confirmed:   boolean;
+  id: string;
+  userId: string;
+  tenantId: string | null;
+  surface: string;
+  toolId: string;
+  input: unknown;
+  result: unknown;
+  confirmed: boolean;
   cancelledAt: Date | null;
-  executedAt:  Date;
+  executedAt: Date;
 }
 
 export interface VelaAuditLogCreateInput {
-  userId:    string;
-  tenantId:  string | null;
-  surface:   string;
-  toolId:    string;
-  input:     unknown;
-  result:    unknown;
+  userId: string;
+  tenantId: string | null;
+  surface: string;
+  toolId: string;
+  input: unknown;
+  result: unknown;
   confirmed: boolean;
 }
 
 interface VelaAuditLogRow {
-  id:          string;
-  userId:      string;
-  tenantId:    string | null;
-  surface:     string;
-  toolId:      string;
-  input:       unknown;
-  result:      unknown;
-  confirmed:   boolean;
+  id: string;
+  userId: string;
+  tenantId: string | null;
+  surface: string;
+  toolId: string;
+  input: unknown;
+  result: unknown;
+  confirmed: boolean;
   cancelledAt: Date | null;
-  executedAt:  Date;
+  executedAt: Date;
 }
 
 // ============================================================================
@@ -73,7 +73,7 @@ export class AuditRepository {
   /** 写入一条审计记录，返回含 id 的完整记录（id 供后续 updateConfirmed 使用）。 */
   async create(data: VelaAuditLogCreateInput): Promise<VelaAuditLogRecord> {
     const id = randomUUID();
-    const rows = await this.prisma.$queryRawUnsafe<VelaAuditLogRow[]>(
+    const rows = (await this.prisma.$queryRawUnsafe(
       `INSERT INTO "VelaAuditLog" (id, "userId", "tenantId", surface, "toolId", input, result, confirmed, "executedAt")
        VALUES ($1, $2, $3, $4, $5, $6::jsonb, $7::jsonb, $8, NOW())
        RETURNING id, "userId", "tenantId", surface, "toolId", input, result, confirmed, "cancelledAt", "executedAt"`,
@@ -85,12 +85,16 @@ export class AuditRepository {
       JSON.stringify(data.input),
       JSON.stringify(data.result),
       data.confirmed,
-    );
+    )) as VelaAuditLogRow[];
     return toAuditRecord(rows[0]!);
   }
 
   /** 确认接口：同时更新 confirmed 标志和工具执行结果。 */
-  async updateExecution(id: string, confirmed: boolean, result: unknown): Promise<void> {
+  async updateExecution(
+    id: string,
+    confirmed: boolean,
+    result: unknown,
+  ): Promise<void> {
     await this.prisma.$executeRawUnsafe(
       'UPDATE "VelaAuditLog" SET confirmed = $2, result = $3::jsonb WHERE id = $1',
       id,
@@ -115,25 +119,25 @@ export class AuditRepository {
    * 并发请求中只有一个能成功（PostgreSQL 行级锁），返回 null 表示已被抢先或已取消。
    */
   async claimForExecution(id: string): Promise<VelaAuditLogRecord | null> {
-    const rows = await this.prisma.$queryRawUnsafe<VelaAuditLogRow[]>(
+    const rows = (await this.prisma.$queryRawUnsafe(
       `UPDATE "VelaAuditLog"
        SET confirmed = true
        WHERE id = $1 AND confirmed = false AND "cancelledAt" IS NULL
        RETURNING id, "userId", "tenantId", surface, "toolId", input, result, confirmed, "cancelledAt", "executedAt"`,
       id,
-    );
+    )) as VelaAuditLogRow[];
     return rows[0] ? toAuditRecord(rows[0]) : null;
   }
 
   /** 按 id 查询，供确认接口校验记录归属。 */
   async findById(id: string): Promise<VelaAuditLogRecord | null> {
-    const rows = await this.prisma.$queryRawUnsafe<VelaAuditLogRow[]>(
+    const rows = (await this.prisma.$queryRawUnsafe(
       `SELECT id, "userId", "tenantId", surface, "toolId", input, result, confirmed, "cancelledAt", "executedAt"
        FROM "VelaAuditLog"
        WHERE id = $1
        LIMIT 1`,
       id,
-    );
+    )) as VelaAuditLogRow[];
     return rows[0] ? toAuditRecord(rows[0]) : null;
   }
 }
@@ -144,15 +148,15 @@ export class AuditRepository {
 
 function toAuditRecord(row: VelaAuditLogRow): VelaAuditLogRecord {
   return {
-    id:          row.id,
-    userId:      row.userId,
-    tenantId:    row.tenantId,
-    surface:     row.surface,
-    toolId:      row.toolId,
-    input:       row.input,
-    result:      row.result,
-    confirmed:   row.confirmed,
+    id: row.id,
+    userId: row.userId,
+    tenantId: row.tenantId,
+    surface: row.surface,
+    toolId: row.toolId,
+    input: row.input,
+    result: row.result,
+    confirmed: row.confirmed,
     cancelledAt: row.cancelledAt,
-    executedAt:  row.executedAt,
+    executedAt: row.executedAt,
   };
 }

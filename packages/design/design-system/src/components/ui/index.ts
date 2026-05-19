@@ -38,6 +38,7 @@ export * from "./page-header";
 export * from "./page-section";
 export * from "./page-stack";
 export * from "./page-actions";
+export * from "./bulk-action-bar";
 export * from "./entity-list-page";
 export * from "./settings-split-page";
 export * from "./page-size-picker";

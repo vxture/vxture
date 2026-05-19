@@ -6,14 +6,14 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/bff-admin` |
-| 路径 | `bff/admin-bff/` |
-| @layer | `Application` |
-| 框架 | NestJS |
-| 端口 | 3031 |
-| 服务对象 | `portals/admin` |
+| 项       | 值                  |
+| -------- | ------------------- |
+| 包名     | `@vxture/bff-admin` |
+| 路径     | `bff/admin-bff/`    |
+| @layer   | `Application`       |
+| 框架     | NestJS              |
+| 端口     | 3031                |
+| 服务对象 | `portals/admin`     |
 
 ## 职责
 
@@ -40,16 +40,22 @@ middleware 顺序：`auth → capabilities → router`
 
 ```typescript
 // Response 200：CaptchaChallengeDto
-{ token: string; /* 挑战令牌，后续 login 提交 */ }
+{
+  token: string; /* 挑战令牌，后续 login 提交 */
+}
 ```
 
 **POST `/api/auth/send-phone-code`** — 发送手机验证码（无鉴权）
 
 ```typescript
 // Request
-{ phone: string }
+{
+  phone: string;
+}
 // Response 200
-{ message: '验证码已发送，请在 10 分钟内输入' }
+{
+  message: "验证码已发送，请在 10 分钟内输入";
+}
 // 手机号未绑定运营账号时静默成功（不暴露账号状态）
 ```
 
@@ -58,14 +64,17 @@ middleware 顺序：`auth → capabilities → router`
 ```typescript
 // Request
 {
-  identifier: string;    // 用户名或邮箱
+  identifier: string; // 用户名或邮箱
   password: string;
-  captchaToken: string;  // 来自 captcha/challenge
+  captchaToken: string; // 来自 captcha/challenge
   captchaPosition: number; // 滑块位置
 }
 
 // Response 200（Set-Cookie: vx_admin_access_token）
-{ userId: string; status: 'authenticated' }
+{
+  userId: string;
+  status: "authenticated";
+}
 
 // Error
 // 429：登录频率超限（IP + 账号双维度限速）
@@ -77,10 +86,16 @@ middleware 顺序：`auth → capabilities → router`
 
 ```typescript
 // Request
-{ phone: string; code: string }  // code 为 6 位数字
+{
+  phone: string;
+  code: string;
+} // code 为 6 位数字
 
 // Response 200（Set-Cookie: vx_admin_access_token）
-{ userId: string; status: 'authenticated' }
+{
+  userId: string;
+  status: "authenticated";
+}
 
 // Error 400：手机号格式错误 / 验证码格式错误 / 验证码错误或过期
 // Error 401：手机号未绑定运营账号
@@ -97,9 +112,14 @@ middleware 顺序：`auth → capabilities → router`
 
 ```typescript
 // Response 200
-{ status: 'active'; userId: string }
+{
+  status: "active";
+  userId: string;
+}
 // Response 401
-{ code: 'UNAUTHORIZED' }
+{
+  code: "UNAUTHORIZED";
+}
 ```
 
 ---
@@ -183,8 +203,8 @@ middleware 顺序：`auth → capabilities → router`
 ```typescript
 // Request
 {
-  action: 'renew' | 'suspend' | 'resume' | 'cancel';
-  reason: string;  // 必填，至少 4 个字符
+  action: "renew" | "suspend" | "resume" | "cancel";
+  reason: string; // 必填，至少 4 个字符
 }
 
 // Response 200：SubscriptionOperationDetailRecord（操作后状态）
@@ -404,29 +424,32 @@ middleware 顺序：`auth → capabilities → router`
 
 ```typescript
 // Response 200
-{ status: 'ok' }
+{
+  status: "ok";
+}
 ```
 
 ---
 
 ## 能力守卫汇总
 
-| 能力 code | 保护范围 |
-|----------|---------|
-| `platform.tenant.manage` | tenants / accounts / subscriptions / billing / tickets / admin-roles |
-| `platform.pricing.manage` | subscriptions / billing（与 tenant.manage 任一即可） |
-| `platform.product.manage` | products |
-| `platform.model.manage` | ai-gateway |
-| `platform.admin.manage` | platform-admins / admin-roles |
+| 能力 code                 | 保护范围                                                             |
+| ------------------------- | -------------------------------------------------------------------- |
+| `platform.tenant.manage`  | tenants / accounts / subscriptions / billing / tickets / admin-roles |
+| `platform.pricing.manage` | subscriptions / billing（与 tenant.manage 任一即可）                 |
+| `platform.product.manage` | products                                                             |
+| `platform.model.manage`   | ai-gateway                                                           |
+| `platform.admin.manage`   | platform-admins / admin-roles                                        |
 
 ---
 
 ## 依赖约束
 
 **允许：**
+
 - `@vxture/core-auth` / `@vxture/core-tenant` / `@vxture/core-config` / `@vxture/shared`
 - `@vxture/service-sms`（手机验证码发送）
 - NestJS / class-validator / pg（直连 DB 聚合查询）
 - auth-bff（HTTP internal，登录时委托签发 Cookie）
 
-**禁止：** `@vxture/ai-sdk` / `design-system` / `platform-*` / 跨 BFF 导入 / 直接签发 JWT / 业务逻辑
+**禁止：** `@vxture/ai-gateway-client` / `design-system` / `platform-*` / 跨 BFF 导入 / 直接签发 JWT / 业务逻辑

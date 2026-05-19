@@ -1,4 +1,4 @@
-import { PrismaClient as PrismaClientImpl } from "@prisma/client";
+import { PrismaClient as PrismaClientImpl } from "./generated/prisma";
 import type {
   AiModelGrantRecord,
   AiModelRecord,

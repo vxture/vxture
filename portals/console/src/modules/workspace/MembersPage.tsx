@@ -1,7 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { ActionMenu, Avatar, Badge, Button, Checkbox, DialogForm, Icon, Input, Label, NativeSelect } from '@vxture/design-system';
+import { useEffect, useMemo, useState, type FormEvent } from "react";
+import {
+  ActionMenu,
+  Avatar,
+  Badge,
+  BulkActionBar,
+  Button,
+  Checkbox,
+  DialogForm,
+  Icon,
+  Input,
+  Label,
+  NativeSelect,
+} from "@vxture/design-system";
 import {
   createMember,
   disableMember,
@@ -11,43 +23,59 @@ import {
   resetMemberPassword,
   unlinkMember,
   updateMember,
-} from '@/api/console-bff';
-import type { MemberRecord, TenantRoleRecord } from '@/entities/console';
-import { useTranslations } from 'next-intl';
-import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { EmptyState } from '@/modules/shared/EmptyState';
-import { PageHeader } from '@/modules/shared/PageHeader';
+} from "@/api/console-bff";
+import type { MemberRecord, TenantRoleRecord } from "@/entities/console";
+import { useTranslations } from "next-intl";
+import { useConsoleSession } from "@/features/session/ConsoleSessionProvider";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { EmptyState } from "@/modules/shared/EmptyState";
+import { PageHeader } from "@/modules/shared/PageHeader";
 
-type MemberStatusFilter = 'all' | 'active' | 'invited' | 'suspended';
+type MemberStatusFilter = "all" | "active" | "invited" | "suspended";
 
-const DEFAULT_MEMBER_AVATAR_ONLINE_SRC = '/assets/icon/avatar-default-online.png';
-const DEFAULT_MEMBER_AVATAR_OFFLINE_SRC = '/assets/icon/avatar-default-offline.png';
+const DEFAULT_MEMBER_AVATAR_ONLINE_SRC =
+  "/assets/icon/avatar-default-online.png";
+const DEFAULT_MEMBER_AVATAR_OFFLINE_SRC =
+  "/assets/icon/avatar-default-offline.png";
 const MEMBERS_PAGE_SIZE = 10;
 
-const statusClassMap: Record<MemberRecord['status'], string> = {
-  Active: 'vx-member-status--active',
-  Invited: 'vx-member-status--invited',
-  Suspended: 'vx-member-status--suspended',
+const statusClassMap: Record<MemberRecord["status"], string> = {
+  Active: "vx-member-status--active",
+  Invited: "vx-member-status--invited",
+  Suspended: "vx-member-status--suspended",
 };
 
 function memberUsername(member: MemberRecord) {
-  return member.username?.trim() || member.email.split('@')[0] || member.accountId;
+  return (
+    member.username?.trim() || member.email.split("@")[0] || member.accountId
+  );
 }
 
 function memberAvatar(member: MemberRecord) {
-  return member.avatarUrl?.trim() || (member.status === 'Active' ? DEFAULT_MEMBER_AVATAR_ONLINE_SRC : DEFAULT_MEMBER_AVATAR_OFFLINE_SRC);
+  return (
+    member.avatarUrl?.trim() ||
+    (member.status === "Active"
+      ? DEFAULT_MEMBER_AVATAR_ONLINE_SRC
+      : DEFAULT_MEMBER_AVATAR_OFFLINE_SRC)
+  );
 }
 
 function memberSearchText(member: MemberRecord) {
-  return [member.name, memberUsername(member), member.email, member.phone, member.role, member.team]
+  return [
+    member.name,
+    memberUsername(member),
+    member.email,
+    member.phone,
+    member.role,
+    member.team,
+  ]
     .filter(Boolean)
-    .join(' ')
+    .join(" ")
     .toLowerCase();
 }
 
 export function MembersPage() {
-  const t = useTranslations('membersPage');
+  const t = useTranslations("membersPage");
   const { session } = useConsoleSession();
   const [members, setMembers] = useState<MemberRecord[]>([]);
   const [roles, setRoles] = useState<TenantRoleRecord[]>([]);
@@ -55,24 +83,26 @@ export function MembersPage() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [query, setQuery] = useState('');
-  const [status, setStatus] = useState<MemberStatusFilter>('all');
+  const [query, setQuery] = useState("");
+  const [status, setStatus] = useState<MemberStatusFilter>("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(() => new Set());
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [createMode, setCreateMode] = useState<'create' | 'invite' | null>(null);
+  const [createMode, setCreateMode] = useState<"create" | "invite" | null>(
+    null,
+  );
   const [editOpen, setEditOpen] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const [unlinkOpen, setUnlinkOpen] = useState(false);
   const [bulkUnlinkOpen, setBulkUnlinkOpen] = useState(false);
   const [memberForm, setMemberForm] = useState({
-    email: '',
-    nickname: '',
-    remark: '',
-    roleId: '',
+    email: "",
+    nickname: "",
+    remark: "",
+    roleId: "",
   });
   const [passwordForm, setPasswordForm] = useState({
-    nextPassword: '',
+    nextPassword: "",
   });
 
   useEffect(() => {
@@ -86,7 +116,7 @@ export function MembersPage() {
         }
 
         setMembers(records);
-        setRoles(roleRecords.filter((role) => role.status === 'active'));
+        setRoles(roleRecords.filter((role) => role.status === "active"));
         setSelectedIds(new Set());
         setSelectedId(null);
       })
@@ -112,14 +142,14 @@ export function MembersPage() {
 
   function resetMemberForm(member?: MemberRecord | null) {
     setMemberForm({
-      email: member?.email ?? '',
-      nickname: member?.name ?? '',
-      remark: member?.team === 'Workspace' ? '' : member?.team ?? '',
-      roleId: member?.roleId ?? '',
+      email: member?.email ?? "",
+      nickname: member?.name ?? "",
+      remark: member?.team === "Workspace" ? "" : (member?.team ?? ""),
+      roleId: member?.roleId ?? "",
     });
   }
 
-  function openCreateDialog(mode: 'create' | 'invite') {
+  function openCreateDialog(mode: "create" | "invite") {
     resetMemberForm();
     resetFeedback();
     setCreateMode(mode);
@@ -134,7 +164,7 @@ export function MembersPage() {
 
   function openResetDialog(member: MemberRecord) {
     setSelectedId(member.id);
-    setPasswordForm({ nextPassword: '' });
+    setPasswordForm({ nextPassword: "" });
     resetFeedback();
     setResetOpen(true);
   }
@@ -170,16 +200,28 @@ export function MembersPage() {
       };
 
       const created =
-        createMode === 'invite'
+        createMode === "invite"
           ? await inviteMember(payload)
           : await createMember(payload);
 
       await reloadMembers(created.id);
       setCreateMode(null);
       resetMemberForm();
-      setMessage(t(createMode === 'invite' ? 'feedback.inviteSuccess' : 'feedback.createSuccess'));
+      setMessage(
+        t(
+          createMode === "invite"
+            ? "feedback.inviteSuccess"
+            : "feedback.createSuccess",
+        ),
+      );
     } catch {
-      setError(t(createMode === 'invite' ? 'feedback.inviteError' : 'feedback.createError'));
+      setError(
+        t(
+          createMode === "invite"
+            ? "feedback.inviteError"
+            : "feedback.createError",
+        ),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -195,19 +237,16 @@ export function MembersPage() {
     resetFeedback();
 
     try {
-      const updated = await updateMember(
-        selected.id,
-        {
-          nickname: memberForm.nickname,
-          remark: memberForm.remark,
-          roleId: memberForm.roleId || null,
-        },
-      );
+      const updated = await updateMember(selected.id, {
+        nickname: memberForm.nickname,
+        remark: memberForm.remark,
+        roleId: memberForm.roleId || null,
+      });
       await reloadMembers(updated.id);
       setEditOpen(false);
-      setMessage(t('feedback.updateSuccess'));
+      setMessage(t("feedback.updateSuccess"));
     } catch {
-      setError(t('feedback.updateError'));
+      setError(t("feedback.updateError"));
     } finally {
       setSubmitting(false);
     }
@@ -220,7 +259,7 @@ export function MembersPage() {
     }
 
     if (passwordForm.nextPassword.length < 6) {
-      setError(t('feedback.resetPasswordLength'));
+      setError(t("feedback.resetPasswordLength"));
       return;
     }
 
@@ -228,31 +267,41 @@ export function MembersPage() {
     resetFeedback();
 
     try {
-      await resetMemberPassword(selected.id, { nextPassword: passwordForm.nextPassword });
+      await resetMemberPassword(selected.id, {
+        nextPassword: passwordForm.nextPassword,
+      });
       setResetOpen(false);
-      setPasswordForm({ nextPassword: '' });
-      setMessage(t('feedback.resetPasswordSuccess', { name: selected.name }));
+      setPasswordForm({ nextPassword: "" });
+      setMessage(t("feedback.resetPasswordSuccess", { name: selected.name }));
     } catch {
-      setError(t('feedback.resetPasswordError'));
+      setError(t("feedback.resetPasswordError"));
     } finally {
       setSubmitting(false);
     }
   }
 
   async function handleToggleMemberStatus(member: MemberRecord) {
-    const nextStatus = member.status === 'Suspended' ? 'active' : 'banned';
+    const nextStatus = member.status === "Suspended" ? "active" : "banned";
     setSubmitting(true);
     resetFeedback();
 
     try {
       const updated =
-        nextStatus === 'banned'
+        nextStatus === "banned"
           ? await disableMember(member.id)
           : await updateMember(member.id, { status: nextStatus });
       await reloadMembers(updated.id);
-      setMessage(nextStatus === 'banned' ? t('feedback.memberDisabled') : t('feedback.memberEnabled'));
+      setMessage(
+        nextStatus === "banned"
+          ? t("feedback.memberDisabled")
+          : t("feedback.memberEnabled"),
+      );
     } catch {
-      setError(nextStatus === 'banned' ? t('feedback.memberDisableError') : t('feedback.memberEnableError'));
+      setError(
+        nextStatus === "banned"
+          ? t("feedback.memberDisableError")
+          : t("feedback.memberEnableError"),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -270,19 +319,21 @@ export function MembersPage() {
       await unlinkMember(selected.id);
       await reloadMembers();
       setUnlinkOpen(false);
-      setMessage(t('feedback.unlinkSuccess'));
+      setMessage(t("feedback.unlinkSuccess"));
     } catch {
-      setError(t('feedback.unlinkError'));
+      setError(t("feedback.unlinkError"));
     } finally {
       setSubmitting(false);
     }
   }
 
-  async function handleBulkStatus(nextStatus: 'active' | 'banned') {
+  async function handleBulkStatus(nextStatus: "active" | "banned") {
     const targets = members.filter(
       (member) =>
         selectedIds.has(member.id) &&
-        (nextStatus === 'banned' ? member.status !== 'Suspended' : member.status === 'Suspended'),
+        (nextStatus === "banned"
+          ? member.status !== "Suspended"
+          : member.status === "Suspended"),
     );
     if (!targets.length) {
       return;
@@ -294,15 +345,23 @@ export function MembersPage() {
     try {
       await Promise.all(
         targets.map((member) =>
-          nextStatus === 'banned'
+          nextStatus === "banned"
             ? disableMember(member.id)
             : updateMember(member.id, { status: nextStatus }),
         ),
       );
       await reloadMembers();
-      setMessage(nextStatus === 'banned' ? t('feedback.bulkDisabled', { count: targets.length }) : t('feedback.bulkEnabled', { count: targets.length }));
+      setMessage(
+        nextStatus === "banned"
+          ? t("feedback.bulkDisabled", { count: targets.length })
+          : t("feedback.bulkEnabled", { count: targets.length }),
+      );
     } catch {
-      setError(nextStatus === 'banned' ? t('feedback.bulkDisableError') : t('feedback.bulkEnableError'));
+      setError(
+        nextStatus === "banned"
+          ? t("feedback.bulkDisableError")
+          : t("feedback.bulkEnableError"),
+      );
     } finally {
       setSubmitting(false);
     }
@@ -321,9 +380,9 @@ export function MembersPage() {
       await Promise.all(targets.map((member) => unlinkMember(member.id)));
       await reloadMembers();
       setBulkUnlinkOpen(false);
-      setMessage(t('feedback.bulkUnlinkSuccess', { count: targets.length }));
+      setMessage(t("feedback.bulkUnlinkSuccess", { count: targets.length }));
     } catch {
-      setError(t('feedback.bulkUnlinkError'));
+      setError(t("feedback.bulkUnlinkError"));
     } finally {
       setSubmitting(false);
     }
@@ -333,32 +392,46 @@ export function MembersPage() {
     const normalizedQuery = query.trim().toLowerCase();
 
     return members.filter((member) => {
-      const matchesQuery = !normalizedQuery || memberSearchText(member).includes(normalizedQuery);
-      const matchesStatus = status === 'all' || member.status.toLowerCase() === status;
+      const matchesQuery =
+        !normalizedQuery || memberSearchText(member).includes(normalizedQuery);
+      const matchesStatus =
+        status === "all" || member.status.toLowerCase() === status;
       return matchesQuery && matchesStatus;
     });
   }, [members, query, status]);
 
   const statusCounts = useMemo(
     () => ({
-      active: members.filter((member) => member.status === 'Active').length,
-      invited: members.filter((member) => member.status === 'Invited').length,
-      suspended: members.filter((member) => member.status === 'Suspended').length,
+      active: members.filter((member) => member.status === "Active").length,
+      invited: members.filter((member) => member.status === "Invited").length,
+      suspended: members.filter((member) => member.status === "Suspended")
+        .length,
     }),
     [members],
   );
 
   const selected = members.find((member) => member.id === selectedId) ?? null;
-  const totalPages = Math.max(1, Math.ceil(filtered.length / MEMBERS_PAGE_SIZE));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filtered.length / MEMBERS_PAGE_SIZE),
+  );
   const safeCurrentPage = Math.min(currentPage, totalPages);
   const pageStart = (safeCurrentPage - 1) * MEMBERS_PAGE_SIZE;
   const pagedMembers = filtered.slice(pageStart, pageStart + MEMBERS_PAGE_SIZE);
-  const selectedMembers = members.filter((member) => selectedIds.has(member.id));
+  const selectedMembers = members.filter((member) =>
+    selectedIds.has(member.id),
+  );
   const selectedCount = selectedMembers.length;
   const selectablePageIds = pagedMembers.map((member) => member.id);
-  const isPageSelected = selectablePageIds.length > 0 && selectablePageIds.every((id) => selectedIds.has(id));
-  const hasSelectedActive = selectedMembers.some((member) => member.status !== 'Suspended');
-  const hasSelectedSuspended = selectedMembers.some((member) => member.status === 'Suspended');
+  const isPageSelected =
+    selectablePageIds.length > 0 &&
+    selectablePageIds.every((id) => selectedIds.has(id));
+  const hasSelectedActive = selectedMembers.some(
+    (member) => member.status !== "Suspended",
+  );
+  const hasSelectedSuspended = selectedMembers.some(
+    (member) => member.status === "Suspended",
+  );
   const memberActionVisibility = {
     bulk: selectedCount > 0,
     invite: true,
@@ -366,13 +439,13 @@ export function MembersPage() {
   };
 
   const statusFilters = [
-    { value: 'all', label: t('filters.all') },
-    { value: 'active', label: t('filters.active') },
-    { value: 'invited', label: t('filters.invited') },
-    { value: 'suspended', label: t('filters.suspended') },
+    { value: "all", label: t("filters.all") },
+    { value: "active", label: t("filters.active") },
+    { value: "invited", label: t("filters.invited") },
+    { value: "suspended", label: t("filters.suspended") },
   ] as const;
 
-  const countTitle = t('table.countHint', {
+  const countTitle = t("table.countHint", {
     total: members.length,
     active: statusCounts.active,
     invited: statusCounts.invited,
@@ -406,11 +479,17 @@ export function MembersPage() {
   }
 
   return (
-    <div className={selectedCount ? 'vx-page-stack vx-members-page vx-members-page--selecting' : 'vx-page-stack vx-members-page'}>
+    <div
+      className={
+        selectedCount
+          ? "vx-page-stack vx-members-page vx-members-page--selecting"
+          : "vx-page-stack vx-members-page"
+      }
+    >
       <PageHeader
-        eyebrow={t('header.eyebrow')}
-        title={t('header.title')}
-        description={t('header.description')}
+        eyebrow={t("header.eyebrow")}
+        title={t("header.title")}
+        description={t("header.description")}
       />
 
       {message ? <p className="vx-profile-message">{message}</p> : null}
@@ -418,76 +497,95 @@ export function MembersPage() {
 
       <div className="vx-members-workspace">
         <div className="vx-members-actionbar">
-          <div className="vx-members-header-actions">
-            {memberActionVisibility.bulk ? (
-              <div className="vx-members-header-selection">
-                <span>{t('bulk.selected', { count: selectedCount })}</span>
-                <ActionButton
-                  variant="outline"
-                  icon="shield-check"
-                  disabled={submitting || !hasSelectedActive}
-                  onClick={() => void handleBulkStatus('banned')}
-                >
-                  {t('bulk.disable')}
-                </ActionButton>
-                <ActionButton
-                  variant="outline"
-                  icon="check"
-                  disabled={submitting || !hasSelectedSuspended}
-                  onClick={() => void handleBulkStatus('active')}
-                >
-                  {t('bulk.enable')}
-                </ActionButton>
-                <ActionButton
-                  variant="outline"
-                  icon="user-switch"
-                  disabled={submitting}
-                  onClick={() => setBulkUnlinkOpen(true)}
-                >
-                  {t('bulk.unlink')}
-                </ActionButton>
-              </div>
-            ) : null}
-            <div className="vx-members-header-primary">
-              {memberActionVisibility.invite ? (
-                <ActionButton variant="outline" icon="mail" onClick={() => openCreateDialog('invite')}>
-                  {t('header.inviteMember')}
-                </ActionButton>
-              ) : null}
-              {memberActionVisibility.create ? (
-                <ActionButton icon="plus" onClick={() => openCreateDialog('create')}>
-                  {t('header.addMember')}
-                </ActionButton>
-              ) : null}
-            </div>
-          </div>
+          <BulkActionBar
+            selectedLabel={
+              memberActionVisibility.bulk
+                ? t("bulk.selected", { count: selectedCount })
+                : undefined
+            }
+            selectionActions={
+              memberActionVisibility.bulk ? (
+                <>
+                  <ActionButton
+                    variant="outline"
+                    icon="shield-check"
+                    disabled={submitting || !hasSelectedActive}
+                    onClick={() => void handleBulkStatus("banned")}
+                  >
+                    {t("bulk.disable")}
+                  </ActionButton>
+                  <ActionButton
+                    variant="outline"
+                    icon="check"
+                    disabled={submitting || !hasSelectedSuspended}
+                    onClick={() => void handleBulkStatus("active")}
+                  >
+                    {t("bulk.enable")}
+                  </ActionButton>
+                  <ActionButton
+                    variant="outline"
+                    icon="user-switch"
+                    disabled={submitting}
+                    onClick={() => setBulkUnlinkOpen(true)}
+                  >
+                    {t("bulk.unlink")}
+                  </ActionButton>
+                </>
+              ) : null
+            }
+            primaryActions={
+              <>
+                {memberActionVisibility.invite ? (
+                  <ActionButton
+                    variant="outline"
+                    icon="mail"
+                    onClick={() => openCreateDialog("invite")}
+                  >
+                    {t("header.inviteMember")}
+                  </ActionButton>
+                ) : null}
+                {memberActionVisibility.create ? (
+                  <ActionButton
+                    icon="plus"
+                    onClick={() => openCreateDialog("create")}
+                  >
+                    {t("header.addMember")}
+                  </ActionButton>
+                ) : null}
+              </>
+            }
+          />
         </div>
 
         <div className="vx-members-toolbar">
           <Input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={t('table.searchPlaceholder')}
+            placeholder={t("table.searchPlaceholder")}
             className="vx-search-input vx-members-toolbar__search"
-            aria-label={t('table.searchAriaLabel')}
+            aria-label={t("table.searchAriaLabel")}
           />
           <div className="vx-members-toolbar__filters">
             <span className="vx-members-toolbar__count" title={countTitle}>
-              {t('table.toolbarTitle', { count: filtered.length })}
+              {t("table.toolbarTitle", { count: filtered.length })}
             </span>
-            <div className="vx-segmented-control" role="tablist" aria-label={t('table.filterAriaLabel')}>
+            <div
+              className="vx-segmented-control"
+              role="tablist"
+              aria-label={t("table.filterAriaLabel")}
+            >
               {statusFilters.map((filter) => (
                 <Button
                   key={filter.value}
-                  variant={status === filter.value ? 'secondary' : 'ghost'}
+                  variant={status === filter.value ? "secondary" : "ghost"}
                   size="sm"
                   role="tab"
                   title={filter.label}
                   aria-selected={status === filter.value}
                   className={
                     status === filter.value
-                      ? 'vx-segmented-control__item vx-segmented-control__item--active'
-                      : 'vx-segmented-control__item'
+                      ? "vx-segmented-control__item vx-segmented-control__item--active"
+                      : "vx-segmented-control__item"
                   }
                   onClick={() => setStatus(filter.value)}
                 >
@@ -500,28 +598,31 @@ export function MembersPage() {
 
         <div className="vx-member-list">
           <div className="vx-member-list__header">
-            <span className="vx-member-select vx-member-select--header" title={t('table.selectPage')}>
+            <span
+              className="vx-member-select vx-member-select--header"
+              title={t("table.selectPage")}
+            >
               <Checkbox
                 checked={isPageSelected}
-                aria-label={t('table.selectPage')}
+                aria-label={t("table.selectPage")}
                 onCheckedChange={(value) => togglePageSelection(value === true)}
               />
             </span>
-            <span>{t('table.columns.name')}</span>
-            <span>{t('table.columns.phone')}</span>
-            <span>{t('table.columns.email')}</span>
-            <span>{t('table.columns.role')}</span>
-            <span>{t('table.columns.status')}</span>
-            <span>{t('table.columns.lastActive')}</span>
+            <span>{t("table.columns.name")}</span>
+            <span>{t("table.columns.phone")}</span>
+            <span>{t("table.columns.email")}</span>
+            <span>{t("table.columns.role")}</span>
+            <span>{t("table.columns.status")}</span>
+            <span>{t("table.columns.lastActive")}</span>
             <span />
           </div>
           {pagedMembers.length ? (
             pagedMembers.map((member) => {
               const username = memberUsername(member);
-              const detailTitle = t('table.memberTitle', {
+              const detailTitle = t("table.memberTitle", {
                 name: member.name,
                 username,
-                phone: member.phone ?? t('table.emptyPhone'),
+                phone: member.phone ?? t("table.emptyPhone"),
                 email: member.email,
                 role: member.role,
                 team: member.team,
@@ -534,32 +635,48 @@ export function MembersPage() {
                   className="vx-member-table__row"
                   title={detailTitle}
                 >
-                  <span className="vx-member-select" title={t('table.selectMember', { name: member.name })}>
+                  <span
+                    className="vx-member-select"
+                    title={t("table.selectMember", { name: member.name })}
+                  >
                     <Checkbox
                       checked={selectedIds.has(member.id)}
-                      aria-label={t('table.selectMember', { name: member.name })}
-                      onCheckedChange={(value) => toggleMemberSelection(member.id, value === true)}
+                      aria-label={t("table.selectMember", {
+                        name: member.name,
+                      })}
+                      onCheckedChange={(value) =>
+                        toggleMemberSelection(member.id, value === true)
+                      }
                     />
                   </span>
                   <div className="vx-member-table__identity">
                     <Avatar
                       className="vx-member-table__avatar"
                       role="img"
-                      aria-label={t('table.avatarAlt', { name: member.name })}
-                      style={{ backgroundImage: `url("${memberAvatar(member)}")` }}
+                      aria-label={t("table.avatarAlt", { name: member.name })}
+                      style={{
+                        backgroundImage: `url("${memberAvatar(member)}")`,
+                      }}
                     >
-                      <span className="vx-member-table__avatar-label">{member.name}</span>
+                      <span className="vx-member-table__avatar-label">
+                        {member.name}
+                      </span>
                     </Avatar>
                     <div className="vx-member-table__person">
                       <div className="vx-member-table__person-line">
                         <strong>{member.name}</strong>
-                        {member.isPrimaryOwner ? <span>{t('table.primaryOwner')}</span> : null}
+                        {member.isPrimaryOwner ? (
+                          <span>{t("table.primaryOwner")}</span>
+                        ) : null}
                       </div>
                       <p title={username}>{username}</p>
                     </div>
                   </div>
-                  <span className="vx-member-table__muted" title={member.phone ?? t('table.emptyPhone')}>
-                    {member.phone ?? t('table.emptyPhone')}
+                  <span
+                    className="vx-member-table__muted"
+                    title={member.phone ?? t("table.emptyPhone")}
+                  >
+                    {member.phone ?? t("table.emptyPhone")}
                   </span>
                   <span className="vx-member-table__muted" title={member.email}>
                     {member.email}
@@ -570,47 +687,74 @@ export function MembersPage() {
                   <span>
                     <Badge
                       className={`vx-member-status ${statusClassMap[member.status]}`}
-                      title={t('table.statusTitle', { status: t(`status.${member.status}`) })}
+                      title={t("table.statusTitle", {
+                        status: t(`status.${member.status}`),
+                      })}
                     >
                       {t(`status.${member.status}`)}
                     </Badge>
                   </span>
-                  <span className="vx-member-table__muted" title={member.lastActive}>
+                  <span
+                    className="vx-member-table__muted"
+                    title={member.lastActive}
+                  >
                     {member.lastActive}
                   </span>
                   <div className="vx-member-table__menu">
                     <ActionMenu
-                      label={t('actions.menuLabel', { name: member.name })}
-                      triggerProps={{ title: t('actions.menuLabel', { name: member.name }) }}
+                      label={t("actions.menuLabel", { name: member.name })}
+                      triggerProps={{
+                        title: t("actions.menuLabel", { name: member.name }),
+                      }}
                       items={[
                         {
-                          id: 'edit',
-                          label: t('actions.edit'),
-                          icon: <Icon name="edit" size="xs" fallback="placeholder" />,
+                          id: "edit",
+                          label: t("actions.edit"),
+                          icon: (
+                            <Icon
+                              name="edit"
+                              size="xs"
+                              fallback="placeholder"
+                            />
+                          ),
                           onSelect: () => openEditDialog(member),
                         },
                         {
-                          id: 'toggle-status',
+                          id: "toggle-status",
                           label:
-                            member.status === 'Suspended'
-                              ? t('actions.enableMember')
-                              : member.status === 'Invited'
-                                ? t('actions.disableInvite')
-                                : t('actions.disableMember'),
-                          icon: <Icon name="shield-check" size="xs" fallback="placeholder" />,
+                            member.status === "Suspended"
+                              ? t("actions.enableMember")
+                              : member.status === "Invited"
+                                ? t("actions.disableInvite")
+                                : t("actions.disableMember"),
+                          icon: (
+                            <Icon
+                              name="shield-check"
+                              size="xs"
+                              fallback="placeholder"
+                            />
+                          ),
                           disabled: submitting,
                           onSelect: () => void handleToggleMemberStatus(member),
                         },
                         {
-                          id: 'reset-password',
-                          label: t('actions.resetPassword'),
-                          icon: <Icon name="key" size="xs" fallback="placeholder" />,
+                          id: "reset-password",
+                          label: t("actions.resetPassword"),
+                          icon: (
+                            <Icon name="key" size="xs" fallback="placeholder" />
+                          ),
                           onSelect: () => openResetDialog(member),
                         },
                         {
-                          id: 'unlink',
-                          label: t('actions.unlink'),
-                          icon: <Icon name="user-switch" size="xs" fallback="placeholder" />,
+                          id: "unlink",
+                          label: t("actions.unlink"),
+                          icon: (
+                            <Icon
+                              name="user-switch"
+                              size="xs"
+                              fallback="placeholder"
+                            />
+                          ),
                           disabled: submitting,
                           danger: true,
                           onSelect: () => openUnlinkDialog(member),
@@ -623,18 +767,20 @@ export function MembersPage() {
             })
           ) : (
             <EmptyState
-              title={loading ? t('empty.loadingTitle') : t('empty.title')}
-              description={loading ? t('empty.loadingDescription') : t('empty.description')}
+              title={loading ? t("empty.loadingTitle") : t("empty.title")}
+              description={
+                loading ? t("empty.loadingDescription") : t("empty.description")
+              }
               action={
                 <ActionButton
                   variant="outline"
                   icon="x"
                   onClick={() => {
-                    setQuery('');
-                    setStatus('all');
+                    setQuery("");
+                    setStatus("all");
                   }}
                 >
-                  {t('empty.resetFilters')}
+                  {t("empty.resetFilters")}
                 </ActionButton>
               }
             />
@@ -643,22 +789,30 @@ export function MembersPage() {
 
         <div className="vx-members-pagination">
           <div className="vx-members-pagination__actions">
-            <span>{t('pagination.summary', { page: safeCurrentPage, totalPages, total: filtered.length })}</span>
+            <span>
+              {t("pagination.summary", {
+                page: safeCurrentPage,
+                totalPages,
+                total: filtered.length,
+              })}
+            </span>
             <Button
               variant="outline"
               size="sm"
               disabled={safeCurrentPage <= 1}
               onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
             >
-              {t('pagination.previous')}
+              {t("pagination.previous")}
             </Button>
             <Button
               variant="outline"
               size="sm"
               disabled={safeCurrentPage >= totalPages}
-              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+              onClick={() =>
+                setCurrentPage((page) => Math.min(totalPages, page + 1))
+              }
             >
-              {t('pagination.next')}
+              {t("pagination.next")}
             </Button>
           </div>
         </div>
@@ -666,138 +820,187 @@ export function MembersPage() {
         {createMode ? (
           <DialogForm
             open
-            title={createMode === 'invite' ? t('dialogs.invite.title') : t('dialogs.create.title')}
-            submitLabel={createMode === 'invite' ? t('dialogs.actions.sendInvite') : t('dialogs.actions.create')}
-            cancelLabel={t('dialogs.actions.cancel')}
+            title={
+              createMode === "invite"
+                ? t("dialogs.invite.title")
+                : t("dialogs.create.title")
+            }
+            submitLabel={
+              createMode === "invite"
+                ? t("dialogs.actions.sendInvite")
+                : t("dialogs.actions.create")
+            }
+            cancelLabel={t("dialogs.actions.cancel")}
             submitting={submitting}
             onOpenChange={(open) => {
               if (!open) setCreateMode(null);
             }}
             onSubmit={(event) => void submitCreate(event)}
           >
-              <Label>
-                {t('dialogs.fields.email')}
-                <Input
-                  type="email"
-                  value={memberForm.email}
-                  onChange={(event) => setMemberForm((old) => ({ ...old, email: event.target.value }))}
-                  required
-                />
-              </Label>
-              <Label>
-                {t('dialogs.fields.nickname')}
-                <Input
-                  value={memberForm.nickname}
-                  onChange={(event) => setMemberForm((old) => ({ ...old, nickname: event.target.value }))}
-                />
-              </Label>
-              <Label>
-                {t('dialogs.fields.teamRemark')}
-                <Input
-                  value={memberForm.remark}
-                  onChange={(event) => setMemberForm((old) => ({ ...old, remark: event.target.value }))}
-                />
-              </Label>
-              <Label>
-                {t('dialogs.fields.role')}
-                <NativeSelect
-                  className="vx-input"
-                  value={memberForm.roleId}
-                  onChange={(event) => setMemberForm((old) => ({ ...old, roleId: event.target.value }))}
-                >
-                  <option value="">{t('dialogs.fields.defaultRole')}</option>
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.id}>
-                      {role.roleName}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </Label>
+            <Label>
+              {t("dialogs.fields.email")}
+              <Input
+                type="email"
+                value={memberForm.email}
+                onChange={(event) =>
+                  setMemberForm((old) => ({
+                    ...old,
+                    email: event.target.value,
+                  }))
+                }
+                required
+              />
+            </Label>
+            <Label>
+              {t("dialogs.fields.nickname")}
+              <Input
+                value={memberForm.nickname}
+                onChange={(event) =>
+                  setMemberForm((old) => ({
+                    ...old,
+                    nickname: event.target.value,
+                  }))
+                }
+              />
+            </Label>
+            <Label>
+              {t("dialogs.fields.teamRemark")}
+              <Input
+                value={memberForm.remark}
+                onChange={(event) =>
+                  setMemberForm((old) => ({
+                    ...old,
+                    remark: event.target.value,
+                  }))
+                }
+              />
+            </Label>
+            <Label>
+              {t("dialogs.fields.role")}
+              <NativeSelect
+                className="vx-input"
+                value={memberForm.roleId}
+                onChange={(event) =>
+                  setMemberForm((old) => ({
+                    ...old,
+                    roleId: event.target.value,
+                  }))
+                }
+              >
+                <option value="">{t("dialogs.fields.defaultRole")}</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.roleName}
+                  </option>
+                ))}
+              </NativeSelect>
+            </Label>
           </DialogForm>
         ) : null}
 
         {editOpen && selected ? (
           <DialogForm
             open
-            title={t('dialogs.edit.title')}
-            submitLabel={t('dialogs.actions.save')}
-            cancelLabel={t('dialogs.actions.cancel')}
+            title={t("dialogs.edit.title")}
+            submitLabel={t("dialogs.actions.save")}
+            cancelLabel={t("dialogs.actions.cancel")}
             submitting={submitting}
             onOpenChange={(open) => {
               if (!open) setEditOpen(false);
             }}
             onSubmit={(event) => void submitEdit(event)}
           >
-              <Label>
-                {t('dialogs.fields.email')}
-                <Input value={selected.email} disabled />
-              </Label>
-              <Label>
-                {t('dialogs.fields.nickname')}
-                <Input
-                  value={memberForm.nickname}
-                  onChange={(event) => setMemberForm((old) => ({ ...old, nickname: event.target.value }))}
-                />
-              </Label>
-              <Label>
-                {t('dialogs.fields.teamRemark')}
-                <Input
-                  value={memberForm.remark}
-                  onChange={(event) => setMemberForm((old) => ({ ...old, remark: event.target.value }))}
-                />
-              </Label>
-              <Label>
-                {t('dialogs.fields.role')}
-                <NativeSelect
-                  className="vx-input"
-                  value={memberForm.roleId}
-                  onChange={(event) => setMemberForm((old) => ({ ...old, roleId: event.target.value }))}
-                >
-                  <option value="">{t('dialogs.fields.defaultRole')}</option>
-                  {roles.map((role) => (
-                    <option key={role.id} value={role.id}>
-                      {role.roleName}
-                    </option>
-                  ))}
-                </NativeSelect>
-              </Label>
+            <Label>
+              {t("dialogs.fields.email")}
+              <Input value={selected.email} disabled />
+            </Label>
+            <Label>
+              {t("dialogs.fields.nickname")}
+              <Input
+                value={memberForm.nickname}
+                onChange={(event) =>
+                  setMemberForm((old) => ({
+                    ...old,
+                    nickname: event.target.value,
+                  }))
+                }
+              />
+            </Label>
+            <Label>
+              {t("dialogs.fields.teamRemark")}
+              <Input
+                value={memberForm.remark}
+                onChange={(event) =>
+                  setMemberForm((old) => ({
+                    ...old,
+                    remark: event.target.value,
+                  }))
+                }
+              />
+            </Label>
+            <Label>
+              {t("dialogs.fields.role")}
+              <NativeSelect
+                className="vx-input"
+                value={memberForm.roleId}
+                onChange={(event) =>
+                  setMemberForm((old) => ({
+                    ...old,
+                    roleId: event.target.value,
+                  }))
+                }
+              >
+                <option value="">{t("dialogs.fields.defaultRole")}</option>
+                {roles.map((role) => (
+                  <option key={role.id} value={role.id}>
+                    {role.roleName}
+                  </option>
+                ))}
+              </NativeSelect>
+            </Label>
           </DialogForm>
         ) : null}
 
         {resetOpen && selected ? (
           <DialogForm
             open
-            title={t('dialogs.reset.title')}
-            description={t('dialogs.reset.description', { name: selected.name })}
-            submitLabel={t('dialogs.actions.resetPassword')}
-            cancelLabel={t('dialogs.actions.cancel')}
+            title={t("dialogs.reset.title")}
+            description={t("dialogs.reset.description", {
+              name: selected.name,
+            })}
+            submitLabel={t("dialogs.actions.resetPassword")}
+            cancelLabel={t("dialogs.actions.cancel")}
             submitting={submitting}
             onOpenChange={(open) => {
               if (!open) setResetOpen(false);
             }}
             onSubmit={(event) => void submitResetPassword(event)}
           >
-              <Label>
-                {t('dialogs.fields.nextPassword')}
-                <Input
-                  type="password"
-                  value={passwordForm.nextPassword}
-                  onChange={(event) => setPasswordForm({ nextPassword: event.target.value })}
-                  minLength={6}
-                  required
-                />
-              </Label>
+            <Label>
+              {t("dialogs.fields.nextPassword")}
+              <Input
+                type="password"
+                value={passwordForm.nextPassword}
+                onChange={(event) =>
+                  setPasswordForm({ nextPassword: event.target.value })
+                }
+                minLength={6}
+                required
+              />
+            </Label>
           </DialogForm>
         ) : null}
 
         {unlinkOpen && selected ? (
           <DialogForm
             open
-            title={t('dialogs.unlink.title')}
-            description={t('dialogs.unlink.description', { name: selected.name })}
-            submitLabel={t('dialogs.actions.unlink')}
+            title={t("dialogs.unlink.title")}
+            description={t("dialogs.unlink.description", {
+              name: selected.name,
+            })}
+            submitLabel={t("dialogs.actions.unlink")}
             submitVariant="destructive"
-            cancelLabel={t('dialogs.actions.cancel')}
+            cancelLabel={t("dialogs.actions.cancel")}
             submitting={submitting}
             onOpenChange={(open) => {
               if (!open) setUnlinkOpen(false);
@@ -812,11 +1015,13 @@ export function MembersPage() {
         {bulkUnlinkOpen ? (
           <DialogForm
             open
-            title={t('dialogs.bulkUnlink.title')}
-            description={t('dialogs.bulkUnlink.description', { count: selectedCount })}
-            submitLabel={t('dialogs.actions.unlink')}
+            title={t("dialogs.bulkUnlink.title")}
+            description={t("dialogs.bulkUnlink.description", {
+              count: selectedCount,
+            })}
+            submitLabel={t("dialogs.actions.unlink")}
             submitVariant="destructive"
-            cancelLabel={t('dialogs.actions.cancel')}
+            cancelLabel={t("dialogs.actions.cancel")}
             submitting={submitting}
             onOpenChange={(open) => {
               if (!open) setBulkUnlinkOpen(false);
