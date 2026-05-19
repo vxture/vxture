@@ -37,6 +37,11 @@ export function encodePortalContext(ctx: PortalNavContext): string {
  *
  * @param search - URL 查询字符串，可带或不带前导 `?`
  * @returns 解析后的 PortalNavContext，或 null
+ *
+ * @security `returnTo` 字段仅验证类型，不验证 URL 合法性。
+ *   调用方在使用前**必须**自行校验：
+ *   1. 用 `new URL(returnTo)` 构造器确认合法 URL
+ *   2. 校验 origin 在白名单内，防止开放重定向
  */
 export function decodePortalContext(search: string): PortalNavContext | null {
   try {

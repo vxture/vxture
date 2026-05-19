@@ -39,8 +39,8 @@ export const LOCALE_CONFIGS: Record<Locale, LocaleConfig> = {
   },
   "en-US": {
     locale: "en-US",
-    displayName: "English (US)",
-    nativeName: "English (US)",
+    displayName: "English",
+    nativeName: "English",
     flag: "🇺🇸",
   },
 };
@@ -70,7 +70,4 @@ export const LOCALE_CONSTANTS = {
 
   /** HTML lang attribute */
   HTML_LANG_ATTRIBUTE: "lang",
-
-  /** Meta tag selector for content-language */
-  META_SELECTOR: 'meta[http-equiv="content-language"]',
 } as const;

@@ -14,7 +14,11 @@ function isDev(): boolean {
   const loc = (globalThis as Record<string, unknown>)["location"];
   if (typeof loc === "object" && loc !== null) {
     const hostname = String((loc as Record<string, unknown>)["hostname"] ?? "");
-    return hostname === "localhost" || hostname === "127.0.0.1";
+    return (
+      hostname === "localhost" ||
+      hostname === "127.0.0.1" ||
+      hostname === "[::1]"
+    );
   }
 
   // 默认返回 false

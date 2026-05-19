@@ -66,9 +66,7 @@ export class CrossDomainRouter {
   ): Promise<{ token: string; expiresIn: number }> {
     // 从 cookie 读取 access token
     const accessToken =
-      req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN] ??
-      req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN] ??
-      req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
+      req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN];
 
     if (!accessToken) {
       throw new UnauthorizedException("No active session");

@@ -50,24 +50,16 @@ export function deepMerge<T extends object>(target: T, source: Partial<T>): T {
 /**
  * 深度克隆对象。
  *
- * 支持：Date、Array、普通对象、原始类型。
- * 不支持：Map、Set、循环引用（超出当前平台需求范围）。
+ * 基于 structuredClone（Node 22+ / 现代浏览器原生），支持：
+ * Date、Array、Map、Set、ArrayBuffer、循环引用、普通对象、原始类型。
+ *
+ * 不支持：含 Function / DOM 节点的对象（抛出 DataCloneError，为预期行为）。
  *
  * @example
  * const clone = deepClone({ a: { b: 1 }, c: [1, 2] });
  */
 export function deepClone<T>(obj: T): T {
-  if (obj === null || typeof obj !== "object") return obj;
-  if (obj instanceof Date) return new Date(obj.getTime()) as unknown as T;
-  if (Array.isArray(obj)) return obj.map(deepClone) as unknown as T;
-
-  const clone = {} as T;
-  for (const key in obj) {
-    if (Object.prototype.hasOwnProperty.call(obj, key)) {
-      clone[key] = deepClone(obj[key]);
-    }
-  }
-  return clone;
+  return structuredClone(obj);
 }
 
 // ============================================================================
