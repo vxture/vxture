@@ -26,8 +26,8 @@ export const THEME_CONSTANTS = {
 
   /** Available themes */
   AVAILABLE_THEMES: [
-    { name: "system", displayName: "跟随系统", isDark: false },
-    { name: "light", displayName: "浅色", isDark: false },
-    { name: "dark", displayName: "深色", isDark: true },
+    { name: "system", displayName: "跟随系统", isExplicitDark: false },
+    { name: "light", displayName: "浅色", isExplicitDark: false },
+    { name: "dark", displayName: "深色", isExplicitDark: true },
   ],
 } as const;

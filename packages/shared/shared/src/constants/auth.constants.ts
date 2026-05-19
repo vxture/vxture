@@ -18,34 +18,10 @@ export const AUTH_CONSTANTS = {
     REFRESH_TOKEN: "vx_tenant_refresh_token",
   } as const,
 
-  /** Website-BFF HttpOnly cookie keys（兼容旧命名，值指向统一租户登录态） */
-  COOKIE_KEYS: {
-    ACCESS_TOKEN: "vx_tenant_access_token",
-    REFRESH_TOKEN: "vx_tenant_refresh_token",
-  } as const,
-
-  /** Console-BFF HttpOnly cookie keys（兼容旧命名，值指向统一租户登录态） */
-  CONSOLE_COOKIE_KEYS: {
-    ACCESS_TOKEN: "vx_tenant_access_token",
-    REFRESH_TOKEN: "vx_tenant_refresh_token",
-  } as const,
-
   /** Ruyin HttpOnly cookie keys（ruyin.ai 本域承载同一租户登录态） */
   RUYIN_COOKIE_KEYS: {
     ACCESS_TOKEN: "ry_access_token",
     REFRESH_TOKEN: "ry_refresh_token",
-  } as const,
-
-  /** Legacy cookie keys to read and clear during the auth naming migration. */
-  LEGACY_COOKIE_KEYS: {
-    WEBSITE: {
-      ACCESS_TOKEN: "vx_access_token",
-      REFRESH_TOKEN: "vx_refresh_token",
-    },
-    CONSOLE: {
-      ACCESS_TOKEN: "vx_console_access_token",
-      REFRESH_TOKEN: "vx_console_refresh_token",
-    },
   } as const,
 
   /** Session storage key prefix for server-side session adapters */

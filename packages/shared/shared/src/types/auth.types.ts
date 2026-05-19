@@ -17,6 +17,7 @@ export interface UserInfo {
   email?: string;
   phone?: string;
   permissions: string[];
+  /** Unix timestamp in milliseconds */
   lastLogin?: number;
 }
 
@@ -26,5 +27,6 @@ export interface UserInfo {
 export interface TokenData {
   token: string;
   refreshToken: string;
+  /** Token expiry duration in seconds */
   expiresIn: number;
 }

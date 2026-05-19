@@ -96,17 +96,6 @@ const TENANT_COOKIES = {
   refresh: AUTH_CONSTANTS.TENANT_COOKIE_KEYS.REFRESH_TOKEN,
 };
 
-const LEGACY_TENANT_COOKIES = [
-  {
-    access: AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN,
-    refresh: AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.REFRESH_TOKEN,
-  },
-  {
-    access: AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN,
-    refresh: AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.REFRESH_TOKEN,
-  },
-] as const;
-
 const ADMIN_COOKIES = {
   access: "vx_admin_access_token",
   refresh: "vx_admin_refresh_token",
@@ -187,30 +176,18 @@ function clearCookiesForSource(res: Response, source: LoginSource) {
   }
   if (source === "ruyin") {
     clearCookieGroup(res, [RUYIN_COOKIES], resolveRuyinCookieDomain());
-    clearCookieGroup(
-      res,
-      [TENANT_COOKIES, ...LEGACY_TENANT_COOKIES],
-      resolvePlatformCookieDomain(),
-    );
+    clearCookieGroup(res, [TENANT_COOKIES], resolvePlatformCookieDomain());
     return;
   }
 
-  clearCookieGroup(
-    res,
-    [TENANT_COOKIES, ...LEGACY_TENANT_COOKIES],
-    resolvePlatformCookieDomain(),
-  );
+  clearCookieGroup(res, [TENANT_COOKIES], resolvePlatformCookieDomain());
 }
 
 function readTenantCookie(
   req: Request,
   type: "access" | "refresh",
 ): string | undefined {
-  return (
-    req.cookies?.[TENANT_COOKIES[type]] ??
-    req.cookies?.[LEGACY_TENANT_COOKIES[0][type]] ??
-    req.cookies?.[LEGACY_TENANT_COOKIES[1][type]]
-  );
+  return req.cookies?.[TENANT_COOKIES[type]];
 }
 
 function readAccessToken(

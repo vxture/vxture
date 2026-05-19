@@ -50,7 +50,7 @@ export function middleware(request: NextRequest) {
   const localePrefix = resolveLocalePrefix(request.nextUrl.pathname);
   const isProtectedRoute = normalizedPath.startsWith("/dashboard");
   const hasSession = request.cookies.has(
-    AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN,
+    AUTH_CONSTANTS.TENANT_COOKIE_KEYS.REFRESH_TOKEN,
   );
 
   // 认证重定向（在 intl 处理之前）

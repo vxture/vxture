@@ -112,7 +112,7 @@ export class InternalServerError extends VxtureError {
     super(message, {
       ...metadata,
       status: 500,
-      code: metadata.code ?? "INTERNAL_ERROR",
+      code: metadata.code ?? "INTERNAL_SERVER_ERROR",
     });
     this.name = "InternalServerError";
   }
