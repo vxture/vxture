@@ -46,6 +46,7 @@ const LEGACY_SCALE_TOKEN_STYLE_PATHS = new Set(
   [
     "tokens-auth-controls-scale.css",
     "tokens-auth-experience-scale.css",
+    "tokens-auth-scale-core.css",
     "tokens-component-scale.css",
     "tokens-console-scale.css",
     "tokens-platform-access-scale.css",
@@ -54,8 +55,14 @@ const LEGACY_SCALE_TOKEN_STYLE_PATHS = new Set(
     "tokens-platform-layout-scale.css",
     "tokens-platform-models-scale.css",
     "tokens-platform-notifications-scale.css",
+    "tokens-platform-scale.css",
+    "tokens-platform-scale-core.css",
+    "tokens-platform-scale-layout.css",
     "tokens-platform-shell-scale.css",
     "tokens-platform-tenant-settings-scale.css",
+    "tokens-scale-flow.css",
+    "tokens-scale-px.css",
+    "tokens-scale-rem.css",
   ].map((name) => normalize(`${DS_ROOT}/src/styles/${name}`)),
 );
 const LEGACY_COMPONENT_METRIC_TOKEN_STYLE_PATHS = new Set(
@@ -1333,7 +1340,7 @@ function collectLegacyScaleTokenStyleViolations(sourceFiles) {
         violation(
           file,
           1,
-          "已收敛的叶子 scale token 文件不得恢复；请使用 tokens-auth-scale.css 或 tokens-platform-scale.css 的 core 尺度入口。",
+          "已清零的 scale bridge token 文件不得恢复；请在具体 token owner 中直接定义运行时值。",
           normalized,
         ),
       );
@@ -1349,7 +1356,7 @@ function collectLegacyScaleTokenStyleViolations(sourceFiles) {
         violation(
           file,
           item.line,
-          `${item.specifier} 指向已淘汰的叶子 scale token 文件；请改用 auth/platform core scale 或更具体的语义 token。`,
+          `${item.specifier} 指向已清零的 scale bridge token 文件；请直接使用具体 token owner 的运行时值。`,
           item.source,
         ),
       );
