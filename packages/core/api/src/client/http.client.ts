@@ -12,6 +12,7 @@
 import { Injectable, Logger, Inject } from "@nestjs/common";
 import { HttpService } from "@nestjs/axios";
 import { firstValueFrom } from "rxjs";
+import { isAxiosError } from "axios";
 import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import FormData from "form-data";
 
@@ -308,18 +309,4 @@ export class VxHttpClient {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function isAxiosError(err: unknown): err is {
-  response?: { status: number; data: unknown };
-  request?: unknown;
-  message: string;
-  isAxiosError: boolean;
-} {
-  return (
-    typeof err === "object" &&
-    err !== null &&
-    "isAxiosError" in err &&
-    (err as Record<string, unknown>)["isAxiosError"] === true
-  );
 }
