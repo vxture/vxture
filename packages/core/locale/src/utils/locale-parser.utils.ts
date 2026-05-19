@@ -91,5 +91,5 @@ export function parseCookieValue(
     .map((c) => c.trim())
     .find((c) => c.startsWith(`${key}=`));
 
-  return entry?.split("=")[1];
+  return entry?.slice(key.length + 1);
 }

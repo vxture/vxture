@@ -10,12 +10,26 @@
 
 import type { Locale } from "@vxture/shared";
 import { DEFAULT_LOCALE } from "@vxture/shared";
-import type { LocaleRequest } from "../types";
+import type { LocaleHeaders, LocaleRequest } from "../types";
 import {
   isSupportedLocale,
   normalizeLocale,
   parseCookieValue,
 } from "./locale-parser.utils";
+
+// Fetch API Headers have a .get() method; Express headers are plain objects.
+function getHeader(headers: LocaleHeaders, name: string): string | undefined {
+  if (typeof (headers as { get?: unknown }).get === "function") {
+    return (
+      (headers as { get(n: string): string | null | undefined }).get(name) ??
+      undefined
+    );
+  }
+  const val = (headers as Record<string, string | string[] | undefined>)[
+    name.toLowerCase()
+  ];
+  return Array.isArray(val) ? val[0] : val;
+}
 
 export function resolveLocale(request: LocaleRequest): Locale {
   // 1. Parsed cookie object (provided by Express/NestJS cookie-parser)
@@ -25,8 +39,7 @@ export function resolveLocale(request: LocaleRequest): Locale {
   }
 
   // 2. Fallback to raw Cookie header string
-  const cookieHeader =
-    request.headers.get("cookie") ?? request.headers.get("Cookie");
+  const cookieHeader = getHeader(request.headers, "cookie");
   if (cookieHeader) {
     const raw = parseCookieValue(cookieHeader, "NEXT_LOCALE");
     if (raw) {
@@ -36,9 +49,7 @@ export function resolveLocale(request: LocaleRequest): Locale {
   }
 
   // 3. Accept-Language header
-  const acceptLanguage =
-    request.headers.get("accept-language") ??
-    request.headers.get("Accept-Language");
+  const acceptLanguage = getHeader(request.headers, "accept-language");
   if (acceptLanguage) {
     const candidates = acceptLanguage.split(",").flatMap((l) => {
       const part = l.split(";").at(0)?.trim();
