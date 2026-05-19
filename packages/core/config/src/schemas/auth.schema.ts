@@ -20,6 +20,11 @@ export const authSchema = z.object({
     .string()
     .min(32, "JWT_SECRET must be at least 32 characters for security"),
 
+  /** Refresh token signing secret — must differ from JWT_SECRET to prevent cross-token forgery */
+  JWT_REFRESH_SECRET: z
+    .string()
+    .min(32, "JWT_REFRESH_SECRET must be at least 32 characters for security"),
+
   /** Access token expiration, supports vercel/ms format: 15m, 1h, 7d */
   JWT_ACCESS_EXPIRES_IN: z.string().default("8h"),
 
