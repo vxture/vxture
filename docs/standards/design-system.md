@@ -73,7 +73,7 @@ DS 已在 `@vxture/design-system/tokens` 暴露 `colors.semantic.ai*` 与 `gradi
 
 ## 5. Foundation 尺度、阴影与动效
 
-Foundation patch 已正式迁入 DS，临时 patch 文件不再保留为源码。`--vx-space-3xl/4xl`、`--vx-radius-xs/2xl/3xl`、`--vx-shadow-xs/xl/2xl/glow/focus-ring/focus-ring-ai`、`--vx-duration-*`、`--vx-ease-*`、`--vx-motion-*` 和 `--animate-vx-*` 由 `tokens-foundation.css` 统一维护，并通过 `tokens-theme-foundation.css` 映射为 Tailwind `vx-*` 工具能力。
+Foundation patch 已正式迁入 DS，临时 patch 文件不再保留为源码。`--vx-space-3xl/4xl`、`--vx-radius-xs/2xl/3xl`、`--vx-shadow-xs/xl/2xl/glow/focus-ring/focus-ring-ai`、`--vx-duration-*`、`--vx-ease-*`、`--vx-motion-*` 和 `--animate-vx-*` 由 `tokens-foundation-radius-space.css`、`tokens-foundation-shadow.css`、`tokens-foundation-motion.css` 与 `tokens-foundation-type-layout.css` 分层维护，并通过 `tokens-theme-foundation.css` 映射为 Tailwind `vx-*` 工具能力。
 
 应用端只能消费这些语义 token、Tailwind `vx-*` 映射或 DS 组件封装；不得在应用 CSS 中重新定义阴影、圆角、动效曲线、动画关键帧或发光基线。`--vx-shadow-glow`、`--vx-motion-ai-pop`、`--animate-vx-shimmer` 属于 AI / 生成态视觉语义，只能用于 AI 入口、生成中状态、模型徽章和 DS 授权的 AI 组件组装。
 
