@@ -75,7 +75,7 @@ export function middleware(request: NextRequest) {
 
   if (!isPublic) {
     const hasSession = request.cookies.has(
-      AUTH_CONSTANTS.CONSOLE_COOKIE_KEYS.REFRESH_TOKEN,
+      AUTH_CONSTANTS.TENANT_COOKIE_KEYS.REFRESH_TOKEN,
     );
 
     if (!hasSession) {
