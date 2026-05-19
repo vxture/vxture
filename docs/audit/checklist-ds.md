@@ -583,6 +583,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 43. 已完成：Component metric bridge 全量清零；一次性解析 46 个 `tokens-*` runtime token 文件中的 1017 处 `var(--vx-component-metric-*)`，将其落为 token owner 内的实际运行时值。当前 `var(--vx-component-metric-*)` 命中为 0；本批只改变 token runtime 值源表达方式，不改变公共入口和消费者选择器。
 44. 已完成：Component metric 回流守卫；新增 `ds/no-runtime-component-metric-var-usage`，禁止 DS 样式层重新通过 `var()` 消费 `--vx-component-metric-*` 兜底 token。至此 scale bridge 与 component metric bridge 两类运行时 var 债务均进入 0 baseline 回流拦截。
 45. 已完成：Component metric 批次验收；`pnpm lint:design`、`node --check scripts/guardrails/check-design-system.mjs`、`pnpm --filter @vxture/design-system lint`、`pnpm --filter @vxture/design-system type-check`、`pnpm --filter @vxture/shared build`、`pnpm --filter @vxture/design-system build`、`git diff --check` 均通过；当前 scale bridge 与 component metric bridge 命中均为 0。
+46. 已完成：Raw color / effect 口径复核；非 token owner raw color 命中为 0，raw color 仅保留在 `tokens-colors-*`、`tokens-dark-*`、shadow/effect 等 runtime token owner 内。粗略 effect 扫描中的 `transition`、`box-shadow` 命中主要来自已 token 化的多行声明或 token owner 定义，现有 `ds/no-ds-style-hardcoded-shadow`、`ds/no-ds-style-hardcoded-motion` 与已锁定 effect 规则继续负责回流拦截；本批不做样式实现改动。
 
 ## 后续验收清单
 
