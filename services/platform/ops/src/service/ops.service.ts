@@ -1,5 +1,10 @@
-import { Injectable, NotFoundException, ConflictException, UnauthorizedException } from '@nestjs/common';
-import { PgOpsRepository } from '../repository/pg-ops.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { PgOpsRepository } from "../repository/pg-ops.repository";
 import type {
   AdminRecord,
   AdminView,
@@ -17,7 +22,7 @@ import type {
   UpsertGovernanceInput,
   AnnouncementRecord,
   ListAnnouncementsParams,
-} from '../types/ops.types';
+} from "../types/ops.types";
 
 @Injectable()
 export class OpsService {
@@ -34,7 +39,7 @@ export class OpsService {
   }
 
   async recordLoginFailure(id: string): Promise<void> {
-    return this.repo.recordLogin(id, '', false);
+    return this.repo.recordLogin(id, "", false);
   }
 
   // ── Admin CRUD ──────────────────────────────────────────────────────────
@@ -61,7 +66,7 @@ export class OpsService {
   async updateAdmin(id: string, input: UpdateAdminInput): Promise<AdminView> {
     const existing = await this.repo.findAdminById(id);
     if (!existing) throw new NotFoundException(`运营账号 ${id} 不存在`);
-    if (existing.isSystem) throw new ConflictException('系统内置账号不可修改');
+    if (existing.isSystem) throw new ConflictException("系统内置账号不可修改");
 
     const result = await this.repo.updateAdmin(id, input);
     const { passwordHash: _ph, ...view } = result!;
@@ -69,7 +74,10 @@ export class OpsService {
     return view;
   }
 
-  async updateAdminPassword(id: string, newPasswordHash: string): Promise<void> {
+  async updateAdminPassword(
+    id: string,
+    newPasswordHash: string,
+  ): Promise<void> {
     const existing = await this.repo.findAdminById(id);
     if (!existing) throw new NotFoundException(`运营账号 ${id} 不存在`);
     return this.repo.updateAdminPassword(id, newPasswordHash);
@@ -78,7 +86,7 @@ export class OpsService {
   async deleteAdmin(id: string, operatorId?: string): Promise<void> {
     const existing = await this.repo.findAdminById(id);
     if (!existing) throw new NotFoundException(`运营账号 ${id} 不存在`);
-    if (existing.isSystem) throw new ConflictException('系统内置账号不可删除');
+    if (existing.isSystem) throw new ConflictException("系统内置账号不可删除");
     return this.repo.softDeleteAdmin(id, operatorId);
   }
 
@@ -98,10 +106,15 @@ export class OpsService {
     return this.repo.createRole(input);
   }
 
-  async setRolePermissions(roleId: string, permissionIds: string[], operatorId: string): Promise<void> {
+  async setRolePermissions(
+    roleId: string,
+    permissionIds: string[],
+    operatorId: string,
+  ): Promise<void> {
     const role = await this.repo.getRoleById(roleId);
     if (!role) throw new NotFoundException(`角色 ${roleId} 不存在`);
-    if (role.isSystem) throw new ConflictException('系统内置角色权限不可手动修改');
+    if (role.isSystem)
+      throw new ConflictException("系统内置角色权限不可手动修改");
     return this.repo.setRolePermissions(roleId, permissionIds, operatorId);
   }
 
@@ -125,23 +138,33 @@ export class OpsService {
     return record;
   }
 
-  async updateSetting(key: string, value: string, updatedBy?: string): Promise<SettingRecord> {
+  async updateSetting(
+    key: string,
+    value: string,
+    updatedBy?: string,
+  ): Promise<SettingRecord> {
     return this.repo.upsertSetting(key, value, updatedBy);
   }
 
   // ── Governance ───────────────────────────────────────────────────────────
 
-  async listGovernance(params: ListGovernanceParams): Promise<{ items: GovernanceRecord[]; total: number }> {
+  async listGovernance(
+    params: ListGovernanceParams,
+  ): Promise<{ items: GovernanceRecord[]; total: number }> {
     return this.repo.listGovernance(params);
   }
 
-  async upsertGovernance(input: UpsertGovernanceInput): Promise<GovernanceRecord> {
+  async upsertGovernance(
+    input: UpsertGovernanceInput,
+  ): Promise<GovernanceRecord> {
     return this.repo.upsertGovernance(input);
   }
 
   // ── Announcements ────────────────────────────────────────────────────────
 
-  async listAnnouncements(params: ListAnnouncementsParams): Promise<{ items: AnnouncementRecord[]; total: number }> {
+  async listAnnouncements(
+    params: ListAnnouncementsParams,
+  ): Promise<{ items: AnnouncementRecord[]; total: number }> {
     return this.repo.listAnnouncements(params);
   }
 

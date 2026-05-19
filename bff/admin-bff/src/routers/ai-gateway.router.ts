@@ -11,14 +11,14 @@ import {
   Query,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
+} from "@nestjs/common";
+import type { Request } from "express";
 
 import type {
   AiModelGrantRecord,
   AiModelRecord,
   RequestContext,
-} from '../types/console.types';
+} from "../types/console.types";
 
 type JsonObject = Record<string, unknown>;
 
@@ -26,170 +26,200 @@ interface GatewayErrorBody {
   message?: string | string[];
 }
 
-@Controller('api/ai-gateway')
+@Controller("api/ai-gateway")
 export class AiGatewayRouter {
-  @Get('models')
+  @Get("models")
   listModels(
     @Req() req: Request & RequestContext,
-    @Query('includeInactive') includeInactive?: string,
+    @Query("includeInactive") includeInactive?: string,
   ): Promise<AiModelRecord[]> {
     assertCanManageModels(req);
     return gatewayRequest<AiModelRecord[]>(
-      `/ai/gateway/admin/models?includeInactive=${includeInactive === 'false' ? 'false' : 'true'}`,
+      `/ai/gateway/admin/models?includeInactive=${includeInactive === "false" ? "false" : "true"}`,
     );
   }
 
-  @Post('models')
+  @Post("models")
   createModel(
     @Req() req: Request & RequestContext,
     @Body() body: JsonObject,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>('/ai/gateway/admin/models', {
-      method: 'POST',
+    return gatewayRequest<AiModelRecord>("/ai/gateway/admin/models", {
+      method: "POST",
       body,
     });
   }
 
-  @Put('models/:modelId')
+  @Put("models/:modelId")
   updateModel(
     @Req() req: Request & RequestContext,
-    @Param('modelId') modelId: string,
+    @Param("modelId") modelId: string,
     @Body() body: JsonObject,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(`/ai/gateway/admin/models/${encodeURIComponent(modelId)}`, {
-      method: 'PUT',
-      body,
-    });
+    return gatewayRequest<AiModelRecord>(
+      `/ai/gateway/admin/models/${encodeURIComponent(modelId)}`,
+      {
+        method: "PUT",
+        body,
+      },
+    );
   }
 
-  @Post('models/:modelId/activate')
+  @Post("models/:modelId/activate")
   activateModel(
     @Req() req: Request & RequestContext,
-    @Param('modelId') modelId: string,
+    @Param("modelId") modelId: string,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(`/ai/gateway/admin/models/${encodeURIComponent(modelId)}/activate`, {
-      method: 'POST',
-    });
+    return gatewayRequest<AiModelRecord>(
+      `/ai/gateway/admin/models/${encodeURIComponent(modelId)}/activate`,
+      {
+        method: "POST",
+      },
+    );
   }
 
-  @Post('models/:modelId/deactivate')
+  @Post("models/:modelId/deactivate")
   deactivateModel(
     @Req() req: Request & RequestContext,
-    @Param('modelId') modelId: string,
+    @Param("modelId") modelId: string,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(`/ai/gateway/admin/models/${encodeURIComponent(modelId)}/deactivate`, {
-      method: 'POST',
-    });
+    return gatewayRequest<AiModelRecord>(
+      `/ai/gateway/admin/models/${encodeURIComponent(modelId)}/deactivate`,
+      {
+        method: "POST",
+      },
+    );
   }
 
-  @Delete('models/:modelId')
+  @Delete("models/:modelId")
   deleteModel(
     @Req() req: Request & RequestContext,
-    @Param('modelId') modelId: string,
+    @Param("modelId") modelId: string,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(`/ai/gateway/admin/models/${encodeURIComponent(modelId)}`, {
-      method: 'DELETE',
-    });
+    return gatewayRequest<AiModelRecord>(
+      `/ai/gateway/admin/models/${encodeURIComponent(modelId)}`,
+      {
+        method: "DELETE",
+      },
+    );
   }
 
-  @Get('grants')
+  @Get("grants")
   listGrants(
     @Req() req: Request & RequestContext,
-    @Query('tenantId') tenantId?: string,
-    @Query('modelId') modelId?: string,
+    @Query("tenantId") tenantId?: string,
+    @Query("modelId") modelId?: string,
   ): Promise<AiModelGrantRecord[]> {
     assertCanManageModels(req);
 
     const params = new URLSearchParams();
-    if (tenantId) params.set('tenantId', tenantId);
-    if (modelId) params.set('modelId', modelId);
+    if (tenantId) params.set("tenantId", tenantId);
+    if (modelId) params.set("modelId", modelId);
 
-    return gatewayRequest<AiModelGrantRecord[]>(`/ai/gateway/admin/grants${params.size ? `?${params.toString()}` : ''}`);
+    return gatewayRequest<AiModelGrantRecord[]>(
+      `/ai/gateway/admin/grants${params.size ? `?${params.toString()}` : ""}`,
+    );
   }
 
-  @Post('grants')
+  @Post("grants")
   createGrant(
     @Req() req: Request & RequestContext,
     @Body() body: JsonObject,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>('/ai/gateway/admin/grants', {
-      method: 'POST',
+    return gatewayRequest<AiModelGrantRecord>("/ai/gateway/admin/grants", {
+      method: "POST",
       body,
     });
   }
 
-  @Put('grants/:grantId')
+  @Put("grants/:grantId")
   updateGrant(
     @Req() req: Request & RequestContext,
-    @Param('grantId') grantId: string,
+    @Param("grantId") grantId: string,
     @Body() body: JsonObject,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>(`/ai/gateway/admin/grants/${encodeURIComponent(grantId)}`, {
-      method: 'PUT',
-      body,
-    });
+    return gatewayRequest<AiModelGrantRecord>(
+      `/ai/gateway/admin/grants/${encodeURIComponent(grantId)}`,
+      {
+        method: "PUT",
+        body,
+      },
+    );
   }
 
-  @Post('grants/:grantId/activate')
+  @Post("grants/:grantId/activate")
   activateGrant(
     @Req() req: Request & RequestContext,
-    @Param('grantId') grantId: string,
+    @Param("grantId") grantId: string,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>(`/ai/gateway/admin/grants/${encodeURIComponent(grantId)}/activate`, {
-      method: 'POST',
-    });
+    return gatewayRequest<AiModelGrantRecord>(
+      `/ai/gateway/admin/grants/${encodeURIComponent(grantId)}/activate`,
+      {
+        method: "POST",
+      },
+    );
   }
 
-  @Delete('grants/:grantId')
+  @Delete("grants/:grantId")
   deactivateGrant(
     @Req() req: Request & RequestContext,
-    @Param('grantId') grantId: string,
+    @Param("grantId") grantId: string,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>(`/ai/gateway/admin/grants/${encodeURIComponent(grantId)}`, {
-      method: 'DELETE',
-    });
+    return gatewayRequest<AiModelGrantRecord>(
+      `/ai/gateway/admin/grants/${encodeURIComponent(grantId)}`,
+      {
+        method: "DELETE",
+      },
+    );
   }
 }
 
 function assertCanManageModels(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
-  if (req.capabilities && !req.capabilities.includes('platform.model.manage')) {
-    throw new ForbiddenException('Missing platform.model.manage capability');
+  if (req.capabilities && !req.capabilities.includes("platform.model.manage")) {
+    throw new ForbiddenException("Missing platform.model.manage capability");
   }
 }
 
 async function gatewayRequest<TResponse>(
   path: string,
-  options: { method?: 'GET' | 'POST' | 'PUT' | 'DELETE'; body?: JsonObject } = {},
+  options: {
+    method?: "GET" | "POST" | "PUT" | "DELETE";
+    body?: JsonObject;
+  } = {},
 ): Promise<TResponse> {
   let response: Response;
 
   try {
     response = await fetch(`${gatewayBaseUrl()}${path}`, {
-      method: options.method ?? 'GET',
-      ...(options.body ? { headers: { 'content-type': 'application/json' } } : {}),
+      method: options.method ?? "GET",
+      ...(options.body
+        ? { headers: { "content-type": "application/json" } }
+        : {}),
       ...(options.body ? { body: JSON.stringify(options.body) } : {}),
     });
   } catch {
-    throw new BadGatewayException('AI Gateway is unavailable');
+    throw new BadGatewayException("AI Gateway is unavailable");
   }
 
   const responseText = await response.text();
 
   if (!response.ok) {
-    throw new BadGatewayException(parseGatewayError(responseText, response.status));
+    throw new BadGatewayException(
+      parseGatewayError(responseText, response.status),
+    );
   }
 
   if (!responseText.trim()) {
@@ -200,7 +230,9 @@ async function gatewayRequest<TResponse>(
 }
 
 function gatewayBaseUrl(): string {
-  return (process.env.AI_GATEWAY_URL ?? 'http://localhost:3100').trim().replace(/\/+$/, '');
+  return (process.env.AI_GATEWAY_URL ?? "http://localhost:3100")
+    .trim()
+    .replace(/\/+$/, "");
 }
 
 function parseGatewayError(responseText: string, status: number): string {
@@ -211,7 +243,9 @@ function parseGatewayError(responseText: string, status: number): string {
   try {
     const parsed = JSON.parse(responseText) as GatewayErrorBody;
     if (Array.isArray(parsed.message)) {
-      return parsed.message[0] ?? `AI Gateway request failed with status ${status}`;
+      return (
+        parsed.message[0] ?? `AI Gateway request failed with status ${status}`
+      );
     }
 
     return parsed.message ?? `AI Gateway request failed with status ${status}`;

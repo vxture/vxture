@@ -18,7 +18,10 @@ export interface SectionNavItem {
   readonly meta?: React.ReactNode;
 }
 
-export interface SectionNavProps extends Omit<React.HTMLAttributes<HTMLElement>, "onSelect"> {
+export interface SectionNavProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  "onSelect"
+> {
   readonly items: readonly SectionNavItem[];
   readonly activeKey: string;
   readonly onSelect?: (key: string) => void;
@@ -37,7 +40,12 @@ const SectionNav = React.forwardRef<HTMLElement, SectionNavProps>(
     ref,
   ) {
     return (
-      <nav ref={ref} className={cn("vx-section-nav", className)} aria-label={ariaLabel} {...props}>
+      <nav
+        ref={ref}
+        className={cn("vx-section-nav", className)}
+        aria-label={ariaLabel}
+        {...props}
+      >
         {items.map((item) => {
           const isActive = item.key === activeKey;
 
@@ -45,14 +53,19 @@ const SectionNav = React.forwardRef<HTMLElement, SectionNavProps>(
             <Button
               key={item.key}
               variant="ghost"
-              className={cn("vx-section-nav__item", isActive && "vx-section-nav__item--active")}
+              className={cn(
+                "vx-section-nav__item",
+                isActive && "vx-section-nav__item--active",
+              )}
               onClick={() => onSelect?.(item.key)}
             >
               <div className="vx-section-nav__copy">
                 <strong>{item.label}</strong>
                 {item.description ? <span>{item.description}</span> : null}
               </div>
-              {item.meta ? <div className="vx-section-nav__meta">{item.meta}</div> : null}
+              {item.meta ? (
+                <div className="vx-section-nav__meta">{item.meta}</div>
+              ) : null}
             </Button>
           );
         })}

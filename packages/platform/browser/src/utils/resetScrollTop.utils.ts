@@ -15,14 +15,16 @@
 /**
  * 滚动行为类型
  */
-export type ScrollBehavior = 'auto' | 'smooth' | 'instant';
+export type ScrollBehavior = "auto" | "smooth" | "instant";
 
 /**
  * 重置窗口滚动到顶部
  * @param behavior - 滚动行为
  */
-export const resetWindowScrollTop = (behavior: ScrollBehavior = 'instant'): void => {
-  if (typeof window !== 'undefined') {
+export const resetWindowScrollTop = (
+  behavior: ScrollBehavior = "instant",
+): void => {
+  if (typeof window !== "undefined") {
     window.scrollTo({ top: 0, behavior });
   }
 };

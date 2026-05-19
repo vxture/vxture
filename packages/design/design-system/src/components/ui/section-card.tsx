@@ -34,7 +34,9 @@ export function SectionCard({
       <CardHeader className="vx-section-card__header">
         <div>
           <CardTitle className="vx-card-title">{title}</CardTitle>
-          {description ? <CardDescription>{description}</CardDescription> : null}
+          {description ? (
+            <CardDescription>{description}</CardDescription>
+          ) : null}
         </div>
         {action}
       </CardHeader>

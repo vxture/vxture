@@ -13,13 +13,13 @@
  * @date 2026-04-30
  */
 
-import { Module } from '@nestjs/common';
-import { MessageRepository } from '../storage/message.repository';
-import { ConfirmController } from './confirm.controller';
-import { ConfirmService } from './confirm.service';
+import { Module } from "@nestjs/common";
+import { MessageRepository } from "../storage/message.repository";
+import { ConfirmController } from "./confirm.controller";
+import { ConfirmService } from "./confirm.service";
 
 @Module({
   controllers: [ConfirmController],
-  providers:   [ConfirmService, MessageRepository],
+  providers: [ConfirmService, MessageRepository],
 })
 export class ConfirmModule {}

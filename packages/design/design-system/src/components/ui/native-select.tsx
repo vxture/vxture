@@ -10,16 +10,17 @@ import { cn } from "../../utils/cn";
 
 export interface NativeSelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {}
 
-export const NativeSelect = React.forwardRef<HTMLSelectElement, NativeSelectProps>(
-  function NativeSelect({ className, ...props }, ref) {
-    return (
-      <select
-        ref={ref}
-        className={cn("vx-input vx-select-trigger", className)}
-        {...props}
-      />
-    );
-  },
-);
+export const NativeSelect = React.forwardRef<
+  HTMLSelectElement,
+  NativeSelectProps
+>(function NativeSelect({ className, ...props }, ref) {
+  return (
+    <select
+      ref={ref}
+      className={cn("vx-input vx-select-trigger", className)}
+      {...props}
+    />
+  );
+});
 
 NativeSelect.displayName = "NativeSelect";

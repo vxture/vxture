@@ -8,4 +8,4 @@ export {
   extractSubdomain,
   tenantKey,
   extractFromTenantKey,
-} from './tenant.utils';
+} from "./tenant.utils";

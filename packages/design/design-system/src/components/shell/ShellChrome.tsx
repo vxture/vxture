@@ -1,9 +1,21 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { LOCALE_CONFIGS, SUPPORTED_LOCALES, type Locale, type Theme } from "@vxture/shared";
+import {
+  LOCALE_CONFIGS,
+  SUPPORTED_LOCALES,
+  type Locale,
+  type Theme,
+} from "@vxture/shared";
 import { Icon } from "../../icons";
 import type { IconName } from "../../icons";
 import { cn } from "../../utils";
-import { Avatar, AvatarFallback, AvatarImage, Popover, PopoverContent, PopoverTrigger } from "../ui";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../ui";
 import { useFullscreen } from "../layout/fullscreen";
 import type { FullscreenMode } from "../../types";
 import type { Density } from "../../density";
@@ -165,12 +177,14 @@ export interface ShellLegalFooterProps {
   linksClassName?: string | undefined;
 }
 
-const DEFAULT_LOCALE_OPTIONS: LocaleSelectOption[] = SUPPORTED_LOCALES.map((locale) => ({
-  locale,
-  nativeName: LOCALE_CONFIGS[locale].nativeName,
-  label: LOCALE_CONFIGS[locale].displayName,
-  flag: LOCALE_CONFIGS[locale].flag,
-}));
+const DEFAULT_LOCALE_OPTIONS: LocaleSelectOption[] = SUPPORTED_LOCALES.map(
+  (locale) => ({
+    locale,
+    nativeName: LOCALE_CONFIGS[locale].nativeName,
+    label: LOCALE_CONFIGS[locale].displayName,
+    flag: LOCALE_CONFIGS[locale].flag,
+  }),
+);
 
 const DEFAULT_LEGAL_LINKS: ShellLegalFooterLink[] = [
   { href: "/legal/terms", label: "服务条款" },
@@ -178,11 +192,27 @@ const DEFAULT_LEGAL_LINKS: ShellLegalFooterLink[] = [
   { href: "/legal/cookies", label: "Cookie 使用政策" },
 ];
 
-const THEME_OPTIONS: readonly ShellThemePreference[] = ["system", "light", "dark"];
-const DENSITY_OPTIONS: readonly Density[] = ["compact", "default", "comfortable"];
-const FONT_SIZE_OPTIONS: readonly ShellFontSizePreference[] = ["small", "default", "large"];
+const THEME_OPTIONS: readonly ShellThemePreference[] = [
+  "system",
+  "light",
+  "dark",
+];
+const DENSITY_OPTIONS: readonly Density[] = [
+  "compact",
+  "default",
+  "comfortable",
+];
+const FONT_SIZE_OPTIONS: readonly ShellFontSizePreference[] = [
+  "small",
+  "default",
+  "large",
+];
 
-export function LocaleSelectPanel({ activeLocale, options = DEFAULT_LOCALE_OPTIONS, onSelect }: LocaleSelectPanelProps) {
+export function LocaleSelectPanel({
+  activeLocale,
+  options = DEFAULT_LOCALE_OPTIONS,
+  onSelect,
+}: LocaleSelectPanelProps) {
   return (
     <div className="vx-locale-panel" role="menu">
       {options.map((option) => {
@@ -196,12 +226,26 @@ export function LocaleSelectPanel({ activeLocale, options = DEFAULT_LOCALE_OPTIO
             className={`vx-locale-option${active ? " vx-locale-option--active" : ""}`}
             onClick={() => onSelect(option.locale)}
           >
-            {option.flag ? <span className="vx-locale-option__flag" aria-hidden="true">{option.flag}</span> : null}
+            {option.flag ? (
+              <span className="vx-locale-option__flag" aria-hidden="true">
+                {option.flag}
+              </span>
+            ) : null}
             <span className="vx-locale-option__text">
-              <strong>{option.nativeName ?? option.label ?? option.locale}</strong>
-              {option.label && option.label !== option.nativeName ? <small>{option.label}</small> : null}
+              <strong>
+                {option.nativeName ?? option.label ?? option.locale}
+              </strong>
+              {option.label && option.label !== option.nativeName ? (
+                <small>{option.label}</small>
+              ) : null}
             </span>
-            {active ? <Icon name="check" size="sm" className="vx-locale-option__check" /> : null}
+            {active ? (
+              <Icon
+                name="check"
+                size="sm"
+                className="vx-locale-option__check"
+              />
+            ) : null}
           </button>
         );
       })}
@@ -219,7 +263,11 @@ export function ShellBrand({
   labelClassName,
 }: ShellBrandProps) {
   return (
-    <a href={href} className={cn("vx-shell-brand", className)} aria-label={typeof label === "string" ? label : undefined}>
+    <a
+      href={href}
+      className={cn("vx-shell-brand", className)}
+      aria-label={typeof label === "string" ? label : undefined}
+    >
       {logoSrc ? (
         <img
           src={logoSrc}
@@ -231,7 +279,9 @@ export function ShellBrand({
           draggable={false}
         />
       ) : null}
-      <span className={cn("vx-shell-brand__label", labelClassName)}>{label}</span>
+      <span className={cn("vx-shell-brand__label", labelClassName)}>
+        {label}
+      </span>
     </a>
   );
 }
@@ -255,7 +305,12 @@ export function ShellIconButton({
       aria-pressed={active || undefined}
       disabled={disabled}
       onClick={onClick}
-      className={cn("vx-shell-tool-button", active && "vx-shell-tool-button--active", active && activeClassName, className)}
+      className={cn(
+        "vx-shell-tool-button",
+        active && "vx-shell-tool-button--active",
+        active && activeClassName,
+        className,
+      )}
     >
       {children ?? <Icon name={icon} size="sm" className={iconClassName} />}
     </button>
@@ -312,7 +367,14 @@ export function ShellLocaleSwitcher({
         onClick={() => setOpen((value) => !value)}
       />
       {open ? (
-        <div className={cn("vx-shell-locale-popover", `vx-shell-locale-popover--${align}`, popoverClassName)} aria-label={panelLabel}>
+        <div
+          className={cn(
+            "vx-shell-locale-popover",
+            `vx-shell-locale-popover--${align}`,
+            popoverClassName,
+          )}
+          aria-label={panelLabel}
+        >
           <LocaleSelectPanel
             activeLocale={currentLocale}
             options={options}
@@ -338,7 +400,8 @@ export function ShellThemeToggle({
 }: ShellThemeToggleProps) {
   const activeTheme = currentTheme === "dark" ? "dark" : "light";
   const nextTheme = activeTheme === "dark" ? "light" : "dark";
-  const resolvedLabel = buttonLabel ?? (nextTheme === "dark" ? darkLabel : lightLabel);
+  const resolvedLabel =
+    buttonLabel ?? (nextTheme === "dark" ? darkLabel : lightLabel);
 
   return (
     <ShellIconButton
@@ -362,8 +425,15 @@ export function ShellFullscreenToggle({
   activeClassName,
   getTargetElement,
 }: ShellFullscreenToggleProps) {
-  const { enter, exit, isFullscreen, mode: activeMode, targetId: activeTargetId } = useFullscreen();
-  const active = isFullscreen && activeTargetId === targetId && activeMode === mode;
+  const {
+    enter,
+    exit,
+    isFullscreen,
+    mode: activeMode,
+    targetId: activeTargetId,
+  } = useFullscreen();
+  const active =
+    isFullscreen && activeTargetId === targetId && activeMode === mode;
 
   return (
     <ShellIconButton
@@ -378,7 +448,9 @@ export function ShellFullscreenToggle({
           return;
         }
 
-        const target = getTargetElement?.() ?? (typeof document !== "undefined" ? document.documentElement : null);
+        const target =
+          getTargetElement?.() ??
+          (typeof document !== "undefined" ? document.documentElement : null);
         if (target) {
           enter(targetId, target, { mode, lockScroll });
         }
@@ -404,17 +476,26 @@ export function ShellPreferencePanel({
 }: ShellPreferencePanelProps) {
   return (
     <div className={cn("vx-shell-preferences", className)}>
-      {labels?.title ? <p className="vx-shell-preferences__title">{labels.title}</p> : null}
+      {labels?.title ? (
+        <p className="vx-shell-preferences__title">{labels.title}</p>
+      ) : null}
       <ShellPreferenceRow icon="globe" label={labels?.locale}>
         <div className="vx-shell-preferences__select-wrap">
-          <select className="vx-shell-preferences__select" value={locale} onChange={(event) => onLocaleChange(event.target.value as Locale)}>
+          <select
+            className="vx-shell-preferences__select"
+            value={locale}
+            onChange={(event) => onLocaleChange(event.target.value as Locale)}
+          >
             {localeOptions.map((option) => (
               <option key={option.locale} value={option.locale}>
                 {option.nativeName ?? option.label ?? option.locale}
               </option>
             ))}
           </select>
-          <Icon name="chevron-down" className="vx-shell-preferences__select-icon" />
+          <Icon
+            name="chevron-down"
+            className="vx-shell-preferences__select-icon"
+          />
         </div>
       </ShellPreferenceRow>
 
@@ -489,24 +570,38 @@ export function ShellUserMenu({
           title={openLabel}
         >
           <ShellUserAvatar user={user} />
-          {online ? <span className={cn("vx-shell-user-trigger__status", statusClassName)} /> : null}
+          {online ? (
+            <span
+              className={cn("vx-shell-user-trigger__status", statusClassName)}
+            />
+          ) : null}
         </button>
       </PopoverTrigger>
 
-      <PopoverContent align={align} sideOffset={sideOffset} className={cn("vx-shell-user-menu", contentClassName)}>
+      <PopoverContent
+        align={align}
+        sideOffset={sideOffset}
+        className={cn("vx-shell-user-menu", contentClassName)}
+      >
         <div className="vx-shell-user-menu__profile">
           <ShellUserAvatar user={user} size="lg" />
           <div className="vx-shell-user-menu__identity">
             <p className="vx-shell-user-menu__name">{user.displayName}</p>
-            {user.uniqueLine ? <p className="vx-shell-user-menu__line">{user.uniqueLine}</p> : null}
-            {user.meta ? <p className="vx-shell-user-menu__meta">{user.meta}</p> : null}
+            {user.uniqueLine ? (
+              <p className="vx-shell-user-menu__line">{user.uniqueLine}</p>
+            ) : null}
+            {user.meta ? (
+              <p className="vx-shell-user-menu__meta">{user.meta}</p>
+            ) : null}
           </div>
         </div>
 
         {user.badges && user.badges.length > 0 ? (
           <div className="vx-shell-user-menu__badges">
             {user.badges.map((badge) => (
-              <span key={badge.key} className="vx-shell-user-badge">{badge.label}</span>
+              <span key={badge.key} className="vx-shell-user-badge">
+                {badge.label}
+              </span>
             ))}
           </div>
         ) : null}
@@ -523,7 +618,10 @@ export function ShellUserMenu({
                   portalReturn.onReturn();
                 }}
               >
-                <Icon name="arrow-left" className="vx-shell-user-menu__action-icon" />
+                <Icon
+                  name="arrow-left"
+                  className="vx-shell-user-menu__action-icon"
+                />
                 <span>{portalReturn.label}</span>
               </button>
               {portalReturn.onDismiss ? (
@@ -562,7 +660,12 @@ export function ShellUserMenu({
                     await action.onClick();
                   }}
                 >
-                  {action.icon ? <Icon name={action.icon} className="vx-shell-user-menu__action-icon" /> : null}
+                  {action.icon ? (
+                    <Icon
+                      name={action.icon}
+                      className="vx-shell-user-menu__action-icon"
+                    />
+                  ) : null}
                   {action.label}
                 </button>
               ))}
@@ -586,7 +689,10 @@ export function ShellLegalFooter({
     <footer className={cn("vx-shell-legal-footer", className)}>
       <div className={cn("vx-shell-legal-footer__inner", innerClassName)}>
         <span>{copyright}</span>
-        <nav className={cn("vx-shell-legal-footer__links", linksClassName)} aria-label={legalLabel}>
+        <nav
+          className={cn("vx-shell-legal-footer__links", linksClassName)}
+          aria-label={legalLabel}
+        >
           {links.map((link) => (
             <a key={link.href} href={link.href}>
               {link.label}
@@ -598,21 +704,53 @@ export function ShellLegalFooter({
   );
 }
 
-function ShellUserAvatar({ user, size = "md" }: { user: ShellUserMenuUser; size?: "md" | "lg" }) {
-  const fallback = user.avatarFallback ?? user.displayName.slice(0, 2).toUpperCase();
+function ShellUserAvatar({
+  user,
+  size = "md",
+}: {
+  user: ShellUserMenuUser;
+  size?: "md" | "lg";
+}) {
+  const fallback =
+    user.avatarFallback ?? user.displayName.slice(0, 2).toUpperCase();
 
   return (
-    <Avatar className={cn("vx-shell-user-avatar", size === "lg" && "vx-shell-user-avatar--lg")}>
-      {user.avatarSrc ? <AvatarImage className="vx-shell-user-avatar__image" src={user.avatarSrc} alt={user.avatarAlt ?? user.displayName} /> : null}
-      <AvatarFallback className="vx-shell-user-avatar__fallback">{fallback}</AvatarFallback>
+    <Avatar
+      className={cn(
+        "vx-shell-user-avatar",
+        size === "lg" && "vx-shell-user-avatar--lg",
+      )}
+    >
+      {user.avatarSrc ? (
+        <AvatarImage
+          className="vx-shell-user-avatar__image"
+          src={user.avatarSrc}
+          alt={user.avatarAlt ?? user.displayName}
+        />
+      ) : null}
+      <AvatarFallback className="vx-shell-user-avatar__fallback">
+        {fallback}
+      </AvatarFallback>
     </Avatar>
   );
 }
 
-function ShellPreferenceRow({ icon, label, children }: { icon: IconName; label?: ReactNode; children: ReactNode }) {
+function ShellPreferenceRow({
+  icon,
+  label,
+  children,
+}: {
+  icon: IconName;
+  label?: ReactNode;
+  children: ReactNode;
+}) {
   return (
     <div className="vx-shell-preferences__row">
-      <span className="vx-shell-preferences__icon" title={typeof label === "string" ? label : undefined} aria-hidden={label ? undefined : true}>
+      <span
+        className="vx-shell-preferences__icon"
+        title={typeof label === "string" ? label : undefined}
+        aria-hidden={label ? undefined : true}
+      >
         <Icon name={icon} size="sm" />
       </span>
       <div className="vx-shell-preferences__control">{children}</div>

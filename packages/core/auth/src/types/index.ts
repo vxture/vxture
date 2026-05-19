@@ -8,7 +8,7 @@ export {
   PlatformRole,
   JwtAuthScope,
   JwtUserType,
-} from './auth.types';
+} from "./auth.types";
 
 export type {
   JwtAccessPayload,
@@ -20,5 +20,5 @@ export type {
   AuthTokenPair,
   PermissionCheckOptions,
   JwtAuthScope as JwtAuthScopeType,
-  PlatformRole as PlatformRoleType
-} from './auth.types';
+  PlatformRole as PlatformRoleType,
+} from "./auth.types";

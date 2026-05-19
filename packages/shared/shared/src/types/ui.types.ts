@@ -9,10 +9,10 @@
  * 跨层共用：design-system 组件、BFF 响应状态字段、agent UI 均引用此类型
  */
 export type SemanticColor =
-  | 'primary'
-  | 'secondary'
-  | 'brand'
-  | 'info'
-  | 'success'
-  | 'warning'
-  | 'danger';
+  | "primary"
+  | "secondary"
+  | "brand"
+  | "info"
+  | "success"
+  | "warning"
+  | "danger";

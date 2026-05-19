@@ -1,11 +1,11 @@
-import 'reflect-metadata';
+import "reflect-metadata";
 
-import { NestFactory } from '@nestjs/core';
-import { existsSync, readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { NestFactory } from "@nestjs/core";
+import { existsSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 
-import { GatewayModule } from './gateway.module';
-import { prisma } from './prisma';
+import { GatewayModule } from "./gateway.module";
+import { prisma } from "./prisma";
 
 async function bootstrap(): Promise<void> {
   loadRootEnv();
@@ -21,23 +21,23 @@ async function bootstrap(): Promise<void> {
 void bootstrap();
 
 function loadRootEnv(): void {
-  const rootDir = resolve(process.cwd(), '..', '..', '..');
+  const rootDir = resolve(process.cwd(), "..", "..", "..");
   const candidates = [
-    join(rootDir, '.env.local'),
-    join(rootDir, '.env'),
-    resolve(process.cwd(), '.env.local'),
-    resolve(process.cwd(), '.env'),
+    join(rootDir, ".env.local"),
+    join(rootDir, ".env"),
+    resolve(process.cwd(), ".env.local"),
+    resolve(process.cwd(), ".env"),
   ];
 
   for (const filePath of candidates) {
     if (!existsSync(filePath)) continue;
 
-    const content = readFileSync(filePath, 'utf8');
+    const content = readFileSync(filePath, "utf8");
     for (const rawLine of content.split(/\r?\n/)) {
       const line = rawLine.trim();
-      if (!line || line.startsWith('#')) continue;
+      if (!line || line.startsWith("#")) continue;
 
-      const separatorIndex = line.indexOf('=');
+      const separatorIndex = line.indexOf("=");
       if (separatorIndex < 0) continue;
 
       const key = line.slice(0, separatorIndex).trim();

@@ -16,18 +16,18 @@ import {
   Post,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import { MailService } from '@vxture/core-mail';
-import { SubscriptionService } from '@vxture/service-subscription';
-import type { SubscriptionRecord } from '@vxture/service-subscription';
-import type { RequestContext } from '../types/console.types';
+} from "@nestjs/common";
+import type { Request } from "express";
+import { MailService } from "@vxture/core-mail";
+import { SubscriptionService } from "@vxture/service-subscription";
+import type { SubscriptionRecord } from "@vxture/service-subscription";
+import type { RequestContext } from "../types/console.types";
 
 // ============================================================================
 // 订阅操作类型
 // ============================================================================
 
-type SubscriptionAction = 'upgrade' | 'pause' | 'resume' | 'cancel';
+type SubscriptionAction = "upgrade" | "pause" | "resume" | "cancel";
 
 interface SubscriptionActionBody {
   subscriptionId: string;
@@ -44,7 +44,7 @@ interface SubscriptionActionBody {
 // Router
 // ============================================================================
 
-@Controller('api/subscription')
+@Controller("api/subscription")
 export class SubscriptionRouter {
   constructor(
     private readonly subscriptionService: SubscriptionService,
@@ -55,10 +55,14 @@ export class SubscriptionRouter {
   // GET /api/subscription/my — 查询当前租户的全部订阅
   // --------------------------------------------------------------------------
 
-  @Get('my')
-  async getMySubscriptions(@Req() req: Request & RequestContext): Promise<SubscriptionRecord[]> {
-    if (!req.tenant) throw new UnauthorizedException('租户上下文缺失');
-    const result = await this.subscriptionService.listSubscriptions({ tenantId: req.tenant.id });
+  @Get("my")
+  async getMySubscriptions(
+    @Req() req: Request & RequestContext,
+  ): Promise<SubscriptionRecord[]> {
+    if (!req.tenant) throw new UnauthorizedException("租户上下文缺失");
+    const result = await this.subscriptionService.listSubscriptions({
+      tenantId: req.tenant.id,
+    });
     return result.items;
   }
 
@@ -66,23 +70,30 @@ export class SubscriptionRouter {
   // POST /api/subscription/actions — 执行订阅变更操作
   // --------------------------------------------------------------------------
 
-  @Post('actions')
+  @Post("actions")
   async executeAction(
     @Req() req: Request & RequestContext,
     @Body() body: SubscriptionActionBody,
   ): Promise<SubscriptionRecord> {
-    if (!req.user || !req.tenant) throw new UnauthorizedException('会话已失效');
+    if (!req.user || !req.tenant) throw new UnauthorizedException("会话已失效");
 
     const { subscriptionId, action, planId, reason } = body ?? {};
 
     // ── 入参校验 ──────────────────────────────────────────────────────────
-    if (!subscriptionId?.trim()) throw new BadRequestException('subscriptionId 不能为空');
+    if (!subscriptionId?.trim())
+      throw new BadRequestException("subscriptionId 不能为空");
 
-    const VALID: SubscriptionAction[] = ['upgrade', 'pause', 'resume', 'cancel'];
-    if (!VALID.includes(action)) throw new BadRequestException(`无效操作类型：${String(action)}`);
+    const VALID: SubscriptionAction[] = [
+      "upgrade",
+      "pause",
+      "resume",
+      "cancel",
+    ];
+    if (!VALID.includes(action))
+      throw new BadRequestException(`无效操作类型：${String(action)}`);
 
-    if (action === 'upgrade' && !planId?.trim()) {
-      throw new BadRequestException('upgrade 操作需要提供 planId');
+    if (action === "upgrade" && !planId?.trim()) {
+      throw new BadRequestException("upgrade 操作需要提供 planId");
     }
 
     // ── 查订阅并校验租户归属 ──────────────────────────────────────────────
@@ -90,37 +101,57 @@ export class SubscriptionRouter {
     try {
       current = await this.subscriptionService.getSubscription(subscriptionId);
     } catch {
-      throw new BadRequestException('订阅不存在');
+      throw new BadRequestException("订阅不存在");
     }
 
     if (current.tenantId !== req.tenant.id) {
-      throw new UnauthorizedException('无权操作该订阅');
+      throw new UnauthorizedException("无权操作该订阅");
     }
 
     // ── 执行操作 ──────────────────────────────────────────────────────────
     const changedBy = req.user.email;
     let updated!: SubscriptionRecord;
     try {
-      if (action === 'upgrade') {
-        updated = await this.subscriptionService.upgradeSubscription(subscriptionId, planId!, changedBy);
-      } else if (action === 'pause') {
-        updated = await this.subscriptionService.updateSubscription(subscriptionId, {
-          status: 'paused',
-          operatorType: 'user',
-          ...(changedBy ? { operatorId: changedBy, updatedBy: changedBy } : {}),
-          ...(reason    ? { operatorRemark: reason } : {}),
-        });
-      } else if (action === 'resume') {
-        updated = await this.subscriptionService.updateSubscription(subscriptionId, {
-          status: 'active',
-          operatorType: 'user',
-          ...(changedBy ? { operatorId: changedBy, updatedBy: changedBy } : {}),
-        });
+      if (action === "upgrade") {
+        updated = await this.subscriptionService.upgradeSubscription(
+          subscriptionId,
+          planId!,
+          changedBy,
+        );
+      } else if (action === "pause") {
+        updated = await this.subscriptionService.updateSubscription(
+          subscriptionId,
+          {
+            status: "paused",
+            operatorType: "user",
+            ...(changedBy
+              ? { operatorId: changedBy, updatedBy: changedBy }
+              : {}),
+            ...(reason ? { operatorRemark: reason } : {}),
+          },
+        );
+      } else if (action === "resume") {
+        updated = await this.subscriptionService.updateSubscription(
+          subscriptionId,
+          {
+            status: "active",
+            operatorType: "user",
+            ...(changedBy
+              ? { operatorId: changedBy, updatedBy: changedBy }
+              : {}),
+          },
+        );
       } else {
-        updated = await this.subscriptionService.cancelSubscription(subscriptionId, changedBy, reason);
+        updated = await this.subscriptionService.cancelSubscription(
+          subscriptionId,
+          changedBy,
+          reason,
+        );
       }
     } catch (err) {
-      throw new BadRequestException(err instanceof Error ? err.message : '订阅操作失败');
+      throw new BadRequestException(
+        err instanceof Error ? err.message : "订阅操作失败",
+      );
     }
 
     // ── 发送确认邮件（失败不阻断主流程）─────────────────────────────────
@@ -137,13 +168,17 @@ export class SubscriptionRouter {
 // ============================================================================
 
 const ACTION_LABELS: Record<SubscriptionAction, string> = {
-  upgrade: '套餐升级',
-  pause:   '订阅暂停',
-  resume:  '订阅恢复',
-  cancel:  '订阅取消',
+  upgrade: "套餐升级",
+  pause: "订阅暂停",
+  resume: "订阅恢复",
+  cancel: "订阅取消",
 };
 
-function buildActionEmail(to: string, action: SubscriptionAction, sub: SubscriptionRecord) {
+function buildActionEmail(
+  to: string,
+  action: SubscriptionAction,
+  sub: SubscriptionRecord,
+) {
   const label = ACTION_LABELS[action];
   const subject = `[Vxture] 您的${label}操作已完成`;
   const html = `

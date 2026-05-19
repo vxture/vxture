@@ -14,27 +14,27 @@
 
 /** Current NODE_ENV value, defaults to 'development' if not set */
 export function getNodeEnv(): string {
-  return process.env['NODE_ENV'] ?? 'development';
+  return process.env["NODE_ENV"] ?? "development";
 }
 
 /** Is production environment */
 export function isProduction(): boolean {
-  return getNodeEnv() === 'production';
+  return getNodeEnv() === "production";
 }
 
 /** Is development environment */
 export function isDevelopment(): boolean {
-  return getNodeEnv() === 'development';
+  return getNodeEnv() === "development";
 }
 
 /** Is test environment */
 export function isTest(): boolean {
-  return getNodeEnv() === 'test';
+  return getNodeEnv() === "test";
 }
 
 /** Is staging environment */
 export function isStaging(): boolean {
-  return getNodeEnv() === 'staging';
+  return getNodeEnv() === "staging";
 }
 
 // ============================================================================
@@ -43,10 +43,10 @@ export function isStaging(): boolean {
 
 /** Is running in Node.js environment */
 export function isNode(): boolean {
-  return typeof process !== 'undefined' && process.versions?.node !== undefined;
+  return typeof process !== "undefined" && process.versions?.node !== undefined;
 }
 
 /** Is running in browser environment */
 export function isBrowser(): boolean {
-  return 'window' in globalThis && 'document' in globalThis;
+  return "window" in globalThis && "document" in globalThis;
 }

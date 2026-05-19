@@ -1,8 +1,12 @@
-export type TenantType = 'company' | 'individual';
-export type TenantStatus = 'trial' | 'active' | 'suspended' | 'cancelled';
-export type TenantMemberStatus = 'active' | 'inactive' | 'banned';
-export type OrganizationVerifiedStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
-export type TenantRoleStatus = 'active' | 'disabled';
+export type TenantType = "company" | "individual";
+export type TenantStatus = "trial" | "active" | "suspended" | "cancelled";
+export type TenantMemberStatus = "active" | "inactive" | "banned";
+export type OrganizationVerifiedStatus =
+  | "unverified"
+  | "pending"
+  | "verified"
+  | "rejected";
+export type TenantRoleStatus = "active" | "disabled";
 
 export interface TenantContextView {
   tenantId: string;
@@ -88,7 +92,7 @@ export interface UpsertTenantMemberInput {
   roleId?: string | null;
   roleCode?: string | null;
   status: TenantMemberStatus;
-  joinedSource: 'created' | 'invited' | 'api';
+  joinedSource: "created" | "invited" | "api";
 }
 
 export interface OrganizationProfileView {
@@ -125,10 +129,17 @@ export interface OrganizationProfileView {
 
 export interface OrganizationReadRepository {
   createTenant(input: CreateTenantInput): Promise<TenantContextView>;
-  getTenantMembershipsByAccountId(accountId: string): Promise<TenantMembershipView[]>;
+  getTenantMembershipsByAccountId(
+    accountId: string,
+  ): Promise<TenantMembershipView[]>;
   getTenantContextById(tenantId: string): Promise<TenantContextView | null>;
-  getOrganizationProfileByTenantId(tenantId: string): Promise<OrganizationProfileView | null>;
-  getTenantMemberById(tenantId: string, memberId: string): Promise<TenantMemberView | null>;
+  getOrganizationProfileByTenantId(
+    tenantId: string,
+  ): Promise<OrganizationProfileView | null>;
+  getTenantMemberById(
+    tenantId: string,
+    memberId: string,
+  ): Promise<TenantMemberView | null>;
   listTenantPermissions(tenantId: string): Promise<TenantPermissionView[]>;
   listTenantRoles(tenantId: string): Promise<TenantRoleView[]>;
   createTenantRole(
@@ -152,8 +163,16 @@ export interface OrganizationReadRepository {
       permissionIds?: string[];
     },
   ): Promise<TenantRoleView | null>;
-  removeTenantRole(tenantId: string, roleId: string, operatorAccountId: string): Promise<boolean>;
-  upsertTenantMember(tenantId: string, operatorAccountId: string, input: UpsertTenantMemberInput): Promise<TenantMemberView>;
+  removeTenantRole(
+    tenantId: string,
+    roleId: string,
+    operatorAccountId: string,
+  ): Promise<boolean>;
+  upsertTenantMember(
+    tenantId: string,
+    operatorAccountId: string,
+    input: UpsertTenantMemberInput,
+  ): Promise<TenantMemberView>;
   updateTenantMember(
     tenantId: string,
     memberId: string,
@@ -165,7 +184,11 @@ export interface OrganizationReadRepository {
       status?: TenantMemberStatus;
     },
   ): Promise<TenantMemberView | null>;
-  removeTenantMember(tenantId: string, memberId: string, operatorAccountId: string): Promise<boolean>;
+  removeTenantMember(
+    tenantId: string,
+    memberId: string,
+    operatorAccountId: string,
+  ): Promise<boolean>;
   getTenantMemberSummary(tenantId: string): Promise<TenantMemberSummary>;
   listTenantMembers(tenantId: string): Promise<TenantMemberView[]>;
 }

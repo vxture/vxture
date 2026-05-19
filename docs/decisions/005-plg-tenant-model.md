@@ -51,12 +51,14 @@ auth-bff 检查 user 的 tenant 列表
 ## 后果
 
 **正面：**
+
 - 最低注册摩擦：首次登录即可使用产品功能
 - Trial plan 自动开始计量，数据驱动转化决策
 - 用户自然升级路径：继续个人使用 → Pro，或拉同事 → Enterprise
 - 用户可同时属于多个 tenant（已实现）：个人 Personal Tenant + 多个企业 Tenant 并存，登录时通过 tenant 选择步骤切换
 
 **负面：**
+
 - auth-bff 登录逻辑变复杂：每次 OAuth 回调需要 check-or-create 操作（数据库写操作在关键路径上）
 - 大量 Trial 用户若不活跃，会产生僵尸租户，需要定期清理机制
 - 多租户切换增加了登录流程分支：用户属于多个 tenant 时需要额外的 tenant 选择步骤（已实现，但前端需要维护选择 UI）

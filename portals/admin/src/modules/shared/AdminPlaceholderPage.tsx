@@ -1,7 +1,7 @@
-import { Icon } from '@vxture/design-system';
-import type { AdminNavigationItem } from '@/config/navigation';
-import { EmptyState } from './EmptyState';
-import { PageHeader } from './PageHeader';
+import { Icon } from "@vxture/design-system";
+import type { AdminNavigationItem } from "@/config/navigation";
+import { EmptyState } from "./EmptyState";
+import { PageHeader } from "./PageHeader";
 
 export function AdminPlaceholderPage({
   item,
@@ -12,9 +12,17 @@ export function AdminPlaceholderPage({
 }) {
   return (
     <div className="vx-page-stack admin-placeholder-page">
-      <PageHeader icon={item.icon} eyebrow={sectionTitle} title={item.label} description={item.description} />
+      <PageHeader
+        icon={item.icon}
+        eyebrow={sectionTitle}
+        title={item.label}
+        description={item.description}
+      />
 
-      <section className="vx-page-section admin-placeholder-page__section" aria-label={item.label}>
+      <section
+        className="vx-page-section admin-placeholder-page__section"
+        aria-label={item.label}
+      >
         <span className="admin-placeholder-page__icon" aria-hidden="true">
           <Icon name={item.icon} size="lg" fallback="placeholder" />
         </span>

@@ -5,7 +5,7 @@
  * @category API
  */
 
-import { apiClient } from './client';
+import { apiClient } from "./client";
 
 export interface ContentItem {
   id: string;
@@ -24,21 +24,29 @@ export interface PageContent {
   cta: ContentItem;
 }
 
-export async function getContent(key: string, locale: string): Promise<ContentItem> {
-  const response = await apiClient.get('/content', {
-    params: { key, locale }
+export async function getContent(
+  key: string,
+  locale: string,
+): Promise<ContentItem> {
+  const response = await apiClient.get("/content", {
+    params: { key, locale },
   });
   return response.data;
 }
 
-export async function getPageContent(page: string, locale: string): Promise<PageContent> {
+export async function getPageContent(
+  page: string,
+  locale: string,
+): Promise<PageContent> {
   const response = await apiClient.get(`/content/page/${page}`, {
-    params: { locale }
+    params: { locale },
   });
   return response.data;
 }
 
-export async function updateContent(data: Partial<ContentItem>): Promise<ContentItem> {
-  const response = await apiClient.put('/content', data);
+export async function updateContent(
+  data: Partial<ContentItem>,
+): Promise<ContentItem> {
+  const response = await apiClient.put("/content", data);
   return response.data;
 }

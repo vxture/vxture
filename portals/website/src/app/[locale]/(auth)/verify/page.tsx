@@ -10,9 +10,9 @@
  * @date 2026-05-02
  */
 
-'use client';
+"use client";
 
-import { VerifyForm } from '@/components/auth/VerifyForm';
+import { VerifyForm } from "@/components/auth/VerifyForm";
 
 export default function VerifyPage() {
   return <VerifyForm />;

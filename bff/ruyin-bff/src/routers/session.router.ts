@@ -27,15 +27,20 @@ import {
   Query,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import { RuyinAggregator, RuyinBffError } from '../aggregators/ruyin.aggregator';
-import type { RequestContext } from '../types/auth.types';
-import type { CreateSessionDto, SendMessageDto } from '../types/ruyin.types';
+} from "@nestjs/common";
+import type { Request } from "express";
+import {
+  RuyinAggregator,
+  RuyinBffError,
+} from "../aggregators/ruyin.aggregator";
+import type { RequestContext } from "../types/auth.types";
+import type { CreateSessionDto, SendMessageDto } from "../types/ruyin.types";
 
-@Controller('api/session')
+@Controller("api/session")
 export class SessionRouter {
-  constructor(@Inject(RuyinAggregator) private readonly ruyinAggregator: RuyinAggregator) {}
+  constructor(
+    @Inject(RuyinAggregator) private readonly ruyinAggregator: RuyinAggregator,
+  ) {}
 
   @Post()
   async createSession(
@@ -51,49 +56,60 @@ export class SessionRouter {
     }
   }
 
-  @Get(':sessionId/history')
+  @Get(":sessionId/history")
   async getSessionHistory(
     @Req() req: Request & RequestContext,
-    @Param('sessionId') sessionId: string,
+    @Param("sessionId") sessionId: string,
   ) {
     const accessToken = requireAccessToken(req);
 
     try {
-      return await this.ruyinAggregator.getSessionHistory(accessToken, sessionId);
+      return await this.ruyinAggregator.getSessionHistory(
+        accessToken,
+        sessionId,
+      );
     } catch (error: unknown) {
       throw mapBffError(error);
     }
   }
 
-  @Post(':sessionId/message')
+  @Post(":sessionId/message")
   async sendMessage(
     @Req() req: Request & RequestContext,
-    @Param('sessionId') sessionId: string,
+    @Param("sessionId") sessionId: string,
     @Body() body: SendMessageDto,
   ) {
     const accessToken = requireAccessToken(req);
 
     try {
-      return await this.ruyinAggregator.sendMessage(accessToken, sessionId, body);
+      return await this.ruyinAggregator.sendMessage(
+        accessToken,
+        sessionId,
+        body,
+      );
     } catch (error: unknown) {
       throw mapBffError(error);
     }
   }
 
-  @Get(':sessionId/task')
+  @Get(":sessionId/task")
   async getTaskStatus(
     @Req() req: Request & RequestContext,
-    @Param('sessionId') sessionId: string,
-    @Query('taskId') taskId?: string,
+    @Param("sessionId") sessionId: string,
+    @Query("taskId") taskId?: string,
   ) {
     if (!taskId) {
-      throw new BadRequestException('Missing taskId parameter');
+      throw new BadRequestException("Missing taskId parameter");
     }
 
     const accessToken = requireAccessToken(req);
 
     try {
-      return await this.ruyinAggregator.getTaskStatus(accessToken, sessionId, taskId);
+      return await this.ruyinAggregator.getTaskStatus(
+        accessToken,
+        sessionId,
+        taskId,
+      );
     } catch (error: unknown) {
       throw mapBffError(error);
     }
@@ -102,7 +118,7 @@ export class SessionRouter {
 
 function requireAccessToken(req: RequestContext): string {
   if (!req.user || !req.accessToken) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
   return req.accessToken;
@@ -118,7 +134,7 @@ function mapBffError(error: unknown): HttpException {
   }
 
   return new HttpException(
-    error instanceof Error ? error.message : 'Unexpected Ruyin BFF error',
+    error instanceof Error ? error.message : "Unexpected Ruyin BFF error",
     500,
   );
 }

@@ -11,9 +11,13 @@
  * 仅 (auth) 路由组不继承此布局。
  */
 
-import { Footer, Header } from '@/components/layout';
+import { Footer, Header } from "@/components/layout";
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default function PublicLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Header />

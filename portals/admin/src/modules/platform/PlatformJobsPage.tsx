@@ -1,4 +1,4 @@
-import { PlatformGovernanceListPage } from './PlatformGovernanceListPage';
+import { PlatformGovernanceListPage } from "./PlatformGovernanceListPage";
 
 export function PlatformJobsPage() {
   return <PlatformGovernanceListPage kind="jobs" />;

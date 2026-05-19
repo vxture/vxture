@@ -28,18 +28,18 @@ Permission (code: string, type: MENU | BUTTON | API)
 
 ### 权限类型
 
-| 类型 | 说明 | 示例 code |
-|------|------|-----------|
-| `MENU` | 菜单可见性 | `user`、`role` |
+| 类型     | 说明         | 示例 code                    |
+| -------- | ------------ | ---------------------------- |
+| `MENU`   | 菜单可见性   | `user`、`role`               |
 | `BUTTON` | 页面操作按钮 | `user.create`、`user.delete` |
-| `API` | 后端接口访问 | `user.login`、`admin.view` |
+| `API`    | 后端接口访问 | `user.login`、`admin.view`   |
 
 ### 权限来源
 
-| 来源 | 说明 |
-|------|------|
+| 来源     | 说明                                                       |
+| -------- | ---------------------------------------------------------- |
 | `system` | 系统预置，随应用初始化写入，code / type 不可修改，不可删除 |
-| `custom` | 运营人员自建，可全字段编辑，无引用时可删除 |
+| `custom` | 运营人员自建，可全字段编辑，无引用时可删除                 |
 
 ---
 
@@ -47,13 +47,13 @@ Permission (code: string, type: MENU | BUTTON | API)
 
 平台维护两套完全独立的权限域，互不干涉。
 
-| 维度 | 运营账号权限域 | 租户账号权限域 |
-|------|--------------|--------------|
-| 账号类型 | `operator` | `tenant_user` |
-| 管理入口 | admin portal | console portal（未来规划） |
-| 角色作用域 | 全平台（无 tenantId） | 单租户（绑定 tenantId） |
-| 数据隔离 | IAM 表 operator namespace | IAM 表 tenant namespace + tenantId 过滤 |
-| 当前状态 | 已实现 | 初步结构，权限 UI 待建 |
+| 维度       | 运营账号权限域            | 租户账号权限域                          |
+| ---------- | ------------------------- | --------------------------------------- |
+| 账号类型   | `operator`                | `tenant_user`                           |
+| 管理入口   | admin portal              | console portal（未来规划）              |
+| 角色作用域 | 全平台（无 tenantId）     | 单租户（绑定 tenantId）                 |
+| 数据隔离   | IAM 表 operator namespace | IAM 表 tenant namespace + tenantId 过滤 |
+| 当前状态   | 已实现                    | 初步结构，权限 UI 待建                  |
 
 ---
 

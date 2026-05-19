@@ -7,25 +7,25 @@ import {
   Param,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL } from '../tokens';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL } from "../tokens";
 import type {
   PlatformGovernanceKind,
   PlatformGovernanceRecord,
   PlatformGovernanceStatus,
   RequestContext,
-} from '../types/console.types';
+} from "../types/console.types";
 
-@Controller('api/platform-governance')
+@Controller("api/platform-governance")
 export class PlatformGovernanceRouter {
   constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
-  @Get(':kind')
+  @Get(":kind")
   async listGovernanceRecords(
     @Req() req: Request & RequestContext,
-    @Param('kind') kind: PlatformGovernanceKind,
+    @Param("kind") kind: PlatformGovernanceKind,
   ): Promise<PlatformGovernanceRecord[]> {
     assertCanReadPlatformGovernance(req);
 
@@ -33,47 +33,55 @@ export class PlatformGovernanceRouter {
       "select to_regclass('ops.governance_record')::text as table_name",
     );
     if (!tableCheck.rows[0]?.table_name) {
-      throw new BadGatewayException('Platform governance database is not connected. Confirm the schema design before enabling governance data.');
+      throw new BadGatewayException(
+        "Platform governance database is not connected. Confirm the schema design before enabling governance data.",
+      );
     }
 
-    const rows = await this.pool.query<PlatformGovernanceRow>(PLATFORM_GOVERNANCE_SQL, [kind]);
+    const rows = await this.pool.query<PlatformGovernanceRow>(
+      PLATFORM_GOVERNANCE_SQL,
+      [kind],
+    );
     return rows.rows.map(mapGovernanceRow);
   }
 }
 
 function assertCanReadPlatformGovernance(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
   if (
     req.capabilities &&
-    !req.capabilities.includes('platform.admin.manage') &&
-    !req.capabilities.includes('platform.model.manage') &&
-    !req.capabilities.includes('platform.audit.read')
+    !req.capabilities.includes("platform.admin.manage") &&
+    !req.capabilities.includes("platform.model.manage") &&
+    !req.capabilities.includes("platform.audit.read")
   ) {
-    throw new ForbiddenException('Missing platform governance capability');
+    throw new ForbiddenException("Missing platform governance capability");
   }
 }
 
 function normalizeStatus(status: string): PlatformGovernanceStatus {
-  if (status === 'warning' || status === 'blocked' || status === 'pending') return status;
-  return 'normal';
+  if (status === "warning" || status === "blocked" || status === "pending")
+    return status;
+  return "normal";
 }
 
 function toDisplayTime(value: Date | string | null): string {
-  if (!value) return '';
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
+  if (!value) return "";
+  return new Intl.DateTimeFormat("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
     hour12: false,
   }).format(value instanceof Date ? value : new Date(value));
 }
 
-function mapGovernanceRow(row: PlatformGovernanceRow): PlatformGovernanceRecord {
+function mapGovernanceRow(
+  row: PlatformGovernanceRow,
+): PlatformGovernanceRecord {
   return {
     id: row.id,
     name: row.name,

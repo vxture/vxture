@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * AIAssistantBubble.tsx - AI 对话气泡
@@ -12,11 +12,11 @@
  * @date 2026-05-16
  */
 
-import type { ReactNode } from 'react';
-import { cn } from '../../utils/cn';
+import type { ReactNode } from "react";
+import { cn } from "../../utils/cn";
 
 export interface AIAssistantBubbleProps {
-  readonly role: 'user' | 'ai';
+  readonly role: "user" | "ai";
   readonly children: ReactNode;
   readonly avatar?: string;
   readonly avatarSrc?: string;
@@ -32,15 +32,18 @@ export function AIAssistantBubble({
   timestamp,
   className,
 }: AIAssistantBubbleProps) {
-  const fallbackAvatar = avatar ?? (role === 'ai' ? 'AI' : 'U');
+  const fallbackAvatar = avatar ?? (role === "ai" ? "AI" : "U");
   const time =
     timestamp instanceof Date
-      ? timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      ? timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       : timestamp;
 
   return (
-    <div className={cn('vx-bubble', `vx-bubble--${role}`, className)}>
-      <div className={cn('vx-bubble__avatar', `vx-bubble__avatar--${role}`)} aria-hidden>
+    <div className={cn("vx-bubble", `vx-bubble--${role}`, className)}>
+      <div
+        className={cn("vx-bubble__avatar", `vx-bubble__avatar--${role}`)}
+        aria-hidden
+      >
         {avatarSrc ? <img src={avatarSrc} alt="" /> : fallbackAvatar}
       </div>
       <div className="vx-bubble__content">

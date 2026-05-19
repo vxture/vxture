@@ -13,8 +13,10 @@ import { PageSection } from "./page-section";
 import type { PageSectionProps } from "./page-section";
 import { TableToolbar } from "./table-toolbar";
 
-export interface EntityTableSectionProps
-  extends Omit<PageSectionProps, "title" | "description" | "action" | "children"> {
+export interface EntityTableSectionProps extends Omit<
+  PageSectionProps,
+  "title" | "description" | "action" | "children"
+> {
   readonly title: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly toolbarTitle?: React.ReactNode;
@@ -28,49 +30,52 @@ export interface EntityTableSectionProps
   readonly children: React.ReactNode;
 }
 
-const EntityTableSection = React.forwardRef<HTMLElement, EntityTableSectionProps>(
-  function EntityTableSection(
-    {
-      title,
-      description,
-      toolbarTitle,
-      toolbarHint,
-      toolbarAction,
-      filters,
-      hasData = true,
-      emptyTitle = "No items found.",
-      emptyDescription,
-      emptyAction,
-      children,
-      ...props
-    },
-    ref,
-  ) {
-    return (
-      <PageSection ref={ref} title={title} description={description} {...props}>
-        <div className="vx-table-stack">
-          {toolbarTitle || toolbarHint || toolbarAction ? (
-            <TableToolbar
-              title={toolbarTitle ?? ""}
-              hint={toolbarHint}
-              action={toolbarAction}
-            />
-          ) : null}
-          {filters ? <div className="vx-entity-table-section__filters">{filters}</div> : null}
-          {hasData ? (
-            children
-          ) : (
-            <EmptyState
-              title={emptyTitle}
-              description={emptyDescription}
-              action={emptyAction}
-            />
-          )}
-        </div>
-      </PageSection>
-    );
+const EntityTableSection = React.forwardRef<
+  HTMLElement,
+  EntityTableSectionProps
+>(function EntityTableSection(
+  {
+    title,
+    description,
+    toolbarTitle,
+    toolbarHint,
+    toolbarAction,
+    filters,
+    hasData = true,
+    emptyTitle = "No items found.",
+    emptyDescription,
+    emptyAction,
+    children,
+    ...props
   },
-);
+  ref,
+) {
+  return (
+    <PageSection ref={ref} title={title} description={description} {...props}>
+      <div className="vx-table-stack">
+        {toolbarTitle || toolbarHint || toolbarAction ? (
+          <TableToolbar
+            title={toolbarTitle ?? ""}
+            hint={toolbarHint}
+            action={toolbarAction}
+          />
+        ) : null}
+        {filters ? (
+          <div className="vx-entity-table-section__filters">{filters}</div>
+        ) : null}
+        {hasData ? (
+          children
+        ) : (
+          <EmptyState
+            title={emptyTitle}
+            description={emptyDescription}
+            action={emptyAction}
+          />
+        )}
+      </div>
+    </PageSection>
+  );
+});
 
 EntityTableSection.displayName = "EntityTableSection";
 

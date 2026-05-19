@@ -7,21 +7,25 @@
  * @date 2026-05-06
  */
 
-import { encodePortalContext } from '@vxture/shared';
+import { encodePortalContext } from "@vxture/shared";
 
 // =============================================================================
 // 环境变量（构建时注入）
 // =============================================================================
 
 function normalizeBaseUrl(url: string): string {
-  return url.trim().replace(/\/+$/, '');
+  return url.trim().replace(/\/+$/, "");
 }
 
 const DEFAULT_CONSOLE_BASE_URL =
-  process.env.NODE_ENV === 'production' ? 'https://console.vxture.com' : 'http://localhost:3020';
+  process.env.NODE_ENV === "production"
+    ? "https://console.vxture.com"
+    : "http://localhost:3020";
 
 const DEFAULT_WEBSITE_BASE_URL =
-  process.env.NODE_ENV === 'production' ? 'https://vxture.com' : 'http://localhost:3010';
+  process.env.NODE_ENV === "production"
+    ? "https://vxture.com"
+    : "http://localhost:3010";
 
 const CONSOLE_BASE_URL = normalizeBaseUrl(
   process.env.NEXT_PUBLIC_CONSOLE_URL ?? DEFAULT_CONSOLE_BASE_URL,
@@ -46,10 +50,10 @@ const WEBSITE_BASE_URL = normalizeBaseUrl(
  */
 export function buildConsoleEntryUrl(locale: string): string {
   const queryString = encodePortalContext({
-    from: 'website',
+    from: "website",
     returnTo: `${WEBSITE_BASE_URL}/${locale}`,
-    caller: 'Vxture 官网',
-    callerLogo: '/images/logo.png',
+    caller: "Vxture 官网",
+    callerLogo: "/images/logo.png",
   });
   return `${CONSOLE_BASE_URL}?${queryString}`;
 }

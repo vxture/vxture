@@ -196,15 +196,15 @@ src/index.ts
 All public APIs are exported from this file:
 
 ```ts
-export * from './client/api-client';
-export * from './types/api.types';
+export * from "./client/api-client";
+export * from "./types/api.types";
 ```
 
 Consumers import from the package root only:
 
 ```ts
-import { apiClient } from '@vxture/core-api';                        // ✅
-import { apiClient } from '@vxture/core-api/src/client/api-client';  // ❌
+import { apiClient } from "@vxture/core-api"; // ✅
+import { apiClient } from "@vxture/core-api/src/client/api-client"; // ❌
 ```
 
 ---
@@ -212,28 +212,28 @@ import { apiClient } from '@vxture/core-api/src/client/api-client';  // ❌
 # 7. Example Usage
 
 ```ts
-import { apiClient } from '@vxture/core-api';
-import { validateToken } from '@vxture/core-auth';
-import { getConfig } from '@vxture/core-config';
-import { PrismaModule, PrismaService } from '@vxture/core-database';
-import { translate } from '@vxture/core-locale';
-import { MailModule, MailService } from '@vxture/core-mail';
-import { getTenantId } from '@vxture/core-tenant';
-import { log } from '@vxture/core-utils';
+import { apiClient } from "@vxture/core-api";
+import { validateToken } from "@vxture/core-auth";
+import { getConfig } from "@vxture/core-config";
+import { PrismaModule, PrismaService } from "@vxture/core-database";
+import { translate } from "@vxture/core-locale";
+import { MailModule, MailService } from "@vxture/core-mail";
+import { getTenantId } from "@vxture/core-tenant";
+import { log } from "@vxture/core-utils";
 
 const tenantId = getTenantId();
 const response = await apiClient.get(`/users?tenant=${tenantId}`);
-log('Fetched users:', response);
+log("Fetched users:", response);
 
-const label = translate('welcome_message');
+const label = translate("welcome_message");
 
 // core-mail — NestJS usage (server-side BFF only)
 // 1. AppModule imports MailModule once
 // 2. Any router / service can inject MailService directly
 await mailService.send({
-  to: 'user@example.com',
-  subject: 'Welcome to Vxture',
-  html: '<p>Hello!</p>',
+  to: "user@example.com",
+  subject: "Welcome to Vxture",
+  html: "<p>Hello!</p>",
 });
 ```
 
@@ -243,11 +243,11 @@ await mailService.send({
 
 Core packages are consumed by:
 
-| Consumer         | Core packages used                                                             |
-| ---------------- | ------------------------------------------------------------------------------ |
-| `bff/*`          | `core-auth`, `core-config`, `core-tenant`, `core-mail`, `core-database`        |
-| `agent-server/*` | `core-config`, `core-tenant`, `core-api`                                       |
-| `services/*`     | `core-config`, `core-database`                                                 |
+| Consumer         | Core packages used                                                      |
+| ---------------- | ----------------------------------------------------------------------- |
+| `bff/*`          | `core-auth`, `core-config`, `core-tenant`, `core-mail`, `core-database` |
+| `agent-server/*` | `core-config`, `core-tenant`, `core-api`                                |
+| `services/*`     | `core-config`, `core-database`                                          |
 
 `core-mail` is consumed exclusively by Portal BFFs (`admin-bff`, `console-bff`) for
 server-side transactional email notifications. `core-database` is consumed by BFFs and

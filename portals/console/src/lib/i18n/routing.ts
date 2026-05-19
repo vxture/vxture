@@ -8,13 +8,13 @@
  * @date 2026-05-05
  */
 
-import { defineRouting } from 'next-intl/routing';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
+import { defineRouting } from "next-intl/routing";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@vxture/shared";
 
 export const routing = defineRouting({
   locales: SUPPORTED_LOCALES,
   defaultLocale: DEFAULT_LOCALE,
-  localePrefix: 'always',
+  localePrefix: "always",
   localeDetection: true,
 });
 

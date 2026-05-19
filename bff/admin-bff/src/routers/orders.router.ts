@@ -10,10 +10,10 @@ import {
   Post,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool, PoolClient } from 'pg';
-import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from '../tokens';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool, PoolClient } from "pg";
+import { ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL } from "../tokens";
 import type {
   OrderInvoiceItemRecord,
   OrderOfflinePaymentType,
@@ -27,9 +27,9 @@ import type {
   RequestContext,
   SubscriptionOperationCycle,
   SubscriptionOperationStatus,
-} from '../types/console.types';
+} from "../types/console.types";
 
-@Controller('api/orders')
+@Controller("api/orders")
 export class OrdersRouter {
   constructor(
     @Inject(ADMIN_BFF_RO_POOL) private readonly roPool: Pool,
@@ -37,38 +37,43 @@ export class OrdersRouter {
   ) {}
 
   @Get()
-  async listOrders(@Req() req: Request & RequestContext): Promise<OrderOperationRecord[]> {
+  async listOrders(
+    @Req() req: Request & RequestContext,
+  ): Promise<OrderOperationRecord[]> {
     assertCanManageOrders(req);
 
-    const rows = await this.roPool.query<OrderOperationRow>(ORDER_OPERATION_SQL);
+    const rows =
+      await this.roPool.query<OrderOperationRow>(ORDER_OPERATION_SQL);
     return rows.rows.map(mapOrderOperationRow);
   }
 
-  @Get(':orderId')
+  @Get(":orderId")
   async getOrder(
     @Req() req: Request & RequestContext,
-    @Param('orderId') orderId: string,
+    @Param("orderId") orderId: string,
   ): Promise<OrderOperationDetailRecord> {
     assertCanManageOrders(req);
 
     return loadOrderDetail(this.roPool, orderId);
   }
 
-  @Post(':orderId/offline-payment-confirm')
+  @Post(":orderId/offline-payment-confirm")
   async confirmOfflinePayment(
     @Req() req: Request & RequestContext,
-    @Param('orderId') orderId: string,
+    @Param("orderId") orderId: string,
     @Body() body: ConfirmOfflinePaymentBody,
   ): Promise<OrderOperationDetailRecord> {
     assertCanManageOrders(req);
-
 
     const payload = normalizeConfirmOfflinePaymentBody(body);
     const client = await this.rwPool.connect();
 
     try {
-      await client.query('begin');
-      const currentResult = await client.query<OrderActionRow>(ORDER_ACTION_LOOKUP_SQL, [orderId]);
+      await client.query("begin");
+      const currentResult = await client.query<OrderActionRow>(
+        ORDER_ACTION_LOOKUP_SQL,
+        [orderId],
+      );
       const current = currentResult.rows[0];
 
       if (!current) {
@@ -77,7 +82,12 @@ export class OrdersRouter {
 
       validateOfflinePaymentConfirm(current, payload);
       const operatorId = normalizeUuid(req.user?.id);
-      const billId = await ensureInvoiceForOfflinePayment(client, current, payload, operatorId);
+      const billId = await ensureInvoiceForOfflinePayment(
+        client,
+        current,
+        payload,
+        operatorId,
+      );
 
       await client.query(ORDER_OFFLINE_PAYMENT_INSERT_SQL, [
         current.tenant_id,
@@ -89,7 +99,7 @@ export class OrdersRouter {
         payload.evidenceUrl,
         current.payable_amount,
         payload.paidAmount,
-        current.currency ?? 'CNY',
+        current.currency ?? "CNY",
         payload.transactionNo,
         operatorId,
         payload.reason,
@@ -98,14 +108,14 @@ export class OrdersRouter {
         billId,
         payload.paidAmount,
         payload.paidAt,
-        'offline',
+        "offline",
         payload.transactionNo,
         operatorId,
         payload.reason,
       ]);
-      await client.query('commit');
+      await client.query("commit");
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
@@ -115,7 +125,10 @@ export class OrdersRouter {
   }
 }
 
-async function loadOrderDetail(pool: Pool, orderId: string): Promise<OrderOperationDetailRecord> {
+async function loadOrderDetail(
+  pool: Pool,
+  orderId: string,
+): Promise<OrderOperationDetailRecord> {
   const [orderRows, invoiceItemRows, paymentRows] = await Promise.all([
     pool.query<OrderOperationRow>(ORDER_OPERATION_SQL),
     pool.query<OrderInvoiceItemRow>(ORDER_INVOICE_ITEM_SQL, [orderId]),
@@ -141,18 +154,26 @@ async function loadOrderDetail(pool: Pool, orderId: string): Promise<OrderOperat
 
 function assertCanManageOrders(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
   const capabilities = req.capabilities ?? [];
-  if (capabilities.length && !capabilities.some((item) => item === 'platform.pricing.manage' || item === 'platform.tenant.manage')) {
-    throw new ForbiddenException('Missing platform.pricing.manage capability');
+  if (
+    capabilities.length &&
+    !capabilities.some(
+      (item) =>
+        item === "platform.pricing.manage" || item === "platform.tenant.manage",
+    )
+  ) {
+    throw new ForbiddenException("Missing platform.pricing.manage capability");
   }
 }
 
 function toIso(value: Date | string | null): string {
   if (!value) return new Date(0).toISOString();
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
 function nullableIso(value: Date | string | null): string | null {
@@ -160,59 +181,88 @@ function nullableIso(value: Date | string | null): string | null {
 }
 
 function normalizeCycle(value: string | null): SubscriptionOperationCycle {
-  if (value === 'yearly' || value === 'once') return value;
-  return 'monthly';
+  if (value === "yearly" || value === "once") return value;
+  return "monthly";
 }
 
-function normalizeSubscriptionStatus(row: OrderOperationRow): SubscriptionOperationStatus {
-  if (row.subscription_status === 'trial') return 'trial';
-  if (row.subscription_status === 'suspended') return 'suspended';
-  if (row.subscription_status === 'cancelled') return 'cancelled';
-  if (row.subscription_status === 'expired') return 'overdue';
+function normalizeSubscriptionStatus(
+  row: OrderOperationRow,
+): SubscriptionOperationStatus {
+  if (row.subscription_status === "trial") return "trial";
+  if (row.subscription_status === "suspended") return "suspended";
+  if (row.subscription_status === "cancelled") return "cancelled";
+  if (row.subscription_status === "expired") return "overdue";
 
   const endAt = row.end_at ? new Date(row.end_at).getTime() : null;
   if (endAt !== null) {
     const now = Date.now();
-    if (endAt < now) return 'overdue';
-    if (endAt - now <= 30 * 24 * 60 * 60 * 1000) return 'expiring';
+    if (endAt < now) return "overdue";
+    if (endAt - now <= 30 * 24 * 60 * 60 * 1000) return "expiring";
   }
 
-  return 'active';
+  return "active";
 }
 
 function normalizePaymentStatus(row: OrderOperationRow): OrderPaymentStatus {
-  if (Number(row.amount ?? 0) <= 0) return 'not_required';
-  if (row.bill_status === 'partial' || (Number(row.paid_amount ?? 0) > 0 && Number(row.paid_amount ?? 0) < Number(row.amount ?? 0))) return 'partial';
-  if (row.payment_status === 'pending_verify') return 'pending_verify';
-  if (row.payment_status === 'paid' || row.bill_status === 'paid') return 'paid';
-  if (row.payment_status === 'failed') return 'failed';
-  if (row.payment_status === 'closed' || row.bill_status === 'cancelled') return 'closed';
-  if (row.payment_status === 'refunding') return 'refunding';
-  if (row.payment_status === 'pending' || row.bill_status === 'paying') return 'pending';
-  return 'unpaid';
+  if (Number(row.amount ?? 0) <= 0) return "not_required";
+  if (
+    row.bill_status === "partial" ||
+    (Number(row.paid_amount ?? 0) > 0 &&
+      Number(row.paid_amount ?? 0) < Number(row.amount ?? 0))
+  )
+    return "partial";
+  if (row.payment_status === "pending_verify") return "pending_verify";
+  if (row.payment_status === "paid" || row.bill_status === "paid")
+    return "paid";
+  if (row.payment_status === "failed") return "failed";
+  if (row.payment_status === "closed" || row.bill_status === "cancelled")
+    return "closed";
+  if (row.payment_status === "refunding") return "refunding";
+  if (row.payment_status === "pending" || row.bill_status === "paying")
+    return "pending";
+  return "unpaid";
 }
 
-function normalizeOrderStatus(row: OrderOperationRow, paymentStatus: OrderPaymentStatus): OrderOperationStatus {
-  if (row.subscription_status === 'cancelled' || paymentStatus === 'closed') return 'closed';
-  if (paymentStatus === 'failed' || paymentStatus === 'refunding') return 'abnormal';
-  if (paymentStatus === 'pending_verify') return 'pending_verify';
-  if (paymentStatus === 'paid' || paymentStatus === 'not_required') return 'confirmed';
-  if (row.bill_status === 'overdue' || normalizeSubscriptionStatus(row) === 'overdue') return 'overdue';
-  return 'pending';
+function normalizeOrderStatus(
+  row: OrderOperationRow,
+  paymentStatus: OrderPaymentStatus,
+): OrderOperationStatus {
+  if (row.subscription_status === "cancelled" || paymentStatus === "closed")
+    return "closed";
+  if (paymentStatus === "failed" || paymentStatus === "refunding")
+    return "abnormal";
+  if (paymentStatus === "pending_verify") return "pending_verify";
+  if (paymentStatus === "paid" || paymentStatus === "not_required")
+    return "confirmed";
+  if (
+    row.bill_status === "overdue" ||
+    normalizeSubscriptionStatus(row) === "overdue"
+  )
+    return "overdue";
+  return "pending";
 }
 
-function normalizePaySource(row: OrderOperationRow, paymentStatus: OrderPaymentStatus): OrderPaySource {
-  if (paymentStatus === 'not_required' || !row.pay_source) return 'none';
-  return row.pay_source === 'offline' ? 'offline' : 'online';
+function normalizePaySource(
+  row: OrderOperationRow,
+  paymentStatus: OrderPaymentStatus,
+): OrderPaySource {
+  if (paymentStatus === "not_required" || !row.pay_source) return "none";
+  return row.pay_source === "offline" ? "offline" : "online";
 }
 
 function normalizeOfflinePaymentType(value: unknown): OrderOfflinePaymentType {
-  if (value === 'bank_transfer' || value === 'cash' || value === 'other') return value;
-  throw new BadRequestException('请选择线下收款方式');
+  if (value === "bank_transfer" || value === "cash" || value === "other")
+    return value;
+  throw new BadRequestException("请选择线下收款方式");
 }
 
-function normalizeText(value: unknown, fieldName: string, maxLength: number, minLength = 1): string {
-  const text = typeof value === 'string' ? value.trim() : '';
+function normalizeText(
+  value: unknown,
+  fieldName: string,
+  maxLength: number,
+  minLength = 1,
+): string {
+  const text = typeof value === "string" ? value.trim() : "";
   if (text.length < minLength) {
     throw new BadRequestException(`${fieldName}不能为空`);
   }
@@ -222,8 +272,11 @@ function normalizeText(value: unknown, fieldName: string, maxLength: number, min
   return text;
 }
 
-function normalizeOptionalText(value: unknown, maxLength: number): string | null {
-  const text = typeof value === 'string' ? value.trim() : '';
+function normalizeOptionalText(
+  value: unknown,
+  maxLength: number,
+): string | null {
+  const text = typeof value === "string" ? value.trim() : "";
   if (!text) return null;
   if (text.length > maxLength) {
     throw new BadRequestException(`字段长度不能超过 ${maxLength} 个字符`);
@@ -231,64 +284,79 @@ function normalizeOptionalText(value: unknown, maxLength: number): string | null
   return text;
 }
 
-function normalizeConfirmOfflinePaymentBody(body: ConfirmOfflinePaymentBody): ConfirmOfflinePaymentPayload {
+function normalizeConfirmOfflinePaymentBody(
+  body: ConfirmOfflinePaymentBody,
+): ConfirmOfflinePaymentPayload {
   const paidAmount = Number(body?.paidAmount);
   if (!Number.isFinite(paidAmount) || paidAmount <= 0) {
-    throw new BadRequestException('确认金额必须大于 0');
+    throw new BadRequestException("确认金额必须大于 0");
   }
 
-  const paidAt = typeof body?.paidAt === 'string' ? new Date(body.paidAt) : new Date();
+  const paidAt =
+    typeof body?.paidAt === "string" ? new Date(body.paidAt) : new Date();
   if (!Number.isFinite(paidAt.getTime())) {
-    throw new BadRequestException('请选择有效的收款时间');
+    throw new BadRequestException("请选择有效的收款时间");
   }
   if (paidAt.getTime() > Date.now() + 5 * 60 * 1000) {
-    throw new BadRequestException('收款时间不能晚于当前时间');
+    throw new BadRequestException("收款时间不能晚于当前时间");
   }
 
   return {
     paidAmount: Math.round(paidAmount * 100) / 100,
     offlinePayType: normalizeOfflinePaymentType(body?.offlinePayType),
-    payerName: normalizeText(body?.payerName, '付款方', 128),
+    payerName: normalizeText(body?.payerName, "付款方", 128),
     paidAt,
     transactionNo: normalizeOptionalText(body?.transactionNo, 128),
     evidenceUrl: normalizeOptionalText(body?.evidenceUrl, 512),
-    reason: normalizeText(body?.reason, '确认原因', 512, 4),
+    reason: normalizeText(body?.reason, "确认原因", 512, 4),
   };
 }
 
-function validateOfflinePaymentConfirm(current: OrderActionRow, payload: ConfirmOfflinePaymentPayload): void {
+function validateOfflinePaymentConfirm(
+  current: OrderActionRow,
+  payload: ConfirmOfflinePaymentPayload,
+): void {
   const payableAmount = Number(current.payable_amount ?? 0);
   const paidAmount = Number(current.paid_amount ?? 0);
   const remainingAmount = Math.max(0, payableAmount - paidAmount);
 
-  if (current.subscription_status === 'cancelled') {
-    throw new BadRequestException('已取消订阅对应的订单不能确认收款');
+  if (current.subscription_status === "cancelled") {
+    throw new BadRequestException("已取消订阅对应的订单不能确认收款");
   }
 
   if (payableAmount <= 0) {
-    throw new BadRequestException('免费订单或零金额订单不需要确认收款');
+    throw new BadRequestException("免费订单或零金额订单不需要确认收款");
   }
 
-  if (current.bill_status === 'cancelled' || current.payment_status === 'closed') {
-    throw new BadRequestException('已关闭订单不能确认收款');
+  if (
+    current.bill_status === "cancelled" ||
+    current.payment_status === "closed"
+  ) {
+    throw new BadRequestException("已关闭订单不能确认收款");
   }
 
-  if (current.payment_status === 'refunding') {
-    throw new BadRequestException('退款中的订单不能确认收款');
+  if (current.payment_status === "refunding") {
+    throw new BadRequestException("退款中的订单不能确认收款");
   }
 
-  if (current.bill_status === 'paid' || remainingAmount <= 0) {
-    throw new BadRequestException('订单已完成收款确认');
+  if (current.bill_status === "paid" || remainingAmount <= 0) {
+    throw new BadRequestException("订单已完成收款确认");
   }
 
   if (payload.paidAmount > remainingAmount + 0.01) {
-    throw new BadRequestException(`确认金额不能超过剩余应收 ${remainingAmount.toFixed(2)}`);
+    throw new BadRequestException(
+      `确认金额不能超过剩余应收 ${remainingAmount.toFixed(2)}`,
+    );
   }
 }
 
 function normalizeUuid(value: string | null | undefined): string | null {
   if (!value) return null;
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value) ? value : null;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+    value,
+  )
+    ? value
+    : null;
 }
 
 function toDateOnly(value: Date | string): string {
@@ -297,7 +365,7 @@ function toDateOnly(value: Date | string): string {
 
 function addCycle(value: Date | string, cycleType: string): Date {
   const next = new Date(value);
-  if (cycleType === 'monthly') {
+  if (cycleType === "monthly") {
     next.setMonth(next.getMonth() + 1);
   } else {
     next.setFullYear(next.getFullYear() + 1);
@@ -306,12 +374,17 @@ function addCycle(value: Date | string, cycleType: string): Date {
 }
 
 function billCycleFor(value: Date): string {
-  return value.toISOString().slice(0, 7).replace('-', '');
+  return value.toISOString().slice(0, 7).replace("-", "");
 }
 
 function billNoFor(current: OrderActionRow): string {
-  const suffix = (current.order_no ?? current.id).replace(/[^a-z0-9]/gi, '').slice(-12) || current.id.slice(0, 8);
-  const stamp = new Date().toISOString().replace(/[-:TZ.]/g, '').slice(0, 14);
+  const suffix =
+    (current.order_no ?? current.id).replace(/[^a-z0-9]/gi, "").slice(-12) ||
+    current.id.slice(0, 8);
+  const stamp = new Date()
+    .toISOString()
+    .replace(/[-:TZ.]/g, "")
+    .slice(0, 14);
   return `BILL-${stamp}-${suffix}`;
 }
 
@@ -324,7 +397,9 @@ async function ensureInvoiceForOfflinePayment(
   if (current.bill_id) return current.bill_id;
 
   const cycleStartDate = toDateOnly(current.start_at);
-  const cycleEndDate = toDateOnly(current.end_at ?? addCycle(current.start_at, current.cycle_type));
+  const cycleEndDate = toDateOnly(
+    current.end_at ?? addCycle(current.start_at, current.cycle_type),
+  );
   const result = await client.query<{ id: string }>(ORDER_INVOICE_CREATE_SQL, [
     current.tenant_id,
     billNoFor(current),
@@ -333,54 +408,71 @@ async function ensureInvoiceForOfflinePayment(
     cycleStartDate,
     cycleEndDate,
     current.payable_amount,
-    current.currency ?? 'CNY',
+    current.currency ?? "CNY",
     operatorId,
     `平台运营确认线下收款时自动补录账单：${payload.reason}`,
   ]);
 
   const createdInvoice = result.rows[0];
   if (!createdInvoice) {
-    throw new BadRequestException('账单补录失败，请稍后重试');
+    throw new BadRequestException("账单补录失败，请稍后重试");
   }
 
   return createdInvoice.id;
 }
 
-function inferSolution(row: OrderOperationRow): { code: string | null; name: string } {
-  const searchable = `${row.tenant_code} ${row.industry ?? ''} ${row.plan_name} ${row.plan_code}`.toLowerCase();
+function inferSolution(row: OrderOperationRow): {
+  code: string | null;
+  name: string;
+} {
+  const searchable =
+    `${row.tenant_code} ${row.industry ?? ""} ${row.plan_name} ${row.plan_code}`.toLowerCase();
 
-  if (searchable.includes('法律') || searchable.includes('法务') || searchable.includes('law')) {
-    return { code: 'smart-legal', name: '智慧法务' };
+  if (
+    searchable.includes("法律") ||
+    searchable.includes("法务") ||
+    searchable.includes("law")
+  ) {
+    return { code: "smart-legal", name: "智慧法务" };
   }
 
-  if (searchable.includes('应急') || searchable.includes('政务') || searchable.includes('水利') || searchable.includes('flood')) {
-    if (searchable.includes('水利') || searchable.includes('flood')) {
-      return { code: 'flood-regulation', name: '洪涝灾害监管业务' };
+  if (
+    searchable.includes("应急") ||
+    searchable.includes("政务") ||
+    searchable.includes("水利") ||
+    searchable.includes("flood")
+  ) {
+    if (searchable.includes("水利") || searchable.includes("flood")) {
+      return { code: "flood-regulation", name: "洪涝灾害监管业务" };
     }
-    return { code: 'emergency-command', name: '应急指挥协同' };
+    return { code: "emergency-command", name: "应急指挥协同" };
   }
 
-  if (searchable.includes('智能体') || searchable.includes('ai') || searchable.includes('agent')) {
-    return { code: null, name: '智能体平台服务' };
+  if (
+    searchable.includes("智能体") ||
+    searchable.includes("ai") ||
+    searchable.includes("agent")
+  ) {
+    return { code: null, name: "智能体平台服务" };
   }
 
-  return { code: null, name: '平台基础服务' };
+  return { code: null, name: "平台基础服务" };
 }
 
 function tierNameForPlan(planCode: string, planName: string): string {
-  if (planCode === 'starter') return 'Free';
-  if (planCode === 'growth') return 'Pro';
-  if (planCode === 'enterprise') return 'Enterprise';
+  if (planCode === "starter") return "Free";
+  if (planCode === "growth") return "Pro";
+  if (planCode === "enterprise") return "Enterprise";
   return planName;
 }
 
 function orderOperationHint(status: OrderOperationStatus): string {
-  if (status === 'pending_verify') return '收款复核';
-  if (status === 'confirmed') return '已确认';
-  if (status === 'overdue') return '逾期催收';
-  if (status === 'closed') return '已关闭';
-  if (status === 'abnormal') return '异常处理';
-  return '等待付款';
+  if (status === "pending_verify") return "收款复核";
+  if (status === "confirmed") return "已确认";
+  if (status === "overdue") return "逾期催收";
+  if (status === "closed") return "已关闭";
+  if (status === "abnormal") return "异常处理";
+  return "等待付款";
 }
 
 function mapOrderOperationRow(row: OrderOperationRow): OrderOperationRecord {
@@ -398,8 +490,8 @@ function mapOrderOperationRow(row: OrderOperationRow): OrderOperationRecord {
     tenantCode: row.tenant_code,
     tenantName: row.display_name ?? row.tenant_name,
     tenantType: row.tenant_type,
-    region: [row.province, row.city].filter(Boolean).join(' / ') || '未设置',
-    industry: row.industry ?? '未设置',
+    region: [row.province, row.city].filter(Boolean).join(" / ") || "未设置",
+    industry: row.industry ?? "未设置",
     solutionCode: solution.code,
     solutionName: solution.name,
     servicePlanCode: row.plan_code,
@@ -419,8 +511,8 @@ function mapOrderOperationRow(row: OrderOperationRow): OrderOperationRecord {
     paymentNo: row.pay_order_no,
     amount,
     paidAmount,
-    currency: row.currency ?? 'CNY',
-    operatorName: row.operator_display_name ?? row.operator_username ?? '系统',
+    currency: row.currency ?? "CNY",
+    operatorName: row.operator_display_name ?? row.operator_username ?? "系统",
     operationHint: orderOperationHint(orderStatus),
     createdAt: toIso(row.created_at),
     confirmedAt: nullableIso(row.confirmed_at),
@@ -428,7 +520,10 @@ function mapOrderOperationRow(row: OrderOperationRow): OrderOperationRecord {
   };
 }
 
-function mapInvoiceItems(row: OrderOperationRow, items: OrderInvoiceItemRow[]): OrderInvoiceItemRecord[] {
+function mapInvoiceItems(
+  row: OrderOperationRow,
+  items: OrderInvoiceItemRow[],
+): OrderInvoiceItemRecord[] {
   if (items.length) {
     return items.map((item) => ({
       id: item.id,
@@ -445,13 +540,13 @@ function mapInvoiceItems(row: OrderOperationRow, items: OrderInvoiceItemRow[]): 
   return [
     {
       id: `${row.id}:subscription`,
-      itemName: `${row.plan_name} ${normalizeCycle(row.cycle_type) === 'yearly' ? '年付' : normalizeCycle(row.cycle_type) === 'once' ? '一次性' : '月付'}订阅`,
-      itemType: 'subscription',
-      itemUnit: '项',
+      itemName: `${row.plan_name} ${normalizeCycle(row.cycle_type) === "yearly" ? "年付" : normalizeCycle(row.cycle_type) === "once" ? "一次性" : "月付"}订阅`,
+      itemType: "subscription",
+      itemUnit: "项",
       quantity: 1,
       unitPrice: Number(row.amount ?? 0),
       totalAmount: Number(row.amount ?? 0),
-      remark: '当前订单尚未生成账单明细，按订阅订单金额兼容展示。',
+      remark: "当前订单尚未生成账单明细，按订阅订单金额兼容展示。",
     },
   ];
 }
@@ -462,28 +557,38 @@ function mapPaymentRow(row: OrderPaymentRow): OrderPaymentRecord {
   return {
     id: row.id,
     paymentNo: row.pay_order_no,
-    paySource: row.pay_source === 'offline' ? 'offline' : 'online',
+    paySource: row.pay_source === "offline" ? "offline" : "online",
     payMethod: row.pay_method,
     offlinePayType: normalizePaymentTypeOrNull(row.offline_pay_type),
     offlinePayerName: row.offline_payer_name,
     paidAmount: Number(row.paid_amount ?? 0),
-    currency: row.currency ?? 'CNY',
+    currency: row.currency ?? "CNY",
     paymentStatus,
     paidAt: nullableIso(row.paid_at),
-    operatorName: row.operator_display_name ?? row.operator_username ?? '系统',
+    operatorName: row.operator_display_name ?? row.operator_username ?? "系统",
     remark: row.operate_remark ?? row.status_msg,
   };
 }
 
 function normalizePaymentRowStatus(value: string): OrderPaymentStatus {
-  if (value === 'pending_verify' || value === 'paid' || value === 'failed' || value === 'closed' || value === 'refunding' || value === 'pending') {
+  if (
+    value === "pending_verify" ||
+    value === "paid" ||
+    value === "failed" ||
+    value === "closed" ||
+    value === "refunding" ||
+    value === "pending"
+  ) {
     return value;
   }
-  return 'pending';
+  return "pending";
 }
 
-function normalizePaymentTypeOrNull(value: string | null): OrderOfflinePaymentType | null {
-  if (value === 'bank_transfer' || value === 'cash' || value === 'other') return value;
+function normalizePaymentTypeOrNull(
+  value: string | null,
+): OrderOfflinePaymentType | null {
+  if (value === "bank_transfer" || value === "cash" || value === "other")
+    return value;
   return null;
 }
 
@@ -492,45 +597,55 @@ function buildOrderTimeline(
   record: OrderOperationRecord,
   paymentRecords: OrderPaymentRecord[],
 ): OrderOperationEvent[] {
-  const paymentEvents: OrderOperationEvent[] = paymentRecords.map((payment) => ({
-    id: payment.id,
-    title: payment.paymentStatus === 'paid' ? '收款确认' : '支付记录',
-    description: `${payment.paySource === 'offline' ? '线下' : '线上'}收款 ${payment.paidAmount.toFixed(2)} ${payment.currency}${payment.remark ? `，${payment.remark}` : ''}`,
-    actor: payment.operatorName,
-    at: payment.paidAt ?? toIso(row.updated_at),
-    tone: payment.paymentStatus === 'paid' ? 'success' : payment.paymentStatus === 'failed' ? 'danger' : 'warning',
-  }));
+  const paymentEvents: OrderOperationEvent[] = paymentRecords.map(
+    (payment) => ({
+      id: payment.id,
+      title: payment.paymentStatus === "paid" ? "收款确认" : "支付记录",
+      description: `${payment.paySource === "offline" ? "线下" : "线上"}收款 ${payment.paidAmount.toFixed(2)} ${payment.currency}${payment.remark ? `，${payment.remark}` : ""}`,
+      actor: payment.operatorName,
+      at: payment.paidAt ?? toIso(row.updated_at),
+      tone:
+        payment.paymentStatus === "paid"
+          ? "success"
+          : payment.paymentStatus === "failed"
+            ? "danger"
+            : "warning",
+    }),
+  );
 
-  const currentTone: OrderOperationEvent['tone'] =
-    record.orderStatus === 'confirmed'
-      ? 'success'
-      : record.orderStatus === 'pending' || record.orderStatus === 'pending_verify'
-        ? 'warning'
-        : record.orderStatus === 'closed'
-          ? 'neutral'
-          : 'danger';
+  const currentTone: OrderOperationEvent["tone"] =
+    record.orderStatus === "confirmed"
+      ? "success"
+      : record.orderStatus === "pending" ||
+          record.orderStatus === "pending_verify"
+        ? "warning"
+        : record.orderStatus === "closed"
+          ? "neutral"
+          : "danger";
 
   const events: OrderOperationEvent[] = [
     {
       id: `${record.id}:created`,
-      title: '订单生成',
+      title: "订单生成",
       description: `${record.tenantName} 生成 ${record.servicePlanName} 订阅订单，应收 ${record.amount.toFixed(2)} ${record.currency}。`,
       actor: record.operatorName,
       at: toIso(row.created_at),
-      tone: 'neutral',
+      tone: "neutral",
     },
     ...paymentEvents,
     {
       id: `${record.id}:current`,
       title: record.operationHint,
       description: `当前订单状态为 ${orderOperationHint(record.orderStatus)}，支付状态为 ${record.paymentStatus}。`,
-      actor: '系统',
+      actor: "系统",
       at: toIso(row.updated_at),
       tone: currentTone,
     },
   ];
 
-  return events.sort((left, right) => new Date(right.at).getTime() - new Date(left.at).getTime());
+  return events.sort(
+    (left, right) => new Date(right.at).getTime() - new Date(left.at).getTime(),
+  );
 }
 
 interface ConfirmOfflinePaymentBody {
@@ -560,7 +675,7 @@ interface OrderOperationRow {
   tenant_code: string;
   tenant_name: string;
   display_name: string | null;
-  tenant_type: 'company' | 'individual';
+  tenant_type: "company" | "individual";
   province: string | null;
   city: string | null;
   industry: string | null;

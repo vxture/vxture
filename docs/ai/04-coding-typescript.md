@@ -54,7 +54,7 @@ Defines global TypeScript compiler rules inherited by all packages and applicati
   "compilerOptions": {
     // 编译目标
     "target": "ES2023",
-    "lib": ["ES2023"],          // 不含 DOM；前端包在本地覆盖为 ["DOM", "DOM.Iterable", "ES2023"]
+    "lib": ["ES2023"], // 不含 DOM；前端包在本地覆盖为 ["DOM", "DOM.Iterable", "ES2023"]
     "module": "ESNext",
     "moduleResolution": "bundler",
 
@@ -75,8 +75,8 @@ Defines global TypeScript compiler rules inherited by all packages and applicati
 
     // 工具链
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  }
+    "forceConsistentCasingInFileNames": true,
+  },
 }
 ```
 
@@ -94,11 +94,11 @@ Rules:
 - Cross-package relative imports are **forbidden**
 
 ```ts
-import { debug } from '@vxture/shared';                    // ✅
-import { debug } from '../../../shared/shared/src';        // ❌
+import { debug } from "@vxture/shared"; // ✅
+import { debug } from "../../../shared/shared/src"; // ❌
 
-import { getBillingStatus } from '@vxture/service-billing'; // ✅
-import { getBillingStatus } from '../../services/commerce/billing/src'; // ❌
+import { getBillingStatus } from "@vxture/service-billing"; // ✅
+import { getBillingStatus } from "../../services/commerce/billing/src"; // ❌
 ```
 
 ---
@@ -183,10 +183,10 @@ Applies to: `packages/core/*`, `packages/ai/ai-sdk`, `packages/platform/*`,
 
 **lib 分层策略**（最重要的差异点）：
 
-| 层 | `lib` | 说明 |
-|----|-------|------|
-| 服务端（bff、agent-server、services、core、shared） | 继承 base 的 `["ES2023"]` — **不需要在本地声明** | 无 DOM 类型，防止误用浏览器 API |
-| 前端（portals、agent-studio、design-system、platform-*） | `["DOM", "DOM.Iterable", "ES2023"]` — **必须在本地声明** | 覆盖 base，启用 DOM 类型 |
+| 层                                                        | `lib`                                                    | 说明                            |
+| --------------------------------------------------------- | -------------------------------------------------------- | ------------------------------- |
+| 服务端（bff、agent-server、services、core、shared）       | 继承 base 的 `["ES2023"]` — **不需要在本地声明**         | 无 DOM 类型，防止误用浏览器 API |
+| 前端（portals、agent-studio、design-system、platform-\*） | `["DOM", "DOM.Iterable", "ES2023"]` — **必须在本地声明** | 覆盖 base，启用 DOM 类型        |
 
 **NestJS 包**（bff、agent-server、services、core）额外需要：
 
@@ -195,8 +195,8 @@ Applies to: `packages/core/*`, `packages/ai/ai-sdk`, `packages/platform/*`,
   "compilerOptions": {
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["node"]           // 可选，显式限制环境类型
-  }
+    "types": ["node"], // 可选，显式限制环境类型
+  },
 }
 ```
 
@@ -206,10 +206,10 @@ Applies to: `packages/core/*`, `packages/ai/ai-sdk`, `packages/platform/*`,
 {
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
-    "jsx": "preserve",          // Next.js 用 preserve；纯 React 库用 react-jsx
+    "jsx": "preserve", // Next.js 用 preserve；纯 React 库用 react-jsx
     "noEmit": true,
-    "isolatedModules": true     // Next.js 要求
-  }
+    "isolatedModules": true, // Next.js 要求
+  },
 }
 ```
 
@@ -231,16 +231,16 @@ src/index.ts
 All public APIs exported from this file:
 
 ```ts
-export * from './client/api-client';
-export * from './types/api.types';
-export * from './utils/request.utils';
+export * from "./client/api-client";
+export * from "./types/api.types";
+export * from "./utils/request.utils";
 ```
 
 Consumers always import from the package root:
 
 ```ts
-import { apiClient } from '@vxture/core-api';        // ✅
-import { apiClient } from '@vxture/core-api/src/client'; // ❌
+import { apiClient } from "@vxture/core-api"; // ✅
+import { apiClient } from "@vxture/core-api/src/client"; // ❌
 ```
 
 Source code must never import from `dist/`.
@@ -249,19 +249,19 @@ Source code must never import from `dist/`.
 
 # 8. File Naming Convention
 
-| Type             | Convention          | Example               |
-| ---------------- | ------------------- | --------------------- |
-| React components | PascalCase `.tsx`   | `Button.tsx`          |
-| React hooks      | camelCase `use*.ts` | `useTheme.ts`         |
-| Type definitions | `*.types.ts`        | `user.types.ts`       |
-| Constants        | `*.constants.ts`    | `auth.constants.ts`   |
-| Utilities        | `*.utils.ts`        | `format.utils.ts`     |
-| API clients      | `*.client.ts`       | `api.client.ts`       |
-| Context helpers  | `*.context.ts`      | `tenant.context.ts`   |
-| Service logic    | `*.service.ts`      | `billing.service.ts`  |
-| Repository logic | `*.repository.ts`   | `user.repository.ts`  |
-| Router modules   | `*.router.ts`       | `order.router.ts`     |
-| Middleware       | `*.middleware.ts`   | `auth.middleware.ts`  |
+| Type             | Convention          | Example              |
+| ---------------- | ------------------- | -------------------- |
+| React components | PascalCase `.tsx`   | `Button.tsx`         |
+| React hooks      | camelCase `use*.ts` | `useTheme.ts`        |
+| Type definitions | `*.types.ts`        | `user.types.ts`      |
+| Constants        | `*.constants.ts`    | `auth.constants.ts`  |
+| Utilities        | `*.utils.ts`        | `format.utils.ts`    |
+| API clients      | `*.client.ts`       | `api.client.ts`      |
+| Context helpers  | `*.context.ts`      | `tenant.context.ts`  |
+| Service logic    | `*.service.ts`      | `billing.service.ts` |
+| Repository logic | `*.repository.ts`   | `user.repository.ts` |
+| Router modules   | `*.router.ts`       | `order.router.ts`    |
+| Middleware       | `*.middleware.ts`   | `auth.middleware.ts` |
 
 Avoid generic names: `helpers.ts`, `utils.ts`, `misc.ts`.
 Use domain-specific names instead.
@@ -272,16 +272,16 @@ Use domain-specific names instead.
 
 ```ts
 // 1. External libraries
-import React from 'react';
-import { z } from 'zod';
+import React from "react";
+import { z } from "zod";
 
 // 2. Internal @vxture packages
-import { getTenantId } from '@vxture/core-tenant';
-import { Button } from '@vxture/design-system';
+import { getTenantId } from "@vxture/core-tenant";
+import { Button } from "@vxture/design-system";
 
 // 3. Relative imports (within same package)
-import { formatDate } from './utils/format.utils';
-import type { UserType } from './types/user.types';
+import { formatDate } from "./utils/format.utils";
+import type { UserType } from "./types/user.types";
 ```
 
 Use `import type` for type-only imports.
@@ -315,8 +315,8 @@ const data: any           // ❌ use unknown and narrow
 Cross-package relative imports:
 
 ```ts
-import { x } from '../../../packages/core/api/src';  // ❌
-import { x } from '@vxture/core-api';                 // ✅
+import { x } from "../../../packages/core/api/src"; // ❌
+import { x } from "@vxture/core-api"; // ✅
 ```
 
 Duplicated type definitions across packages:

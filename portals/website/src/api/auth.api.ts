@@ -16,8 +16,8 @@
  * @license MIT
  */
 
-import { apiClient } from './client';
-import { AUTH_CONSTANTS } from '@vxture/shared';
+import { apiClient } from "./client";
+import { AUTH_CONSTANTS } from "@vxture/shared";
 
 export interface AuthUserDto {
   id: string;
@@ -32,7 +32,7 @@ export interface AuthUserDto {
   personalVerified?: boolean | null;
   organizationVerified?: boolean | null;
   organizationName?: string | null;
-  tenantType?: 'individual' | 'company' | 'organization' | string | null;
+  tenantType?: "individual" | "company" | "organization" | string | null;
 }
 
 export interface AccountProfileDto {
@@ -79,12 +79,15 @@ export interface SignupRequest {
 }
 
 export async function login(data: LoginRequest): Promise<AuthUserDto> {
-  const response = await apiClient.post(AUTH_CONSTANTS.API_ENDPOINTS.LOGIN, data);
+  const response = await apiClient.post(
+    AUTH_CONSTANTS.API_ENDPOINTS.LOGIN,
+    data,
+  );
   return response.data;
 }
 
 export async function signup(data: SignupRequest): Promise<AuthUserDto> {
-  const response = await apiClient.post('/api/auth/signup', data);
+  const response = await apiClient.post("/api/auth/signup", data);
   return response.data;
 }
 
@@ -98,39 +101,64 @@ export async function getProfile(): Promise<AuthUserDto> {
 }
 
 export async function getUserProfile(): Promise<AccountProfileDto> {
-  const response = await apiClient.get<AccountProfileDto>('/api/me/profile');
+  const response = await apiClient.get<AccountProfileDto>("/api/me/profile");
   return response.data;
 }
 
-export async function updateUserProfile(data: UpdateProfileRequest): Promise<AccountProfileDto> {
-  const response = await apiClient.put<AccountProfileDto>('/api/me/profile', data);
+export async function updateUserProfile(
+  data: UpdateProfileRequest,
+): Promise<AccountProfileDto> {
+  const response = await apiClient.put<AccountProfileDto>(
+    "/api/me/profile",
+    data,
+  );
   return response.data;
 }
 
-export async function changeUserPassword(data: ChangePasswordRequest): Promise<void> {
-  await apiClient.put('/api/me/password', data);
+export async function changeUserPassword(
+  data: ChangePasswordRequest,
+): Promise<void> {
+  await apiClient.put("/api/me/password", data);
 }
 
 export async function forgotPassword(data: { email: string }): Promise<void> {
-  await apiClient.post('/api/auth/forgot-password', data);
+  await apiClient.post("/api/auth/forgot-password", data);
 }
 
-export async function resetPassword(data: { token: string; newPassword: string }): Promise<void> {
-  await apiClient.post('/api/auth/reset-password', data);
+export async function resetPassword(data: {
+  token: string;
+  newPassword: string;
+}): Promise<void> {
+  await apiClient.post("/api/auth/reset-password", data);
 }
 
-export async function initTenant(data: { type: 'individual' | 'organization' }): Promise<{ tenantId: string }> {
-  const response = await apiClient.post<{ tenantId: string }>('/api/auth/tenant/init', data);
+export async function initTenant(data: {
+  type: "individual" | "organization";
+}): Promise<{ tenantId: string }> {
+  const response = await apiClient.post<{ tenantId: string }>(
+    "/api/auth/tenant/init",
+    data,
+  );
   return response.data;
 }
 
 /** 发送手机验证码 */
-export async function sendPhoneCode(phone: string, turnstileToken?: string): Promise<void> {
-  await apiClient.post('/api/auth/send-phone-code', { phone, turnstileToken });
+export async function sendPhoneCode(
+  phone: string,
+  turnstileToken?: string,
+): Promise<void> {
+  await apiClient.post("/api/auth/send-phone-code", { phone, turnstileToken });
 }
 
 /** 手机验证码登录 */
-export async function loginWithPhone(phone: string, code: string, turnstileToken?: string): Promise<AuthUserDto> {
-  const response = await apiClient.post<AuthUserDto>('/api/auth/login-with-phone', { phone, code, turnstileToken });
+export async function loginWithPhone(
+  phone: string,
+  code: string,
+  turnstileToken?: string,
+): Promise<AuthUserDto> {
+  const response = await apiClient.post<AuthUserDto>(
+    "/api/auth/login-with-phone",
+    { phone, code, turnstileToken },
+  );
   return response.data;
 }

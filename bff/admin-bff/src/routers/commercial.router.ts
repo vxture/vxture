@@ -5,10 +5,10 @@ import {
   Inject,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL } from '../tokens';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL } from "../tokens";
 import type {
   BillingBillStatus,
   CommerceOverviewPlanRevenue,
@@ -21,38 +21,48 @@ import type {
   RequestContext,
   UsageMeteringRecord,
   UsageMeteringRisk,
-} from '../types/console.types';
+} from "../types/console.types";
 
-@Controller('api/commercial')
+@Controller("api/commercial")
 export class CommercialRouter {
   constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
-  @Get('usage-metering')
-  async listUsageMetering(@Req() req: Request & RequestContext): Promise<UsageMeteringRecord[]> {
+  @Get("usage-metering")
+  async listUsageMetering(
+    @Req() req: Request & RequestContext,
+  ): Promise<UsageMeteringRecord[]> {
     assertCanManageCommercial(req);
 
     const rows = await this.pool.query<UsageMeteringRow>(USAGE_METERING_SQL);
     return rows.rows.map(mapUsageMeteringRow);
   }
 
-  @Get('promotions')
-  async listPromotions(@Req() req: Request & RequestContext): Promise<PromotionOperationRecord[]> {
+  @Get("promotions")
+  async listPromotions(
+    @Req() req: Request & RequestContext,
+  ): Promise<PromotionOperationRecord[]> {
     assertCanManageCommercial(req);
 
     const rows = await this.pool.query<PromotionRow>(PROMOTION_SQL);
     return rows.rows.map(mapPromotionRow);
   }
 
-  @Get('promotion-redemptions')
-  async listPromotionRedemptions(@Req() req: Request & RequestContext): Promise<PromotionRedemptionRecord[]> {
+  @Get("promotion-redemptions")
+  async listPromotionRedemptions(
+    @Req() req: Request & RequestContext,
+  ): Promise<PromotionRedemptionRecord[]> {
     assertCanManageCommercial(req);
 
-    const rows = await this.pool.query<PromotionRedemptionRow>(PROMOTION_REDEMPTION_SQL);
+    const rows = await this.pool.query<PromotionRedemptionRow>(
+      PROMOTION_REDEMPTION_SQL,
+    );
     return rows.rows.map(mapPromotionRedemptionRow);
   }
 
-  @Get('overview')
-  async getCommerceOverview(@Req() req: Request & RequestContext): Promise<CommerceOverviewSnapshot> {
+  @Get("overview")
+  async getCommerceOverview(
+    @Req() req: Request & RequestContext,
+  ): Promise<CommerceOverviewSnapshot> {
     assertCanManageCommercial(req);
 
     const [metricsResult, riskResult, planRevenueResult] = await Promise.all([
@@ -70,61 +80,69 @@ export class CommercialRouter {
       generatedAt: new Date().toISOString(),
       metrics: [
         {
-          key: 'subscriptions',
-          label: '订阅实例',
+          key: "subscriptions",
+          label: "订阅实例",
           value: Number(metrics.subscription_count ?? 0),
-          tone: 'blue',
+          tone: "blue",
           hint: `有效 ${Number(metrics.active_subscription_count ?? 0)}，试用 ${Number(metrics.trial_subscription_count ?? 0)}`,
         },
         {
-          key: 'receivable',
-          label: '应收金额',
+          key: "receivable",
+          label: "应收金额",
           value: Number(metrics.bill_count ?? 0),
           amount: Number(metrics.receivable_amount ?? 0),
-          currency: 'CNY',
-          tone: 'green',
+          currency: "CNY",
+          tone: "green",
           hint: `已收 ${Number(metrics.paid_amount ?? 0).toFixed(0)}，减免 ${discountAmount.toFixed(0)}`,
         },
         {
-          key: 'payments',
-          label: '收款记录',
+          key: "payments",
+          label: "收款记录",
           value: Number(metrics.payment_count ?? 0),
           amount: Number(metrics.payment_amount ?? 0),
-          currency: 'CNY',
-          tone: Number(metrics.payment_attention_count ?? 0) ? 'amber' : 'green',
+          currency: "CNY",
+          tone: Number(metrics.payment_attention_count ?? 0)
+            ? "amber"
+            : "green",
           hint: `线下 ${Number(metrics.offline_payment_amount ?? 0).toFixed(0)}，待核 ${Number(metrics.pending_verify_payment_count ?? 0)}`,
         },
         {
-          key: 'invoices',
-          label: '发票登记',
+          key: "invoices",
+          label: "发票登记",
           value: Number(metrics.invoice_count ?? 0),
           amount: Number(metrics.invoice_amount ?? 0),
-          currency: 'CNY',
-          tone: pendingInvoices ? 'amber' : 'green',
+          currency: "CNY",
+          tone: pendingInvoices ? "amber" : "green",
           hint: `待交付 ${pendingInvoices}，异常 ${Number(metrics.exception_invoice_count ?? 0)}`,
         },
       ],
       risks: [
         {
-          id: 'overdue-bills',
+          id: "overdue-bills",
           title: `逾期账单 ${overdueBills}`,
-          detail: overdueBills ? '存在逾期未结清账单，建议进入账单管理跟进。' : '当前无逾期账单。',
-          tone: overdueBills ? 'rose' : 'green',
-          href: '/billing',
+          detail: overdueBills
+            ? "存在逾期未结清账单，建议进入账单管理跟进。"
+            : "当前无逾期账单。",
+          tone: overdueBills ? "rose" : "green",
+          href: "/billing",
         },
         {
-          id: 'usage-risk',
+          id: "usage-risk",
           title: `用量预警 ${warningUsage}`,
-          detail: warningUsage ? '存在接近或超过配额的租户用量记录。' : '当前用量消耗处于正常区间。',
-          tone: warningUsage ? 'amber' : 'green',
-          href: '/usage-metering',
+          detail: warningUsage
+            ? "存在接近或超过配额的租户用量记录。"
+            : "当前用量消耗处于正常区间。",
+          tone: warningUsage ? "amber" : "green",
+          href: "/usage-metering",
         },
         {
-          id: 'invoice-pending',
+          id: "invoice-pending",
           title: `发票待交付 ${pendingInvoices}`,
-          detail: pendingInvoices ? '存在已开票未完成交付的线下发票。' : '线下发票交付状态正常。',
-          tone: pendingInvoices ? 'amber' : 'green',
-          href: '/invoices',
+          detail: pendingInvoices
+            ? "存在已开票未完成交付的线下发票。"
+            : "线下发票交付状态正常。",
+          tone: pendingInvoices ? "amber" : "green",
+          href: "/invoices",
         },
         ...riskResult.rows.map(mapOverviewRiskRow),
       ],
@@ -135,64 +153,105 @@ export class CommercialRouter {
 
 function assertCanManageCommercial(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
   const capabilities = req.capabilities ?? [];
-  if (capabilities.length && !capabilities.some((item) => item === 'platform.pricing.manage' || item === 'platform.tenant.manage')) {
-    throw new ForbiddenException('Missing platform.pricing.manage capability');
+  if (
+    capabilities.length &&
+    !capabilities.some(
+      (item) =>
+        item === "platform.pricing.manage" || item === "platform.tenant.manage",
+    )
+  ) {
+    throw new ForbiddenException("Missing platform.pricing.manage capability");
   }
 }
 
 function toIso(value: Date | string | null): string {
   if (!value) return new Date(0).toISOString();
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
 function nullableIso(value: Date | string | null): string | null {
   return value ? toIso(value) : null;
 }
 
-function tierNameForPlan(planCode: string | null, planName: string | null): string | null {
+function tierNameForPlan(
+  planCode: string | null,
+  planName: string | null,
+): string | null {
   if (!planCode || !planName) return null;
-  if (planCode === 'starter') return 'Free';
-  if (planCode === 'growth') return 'Pro';
-  if (planCode === 'enterprise') return 'Enterprise';
+  if (planCode === "starter") return "Free";
+  if (planCode === "growth") return "Pro";
+  if (planCode === "enterprise") return "Enterprise";
   return planName;
 }
 
 function normalizeBillStatus(value: string | null): BillingBillStatus {
-  if (value === 'paying' || value === 'paid' || value === 'partial' || value === 'cancelled' || value === 'overdue') return value;
-  return 'unpaid';
+  if (
+    value === "paying" ||
+    value === "paid" ||
+    value === "partial" ||
+    value === "cancelled" ||
+    value === "overdue"
+  )
+    return value;
+  return "unpaid";
 }
 
-function usageRiskFor(usageRate: number, quotaValue: number): UsageMeteringRisk {
-  if (!Number.isFinite(usageRate) || quotaValue <= 0) return 'anomaly';
-  if (usageRate > 1) return 'danger';
-  if (usageRate >= 0.85) return 'warning';
-  return 'normal';
+function usageRiskFor(
+  usageRate: number,
+  quotaValue: number,
+): UsageMeteringRisk {
+  if (!Number.isFinite(usageRate) || quotaValue <= 0) return "anomaly";
+  if (usageRate > 1) return "danger";
+  if (usageRate >= 0.85) return "warning";
+  return "normal";
 }
 
 function productTypeFor(row: UsageMeteringRow): string {
-  if (row.agent_type === 'business') return '智能体';
-  if (row.feature_type === 'model') return '大模型';
-  if (row.feature_type === 'platform') return '平台';
-  if (row.feature_code?.includes('api') || row.feature_code?.includes('integration')) return '三方接入';
-  return row.agent_id === '00000000-0000-0000-0000-000000000000' ? '平台' : '产品能力';
+  if (row.agent_type === "business") return "智能体";
+  if (row.feature_type === "model") return "大模型";
+  if (row.feature_type === "platform") return "平台";
+  if (
+    row.feature_code?.includes("api") ||
+    row.feature_code?.includes("integration")
+  )
+    return "三方接入";
+  return row.agent_id === "00000000-0000-0000-0000-000000000000"
+    ? "平台"
+    : "产品能力";
 }
 
-function metricNameFor(row: UsageMeteringRow): { code: string; name: string; unit: string } {
+function metricNameFor(row: UsageMeteringRow): {
+  code: string;
+  name: string;
+  unit: string;
+} {
   if (row.feature_code && row.feature_name) {
     return {
       code: row.feature_code,
       name: row.feature_name,
-      unit: row.feature_code.includes('storage') ? 'GB' : row.feature_code.includes('request') ? '次' : 'token',
+      unit: row.feature_code.includes("storage")
+        ? "GB"
+        : row.feature_code.includes("request")
+          ? "次"
+          : "token",
     };
   }
 
-  if (row.stat_type === 'summary') return { code: 'tenant.tokens', name: '租户总 Token', unit: 'token' };
-  if (row.agent_name) return { code: `${row.agent_code}.tokens`, name: `${row.agent_name} Token`, unit: 'token' };
-  return { code: 'usage.tokens', name: '用量消耗', unit: 'token' };
+  if (row.stat_type === "summary")
+    return { code: "tenant.tokens", name: "租户总 Token", unit: "token" };
+  if (row.agent_name)
+    return {
+      code: `${row.agent_code}.tokens`,
+      name: `${row.agent_name} Token`,
+      unit: "token",
+    };
+  return { code: "usage.tokens", name: "用量消耗", unit: "token" };
 }
 
 function mapUsageMeteringRow(row: UsageMeteringRow): UsageMeteringRecord {
@@ -206,15 +265,21 @@ function mapUsageMeteringRow(row: UsageMeteringRow): UsageMeteringRecord {
     tenantId: row.tenant_id,
     tenantCode: row.tenant_code,
     tenantName: row.display_name ?? row.tenant_name,
-    tenantType: row.tenant_type === 'individual' ? 'individual' : 'company',
-    region: [row.province, row.city].filter(Boolean).join(' / ') || '未设置',
-    industry: row.industry ?? '未设置',
+    tenantType: row.tenant_type === "individual" ? "individual" : "company",
+    region: [row.province, row.city].filter(Boolean).join(" / ") || "未设置",
+    industry: row.industry ?? "未设置",
     subscriptionId: row.subscription_id,
     orderNo: row.order_no,
     servicePlanName: row.plan_name,
     tierName: tierNameForPlan(row.plan_code, row.plan_name),
-    productCode: row.agent_code ?? row.feature_code ?? (row.stat_type === 'summary' ? 'tenant-summary' : 'unknown'),
-    productName: row.agent_name ?? row.feature_name ?? (row.stat_type === 'summary' ? '租户总用量' : '未命名能力'),
+    productCode:
+      row.agent_code ??
+      row.feature_code ??
+      (row.stat_type === "summary" ? "tenant-summary" : "unknown"),
+    productName:
+      row.agent_name ??
+      row.feature_name ??
+      (row.stat_type === "summary" ? "租户总用量" : "未命名能力"),
     productType: productTypeFor(row),
     metricCode: metric.code,
     metricName: metric.name,
@@ -233,27 +298,28 @@ function mapUsageMeteringRow(row: UsageMeteringRow): UsageMeteringRecord {
 }
 
 function promotionStatusFor(row: PromotionRow): PromotionOperationStatus {
-  if (!row.plan_status || !row.price_status) return 'paused';
+  if (!row.plan_status || !row.price_status) return "paused";
   const endsAt = row.ends_at ? new Date(row.ends_at).getTime() : null;
-  if (endsAt !== null && endsAt < Date.now()) return 'expired';
-  return 'active';
+  if (endsAt !== null && endsAt < Date.now()) return "expired";
+  return "active";
 }
 
 function promotionTypeFor(row: PromotionRow): PromotionOperationType {
-  if (row.discount_amount > 0) return 'discount';
-  if (row.plan_code === 'starter') return 'campaign';
-  return 'coupon';
+  if (row.discount_amount > 0) return "discount";
+  if (row.plan_code === "starter") return "campaign";
+  return "coupon";
 }
 
 function mapPromotionRow(row: PromotionRow): PromotionOperationRecord {
   const discountAmount = Number(row.discount_amount ?? 0);
   const salePrice = Number(row.sale_price ?? 0);
   const originalPrice = Number(row.original_price ?? salePrice);
-  const discountLabel = discountAmount > 0
-    ? `立减 ${discountAmount.toFixed(0)}`
-    : row.plan_code === 'starter'
-      ? '免费试用'
-      : '合同优惠';
+  const discountLabel =
+    discountAmount > 0
+      ? `立减 ${discountAmount.toFixed(0)}`
+      : row.plan_code === "starter"
+        ? "免费试用"
+        : "合同优惠";
   const tierName = tierNameForPlan(row.plan_code, row.plan_name);
 
   return {
@@ -267,7 +333,7 @@ function mapPromotionRow(row: PromotionRow): PromotionOperationRecord {
     planName: row.plan_name,
     tierName,
     discountLabel,
-    currency: row.currency ?? 'CNY',
+    currency: row.currency ?? "CNY",
     originalPrice,
     salePrice,
     discountAmount,
@@ -276,42 +342,49 @@ function mapPromotionRow(row: PromotionRow): PromotionOperationRecord {
     tenantCount: Number(row.tenant_count ?? 0),
     startsAt: toIso(row.starts_at),
     endsAt: nullableIso(row.ends_at),
-    ownerName: row.owner_display_name ?? row.owner_username ?? '市场运营',
-    description: row.description ?? '基于当前套餐价格和账单减免记录生成的推广优惠 MVP 台账。',
+    ownerName: row.owner_display_name ?? row.owner_username ?? "市场运营",
+    description:
+      row.description ??
+      "基于当前套餐价格和账单减免记录生成的推广优惠 MVP 台账。",
     updatedAt: toIso(row.updated_at),
   };
 }
 
-function redemptionStatusFor(row: PromotionRedemptionRow): PromotionRedemptionStatus {
-  if (row.bill_status === 'cancelled') return 'reversed';
-  if (Number(row.paid_amount ?? 0) >= Number(row.payable_amount ?? 0)) return 'redeemed';
-  return 'applied';
+function redemptionStatusFor(
+  row: PromotionRedemptionRow,
+): PromotionRedemptionStatus {
+  if (row.bill_status === "cancelled") return "reversed";
+  if (Number(row.paid_amount ?? 0) >= Number(row.payable_amount ?? 0))
+    return "redeemed";
+  return "applied";
 }
 
-function mapPromotionRedemptionRow(row: PromotionRedemptionRow): PromotionRedemptionRecord {
+function mapPromotionRedemptionRow(
+  row: PromotionRedemptionRow,
+): PromotionRedemptionRecord {
   const tierName = tierNameForPlan(row.plan_code, row.plan_name);
 
   return {
     id: row.id,
-    redemptionNo: `RED-${row.bill_no.replace(/[^a-z0-9]/gi, '').slice(-12)}`,
-    promotionCode: `PROMO-${(row.plan_code ?? 'CUSTOM').toUpperCase()}`,
-    promotionName: `${tierName ?? row.plan_name ?? '自定义'} 账单优惠`,
+    redemptionNo: `RED-${row.bill_no.replace(/[^a-z0-9]/gi, "").slice(-12)}`,
+    promotionCode: `PROMO-${(row.plan_code ?? "CUSTOM").toUpperCase()}`,
+    promotionName: `${tierName ?? row.plan_name ?? "自定义"} 账单优惠`,
     status: redemptionStatusFor(row),
     tenantId: row.tenant_id,
     tenantCode: row.tenant_code,
     tenantName: row.display_name ?? row.tenant_name,
-    tenantType: row.tenant_type === 'individual' ? 'individual' : 'company',
+    tenantType: row.tenant_type === "individual" ? "individual" : "company",
     orderNo: row.order_no,
     billId: row.id,
     billNo: row.bill_no,
     billStatus: normalizeBillStatus(row.bill_status),
     servicePlanName: row.plan_name,
     tierName,
-    currency: row.currency ?? 'CNY',
+    currency: row.currency ?? "CNY",
     orderAmount: Number(row.total_amount ?? 0),
     discountAmount: Number(row.discount_amount ?? 0),
     payableAmount: Number(row.payable_amount ?? 0),
-    operatorName: row.operator_display_name ?? row.operator_username ?? '系统',
+    operatorName: row.operator_display_name ?? row.operator_username ?? "系统",
     redeemedAt: toIso(row.updated_at),
     remark: row.operate_remark,
   };
@@ -322,12 +395,14 @@ function mapOverviewRiskRow(row: OverviewRiskRow) {
     id: row.id,
     title: row.title,
     detail: row.detail,
-    tone: row.tone === 'rose' || row.tone === 'amber' ? row.tone : 'green',
+    tone: row.tone === "rose" || row.tone === "amber" ? row.tone : "green",
     href: row.href,
   } as const;
 }
 
-function mapOverviewPlanRevenueRow(row: OverviewPlanRevenueRow): CommerceOverviewPlanRevenue {
+function mapOverviewPlanRevenueRow(
+  row: OverviewPlanRevenueRow,
+): CommerceOverviewPlanRevenue {
   return {
     planName: row.plan_name,
     tierName: tierNameForPlan(row.plan_code, row.plan_name) ?? row.plan_name,
@@ -335,7 +410,7 @@ function mapOverviewPlanRevenueRow(row: OverviewPlanRevenueRow): CommerceOvervie
     revenueAmount: Number(row.revenue_amount ?? 0),
     paidAmount: Number(row.paid_amount ?? 0),
     discountAmount: Number(row.discount_amount ?? 0),
-    currency: row.currency ?? 'CNY',
+    currency: row.currency ?? "CNY",
   };
 }
 

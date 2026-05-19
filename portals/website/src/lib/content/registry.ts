@@ -7,10 +7,10 @@
  * @date 2026-05-06
  */
 
-import { legalLoader, legalStaticParams } from './loaders/legal.loader';
-import { blogLoader, blogStaticParams } from './loaders/blog.loader';
-import { createStubLoader } from './loaders/stub.loader';
-import type { ContentSection, ContentSectionConfig } from './types';
+import { legalLoader, legalStaticParams } from "./loaders/legal.loader";
+import { blogLoader, blogStaticParams } from "./loaders/blog.loader";
+import { createStubLoader } from "./loaders/stub.loader";
+import type { ContentSection, ContentSectionConfig } from "./types";
 
 // =============================================================================
 // Registry 主配置表
@@ -35,13 +35,13 @@ export const CONTENT_REGISTRY: Record<ContentSection, ContentSectionConfig> = {
     staticParams: blogStaticParams,
   },
   // ── 占位实现（原 [footerSlug] 路由收拢至此） ─────────────────────────────
-  faq:            { loader: createStubLoader('faq') },
-  support:        { loader: createStubLoader('support') },
-  insights:       { loader: createStubLoader('insights') },
-  careers:        { loader: createStubLoader('careers') },
-  certifications: { loader: createStubLoader('certifications') },
-  contact:        { loader: createStubLoader('contact') },
-  changelog:      { loader: createStubLoader('changelog') },
+  faq: { loader: createStubLoader("faq") },
+  support: { loader: createStubLoader("support") },
+  insights: { loader: createStubLoader("insights") },
+  careers: { loader: createStubLoader("careers") },
+  certifications: { loader: createStubLoader("certifications") },
+  contact: { loader: createStubLoader("contact") },
+  changelog: { loader: createStubLoader("changelog") },
 };
 
 // =============================================================================
@@ -57,7 +57,9 @@ export function isContentSection(value: string): value is ContentSection {
  * 聚合所有区段的 generateStaticParams，供 Next.js 静态生成使用。
  * 返回格式：{ slug: string[] }[]（含 section 前缀）
  */
-export async function aggregateContentStaticParams(): Promise<{ slug: string[] }[]> {
+export async function aggregateContentStaticParams(): Promise<
+  { slug: string[] }[]
+> {
   const result: { slug: string[] }[] = [];
 
   for (const [section, config] of Object.entries(CONTENT_REGISTRY)) {

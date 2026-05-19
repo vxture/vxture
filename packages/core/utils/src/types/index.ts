@@ -13,9 +13,6 @@ export type {
   DeepReadonly,
   LogRecord,
   LoggerConfig,
-} from './utils.types';
+} from "./utils.types";
 
-export {
-  LogLevel,
-  DEFAULT_LOGGER_CONFIG,
-} from './utils.types';
+export { LogLevel, DEFAULT_LOGGER_CONFIG } from "./utils.types";

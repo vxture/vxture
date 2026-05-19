@@ -1,14 +1,28 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PgModelRepository } from '../repository/pg-model.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PgModelRepository } from "../repository/pg-model.repository";
 import type {
-  ModelProviderRecord, ModelDefinitionRecord, ModelGrantRecord,
-  ModelPriceRuleRecord, ModelPolicyRecord,
-  ListProvidersParams, ListModelsParams, ListGrantsParams,
-  ListPriceRulesParams, ListPoliciesParams,
-  CreateProviderInput, UpdateProviderInput,
-  CreateModelInput, UpdateModelInput,
-  CreateGrantInput, CreatePriceRuleInput, UpsertPolicyInput,
-} from '../types/model.types';
+  ModelProviderRecord,
+  ModelDefinitionRecord,
+  ModelGrantRecord,
+  ModelPriceRuleRecord,
+  ModelPolicyRecord,
+  ListProvidersParams,
+  ListModelsParams,
+  ListGrantsParams,
+  ListPriceRulesParams,
+  ListPoliciesParams,
+  CreateProviderInput,
+  UpdateProviderInput,
+  CreateModelInput,
+  UpdateModelInput,
+  CreateGrantInput,
+  CreatePriceRuleInput,
+  UpsertPolicyInput,
+} from "../types/model.types";
 
 @Injectable()
 export class ModelService {
@@ -16,7 +30,9 @@ export class ModelService {
 
   // ── Providers ──────────────────────────────────────────────────────────
 
-  async listProviders(params: ListProvidersParams): Promise<ModelProviderRecord[]> {
+  async listProviders(
+    params: ListProvidersParams,
+  ): Promise<ModelProviderRecord[]> {
     return this.repo.listProviders(params);
   }
 
@@ -26,13 +42,21 @@ export class ModelService {
     return provider;
   }
 
-  async createProvider(input: CreateProviderInput): Promise<ModelProviderRecord> {
+  async createProvider(
+    input: CreateProviderInput,
+  ): Promise<ModelProviderRecord> {
     const existing = await this.repo.getProviderByCode(input.providerCode);
-    if (existing) throw new ConflictException(`Provider code ${input.providerCode} already exists`);
+    if (existing)
+      throw new ConflictException(
+        `Provider code ${input.providerCode} already exists`,
+      );
     return this.repo.createProvider(input);
   }
 
-  async updateProvider(id: string, input: UpdateProviderInput): Promise<ModelProviderRecord> {
+  async updateProvider(
+    id: string,
+    input: UpdateProviderInput,
+  ): Promise<ModelProviderRecord> {
     const updated = await this.repo.updateProvider(id, input);
     if (!updated) throw new NotFoundException(`Provider ${id} not found`);
     return updated;
@@ -40,7 +64,9 @@ export class ModelService {
 
   // ── Model Definitions ──────────────────────────────────────────────────
 
-  async listModels(params: ListModelsParams): Promise<{ items: ModelDefinitionRecord[]; total: number }> {
+  async listModels(
+    params: ListModelsParams,
+  ): Promise<{ items: ModelDefinitionRecord[]; total: number }> {
     return this.repo.listModels(params);
   }
 
@@ -52,11 +78,17 @@ export class ModelService {
 
   async createModel(input: CreateModelInput): Promise<ModelDefinitionRecord> {
     const existing = await this.repo.getModelByCode(input.modelCode);
-    if (existing) throw new ConflictException(`Model code ${input.modelCode} already exists`);
+    if (existing)
+      throw new ConflictException(
+        `Model code ${input.modelCode} already exists`,
+      );
     return this.repo.createModel(input);
   }
 
-  async updateModel(id: string, input: UpdateModelInput): Promise<ModelDefinitionRecord> {
+  async updateModel(
+    id: string,
+    input: UpdateModelInput,
+  ): Promise<ModelDefinitionRecord> {
     const updated = await this.repo.updateModel(id, input);
     if (!updated) throw new NotFoundException(`Model ${id} not found`);
     return updated;
@@ -79,11 +111,15 @@ export class ModelService {
 
   // ── Price Rules ────────────────────────────────────────────────────────
 
-  async listPriceRules(params: ListPriceRulesParams): Promise<ModelPriceRuleRecord[]> {
+  async listPriceRules(
+    params: ListPriceRulesParams,
+  ): Promise<ModelPriceRuleRecord[]> {
     return this.repo.listPriceRules(params);
   }
 
-  async createPriceRule(input: CreatePriceRuleInput): Promise<ModelPriceRuleRecord> {
+  async createPriceRule(
+    input: CreatePriceRuleInput,
+  ): Promise<ModelPriceRuleRecord> {
     await this.getModelById(input.modelId);
     return this.repo.createPriceRule(input);
   }

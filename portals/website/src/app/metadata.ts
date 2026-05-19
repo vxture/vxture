@@ -6,27 +6,29 @@
  * - 与 Layout 解耦
  */
 
-import type { Metadata } from 'next';
-import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@vxture/shared';
+import type { Metadata } from "next";
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from "@vxture/shared";
 
 export function buildMetadata(locale: string): Metadata {
   const titles = {
-    'zh-CN': 'vxture AI | 释放数据潜力',
-    'en-US': 'vxture AI | Unleash Data Potential',
+    "zh-CN": "vxture AI | 释放数据潜力",
+    "en-US": "vxture AI | Unleash Data Potential",
   };
 
   const descriptions = {
-    'zh-CN': '基于AI的虚拟自然探索平台',
-    'en-US': 'AI-based virtual nature exploration platform',
+    "zh-CN": "基于AI的虚拟自然探索平台",
+    "en-US": "AI-based virtual nature exploration platform",
   };
 
   // 确保 locale 是有效的
   const validLocale = (SUPPORTED_LOCALES as readonly string[]).includes(locale)
-    ? locale as 'zh-CN' | 'en-US'
-    : DEFAULT_LOCALE as 'zh-CN' | 'en-US';
+    ? (locale as "zh-CN" | "en-US")
+    : (DEFAULT_LOCALE as "zh-CN" | "en-US");
 
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3010'),
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3010",
+    ),
 
     title: {
       default: titles[validLocale] as string,
@@ -36,11 +38,19 @@ export function buildMetadata(locale: string): Metadata {
     description: descriptions[validLocale] as string,
 
     keywords:
-      validLocale === 'zh-CN'
-        ? ['AI', '数据', '智能', '决策', '虚拟', '平台', 'vxture']
-        : ['AI', 'data', 'intelligence', 'decision', 'virtual', 'platform', 'vxture'],
+      validLocale === "zh-CN"
+        ? ["AI", "数据", "智能", "决策", "虚拟", "平台", "vxture"]
+        : [
+            "AI",
+            "data",
+            "intelligence",
+            "decision",
+            "virtual",
+            "platform",
+            "vxture",
+          ],
 
-    authors: [{ name: 'vxture Team' }],
+    authors: [{ name: "vxture Team" }],
 
     robots: {
       index: true,
@@ -48,25 +58,25 @@ export function buildMetadata(locale: string): Metadata {
     },
 
     openGraph: {
-      type: 'website',
-      url: 'https://vxture.com',
+      type: "website",
+      url: "https://vxture.com",
       title: titles[validLocale],
       description: descriptions[validLocale],
-      images: ['/icons/favicon.ico'],
+      images: ["/icons/favicon.ico"],
     },
 
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: titles[validLocale],
       description: descriptions[validLocale],
-      images: ['/icons/favicon.ico'],
+      images: ["/icons/favicon.ico"],
     },
 
     icons: {
-      icon: '/icons/favicon.ico',
-      apple: '/icons/favicon.ico',
+      icon: "/icons/favicon.ico",
+      apple: "/icons/favicon.ico",
     },
 
-    manifest: '/manifest.json',
+    manifest: "/manifest.json",
   };
 }

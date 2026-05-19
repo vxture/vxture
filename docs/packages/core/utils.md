@@ -7,17 +7,18 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/core-utils` |
-| 路径 | `packages/core/utils/` |
-| @layer | `Infrastructure` |
+| 项     | 值                     |
+| ------ | ---------------------- |
+| 包名   | `@vxture/core-utils`   |
+| 路径   | `packages/core/utils/` |
+| @layer | `Infrastructure`       |
 
 ## 职责
 
 平台级通用工具：日志、环境判断、类型守卫、错误类。
 
 **与 `@vxture/shared` 的区别：**
+
 - shared：纯通用工具，无平台意识
 - core-utils：有平台意识的工具（结构化日志、环境判断）
 

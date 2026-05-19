@@ -1,33 +1,33 @@
-import type { BreadcrumbItem } from '@/entities/console';
+import type { BreadcrumbItem } from "@/entities/console";
 
 const routeLabels = new Map<string, string>([
-  ['/', 'dashboard'],
-  ['/todos', 'todos'],
-  ['/profile', 'profile'],
-  ['/personal-tenant', 'personalTenant'],
-  ['/organization', 'organization'],
-  ['/members', 'members'],
-  ['/roles', 'roles'],
-  ['/invitations', 'invitations'],
-  ['/subscription', 'subscription'],
-  ['/billing', 'billing'],
-  ['/quotas', 'quotas'],
-  ['/model-gateway', 'modelGateway'],
-  ['/notifications', 'notifications'],
-  ['/security', 'security'],
-  ['/settings', 'settings'],
-  ['/tenant-settings', 'tenantSettings'],
+  ["/", "dashboard"],
+  ["/todos", "todos"],
+  ["/profile", "profile"],
+  ["/personal-tenant", "personalTenant"],
+  ["/organization", "organization"],
+  ["/members", "members"],
+  ["/roles", "roles"],
+  ["/invitations", "invitations"],
+  ["/subscription", "subscription"],
+  ["/billing", "billing"],
+  ["/quotas", "quotas"],
+  ["/model-gateway", "modelGateway"],
+  ["/notifications", "notifications"],
+  ["/security", "security"],
+  ["/settings", "settings"],
+  ["/tenant-settings", "tenantSettings"],
 ]);
 
 export function buildBreadcrumbs(pathname: string): BreadcrumbItem[] {
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
 
   if (segments.length === 0) {
-    return [{ href: '/', label: 'dashboard' }];
+    return [{ href: "/", label: "dashboard" }];
   }
 
-  const breadcrumbs: BreadcrumbItem[] = [{ href: '/', label: 'dashboard' }];
-  let currentPath = '';
+  const breadcrumbs: BreadcrumbItem[] = [{ href: "/", label: "dashboard" }];
+  let currentPath = "";
 
   for (const segment of segments) {
     currentPath = `${currentPath}/${segment}`;

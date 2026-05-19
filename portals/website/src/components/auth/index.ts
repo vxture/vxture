@@ -5,6 +5,6 @@
  * @category Components
  */
 
-export { LoginForm } from './LoginForm';
-export { SignupForm } from './SignupForm';
-export { AuthSessionBootstrap } from './AuthSessionBootstrap';
+export { LoginForm } from "./LoginForm";
+export { SignupForm } from "./SignupForm";
+export { AuthSessionBootstrap } from "./AuthSessionBootstrap";

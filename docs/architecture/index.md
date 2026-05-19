@@ -17,12 +17,12 @@
 
 ### 层级文档（依赖链由下至上）
 
-| 文件                  | 内容                                          |
-| --------------------- | --------------------------------------------- |
-| `03-core-layer.md`    | Core 层 — 平台基础设施原语                    |
-| `04-service-layer.md` | Service 层 — 共享域服务与晋升生命周期         |
-| `05-bff-layer.md`     | BFF 层 — 认证、聚合、路由、响应塑形           |
-| `06-agent-server.md`  | Agent Server 层 — Agent 私有后端架构          |
+| 文件                  | 内容                                  |
+| --------------------- | ------------------------------------- |
+| `03-core-layer.md`    | Core 层 — 平台基础设施原语            |
+| `04-service-layer.md` | Service 层 — 共享域服务与晋升生命周期 |
+| `05-bff-layer.md`     | BFF 层 — 认证、聚合、路由、响应塑形   |
+| `06-agent-server.md`  | Agent Server 层 — Agent 私有后端架构  |
 
 > Shared / AI SDK / Design System / Platform SDK 的实现约束见 [`docs/packages/`](../packages/index.md)
 
@@ -92,7 +92,7 @@
 
 ### v1.6.0 — 2026-05-11
 
-- `index.md`：Coding 规范章节改为指向 `docs/ai/index.md`（原链接 claude-coding-*.md 已失效）
+- `index.md`：Coding 规范章节改为指向 `docs/ai/index.md`（原链接 claude-coding-\*.md 已失效）
 - `00-overview.md`：删除 §9 依赖规则摘要（指向 02-package-boundaries.md）、精简 §10 Agent 生命周期、website 附录改为指针
 - `01-monorepo.md`：删除 §11 依赖方向（指向 02）、§17 AI 开发规范（指向 02）、§18 架构目标、website Appendix A 改为指针
 - `03-core-layer.md`：§3 补充 core-auth → core-config 例外说明

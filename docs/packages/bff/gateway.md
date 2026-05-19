@@ -6,12 +6,12 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/bff-gateway` |
-| 路径 | `bff/gateway-bff/` |
-| @layer | `Application` |
-| 框架 | NestJS（轻量，仅路由转发） |
+| 项     | 值                         |
+| ------ | -------------------------- |
+| 包名   | `@vxture/bff-gateway`      |
+| 路径   | `bff/gateway-bff/`         |
+| @layer | `Application`              |
+| 框架   | NestJS（轻量，仅路由转发） |
 
 ## 职责
 

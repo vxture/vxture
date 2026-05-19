@@ -22,15 +22,22 @@
  * @license MIT
  */
 
-import { create } from 'zustand';
-import axios from 'axios';
-import type { StateCreator } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { makeAuthPersistOptions } from './persistOptions/authPersist';
-import type { AuthState, UserInfo } from '@/types/auth.types';
-import { getProfile, login as loginRequest, logout as logoutRequest, signup as signupRequest } from '@/api/auth.api';
+import { create } from "zustand";
+import axios from "axios";
+import type { StateCreator } from "zustand";
+import { persist } from "zustand/middleware";
+import { makeAuthPersistOptions } from "./persistOptions/authPersist";
+import type { AuthState, UserInfo } from "@/types/auth.types";
+import {
+  getProfile,
+  login as loginRequest,
+  logout as logoutRequest,
+  signup as signupRequest,
+} from "@/api/auth.api";
 
-function extractResponseMessage(message: string | string[] | undefined): string | null {
+function extractResponseMessage(
+  message: string | string[] | undefined,
+): string | null {
   if (Array.isArray(message)) {
     return message[0] ?? null;
   }
@@ -39,18 +46,20 @@ function extractResponseMessage(message: string | string[] | undefined): string 
 
 function extractAuthErrorMessage(error: unknown): string {
   if (axios.isAxiosError<{ message?: string | string[] }>(error)) {
-    const upstreamMessage = extractResponseMessage(error.response?.data?.message);
+    const upstreamMessage = extractResponseMessage(
+      error.response?.data?.message,
+    );
     if (upstreamMessage) {
       return upstreamMessage;
     }
     if (error.response?.status === 401) {
-      return '登录失败，请检查账号密码';
+      return "登录失败，请检查账号密码";
     }
 
     return error.message;
   }
 
-  return error instanceof Error ? error.message : '登录失败，请重试';
+  return error instanceof Error ? error.message : "登录失败，请重试";
 }
 
 function getUserIdentity(user: UserInfo | null): string {
@@ -67,7 +76,11 @@ const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
     set({ user, isAuthenticated: !!user });
   },
 
-  login: async (identifier: string, password: string, turnstileToken?: string) => {
+  login: async (
+    identifier: string,
+    password: string,
+    turnstileToken?: string,
+  ) => {
     set({ isLoading: true, error: null });
     try {
       const user = await loginRequest({ identifier, password, turnstileToken });
@@ -89,14 +102,29 @@ const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
     }
   },
 
-  signup: async (email: string, name: string, password: string, turnstileToken?: string) => {
+  signup: async (
+    email: string,
+    name: string,
+    password: string,
+    turnstileToken?: string,
+  ) => {
     set({ isLoading: true, error: null });
     try {
-      const user = await signupRequest({ email, name, password, turnstileToken });
+      const user = await signupRequest({
+        email,
+        name,
+        password,
+        turnstileToken,
+      });
       set({ user, isAuthenticated: true, isLoading: false, error: null });
     } catch (error: unknown) {
       const errorMessage = extractAuthErrorMessage(error);
-      set({ user: null, isAuthenticated: false, isLoading: false, error: errorMessage });
+      set({
+        user: null,
+        isAuthenticated: false,
+        isLoading: false,
+        error: errorMessage,
+      });
       throw new Error(errorMessage);
     }
   },
@@ -123,7 +151,10 @@ const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
     try {
       const user = await getProfile();
       const current = get();
-      if (current.isAuthenticated && getUserIdentity(current.user) === getUserIdentity(user)) {
+      if (
+        current.isAuthenticated &&
+        getUserIdentity(current.user) === getUserIdentity(user)
+      ) {
         set({ isLoading: false, error: null });
       } else {
         set({
@@ -135,7 +166,8 @@ const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
       }
       return user;
     } catch (error: unknown) {
-      const isUnauthorized = axios.isAxiosError(error) && error.response?.status === 401;
+      const isUnauthorized =
+        axios.isAxiosError(error) && error.response?.status === 401;
       if (options.silent && !isUnauthorized) {
         set({ isLoading: false, error: null });
         return get().user;
@@ -145,7 +177,10 @@ const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
         user: null,
         isAuthenticated: false,
         isLoading: false,
-        error: options.silent || isUnauthorized ? null : extractAuthErrorMessage(error),
+        error:
+          options.silent || isUnauthorized
+            ? null
+            : extractAuthErrorMessage(error),
       });
       return null;
     }
@@ -157,8 +192,5 @@ const authStoreCreator: StateCreator<AuthState> = (set, get) => ({
 });
 
 export const useAuthStore = create(
-  persist(
-    authStoreCreator,
-    makeAuthPersistOptions()
-  )
+  persist(authStoreCreator, makeAuthPersistOptions()),
 );

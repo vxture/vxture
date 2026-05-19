@@ -29,18 +29,18 @@ Infrastructure
 
 ### 提供方
 
-| 提供方               | 适用环境 | 说明                     |
-| -------------------- | -------- | ------------------------ |
-| `SmtpMailProvider`   | 生产     | Nodemailer，端口 465 SSL |
-| `ConsoleMailProvider`| 开发     | 仅打印到控制台，不发送    |
+| 提供方                | 适用环境 | 说明                     |
+| --------------------- | -------- | ------------------------ |
+| `SmtpMailProvider`    | 生产     | Nodemailer，端口 465 SSL |
+| `ConsoleMailProvider` | 开发     | 仅打印到控制台，不发送   |
 
 通过环境变量 `MAIL_PROVIDER=smtp|console` 切换（开发默认 `console`）。
 
 ### 支持模板
 
-| 模板 | 方法 | 说明 |
-|------|------|------|
-| 邮件验证码 | `MailService.sendVerifyCode()` | 6 位数字，TTL 10 分钟 |
+| 模板       | 方法                              | 说明                    |
+| ---------- | --------------------------------- | ----------------------- |
+| 邮件验证码 | `MailService.sendVerifyCode()`    | 6 位数字，TTL 10 分钟   |
 | 密码重置   | `MailService.sendPasswordReset()` | 带重置链接，TTL 15 分钟 |
 
 ### Redis 键规范（邮件验证码）
@@ -96,8 +96,8 @@ svc:rl:{scope}:1d:{phone}     ← 1 天限流计数（TTL 86400s）
 
 邮件与短信使用相同的三级限流规则：
 
-| 维度   | 限额 | Redis TTL |
-| ------ | ---- | --------- |
+| 维度   | 限额  | Redis TTL |
+| ------ | ----- | --------- |
 | 每分钟 | 1 次  | 60s       |
 | 每小时 | 5 次  | 3600s     |
 | 每天   | 10 次 | 86400s    |
@@ -108,23 +108,23 @@ svc:rl:{scope}:1d:{phone}     ← 1 天限流计数（TTL 86400s）
 
 ## API 路由（已上线）
 
-| 端点 | BFF | 说明 |
-|------|-----|------|
-| `POST /api/send-code` | website-bff | 发送邮件验证码 |
-| `POST /api/verify-code` | website-bff | 校验邮件验证码 |
-| `POST /api/phone/send-code` | console-bff | 发送手机验证码 |
+| 端点                          | BFF         | 说明           |
+| ----------------------------- | ----------- | -------------- |
+| `POST /api/send-code`         | website-bff | 发送邮件验证码 |
+| `POST /api/verify-code`       | website-bff | 校验邮件验证码 |
+| `POST /api/phone/send-code`   | console-bff | 发送手机验证码 |
 | `POST /api/phone/verify-code` | console-bff | 校验手机验证码 |
 
 ---
 
 ## 扩展点
 
-| 能力 | 状态 | 说明 |
-|------|------|------|
+| 能力             | 状态   | 说明                          |
+| ---------------- | ------ | ----------------------------- |
 | 账单通知（邮件） | 待接入 | console-bff 接入 service-mail |
-| 公告推送（邮件） | 待接入 | admin-bff 接入 service-mail |
-| 站内消息 | 二期 | 需新增 service-notification |
-| Push 通知 | 二期 | APNs / FCM，依赖 App 上线 |
+| 公告推送（邮件） | 待接入 | admin-bff 接入 service-mail   |
+| 站内消息         | 二期   | 需新增 service-notification   |
+| Push 通知        | 二期   | APNs / FCM，依赖 App 上线     |
 
 ---
 

@@ -1,4 +1,4 @@
-import { PlatformSecretsPage } from '@/modules/platform/PlatformSecretsPage';
+import { PlatformSecretsPage } from "@/modules/platform/PlatformSecretsPage";
 
 export default function Page() {
   return <PlatformSecretsPage />;

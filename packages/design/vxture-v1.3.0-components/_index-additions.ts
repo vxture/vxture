@@ -9,7 +9,7 @@ export {
   PromptInput,
   AIAssistantBubble,
   TokenCounter,
-} from './components/ai';
+} from "./components/ai";
 export type {
   ModelBadgeProps,
   GenerationStreamProps,
@@ -17,30 +17,17 @@ export type {
   PromptInputChip,
   AIAssistantBubbleProps,
   TokenCounterProps,
-} from './components/ai';
+} from "./components/ai";
 
 // New basic UI components (components/ui/)
-export {
-  ToastProvider,
-  useToast,
-  Drawer,
-  Skeleton,
-} from './components/ui';
+export { ToastProvider, useToast, Drawer, Skeleton } from "./components/ui";
 export type {
   ToastTone,
   ToastInput,
   DrawerProps,
   SkeletonProps,
-} from './components/ui';
+} from "./components/ui";
 
 // Theme (existing — extend re-exports)
-export {
-  ThemeProvider,
-  useTheme,
-  themeBootstrapScript,
-} from './theme';
-export type {
-  Theme,
-  ThemeMode,
-  ThemeProviderProps,
-} from './theme';
+export { ThemeProvider, useTheme, themeBootstrapScript } from "./theme";
+export type { Theme, ThemeMode, ThemeProviderProps } from "./theme";

@@ -15,14 +15,7 @@ export interface PageActionsProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const PageActions = React.forwardRef<HTMLDivElement, PageActionsProps>(
-  function PageActions(
-    {
-      className,
-      children,
-      ...props
-    },
-    ref,
-  ) {
+  function PageActions({ className, children, ...props }, ref) {
     return (
       <div ref={ref} className={cn("vx-detail-actions", className)} {...props}>
         {children}

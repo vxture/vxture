@@ -8,25 +8,25 @@
  * @date 2026-04-30
  */
 
-'use client';
+"use client";
 
-import { Button } from '@vxture/design-system';
-import { useVelaStore } from '../stores/vela.store';
-import { useVelaSurface } from '../hooks/useVelaSurface';
-import { MessageList } from './MessageList';
-import { InputBar } from './InputBar';
-import { ConfirmActionDialog } from './ConfirmActionDialog';
-import { SurfaceBadge } from './SurfaceBadge';
-import type { VelaSurface } from '../types/vela.types';
+import { Button } from "@vxture/design-system";
+import { useVelaStore } from "../stores/vela.store";
+import { useVelaSurface } from "../hooks/useVelaSurface";
+import { MessageList } from "./MessageList";
+import { InputBar } from "./InputBar";
+import { ConfirmActionDialog } from "./ConfirmActionDialog";
+import { SurfaceBadge } from "./SurfaceBadge";
+import type { VelaSurface } from "../types/vela.types";
 
 // ============================================================================
 // Props
 // ============================================================================
 
 export interface VelaChatProps {
-  surface:  VelaSurface;
+  surface: VelaSurface;
   /** sidebar：固定侧边栏；float：右下角浮动窗口 */
-  position: 'sidebar' | 'float';
+  position: "sidebar" | "float";
 }
 
 // ============================================================================
@@ -40,7 +40,7 @@ export function VelaChat({ surface, position }: VelaChatProps) {
   const toggleOpen = useVelaStore((s) => s.toggleOpen);
 
   // ---- sidebar 模式：始终可见
-  if (position === 'sidebar') {
+  if (position === "sidebar") {
     return (
       <div className="vx-vela-chat vx-vela-chat--sidebar">
         <Header surface={surface} />
@@ -62,8 +62,13 @@ export function VelaChat({ surface, position }: VelaChatProps) {
           <InputBar />
         </div>
       )}
-      <Button className="vx-vela-float-button" onClick={toggleOpen} aria-label="打开 Vela 助手" size="icon">
-        {isOpen ? '✕' : '✦'}
+      <Button
+        className="vx-vela-float-button"
+        onClick={toggleOpen}
+        aria-label="打开 Vela 助手"
+        size="icon"
+      >
+        {isOpen ? "✕" : "✦"}
       </Button>
     </>
   );
@@ -74,7 +79,7 @@ export function VelaChat({ surface, position }: VelaChatProps) {
 // ============================================================================
 
 interface HeaderProps {
-  surface:  VelaSurface;
+  surface: VelaSurface;
   onClose?: () => void;
 }
 

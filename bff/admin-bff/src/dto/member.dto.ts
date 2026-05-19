@@ -10,7 +10,7 @@ export class UpdateMemberDto {
   nickname?: string | null;
   remark?: string | null;
   roleId?: string | null;
-  status?: 'active' | 'inactive' | 'banned';
+  status?: "active" | "inactive" | "banned";
 }
 
 export class ResetMemberPasswordDto {

@@ -60,39 +60,39 @@ export const CTA_DATA: CtaData = {
     {
       id: "features-cta-01",
       icon: "layers",
-      theme: "primary"
+      theme: "primary",
     },
     {
       id: "features-cta-02",
       icon: "users",
-      theme: "primary"
+      theme: "primary",
     },
     {
       id: "features-cta-03",
       icon: "refresh",
-      theme: "primary"
-    }
+      theme: "primary",
+    },
   ],
   actions: [
     {
       href: "/contact",
       variant: "primary",
-      icon: "calendar"
+      icon: "calendar",
     },
     {
       href: "/ruyin-agent",
       variant: "secondary",
-      icon: "bot"
-    }
+      icon: "bot",
+    },
   ],
   contact: {
     email: {
       icon: "mail",
-      value: "experts@vxture.com"
+      value: "experts@vxture.com",
     },
     phone: {
       icon: "phone",
-      value: "029-12345678"
-    }
-  }
+      value: "029-12345678",
+    },
+  },
 };

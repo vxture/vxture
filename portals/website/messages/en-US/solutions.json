@@ -6,7 +6,12 @@
     "imageAlt": "Emergency command and dispatch visualization screen",
     "primaryAction": "Open Console",
     "secondaryAction": "View Architecture",
-    "highlights": ["Digital Twin Situation", "LLM Assessment", "Multi-agent Coordination", "Closed-loop Response"],
+    "highlights": [
+      "Digital Twin Situation",
+      "LLM Assessment",
+      "Multi-agent Coordination",
+      "Closed-loop Response"
+    ],
     "metrics": [
       { "value": "Minutes", "label": "Cross-agency situation fusion" },
       { "value": "6", "label": "Command coordination agents" },
@@ -30,19 +35,31 @@
         "icon": "cube",
         "title": "Digital twin situation base",
         "description": "Map cities, parks, watersheds, roads, critical facilities, and risk sources into a virtual-real model for event localization, impact analysis, and resource reachability.",
-        "points": ["Unified spatial map and risk objects", "Live overlay of events, teams, supplies, and facilities", "Simulation for flooding, fire, congestion, evacuation, and more"]
+        "points": [
+          "Unified spatial map and risk objects",
+          "Live overlay of events, teams, supplies, and facilities",
+          "Simulation for flooding, fire, congestion, evacuation, and more"
+        ]
       },
       {
         "icon": "sparkles",
         "title": "LLM assessment center",
         "description": "Support natural-language queries, event summaries, plan retrieval, risk explanation, and communication drafting for command teams.",
-        "points": ["Automatic summary of multi-source intelligence", "Retrieval of plans and historical cases", "Traceable assessment evidence and action suggestions"]
+        "points": [
+          "Automatic summary of multi-source intelligence",
+          "Retrieval of plans and historical cases",
+          "Traceable assessment evidence and action suggestions"
+        ]
       },
       {
         "icon": "workflow",
         "title": "Multi-agent execution",
         "description": "Divide monitoring, assessment, dispatch, notification, public communication, and review into cooperating agents that keep advancing the event workflow.",
-        "points": ["Automatic task and owner breakdown", "Status tracking for teams, vehicles, supplies, and arrival", "Incident timeline, outcome review, and optimization suggestions"]
+        "points": [
+          "Automatic task and owner breakdown",
+          "Status tracking for teams, vehicles, supplies, and arrival",
+          "Incident timeline, outcome review, and optimization suggestions"
+        ]
       }
     ]
   },
@@ -149,7 +166,11 @@
         "label": "Practice 01",
         "title": "Provincial Emergency Department · Emergency Command Platform",
         "description": "Reuse the AI command decision support capability from the case, strengthening incident analysis, prediction, assessment, plan management, resource dispatch, and visualization.",
-        "tags": ["Emergency Management", "Data Integration", "Intelligent Decision"]
+        "tags": [
+          "Emergency Management",
+          "Data Integration",
+          "Intelligent Decision"
+        ]
       },
       {
         "label": "Practice 02",

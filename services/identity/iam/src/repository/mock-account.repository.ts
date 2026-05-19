@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 import type {
   AccountCredentialRecord,
   AccountProfileView,
@@ -7,15 +7,15 @@ import type {
   CreateAccountInput,
   FindOrCreateByOAuthInput,
   UpdateAccountProfileInput,
-} from '../types/iam.types';
+} from "../types/iam.types";
 
 const mockAccount: AccountCredentialRecord = {
-  id: 'u_console_admin',
-  username: 'console.admin',
-  email: 'lin.chen@vxture.ai',
-  phone: '13800000000',
-  passwordHash: 'console123',
-  status: 'active',
+  id: "u_console_admin",
+  username: "console.admin",
+  email: "lin.chen@vxture.ai",
+  phone: "13800000000",
+  passwordHash: "console123",
+  status: "active",
 };
 
 let mockProfile: AccountProfileView = {
@@ -23,18 +23,20 @@ let mockProfile: AccountProfileView = {
   username: mockAccount.username,
   email: mockAccount.email,
   phone: mockAccount.phone,
-  displayName: 'Lin Chen',
+  displayName: "Lin Chen",
   avatarUrl: null,
-  headline: 'Platform Operator',
-  bio: 'Responsible for workspace operations and tenant governance.',
-  timezone: 'Asia/Shanghai',
-  language: 'zh-CN',
+  headline: "Platform Operator",
+  bio: "Responsible for workspace operations and tenant governance.",
+  timezone: "Asia/Shanghai",
+  language: "zh-CN",
   profileUpdatedAt: new Date(),
 };
 
 @Injectable()
 export class MockAccountRepository implements AccountReadRepository {
-  async findByIdentifier(identifier: string): Promise<AccountCredentialRecord | null> {
+  async findByIdentifier(
+    identifier: string,
+  ): Promise<AccountCredentialRecord | null> {
     const normalized = identifier.trim().toLowerCase();
     const matches = [mockAccount.username, mockAccount.email, mockAccount.phone]
       .filter((value): value is string => Boolean(value))
@@ -52,7 +54,9 @@ export class MockAccountRepository implements AccountReadRepository {
     return account;
   }
 
-  async findCredentialById(accountId: string): Promise<AccountCredentialRecord | null> {
+  async findCredentialById(
+    accountId: string,
+  ): Promise<AccountCredentialRecord | null> {
     return accountId === mockAccount.id ? mockAccount : null;
   }
 
@@ -60,7 +64,10 @@ export class MockAccountRepository implements AccountReadRepository {
     return accountId === mockAccount.id ? mockProfile : null;
   }
 
-  async updateProfile(accountId: string, input: UpdateAccountProfileInput): Promise<AccountProfileView | null> {
+  async updateProfile(
+    accountId: string,
+    input: UpdateAccountProfileInput,
+  ): Promise<AccountProfileView | null> {
     if (accountId !== mockAccount.id) {
       return null;
     }
@@ -95,19 +102,36 @@ export class MockAccountRepository implements AccountReadRepository {
     }
   }
 
-  async createAccount(_input: CreateAccountInput): Promise<AuthenticatedAccountView> {
-    return { id: mockAccount.id, username: mockAccount.username, email: mockAccount.email, phone: mockAccount.phone };
+  async createAccount(
+    _input: CreateAccountInput,
+  ): Promise<AuthenticatedAccountView> {
+    return {
+      id: mockAccount.id,
+      username: mockAccount.username,
+      email: mockAccount.email,
+      phone: mockAccount.phone,
+    };
   }
 
-  async createPasswordResetToken(_accountId: string, _expiresAt: Date): Promise<string> {
-    return 'mock-reset-token';
+  async createPasswordResetToken(
+    _accountId: string,
+    _expiresAt: Date,
+  ): Promise<string> {
+    return "mock-reset-token";
   }
 
   async consumePasswordResetToken(_rawToken: string): Promise<string | null> {
     return mockAccount.id;
   }
 
-  async findOrCreateByOAuth(_input: FindOrCreateByOAuthInput): Promise<AuthenticatedAccountView> {
-    return { id: mockAccount.id, username: mockAccount.username, email: mockAccount.email, phone: mockAccount.phone };
+  async findOrCreateByOAuth(
+    _input: FindOrCreateByOAuthInput,
+  ): Promise<AuthenticatedAccountView> {
+    return {
+      id: mockAccount.id,
+      username: mockAccount.username,
+      email: mockAccount.email,
+      phone: mockAccount.phone,
+    };
   }
 }

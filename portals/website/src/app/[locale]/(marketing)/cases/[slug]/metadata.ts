@@ -7,8 +7,8 @@
  * @date 2026-05-06
  */
 
-import type { Metadata } from 'next';
-import { CASES_DATA } from '@/data/cases/cases.data';
+import type { Metadata } from "next";
+import { CASES_DATA } from "@/data/cases/cases.data";
 
 interface CaseMetadataParams {
   params: {
@@ -16,14 +16,16 @@ interface CaseMetadataParams {
   };
 }
 
-export async function generateMetadata({ params }: CaseMetadataParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: CaseMetadataParams): Promise<Metadata> {
   const { slug } = params;
   const caseItem = CASES_DATA.items.find((item) => item.slug === slug);
 
   if (!caseItem) {
     return {
-      title: 'Case Not Found',
-      description: 'The requested case study was not found.',
+      title: "Case Not Found",
+      description: "The requested case study was not found.",
     };
   }
 
@@ -45,7 +47,7 @@ export async function generateMetadata({ params }: CaseMetadataParams): Promise<
       ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: caseItem.slug,
       description: `Case study: ${caseItem.slug}`,
       images: [caseItem.cover.url],

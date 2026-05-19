@@ -8,8 +8,8 @@
  * @date 2026-04-30
  */
 
-import { ToolCallCard } from './ToolCallCard';
-import type { VelaMessage, VelaToolMessage } from '../types/vela.types';
+import { ToolCallCard } from "./ToolCallCard";
+import type { VelaMessage, VelaToolMessage } from "../types/vela.types";
 
 // ============================================================================
 // 组件
@@ -20,19 +20,25 @@ interface Props {
 }
 
 export function MessageBubble({ message }: Props) {
-  if (message.role === 'tool') {
+  if (message.role === "tool") {
     return <ToolCallCard message={message as VelaToolMessage} />;
   }
 
-  const isUser = message.role === 'user';
+  const isUser = message.role === "user";
 
   return (
-    <div className={isUser ? 'vx-vela-message vx-vela-message--user' : 'vx-vela-message vx-vela-message--assistant'}>
+    <div
+      className={
+        isUser
+          ? "vx-vela-message vx-vela-message--user"
+          : "vx-vela-message vx-vela-message--assistant"
+      }
+    >
       <div
         className={
           isUser
-            ? 'vx-vela-message__bubble vx-vela-message__bubble--user'
-            : 'vx-vela-message__bubble vx-vela-message__bubble--assistant'
+            ? "vx-vela-message__bubble vx-vela-message__bubble--user"
+            : "vx-vela-message__bubble vx-vela-message__bubble--assistant"
         }
       >
         {message.content || (

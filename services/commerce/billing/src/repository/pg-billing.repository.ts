@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { Pool } from 'pg';
-import { COMMERCE_PG_POOL } from '../tokens';
+import { Inject, Injectable } from "@nestjs/common";
+import type { Pool } from "pg";
+import { COMMERCE_PG_POOL } from "../tokens";
 import type {
   InvoiceRecord,
   InvoiceItemRecord,
@@ -10,7 +10,7 @@ import type {
   ListInvoicesResult,
   CreateInvoiceInput,
   UpdateInvoiceStatusInput,
-} from '../types/billing.types';
+} from "../types/billing.types";
 
 interface InvoiceRow {
   id: string;
@@ -75,7 +75,7 @@ export class PgBillingRepository {
   constructor(@Inject(COMMERCE_PG_POOL) private readonly pool: Pool) {}
 
   async listInvoices(params: ListInvoicesParams): Promise<ListInvoicesResult> {
-    const conditions: string[] = ['i.deleted_at is null'];
+    const conditions: string[] = ["i.deleted_at is null"];
     const values: unknown[] = [];
     let idx = 1;
 
@@ -96,7 +96,7 @@ export class PgBillingRepository {
       values.push(params.billType);
     }
 
-    const where = conditions.join(' and ');
+    const where = conditions.join(" and ");
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 20;
     const offset = (page - 1) * pageSize;
@@ -117,7 +117,7 @@ export class PgBillingRepository {
     ]);
 
     return {
-      total: parseInt(countResult.rows[0]?.count ?? '0', 10),
+      total: parseInt(countResult.rows[0]?.count ?? "0", 10),
       items: rowsResult.rows.map(this.mapInvoice),
     };
   }
@@ -155,7 +155,7 @@ export class PgBillingRepository {
   async createInvoice(input: CreateInvoiceInput): Promise<InvoiceDetail> {
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       const totalAmount = input.items.reduce((s, i) => s + i.totalAmount, 0);
       const billNo = generateBillNo(input.billCycle);
@@ -179,8 +179,8 @@ export class PgBillingRepository {
           input.cycleStartDate,
           input.cycleEndDate,
           totalAmount,
-          input.currency ?? 'CNY',
-          input.billType ?? 'normal',
+          input.currency ?? "CNY",
+          input.billType ?? "normal",
           input.createdBy ?? null,
         ],
       );
@@ -215,17 +215,20 @@ export class PgBillingRepository {
         items.push(this.mapItem(itemResult.rows[0]!));
       }
 
-      await client.query('commit');
+      await client.query("commit");
       return { ...this.mapInvoice(invoice), items };
     } catch (err) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw err;
     } finally {
       client.release();
     }
   }
 
-  async updateInvoiceStatus(id: string, input: UpdateInvoiceStatusInput): Promise<InvoiceRecord | null> {
+  async updateInvoiceStatus(
+    id: string,
+    input: UpdateInvoiceStatusInput,
+  ): Promise<InvoiceRecord | null> {
     const result = await this.pool.query<InvoiceRow>(
       `update commerce.tenant_invoice set
         bill_status   = $2,

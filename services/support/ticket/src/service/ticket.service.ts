@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PgTicketRepository } from '../repository/pg-ticket.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PgTicketRepository } from "../repository/pg-ticket.repository";
 import type {
   TicketRecord,
   TicketEventRecord,
@@ -10,7 +14,7 @@ import type {
   UpdateTicketInput,
   AddTicketEventInput,
   AppendAuditLogInput,
-} from '../types/ticket.types';
+} from "../types/ticket.types";
 
 @Injectable()
 export class TicketService {
@@ -30,22 +34,28 @@ export class TicketService {
     const ticket = await this.repo.create(input);
     await this.repo.addEvent({
       ticketId: ticket.id,
-      eventType: 'created',
-      actorType: 'user',
+      eventType: "created",
+      actorType: "user",
       ...(input.accountId !== undefined ? { actorId: input.accountId } : {}),
-      actorName: input.reporterName ?? 'unknown',
+      actorName: input.reporterName ?? "unknown",
       payload: { title: ticket.title, category: ticket.category },
     });
     return ticket;
   }
 
-  async assignTicket(id: string, assigneeId: string, assigneeName: string, operatorId: string, operatorName: string): Promise<TicketRecord> {
+  async assignTicket(
+    id: string,
+    assigneeId: string,
+    assigneeName: string,
+    operatorId: string,
+    operatorName: string,
+  ): Promise<TicketRecord> {
     await this.getTicket(id);
     const result = await this.repo.update(id, { assigneeId, assigneeName });
     await this.repo.addEvent({
       ticketId: id,
-      eventType: 'assigned',
-      actorType: 'operator',
+      eventType: "assigned",
+      actorType: "operator",
       actorId: operatorId,
       actorName: operatorName,
       payload: { assigneeId, assigneeName },
@@ -62,11 +72,12 @@ export class TicketService {
     attachments?: string[],
   ): Promise<TicketEventRecord> {
     const ticket = await this.getTicket(id);
-    if (ticket.status === 'closed') throw new ConflictException('已关闭工单不可回复');
+    if (ticket.status === "closed")
+      throw new ConflictException("已关闭工单不可回复");
 
     const event = await this.repo.addEvent({
       ticketId: id,
-      eventType: 'replied',
+      eventType: "replied",
       actorType,
       actorId,
       actorName,
@@ -74,39 +85,57 @@ export class TicketService {
     });
 
     // 记录首次响应时间（仅运营人员首次回复时）
-    if (!ticket.firstResponseAt && actorType === 'operator') {
-      await this.repo.update(id, { status: 'in_progress' } as UpdateTicketInput);
+    if (!ticket.firstResponseAt && actorType === "operator") {
+      await this.repo.update(id, {
+        status: "in_progress",
+      } as UpdateTicketInput);
     }
 
     return event;
   }
 
-  async resolveTicket(id: string, operatorId: string, operatorName: string, remark?: string): Promise<TicketRecord> {
+  async resolveTicket(
+    id: string,
+    operatorId: string,
+    operatorName: string,
+    remark?: string,
+  ): Promise<TicketRecord> {
     const ticket = await this.getTicket(id);
-    if (ticket.status === 'resolved' || ticket.status === 'closed') {
-      throw new ConflictException('工单已处理');
+    if (ticket.status === "resolved" || ticket.status === "closed") {
+      throw new ConflictException("工单已处理");
     }
 
-    const result = await this.repo.update(id, { status: 'resolved', resolvedAt: new Date() });
+    const result = await this.repo.update(id, {
+      status: "resolved",
+      resolvedAt: new Date(),
+    });
     await this.repo.addEvent({
       ticketId: id,
-      eventType: 'resolved',
-      actorType: 'operator',
+      eventType: "resolved",
+      actorType: "operator",
       actorId: operatorId,
       actorName: operatorName,
-      payload: { remark: remark ?? '' },
+      payload: { remark: remark ?? "" },
     });
     return result!;
   }
 
-  async closeTicket(id: string, actorId: string, actorName: string, actorType: string): Promise<TicketRecord> {
+  async closeTicket(
+    id: string,
+    actorId: string,
+    actorName: string,
+    actorType: string,
+  ): Promise<TicketRecord> {
     const ticket = await this.getTicket(id);
-    if (ticket.status === 'closed') throw new ConflictException('工单已关闭');
+    if (ticket.status === "closed") throw new ConflictException("工单已关闭");
 
-    const result = await this.repo.update(id, { status: 'closed', closedAt: new Date() });
+    const result = await this.repo.update(id, {
+      status: "closed",
+      closedAt: new Date(),
+    });
     await this.repo.addEvent({
       ticketId: id,
-      eventType: 'closed',
+      eventType: "closed",
       actorType,
       actorId,
       actorName,
@@ -115,7 +144,10 @@ export class TicketService {
     return result!;
   }
 
-  async updateTicket(id: string, input: UpdateTicketInput): Promise<TicketRecord> {
+  async updateTicket(
+    id: string,
+    input: UpdateTicketInput,
+  ): Promise<TicketRecord> {
     await this.getTicket(id);
     const result = await this.repo.update(id, input);
     if (!result) throw new NotFoundException(`工单 ${id} 不存在`);

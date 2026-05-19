@@ -10,11 +10,11 @@
  * @date 2026-05-05
  */
 
-import type { ReactNode } from 'react';
-import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
-import { routing } from '@/lib/i18n/routing';
+import type { ReactNode } from "react";
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
+import { routing } from "@/lib/i18n/routing";
 
 type Props = {
   children: ReactNode;

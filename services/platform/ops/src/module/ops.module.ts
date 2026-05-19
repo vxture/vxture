@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
-import { VxConfigModule, VxConfigService } from '@vxture/core-config';
-import { Pool } from 'pg';
-import { OPS_PG_POOL } from '../tokens';
-import { PgOpsRepository } from '../repository/pg-ops.repository';
-import { OpsService } from '../service/ops.service';
+import { Module } from "@nestjs/common";
+import { VxConfigModule, VxConfigService } from "@vxture/core-config";
+import { Pool } from "pg";
+import { OPS_PG_POOL } from "../tokens";
+import { PgOpsRepository } from "../repository/pg-ops.repository";
+import { OpsService } from "../service/ops.service";
 
 @Module({
-  imports: [VxConfigModule.register({ domains: ['database'] })],
+  imports: [VxConfigModule.register({ domains: ["database"] })],
   providers: [
     {
       provide: OPS_PG_POOL,
@@ -23,7 +23,10 @@ import { OpsService } from '../service/ops.service';
                 user: db.DB_USER,
                 password: db.DB_PASSWORD,
                 max: db.DB_POOL_MAX,
-                ssl: db.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
+                ssl:
+                  db.DB_SSL === "require"
+                    ? { rejectUnauthorized: false }
+                    : undefined,
               },
         );
       },

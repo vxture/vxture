@@ -1,1 +1,1 @@
-export * from './ConsolePreferenceControls';
+export * from "./ConsolePreferenceControls";

@@ -8,7 +8,7 @@
  * @date 2026-04-30
  */
 
-import type { ChatStreamEvent } from '../types/vela.types';
+import type { ChatStreamEvent } from "../types/vela.types";
 
 /**
  * 将 fetch 的 ReadableStream 解析为 ChatStreamEvent 异步生成器。
@@ -17,9 +17,9 @@ import type { ChatStreamEvent } from '../types/vela.types';
 export async function* parseSseStream(
   body: ReadableStream<Uint8Array>,
 ): AsyncGenerator<ChatStreamEvent> {
-  const reader  = body.getReader();
+  const reader = body.getReader();
   const decoder = new TextDecoder();
-  let buffer    = '';
+  let buffer = "";
 
   try {
     while (true) {
@@ -27,19 +27,22 @@ export async function* parseSseStream(
       if (done) break;
 
       buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() ?? '';
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
 
       for (const line of lines) {
-        if (!line.startsWith('data: ')) continue;
+        if (!line.startsWith("data: ")) continue;
         const payload = line.slice(6).trim();
         if (!payload) continue;
         try {
           yield JSON.parse(payload) as ChatStreamEvent;
         } catch {
           // 继续处理后续行，但记录日志便于调试
-          if (process.env.NODE_ENV !== 'production') {
-            console.warn('[vela/stream] SSE parse error, raw payload:', payload);
+          if (process.env.NODE_ENV !== "production") {
+            console.warn(
+              "[vela/stream] SSE parse error, raw payload:",
+              payload,
+            );
           }
         }
       }

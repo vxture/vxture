@@ -5,4 +5,4 @@
  * @category Hooks
  */
 
-export { useWindowScrollSnap } from './useWindowScrollSnap';
+export { useWindowScrollSnap } from "./useWindowScrollSnap";

@@ -2,7 +2,7 @@ Core Layer Validation
 
 Location
 
-packages/core-*
+packages/core-\*
 
 Responsibilities
 

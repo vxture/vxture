@@ -7,11 +7,11 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/shared` |
-| 路径 | `packages/shared/shared/` |
-| @layer | `Shared` |
+| 项     | 值                        |
+| ------ | ------------------------- |
+| 包名   | `@vxture/shared`          |
+| 路径   | `packages/shared/shared/` |
+| @layer | `Shared`                  |
 
 ## 职责定位
 
@@ -36,6 +36,7 @@ src/
 **允许：** `zod` / `dayjs` / 其他轻量无副作用三方库
 
 **禁止：**
+
 - ❌ 任何 `@vxture/*` 内部包
 - ❌ NestJS / Next.js / React / Prisma / axios / dotenv
 - ❌ 浏览器专用 API（window / document / localStorage）
@@ -44,35 +45,38 @@ src/
 ## 现有模块
 
 ### 工具函数
-| 文件 | 内容 |
-|------|------|
-| `debug.utils.ts` | 调试工具（开发环境，生产无副作用） |
+
+| 文件              | 内容                                      |
+| ----------------- | ----------------------------------------- |
+| `debug.utils.ts`  | 调试工具（开发环境，生产无副作用）        |
 | `format.utils.ts` | 货币 / 日期 / 数字格式化（基于 Intl API） |
 
 ### 类型定义
-| 文件 | 内容 |
-|------|------|
-| `auth.types.ts` | UserInfo / TokenData |
-| `locale.types.ts` | Locale / LocaleConfig |
-| `theme.types.ts` | Theme / ThemeValue |
-| `api.types.ts` | ApiResponse / ApiSuccessResponse / ApiErrorResponse |
-| `ui.types.ts` | SemanticColor |
-| `common.types.ts` | Link / Action |
+
+| 文件              | 内容                                                |
+| ----------------- | --------------------------------------------------- |
+| `auth.types.ts`   | UserInfo / TokenData                                |
+| `locale.types.ts` | Locale / LocaleConfig                               |
+| `theme.types.ts`  | Theme / ThemeValue                                  |
+| `api.types.ts`    | ApiResponse / ApiSuccessResponse / ApiErrorResponse |
+| `ui.types.ts`     | SemanticColor                                       |
+| `common.types.ts` | Link / Action                                       |
 
 ### 常量配置
-| 文件 | 内容 |
-|------|------|
-| `auth.constants.ts` | AUTH_CONSTANTS |
+
+| 文件                  | 内容                                                 |
+| --------------------- | ---------------------------------------------------- |
+| `auth.constants.ts`   | AUTH_CONSTANTS                                       |
 | `locale.constants.ts` | SUPPORTED_LOCALES / DEFAULT_LOCALE / LOCALE_INTL_MAP |
-| `theme.constants.ts` | THEME_CONSTANTS |
-| `ui.constants.ts` | SEMANTIC_COLORS |
+| `theme.constants.ts`  | THEME_CONSTANTS                                      |
+| `ui.constants.ts`     | SEMANTIC_COLORS                                      |
 
 ## 文件命名规范
 
-| 类型 | 规范 |
-|------|------|
-| 工具函数 | `*.utils.ts` |
-| 类型定义 | `*.types.ts` |
-| 常量 | `*.constants.ts` |
+| 类型     | 规范             |
+| -------- | ---------------- |
+| 工具函数 | `*.utils.ts`     |
+| 类型定义 | `*.types.ts`     |
+| 常量     | `*.constants.ts` |
 
 禁止：`utils.ts` / `helpers.ts` / `misc.ts` 等泛名。

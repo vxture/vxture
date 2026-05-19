@@ -6,11 +6,7 @@
     "imageAlt": "全域数智平台产品界面",
     "primaryAction": "申请试用",
     "secondaryAction": "查看能力",
-    "highlights": [
-      "多源数据接入",
-      "知识图谱建模",
-      "智能分析问答"
-    ],
+    "highlights": ["多源数据接入", "知识图谱建模", "智能分析问答"],
     "metrics": [
       {
         "value": "30+",

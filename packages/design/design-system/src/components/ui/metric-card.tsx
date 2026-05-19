@@ -58,7 +58,7 @@ const MetricCard = React.forwardRef<HTMLDivElement, MetricCardProps>(
               </div>
             ) : null}
           </div>
-          {(description || trend || action) ? (
+          {description || trend || action ? (
             <div className="flex items-end justify-between gap-3">
               <div className="min-w-0">
                 {description ? (

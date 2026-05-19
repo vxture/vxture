@@ -1,9 +1,9 @@
 export class LoginDto {
-  identifier = '';
-  password = '';
+  identifier = "";
+  password = "";
 }
 
 export class AuthResultDto {
-  userId = '';
-  status = 'authenticated';
+  userId = "";
+  status = "authenticated";
 }

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { Link, usePathname } from '@/lib/i18n/navigation';
-import { useTranslations } from 'next-intl';
-import { navigationSections } from '@/config/navigation';
-import { hasCapability } from '@/features/permissions/can';
-import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { Icon } from '@vxture/design-system';
+import { Link, usePathname } from "@/lib/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { navigationSections } from "@/config/navigation";
+import { hasCapability } from "@/features/permissions/can";
+import { useConsoleSession } from "@/features/session/ConsoleSessionProvider";
+import { Icon } from "@vxture/design-system";
 
 export function ConsoleSidebar() {
   const pathname = usePathname();
   const { session } = useConsoleSession();
-  const t = useTranslations('sidebar');
+  const t = useTranslations("sidebar");
 
   return (
     <aside className="console-sidebar">
@@ -19,21 +19,25 @@ export function ConsoleSidebar() {
           <span>V</span>
         </div>
         <div>
-          <p className="vx-eyebrow">{t('eyebrow')}</p>
-          <h2>{t('title')}</h2>
-          <span>{t('description')}</span>
+          <p className="vx-eyebrow">{t("eyebrow")}</p>
+          <h2>{t("title")}</h2>
+          <span>{t("description")}</span>
         </div>
       </div>
-      <nav className="console-nav" aria-label={t('ariaLabel')}>
+      <nav className="console-nav" aria-label={t("ariaLabel")}>
         {navigationSections.map((section) => {
-          const items = section.items.filter((item) => hasCapability(session.capabilities, item.capability));
+          const items = section.items.filter((item) =>
+            hasCapability(session.capabilities, item.capability),
+          );
           if (items.length === 0) {
             return null;
           }
 
           return (
             <div key={section.titleKey} className="console-nav__group">
-              <p className="console-nav__group-title">{t(`sections.${section.titleKey}`)}</p>
+              <p className="console-nav__group-title">
+                {t(`sections.${section.titleKey}`)}
+              </p>
               {items.map((item) => {
                 const isActive = pathname === item.href;
                 const label = t(`items.${item.labelKey}`);
@@ -42,10 +46,18 @@ export function ConsoleSidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={isActive ? 'console-nav__item console-nav__item--active' : 'console-nav__item'}
+                    className={
+                      isActive
+                        ? "console-nav__item console-nav__item--active"
+                        : "console-nav__item"
+                    }
                   >
                     <div className="console-nav__item-icon">
-                      <Icon name={item.icon} className="w-4 h-4" fallback="placeholder" />
+                      <Icon
+                        name={item.icon}
+                        className="w-4 h-4"
+                        fallback="placeholder"
+                      />
                     </div>
                     <div>
                       <strong>{label}</strong>
@@ -61,7 +73,9 @@ export function ConsoleSidebar() {
       <div className="console-sidebar__footer">
         <span>{session.tenant?.name}</span>
         <strong>
-          {session.tenant?.mode === 'platform' ? t('workspaceMode.platform') : t('workspaceMode.tenant')}
+          {session.tenant?.mode === "platform"
+            ? t("workspaceMode.platform")
+            : t("workspaceMode.tenant")}
         </strong>
       </div>
     </aside>

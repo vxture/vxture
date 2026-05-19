@@ -16,10 +16,10 @@
  * @date 2026-05-05
  */
 
-import { NextResponse, type NextRequest } from 'next/server';
-import createMiddleware from 'next-intl/middleware';
-import { AUTH_CONSTANTS, LOCALE_CONSTANTS } from '@vxture/shared';
-import { routing } from './lib/i18n/routing';
+import { NextResponse, type NextRequest } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { AUTH_CONSTANTS, LOCALE_CONSTANTS } from "@vxture/shared";
+import { routing } from "./lib/i18n/routing";
 
 const handleI18n = createMiddleware(routing);
 
@@ -42,7 +42,7 @@ function stripLocale(pathname: string): string {
       return pathname.slice(locale.length + 1);
     }
     if (pathname === `/${locale}`) {
-      return '/';
+      return "/";
     }
   }
   return pathname;
@@ -54,7 +54,10 @@ function resolveLocale(request: NextRequest, pathname: string): string {
   if (fromPath) return fromPath;
 
   const fromCookie = request.cookies.get(LOCALE_CONSTANTS.COOKIE_KEY)?.value;
-  if (fromCookie && (routing.locales as readonly string[]).includes(fromCookie)) {
+  if (
+    fromCookie &&
+    (routing.locales as readonly string[]).includes(fromCookie)
+  ) {
     return fromCookie;
   }
 
@@ -68,7 +71,7 @@ export function middleware(request: NextRequest) {
   const localePath = stripLocale(pathname);
 
   // /signin 是唯一公开路由，其余全部需要认证
-  const isPublic = localePath === '/signin';
+  const isPublic = localePath === "/signin";
 
   if (!isPublic) {
     const hasSession = request.cookies.has(
@@ -78,9 +81,12 @@ export function middleware(request: NextRequest) {
     if (!hasSession) {
       const locale = resolveLocale(request, pathname);
       // next 传递去 locale 的路径；登录后 next-intl router 自动补回 locale 前缀
-      const next = localePath === '/' ? '/' : localePath;
+      const next = localePath === "/" ? "/" : localePath;
       return NextResponse.redirect(
-        new URL(`/${locale}/signin?next=${encodeURIComponent(next)}`, request.url),
+        new URL(
+          `/${locale}/signin?next=${encodeURIComponent(next)}`,
+          request.url,
+        ),
       );
     }
   }
@@ -90,5 +96,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next|.*\\..*).*)'],
+  matcher: ["/((?!api|_next|.*\\..*).*)"],
 };

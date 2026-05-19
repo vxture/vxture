@@ -42,12 +42,14 @@ TypeScript 类型、URL 路径段、HTML lang 属性、next-intl 配置、Intl A
 ## 后果
 
 **正面：**
+
 - URL / HTML lang / Intl API / next-intl 完全对齐，无映射层
 - `Locale` 类型精确（`'zh-CN' | 'en-US'`），TypeScript 类型安全
 - 未来添加 `zh-TW`、`ja-JP` 等无需修改现有逻辑
 - 与 W3C、Google、Apple 等大厂 URL 规范一致
 
 **负面：**
+
 - URL 路径段更长（`/zh-CN/` vs `/zh/`）
 - 翻译文件目录从 `messages/zh/` 重命名为 `messages/zh-CN/`（一次性重构成本，已完成）
 

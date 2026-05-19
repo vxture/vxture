@@ -13,12 +13,12 @@
  * @layer Presentation
  * @category Components - About
  */
-'use client';
+"use client";
 
 interface SectionConfig {
   id: string;
   title: string;
-  tone?: 'page' | 'odd' | 'even';
+  tone?: "page" | "odd" | "even";
 }
 
 interface TestSectionProps {
@@ -27,18 +27,24 @@ interface TestSectionProps {
 
 export default function TestSection({ sections }: TestSectionProps) {
   return (
-    <div className='min-h-screen'>
+    <div className="min-h-screen">
       {sections.map((section) => (
         <section
           key={section.id}
           id={section.id}
           className={`relative snap-section min-h-screen flex items-center justify-center ${
-            section.tone === 'page' ? 'vx-page-surface' : section.tone === 'even' ? 'vx-section-even' : 'vx-section-odd'
+            section.tone === "page"
+              ? "vx-page-surface"
+              : section.tone === "even"
+                ? "vx-section-even"
+                : "vx-section-odd"
           }`}
         >
-          <div className='text-center'>
-            <h2 className='font-display text-4xl font-bold text-vx-gray-800 mb-4'>{section.title}</h2>
-            <p className='text-lg text-vx-gray-600'>
+          <div className="text-center">
+            <h2 className="font-display text-4xl font-bold text-vx-gray-800 mb-4">
+              {section.title}
+            </h2>
+            <p className="text-lg text-vx-gray-600">
               欢迎来到关于我们页面！这里是 {section.title} 的内容。
             </p>
           </div>

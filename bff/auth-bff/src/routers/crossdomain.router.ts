@@ -30,12 +30,12 @@ import {
   Post,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import { JwtAuthScope } from '@vxture/core-auth';
-import { AUTH_CONSTANTS } from '@vxture/shared';
-import { AuthService } from '../auth/auth.service';
-import { RedisService, type CrossDomainPayload } from '../redis/redis.service';
+} from "@nestjs/common";
+import type { Request } from "express";
+import { JwtAuthScope } from "@vxture/core-auth";
+import { AUTH_CONSTANTS } from "@vxture/shared";
+import { AuthService } from "../auth/auth.service";
+import { RedisService, type CrossDomainPayload } from "../redis/redis.service";
 
 // ─── DTO ──────────────────────────────────────────────────────────────────
 
@@ -48,7 +48,7 @@ class VerifyDto {
 
 // ─── Router ───────────────────────────────────────────────────────────────
 
-@Controller('auth/crossdomain')
+@Controller("auth/crossdomain")
 export class CrossDomainRouter {
   constructor(
     @Inject(AuthService) private readonly authService: AuthService,
@@ -59,44 +59,52 @@ export class CrossDomainRouter {
    * 生成跨域一次性 token
    * 前端调用此接口前必须在当前 domain 已有登录态
    */
-  @Get('token')
+  @Get("token")
   @HttpCode(HttpStatus.OK)
-  async generateToken(@Req() req: Request): Promise<{ token: string; expiresIn: number }> {
+  async generateToken(
+    @Req() req: Request,
+  ): Promise<{ token: string; expiresIn: number }> {
     // 从 cookie 读取 access token
-    const accessToken = req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN]
-      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN]
-      ?? req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
+    const accessToken =
+      req.cookies?.[AUTH_CONSTANTS.TENANT_COOKIE_KEYS.ACCESS_TOKEN] ??
+      req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.WEBSITE.ACCESS_TOKEN] ??
+      req.cookies?.[AUTH_CONSTANTS.LEGACY_COOKIE_KEYS.CONSOLE.ACCESS_TOKEN];
 
     if (!accessToken) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
 
     let payload: ReturnType<typeof this.authService.verifyAccessToken>;
     try {
       payload = this.authService.verifyAccessToken(accessToken);
     } catch {
-      throw new UnauthorizedException('Invalid or expired session');
+      throw new UnauthorizedException("Invalid or expired session");
     }
 
     // 校验 userType：必须是 tenant_user（跨域仅限租户账号）
-    if (payload.userType !== 'tenant_user' || payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
-      throw new UnauthorizedException('Cross-domain login is only available for tenant users');
+    if (
+      payload.userType !== "tenant_user" ||
+      payload.authScope !== JwtAuthScope.TENANT_CONSOLE
+    ) {
+      throw new UnauthorizedException(
+        "Cross-domain login is only available for tenant users",
+      );
     }
     if (!payload.jti) {
-      throw new UnauthorizedException('Invalid session');
+      throw new UnauthorizedException("Invalid session");
     }
     if (
-      await this.redis.isBlacklisted(payload.jti)
-      || await this.redis.isSubjectAccessRevoked(payload.sub, false, payload.iat)
+      (await this.redis.isBlacklisted(payload.jti)) ||
+      (await this.redis.isSubjectAccessRevoked(payload.sub, false, payload.iat))
     ) {
-      throw new UnauthorizedException('Session has been revoked');
+      throw new UnauthorizedException("Session has been revoked");
     }
 
     const crossPayload: CrossDomainPayload = {
       sub: payload.sub,
       userType: payload.userType,
-      tenantId: payload.tenantId ?? '',
-      targetDomain: 'ruyin.ai',
+      tenantId: payload.tenantId ?? "",
+      targetDomain: "ruyin.ai",
       provider: payload.provider,
     };
 
@@ -114,12 +122,12 @@ export class CrossDomainRouter {
    * - 校验 targetDomain 是否匹配接收方
    * - 校验 userType 是否匹配目标产品
    */
-  @Post('verify')
+  @Post("verify")
   @HttpCode(HttpStatus.OK)
   async verifyToken(@Body() body: VerifyDto): Promise<CrossDomainPayload> {
     const payload = await this.redis.consumeCrossDomainToken(body.token);
     if (!payload) {
-      throw new UnauthorizedException('Invalid or expired cross-domain token');
+      throw new UnauthorizedException("Invalid or expired cross-domain token");
     }
 
     // 校验 targetDomain（防止 token 被截获后在非目标 domain 使用）

@@ -16,13 +16,13 @@
  * @license MIT
  */
 
-import { Module } from '@nestjs/common';
-import Redis from 'ioredis';
-import { MAIL_PROVIDER, REDIS_CLIENT } from '../constants/tokens';
-import { ConsoleMailProvider } from '../providers/console.provider';
-import { SmtpMailProvider } from '../providers/smtp.provider';
-import { MailService } from '../service/mail.service';
-import { VerifyCodeService } from '../service/verifycode.service';
+import { Module } from "@nestjs/common";
+import Redis from "ioredis";
+import { MAIL_PROVIDER, REDIS_CLIENT } from "../constants/tokens";
+import { ConsoleMailProvider } from "../providers/console.provider";
+import { SmtpMailProvider } from "../providers/smtp.provider";
+import { MailService } from "../service/mail.service";
+import { VerifyCodeService } from "../service/verifycode.service";
 
 @Module({
   providers: [
@@ -30,13 +30,13 @@ import { VerifyCodeService } from '../service/verifycode.service';
     {
       provide: REDIS_CLIENT,
       useFactory: () => {
-        const url = process.env['REDIS_URL'];
+        const url = process.env["REDIS_URL"];
         if (url) {
           return new Redis(url);
         }
         return new Redis({
-          host: process.env['REDIS_HOST'] ?? 'localhost',
-          port: Number(process.env['REDIS_PORT'] ?? 6379),
+          host: process.env["REDIS_HOST"] ?? "localhost",
+          port: Number(process.env["REDIS_PORT"] ?? 6379),
         });
       },
     },
@@ -48,7 +48,7 @@ import { VerifyCodeService } from '../service/verifycode.service';
       provide: MAIL_PROVIDER,
       inject: [SmtpMailProvider, ConsoleMailProvider],
       useFactory: (smtp: SmtpMailProvider, console: ConsoleMailProvider) => {
-        return process.env['SMTP_PASS'] ? smtp : console;
+        return process.env["SMTP_PASS"] ? smtp : console;
       },
     },
 

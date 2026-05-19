@@ -8,15 +8,16 @@
 
 ### 1.1 主干分支（长期存在，受保护，禁止直接 push）
 
-| 分支 | 对应环境 | 说明 |
-|------|---------|------|
-| `main` | 生产（prod） | 平台全量 prod + 所有业务 prod；合并触发正式镜像构建，手动 deploy |
-| `beta` | 公测（beta） | 业务板块 beta / 试用版本；合并触发 beta 镜像构建，自动部署到 worker-02 beta |
-| `develop` | 开发集成 | 日常开发集成主线；仅触发 CI，不构建镜像，不部署 |
+| 分支      | 对应环境     | 说明                                                                        |
+| --------- | ------------ | --------------------------------------------------------------------------- |
+| `main`    | 生产（prod） | 平台全量 prod + 所有业务 prod；合并触发正式镜像构建，手动 deploy            |
+| `beta`    | 公测（beta） | 业务板块 beta / 试用版本；合并触发 beta 镜像构建，自动部署到 worker-02 beta |
+| `develop` | 开发集成     | 日常开发集成主线；仅触发 CI，不构建镜像，不部署                             |
 
 **平台层（worker-01）**：只有 prod，仅跟随 `main` 发布。`beta` / `develop` 分支不触发平台层部署。
 
 **业务层（worker-02）**：维持 prod + beta 双环境：
+
 - `main` 合并 → 构建 `:latest` / `:sha` 镜像 → 手动部署各业务 prod 容器
 - `beta` 合并 → 构建 `:beta` 镜像 → 自动部署各业务 beta 容器
 
@@ -26,16 +27,17 @@
 
 ### 1.2 工作分支（短期，任务完成即删除）
 
-| 前缀 | 用途 | 基分支 | 目标分支 | 示例 |
-|------|------|--------|---------|------|
-| `feature/` | 新功能 | `develop` | `develop` | `feature/vela-tool-registry` |
-| `fix/` | Bug 修复 | `develop` | `develop` | `fix/auth-cookie-domain` |
-| `hotfix/` | 紧急生产修复 | `main` | `main` → back-merge | `hotfix/auth-jwt-leak` |
-| `refactor/` | 重构（不改行为） | `develop` | `develop` | `refactor/design-token-centralize` |
-| `docs/` | 纯文档变更 | `develop` | `develop` | `docs/architecture-restructure` |
-| `chore/` | 构建 / CI / 依赖 | `develop` | `develop` | `chore/pnpm-upgrade` |
+| 前缀        | 用途             | 基分支    | 目标分支            | 示例                               |
+| ----------- | ---------------- | --------- | ------------------- | ---------------------------------- |
+| `feature/`  | 新功能           | `develop` | `develop`           | `feature/vela-tool-registry`       |
+| `fix/`      | Bug 修复         | `develop` | `develop`           | `fix/auth-cookie-domain`           |
+| `hotfix/`   | 紧急生产修复     | `main`    | `main` → back-merge | `hotfix/auth-jwt-leak`             |
+| `refactor/` | 重构（不改行为） | `develop` | `develop`           | `refactor/design-token-centralize` |
+| `docs/`     | 纯文档变更       | `develop` | `develop`           | `docs/architecture-restructure`    |
+| `chore/`    | 构建 / CI / 依赖 | `develop` | `develop`           | `chore/pnpm-upgrade`               |
 
 **规则**：
+
 - 所有工作分支必须从 `develop` 创建（`hotfix/` 例外，从 `main` 创建）
 - 禁止直接推送到 `main` / `beta` / `develop`
 - 分支名使用小写 kebab-case，描述具体内容
@@ -76,14 +78,14 @@ main
 
 以下分支均从 `develop` 创建，完成后 PR 回 `develop`：
 
-| 分支 | 内容 | 优先级 |
-|------|------|--------|
-| `fix/ds-context-split` | density / theme context 拆分；DensityProvider 反模式重构 | P2 |
-| `feat/ds-button-danger-variant` | DS Button 增加正式 `variant="danger"` 扩展点，清理 admin CSS 补丁 | P2 |
-| `fix/ds-layout-tokens` | 布局组件 gap / padding 间距 token 设计对齐；FullscreenContainer 重构 | P2 |
-| `refactor/portal-rsc-pages` | website 落地页 / admin 首页改为 Server Component | P2 |
-| `refactor/portal-shared-ui` | ActionButton / EmptyState 提取到共享包 | P3 |
-| `fix/admin-token-dark-mode` | admin `--tenant-*` scale token 语义化；补充 gray-950 CSS 变量 | P3 |
+| 分支                            | 内容                                                                 | 优先级 |
+| ------------------------------- | -------------------------------------------------------------------- | ------ |
+| `fix/ds-context-split`          | density / theme context 拆分；DensityProvider 反模式重构             | P2     |
+| `feat/ds-button-danger-variant` | DS Button 增加正式 `variant="danger"` 扩展点，清理 admin CSS 补丁    | P2     |
+| `fix/ds-layout-tokens`          | 布局组件 gap / padding 间距 token 设计对齐；FullscreenContainer 重构 | P2     |
+| `refactor/portal-rsc-pages`     | website 落地页 / admin 首页改为 Server Component                     | P2     |
+| `refactor/portal-shared-ui`     | ActionButton / EmptyState 提取到共享包                               | P3     |
+| `fix/admin-token-dark-mode`     | admin `--tenant-*` scale token 语义化；补充 gray-950 CSS 变量        | P3     |
 
 ---
 
@@ -95,16 +97,16 @@ main
 <type>(<scope>): <description>
 ```
 
-| type | 含义 |
-|------|------|
-| `feat` | 新功能 |
-| `fix` | Bug 修复 |
+| type       | 含义                   |
+| ---------- | ---------------------- |
+| `feat`     | 新功能                 |
+| `fix`      | Bug 修复               |
 | `refactor` | 重构（不影响外部行为） |
-| `perf` | 性能优化 |
-| `docs` | 纯文档变更 |
-| `chore` | 构建、CI、依赖升级等 |
-| `test` | 测试相关 |
-| `style` | 代码格式（不影响逻辑） |
+| `perf`     | 性能优化               |
+| `docs`     | 纯文档变更             |
+| `chore`    | 构建、CI、依赖升级等   |
+| `test`     | 测试相关               |
+| `style`    | 代码格式（不影响逻辑） |
 
 `scope` 使用包短名（不带 `@vxture/` 前缀）或目录名：
 
@@ -118,6 +120,7 @@ chore(deps): upgrade pnpm to 10.x
 ```
 
 **规则**：
+
 - description 使用中文或英文均可，但保持全 PR 一致
 - 禁止无意义的 commit 描述（如 `update`、`fix bug`、`wip`）
 
@@ -144,12 +147,12 @@ chore(deps): upgrade pnpm to 10.x
 shortname@Vx.y.yyMMdd.nn
 ```
 
-| 字段 | 说明 |
-|------|------|
-| `shortname` | 包短名（不带 `@vxture/` 前缀） |
-| `Vx.y` | semver 版本号（来自 `package.json`） |
-| `yyMMdd` | 发布日期（年月日） |
-| `nn` | 当日序号（`01`、`02`...） |
+| 字段        | 说明                                 |
+| ----------- | ------------------------------------ |
+| `shortname` | 包短名（不带 `@vxture/` 前缀）       |
+| `Vx.y`      | semver 版本号（来自 `package.json`） |
+| `yyMMdd`    | 发布日期（年月日）                   |
+| `nn`        | 当日序号（`01`、`02`...）            |
 
 **示例**：`core-tenant@V1.0.0.260314.01`
 
@@ -164,10 +167,10 @@ shortname@Vx.y.yyMMdd.nn
 
 ## 5. 版本号规则（SemVer）
 
-| 类型 | 规则 |
-|------|------|
+| 类型          | 规则                       |
+| ------------- | -------------------------- |
 | Patch `x.y.Z` | Bug 修复、向后兼容的小改动 |
-| Minor `x.Y.0` | 新增功能、向后兼容 |
-| Major `X.0.0` | 破坏性变更（接口不兼容） |
+| Minor `x.Y.0` | 新增功能、向后兼容         |
+| Major `X.0.0` | 破坏性变更（接口不兼容）   |
 
 **monorepo 包独立版本**：每个包独立维护版本号，不做全仓库统一版本。

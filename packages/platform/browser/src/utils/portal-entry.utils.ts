@@ -5,10 +5,10 @@
  *   首次进入时从 URL 解析，会话期间通过 sessionStorage 保持，标签页关闭后自动清除。
  */
 
-import { decodePortalContext } from '@vxture/shared';
-import type { PortalNavContext } from '@vxture/shared';
+import { decodePortalContext } from "@vxture/shared";
+import type { PortalNavContext } from "@vxture/shared";
 
-const STORAGE_KEY = 'vx-portal-entry-ctx';
+const STORAGE_KEY = "vx-portal-entry-ctx";
 
 // =============================================================================
 // URL 解析
@@ -21,7 +21,7 @@ const STORAGE_KEY = 'vx-portal-entry-ctx';
  * @returns 解析后的 PortalNavContext，URL 中无 ctx 参数时返回 null
  */
 export function parsePortalEntryFromUrl(): PortalNavContext | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   return decodePortalContext(window.location.search);
 }
 
@@ -36,7 +36,7 @@ export function parsePortalEntryFromUrl(): PortalNavContext | null {
  * @returns 存储的 PortalNavContext，不存在或解析失败时返回 null
  */
 export function loadPortalEntry(): PortalNavContext | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === "undefined") return null;
   try {
     const raw = window.sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
@@ -53,7 +53,7 @@ export function loadPortalEntry(): PortalNavContext | null {
  * @param ctx - 跨 Portal 导航上下文
  */
 export function savePortalEntry(ctx: PortalNavContext): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(ctx));
 }
 
@@ -62,6 +62,6 @@ export function savePortalEntry(ctx: PortalNavContext): void {
  * 用户主动关闭「返回来源」指示时调用。
  */
 export function clearPortalEntry(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   window.sessionStorage.removeItem(STORAGE_KEY);
 }

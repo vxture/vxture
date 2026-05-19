@@ -10,7 +10,14 @@
  * @category Components
  */
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type {
   FullscreenContextValue,
   FullscreenMode,
@@ -21,7 +28,9 @@ import type {
 
 // ─── Context ───────────────────────────────────────────────────────────────────
 
-const FullscreenContext = createContext<FullscreenContextValue | undefined>(undefined);
+const FullscreenContext = createContext<FullscreenContextValue | undefined>(
+  undefined,
+);
 
 const DEFAULT_MODE: FullscreenMode = "pseudo";
 const DEFAULT_LOCK_SCROLL = true;
@@ -86,7 +95,10 @@ export function FullscreenProvider({
         await target.msRequestFullscreen();
       }
     } catch (error) {
-      console.warn("Failed to enter native fullscreen, falling back to pseudo:", error);
+      console.warn(
+        "Failed to enter native fullscreen, falling back to pseudo:",
+        error,
+      );
     }
   }, []);
 
@@ -148,7 +160,13 @@ export function FullscreenProvider({
 
       setState({ isFullscreen: true, targetId: id, mode: targetMode });
     },
-    [state.mode, defaultLockScroll, isNativeSupported, enterNativeFullscreen, lockScroll]
+    [
+      state.mode,
+      defaultLockScroll,
+      isNativeSupported,
+      enterNativeFullscreen,
+      lockScroll,
+    ],
   );
 
   const exitFullscreen = useCallback(() => {
@@ -170,7 +188,7 @@ export function FullscreenProvider({
         enterFullscreen(id, element, options);
       }
     },
-    [state.isFullscreen, state.targetId, enterFullscreen, exitFullscreen]
+    [state.isFullscreen, state.targetId, enterFullscreen, exitFullscreen],
   );
 
   // ─── 键盘 / 原生全屏事件监听 ───────────────────────────────────────────────
@@ -178,7 +196,11 @@ export function FullscreenProvider({
   /** ESC 退出 pseudo 全屏 */
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && state.isFullscreen && state.mode === "pseudo") {
+      if (
+        event.key === "Escape" &&
+        state.isFullscreen &&
+        state.mode === "pseudo"
+      ) {
         exitFullscreen();
       }
     };
@@ -197,9 +219,17 @@ export function FullscreenProvider({
         fullscreenDocument.msFullscreenElement
       );
 
-      if (!isInNativeFullscreen && state.isFullscreen && state.mode === "native") {
+      if (
+        !isInNativeFullscreen &&
+        state.isFullscreen &&
+        state.mode === "native"
+      ) {
         unlockScroll();
-        setState(prev => ({ ...prev, isFullscreen: false, targetId: undefined }));
+        setState((prev) => ({
+          ...prev,
+          isFullscreen: false,
+          targetId: undefined,
+        }));
       }
     };
 
@@ -210,9 +240,18 @@ export function FullscreenProvider({
 
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
-      document.removeEventListener("mozfullscreenchange", handleFullscreenChange);
-      document.removeEventListener("MSFullscreenChange", handleFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange,
+      );
+      document.removeEventListener(
+        "mozfullscreenchange",
+        handleFullscreenChange,
+      );
+      document.removeEventListener(
+        "MSFullscreenChange",
+        handleFullscreenChange,
+      );
     };
   }, [state.isFullscreen, state.mode, unlockScroll]);
 
@@ -252,7 +291,9 @@ export function FullscreenProvider({
 export function useFullscreenContext(): FullscreenContextValue {
   const context = useContext(FullscreenContext);
   if (!context) {
-    throw new Error("useFullscreenContext must be used within a FullscreenProvider");
+    throw new Error(
+      "useFullscreenContext must be used within a FullscreenProvider",
+    );
   }
   return context;
 }

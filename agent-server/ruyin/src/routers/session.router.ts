@@ -25,9 +25,9 @@ import type {
   GetTaskStatusResponse,
   ApiResponse,
   ChatMessage,
-} from '../types/ruyin.types';
-import { chatService } from '../services/chat.service';
-import { workflowTaskManager } from '../workflows/ruyin.workflow';
+} from "../types/ruyin.types";
+import { chatService } from "../services/chat.service";
+import { workflowTaskManager } from "../workflows/ruyin.workflow";
 
 // ============================================================================
 // 会话路由处理
@@ -57,11 +57,15 @@ export class SessionRouter {
     req: CreateSessionRequest,
   ): Promise<ApiResponse<CreateSessionResponse>> {
     try {
-      const session = await chatService.createSession(context.userId, context.tenantId, req.config);
+      const session = await chatService.createSession(
+        context.userId,
+        context.tenantId,
+        req.config,
+      );
 
       return {
         code: 200,
-        message: 'Session created successfully',
+        message: "Session created successfully",
         data: {
           sessionId: session.sessionId,
           config: session,
@@ -70,8 +74,8 @@ export class SessionRouter {
     } catch (error) {
       return {
         code: 500,
-        message: 'Failed to create session',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        message: "Failed to create session",
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
@@ -88,14 +92,14 @@ export class SessionRouter {
 
       return {
         code: 200,
-        message: 'Message sent successfully',
+        message: "Message sent successfully",
         data: result,
       };
     } catch (error) {
       return {
         code: 500,
-        message: 'Failed to send message',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        message: "Failed to send message",
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
@@ -109,18 +113,22 @@ export class SessionRouter {
     limit?: number,
   ): Promise<ApiResponse<ChatMessage[]>> {
     try {
-      const messages = await chatService.getSessionHistory(sessionId, context, limit);
+      const messages = await chatService.getSessionHistory(
+        sessionId,
+        context,
+        limit,
+      );
 
       return {
         code: 200,
-        message: 'History retrieved successfully',
+        message: "History retrieved successfully",
         data: messages,
       };
     } catch (error) {
       return {
         code: 500,
-        message: 'Failed to retrieve history',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        message: "Failed to retrieve history",
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
@@ -134,35 +142,49 @@ export class SessionRouter {
     req: GetTaskStatusRequest,
   ): Promise<ApiResponse<GetTaskStatusResponse>> {
     try {
-      await chatService.ensureSessionAccess(sessionId, context.userId, context.tenantId);
+      await chatService.ensureSessionAccess(
+        sessionId,
+        context.userId,
+        context.tenantId,
+      );
       const task = workflowTaskManager.getTaskStatus(req.taskId);
 
       if (!task) {
         return {
           code: 404,
-          message: 'Task not found',
+          message: "Task not found",
         };
       }
 
       return {
         code: 200,
-        message: 'Task status retrieved successfully',
+        message: "Task status retrieved successfully",
         data: {
           status: task.status,
-          progress: task.status === 'running' ? 50 : task.status === 'completed' ? 100 : 0,
+          progress:
+            task.status === "running"
+              ? 50
+              : task.status === "completed"
+                ? 100
+                : 0,
           result: task.result,
-          ...(task.status === 'failed'
-            ? { error: task.result && typeof task.result === 'object' && 'error' in task.result
-                ? String(task.result.error)
-                : 'Task failed' }
+          ...(task.status === "failed"
+            ? {
+                error:
+                  task.result &&
+                  typeof task.result === "object" &&
+                  "error" in task.result
+                    ? String(task.result.error)
+                    : "Task failed",
+              }
             : {}),
         },
       };
     } catch (error) {
       return {
         code: 500,
-        message: 'Failed to retrieve task status',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        message: "Failed to retrieve task status",
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }

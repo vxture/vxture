@@ -7,12 +7,12 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/service-ticket` |
-| 路径 | `services/support/ticket/` |
-| @layer | `Domain` |
-| 所属域 | `support` |
+| 项     | 值                         |
+| ------ | -------------------------- |
+| 包名   | `@vxture/service-ticket`   |
+| 路径   | `services/support/ticket/` |
+| @layer | `Domain`                   |
+| 所属域 | `support`                  |
 
 ## 职责
 
@@ -27,8 +27,12 @@
 ## Barrel Export 规则
 
 ```typescript
-export { TicketModule } from './module/ticket.module'
-export { TicketService } from './service/ticket.service'
-export type { Ticket, TicketStatus, TicketPriority } from './types/ticket.types'
+export { TicketModule } from "./module/ticket.module";
+export { TicketService } from "./service/ticket.service";
+export type {
+  Ticket,
+  TicketStatus,
+  TicketPriority,
+} from "./types/ticket.types";
 // 禁止导出 TicketRepository
 ```

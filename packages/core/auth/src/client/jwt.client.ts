@@ -4,15 +4,19 @@
  * @description
  *   Encapsulates @nestjs/jwt to provide type-safe JWT operations.
  *   Depends on VxConfigService for JWT configuration, no hardcoded keys.
- * 
+ *
  * @author AI-Generated
  * @date 2026-03-15
  */
 
-import { Injectable } from '@nestjs/common';
-import { JwtService }  from '@nestjs/jwt';
+import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 
-import type { JwtAccessPayload, JwtRefreshPayload, AuthTokenPair } from '../types/auth.types';
+import type {
+  JwtAccessPayload,
+  JwtRefreshPayload,
+  AuthTokenPair,
+} from "../types/auth.types";
 
 // ============================================================================
 // VxJwtClient
@@ -29,7 +33,7 @@ export class VxJwtClient {
   /**
    * Signs access token
    */
-  signAccessToken(payload: Omit<JwtAccessPayload, 'iat' | 'exp'>): string {
+  signAccessToken(payload: Omit<JwtAccessPayload, "iat" | "exp">): string {
     return this.jwtService.sign(payload);
     // Expiry time is controlled by JwtModule.registerAsync options.signOptions.expiresIn
     // Configure in each BFF / agent-server's AppModule
@@ -61,7 +65,7 @@ export class VxJwtClient {
    * @param expiresIn expiry duration, e.g. '7d'
    */
   signRefreshToken(
-    payload: Omit<JwtRefreshPayload, 'iat' | 'exp'>,
+    payload: Omit<JwtRefreshPayload, "iat" | "exp">,
     secret: string,
     expiresIn: string,
   ): string {
@@ -92,14 +96,14 @@ export class VxJwtClient {
    * @param refreshExpiresIn refresh token expiry (seconds, for cookie lifetime)
    */
   signTokenPair(params: {
-    accessPayload:   Omit<JwtAccessPayload,  'iat' | 'exp'>;
-    refreshPayload:  Omit<JwtRefreshPayload, 'iat' | 'exp'>;
-    refreshSecret:   string;
-    refreshExpires:  string;
+    accessPayload: Omit<JwtAccessPayload, "iat" | "exp">;
+    refreshPayload: Omit<JwtRefreshPayload, "iat" | "exp">;
+    refreshSecret: string;
+    refreshExpires: string;
     accessExpiresIn: number;
     refreshExpiresIn: number;
   }): AuthTokenPair {
-    const accessToken  = this.signAccessToken(params.accessPayload);
+    const accessToken = this.signAccessToken(params.accessPayload);
     const refreshToken = this.signRefreshToken(
       params.refreshPayload,
       params.refreshSecret,

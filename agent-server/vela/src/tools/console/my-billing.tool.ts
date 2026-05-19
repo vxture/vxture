@@ -11,21 +11,25 @@
  * @date 2026-04-30
  */
 
-import type { VelaTool } from '../tool.types';
+import type { VelaTool } from "../tool.types";
 
 export const myBillingTool: VelaTool = {
-  id:          'my_billing',
-  name:        '我的账单',
-  description: '查询当前租户的近期发票和账单记录',
-  surfaces:    ['console'],
-  dataScope:   'tenant',
+  id: "my_billing",
+  name: "我的账单",
+  description: "查询当前租户的近期发票和账单记录",
+  surfaces: ["console"],
+  dataScope: "tenant",
   inputSchema: {
-    type: 'object',
+    type: "object",
     properties: {
-      limit: { type: 'number', default: 5, description: '返回最近 N 张发票，最大 20' },
+      limit: {
+        type: "number",
+        default: 5,
+        description: "返回最近 N 张发票，最大 20",
+      },
     },
   },
   async execute(_input, _ctx) {
-    return { success: false, error: 'my_billing: not yet implemented' };
+    return { success: false, error: "my_billing: not yet implemented" };
   },
 };

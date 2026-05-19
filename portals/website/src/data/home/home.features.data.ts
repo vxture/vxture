@@ -55,10 +55,14 @@ export const FEATURES_DATA: FeaturesData = {
       intent: "simulation",
       theme: "primary",
       variant: "card",
-      highlights: ["items.feature-intro-01.highlights.0", "items.feature-intro-01.highlights.1", "items.feature-intro-01.highlights.2"],
+      highlights: [
+        "items.feature-intro-01.highlights.0",
+        "items.feature-intro-01.highlights.1",
+        "items.feature-intro-01.highlights.2",
+      ],
       cta: {
-        href: "/features/data-knowledge-graph"
-      }
+        href: "/features/data-knowledge-graph",
+      },
     },
     {
       id: "feature-intro-02",
@@ -66,10 +70,14 @@ export const FEATURES_DATA: FeaturesData = {
       intent: "solution",
       theme: "primary",
       variant: "card",
-      highlights: ["items.feature-intro-02.highlights.0", "items.feature-intro-02.highlights.1", "items.feature-intro-02.highlights.2"],
+      highlights: [
+        "items.feature-intro-02.highlights.0",
+        "items.feature-intro-02.highlights.1",
+        "items.feature-intro-02.highlights.2",
+      ],
       cta: {
-        href: "/features/intelligent-decision-dispatch"
-      }
+        href: "/features/intelligent-decision-dispatch",
+      },
     },
     {
       id: "feature-intro-03",
@@ -77,10 +85,14 @@ export const FEATURES_DATA: FeaturesData = {
       intent: "simulation",
       theme: "primary",
       variant: "card",
-      highlights: ["items.feature-intro-03.highlights.0", "items.feature-intro-03.highlights.1", "items.feature-intro-03.highlights.2"],
+      highlights: [
+        "items.feature-intro-03.highlights.0",
+        "items.feature-intro-03.highlights.1",
+        "items.feature-intro-03.highlights.2",
+      ],
       cta: {
-        href: "/features/digital-twin-simulation"
-      }
-    }
-  ]
+        href: "/features/digital-twin-simulation",
+      },
+    },
+  ],
 };

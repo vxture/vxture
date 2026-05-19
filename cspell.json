@@ -159,10 +159,7 @@
   "overrides": [
     {
       "filename": "**/*.{py,pyi}",
-      "dictionaries": [
-        "python",
-        "en-us"
-      ],
+      "dictionaries": ["python", "en-us"],
       "words": [
         "fastapi",
         "uvicorn",
@@ -181,12 +178,7 @@
     },
     {
       "filename": "**/*.{ts,tsx,js,jsx,mts,cts}",
-      "dictionaries": [
-        "typescript",
-        "node",
-        "npm",
-        "en-us"
-      ],
+      "dictionaries": ["typescript", "node", "npm", "en-us"],
       "words": [
         "nextjs",
         "tailwindcss",
@@ -202,22 +194,12 @@
     },
     {
       "filename": "**/*.{css,scss,sass,less}",
-      "dictionaries": [
-        "css",
-        "en-us"
-      ],
-      "words": [
-        "tailwindcss",
-        "autoprefixer",
-        "postcss",
-        "scss"
-      ]
+      "dictionaries": ["css", "en-us"],
+      "words": ["tailwindcss", "autoprefixer", "postcss", "scss"]
     },
     {
       "filename": "**/*.{md,mdx}",
-      "dictionaries": [
-        "en-us"
-      ],
+      "dictionaries": ["en-us"],
       "words": [
         "monorepo",
         "vxture",
@@ -230,11 +212,7 @@
     },
     {
       "filename": "**/package.json",
-      "dictionaries": [
-        "npm",
-        "node",
-        "en-us"
-      ],
+      "dictionaries": ["npm", "node", "en-us"],
       "words": [
         "pnpm",
         "nextjs",
@@ -247,22 +225,12 @@
     },
     {
       "filename": "**/*.{yml,yaml}",
-      "dictionaries": [
-        "en-us"
-      ],
-      "words": [
-        "pnpm",
-        "vxture",
-        "nextjs",
-        "fastapi"
-      ]
+      "dictionaries": ["en-us"],
+      "words": ["pnpm", "vxture", "nextjs", "fastapi"]
     },
     {
       "filename": "**/requirements*.txt",
-      "dictionaries": [
-        "python",
-        "en-us"
-      ],
+      "dictionaries": ["python", "en-us"],
       "words": [
         "fastapi",
         "uvicorn",

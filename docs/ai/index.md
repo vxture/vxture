@@ -6,14 +6,14 @@
 
 ## 规范文档
 
-| 文件 | 内容 | 优先级 |
-|------|------|--------|
-| [`01-coding-rules.md`](01-coding-rules.md) | AI 编码行为规则（操作范围 / 层边界 / 输出质量） | 必读 |
-| [`02-coding-style.md`](02-coding-style.md) | TypeScript 约定 / 命名规则 / 导出风格 | 必读 |
-| [`03-coding-comments.md`](03-coding-comments.md) | 文件头模板 / JSDoc 格式 / 分区注释 / 中文注释要求 | 必读 |
-| [`04-coding-typescript.md`](04-coding-typescript.md) | TypeScript 配置标准 / tsconfig 继承结构 / 严格模式策略 | 必读 |
+| 文件                                                         | 内容                                                                     | 优先级       |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------ | ------------ |
+| [`01-coding-rules.md`](01-coding-rules.md)                   | AI 编码行为规则（操作范围 / 层边界 / 输出质量）                          | 必读         |
+| [`02-coding-style.md`](02-coding-style.md)                   | TypeScript 约定 / 命名规则 / 导出风格                                    | 必读         |
+| [`03-coding-comments.md`](03-coding-comments.md)             | 文件头模板 / JSDoc 格式 / 分区注释 / 中文注释要求                        | 必读         |
+| [`04-coding-typescript.md`](04-coding-typescript.md)         | TypeScript 配置标准 / tsconfig 继承结构 / 严格模式策略                   | 必读         |
 | [`05-bff-data-access-guide.md`](05-bff-data-access-guide.md) | BFF 层数据访问与前端对接：Pool 注入 / req.user / auth 委托 / Schema 速查 | BFF 任务必读 |
-| [`port-allocation.md`](port-allocation.md) | 全局端口表 / 3NNX 规则 / 新服务登记流程 | 按需 |
+| [`port-allocation.md`](port-allocation.md)                   | 全局端口表 / 3NNX 规则 / 新服务登记流程                                  | 按需         |
 
 ## 工程合规审计
 

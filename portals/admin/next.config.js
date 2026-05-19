@@ -1,39 +1,45 @@
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const internalAliases = {
-  '@vxture/shared': join(__dirname, '../../packages/shared/shared/src'),
-  '@vxture/design-system': join(__dirname, '../../packages/design/design-system/src/client.ts'),
-  '@vxture/platform-browser': join(__dirname, '../../packages/platform/browser/src'),
-  '@vxture/agent-studio-vela': join(__dirname, '../../agent-studio/vela/src'),
+  "@vxture/shared": join(__dirname, "../../packages/shared/shared/src"),
+  "@vxture/design-system": join(
+    __dirname,
+    "../../packages/design/design-system/src/client.ts",
+  ),
+  "@vxture/platform-browser": join(
+    __dirname,
+    "../../packages/platform/browser/src",
+  ),
+  "@vxture/agent-studio-vela": join(__dirname, "../../agent-studio/vela/src"),
 };
 
 const turboAliases = {
-  '@vxture/shared': '../../packages/shared/shared/src',
-  '@vxture/design-system': '../../packages/design/design-system/src/client.ts',
-  '@vxture/platform-browser': '../../packages/platform/browser/src',
-  '@vxture/agent-studio-vela': '../../agent-studio/vela/src',
+  "@vxture/shared": "../../packages/shared/shared/src",
+  "@vxture/design-system": "../../packages/design/design-system/src/client.ts",
+  "@vxture/platform-browser": "../../packages/platform/browser/src",
+  "@vxture/agent-studio-vela": "../../agent-studio/vela/src",
 };
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
+  output: process.env.NEXT_STANDALONE === "1" ? "standalone" : undefined,
   experimental: {
     webpackBuildWorker: false,
   },
-  transpilePackages: ['@vxture/design-system', '@vxture/agent-studio-vela'],
+  transpilePackages: ["@vxture/design-system", "@vxture/agent-studio-vela"],
   turbopack: {
     resolveAlias: turboAliases,
   },
   async rewrites() {
     return [
       {
-        source: '/vela/:path*',
-        destination: `${process.env.VELA_BFF_DEV_URL ?? 'http://localhost:3121'}/vela/:path*`,
+        source: "/vela/:path*",
+        destination: `${process.env.VELA_BFF_DEV_URL ?? "http://localhost:3121"}/vela/:path*`,
       },
     ];
   },

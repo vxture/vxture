@@ -22,10 +22,14 @@ export function FullscreenToggle({
   mode = "pseudo",
   lockScroll,
   className,
-  children
+  children,
 }: FullscreenToggleProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const { isFullscreen, targetId: activeId, toggleFullscreen } = useFullscreenContext();
+  const {
+    isFullscreen,
+    targetId: activeId,
+    toggleFullscreen,
+  } = useFullscreenContext();
 
   /**
    * 检查是否是当前全屏目标
@@ -36,7 +40,9 @@ export function FullscreenToggle({
    * 切换全屏
    */
   const handleToggle = () => {
-    const targetElement = document.querySelector(`[data-fullscreen-id="${targetId}"]`);
+    const targetElement = document.querySelector(
+      `[data-fullscreen-id="${targetId}"]`,
+    );
     if (targetElement instanceof HTMLElement) {
       toggleFullscreen(targetId, targetElement, { mode, lockScroll });
     }
@@ -72,9 +78,10 @@ export function FullscreenToggle({
       className={cn(
         "transition-colors duration-200",
         {
-          "bg-vx-primary text-vx-text-inverse hover:bg-vx-primary-strong": isActive
+          "bg-vx-primary text-vx-text-inverse hover:bg-vx-primary-strong":
+            isActive,
         },
-        className
+        className,
       )}
     >
       {children || renderDefaultIcon()}

@@ -41,7 +41,11 @@ import "@vxture/design-system/styles/globals.css";
 import { FullscreenProvider, ThemeProvider } from "@vxture/design-system";
 import "@vxture/design-system/styles/globals.css";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body>
@@ -58,46 +62,46 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ### UI 组件（28 个）
 
-| 组件 | 说明 |
-|------|------|
-| `ActionMenu` | 行操作菜单 |
-| `Avatar` | 头像 |
-| `Badge` | 徽章 |
-| `Breadcrumb` | 面包屑 |
-| `Button` | 按钮 |
-| `Card` | 卡片 |
-| `Checkbox` | 复选框 |
-| `DataTable` | 数据表格 |
-| `Dialog` | 对话框 |
-| `DialogForm` | 弹窗表单组合 |
-| `DropdownMenu` | 下拉菜单 |
-| `FilterBar` | 筛选工具栏 |
-| `Input` | 输入框 |
-| `Label` | 标签 |
-| `MetricCard` | 指标卡 |
-| `NativeSelect` | 原生选择器封装 |
-| `Pagination` | 分页 |
-| `Popover` | 弹出层 |
-| `Select` | 选择器 |
-| `Separator` | 分隔线 |
-| `StatusBadge` | 状态徽章 |
-| `Switch` | 开关 |
-| `Tabs` | 标签页 |
-| `Textarea` | 多行输入 |
-| `Tooltip` | 提示 |
-| `ToastProvider` / `useToast` | 全局通知 |
-| `Drawer` | 侧滑面板 |
-| `Skeleton` | 加载占位 |
+| 组件                         | 说明           |
+| ---------------------------- | -------------- |
+| `ActionMenu`                 | 行操作菜单     |
+| `Avatar`                     | 头像           |
+| `Badge`                      | 徽章           |
+| `Breadcrumb`                 | 面包屑         |
+| `Button`                     | 按钮           |
+| `Card`                       | 卡片           |
+| `Checkbox`                   | 复选框         |
+| `DataTable`                  | 数据表格       |
+| `Dialog`                     | 对话框         |
+| `DialogForm`                 | 弹窗表单组合   |
+| `DropdownMenu`               | 下拉菜单       |
+| `FilterBar`                  | 筛选工具栏     |
+| `Input`                      | 输入框         |
+| `Label`                      | 标签           |
+| `MetricCard`                 | 指标卡         |
+| `NativeSelect`               | 原生选择器封装 |
+| `Pagination`                 | 分页           |
+| `Popover`                    | 弹出层         |
+| `Select`                     | 选择器         |
+| `Separator`                  | 分隔线         |
+| `StatusBadge`                | 状态徽章       |
+| `Switch`                     | 开关           |
+| `Tabs`                       | 标签页         |
+| `Textarea`                   | 多行输入       |
+| `Tooltip`                    | 提示           |
+| `ToastProvider` / `useToast` | 全局通知       |
+| `Drawer`                     | 侧滑面板       |
+| `Skeleton`                   | 加载占位       |
 
 ### AI 组件（5 个）
 
-| 组件 | 说明 |
-|------|------|
-| `ModelBadge` | 模型身份徽章 |
-| `GenerationStream` | AI 流式生成展示面 |
-| `PromptInput` | AI Prompt 输入框 |
-| `AIAssistantBubble` | AI 对话气泡 |
-| `TokenCounter` | Token 用量条 |
+| 组件                | 说明              |
+| ------------------- | ----------------- |
+| `ModelBadge`        | 模型身份徽章      |
+| `GenerationStream`  | AI 流式生成展示面 |
+| `PromptInput`       | AI Prompt 输入框  |
+| `AIAssistantBubble` | AI 对话气泡       |
+| `TokenCounter`      | Token 用量条      |
 
 ### 其他导出
 
@@ -124,14 +128,14 @@ Foundation 层统一维护 spacing、radius、shadow、motion 和 animation keyf
 
 ## CSS 分层
 
-| 层级 | 归属 | 内容 |
-|------|------|------|
-| L0 Foundation | DS | `tokens.css`、`typography.css`、`tailwind.css`、theme/density/font 基线 |
-| L1 Primitive | DS | 基础 UI 组件和 `.vx-*` primitive 语义类 |
-| L2 Platform Pattern | DS | `platform.css` 聚合入口与 `platform-*` 模块，承载跨应用模式 |
-| L3 Portal Experience | Portal / DS portal pack | `console.css` 聚合入口与 `console-*` 模块，或各 portal 自有 chrome |
-| L4 Domain Assembly | 应用模块 | 业务实体页面的语义组装 |
-| L5 Runtime Dynamic | 调用现场 | 坐标、进度、背景图 URL、动画延迟等运行时值 |
+| 层级                 | 归属                    | 内容                                                                    |
+| -------------------- | ----------------------- | ----------------------------------------------------------------------- |
+| L0 Foundation        | DS                      | `tokens.css`、`typography.css`、`tailwind.css`、theme/density/font 基线 |
+| L1 Primitive         | DS                      | 基础 UI 组件和 `.vx-*` primitive 语义类                                 |
+| L2 Platform Pattern  | DS                      | `platform.css` 聚合入口与 `platform-*` 模块，承载跨应用模式             |
+| L3 Portal Experience | Portal / DS portal pack | `console.css` 聚合入口与 `console-*` 模块，或各 portal 自有 chrome      |
+| L4 Domain Assembly   | 应用模块                | 业务实体页面的语义组装                                                  |
+| L5 Runtime Dynamic   | 调用现场                | 坐标、进度、背景图 URL、动画延迟等运行时值                              |
 
 `platform.css`、`console.css` 和 `admin-management.css` 这类大入口只能保留 `@import` 聚合。具体规则必须进入同目录分层模块，并由 `pnpm lint:design` 阻断回流。
 

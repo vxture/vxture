@@ -11,17 +11,20 @@
  * @category Infrastructure
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import createMiddleware from 'next-intl/middleware';
-import { AUTH_CONSTANTS } from '@vxture/shared';
-import { routing } from './lib/i18n/routing';
+import { NextRequest, NextResponse } from "next/server";
+import createMiddleware from "next-intl/middleware";
+import { AUTH_CONSTANTS } from "@vxture/shared";
+import { routing } from "./lib/i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
 function resolveLocalePrefix(pathname: string): string {
-  const [firstSegment] = pathname.split('/').filter(Boolean);
+  const [firstSegment] = pathname.split("/").filter(Boolean);
 
-  if (firstSegment && routing.locales.includes(firstSegment as typeof routing.locales[number])) {
+  if (
+    firstSegment &&
+    routing.locales.includes(firstSegment as (typeof routing.locales)[number])
+  ) {
     return `/${firstSegment}`;
   }
 
@@ -29,11 +32,14 @@ function resolveLocalePrefix(pathname: string): string {
 }
 
 function stripLocalePrefix(pathname: string): string {
-  const segments = pathname.split('/').filter(Boolean);
+  const segments = pathname.split("/").filter(Boolean);
   const [firstSegment, ...restSegments] = segments;
 
-  if (firstSegment && routing.locales.includes(firstSegment as typeof routing.locales[number])) {
-    return restSegments.length > 0 ? `/${restSegments.join('/')}` : '/';
+  if (
+    firstSegment &&
+    routing.locales.includes(firstSegment as (typeof routing.locales)[number])
+  ) {
+    return restSegments.length > 0 ? `/${restSegments.join("/")}` : "/";
   }
 
   return pathname;
@@ -42,8 +48,10 @@ function stripLocalePrefix(pathname: string): string {
 export function middleware(request: NextRequest) {
   const normalizedPath = stripLocalePrefix(request.nextUrl.pathname);
   const localePrefix = resolveLocalePrefix(request.nextUrl.pathname);
-  const isProtectedRoute = normalizedPath.startsWith('/dashboard');
-  const hasSession = request.cookies.has(AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN);
+  const isProtectedRoute = normalizedPath.startsWith("/dashboard");
+  const hasSession = request.cookies.has(
+    AUTH_CONSTANTS.COOKIE_KEYS.REFRESH_TOKEN,
+  );
 
   // 认证重定向（在 intl 处理之前）
   // 只保护 dashboard：无 session cookie 时跳转到登录页，携带 next 参数供登录后回跳
@@ -63,22 +71,22 @@ export function middleware(request: NextRequest) {
   // 交给 next-intl 处理语言前缀路由
   // 写入 pathname 供 getRequestConfig 按需加载翻译
   const response = intlMiddleware(request);
-  response.headers.set('x-pathname', request.nextUrl.pathname);
+  response.headers.set("x-pathname", request.nextUrl.pathname);
   return response;
 }
 
 export const config = {
   matcher: [
     // 匹配所有路由，但排除 API 路由和静态资源
-    '/((?!api|_next|.*\\..*).*)',
+    "/((?!api|_next|.*\\..*).*)",
     // 匹配没有语言前缀的路由，以便重定向到默认语言
-    '/',
-    '/signin',
-    '/login',
-    '/signup',
-    '/register',
-    '/products',
-    '/about',
-    '/dashboard'
+    "/",
+    "/signin",
+    "/login",
+    "/signup",
+    "/register",
+    "/products",
+    "/about",
+    "/dashboard",
   ],
 };

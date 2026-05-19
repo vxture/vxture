@@ -60,9 +60,9 @@ cp -r vxture-v1.3.0-components/theme/*         $DS/theme/  # 已有 theme/ 目�
 确保 Toast / Drawer / Skeleton 三个新组件在 `src/components/ui/index.ts` 中已有导出，否则补：
 
 ```ts
-export { ToastProvider, useToast } from './Toast';
-export { Drawer } from './Drawer';
-export { Skeleton } from './Skeleton';
+export { ToastProvider, useToast } from "./Toast";
+export { Drawer } from "./Drawer";
+export { Skeleton } from "./Skeleton";
 ```
 
 ### 5. 应用 ThemeProvider（业务层）
@@ -70,7 +70,7 @@ export { Skeleton } from './Skeleton';
 每个 portal 的 `app/layout.tsx`：
 
 ```tsx
-import { ThemeProvider, themeBootstrapScript } from '@vxture/design-system';
+import { ThemeProvider, themeBootstrapScript } from "@vxture/design-system";
 
 export default function RootLayout({ children }) {
   return (
@@ -79,9 +79,7 @@ export default function RootLayout({ children }) {
         <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
       </head>
       <body>
-        <ThemeProvider defaultMode="system">
-          {children}
-        </ThemeProvider>
+        <ThemeProvider defaultMode="system">{children}</ThemeProvider>
       </body>
     </html>
   );
@@ -105,29 +103,35 @@ pnpm --filter @vxture/console build
 
 ```tsx
 import {
-  ToastProvider, useToast,
-  ModelBadge, GenerationStream, PromptInput, TokenCounter,
-  ThemeProvider, useTheme,
-  Drawer, Skeleton,
-} from '@vxture/design-system';
+  ToastProvider,
+  useToast,
+  ModelBadge,
+  GenerationStream,
+  PromptInput,
+  TokenCounter,
+  ThemeProvider,
+  useTheme,
+  Drawer,
+  Skeleton,
+} from "@vxture/design-system";
 
 function ChatPage() {
   const { theme, toggle } = useTheme();
   const { toast } = useToast();
-  const [prompt, setPrompt] = useState('');
-  const [output, setOutput] = useState('');
+  const [prompt, setPrompt] = useState("");
+  const [output, setOutput] = useState("");
   const [streaming, setStreaming] = useState(false);
 
   async function run() {
     setStreaming(true);
     // ... stream into setOutput
     setStreaming(false);
-    toast({ tone: 'success', title: 'Generation complete' });
+    toast({ tone: "success", title: "Generation complete" });
   }
 
   return (
     <div>
-      <button onClick={toggle}>{theme === 'dark' ? '☾' : '☀'}</button>
+      <button onClick={toggle}>{theme === "dark" ? "☾" : "☀"}</button>
 
       <ModelBadge modelId="claude-haiku-4-5" status="active" />
 
@@ -136,7 +140,7 @@ function ChatPage() {
         onChange={setPrompt}
         onSubmit={run}
         busy={streaming}
-        chips={[{ label: '@claude-haiku', active: true }]}
+        chips={[{ label: "@claude-haiku", active: true }]}
       />
 
       <GenerationStream

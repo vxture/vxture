@@ -8,22 +8,27 @@
  * @date 2026-03-15
  */
 
-import type { Locale } from '@vxture/shared';
-import { DEFAULT_LOCALE } from '@vxture/shared';
-import type { LocaleRequest } from '../types';
-import { isSupportedLocale, normalizeLocale, parseCookieValue } from './locale-parser.utils';
+import type { Locale } from "@vxture/shared";
+import { DEFAULT_LOCALE } from "@vxture/shared";
+import type { LocaleRequest } from "../types";
+import {
+  isSupportedLocale,
+  normalizeLocale,
+  parseCookieValue,
+} from "./locale-parser.utils";
 
 export function resolveLocale(request: LocaleRequest): Locale {
   // 1. Parsed cookie object (provided by Express/NestJS cookie-parser)
   if (request.cookies) {
-    const raw = request.cookies['NEXT_LOCALE'];
+    const raw = request.cookies["NEXT_LOCALE"];
     if (raw && isSupportedLocale(raw)) return raw as Locale;
   }
 
   // 2. Fallback to raw Cookie header string
-  const cookieHeader = request.headers.get('cookie') ?? request.headers.get('Cookie');
+  const cookieHeader =
+    request.headers.get("cookie") ?? request.headers.get("Cookie");
   if (cookieHeader) {
-    const raw = parseCookieValue(cookieHeader, 'NEXT_LOCALE');
+    const raw = parseCookieValue(cookieHeader, "NEXT_LOCALE");
     if (raw) {
       const normalized = normalizeLocale(raw);
       if (normalized) return normalized;
@@ -32,15 +37,13 @@ export function resolveLocale(request: LocaleRequest): Locale {
 
   // 3. Accept-Language header
   const acceptLanguage =
-    request.headers.get('accept-language') ??
-    request.headers.get('Accept-Language');
+    request.headers.get("accept-language") ??
+    request.headers.get("Accept-Language");
   if (acceptLanguage) {
-    const candidates = acceptLanguage
-      .split(',')
-      .flatMap((l) => {
-        const part = l.split(';').at(0)?.trim();
-        return part && part.length > 0 ? [part] : [];
-      });
+    const candidates = acceptLanguage.split(",").flatMap((l) => {
+      const part = l.split(";").at(0)?.trim();
+      return part && part.length > 0 ? [part] : [];
+    });
 
     for (const candidate of candidates) {
       const normalized = normalizeLocale(candidate);
@@ -73,7 +76,7 @@ export function resolveLocale(request: LocaleRequest): Locale {
  */
 export function localizeContent(
   content: Partial<Record<Locale, string>>,
-  locale: Locale
+  locale: Locale,
 ): string {
   // 1. Return content[locale]
   if (content[locale]) {
@@ -86,6 +89,5 @@ export function localizeContent(
   }
 
   // 3. If DEFAULT_LOCALE also doesn't exist, return empty string
-  return '';
+  return "";
 }
-

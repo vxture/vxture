@@ -1,4 +1,4 @@
-export { TenantProvider, useTenant } from './TenantProvider';
+export { TenantProvider, useTenant } from "./TenantProvider";
 export type {
   CreateTenantPayload,
   Tenant,
@@ -7,4 +7,4 @@ export type {
   TenantMembership,
   TenantRole,
   TenantType,
-} from './types';
+} from "./types";

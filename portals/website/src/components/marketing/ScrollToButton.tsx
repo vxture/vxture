@@ -13,10 +13,10 @@
  * @layer Presentation
  * @category Components - Widgets
  */
-'use client';
+"use client";
 
-import { useCallback } from 'react';
-import { Button, Icon } from '@vxture/design-system';
+import { useCallback } from "react";
+import { Button, Icon } from "@vxture/design-system";
 
 // ============================================================================
 // 类型定义
@@ -42,15 +42,15 @@ interface ScrollToButtonProps {
 // ============================================================================
 
 /** 默认文本 */
-const DEFAULT_TEXT = 'Top';
+const DEFAULT_TEXT = "Top";
 /** 默认位置 */
-const DEFAULT_POSITION_CLASS = 'absolute right-16 bottom-20';
+const DEFAULT_POSITION_CLASS = "absolute right-16 bottom-20";
 /** 默认动画 */
-const DEFAULT_ANIMATION_CLASS = 'animate-bounce';
+const DEFAULT_ANIMATION_CLASS = "animate-bounce";
 /** 默认图标尺寸 */
-const DEFAULT_ICON_SIZE = 'w-5 h-5';
+const DEFAULT_ICON_SIZE = "w-5 h-5";
 /** 默认目标选择器 */
-const DEFAULT_TARGET_SELECTOR = '.snap-section';
+const DEFAULT_TARGET_SELECTOR = ".snap-section";
 
 // ============================================================================
 // 组件实现
@@ -62,7 +62,7 @@ const DEFAULT_TARGET_SELECTOR = '.snap-section';
 export default function ScrollToButton({
   text = DEFAULT_TEXT,
   positionClass = DEFAULT_POSITION_CLASS,
-  className = '',
+  className = "",
   animationClass = DEFAULT_ANIMATION_CLASS,
   iconSize = DEFAULT_ICON_SIZE,
   ariaLabel,
@@ -143,13 +143,13 @@ export default function ScrollToButton({
         const scrollTop = rect.top + win.scrollY;
         win.scrollTo({
           top: scrollTop,
-          behavior: 'smooth',
+          behavior: "smooth",
         });
       } else {
         // 无目标元素：滚动到顶部
         (globalThis.window as Window).scrollTo({
           top: 0,
-          behavior: 'smooth',
+          behavior: "smooth",
         });
       }
     }

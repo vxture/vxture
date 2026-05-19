@@ -1,10 +1,16 @@
-'use client';
+"use client";
 
-import { createContext, useContext, useMemo } from 'react';
-import { usePathname, useRouter } from '@/lib/i18n/navigation';
-import type { TenantContext } from '@/entities/console';
-import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import type { CreateTenantPayload, TenantContextState, TenantListItem, TenantProviderProps, TenantRole } from './types';
+import { createContext, useContext, useMemo } from "react";
+import { usePathname, useRouter } from "@/lib/i18n/navigation";
+import type { TenantContext } from "@/entities/console";
+import { useConsoleSession } from "@/features/session/ConsoleSessionProvider";
+import type {
+  CreateTenantPayload,
+  TenantContextState,
+  TenantListItem,
+  TenantProviderProps,
+  TenantRole,
+} from "./types";
 
 const TenantUiContext = createContext<TenantContextState | null>(null);
 const tenantRolePriority: Record<TenantRole, number> = {
@@ -17,39 +23,45 @@ function slugify(value: string) {
   const normalized = value
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
-  return normalized || 'tenant';
+  return normalized || "tenant";
 }
 
 function inferRole(tenant: TenantContext): TenantRole {
-  if (tenant.tenantType === 'individual') {
-    return 'owner';
+  if (tenant.tenantType === "individual") {
+    return "owner";
   }
 
-  return tenant.status === 'active' ? 'admin' : 'member';
+  return tenant.status === "active" ? "admin" : "member";
 }
 
-function mapTenantContextToItem(tenant: TenantContext, currentTenantId?: string | null): TenantListItem {
+function mapTenantContextToItem(
+  tenant: TenantContext,
+  currentTenantId?: string | null,
+): TenantListItem {
   return {
     id: tenant.id,
     name: tenant.name,
     slug: slugify(tenant.tenantCode ?? tenant.workspace ?? tenant.name),
-    type: tenant.tenantType === 'individual' ? 'personal' : 'organization',
+    type: tenant.tenantType === "individual" ? "personal" : "organization",
     role: inferRole(tenant),
     isCurrent: tenant.id === currentTenantId,
-    source: 'session',
+    source: "session",
   };
 }
 
 function sortTenants(items: TenantListItem[]) {
   return [...items].sort((a, b) => {
     if (a.type !== b.type) {
-      return a.type === 'personal' ? -1 : 1;
+      return a.type === "personal" ? -1 : 1;
     }
 
-    return tenantRolePriority[a.role] - tenantRolePriority[b.role] || a.name.localeCompare(b.name);
+    return (
+      tenantRolePriority[a.role] - tenantRolePriority[b.role] ||
+      a.name.localeCompare(b.name)
+    );
   });
 }
 
@@ -73,13 +85,18 @@ export function TenantProvider({ children }: TenantProviderProps) {
 
   const currentTenantId = session.tenant?.id ?? null;
   const tenantList = useMemo(() => {
-    const sessionItems = baseTenants.map((tenant) => mapTenantContextToItem(tenant, currentTenantId));
+    const sessionItems = baseTenants.map((tenant) =>
+      mapTenantContextToItem(tenant, currentTenantId),
+    );
 
     return sortTenants(sessionItems);
   }, [baseTenants, currentTenantId]);
 
-  const currentTenant = tenantList.find((tenant) => tenant.isCurrent) ?? tenantList[0] ?? null;
-  const hasPersonalTenant = tenantList.some((tenant) => tenant.type === 'personal');
+  const currentTenant =
+    tenantList.find((tenant) => tenant.isCurrent) ?? tenantList[0] ?? null;
+  const hasPersonalTenant = tenantList.some(
+    (tenant) => tenant.type === "personal",
+  );
 
   async function switchTenantContext(tenantId: string) {
     const tenant = tenantList.find((item) => item.id === tenantId);
@@ -93,11 +110,11 @@ export function TenantProvider({ children }: TenantProviderProps) {
   }
 
   async function createTenant(payload: CreateTenantPayload) {
-    if (payload.type === 'personal' && hasPersonalTenant) {
-      throw new Error('Only one personal workspace is allowed.');
+    if (payload.type === "personal" && hasPersonalTenant) {
+      throw new Error("Only one personal workspace is allowed.");
     }
 
-    throw new Error('Tenant creation BFF endpoint is not available.');
+    throw new Error("Tenant creation BFF endpoint is not available.");
   }
 
   return (
@@ -119,7 +136,7 @@ export function TenantProvider({ children }: TenantProviderProps) {
 export function useTenant() {
   const context = useContext(TenantUiContext);
   if (!context) {
-    throw new Error('useTenant must be used within TenantProvider.');
+    throw new Error("useTenant must be used within TenantProvider.");
   }
 
   return context;

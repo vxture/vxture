@@ -11,41 +11,41 @@
 
 // Schema exports (explicit listing for maintainability)
 export {
-    appSchema,
-    AppEnvEnum,
-    databaseSchema,
-    redisSchema,
-    authSchema,
-    aiSchema,
-} from './schemas';
+  appSchema,
+  AppEnvEnum,
+  databaseSchema,
+  redisSchema,
+  authSchema,
+  aiSchema,
+} from "./schemas";
 
 // Type exports (explicit listing for maintainability)
 export type {
-    AppConfig,
-    AppEnv,
-    DatabaseConfig,
-    RedisConfig,
-    AuthConfig,
-} from './schemas';
+  AppConfig,
+  AppEnv,
+  DatabaseConfig,
+  RedisConfig,
+  AuthConfig,
+} from "./schemas";
 
-export type { VxConfig, ConfigLoadResult, ConfigValidationError } from './types';
-export { CONFIG_TOKEN } from './types';
+export type {
+  VxConfig,
+  ConfigLoadResult,
+  ConfigValidationError,
+} from "./types";
+export { CONFIG_TOKEN } from "./types";
 
 // ============================================
 // Module & Service
 // ============================================
 
-export type { VxConfigModuleOptions } from './module';
-export { VxConfigModule } from './module';
+export type { VxConfigModuleOptions } from "./module";
+export { VxConfigModule } from "./module";
 
-export { VxConfigService } from './service';
+export { VxConfigService } from "./service";
 
 // ============================================
 // Utils
 // ============================================
 
-export {
-    deepMerge,
-    deepClone,
-    isPlainObject
-} from './utils';
+export { deepMerge, deepClone, isPlainObject } from "./utils";

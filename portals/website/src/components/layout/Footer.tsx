@@ -16,17 +16,17 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useTranslations } from 'next-intl';
+import { useTranslations } from "next-intl";
 import { Button, useTheme, Icon } from "@vxture/design-system";
 import { debugLog } from "@vxture/shared";
-import Image from 'next/image';
+import Image from "next/image";
 import { FOOTER_DATA } from "@/data/layout/footer.data";
-import { Link } from '@/lib/i18n/navigation';
+import { Link } from "@/lib/i18n/navigation";
 
 export default function Footer() {
   const { theme } = useTheme();
-  const isDarkMode = theme === 'dark';
-  const t = useTranslations('layout.footer');
+  const isDarkMode = theme === "dark";
+  const t = useTranslations("layout.footer");
 
   // 调试日志
   debugLog("Footer data:", FOOTER_DATA);
@@ -46,16 +46,22 @@ export default function Footer() {
 
   // 渲染 Footer UI
   return (
-    <footer className={`vx-website-footer flex w-full flex-col ${
-      isDarkMode ? 'text-vx-gray-200 bg-vx-gray-900' : 'text-vx-gray-800 bg-vx-gray-100'
-    }`}>
+    <footer
+      className={`vx-website-footer flex w-full flex-col ${
+        isDarkMode
+          ? "text-vx-gray-200 bg-vx-gray-900"
+          : "text-vx-gray-800 bg-vx-gray-100"
+      }`}
+    >
       <div className="flex flex-1 flex-col w-full max-w-7xl xl:max-w-screen-2xl mx-auto pt-8 px-4 sm:px-6 lg:px-8">
         {/* 主要内容区域：品牌 + 联系 + 社交 / 链接区 */}
         <div className="flex flex-1 flex-col md:flex-row gap-8 items-start">
           {/* 左侧：品牌信息 + 联系方式 */}
           <div className="vx-website-footer-brand flex min-w-50 flex-col">
             {/* 品牌标识 */}
-            <span className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-vx-white' : 'text-vx-gray-700'}`}>
+            <span
+              className={`text-lg font-semibold mb-4 ${isDarkMode ? "text-vx-white" : "text-vx-gray-700"}`}
+            >
               {t(FOOTER_DATA.brand.nameKey)}
             </span>
 
@@ -80,7 +86,10 @@ export default function Footer() {
               {FOOTER_DATA.contact.service_email && (
                 <li className="flex items-center space-x-1">
                   <Icon name="mail" className="w-4 h-4 shrink-0" />
-                  <a href={`mailto:${FOOTER_DATA.contact.service_email}`} className="hover:text-vx-primary transition-colors">
+                  <a
+                    href={`mailto:${FOOTER_DATA.contact.service_email}`}
+                    className="hover:text-vx-primary transition-colors"
+                  >
                     {FOOTER_DATA.contact.service_email}
                   </a>
                 </li>
@@ -90,7 +99,10 @@ export default function Footer() {
               {FOOTER_DATA.contact.partner_email && (
                 <li className="flex items-center space-x-1">
                   <Icon name="mail" className="w-4 h-4 shrink-0" />
-                  <a href={`mailto:${FOOTER_DATA.contact.partner_email}`} className="hover:text-vx-primary transition-colors">
+                  <a
+                    href={`mailto:${FOOTER_DATA.contact.partner_email}`}
+                    className="hover:text-vx-primary transition-colors"
+                  >
                     {FOOTER_DATA.contact.partner_email}
                   </a>
                 </li>
@@ -102,9 +114,11 @@ export default function Footer() {
           <div className="vx-website-footer-links flex flex-1 flex-col justify-between gap-8 md:flex-row">
             {FOOTER_DATA.sections.map((section) => (
               <div key={section.id} className="flex-1">
-                <h3 className={`text-lg font-semibold mb-4 ${
-                  isDarkMode ? 'text-vx-white' : 'text-vx-gray-700'
-                }`}>
+                <h3
+                  className={`text-lg font-semibold mb-4 ${
+                    isDarkMode ? "text-vx-white" : "text-vx-gray-700"
+                  }`}
+                >
                   {t(section.titleKey)}
                 </h3>
                 <ul className="space-y-2">
@@ -113,7 +127,7 @@ export default function Footer() {
                       <a
                         href={link.href}
                         className={`text-sm hover:text-vx-primary transition-colors duration-300 ${
-                          isDarkMode ? 'text-vx-gray-400' : 'text-vx-gray-600'
+                          isDarkMode ? "text-vx-gray-400" : "text-vx-gray-600"
                         }`}
                       >
                         {t(link.labelKey)}
@@ -180,7 +194,9 @@ export default function Footer() {
             return (
               <div
                 className={`fixed p-2 rounded-lg shadow-lg z-50 ${
-                  isDarkMode ? 'bg-vx-gray-800 border border-vx-gray-700' : 'bg-vx-surface border border-vx-gray-200'
+                  isDarkMode
+                    ? "bg-vx-gray-800 border border-vx-gray-700"
+                    : "bg-vx-surface border border-vx-gray-200"
                 }`}
                 style={{
                   left: rect.right,
@@ -207,7 +223,9 @@ export default function Footer() {
           {/* 底部信息：版权 + 法律 + 备案 */}
           <div className="flex w-full justify-between items-center py-4 text-sm text-vx-gray-600 flex-wrap gap-2">
             {/* 左侧：版权 */}
-            <p className="whitespace-nowrap">{t(FOOTER_DATA.copyright.textKey)}</p>
+            <p className="whitespace-nowrap">
+              {t(FOOTER_DATA.copyright.textKey)}
+            </p>
 
             {/* 右侧：法律链接 + 备案信息 */}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 justify-end">

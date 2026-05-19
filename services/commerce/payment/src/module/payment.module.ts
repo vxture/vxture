@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
-import { VxConfigModule, VxConfigService } from '@vxture/core-config';
-import { Pool } from 'pg';
-import { COMMERCE_PG_POOL } from '../tokens';
-import { PgPaymentRepository } from '../repository/pg-payment.repository';
-import { PaymentService } from '../service/payment.service';
+import { Module } from "@nestjs/common";
+import { VxConfigModule, VxConfigService } from "@vxture/core-config";
+import { Pool } from "pg";
+import { COMMERCE_PG_POOL } from "../tokens";
+import { PgPaymentRepository } from "../repository/pg-payment.repository";
+import { PaymentService } from "../service/payment.service";
 
 @Module({
-  imports: [VxConfigModule.register({ domains: ['database'] })],
+  imports: [VxConfigModule.register({ domains: ["database"] })],
   providers: [
     {
       provide: COMMERCE_PG_POOL,
@@ -23,7 +23,10 @@ import { PaymentService } from '../service/payment.service';
                 user: db.DB_USER,
                 password: db.DB_PASSWORD,
                 max: db.DB_POOL_MAX,
-                ssl: db.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
+                ssl:
+                  db.DB_SSL === "require"
+                    ? { rejectUnauthorized: false }
+                    : undefined,
               },
         );
       },

@@ -1,17 +1,17 @@
-import type { JwtAccessPayload } from '@vxture/core-auth';
+import type { JwtAccessPayload } from "@vxture/core-auth";
 
 export type Capability =
-  | 'platform.tenant.manage'
-  | 'platform.product.manage'
-  | 'platform.pricing.manage'
-  | 'platform.model.manage'
-  | 'tenant.user.manage'
-  | 'tenant.role.manage'
-  | 'tenant.subscription.read'
-  | 'tenant.billing.read'
-  | 'tenant.invoice.manage'
-  | 'tenant.payment.manage'
-  | 'tenant.quota.read';
+  | "platform.tenant.manage"
+  | "platform.product.manage"
+  | "platform.pricing.manage"
+  | "platform.model.manage"
+  | "tenant.user.manage"
+  | "tenant.role.manage"
+  | "tenant.subscription.read"
+  | "tenant.billing.read"
+  | "tenant.invoice.manage"
+  | "tenant.payment.manage"
+  | "tenant.quota.read";
 
 export interface ConsoleUser {
   id: string;
@@ -42,8 +42,8 @@ export interface ConsoleOrganizationProfile {
   tenantCode: string;
   tenantName: string;
   displayName: string;
-  tenantType: 'company' | 'individual';
-  status: 'trial' | 'active' | 'suspended' | 'cancelled';
+  tenantType: "company" | "individual";
+  status: "trial" | "active" | "suspended" | "cancelled";
   logoUrl: string | null;
   description: string | null;
   language: string;
@@ -62,7 +62,7 @@ export interface ConsoleOrganizationProfile {
   district: string | null;
   address: string | null;
   postalCode: string | null;
-  verifiedStatus: 'unverified' | 'pending' | 'verified' | 'rejected' | null;
+  verifiedStatus: "unverified" | "pending" | "verified" | "rejected" | null;
   verifiedAt: string | null;
   rejectedReason: string | null;
   primaryDomain: string | null;
@@ -74,7 +74,7 @@ export interface ConsoleTenantRole {
   roleCode: string;
   roleName: string;
   description: string | null;
-  status: 'active' | 'disabled';
+  status: "active" | "disabled";
   isSystem: boolean;
   permissions: ConsoleTenantPermission[];
 }
@@ -98,8 +98,8 @@ export interface MemberRecord {
   role: string;
   roleCode: string | null;
   roleId: string | null;
-  status: 'Active' | 'Invited' | 'Suspended';
-  statusCode: 'active' | 'inactive' | 'banned';
+  status: "Active" | "Invited" | "Suspended";
+  statusCode: "active" | "inactive" | "banned";
   lastActive: string;
   team: string;
   joinedAt: string;
@@ -109,9 +109,9 @@ export interface MemberRecord {
 export interface TenantContext {
   id: string;
   name: string;
-  mode: 'platform' | 'tenant';
+  mode: "platform" | "tenant";
   workspace: string;
-  tenantType?: 'individual' | 'company';
+  tenantType?: "individual" | "company";
   tenantCode?: string;
   status?: string;
 }

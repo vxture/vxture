@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PgSubscriptionRepository } from '../repository/pg-subscription.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PgSubscriptionRepository } from "../repository/pg-subscription.repository";
 import type {
   SubscriptionRecord,
   SubscriptionHistoryRecord,
@@ -7,13 +11,15 @@ import type {
   ListSubscriptionsResult,
   CreateSubscriptionInput,
   UpdateSubscriptionInput,
-} from '../types/subscription.types';
+} from "../types/subscription.types";
 
 @Injectable()
 export class SubscriptionService {
   constructor(private readonly repo: PgSubscriptionRepository) {}
 
-  async listSubscriptions(params: ListSubscriptionsParams): Promise<ListSubscriptionsResult> {
+  async listSubscriptions(
+    params: ListSubscriptionsParams,
+  ): Promise<ListSubscriptionsResult> {
     return this.repo.listSubscriptions(params);
   }
 
@@ -23,13 +29,18 @@ export class SubscriptionService {
     return record;
   }
 
-  async getActiveSubscription(tenantId: string): Promise<SubscriptionRecord | null> {
+  async getActiveSubscription(
+    tenantId: string,
+  ): Promise<SubscriptionRecord | null> {
     return this.repo.getActiveByTenantId(tenantId);
   }
 
-  async createSubscription(input: CreateSubscriptionInput): Promise<SubscriptionRecord> {
+  async createSubscription(
+    input: CreateSubscriptionInput,
+  ): Promise<SubscriptionRecord> {
     const existing = await this.repo.getActiveByTenantId(input.tenantId);
-    if (existing) throw new ConflictException('租户已有活跃订阅，请先取消或升级现有订阅');
+    if (existing)
+      throw new ConflictException("租户已有活跃订阅，请先取消或升级现有订阅");
     return this.repo.create(input);
   }
 
@@ -39,15 +50,19 @@ export class SubscriptionService {
     remark?: string,
   ): Promise<SubscriptionRecord> {
     const subscription = await this.getSubscription(id);
-    if (subscription.status === 'cancelled') throw new ConflictException('订阅已取消');
-    if (subscription.status === 'expired') throw new ConflictException('订阅已过期');
+    if (subscription.status === "cancelled")
+      throw new ConflictException("订阅已取消");
+    if (subscription.status === "expired")
+      throw new ConflictException("订阅已过期");
 
     const result = await this.repo.update(id, subscription, {
-      status: 'cancelled',
+      status: "cancelled",
       endAt: new Date(),
-      operatorType: 'operator',
-      ...(operatorId !== undefined ? { operatorId, updatedBy: operatorId } : {}),
-      ...(remark     !== undefined ? { operatorRemark: remark }            : {}),
+      operatorType: "operator",
+      ...(operatorId !== undefined
+        ? { operatorId, updatedBy: operatorId }
+        : {}),
+      ...(remark !== undefined ? { operatorRemark: remark } : {}),
     });
     return result!;
   }
@@ -59,13 +74,16 @@ export class SubscriptionService {
     remark?: string,
   ): Promise<SubscriptionRecord> {
     const subscription = await this.getSubscription(id);
-    if (subscription.status !== 'active') throw new ConflictException('只有活跃订阅可以升级');
+    if (subscription.status !== "active")
+      throw new ConflictException("只有活跃订阅可以升级");
 
     const result = await this.repo.update(id, subscription, {
       toPlanId: newPlanId,
-      operatorType: 'operator',
-      ...(operatorId !== undefined ? { operatorId, updatedBy: operatorId } : {}),
-      ...(remark     !== undefined ? { operatorRemark: remark }            : {}),
+      operatorType: "operator",
+      ...(operatorId !== undefined
+        ? { operatorId, updatedBy: operatorId }
+        : {}),
+      ...(remark !== undefined ? { operatorRemark: remark } : {}),
     });
     return result!;
   }

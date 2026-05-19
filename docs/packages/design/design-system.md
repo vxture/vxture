@@ -5,29 +5,29 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|-----|
-| 包名 | `@vxture/design-system` |
-| 版本 | `1.3.0` |
-| 路径 | `packages/design/design-system/` |
-| @layer | `Presentation` |
+| 项     | 值                                            |
+| ------ | --------------------------------------------- |
+| 包名   | `@vxture/design-system`                       |
+| 版本   | `1.3.0`                                       |
+| 路径   | `packages/design/design-system/`              |
+| @layer | `Presentation`                                |
 | 消费方 | `portals/*` · `business/*` · `agent-studio/*` |
 
 ## 公共入口
 
-| 入口 | 用途 |
-|------|------|
-| `@vxture/design-system` | 客户端组件、Icon、主题、密度、hooks、utils |
-| `@vxture/design-system/tokens` | server-safe token 引用 |
-| `@vxture/design-system/types` | server-safe 类型 |
-| `@vxture/design-system/server` | server-safe 工具入口 |
-| `@vxture/design-system/styles/globals.css` | 标准全局样式入口 |
-| `@vxture/design-system/styles/auth.css` | 认证模板样式 |
-| `@vxture/design-system/styles/components.css` | 基础组件语义类 |
-| `@vxture/design-system/styles/console.css` | Console portal style pack |
-| `@vxture/design-system/styles/fullscreen.css` | 全屏基础设施样式 |
-| `@vxture/design-system/styles/tokens.css` | token 运行时值源 |
-| `@vxture/design-system/styles/typography.css` | 字体和排版基线 |
+| 入口                                          | 用途                                       |
+| --------------------------------------------- | ------------------------------------------ |
+| `@vxture/design-system`                       | 客户端组件、Icon、主题、密度、hooks、utils |
+| `@vxture/design-system/tokens`                | server-safe token 引用                     |
+| `@vxture/design-system/types`                 | server-safe 类型                           |
+| `@vxture/design-system/server`                | server-safe 工具入口                       |
+| `@vxture/design-system/styles/globals.css`    | 标准全局样式入口                           |
+| `@vxture/design-system/styles/auth.css`       | 认证模板样式                               |
+| `@vxture/design-system/styles/components.css` | 基础组件语义类                             |
+| `@vxture/design-system/styles/console.css`    | Console portal style pack                  |
+| `@vxture/design-system/styles/fullscreen.css` | 全屏基础设施样式                           |
+| `@vxture/design-system/styles/tokens.css`     | token 运行时值源                           |
+| `@vxture/design-system/styles/typography.css` | 字体和排版基线                             |
 
 其他 `@vxture/design-system/*` 路径默认禁止。
 

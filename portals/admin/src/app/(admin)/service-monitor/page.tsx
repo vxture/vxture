@@ -1,4 +1,4 @@
-import { ServiceHealthPage } from '@/modules/ops/ServiceHealthPage';
+import { ServiceHealthPage } from "@/modules/ops/ServiceHealthPage";
 
 export default function AdminServiceMonitorRoute() {
   return (

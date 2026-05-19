@@ -6,7 +6,12 @@
     "primaryAction": "Open Console",
     "guestPrimaryAction": "Request Trial",
     "secondaryAction": "Browse Agents",
-    "highlights": ["Digital Employees", "Software Agents", "Embodied Agents", "Industry Agents"],
+    "highlights": [
+      "Digital Employees",
+      "Software Agents",
+      "Embodied Agents",
+      "Industry Agents"
+    ],
     "metrics": [
       { "value": "12+", "label": "Initial agent services" },
       { "value": "8", "label": "Industry and scenario tags" },
@@ -48,7 +53,11 @@
         "industries": ["general", "legal"],
         "description": "For procurement, sales, legal, and project management, automatically identifies contract clause risks, missing terms, obligations, and approval concerns.",
         "value": "Reduces manual review effort and gives business teams structured risk hints before approval submission.",
-        "capabilities": ["Clause risk detection", "Template comparison", "Approval comment drafting"],
+        "capabilities": [
+          "Clause risk detection",
+          "Template comparison",
+          "Approval comment drafting"
+        ],
         "tags": ["LLM", "Knowledge Base", "Compliance Review"]
       },
       {
@@ -58,7 +67,11 @@
         "industries": ["general", "legal"],
         "description": "Uses enterprise policies, regulations, historical cases, and Q&A knowledge to support legal consultation, policy retrieval, and document drafting.",
         "value": "Turns common legal questions into self-service answers while keeping citations and review trails.",
-        "capabilities": ["Policy Q&A", "Legal letter drafting", "Risk explanation with citations"],
+        "capabilities": [
+          "Policy Q&A",
+          "Legal letter drafting",
+          "Risk explanation with citations"
+        ],
         "tags": ["LLM Q&A", "RAG", "Enterprise Knowledge"]
       },
       {
@@ -68,7 +81,11 @@
         "industries": ["general", "operations"],
         "description": "Connects operating metrics, finance data, customer data, and project progress to generate daily briefs, anomaly alerts, and cause analysis.",
         "value": "Helps managers move from reading dashboards to asking business questions and finding root causes faster.",
-        "capabilities": ["Metric Q&A", "Anomaly attribution", "Business report generation"],
+        "capabilities": [
+          "Metric Q&A",
+          "Anomaly attribution",
+          "Business report generation"
+        ],
         "tags": ["Intelligent Data", "Metrics", "BI Agent"]
       },
       {
@@ -78,7 +95,11 @@
         "industries": ["defense"],
         "description": "Supports complex situation simulation, resource-constraint assessment, and plan comparison with explainable and reviewable tabletop assistance.",
         "value": "Helps teams run situation simulation and plan evaluation within safety boundaries, improving simulation efficiency and review quality.",
-        "capabilities": ["Situation element modeling", "Plan comparison simulation", "Process review"],
+        "capabilities": [
+          "Situation element modeling",
+          "Plan comparison simulation",
+          "Process review"
+        ],
         "tags": ["Digital Twin", "Simulation", "Agent Collaboration"]
       },
       {
@@ -88,7 +109,11 @@
         "industries": ["lowAltitude", "emergency", "industry"],
         "description": "Connects drone imagery, flight tasks, spatial grids, and alert rules to identify anomalies and generate inspection reports.",
         "value": "Turns drone-collected data into assignable tasks and traceable response loops.",
-        "capabilities": ["Image anomaly detection", "Inspection route summary", "Alert task dispatch"],
+        "capabilities": [
+          "Image anomaly detection",
+          "Inspection route summary",
+          "Alert task dispatch"
+        ],
         "tags": ["Embodied AI", "Vision", "Spatial Data"]
       },
       {
@@ -98,7 +123,11 @@
         "industries": ["data", "general", "industry"],
         "description": "Supports data asset inventory, quality checks, metric definition explanation, and lineage analysis for an intelligent data foundation.",
         "value": "Lowers the barrier to data governance so business users can understand data sources, quality issues, and metric definitions.",
-        "capabilities": ["Data asset Q&A", "Quality rule suggestions", "Metric definition explanation"],
+        "capabilities": [
+          "Data asset Q&A",
+          "Quality rule suggestions",
+          "Metric definition explanation"
+        ],
         "tags": ["Intelligent Data", "Metadata", "Data Quality"]
       },
       {
@@ -108,7 +137,11 @@
         "industries": ["emergency"],
         "description": "Provides continuous assistance for incident situation fusion, plan matching, resource dispatch, and task tracking.",
         "value": "Unifies event summaries, response suggestions, team and supply status, and acknowledgements into one command chain.",
-        "capabilities": ["Event summary", "Plan matching", "Task loop tracking"],
+        "capabilities": [
+          "Event summary",
+          "Plan matching",
+          "Task loop tracking"
+        ],
         "tags": ["LLM Assessment", "Dispatch Agent", "Digital Twin"]
       },
       {
@@ -118,7 +151,11 @@
         "industries": ["emergency", "data"],
         "description": "Integrates people, vehicles, places, events, and risk-source data to continuously discover urban public safety and governance risks.",
         "value": "Turns cross-agency clues into explainable risk lists and spatial situation views for earlier intervention.",
-        "capabilities": ["Multi-source clue fusion", "Risk relationship analysis", "Spatial situation display"],
+        "capabilities": [
+          "Multi-source clue fusion",
+          "Risk relationship analysis",
+          "Spatial situation display"
+        ],
         "tags": ["Intelligent Data", "Knowledge Graph", "Risk Assessment"]
       },
       {
@@ -128,7 +165,11 @@
         "industries": ["industry"],
         "description": "Connects equipment sensors, inspection records, repair tickets, and expert knowledge to identify abnormal trends and suggest actions.",
         "value": "Helps factories move from scheduled inspection to predictive maintenance, reducing downtime and repeated diagnosis.",
-        "capabilities": ["Abnormal trend detection", "Maintenance knowledge retrieval", "Work order suggestion"],
+        "capabilities": [
+          "Abnormal trend detection",
+          "Maintenance knowledge retrieval",
+          "Work order suggestion"
+        ],
         "tags": ["Industrial Agent", "IoT", "Predictive Maintenance"]
       },
       {
@@ -138,7 +179,11 @@
         "industries": ["general", "operations"],
         "description": "Uses enterprise knowledge, product material, and historical bids to assist with proposal outlines, response points, and differentiation.",
         "value": "Lets presales teams create editable drafts quickly and spend more time on customer insight and solution refinement.",
-        "capabilities": ["Bid document parsing", "Proposal outline generation", "Response point checking"],
+        "capabilities": [
+          "Bid document parsing",
+          "Proposal outline generation",
+          "Response point checking"
+        ],
         "tags": ["LLM Writing", "Knowledge Base", "Presales"]
       },
       {
@@ -148,7 +193,11 @@
         "industries": ["operations", "industry"],
         "description": "Connects procurement, inventory, logistics, suppliers, and delivery milestones to monitor exceptions and suggest actions.",
         "value": "Finds delivery risks earlier and turns cross-team communication into trackable task flows.",
-        "capabilities": ["Supply risk warning", "Inventory and delivery analysis", "Collaboration task generation"],
+        "capabilities": [
+          "Supply risk warning",
+          "Inventory and delivery analysis",
+          "Collaboration task generation"
+        ],
         "tags": ["Intelligent Data", "Workflow Agent", "Operations"]
       },
       {
@@ -158,7 +207,11 @@
         "industries": ["lowAltitude", "emergency"],
         "description": "Supports mission orchestration, resource matching, and execution tracking for low-altitude inspection, emergency communication, delivery, and airspace resources.",
         "value": "Upgrades low-altitude resources from one-off task execution into schedulable, reviewable, and collaborative business capability.",
-        "capabilities": ["Mission orchestration", "Resource matching", "Execution status tracking"],
+        "capabilities": [
+          "Mission orchestration",
+          "Resource matching",
+          "Execution status tracking"
+        ],
         "tags": ["Embodied AI", "Low-altitude Economy", "Dispatch Agent"]
       }
     ]

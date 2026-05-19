@@ -11,16 +11,20 @@
  * @category Infrastructure
  */
 
-import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
-import cookieParser from 'cookie-parser';
+import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
+import { AppModule } from "./app.module";
+import cookieParser from "cookie-parser";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  const allowedOrigins = process.env['ALLOWED_ORIGIN']?.split(',').map(s => s.trim()).filter(Boolean) ?? [];
+  const allowedOrigins =
+    process.env["ALLOWED_ORIGIN"]
+      ?.split(",")
+      .map((s) => s.trim())
+      .filter(Boolean) ?? [];
   app.enableCors({
     origin: allowedOrigins.length > 0 ? allowedOrigins : true,
     credentials: true,

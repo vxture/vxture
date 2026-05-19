@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PgInvoiceRepository } from '../repository/pg-invoice.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PgInvoiceRepository } from "../repository/pg-invoice.repository";
 import type {
   InvoiceReceiptRecord,
   BillingAddressRecord,
@@ -9,7 +13,7 @@ import type {
   AuditInvoiceReceiptInput,
   ShipInvoiceReceiptInput,
   UpsertBillingAddressInput,
-} from '../types/invoice.types';
+} from "../types/invoice.types";
 
 @Injectable()
 export class InvoiceService {
@@ -25,33 +29,46 @@ export class InvoiceService {
     return record;
   }
 
-  async applyReceipt(input: ApplyInvoiceReceiptInput): Promise<InvoiceReceiptRecord> {
+  async applyReceipt(
+    input: ApplyInvoiceReceiptInput,
+  ): Promise<InvoiceReceiptRecord> {
     return this.repo.applyReceipt(input);
   }
 
-  async auditReceipt(id: string, input: AuditInvoiceReceiptInput): Promise<InvoiceReceiptRecord> {
+  async auditReceipt(
+    id: string,
+    input: AuditInvoiceReceiptInput,
+  ): Promise<InvoiceReceiptRecord> {
     const receipt = await this.getReceipt(id);
-    if (receipt.invoiceStatus !== 'applying') {
-      throw new ConflictException('只有申请中的发票可以审核');
+    if (receipt.invoiceStatus !== "applying") {
+      throw new ConflictException("只有申请中的发票可以审核");
     }
     const result = await this.repo.auditReceipt(id, input);
     return result!;
   }
 
-  async shipReceipt(id: string, input: ShipInvoiceReceiptInput): Promise<InvoiceReceiptRecord> {
+  async shipReceipt(
+    id: string,
+    input: ShipInvoiceReceiptInput,
+  ): Promise<InvoiceReceiptRecord> {
     const receipt = await this.getReceipt(id);
-    if (receipt.invoiceStatus !== 'issued') {
-      throw new ConflictException('只有已开票的发票可以填写快递信息');
+    if (receipt.invoiceStatus !== "issued") {
+      throw new ConflictException("只有已开票的发票可以填写快递信息");
     }
     const result = await this.repo.shipReceipt(id, input);
     return result!;
   }
 
-  async listBillingAddresses(tenantId: string): Promise<BillingAddressRecord[]> {
+  async listBillingAddresses(
+    tenantId: string,
+  ): Promise<BillingAddressRecord[]> {
     return this.repo.listBillingAddresses(tenantId);
   }
 
-  async saveBillingAddress(id: string | null, input: UpsertBillingAddressInput): Promise<BillingAddressRecord> {
+  async saveBillingAddress(
+    id: string | null,
+    input: UpsertBillingAddressInput,
+  ): Promise<BillingAddressRecord> {
     return this.repo.upsertBillingAddress(id, input);
   }
 }

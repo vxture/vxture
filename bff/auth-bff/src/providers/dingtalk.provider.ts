@@ -14,7 +14,7 @@
  * @version 1.0
  */
 
-import { OAuthProviderType } from '@vxture/core-auth';
+import { OAuthProviderType } from "@vxture/core-auth";
 
 // ============================================================================
 // 类型
@@ -57,48 +57,60 @@ export interface OAuthUserProfileResponse {
 // ============================================================================
 
 export class DingtalkProvider {
-  readonly name = 'dingtalk';
+  readonly name = "dingtalk";
 
   private get clientId(): string {
-    return process.env.DINGTALK_APP_KEY ?? process.env.DINGTALK_SUITE_KEY ?? '';
+    return process.env.DINGTALK_APP_KEY ?? process.env.DINGTALK_SUITE_KEY ?? "";
   }
 
   private get clientSecret(): string {
-    return process.env.DINGTALK_APP_SECRET ?? process.env.DINGTALK_SUITE_SECRET ?? '';
+    return (
+      process.env.DINGTALK_APP_SECRET ?? process.env.DINGTALK_SUITE_SECRET ?? ""
+    );
   }
 
   async exchangeCode(code: string, _redirectUri: string): Promise<OAuthTokens> {
-    const response = await fetch('https://api.dingtalk.com/v1.0/oauth2/userAccessToken', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        clientId: this.clientId,
-        clientSecret: this.clientSecret,
-        code,
-        grantType: 'authorization_code',
-      }),
-    });
+    const response = await fetch(
+      "https://api.dingtalk.com/v1.0/oauth2/userAccessToken",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clientId: this.clientId,
+          clientSecret: this.clientSecret,
+          code,
+          grantType: "authorization_code",
+        }),
+      },
+    );
 
     if (!response.ok) {
-      const text = await response.text().catch(() => '');
-      throw new Error(`DingTalk token exchange failed: ${response.status} ${text}`);
+      const text = await response.text().catch(() => "");
+      throw new Error(
+        `DingTalk token exchange failed: ${response.status} ${text}`,
+      );
     }
 
     const data = (await response.json()) as DingTalkTokenResponse;
     return {
       accessToken: data.accessToken,
-      ...(data.refreshToken !== undefined ? { refreshToken: data.refreshToken } : {}),
+      ...(data.refreshToken !== undefined
+        ? { refreshToken: data.refreshToken }
+        : {}),
       expiresIn: data.expireIn ?? 7200,
     };
   }
 
   async getUserInfo(accessToken: string): Promise<OAuthUserProfileResponse> {
-    const response = await fetch('https://api.dingtalk.com/v1.0/contact/users/me', {
-      headers: { 'x-acs-dingtalk-access-token': accessToken },
-    });
+    const response = await fetch(
+      "https://api.dingtalk.com/v1.0/contact/users/me",
+      {
+        headers: { "x-acs-dingtalk-access-token": accessToken },
+      },
+    );
 
     if (!response.ok) {
-      const text = await response.text().catch(() => '');
+      const text = await response.text().catch(() => "");
       throw new Error(`DingTalk userinfo failed: ${response.status} ${text}`);
     }
 
@@ -106,7 +118,7 @@ export class DingtalkProvider {
     return {
       providerId: data.unionId,
       provider: OAuthProviderType.DINGTALK,
-      ...(data.email    !== undefined ? { email:  data.email }    : {}),
+      ...(data.email !== undefined ? { email: data.email } : {}),
       name: data.nick,
       ...(data.avatarUrl !== undefined ? { avatar: data.avatarUrl } : {}),
       raw: data as unknown as Record<string, unknown>,
@@ -115,11 +127,11 @@ export class DingtalkProvider {
 
   buildAuthorizationUrl(redirectUri: string, state: string): string {
     const params = new URLSearchParams({
-      response_type: 'code',
+      response_type: "code",
       client_id: this.clientId,
       redirect_uri: redirectUri,
-      scope: 'openid',
-      prompt: 'consent',
+      scope: "openid",
+      prompt: "consent",
       state,
     });
     return `https://login.dingtalk.com/oauth2/auth?${params.toString()}`;

@@ -20,8 +20,8 @@ Rules must be executed in the following order.
 
 This order ensures that foundational structural issues are detected before code-level issues.
 
-| Order | Rule                     | File                         |
-| ----- | ------------------------ | ---------------------------- |
+| Order | Rule                     | File                   |
+| ----- | ------------------------ | ---------------------- |
 | 01    | Monorepo Structure Check | 01-monorepo.md         |
 | 02    | Folder Structure Check   | 02-folder-structure.md |
 | 03    | Architecture Layer Check | 03-architecture.md     |

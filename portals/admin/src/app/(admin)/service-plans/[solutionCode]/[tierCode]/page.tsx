@@ -1,4 +1,4 @@
-import { ServicePlanDetailPage } from '@/modules/products/ServicePlanDetailPage';
+import { ServicePlanDetailPage } from "@/modules/products/ServicePlanDetailPage";
 
 export default async function Page({
   params,
@@ -9,5 +9,10 @@ export default async function Page({
   }>;
 }) {
   const { solutionCode, tierCode } = await params;
-  return <ServicePlanDetailPage solutionCode={decodeURIComponent(solutionCode)} tierCode={decodeURIComponent(tierCode)} />;
+  return (
+    <ServicePlanDetailPage
+      solutionCode={decodeURIComponent(solutionCode)}
+      tierCode={decodeURIComponent(tierCode)}
+    />
+  );
 }

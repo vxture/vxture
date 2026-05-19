@@ -151,10 +151,10 @@ docker compose -f docker-compose.worker01.yml up -d --no-deps vx-website-bff:<pr
 
 ## 五、上线后持续监控（24h）
 
-| 项目 | 检查方式 |
-|------|---------|
-| 错误率 | `docker logs` / Sentry DSN |
-| 邮件发送 | 测试注册/密码重置流程 |
+| 项目       | 检查方式                                       |
+| ---------- | ---------------------------------------------- |
+| 错误率     | `docker logs` / Sentry DSN                     |
+| 邮件发送   | 测试注册/密码重置流程                          |
 | Redis 可用 | `docker exec vx-platform-redis redis-cli ping` |
-| DB 连接池 | 检查 BFF 日志中 pg-pool 警告 |
-| SSE 连接 | Vela 面板持续对话 5 分钟无断连 |
+| DB 连接池  | 检查 BFF 日志中 pg-pool 警告                   |
+| SSE 连接   | Vela 面板持续对话 5 分钟无断连                 |

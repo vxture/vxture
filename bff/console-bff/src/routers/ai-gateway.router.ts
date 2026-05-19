@@ -24,14 +24,16 @@ import {
   Req,
   Res,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request, Response } from 'express';
-import type { RequestContext } from '../types/console.types';
+} from "@nestjs/common";
+import type { Request, Response } from "express";
+import type { RequestContext } from "../types/console.types";
 
 // ─── 配置 ─────────────────────────────────────────────────────────────────────
 
 function resolveGatewayUrl(): string {
-  return (process.env['AI_GATEWAY_URL']?.trim() ?? 'http://localhost:3100').replace(/\/+$/, '');
+  return (
+    process.env["AI_GATEWAY_URL"]?.trim() ?? "http://localhost:3100"
+  ).replace(/\/+$/, "");
 }
 
 const AI_GATEWAY = resolveGatewayUrl();
@@ -41,72 +43,87 @@ const ADMIN_BASE = `${AI_GATEWAY}/ai/gateway/admin`;
 
 function requireModelManageCapability(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
-  if (!req.capabilities?.includes('platform.model.manage')) {
-    throw new ForbiddenException('platform.model.manage capability required');
+  if (!req.capabilities?.includes("platform.model.manage")) {
+    throw new ForbiddenException("platform.model.manage capability required");
   }
 }
 
 // ─── 代理工具 ─────────────────────────────────────────────────────────────────
 
 async function readJson(response: globalThis.Response): Promise<unknown> {
-  if (response.status === 204 || response.headers.get('content-length') === '0') return {};
+  if (response.status === 204 || response.headers.get("content-length") === "0")
+    return {};
   const text = await response.text();
   if (!text) return {};
   return JSON.parse(text);
 }
 
-async function proxyGet(path: string): Promise<{ status: number; data: unknown }> {
+async function proxyGet(
+  path: string,
+): Promise<{ status: number; data: unknown }> {
   const response = await fetch(ADMIN_BASE + path);
   return { status: response.status, data: await readJson(response) };
 }
 
-async function proxyPost(path: string, body?: unknown): Promise<{ status: number; data: unknown }> {
-  const init: RequestInit = { method: 'POST', headers: { 'Content-Type': 'application/json' } };
+async function proxyPost(
+  path: string,
+  body?: unknown,
+): Promise<{ status: number; data: unknown }> {
+  const init: RequestInit = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  };
   if (body !== undefined) init.body = JSON.stringify(body);
   const response = await fetch(ADMIN_BASE + path, init);
   return { status: response.status, data: await readJson(response) };
 }
 
-async function proxyPut(path: string, body: unknown): Promise<{ status: number; data: unknown }> {
+async function proxyPut(
+  path: string,
+  body: unknown,
+): Promise<{ status: number; data: unknown }> {
   const response = await fetch(ADMIN_BASE + path, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
   return { status: response.status, data: await readJson(response) };
 }
 
-async function proxyDelete(path: string): Promise<{ status: number; data: unknown }> {
-  const response = await fetch(ADMIN_BASE + path, { method: 'DELETE' });
+async function proxyDelete(
+  path: string,
+): Promise<{ status: number; data: unknown }> {
+  const response = await fetch(ADMIN_BASE + path, { method: "DELETE" });
   return { status: response.status, data: await readJson(response) };
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-@Controller('api/ai-gateway')
+@Controller("api/ai-gateway")
 export class AiGatewayRouter {
   // ── 模型列表 ──────────────────────────────────────────────────────────────
 
-  @Get('models')
+  @Get("models")
   async listModels(
-    @Query('includeInactive') includeInactive: string,
+    @Query("includeInactive") includeInactive: string,
     @Req() req: Request & RequestContext,
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const qs = `?includeInactive=${includeInactive === 'false' ? 'false' : 'true'}`;
+    const qs = `?includeInactive=${includeInactive === "false" ? "false" : "true"}`;
     const { status, data } = await proxyGet(`/models${qs}`);
     res.status(status).json(data);
   }
 
   // ── 创建模型 ──────────────────────────────────────────────────────────────
 
-  @Post('models')
+  @Post("models")
   @HttpCode(HttpStatus.CREATED)
   async createModel(
-    @Body() body: {
+    @Body()
+    body: {
       modelCode: string;
       modelName: string;
       provider: string;
@@ -121,16 +138,17 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPost('/models', body);
+    const { status, data } = await proxyPost("/models", body);
     res.status(status).json(data);
   }
 
   // ── 更新模型 ──────────────────────────────────────────────────────────────
 
-  @Put('models/:id')
+  @Put("models/:id")
   async updateModel(
-    @Param('id') id: string,
-    @Body() body: {
+    @Param("id") id: string,
+    @Body()
+    body: {
       modelCode?: string;
       modelName?: string;
       provider?: string;
@@ -152,10 +170,10 @@ export class AiGatewayRouter {
 
   // ── 激活/停用模型 ─────────────────────────────────────────────────────────
 
-  @Post('models/:id/activate')
+  @Post("models/:id/activate")
   @HttpCode(HttpStatus.OK)
   async activateModel(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Req() req: Request & RequestContext,
     @Res() res: Response,
   ): Promise<void> {
@@ -164,10 +182,10 @@ export class AiGatewayRouter {
     res.status(status).json(data);
   }
 
-  @Post('models/:id/deactivate')
+  @Post("models/:id/deactivate")
   @HttpCode(HttpStatus.OK)
   async deactivateModel(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Req() req: Request & RequestContext,
     @Res() res: Response,
   ): Promise<void> {
@@ -178,24 +196,25 @@ export class AiGatewayRouter {
 
   // ── 授权列表 ──────────────────────────────────────────────────────────────
 
-  @Get('grants')
+  @Get("grants")
   async listGrants(
-    @Query('modelId') modelId: string | undefined,
+    @Query("modelId") modelId: string | undefined,
     @Req() req: Request & RequestContext,
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const qs = modelId ? `?modelId=${encodeURIComponent(modelId)}` : '';
+    const qs = modelId ? `?modelId=${encodeURIComponent(modelId)}` : "";
     const { status, data } = await proxyGet(`/grants${qs}`);
     res.status(status).json(data);
   }
 
   // ── 创建授权 ──────────────────────────────────────────────────────────────
 
-  @Post('grants')
+  @Post("grants")
   @HttpCode(HttpStatus.CREATED)
   async createGrant(
-    @Body() body: {
+    @Body()
+    body: {
       modelId: string;
       tenantId: string;
       agentId?: string | null;
@@ -208,16 +227,17 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPost('/grants', body);
+    const { status, data } = await proxyPost("/grants", body);
     res.status(status).json(data);
   }
 
   // ── 更新授权 ──────────────────────────────────────────────────────────────
 
-  @Put('grants/:id')
+  @Put("grants/:id")
   async updateGrant(
-    @Param('id') id: string,
-    @Body() body: {
+    @Param("id") id: string,
+    @Body()
+    body: {
       agentId?: string | null;
       priority?: number | null;
       reason?: string | null;
@@ -234,10 +254,10 @@ export class AiGatewayRouter {
 
   // ── 激活授权 ──────────────────────────────────────────────────────────────
 
-  @Post('grants/:id/activate')
+  @Post("grants/:id/activate")
   @HttpCode(HttpStatus.OK)
   async activateGrant(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Req() req: Request & RequestContext,
     @Res() res: Response,
   ): Promise<void> {
@@ -248,10 +268,10 @@ export class AiGatewayRouter {
 
   // ── 删除授权（停用） ──────────────────────────────────────────────────────
 
-  @Delete('grants/:id')
+  @Delete("grants/:id")
   @HttpCode(HttpStatus.OK)
   async deleteGrant(
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Req() req: Request & RequestContext,
     @Res() res: Response,
   ): Promise<void> {

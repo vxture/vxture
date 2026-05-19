@@ -11,5 +11,5 @@
  * @license MIT
  */
 
-export const MAIL_PROVIDER = Symbol('MAIL_PROVIDER');
-export const REDIS_CLIENT = Symbol('REDIS_CLIENT');
+export const MAIL_PROVIDER = Symbol("MAIL_PROVIDER");
+export const REDIS_CLIENT = Symbol("REDIS_CLIENT");

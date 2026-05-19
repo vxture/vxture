@@ -8,8 +8,12 @@
  * @date 2026-04-30
  */
 
-import { create } from 'zustand';
-import type { VelaConfirmPending, VelaMessage, VelaSurface } from '../types/vela.types';
+import { create } from "zustand";
+import type {
+  VelaConfirmPending,
+  VelaMessage,
+  VelaSurface,
+} from "../types/vela.types";
 
 // ============================================================================
 // 状态类型
@@ -17,29 +21,29 @@ import type { VelaConfirmPending, VelaMessage, VelaSurface } from '../types/vela
 
 export interface VelaState {
   /** 当前会话 ID，null 表示尚未建立 */
-  sessionId:      string | null;
+  sessionId: string | null;
   /** 当前面的所有消息 */
-  messages:       VelaMessage[];
+  messages: VelaMessage[];
   /** 是否正在流式接收响应 */
-  isStreaming:     boolean;
+  isStreaming: boolean;
   /** 侧边栏/浮窗是否展开 */
-  isOpen:         boolean;
+  isOpen: boolean;
   /** 所在 surface，由宿主注入 */
-  surface:        VelaSurface | null;
+  surface: VelaSurface | null;
   /** 挂起等待用户确认的执行类工具，null 表示无待确认任务 */
   pendingConfirm: VelaConfirmPending | null;
 }
 
 export interface VelaActions {
-  setSurface:         (surface: VelaSurface) => void;
-  setOpen:            (open: boolean) => void;
-  toggleOpen:         () => void;
-  setSessionId:       (id: string) => void;
-  appendMessage:      (msg: VelaMessage) => void;
-  appendTextDelta:    (id: string, delta: string) => void;
-  setStreaming:        (streaming: boolean) => void;
-  setPendingConfirm:  (confirm: VelaConfirmPending | null) => void;
-  reset:              () => void;
+  setSurface: (surface: VelaSurface) => void;
+  setOpen: (open: boolean) => void;
+  toggleOpen: () => void;
+  setSessionId: (id: string) => void;
+  appendMessage: (msg: VelaMessage) => void;
+  appendTextDelta: (id: string, delta: string) => void;
+  setStreaming: (streaming: boolean) => void;
+  setPendingConfirm: (confirm: VelaConfirmPending | null) => void;
+  reset: () => void;
 }
 
 export type VelaStore = VelaState & VelaActions;
@@ -49,11 +53,11 @@ export type VelaStore = VelaState & VelaActions;
 // ============================================================================
 
 const INITIAL_STATE: VelaState = {
-  sessionId:      null,
-  messages:       [],
-  isStreaming:     false,
-  isOpen:         false,
-  surface:        null,
+  sessionId: null,
+  messages: [],
+  isStreaming: false,
+  isOpen: false,
+  surface: null,
   pendingConfirm: null,
 };
 
@@ -78,7 +82,7 @@ export const useVelaStore = create<VelaStore>((set) => ({
   appendTextDelta: (id, delta) =>
     set((s) => ({
       messages: s.messages.map((m) =>
-        m.id === id && m.role !== 'tool'
+        m.id === id && m.role !== "tool"
           ? { ...m, content: m.content + delta }
           : m,
       ),

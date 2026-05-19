@@ -12,42 +12,54 @@
  * @category DTO
  */
 
-import { IsString, IsOptional, IsBoolean, IsEnum } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { BillingCycle, SubscriptionStatus } from '../types/subscription.types';
+import { IsString, IsOptional, IsBoolean, IsEnum } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
+import { BillingCycle, SubscriptionStatus } from "../types/subscription.types";
 
 export class UpdateSubscriptionInput {
-  @ApiProperty({ description: '新套餐ID', example: '3', required: false })
+  @ApiProperty({ description: "新套餐ID", example: "3", required: false })
   @IsOptional()
   @IsString()
   planId?: string;
 
-  @ApiProperty({ description: '新计费周期', example: BillingCycle.YEARLY, required: false })
+  @ApiProperty({
+    description: "新计费周期",
+    example: BillingCycle.YEARLY,
+    required: false,
+  })
   @IsOptional()
   @IsEnum(BillingCycle)
   cycle?: BillingCycle;
 
-  @ApiProperty({ description: '自动续费', example: false, required: false })
+  @ApiProperty({ description: "自动续费", example: false, required: false })
   @IsOptional()
   @IsBoolean()
   autoRenew?: boolean;
 
-  @ApiProperty({ description: '到期取消', example: true, required: false })
+  @ApiProperty({ description: "到期取消", example: true, required: false })
   @IsOptional()
   @IsBoolean()
   cancelAtPeriodEnd?: boolean;
 
-  @ApiProperty({ description: '支付方式ID', example: 'pm002', required: false })
+  @ApiProperty({ description: "支付方式ID", example: "pm002", required: false })
   @IsOptional()
   @IsString()
   paymentMethodId?: string;
 
-  @ApiProperty({ description: '状态', example: SubscriptionStatus.PAUSED, required: false })
+  @ApiProperty({
+    description: "状态",
+    example: SubscriptionStatus.PAUSED,
+    required: false,
+  })
   @IsOptional()
   @IsEnum(SubscriptionStatus)
   status?: SubscriptionStatus;
 
-  @ApiProperty({ description: '元数据', example: { notes: '客户要求暂停' }, required: false })
+  @ApiProperty({
+    description: "元数据",
+    example: { notes: "客户要求暂停" },
+    required: false,
+  })
   @IsOptional()
   metadata?: Record<string, unknown>;
 }

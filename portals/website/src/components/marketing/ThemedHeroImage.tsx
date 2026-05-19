@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 type ThemedHeroImageProps = {
   alt: string;
@@ -13,7 +13,7 @@ export default function ThemedHeroImage({
   lightSrc,
   darkSrc,
   priority = true,
-  className = '',
+  className = "",
 }: ThemedHeroImageProps) {
   const imageClassName = `object-cover ${className}`.trim();
 
@@ -24,7 +24,7 @@ export default function ThemedHeroImage({
         alt={alt}
         fill
         priority={priority}
-        sizes='100vw'
+        sizes="100vw"
         className={`${imageClassName} block dark:hidden`}
       />
       <Image
@@ -32,7 +32,7 @@ export default function ThemedHeroImage({
         alt={alt}
         fill
         priority={priority}
-        sizes='100vw'
+        sizes="100vw"
         className={`${imageClassName} hidden dark:block`}
       />
     </>

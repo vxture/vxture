@@ -98,92 +98,95 @@ export interface FooterData {
 export const FOOTER_DATA: FooterData = {
   enabled: true,
   brand: {
-    logo: '/icons/favicon.ico',
-    shortname: 'vxture',
-    website: 'vxture.ai',
-    foundedYear: '2024',
-    timezone: 'GMT+8',
-    nameKey: 'brand.name',
-    descriptionKey: 'brand.description',
-    addressKey: 'brand.address'
+    logo: "/icons/favicon.ico",
+    shortname: "vxture",
+    website: "vxture.ai",
+    foundedYear: "2024",
+    timezone: "GMT+8",
+    nameKey: "brand.name",
+    descriptionKey: "brand.description",
+    addressKey: "brand.address",
   },
   contact: {
-    contact_phone: '400-888-2345',
-    service_email: 'support@vxture.com',
-    partner_email: 'partner@vxture.com',
+    contact_phone: "400-888-2345",
+    service_email: "support@vxture.com",
+    partner_email: "partner@vxture.com",
   },
   social: [
     {
-      name: 'GitHub',
-      icon: 'github',
-      href: 'https://github.com/stonesmoker/vxture',
-      ariaLabelKey: 'social.github'
+      name: "GitHub",
+      icon: "github",
+      href: "https://github.com/stonesmoker/vxture",
+      ariaLabelKey: "social.github",
     },
     {
-      name: 'LinkedIn',
-      icon: 'linkedin',
-      href: 'https://linkedin.com/company/stonesmoker',
-      ariaLabelKey: 'social.linkedin'
+      name: "LinkedIn",
+      icon: "linkedin",
+      href: "https://linkedin.com/company/stonesmoker",
+      ariaLabelKey: "social.linkedin",
     },
     {
-      name: 'WeChat',
-      icon: 'wechat',
-      href: '/images/footer/WeChatOfficialAccounts.png',
-      ariaLabelKey: 'social.wechat'
-    }
+      name: "WeChat",
+      icon: "wechat",
+      href: "/images/footer/WeChatOfficialAccounts.png",
+      ariaLabelKey: "social.wechat",
+    },
   ],
   sections: [
     {
-      id: 'products-services',
-      titleKey: 'sections.products.title',
+      id: "products-services",
+      titleKey: "sections.products.title",
       links: [
-        { href: '/appcenter', labelKey: 'sections.products.appcenter' },
-        { href: '/products', labelKey: 'sections.products.products' },
-        { href: '/solutions', labelKey: 'sections.products.solutions' },
-        { href: '/cases', labelKey: 'sections.products.cases' }
-      ]
+        { href: "/appcenter", labelKey: "sections.products.appcenter" },
+        { href: "/products", labelKey: "sections.products.products" },
+        { href: "/solutions", labelKey: "sections.products.solutions" },
+        { href: "/cases", labelKey: "sections.products.cases" },
+      ],
     },
     {
-      id: 'resources-support',
-      titleKey: 'sections.support.title',
+      id: "resources-support",
+      titleKey: "sections.support.title",
       links: [
-        { href: '/docs', labelKey: 'sections.support.docs' },
-        { href: '/faq', labelKey: 'sections.support.faq' },
-        { href: '/support', labelKey: 'sections.support.technology' },
-        { href: '/insights', labelKey: 'sections.support.insights' }
-      ]
+        { href: "/docs", labelKey: "sections.support.docs" },
+        { href: "/faq", labelKey: "sections.support.faq" },
+        { href: "/support", labelKey: "sections.support.technology" },
+        { href: "/insights", labelKey: "sections.support.insights" },
+      ],
     },
     {
-      id: 'about-us',
-      titleKey: 'sections.company.title',
+      id: "about-us",
+      titleKey: "sections.company.title",
       links: [
-        { href: '/about', labelKey: 'sections.company.introduction' },
-        { href: '/certifications', labelKey: 'sections.company.certifications' },
-        { href: '/careers', labelKey: 'sections.company.careers' },
-        { href: '/contact', labelKey: 'sections.company.contact' }
-      ]
-    }
+        { href: "/about", labelKey: "sections.company.introduction" },
+        {
+          href: "/certifications",
+          labelKey: "sections.company.certifications",
+        },
+        { href: "/careers", labelKey: "sections.company.careers" },
+        { href: "/contact", labelKey: "sections.company.contact" },
+      ],
+    },
   ],
   legal: [
-    { href: '/legal/terms', labelKey: 'legal.terms' },
-    { href: '/legal/privacy', labelKey: 'legal.privacy' },
-    { href: '/legal/copyright', labelKey: 'legal.copyright' },
-    { href: '/legal/brand', labelKey: 'legal.brand' },
-    { href: '/legal/cookies', labelKey: 'legal.cookies' }
+    { href: "/legal/terms", labelKey: "legal.terms" },
+    { href: "/legal/privacy", labelKey: "legal.privacy" },
+    { href: "/legal/copyright", labelKey: "legal.copyright" },
+    { href: "/legal/brand", labelKey: "legal.brand" },
+    { href: "/legal/cookies", labelKey: "legal.cookies" },
   ],
   icp: {
-    textKey: 'icp.text',
-    link: 'https://beian.miit.gov.cn'
+    textKey: "icp.text",
+    link: "https://beian.miit.gov.cn",
   },
   publicSecurity: {
-    textKey: 'publicSecurity.text',
-    link: 'https://beian.mps.gov.cn'
+    textKey: "publicSecurity.text",
+    link: "https://beian.mps.gov.cn",
   },
   copyright: {
     startYear: 2024,
     endYear: 2026,
-    companyName: 'vxture.ai',
+    companyName: "vxture.ai",
     allRightsReserved: true,
-    textKey: 'copyright.text'
-  }
+    textKey: "copyright.text",
+  },
 };

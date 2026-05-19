@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * skeleton.tsx - Shimmer 加载占位组件
@@ -12,11 +12,11 @@
  * @date 2026-05-16
  */
 
-import type { CSSProperties } from 'react';
-import { cn } from '../../utils/cn';
+import type { CSSProperties } from "react";
+import { cn } from "../../utils/cn";
 
 export interface SkeletonProps {
-  readonly variant?: 'line' | 'rect' | 'circle';
+  readonly variant?: "line" | "rect" | "circle";
   readonly width?: number | string;
   readonly height?: number | string;
   readonly lines?: number;
@@ -25,26 +25,29 @@ export interface SkeletonProps {
 
 function toCssLength(value: number | string | undefined): string | undefined {
   if (value === undefined) return undefined;
-  return typeof value === 'number' ? `${value}px` : value;
+  return typeof value === "number" ? `${value}px` : value;
 }
 
-function buildSkeletonStyle(width: number | string | undefined, height: number | string | undefined): CSSProperties | undefined {
+function buildSkeletonStyle(
+  width: number | string | undefined,
+  height: number | string | undefined,
+): CSSProperties | undefined {
   const widthValue = toCssLength(width);
   const heightValue = toCssLength(height);
   if (!widthValue && !heightValue) return undefined;
 
   const style: Record<string, string> = {};
   if (widthValue) {
-    style['--vx-skeleton-width'] = widthValue;
+    style["--vx-skeleton-width"] = widthValue;
   }
   if (heightValue) {
-    style['--vx-skeleton-height'] = heightValue;
+    style["--vx-skeleton-height"] = heightValue;
   }
   return style as CSSProperties;
 }
 
 export function Skeleton({
-  variant = 'line',
+  variant = "line",
   width,
   height,
   lines,
@@ -52,13 +55,17 @@ export function Skeleton({
 }: SkeletonProps) {
   const style = buildSkeletonStyle(width, height);
 
-  if (variant === 'line' && lines && lines > 1) {
+  if (variant === "line" && lines && lines > 1) {
     return (
-      <div className={cn('vx-skeleton-group', className)}>
+      <div className={cn("vx-skeleton-group", className)}>
         {Array.from({ length: lines }).map((_, index) => (
           <div
             key={index}
-            className={cn('vx-skeleton', 'vx-skeleton--line', index === lines - 1 ? 'vx-skeleton--last-line' : undefined)}
+            className={cn(
+              "vx-skeleton",
+              "vx-skeleton--line",
+              index === lines - 1 ? "vx-skeleton--last-line" : undefined,
+            )}
             style={style}
             aria-hidden
           />
@@ -69,7 +76,7 @@ export function Skeleton({
 
   return (
     <div
-      className={cn('vx-skeleton', `vx-skeleton--${variant}`, className)}
+      className={cn("vx-skeleton", `vx-skeleton--${variant}`, className)}
       style={style}
       aria-hidden
     />

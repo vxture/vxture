@@ -7,13 +7,19 @@
  * @date 2026-05-06
  */
 
-import type { ContentLoader } from '../types';
+import type { ContentLoader } from "../types";
 
 // =============================================================================
 // 合法 Policy Key 集合
 // =============================================================================
 
-const POLICY_KEYS = ['terms', 'privacy', 'copyright', 'brand', 'cookies'] as const;
+const POLICY_KEYS = [
+  "terms",
+  "privacy",
+  "copyright",
+  "brand",
+  "cookies",
+] as const;
 
 type PolicyKey = (typeof POLICY_KEYS)[number];
 
@@ -34,13 +40,13 @@ function isPolicyKey(value: string): value is PolicyKey {
 export const legalLoader: ContentLoader = async (slug) => {
   // /legal（无子路径）→ 政策列表
   if (slug.length === 0) {
-    return { type: 'legal-index', layout: 'legal' };
+    return { type: "legal-index", layout: "legal" };
   }
 
   // /legal/[policy]（单政策详情）
   const [policyKey] = slug;
   if (slug.length === 1 && policyKey && isPolicyKey(policyKey)) {
-    return { type: 'legal-detail', layout: 'legal', policyKey };
+    return { type: "legal-detail", layout: "legal", policyKey };
   }
 
   return null;

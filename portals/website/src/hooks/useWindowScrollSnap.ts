@@ -14,7 +14,7 @@
  * @category Hooks
  */
 
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState, useCallback, useRef } from "react";
 
 // ============================================================================
 // 类型定义
@@ -26,9 +26,9 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 interface WindowScrollSnapConfig {
   debugFlag: boolean;
   targetSelector: string;
-  targetAlignTo?: 'top' | 'center' | 'bottom' | 'auto';
+  targetAlignTo?: "top" | "center" | "bottom" | "auto";
   snapThreshold?: number;
-  enabledDirections?: ('up' | 'down')[];
+  enabledDirections?: ("up" | "down")[];
   observerRoot?: HTMLElement;
 }
 
@@ -43,7 +43,7 @@ interface WindowScrollSnapReturn {
     targetRect: DOMRect | null;
     targetsCount: number;
     targetAlignTo: string;
-    isScrollingDirection: 'up' | 'down' | 'no';
+    isScrollingDirection: "up" | "down" | "no";
     activeTargetId: string | null;
     activeTargetName: string | null;
     snapThreshold: number;
@@ -56,7 +56,7 @@ interface WindowScrollSnapReturn {
 /**
  * 滚动方向类型
  */
-type ScrollDirection = 'up' | 'down' | 'no';
+type ScrollDirection = "up" | "down" | "no";
 
 // ============================================================================
 // 常量定义
@@ -75,7 +75,9 @@ const hasWindow = globalThis?.window !== undefined;
 /**
  * useWindowScrollSnap - 主 hook 实现
  */
-export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrollSnapReturn {
+export function useWindowScrollSnap(
+  config: WindowScrollSnapConfig,
+): WindowScrollSnapReturn {
   // ==========================================================================
   // 状态初始化
   // ==========================================================================
@@ -84,14 +86,15 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
   const {
     debugFlag,
     targetSelector,
-    targetAlignTo = 'top',
+    targetAlignTo = "top",
     snapThreshold = 150,
-    enabledDirections = ['up', 'down'],
+    enabledDirections = ["up", "down"],
     observerRoot = null,
   } = config;
 
   /** 响应式阈值：根据视口高度动态计算 */
-  const [responsiveThreshold, setResponsiveThreshold] = useState<number>(snapThreshold);
+  const [responsiveThreshold, setResponsiveThreshold] =
+    useState<number>(snapThreshold);
   /** 使用响应式阈值替代固定阈值 */
   const activeSnapThreshold = responsiveThreshold;
 
@@ -118,7 +121,9 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
   });
 
   /** 调试信息状态（仅 debugFlag 为 true 时有效） */
-  const [snapdebugInfo, setsnapdebugInfo] = useState<WindowScrollSnapReturn['snapdebugInfo']>(() =>
+  const [snapdebugInfo, setsnapdebugInfo] = useState<
+    WindowScrollSnapReturn["snapdebugInfo"]
+  >(() =>
     debugFlag
       ? {
           screenRect: null,
@@ -128,12 +133,12 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
           activeTargetName: null,
           targetAlignTo,
           snapThreshold: activeSnapThreshold,
-          isScrollingDirection: 'no',
+          isScrollingDirection: "no",
           scrollVelocity: 0,
           scrollX: 0,
           scrollY: 0,
         }
-      : undefined
+      : undefined,
   );
 
   // ==========================================================================
@@ -145,7 +150,11 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
    * 只合并 partialInfo，避免把依赖参数直接写进依赖，否则会导致无限循环
    */
   const updateDebugInfo = useCallback(
-    (partialInfo: Partial<NonNullable<WindowScrollSnapReturn['snapdebugInfo']>>) => {
+    (
+      partialInfo: Partial<
+        NonNullable<WindowScrollSnapReturn["snapdebugInfo"]>
+      >,
+    ) => {
       if (debugFlag) {
         setsnapdebugInfo((prev) =>
           prev
@@ -153,11 +162,11 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
                 ...prev,
                 ...partialInfo,
               }
-            : prev
+            : prev,
         );
       }
     },
-    [debugFlag]
+    [debugFlag],
   );
 
   /**
@@ -178,18 +187,20 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     rect: DOMRect,
     viewportHeight: number,
     currentScrollY: number,
-    alignTo: string
+    alignTo: string,
   ): number => {
     let scrollTop = currentScrollY;
     switch (alignTo) {
-      case 'auto':
+      case "auto":
         scrollTop +=
-          rect.height < viewportHeight ? rect.top + rect.height - viewportHeight : rect.top;
+          rect.height < viewportHeight
+            ? rect.top + rect.height - viewportHeight
+            : rect.top;
         break;
-      case 'center':
+      case "center":
         scrollTop += rect.top - (viewportHeight - rect.height) / 2;
         break;
-      case 'bottom':
+      case "bottom":
         scrollTop += rect.top + rect.height - viewportHeight;
         break;
       default:
@@ -207,19 +218,21 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       if (!hasWindow) return false;
 
       const style = (globalThis.window as Window).getComputedStyle(element);
-      if (style.display === 'none' || style.visibility === 'hidden') return false;
+      if (style.display === "none" || style.visibility === "hidden")
+        return false;
 
       const rect = element.getBoundingClientRect();
       if (rect.height <= 0) return false;
 
       const viewportHeight = (globalThis.window as Window).innerHeight;
       const isTopNear = Math.abs(rect.top) <= activeSnapThreshold;
-      const isBottomNear = Math.abs(rect.bottom - viewportHeight) <= activeSnapThreshold;
+      const isBottomNear =
+        Math.abs(rect.bottom - viewportHeight) <= activeSnapThreshold;
       const isFullyInView = rect.top >= 0 && rect.bottom <= viewportHeight;
 
       return isTopNear || isBottomNear || isFullyInView;
     },
-    [activeSnapThreshold]
+    [activeSnapThreshold],
   );
 
   /**
@@ -228,14 +241,18 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
   const queryTargets = useCallback(() => {
     if (!hasWindow || !targetSelector) return;
 
-    const foundTargets = Array.from(document.querySelectorAll<HTMLElement>(targetSelector))
+    const foundTargets = Array.from(
+      document.querySelectorAll<HTMLElement>(targetSelector),
+    )
       .filter((el) => {
         const style = (globalThis.window as Window).getComputedStyle(el);
-        return style.display !== 'none' && style.visibility !== 'hidden';
+        return style.display !== "none" && style.visibility !== "hidden";
       })
       .sort((a, b) => {
-        const aTop = a.getBoundingClientRect().top + (globalThis.window as Window).scrollY;
-        const bTop = b.getBoundingClientRect().top + (globalThis.window as Window).scrollY;
+        const aTop =
+          a.getBoundingClientRect().top + (globalThis.window as Window).scrollY;
+        const bTop =
+          b.getBoundingClientRect().top + (globalThis.window as Window).scrollY;
         return aTop - bTop;
       });
 
@@ -253,7 +270,7 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       (globalThis.window as Window).scrollX,
       (globalThis.window as Window).scrollY,
       (globalThis.window as Window).innerWidth,
-      (globalThis.window as Window).innerHeight
+      (globalThis.window as Window).innerHeight,
     );
 
     let targetRect: DOMRect | null = null;
@@ -276,14 +293,17 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
   /**
    * 设置 scrollend 监听器（现代浏览器）
    */
-  const setupScrollEndListener = (win: Window, handleScrollEnd: () => void): (() => void) => {
+  const setupScrollEndListener = (
+    win: Window,
+    handleScrollEnd: () => void,
+  ): (() => void) => {
     const scrollEndHandler = () => {
       handleScrollEnd();
-      win.removeEventListener('scrollend', scrollEndHandler);
+      win.removeEventListener("scrollend", scrollEndHandler);
     };
-    win.addEventListener('scrollend', scrollEndHandler, { once: true });
+    win.addEventListener("scrollend", scrollEndHandler, { once: true });
     return () => {
-      win.removeEventListener('scrollend', scrollEndHandler);
+      win.removeEventListener("scrollend", scrollEndHandler);
     };
   };
 
@@ -293,7 +313,7 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
   const setupFallbackScrollListener = (
     win: Window,
     handleScrollEnd: () => void,
-    debugFlag: boolean
+    debugFlag: boolean,
   ): (() => void) => {
     let scrollTimer: ReturnType<typeof setTimeout> | undefined;
 
@@ -301,24 +321,24 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       if (scrollTimer) clearTimeout(scrollTimer);
       scrollTimer = setTimeout(() => {
         handleScrollEnd();
-        win.removeEventListener('scroll', fallbackScrollEnd);
+        win.removeEventListener("scroll", fallbackScrollEnd);
       }, 150);
     };
 
-    win.addEventListener('scroll', fallbackScrollEnd, { passive: true });
+    win.addEventListener("scroll", fallbackScrollEnd, { passive: true });
 
     const timeoutTimer = setTimeout(() => {
       if (scrollTimer) clearTimeout(scrollTimer);
-      win.removeEventListener('scroll', fallbackScrollEnd);
+      win.removeEventListener("scroll", fallbackScrollEnd);
       if (isProgramScrollingRef.current && debugFlag) {
-        console.log('Fallback: Force reset isProgramScrolling after timeout');
+        console.log("Fallback: Force reset isProgramScrolling after timeout");
       }
     }, 2000);
 
     return () => {
       if (scrollTimer) clearTimeout(scrollTimer);
       if (timeoutTimer) clearTimeout(timeoutTimer);
-      win.removeEventListener('scroll', fallbackScrollEnd);
+      win.removeEventListener("scroll", fallbackScrollEnd);
     };
   };
 
@@ -327,12 +347,12 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
    */
   const snapToTarget = useCallback(
     (target: HTMLElement) => {
-      if (debugFlag) console.log('Snapping to target:', target.id || 'unknown');
+      if (debugFlag) console.log("Snapping to target:", target.id || "unknown");
       if (!hasWindow || !target) return;
 
       // 清理之前的监听器（防止快速点击时累积）
       if (scrollEndCleanupRef.current) {
-        if (debugFlag) console.log('Cleaning up previous scroll listener');
+        if (debugFlag) console.log("Cleaning up previous scroll listener");
         scrollEndCleanupRef.current();
         scrollEndCleanupRef.current = null;
       }
@@ -341,19 +361,27 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       const win = globalThis.window as Window;
       const rect = target.getBoundingClientRect();
       const viewportHeight = win.innerHeight;
-      const scrollTop = calculateScrollTop(rect, viewportHeight, win.scrollY, targetAlignTo);
+      const scrollTop = calculateScrollTop(
+        rect,
+        viewportHeight,
+        win.scrollY,
+        targetAlignTo,
+      );
 
       // 始终采用平滑滚动
       win.scrollTo({
         top: scrollTop,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
 
       setActiveTarget(target);
       const getName = (el: HTMLElement): string | null => {
         return el.dataset.name ?? null;
       };
-      updateDebugInfo({ activeTargetId: target.id, activeTargetName: getName(target) });
+      updateDebugInfo({
+        activeTargetId: target.id,
+        activeTargetName: getName(target),
+      });
 
       // 滚动结束后更新目标矩形信息和重置程序滚动标记
       const handleScrollEnd = () => {
@@ -364,21 +392,25 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       };
 
       // 检查浏览器是否支持 scrollend 事件
-      if ('onscrollend' in win) {
+      if ("onscrollend" in win) {
         const cleanup = setupScrollEndListener(win, handleScrollEnd);
         scrollEndCleanupRef.current = () => {
           cleanup();
           isProgramScrollingRef.current = false;
         };
       } else {
-        const cleanup = setupFallbackScrollListener(win, handleScrollEnd, debugFlag);
+        const cleanup = setupFallbackScrollListener(
+          win,
+          handleScrollEnd,
+          debugFlag,
+        );
         scrollEndCleanupRef.current = () => {
           cleanup();
           isProgramScrollingRef.current = false;
         };
       }
     },
-    [targetAlignTo, debugFlag, updateDebugInfo]
+    [targetAlignTo, debugFlag, updateDebugInfo],
   );
 
   // ==========================================================================
@@ -394,7 +426,7 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       setResponsiveThreshold(newThreshold);
       if (debugFlag) {
         console.log(
-          `Responsive threshold updated: ${newThreshold}px (viewport: ${(globalThis.window as Window).innerHeight}px)`
+          `Responsive threshold updated: ${newThreshold}px (viewport: ${(globalThis.window as Window).innerHeight}px)`,
         );
       }
     };
@@ -402,8 +434,16 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     updateThreshold();
 
     if (hasWindow) {
-      (globalThis.window as Window).addEventListener('resize', updateThreshold, { passive: true });
-      return () => (globalThis.window as Window).removeEventListener('resize', updateThreshold);
+      (globalThis.window as Window).addEventListener(
+        "resize",
+        updateThreshold,
+        { passive: true },
+      );
+      return () =>
+        (globalThis.window as Window).removeEventListener(
+          "resize",
+          updateThreshold,
+        );
     }
     return;
   }, [calculateThreshold, debugFlag]);
@@ -420,7 +460,7 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
               snapThreshold: activeSnapThreshold,
               targetAlignTo,
             }
-          : prev
+          : prev,
       );
     }
   }, [activeSnapThreshold, targetAlignTo, debugFlag]);
@@ -433,11 +473,18 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
 
     if (!hasWindow) return;
 
-    (globalThis.window as Window).addEventListener('resize', updateScreenAndScrollInfo, {
-      passive: true,
-    });
+    (globalThis.window as Window).addEventListener(
+      "resize",
+      updateScreenAndScrollInfo,
+      {
+        passive: true,
+      },
+    );
     return () =>
-      (globalThis.window as Window).removeEventListener('resize', updateScreenAndScrollInfo);
+      (globalThis.window as Window).removeEventListener(
+        "resize",
+        updateScreenAndScrollInfo,
+      );
   }, [updateScreenAndScrollInfo]);
 
   /**
@@ -465,10 +512,16 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
 
     const observer = new MutationObserver((mutations) => {
       const relevantMutations = mutations.filter((m) => {
-        if (m.type === 'childList') return true;
-        if (m.type === 'attributes' && ['style', 'class'].includes(m.attributeName || '')) {
+        if (m.type === "childList") return true;
+        if (
+          m.type === "attributes" &&
+          ["style", "class"].includes(m.attributeName || "")
+        ) {
           const target = m.target as HTMLElement;
-          if (target.classList?.contains('snap-section') || target.querySelector('.snap-section')) {
+          if (
+            target.classList?.contains("snap-section") ||
+            target.querySelector(".snap-section")
+          ) {
             return true;
           }
         }
@@ -482,7 +535,9 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
 
       mutationTimer = setTimeout(() => {
         if (debugFlag) {
-          console.log(`MutationObserver: Updating targets (${mutationCount} mutations batched)`);
+          console.log(
+            `MutationObserver: Updating targets (${mutationCount} mutations batched)`,
+          );
         }
         queryTargets();
         mutationCount = 0;
@@ -493,7 +548,7 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['style', 'class'],
+      attributeFilter: ["style", "class"],
     });
 
     return () => {
@@ -511,17 +566,20 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     let isProcessing = false;
 
     // 计算滚动方向
-    const getScrollDirection = (currentScrollY: number, lastScrollY: number): ScrollDirection => {
-      if (currentScrollY > lastScrollY) return 'down';
-      if (currentScrollY < lastScrollY) return 'up';
-      return 'no';
+    const getScrollDirection = (
+      currentScrollY: number,
+      lastScrollY: number,
+    ): ScrollDirection => {
+      if (currentScrollY > lastScrollY) return "down";
+      if (currentScrollY < lastScrollY) return "up";
+      return "no";
     };
 
     // 向下查找目标
     const findTargetDown = (
       targets: HTMLElement[],
       currentIndex: number,
-      isTargetInThreshold: (el: HTMLElement) => boolean
+      isTargetInThreshold: (el: HTMLElement) => boolean,
     ): HTMLElement | null => {
       const startIndex = currentIndex === -1 ? 0 : currentIndex + 1;
       for (let i = startIndex; i < targets.length; i++) {
@@ -537,9 +595,10 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     const findTargetUp = (
       targets: HTMLElement[],
       currentIndex: number,
-      isTargetInThreshold: (el: HTMLElement) => boolean
+      isTargetInThreshold: (el: HTMLElement) => boolean,
     ): HTMLElement | null => {
-      const startIndex = currentIndex === -1 ? targets.length - 1 : currentIndex - 1;
+      const startIndex =
+        currentIndex === -1 ? targets.length - 1 : currentIndex - 1;
       for (let i = startIndex; i >= 0; i--) {
         const target = targets[i];
         if (target && isTargetInThreshold(target)) {
@@ -554,13 +613,13 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       direction: ScrollDirection,
       targets: HTMLElement[],
       activeTarget: HTMLElement | null,
-      isTargetInThreshold: (el: HTMLElement) => boolean
+      isTargetInThreshold: (el: HTMLElement) => boolean,
     ): HTMLElement | null => {
       const currentIndex = activeTarget ? targets.indexOf(activeTarget) : -1;
-      if (direction === 'down') {
+      if (direction === "down") {
         return findTargetDown(targets, currentIndex, isTargetInThreshold);
       }
-      if (direction === 'up') {
+      if (direction === "up") {
         return findTargetUp(targets, currentIndex, isTargetInThreshold);
       }
       return null;
@@ -570,16 +629,17 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     const shouldSkipSnap = (
       velocity: number,
       direction: ScrollDirection,
-      enabledDirections: ('up' | 'down')[]
+      enabledDirections: ("up" | "down")[],
     ): boolean => {
       if (velocity > FAST_SCROLL_THRESHOLD) return true;
-      if (direction !== 'no' && !enabledDirections.includes(direction)) return true;
+      if (direction !== "no" && !enabledDirections.includes(direction))
+        return true;
       return false;
     };
 
     const handleWindowScroll = () => {
       if (isProgramScrollingRef.current || isProcessing) {
-        if (debugFlag) console.log('Skipped scroll processing');
+        if (debugFlag) console.log("Skipped scroll processing");
         return;
       }
 
@@ -593,7 +653,10 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
         }
 
         const currentScrollY = (globalThis.window as Window).scrollY;
-        const direction = getScrollDirection(currentScrollY, lastScrollYRef.current);
+        const direction = getScrollDirection(
+          currentScrollY,
+          lastScrollYRef.current,
+        );
         const velocity = Math.abs(currentScrollY - lastScrollYRef.current);
 
         if (debugFlag) {
@@ -614,11 +677,11 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
           direction,
           targets,
           activeTarget,
-          isTargetInThreshold
+          isTargetInThreshold,
         );
 
         if (targetToSnap && targetToSnap !== activeTarget) {
-          if (debugFlag) console.log('Found target to snap:', targetToSnap.id);
+          if (debugFlag) console.log("Found target to snap:", targetToSnap.id);
           snapToTarget(targetToSnap);
         }
 
@@ -627,12 +690,25 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       });
     };
 
-    (globalThis.window as Window).addEventListener('scroll', handleWindowScroll, { passive: true });
+    (globalThis.window as Window).addEventListener(
+      "scroll",
+      handleWindowScroll,
+      { passive: true },
+    );
 
     return () => {
-      (globalThis.window as Window).removeEventListener('scroll', handleWindowScroll);
+      (globalThis.window as Window).removeEventListener(
+        "scroll",
+        handleWindowScroll,
+      );
     };
-  }, [debugFlag, enabledDirections, snapToTarget, updateScreenAndScrollInfo, updateDebugInfo]);
+  }, [
+    debugFlag,
+    enabledDirections,
+    snapToTarget,
+    updateScreenAndScrollInfo,
+    updateDebugInfo,
+  ]);
 
   /**
    * 初始化滚动检查
@@ -641,8 +717,9 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     if (!hasWindow || targets.length === 0) return;
 
     const timer = setTimeout(() => {
-      if (debugFlag) console.log('Initialization: Checking initial scroll position');
-      (globalThis.window as Window).dispatchEvent(new Event('scroll'));
+      if (debugFlag)
+        console.log("Initialization: Checking initial scroll position");
+      (globalThis.window as Window).dispatchEvent(new Event("scroll"));
     }, 100);
 
     return () => clearTimeout(timer);
@@ -658,21 +735,27 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     const isInputElement = (e: KeyboardEvent): boolean => {
       const target = e.target as HTMLElement;
       return (
-        target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.isContentEditable
       );
     };
 
     // 获取目标索引计算函数
-    const getTargetIndex = (key: string, currentIndex: number, length: number): number => {
+    const getTargetIndex = (
+      key: string,
+      currentIndex: number,
+      length: number,
+    ): number => {
       switch (key) {
-        case 'PageDown':
-        case ' ':
+        case "PageDown":
+        case " ":
           return Math.min(currentIndex + 1, length - 1);
-        case 'PageUp':
+        case "PageUp":
           return Math.max(currentIndex - 1, 0);
-        case 'Home':
+        case "Home":
           return 0;
-        case 'End':
+        case "End":
           return length - 1;
         default:
           return -1;
@@ -682,17 +765,17 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
     // 获取调试日志消息
     const getDebugMessage = (key: string): string => {
       switch (key) {
-        case 'PageDown':
-        case ' ':
-          return 'Keyboard: PageDown/Space → Next section';
-        case 'PageUp':
-          return 'Keyboard: PageUp → Previous section';
-        case 'Home':
-          return 'Keyboard: Home → First section';
-        case 'End':
-          return 'Keyboard: End → Last section';
+        case "PageDown":
+        case " ":
+          return "Keyboard: PageDown/Space → Next section";
+        case "PageUp":
+          return "Keyboard: PageUp → Previous section";
+        case "Home":
+          return "Keyboard: Home → First section";
+        case "End":
+          return "Keyboard: End → Last section";
         default:
-          return '';
+          return "";
       }
     };
 
@@ -714,10 +797,13 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       snapToTarget(targetElement);
     };
 
-    (globalThis.window as Window).addEventListener('keydown', handleKeyDown);
+    (globalThis.window as Window).addEventListener("keydown", handleKeyDown);
 
     return () => {
-      (globalThis.window as Window).removeEventListener('keydown', handleKeyDown);
+      (globalThis.window as Window).removeEventListener(
+        "keydown",
+        handleKeyDown,
+      );
     };
   }, [activeTarget, targets, snapToTarget, debugFlag]);
 
@@ -735,7 +821,7 @@ export function useWindowScrollSnap(config: WindowScrollSnapConfig): WindowScrol
       setActiveTarget(firstTarget);
       updateDebugInfo({
         activeTargetId: firstTarget.id,
-        activeTargetName: getName(firstTarget)
+        activeTargetName: getName(firstTarget),
       });
     }
   }, [targets, activeTarget, updateDebugInfo]);

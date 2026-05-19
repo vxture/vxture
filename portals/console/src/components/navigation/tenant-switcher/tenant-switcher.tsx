@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { Avatar, AvatarFallback, Button, Icon } from '@vxture/design-system';
-import { useTenant, type TenantType } from '@/features/tenant';
-import { CreateTenantDialog } from './create-tenant-dialog';
-import { TenantSwitcherPanel } from './tenant-switcher-panel';
+import { useEffect, useRef, useState } from "react";
+import { Avatar, AvatarFallback, Button, Icon } from "@vxture/design-system";
+import { useTenant, type TenantType } from "@/features/tenant";
+import { CreateTenantDialog } from "./create-tenant-dialog";
+import { TenantSwitcherPanel } from "./tenant-switcher-panel";
 
 function getInitials(name: string) {
   return name.slice(0, 2).toUpperCase();
@@ -15,8 +15,9 @@ export function TenantSwitcher() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [createType, setCreateType] = useState<TenantType | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
-  const tenantName = currentTenant?.name ?? 'Workspace';
-  const tenantType = currentTenant?.type === 'personal' ? 'Personal' : 'Organization';
+  const tenantName = currentTenant?.name ?? "Workspace";
+  const tenantType =
+    currentTenant?.type === "personal" ? "Personal" : "Organization";
 
   useEffect(() => {
     if (!panelOpen) {
@@ -30,17 +31,17 @@ export function TenantSwitcher() {
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setPanelOpen(false);
       }
     }
 
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [panelOpen]);
 
@@ -48,7 +49,11 @@ export function TenantSwitcher() {
     <div className="vx-tenant-switcher" ref={rootRef}>
       <Button
         variant="ghost"
-        className={panelOpen ? 'vx-tenant-switcher__trigger vx-tenant-switcher__trigger--open' : 'vx-tenant-switcher__trigger'}
+        className={
+          panelOpen
+            ? "vx-tenant-switcher__trigger vx-tenant-switcher__trigger--open"
+            : "vx-tenant-switcher__trigger"
+        }
         aria-haspopup="menu"
         aria-expanded={panelOpen}
         onClick={() => setPanelOpen((open) => !open)}
@@ -60,7 +65,12 @@ export function TenantSwitcher() {
           <strong title={tenantName}>{tenantName}</strong>
           <small>{tenantType}</small>
         </span>
-        <Icon name="chevron-down" size="xs" fallback="arrow-down" className="vx-tenant-switcher__trigger-caret" />
+        <Icon
+          name="chevron-down"
+          size="xs"
+          fallback="arrow-down"
+          className="vx-tenant-switcher__trigger-caret"
+        />
       </Button>
 
       {panelOpen ? (
@@ -74,7 +84,7 @@ export function TenantSwitcher() {
 
       <CreateTenantDialog
         open={Boolean(createType)}
-        type={createType ?? 'organization'}
+        type={createType ?? "organization"}
         onClose={() => setCreateType(null)}
         onCreated={() => setPanelOpen(false)}
       />

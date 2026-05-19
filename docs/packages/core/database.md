@@ -8,11 +8,11 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/core-database` |
-| 路径 | `packages/core/database/` |
-| @layer | `Infrastructure` |
+| 项     | 值                        |
+| ------ | ------------------------- |
+| 包名   | `@vxture/core-database`   |
+| 路径   | `packages/core/database/` |
+| @layer | `Infrastructure`          |
 
 ## 职责
 
@@ -24,16 +24,16 @@
 
 ## 覆盖 Schema
 
-| Schema | 表数 |
-|--------|------|
-| `identity` | 10 |
-| `iam` | 6 |
-| `tenant` | 7 |
-| `product` | 7 |
-| `commerce` | 12 |
-| `model` | 5 |
-| `ops` | 9 |
-| `support` | 4 |
+| Schema     | 表数 |
+| ---------- | ---- |
+| `identity` | 10   |
+| `iam`      | 6    |
+| `tenant`   | 7    |
+| `product`  | 7    |
+| `commerce` | 12   |
+| `model`    | 5    |
+| `ops`      | 9    |
+| `support`  | 4    |
 
 ## 常用命令
 

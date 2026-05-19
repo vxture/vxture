@@ -8,12 +8,15 @@
  * @date 2026-03-15
  */
 
-import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
-import type { NextFunction, Request, Response } from 'express';
+import { Inject, Injectable, NestMiddleware } from "@nestjs/common";
+import type { NextFunction, Request, Response } from "express";
 
-import { resolveTenantId } from '../utils/tenant.utils';
-import { TENANT_OPTIONS } from '../context/tenant.module';
-import type { TenantResolveOptions, TenantRequest } from '../types/tenant.types';
+import { resolveTenantId } from "../utils/tenant.utils";
+import { TENANT_OPTIONS } from "../context/tenant.module";
+import type {
+  TenantResolveOptions,
+  TenantRequest,
+} from "../types/tenant.types";
 
 @Injectable()
 export class TenantMiddleware implements NestMiddleware {

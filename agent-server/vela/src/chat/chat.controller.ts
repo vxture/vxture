@@ -12,23 +12,31 @@
  * @date 2026-04-30
  */
 
-import { Body, Controller, Inject, Post, Req, Res, UseGuards } from '@nestjs/common';
-import type { Request, Response } from 'express';
-import { ContextGuard } from '../context/context.guard';
-import type { CallerContext } from '../context/caller-context.types';
-import { ChatService } from './chat.service';
-import type { ChatInternalRequestDto } from './chat.types';
+import {
+  Body,
+  Controller,
+  Inject,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from "@nestjs/common";
+import type { Request, Response } from "express";
+import { ContextGuard } from "../context/context.guard";
+import type { CallerContext } from "../context/caller-context.types";
+import { ChatService } from "./chat.service";
+import type { ChatInternalRequestDto } from "./chat.types";
 
 type VelaServerRequest = Request & {
   callerContext?: CallerContext;
 };
 
-@Controller('internal/vela')
+@Controller("internal/vela")
 @UseGuards(ContextGuard)
 export class ChatController {
   constructor(@Inject(ChatService) private readonly chatService: ChatService) {}
 
-  @Post('chat')
+  @Post("chat")
   async chat(
     @Req() req: Request,
     @Res() res: Response,
@@ -36,14 +44,16 @@ export class ChatController {
   ): Promise<void> {
     const ctx = (req as VelaServerRequest).callerContext;
     if (!ctx) {
-      res.write(`data: ${JSON.stringify({ type: 'error', message: 'Missing caller context' })}\n\n`);
+      res.write(
+        `data: ${JSON.stringify({ type: "error", message: "Missing caller context" })}\n\n`,
+      );
       res.end();
       return;
     }
 
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
     res.flushHeaders();
 
     try {
@@ -55,7 +65,9 @@ export class ChatController {
         res.write(`data: ${JSON.stringify(event)}\n\n`);
       }
     } catch (err) {
-      res.write(`data: ${JSON.stringify({ type: 'error', message: String(err) })}\n\n`);
+      res.write(
+        `data: ${JSON.stringify({ type: "error", message: String(err) })}\n\n`,
+      );
     } finally {
       res.end();
     }

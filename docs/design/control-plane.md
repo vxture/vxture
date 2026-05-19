@@ -45,10 +45,10 @@ Business Data Plane
 
 即：
 
-| 层级 | 职责 |
-|---|---|
-| Platform Control Plane | 用户、租户、认证、订阅、计费、配额、审计、平台治理 |
-| Business Data Plane | AI业务、GIS业务、无人机业务、业务任务、业务文件、模型结果 |
+| 层级                   | 职责                                                      |
+| ---------------------- | --------------------------------------------------------- |
+| Platform Control Plane | 用户、租户、认证、订阅、计费、配额、审计、平台治理        |
+| Business Data Plane    | AI业务、GIS业务、无人机业务、业务任务、业务文件、模型结果 |
 
 ---
 
@@ -535,4 +535,3 @@ Docker Compose 配置、镜像命名、环境变量管理见 [`docs/deployment/`
 ---
 
 End of document.
-

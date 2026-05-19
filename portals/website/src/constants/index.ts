@@ -5,5 +5,5 @@
  * @category Constants
  */
 
-export { AUTH_CONSTANTS } from './auth.constants';
-export { ROUTE_CONSTANTS } from './routes.constants';
+export { AUTH_CONSTANTS } from "./auth.constants";
+export { ROUTE_CONSTANTS } from "./routes.constants";

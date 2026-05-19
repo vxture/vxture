@@ -16,7 +16,11 @@
     "case-intro-02": {
       "title": "Intelligent Emergency Command Platform",
       "description": "Cross-Domain Data Integration for Emergency Resource Optimization and Decision Support",
-      "tags": ["Data Integration", "Intelligent Judgment", "Emergency Management"],
+      "tags": [
+        "Data Integration",
+        "Intelligent Judgment",
+        "Emergency Management"
+      ],
       "cover": { "alt": "Emergency Command Platform" },
       "customer": "Provincial Emergency Department"
     },

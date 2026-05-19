@@ -6,16 +6,16 @@
  * @author AI-Generated
  * @date 2026-05-06
  */
-'use client';
+"use client";
 
-import { createContext, useContext, useEffect, useState } from 'react';
-import type { PortalNavContext } from '@vxture/shared';
+import { createContext, useContext, useEffect, useState } from "react";
+import type { PortalNavContext } from "@vxture/shared";
 import {
   parsePortalEntryFromUrl,
   loadPortalEntry,
   savePortalEntry,
   clearPortalEntry,
-} from '@vxture/platform-browser';
+} from "@vxture/platform-browser";
 
 // =============================================================================
 // Context 类型
@@ -37,7 +37,11 @@ const PortalEntryContext = createContext<PortalEntryContextValue>({
 // Provider
 // =============================================================================
 
-export function PortalEntryProvider({ children }: { children: React.ReactNode }) {
+export function PortalEntryProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [portalEntry, setPortalEntry] = useState<PortalNavContext | null>(null);
 
   useEffect(() => {
@@ -48,8 +52,8 @@ export function PortalEntryProvider({ children }: { children: React.ReactNode })
       setPortalEntry(fromUrl);
       // 清理 URL ctx 参数，避免污染浏览历史和分享链接
       const url = new URL(window.location.href);
-      url.searchParams.delete('ctx');
-      window.history.replaceState({}, '', url.toString());
+      url.searchParams.delete("ctx");
+      window.history.replaceState({}, "", url.toString());
       return;
     }
     // 回退到 sessionStorage（console 内页面跳转后恢复）

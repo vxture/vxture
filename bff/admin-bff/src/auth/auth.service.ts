@@ -1,28 +1,29 @@
-import { compare } from 'bcryptjs';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import type { Pool } from 'pg';
-import type { ConsoleUser } from '../types/console.types';
-import { ADMIN_BFF_RW_POOL } from '../tokens';
+import { compare } from "bcryptjs";
+import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import type { Pool } from "pg";
+import type { ConsoleUser } from "../types/console.types";
+import { ADMIN_BFF_RW_POOL } from "../tokens";
 
 const PLATFORM_ADMIN_CAPABILITIES = [
-  'platform.admin.manage',
-  'platform.tenant.manage',
-  'platform.product.manage',
-  'platform.pricing.manage',
-  'platform.model.manage',
+  "platform.admin.manage",
+  "platform.tenant.manage",
+  "platform.product.manage",
+  "platform.pricing.manage",
+  "platform.model.manage",
 ];
 
 @Injectable()
 export class PlatformAuthService {
-  constructor(
-    @Inject(ADMIN_BFF_RW_POOL) private readonly pool: Pool,
-  ) {}
+  constructor(@Inject(ADMIN_BFF_RW_POOL) private readonly pool: Pool) {}
 
   /**
    * 【重构 v1.4】仅做 DB 密码校验，不再签发 JWT。
    * JWT 签发统一委托给 auth-bff 的 /auth/internal/sign。
    */
-  async loginWithPassword(identifier: string, password: string): Promise<{
+  async loginWithPassword(
+    identifier: string,
+    password: string,
+  ): Promise<{
     user: ConsoleUser;
     permissions: string[];
   }> {
@@ -61,19 +62,22 @@ export class PlatformAuthService {
     return admin?.permissions ?? [];
   }
 
-  private async authenticatePlatformAdmin(identifier: string, password: string): Promise<PlatformAdminView> {
+  private async authenticatePlatformAdmin(
+    identifier: string,
+    password: string,
+  ): Promise<PlatformAdminView> {
     if (!identifier.trim() || !password) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const admin = await this.findPlatformAdminByIdentifier(identifier);
     if (!admin || !admin.passwordHash) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const isValid = await verifyPassword(password, admin.passwordHash);
     if (!isValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     await this.recordLastLogin(admin.id);
@@ -81,14 +85,16 @@ export class PlatformAuthService {
     return admin;
   }
 
-  private async authenticatePlatformAdminPhone(phone: string): Promise<PlatformAdminView> {
+  private async authenticatePlatformAdminPhone(
+    phone: string,
+  ): Promise<PlatformAdminView> {
     if (!phone.trim()) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const admin = await this.findPlatformAdminByPhone(phone);
     if (!admin) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     await this.recordLastLogin(admin.id);
@@ -96,11 +102,15 @@ export class PlatformAuthService {
     return admin;
   }
 
-  private async getPlatformAdminById(adminId: string): Promise<PlatformAdminView | null> {
-    return this.findPlatformAdmin('a.id = $1', [adminId]);
+  private async getPlatformAdminById(
+    adminId: string,
+  ): Promise<PlatformAdminView | null> {
+    return this.findPlatformAdmin("a.id = $1", [adminId]);
   }
 
-  private async findPlatformAdminByIdentifier(identifier: string): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
+  private async findPlatformAdminByIdentifier(
+    identifier: string,
+  ): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
     return this.findPlatformAdmin(
       `
         (
@@ -113,8 +123,12 @@ export class PlatformAuthService {
     );
   }
 
-  private async findPlatformAdminByPhone(phone: string): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
-    return this.findPlatformAdmin('coalesce(a.phone, \'\') = $1', [normalizePhone(phone)]);
+  private async findPlatformAdminByPhone(
+    phone: string,
+  ): Promise<(PlatformAdminView & { passwordHash: string | null }) | null> {
+    return this.findPlatformAdmin("coalesce(a.phone, '') = $1", [
+      normalizePhone(phone),
+    ]);
   }
 
   private async findPlatformAdmin(
@@ -193,15 +207,24 @@ interface PlatformAdminView {
   passwordHash?: string | null;
 }
 
-async function verifyPassword(password: string, passwordHash: string): Promise<boolean> {
-  if (passwordHash.startsWith('$2a$') || passwordHash.startsWith('$2b$') || passwordHash.startsWith('$2y$')) {
+async function verifyPassword(
+  password: string,
+  passwordHash: string,
+): Promise<boolean> {
+  if (
+    passwordHash.startsWith("$2a$") ||
+    passwordHash.startsWith("$2b$") ||
+    passwordHash.startsWith("$2y$")
+  ) {
     return compare(password, passwordHash);
   }
 
   return password === passwordHash;
 }
 
-function mapPlatformAdminRow(row?: PlatformAdminRow): (PlatformAdminView & { passwordHash: string | null }) | null {
+function mapPlatformAdminRow(
+  row?: PlatformAdminRow,
+): (PlatformAdminView & { passwordHash: string | null }) | null {
   if (!row) {
     return null;
   }
@@ -216,23 +239,31 @@ function mapPlatformAdminRow(row?: PlatformAdminRow): (PlatformAdminView & { pas
     roleCode: row.role_code,
     roleI18nKey: row.name_i18n_key,
     roleNameEn: row.name_en,
-    permissions: normalizePlatformPermissions(row.role_code, row.permissions ?? []),
+    permissions: normalizePlatformPermissions(
+      row.role_code,
+      row.permissions ?? [],
+    ),
   };
 }
 
-function normalizePlatformPermissions(roleCode: string, permissions: string[]): string[] {
+function normalizePlatformPermissions(
+  roleCode: string,
+  permissions: string[],
+): string[] {
   const normalized = new Set(permissions);
   const isPlatformArchitect =
-    roleCode === 'PLATFORM_ARCHITECT' ||
-    normalized.has('system:admin') ||
-    normalized.has('admin:manage');
+    roleCode === "PLATFORM_ARCHITECT" ||
+    normalized.has("system:admin") ||
+    normalized.has("admin:manage");
 
   if (isPlatformArchitect) {
-    PLATFORM_ADMIN_CAPABILITIES.forEach((permission) => normalized.add(permission));
+    PLATFORM_ADMIN_CAPABILITIES.forEach((permission) =>
+      normalized.add(permission),
+    );
   }
 
-  if (normalized.has('tenant:manage')) {
-    normalized.add('platform.tenant.manage');
+  if (normalized.has("tenant:manage")) {
+    normalized.add("platform.tenant.manage");
   }
 
   return [...normalized];
@@ -254,5 +285,5 @@ function mapPlatformAdminUser(admin: PlatformAdminView): ConsoleUser {
 }
 
 function normalizePhone(phone: string): string {
-  return phone.trim().replace(/\s+/g, '');
+  return phone.trim().replace(/\s+/g, "");
 }

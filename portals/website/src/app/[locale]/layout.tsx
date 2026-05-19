@@ -14,14 +14,14 @@
  * @category Pages
  */
 
-import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
-import { routing } from '@/lib/i18n/routing';
-import { AuthSessionBootstrap } from '@/components/auth';
-import Notifications from '@/components/feedback/Notifications';
-import type { Locale } from '@vxture/shared';
-import { buildMetadata } from '@/app/metadata';
+import { notFound } from "next/navigation";
+import { NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
+import { routing } from "@/lib/i18n/routing";
+import { AuthSessionBootstrap } from "@/components/auth";
+import Notifications from "@/components/feedback/Notifications";
+import type { Locale } from "@vxture/shared";
+import { buildMetadata } from "@/app/metadata";
 
 type Props = {
   children: React.ReactNode;
@@ -32,7 +32,7 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({ params }: Pick<Props, 'params'>) {
+export async function generateMetadata({ params }: Pick<Props, "params">) {
   const { locale } = await params;
   return buildMetadata(locale);
 }

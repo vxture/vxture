@@ -23,8 +23,10 @@ import {
 } from "./dialog";
 import type { ButtonVariant } from "./button.types";
 
-export interface DialogFormProps
-  extends Omit<React.ComponentPropsWithoutRef<typeof Dialog>, "children"> {
+export interface DialogFormProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof Dialog>,
+  "children"
+> {
   readonly title: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly children?: React.ReactNode;
@@ -59,18 +61,31 @@ function DialogForm({
 }: DialogFormProps) {
   const defaultFooter = (
     <>
-      <Button variant={cancelVariant} onClick={() => onOpenChange?.(false)} disabled={submitting}>
+      <Button
+        variant={cancelVariant}
+        onClick={() => onOpenChange?.(false)}
+        disabled={submitting}
+      >
         {cancelLabel}
       </Button>
-      <Button type="submit" variant={submitVariant} disabled={submitDisabled || submitting}>
+      <Button
+        type="submit"
+        variant={submitVariant}
+        disabled={submitDisabled || submitting}
+      >
         {submitting ? "处理中..." : submitLabel}
       </Button>
     </>
   );
 
   return (
-    <Dialog {...(onOpenChange !== undefined ? { onOpenChange } : {})} {...props}>
-      <DialogContent className={cn("vx-dialog-form max-w-2xl", contentClassName)}>
+    <Dialog
+      {...(onOpenChange !== undefined ? { onOpenChange } : {})}
+      {...props}
+    >
+      <DialogContent
+        className={cn("vx-dialog-form max-w-2xl", contentClassName)}
+      >
         <form className={cn("grid gap-5", formClassName)} onSubmit={onSubmit}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>

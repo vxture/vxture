@@ -14,35 +14,39 @@
  * @date 2026-05-01
  */
 
-import type { VelaTool } from '../tool.types';
+import type { VelaTool } from "../tool.types";
 
 // ============================================================================
 // my_change_plan
 // ============================================================================
 
 export const myChangePlanTool: VelaTool = {
-  id:                   'my_change_plan',
-  name:                 '变更订阅套餐',
-  description:          '升级或降级当前租户的订阅套餐。升级立即生效，降级在当前计费周期结束时生效。',
-  surfaces:             ['console'],
-  dataScope:            'tenant',
+  id: "my_change_plan",
+  name: "变更订阅套餐",
+  description:
+    "升级或降级当前租户的订阅套餐。升级立即生效，降级在当前计费周期结束时生效。",
+  surfaces: ["console"],
+  dataScope: "tenant",
   requiresConfirmation: true,
   confirmSummary: (input) => {
     const { subscriptionId, newPlanId } = input as {
       subscriptionId: string;
-      newPlanId:      string;
+      newPlanId: string;
     };
     return `将订阅（${subscriptionId}）的套餐变更为 ${newPlanId}`;
   },
   inputSchema: {
-    type: 'object',
+    type: "object",
     properties: {
-      subscriptionId: { type: 'string', description: '要变更的订阅 ID（可通过 my_subscription 工具查询）' },
-      newPlanId:      { type: 'string', description: '目标套餐 ID' },
+      subscriptionId: {
+        type: "string",
+        description: "要变更的订阅 ID（可通过 my_subscription 工具查询）",
+      },
+      newPlanId: { type: "string", description: "目标套餐 ID" },
     },
-    required: ['subscriptionId', 'newPlanId'],
+    required: ["subscriptionId", "newPlanId"],
   },
   async execute(_input, _ctx) {
-    return { success: false, error: 'my_change_plan: not yet implemented' };
+    return { success: false, error: "my_change_plan: not yet implemented" };
   },
 };

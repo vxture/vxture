@@ -12,7 +12,10 @@ import { cn } from "../../utils/cn";
 import { FilterBar } from "./filter-bar";
 import type { FilterBarProps } from "./filter-bar";
 
-export interface TableToolbarProps extends Omit<FilterBarProps, "title" | "description" | "actions"> {
+export interface TableToolbarProps extends Omit<
+  FilterBarProps,
+  "title" | "description" | "actions"
+> {
   readonly title: React.ReactNode;
   readonly hint?: React.ReactNode;
   readonly description?: React.ReactNode;
@@ -22,15 +25,7 @@ export interface TableToolbarProps extends Omit<FilterBarProps, "title" | "descr
 
 const TableToolbar = React.forwardRef<HTMLDivElement, TableToolbarProps>(
   function TableToolbar(
-    {
-      className,
-      title,
-      hint,
-      description,
-      action,
-      actions,
-      ...props
-    },
+    { className, title, hint, description, action, actions, ...props },
     ref,
   ) {
     return (

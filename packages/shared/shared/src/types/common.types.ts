@@ -4,7 +4,7 @@
  * @description Cross-layer navigation and interaction primitives. Provides shared type definitions for common UI patterns used across all layers.
  */
 
-import type { SemanticColor } from './ui.types';
+import type { SemanticColor } from "./ui.types";
 
 /** 基础链接结构，跨层导航原语 */
 export interface Link {

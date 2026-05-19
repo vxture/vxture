@@ -15,6 +15,7 @@ Commerce 域回答三个核心问题：
 3. **租户欠多少、付了多少**（Invoice、Payment、Transaction 账本）
 
 Commerce 域**不**负责：
+
 - 模型路由和 LLM 调用（`@vxture/service-ai-gateway` 负责）
 - 用户认证和 JWT（`@vxture/bff-auth` 负责）
 - 租户创建和组织管理（`@vxture/service-iam` 负责）
@@ -61,34 +62,34 @@ Commerce 域**不**负责：
 
 ### 3.1 `product` Schema（产品目录，7 张表）
 
-| 表 | 职责 |
-|---|---|
-| `product.feature` | 功能特性目录（feature_code、名称、计量单位） |
-| `product.plan` | 订阅计划目录（free / starter / pro / enterprise） |
-| `product.plan_feature` | 计划包含哪些 Feature，以及 quota_value 和 is_unlimited |
-| `product.plan_price` | 计划价格（按 monthly / annual 计费周期） |
-| `product.plan_agent` | 计划可访问哪些 Agent |
-| `product.agent` | Agent 目录（agent_code、名称、类型） |
-| `product.agent_feature` | 每个 Agent 支持哪些 Feature |
+| 表                      | 职责                                                   |
+| ----------------------- | ------------------------------------------------------ |
+| `product.feature`       | 功能特性目录（feature_code、名称、计量单位）           |
+| `product.plan`          | 订阅计划目录（free / starter / pro / enterprise）      |
+| `product.plan_feature`  | 计划包含哪些 Feature，以及 quota_value 和 is_unlimited |
+| `product.plan_price`    | 计划价格（按 monthly / annual 计费周期）               |
+| `product.plan_agent`    | 计划可访问哪些 Agent                                   |
+| `product.agent`         | Agent 目录（agent_code、名称、类型）                   |
+| `product.agent_feature` | 每个 Agent 支持哪些 Feature                            |
 
-> product.* 数据由运营后台（`@vxture/bff-admin`）维护，变更极少。
+> product.\* 数据由运营后台（`@vxture/bff-admin`）维护，变更极少。
 
 ### 3.2 `commerce` Schema（租户交易状态，12 张表）
 
-| 表 | 职责 | 可变性 |
-|---|---|---|
-| `commerce.tenant_subscription` | 租户当前订阅计划和状态 | 可更新（状态流转） |
-| `commerce.tenant_subscription_quota` | 订阅配额快照（plan_feature 的静态副本） | 可更新（升降级时覆盖） |
-| `commerce.tenant_subscription_override` | 企业/VIP 定制配额覆盖 | 由运营手动维护 |
-| `commerce.tenant_usage_event` | 每次 LLM 调用的原始用量事件 | **仅追加（Append-only）** |
-| `commerce.tenant_usage_summary` | 用量聚合快照（detail / summary 两种粒度） | 异步更新 |
-| `commerce.tenant_invoice` | 账单（月结/年结） | 状态流转 |
-| `commerce.tenant_payment` | 付款记录（第三方支付结果） | 状态流转 |
-| `commerce.tenant_refund` | 退款申请和处理状态 | 状态流转 |
-| `commerce.tenant_transaction` | 资金流水账本 | **不可变（DB 规则阻止 UPDATE/DELETE）** |
-| `commerce.tenant_payment_method` | 租户已绑定的支付方式 | 可更新 |
-| `commerce.tenant_credit` | 租户账户余额/赠送额度 | 可更新（余额变化） |
-| `commerce.tenant_billing_address` | 账单地址（开票信息） | 可更新 |
+| 表                                      | 职责                                      | 可变性                                  |
+| --------------------------------------- | ----------------------------------------- | --------------------------------------- |
+| `commerce.tenant_subscription`          | 租户当前订阅计划和状态                    | 可更新（状态流转）                      |
+| `commerce.tenant_subscription_quota`    | 订阅配额快照（plan_feature 的静态副本）   | 可更新（升降级时覆盖）                  |
+| `commerce.tenant_subscription_override` | 企业/VIP 定制配额覆盖                     | 由运营手动维护                          |
+| `commerce.tenant_usage_event`           | 每次 LLM 调用的原始用量事件               | **仅追加（Append-only）**               |
+| `commerce.tenant_usage_summary`         | 用量聚合快照（detail / summary 两种粒度） | 异步更新                                |
+| `commerce.tenant_invoice`               | 账单（月结/年结）                         | 状态流转                                |
+| `commerce.tenant_payment`               | 付款记录（第三方支付结果）                | 状态流转                                |
+| `commerce.tenant_refund`                | 退款申请和处理状态                        | 状态流转                                |
+| `commerce.tenant_transaction`           | 资金流水账本                              | **不可变（DB 规则阻止 UPDATE/DELETE）** |
+| `commerce.tenant_payment_method`        | 租户已绑定的支付方式                      | 可更新                                  |
+| `commerce.tenant_credit`                | 租户账户余额/赠送额度                     | 可更新（余额变化）                      |
+| `commerce.tenant_billing_address`       | 账单地址（开票信息）                      | 可更新                                  |
 
 ---
 
@@ -175,11 +176,11 @@ ai-gateway 写入 commerce.tenant_usage_event（Append-only）
 
 ### 5.1 状态定义
 
-| 状态 | 描述 |
-|------|------|
-| `trial` | 试用期，有配额但未付费 |
-| `active` | 付费有效期内 |
-| `expired` | 到期未续费，功能受限 |
+| 状态        | 描述                         |
+| ----------- | ---------------------------- |
+| `trial`     | 试用期，有配额但未付费       |
+| `active`    | 付费有效期内                 |
+| `expired`   | 到期未续费，功能受限         |
 | `suspended` | 因欠款或违规被暂停，功能暂停 |
 | `cancelled` | 用户主动取消，按期结束后终止 |
 
@@ -245,14 +246,14 @@ Feature Gating 决定"当前请求是否被允许执行"。检查链路（优先
 
 ### 7.1 付款状态（`commerce.tenant_payment`）
 
-| 状态 | 描述 |
-|------|------|
-| `pending` | 已创建，等待跳转支付 |
+| 状态             | 描述                     |
+| ---------------- | ------------------------ |
+| `pending`        | 已创建，等待跳转支付     |
 | `pending_verify` | 已跳转，等待支付网关回调 |
-| `paid` | 支付成功 |
-| `failed` | 支付失败 |
-| `closed` | 超时未支付，已关闭 |
-| `refunding` | 申请退款中 |
+| `paid`           | 支付成功                 |
+| `failed`         | 支付失败                 |
+| `closed`         | 超时未支付，已关闭       |
+| `refunding`      | 申请退款中               |
 
 ```
 pending → pending_verify → paid
@@ -263,14 +264,14 @@ pending → pending_verify → paid
 
 ### 7.2 账单状态（`commerce.tenant_invoice`）
 
-| 状态 | 描述 |
-|------|------|
-| `unpaid` | 已生成，待付款 |
-| `paying` | 付款进行中 |
-| `paid` | 已全额付清 |
-| `partial` | 部分付清（余额抵扣场景） |
-| `cancelled` | 作废 |
-| `overdue` | 已逾期未付 |
+| 状态        | 描述                     |
+| ----------- | ------------------------ |
+| `unpaid`    | 已生成，待付款           |
+| `paying`    | 付款进行中               |
+| `paid`      | 已全额付清               |
+| `partial`   | 部分付清（余额抵扣场景） |
+| `cancelled` | 作废                     |
+| `overdue`   | 已逾期未付               |
 
 ### 7.3 退款状态（`commerce.tenant_refund`）
 
@@ -282,28 +283,28 @@ pending → pending_verify → paid
 
 ## 8. 跨包职责表
 
-| 包 | 层 | 负责 |
-|---|---|---|
-| `@vxture/service-subscription` | Domain | 订阅状态管理、Feature Gating（`hasFeature`）、配额初始化 |
-| `@vxture/service-billing` | Domain | Invoice 生成、Payment 处理、退款、Transaction 写入 |
-| `@vxture/service-ai-gateway` | Domain | 用量事件写入（`tenant_usage_event`）、实时配额检查 |
-| `@vxture/bff-console` | Application | 订阅查询 / 升级 API、用量展示 API、支付发起 / 回调 |
-| `@vxture/bff-admin` | Application | 订阅管理（挂起 / 恢复）、配额 Override 管理、账单查询 |
-| `@vxture/console` | Presentation | 订阅状态展示、用量仪表盘、升级引导 |
-| `@vxture/admin` | Presentation | 租户订阅管理、配额 Override 表单、财务报表 |
+| 包                             | 层           | 负责                                                     |
+| ------------------------------ | ------------ | -------------------------------------------------------- |
+| `@vxture/service-subscription` | Domain       | 订阅状态管理、Feature Gating（`hasFeature`）、配额初始化 |
+| `@vxture/service-billing`      | Domain       | Invoice 生成、Payment 处理、退款、Transaction 写入       |
+| `@vxture/service-ai-gateway`   | Domain       | 用量事件写入（`tenant_usage_event`）、实时配额检查       |
+| `@vxture/bff-console`          | Application  | 订阅查询 / 升级 API、用量展示 API、支付发起 / 回调       |
+| `@vxture/bff-admin`            | Application  | 订阅管理（挂起 / 恢复）、配额 Override 管理、账单查询    |
+| `@vxture/console`              | Presentation | 订阅状态展示、用量仪表盘、升级引导                       |
+| `@vxture/admin`                | Presentation | 租户订阅管理、配额 Override 表单、财务报表               |
 
 **数据所有权**：
 
-| 操作 | 唯一写入者 |
-|------|----------|
-| `tenant_subscription.*` 状态流转 | `service-subscription` |
-| `tenant_subscription_quota` 初始化/更新 | `service-subscription`（升降级时触发） |
-| `tenant_subscription_override` | `bff-admin`（运营操作） |
-| `tenant_usage_event` 写入 | `service-ai-gateway`（调用后立即写入） |
-| `tenant_usage_summary` 更新 | `service-ai-gateway`（异步聚合 Job） |
-| `tenant_invoice` 生成 | `service-billing` |
-| `tenant_payment` 状态更新 | `service-billing`（支付回调中） |
-| `tenant_transaction` 写入 | `service-billing`（付款成功时，不可变） |
+| 操作                                    | 唯一写入者                              |
+| --------------------------------------- | --------------------------------------- |
+| `tenant_subscription.*` 状态流转        | `service-subscription`                  |
+| `tenant_subscription_quota` 初始化/更新 | `service-subscription`（升降级时触发）  |
+| `tenant_subscription_override`          | `bff-admin`（运营操作）                 |
+| `tenant_usage_event` 写入               | `service-ai-gateway`（调用后立即写入）  |
+| `tenant_usage_summary` 更新             | `service-ai-gateway`（异步聚合 Job）    |
+| `tenant_invoice` 生成                   | `service-billing`                       |
+| `tenant_payment` 状态更新               | `service-billing`（支付回调中）         |
+| `tenant_transaction` 写入               | `service-billing`（付款成功时，不可变） |
 
 ---
 
@@ -321,6 +322,7 @@ pending → pending_verify → paid
 ### 9.2 用量事件仅追加
 
 `commerce.tenant_usage_event` 是 Append-only：
+
 - 不存在 UPDATE，只有 INSERT
 - `used_quota = input_quota + output_quota`，由 CHECK 约束强制执行：
   ```sql
@@ -330,6 +332,7 @@ pending → pending_verify → paid
 ### 9.3 配额快照 vs 用量计数器
 
 `tenant_subscription_quota` **不是**计数器，是静态配置快照：
+
 - 记录"租户该有多少配额"（从 plan_feature 复制而来）
 - 实际已用量在 `tenant_usage_summary` 中
 - 配额检查 = `usage_summary.used_quota` vs `subscription_quota.quota_value`
@@ -338,12 +341,14 @@ pending → pending_verify → paid
 ### 9.4 Override 优先级
 
 `tenant_subscription_override` 完全覆盖 `tenant_subscription_quota`，不叠加：
+
 - Override 存在时：直接使用 override.quota_value，subscription_quota 被忽略
 - Override 不存在时：使用 subscription_quota.quota_value
 
 ### 9.5 配额检查必须通过 ai-gateway
 
 任何 LLM 调用必须经过 `service-ai-gateway`，禁止 agent-server 绕过直接访问 LLM Provider：
+
 - 保证用量事件被完整记录
 - 保证配额检查不被绕过
 - 保证 API Key 不泄露给 agent-server 层
@@ -352,15 +357,15 @@ pending → pending_verify → paid
 
 ## 10. 当前阶段说明
 
-| 功能 | 状态 | 备注 |
-|------|------|------|
-| 订阅状态管理 | ✅ 已有 Schema | `service-subscription` 实现中 |
-| Feature Gating | ✅ 实现 | `hasFeature()` 已使用 |
-| 用量事件记录 | ✅ 已有 Schema | ai-gateway 写入 |
-| 用量聚合 Job | ⚠️ 待实现 | 当前配额检查精度待评估 |
-| Invoice 生成 | ⚠️ Schema 已有 | `service-billing` 逻辑待完善 |
-| 支付接入 | 🚧 规划中 | 微信支付 / 支付宝回调流程待实现 |
-| 退款流程 | 🚧 规划中 | Schema 已就绪，业务流程待实现 |
-| 账单地址 / 发票 | 🚧 规划中 | 合规需求驱动，时间待定 |
+| 功能            | 状态           | 备注                            |
+| --------------- | -------------- | ------------------------------- |
+| 订阅状态管理    | ✅ 已有 Schema | `service-subscription` 实现中   |
+| Feature Gating  | ✅ 实现        | `hasFeature()` 已使用           |
+| 用量事件记录    | ✅ 已有 Schema | ai-gateway 写入                 |
+| 用量聚合 Job    | ⚠️ 待实现      | 当前配额检查精度待评估          |
+| Invoice 生成    | ⚠️ Schema 已有 | `service-billing` 逻辑待完善    |
+| 支付接入        | 🚧 规划中      | 微信支付 / 支付宝回调流程待实现 |
+| 退款流程        | 🚧 规划中      | Schema 已就绪，业务流程待实现   |
+| 账单地址 / 发票 | 🚧 规划中      | 合规需求驱动，时间待定          |
 
 > 参见 `docs/tech-debt.md` 中与 Commerce 相关的技术债务条目。

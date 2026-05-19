@@ -13,8 +13,10 @@ import { Button } from "./button";
 
 export type ViewModeSwitchValue = "list" | "cards";
 
-export interface ViewModeSwitchProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface ViewModeSwitchProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "onChange"
+> {
   readonly value: ViewModeSwitchValue;
   readonly onChange: (mode: ViewModeSwitchValue) => void;
   readonly ariaLabel?: string;
@@ -31,7 +33,12 @@ export function ViewModeSwitch({
   ...props
 }: ViewModeSwitchProps) {
   return (
-    <div className="vx-view-mode-switch" role="group" aria-label={ariaLabel} {...props}>
+    <div
+      className="vx-view-mode-switch"
+      role="group"
+      aria-label={ariaLabel}
+      {...props}
+    >
       <Button
         variant="ghost"
         size="icon"

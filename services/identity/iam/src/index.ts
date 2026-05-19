@@ -1,5 +1,5 @@
-export { IamModule } from './module/iam.module';
-export { AccountAuthService } from './service/account-auth.service';
+export { IamModule } from "./module/iam.module";
+export { AccountAuthService } from "./service/account-auth.service";
 export type {
   AccountCredentialRecord,
   AccountProfileView,
@@ -8,4 +8,4 @@ export type {
   CreateAccountInput,
   FindOrCreateByOAuthInput,
   UpdateAccountProfileInput,
-} from './types/iam.types';
+} from "./types/iam.types";

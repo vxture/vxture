@@ -16,9 +16,9 @@ packages/
 
 Example groups
 
-packages/core/*
-packages/platform/*
-packages/design/*
-packages/shared/*
+packages/core/_
+packages/platform/_
+packages/design/_
+packages/shared/_
 
 No new top-level folders allowed without approval.

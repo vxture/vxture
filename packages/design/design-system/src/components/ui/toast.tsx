@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * toast.tsx - Toast 通知组件
@@ -12,11 +12,17 @@
  * @date 2026-05-16
  */
 
-import type { ReactNode } from 'react';
-import { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import { cn } from '../../utils/cn';
+import type { ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
+import { cn } from "../../utils/cn";
 
-export type ToastTone = 'success' | 'error' | 'warning' | 'info' | 'ai';
+export type ToastTone = "success" | "error" | "warning" | "info" | "ai";
 
 export interface ToastInput {
   readonly id?: string;
@@ -42,11 +48,11 @@ interface ToastContextValue {
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 const TONE_LABEL: Record<ToastTone, string> = {
-  success: 'Success',
-  error: 'Error',
-  warning: 'Warning',
-  info: 'Info',
-  ai: 'AI',
+  success: "Success",
+  error: "Error",
+  warning: "Warning",
+  info: "Info",
+  ai: "AI",
 };
 
 export function ToastProvider({ children }: { readonly children: ReactNode }) {
@@ -58,14 +64,18 @@ export function ToastProvider({ children }: { readonly children: ReactNode }) {
 
   const toast = useCallback(
     (input: ToastInput) => {
-      const id = input.id ?? `toast-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const id =
+        input.id ??
+        `toast-${Date.now()}-${Math.random().toString(36).slice(2)}`;
       const nextToast: ToastRecord = {
         id,
-        tone: input.tone ?? 'info',
+        tone: input.tone ?? "info",
         title: input.title,
         duration: input.duration ?? 4000,
       };
-      const toastWithDescription = input.description ? { ...nextToast, description: input.description } : nextToast;
+      const toastWithDescription = input.description
+        ? { ...nextToast, description: input.description }
+        : nextToast;
 
       setToasts((current) => [...current, toastWithDescription]);
       if (toastWithDescription.duration > 0) {
@@ -76,20 +86,33 @@ export function ToastProvider({ children }: { readonly children: ReactNode }) {
     [dismiss],
   );
 
-  const value = useMemo<ToastContextValue>(() => ({ toast, dismiss }), [dismiss, toast]);
+  const value = useMemo<ToastContextValue>(
+    () => ({ toast, dismiss }),
+    [dismiss, toast],
+  );
 
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="vx-toast-viewport" role="region" aria-label="Notifications">
+      <div
+        className="vx-toast-viewport"
+        role="region"
+        aria-label="Notifications"
+      >
         {toasts.map((item) => (
-          <div key={item.id} className={cn('vx-toast', `vx-toast--${item.tone}`)} role="alert">
+          <div
+            key={item.id}
+            className={cn("vx-toast", `vx-toast--${item.tone}`)}
+            role="alert"
+          >
             <span className="vx-toast__icon" aria-hidden>
               {TONE_LABEL[item.tone]}
             </span>
             <div className="vx-toast__body">
               <div className="vx-toast__title">{item.title}</div>
-              {item.description ? <div className="vx-toast__desc">{item.description}</div> : null}
+              {item.description ? (
+                <div className="vx-toast__desc">{item.description}</div>
+              ) : null}
             </div>
             <button
               type="button"
@@ -109,7 +132,7 @@ export function ToastProvider({ children }: { readonly children: ReactNode }) {
 export function useToast(): ToastContextValue {
   const context = useContext(ToastContext);
   if (!context) {
-    throw new Error('useToast must be used inside ToastProvider');
+    throw new Error("useToast must be used inside ToastProvider");
   }
   return context;
 }

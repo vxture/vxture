@@ -1,7 +1,14 @@
-'use client';
+"use client";
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState, type FormEvent, type PointerEvent, type RefObject } from 'react';
+import { useSearchParams, useRouter } from "next/navigation";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type PointerEvent,
+  type RefObject,
+} from "react";
 import {
   AuthChromeFooter,
   AuthChromeHeader,
@@ -12,25 +19,40 @@ import {
   Button,
   useTheme,
   type AuthLoginTab,
-} from '@vxture/design-system';
-import { AdminBffError, getCaptchaChallenge, sendAdminPhoneCode } from '@/api/admin-bff';
-import { AdminSessionProvider, useAdminSession } from '@/features/session/AdminSessionProvider';
-import { useConsoleLocale, useConsoleTranslations } from '@/lib/console-intl';
-import { setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
-import type { Locale, Theme } from '@vxture/shared';
+} from "@vxture/design-system";
+import {
+  AdminBffError,
+  getCaptchaChallenge,
+  sendAdminPhoneCode,
+} from "@/api/admin-bff";
+import {
+  AdminSessionProvider,
+  useAdminSession,
+} from "@/features/session/AdminSessionProvider";
+import { useConsoleLocale, useConsoleTranslations } from "@/lib/console-intl";
+import {
+  setGlobalLocalePreference,
+  setGlobalThemePreference,
+} from "@vxture/platform-browser";
+import type { Locale, Theme } from "@vxture/shared";
 
-const BG_SRC = '/images/login-bg-light.jpg';
+const BG_SRC = "/images/login-bg-light.jpg";
 const CAPTCHA_HANDLE_SIZE = 42;
 const CAPTCHA_PIECE_SIZE = 42;
 const CAPTCHA_TOLERANCE = 10;
 const CAPTCHA_RETURN_MS = 220;
 const PHONE_PATTERN = /^1[3-9]\d{9}$/;
-const REMEMBER_LOGIN_KEY = 'vxture-admin-login-remember';
-const REMEMBER_IDENTIFIER_KEY = 'vxture-admin-login-identifier';
+const REMEMBER_LOGIN_KEY = "vxture-admin-login-remember";
+const REMEMBER_IDENTIFIER_KEY = "vxture-admin-login-identifier";
 
 function resolveSafeRedirect(next: string | null) {
-  if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('\\')) {
-    return '/';
+  if (
+    !next ||
+    !next.startsWith("/") ||
+    next.startsWith("//") ||
+    next.includes("\\")
+  ) {
+    return "/";
   }
 
   return next;
@@ -40,15 +62,15 @@ function LoginScreen() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { signIn, signInWithPhone, status } = useAdminSession();
-  const t = useConsoleTranslations('login');
+  const t = useConsoleTranslations("login");
 
-  const [screen, setScreen] = useState<AuthLoginTab>('login');
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
-  const [phoneCode, setPhoneCode] = useState('');
-  const [phoneError, setPhoneError] = useState('');
-  const [phoneCodeError, setPhoneCodeError] = useState('');
+  const [screen, setScreen] = useState<AuthLoginTab>("login");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [phoneCode, setPhoneCode] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [phoneCodeError, setPhoneCodeError] = useState("");
   const [rememberLogin, setRememberLogin] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [captchaOffset, setCaptchaOffset] = useState(0);
@@ -57,14 +79,14 @@ function LoginScreen() {
   const [captchaSolved, setCaptchaSolved] = useState(false);
   const [captchaOpen, setCaptchaOpen] = useState(false);
   const [captchaTargetRatio, setCaptchaTargetRatio] = useState(0.6);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [codeSending, setCodeSending] = useState(false);
   const [codeCountdown, setCodeCountdown] = useState(0);
 
-  const pendingCredentialsRef = useRef({ identifier: '', password: '' });
+  const pendingCredentialsRef = useRef({ identifier: "", password: "" });
   const phoneCodeTimerRef = useRef<number | null>(null);
-  const captchaTokenRef = useRef('');
+  const captchaTokenRef = useRef("");
   const captchaSliderRef = useRef<HTMLDivElement | null>(null);
   const captchaHandleRef = useRef<HTMLButtonElement | null>(null);
   const captchaPieceRef = useRef<HTMLDivElement | null>(null);
@@ -72,11 +94,14 @@ function LoginScreen() {
   const captchaMaxRef = useRef(0);
   const captchaOffsetRef = useRef(0);
   const captchaAnimationFrameRef = useRef<number | null>(null);
-  const loading = submitting || status === 'loading';
+  const loading = submitting || status === "loading";
 
   useEffect(() => {
-    const shouldRemember = window.localStorage.getItem(REMEMBER_LOGIN_KEY) === '1';
-    const savedIdentifier = window.localStorage.getItem(REMEMBER_IDENTIFIER_KEY);
+    const shouldRemember =
+      window.localStorage.getItem(REMEMBER_LOGIN_KEY) === "1";
+    const savedIdentifier = window.localStorage.getItem(
+      REMEMBER_IDENTIFIER_KEY,
+    );
 
     setRememberLogin(shouldRemember);
     if (shouldRemember && savedIdentifier) {
@@ -99,7 +124,10 @@ function LoginScreen() {
   function captchaGeometry() {
     const slider = captchaSliderRef.current;
     if (!slider) return { max: 0, target: 0 };
-    const max = Math.max(0, slider.getBoundingClientRect().width - CAPTCHA_HANDLE_SIZE);
+    const max = Math.max(
+      0,
+      slider.getBoundingClientRect().width - CAPTCHA_HANDLE_SIZE,
+    );
     return {
       max,
       target: Math.round(max * captchaTargetRatio),
@@ -135,7 +163,7 @@ function LoginScreen() {
     setCaptchaSolved(false);
     captchaOffsetRef.current = 0;
     captchaMaxRef.current = 0;
-    captchaTokenRef.current = '';
+    captchaTokenRef.current = "";
     applyCaptchaOffset(0);
   }
 
@@ -147,7 +175,7 @@ function LoginScreen() {
     setCaptchaReturning(false);
     event.currentTarget.setPointerCapture(event.pointerId);
     setCaptchaDragging(true);
-    setError('');
+    setError("");
   }
 
   function handleCaptchaPointerMove(event: PointerEvent<HTMLButtonElement>) {
@@ -156,7 +184,10 @@ function LoginScreen() {
     if (!slider) return;
     const rect = slider.getBoundingClientRect();
     const max = captchaMaxRef.current || captchaGeometry().max;
-    const next = Math.min(max, Math.max(0, event.clientX - rect.left - CAPTCHA_HANDLE_SIZE / 2));
+    const next = Math.min(
+      max,
+      Math.max(0, event.clientX - rect.left - CAPTCHA_HANDLE_SIZE / 2),
+    );
     applyCaptchaOffset(next);
   }
 
@@ -171,7 +202,7 @@ function LoginScreen() {
       setCaptchaSolved(true);
       setCaptchaOffset(target);
       applyCaptchaOffset(target);
-      setError('');
+      setError("");
       const position = max > 0 ? offset / max : 0;
       void continueSignIn(captchaTokenRef.current, position);
       return;
@@ -190,12 +221,12 @@ function LoginScreen() {
     };
 
     if (!credentials.identifier || !credentials.password) {
-      setError(t('errors.required'));
+      setError(t("errors.required"));
       return false;
     }
 
     if (!acceptedTerms) {
-      setError(t('errors.terms'));
+      setError(t("errors.terms"));
       return false;
     }
 
@@ -225,35 +256,35 @@ function LoginScreen() {
 
   function validatePhoneValue(value: string) {
     if (!PHONE_PATTERN.test(value)) {
-      setPhoneError(t('errors.phoneInvalid'));
+      setPhoneError(t("errors.phoneInvalid"));
       return false;
     }
 
-    setPhoneError('');
+    setPhoneError("");
     return true;
   }
 
   function validatePhoneLoginForm() {
-    const normalizedPhone = phone.trim().replace(/\s+/g, '');
+    const normalizedPhone = phone.trim().replace(/\s+/g, "");
     const normalizedCode = phoneCode.trim();
     let valid = true;
 
     if (!PHONE_PATTERN.test(normalizedPhone)) {
-      setPhoneError(t('errors.phoneInvalid'));
+      setPhoneError(t("errors.phoneInvalid"));
       valid = false;
     } else {
-      setPhoneError('');
+      setPhoneError("");
     }
 
     if (!/^\d{6}$/.test(normalizedCode)) {
-      setPhoneCodeError(t('errors.codeInvalid'));
+      setPhoneCodeError(t("errors.codeInvalid"));
       valid = false;
     } else {
-      setPhoneCodeError('');
+      setPhoneCodeError("");
     }
 
     if (!acceptedTerms) {
-      setError(t('errors.terms'));
+      setError(t("errors.terms"));
       valid = false;
     }
 
@@ -267,9 +298,9 @@ function LoginScreen() {
 
   function handleAuthTabChange(nextScreen: AuthLoginTab) {
     setScreen(nextScreen);
-    setError('');
-    setPhoneError('');
-    setPhoneCodeError('');
+    setError("");
+    setPhoneError("");
+    setPhoneCodeError("");
   }
 
   function handleRememberLoginChange(checked: boolean) {
@@ -282,7 +313,7 @@ function LoginScreen() {
 
   function persistRememberedLogin(value: string) {
     if (rememberLogin) {
-      window.localStorage.setItem(REMEMBER_LOGIN_KEY, '1');
+      window.localStorage.setItem(REMEMBER_LOGIN_KEY, "1");
       window.localStorage.setItem(REMEMBER_IDENTIFIER_KEY, value);
       return;
     }
@@ -292,9 +323,9 @@ function LoginScreen() {
   }
 
   async function handleSendPhoneCode() {
-    const normalizedPhone = phone.trim().replace(/\s+/g, '');
-    setError('');
-    setPhoneCodeError('');
+    const normalizedPhone = phone.trim().replace(/\s+/g, "");
+    setError("");
+    setPhoneCodeError("");
 
     if (!validatePhoneValue(normalizedPhone)) {
       return;
@@ -307,13 +338,16 @@ function LoginScreen() {
       startPhoneCodeCountdown();
     } catch (error) {
       if (error instanceof AdminBffError && error.status === 429) {
-        setError(error.message || t('errors.tooManyAttempts'));
-      } else if (error instanceof AdminBffError && (error.status === 502 || error.status === 503)) {
-        setError(t('errors.unavailable'));
+        setError(error.message || t("errors.tooManyAttempts"));
+      } else if (
+        error instanceof AdminBffError &&
+        (error.status === 502 || error.status === 503)
+      ) {
+        setError(t("errors.unavailable"));
       } else if (error instanceof AdminBffError && error.message) {
         setError(error.message);
       } else {
-        setError(t('errors.unavailable'));
+        setError(t("errors.unavailable"));
       }
     } finally {
       setCodeSending(false);
@@ -321,38 +355,51 @@ function LoginScreen() {
   }
 
   async function continueSignIn(captchaToken: string, captchaPosition: number) {
-    setError('');
+    setError("");
     setSubmitting(true);
 
     try {
       const credentials = pendingCredentialsRef.current;
-      await signIn(credentials.identifier, credentials.password, captchaToken, captchaPosition);
+      await signIn(
+        credentials.identifier,
+        credentials.password,
+        captchaToken,
+        captchaPosition,
+      );
       persistRememberedLogin(credentials.identifier);
 
-      const PasswordCredentialConstructor = (window as Window & {
-        PasswordCredential?: new (data: { id: string; password: string }) => Credential;
-      }).PasswordCredential;
+      const PasswordCredentialConstructor = (
+        window as Window & {
+          PasswordCredential?: new (data: {
+            id: string;
+            password: string;
+          }) => Credential;
+        }
+      ).PasswordCredential;
       if (PasswordCredentialConstructor) {
         try {
-          const cred = new PasswordCredentialConstructor({ id: credentials.identifier, password: credentials.password });
+          const cred = new PasswordCredentialConstructor({
+            id: credentials.identifier,
+            password: credentials.password,
+          });
           await navigator.credentials.store(cred);
         } catch {
           // 隐私模式或用户拒绝时静默忽略
         }
       }
 
-      router.replace(resolveSafeRedirect(searchParams.get('next')));
+      router.replace(resolveSafeRedirect(searchParams.get("next")));
     } catch (error) {
       if (error instanceof AdminBffError && error.status === 429) {
-        setError(error.message || t('errors.tooManyAttempts'));
+        setError(error.message || t("errors.tooManyAttempts"));
       } else if (error instanceof AdminBffError && error.status === 401) {
-        setError(t('errors.invalid'));
+        setError(t("errors.invalid"));
       } else if (error instanceof AdminBffError && error.status === 503) {
-        setError(t('errors.unavailable'));
+        setError(t("errors.unavailable"));
       } else if (error instanceof AdminBffError && error.message) {
         setError(error.message);
       } else {
-        setError(t('errors.invalid'));
+        setError(t("errors.invalid"));
       }
     } finally {
       setSubmitting(false);
@@ -362,12 +409,12 @@ function LoginScreen() {
   }
 
   async function handleForgetMe() {
-    setIdentifier('');
-    setPassword('');
-    setPhone('');
-    setPhoneCode('');
-    setPhoneError('');
-    setPhoneCodeError('');
+    setIdentifier("");
+    setPassword("");
+    setPhone("");
+    setPhoneCode("");
+    setPhoneError("");
+    setPhoneCodeError("");
     setRememberLogin(false);
     window.localStorage.removeItem(REMEMBER_LOGIN_KEY);
     window.localStorage.removeItem(REMEMBER_IDENTIFIER_KEY);
@@ -382,30 +429,33 @@ function LoginScreen() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (screen === 'phone') {
+    if (screen === "phone") {
       if (!validatePhoneLoginForm()) return;
 
-      setError('');
+      setError("");
       setSubmitting(true);
 
       try {
-        const normalizedPhone = phone.trim().replace(/\s+/g, '');
+        const normalizedPhone = phone.trim().replace(/\s+/g, "");
         await signInWithPhone(normalizedPhone, phoneCode.trim());
         persistRememberedLogin(normalizedPhone);
-        router.replace(resolveSafeRedirect(searchParams.get('next')));
+        router.replace(resolveSafeRedirect(searchParams.get("next")));
       } catch (error) {
         if (error instanceof AdminBffError && error.status === 429) {
-          setError(error.message || t('errors.tooManyAttempts'));
+          setError(error.message || t("errors.tooManyAttempts"));
         } else if (error instanceof AdminBffError && error.status === 400) {
-          setError(t('errors.phoneCodeInvalid'));
+          setError(t("errors.phoneCodeInvalid"));
         } else if (error instanceof AdminBffError && error.status === 401) {
-          setError(t('errors.invalid'));
-        } else if (error instanceof AdminBffError && (error.status === 502 || error.status === 503)) {
-          setError(t('errors.unavailable'));
+          setError(t("errors.invalid"));
+        } else if (
+          error instanceof AdminBffError &&
+          (error.status === 502 || error.status === 503)
+        ) {
+          setError(t("errors.unavailable"));
         } else if (error instanceof AdminBffError && error.message) {
           setError(error.message);
         } else {
-          setError(t('errors.invalid'));
+          setError(t("errors.invalid"));
         }
       } finally {
         setSubmitting(false);
@@ -417,7 +467,7 @@ function LoginScreen() {
 
     resetCaptcha();
     setSubmitting(true);
-    setError('');
+    setError("");
 
     try {
       const challenge = await getCaptchaChallenge();
@@ -426,9 +476,9 @@ function LoginScreen() {
       setCaptchaOpen(true);
     } catch (error) {
       if (error instanceof AdminBffError && error.status === 503) {
-        setError(t('errors.unavailable'));
+        setError(t("errors.unavailable"));
       } else {
-        setError(t('errors.captchaUnavailable'));
+        setError(t("errors.captchaUnavailable"));
       }
     } finally {
       setSubmitting(false);
@@ -439,15 +489,15 @@ function LoginScreen() {
     <AuthLoginTemplate
       className="vx-admin-auth-page"
       pageBackgroundImage={BG_SRC}
-      title={t('card.title')}
+      title={t("card.title")}
       visual={{
-        title: t('hero.title'),
-        description: t('hero.description'),
-        statusText: t('hero.eyebrow'),
+        title: t("hero.title"),
+        description: t("hero.description"),
+        statusText: t("hero.eyebrow"),
         stats: [
-          { value: 'Admin', label: t('hero.signals.capability') },
-          { value: 'RBAC', label: t('hero.signals.tenant') },
-          { value: 'BFF', label: t('hero.signals.session') },
+          { value: "Admin", label: t("hero.signals.capability") },
+          { value: "RBAC", label: t("hero.signals.tenant") },
+          { value: "BFF", label: t("hero.signals.session") },
         ],
       }}
       overlay={
@@ -464,10 +514,10 @@ function LoginScreen() {
             handleRef={captchaHandleRef}
             pieceRef={captchaPieceRef}
             progressRef={captchaProgressRef}
-            dragLabel={t('form.dragToVerify')}
-            closeLabel={t('form.closeVerification')}
-            title={t('form.humanVerification')}
-            solvedLabel={t('form.verificationPassed')}
+            dragLabel={t("form.dragToVerify")}
+            closeLabel={t("form.closeVerification")}
+            title={t("form.humanVerification")}
+            solvedLabel={t("form.verificationPassed")}
             onClose={() => {
               setCaptchaOpen(false);
               resetCaptcha();
@@ -481,52 +531,66 @@ function LoginScreen() {
       header={<AuthHeader />}
       footer={<AuthFooter />}
     >
-      {screen === 'login' ? (
+      {screen === "login" ? (
         <AuthPasswordLoginPanel
-          tabs={<AuthTabs active={screen} onChange={handleAuthTabChange} passwordLabel={t('form.passwordLogin')} phoneLabel={t('form.phoneLogin')} />}
+          tabs={
+            <AuthTabs
+              active={screen}
+              onChange={handleAuthTabChange}
+              passwordLabel={t("form.passwordLogin")}
+              phoneLabel={t("form.phoneLogin")}
+            />
+          }
           identifier={identifier}
           password={password}
           rememberChecked={rememberLogin}
           agreementChecked={acceptedTerms}
           errors={{ form: error }}
           loading={loading}
-          identifierLabel={t('form.account')}
-          identifierPlaceholder={t('form.accountPlaceholder')}
-          passwordLabel={t('form.password')}
-          passwordPlaceholder={t('form.passwordPlaceholder')}
-          submitLabel={t('form.submit')}
-          submitLoadingLabel={t('form.submitting')}
+          identifierLabel={t("form.account")}
+          identifierPlaceholder={t("form.accountPlaceholder")}
+          passwordLabel={t("form.password")}
+          passwordPlaceholder={t("form.passwordPlaceholder")}
+          submitLabel={t("form.submit")}
+          submitLoadingLabel={t("form.submitting")}
           options={{
-            rememberLabel: t('form.rememberLogin'),
-            agreementPrefix: t('form.acceptPrefix'),
-            termsLabel: t('form.terms'),
-            agreementJoiner: t('form.acceptJoiner'),
-            privacyLabel: t('form.privacy'),
-            forgotLabel: t('form.forgotPassword'),
-            forgotHref: '#forgot-password',
-            forgetMeLabel: t('form.forgetMe'),
+            rememberLabel: t("form.rememberLogin"),
+            agreementPrefix: t("form.acceptPrefix"),
+            termsLabel: t("form.terms"),
+            agreementJoiner: t("form.acceptJoiner"),
+            privacyLabel: t("form.privacy"),
+            forgotLabel: t("form.forgotPassword"),
+            forgotHref: "#forgot-password",
+            forgetMeLabel: t("form.forgetMe"),
           }}
           reserveSocialSpace
           reserveFooterSpace
           onChangeIdentifier={(value) => {
             setIdentifier(value);
-            setError('');
+            setError("");
           }}
           onChangePassword={(value) => {
             setPassword(value);
-            setError('');
+            setError("");
           }}
           onRememberChange={handleRememberLoginChange}
           onAgreementChange={(checked) => {
             setAcceptedTerms(checked);
-            setError('');
+            setError("");
           }}
           onForgetMe={handleForgetMe}
           onSubmit={handleSubmit}
         />
       ) : (
         <AuthPhoneLoginPanel
-          tabs={<AuthTabs active={screen} onChange={handleAuthTabChange} passwordLabel={t('form.passwordLogin')} phoneLabel={t('form.phoneLogin')} />}
+          tabs={
+            <AuthTabs
+              active={screen}
+              onChange={handleAuthTabChange}
+              passwordLabel={t("form.passwordLogin")}
+              phoneLabel={t("form.phoneLogin")}
+            />
+          }
           phone={phone}
           code={phoneCode}
           rememberChecked={rememberLogin}
@@ -535,43 +599,43 @@ function LoginScreen() {
           loading={loading}
           codeSending={codeSending}
           codeCountdown={codeCountdown}
-          phoneLabel={t('form.phone')}
-          phonePlaceholder={t('form.phonePlaceholder')}
-          codeLabel={t('form.code')}
+          phoneLabel={t("form.phone")}
+          phonePlaceholder={t("form.phonePlaceholder")}
+          codeLabel={t("form.code")}
           codeName="phone-code"
-          codePlaceholder={t('form.codePlaceholder')}
-          sendCodeLabel={t('form.sendCode')}
-          sendingCodeLabel={t('form.sendingCode')}
-          retryCodeLabel={(seconds) => t('form.retryCode', { seconds })}
-          submitLabel={t('form.submit')}
-          submitLoadingLabel={t('form.submitting')}
+          codePlaceholder={t("form.codePlaceholder")}
+          sendCodeLabel={t("form.sendCode")}
+          sendingCodeLabel={t("form.sendingCode")}
+          retryCodeLabel={(seconds) => t("form.retryCode", { seconds })}
+          submitLabel={t("form.submit")}
+          submitLoadingLabel={t("form.submitting")}
           options={{
-            rememberLabel: t('form.rememberLogin'),
-            agreementPrefix: t('form.acceptPrefix'),
-            termsLabel: t('form.terms'),
-            agreementJoiner: t('form.acceptJoiner'),
-            privacyLabel: t('form.privacy'),
-            forgotLabel: t('form.forgotPassword'),
-            forgotHref: '#forgot-password',
-            forgetMeLabel: t('form.forgetMe'),
+            rememberLabel: t("form.rememberLogin"),
+            agreementPrefix: t("form.acceptPrefix"),
+            termsLabel: t("form.terms"),
+            agreementJoiner: t("form.acceptJoiner"),
+            privacyLabel: t("form.privacy"),
+            forgotLabel: t("form.forgotPassword"),
+            forgotHref: "#forgot-password",
+            forgetMeLabel: t("form.forgetMe"),
           }}
           reserveSocialSpace
           reserveFooterSpace
           onChangePhone={(value) => {
             setPhone(value);
-            setPhoneError('');
-            setError('');
+            setPhoneError("");
+            setError("");
           }}
           onChangeCode={(value) => {
-            setPhoneCode(value.replace(/\D/g, '').slice(0, 6));
-            setPhoneCodeError('');
-            setError('');
+            setPhoneCode(value.replace(/\D/g, "").slice(0, 6));
+            setPhoneCodeError("");
+            setError("");
           }}
           onSendCode={handleSendPhoneCode}
           onRememberChange={handleRememberLoginChange}
           onAgreementChange={(checked) => {
             setAcceptedTerms(checked);
-            setError('');
+            setError("");
           }}
           onForgetMe={handleForgetMe}
           onSubmit={handleSubmit}
@@ -584,7 +648,7 @@ function LoginScreen() {
 function AuthHeader() {
   const locale = useConsoleLocale();
   const { theme, setTheme } = useTheme();
-  const isZh = locale === 'zh-CN';
+  const isZh = locale === "zh-CN";
 
   return (
     <AuthChromeHeader
@@ -594,10 +658,10 @@ function AuthHeader() {
       brandLabel="vxture.ai"
       currentLocale={locale}
       currentTheme={theme}
-      localeButtonLabel={isZh ? '选择语言' : 'Select language'}
-      localePanelLabel={isZh ? '语言选择' : 'Language selection'}
-      lightThemeLabel={isZh ? '浅色模式' : 'Light mode'}
-      darkThemeLabel={isZh ? '深色模式' : 'Dark mode'}
+      localeButtonLabel={isZh ? "选择语言" : "Select language"}
+      localePanelLabel={isZh ? "语言选择" : "Language selection"}
+      lightThemeLabel={isZh ? "浅色模式" : "Light mode"}
+      darkThemeLabel={isZh ? "深色模式" : "Dark mode"}
       onLocaleChange={(nextLocale: Locale) => {
         setGlobalLocalePreference(nextLocale);
       }}
@@ -610,16 +674,16 @@ function AuthHeader() {
 }
 
 function AuthFooter() {
-  const t = useConsoleTranslations('login');
+  const t = useConsoleTranslations("login");
 
   return (
     <AuthChromeFooter
-      copyright={t('footer.copyright')}
+      copyright={t("footer.copyright")}
       legalLabel="Legal links"
       links={[
-        { href: '/legal/terms', label: t('footer.terms') },
-        { href: '/legal/privacy', label: t('footer.privacy') },
-        { href: '/legal/cookies', label: t('footer.cookies') },
+        { href: "/legal/terms", label: t("footer.terms") },
+        { href: "/legal/privacy", label: t("footer.privacy") },
+        { href: "/legal/cookies", label: t("footer.cookies") },
       ]}
     />
   );
@@ -667,10 +731,22 @@ function AdminCaptchaOverlay({
   onPointerEnd: () => void;
 }) {
   return (
-    <div className="auth-captcha-modal" role="dialog" aria-modal="true" aria-label={dragLabel}>
+    <div
+      className="auth-captcha-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label={dragLabel}
+    >
       <div className="auth-captcha-modal__backdrop" />
       <div className="auth-captcha-modal__panel">
-        <Button variant="ghost" size="icon" className="auth-captcha-modal__close" aria-label={closeLabel} onClick={onClose} disabled={loading}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="auth-captcha-modal__close"
+          aria-label={closeLabel}
+          onClick={onClose}
+          disabled={loading}
+        >
           ×
         </Button>
         <div className="auth-captcha-modal__header">
@@ -679,19 +755,37 @@ function AdminCaptchaOverlay({
         </div>
         <div
           className={[
-            'auth-captcha',
-            dragging ? 'auth-captcha--dragging' : '',
-            returning ? 'auth-captcha--returning' : '',
-            solved ? 'auth-captcha--solved' : '',
-          ].filter(Boolean).join(' ')}
+            "auth-captcha",
+            dragging ? "auth-captcha--dragging" : "",
+            returning ? "auth-captcha--returning" : "",
+            solved ? "auth-captcha--solved" : "",
+          ]
+            .filter(Boolean)
+            .join(" ")}
         >
           <div className="auth-captcha__image" aria-hidden="true">
-            <div className="auth-captcha__target" style={{ left: `calc((100% - ${CAPTCHA_PIECE_SIZE}px) * ${targetRatio})` }} />
-            <div ref={pieceRef} className="auth-captcha__piece" style={{ transform: `translate3d(${offset}px, 0, 0)` }} />
+            <div
+              className="auth-captcha__target"
+              style={{
+                left: `calc((100% - ${CAPTCHA_PIECE_SIZE}px) * ${targetRatio})`,
+              }}
+            />
+            <div
+              ref={pieceRef}
+              className="auth-captcha__piece"
+              style={{ transform: `translate3d(${offset}px, 0, 0)` }}
+            />
           </div>
           <div className="auth-captcha__slider" ref={sliderRef}>
-            <div ref={progressRef} className="auth-captcha__progress" style={{ transform: `scaleX(${max ? offset / max : 0})` }} aria-hidden="true" />
-            <span className="auth-captcha__hint">{solved ? solvedLabel : dragLabel}</span>
+            <div
+              ref={progressRef}
+              className="auth-captcha__progress"
+              style={{ transform: `scaleX(${max ? offset / max : 0})` }}
+              aria-hidden="true"
+            />
+            <span className="auth-captcha__hint">
+              {solved ? solvedLabel : dragLabel}
+            </span>
             <Button
               variant="ghost"
               size="icon"

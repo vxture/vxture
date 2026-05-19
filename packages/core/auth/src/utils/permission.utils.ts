@@ -3,13 +3,13 @@
  * @package @vxture/core-auth
  * @description
  *   Permission checking, role validation, admin judgment, and other utility functions.
- * 
+ *
  * @author AI-Generated
  * @date 2026-03-15
  */
 
-import type { AuthUser, PermissionCheckOptions } from '../types';
-import { PlatformRole } from '../types';
+import type { AuthUser, PermissionCheckOptions } from "../types";
+import { PlatformRole } from "../types";
 
 // ============================================================================
 // Permission Check
@@ -20,11 +20,11 @@ export function hasPermission(
   required: string | string[],
   options: PermissionCheckOptions = {},
 ): boolean {
-  const { mode = 'any' } = options;
+  const { mode = "any" } = options;
   const list = Array.isArray(required) ? required : [required];
   const userPerms = new Set(user.permissions);
 
-  return mode === 'all'
+  return mode === "all"
     ? list.every((p) => userPerms.has(p))
     : list.some((p) => userPerms.has(p));
 }
@@ -38,10 +38,10 @@ export function hasRole(
   required: string | string[],
   options: PermissionCheckOptions = {},
 ): boolean {
-  const { mode = 'any' } = options;
+  const { mode = "any" } = options;
   const list = Array.isArray(required) ? required : [required];
 
-  return mode === 'all'
+  return mode === "all"
     ? list.every((r) => r === user.role)
     : list.some((r) => r === user.role);
 }

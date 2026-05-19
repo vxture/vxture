@@ -17,10 +17,10 @@
 // ============================================================================
 
 /** Vela 前端声明的入口面（由 X-Vela-Surface Header 携带，服务端二次校验） */
-export type VelaSurface = 'admin' | 'console';
+export type VelaSurface = "admin" | "console";
 
 /** Vela 认可的用户身份类型（来自 JWT payload.userType） */
-export type VelaUserType = 'operator' | 'tenant_user';
+export type VelaUserType = "operator" | "tenant_user";
 
 // ============================================================================
 // CallerContext
@@ -51,5 +51,5 @@ export interface CallerContext {
   allowedTools: readonly string[];
 
   /** 数据查询范围：admin surface → global；console surface → tenant */
-  dataScope: 'global' | 'tenant';
+  dataScope: "global" | "tenant";
 }

@@ -8,8 +8,8 @@
  * @date 2026-03-15
  */
 
-import { LogLevel } from '../types/utils.types';
-import type { LogRecord, LoggerConfig } from '../types/utils.types';
+import { LogLevel } from "../types/utils.types";
+import type { LogRecord, LoggerConfig } from "../types/utils.types";
 
 // ============================================================================
 // Log Level Priority
@@ -17,8 +17,8 @@ import type { LogRecord, LoggerConfig } from '../types/utils.types';
 
 const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
   debug: 0,
-  info:  1,
-  warn:  2,
+  info: 1,
+  warn: 2,
   error: 3,
   fatal: 4,
 };
@@ -28,13 +28,13 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
 // ============================================================================
 
 const COLORS: Record<LogLevel, string> = {
-  debug: '\x1b[36m', // cyan
-  info:  '\x1b[32m', // green
-  warn:  '\x1b[33m', // yellow
-  error: '\x1b[31m', // red
-  fatal: '\x1b[35m', // magenta
+  debug: "\x1b[36m", // cyan
+  info: "\x1b[32m", // green
+  warn: "\x1b[33m", // yellow
+  error: "\x1b[31m", // red
+  fatal: "\x1b[35m", // magenta
 };
-const RESET = '\x1b[0m';
+const RESET = "\x1b[0m";
 
 // ============================================================================
 // VxLogger
@@ -45,10 +45,10 @@ export class VxLogger {
 
   constructor(config: LoggerConfig = {}) {
     this.config = {
-      level:           config.level            ?? LogLevel.INFO,
-      enableTimestamp: config.enableTimestamp  ?? true,
-      enableColors:    config.enableColors     ?? true,
-      context:         config.context          ?? '',
+      level: config.level ?? LogLevel.INFO,
+      enableTimestamp: config.enableTimestamp ?? true,
+      enableColors: config.enableColors ?? true,
+      context: config.context ?? "",
     };
   }
 
@@ -79,8 +79,13 @@ export class VxLogger {
 
   // --------------------------------------------------------------------------
 
-  private write(level: LogLevel, message: string, metadata?: Record<string, unknown>): void {
-    if (LOG_LEVEL_PRIORITY[level] < LOG_LEVEL_PRIORITY[this.config.level]) return;
+  private write(
+    level: LogLevel,
+    message: string,
+    metadata?: Record<string, unknown>,
+  ): void {
+    if (LOG_LEVEL_PRIORITY[level] < LOG_LEVEL_PRIORITY[this.config.level])
+      return;
 
     const record: LogRecord = {
       level,
@@ -127,7 +132,7 @@ export class VxLogger {
       parts.push(JSON.stringify(record.metadata));
     }
 
-    return parts.join(' ');
+    return parts.join(" ");
   }
 }
 

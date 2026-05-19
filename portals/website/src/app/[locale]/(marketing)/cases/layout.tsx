@@ -1,3 +1,7 @@
-export default function CasesLayout({ children }: { children: React.ReactNode }) {
+export default function CasesLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return <>{children}</>;
 }

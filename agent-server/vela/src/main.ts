@@ -8,13 +8,13 @@
  * @date 2026-04-30
  */
 
-import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import "reflect-metadata";
+import { NestFactory } from "@nestjs/core";
+import { AppModule } from "./app.module";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const port = Number(process.env['VELA_SERVER_PORT'] ?? 3122);
+  const port = Number(process.env["VELA_SERVER_PORT"] ?? 3122);
   await app.listen(port);
 }
 

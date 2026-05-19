@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { Link, usePathname } from '@/lib/i18n/navigation';
-import { useTranslations } from 'next-intl';
-import { buildBreadcrumbs } from '@/config/routes';
+import { Link, usePathname } from "@/lib/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { buildBreadcrumbs } from "@/config/routes";
 
 export function Breadcrumbs() {
   const pathname = usePathname();
   const items = buildBreadcrumbs(pathname);
-  const t = useTranslations('routes');
+  const t = useTranslations("routes");
 
   return (
     <nav className="vx-breadcrumbs" aria-label="Breadcrumb">

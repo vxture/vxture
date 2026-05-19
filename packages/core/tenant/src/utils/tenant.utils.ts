@@ -8,8 +8,12 @@
  * @date 2026-03-15
  */
 
-import { TenantResolveSource } from '../types/tenant.types';
-import type { TenantInfo, TenantRequest, TenantResolveOptions } from '../types/tenant.types';
+import { TenantResolveSource } from "../types/tenant.types";
+import type {
+  TenantInfo,
+  TenantRequest,
+  TenantResolveOptions,
+} from "../types/tenant.types";
 
 // ============================================================================
 // 租户 ID 解析
@@ -31,14 +35,14 @@ export function resolveTenantId(
   options: TenantResolveOptions = {},
 ): TenantInfo {
   // 1. x-tenant-id header
-  const headerValue = extractHeader(request.headers, 'x-tenant-id');
+  const headerValue = extractHeader(request.headers, "x-tenant-id");
   if (headerValue) {
     return { id: headerValue, resolvedFrom: TenantResolveSource.HEADER };
   }
 
   // 2. 子域名
   if (options.rootDomain) {
-    const host = extractHeader(request.headers, 'host') ?? '';
+    const host = extractHeader(request.headers, "host") ?? "";
     const subdomain = extractSubdomain(host, options.rootDomain);
     if (subdomain) {
       return { id: subdomain, resolvedFrom: TenantResolveSource.SUBDOMAIN };
@@ -53,15 +57,18 @@ export function resolveTenantId(
 
   // 4. 回退
   if (options.fallbackTenantId) {
-    return { id: options.fallbackTenantId, resolvedFrom: TenantResolveSource.FALLBACK };
+    return {
+      id: options.fallbackTenantId,
+      resolvedFrom: TenantResolveSource.FALLBACK,
+    };
   }
 
   throw new Error(
-    '[core-tenant] Cannot resolve tenantId. Tried: ' +
-    'x-tenant-id header, subdomain' +
-    (options.rootDomain ? ` (rootDomain: ${options.rootDomain})` : '') +
-    ', JWT payload. ' +
-    'Set fallbackTenantId or ensure one source is present.',
+    "[core-tenant] Cannot resolve tenantId. Tried: " +
+      "x-tenant-id header, subdomain" +
+      (options.rootDomain ? ` (rootDomain: ${options.rootDomain})` : "") +
+      ", JWT payload. " +
+      "Set fallbackTenantId or ensure one source is present.",
   );
 }
 
@@ -77,16 +84,19 @@ export function resolveTenantId(
  * extractSubdomain('vxture.com', 'vxture.com')        // → undefined
  * extractSubdomain('www.vxture.com', 'vxture.com')    // → undefined（www 排除）
  */
-export function extractSubdomain(host: string, rootDomain: string): string | undefined {
+export function extractSubdomain(
+  host: string,
+  rootDomain: string,
+): string | undefined {
   // 去掉端口号
-  const hostname = host.split(':').at(0) ?? host;
+  const hostname = host.split(":").at(0) ?? host;
 
   if (!hostname.endsWith(`.${rootDomain}`)) return undefined;
 
   const subdomain = hostname.slice(0, -(rootDomain.length + 1));
 
   // 排除 www 和空字符串
-  if (!subdomain || subdomain === 'www') return undefined;
+  if (!subdomain || subdomain === "www") return undefined;
 
   return subdomain;
 }

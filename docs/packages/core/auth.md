@@ -7,11 +7,11 @@
 
 ## 包信息
 
-| 项 | 值 |
-|----|----|
-| 包名 | `@vxture/core-auth` |
-| 路径 | `packages/core/auth/` |
-| @layer | `Infrastructure` |
+| 项     | 值                    |
+| ------ | --------------------- |
+| 包名   | `@vxture/core-auth`   |
+| 路径   | `packages/core/auth/` |
+| @layer | `Infrastructure`      |
 
 ## 职责
 
@@ -31,10 +31,12 @@ src/
 ## 依赖约束
 
 **允许：**
+
 - `@vxture/shared`
 - `jsonwebtoken` + `@types/jsonwebtoken`
 
 **禁止：**
+
 - NestJS / Passport.js（属于上层 BFF）
 - Next.js / React / Prisma / Redis
 - `@vxture/service-*` / `bff-*` / `ai-sdk` / `design-system` / `platform-*`
@@ -42,11 +44,11 @@ src/
 
 ## 文件命名
 
-| 类型 | 规范 |
-|------|------|
+| 类型       | 规范          |
+| ---------- | ------------- |
 | 认证客户端 | `*.client.ts` |
-| 类型定义 | `*.types.ts` |
-| 工具函数 | `*.utils.ts` |
+| 类型定义   | `*.types.ts`  |
+| 工具函数   | `*.utils.ts`  |
 
 ## 核心设计约束
 
@@ -58,7 +60,7 @@ src/
 
 ```typescript
 // src/index.ts
-export { verifyToken, signToken } from './client/token.client'
-export type { TokenPayload, PlatformRole } from './types/auth.types'
-export { extractBearerToken } from './utils/token.utils'
+export { verifyToken, signToken } from "./client/token.client";
+export type { TokenPayload, PlatformRole } from "./types/auth.types";
+export { extractBearerToken } from "./utils/token.utils";
 ```

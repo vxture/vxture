@@ -14,7 +14,7 @@
  * - dark：暗色
  * - system：跟随操作系统
  */
-export type Theme = 'light' | 'dark' | 'system';
+export type Theme = "light" | "dark" | "system";
 
 /**
  * 扩展主题类型，支持自定义主题标识符（如租户品牌主题）

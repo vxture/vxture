@@ -1,12 +1,12 @@
-import { Module } from '@nestjs/common';
-import { VxConfigModule, VxConfigService } from '@vxture/core-config';
-import { Pool } from 'pg';
-import { SUPPORT_PG_POOL } from '../tokens';
-import { PgTicketRepository } from '../repository/pg-ticket.repository';
-import { TicketService } from '../service/ticket.service';
+import { Module } from "@nestjs/common";
+import { VxConfigModule, VxConfigService } from "@vxture/core-config";
+import { Pool } from "pg";
+import { SUPPORT_PG_POOL } from "../tokens";
+import { PgTicketRepository } from "../repository/pg-ticket.repository";
+import { TicketService } from "../service/ticket.service";
 
 @Module({
-  imports: [VxConfigModule.register({ domains: ['database'] })],
+  imports: [VxConfigModule.register({ domains: ["database"] })],
   providers: [
     {
       provide: SUPPORT_PG_POOL,
@@ -23,7 +23,10 @@ import { TicketService } from '../service/ticket.service';
                 user: db.DB_USER,
                 password: db.DB_PASSWORD,
                 max: db.DB_POOL_MAX,
-                ssl: db.DB_SSL === 'require' ? { rejectUnauthorized: false } : undefined,
+                ssl:
+                  db.DB_SSL === "require"
+                    ? { rejectUnauthorized: false }
+                    : undefined,
               },
         );
       },

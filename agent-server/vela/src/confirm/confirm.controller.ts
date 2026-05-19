@@ -14,12 +14,19 @@
  * @date 2026-04-30
  */
 
-import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
-import type { Request } from 'express';
-import { ContextGuard } from '../context/context.guard';
-import type { CallerContext } from '../context/caller-context.types';
-import { ConfirmService } from './confirm.service';
-import type { ConfirmRequestDto } from './confirm.types';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Req,
+  UseGuards,
+} from "@nestjs/common";
+import type { Request } from "express";
+import { ContextGuard } from "../context/context.guard";
+import type { CallerContext } from "../context/caller-context.types";
+import { ConfirmService } from "./confirm.service";
+import type { ConfirmRequestDto } from "./confirm.types";
 
 // ============================================================================
 // ConfirmController
@@ -27,21 +34,23 @@ import type { ConfirmRequestDto } from './confirm.types';
 
 type VelaServerRequest = Request & { callerContext?: CallerContext };
 
-@Controller('internal/vela/confirm')
+@Controller("internal/vela/confirm")
 @UseGuards(ContextGuard)
 export class ConfirmController {
   constructor(private readonly confirmService: ConfirmService) {}
 
   @Post()
   @HttpCode(200)
-  async confirm(
-    @Body() dto: ConfirmRequestDto,
-    @Req() req: Request,
-  ) {
+  async confirm(@Body() dto: ConfirmRequestDto, @Req() req: Request) {
     const ctx = (req as VelaServerRequest).callerContext;
     if (!ctx) {
-      return { success: false, error: 'Missing caller context' };
+      return { success: false, error: "Missing caller context" };
     }
-    return this.confirmService.confirm(dto.auditId, dto.confirmed, ctx, dto.sessionId);
+    return this.confirmService.confirm(
+      dto.auditId,
+      dto.confirmed,
+      ctx,
+      dto.sessionId,
+    );
   }
 }

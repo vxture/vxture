@@ -34,16 +34,16 @@ export interface CreateSessionResponseDto {
 
 export interface ChatMessageDto {
   id: string;
-  sender: 'user' | 'agent' | 'system';
+  sender: "user" | "agent" | "system";
   content: string;
-  type: 'text' | 'image' | 'document' | 'action';
+  type: "text" | "image" | "document" | "action";
   timestamp: string;
   taskId?: string;
 }
 
 export interface SendMessageDto {
   content: string;
-  type: 'text' | 'image' | 'document' | 'action';
+  type: "text" | "image" | "document" | "action";
   taskId?: string;
 }
 
@@ -54,7 +54,7 @@ export interface SendMessageResponseDto {
 }
 
 export interface TaskStatusResponseDto {
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   progress?: number;
   result?: unknown;
   error?: string;

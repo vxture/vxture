@@ -15,7 +15,7 @@
  * @category Storage
  */
 
-import type { SessionConfig, ChatMessage } from '../types/ruyin.types';
+import type { SessionConfig, ChatMessage } from "../types/ruyin.types";
 
 // ============================================================================
 // 数据访问接口
@@ -26,13 +26,18 @@ import type { SessionConfig, ChatMessage } from '../types/ruyin.types';
  */
 export interface SessionStorage {
   /** 创建新会话 */
-  createSession(config: Omit<SessionConfig, 'createdAt' | 'updatedAt'>): Promise<SessionConfig>;
+  createSession(
+    config: Omit<SessionConfig, "createdAt" | "updatedAt">,
+  ): Promise<SessionConfig>;
 
   /** 获取会话 */
   getSession(sessionId: string): Promise<SessionConfig | null>;
 
   /** 更新会话 */
-  updateSession(sessionId: string, updates: Partial<SessionConfig>): Promise<SessionConfig>;
+  updateSession(
+    sessionId: string,
+    updates: Partial<SessionConfig>,
+  ): Promise<SessionConfig>;
 
   /** 删除会话 */
   deleteSession(sessionId: string): Promise<boolean>;
@@ -44,7 +49,10 @@ export interface SessionStorage {
   getSessionHistory(sessionId: string, limit?: number): Promise<ChatMessage[]>;
 
   /** 搜索会话历史 */
-  searchSessionHistory(sessionId: string, query: string): Promise<ChatMessage[]>;
+  searchSessionHistory(
+    sessionId: string,
+    query: string,
+  ): Promise<ChatMessage[]>;
 }
 
 // ============================================================================
@@ -58,7 +66,9 @@ export class MemorySessionStorage implements SessionStorage {
   private sessions: Map<string, SessionConfig> = new Map();
   private messages: Map<string, ChatMessage[]> = new Map();
 
-  async createSession(config: Omit<SessionConfig, 'createdAt' | 'updatedAt'>): Promise<SessionConfig> {
+  async createSession(
+    config: Omit<SessionConfig, "createdAt" | "updatedAt">,
+  ): Promise<SessionConfig> {
     const session: SessionConfig = {
       ...config,
       createdAt: new Date(),
@@ -75,7 +85,10 @@ export class MemorySessionStorage implements SessionStorage {
     return this.sessions.get(sessionId) || null;
   }
 
-  async updateSession(sessionId: string, updates: Partial<SessionConfig>): Promise<SessionConfig> {
+  async updateSession(
+    sessionId: string,
+    updates: Partial<SessionConfig>,
+  ): Promise<SessionConfig> {
     const session = this.sessions.get(sessionId);
     if (!session) {
       throw new Error(`Session not found: ${sessionId}`);
@@ -97,7 +110,10 @@ export class MemorySessionStorage implements SessionStorage {
     return deletedSession;
   }
 
-  async storeMessage(sessionId: string, message: ChatMessage): Promise<ChatMessage> {
+  async storeMessage(
+    sessionId: string,
+    message: ChatMessage,
+  ): Promise<ChatMessage> {
     const sessionMessages = this.messages.get(sessionId);
     if (!sessionMessages) {
       throw new Error(`Session not found: ${sessionId}`);
@@ -107,19 +123,25 @@ export class MemorySessionStorage implements SessionStorage {
     return message;
   }
 
-  async getSessionHistory(sessionId: string, limit: number = 50): Promise<ChatMessage[]> {
+  async getSessionHistory(
+    sessionId: string,
+    limit: number = 50,
+  ): Promise<ChatMessage[]> {
     const sessionMessages = this.messages.get(sessionId) || [];
     return sessionMessages.slice(-limit);
   }
 
-  async searchSessionHistory(sessionId: string, query: string): Promise<ChatMessage[]> {
+  async searchSessionHistory(
+    sessionId: string,
+    query: string,
+  ): Promise<ChatMessage[]> {
     const sessionMessages = this.messages.get(sessionId) || [];
     const lowerCaseQuery = query.toLowerCase();
 
     return sessionMessages.filter(
       (message) =>
         message.content.toLowerCase().includes(lowerCaseQuery) ||
-        message.taskId?.toLowerCase().includes(lowerCaseQuery)
+        message.taskId?.toLowerCase().includes(lowerCaseQuery),
     );
   }
 }
@@ -131,13 +153,15 @@ export class MemorySessionStorage implements SessionStorage {
 /**
  * 创建会话存储实例
  */
-export function createSessionStorage(type: 'memory' | 'prisma' = 'memory'): SessionStorage {
+export function createSessionStorage(
+  type: "memory" | "prisma" = "memory",
+): SessionStorage {
   switch (type) {
-    case 'memory':
+    case "memory":
       return new MemorySessionStorage();
-    case 'prisma':
+    case "prisma":
       // 未来支持 Prisma 存储
-      throw new Error('Prisma storage not implemented yet');
+      throw new Error("Prisma storage not implemented yet");
     default:
       throw new Error(`Unknown storage type: ${type}`);
   }
@@ -146,4 +170,4 @@ export function createSessionStorage(type: 'memory' | 'prisma' = 'memory'): Sess
 /**
  * 全局存储实例
  */
-export const sessionStorage = createSessionStorage('memory');
+export const sessionStorage = createSessionStorage("memory");

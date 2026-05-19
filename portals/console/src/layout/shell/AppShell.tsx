@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import type { CSSProperties, ReactNode } from 'react';
-import { useEffect, useState } from 'react';
-import { usePathname } from '@/lib/i18n/navigation';
-import { useTranslations } from 'next-intl';
-import { AssistantPanel } from './AssistantPanel';
-import { getShellLayoutMode } from './config';
-import { Header } from './Header';
-import { Sidebar } from './Sidebar';
+import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useState } from "react";
+import { usePathname } from "@/lib/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { AssistantPanel } from "./AssistantPanel";
+import { getShellLayoutMode } from "./config";
+import { Header } from "./Header";
+import { Sidebar } from "./Sidebar";
 
-const SIDEBAR_KEY = 'vx-console-sidebar-collapsed';
-const ASSISTANT_KEY = 'vx-console-assistant-open';
-const ASSISTANT_WIDTH_KEY = 'vx-console-assistant-width';
+const SIDEBAR_KEY = "vx-console-sidebar-collapsed";
+const ASSISTANT_KEY = "vx-console-assistant-open";
+const ASSISTANT_WIDTH_KEY = "vx-console-assistant-width";
 const ASSISTANT_MIN_WIDTH = 380;
 const ASSISTANT_DEFAULT_WIDTH = 420;
 const ASSISTANT_MAX_WIDTH = 720;
@@ -27,43 +27,61 @@ function clamp(value: number, min: number, max: number) {
 }
 
 function getRootFontSize() {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return 16;
   }
 
-  const fontSize = Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize);
+  const fontSize = Number.parseFloat(
+    window.getComputedStyle(document.documentElement).fontSize,
+  );
   return Number.isFinite(fontSize) ? fontSize : 16;
 }
 
 function getAssistantMaxWidth(sidebarCollapsed: boolean) {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return ASSISTANT_DEFAULT_WIDTH;
   }
 
-  const sidebarWidth = sidebarCollapsed ? SIDEBAR_COLLAPSED_WIDTH_REM * getRootFontSize() : SIDEBAR_EXPANDED_WIDTH;
+  const sidebarWidth = sidebarCollapsed
+    ? SIDEBAR_COLLAPSED_WIDTH_REM * getRootFontSize()
+    : SIDEBAR_EXPANDED_WIDTH;
   const availableWidth =
-    window.innerWidth - SHELL_HORIZONTAL_PADDING - SHELL_BODY_GAPS - sidebarWidth - CONTENT_MIN_WIDTH;
+    window.innerWidth -
+    SHELL_HORIZONTAL_PADDING -
+    SHELL_BODY_GAPS -
+    sidebarWidth -
+    CONTENT_MIN_WIDTH;
 
   return clamp(availableWidth, ASSISTANT_MIN_WIDTH, ASSISTANT_MAX_WIDTH);
 }
 
-export function AppShell({ children, endPanel }: { children: ReactNode; endPanel?: ReactNode }) {
+export function AppShell({
+  children,
+  endPanel,
+}: {
+  children: ReactNode;
+  endPanel?: ReactNode;
+}) {
   const pathname = usePathname();
-  const routeLabels = useTranslations('routes');
+  const routeLabels = useTranslations("routes");
   const layoutMode = getShellLayoutMode(pathname);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [assistantOpen, setAssistantOpen] = useState(layoutMode.assistantDefaultOpen);
+  const [assistantOpen, setAssistantOpen] = useState(
+    layoutMode.assistantDefaultOpen,
+  );
   const [assistantWidth, setAssistantWidth] = useState(ASSISTANT_DEFAULT_WIDTH);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(SIDEBAR_KEY);
-    setSidebarCollapsed(saved === 'true');
+    setSidebarCollapsed(saved === "true");
   }, []);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(ASSISTANT_KEY);
     if (layoutMode.assistantEnabled) {
-      setAssistantOpen(saved ? saved === 'true' : layoutMode.assistantDefaultOpen);
+      setAssistantOpen(
+        saved ? saved === "true" : layoutMode.assistantDefaultOpen,
+      );
     } else {
       setAssistantOpen(false);
     }
@@ -72,7 +90,9 @@ export function AppShell({ children, endPanel }: { children: ReactNode; endPanel
   useEffect(() => {
     const saved = window.localStorage.getItem(ASSISTANT_WIDTH_KEY);
     const parsed = saved ? Number(saved) : NaN;
-    const nextWidth = Number.isFinite(parsed) ? parsed : ASSISTANT_DEFAULT_WIDTH;
+    const nextWidth = Number.isFinite(parsed)
+      ? parsed
+      : ASSISTANT_DEFAULT_WIDTH;
     const maxWidth = getAssistantMaxWidth(sidebarCollapsed);
     setAssistantWidth(clamp(nextWidth, ASSISTANT_MIN_WIDTH, maxWidth));
   }, [sidebarCollapsed]);
@@ -88,10 +108,10 @@ export function AppShell({ children, endPanel }: { children: ReactNode; endPanel
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }, [sidebarCollapsed]);
 
@@ -120,15 +140,15 @@ export function AppShell({ children, endPanel }: { children: ReactNode; endPanel
   };
 
   const shellStyle = {
-    '--vx-shell-assistant-width': `${assistantWidth}px`,
-    '--vx-shell-end-panel-width': `${END_PANEL_WIDTH}px`,
+    "--vx-shell-assistant-width": `${assistantWidth}px`,
+    "--vx-shell-end-panel-width": `${END_PANEL_WIDTH}px`,
   } as CSSProperties;
 
   return (
     <div
       className={`vx-shell ${
-        sidebarCollapsed ? 'vx-shell--sidebar-collapsed' : ''
-      } ${assistantOpen ? 'vx-shell--assistant-open' : ''} ${endPanel ? 'vx-shell--end-panel-open' : ''}`}
+        sidebarCollapsed ? "vx-shell--sidebar-collapsed" : ""
+      } ${assistantOpen ? "vx-shell--assistant-open" : ""} ${endPanel ? "vx-shell--end-panel-open" : ""}`}
       style={shellStyle}
     >
       <div className="vx-shell__header-slot">
@@ -140,7 +160,10 @@ export function AppShell({ children, endPanel }: { children: ReactNode; endPanel
       </div>
 
       <div className="vx-shell__body">
-        <Sidebar collapsed={sidebarCollapsed} onToggleCollapse={handleToggleSidebar} />
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={handleToggleSidebar}
+        />
 
         <main className="vx-shell__content" aria-label="Console content">
           {children}
@@ -155,7 +178,9 @@ export function AppShell({ children, endPanel }: { children: ReactNode; endPanel
         {layoutMode.assistantEnabled ? (
           <AssistantPanel
             id="vx-assistant-panel"
-            routeLabel={routeLabels(pathname === '/' ? 'dashboard' : pathname.slice(1))}
+            routeLabel={routeLabels(
+              pathname === "/" ? "dashboard" : pathname.slice(1),
+            )}
             open={assistantOpen}
             maxWidth={getAssistantMaxWidth(sidebarCollapsed)}
             minWidth={ASSISTANT_MIN_WIDTH}

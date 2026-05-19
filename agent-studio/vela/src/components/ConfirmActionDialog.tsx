@@ -15,23 +15,33 @@
  * @date 2026-05-02
  */
 
-'use client';
+"use client";
 
-import { Badge, Button } from '@vxture/design-system';
-import { useVelaConfirm } from '../hooks/useVelaConfirm';
+import { Badge, Button } from "@vxture/design-system";
+import { useVelaConfirm } from "../hooks/useVelaConfirm";
 
 // ============================================================================
 // 组件
 // ============================================================================
 
 export function ConfirmActionDialog() {
-  const { pendingConfirm, isConfirming, confirmError, confirmResult, handleConfirm, dismiss } =
-    useVelaConfirm();
+  const {
+    pendingConfirm,
+    isConfirming,
+    confirmError,
+    confirmResult,
+    handleConfirm,
+    dismiss,
+  } = useVelaConfirm();
 
   if (!pendingConfirm) return null;
 
   // ---- 执行成功状态
-  if (confirmResult && confirmResult.success !== false && !confirmResult.cancelled) {
+  if (
+    confirmResult &&
+    confirmResult.success !== false &&
+    !confirmResult.cancelled
+  ) {
     return (
       <div className="vx-vela-confirm vx-vela-confirm--success">
         <div className="vx-vela-confirm__header vx-vela-confirm__header--compact">
@@ -55,7 +65,9 @@ export function ConfirmActionDialog() {
         </div>
         <p className="vx-vela-confirm__summary">{confirmError}</p>
         <div className="vx-vela-confirm__actions">
-          <Button onClick={dismiss} variant="secondary" size="sm">关闭</Button>
+          <Button onClick={dismiss} variant="secondary" size="sm">
+            关闭
+          </Button>
         </div>
       </div>
     );
@@ -69,9 +81,7 @@ export function ConfirmActionDialog() {
         <span className="vx-vela-confirm__title">需要确认</span>
         <Badge variant="outline">{pendingConfirm.toolId}</Badge>
       </div>
-      <p className="vx-vela-confirm__summary">
-        {pendingConfirm.summary}
-      </p>
+      <p className="vx-vela-confirm__summary">{pendingConfirm.summary}</p>
       <div className="vx-vela-confirm__actions">
         <Button
           onClick={() => void handleConfirm(false)}
@@ -86,7 +96,7 @@ export function ConfirmActionDialog() {
           disabled={isConfirming}
           size="sm"
         >
-          {isConfirming ? '执行中…' : '确认执行'}
+          {isConfirming ? "执行中…" : "确认执行"}
         </Button>
       </div>
     </div>

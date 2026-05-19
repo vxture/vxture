@@ -5,10 +5,10 @@ import {
   Inject,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL } from '../tokens';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL } from "../tokens";
 import type {
   BillingBillStatus,
   BillingBillType,
@@ -17,14 +17,16 @@ import type {
   BillingInvoiceTaxType,
   BillingInvoiceType,
   RequestContext,
-} from '../types/console.types';
+} from "../types/console.types";
 
-@Controller('api/invoices')
+@Controller("api/invoices")
 export class InvoicesRouter {
   constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get()
-  async listInvoices(@Req() req: Request & RequestContext): Promise<BillingInvoiceLedgerRecord[]> {
+  async listInvoices(
+    @Req() req: Request & RequestContext,
+  ): Promise<BillingInvoiceLedgerRecord[]> {
     assertCanManageInvoices(req);
 
     const rows = await this.pool.query<InvoiceLedgerRow>(INVOICE_LEDGER_SQL);
@@ -34,18 +36,26 @@ export class InvoicesRouter {
 
 function assertCanManageInvoices(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
   const capabilities = req.capabilities ?? [];
-  if (capabilities.length && !capabilities.some((item) => item === 'platform.pricing.manage' || item === 'platform.tenant.manage')) {
-    throw new ForbiddenException('Missing platform.pricing.manage capability');
+  if (
+    capabilities.length &&
+    !capabilities.some(
+      (item) =>
+        item === "platform.pricing.manage" || item === "platform.tenant.manage",
+    )
+  ) {
+    throw new ForbiddenException("Missing platform.pricing.manage capability");
   }
 }
 
 function toIso(value: Date | string | null): string {
   if (!value) return new Date(0).toISOString();
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
 function nullableIso(value: Date | string | null): string | null {
@@ -53,39 +63,72 @@ function nullableIso(value: Date | string | null): string | null {
 }
 
 function normalizeBillStatus(value: string): BillingBillStatus {
-  if (value === 'paying' || value === 'paid' || value === 'partial' || value === 'cancelled' || value === 'overdue') return value;
-  return 'unpaid';
+  if (
+    value === "paying" ||
+    value === "paid" ||
+    value === "partial" ||
+    value === "cancelled" ||
+    value === "overdue"
+  )
+    return value;
+  return "unpaid";
 }
 
 function normalizeBillType(value: string | null): BillingBillType {
-  if (value === 'adjust' || value === 'supplement' || value === 'prepaid') return value;
-  return 'normal';
+  if (value === "adjust" || value === "supplement" || value === "prepaid")
+    return value;
+  return "normal";
 }
 
 function normalizeInvoiceStatus(value: string | null): BillingInvoiceStatus {
-  if (value === 'applying' || value === 'auditing' || value === 'issued' || value === 'sending' || value === 'finished' || value === 'rejected' || value === 'red') return value;
-  return 'none';
+  if (
+    value === "applying" ||
+    value === "auditing" ||
+    value === "issued" ||
+    value === "sending" ||
+    value === "finished" ||
+    value === "rejected" ||
+    value === "red"
+  )
+    return value;
+  return "none";
 }
 
 function normalizeInvoiceType(value: string | null): BillingInvoiceType {
-  if (value === 'special_vat' || value === 'normal_vat' || value === 'electronic' || value === 'paper') return value;
-  return 'other';
+  if (
+    value === "special_vat" ||
+    value === "normal_vat" ||
+    value === "electronic" ||
+    value === "paper"
+  )
+    return value;
+  return "other";
 }
 
 function normalizeInvoiceTaxType(value: string | null): BillingInvoiceTaxType {
-  if (value === 'enterprise' || value === 'individual' || value === 'government') return value;
-  return 'other';
+  if (
+    value === "enterprise" ||
+    value === "individual" ||
+    value === "government"
+  )
+    return value;
+  return "other";
 }
 
-function tierNameForPlan(planCode: string | null, planName: string | null): string | null {
+function tierNameForPlan(
+  planCode: string | null,
+  planName: string | null,
+): string | null {
   if (!planCode || !planName) return null;
-  if (planCode === 'starter') return 'Free';
-  if (planCode === 'growth') return 'Pro';
-  if (planCode === 'enterprise') return 'Enterprise';
+  if (planCode === "starter") return "Free";
+  if (planCode === "growth") return "Pro";
+  if (planCode === "enterprise") return "Enterprise";
   return planName;
 }
 
-function mapInvoiceLedgerRow(row: InvoiceLedgerRow): BillingInvoiceLedgerRecord {
+function mapInvoiceLedgerRow(
+  row: InvoiceLedgerRow,
+): BillingInvoiceLedgerRecord {
   return {
     id: row.id,
     billId: row.bill_id,
@@ -96,7 +139,7 @@ function mapInvoiceLedgerRow(row: InvoiceLedgerRow): BillingInvoiceLedgerRecord 
     taxNo: row.tax_no,
     invoiceAmount: Number(row.invoice_amount ?? 0),
     taxAmount: Number(row.tax_amount ?? 0),
-    currency: row.currency ?? row.bill_currency ?? 'CNY',
+    currency: row.currency ?? row.bill_currency ?? "CNY",
     invoiceStatus: normalizeInvoiceStatus(row.invoice_status),
     statusRemark: row.status_remark,
     invoiceCode: row.invoice_code,
@@ -106,7 +149,7 @@ function mapInvoiceLedgerRow(row: InvoiceLedgerRow): BillingInvoiceLedgerRecord 
     expressCompany: row.express_company,
     expressNo: row.express_no,
     sendAt: nullableIso(row.send_at),
-    auditorName: row.auditor_display_name ?? row.auditor_username ?? '系统',
+    auditorName: row.auditor_display_name ?? row.auditor_username ?? "系统",
     createdAt: toIso(row.created_at),
     updatedAt: toIso(row.updated_at),
     billNo: row.bill_no,
@@ -117,14 +160,14 @@ function mapInvoiceLedgerRow(row: InvoiceLedgerRow): BillingInvoiceLedgerRecord 
     tenantId: row.tenant_id,
     tenantCode: row.tenant_code,
     tenantName: row.display_name ?? row.tenant_name,
-    tenantType: row.tenant_type === 'individual' ? 'individual' : 'company',
-    region: [row.province, row.city].filter(Boolean).join(' / ') || '未设置',
-    industry: row.industry ?? '未设置',
+    tenantType: row.tenant_type === "individual" ? "individual" : "company",
+    region: [row.province, row.city].filter(Boolean).join(" / ") || "未设置",
+    industry: row.industry ?? "未设置",
     subscriptionId: row.subscription_id,
     orderNo: row.order_no,
     servicePlanName: row.plan_name,
     tierName: tierNameForPlan(row.plan_code, row.plan_name),
-    sourceLabel: 'offline',
+    sourceLabel: "offline",
   };
 }
 

@@ -17,16 +17,16 @@
  * @category Router
  */
 
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get } from "@nestjs/common";
 
 // ─── 响应体类型 ────────────────────────────────────────────────────────────────
 
 /** 健康检查响应结构 */
 interface HealthCheckResult {
   /** 服务状态，始终为 'ok' */
-  status: 'ok';
+  status: "ok";
   /** 服务标识 */
-  service: 'website-bff';
+  service: "website-bff";
   /** 响应时间戳（ISO 8601） */
   timestamp: string;
 }
@@ -40,11 +40,11 @@ export class HealthRouter {
    * 返回服务存活状态，供 Docker HEALTHCHECK / K8s liveness probe / 监控面板使用。
    * 不经过任何 auth / tenant / locale middleware。
    */
-  @Get('healthz')
+  @Get("healthz")
   check(): HealthCheckResult {
     return {
-      status: 'ok',
-      service: 'website-bff',
+      status: "ok",
+      service: "website-bff",
       timestamp: new Date().toISOString(),
     };
   }

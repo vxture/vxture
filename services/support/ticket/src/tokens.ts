@@ -1,1 +1,1 @@
-export const SUPPORT_PG_POOL = 'SUPPORT_PG_POOL';
+export const SUPPORT_PG_POOL = "SUPPORT_PG_POOL";

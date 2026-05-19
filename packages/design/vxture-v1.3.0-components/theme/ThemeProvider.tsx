@@ -1,8 +1,8 @@
-'use client';
-import * as React from 'react';
+"use client";
+import * as React from "react";
 
-export type ThemeMode = 'light' | 'dark' | 'system';
-export type Theme = 'light' | 'dark';
+export type ThemeMode = "light" | "dark" | "system";
+export type Theme = "light" | "dark";
 
 type ThemeContextValue = {
   /** Currently rendered theme — always 'light' or 'dark' */
@@ -17,25 +17,27 @@ type ThemeContextValue = {
 
 const ThemeContext = React.createContext<ThemeContextValue | null>(null);
 
-const STORAGE_KEY = 'vxture-theme';
+const STORAGE_KEY = "vxture-theme";
 
 function readSavedMode(): ThemeMode {
-  if (typeof window === 'undefined') return 'system';
+  if (typeof window === "undefined") return "system";
   const v = window.localStorage.getItem(STORAGE_KEY);
-  if (v === 'light' || v === 'dark' || v === 'system') return v;
-  return 'system';
+  if (v === "light" || v === "dark" || v === "system") return v;
+  return "system";
 }
 
 function resolveTheme(mode: ThemeMode): Theme {
-  if (mode === 'system' && typeof window !== 'undefined') {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  if (mode === "system" && typeof window !== "undefined") {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   }
-  return mode === 'dark' ? 'dark' : 'light';
+  return mode === "dark" ? "dark" : "light";
 }
 
 function applyTheme(theme: Theme) {
-  if (typeof document === 'undefined') return;
-  document.documentElement.classList.toggle('dark', theme === 'dark');
+  if (typeof document === "undefined") return;
+  document.documentElement.classList.toggle("dark", theme === "dark");
   document.documentElement.style.colorScheme = theme;
 }
 
@@ -61,9 +63,12 @@ export type ThemeProviderProps = {
  *     <App />
  *   </ThemeProvider>
  */
-export function ThemeProvider({ children, defaultMode = 'system' }: ThemeProviderProps) {
+export function ThemeProvider({
+  children,
+  defaultMode = "system",
+}: ThemeProviderProps) {
   const [mode, setModeState] = React.useState<ThemeMode>(defaultMode);
-  const [theme, setTheme] = React.useState<Theme>('light');
+  const [theme, setTheme] = React.useState<Theme>("light");
 
   /* Hydrate from localStorage after mount */
   React.useEffect(() => {
@@ -72,12 +77,12 @@ export function ThemeProvider({ children, defaultMode = 'system' }: ThemeProvide
 
   /* Resolve mode → theme + listen for OS changes */
   React.useEffect(() => {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const resolve = () => setTheme(resolveTheme(mode));
     resolve();
-    if (mode === 'system') {
-      mq.addEventListener('change', resolve);
-      return () => mq.removeEventListener('change', resolve);
+    if (mode === "system") {
+      mq.addEventListener("change", resolve);
+      return () => mq.removeEventListener("change", resolve);
     }
   }, [mode]);
 
@@ -96,15 +101,17 @@ export function ThemeProvider({ children, defaultMode = 'system' }: ThemeProvide
   }, []);
 
   const toggle = React.useCallback(() => {
-    setMode(theme === 'dark' ? 'light' : 'dark');
+    setMode(theme === "dark" ? "light" : "dark");
   }, [theme, setMode]);
 
   const value = React.useMemo<ThemeContextValue>(
     () => ({ theme, mode, setMode, toggle }),
-    [theme, mode, setMode, toggle]
+    [theme, mode, setMode, toggle],
   );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+  );
 }
 
 /**
@@ -116,6 +123,6 @@ export function ThemeProvider({ children, defaultMode = 'system' }: ThemeProvide
  */
 export function useTheme() {
   const ctx = React.useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used inside <ThemeProvider>');
+  if (!ctx) throw new Error("useTheme must be used inside <ThemeProvider>");
   return ctx;
 }

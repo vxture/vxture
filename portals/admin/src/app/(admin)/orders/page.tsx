@@ -1,4 +1,4 @@
-import { OrdersPage } from '@/modules/orders/OrdersPage';
+import { OrdersPage } from "@/modules/orders/OrdersPage";
 
 export default function Page() {
   return <OrdersPage />;

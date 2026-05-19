@@ -6,15 +6,15 @@
  */
 
 export const ROUTE_CONSTANTS = {
-  HOME: '/',
-  LOGIN: '/login',
-  SIGNUP: '/signup',
-  PRODUCTS: '/products',
-  ABOUT: '/about',
-  CONTACT: '/contact',
-  DASHBOARD: '/dashboard',
-  APP_CENTER: '/appcenter',
-  SOLUTIONS: '/solutions',
-  CASES: '/cases',
-  PRICING: '/pricing',
+  HOME: "/",
+  LOGIN: "/login",
+  SIGNUP: "/signup",
+  PRODUCTS: "/products",
+  ABOUT: "/about",
+  CONTACT: "/contact",
+  DASHBOARD: "/dashboard",
+  APP_CENTER: "/appcenter",
+  SOLUTIONS: "/solutions",
+  CASES: "/cases",
+  PRICING: "/pricing",
 };

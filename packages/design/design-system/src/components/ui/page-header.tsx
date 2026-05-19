@@ -12,7 +12,10 @@ import { Icon } from "../../icons";
 import type { IconName, IconSize } from "../../icons";
 import { cn } from "../../utils/cn";
 
-export interface PageHeaderProps extends Omit<React.HTMLAttributes<HTMLElement>, "title"> {
+export interface PageHeaderProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  "title"
+> {
   readonly eyebrow?: React.ReactNode;
   readonly icon?: IconName;
   readonly iconFallback?: IconName;
@@ -56,18 +59,28 @@ const PageHeader = React.forwardRef<HTMLElement, PageHeaderProps>(
     return (
       <section ref={ref} className={cn("vx-page-header", className)} {...props}>
         {icon ? (
-          <span className={cn("vx-page-header__icon", iconClassName)} aria-hidden="true">
+          <span
+            className={cn("vx-page-header__icon", iconClassName)}
+            aria-hidden="true"
+          >
             <Icon name={icon} size={iconSize} fallback={iconFallback} />
           </span>
         ) : null}
         <div className={cn("vx-page-header__copy", copyClassName)}>
-          {eyebrow ? <p className="vx-page-header__eyebrow">{eyebrow}</p> : null}
+          {eyebrow ? (
+            <p className="vx-page-header__eyebrow">{eyebrow}</p>
+          ) : null}
           <div className={cn("vx-page-header__title-row", titleRowClassName)}>
             <h1>{title}</h1>
             {secondary}
           </div>
           {description ? (
-            <p className={cn("vx-page-header__description", descriptionClassName)}>
+            <p
+              className={cn(
+                "vx-page-header__description",
+                descriptionClassName,
+              )}
+            >
               {description}
             </p>
           ) : null}

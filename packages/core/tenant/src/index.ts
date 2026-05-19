@@ -6,18 +6,14 @@
  */
 
 // Types
-export { TenantResolveSource } from './types';
-export type {
-  TenantInfo,
-  TenantRequest,
-  TenantResolveOptions,
-} from './types';
+export { TenantResolveSource } from "./types";
+export type { TenantInfo, TenantRequest, TenantResolveOptions } from "./types";
 
 // NestJS Module & Context Provider
-export { TenantModule, TenantContext, TENANT_OPTIONS } from './context';
+export { TenantModule, TenantContext, TENANT_OPTIONS } from "./context";
 
 // Middleware
-export { TenantMiddleware } from './middleware';
+export { TenantMiddleware } from "./middleware";
 
 // Utils
 export {
@@ -25,4 +21,4 @@ export {
   extractSubdomain,
   tenantKey,
   extractFromTenantKey,
-} from './utils';
+} from "./utils";

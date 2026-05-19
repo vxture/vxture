@@ -14,11 +14,11 @@
 
 ### 状态值
 
-| 状态 | 含义 |
-|------|------|
-| `Open` | 已登记，待处理 |
-| `In Progress` | 正在处理中，有负责人 |
-| `Resolved` | 已销号，条目保留作历史记录 |
+| 状态          | 含义                       |
+| ------------- | -------------------------- |
+| `Open`        | 已登记，待处理             |
+| `In Progress` | 正在处理中，有负责人       |
+| `Resolved`    | 已销号，条目保留作历史记录 |
 
 ### 登记模板
 
@@ -55,18 +55,18 @@
 
 ## 汇总表
 
-| ID | 标题 | 分类 | 状态 |
-|----|------|------|------|
-| [TD-001](#td-001--bff-层结构待大版本重构) | BFF 层结构待大版本重构 | Architecture | Open |
-| [TD-002](#td-002--prisma-schema-集中管理待重构) | Prisma schema 集中管理待重构 | Architecture | Open |
-| [TD-003](#td-003--business-bff-认证流程未实现) | Business BFF 认证流程未实现 | Implementation Gap | Open |
-| [TD-004](#td-004--会话空闲超时未实现) | 会话空闲超时未实现 | Implementation Gap | Open |
-| [TD-005](#td-005--ai-gateway-流式响应未实现) | AI Gateway 流式响应未实现 | Implementation Gap | Open |
-| [TD-006](#td-006--ai-gateway-provider-api-key-无轮换机制) | AI Gateway Provider API Key 无轮换机制 | Security | Open |
-| [TD-007](#td-007--ai-gateway-provider-重试--降级未实现) | AI Gateway Provider 重试 / 降级未实现 | Implementation Gap | Open |
+| ID                                                        | 标题                                   | 分类               | 状态 |
+| --------------------------------------------------------- | -------------------------------------- | ------------------ | ---- |
+| [TD-001](#td-001--bff-层结构待大版本重构)                 | BFF 层结构待大版本重构                 | Architecture       | Open |
+| [TD-002](#td-002--prisma-schema-集中管理待重构)           | Prisma schema 集中管理待重构           | Architecture       | Open |
+| [TD-003](#td-003--business-bff-认证流程未实现)            | Business BFF 认证流程未实现            | Implementation Gap | Open |
+| [TD-004](#td-004--会话空闲超时未实现)                     | 会话空闲超时未实现                     | Implementation Gap | Open |
+| [TD-005](#td-005--ai-gateway-流式响应未实现)              | AI Gateway 流式响应未实现              | Implementation Gap | Open |
+| [TD-006](#td-006--ai-gateway-provider-api-key-无轮换机制) | AI Gateway Provider API Key 无轮换机制 | Security           | Open |
+| [TD-007](#td-007--ai-gateway-provider-重试--降级未实现)   | AI Gateway Provider 重试 / 降级未实现  | Implementation Gap | Open |
 | [TD-008](#td-008--ai-gateway-provider-合同价格为占位数据) | AI Gateway Provider 合同价格为占位数据 | Implementation Gap | Open |
-| [TD-009](#td-009--surface-命名方案待定) | surface 命名方案待定 | Design Pending | Open |
-| [TD-010](#td-010--platform-sdk-部分模块计划中未实现) | Platform SDK 部分模块计划中未实现 | Implementation Gap | Open |
+| [TD-009](#td-009--surface-命名方案待定)                   | surface 命名方案待定                   | Design Pending     | Open |
+| [TD-010](#td-010--platform-sdk-部分模块计划中未实现)      | Platform SDK 部分模块计划中未实现      | Implementation Gap | Open |
 
 ---
 
@@ -74,12 +74,12 @@
 
 ### TD-001 — BFF 层结构待大版本重构
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Architecture |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/packages/bff/` 各包文档、代码内注释 |
+| 字段         | 内容                                      |
+| ------------ | ----------------------------------------- |
+| **分类**     | Architecture                              |
+| **状态**     | Open                                      |
+| **登记日期** | 2026-05-14                                |
+| **来源**     | `docs/packages/bff/` 各包文档、代码内注释 |
 
 **描述**：各业务型 BFF 内部存在历史遗留结构问题，注释标记为"待大版本重构"。包括 Guard 链路不完整、跨 BFF 公共逻辑重复（如 auth 中间件、tenant 解析）、部分路由层职责混乱。
 
@@ -91,12 +91,12 @@
 
 ### TD-002 — Prisma schema 集中管理待重构
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Architecture |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/glossary.md` → Prisma 条目；`packages/core-database/` |
+| 字段         | 内容                                                        |
+| ------------ | ----------------------------------------------------------- |
+| **分类**     | Architecture                                                |
+| **状态**     | Open                                                        |
+| **登记日期** | 2026-05-14                                                  |
+| **来源**     | `docs/glossary.md` → Prisma 条目；`packages/core-database/` |
 
 **描述**：DDL 集中在 `@vxture/core-database`，当前有 6 个 schema 文件（⚠️ 待大幅重构）。随业务域增长，单包集中管理导致边界模糊，schema 变更影响面过大，迁移方向和拆分粒度尚未确定。
 
@@ -108,12 +108,12 @@
 
 ### TD-003 — Business BFF 认证流程未实现
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Implementation Gap |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/decisions/001-auth-bff-sole-jwt-issuer.md` §实施范围 |
+| 字段         | 内容                                                       |
+| ------------ | ---------------------------------------------------------- |
+| **分类**     | Implementation Gap                                         |
+| **状态**     | Open                                                       |
+| **登记日期** | 2026-05-14                                                 |
+| **来源**     | `docs/decisions/001-auth-bff-sole-jwt-issuer.md` §实施范围 |
 
 **描述**：ADR-001 规定 Business BFF（ruyin-bff / vela-bff / agent-template-bff）应读取浏览器已有 Cookie，未登录或 Cookie 无效时 302 跳转 console 登录页。当前仅 Platform BFF 完成实施，Business BFF 的标准认证中间件标注为 `🔲 规划中`。
 
@@ -125,12 +125,12 @@
 
 ### TD-004 — 会话空闲超时未实现
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Implementation Gap |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/decisions/001-auth-bff-sole-jwt-issuer.md` §会话空闲超时 |
+| 字段         | 内容                                                           |
+| ------------ | -------------------------------------------------------------- |
+| **分类**     | Implementation Gap                                             |
+| **状态**     | Open                                                           |
+| **登记日期** | 2026-05-14                                                     |
+| **来源**     | `docs/decisions/001-auth-bff-sole-jwt-issuer.md` §会话空闲超时 |
 
 **描述**：ADR-001 规划了 4h 空闲超时机制，基于 Redis 滑动窗口（key: `session:activity:{userId}:{surface}`，TTL 4h，每次认证请求续期）。当前未实现，所有 Platform BFF 认证请求无空闲超时保护，仅靠 access token 15min + refresh token 7d 控制有效期。
 
@@ -142,12 +142,12 @@
 
 ### TD-005 — AI Gateway 流式响应未实现
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Implementation Gap |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/design/ai-gateway.md` §11 后续推荐工作 |
+| 字段         | 内容                                         |
+| ------------ | -------------------------------------------- |
+| **分类**     | Implementation Gap                           |
+| **状态**     | Open                                         |
+| **登记日期** | 2026-05-14                                   |
+| **来源**     | `docs/design/ai-gateway.md` §11 后续推荐工作 |
 
 **描述**：当前 AI Gateway 仅支持同步响应，大模型回复长文本时用户需等待完整响应。vela-bff → browser 层已有 SSE 协议设计，但 gateway → provider 层的 streaming 调用未打通，`ChatRequest.stream: true` 参数当前无效。
 
@@ -159,12 +159,12 @@
 
 ### TD-006 — AI Gateway Provider API Key 无轮换机制
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Security |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/design/ai-gateway.md` §11 后续推荐工作；§5 `ai_model.api_key_env_var` |
+| 字段         | 内容                                                                        |
+| ------------ | --------------------------------------------------------------------------- |
+| **分类**     | Security                                                                    |
+| **状态**     | Open                                                                        |
+| **登记日期** | 2026-05-14                                                                  |
+| **来源**     | `docs/design/ai-gateway.md` §11 后续推荐工作；§5 `ai_model.api_key_env_var` |
 
 **描述**：Provider API Key 当前通过环境变量注入（数据库只存变量名，Key 不入库）。该方案无 Key 轮换机制：Key 泄露后需停机修改环境变量并重启服务，多环境 Key 管理分散。
 
@@ -176,12 +176,12 @@
 
 ### TD-007 — AI Gateway Provider 重试 / 降级未实现
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Implementation Gap |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/design/ai-gateway.md` §11 后续推荐工作 |
+| 字段         | 内容                                         |
+| ------------ | -------------------------------------------- |
+| **分类**     | Implementation Gap                           |
+| **状态**     | Open                                         |
+| **登记日期** | 2026-05-14                                   |
+| **来源**     | `docs/design/ai-gateway.md` §11 后续推荐工作 |
 
 **描述**：Provider 调用当前无重试策略，瞬时故障直接返回错误给调用方。无 fallback 路由（如主 Provider 不可用时切换备用 modelCode）。
 
@@ -193,12 +193,12 @@
 
 ### TD-008 — AI Gateway Provider 合同价格为占位数据
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Implementation Gap |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/design/ai-gateway.md` §10 Phase 1 Seed、§6 Cost And Fee Model |
+| 字段         | 内容                                                                |
+| ------------ | ------------------------------------------------------------------- |
+| **分类**     | Implementation Gap                                                  |
+| **状态**     | Open                                                                |
+| **登记日期** | 2026-05-14                                                          |
+| **来源**     | `docs/design/ai-gateway.md` §10 Phase 1 Seed、§6 Cost And Fee Model |
 
 **描述**：`ai_gateway.ai_model_cost_rate` 表中的 Provider 成本价格为 seed 文件占位数据，非实际合同价格。商务面向客户的计费规则（超额用量、add-on agent、私有模型部署服务、实施费）也未实现。
 
@@ -210,12 +210,12 @@
 
 ### TD-009 — surface 命名方案待定
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Design Pending |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/glossary.md` → surface 条目 |
+| 字段         | 内容                              |
+| ------------ | --------------------------------- |
+| **分类**     | Design Pending                    |
+| **状态**     | Open                              |
+| **登记日期** | 2026-05-14                        |
+| **来源**     | `docs/glossary.md` → surface 条目 |
 
 **描述**：当前 surface 取值为 `admin` 和 `console`，但 `admin` 与 RBAC 中的角色名重名，语义存在歧义。规划中 surface 将细分为两层（运营管理子域 + 平台自治子域；管理子域 + 应用子域），候选更名方案（如 `admin` → `ops`）尚未决策。
 
@@ -227,12 +227,12 @@
 
 ### TD-010 — Platform SDK 部分模块计划中未实现
 
-| 字段 | 内容 |
-|------|------|
-| **分类** | Implementation Gap |
-| **状态** | Open |
-| **登记日期** | 2026-05-14 |
-| **来源** | `docs/packages/` Platform SDK 相关文档 |
+| 字段         | 内容                                   |
+| ------------ | -------------------------------------- |
+| **分类**     | Implementation Gap                     |
+| **状态**     | Open                                   |
+| **登记日期** | 2026-05-14                             |
+| **来源**     | `docs/packages/` Platform SDK 相关文档 |
 
 **描述**：Platform SDK 中部分模块（地图集成 `amap`、三维可视化 `cesium` 等）标注为"计划中"，尚未实现。当前只有 `@vxture/platform-browser` 一个已实现 SDK，其余模块为占位。
 

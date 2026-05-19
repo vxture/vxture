@@ -15,11 +15,20 @@
  * @category Service
  */
 
-import { ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { JwtAuthScope, JwtUserType, type JwtAccessPayload } from '@vxture/core-auth';
-import { VxConfigService } from '@vxture/core-config';
-import type { AgentViewer } from '../types/auth.types';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
+import {
+  JwtAuthScope,
+  JwtUserType,
+  type JwtAccessPayload,
+} from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
+import type { AgentViewer } from "../types/auth.types";
 
 @Injectable()
 export class AgentAuthService {
@@ -34,13 +43,13 @@ export class AgentAuthService {
     });
 
     if (payload.userType !== JwtUserType.TENANT_USER) {
-      throw new ForbiddenException('Invalid ruyin token user type');
+      throw new ForbiddenException("Invalid ruyin token user type");
     }
     if (payload.authScope !== JwtAuthScope.TENANT_CONSOLE) {
-      throw new ForbiddenException('Invalid ruyin token scope');
+      throw new ForbiddenException("Invalid ruyin token scope");
     }
     if (!payload.tenantId?.trim()) {
-      throw new UnauthorizedException('Ruyin token requires tenantId');
+      throw new UnauthorizedException("Ruyin token requires tenantId");
     }
 
     return payload;

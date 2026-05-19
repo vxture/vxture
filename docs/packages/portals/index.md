@@ -7,11 +7,11 @@
 
 ## 包列表
 
-| 包 | 路径 | 端口 | 域名 | 服务对象 |
-|----|------|------|------|---------|
-| [`website.md`](website.md) | `portals/website/` | 3010 | `vxture.com` | 公众（官网、注册、登录） |
-| [`console.md`](console.md) | `portals/console/` | 3020 | `console.vxture.com` | 租户管理员（工作台、成员、账单） |
-| [`admin.md`](admin.md) | `portals/admin/` | 3030 | `admin.vxture.com` | 平台运营者（租户管理、工单、AI 配置） |
+| 包                         | 路径               | 端口 | 域名                 | 服务对象                              |
+| -------------------------- | ------------------ | ---- | -------------------- | ------------------------------------- |
+| [`website.md`](website.md) | `portals/website/` | 3010 | `vxture.com`         | 公众（官网、注册、登录）              |
+| [`console.md`](console.md) | `portals/console/` | 3020 | `console.vxture.com` | 租户管理员（工作台、成员、账单）      |
+| [`admin.md`](admin.md)     | `portals/admin/`   | 3030 | `admin.vxture.com`   | 平台运营者（租户管理、工单、AI 配置） |
 
 ---
 
@@ -19,10 +19,10 @@
 
 Vela 智能助手嵌入 admin 和 console 两个 portal，作为侧边栏 / 浮动栏 / 全屏 AI 助手使用：
 
-| Portal | 嵌入入口文件 | surface 值 |
-|--------|------------|-----------|
-| admin | `portals/admin/src/layout/VelaAdminChat.tsx` | `admin` |
-| console | `portals/console/src/layout/VelaConsoleChat.tsx` | `console` |
+| Portal  | 嵌入入口文件                                     | surface 值 |
+| ------- | ------------------------------------------------ | ---------- |
+| admin   | `portals/admin/src/layout/VelaAdminChat.tsx`     | `admin`    |
+| console | `portals/console/src/layout/VelaConsoleChat.tsx` | `console`  |
 
 ---
 

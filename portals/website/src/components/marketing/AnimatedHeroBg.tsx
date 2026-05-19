@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * AnimatedHeroBg.tsx - 营销页 Hero 区块动态背景
@@ -13,18 +13,18 @@
  * @date 2026-05-06
  */
 
-import { useEffect, useRef } from 'react';
-import { useTheme } from '@vxture/design-system';
+import { useEffect, useRef } from "react";
+import { useTheme } from "@vxture/design-system";
 
 function readHeroCanvasPalette() {
   const styles = getComputedStyle(document.documentElement);
-  const nodeRgb = styles.getPropertyValue('--vx-color-hero-node-rgb').trim();
-  const lineRgb = styles.getPropertyValue('--vx-color-hero-line-rgb').trim();
+  const nodeRgb = styles.getPropertyValue("--vx-color-hero-node-rgb").trim();
+  const lineRgb = styles.getPropertyValue("--vx-color-hero-line-rgb").trim();
 
   return {
     node: (alpha: number) => `rgb(${nodeRgb} / ${alpha})`,
     line: (alpha: number) => `rgb(${lineRgb} / ${alpha})`,
-    scanColor: styles.getPropertyValue('--vx-color-hero-scan').trim(),
+    scanColor: styles.getPropertyValue("--vx-color-hero-scan").trim(),
   };
 }
 
@@ -37,14 +37,14 @@ export default function AnimatedHeroBg() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -999, y: -999 });
   const { theme } = useTheme();
-  const isDark = theme === 'dark';
+  const isDark = theme === "dark";
 
   // ─── Canvas 动画 ───────────────────────────────────────────────────────────
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const palette = readHeroCanvasPalette();
@@ -53,7 +53,14 @@ export default function AnimatedHeroBg() {
     let height = 0;
     let scanY = 0;
 
-    type Node = { x: number; y: number; vx: number; vy: number; r: number; phase: number };
+    type Node = {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      r: number;
+      phase: number;
+    };
     let nodes: Node[] = [];
 
     const resize = () => {
@@ -127,9 +134,9 @@ export default function AnimatedHeroBg() {
       // 绘制下降横向扫描线
       scanY = (scanY + SCAN_SPEED) % height;
       const scanGrad = ctx.createLinearGradient(0, 0, width, 0);
-      scanGrad.addColorStop(0, 'transparent');
+      scanGrad.addColorStop(0, "transparent");
       scanGrad.addColorStop(0.5, palette.scanColor);
-      scanGrad.addColorStop(1, 'transparent');
+      scanGrad.addColorStop(1, "transparent");
       ctx.fillStyle = scanGrad;
       ctx.fillRect(0, scanY, width, 1.5);
 
@@ -144,31 +151,34 @@ export default function AnimatedHeroBg() {
       mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     };
 
-    window.addEventListener('resize', resize);
-    canvas.addEventListener('pointermove', onMove);
+    window.addEventListener("resize", resize);
+    canvas.addEventListener("pointermove", onMove);
 
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
-      canvas.removeEventListener('pointermove', onMove);
+      window.removeEventListener("resize", resize);
+      canvas.removeEventListener("pointermove", onMove);
     };
   }, [isDark]);
 
   // ─── 渲染 ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className='pointer-events-none absolute inset-0 overflow-hidden' aria-hidden='true'>
+    <div
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      aria-hidden="true"
+    >
       {/* 渐变底色 */}
-      <div className='vx-hero-bg-layer absolute inset-0' />
+      <div className="vx-hero-bg-layer absolute inset-0" />
 
       {/* 节点连线动画层 */}
-      <canvas ref={canvasRef} className='absolute inset-0 h-full w-full' />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
 
       {/* 网格叠层 */}
-      <div className='vx-hero-grid-layer absolute inset-0' />
+      <div className="vx-hero-grid-layer absolute inset-0" />
 
       {/* 底部向下渐隐，与页面内容区平滑过渡 */}
-      <div className='vx-hero-fade-layer absolute bottom-0 left-0 right-0 h-28' />
+      <div className="vx-hero-fade-layer absolute bottom-0 left-0 right-0 h-28" />
     </div>
   );
 }

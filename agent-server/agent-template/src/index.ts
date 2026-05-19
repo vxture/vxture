@@ -15,7 +15,7 @@
  * @category Agent01 - Backend
  */
 
-import { createServer } from 'http';
+import { createServer } from "http";
 
 /**
  * Agent01 后端服务器
@@ -34,11 +34,13 @@ class Agent01Server {
   start(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.server = createServer((_req, res) => {
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({
-          message: 'Agent01 backend server is running',
-          timestamp: new Date().toISOString(),
-        }));
+        res.writeHead(200, { "Content-Type": "application/json" });
+        res.end(
+          JSON.stringify({
+            message: "Agent01 backend server is running",
+            timestamp: new Date().toISOString(),
+          }),
+        );
       });
 
       this.server.listen(this.port, () => {
@@ -46,8 +48,8 @@ class Agent01Server {
         resolve();
       });
 
-      this.server.on('error', (error) => {
-        console.error('Server error:', error);
+      this.server.on("error", (error) => {
+        console.error("Server error:", error);
         reject(error);
       });
     });
@@ -61,10 +63,10 @@ class Agent01Server {
       if (this.server) {
         this.server.close((error) => {
           if (error) {
-            console.error('Error closing server:', error);
+            console.error("Error closing server:", error);
             reject(error);
           } else {
-            console.log('Agent01 backend server stopped');
+            console.log("Agent01 backend server stopped");
             resolve();
           }
         });

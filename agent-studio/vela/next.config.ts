@@ -1,4 +1,4 @@
-import type { NextConfig } from 'next';
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /**
@@ -8,8 +8,8 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: '/vela/:path*',
-        destination: `${process.env['VELA_BFF_DEV_URL'] ?? 'http://localhost:3121'}/vela/:path*`,
+        source: "/vela/:path*",
+        destination: `${process.env["VELA_BFF_DEV_URL"] ?? "http://localhost:3121"}/vela/:path*`,
       },
     ];
   },

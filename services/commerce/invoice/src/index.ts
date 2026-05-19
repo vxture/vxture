@@ -1,5 +1,5 @@
-export { InvoiceModule } from './module/invoice.module';
-export { InvoiceService } from './service/invoice.service';
+export { InvoiceModule } from "./module/invoice.module";
+export { InvoiceService } from "./service/invoice.service";
 export type {
   InvoiceReceiptRecord,
   BillingAddressRecord,
@@ -9,4 +9,4 @@ export type {
   AuditInvoiceReceiptInput,
   ShipInvoiceReceiptInput,
   UpsertBillingAddressInput,
-} from './types/invoice.types';
+} from "./types/invoice.types";

@@ -19,8 +19,8 @@ import {
   Post,
   Req,
   Res,
-} from '@nestjs/common';
-import type { Request, Response } from 'express';
+} from "@nestjs/common";
+import type { Request, Response } from "express";
 
 // ─── DTO ──────────────────────────────────────────────────────────────────────
 
@@ -47,72 +47,84 @@ class ResetPasswordDto {
 }
 
 class InitTenantDto {
-  type!: 'individual' | 'organization';
+  type!: "individual" | "organization";
 }
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
 function resolveAuthBffUrl(): string {
-  const configured = process.env['AUTH_BFF_URL']?.trim();
-  if (configured) return configured.replace(/\/+$/, '');
-  return 'http://localhost:3090';
+  const configured = process.env["AUTH_BFF_URL"]?.trim();
+  if (configured) return configured.replace(/\/+$/, "");
+  return "http://localhost:3090";
 }
 
 const AUTH_BFF = resolveAuthBffUrl();
 
 /** 将 auth-bff 的 set-cookie 头完整透传到客户端 */
-function forwardSetCookie(response: Response, upstream: globalThis.Response): void {
+function forwardSetCookie(
+  response: Response,
+  upstream: globalThis.Response,
+): void {
   const setCookie = readSetCookie(upstream);
-  if (setCookie.length) response.setHeader('set-cookie', setCookie);
+  if (setCookie.length) response.setHeader("set-cookie", setCookie);
 }
 
 function readSetCookie(upstream: globalThis.Response): string[] {
-  const headers = upstream.headers as Headers & { getSetCookie?: () => string[] };
+  const headers = upstream.headers as Headers & {
+    getSetCookie?: () => string[];
+  };
   const setCookie = headers.getSetCookie?.();
   if (setCookie?.length) return setCookie;
-  const single = upstream.headers.get('set-cookie');
+  const single = upstream.headers.get("set-cookie");
   return single ? [single] : [];
 }
 
 /** 将客户端请求中的 cookie 转发到 auth-bff */
 function forwardCookie(req: Request): string {
-  return req.headers.cookie ?? '';
+  return req.headers.cookie ?? "";
 }
 
 function forwardJsonHeaders(req: Request): Record<string, string> {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'Cookie': forwardCookie(req),
+    "Content-Type": "application/json",
+    Cookie: forwardCookie(req),
   };
-  const forwardedFor = req.headers['x-forwarded-for'];
+  const forwardedFor = req.headers["x-forwarded-for"];
   const remoteIp = req.ip ?? req.socket.remoteAddress;
-  headers['X-Forwarded-For'] = [typeof forwardedFor === 'string' ? forwardedFor : '', remoteIp]
+  headers["X-Forwarded-For"] = [
+    typeof forwardedFor === "string" ? forwardedFor : "",
+    remoteIp,
+  ]
     .filter(Boolean)
-    .join(', ');
-  if (req.headers['user-agent']) {
-    headers['User-Agent'] = req.headers['user-agent'];
+    .join(", ");
+  if (req.headers["user-agent"]) {
+    headers["User-Agent"] = req.headers["user-agent"];
   }
   return headers;
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-@Controller('api/auth')
+@Controller("api/auth")
 export class AuthRouter {
   /**
    * 密码登录 → 代理到 auth-bff
    * POST /api/auth/login
    */
-  @Post('login')
+  @Post("login")
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: LoginDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/login', {
-      method: 'POST',
+  async login(
+    @Body() body: LoginDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/login", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({
         identifier: body.identifier,
         password: body.password,
-        source: 'website',
+        source: "website",
         turnstileToken: body.turnstileToken,
       }),
     });
@@ -126,11 +138,15 @@ export class AuthRouter {
    * 注册 → 代理到 auth-bff
    * POST /api/auth/signup
    */
-  @Post('signup')
+  @Post("signup")
   @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() body: SignupDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/signup', {
-      method: 'POST',
+  async signup(
+    @Body() body: SignupDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/signup", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({
         email: body.email,
@@ -149,13 +165,13 @@ export class AuthRouter {
    * 登出 → 代理到 auth-bff
    * POST /api/auth/logout
    */
-  @Post('logout')
+  @Post("logout")
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/logout?source=website', {
-      method: 'POST',
+    const response = await fetch(AUTH_BFF + "/auth/logout?source=website", {
+      method: "POST",
       headers: {
-        'Cookie': forwardCookie(req),
+        Cookie: forwardCookie(req),
       },
     });
 
@@ -168,18 +184,15 @@ export class AuthRouter {
    * 刷新 access token → 代理到 auth-bff
    * POST /api/auth/refresh
    */
-  @Post('refresh')
+  @Post("refresh")
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(
-      AUTH_BFF + '/auth/refresh?source=website',
-      {
-        method: 'POST',
-        headers: {
-          'Cookie': forwardCookie(req),
-        },
+    const response = await fetch(AUTH_BFF + "/auth/refresh?source=website", {
+      method: "POST",
+      headers: {
+        Cookie: forwardCookie(req),
       },
-    );
+    });
 
     const data = await response.json();
     forwardSetCookie(res, response);
@@ -190,13 +203,17 @@ export class AuthRouter {
    * 忘记密码 → 代理到 auth-bff（发送重置邮件）
    * POST /api/auth/forgot-password
    */
-  @Post('forgot-password')
+  @Post("forgot-password")
   @HttpCode(HttpStatus.OK)
-  async forgotPassword(@Body() body: ForgotPasswordDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/forgot-password', {
-      method: 'POST',
+  async forgotPassword(
+    @Body() body: ForgotPasswordDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/forgot-password", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
-      body: JSON.stringify({ email: body.email, source: 'website' }),
+      body: JSON.stringify({ email: body.email, source: "website" }),
     });
 
     const data = await response.json();
@@ -207,13 +224,20 @@ export class AuthRouter {
    * 重置密码 → 代理到 auth-bff
    * POST /api/auth/reset-password
    */
-  @Post('reset-password')
+  @Post("reset-password")
   @HttpCode(HttpStatus.OK)
-  async resetPassword(@Body() body: ResetPasswordDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/reset-password', {
-      method: 'POST',
+  async resetPassword(
+    @Body() body: ResetPasswordDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/reset-password", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
-      body: JSON.stringify({ token: body.token, newPassword: body.newPassword }),
+      body: JSON.stringify({
+        token: body.token,
+        newPassword: body.newPassword,
+      }),
     });
 
     const data = await response.json();
@@ -224,11 +248,15 @@ export class AuthRouter {
    * 初始化租户（注册后首次选择类型）→ 代理到 auth-bff，转发 Set-Cookie
    * POST /api/auth/tenant/init
    */
-  @Post('tenant/init')
+  @Post("tenant/init")
   @HttpCode(HttpStatus.OK)
-  async initTenant(@Body() body: InitTenantDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/tenant/init', {
-      method: 'POST',
+  async initTenant(
+    @Body() body: InitTenantDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/tenant/init", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({ type: body.type }),
     });

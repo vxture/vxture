@@ -23,11 +23,11 @@
  *   const persistOptions = makePersistOptions('auth', (state) => ({ token: state.token }));
  */
 
-import type { PersistOptions } from 'zustand/middleware';
+import type { PersistOptions } from "zustand/middleware";
 
 export function makePersistOptions<TState extends object>(
   name: string,
-  pick: (s: TState) => Partial<TState>
+  pick: (s: TState) => Partial<TState>,
 ): PersistOptions<TState> {
   return {
     name,

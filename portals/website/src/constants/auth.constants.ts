@@ -6,13 +6,13 @@
  */
 
 export const AUTH_CONSTANTS = {
-  STORAGE_KEY: 'auth_storage_key',
-  PERSIST_KEY: 'auth-persist',
+  STORAGE_KEY: "auth_storage_key",
+  PERSIST_KEY: "auth-persist",
   DEFAULT_TOKEN_EXPIRY: 3600 * 24,
   TOKEN_REFRESH_BUFFER: 60000,
   AUTO_LOGOUT_COUNTDOWN: 5000,
   PERMISSIONS: {
-    ADMIN: 'admin',
-    USER: 'user',
+    ADMIN: "admin",
+    USER: "user",
   },
 };

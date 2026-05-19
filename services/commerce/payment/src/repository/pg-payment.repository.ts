@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { Pool } from 'pg';
-import { COMMERCE_PG_POOL } from '../tokens';
+import { Inject, Injectable } from "@nestjs/common";
+import type { Pool } from "pg";
+import { COMMERCE_PG_POOL } from "../tokens";
 import type {
   PaymentRecord,
   RefundRecord,
@@ -13,7 +13,7 @@ import type {
   UpdatePaymentStatusInput,
   CreateRefundInput,
   AuditRefundInput,
-} from '../types/payment.types';
+} from "../types/payment.types";
 
 interface PaymentRow {
   id: string;
@@ -93,11 +93,20 @@ export class PgPaymentRepository {
     const values: unknown[] = [];
     let idx = 1;
 
-    if (params.tenantId) { conditions.push(`tenant_id = $${idx++}`); values.push(params.tenantId); }
-    if (params.billId) { conditions.push(`bill_id = $${idx++}`); values.push(params.billId); }
-    if (params.payStatus) { conditions.push(`pay_status = $${idx++}`); values.push(params.payStatus); }
+    if (params.tenantId) {
+      conditions.push(`tenant_id = $${idx++}`);
+      values.push(params.tenantId);
+    }
+    if (params.billId) {
+      conditions.push(`bill_id = $${idx++}`);
+      values.push(params.billId);
+    }
+    if (params.payStatus) {
+      conditions.push(`pay_status = $${idx++}`);
+      values.push(params.payStatus);
+    }
 
-    const where = conditions.length ? conditions.join(' and ') : 'true';
+    const where = conditions.length ? conditions.join(" and ") : "true";
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 20;
     const offset = (page - 1) * pageSize;
@@ -115,7 +124,7 @@ export class PgPaymentRepository {
     ]);
 
     return {
-      total: parseInt(countResult.rows[0]?.count ?? '0', 10),
+      total: parseInt(countResult.rows[0]?.count ?? "0", 10),
       items: rowsResult.rows.map(this.mapPayment),
     };
   }
@@ -145,18 +154,21 @@ export class PgPaymentRepository {
         input.billId,
         input.transactionId,
         input.payOrderNo,
-        input.paySource ?? 'online',
+        input.paySource ?? "online",
         input.payChannel ?? null,
         input.payMethod ?? null,
         input.totalAmount,
-        input.currency ?? 'CNY',
+        input.currency ?? "CNY",
         input.payExpireAt ?? null,
       ],
     );
     return this.mapPayment(result.rows[0]!);
   }
 
-  async updatePaymentStatus(id: string, input: UpdatePaymentStatusInput): Promise<PaymentRecord | null> {
+  async updatePaymentStatus(
+    id: string,
+    input: UpdatePaymentStatusInput,
+  ): Promise<PaymentRecord | null> {
     const result = await this.pool.query<PaymentRow>(
       `update commerce.tenant_payment set
         pay_status              = $2,
@@ -195,12 +207,24 @@ export class PgPaymentRepository {
     const values: unknown[] = [];
     let idx = 1;
 
-    if (params.tenantId) { conditions.push(`tenant_id = $${idx++}`); values.push(params.tenantId); }
-    if (params.billId) { conditions.push(`bill_id = $${idx++}`); values.push(params.billId); }
-    if (params.auditStatus) { conditions.push(`audit_status = $${idx++}`); values.push(params.auditStatus); }
-    if (params.refundStatus) { conditions.push(`refund_status = $${idx++}`); values.push(params.refundStatus); }
+    if (params.tenantId) {
+      conditions.push(`tenant_id = $${idx++}`);
+      values.push(params.tenantId);
+    }
+    if (params.billId) {
+      conditions.push(`bill_id = $${idx++}`);
+      values.push(params.billId);
+    }
+    if (params.auditStatus) {
+      conditions.push(`audit_status = $${idx++}`);
+      values.push(params.auditStatus);
+    }
+    if (params.refundStatus) {
+      conditions.push(`refund_status = $${idx++}`);
+      values.push(params.refundStatus);
+    }
 
-    const where = conditions.length ? conditions.join(' and ') : 'true';
+    const where = conditions.length ? conditions.join(" and ") : "true";
     const page = params.page ?? 1;
     const pageSize = params.pageSize ?? 20;
     const offset = (page - 1) * pageSize;
@@ -218,7 +242,7 @@ export class PgPaymentRepository {
     ]);
 
     return {
-      total: parseInt(countResult.rows[0]?.count ?? '0', 10),
+      total: parseInt(countResult.rows[0]?.count ?? "0", 10),
       items: rowsResult.rows.map(this.mapRefund),
     };
   }
@@ -249,16 +273,19 @@ export class PgPaymentRepository {
         input.transactionId,
         input.refundNo,
         input.refundAmount,
-        input.currency ?? 'CNY',
+        input.currency ?? "CNY",
         input.refundReason ?? null,
-        input.refundType ?? 'normal',
+        input.refundType ?? "normal",
         input.createdBy,
       ],
     );
     return this.mapRefund(result.rows[0]!);
   }
 
-  async auditRefund(id: string, input: AuditRefundInput): Promise<RefundRecord | null> {
+  async auditRefund(
+    id: string,
+    input: AuditRefundInput,
+  ): Promise<RefundRecord | null> {
     const result = await this.pool.query<RefundRow>(
       `update commerce.tenant_refund set
         audit_status = $2,
@@ -276,7 +303,10 @@ export class PgPaymentRepository {
 
   // ── Transactions (read-only for app, append via insert) ───────
 
-  async listTransactionsByTenantId(tenantId: string, limit = 50): Promise<TransactionRecord[]> {
+  async listTransactionsByTenantId(
+    tenantId: string,
+    limit = 50,
+  ): Promise<TransactionRecord[]> {
     const result = await this.pool.query<TransactionRow>(
       `select * from commerce.tenant_transaction
        where tenant_id = $1
@@ -288,7 +318,7 @@ export class PgPaymentRepository {
   }
 
   async appendTransaction(
-    input: Omit<TransactionRecord, 'id' | 'createdAt'>,
+    input: Omit<TransactionRecord, "id" | "createdAt">,
   ): Promise<TransactionRecord> {
     const result = await this.pool.query<TransactionRow>(
       `insert into commerce.tenant_transaction (

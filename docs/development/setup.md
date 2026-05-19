@@ -6,14 +6,15 @@
 
 ## 前置条件
 
-| 工具 | 版本要求 | 说明 |
-|------|---------|------|
-| Node.js | ≥ 22.x | 推荐通过 nvm 管理 |
-| pnpm | ≥ 9.x | `npm install -g pnpm` |
-| Docker Desktop | ≥ 4.x | 运行 PostgreSQL + Redis |
-| Git | ≥ 2.40 | |
+| 工具           | 版本要求 | 说明                    |
+| -------------- | -------- | ----------------------- |
+| Node.js        | ≥ 22.x   | 推荐通过 nvm 管理       |
+| pnpm           | ≥ 9.x    | `npm install -g pnpm`   |
+| Docker Desktop | ≥ 4.x    | 运行 PostgreSQL + Redis |
+| Git            | ≥ 2.40   |                         |
 
 可选：
+
 - **Tailscale**：连接到 worker-01/02 节点（远程调试用）
 - **VS Code**：推荐扩展 ESLint、Prisma、TypeScript
 

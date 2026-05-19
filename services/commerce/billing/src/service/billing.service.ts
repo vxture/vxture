@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PgBillingRepository } from '../repository/pg-billing.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PgBillingRepository } from "../repository/pg-billing.repository";
 import type {
   InvoiceRecord,
   InvoiceDetail,
@@ -8,7 +12,7 @@ import type {
   ListInvoicesResult,
   CreateInvoiceInput,
   UpdateInvoiceStatusInput,
-} from '../types/billing.types';
+} from "../types/billing.types";
 
 @Injectable()
 export class BillingService {
@@ -31,7 +35,8 @@ export class BillingService {
   }
 
   async createInvoice(input: CreateInvoiceInput): Promise<InvoiceDetail> {
-    if (!input.items.length) throw new ConflictException('账单至少包含一个明细项');
+    if (!input.items.length)
+      throw new ConflictException("账单至少包含一个明细项");
     return this.billing.createInvoice(input);
   }
 
@@ -40,11 +45,13 @@ export class BillingService {
     data: { paymentMethod: string; transactionNo: string; operatorId?: string },
   ): Promise<InvoiceRecord> {
     const invoice = await this.getInvoice(id);
-    if (invoice.billStatus === 'paid') throw new ConflictException('账单已支付');
-    if (invoice.billStatus === 'cancelled') throw new ConflictException('账单已取消');
+    if (invoice.billStatus === "paid")
+      throw new ConflictException("账单已支付");
+    if (invoice.billStatus === "cancelled")
+      throw new ConflictException("账单已取消");
 
     const result = await this.billing.updateInvoiceStatus(id, {
-      billStatus: 'paid',
+      billStatus: "paid",
       paidAt: new Date(),
       paymentMethod: data.paymentMethod,
       transactionNo: data.transactionNo,
@@ -54,20 +61,29 @@ export class BillingService {
     return result!;
   }
 
-  async cancelInvoice(id: string, operatorId?: string, remark?: string): Promise<InvoiceRecord> {
+  async cancelInvoice(
+    id: string,
+    operatorId?: string,
+    remark?: string,
+  ): Promise<InvoiceRecord> {
     const invoice = await this.getInvoice(id);
-    if (invoice.billStatus === 'paid') throw new ConflictException('已支付账单不可取消');
-    if (invoice.billStatus === 'cancelled') throw new ConflictException('账单已取消');
+    if (invoice.billStatus === "paid")
+      throw new ConflictException("已支付账单不可取消");
+    if (invoice.billStatus === "cancelled")
+      throw new ConflictException("账单已取消");
 
     const result = await this.billing.updateInvoiceStatus(id, {
-      billStatus: 'cancelled',
-      ...(operatorId !== undefined ? { operatorId }       : {}),
-      ...(remark     !== undefined ? { operateRemark: remark } : {}),
+      billStatus: "cancelled",
+      ...(operatorId !== undefined ? { operatorId } : {}),
+      ...(remark !== undefined ? { operateRemark: remark } : {}),
     });
     return result!;
   }
 
-  async updateInvoiceStatus(id: string, input: UpdateInvoiceStatusInput): Promise<InvoiceRecord> {
+  async updateInvoiceStatus(
+    id: string,
+    input: UpdateInvoiceStatusInput,
+  ): Promise<InvoiceRecord> {
     await this.getInvoice(id);
     const result = await this.billing.updateInvoiceStatus(id, input);
     return result!;

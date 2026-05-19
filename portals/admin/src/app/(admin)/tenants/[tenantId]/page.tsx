@@ -1,4 +1,4 @@
-import { TenantDetailPage } from '@/modules/tenants/TenantDetailPage';
+import { TenantDetailPage } from "@/modules/tenants/TenantDetailPage";
 
 type TenantDetailRouteProps = {
   params: Promise<{

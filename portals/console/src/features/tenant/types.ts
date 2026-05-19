@@ -1,7 +1,7 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-export type TenantType = 'personal' | 'organization';
-export type TenantRole = 'owner' | 'admin' | 'member';
+export type TenantType = "personal" | "organization";
+export type TenantRole = "owner" | "admin" | "member";
 
 export interface Tenant {
   id: string;
@@ -17,7 +17,7 @@ export interface TenantMembership {
   userId: string;
   tenantId: string;
   role: TenantRole;
-  status: 'active' | 'pending' | 'disabled';
+  status: "active" | "pending" | "disabled";
 }
 
 export interface TenantListItem {
@@ -28,7 +28,7 @@ export interface TenantListItem {
   type: TenantType;
   role: TenantRole;
   isCurrent: boolean;
-  source?: 'session';
+  source?: "session";
 }
 
 export interface CreateTenantPayload {

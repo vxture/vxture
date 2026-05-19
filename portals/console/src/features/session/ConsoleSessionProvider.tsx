@@ -1,10 +1,23 @@
-'use client';
+"use client";
 
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { login, logout, restoreSession, switchTenantSession } from '@/api/console-bff';
-import type { SessionSnapshot } from '@/entities/console';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import {
+  login,
+  logout,
+  restoreSession,
+  switchTenantSession,
+} from "@/api/console-bff";
+import type { SessionSnapshot } from "@/entities/console";
 
-type SessionStatus = 'idle' | 'loading' | 'ready';
+type SessionStatus = "idle" | "loading" | "ready";
 const SESSION_SYNC_INTERVAL_MS = 2000;
 const SESSION_SYNC_THROTTLE_MS = 1500;
 const ANONYMOUS_SESSION: SessionSnapshot = {
@@ -22,7 +35,11 @@ interface RefreshSessionOptions {
 interface SessionContextValue {
   session: SessionSnapshot;
   status: SessionStatus;
-  signIn: (identifier: string, password: string, turnstileToken?: string) => Promise<void>;
+  signIn: (
+    identifier: string,
+    password: string,
+    turnstileToken?: string,
+  ) => Promise<void>;
   signOut: () => void;
   switchTenant: (tenantId: string) => Promise<void>;
   refreshSession: (options?: RefreshSessionOptions) => Promise<SessionSnapshot>;
@@ -30,17 +47,17 @@ interface SessionContextValue {
 
 const SessionContext = createContext<SessionContextValue>({
   session: ANONYMOUS_SESSION,
-  status: 'idle',
+  status: "idle",
   signIn: async () => undefined,
   signOut: () => undefined,
   switchTenant: async () => undefined,
   refreshSession: async () => ANONYMOUS_SESSION,
 });
 
-const ACTIVE_TENANT_STORAGE_KEY = 'vx-console-active-tenant-id';
+const ACTIVE_TENANT_STORAGE_KEY = "vx-console-active-tenant-id";
 
 function readStoredTenantId() {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return undefined;
   }
 
@@ -48,7 +65,7 @@ function readStoredTenantId() {
 }
 
 function writeStoredTenantId(tenantId: string) {
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.localStorage.setItem(ACTIVE_TENANT_STORAGE_KEY, tenantId);
   }
 }
@@ -59,7 +76,9 @@ async function applyStoredTenant(snapshot: SessionSnapshot) {
     return snapshot;
   }
 
-  const canUseStoredTenant = (snapshot.tenantOptions ?? []).some((tenant) => tenant.id === storedTenantId);
+  const canUseStoredTenant = (snapshot.tenantOptions ?? []).some(
+    (tenant) => tenant.id === storedTenantId,
+  );
   return canUseStoredTenant ? switchTenantSession(storedTenantId) : snapshot;
 }
 
@@ -75,7 +94,7 @@ function getSessionIdentity(snapshot: SessionSnapshot) {
 
 export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<SessionSnapshot>(ANONYMOUS_SESSION);
-  const [status, setStatus] = useState<SessionStatus>('loading');
+  const [status, setStatus] = useState<SessionStatus>("loading");
   const sessionRef = useRef<SessionSnapshot>(ANONYMOUS_SESSION);
   const lastSyncAtRef = useRef(0);
   const syncInFlightRef = useRef(false);
@@ -89,26 +108,29 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const refreshSession = useCallback(async (options: RefreshSessionOptions = {}) => {
-    if (!options.silent) {
-      setStatus('loading');
-    }
-
-    try {
-      const snapshot = await applyStoredTenant(await restoreSession());
-      commitSession(snapshot);
-      setStatus('ready');
-
-      return snapshot;
-    } catch (error) {
+  const refreshSession = useCallback(
+    async (options: RefreshSessionOptions = {}) => {
       if (!options.silent) {
-        commitSession(ANONYMOUS_SESSION);
+        setStatus("loading");
       }
 
-      setStatus('ready');
-      return options.silent ? sessionRef.current : ANONYMOUS_SESSION;
-    }
-  }, [commitSession]);
+      try {
+        const snapshot = await applyStoredTenant(await restoreSession());
+        commitSession(snapshot);
+        setStatus("ready");
+
+        return snapshot;
+      } catch (error) {
+        if (!options.silent) {
+          commitSession(ANONYMOUS_SESSION);
+        }
+
+        setStatus("ready");
+        return options.silent ? sessionRef.current : ANONYMOUS_SESSION;
+      }
+    },
+    [commitSession],
+  );
 
   useEffect(() => {
     lastSyncAtRef.current = Date.now();
@@ -116,13 +138,16 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
   }, [refreshSession]);
 
   useEffect(() => {
-    if (status !== 'ready') {
+    if (status !== "ready") {
       return;
     }
 
     const syncIfStale = () => {
       const now = Date.now();
-      if (syncInFlightRef.current || now - lastSyncAtRef.current < SESSION_SYNC_THROTTLE_MS) {
+      if (
+        syncInFlightRef.current ||
+        now - lastSyncAtRef.current < SESSION_SYNC_THROTTLE_MS
+      ) {
         return;
       }
 
@@ -135,31 +160,40 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
     };
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === "visible") {
         syncIfStale();
       }
     };
 
-    const intervalId = window.setInterval(syncIfStale, SESSION_SYNC_INTERVAL_MS);
-    window.addEventListener('focus', syncIfStale);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    const intervalId = window.setInterval(
+      syncIfStale,
+      SESSION_SYNC_INTERVAL_MS,
+    );
+    window.addEventListener("focus", syncIfStale);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       window.clearInterval(intervalId);
-      window.removeEventListener('focus', syncIfStale);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener("focus", syncIfStale);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [refreshSession, status]);
 
-  async function signIn(identifier: string, password: string, turnstileToken?: string) {
-    setStatus('loading');
+  async function signIn(
+    identifier: string,
+    password: string,
+    turnstileToken?: string,
+  ) {
+    setStatus("loading");
     try {
-      const snapshot = await applyStoredTenant(await login({ identifier, password, turnstileToken }));
+      const snapshot = await applyStoredTenant(
+        await login({ identifier, password, turnstileToken }),
+      );
       commitSession(snapshot);
-      setStatus('ready');
+      setStatus("ready");
     } catch (error) {
       commitSession(ANONYMOUS_SESSION);
-      setStatus('ready');
+      setStatus("ready");
       throw error;
     }
   }
@@ -167,19 +201,21 @@ export function ConsoleSessionProvider({ children }: { children: ReactNode }) {
   async function signOut() {
     await logout();
     commitSession(ANONYMOUS_SESSION);
-    setStatus('ready');
+    setStatus("ready");
   }
 
   async function switchTenant(tenantId: string) {
-    setStatus('loading');
+    setStatus("loading");
     const snapshot = await switchTenantSession(tenantId);
     writeStoredTenantId(tenantId);
     commitSession(snapshot);
-    setStatus('ready');
+    setStatus("ready");
   }
 
   return (
-    <SessionContext.Provider value={{ session, status, signIn, signOut, switchTenant, refreshSession }}>
+    <SessionContext.Provider
+      value={{ session, status, signIn, signOut, switchTenant, refreshSession }}
+    >
       {children}
     </SessionContext.Provider>
   );

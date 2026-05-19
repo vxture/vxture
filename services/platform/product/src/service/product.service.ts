@@ -1,10 +1,23 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PgProductRepository } from '../repository/pg-product.repository';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from "@nestjs/common";
+import { PgProductRepository } from "../repository/pg-product.repository";
 import type {
-  AgentRecord, AgentDetail, FeatureRecord, PlanRecord, PlanPriceRecord,
-  PlanDetail, ListAgentsParams, ListPlansParams, ListFeaturesParams,
-  CreateAgentInput, CreatePlanInput, SetPlanFeaturesInput,
-} from '../types/product.types';
+  AgentRecord,
+  AgentDetail,
+  FeatureRecord,
+  PlanRecord,
+  PlanPriceRecord,
+  PlanDetail,
+  ListAgentsParams,
+  ListPlansParams,
+  ListFeaturesParams,
+  CreateAgentInput,
+  CreatePlanInput,
+  SetPlanFeaturesInput,
+} from "../types/product.types";
 
 @Injectable()
 export class ProductService {
@@ -12,7 +25,9 @@ export class ProductService {
 
   // ── Agents ─────────────────────────────────────────────────────────────
 
-  async listAgents(params: ListAgentsParams): Promise<{ items: AgentRecord[]; total: number }> {
+  async listAgents(
+    params: ListAgentsParams,
+  ): Promise<{ items: AgentRecord[]; total: number }> {
     return this.repo.listAgents(params);
   }
 
@@ -32,7 +47,11 @@ export class ProductService {
     return this.repo.createAgent(input);
   }
 
-  async updateAgentStatus(id: string, status: string, updatedBy: string): Promise<void> {
+  async updateAgentStatus(
+    id: string,
+    status: string,
+    updatedBy: string,
+  ): Promise<void> {
     const agent = await this.repo.getAgentById(id);
     if (!agent) throw new NotFoundException(`Agent ${id} not found`);
     await this.repo.updateAgentStatus(id, status, updatedBy);
@@ -46,13 +65,16 @@ export class ProductService {
 
   async getFeatureByCode(featureCode: string): Promise<FeatureRecord> {
     const feature = await this.repo.getFeatureByCode(featureCode);
-    if (!feature) throw new NotFoundException(`Feature ${featureCode} not found`);
+    if (!feature)
+      throw new NotFoundException(`Feature ${featureCode} not found`);
     return feature;
   }
 
   // ── Plans ──────────────────────────────────────────────────────────────
 
-  async listPlans(params: ListPlansParams): Promise<{ items: PlanRecord[]; total: number }> {
+  async listPlans(
+    params: ListPlansParams,
+  ): Promise<{ items: PlanRecord[]; total: number }> {
     return this.repo.listPlans(params);
   }
 

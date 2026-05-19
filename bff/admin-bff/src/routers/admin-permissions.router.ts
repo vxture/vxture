@@ -5,21 +5,29 @@ import {
   Inject,
   Req,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import type { Pool } from 'pg';
-import { ADMIN_BFF_RO_POOL } from '../tokens';
-import type { PlatformAdminPermissionRecord, PlatformPermissionType, RequestContext } from '../types/console.types';
+} from "@nestjs/common";
+import type { Request } from "express";
+import type { Pool } from "pg";
+import { ADMIN_BFF_RO_POOL } from "../tokens";
+import type {
+  PlatformAdminPermissionRecord,
+  PlatformPermissionType,
+  RequestContext,
+} from "../types/console.types";
 
-@Controller('api/admin-permissions')
+@Controller("api/admin-permissions")
 export class AdminPermissionsRouter {
   constructor(@Inject(ADMIN_BFF_RO_POOL) private readonly pool: Pool) {}
 
   @Get()
-  async listAdminPermissions(@Req() req: Request & RequestContext): Promise<PlatformAdminPermissionRecord[]> {
+  async listAdminPermissions(
+    @Req() req: Request & RequestContext,
+  ): Promise<PlatformAdminPermissionRecord[]> {
     assertCanViewAdminPermissions(req);
 
-    const result = await this.pool.query<PlatformAdminPermissionRow>(PLATFORM_PERMISSION_SQL);
+    const result = await this.pool.query<PlatformAdminPermissionRow>(
+      PLATFORM_PERMISSION_SQL,
+    );
     return result.rows.map((row) => ({
       id: row.id,
       parentId: row.parent_id,
@@ -42,21 +50,23 @@ export class AdminPermissionsRouter {
 
 function assertCanViewAdminPermissions(req: Request & RequestContext): void {
   if (!req.user) {
-    throw new UnauthorizedException('No active session');
+    throw new UnauthorizedException("No active session");
   }
 
   if (
     req.capabilities &&
-    !req.capabilities.includes('platform.admin.manage') &&
-    !req.capabilities.includes('platform.tenant.manage')
+    !req.capabilities.includes("platform.admin.manage") &&
+    !req.capabilities.includes("platform.tenant.manage")
   ) {
-    throw new ForbiddenException('Missing platform.admin.manage capability');
+    throw new ForbiddenException("Missing platform.admin.manage capability");
   }
 }
 
 function toIso(value: Date | string | null): string {
   if (!value) return new Date(0).toISOString();
-  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  return value instanceof Date
+    ? value.toISOString()
+    : new Date(value).toISOString();
 }
 
 interface PlatformAdminPermissionRow {

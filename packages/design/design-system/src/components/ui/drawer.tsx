@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * drawer.tsx - 侧滑抽屉组件
@@ -12,14 +12,14 @@
  * @date 2026-05-16
  */
 
-import type { CSSProperties, ReactNode } from 'react';
-import { useEffect } from 'react';
-import { cn } from '../../utils/cn';
+import type { CSSProperties, ReactNode } from "react";
+import { useEffect } from "react";
+import { cn } from "../../utils/cn";
 
 export interface DrawerProps {
   readonly open: boolean;
   readonly onClose: () => void;
-  readonly side?: 'right' | 'left';
+  readonly side?: "right" | "left";
   readonly width?: number | string;
   readonly title?: ReactNode;
   readonly footer?: ReactNode;
@@ -30,7 +30,7 @@ export interface DrawerProps {
 export function Drawer({
   open,
   onClose,
-  side = 'right',
+  side = "right",
   width,
   title,
   footer,
@@ -40,18 +40,18 @@ export function Drawer({
   useEffect(() => {
     if (!open) return undefined;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose, open]);
 
   useEffect(() => {
     if (!open) return undefined;
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previousOverflow;
     };
@@ -59,17 +59,34 @@ export function Drawer({
 
   if (!open) return null;
 
-  const widthValue = typeof width === 'number' ? `${width}px` : width;
-  const panelStyle = widthValue ? ({ '--vx-drawer-width': widthValue } as CSSProperties) : undefined;
+  const widthValue = typeof width === "number" ? `${width}px` : width;
+  const panelStyle = widthValue
+    ? ({ "--vx-drawer-width": widthValue } as CSSProperties)
+    : undefined;
 
   return (
-    <div className={cn('vx-drawer-root', `vx-drawer-root--${side}`, className)}>
-      <button type="button" className="vx-drawer__scrim" onClick={onClose} aria-label="Close drawer" />
-      <div className="vx-drawer__panel" role="dialog" aria-modal="true" style={panelStyle}>
+    <div className={cn("vx-drawer-root", `vx-drawer-root--${side}`, className)}>
+      <button
+        type="button"
+        className="vx-drawer__scrim"
+        onClick={onClose}
+        aria-label="Close drawer"
+      />
+      <div
+        className="vx-drawer__panel"
+        role="dialog"
+        aria-modal="true"
+        style={panelStyle}
+      >
         {title ? (
           <div className="vx-drawer__header">
             <div className="vx-drawer__title">{title}</div>
-            <button type="button" className="vx-drawer__close" onClick={onClose} aria-label="Close drawer">
+            <button
+              type="button"
+              className="vx-drawer__close"
+              onClick={onClose}
+              aria-label="Close drawer"
+            >
               Close
             </button>
           </div>

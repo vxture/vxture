@@ -5,9 +5,13 @@
  * @category Components - Panels
  */
 
-export { default as SnapChoicePanel } from './SnapChoicePanel';
-export { default as SnapDebugPanel } from './SnapDebugPanel';
+export { default as SnapChoicePanel } from "./SnapChoicePanel";
+export { default as SnapDebugPanel } from "./SnapDebugPanel";
 
 // 类型导出
-export type { SnapChoicePanelProps } from './SnapChoicePanel';
-export type { SnapDebugPanelProps, SnapDebugInfo, PanelPosition } from './SnapDebugPanel';
+export type { SnapChoicePanelProps } from "./SnapChoicePanel";
+export type {
+  SnapDebugPanelProps,
+  SnapDebugInfo,
+  PanelPosition,
+} from "./SnapDebugPanel";

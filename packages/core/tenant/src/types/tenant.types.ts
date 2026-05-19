@@ -29,16 +29,17 @@ export interface TenantInfo {
  */
 export const TenantResolveSource = {
   /** x-tenant-id header */
-  HEADER:    'header',
+  HEADER: "header",
   /** 子域名，如 acme.vxture.com */
-  SUBDOMAIN: 'subdomain',
+  SUBDOMAIN: "subdomain",
   /** JWT payload 中的 tenantId */
-  JWT:       'jwt',
+  JWT: "jwt",
   /** 回退默认值 */
-  FALLBACK:  'fallback',
+  FALLBACK: "fallback",
 } as const;
 
-export type TenantResolveSource = typeof TenantResolveSource[keyof typeof TenantResolveSource];
+export type TenantResolveSource =
+  (typeof TenantResolveSource)[keyof typeof TenantResolveSource];
 
 // ============================================================================
 // 请求扩展接口

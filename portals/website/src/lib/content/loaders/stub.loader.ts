@@ -7,7 +7,7 @@
  * @date 2026-05-06
  */
 
-import type { ContentLoader, ContentSection } from '../types';
+import type { ContentLoader, ContentSection } from "../types";
 
 /**
  * 生成仅处理区段根路径的占位 loader。
@@ -22,6 +22,6 @@ export function createStubLoader(section: ContentSection): ContentLoader {
   return async (slug) => {
     // 只处理根路径，子路径暂不支持
     if (slug.length > 0) return null;
-    return { type: 'stub', layout: 'prose', section };
+    return { type: "stub", layout: "prose", section };
   };
 }

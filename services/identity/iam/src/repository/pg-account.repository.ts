@@ -1,7 +1,7 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
-import { createHash, randomBytes } from 'node:crypto';
-import type { Pool } from 'pg';
-import { IAM_PG_POOL } from '../tokens';
+import { ConflictException, Inject, Injectable } from "@nestjs/common";
+import { createHash, randomBytes } from "node:crypto";
+import type { Pool } from "pg";
+import { IAM_PG_POOL } from "../tokens";
 import type {
   AccountCredentialRecord,
   AccountProfileView,
@@ -10,7 +10,7 @@ import type {
   CreateAccountInput,
   FindOrCreateByOAuthInput,
   UpdateAccountProfileInput,
-} from '../types/iam.types';
+} from "../types/iam.types";
 
 interface AccountRow {
   id: string;
@@ -39,7 +39,9 @@ interface AccountProfileRow extends AccountRow {
 export class PgAccountRepository implements AccountReadRepository {
   constructor(@Inject(IAM_PG_POOL) private readonly pool: Pool) {}
 
-  async findByIdentifier(identifier: string): Promise<AccountCredentialRecord | null> {
+  async findByIdentifier(
+    identifier: string,
+  ): Promise<AccountCredentialRecord | null> {
     const result = await this.pool.query<AccountCredentialRow>(
       `
         select
@@ -97,7 +99,9 @@ export class PgAccountRepository implements AccountReadRepository {
     };
   }
 
-  async findCredentialById(accountId: string): Promise<AccountCredentialRecord | null> {
+  async findCredentialById(
+    accountId: string,
+  ): Promise<AccountCredentialRecord | null> {
     const result = await this.pool.query<AccountCredentialRow>(
       `
         select
@@ -151,12 +155,18 @@ export class PgAccountRepository implements AccountReadRepository {
     return this.mapProfile(result.rows[0]);
   }
 
-  async updateProfile(accountId: string, input: UpdateAccountProfileInput): Promise<AccountProfileView | null> {
+  async updateProfile(
+    accountId: string,
+    input: UpdateAccountProfileInput,
+  ): Promise<AccountProfileView | null> {
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
 
-      if (Object.prototype.hasOwnProperty.call(input, 'email') || Object.prototype.hasOwnProperty.call(input, 'phone')) {
+      if (
+        Object.prototype.hasOwnProperty.call(input, "email") ||
+        Object.prototype.hasOwnProperty.call(input, "phone")
+      ) {
         await client.query(
           `
             update identity.account
@@ -167,7 +177,11 @@ export class PgAccountRepository implements AccountReadRepository {
             where id = $1
               and deleted_at is null
           `,
-          [accountId, normalizeNullable(input.email), normalizeNullable(input.phone)],
+          [
+            accountId,
+            normalizeNullable(input.email),
+            normalizeNullable(input.phone),
+          ],
         );
       }
 
@@ -205,9 +219,9 @@ export class PgAccountRepository implements AccountReadRepository {
         ],
       );
 
-      await client.query('commit');
+      await client.query("commit");
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
@@ -216,10 +230,13 @@ export class PgAccountRepository implements AccountReadRepository {
     return this.getProfile(accountId);
   }
 
-  async createPasswordResetToken(accountId: string, expiresAt: Date): Promise<string> {
+  async createPasswordResetToken(
+    accountId: string,
+    expiresAt: Date,
+  ): Promise<string> {
     // 生成 64 字符随机 hex token，仅在此处可见，DB 存哈希
-    const rawToken = randomBytes(32).toString('hex');
-    const tokenHash = createHash('sha256').update(rawToken).digest('hex');
+    const rawToken = randomBytes(32).toString("hex");
+    const tokenHash = createHash("sha256").update(rawToken).digest("hex");
 
     await this.pool.query(
       `insert into identity.password_reset_token (account_id, token_hash, expires_at)
@@ -232,7 +249,7 @@ export class PgAccountRepository implements AccountReadRepository {
   }
 
   async consumePasswordResetToken(token: string): Promise<string | null> {
-    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const tokenHash = createHash("sha256").update(token).digest("hex");
 
     const result = await this.pool.query<{ account_id: string }>(
       `update identity.password_reset_token
@@ -247,14 +264,16 @@ export class PgAccountRepository implements AccountReadRepository {
     return result.rows[0]?.account_id ?? null;
   }
 
-  async createAccount(input: CreateAccountInput): Promise<AuthenticatedAccountView> {
+  async createAccount(
+    input: CreateAccountInput,
+  ): Promise<AuthenticatedAccountView> {
     const id = crypto.randomUUID();
     const username = deriveUsername(input.email);
     const email = input.email.toLowerCase().trim();
 
     const client = await this.pool.connect();
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       await client.query(
         `insert into identity.account (id, username, email, status, created_at, updated_at)
@@ -274,11 +293,11 @@ export class PgAccountRepository implements AccountReadRepository {
         [id, input.name.trim()],
       );
 
-      await client.query('commit');
+      await client.query("commit");
     } catch (error: unknown) {
-      await client.query('rollback');
+      await client.query("rollback");
       if (isUniqueViolation(error)) {
-        throw new ConflictException('该邮箱已被注册');
+        throw new ConflictException("该邮箱已被注册");
       }
 
       throw error;
@@ -303,7 +322,9 @@ export class PgAccountRepository implements AccountReadRepository {
     );
   }
 
-  async findOrCreateByOAuth(input: FindOrCreateByOAuthInput): Promise<AuthenticatedAccountView> {
+  async findOrCreateByOAuth(
+    input: FindOrCreateByOAuthInput,
+  ): Promise<AuthenticatedAccountView> {
     // 1. 通过 sso_connection 表查找已绑定账号
     const existing = await this.pool.query<{ account_id: string }>(
       `select account_id from identity.sso_connection
@@ -332,7 +353,7 @@ export class PgAccountRepository implements AccountReadRepository {
     const client = await this.pool.connect();
 
     try {
-      await client.query('begin');
+      await client.query("begin");
 
       await client.query(
         `insert into identity.account (id, username, email, status, created_at, updated_at)
@@ -352,18 +373,25 @@ export class PgAccountRepository implements AccountReadRepository {
         [id, input.provider, input.providerId, providerAccountData],
       );
 
-      await client.query('commit');
+      await client.query("commit");
     } catch (error) {
-      await client.query('rollback');
+      await client.query("rollback");
       throw error;
     } finally {
       client.release();
     }
 
-    return { id, username, email: input.email?.toLowerCase().trim() ?? null, phone: null };
+    return {
+      id,
+      username,
+      email: input.email?.toLowerCase().trim() ?? null,
+      phone: null,
+    };
   }
 
-  private mapCredential(row?: AccountCredentialRow): AccountCredentialRecord | null {
+  private mapCredential(
+    row?: AccountCredentialRow,
+  ): AccountCredentialRecord | null {
     if (!row) {
       return null;
     }
@@ -411,16 +439,16 @@ function normalizeNullable(value: string | null | undefined) {
 function deriveUsernameFromName(name: string): string {
   const prefix = name
     .toLowerCase()
-    .replace(/[^a-z0-9_]/g, '_')
+    .replace(/[^a-z0-9_]/g, "_")
     .slice(0, 20);
   const suffix = Math.random().toString(36).slice(2, 6);
   return prefix ? `${prefix}_${suffix}` : `user_${suffix}`;
 }
 
 function deriveUsername(email: string): string {
-  const prefix = (email.split('@')[0] ?? '')
+  const prefix = (email.split("@")[0] ?? "")
     .toLowerCase()
-    .replace(/[^a-z0-9_]/g, '_')
+    .replace(/[^a-z0-9_]/g, "_")
     .slice(0, 24);
   const suffix = Math.random().toString(36).slice(2, 6);
   return prefix ? `${prefix}_${suffix}` : `user_${suffix}`;
@@ -428,9 +456,9 @@ function deriveUsername(email: string): string {
 
 function isUniqueViolation(error: unknown): boolean {
   return (
-    typeof error === 'object' &&
+    typeof error === "object" &&
     error !== null &&
-    'code' in error &&
-    (error as { code: string }).code === '23505'
+    "code" in error &&
+    (error as { code: string }).code === "23505"
   );
 }

@@ -9,16 +9,20 @@
  * @date 2026-03-15
  */
 
-import { Injectable, Logger, Inject } from '@nestjs/common';
-import { HttpService }         from '@nestjs/axios';
-import { firstValueFrom }      from 'rxjs';
-import type { AxiosRequestConfig, AxiosResponse } from 'axios';
-import FormData                from 'form-data';
+import { Injectable, Logger, Inject } from "@nestjs/common";
+import { HttpService } from "@nestjs/axios";
+import { firstValueFrom } from "rxjs";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import FormData from "form-data";
 
-import { normalizeHttpError, isRetryableError } from '../utils/error.utils';
-import type { RequestOptions, UploadOptions, RequestContext } from '../types/api.types';
-import { VX_HTTP_OPTIONS } from '../module/http.module';
-import type { VxHttpModuleOptions } from '../module/http.module';
+import { normalizeHttpError, isRetryableError } from "../utils/error.utils";
+import type {
+  RequestOptions,
+  UploadOptions,
+  RequestContext,
+} from "../types/api.types";
+import { VX_HTTP_OPTIONS } from "../module/http.module";
+import type { VxHttpModuleOptions } from "../module/http.module";
 
 // ============================================================================
 // VxHttpClient
@@ -38,23 +42,35 @@ export class VxHttpClient {
   // --------------------------------------------------------------------------
 
   async get<T>(path: string, options?: RequestOptions): Promise<T> {
-    return this.request<T>('GET', path, undefined, options);
+    return this.request<T>("GET", path, undefined, options);
   }
 
-  async post<T>(path: string, data?: unknown, options?: RequestOptions): Promise<T> {
-    return this.request<T>('POST', path, data, options);
+  async post<T>(
+    path: string,
+    data?: unknown,
+    options?: RequestOptions,
+  ): Promise<T> {
+    return this.request<T>("POST", path, data, options);
   }
 
-  async put<T>(path: string, data?: unknown, options?: RequestOptions): Promise<T> {
-    return this.request<T>('PUT', path, data, options);
+  async put<T>(
+    path: string,
+    data?: unknown,
+    options?: RequestOptions,
+  ): Promise<T> {
+    return this.request<T>("PUT", path, data, options);
   }
 
-  async patch<T>(path: string, data?: unknown, options?: RequestOptions): Promise<T> {
-    return this.request<T>('PATCH', path, data, options);
+  async patch<T>(
+    path: string,
+    data?: unknown,
+    options?: RequestOptions,
+  ): Promise<T> {
+    return this.request<T>("PATCH", path, data, options);
   }
 
   async delete<T>(path: string, options?: RequestOptions): Promise<T> {
-    return this.request<T>('DELETE', path, undefined, options);
+    return this.request<T>("DELETE", path, undefined, options);
   }
 
   // --------------------------------------------------------------------------
@@ -73,15 +89,15 @@ export class VxHttpClient {
    * );
    */
   async upload<T>(
-    path:     string,
-    file:     Buffer | NodeJS.ReadableStream,
+    path: string,
+    file: Buffer | NodeJS.ReadableStream,
     filename: string,
     options?: UploadOptions,
   ): Promise<T> {
     const form = new FormData();
-    form.append('file', file, filename);
+    form.append("file", file, filename);
 
-    return this.request<T>('POST', path, form, {
+    return this.request<T>("POST", path, form, {
       ...options,
       headers: {
         ...options?.headers,
@@ -97,9 +113,9 @@ export class VxHttpClient {
    * const buffer = await this.http.download('/files/report.pdf', token);
    */
   async download(path: string, options?: RequestOptions): Promise<Buffer> {
-    const response = await this.rawRequest<Buffer>('GET', path, undefined, {
+    const response = await this.rawRequest<Buffer>("GET", path, undefined, {
       ...options,
-      responseType: 'arraybuffer',
+      responseType: "arraybuffer",
     });
     return Buffer.from(response.data as unknown as ArrayBuffer);
   }
@@ -119,7 +135,7 @@ export class VxHttpClient {
    * });
    */
   async getWithContext<T>(
-    path:    string,
+    path: string,
     context: RequestContext,
     options?: RequestOptions,
   ): Promise<T> {
@@ -127,8 +143,8 @@ export class VxHttpClient {
   }
 
   async postWithContext<T>(
-    path:    string,
-    data:    unknown,
+    path: string,
+    data: unknown,
     context: RequestContext,
     options?: RequestOptions,
   ): Promise<T> {
@@ -144,9 +160,9 @@ export class VxHttpClient {
    * Used for scenarios with various third-party API response formats
    */
   async rawRequest<T = unknown>(
-    method:  string,
-    path:    string,
-    data?:   unknown,
+    method: string,
+    path: string,
+    data?: unknown,
     options?: RequestOptions,
   ): Promise<AxiosResponse<T>> {
     const config = this.buildConfig(method, path, data, options);
@@ -164,9 +180,9 @@ export class VxHttpClient {
   // --------------------------------------------------------------------------
 
   private async request<T>(
-    method:  string,
-    path:    string,
-    data?:   unknown,
+    method: string,
+    path: string,
+    data?: unknown,
     options?: RequestOptions,
   ): Promise<T> {
     const response = await this.rawRequest<T>(method, path, data, options);
@@ -175,38 +191,38 @@ export class VxHttpClient {
   }
 
   private buildConfig(
-    method:  string,
-    path:    string,
-    data?:   unknown,
+    method: string,
+    path: string,
+    data?: unknown,
     options?: RequestOptions,
   ): AxiosRequestConfig {
-    const baseURL  = options?.baseURL  ?? this.options.baseURL;
-    const headers  = options?.headers  ?? this.options.headers;
+    const baseURL = options?.baseURL ?? this.options.baseURL;
+    const headers = options?.headers ?? this.options.headers;
     return {
       method,
-      url:          path,
-      ...(baseURL  !== undefined ? { baseURL }  : {}),
+      url: path,
+      ...(baseURL !== undefined ? { baseURL } : {}),
       data,
-      ...(headers  !== undefined ? { headers }  : {}),
-      timeout:      options?.timeout ?? this.options.timeout ?? 30_000,
-      responseType: options?.responseType ?? 'json',
+      ...(headers !== undefined ? { headers } : {}),
+      timeout: options?.timeout ?? this.options.timeout ?? 30_000,
+      responseType: options?.responseType ?? "json",
     };
   }
 
   private mergeContext(
-    options:  RequestOptions | undefined,
-    context:  RequestContext,
+    options: RequestOptions | undefined,
+    context: RequestContext,
   ): RequestOptions {
     const contextHeaders: Record<string, string> = {};
 
     if (context.accessToken) {
-      contextHeaders['authorization'] = `Bearer ${context.accessToken}`;
+      contextHeaders["authorization"] = `Bearer ${context.accessToken}`;
     }
     if (context.tenantId) {
-      contextHeaders['x-tenant-id'] = context.tenantId;
+      contextHeaders["x-tenant-id"] = context.tenantId;
     }
     if (context.requestId) {
-      contextHeaders['x-request-id'] = context.requestId;
+      contextHeaders["x-request-id"] = context.requestId;
     }
 
     return {
@@ -216,9 +232,9 @@ export class VxHttpClient {
   }
 
   private async executeWithRetry<T>(
-    fn:          () => Promise<T>,
-    retries:     number,
-    label:       string,
+    fn: () => Promise<T>,
+    retries: number,
+    label: string,
   ): Promise<T> {
     let lastError: unknown;
 
@@ -228,14 +244,16 @@ export class VxHttpClient {
       } catch (err) {
         lastError = err;
 
-        const status      = this.extractStatus(err);
-        const isNetwork   = this.isNetworkError(err);
+        const status = this.extractStatus(err);
+        const isNetwork = this.isNetworkError(err);
         const shouldRetry = isRetryableError(status, isNetwork);
 
         if (!shouldRetry || attempt === retries) break;
 
         const delay = Math.min(1000 * 2 ** attempt, 8000);
-        this.logger.warn(`[VxHttpClient] ${label} failed (attempt ${attempt + 1}), retrying in ${delay}ms`);
+        this.logger.warn(
+          `[VxHttpClient] ${label} failed (attempt ${attempt + 1}), retrying in ${delay}ms`,
+        );
         await sleep(delay);
       }
     }
@@ -245,20 +263,25 @@ export class VxHttpClient {
 
   private normalizeError(err: unknown, label: string): Error {
     if (isAxiosError(err)) {
-      const status    = err.response?.status;
-      const body      = err.response?.data as Record<string, unknown> | undefined;
-      const requestId = typeof body?.['requestId'] === 'string' ? body['requestId'] : undefined;
+      const status = err.response?.status;
+      const body = err.response?.data as Record<string, unknown> | undefined;
+      const requestId =
+        typeof body?.["requestId"] === "string" ? body["requestId"] : undefined;
 
-      this.logger.error(`[VxHttpClient] ${label} → ${status ?? 'network error'}`);
+      this.logger.error(
+        `[VxHttpClient] ${label} → ${status ?? "network error"}`,
+      );
 
-      const errMessage = typeof body?.['message'] === 'string' ? body['message'] : undefined;
-      const errCode    = typeof body?.['code']    === 'string' ? body['code']    : undefined;
+      const errMessage =
+        typeof body?.["message"] === "string" ? body["message"] : undefined;
+      const errCode =
+        typeof body?.["code"] === "string" ? body["code"] : undefined;
       return normalizeHttpError(
         status ?? 0,
         {
           ...(errMessage !== undefined ? { message: errMessage } : {}),
-          ...(errCode    !== undefined ? { code:    errCode }    : {}),
-          details: body?.['details'],
+          ...(errCode !== undefined ? { code: errCode } : {}),
+          details: body?.["details"],
         },
         requestId,
       );
@@ -289,14 +312,14 @@ function sleep(ms: number): Promise<void> {
 
 function isAxiosError(err: unknown): err is {
   response?: { status: number; data: unknown };
-  request?:  unknown;
-  message:   string;
+  request?: unknown;
+  message: string;
   isAxiosError: boolean;
 } {
   return (
-    typeof err === 'object' &&
+    typeof err === "object" &&
     err !== null &&
-    'isAxiosError' in err &&
-    (err as Record<string, unknown>)['isAxiosError'] === true
+    "isAxiosError" in err &&
+    (err as Record<string, unknown>)["isAxiosError"] === true
   );
 }

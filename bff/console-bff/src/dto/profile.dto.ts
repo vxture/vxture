@@ -10,6 +10,6 @@ export class UpdateProfileDto {
 }
 
 export class ChangePasswordDto {
-  currentPassword = '';
-  nextPassword = '';
+  currentPassword = "";
+  nextPassword = "";
 }

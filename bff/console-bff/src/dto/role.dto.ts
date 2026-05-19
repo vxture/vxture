@@ -8,6 +8,6 @@ export class CreateRoleDto {
 export class UpdateRoleDto {
   roleName?: string | null;
   description?: string | null;
-  status?: 'active' | 'disabled';
+  status?: "active" | "disabled";
   permissionIds?: string[];
 }

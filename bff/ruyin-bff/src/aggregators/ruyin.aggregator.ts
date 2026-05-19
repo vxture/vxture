@@ -16,8 +16,8 @@
  * @category Aggregator
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
+import { Inject, Injectable } from "@nestjs/common";
+import { VxConfigService } from "@vxture/core-config";
 import type {
   CreateSessionDto,
   CreateSessionResponseDto,
@@ -25,7 +25,7 @@ import type {
   SendMessageDto,
   SendMessageResponseDto,
   TaskStatusResponseDto,
-} from '../types/ruyin.types';
+} from "../types/ruyin.types";
 
 interface AgentServerEnvelope<T> {
   code: number;
@@ -50,9 +50,9 @@ interface AgentServerCreateSessionData {
 
 interface AgentServerChatMessage {
   id: string;
-  sender: 'user' | 'agent' | 'system';
+  sender: "user" | "agent" | "system";
   content: string;
-  type: 'text' | 'image' | 'document' | 'action';
+  type: "text" | "image" | "document" | "action";
   timestamp: string;
   taskId?: string;
 }
@@ -64,7 +64,7 @@ interface AgentServerSendMessageData {
 }
 
 interface AgentServerTaskStatusData {
-  status: 'pending' | 'running' | 'completed' | 'failed';
+  status: "pending" | "running" | "completed" | "failed";
   progress?: number;
   result?: unknown;
   error?: string;
@@ -76,22 +76,30 @@ export class RuyinBffError extends Error {
     readonly statusCode: number,
   ) {
     super(message);
-    this.name = 'RuyinBffError';
+    this.name = "RuyinBffError";
   }
 }
 
 @Injectable()
 export class RuyinAggregator {
-  constructor(@Inject(VxConfigService) private readonly configService: VxConfigService) {}
+  constructor(
+    @Inject(VxConfigService) private readonly configService: VxConfigService,
+  ) {}
 
-  async createSession(accessToken: string, body: CreateSessionDto): Promise<CreateSessionResponseDto> {
-    const data = await this.request<AgentServerCreateSessionData>('/api/session', {
-      method: 'POST',
-      headers: this.buildHeaders(accessToken),
-      body: JSON.stringify({
-        config: body.config ?? {},
-      }),
-    });
+  async createSession(
+    accessToken: string,
+    body: CreateSessionDto,
+  ): Promise<CreateSessionResponseDto> {
+    const data = await this.request<AgentServerCreateSessionData>(
+      "/api/session",
+      {
+        method: "POST",
+        headers: this.buildHeaders(accessToken),
+        body: JSON.stringify({
+          config: body.config ?? {},
+        }),
+      },
+    );
 
     return {
       sessionId: data.sessionId,
@@ -99,11 +107,14 @@ export class RuyinAggregator {
     };
   }
 
-  async getSessionHistory(accessToken: string, sessionId: string): Promise<ChatMessageDto[]> {
+  async getSessionHistory(
+    accessToken: string,
+    sessionId: string,
+  ): Promise<ChatMessageDto[]> {
     const data = await this.request<AgentServerChatMessage[]>(
       `/api/session/${encodeURIComponent(sessionId)}/history`,
       {
-        method: 'GET',
+        method: "GET",
         headers: this.buildHeaders(accessToken, false),
       },
     );
@@ -119,7 +130,7 @@ export class RuyinAggregator {
     const data = await this.request<AgentServerSendMessageData>(
       `/api/session/${encodeURIComponent(sessionId)}/message`,
       {
-        method: 'POST',
+        method: "POST",
         headers: this.buildHeaders(accessToken),
         body: JSON.stringify(body),
       },
@@ -140,7 +151,7 @@ export class RuyinAggregator {
     const data = await this.request<AgentServerTaskStatusData>(
       `/api/session/${encodeURIComponent(sessionId)}/task?taskId=${encodeURIComponent(taskId)}`,
       {
-        method: 'GET',
+        method: "GET",
         headers: this.buildHeaders(accessToken, false),
       },
     );
@@ -148,31 +159,37 @@ export class RuyinAggregator {
     return {
       status: data.status,
       ...(data.progress !== undefined ? { progress: data.progress } : {}),
-      ...(data.result   !== undefined ? { result:   data.result }   : {}),
-      ...(data.error    !== undefined ? { error:    data.error }    : {}),
+      ...(data.result !== undefined ? { result: data.result } : {}),
+      ...(data.error !== undefined ? { error: data.error } : {}),
     };
   }
 
-  private buildHeaders(accessToken: string, includeContentType: boolean = true): Record<string, string> {
+  private buildHeaders(
+    accessToken: string,
+    includeContentType: boolean = true,
+  ): Record<string, string> {
     const headers: Record<string, string> = {
       authorization: `Bearer ${accessToken}`,
     };
 
     if (includeContentType) {
-      headers['content-type'] = 'application/json';
+      headers["content-type"] = "application/json";
     }
 
     return headers;
   }
 
   private async request<T>(path: string, init: RequestInit): Promise<T> {
-    const response = await fetch(`${this.configService.app.AGENT_SERVER_BASE_URL}${path}`, init);
+    const response = await fetch(
+      `${this.configService.app.AGENT_SERVER_BASE_URL}${path}`,
+      init,
+    );
     const payload = (await response.json()) as AgentServerEnvelope<T>;
     const statusCode = response.status || payload.code || 500;
 
     if (!response.ok || payload.code >= 400 || payload.data === undefined) {
       throw new RuyinBffError(
-        payload.error ?? payload.message ?? 'Upstream request failed',
+        payload.error ?? payload.message ?? "Upstream request failed",
         statusCode,
       );
     }
@@ -180,7 +197,9 @@ export class RuyinAggregator {
     return payload.data;
   }
 
-  private mapSession(session: AgentServerSessionConfig): CreateSessionResponseDto['session'] {
+  private mapSession(
+    session: AgentServerSessionConfig,
+  ): CreateSessionResponseDto["session"] {
     return {
       sessionId: session.sessionId,
       tenantId: session.tenantId,

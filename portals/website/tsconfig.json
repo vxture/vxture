@@ -3,7 +3,7 @@
   "compilerOptions": {
     "noEmit": true,
     "jsx": "preserve",
-    "lib": [ "DOM", "DOM.Iterable", "ES2023" ],
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
     "plugins": [
       {
         "name": "next"
@@ -15,10 +15,18 @@
       "@vxture/shared/*": ["../../packages/shared/shared/src/*"],
       "@vxture/core-locale": ["../../packages/core/locale/src"],
       "@vxture/core-locale/*": ["../../packages/core/locale/src/*"],
-      "@vxture/design-system": ["../../packages/design/design-system/src/client.ts"],
-      "@vxture/design-system/tokens": ["../../packages/design/design-system/src/tokens-entry.ts"],
-      "@vxture/design-system/types": ["../../packages/design/design-system/src/types-entry.ts"],
-      "@vxture/design-system/server": ["../../packages/design/design-system/src/server.ts"],
+      "@vxture/design-system": [
+        "../../packages/design/design-system/src/client.ts"
+      ],
+      "@vxture/design-system/tokens": [
+        "../../packages/design/design-system/src/tokens-entry.ts"
+      ],
+      "@vxture/design-system/types": [
+        "../../packages/design/design-system/src/types-entry.ts"
+      ],
+      "@vxture/design-system/server": [
+        "../../packages/design/design-system/src/server.ts"
+      ],
       "@vxture/platform-browser": ["../../packages/platform/browser/src"],
       "@vxture/platform-browser/*": ["../../packages/platform/browser/src/*"]
     },
@@ -26,11 +34,6 @@
     "incremental": true,
     "isolatedModules": true
   },
-  "include": [
-    "next-env.d.ts",
-    "next.config.js",
-    "src",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [ "node_modules", ".next" ]
+  "include": ["next-env.d.ts", "next.config.js", "src", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
 }

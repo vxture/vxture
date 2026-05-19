@@ -5,8 +5,18 @@ import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
 import type { IconName } from "@vxture/design-system";
 import { fetchSupportTicketsStrict } from "@/api/admin-bff";
-import { ActionMenu, Badge, Button, Checkbox, Input, NativeSelect } from "@vxture/design-system";
-import type { SupportTicketRecord, TenantOperationTicket } from "@/entities/console";
+import {
+  ActionMenu,
+  Badge,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+} from "@vxture/design-system";
+import type {
+  SupportTicketRecord,
+  TenantOperationTicket,
+} from "@/entities/console";
 import { EmptyState } from "@/modules/shared/EmptyState";
 import { PageHeader } from "@/modules/shared/PageHeader";
 import {
@@ -94,15 +104,14 @@ function SummaryItem({
   );
 }
 
-function TicketActionsMenu({
-  ticket,
-}: {
-  ticket: SupportTicketRecord;
-}) {
+function TicketActionsMenu({ ticket }: { ticket: SupportTicketRecord }) {
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${ticket.title} 工单操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -112,7 +121,8 @@ function TicketActionsMenu({
             id: "tenant",
             label: "查看租户",
             icon: <Icon name="buildings" size="xs" fallback="placeholder" />,
-            onSelect: () => router.push(`/tenants/${encodeURIComponent(ticket.tenantId)}`),
+            onSelect: () =>
+              router.push(`/tenants/${encodeURIComponent(ticket.tenantId)}`),
           },
           {
             id: "ops-todos",
@@ -253,7 +263,9 @@ export function TicketsPage() {
       .catch((error) => {
         if (!cancelled) {
           setTickets([]);
-          setLoadError(error instanceof Error ? error.message : "工单数据读取失败");
+          setLoadError(
+            error instanceof Error ? error.message : "工单数据读取失败",
+          );
         }
       })
       .finally(() => {
@@ -426,10 +438,7 @@ export function TicketsPage() {
           </div>
         ) : loadError ? (
           <div className="vx-service-health-empty">
-            <EmptyState
-              title="工单数据读取失败"
-              description={loadError}
-            />
+            <EmptyState title="工单数据读取失败" description={loadError} />
           </div>
         ) : visibleTickets.length ? (
           <div className="vx-tenant-directory-list vx-ticket-directory-list">
@@ -437,8 +446,16 @@ export function TicketsPage() {
               <span>
                 <Checkbox
                   className="vx-model-select-checkbox"
-                  checked={isTicketPageSelected ? true : selectedVisibleTicketCount > 0 ? "indeterminate" : false}
-                  onCheckedChange={(value) => toggleTicketPageSelection(value === true)}
+                  checked={
+                    isTicketPageSelected
+                      ? true
+                      : selectedVisibleTicketCount > 0
+                        ? "indeterminate"
+                        : false
+                  }
+                  onCheckedChange={(value) =>
+                    toggleTicketPageSelection(value === true)
+                  }
                   aria-label="选择当前页工单"
                 />
               </span>

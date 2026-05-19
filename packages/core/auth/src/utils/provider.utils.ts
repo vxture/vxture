@@ -3,13 +3,13 @@
  * @package @vxture/core-auth
  * @description
  *   OAuth provider validation, user info standardization, JTI generation, and other utility functions.
- * 
+ *
  * @author AI-Generated
  * @date 2026-03-15
  */
 
-import { OAuthProviderType } from '../types/auth.types';
-import type { OAuthUserProfile } from '../types/auth.types';
+import { OAuthProviderType } from "../types/auth.types";
+import type { OAuthUserProfile } from "../types/auth.types";
 
 // ============================================================================
 // Provider Validation
@@ -44,19 +44,19 @@ export function isValidProvider(value: string): value is OAuthProviderType {
  */
 export function buildOAuthProfile(params: {
   providerId: string;
-  provider:   OAuthProviderType;
-  name:       string;
-  email?:     string;
-  avatar?:    string;
-  raw:        Record<string, unknown>;
+  provider: OAuthProviderType;
+  name: string;
+  email?: string;
+  avatar?: string;
+  raw: Record<string, unknown>;
 }): OAuthUserProfile {
   return {
     providerId: params.providerId,
-    provider:   params.provider,
-    name:       params.name,
+    provider: params.provider,
+    name: params.name,
     ...(params.email ? { email: params.email } : {}),
     ...(params.avatar ? { avatar: params.avatar } : {}),
-    raw:        params.raw,
+    raw: params.raw,
   };
 }
 

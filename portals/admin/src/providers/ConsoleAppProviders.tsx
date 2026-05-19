@@ -1,11 +1,23 @@
-'use client';
+"use client";
 
-import { startTransition, useEffect, useState } from 'react';
-import { FullscreenProvider, ThemeProvider, TooltipProvider } from '@vxture/design-system';
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES, type Locale, type Theme } from '@vxture/shared';
-import type { Density } from '@vxture/design-system';
-import { ConsoleIntlProvider } from '@/lib/console-intl';
-import { getGlobalUserPreferences, subscribeToGlobalPreferenceChanges } from '@vxture/platform-browser';
+import { startTransition, useEffect, useState } from "react";
+import {
+  FullscreenProvider,
+  ThemeProvider,
+  TooltipProvider,
+} from "@vxture/design-system";
+import {
+  DEFAULT_LOCALE,
+  SUPPORTED_LOCALES,
+  type Locale,
+  type Theme,
+} from "@vxture/shared";
+import type { Density } from "@vxture/design-system";
+import { ConsoleIntlProvider } from "@/lib/console-intl";
+import {
+  getGlobalUserPreferences,
+  subscribeToGlobalPreferenceChanges,
+} from "@vxture/platform-browser";
 
 type Props = {
   children: React.ReactNode;
@@ -17,7 +29,9 @@ type Props = {
 };
 
 function normalizeClientLocale(locale: string | undefined): Locale {
-  return locale && (SUPPORTED_LOCALES as readonly string[]).includes(locale) ? (locale as Locale) : DEFAULT_LOCALE;
+  return locale && (SUPPORTED_LOCALES as readonly string[]).includes(locale)
+    ? (locale as Locale)
+    : DEFAULT_LOCALE;
 }
 
 export function ConsoleAppProviders({
@@ -29,7 +43,8 @@ export function ConsoleAppProviders({
   initialDensity,
 }: Props) {
   const [locale, setLocale] = useState<Locale>(initialLocale);
-  const [messages, setMessages] = useState<Record<string, unknown>>(initialMessages);
+  const [messages, setMessages] =
+    useState<Record<string, unknown>>(initialMessages);
 
   useEffect(() => {
     document.documentElement.lang = locale;

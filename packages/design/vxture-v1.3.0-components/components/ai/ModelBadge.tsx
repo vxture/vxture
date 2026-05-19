@@ -1,24 +1,24 @@
-'use client';
-import * as React from 'react';
-import { cn } from '../../utils/cn';
+"use client";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type ModelBadgeProps = {
   /** Model identifier — shown as primary text */
   modelId: string;
   /** Visual variant — flagship gets the aurora gradient treatment */
-  variant?: 'default' | 'flagship';
+  variant?: "default" | "flagship";
   /** Runtime status of the model */
-  status?: 'active' | 'idle' | 'deploying' | 'error';
+  status?: "active" | "idle" | "deploying" | "error";
   /** Optional click handler */
   onClick?: () => void;
   className?: string;
 };
 
-const STATUS_LABEL: Record<NonNullable<ModelBadgeProps['status']>, string> = {
-  active:    '● ACTIVE',
-  idle:      '○ IDLE',
-  deploying: '↗ DEPLOYING',
-  error:     '✕ ERROR',
+const STATUS_LABEL: Record<NonNullable<ModelBadgeProps["status"]>, string> = {
+  active: "● ACTIVE",
+  idle: "○ IDLE",
+  deploying: "↗ DEPLOYING",
+  error: "✕ ERROR",
 };
 
 /**
@@ -33,16 +33,22 @@ const STATUS_LABEL: Record<NonNullable<ModelBadgeProps['status']>, string> = {
  */
 export function ModelBadge({
   modelId,
-  variant = 'default',
-  status = 'active',
+  variant = "default",
+  status = "active",
   onClick,
   className,
 }: ModelBadgeProps) {
   return (
     <span
-      className={cn('vx-model-badge', `vx-model-badge--${variant}`, `vx-model-badge--${status}`, onClick && 'vx-model-badge--interactive', className)}
+      className={cn(
+        "vx-model-badge",
+        `vx-model-badge--${variant}`,
+        `vx-model-badge--${status}`,
+        onClick && "vx-model-badge--interactive",
+        className,
+      )}
       onClick={onClick}
-      role={onClick ? 'button' : undefined}
+      role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
     >
       <span className="vx-model-badge__dot" aria-hidden />

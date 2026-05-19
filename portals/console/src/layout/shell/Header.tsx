@@ -1,24 +1,27 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import { Link, usePathname, useRouter } from '@/lib/i18n/navigation';
-import { useLocale, useTranslations } from 'next-intl';
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { Link, usePathname, useRouter } from "@/lib/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Icon,
   ShellFullscreenToggle,
   ShellLocaleSwitcher,
   ShellThemeToggle,
   useTheme,
-} from '@vxture/design-system';
-import { Button, Input } from '@vxture/design-system';
-import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { usePortalEntry } from '@/contexts/PortalEntryContext';
-import { UserPanel } from './UserPanel';
-import { setGlobalLocalePreference, setGlobalThemePreference } from '@vxture/platform-browser';
-import type { Locale } from '@vxture/shared';
+} from "@vxture/design-system";
+import { Button, Input } from "@vxture/design-system";
+import { useConsoleSession } from "@/features/session/ConsoleSessionProvider";
+import { usePortalEntry } from "@/contexts/PortalEntryContext";
+import { UserPanel } from "./UserPanel";
+import {
+  setGlobalLocalePreference,
+  setGlobalThemePreference,
+} from "@vxture/platform-browser";
+import type { Locale } from "@vxture/shared";
 
-const PAGE_FULLSCREEN_ID = 'console-page-root-native';
+const PAGE_FULLSCREEN_ID = "console-page-root-native";
 
 export function Header({
   assistantEnabled,
@@ -37,10 +40,12 @@ export function Header({
   const { theme, setTheme } = useTheme();
   const [launcherOpen, setLauncherOpen] = useState(false);
   const launcherRef = useRef<HTMLDivElement>(null);
-  const t = useTranslations('header');
+  const t = useTranslations("header");
   const currentLocale = locale as Locale;
   const tenantLabel = session.tenant?.workspace ?? session.tenant?.name;
-  const assistantLabel = assistantOpen ? t('closeAssistant') : t('openAssistant');
+  const assistantLabel = assistantOpen
+    ? t("closeAssistant")
+    : t("openAssistant");
 
   useEffect(() => {
     if (!launcherOpen) {
@@ -54,17 +59,17 @@ export function Header({
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         setLauncherOpen(false);
       }
     }
 
-    document.addEventListener('pointerdown', handlePointerDown);
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('pointerdown', handlePointerDown);
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [launcherOpen]);
 
@@ -76,7 +81,7 @@ export function Header({
             variant="ghost"
             size="icon"
             className="vx-shell-icon-button vx-shell-icon-button--launcher"
-            aria-label={t('featureOverview')}
+            aria-label={t("featureOverview")}
             aria-haspopup="dialog"
             aria-expanded={launcherOpen}
             onClick={() => setLauncherOpen((open) => !open)}
@@ -85,8 +90,17 @@ export function Header({
           </Button>
 
           {launcherOpen ? (
-            <div className="vx-shell-launcher__panel" role="dialog" aria-label={t('featureOverview')}>
-              <Icon name="app-grid" size="xl" fallback="placeholder" className="vx-shell-launcher__placeholder" />
+            <div
+              className="vx-shell-launcher__panel"
+              role="dialog"
+              aria-label={t("featureOverview")}
+            >
+              <Icon
+                name="app-grid"
+                size="xl"
+                fallback="placeholder"
+                className="vx-shell-launcher__placeholder"
+              />
             </div>
           ) : null}
         </div>
@@ -111,7 +125,11 @@ export function Header({
             <strong className="vx-shell-header__brand-title">vxture.ai</strong>
           </a>
         ) : (
-          <Link href="/" className="vx-shell-header__brand" aria-label="vxture.ai">
+          <Link
+            href="/"
+            className="vx-shell-header__brand"
+            aria-label="vxture.ai"
+          >
             <Image
               className="vx-shell-header__brand-logo"
               src="/brand/vxture-logo-white.png"
@@ -125,25 +143,36 @@ export function Header({
           </Link>
         )}
 
-        <span className="vx-shell-header__divider" aria-hidden="true">|</span>
-        <strong className="vx-shell-header__workspace-label">{t('workspace')}</strong>
-        {tenantLabel ? <span className="vx-shell-header__context" title={tenantLabel}>{tenantLabel}</span> : null}
+        <span className="vx-shell-header__divider" aria-hidden="true">
+          |
+        </span>
+        <strong className="vx-shell-header__workspace-label">
+          {t("workspace")}
+        </strong>
+        {tenantLabel ? (
+          <span className="vx-shell-header__context" title={tenantLabel}>
+            {tenantLabel}
+          </span>
+        ) : null}
       </div>
 
-      <label className="vx-shell-header__search-shell" aria-label={t('searchPlaceholder')}>
+      <label
+        className="vx-shell-header__search-shell"
+        aria-label={t("searchPlaceholder")}
+      >
         <span className="vx-shell-header__search-icon" aria-hidden="true">
           <Icon name="search" size="sm" fallback="search" />
         </span>
         <Input
           className="vx-shell-header__search-input"
-          placeholder={t('searchPlaceholder')}
+          placeholder={t("searchPlaceholder")}
         />
       </label>
 
       <div className="vx-shell-header__actions">
         <Button
           variant="ghost"
-          className={`vx-shell-agent-button ${assistantOpen ? 'vx-shell-agent-button--active' : ''}`}
+          className={`vx-shell-agent-button ${assistantOpen ? "vx-shell-agent-button--active" : ""}`}
           aria-pressed={assistantEnabled ? assistantOpen : undefined}
           aria-expanded={assistantEnabled ? assistantOpen : undefined}
           aria-controls="vx-assistant-panel"
@@ -162,10 +191,14 @@ export function Header({
           />
         </Button>
 
-        <div className="vx-shell-header__action-group" role="group" aria-label={t('quickPreferences')}>
+        <div
+          className="vx-shell-header__action-group"
+          role="group"
+          aria-label={t("quickPreferences")}
+        >
           <ShellThemeToggle
             currentTheme={theme}
-            buttonLabel={t('toggleTheme')}
+            buttonLabel={t("toggleTheme")}
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
             activeClassName="vx-shell-icon-button--active"
             onThemeChange={(nextTheme) => {
@@ -176,7 +209,7 @@ export function Header({
 
           <ShellLocaleSwitcher
             currentLocale={currentLocale}
-            buttonLabel={t('toggleLanguage')}
+            buttonLabel={t("toggleLanguage")}
             buttonClassName="vx-shell-icon-button vx-shell-icon-button--toolbar"
             activeButtonClassName="vx-shell-icon-button--active"
             onLocaleChange={(nextLocale) => {
@@ -187,20 +220,24 @@ export function Header({
 
           <ShellFullscreenToggle
             targetId={PAGE_FULLSCREEN_ID}
-            enterLabel={t('fullscreen.enter')}
-            exitLabel={t('fullscreen.exit')}
+            enterLabel={t("fullscreen.enter")}
+            exitLabel={t("fullscreen.exit")}
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
             activeClassName="vx-shell-icon-button--active"
           />
         </div>
 
-        <div className="vx-shell-header__action-group" role="group" aria-label={t('workspaceActions')}>
+        <div
+          className="vx-shell-header__action-group"
+          role="group"
+          aria-label={t("workspaceActions")}
+        >
           <Button
             variant="ghost"
             size="icon"
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
-            aria-label={t('help')}
-            title={t('help')}
+            aria-label={t("help")}
+            title={t("help")}
           >
             <Icon name="help" size="sm" fallback="placeholder" />
           </Button>
@@ -209,8 +246,8 @@ export function Header({
             variant="ghost"
             size="icon"
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
-            aria-label={t('notifications')}
-            title={t('notifications')}
+            aria-label={t("notifications")}
+            title={t("notifications")}
           >
             <Icon name="bell" size="sm" fallback="placeholder" />
           </Button>
@@ -218,8 +255,8 @@ export function Header({
           <Link
             href="/settings"
             className="vx-shell-icon-button vx-shell-icon-button--toolbar"
-            aria-label={t('settings')}
-            title={t('settings')}
+            aria-label={t("settings")}
+            title={t("settings")}
           >
             <Icon name="settings" size="sm" fallback="settings" />
           </Link>

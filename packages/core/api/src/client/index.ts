@@ -3,4 +3,4 @@
  * @package @vxture/core-api
  */
 
-export { VxHttpClient } from './http.client';
+export { VxHttpClient } from "./http.client";

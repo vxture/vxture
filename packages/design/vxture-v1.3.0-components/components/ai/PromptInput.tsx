@@ -1,6 +1,6 @@
-'use client';
-import * as React from 'react';
-import { cn } from '../../utils/cn';
+"use client";
+import * as React from "react";
+import { cn } from "../../utils/cn";
 
 export type PromptInputChip = {
   /** Display label for the chip */
@@ -54,29 +54,38 @@ export function PromptInput({
   value,
   onChange,
   onSubmit,
-  placeholder = 'Ask anything...',
+  placeholder = "Ask anything...",
   chips,
-  hint = '⌘↵ to send',
-  submitLabel = 'Generate',
+  hint = "⌘↵ to send",
+  submitLabel = "Generate",
   busy = false,
   className,
 }: PromptInputProps) {
   const onKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();
       if (!busy) onSubmit?.(value);
     }
   };
 
   return (
-    <div className={cn('vx-prompt-input', busy && 'vx-prompt-input--busy', className)}>
+    <div
+      className={cn(
+        "vx-prompt-input",
+        busy && "vx-prompt-input--busy",
+        className,
+      )}
+    >
       {chips && chips.length > 0 && (
         <div className="vx-prompt-input__toolbar">
           {chips.map((c, i) => (
             <button
               key={i}
               type="button"
-              className={cn('vx-prompt-input__chip', c.active && 'vx-prompt-input__chip--active')}
+              className={cn(
+                "vx-prompt-input__chip",
+                c.active && "vx-prompt-input__chip--active",
+              )}
               onClick={c.onClick}
             >
               {c.label}

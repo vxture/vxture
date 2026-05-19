@@ -3,7 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Icon } from "@vxture/design-system";
-import { ActionMenu, Button, Checkbox, Input, NativeSelect, Pagination as DsPagination } from "@vxture/design-system";
+import {
+  ActionMenu,
+  Button,
+  Checkbox,
+  Input,
+  NativeSelect,
+  Pagination as DsPagination,
+} from "@vxture/design-system";
 import { fetchPromotionOperations } from "@/api/admin-bff";
 import type {
   PromotionOperationRecord,
@@ -79,7 +86,10 @@ function PromotionActionsMenu({
   const router = useRouter();
 
   return (
-    <div className="vx-tenant-actions" onClick={(event) => event.stopPropagation()}>
+    <div
+      className="vx-tenant-actions"
+      onClick={(event) => event.stopPropagation()}
+    >
       <ActionMenu
         label={`${record.promotionName} 操作`}
         triggerClassName="vx-tenant-actions__trigger"
@@ -133,7 +143,13 @@ function PromotionRows({
         <span>
           <Checkbox
             className="vx-model-select-checkbox"
-            checked={isPageSelected ? true : selectedOnPage > 0 ? "indeterminate" : false}
+            checked={
+              isPageSelected
+                ? true
+                : selectedOnPage > 0
+                  ? "indeterminate"
+                  : false
+            }
             onCheckedChange={(value) => onTogglePage(value === true)}
             aria-label="选择当前页优惠活动"
           />
@@ -174,7 +190,9 @@ function PromotionRows({
               <Checkbox
                 className="vx-model-select-checkbox"
                 checked={selected}
-                onCheckedChange={(value) => onToggleRecord(record.id, value === true)}
+                onCheckedChange={(value) =>
+                  onToggleRecord(record.id, value === true)
+                }
                 aria-label={`选择优惠活动 ${record.promotionName}`}
               />
             </span>
@@ -236,11 +254,7 @@ function PromotionRows({
   );
 }
 
-function PromotionCards({
-  records,
-}: {
-  records: PromotionOperationRecord[];
-}) {
+function PromotionCards({ records }: { records: PromotionOperationRecord[] }) {
   return (
     <div
       className="vx-tenant-directory-cards vx-commercial-cards"
@@ -540,7 +554,12 @@ export function PromotionsPage() {
             </span>
             <div className="vx-tenant-pagination__actions">
               <PageSizePicker value={pageSize} onChange={setPageSize} />
-              <DsPagination className="vx-tenant-pagination__pager" page={activePage} pageCount={pageCount} onPageChange={setCurrentPage} />
+              <DsPagination
+                className="vx-tenant-pagination__pager"
+                page={activePage}
+                pageCount={pageCount}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </footer>
         </section>

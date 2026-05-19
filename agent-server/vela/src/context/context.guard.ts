@@ -19,10 +19,10 @@ import {
   ForbiddenException,
   Injectable,
   BadRequestException,
-} from '@nestjs/common';
-import type { Request } from 'express';
-import { VALID_COMBINATIONS } from './caller-context.types';
-import type { CallerContext } from './caller-context.types';
+} from "@nestjs/common";
+import type { Request } from "express";
+import { VALID_COMBINATIONS } from "./caller-context.types";
+import type { CallerContext } from "./caller-context.types";
 
 type VelaServerRequest = Request & {
   callerContext?: CallerContext;
@@ -32,32 +32,42 @@ type VelaServerRequest = Request & {
 export class ContextGuard implements CanActivate {
   canActivate(executionContext: ExecutionContext): boolean {
     const req = executionContext.switchToHttp().getRequest<VelaServerRequest>();
-    const raw = req.headers['x-vela-context'] as string | undefined;
+    const raw = req.headers["x-vela-context"] as string | undefined;
 
     if (!raw) {
-      throw new BadRequestException('Missing X-Vela-Context header');
+      throw new BadRequestException("Missing X-Vela-Context header");
     }
 
     let ctx: CallerContext;
     try {
-      ctx = JSON.parse(Buffer.from(raw, 'base64').toString('utf-8')) as CallerContext;
+      ctx = JSON.parse(
+        Buffer.from(raw, "base64").toString("utf-8"),
+      ) as CallerContext;
     } catch {
-      throw new BadRequestException('Invalid X-Vela-Context encoding');
+      throw new BadRequestException("Invalid X-Vela-Context encoding");
     }
 
     // 必填字段存在性校验（防止恶意/格式不完整的 Header 导致运行时异常）
     if (
-      typeof ctx.userId     !== 'string' || !ctx.userId.trim()  ||
-      typeof ctx.role       !== 'string' || !ctx.role.trim()    ||
-      !Array.isArray(ctx.allowedTools)                          ||
-      (ctx.dataScope !== 'global' && ctx.dataScope !== 'tenant')
+      typeof ctx.userId !== "string" ||
+      !ctx.userId.trim() ||
+      typeof ctx.role !== "string" ||
+      !ctx.role.trim() ||
+      !Array.isArray(ctx.allowedTools) ||
+      (ctx.dataScope !== "global" && ctx.dataScope !== "tenant")
     ) {
-      throw new BadRequestException('CallerContext missing or invalid required fields');
+      throw new BadRequestException(
+        "CallerContext missing or invalid required fields",
+      );
     }
 
     // surface × userType 合法性二次校验
-    if (!ctx.surface || !ctx.userType || VALID_COMBINATIONS[ctx.surface] !== ctx.userType) {
-      throw new ForbiddenException('CallerContext surface × userType mismatch');
+    if (
+      !ctx.surface ||
+      !ctx.userType ||
+      VALID_COMBINATIONS[ctx.surface] !== ctx.userType
+    ) {
+      throw new ForbiddenException("CallerContext surface × userType mismatch");
     }
 
     req.callerContext = ctx;

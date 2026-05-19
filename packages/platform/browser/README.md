@@ -11,6 +11,7 @@
 浏览器环境工具函数，封装浏览器 API。包含滚动、存储、剪贴板、视口等浏览器特定功能。
 
 **核心特性：**
+
 - 纯浏览器环境工具函数
 - 类型安全的 API 设计
 - 向后兼容支持
@@ -31,13 +32,16 @@ pnpm add @vxture/platform-browser
 ### 滚动工具
 
 ```typescript
-import { resetWindowScrollTop, type ScrollBehavior } from '@vxture/platform-browser';
+import {
+  resetWindowScrollTop,
+  type ScrollBehavior,
+} from "@vxture/platform-browser";
 
 // 重置窗口滚动到顶部（平滑动画）
-resetWindowScrollTop('smooth');
+resetWindowScrollTop("smooth");
 
 // 重置窗口滚动到顶部（立即）
-resetWindowScrollTop('instant');
+resetWindowScrollTop("instant");
 ```
 
 ---
@@ -56,8 +60,10 @@ resetWindowScrollTop('instant');
  * @example
  * resetWindowScrollTop('smooth');
  */
-export const resetWindowScrollTop = (behavior: ScrollBehavior = 'instant'): void => {
-  if (typeof window !== 'undefined') {
+export const resetWindowScrollTop = (
+  behavior: ScrollBehavior = "instant",
+): void => {
+  if (typeof window !== "undefined") {
     window.scrollTo({
       top: 0,
       behavior: behavior,
@@ -69,7 +75,7 @@ export const resetWindowScrollTop = (behavior: ScrollBehavior = 'instant'): void
 **类型定义：**
 
 ```typescript
-export type ScrollBehavior = 'auto' | 'smooth' | 'instant';
+export type ScrollBehavior = "auto" | "smooth" | "instant";
 ```
 
 ---
@@ -81,7 +87,7 @@ export type ScrollBehavior = 'auto' | 'smooth' | 'instant';
 所有函数都包含环境检查，确保只在浏览器中执行：
 
 ```typescript
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   // 浏览器特定代码
 }
 ```
@@ -92,10 +98,10 @@ if (typeof window !== 'undefined') {
 
 ```typescript
 // ✅ 正确
-import { resetWindowScrollTop } from '@vxture/platform-browser';
+import { resetWindowScrollTop } from "@vxture/platform-browser";
 
 // ❌ 错误
-import { resetWindowScrollTop } from '@vxture/platform-browser/src/utils/resetScrollTop.utils';
+import { resetWindowScrollTop } from "@vxture/platform-browser/src/utils/resetScrollTop.utils";
 ```
 
 ---
@@ -124,6 +130,7 @@ packages/platform/browser/
 ## 📝 更新日志
 
 ### v1.0.0
+
 - 初始版本
 - 实现 `resetWindowScrollTop` 函数
 - 添加类型定义 `ScrollBehavior`

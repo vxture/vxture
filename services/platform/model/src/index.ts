@@ -1,5 +1,5 @@
-export { ModelModule } from './module/model.module';
-export { ModelService } from './service/model.service';
+export { ModelModule } from "./module/model.module";
+export { ModelService } from "./service/model.service";
 export type {
   ModelProviderRecord,
   ModelDefinitionRecord,
@@ -18,4 +18,4 @@ export type {
   CreateGrantInput,
   CreatePriceRuleInput,
   UpsertPolicyInput,
-} from './types/model.types';
+} from "./types/model.types";

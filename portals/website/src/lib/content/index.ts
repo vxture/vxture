@@ -20,12 +20,16 @@ export type {
   ContentLoader,
   ContentStaticParamsGenerator,
   ContentSectionConfig,
-} from './types';
+} from "./types";
 
 // Registry 核心
-export { CONTENT_REGISTRY, isContentSection, aggregateContentStaticParams } from './registry';
+export {
+  CONTENT_REGISTRY,
+  isContentSection,
+  aggregateContentStaticParams,
+} from "./registry";
 
 // Loaders（按需导出，供需要精细控制的场景使用）
-export { legalLoader, legalStaticParams } from './loaders/legal.loader';
-export { blogLoader, blogStaticParams } from './loaders/blog.loader';
-export { createStubLoader } from './loaders/stub.loader';
+export { legalLoader, legalStaticParams } from "./loaders/legal.loader";
+export { blogLoader, blogStaticParams } from "./loaders/blog.loader";
+export { createStubLoader } from "./loaders/stub.loader";

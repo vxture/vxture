@@ -13,9 +13,9 @@
  * @license MIT
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { MAIL_PROVIDER } from '../constants/tokens';
-import type { IMailProvider, MailMessage } from '../types/mail.types';
+import { Inject, Injectable } from "@nestjs/common";
+import { MAIL_PROVIDER } from "../constants/tokens";
+import type { IMailProvider, MailMessage } from "../types/mail.types";
 
 // ─── Service ──────────────────────────────────────────────────────────────────
 
@@ -31,11 +31,17 @@ export class MailService {
     try {
       await this.provider.send(message);
     } catch (firstError) {
-      console.error('[mail] 首次发送失败，重试中...', firstError instanceof Error ? firstError.message : firstError);
+      console.error(
+        "[mail] 首次发送失败，重试中...",
+        firstError instanceof Error ? firstError.message : firstError,
+      );
       try {
         await this.provider.send(message);
       } catch (retryError) {
-        console.error('[mail] 重试发送失败', retryError instanceof Error ? retryError.message : retryError);
+        console.error(
+          "[mail] 重试发送失败",
+          retryError instanceof Error ? retryError.message : retryError,
+        );
         throw retryError;
       }
     }
@@ -54,7 +60,7 @@ export class MailService {
   async sendPasswordReset(to: string, resetUrl: string): Promise<void> {
     await this.send({
       to,
-      subject: '重置您的 Vxture Studio 密码',
+      subject: "重置您的 Vxture Studio 密码",
       text: `您收到此邮件，是因为有人申请重置您的账号密码。\n\n请在 15 分钟内点击以下链接完成重置：\n\n${resetUrl}\n\n如非本人操作，请忽略此邮件，您的账号安全不受影响。`,
     });
   }

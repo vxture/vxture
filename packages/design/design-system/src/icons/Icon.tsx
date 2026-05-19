@@ -39,7 +39,10 @@ const Placeholder = ({
   readonly size?: number | string;
   readonly className?: string;
 }) => (
-  <span style={{ width: size, height: size, display: "inline-block" }} className={className} />
+  <span
+    style={{ width: size, height: size, display: "inline-block" }}
+    className={className}
+  />
 );
 
 // ============================================================================

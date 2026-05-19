@@ -25,8 +25,10 @@ export interface DataTableColumn<TRow> {
   readonly cellClassName?: string;
 }
 
-export interface DataTableProps<TRow>
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "children"> {
+export interface DataTableProps<TRow> extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  "children"
+> {
   readonly columns: readonly DataTableColumn<TRow>[];
   readonly rows: readonly TRow[];
   readonly rowKey: (row: TRow, rowIndex: number) => React.Key;
@@ -34,7 +36,10 @@ export interface DataTableProps<TRow>
   readonly loading?: boolean;
   readonly loadingLabel?: React.ReactNode;
   readonly onRowClick?: (row: TRow, rowIndex: number) => void;
-  readonly getRowClassName?: (row: TRow, rowIndex: number) => string | undefined;
+  readonly getRowClassName?: (
+    row: TRow,
+    rowIndex: number,
+  ) => string | undefined;
 }
 
 const alignClasses: Record<DataTableAlign, string> = {
@@ -57,7 +62,13 @@ function DataTable<TRow>({
 }: DataTableProps<TRow>) {
   const colSpan = Math.max(columns.length, 1);
   return (
-    <div className={cn("vx-data-table overflow-hidden rounded-lg border border-vx-border bg-vx-surface", className)} {...props}>
+    <div
+      className={cn(
+        "vx-data-table overflow-hidden rounded-lg border border-vx-border bg-vx-surface",
+        className,
+      )}
+      {...props}
+    >
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead className="bg-vx-surface-muted text-vx-text-muted">
@@ -84,7 +95,10 @@ function DataTable<TRow>({
           <tbody className="divide-y divide-vx-border">
             {loading ? (
               <tr>
-                <td colSpan={colSpan} className="px-4 py-8 text-center text-vx-text-muted">
+                <td
+                  colSpan={colSpan}
+                  className="px-4 py-8 text-center text-vx-text-muted"
+                >
                   {loadingLabel}
                 </td>
               </tr>
@@ -97,7 +111,9 @@ function DataTable<TRow>({
                     onRowClick && "cursor-pointer",
                     getRowClassName?.(row, rowIndex),
                   )}
-                  onClick={onRowClick ? () => onRowClick(row, rowIndex) : undefined}
+                  onClick={
+                    onRowClick ? () => onRowClick(row, rowIndex) : undefined
+                  }
                 >
                   {columns.map((column) => {
                     const align = column.align ?? "left";
@@ -119,7 +135,10 @@ function DataTable<TRow>({
               ))
             ) : (
               <tr>
-                <td colSpan={colSpan} className="px-4 py-8 text-center text-vx-text-muted">
+                <td
+                  colSpan={colSpan}
+                  className="px-4 py-8 text-center text-vx-text-muted"
+                >
                   {empty}
                 </td>
               </tr>

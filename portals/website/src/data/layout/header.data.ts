@@ -5,7 +5,7 @@
  * @category Data - Layout
  */
 
-import type { Locale } from '@vxture/shared';
+import type { Locale } from "@vxture/shared";
 
 /**
  * Logo 配置
@@ -30,7 +30,7 @@ export interface HeaderNavItem {
  */
 export interface HeaderAction {
   href: string;
-  variant: 'primary' | 'secondary';
+  variant: "primary" | "secondary";
   labelKey: string;
 }
 
@@ -55,7 +55,7 @@ export interface HeaderTheme {
   icon: string;
   titleKey: string;
   options: Array<{
-    code: 'system' | 'light' | 'dark';
+    code: "system" | "light" | "dark";
     labelKey: string;
   }>;
 }
@@ -78,39 +78,39 @@ export interface HeaderData {
 export const HEADER_DATA: HeaderData = {
   enabled: true,
   logo: {
-    image: '/images/header/vxture-logo-white.png',
-    href: '/',
-    labelKey: 'logo.text',
-    altKey: 'logo.alt'
+    image: "/images/header/vxture-logo-white.png",
+    href: "/",
+    labelKey: "logo.text",
+    altKey: "logo.alt",
   },
   nav: [
-    { href: '/appcenter', labelKey: 'nav.appcenter' },
-    { href: '/products', labelKey: 'nav.products' },
-    { href: '/solutions', labelKey: 'nav.solutions' },
-    { href: '/cases', labelKey: 'nav.cases' },
-    { href: '/about', labelKey: 'nav.about' }
+    { href: "/appcenter", labelKey: "nav.appcenter" },
+    { href: "/products", labelKey: "nav.products" },
+    { href: "/solutions", labelKey: "nav.solutions" },
+    { href: "/cases", labelKey: "nav.cases" },
+    { href: "/about", labelKey: "nav.about" },
   ],
   actions: [
-    { href: '/signup', variant: 'secondary', labelKey: 'actions.signup' },
-    { href: '/signin', variant: 'primary', labelKey: 'actions.login' }
+    { href: "/signup", variant: "secondary", labelKey: "actions.signup" },
+    { href: "/signin", variant: "primary", labelKey: "actions.login" },
   ],
   language: {
     enabled: true,
-    icon: 'globe',
-    titleKey: 'language.title',
+    icon: "globe",
+    titleKey: "language.title",
     options: [
-      { code: 'zh-CN', labelKey: 'language.zh-CN' },
-      { code: 'en-US', labelKey: 'language.en-US' }
-    ]
+      { code: "zh-CN", labelKey: "language.zh-CN" },
+      { code: "en-US", labelKey: "language.en-US" },
+    ],
   },
   theme: {
     enabled: true,
-    icon: 'sun',
-    titleKey: 'theme.title',
+    icon: "sun",
+    titleKey: "theme.title",
     options: [
-      { code: 'system', labelKey: 'theme.system' },
-      { code: 'light', labelKey: 'theme.light' },
-      { code: 'dark', labelKey: 'theme.dark' }
-    ]
-  }
+      { code: "system", labelKey: "theme.system" },
+      { code: "light", labelKey: "theme.light" },
+      { code: "dark", labelKey: "theme.dark" },
+    ],
+  },
 };

@@ -1,13 +1,23 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { Badge, Button } from '@vxture/design-system';
-import { fetchBillingInvoices, fetchMySubscriptions, type ConsoleInvoice, type ConsoleSubscription } from '@/api/console-bff';
-import { ActionButton } from '@/modules/shared/ActionButton';
-import { PageHeader } from '@/modules/shared/PageHeader';
-import { useConsoleSession } from '@/features/session/ConsoleSessionProvider';
-import { DashboardSplit, PageSection, SignalList, SummaryStrip } from '@/layout/shell';
-import type { ModuleCardStat } from '@/entities/console';
+import { useEffect, useState } from "react";
+import { Badge, Button } from "@vxture/design-system";
+import {
+  fetchBillingInvoices,
+  fetchMySubscriptions,
+  type ConsoleInvoice,
+  type ConsoleSubscription,
+} from "@/api/console-bff";
+import { ActionButton } from "@/modules/shared/ActionButton";
+import { PageHeader } from "@/modules/shared/PageHeader";
+import { useConsoleSession } from "@/features/session/ConsoleSessionProvider";
+import {
+  DashboardSplit,
+  PageSection,
+  SignalList,
+  SummaryStrip,
+} from "@/layout/shell";
+import type { ModuleCardStat } from "@/entities/console";
 
 // ============================================================================
 // 数据格式化工具
@@ -15,41 +25,50 @@ import type { ModuleCardStat } from '@/entities/console';
 
 function formatDate(dateStr: string): string {
   try {
-    return new Date(dateStr).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', year: 'numeric' });
+    return new Date(dateStr).toLocaleDateString("zh-CN", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   } catch {
     return dateStr;
   }
 }
 
-function formatAmount(amount: number, currency = 'CNY'): string {
-  return currency === 'CNY' ? `¥${amount.toLocaleString()}` : `${currency} ${amount.toLocaleString()}`;
+function formatAmount(amount: number, currency = "CNY"): string {
+  return currency === "CNY"
+    ? `¥${amount.toLocaleString()}`
+    : `${currency} ${amount.toLocaleString()}`;
 }
 
-function buildSummaryItems(subscriptions: ConsoleSubscription[]): ModuleCardStat[] {
-  const active = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
+function buildSummaryItems(
+  subscriptions: ConsoleSubscription[],
+): ModuleCardStat[] {
+  const active =
+    subscriptions.find((s) => s.status === "active") ?? subscriptions[0];
   if (!active) {
     return [
-      { label: 'Plan', value: '—', hint: 'No active subscription.' },
-      { label: 'Renewal', value: '—', hint: '—' },
-      { label: 'Billing', value: '—', hint: '—' },
+      { label: "Plan", value: "—", hint: "No active subscription." },
+      { label: "Renewal", value: "—", hint: "—" },
+      { label: "Billing", value: "—", hint: "—" },
     ];
   }
 
   return [
     {
-      label: 'Plan',
+      label: "Plan",
       value: active.planName,
       hint: `${formatAmount(active.price, active.currency)} / ${active.cycle}`,
     },
     {
-      label: 'Renewal',
+      label: "Renewal",
       value: formatDate(active.nextBillingDate),
-      hint: active.autoRenew ? 'Auto-renew enabled' : 'Will not auto-renew',
+      hint: active.autoRenew ? "Auto-renew enabled" : "Will not auto-renew",
     },
     {
-      label: 'Status',
+      label: "Status",
       value: active.status.charAt(0).toUpperCase() + active.status.slice(1),
-      hint: active.isTrial ? 'Trial period active' : 'Paid subscription',
+      hint: active.isTrial ? "Trial period active" : "Paid subscription",
     },
   ];
 }
@@ -58,7 +77,7 @@ function buildInvoiceRows(invoices: ConsoleInvoice[]): string[][] {
   return invoices.map((inv) => [
     inv.invoiceNumber,
     formatDate(inv.dueDate),
-    inv.lineItems[0]?.description ?? '—',
+    inv.lineItems[0]?.description ?? "—",
     inv.status.charAt(0).toUpperCase() + inv.status.slice(1),
     formatAmount(inv.totalAmount, inv.currency),
   ]);
@@ -70,39 +89,38 @@ function buildInvoiceRows(invoices: ConsoleInvoice[]): string[][] {
 
 const changePlanningNotes = [
   {
-    title: 'Upgrade recommendation',
-    body: 'Fine-tune demand suggests moving GPU budget into the next tier before the next contract checkpoint.',
+    title: "Upgrade recommendation",
+    body: "Fine-tune demand suggests moving GPU budget into the next tier before the next contract checkpoint.",
   },
   {
-    title: 'Renewal note',
-    body: 'Seats can still be adjusted before the invoice locks on the next billing date.',
+    title: "Renewal note",
+    body: "Seats can still be adjusted before the invoice locks on the next billing date.",
   },
 ];
 
 const paymentMethods = [
   {
-    title: 'Corporate Visa',
-    body: 'Primary method for annual subscription charges and variable overage billing.',
+    title: "Corporate Visa",
+    body: "Primary method for annual subscription charges and variable overage billing.",
   },
   {
-    title: 'Bank transfer',
-    body: 'Reserved for negotiated invoice settlements and manual approval workflow.',
+    title: "Bank transfer",
+    body: "Reserved for negotiated invoice settlements and manual approval workflow.",
   },
 ];
 
 export function SubscriptionPage() {
   const { session } = useConsoleSession();
-  const [tab, setTab] = useState<'overview' | 'billing' | 'payments'>('overview');
+  const [tab, setTab] = useState<"overview" | "billing" | "payments">(
+    "overview",
+  );
   const [subscriptions, setSubscriptions] = useState<ConsoleSubscription[]>([]);
   const [invoices, setInvoices] = useState<ConsoleInvoice[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([
-      fetchMySubscriptions(),
-      fetchBillingInvoices(10),
-    ])
+    Promise.all([fetchMySubscriptions(), fetchBillingInvoices(10)])
       .then(([subs, invs]) => {
         setSubscriptions(subs);
         setInvoices(invs);
@@ -112,22 +130,31 @@ export function SubscriptionPage() {
 
   const summaryItems = buildSummaryItems(subscriptions);
   const invoiceRows = buildInvoiceRows(invoices);
-  const planningSignals = changePlanningNotes.map((note) => ({ title: note.title, description: note.body }));
-  const paymentSignals = paymentMethods.map((method) => ({ title: method.title, description: method.body }));
+  const planningSignals = changePlanningNotes.map((note) => ({
+    title: note.title,
+    description: note.body,
+  }));
+  const paymentSignals = paymentMethods.map((method) => ({
+    title: method.title,
+    description: method.body,
+  }));
 
-  const activeSubscription = subscriptions.find((s) => s.status === 'active') ?? subscriptions[0];
+  const activeSubscription =
+    subscriptions.find((s) => s.status === "active") ?? subscriptions[0];
 
   const postureSignals = [
     {
-      title: 'Invoice readiness',
-      description: 'Finance contact and payment routing are configured, renewal can proceed without manual intervention.',
+      title: "Invoice readiness",
+      description:
+        "Finance contact and payment routing are configured, renewal can proceed without manual intervention.",
     },
   ];
 
   const chargeSignals = [
     {
-      title: 'Overage driver',
-      description: 'Most variable spend comes from burst model access rather than additional seat growth.',
+      title: "Overage driver",
+      description:
+        "Most variable spend comes from burst model access rather than additional seat growth.",
     },
   ];
 
@@ -142,21 +169,43 @@ export function SubscriptionPage() {
 
       <SummaryStrip items={summaryItems} />
 
-      <div className="vx-tabs-list" role="tablist" aria-label="Subscription tabs">
-        <Button variant="ghost" size="sm" className={tab === 'overview' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('overview')}>
+      <div
+        className="vx-tabs-list"
+        role="tablist"
+        aria-label="Subscription tabs"
+      >
+        <Button
+          variant="ghost"
+          size="sm"
+          className={tab === "overview" ? "vx-tab vx-tab--active" : "vx-tab"}
+          onClick={() => setTab("overview")}
+        >
           Plan overview
         </Button>
-        <Button variant="ghost" size="sm" className={tab === 'billing' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('billing')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={tab === "billing" ? "vx-tab vx-tab--active" : "vx-tab"}
+          onClick={() => setTab("billing")}
+        >
           Recent billing
         </Button>
-        <Button variant="ghost" size="sm" className={tab === 'payments' ? 'vx-tab vx-tab--active' : 'vx-tab'} onClick={() => setTab('payments')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={tab === "payments" ? "vx-tab vx-tab--active" : "vx-tab"}
+          onClick={() => setTab("payments")}
+        >
           Payment methods
         </Button>
       </div>
 
-      {tab === 'overview' ? (
+      {tab === "overview" ? (
         <DashboardSplit>
-          <PageSection title="Current package" description="A modern SaaS billing page starts with the plan, not the table.">
+          <PageSection
+            title="Current package"
+            description="A modern SaaS billing page starts with the plan, not the table."
+          >
             {loading ? (
               <p className="vx-empty-hint">Loading subscription…</p>
             ) : activeSubscription ? (
@@ -164,22 +213,36 @@ export function SubscriptionPage() {
                 <div className="vx-stack-sm">
                   <div className="vx-inline-between">
                     <strong>{activeSubscription.planName}</strong>
-                    <Badge className="vx-badge-positive">{activeSubscription.status}</Badge>
+                    <Badge className="vx-badge-positive">
+                      {activeSubscription.status}
+                    </Badge>
                   </div>
                   <div className="vx-detail-grid">
                     <div>
                       <span>Renewal</span>
-                      <strong>{formatDate(activeSubscription.nextBillingDate)}</strong>
+                      <strong>
+                        {formatDate(activeSubscription.nextBillingDate)}
+                      </strong>
                     </div>
                     <div>
                       <span>Price</span>
-                      <strong>{formatAmount(activeSubscription.price, activeSubscription.currency)} / {activeSubscription.cycle}</strong>
+                      <strong>
+                        {formatAmount(
+                          activeSubscription.price,
+                          activeSubscription.currency,
+                        )}{" "}
+                        / {activeSubscription.cycle}
+                      </strong>
                     </div>
                   </div>
                 </div>
                 <div className="vx-detail-actions">
-                  <ActionButton variant="outline" icon="chart-bar">Compare tiers</ActionButton>
-                  <ActionButton variant="outline" icon="calendar">Preview renewal</ActionButton>
+                  <ActionButton variant="outline" icon="chart-bar">
+                    Compare tiers
+                  </ActionButton>
+                  <ActionButton variant="outline" icon="calendar">
+                    Preview renewal
+                  </ActionButton>
                 </div>
               </div>
             ) : (
@@ -187,23 +250,34 @@ export function SubscriptionPage() {
             )}
           </PageSection>
 
-          <PageSection title="Change planning" description="Keep upgrade or downgrade actions available, but visually secondary to the current state." tone="muted">
+          <PageSection
+            title="Change planning"
+            description="Keep upgrade or downgrade actions available, but visually secondary to the current state."
+            tone="muted"
+          >
             <SignalList items={planningSignals} />
           </PageSection>
         </DashboardSplit>
       ) : null}
 
-      {tab === 'overview' ? (
+      {tab === "overview" ? (
         <DashboardSplit>
-          <PageSection title="Billing posture" description="Keep payment context available without turning subscription into a finance page." tone="muted">
+          <PageSection
+            title="Billing posture"
+            description="Keep payment context available without turning subscription into a finance page."
+            tone="muted"
+          >
             <SignalList items={postureSignals} />
           </PageSection>
         </DashboardSplit>
       ) : null}
 
-      {tab === 'billing' ? (
+      {tab === "billing" ? (
         <DashboardSplit>
-          <PageSection title="Recent charges" description="Invoices and overage records remain secondary to the subscription overview.">
+          <PageSection
+            title="Recent charges"
+            description="Invoices and overage records remain secondary to the subscription overview."
+          >
             {loading ? (
               <p className="vx-empty-hint">Loading invoices…</p>
             ) : invoiceRows.length > 0 ? (
@@ -228,14 +302,22 @@ export function SubscriptionPage() {
             )}
           </PageSection>
 
-          <PageSection title="Charge guidance" description="Explain what changed and what operators need to review next." tone="muted">
+          <PageSection
+            title="Charge guidance"
+            description="Explain what changed and what operators need to review next."
+            tone="muted"
+          >
             <SignalList items={chargeSignals} />
           </PageSection>
         </DashboardSplit>
       ) : null}
 
-      {tab === 'payments' ? (
-        <PageSection title="Payment methods" description="Payment management stays available without turning the page into a finance system." tone="muted">
+      {tab === "payments" ? (
+        <PageSection
+          title="Payment methods"
+          description="Payment management stays available without turning the page into a finance system."
+          tone="muted"
+        >
           <SignalList items={paymentSignals} />
         </PageSection>
       ) : null}

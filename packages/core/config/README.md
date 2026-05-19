@@ -10,6 +10,7 @@
 Parses `process.env` into strongly typed configuration objects, injected via NestJS DI to consumers.
 
 **Core Features:**
+
 - Type-safe validation based on Zod
 - NestJS dynamic module integration
 - Domain-level on-demand loading
@@ -31,18 +32,18 @@ pnpm add @vxture/core-config
 ### 1. Register in AppModule
 
 ```typescript
-import { Module } from '@nestjs/common';
-import { VxConfigModule } from '@vxture/core-config';
+import { Module } from "@nestjs/common";
+import { VxConfigModule } from "@vxture/core-config";
 
 @Module({
   imports: [
     // BFF / Service (no AI config needed)
     VxConfigModule.register({
-      domains: ['app', 'database', 'redis', 'auth'],
+      domains: ["app", "database", "redis", "auth"],
     }),
     // Agent Server (needs AI config)
     VxConfigModule.register({
-      domains: ['app', 'database', 'redis', 'auth', 'ai'],
+      domains: ["app", "database", "redis", "auth", "ai"],
     }),
   ],
 })
@@ -52,8 +53,8 @@ export class AppModule {}
 ### 2. Use in Service
 
 ```typescript
-import { Injectable } from '@nestjs/common';
-import { VxConfigService } from '@vxture/core-config';
+import { Injectable } from "@nestjs/common";
+import { VxConfigService } from "@vxture/core-config";
 
 @Injectable()
 export class MyService {
@@ -76,13 +77,13 @@ export class MyService {
 
 ## Configuration Domains
 
-| Domain | Consumer | Content |
-|--------|----------|---------|
-| `app` | All | NODE_ENV, PORT, LOG_LEVEL, APP_NAME |
-| `database` | BFF / services / agent-server | PostgreSQL connection config |
-| `redis` | BFF / services / agent-server | Redis connection config |
-| `auth` | BFF / agent-server | JWT, bcrypt config |
-| `ai` | agent-server | Doubao, Claude, ChatGPT, Qwen, custom model config |
+| Domain     | Consumer                      | Content                                            |
+| ---------- | ----------------------------- | -------------------------------------------------- |
+| `app`      | All                           | NODE_ENV, PORT, LOG_LEVEL, APP_NAME                |
+| `database` | BFF / services / agent-server | PostgreSQL connection config                       |
+| `redis`    | BFF / services / agent-server | Redis connection config                            |
+| `auth`     | BFF / agent-server            | JWT, bcrypt config                                 |
+| `ai`       | agent-server                  | Doubao, Claude, ChatGPT, Qwen, custom model config |
 
 ---
 
@@ -91,11 +92,11 @@ export class MyService {
 ### VxConfigModule
 
 ```typescript
-import { VxConfigModule } from '@vxture/core-config';
+import { VxConfigModule } from "@vxture/core-config";
 
 VxConfigModule.register({
   // Configuration domains to load
-  domains: ['app', 'database', 'redis', 'auth'],
+  domains: ["app", "database", "redis", "auth"],
   // strict: true (default) — missing required env directly process.exit(1)
   // strict: false — only for testing scenarios
 });
@@ -104,32 +105,32 @@ VxConfigModule.register({
 ### VxConfigService
 
 ```typescript
-import { VxConfigService } from '@vxture/core-config';
+import { VxConfigService } from "@vxture/core-config";
 
 @Injectable()
 export class MyService {
   constructor(private readonly config: VxConfigService) {}
 
   // Getters (full type)
-  get app(): AppConfig
-  get database(): DatabaseConfig
-  get redis(): RedisConfig
-  get auth(): AuthConfig
-  get ai(): AiConfig  // agent-server only
+  get app(): AppConfig;
+  get database(): DatabaseConfig;
+  get redis(): RedisConfig;
+  get auth(): AuthConfig;
+  get ai(): AiConfig; // agent-server only
 
   // Environment checks
-  get isProduction(): boolean
-  get isDevelopment(): boolean
-  get isTest(): boolean
+  get isProduction(): boolean;
+  get isDevelopment(): boolean;
+  get isTest(): boolean;
 }
 ```
 
 ### Direct Injection of Single Domain
 
 ```typescript
-import { Inject, Injectable } from '@nestjs/common';
-import { CONFIG_TOKEN } from '@vxture/core-config';
-import type { DatabaseConfig } from '@vxture/core-config';
+import { Inject, Injectable } from "@nestjs/common";
+import { CONFIG_TOKEN } from "@vxture/core-config";
+import type { DatabaseConfig } from "@vxture/core-config";
 
 @Injectable()
 export class DatabaseProvider {
@@ -145,17 +146,17 @@ export class DatabaseProvider {
 ## Mock Configuration in Tests
 
 ```typescript
-import { Test } from '@nestjs/testing';
-import { CONFIG_TOKEN } from '@vxture/core-config';
+import { Test } from "@nestjs/testing";
+import { CONFIG_TOKEN } from "@vxture/core-config";
 
 const mockDb = {
-  DB_HOST: 'localhost',
+  DB_HOST: "localhost",
   DB_PORT: 5432,
-  DB_NAME: 'test_db',
-  DB_USER: 'test',
-  DB_PASSWORD: 'test',
+  DB_NAME: "test_db",
+  DB_USER: "test",
+  DB_PASSWORD: "test",
   DB_POOL_MAX: 5,
-  DB_SSL: 'disable',
+  DB_SSL: "disable",
 };
 
 const module = await Test.createTestingModule({

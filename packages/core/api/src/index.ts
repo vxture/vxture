@@ -14,12 +14,12 @@ export type {
   RequestOptions,
   UploadOptions,
   RequestContext,
-} from './types';
+} from "./types";
 
 // NestJS Module & Client
-export { VxHttpModule }              from './module';
-export type { VxHttpModuleOptions }  from './module';
-export { VxHttpClient }              from './client';
+export { VxHttpModule } from "./module";
+export type { VxHttpModuleOptions } from "./module";
+export { VxHttpClient } from "./client";
 
 // Utils
 export {
@@ -30,4 +30,4 @@ export {
   buildPageResult,
   pageToOffset,
   safePageQuery,
-} from './utils';
+} from "./utils";

@@ -31,8 +31,8 @@ export interface ConsoleOrganizationProfile {
   tenantCode: string;
   tenantName: string;
   displayName: string;
-  tenantType: 'company' | 'individual';
-  status: 'trial' | 'active' | 'suspended' | 'cancelled';
+  tenantType: "company" | "individual";
+  status: "trial" | "active" | "suspended" | "cancelled";
   logoUrl: string | null;
   description: string | null;
   language: string;
@@ -51,7 +51,7 @@ export interface ConsoleOrganizationProfile {
   district: string | null;
   address: string | null;
   postalCode: string | null;
-  verifiedStatus: 'unverified' | 'pending' | 'verified' | 'rejected' | null;
+  verifiedStatus: "unverified" | "pending" | "verified" | "rejected" | null;
   verifiedAt: string | null;
   rejectedReason: string | null;
   primaryDomain: string | null;
@@ -69,8 +69,16 @@ export interface SessionSnapshot {
   capabilities: Capability[];
 }
 
-export type PlatformGovernanceKind = 'admins' | 'secrets' | 'jobs' | 'approvals';
-export type PlatformGovernanceStatus = 'normal' | 'warning' | 'blocked' | 'pending';
+export type PlatformGovernanceKind =
+  | "admins"
+  | "secrets"
+  | "jobs"
+  | "approvals";
+export type PlatformGovernanceStatus =
+  | "normal"
+  | "warning"
+  | "blocked"
+  | "pending";
 
 export interface PlatformGovernanceRecord {
   id: string;
@@ -94,7 +102,7 @@ export interface SummaryMetric {
   label: string;
   value: string;
   trend?: string;
-  tone?: 'default' | 'positive' | 'warning';
+  tone?: "default" | "positive" | "warning";
 }
 
 export interface QuickAction {
@@ -115,8 +123,8 @@ export interface MemberRecord {
   role: string;
   roleCode: string | null;
   roleId: string | null;
-  status: 'Active' | 'Invited' | 'Suspended';
-  statusCode: 'active' | 'inactive' | 'banned';
+  status: "Active" | "Invited" | "Suspended";
+  statusCode: "active" | "inactive" | "banned";
   lastActive: string;
   team: string;
   joinedAt: string;
@@ -128,7 +136,7 @@ export interface TenantRoleRecord {
   roleCode: string;
   roleName: string;
   description: string | null;
-  status: 'active' | 'disabled';
+  status: "active" | "disabled";
   isSystem: boolean;
   permissions: TenantPermissionRecord[];
 }
@@ -157,7 +165,7 @@ export interface AiModelRecord {
   updatedAt: string;
 }
 
-export type DevServiceSource = 'dev-tools' | 'dev-panel';
+export type DevServiceSource = "dev-tools" | "dev-panel";
 
 export interface DevServiceHealthCheck {
   label: string;
@@ -206,9 +214,9 @@ export interface ProductAgentRecord {
   agentCode: string;
   agentName: string;
   description: string;
-  agentType: 'chat' | 'business';
-  status: 'active' | 'inactive';
-  visibility: 'public' | 'private' | 'internal';
+  agentType: "chat" | "business";
+  status: "active" | "inactive";
+  visibility: "public" | "private" | "internal";
   defaultModelCode: string | null;
   createdAt: string;
   updatedAt: string;
@@ -216,16 +224,16 @@ export interface ProductAgentRecord {
 
 export interface ProductModelPolicyRecord {
   id: string;
-  subjectType: 'tenant' | 'platform';
+  subjectType: "tenant" | "platform";
   subjectId: string;
   subjectName: string;
-  scopeType: 'product' | 'new_product_default' | 'tenant_default';
+  scopeType: "product" | "new_product_default" | "tenant_default";
   scopeCode: string;
   scopeName: string;
   isDefined: boolean;
   productCode: string;
   productName: string;
-  productRegion: 'domestic' | 'international' | null;
+  productRegion: "domestic" | "international" | null;
   agentId: string | null;
   agentCode: string | null;
   agentName: string;
@@ -234,7 +242,7 @@ export interface ProductModelPolicyRecord {
   isUnlimited: boolean;
   priority: number;
   isActive: boolean;
-  cycle: 'monthly';
+  cycle: "monthly";
   note: string | null;
 }
 
@@ -243,7 +251,7 @@ export interface ProductReleasePrice {
   currency: string;
   price: number;
   originalPrice: number;
-  periodType: 'monthly' | 'yearly';
+  periodType: "monthly" | "yearly";
   periodValue: number;
   isDefault: boolean;
   isActive: boolean;
@@ -252,7 +260,7 @@ export interface ProductReleasePrice {
 export interface ProductReleaseFeature {
   code: string;
   name: string;
-  type: 'quota' | 'function';
+  type: "quota" | "function";
   quotaValue: number | null;
   isUnlimited: boolean;
   config: Record<string, unknown> | null;
@@ -262,12 +270,12 @@ export interface ProductReleaseRecord {
   id: string;
   productCode: string;
   productName: string;
-  productRegion: 'domestic' | 'international';
-  productStatus: 'active' | 'draft' | 'archived';
+  productRegion: "domestic" | "international";
+  productStatus: "active" | "draft" | "archived";
   releaseCode: string;
   releaseName: string;
   description: string;
-  releaseType: 'standard' | 'custom';
+  releaseType: "standard" | "custom";
   versionLabels: string[];
   isFree: boolean;
   isPublic: boolean;
@@ -284,7 +292,7 @@ export interface ProductPlanPrice {
   currency: string;
   price: number;
   originalPrice: number;
-  periodType: 'monthly' | 'yearly';
+  periodType: "monthly" | "yearly";
   periodValue: number;
   isDefault: boolean;
   isActive: boolean;
@@ -293,7 +301,7 @@ export interface ProductPlanPrice {
 export interface ProductPlanFeature {
   code: string;
   name: string;
-  type: 'quota' | 'function';
+  type: "quota" | "function";
   quotaValue: number | null;
   isUnlimited: boolean;
   config: Record<string, unknown> | null;
@@ -303,8 +311,8 @@ export interface ProductPlanAgent {
   id: string;
   agentCode: string;
   agentName: string;
-  agentType: 'chat' | 'business';
-  status: 'active' | 'inactive' | 'draft';
+  agentType: "chat" | "business";
+  status: "active" | "inactive" | "draft";
 }
 
 export interface AuditLogRecord {
@@ -319,7 +327,7 @@ export interface AuditLogRecord {
   targetLabel: string | null;
   module: string;
   ip: string | null;
-  result: 'success' | 'failure';
+  result: "success" | "failure";
   errorMessage: string | null;
   createdAt: string;
 }
@@ -328,9 +336,9 @@ export interface AnnouncementRecord {
   id: string;
   title: string;
   content: string;
-  type: 'system' | 'maintenance' | 'marketing' | 'security';
-  status: 'draft' | 'published' | 'archived';
-  targetScope: 'all' | 'trial' | 'active' | 'custom';
+  type: "system" | "maintenance" | "marketing" | "security";
+  status: "draft" | "published" | "archived";
+  targetScope: "all" | "trial" | "active" | "custom";
   publishedAt: string | null;
   expiresAt: string | null;
   createdAt: string;
@@ -345,7 +353,7 @@ export interface SkillRecord {
   category: string;
   endpointUrl: string | null;
   version: string;
-  status: 'active' | 'disabled' | 'draft';
+  status: "active" | "disabled" | "draft";
   invocations: number;
   isSystem: boolean;
   createdAt: string;
@@ -370,13 +378,22 @@ export interface ProductPlanRecord {
   updatedAt: string;
 }
 
-export type ProductCapabilityStatus = 'active' | 'draft' | 'archived';
-export type ProductCapabilityVisibility = 'public' | 'internal';
-export type ProductCapabilityType = 'platform' | 'agent' | 'model' | 'data' | 'service';
-export type ProductCapabilitySource = 'self' | 'partner';
-export type ProductCapabilityRegion = 'domestic' | 'international' | 'global';
-export type ProductCapabilityIntegrationStatus = 'connected' | 'config_required' | 'testing' | 'not_required';
-export type ProductCapabilityHealthStatus = 'normal' | 'warning' | 'disabled';
+export type ProductCapabilityStatus = "active" | "draft" | "archived";
+export type ProductCapabilityVisibility = "public" | "internal";
+export type ProductCapabilityType =
+  | "platform"
+  | "agent"
+  | "model"
+  | "data"
+  | "service";
+export type ProductCapabilitySource = "self" | "partner";
+export type ProductCapabilityRegion = "domestic" | "international" | "global";
+export type ProductCapabilityIntegrationStatus =
+  | "connected"
+  | "config_required"
+  | "testing"
+  | "not_required";
+export type ProductCapabilityHealthStatus = "normal" | "warning" | "disabled";
 
 export interface ProductCapabilityRelatedSolution {
   solutionCode: string;
@@ -447,7 +464,7 @@ export type ProductSolutionStatus = ProductCapabilityStatus;
 export type ProductSolutionVisibility = ProductCapabilityVisibility;
 export type ProductSolutionCapabilityType = ProductCapabilityType;
 export type ProductSolutionCapabilitySource = ProductCapabilitySource;
-export type ProductSolutionTierCode = 'free' | 'pro' | 'enterprise' | 'custom';
+export type ProductSolutionTierCode = "free" | "pro" | "enterprise" | "custom";
 
 export interface ProductSolutionCapability {
   id: string;
@@ -508,7 +525,7 @@ export interface ProductServicePlanPrice {
   price: number | null;
   originalPrice: number | null;
   currency: string;
-  periodType: 'monthly' | 'yearly' | 'contract';
+  periodType: "monthly" | "yearly" | "contract";
   periodValue: number;
 }
 
@@ -549,10 +566,18 @@ export interface ProductServicePlanDetailRecord {
   updatedAt: string;
 }
 
-export type TenantOperationStatus = 'trial' | 'active' | 'suspended' | 'cancelled';
-export type TenantOperationType = 'company' | 'individual';
-export type TenantVerificationStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
-export type TenantRiskLevel = 'normal' | 'follow_up' | 'high';
+export type TenantOperationStatus =
+  | "trial"
+  | "active"
+  | "suspended"
+  | "cancelled";
+export type TenantOperationType = "company" | "individual";
+export type TenantVerificationStatus =
+  | "unverified"
+  | "pending"
+  | "verified"
+  | "rejected";
+export type TenantRiskLevel = "normal" | "follow_up" | "high";
 
 export interface TenantOperationMember {
   id: string;
@@ -560,7 +585,7 @@ export interface TenantOperationMember {
   name: string;
   email: string;
   role: string;
-  status: 'active' | 'invited' | 'suspended';
+  status: "active" | "invited" | "suspended";
   registeredAt?: string;
   activatedAt?: string | null;
   lastActiveAt: string;
@@ -572,7 +597,7 @@ export interface TenantOperationSubscription {
   productName: string;
   releaseName: string;
   planName: string;
-  status: 'trial' | 'active' | 'past_due' | 'cancelled';
+  status: "trial" | "active" | "past_due" | "cancelled";
   seats: number;
   monthlyRevenue: number;
   startedAt: string;
@@ -586,7 +611,7 @@ export interface TenantOperationUsageMetric {
   quota: number | null;
   unit: string;
   trend: string;
-  status: 'normal' | 'warning' | 'danger';
+  status: "normal" | "warning" | "danger";
 }
 
 export interface TenantOperationModelPolicy {
@@ -596,8 +621,8 @@ export interface TenantOperationModelPolicy {
   modelCode: string;
   quotaTokens: number;
   usedTokens: number;
-  state: 'effective' | 'limited' | 'undefined' | 'disabled';
-  source: 'product' | 'tenant' | 'default';
+  state: "effective" | "limited" | "undefined" | "disabled";
+  source: "product" | "tenant" | "default";
 }
 
 export interface TenantOperationAuditEvent {
@@ -605,14 +630,14 @@ export interface TenantOperationAuditEvent {
   action: string;
   actor: string;
   at: string;
-  result: 'success' | 'warning' | 'danger';
+  result: "success" | "warning" | "danger";
 }
 
 export interface TenantOperationTicket {
   id: string;
   title: string;
-  status: 'open' | 'processing' | 'blocked' | 'closed';
-  priority: 'p0' | 'p1' | 'p2' | 'p3';
+  status: "open" | "processing" | "blocked" | "closed";
+  priority: "p0" | "p1" | "p2" | "p3";
   updatedAt: string;
 }
 
@@ -671,11 +696,23 @@ export interface TenantOperationRecord {
   tickets: TenantOperationTicket[];
 }
 
-export type SubscriptionOperationStatus = 'trial' | 'active' | 'expiring' | 'overdue' | 'suspended' | 'cancelled';
-export type SubscriptionOperationCycle = 'monthly' | 'yearly' | 'once';
-export type SubscriptionOperationQuotaRisk = 'normal' | 'warning' | 'danger';
-export type SubscriptionOperationAction = 'renew' | 'suspend' | 'resume' | 'cancel';
-export type SubscriptionSolutionAssociationSource = 'industry_rule' | 'legacy_plan';
+export type SubscriptionOperationStatus =
+  | "trial"
+  | "active"
+  | "expiring"
+  | "overdue"
+  | "suspended"
+  | "cancelled";
+export type SubscriptionOperationCycle = "monthly" | "yearly" | "once";
+export type SubscriptionOperationQuotaRisk = "normal" | "warning" | "danger";
+export type SubscriptionOperationAction =
+  | "renew"
+  | "suspend"
+  | "resume"
+  | "cancel";
+export type SubscriptionSolutionAssociationSource =
+  | "industry_rule"
+  | "legacy_plan";
 
 export interface SubscriptionOperationQuotaSnapshot {
   maxUsers: number;
@@ -713,7 +750,7 @@ export interface SubscriptionOperationEvent {
   description: string;
   actor: string;
   at: string;
-  tone: 'success' | 'warning' | 'danger' | 'neutral';
+  tone: "success" | "warning" | "danger" | "neutral";
 }
 
 export interface SubscriptionOperationRecord {
@@ -755,19 +792,25 @@ export interface SubscriptionOperationDetailRecord extends SubscriptionOperation
   operationTimeline: SubscriptionOperationEvent[];
 }
 
-export type OrderOperationStatus = 'pending' | 'pending_verify' | 'confirmed' | 'overdue' | 'closed' | 'abnormal';
+export type OrderOperationStatus =
+  | "pending"
+  | "pending_verify"
+  | "confirmed"
+  | "overdue"
+  | "closed"
+  | "abnormal";
 export type OrderPaymentStatus =
-  | 'not_required'
-  | 'unpaid'
-  | 'pending'
-  | 'pending_verify'
-  | 'paid'
-  | 'partial'
-  | 'failed'
-  | 'closed'
-  | 'refunding';
-export type OrderPaySource = 'online' | 'offline' | 'none';
-export type OrderOfflinePaymentType = 'bank_transfer' | 'cash' | 'other';
+  | "not_required"
+  | "unpaid"
+  | "pending"
+  | "pending_verify"
+  | "paid"
+  | "partial"
+  | "failed"
+  | "closed"
+  | "refunding";
+export type OrderPaySource = "online" | "offline" | "none";
+export type OrderOfflinePaymentType = "bank_transfer" | "cash" | "other";
 
 export interface OrderInvoiceItemRecord {
   id: string;
@@ -801,7 +844,7 @@ export interface OrderOperationEvent {
   description: string;
   actor: string;
   at: string;
-  tone: 'success' | 'warning' | 'danger' | 'neutral';
+  tone: "success" | "warning" | "danger" | "neutral";
 }
 
 export interface OrderOperationRecord {
@@ -846,7 +889,14 @@ export interface OrderOperationDetailRecord extends OrderOperationRecord {
   operationTimeline: OrderOperationEvent[];
 }
 
-export type PaymentReconciliationStatus = 'normal' | 'pending_verify' | 'partial' | 'overpaid' | 'bill_cancelled' | 'failed' | 'unlinked';
+export type PaymentReconciliationStatus =
+  | "normal"
+  | "pending_verify"
+  | "partial"
+  | "overpaid"
+  | "bill_cancelled"
+  | "failed"
+  | "unlinked";
 
 export interface PaymentOperationRecord {
   id: string;
@@ -889,7 +939,7 @@ export interface PaymentOperationRecord {
   updatedAt: string;
 }
 
-export type UsageMeteringRisk = 'normal' | 'warning' | 'danger' | 'anomaly';
+export type UsageMeteringRisk = "normal" | "warning" | "danger" | "anomaly";
 
 export interface UsageMeteringRecord {
   id: string;
@@ -921,8 +971,12 @@ export interface UsageMeteringRecord {
   updatedAt: string;
 }
 
-export type PromotionOperationStatus = 'active' | 'scheduled' | 'expired' | 'paused';
-export type PromotionOperationType = 'discount' | 'coupon' | 'campaign';
+export type PromotionOperationStatus =
+  | "active"
+  | "scheduled"
+  | "expired"
+  | "paused";
+export type PromotionOperationType = "discount" | "coupon" | "campaign";
 
 export interface PromotionOperationRecord {
   id: string;
@@ -949,7 +1003,7 @@ export interface PromotionOperationRecord {
   updatedAt: string;
 }
 
-export type PromotionRedemptionStatus = 'applied' | 'redeemed' | 'reversed';
+export type PromotionRedemptionStatus = "applied" | "redeemed" | "reversed";
 
 export interface PromotionRedemptionRecord {
   id: string;
@@ -982,7 +1036,7 @@ export interface CommerceOverviewMetric {
   value: number;
   amount?: number;
   currency?: string;
-  tone: 'blue' | 'green' | 'amber' | 'rose';
+  tone: "blue" | "green" | "amber" | "rose";
   hint: string;
 }
 
@@ -990,7 +1044,7 @@ export interface CommerceOverviewRiskItem {
   id: string;
   title: string;
   detail: string;
-  tone: 'green' | 'amber' | 'rose';
+  tone: "green" | "amber" | "rose";
   href: string;
 }
 
@@ -1011,13 +1065,41 @@ export interface CommerceOverviewSnapshot {
   planRevenue: CommerceOverviewPlanRevenue[];
 }
 
-export type BillingBillStatus = 'unpaid' | 'paying' | 'paid' | 'partial' | 'cancelled' | 'overdue';
-export type BillingBillType = 'normal' | 'adjust' | 'supplement' | 'prepaid';
-export type BillingBillAction = 'cancel' | 'discount' | 'mark_overdue' | 'create_adjustment' | 'create_supplement';
-export type BillingInvoiceStatus = 'none' | 'applying' | 'auditing' | 'issued' | 'sending' | 'finished' | 'rejected' | 'red';
-export type BillingInvoiceType = 'special_vat' | 'normal_vat' | 'electronic' | 'paper' | 'other';
-export type BillingInvoiceTaxType = 'enterprise' | 'individual' | 'government' | 'other';
-export type BillingInvoiceReceiptAction = 'update_shipping' | 'finish' | 'red';
+export type BillingBillStatus =
+  | "unpaid"
+  | "paying"
+  | "paid"
+  | "partial"
+  | "cancelled"
+  | "overdue";
+export type BillingBillType = "normal" | "adjust" | "supplement" | "prepaid";
+export type BillingBillAction =
+  | "cancel"
+  | "discount"
+  | "mark_overdue"
+  | "create_adjustment"
+  | "create_supplement";
+export type BillingInvoiceStatus =
+  | "none"
+  | "applying"
+  | "auditing"
+  | "issued"
+  | "sending"
+  | "finished"
+  | "rejected"
+  | "red";
+export type BillingInvoiceType =
+  | "special_vat"
+  | "normal_vat"
+  | "electronic"
+  | "paper"
+  | "other";
+export type BillingInvoiceTaxType =
+  | "enterprise"
+  | "individual"
+  | "government"
+  | "other";
+export type BillingInvoiceReceiptAction = "update_shipping" | "finish" | "red";
 
 export interface BillingInvoiceReceiptRecord {
   id: string;
@@ -1061,7 +1143,7 @@ export interface BillingInvoiceLedgerRecord extends BillingInvoiceReceiptRecord 
   orderNo: string | null;
   servicePlanName: string | null;
   tierName: string | null;
-  sourceLabel: 'offline';
+  sourceLabel: "offline";
 }
 
 export interface BillingOperationEvent {
@@ -1070,7 +1152,7 @@ export interface BillingOperationEvent {
   description: string;
   actor: string;
   at: string;
-  tone: 'success' | 'warning' | 'danger' | 'neutral';
+  tone: "success" | "warning" | "danger" | "neutral";
 }
 
 export interface BillingRecord {
@@ -1115,7 +1197,11 @@ export interface BillingDetailRecord extends BillingRecord {
   operationTimeline: BillingOperationEvent[];
 }
 
-export type AccountOperationStatus = 'active' | 'invited' | 'locked' | 'disabled';
+export type AccountOperationStatus =
+  | "active"
+  | "invited"
+  | "locked"
+  | "disabled";
 
 export interface AccountTenantBinding {
   tenantId: string;
@@ -1148,7 +1234,7 @@ export interface AccountOperationRecord {
   tenantBindings: AccountTenantBinding[];
 }
 
-export type PlatformPermissionType = 'MENU' | 'BUTTON' | 'API';
+export type PlatformPermissionType = "MENU" | "BUTTON" | "API";
 
 export interface PlatformRolePermissionRecord {
   id: string;
@@ -1179,7 +1265,7 @@ export interface PlatformRoleRecord {
   descriptionI18nKey: string | null;
   description: string;
   isSystem: boolean;
-  statusCode: 'active' | 'disabled' | 'archived';
+  statusCode: "active" | "disabled" | "archived";
   status: boolean;
   sort: number;
   adminCount: number;
@@ -1206,9 +1292,9 @@ export interface PlatformAdminRecord {
   roleCode: string;
   roleNameI18nKey: string;
   roleNameEn: string;
-  roleStatusCode: 'active' | 'disabled' | 'archived';
+  roleStatusCode: "active" | "disabled" | "archived";
   roleStatus: boolean;
-  statusCode: 'active' | 'disabled' | 'locked' | 'pending' | 'suspended';
+  statusCode: "active" | "disabled" | "locked" | "pending" | "suspended";
   status: boolean;
   isSystem: boolean;
   lastLoginAt: string | null;

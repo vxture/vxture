@@ -11,16 +11,16 @@
  * @date 2026-04-30
  */
 
-import type { VelaTool } from '../tool.types';
+import type { VelaTool } from "../tool.types";
 
 export const mySubscriptionTool: VelaTool = {
-  id:          'my_subscription',
-  name:        '我的订阅',
-  description: '查询当前租户的订阅计划、到期时间和功能权限',
-  surfaces:    ['console'],
-  dataScope:   'tenant',
-  inputSchema: { type: 'object', properties: {} },
+  id: "my_subscription",
+  name: "我的订阅",
+  description: "查询当前租户的订阅计划、到期时间和功能权限",
+  surfaces: ["console"],
+  dataScope: "tenant",
+  inputSchema: { type: "object", properties: {} },
   async execute(_input, _ctx) {
-    return { success: false, error: 'my_subscription: not yet implemented' };
+    return { success: false, error: "my_subscription: not yet implemented" };
   },
 };

@@ -8,21 +8,21 @@
  * @date 2026-05-02
  */
 
-'use client';
+"use client";
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { useVelaStore } from '../stores/vela.store';
-import { sendConfirm } from '../lib/vela.client';
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useVelaStore } from "../stores/vela.store";
+import { sendConfirm } from "../lib/vela.client";
 
 // ============================================================================
 // 类型
 // ============================================================================
 
 export interface ConfirmResult {
-  success:     boolean;
-  cancelled?:  boolean;
-  data?:       unknown;
-  error?:      string;
+  success: boolean;
+  cancelled?: boolean;
+  data?: unknown;
+  error?: string;
 }
 
 // ============================================================================
@@ -30,14 +30,16 @@ export interface ConfirmResult {
 // ============================================================================
 
 export function useVelaConfirm() {
-  const pendingConfirm    = useVelaStore((s) => s.pendingConfirm);
-  const surface           = useVelaStore((s) => s.surface);
-  const sessionId         = useVelaStore((s) => s.sessionId);
+  const pendingConfirm = useVelaStore((s) => s.pendingConfirm);
+  const surface = useVelaStore((s) => s.surface);
+  const sessionId = useVelaStore((s) => s.sessionId);
   const setPendingConfirm = useVelaStore((s) => s.setPendingConfirm);
 
   const [isConfirming, setIsConfirming] = useState(false);
   const [confirmError, setConfirmError] = useState<string | null>(null);
-  const [confirmResult, setConfirmResult] = useState<ConfirmResult | null>(null);
+  const [confirmResult, setConfirmResult] = useState<ConfirmResult | null>(
+    null,
+  );
 
   const autoCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -56,7 +58,7 @@ export function useVelaConfirm() {
 
       try {
         const raw = await sendConfirm({
-          auditId:   pendingConfirm.auditId,
+          auditId: pendingConfirm.auditId,
           confirmed,
           surface,
           sessionId,
@@ -98,5 +100,12 @@ export function useVelaConfirm() {
     setConfirmResult(null);
   }, [setPendingConfirm]);
 
-  return { pendingConfirm, isConfirming, confirmError, confirmResult, handleConfirm, dismiss };
+  return {
+    pendingConfirm,
+    isConfirming,
+    confirmError,
+    confirmResult,
+    handleConfirm,
+    dismiss,
+  };
 }

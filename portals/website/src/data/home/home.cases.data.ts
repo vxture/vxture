@@ -20,11 +20,11 @@ export interface HomeCaseItem {
   /** 点击跳转链接（指向案例详情页） */
   href: string;
   /** 展示主题样式 */
-  theme: 'primary' | 'brand' | 'success' | 'info';
+  theme: "primary" | "brand" | "success" | "info";
   /** 展示变体 */
-  variant: 'card' | 'list' | 'grid';
+  variant: "card" | "list" | "grid";
   /** 内容意图（用于分析） */
-  intent: 'case' | 'featured' | 'new' | 'popular';
+  intent: "case" | "featured" | "new" | "popular";
 }
 
 /**
@@ -61,7 +61,7 @@ export const HOME_CASES_DATA: HomeCasesData = {
   subtitleKey: "subtitle",
   taglineKey: "tagline",
   ui: {
-    viewDetailsKey: "ui.viewDetails"
+    viewDetailsKey: "ui.viewDetails",
   },
   items: [
     {
@@ -72,7 +72,7 @@ export const HOME_CASES_DATA: HomeCasesData = {
       href: "/cases-pages/geo-disaster-graph",
       theme: "success",
       variant: "card",
-      intent: "case"
+      intent: "case",
     },
     {
       id: "case-intro-02",
@@ -82,7 +82,7 @@ export const HOME_CASES_DATA: HomeCasesData = {
       href: "/cases-pages/intelligent-emergency",
       theme: "brand",
       variant: "card",
-      intent: "new"
+      intent: "new",
     },
     {
       id: "case-intro-03",
@@ -92,7 +92,7 @@ export const HOME_CASES_DATA: HomeCasesData = {
       href: "/cases-pages/public-safety-analysis",
       theme: "info",
       variant: "card",
-      intent: "featured"
-    }
-  ]
+      intent: "featured",
+    },
+  ],
 };

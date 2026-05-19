@@ -8,23 +8,23 @@
  * @date 2026-04-30
  */
 
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
-import { MessageBubble } from './MessageBubble';
-import { useVelaStore } from '../stores/vela.store';
+import { useEffect, useRef } from "react";
+import { MessageBubble } from "./MessageBubble";
+import { useVelaStore } from "../stores/vela.store";
 
 // ============================================================================
 // 组件
 // ============================================================================
 
 export function MessageList() {
-  const messages   = useVelaStore((s) => s.messages);
-  const bottomRef  = useRef<HTMLDivElement>(null);
+  const messages = useVelaStore((s) => s.messages);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   // 每次消息变化时滚动到底部
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   if (!messages.length) {

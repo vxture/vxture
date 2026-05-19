@@ -14,7 +14,7 @@
 
 export interface ChatInternalRequestDto {
   sessionId: string | null;
-  message:   string;
+  message: string;
 }
 
 // ============================================================================
@@ -22,9 +22,14 @@ export interface ChatInternalRequestDto {
 // ============================================================================
 
 export type ChatStreamEvent =
-  | { type: 'text';             delta: string }
-  | { type: 'tool_call';        toolId: string; status: 'running' }
-  | { type: 'tool_result';      toolId: string; data: unknown; displayHint?: string }
-  | { type: 'confirm_required'; auditId: string; toolId: string; summary: string }
-  | { type: 'done';             sessionId: string }
-  | { type: 'error';            message: string };
+  | { type: "text"; delta: string }
+  | { type: "tool_call"; toolId: string; status: "running" }
+  | { type: "tool_result"; toolId: string; data: unknown; displayHint?: string }
+  | {
+      type: "confirm_required";
+      auditId: string;
+      toolId: string;
+      summary: string;
+    }
+  | { type: "done"; sessionId: string }
+  | { type: "error"; message: string };

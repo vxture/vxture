@@ -16,9 +16,13 @@
  * @category Aggregator
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { AccountAuthService } from '@vxture/service-iam';
-import type { AccountProfileDto, AuthUserDto, UpdateProfileDto } from '../types/auth.types';
+import { Inject, Injectable } from "@nestjs/common";
+import { AccountAuthService } from "@vxture/service-iam";
+import type {
+  AccountProfileDto,
+  AuthUserDto,
+  UpdateProfileDto,
+} from "../types/auth.types";
 
 // ============================================================================
 // SessionAggregator
@@ -52,8 +56,8 @@ export class SessionAggregator {
       username: account.username,
       email: account.email ?? `${account.username}@local.vxture`,
       phone: account.phone ?? null,
-      role: 'member',
-      roleLabel: 'Member',
+      role: "member",
+      roleLabel: "Member",
       personalVerified: true,
       organizationVerified: false,
     };
@@ -63,7 +67,9 @@ export class SessionAggregator {
    * 获取当前用户的完整 Profile（用于 GET /api/me/profile）。
    * 包含 headline、bio、timezone、language 等扩展字段。
    */
-  async getCurrentUserProfile(accountId: string): Promise<AccountProfileDto | null> {
+  async getCurrentUserProfile(
+    accountId: string,
+  ): Promise<AccountProfileDto | null> {
     const profile = await this.accountAuthService.getAccountProfile(accountId);
     if (!profile) {
       return null;
@@ -80,7 +86,9 @@ export class SessionAggregator {
       phone: profile.phone,
       timezone: profile.timezone,
       language: profile.language,
-      profileUpdatedAt: profile.profileUpdatedAt ? profile.profileUpdatedAt.toISOString() : null,
+      profileUpdatedAt: profile.profileUpdatedAt
+        ? profile.profileUpdatedAt.toISOString()
+        : null,
     };
   }
 
@@ -92,16 +100,23 @@ export class SessionAggregator {
     accountId: string,
     input: UpdateProfileDto,
   ): Promise<AccountProfileDto | null> {
-    const profile = await this.accountAuthService.updateAccountProfile(accountId, {
-      ...(input.displayName !== undefined ? { displayName: input.displayName } : {}),
-      ...(input.avatarUrl   !== undefined ? { avatarUrl:   input.avatarUrl }   : {}),
-      ...(input.headline    !== undefined ? { headline:    input.headline }    : {}),
-      ...(input.bio         !== undefined ? { bio:         input.bio }         : {}),
-      ...(input.timezone    !== undefined ? { timezone:    input.timezone }    : {}),
-      ...(input.language    !== undefined ? { language:    input.language }    : {}),
-      ...(input.email       !== undefined ? { email:       input.email }       : {}),
-      ...(input.phone       !== undefined ? { phone:       input.phone }       : {}),
-    });
+    const profile = await this.accountAuthService.updateAccountProfile(
+      accountId,
+      {
+        ...(input.displayName !== undefined
+          ? { displayName: input.displayName }
+          : {}),
+        ...(input.avatarUrl !== undefined
+          ? { avatarUrl: input.avatarUrl }
+          : {}),
+        ...(input.headline !== undefined ? { headline: input.headline } : {}),
+        ...(input.bio !== undefined ? { bio: input.bio } : {}),
+        ...(input.timezone !== undefined ? { timezone: input.timezone } : {}),
+        ...(input.language !== undefined ? { language: input.language } : {}),
+        ...(input.email !== undefined ? { email: input.email } : {}),
+        ...(input.phone !== undefined ? { phone: input.phone } : {}),
+      },
+    );
 
     if (!profile) {
       return null;
@@ -118,7 +133,9 @@ export class SessionAggregator {
       phone: profile.phone,
       timezone: profile.timezone,
       language: profile.language,
-      profileUpdatedAt: profile.profileUpdatedAt ? profile.profileUpdatedAt.toISOString() : null,
+      profileUpdatedAt: profile.profileUpdatedAt
+        ? profile.profileUpdatedAt.toISOString()
+        : null,
     };
   }
 
@@ -131,6 +148,10 @@ export class SessionAggregator {
     currentPassword: string,
     nextPassword: string,
   ): Promise<void> {
-    await this.accountAuthService.changePassword(accountId, currentPassword, nextPassword);
+    await this.accountAuthService.changePassword(
+      accountId,
+      currentPassword,
+      nextPassword,
+    );
   }
 }

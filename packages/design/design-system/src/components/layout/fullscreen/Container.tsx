@@ -10,16 +10,32 @@
  * @category Components
  */
 
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { FullscreenContainerProps, FullscreenContainerRef } from "../../../types/fullscreen";
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import {
+  FullscreenContainerProps,
+  FullscreenContainerRef,
+} from "../../../types/fullscreen";
 import { useFullscreenContext } from "./Provider";
 import { Portal } from "./Portal";
 import { cn } from "../../../utils/cn";
 
-export const FullscreenContainer = forwardRef<FullscreenContainerRef, FullscreenContainerProps>(
-  ({ id, mode = "pseudo", lockScroll, portal = false, className, children }, ref) => {
+export const FullscreenContainer = forwardRef<
+  FullscreenContainerRef,
+  FullscreenContainerProps
+>(
+  (
+    { id, mode = "pseudo", lockScroll, portal = false, className, children },
+    ref,
+  ) => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const { isFullscreen, targetId, enterFullscreen, exitFullscreen } = useFullscreenContext();
+    const { isFullscreen, targetId, enterFullscreen, exitFullscreen } =
+      useFullscreenContext();
     const [isActive, setIsActive] = useState(false);
 
     /**
@@ -43,7 +59,7 @@ export const FullscreenContainer = forwardRef<FullscreenContainerRef, Fullscreen
         } else if (containerRef.current) {
           enterFullscreen(id, containerRef.current, { mode, lockScroll });
         }
-      }
+      },
     }));
 
     /**
@@ -60,16 +76,15 @@ export const FullscreenContainer = forwardRef<FullscreenContainerRef, Fullscreen
       }
     }, [isTarget, mode]);
 
-
     const content = (
       <div
         ref={containerRef}
         className={cn(
           "vx-fullscreen-container",
           {
-            "vx-fullscreen-active": isTarget && mode === "pseudo"
+            "vx-fullscreen-active": isTarget && mode === "pseudo",
           },
-          className
+          className,
         )}
         data-fullscreen-id={id}
       >
@@ -83,7 +98,7 @@ export const FullscreenContainer = forwardRef<FullscreenContainerRef, Fullscreen
     }
 
     return content;
-  }
+  },
 );
 
 FullscreenContainer.displayName = "FullscreenContainer";

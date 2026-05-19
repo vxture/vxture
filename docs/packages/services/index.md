@@ -9,35 +9,35 @@
 
 ### AI 域
 
-| 包 | 路径 | 端口 | 职责 |
-|----|------|------|------|
+| 包                               | 路径                   | 端口 | 职责                                                                                    |
+| -------------------------------- | ---------------------- | ---- | --------------------------------------------------------------------------------------- |
 | [`ai-gateway.md`](ai-gateway.md) | `services/ai/gateway/` | 3100 | LLM 统一路由、模型注册、配额管控、用量计量。所有 agent-server 的 LLM 调用必须经过此服务 |
 
 ### Identity 域
 
-| 包 | 路径 | 职责 |
-|----|------|------|
-| [`iam.md`](iam.md) | `services/identity/iam/` | 账号隔离管理、账户生命周期、跨租户身份查询 |
-| [`organization.md`](organization.md) | `services/identity/organization/` | 组织结构、部门、成员关系 |
+| 包                                   | 路径                              | 职责                                       |
+| ------------------------------------ | --------------------------------- | ------------------------------------------ |
+| [`iam.md`](iam.md)                   | `services/identity/iam/`          | 账号隔离管理、账户生命周期、跨租户身份查询 |
+| [`organization.md`](organization.md) | `services/identity/organization/` | 组织结构、部门、成员关系                   |
 
 ### Commerce 域
 
-| 包 | 路径 | 职责 |
-|----|------|------|
-| [`billing.md`](billing.md) | `services/commerce/billing/` | 账单生成、支付流水、发票 |
+| 包                                   | 路径                              | 职责                         |
+| ------------------------------------ | --------------------------------- | ---------------------------- |
+| [`billing.md`](billing.md)           | `services/commerce/billing/`      | 账单生成、支付流水、发票     |
 | [`subscription.md`](subscription.md) | `services/commerce/subscription/` | 订阅计划、用量配额、续期逻辑 |
 
 ### Notification 域
 
-| 包 | 路径 | 职责 |
-|----|------|------|
+| 包                   | 路径                          | 职责                                   |
+| -------------------- | ----------------------------- | -------------------------------------- |
 | [`mail.md`](mail.md) | `services/notification/mail/` | 邮件发送服务（验证码、通知、重置密码） |
-| [`sms.md`](sms.md) | `services/notification/sms/` | 短信发送服务（验证码、告警） |
+| [`sms.md`](sms.md)   | `services/notification/sms/`  | 短信发送服务（验证码、告警）           |
 
 ### Support 域
 
-| 包 | 路径 | 职责 |
-|----|------|------|
+| 包                       | 路径                       | 职责                                 |
+| ------------------------ | -------------------------- | ------------------------------------ |
 | [`ticket.md`](ticket.md) | `services/support/ticket/` | 工单管理：创建、分配、状态流转、消息 |
 
 ---

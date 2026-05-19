@@ -23,9 +23,9 @@ import {
   Req,
   Res,
   UnauthorizedException,
-} from '@nestjs/common';
-import type { Request, Response } from 'express';
-import type { RequestContext } from '../types/console.types';
+} from "@nestjs/common";
+import type { Request, Response } from "express";
+import type { RequestContext } from "../types/console.types";
 
 // ─── DTO ──────────────────────────────────────────────────────────────────────
 
@@ -51,64 +51,73 @@ class ResetPasswordDto {
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
 function resolveAuthBffUrl(): string {
-  const configured = process.env['AUTH_BFF_URL']?.trim();
-  if (configured) return configured.replace(/\/+$/, '');
-  return 'http://localhost:3090';
+  const configured = process.env["AUTH_BFF_URL"]?.trim();
+  if (configured) return configured.replace(/\/+$/, "");
+  return "http://localhost:3090";
 }
 
 const AUTH_BFF = resolveAuthBffUrl();
 
 function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
   const setCookie = readSetCookie(upstream);
-  if (setCookie.length) res.setHeader('set-cookie', setCookie);
+  if (setCookie.length) res.setHeader("set-cookie", setCookie);
 }
 
 function readSetCookie(upstream: globalThis.Response): string[] {
-  const headers = upstream.headers as Headers & { getSetCookie?: () => string[] };
+  const headers = upstream.headers as Headers & {
+    getSetCookie?: () => string[];
+  };
   const setCookie = headers.getSetCookie?.();
   if (setCookie?.length) return setCookie;
-  const single = upstream.headers.get('set-cookie');
+  const single = upstream.headers.get("set-cookie");
   return single ? [single] : [];
 }
 
 function forwardCookie(req: Request): string {
-  return req.headers.cookie ?? '';
+  return req.headers.cookie ?? "";
 }
 
 function forwardJsonHeaders(req: Request): Record<string, string> {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     Cookie: forwardCookie(req),
   };
-  const forwardedFor = req.headers['x-forwarded-for'];
+  const forwardedFor = req.headers["x-forwarded-for"];
   const remoteIp = req.ip ?? req.socket.remoteAddress;
-  headers['X-Forwarded-For'] = [typeof forwardedFor === 'string' ? forwardedFor : '', remoteIp]
+  headers["X-Forwarded-For"] = [
+    typeof forwardedFor === "string" ? forwardedFor : "",
+    remoteIp,
+  ]
     .filter(Boolean)
-    .join(', ');
-  if (req.headers['user-agent']) {
-    headers['User-Agent'] = req.headers['user-agent'];
+    .join(", ");
+  if (req.headers["user-agent"]) {
+    headers["User-Agent"] = req.headers["user-agent"];
   }
   return headers;
 }
 
 // ─── Router ───────────────────────────────────────────────────────────────────
 
-@Controller('api/auth')
+@Controller("api/auth")
 export class AuthRouter {
   /**
    * 密码登录 → 代理到 auth-bff
    * POST /api/auth/login
    */
-  @Post('login')
+  @Post("login")
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: LoginDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/login', {
-      method: 'POST',
+  async login(
+    @Body() body: LoginDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/login", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({
         identifier: body.identifier,
         password: body.password,
-        source: 'console',
+        source: "console",
         turnstileToken: body.turnstileToken,
       }),
     });
@@ -122,11 +131,11 @@ export class AuthRouter {
    * 登出 → 代理到 auth-bff
    * POST /api/auth/logout
    */
-  @Post('logout')
+  @Post("logout")
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/logout?source=console', {
-      method: 'POST',
+    const response = await fetch(AUTH_BFF + "/auth/logout?source=console", {
+      method: "POST",
       headers: {
         Cookie: forwardCookie(req),
       },
@@ -141,18 +150,15 @@ export class AuthRouter {
    * 刷新 access token → 代理到 auth-bff
    * POST /api/auth/refresh
    */
-  @Post('refresh')
+  @Post("refresh")
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(
-      AUTH_BFF + '/auth/refresh?source=console',
-      {
-        method: 'POST',
-        headers: {
-          Cookie: forwardCookie(req),
-        },
+    const response = await fetch(AUTH_BFF + "/auth/refresh?source=console", {
+      method: "POST",
+      headers: {
+        Cookie: forwardCookie(req),
       },
-    );
+    });
 
     const data = await response.json();
     forwardSetCookie(res, response);
@@ -163,18 +169,22 @@ export class AuthRouter {
    * 切换当前租户 → 代理到 auth-bff 重新签发 console token
    * POST /api/auth/tenant/switch
    */
-  @Post('tenant/switch')
+  @Post("tenant/switch")
   @HttpCode(HttpStatus.OK)
-  async switchTenant(@Body() body: SwitchTenantDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/tenant/switch', {
-      method: 'POST',
+  async switchTenant(
+    @Body() body: SwitchTenantDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/tenant/switch", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Cookie: forwardCookie(req),
       },
       body: JSON.stringify({
         tenantId: body.tenantId,
-        source: 'console',
+        source: "console",
       }),
     });
 
@@ -187,13 +197,17 @@ export class AuthRouter {
    * 忘记密码 → 代理到 auth-bff（发送重置邮件）
    * POST /api/auth/forgot-password
    */
-  @Post('forgot-password')
+  @Post("forgot-password")
   @HttpCode(HttpStatus.OK)
-  async forgotPassword(@Body() body: ForgotPasswordDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/forgot-password', {
-      method: 'POST',
+  async forgotPassword(
+    @Body() body: ForgotPasswordDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/forgot-password", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
-      body: JSON.stringify({ email: body.email, source: 'console' }),
+      body: JSON.stringify({ email: body.email, source: "console" }),
     });
 
     const data = await response.json();
@@ -204,13 +218,20 @@ export class AuthRouter {
    * 重置密码 → 代理到 auth-bff
    * POST /api/auth/reset-password
    */
-  @Post('reset-password')
+  @Post("reset-password")
   @HttpCode(HttpStatus.OK)
-  async resetPassword(@Body() body: ResetPasswordDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + '/auth/reset-password', {
-      method: 'POST',
+  async resetPassword(
+    @Body() body: ResetPasswordDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
+    const response = await fetch(AUTH_BFF + "/auth/reset-password", {
+      method: "POST",
       headers: forwardJsonHeaders(req),
-      body: JSON.stringify({ token: body.token, newPassword: body.newPassword }),
+      body: JSON.stringify({
+        token: body.token,
+        newPassword: body.newPassword,
+      }),
     });
 
     const data = await response.json();
@@ -221,11 +242,11 @@ export class AuthRouter {
    * 会话状态查询（本地，依赖 auth middleware）
    * GET /api/auth/session
    */
-  @Get('session')
+  @Get("session")
   getSessionState(@Req() req: Request & RequestContext) {
     if (!req.user) {
-      throw new UnauthorizedException('No active session');
+      throw new UnauthorizedException("No active session");
     }
-    return { status: 'active', userId: req.user.id };
+    return { status: "active", userId: req.user.id };
   }
 }

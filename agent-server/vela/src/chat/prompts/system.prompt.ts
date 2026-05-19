@@ -8,12 +8,12 @@
  * @date 2026-04-30
  */
 
-import type { CallerContext } from '../../context/caller-context.types';
+import type { CallerContext } from "../../context/caller-context.types";
 
 export function buildSystemPrompt(ctx: CallerContext): string {
   const base = `你是维引 Vela，Vxture 平台的智能助手。当前时间：${new Date().toISOString()}。`;
 
-  if (ctx.surface === 'admin') {
+  if (ctx.surface === "admin") {
     return `${base}
 你正在协助平台运营人员（角色：${ctx.role}）管理 Vxture 平台。
 你可以查询全平台的租户、账单、订阅、工单数据。

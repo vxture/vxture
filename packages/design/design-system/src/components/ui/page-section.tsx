@@ -12,7 +12,10 @@ import { cn } from "../../utils/cn";
 
 export type PageSectionTone = "default" | "muted";
 
-export interface PageSectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "title"> {
+export interface PageSectionProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  "title"
+> {
   readonly title?: React.ReactNode;
   readonly description?: React.ReactNode;
   readonly action?: React.ReactNode;
@@ -46,13 +49,21 @@ const PageSection = React.forwardRef<HTMLElement, PageSectionProps>(
         {title || description || action ? (
           <header className={cn("vx-page-section__header", headerClassName)}>
             <div>
-              {title ? <h2 className="vx-page-section__title">{title}</h2> : null}
-              {description ? <p className="vx-page-section__description">{description}</p> : null}
+              {title ? (
+                <h2 className="vx-page-section__title">{title}</h2>
+              ) : null}
+              {description ? (
+                <p className="vx-page-section__description">{description}</p>
+              ) : null}
             </div>
-            {action ? <div className="vx-page-section__action">{action}</div> : null}
+            {action ? (
+              <div className="vx-page-section__action">{action}</div>
+            ) : null}
           </header>
         ) : null}
-        <div className={cn("vx-page-section__body", bodyClassName)}>{children}</div>
+        <div className={cn("vx-page-section__body", bodyClassName)}>
+          {children}
+        </div>
       </section>
     );
   },

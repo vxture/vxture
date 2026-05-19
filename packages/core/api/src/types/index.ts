@@ -11,4 +11,4 @@ export type {
   RequestOptions,
   UploadOptions,
   RequestContext,
-} from './api.types';
+} from "./api.types";

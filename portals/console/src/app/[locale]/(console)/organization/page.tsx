@@ -1,4 +1,4 @@
-import { OrganizationPage } from '@/modules/account/OrganizationPage';
+import { OrganizationPage } from "@/modules/account/OrganizationPage";
 
 export default function Page() {
   return <OrganizationPage />;

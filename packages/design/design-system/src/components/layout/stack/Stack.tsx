@@ -44,14 +44,14 @@ export const Stack = forwardRef<HTMLDivElement, StackProps>(
           "flex flex-col",
           gapClasses[gap],
           alignClasses[align],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </div>
     );
-  }
+  },
 );
 
 Stack.displayName = "Stack";
