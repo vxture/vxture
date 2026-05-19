@@ -9,8 +9,13 @@
 export { TenantResolveSource } from "./types";
 export type { TenantInfo, TenantRequest, TenantResolveOptions } from "./types";
 
-// NestJS Module & Context Provider
-export { TenantModule, TenantContext, TENANT_OPTIONS } from "./context";
+// NestJS Module & Context Providers
+export {
+  TenantModule,
+  TenantContext,
+  TenantAlsService,
+  TENANT_OPTIONS,
+} from "./context";
 
 // Middleware
 export { TenantMiddleware } from "./middleware";
