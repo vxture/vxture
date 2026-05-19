@@ -41,6 +41,7 @@ const DS_TOKEN_PATHS = [
 ];
 const DS_RUNTIME_TOKEN_STYLE_PATTERN = /^packages\/design\/design-system\/src\/styles\/tokens(?:-[\w-]+)?\.css$/;
 const DS_RUNTIME_SCALE_BRIDGE_VAR_PATTERN = /var\(--vx-(?:scale|platform-scale|auth-scale|console-scale|component-scale)-/;
+const DS_RUNTIME_COMPONENT_METRIC_VAR_PATTERN = /var\(--vx-component-metric-/;
 const LEGACY_SCALE_TOKEN_STYLE_PATHS = new Set(
   [
     "tokens-auth-controls-scale.css",
@@ -972,6 +973,14 @@ for (const item of collectRuntimeScaleBridgeVarViolations(files)) {
   violations.push({ rule: runtimeScaleBridgeVarRule, ...item });
 }
 
+const runtimeComponentMetricVarRule = {
+  id: "ds/no-runtime-component-metric-var-usage",
+  description: "DS 样式层不得重新通过 var() 消费 component metric 兜底 token；运行时值应在 token 层直接落到实际值。",
+};
+for (const item of collectRuntimeComponentMetricVarViolations(files)) {
+  violations.push({ rule: runtimeComponentMetricVarRule, ...item });
+}
+
 const unreachableAppStyleRule = {
   id: "ds/no-unreachable-app-style-module",
   description: "应用 src/styles 下的样式模块必须能从对应 app/globals.css 的 @import 图谱到达。",
@@ -1342,6 +1351,27 @@ function collectRuntimeScaleBridgeVarViolations(sourceFiles) {
           file,
           index + 1,
           "DS 样式层 scale bridge 已清零；新增尺度请在 token owner 中直接定义运行时值，不要重新使用 var(--vx-*-scale-*)。",
+          line.trim(),
+        ),
+      );
+    });
+  }
+  return items;
+}
+
+function collectRuntimeComponentMetricVarViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!normalized.startsWith(`${DS_ROOT}/src/styles/`) || !normalized.endsWith(".css")) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!DS_RUNTIME_COMPONENT_METRIC_VAR_PATTERN.test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          "DS 样式层 component metric bridge 已清零；新增尺度请在 token owner 中直接定义运行时值，不要重新使用 var(--vx-component-metric-*)。",
           line.trim(),
         ),
       );
