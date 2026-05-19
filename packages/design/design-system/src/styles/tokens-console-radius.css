@@ -8,11 +8,11 @@
  */
 
 :root {
-  --vx-console-radius-07r: var(--vx-component-metric-07r);
-  --vx-console-radius-10p: var(--vx-component-metric-10p);
-  --vx-console-radius-14p: var(--vx-component-metric-14p);
-  --vx-console-radius-16p: var(--vx-component-metric-16p);
-  --vx-console-radius-18p: var(--vx-component-metric-18p);
-  --vx-console-radius-5p: var(--vx-component-metric-5p);
-  --vx-console-line-width-2p: var(--vx-component-metric-2p);
+  --vx-console-radius-07r: 0.7rem;
+  --vx-console-radius-10p: 10px;
+  --vx-console-radius-14p: 14px;
+  --vx-console-radius-16p: 16px;
+  --vx-console-radius-18p: 18px;
+  --vx-console-radius-5p: 5px;
+  --vx-console-line-width-2p: 2px;
 }

@@ -8,29 +8,29 @@
  */
 
 :root {
-  --vx-admin-assistant-control-size-sm: var(--vx-component-metric-1875r);
-  --vx-admin-assistant-control-size-md: var(--vx-component-metric-2r);
-  --vx-admin-assistant-loader-size: var(--vx-component-metric-1r);
-  --vx-admin-assistant-composer-min-height: var(--vx-component-metric-5r);
-  --vx-admin-assistant-input-max-height: var(--vx-component-metric-10r);
-  --vx-admin-assistant-stop-size: var(--vx-component-metric-048r);
-  --vx-admin-assistant-border-width: var(--vx-component-metric-1p);
-  --vx-admin-assistant-border-width-strong: var(--vx-component-metric-2p);
-  --vx-admin-assistant-radius-panel: var(--vx-component-metric-1r);
-  --vx-admin-assistant-radius-control: var(--vx-component-metric-075r);
-  --vx-admin-assistant-radius-stop: var(--vx-component-metric-012r);
-  --vx-admin-assistant-text-counter: var(--vx-component-metric-068r);
-  --vx-admin-assistant-text-caption: var(--vx-component-metric-075r);
-  --vx-admin-assistant-text-copy: var(--vx-component-metric-08125r);
-  --vx-admin-assistant-text-body: var(--vx-component-metric-0875r);
-  --vx-admin-assistant-text-title: var(--vx-component-metric-095r);
-  --vx-admin-assistant-effect-hairline: var(--vx-component-metric-1p);
-  --vx-admin-assistant-effect-focus-ring: var(--vx-component-metric-2p);
-  --vx-admin-assistant-effect-sm: var(--vx-component-metric-8p);
-  --vx-admin-assistant-effect-md: var(--vx-component-metric-18p);
-  --vx-admin-assistant-effect-lg: var(--vx-component-metric-24p);
-  --vx-admin-assistant-effect-xl: var(--vx-component-metric-48p);
-  --vx-admin-assistant-shadow-spread: calc(var(--vx-component-metric-24p) * -1);
-  --vx-admin-assistant-hidden-offset: var(--vx-component-metric-035r);
-  --vx-admin-assistant-press-offset: var(--vx-component-metric-1p);
+  --vx-admin-assistant-control-size-sm: 1.875rem;
+  --vx-admin-assistant-control-size-md: 2rem;
+  --vx-admin-assistant-loader-size: 1rem;
+  --vx-admin-assistant-composer-min-height: 5rem;
+  --vx-admin-assistant-input-max-height: 10rem;
+  --vx-admin-assistant-stop-size: 0.48rem;
+  --vx-admin-assistant-border-width: 1px;
+  --vx-admin-assistant-border-width-strong: 2px;
+  --vx-admin-assistant-radius-panel: 1rem;
+  --vx-admin-assistant-radius-control: 0.75rem;
+  --vx-admin-assistant-radius-stop: 0.12rem;
+  --vx-admin-assistant-text-counter: 0.68rem;
+  --vx-admin-assistant-text-caption: 0.75rem;
+  --vx-admin-assistant-text-copy: 0.8125rem;
+  --vx-admin-assistant-text-body: 0.875rem;
+  --vx-admin-assistant-text-title: 0.95rem;
+  --vx-admin-assistant-effect-hairline: 1px;
+  --vx-admin-assistant-effect-focus-ring: 2px;
+  --vx-admin-assistant-effect-sm: 8px;
+  --vx-admin-assistant-effect-md: 18px;
+  --vx-admin-assistant-effect-lg: 24px;
+  --vx-admin-assistant-effect-xl: 48px;
+  --vx-admin-assistant-shadow-spread: calc(24px * -1);
+  --vx-admin-assistant-hidden-offset: 0.35rem;
+  --vx-admin-assistant-press-offset: 1px;
 }

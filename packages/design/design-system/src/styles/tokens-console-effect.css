@@ -8,24 +8,24 @@
  */
 
 :root {
-  --vx-console-effect-14p: var(--vx-component-metric-14p);
-  --vx-console-effect-16p: var(--vx-component-metric-16p);
-  --vx-console-effect-18p: var(--vx-component-metric-18p);
-  --vx-console-effect-20p: var(--vx-component-metric-20p);
-  --vx-console-effect-22p: var(--vx-component-metric-22p);
-  --vx-console-effect-28p: var(--vx-component-metric-28p);
-  --vx-console-effect-36p: var(--vx-component-metric-36p);
-  --vx-console-effect-44p: var(--vx-component-metric-44p);
-  --vx-console-effect-4p: var(--vx-component-metric-4p);
-  --vx-console-effect-56p: var(--vx-component-metric-56p);
-  --vx-console-effect-68p: var(--vx-component-metric-68p);
-  --vx-console-effect-6p: var(--vx-component-metric-6p);
+  --vx-console-effect-14p: 14px;
+  --vx-console-effect-16p: 16px;
+  --vx-console-effect-18p: 18px;
+  --vx-console-effect-20p: 20px;
+  --vx-console-effect-22p: 22px;
+  --vx-console-effect-28p: 28px;
+  --vx-console-effect-36p: 36px;
+  --vx-console-effect-44p: 44px;
+  --vx-console-effect-4p: 4px;
+  --vx-console-effect-56p: 56px;
+  --vx-console-effect-68p: 68px;
+  --vx-console-effect-6p: 6px;
   --vx-console-assistant-panel-shadow: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-ai) 24%, transparent);
   --vx-console-assistant-panel-shadow-dark: calc(var(--vx-console-effect-20p) * -1) 0 var(--vx-console-effect-44p) calc(var(--vx-console-effect-36p) * -1) color-mix(in srgb, var(--vx-color-ai) 22%, transparent);
   --vx-console-brand-logo-filter: drop-shadow(0 var(--vx-console-effect-6p) var(--vx-console-effect-14p) color-mix(in srgb, var(--vx-color-auth-accent) 16%, transparent));
   --vx-console-tenant-dialog-shadow: 0 var(--vx-console-effect-28p) var(--vx-console-effect-68p) color-mix(in srgb, var(--vx-color-brand-950) 18%, transparent);
   --vx-console-tenant-panel-shadow: 0 var(--vx-console-effect-22p) var(--vx-console-effect-56p) color-mix(in srgb, var(--vx-color-brand-950) 16%, transparent);
-  --vx-console-pattern-12r-large: var(--vx-component-metric-12r-large);
-  --vx-console-motion-10p: var(--vx-component-metric-10p);
-  --vx-console-motion-8p: var(--vx-component-metric-8p);
+  --vx-console-pattern-12r-large: 12rem;
+  --vx-console-motion-10p: 10px;
+  --vx-console-motion-8p: 8px;
 }

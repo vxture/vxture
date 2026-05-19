@@ -8,13 +8,13 @@
  */
 
 :root {
-  --vx-admin-radius-012r: var(--vx-component-metric-012r);
-  --vx-admin-radius-04375r: var(--vx-component-metric-04375r);
-  --vx-admin-radius-05r: var(--vx-component-metric-05r);
-  --vx-admin-radius-075r: var(--vx-component-metric-075r);
-  --vx-admin-radius-10p: var(--vx-component-metric-10p);
-  --vx-admin-radius-16p: var(--vx-component-metric-16p);
-  --vx-admin-radius-1r: var(--vx-component-metric-1r);
-  --vx-admin-line-width-1p: var(--vx-component-metric-1p);
-  --vx-admin-line-width-2p: var(--vx-component-metric-2p);
+  --vx-admin-radius-012r: 0.12rem;
+  --vx-admin-radius-04375r: 0.4375rem;
+  --vx-admin-radius-05r: 0.5rem;
+  --vx-admin-radius-075r: 0.75rem;
+  --vx-admin-radius-10p: 10px;
+  --vx-admin-radius-16p: 16px;
+  --vx-admin-radius-1r: 1rem;
+  --vx-admin-line-width-1p: 1px;
+  --vx-admin-line-width-2p: 2px;
 }

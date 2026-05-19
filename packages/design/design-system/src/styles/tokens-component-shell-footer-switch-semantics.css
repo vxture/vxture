@@ -8,13 +8,13 @@
  */
 
 :root {
-  --vx-shell-legal-footer-gap: var(--vx-component-metric-1r);
-  --vx-shell-legal-footer-link-gap: var(--vx-component-metric-085r);
-  --vx-switch-width: var(--vx-component-metric-31r);
-  --vx-switch-height: var(--vx-component-metric-19r);
-  --vx-switch-thumb-inset: var(--vx-component-metric-02r);
-  --vx-switch-thumb-size: var(--vx-component-metric-15r);
-  --vx-switch-thumb-shadow-y: var(--vx-component-metric-1p);
-  --vx-switch-thumb-shadow-blur: var(--vx-component-metric-3p);
-  --vx-switch-checked-translate: var(--vx-component-metric-12r);
+  --vx-shell-legal-footer-gap: 1rem;
+  --vx-shell-legal-footer-link-gap: 0.85rem;
+  --vx-switch-width: 3.1rem;
+  --vx-switch-height: 1.9rem;
+  --vx-switch-thumb-inset: 0.2rem;
+  --vx-switch-thumb-size: 1.5rem;
+  --vx-switch-thumb-shadow-y: 1px;
+  --vx-switch-thumb-shadow-blur: 3px;
+  --vx-switch-checked-translate: 1.2rem;
 }

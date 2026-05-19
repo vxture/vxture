@@ -8,12 +8,12 @@
  */
 
 :root {
-  --vx-shell-segmented-radius: var(--vx-component-metric-8p);
-  --vx-shell-segmented-padding: var(--vx-component-metric-0125r);
-  --vx-shell-segmented-item-radius: var(--vx-component-metric-6p);
-  --vx-shell-segmented-item-padding-y: var(--vx-component-metric-042r);
-  --vx-shell-segmented-item-padding-x: var(--vx-component-metric-05r);
-  --vx-shell-segmented-item-size: var(--vx-component-metric-076r);
-  --vx-shell-segmented-active-shadow-y: var(--vx-component-metric-1p);
-  --vx-shell-segmented-active-shadow-blur: var(--vx-component-metric-3p);
+  --vx-shell-segmented-radius: 8px;
+  --vx-shell-segmented-padding: 0.125rem;
+  --vx-shell-segmented-item-radius: 6px;
+  --vx-shell-segmented-item-padding-y: 0.42rem;
+  --vx-shell-segmented-item-padding-x: 0.5rem;
+  --vx-shell-segmented-item-size: 0.76rem;
+  --vx-shell-segmented-active-shadow-y: 1px;
+  --vx-shell-segmented-active-shadow-blur: 3px;
 }

@@ -9,12 +9,12 @@
 
 :root {
   --vx-shell-brand-color: var(--vx-color-shell-text);
-  --vx-shell-brand-gap: var(--vx-component-metric-05r);
-  --vx-shell-brand-logo-size: var(--vx-component-metric-15r);
+  --vx-shell-brand-gap: 0.5rem;
+  --vx-shell-brand-logo-size: 1.5rem;
   --vx-shell-tool-button-color: var(--vx-color-shell-muted);
   --vx-shell-tool-button-hover-background: color-mix(in srgb, var(--vx-color-shell-brand) 9%, transparent);
   --vx-shell-tool-button-hover-color: var(--vx-color-shell-brand);
   --vx-shell-tool-button-focus-ring: var(--vx-color-ring);
-  --vx-shell-tool-button-size: var(--vx-component-metric-2r);
-  --vx-shell-tool-button-radius: var(--vx-component-metric-8p);
+  --vx-shell-tool-button-size: 2rem;
+  --vx-shell-tool-button-radius: 8px;
 }

@@ -8,11 +8,11 @@
  */
 
 :root {
-  --vx-admin-size-6r: var(--vx-component-metric-6r);
-  --vx-admin-size-75r: var(--vx-component-metric-75r);
-  --vx-admin-size-85r: var(--vx-component-metric-85r);
-  --vx-admin-size-875r: var(--vx-component-metric-875r);
-  --vx-admin-size-8r: var(--vx-component-metric-8r);
-  --vx-admin-size-95r: var(--vx-component-metric-95r);
-  --vx-admin-size-9r: var(--vx-component-metric-9r);
+  --vx-admin-size-6r: 6rem;
+  --vx-admin-size-75r: 7.5rem;
+  --vx-admin-size-85r: 8.5rem;
+  --vx-admin-size-875r: 8.75rem;
+  --vx-admin-size-8r: 8rem;
+  --vx-admin-size-95r: 9.5rem;
+  --vx-admin-size-9r: 9rem;
 }

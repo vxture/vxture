@@ -9,19 +9,19 @@
 
 :root {
   /* 平台语义尺度：platform.css 共享模式优先消费的契约。 */
-  --vx-platform-text-size-xs: var(--vx-component-metric-078r);
-  --vx-platform-text-size-sm: var(--vx-component-metric-082r);
-  --vx-platform-text-size-md: var(--vx-component-metric-084r);
-  --vx-platform-text-size-lg: var(--vx-component-metric-088r);
-  --vx-platform-text-size-xl: var(--vx-component-metric-09r);
-  --vx-platform-text-size-2xl: var(--vx-component-metric-096r);
-  --vx-platform-radius-sm: var(--vx-component-metric-10p);
-  --vx-platform-radius-md: var(--vx-component-metric-14p);
-  --vx-platform-radius-lg: var(--vx-component-metric-18p);
-  --vx-platform-border-width: var(--vx-component-metric-1p);
-  --vx-platform-gap-2xs: var(--vx-component-metric-02r);
-  --vx-platform-gap-xs: var(--vx-component-metric-035r);
-  --vx-platform-gap-sm: var(--vx-component-metric-05r);
-  --vx-platform-gap-md: var(--vx-component-metric-075r);
-  --vx-platform-gap-lg: var(--vx-component-metric-1r);
+  --vx-platform-text-size-xs: 0.78rem;
+  --vx-platform-text-size-sm: 0.82rem;
+  --vx-platform-text-size-md: 0.84rem;
+  --vx-platform-text-size-lg: 0.88rem;
+  --vx-platform-text-size-xl: 0.9rem;
+  --vx-platform-text-size-2xl: 0.96rem;
+  --vx-platform-radius-sm: 10px;
+  --vx-platform-radius-md: 14px;
+  --vx-platform-radius-lg: 18px;
+  --vx-platform-border-width: 1px;
+  --vx-platform-gap-2xs: 0.2rem;
+  --vx-platform-gap-xs: 0.35rem;
+  --vx-platform-gap-sm: 0.5rem;
+  --vx-platform-gap-md: 0.75rem;
+  --vx-platform-gap-lg: 1rem;
 }

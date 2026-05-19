@@ -8,30 +8,30 @@
  */
 
 :root {
-  --vx-admin-effect-0125r: var(--vx-component-metric-0125r);
-  --vx-admin-effect-075r: var(--vx-component-metric-075r);
-  --vx-admin-effect-10p: var(--vx-component-metric-10p);
-  --vx-admin-effect-12p: var(--vx-component-metric-12p);
-  --vx-admin-effect-14p: var(--vx-component-metric-14p);
-  --vx-admin-effect-15r: var(--vx-component-metric-15r);
-  --vx-admin-effect-16p: var(--vx-component-metric-16p);
-  --vx-admin-effect-18p: var(--vx-component-metric-18p);
-  --vx-admin-effect-1p: var(--vx-component-metric-1p);
-  --vx-admin-effect-1r: var(--vx-component-metric-1r);
-  --vx-admin-effect-22p: var(--vx-component-metric-22p);
-  --vx-admin-effect-24p: var(--vx-component-metric-24p);
-  --vx-admin-effect-2p: var(--vx-component-metric-2p);
-  --vx-admin-effect-2r: var(--vx-component-metric-2r);
-  --vx-admin-effect-3p: var(--vx-component-metric-3p);
-  --vx-admin-effect-42p: var(--vx-component-metric-42p);
-  --vx-admin-effect-48p: var(--vx-component-metric-48p);
-  --vx-admin-effect-64p: var(--vx-component-metric-64p);
-  --vx-admin-effect-6p: var(--vx-component-metric-6p);
-  --vx-admin-effect-70p: var(--vx-component-metric-70p);
-  --vx-admin-effect-8p: var(--vx-component-metric-8p);
-  --vx-admin-pattern-028r: var(--vx-component-metric-028r);
-  --vx-admin-pattern-036r: var(--vx-component-metric-036r);
-  --vx-admin-pattern-0625r: var(--vx-component-metric-0625r);
-  --vx-admin-pattern-075r: var(--vx-component-metric-075r);
-  --vx-admin-pattern-0875r: var(--vx-component-metric-0875r);
+  --vx-admin-effect-0125r: 0.125rem;
+  --vx-admin-effect-075r: 0.75rem;
+  --vx-admin-effect-10p: 10px;
+  --vx-admin-effect-12p: 12px;
+  --vx-admin-effect-14p: 14px;
+  --vx-admin-effect-15r: 1.5rem;
+  --vx-admin-effect-16p: 16px;
+  --vx-admin-effect-18p: 18px;
+  --vx-admin-effect-1p: 1px;
+  --vx-admin-effect-1r: 1rem;
+  --vx-admin-effect-22p: 22px;
+  --vx-admin-effect-24p: 24px;
+  --vx-admin-effect-2p: 2px;
+  --vx-admin-effect-2r: 2rem;
+  --vx-admin-effect-3p: 3px;
+  --vx-admin-effect-42p: 42px;
+  --vx-admin-effect-48p: 48px;
+  --vx-admin-effect-64p: 64px;
+  --vx-admin-effect-6p: 6px;
+  --vx-admin-effect-70p: 70px;
+  --vx-admin-effect-8p: 8px;
+  --vx-admin-pattern-028r: 0.28rem;
+  --vx-admin-pattern-036r: 0.36rem;
+  --vx-admin-pattern-0625r: 0.625rem;
+  --vx-admin-pattern-075r: 0.75rem;
+  --vx-admin-pattern-0875r: 0.875rem;
 }

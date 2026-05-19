@@ -8,19 +8,19 @@
  */
 
 :root {
-  --vx-shell-locale-popover-offset: var(--vx-component-metric-05r);
-  --vx-shell-locale-popover-min-width: var(--vx-component-metric-10r);
-  --vx-shell-preferences-gap: var(--vx-component-metric-05r);
-  --vx-shell-preferences-title-margin-bottom: var(--vx-component-metric-015r);
-  --vx-shell-preferences-title-size: var(--vx-component-metric-085r);
-  --vx-shell-preferences-row-height: var(--vx-component-metric-25r);
-  --vx-shell-preferences-row-gap: var(--vx-component-metric-075r);
-  --vx-shell-preferences-icon-size: var(--vx-component-metric-125r);
-  --vx-shell-preferences-select-height: var(--vx-component-metric-225r);
-  --vx-shell-preferences-select-radius: var(--vx-component-metric-8p);
-  --vx-shell-preferences-select-padding-start: var(--vx-component-metric-075r);
-  --vx-shell-preferences-select-padding-end: var(--vx-component-metric-2r);
-  --vx-shell-preferences-select-size: var(--vx-component-metric-082r);
-  --vx-shell-preferences-select-icon-inset: var(--vx-component-metric-065r);
-  --vx-shell-preferences-select-icon-size: var(--vx-component-metric-1r);
+  --vx-shell-locale-popover-offset: 0.5rem;
+  --vx-shell-locale-popover-min-width: 10rem;
+  --vx-shell-preferences-gap: 0.5rem;
+  --vx-shell-preferences-title-margin-bottom: 0.15rem;
+  --vx-shell-preferences-title-size: 0.85rem;
+  --vx-shell-preferences-row-height: 2.5rem;
+  --vx-shell-preferences-row-gap: 0.75rem;
+  --vx-shell-preferences-icon-size: 1.25rem;
+  --vx-shell-preferences-select-height: 2.25rem;
+  --vx-shell-preferences-select-radius: 8px;
+  --vx-shell-preferences-select-padding-start: 0.75rem;
+  --vx-shell-preferences-select-padding-end: 2rem;
+  --vx-shell-preferences-select-size: 0.82rem;
+  --vx-shell-preferences-select-icon-inset: 0.65rem;
+  --vx-shell-preferences-select-icon-size: 1rem;
 }

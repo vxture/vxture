@@ -8,7 +8,7 @@
  */
 
 :root {
-  --vx-admin-layout-1r: var(--vx-component-metric-1r);
-  --vx-admin-layout-2r: var(--vx-component-metric-2r);
-  --vx-admin-layout-4r: var(--vx-component-metric-4r);
+  --vx-admin-layout-1r: 1rem;
+  --vx-admin-layout-2r: 2rem;
+  --vx-admin-layout-4r: 4rem;
 }

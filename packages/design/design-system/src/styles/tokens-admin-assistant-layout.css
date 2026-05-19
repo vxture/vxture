@@ -10,12 +10,12 @@
 :root {
   --vx-admin-assistant-floating-width: var(--vx-admin-floating-assistant-width);
   --vx-admin-assistant-floating-min-width: var(--vx-admin-floating-assistant-min-width);
-  --vx-admin-assistant-floating-viewport-gap: var(--vx-component-metric-2r);
-  --vx-admin-assistant-floating-mobile-viewport-gap: var(--vx-component-metric-1r);
-  --vx-admin-assistant-floating-offset: var(--vx-component-metric-1r);
-  --vx-admin-assistant-floating-mobile-offset: var(--vx-component-metric-05r);
-  --vx-admin-assistant-copy-max-width: var(--vx-component-metric-26r);
-  --vx-admin-assistant-suggestions-max-width: var(--vx-component-metric-28r-large);
-  --vx-admin-assistant-track-suggestion-index: var(--vx-component-metric-115r);
-  --vx-admin-assistant-track-composer-actions: var(--vx-component-metric-2r);
+  --vx-admin-assistant-floating-viewport-gap: 2rem;
+  --vx-admin-assistant-floating-mobile-viewport-gap: 1rem;
+  --vx-admin-assistant-floating-offset: 1rem;
+  --vx-admin-assistant-floating-mobile-offset: 0.5rem;
+  --vx-admin-assistant-copy-max-width: 26rem;
+  --vx-admin-assistant-suggestions-max-width: 28rem;
+  --vx-admin-assistant-track-suggestion-index: 1.15rem;
+  --vx-admin-assistant-track-composer-actions: 2rem;
 }

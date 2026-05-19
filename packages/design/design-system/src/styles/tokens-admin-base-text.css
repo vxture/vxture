@@ -8,26 +8,26 @@
  */
 
 :root {
-  --vx-admin-text-size-0625r: var(--vx-component-metric-0625r);
-  --vx-admin-text-size-068r: var(--vx-component-metric-068r);
-  --vx-admin-text-size-072r: var(--vx-component-metric-072r);
-  --vx-admin-text-size-075r: var(--vx-component-metric-075r);
-  --vx-admin-text-size-078r: var(--vx-component-metric-078r);
-  --vx-admin-text-size-08125r: var(--vx-component-metric-08125r);
-  --vx-admin-text-size-0875r: var(--vx-component-metric-0875r);
-  --vx-admin-text-size-09375r: var(--vx-component-metric-09375r);
-  --vx-admin-text-size-094r: var(--vx-component-metric-094r);
-  --vx-admin-text-size-095r: var(--vx-component-metric-095r);
-  --vx-admin-text-size-098r: var(--vx-component-metric-098r);
-  --vx-admin-text-size-11r: var(--vx-component-metric-11r);
-  --vx-admin-text-size-125r: var(--vx-component-metric-125r);
-  --vx-admin-text-size-15r: var(--vx-component-metric-15r);
-  --vx-admin-text-size-1r: var(--vx-component-metric-1r);
-  --vx-admin-text-line-1125r: var(--vx-component-metric-1125r);
-  --vx-admin-text-line-125r: var(--vx-component-metric-125r);
-  --vx-admin-text-line-1375r: var(--vx-component-metric-1375r);
-  --vx-admin-text-line-15r: var(--vx-component-metric-15r);
-  --vx-admin-text-line-1r: var(--vx-component-metric-1r);
-  --vx-admin-text-line-2r: var(--vx-component-metric-2r);
-  --vx-admin-text-tracking-018e: var(--vx-component-metric-018e);
+  --vx-admin-text-size-0625r: 0.625rem;
+  --vx-admin-text-size-068r: 0.68rem;
+  --vx-admin-text-size-072r: 0.72rem;
+  --vx-admin-text-size-075r: 0.75rem;
+  --vx-admin-text-size-078r: 0.78rem;
+  --vx-admin-text-size-08125r: 0.8125rem;
+  --vx-admin-text-size-0875r: 0.875rem;
+  --vx-admin-text-size-09375r: 0.9375rem;
+  --vx-admin-text-size-094r: 0.94rem;
+  --vx-admin-text-size-095r: 0.95rem;
+  --vx-admin-text-size-098r: 0.98rem;
+  --vx-admin-text-size-11r: 1.1rem;
+  --vx-admin-text-size-125r: 1.25rem;
+  --vx-admin-text-size-15r: 1.5rem;
+  --vx-admin-text-size-1r: 1rem;
+  --vx-admin-text-line-1125r: 1.125rem;
+  --vx-admin-text-line-125r: 1.25rem;
+  --vx-admin-text-line-1375r: 1.375rem;
+  --vx-admin-text-line-15r: 1.5rem;
+  --vx-admin-text-line-1r: 1rem;
+  --vx-admin-text-line-2r: 2rem;
+  --vx-admin-text-tracking-018e: 0.18em;
 }
