@@ -586,6 +586,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 46. 已完成：Raw color / effect 口径复核；非 token owner raw color 命中为 0，raw color 仅保留在 `tokens-colors-*`、`tokens-dark-*`、shadow/effect 等 runtime token owner 内。粗略 effect 扫描中的 `transition`、`box-shadow` 命中主要来自已 token 化的多行声明或 token owner 定义，现有 `ds/no-ds-style-hardcoded-shadow`、`ds/no-ds-style-hardcoded-motion` 与已锁定 effect 规则继续负责回流拦截；本批不做样式实现改动。
 47. 已完成：Component metric 定义文件退场；删除已无消费者的 `tokens-component-metrics.css`、`tokens-component-metrics-em.css`、`tokens-component-metrics-px.css`、`tokens-component-metrics-rem.css`、`tokens-component-metrics-rem-controls.css`、`tokens-component-metrics-rem-fine.css`、`tokens-component-metrics-rem-layout.css`、`tokens-component-metrics-rem-ui.css`，并从 `tokens.css` 移除聚合入口。新增 `ds/no-legacy-component-metric-token-style`，禁止这些兜底 metric token 文件或 import 恢复。
 48. 已完成：Scale bridge 定义文件退场；删除已无消费者的 `tokens-scale-flow.css`、`tokens-scale-rem.css`、`tokens-scale-px.css`、`tokens-platform-scale.css`、`tokens-platform-scale-core.css`、`tokens-platform-scale-layout.css`、`tokens-auth-scale-core.css`，并从 `tokens.css` 移除聚合入口。扩展 `ds/no-legacy-scale-token-style`，禁止这些已清零 bridge token 文件或 import 恢复；DS 样式文件数从 322 降到 315。
+49. 已完成：Scale bridge 守卫文案同步；`ds/no-ds-style-*-scale-bridge-usage` 仍保留回流拦截职责，但提示不再引导迁移到已删除的桥接 token，统一改为落到具体语义 token。当前 `var(--vx-scale-*)`、`var(--vx-platform-scale-*)`、`var(--vx-auth-scale-*)`、`var(--vx-console-scale-*)`、`var(--vx-component-scale-*)` 运行时消费维持 0。
 
 ## 后续验收清单
 

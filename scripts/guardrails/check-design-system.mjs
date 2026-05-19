@@ -1049,7 +1049,7 @@ if (dsStyleHardcodedScaleCount > DS_STYLE_HARDCODED_SCALE_BUDGET) {
 
 const dsStyleScaleBridgeRule = {
   id: "ds/no-ds-style-scale-bridge-usage",
-  description: "DS 非 token owner 样式不能直接消费 --vx-scale-* 桥接 token；必须先提升到域语义 token。",
+  description: "DS 非 token owner 样式不能重新消费 --vx-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleScaleBridgeViolations(files)) {
   violations.push({ rule: dsStyleScaleBridgeRule, ...item });
@@ -1057,7 +1057,7 @@ for (const item of collectDsStyleScaleBridgeViolations(files)) {
 
 const dsStylePlatformScaleBridgeRule = {
   id: "ds/no-ds-style-platform-scale-bridge-usage",
-  description: "DS platform 具体样式不能直接消费 --vx-platform-scale-* 总桥接 token；必须先提升到平台子域 token。",
+  description: "DS platform 具体样式不能重新消费 --vx-platform-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStylePlatformScaleBridgeViolations(files)) {
   violations.push({ rule: dsStylePlatformScaleBridgeRule, ...item });
@@ -1065,7 +1065,7 @@ for (const item of collectDsStylePlatformScaleBridgeViolations(files)) {
 
 const dsStyleConsoleScaleBridgeRule = {
   id: "ds/no-ds-style-console-scale-bridge-usage",
-  description: "DS console 具体样式不能直接消费 --vx-console-scale-* 总桥接 token；必须先提升到 Console 子域 token。",
+  description: "DS console 具体样式不能重新消费 --vx-console-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleDomainScaleBridgeViolations(files, "console", "assistant / shell / tenant-switcher / responsive / common")) {
   violations.push({ rule: dsStyleConsoleScaleBridgeRule, ...item });
@@ -1073,7 +1073,7 @@ for (const item of collectDsStyleDomainScaleBridgeViolations(files, "console", "
 
 const dsStyleAuthScaleBridgeRule = {
   id: "ds/no-ds-style-auth-scale-bridge-usage",
-  description: "DS auth 具体样式不能直接消费 --vx-auth-scale-* 总桥接 token；必须先提升到 Auth 子域 token。",
+  description: "DS auth 具体样式不能重新消费 --vx-auth-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleDomainScaleBridgeViolations(files, "auth", "actions / captcha / fields / form / responsive / signup / tabs / visual")) {
   violations.push({ rule: dsStyleAuthScaleBridgeRule, ...item });
@@ -1081,7 +1081,7 @@ for (const item of collectDsStyleDomainScaleBridgeViolations(files, "auth", "act
 
 const dsStyleComponentScaleBridgeRule = {
   id: "ds/no-ds-style-component-scale-bridge-usage",
-  description: "DS component 具体样式不能直接消费 --vx-component-scale-* 总桥接 token；必须先提升到组件子域 token。",
+  description: "DS component 具体样式不能重新消费 --vx-component-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleDomainScaleBridgeViolations(files, "component", "fullscreen / ai / button / shell / common")) {
   violations.push({ rule: dsStyleComponentScaleBridgeRule, ...item });
@@ -1566,7 +1566,7 @@ function collectDsStyleScaleBridgeViolations(sourceFiles) {
         violation(
           file,
           index + 1,
-          "非 token owner 不得直接消费 --vx-scale-*；请改为 --vx-auth-scale-*、--vx-platform-scale-*、--vx-console-scale-* 或更具体的组件语义 token。",
+          "非 token owner 不得重新消费 --vx-scale-* 历史桥接 token；新增尺度请落到具体语义 token。",
           line.trim(),
         ),
       );
@@ -1588,7 +1588,7 @@ function collectDsStylePlatformScaleBridgeViolations(sourceFiles) {
         violation(
           file,
           index + 1,
-          "Platform 具体样式不得直接消费 --vx-platform-scale-*；请改为 --vx-platform-access-scale-*、--vx-platform-account-scale-*、--vx-platform-models-scale-*、--vx-platform-shell-scale-*、--vx-platform-layout-scale-*、--vx-platform-notifications-scale-*、--vx-platform-tenant-settings-scale-* 或 --vx-platform-common-scale-*。",
+          "Platform 具体样式不得重新消费 --vx-platform-scale-* 历史桥接 token；新增尺度请落到对应 platform 语义 token。",
           line.trim(),
         ),
       );
@@ -1609,7 +1609,7 @@ function collectDsStyleDomainScaleBridgeViolations(sourceFiles, prefix, domains)
         violation(
           file,
           index + 1,
-          `${prefix} 具体样式不得直接消费 --vx-${prefix}-scale-*；请改为 ${domains} 对应的子域 scale token，或继续提升为组件语义 token。`,
+          `${prefix} 具体样式不得重新消费 --vx-${prefix}-scale-* 历史桥接 token；新增尺度请落到 ${domains} 对应语义 token。`,
           line.trim(),
         ),
       );
