@@ -1,7 +1,7 @@
 # 技术债登记表
 
-**版本**: 1.0.0
-**更新**: 2026-05-14
+**版本**: 1.1.0
+**更新**: 2026-05-20
 **维护人**: 架构组
 
 ---
@@ -55,18 +55,21 @@
 
 ## 汇总表
 
-| ID                                                        | 标题                                   | 分类               | 状态 |
-| --------------------------------------------------------- | -------------------------------------- | ------------------ | ---- |
-| [TD-001](#td-001--bff-层结构待大版本重构)                 | BFF 层结构待大版本重构                 | Architecture       | Open |
-| [TD-002](#td-002--prisma-schema-集中管理待重构)           | Prisma schema 集中管理待重构           | Architecture       | Open |
-| [TD-003](#td-003--business-bff-认证流程未实现)            | Business BFF 认证流程未实现            | Implementation Gap | Open |
-| [TD-004](#td-004--会话空闲超时未实现)                     | 会话空闲超时未实现                     | Implementation Gap | Open |
-| [TD-005](#td-005--ai-gateway-流式响应未实现)              | AI Gateway 流式响应未实现              | Implementation Gap | Open |
-| [TD-006](#td-006--ai-gateway-provider-api-key-无轮换机制) | AI Gateway Provider API Key 无轮换机制 | Security           | Open |
-| [TD-007](#td-007--ai-gateway-provider-重试--降级未实现)   | AI Gateway Provider 重试 / 降级未实现  | Implementation Gap | Open |
-| [TD-008](#td-008--ai-gateway-provider-合同价格为占位数据) | AI Gateway Provider 合同价格为占位数据 | Implementation Gap | Open |
-| [TD-009](#td-009--surface-命名方案待定)                   | surface 命名方案待定                   | Design Pending     | Open |
-| [TD-010](#td-010--platform-sdk-部分模块计划中未实现)      | Platform SDK 部分模块计划中未实现      | Implementation Gap | Open |
+| ID                                                                        | 标题                                       | 分类               | 状态 | 优先级  |
+| ------------------------------------------------------------------------- | ------------------------------------------ | ------------------ | ---- | ------- |
+| [TD-001](#td-001--bff-层结构待大版本重构)                                 | BFF 层结构待大版本重构                     | Architecture       | Open |         |
+| [TD-002](#td-002--prisma-schema-集中管理待重构)                           | Prisma schema 集中管理待重构               | Architecture       | Open |         |
+| [TD-003](#td-003--business-bff-认证流程未实现)                            | Business BFF 认证流程未实现                | Implementation Gap | Open |         |
+| [TD-004](#td-004--会话空闲超时未实现)                                     | 会话空闲超时未实现                         | Implementation Gap | Open |         |
+| [TD-005](#td-005--ai-gateway-流式响应未实现)                              | AI Gateway 流式响应未实现                  | Implementation Gap | Open |         |
+| [TD-006](#td-006--ai-gateway-provider-api-key-无轮换机制)                 | AI Gateway Provider API Key 无轮换机制     | Security           | Open |         |
+| [TD-007](#td-007--ai-gateway-provider-重试--降级未实现)                   | AI Gateway Provider 重试 / 降级未实现      | Implementation Gap | Open |         |
+| [TD-008](#td-008--ai-gateway-provider-合同价格为占位数据)                 | AI Gateway Provider 合同价格为占位数据     | Implementation Gap | Open |         |
+| [TD-009](#td-009--surface-命名方案待定)                                   | surface 命名方案待定                       | Design Pending     | Open |         |
+| [TD-010](#td-010--platform-sdk-部分模块计划中未实现)                      | Platform SDK 部分模块计划中未实现          | Implementation Gap | Open |         |
+| [TD-011](#td-011--agent-server-直接读取-process.env-绕过-vxconfigservice) | agent-server 直接读取 process.env          | Security           | Open | 🔴 HIGH |
+| [TD-012](#td-012--bff-oauth-provider-凭据未入-core-config-schema)         | BFF OAuth provider 凭据未入 schema         | Security           | Open | 🔴 HIGH |
+| [TD-013](#td-013--bff-跨服务-url--cookie-domain-未入-core-config-schema)  | BFF 跨服务 URL / cookie domain 未入 schema | Implementation Gap | Open | 🟡 MED  |
 
 ---
 
@@ -239,3 +242,57 @@
 **影响**：依赖这些功能的业务场景（无人机监测、地质灾害分析等）无法开发，需要临时方案兜底或推迟排期。
 
 **解决方向**：随对应业务场景立项时按需开发，遵循 `packages/platform/` 下的包结构规范；不提前实现，避免过度设计。
+
+---
+
+### TD-011 — agent-server 直接读取 process.env 绕过 VxConfigService
+
+| 字段         | 内容                                  |
+| ------------ | ------------------------------------- |
+| **分类**     | Security                              |
+| **状态**     | Open                                  |
+| **优先级**   | 🔴 HIGH                               |
+| **登记日期** | 2026-05-20                            |
+| **来源**     | `agent-server/ruyin/src/index.ts:296` |
+
+**描述**：`agent-server/ruyin` 在业务代码中直接读取 `process.env.JWT_SECRET` 用于 JWT 验证，完全绕过 `VxConfigService`。该值既无 Zod 校验（长度、格式），也无类型保障，若环境变量缺失则静默得到 `undefined`，JWT 验证会以空 secret 通过或抛出运行时错误。
+
+**影响**：secret 缺失时行为不可预测（可能签发全为空 secret 的 token，构成认证漏洞）；与 `@vxture/core-config` 的 authSchema 验证逻辑脱节，双轨配置无法统一管理。
+
+**解决方向**：在 `agent-server/ruyin` 的 `AppModule` 中注册 `VxConfigModule.register({ domains: ['app', 'auth', 'ai'] })`，注入 `VxConfigService`，用 `configService.auth.JWT_SECRET` 替换直接的 `process.env` 读取。
+
+---
+
+### TD-012 — BFF OAuth provider 凭据未入 core-config schema
+
+| 字段         | 内容                                                                                                           |
+| ------------ | -------------------------------------------------------------------------------------------------------------- |
+| **分类**     | Security                                                                                                       |
+| **状态**     | Open                                                                                                           |
+| **优先级**   | 🔴 HIGH                                                                                                        |
+| **登记日期** | 2026-05-20                                                                                                     |
+| **来源**     | `bff/auth-bff/src/providers/dingtalk.provider.ts:63,68`、`bff/auth-bff/src/providers/feishu.provider.ts:76,80` |
+
+**描述**：DingTalk（`DINGTALK_APP_KEY`、`DINGTALK_APP_SECRET`、`DINGTALK_SUITE_KEY`、`DINGTALK_SUITE_SECRET`）和飞书（`FEISHU_APP_ID`、`FEISHU_APP_SECRET`）的 OAuth 凭据直接通过 `process.env.XXX ?? ""` 读取，缺失时静默降级为空字符串。这些凭据既无 Zod 最小长度校验，也不在任何 `core-config` schema domain 内，启动时不会报错，但 OAuth 回调会以空凭据发起请求，导致第三方 API 静默返回授权失败。
+
+**影响**：OAuth provider 凭据缺失时应用正常启动但登录功能不可用，错误发现滞后；凭据轮换后无法通过配置系统统一验证；安全审计无法覆盖这些字段。
+
+**解决方向**：在 `core-config` 的 `authSchema`（或新建 `oauth.schema.ts`）中注册 OAuth provider 凭据字段，标记为 optional（未启用的 provider 不需要配置）；在 auth-bff 启动时通过 `VxConfigService` 注入，在 provider 实例化时断言所需字段存在。
+
+---
+
+### TD-013 — BFF 跨服务 URL / cookie domain 未入 core-config schema
+
+| 字段         | 内容                                                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **分类**     | Implementation Gap                                                                                                                                                 |
+| **状态**     | Open                                                                                                                                                               |
+| **优先级**   | 🟡 MED                                                                                                                                                             |
+| **登记日期** | 2026-05-20                                                                                                                                                         |
+| **来源**     | `bff/auth-bff/src/routers/oauth.router.ts:68-83`、`bff/auth-bff/src/routers/password-auth.router.ts:143-151`、`bff/admin-bff/src/routers/ai-gateway.router.ts:233` |
+
+**描述**：以下环境变量在多处路由中直接读取，均未纳入 `core-config` 任何 schema domain：`WEBSITE_BASE_URL`、`CONSOLE_BASE_URL`、`ADMIN_BASE_URL`、`AI_GATEWAY_URL`、`COOKIE_DOMAIN_PLATFORM`、`AUTH_COOKIE_DOMAIN`、`COOKIE_DOMAIN_RUYIN`、`RUYIN_COOKIE_DOMAIN`。缺失时以 `?? ""` 静默兜底，Cookie domain 设为空字符串会导致 Cookie 无法在子域间共享，OAuth redirect URL 构造失败等问题。
+
+**影响**：跨服务 URL 和 Cookie domain 配置错误时行为不可预期；无法在启动时 fail-fast；多个 BFF 读取同名变量但无统一约束，环境差异难以排查。
+
+**解决方向**：在 `core-config` 中新增 `platform.schema.ts` domain，注册 `WEBSITE_BASE_URL`、`CONSOLE_BASE_URL`、`ADMIN_BASE_URL`、`AI_GATEWAY_URL`、`COOKIE_DOMAIN_*` 等字段（url 类型或 string，各自设合理默认值）；各 BFF 通过 `VxConfigService` 统一读取，移除散落的 `process.env` 直接访问。

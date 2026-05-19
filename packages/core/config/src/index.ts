@@ -44,8 +44,4 @@ export { VxConfigModule } from "./module";
 
 export { VxConfigService } from "./service";
 
-// ============================================
-// Utils
-// ============================================
-
-export { deepMerge, deepClone, isPlainObject } from "./utils";
+// object utils (deepMerge / deepClone / isPlainObject) → import from @vxture/shared
