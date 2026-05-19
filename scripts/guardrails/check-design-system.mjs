@@ -842,10 +842,10 @@ const rules = [
   },
   {
     id: "ds/no-inline-design-style",
-    description: "应用层 inline style 只能承载动态变量或坐标，不能承载颜色、字体、间距、圆角、阴影等设计值。",
+    description: "应用层 inline style 和间接 style 对象只能承载动态变量或坐标，不能承载颜色、字体、间距、圆角、阴影等设计值。",
     checkContent(file, content) {
       if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return [];
-      return findInlineStyleViolations(file, content);
+      return [...findInlineStyleViolations(file, content), ...findNamedStyleObjectViolations(file, content)];
     },
   },
   {
@@ -1861,6 +1861,36 @@ function findInlineStyleViolations(file, content) {
   return items;
 }
 
+function findNamedStyleObjectViolations(file, content) {
+  const lines = content.split(/\r?\n/);
+  const items = [];
+  let block = null;
+
+  lines.forEach((line, index) => {
+    const lineNumber = index + 1;
+    if (!block && isNamedStyleObjectStart(lines, index)) {
+      block = {
+        line: lineNumber,
+        lines: [line],
+      };
+      if (line.includes("}") || line.includes("};")) {
+        pushNamedStyleObjectViolation(file, block, items);
+        block = null;
+      }
+      return;
+    }
+
+    if (!block) return;
+    block.lines.push(line);
+    if (line.includes("}") || block.lines.length >= 80) {
+      pushNamedStyleObjectViolation(file, block, items);
+      block = null;
+    }
+  });
+
+  return items;
+}
+
 function pushInlineStyleViolation(file, block, items) {
   const text = block.lines.join("\n");
   if (!hasInlineDesignValue(text)) return;
@@ -1872,6 +1902,33 @@ function pushInlineStyleViolation(file, block, items) {
       text,
     ),
   );
+}
+
+function pushNamedStyleObjectViolation(file, block, items) {
+  const text = block.lines.join("\n");
+  if (!hasInlineDesignValue(text)) return;
+  items.push(
+    violation(
+      file,
+      block.line,
+      "间接 style 对象只能用于 CSS 变量、坐标、transform、背景图片等动态值；固定设计值必须进入 DS token 或语义 CSS。",
+      text,
+    ),
+  );
+}
+
+function isNamedStyleObjectStart(lines, index) {
+  const line = lines[index] ?? "";
+  if (/\b(?:const|let|var)\s+\w*Style\w*\s*=\s*\{/.test(line)) return true;
+  if (/\bconst\s+\w*Style\w*\s*=.*:\s*(?:React\.)?CSSProperties\b.*=>\s*\(\s*\{/.test(line)) return true;
+  if (/\(\)\s*=>\s*\(\s*\{/.test(line)) {
+    const memoScope = lines.slice(Math.max(0, index - 4), index + 1).join("\n");
+    return /\bconst\s+\w*Style\w*\s*=\s*useMemo<(?:(?:React\.)?CSSProperties)>/.test(memoScope);
+  }
+  if (!/\breturn\s+\{/.test(line)) return false;
+
+  const scope = lines.slice(Math.max(0, index - 6), index + 1).join("\n");
+  return /\bfunction\s+\w*Style\w*\s*\([^)]*\)\s*:\s*(?:React\.)?CSSProperties\b/.test(scope);
 }
 
 function hasInlineDesignValue(text) {

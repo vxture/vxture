@@ -590,6 +590,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 50. 已完成：DS 当前状态快照；当时 DS 样式文件 315 个，7KB/8KB 以上叶子 0，单 import wrapper 0，`var(--vx-component-metric-*)` 0，`var(--vx-*-scale-*)` 0，`--vx-component-metric-*` 定义 0，`--vx-scale-*` / `--vx-platform-scale-*` / `--vx-auth-scale-*` 定义 0。跨应用巡检未发现业务源码 DS 深层导入、应用侧 `--vx-*` 定义或底层 UI primitive 直连；剩余扫描命中来自 `packages/design/foundation-v1.3.0-complete.css` 和 `packages/design/vxture-v1.3.0-components/*` 历史素材包，已在第 52 批清理。
 51. 已完成：DS 不可达样式 wrapper 退场；删除 12 个无法从 package exports 公共入口到达的 import-only 聚合层：`platform-access-shared-panels.css`、`platform-account-connected.css`、`platform-account-profile-base.css`、`platform-account-profile-card.css`、`platform-layout-admin-models-bindings.css`、`platform-layout-shell-bindings.css`、`platform-notifications-table.css`、`platform-shell-bindings.css`、`tokens-admin-operations.css`、`tokens-component-effects.css`、`tokens-foundation.css`、`tokens-platform-access-layout-semantics.css`。新增 `ds/no-unreachable-ds-style-module`，要求 DS `src/styles` 文件必须能从 `package.json` 暴露的公共样式入口到达；DS 样式文件数从 315 降到 303。
 52. 已完成：DS 迁移素材包退场；删除 `packages/design/foundation-v1.3.0-complete.css` 与 `packages/design/vxture-v1.3.0-components/` 历史输入包，并从守卫忽略清单移除对应例外。迁入完成后的事实来源只保留 `packages/design/design-system/src/styles/*`、`src/tokens/*`、DS 文档和规范。
+53. 已完成：应用侧动态 style 收口守卫；`ds/no-inline-design-style` 扩展到 `const *Style = { ... }` 与返回 `CSSProperties` 的 `*Style()` helper，防止固定颜色、字体、间距、圆角、阴影等设计值通过间接 style 对象绕过 inline 检查。当前保留的 `style=` 命中均为主题启动脚本、坐标、transform、进度、背景图片、CSS 变量或调试面板位置这类运行时动态值。
 
 ## 后续验收清单
 
