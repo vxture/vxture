@@ -30,8 +30,6 @@ const IGNORED_PARTS = new Set([
   "node_modules",
   "out",
   "storybook-static",
-  "foundation-v1.3.0-complete.css",
-  "vxture-v1.3.0-components",
 ]);
 
 const DS_ROOT = normalize("packages/design/design-system");
