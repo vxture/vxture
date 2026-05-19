@@ -45,6 +45,9 @@ RUN pnpm --filter ${PACKAGE_FILTER} build
 # 将运行时所需文件归集到 /runtime，避免运行层使用条件 COPY
 RUN mkdir -p /runtime/node_modules && \
     cp ${SERVICE_PATH}/dist/main.cjs /runtime/main.cjs && \
+    { [ -d "${SERVICE_PATH}/src/generated/prisma" ] && \
+        mkdir -p /runtime/src/generated/prisma && \
+        find ${SERVICE_PATH}/src/generated/prisma -name "*.so.node" -exec cp {} /runtime/src/generated/prisma/ \; || true; } && \
     { [ -d "node_modules/.prisma" ]         && cp -rL node_modules/.prisma         /runtime/node_modules/ || true; } && \
     { [ -d "node_modules/@prisma" ]         && cp -rL node_modules/@prisma         /runtime/node_modules/ || true; } && \
     { [ -d "${SERVICE_PATH}/node_modules/.prisma" ] && cp -rL ${SERVICE_PATH}/node_modules/.prisma /runtime/node_modules/ || true; } && \
