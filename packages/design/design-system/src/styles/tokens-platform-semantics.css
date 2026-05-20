@@ -12,12 +12,77 @@
 @import "./tokens-platform-models-layout-semantics.css";
 @import "./tokens-platform-notifications-semantics.css";
 @import "./tokens-platform-access-semantics.css";
-@import "./tokens-platform-access-page-semantics.css";
-@import "./tokens-platform-access-toolbar-semantics.css";
-@import "./tokens-platform-access-segmented-semantics.css";
-@import "./tokens-platform-access-list-semantics.css";
-@import "./tokens-platform-access-panels-semantics.css";
-@import "./tokens-platform-access-feedback-semantics.css";
+:root {
+  --vx-access-page-gap: 0.45rem;
+  --vx-access-page-header-gap: 1rem;
+  --vx-access-page-header-margin-bottom: 1.55rem;
+  --vx-access-page-header-copy-gap: 0.62rem;
+  --vx-access-header-actions-gap: 0.75rem;
+  --vx-access-header-actions-padding-top: 0.05rem;
+  --vx-access-actionbar-padding-bottom: 0.05rem;
+  --vx-access-header-primary-gap: 0.55rem;
+  --vx-access-header-selection-gap: 0.45rem;
+  --vx-access-workspace-gap: 0.72rem;
+}
+
+:root {
+  --vx-access-toolbar-gap: 0.85rem;
+  --vx-access-toolbar-padding: 0.1rem 0 0.45rem;
+  --vx-access-toolbar-search-width: min(28rem, 100%);
+  --vx-access-toolbar-search-min-width: 18rem;
+  --vx-access-toolbar-search-height: 2.25rem;
+  --vx-access-toolbar-search-border: 1px solid color-mix(in srgb, var(--vx-color-brand-800) 12%, transparent);
+  --vx-access-toolbar-search-padding: 0.3rem 0.85rem;
+  --vx-access-toolbar-filters-gap: 0.9rem;
+  --vx-access-toolbar-count-height: 2.25rem;
+  --vx-access-toolbar-count-padding: 0 0.8rem;
+  --vx-access-toolbar-count-border: 1px solid var(--vx-color-border);
+}
+
+:root {
+  --vx-access-page-segmented-min-height: 2.25rem;
+  --vx-access-page-segmented-padding: 0.16rem;
+  --vx-access-page-segmented-gap: 0.12rem;
+  --vx-access-page-segmented-item-min-height: 1.88rem;
+  --vx-access-page-segmented-item-padding: 0 0.72rem;
+}
+
+:root {
+  --vx-access-list-row-gap: 0.72rem;
+  --vx-access-member-list-columns: 2rem minmax(210px, 1.12fr) minmax(120px, 0.68fr) minmax(220px, 1.18fr) minmax(130px, 0.75fr) minmax(105px, 0.56fr) minmax(116px, 0.66fr) 2.5rem;
+  --vx-access-role-list-columns: 2rem minmax(210px, 1.12fr) minmax(140px, 0.76fr) minmax(100px, 0.56fr) minmax(110px, 0.62fr) minmax(120px, 0.66fr) minmax(220px, 1.18fr) 2.5rem;
+  --vx-access-list-header-padding: 0 var(--vx-directory-row-padding-x) 0.35rem;
+  --vx-access-list-row-min-height: 4.05rem;
+  --vx-access-list-row-padding: 0.72rem var(--vx-directory-row-padding-x);
+  --vx-access-list-row-border-width: 1px;
+  --vx-access-select-size: 1.35rem;
+  --vx-access-select-input-size: 1.05rem;
+  --vx-access-select-header-input-size: 1rem;
+}
+
+:root {
+  --vx-access-drawer-height: 100vh;
+  --vx-access-drawer-width: min(32rem, 100vw);
+  --vx-access-drawer-max-width: 32rem;
+  --vx-access-drawer-header-gap: 1rem;
+  --vx-access-detail-grid-gap: 1rem;
+  --vx-access-detail-label-margin-bottom: 0.35rem;
+  --vx-access-detail-label-size: 0.85rem;
+  --vx-access-panel-section-gap: 0.75rem;
+  --vx-access-role-permissions-item-padding: 0.6rem 0.75rem;
+  --vx-access-role-permissions-item-border: 1px solid var(--vx-console-border);
+  --vx-access-role-permissions-item-size: 0.9rem;
+}
+
+:root {
+  --vx-access-empty-gap: 0.65rem;
+  --vx-access-empty-padding: 1.2rem 0 0.2rem;
+  --vx-access-metric-header-gap: 0.75rem;
+  --vx-access-metric-value-size: 1.9rem;
+  --vx-access-badge-border: 1px solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  --vx-access-badge-positive-border: 1px solid var(--vx-color-success-border);
+}
+
 @import "./tokens-platform-tenant-settings-semantics.css";
 @import "./tokens-platform-shell-semantics.css";
 @import "./tokens-platform-layout-semantics.css";
