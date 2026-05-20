@@ -594,6 +594,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 54. 已完成：DS 迁移素材回流守卫；新增 `ds/no-design-migration-artifacts`，禁止 `packages/design/*.css` 迁移输入文件和 `packages/design/vxture-v*-components/` 素材包重新长期保留。正常新增 design package 不受该规则影响，但迁入完成的素材必须只落到 `design-system/src/styles`、`src/tokens` 和正式组件源码。
 55. 已完成：Token leaf 温和归并；将 `tokens-admin-base-track-effect.css` 下 6 个单父 token leaf、`tokens-console-size-effect.css` 下 4 个单父 token leaf、`tokens-platform-semantics.css` 下 6 个 access 语义 token leaf 内联到父文件，删除 16 个无独立入口的碎片文件。变量名、运行时值和公共入口保持不变；DS 样式文件数从 303 降到 287。
 56. 已完成：同域样式 leaf 温和归并；将 Console shell surface 3 个 leaf、Console tenant switcher panel 3 个 leaf、Platform access identity 2 个 leaf、Component shell semantic 6 个 leaf 内联到各自父文件，删除 14 个无独立入口的碎片文件。选择器、变量名、运行时值和公共入口保持不变；`platform-notifications.css` 因稳定 style pack 入口规则保持 import-only；DS 样式文件数从 287 降到 273。
+57. 已完成：Token 聚合批次压缩到 250 以下；将 Admin assistant workspace 5 个 leaf、Admin base space/size 3 个 leaf、Admin directory/governance 2 个 leaf、Admin feature aliases 3 个 leaf、Admin management aliases 4 个 leaf、Admin shell 4 个 leaf、Colors semantic 7 个 leaf 内联到各自父 token 文件，删除 28 个单父引用碎片文件。变量名、运行时值和公共入口保持不变，合并后 token 父文件均低于 8KB 守卫阈值；DS 样式文件数从 273 降到 245。
 
 ## 后续验收清单
 
