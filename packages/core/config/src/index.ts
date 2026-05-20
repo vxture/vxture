@@ -19,6 +19,8 @@ export {
   aiSchema,
   mailSchema,
   toSmtpConfig,
+  oauthSchema,
+  platformSchema,
 } from "./schemas";
 
 // Type exports (explicit listing for maintainability)
@@ -29,6 +31,8 @@ export type {
   RedisConfig,
   AuthConfig,
   MailEnvConfig,
+  OauthConfig,
+  PlatformConfig,
 } from "./schemas";
 
 export type {

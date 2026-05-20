@@ -42,7 +42,7 @@ import { TicketsRouter } from "./routers/tickets.router";
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ["app", "auth", "database", "redis"],
+      domains: ["app", "auth", "database", "redis", "platform"],
     }),
     JwtModule.register({}),
     MailModule,

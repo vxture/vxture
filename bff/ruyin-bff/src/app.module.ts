@@ -30,7 +30,7 @@ import { SessionRouter } from "./routers/session.router";
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ["app", "auth", "redis"],
+      domains: ["app", "auth", "redis", "platform"],
     }),
     JwtModule.register({}),
   ],

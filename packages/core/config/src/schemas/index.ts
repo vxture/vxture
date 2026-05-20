@@ -27,3 +27,9 @@ export { aiSchema } from "./ai.schema";
 
 export type { MailEnvConfig } from "./mail.schema";
 export { mailSchema, toSmtpConfig } from "./mail.schema";
+
+export type { OauthConfig } from "./oauth.schema";
+export { oauthSchema } from "./oauth.schema";
+
+export type { PlatformConfig } from "./platform.schema";
+export { platformSchema } from "./platform.schema";

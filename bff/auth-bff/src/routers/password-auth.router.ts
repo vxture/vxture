@@ -41,6 +41,8 @@ import {
   TurnstileVerifier,
 } from "@vxture/core-auth";
 import { AUTH_CONSTANTS } from "@vxture/shared";
+import { VxConfigService } from "@vxture/core-config";
+import type { PlatformConfig } from "@vxture/core-config";
 import { AccountAuthService } from "@vxture/service-iam";
 import { MailService } from "@vxture/service-mail";
 import { AuthService, type LoginSource } from "../auth/auth.service";
@@ -138,24 +140,21 @@ function normalizeCookieDomain(domain: string | undefined): string | undefined {
   return domain;
 }
 
-function resolvePlatformCookieDomain(): string | undefined {
-  return normalizeCookieDomain(
-    process.env.COOKIE_DOMAIN_PLATFORM?.trim() ||
-      process.env.AUTH_COOKIE_DOMAIN?.trim(),
-  );
+function resolvePlatformCookieDomain(cfg: PlatformConfig): string | undefined {
+  return normalizeCookieDomain(cfg.COOKIE_DOMAIN_PLATFORM?.trim());
 }
 
-function resolveRuyinCookieDomain(): string | undefined {
-  return normalizeCookieDomain(
-    process.env.COOKIE_DOMAIN_RUYIN?.trim() ||
-      process.env.RUYIN_COOKIE_DOMAIN?.trim(),
-  );
+function resolveRuyinCookieDomain(cfg: PlatformConfig): string | undefined {
+  return normalizeCookieDomain(cfg.COOKIE_DOMAIN_RUYIN?.trim());
 }
 
-function resolveCookieDomain(source: LoginSource): string | undefined {
+function resolveCookieDomain(
+  source: LoginSource,
+  cfg: PlatformConfig,
+): string | undefined {
   return source === "ruyin"
-    ? resolveRuyinCookieDomain()
-    : resolvePlatformCookieDomain();
+    ? resolveRuyinCookieDomain(cfg)
+    : resolvePlatformCookieDomain(cfg);
 }
 
 function clearCookieGroup(
@@ -169,18 +168,22 @@ function clearCookieGroup(
   }
 }
 
-function clearCookiesForSource(res: Response, source: LoginSource) {
+function clearCookiesForSource(
+  res: Response,
+  source: LoginSource,
+  cfg: PlatformConfig,
+) {
   if (source === "admin") {
-    clearCookieGroup(res, [ADMIN_COOKIES], resolvePlatformCookieDomain());
+    clearCookieGroup(res, [ADMIN_COOKIES], resolvePlatformCookieDomain(cfg));
     return;
   }
   if (source === "ruyin") {
-    clearCookieGroup(res, [RUYIN_COOKIES], resolveRuyinCookieDomain());
-    clearCookieGroup(res, [TENANT_COOKIES], resolvePlatformCookieDomain());
+    clearCookieGroup(res, [RUYIN_COOKIES], resolveRuyinCookieDomain(cfg));
+    clearCookieGroup(res, [TENANT_COOKIES], resolvePlatformCookieDomain(cfg));
     return;
   }
 
-  clearCookieGroup(res, [TENANT_COOKIES], resolvePlatformCookieDomain());
+  clearCookieGroup(res, [TENANT_COOKIES], resolvePlatformCookieDomain(cfg));
 }
 
 function readTenantCookie(
@@ -289,6 +292,7 @@ export class PasswordAuthRouter {
     @Inject(AccountAuthService)
     private readonly accountAuthService: AccountAuthService,
     @Inject(MailService) private readonly mailService: MailService,
+    private readonly configService: VxConfigService,
   ) {}
 
   /**
@@ -312,7 +316,7 @@ export class PasswordAuthRouter {
     );
 
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolveCookieDomain(source);
+    const domain = resolveCookieDomain(source, this.configService.platform);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,
@@ -363,7 +367,7 @@ export class PasswordAuthRouter {
       body.password,
     );
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolvePlatformCookieDomain();
+    const domain = resolvePlatformCookieDomain(this.configService.platform);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,
@@ -463,7 +467,7 @@ export class PasswordAuthRouter {
       );
     }
 
-    clearCookiesForSource(res, source);
+    clearCookiesForSource(res, source, this.configService.platform);
     return { status: "logged_out" };
   }
 
@@ -520,7 +524,7 @@ export class PasswordAuthRouter {
           );
 
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolveCookieDomain(source);
+    const domain = resolveCookieDomain(source, this.configService.platform);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,
@@ -602,7 +606,7 @@ export class PasswordAuthRouter {
     );
 
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolveCookieDomain(source);
+    const domain = resolveCookieDomain(source, this.configService.platform);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,
@@ -701,11 +705,10 @@ export class PasswordAuthRouter {
       );
       if (result) {
         const isConsole = body.source === "console";
+        const platformCfg = this.configService.platform;
         const baseUrl = isConsole
-          ? (process.env["CONSOLE_BASE_URL"]?.replace(/\/$/, "") ??
-            "http://localhost:3020")
-          : (process.env["WEBSITE_BASE_URL"]?.replace(/\/$/, "") ??
-            "http://localhost:3010");
+          ? platformCfg.CONSOLE_BASE_URL.replace(/\/$/, "")
+          : platformCfg.WEBSITE_BASE_URL.replace(/\/$/, "");
         const resetUrl = `${baseUrl}/reset-password?token=${result.rawToken}`;
         await this.mailService.sendPasswordReset(body.email, resetUrl);
       }
@@ -775,7 +778,7 @@ export class PasswordAuthRouter {
     );
 
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolvePlatformCookieDomain();
+    const domain = resolvePlatformCookieDomain(this.configService.platform);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,
@@ -850,7 +853,7 @@ export class PasswordAuthRouter {
           );
 
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolveCookieDomain(source);
+    const domain = resolveCookieDomain(source, this.configService.platform);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,
