@@ -596,6 +596,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 56. 已完成：同域样式 leaf 温和归并；将 Console shell surface 3 个 leaf、Console tenant switcher panel 3 个 leaf、Platform access identity 2 个 leaf、Component shell semantic 6 个 leaf 内联到各自父文件，删除 14 个无独立入口的碎片文件。选择器、变量名、运行时值和公共入口保持不变；`platform-notifications.css` 因稳定 style pack 入口规则保持 import-only；DS 样式文件数从 287 降到 273。
 57. 已完成：Token 聚合批次压缩到 250 以下；将 Admin assistant workspace 5 个 leaf、Admin base space/size 3 个 leaf、Admin directory/governance 2 个 leaf、Admin feature aliases 3 个 leaf、Admin management aliases 4 个 leaf、Admin shell 4 个 leaf、Colors semantic 7 个 leaf 内联到各自父 token 文件，删除 28 个单父引用碎片文件。变量名、运行时值和公共入口保持不变，合并后 token 父文件均低于 8KB 守卫阈值；DS 样式文件数从 273 降到 245。
 58. 已完成：低风险 token/auth leaf 继续归并；将 Dark token 5 个 leaf、Platform account profile semantic token 4 个 leaf、Platform core semantic token 3 个 leaf、Component semantic token 2 个 leaf、Auth visual panel 4 个 leaf、Auth actions 4 个 leaf、Auth fields 3 个 leaf 内联到各自父文件，删除 25 个单父引用碎片文件。选择器、变量名、运行时值和公共入口保持不变，合并后最大样式文件约 6.7KB；DS 样式文件数从 245 降到 220。
+59. 已完成：统一收敛剩余 8KB 内单父 leaf；将 Platform account profile fields 5 个 leaf、Platform core 5 个 leaf、Platform access shell 4 个 leaf、Platform shell assistant 4 个 leaf、Components shell user menu 4 个 leaf、Toast/drawer/skeleton 3 个 leaf、Console assistant 3 个 leaf、Console shell layout frame 3 个 leaf、Platform notifications shell 3 个 leaf、Platform models shell 3 个 leaf、Typography 3 个 leaf、Platform access identity 2 个 leaf 内联到各自父文件，删除 42 个碎片文件。公共 style pack 入口保持 import-only，合并后最大样式文件约 7.4KB；DS 样式文件数从 220 降到 178。
 
 ## 后续验收清单
 
