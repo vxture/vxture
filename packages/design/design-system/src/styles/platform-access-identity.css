@@ -8,6 +8,46 @@
  */
 
 @import "./platform-access-identity-member.css";
-@import "./platform-access-identity-menu.css";
-@import "./platform-access-identity-bindings.css";
+.vx-member-table__menu,
+.vx-role-row__menu {
+  position: relative;
+  z-index: 1300;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.vx-member-table__menu .vx-btn,
+.vx-role-row__menu .vx-btn {
+  width: var(--vx-access-menu-button-size);
+  height: var(--vx-access-menu-button-size);
+  min-height: var(--vx-access-menu-button-size);
+  border: 0;
+  background: transparent;
+  color: var(--vx-console-text);
+  padding: 0;
+  box-shadow: none;
+}
+
+.vx-member-table__menu .vx-btn svg,
+.vx-role-row__menu .vx-btn svg {
+  width: var(--vx-access-menu-icon-size);
+  height: var(--vx-access-menu-icon-size);
+}
+
+.vx-member-table__menu .vx-btn:hover,
+.vx-role-row__menu .vx-btn:hover {
+  background: transparent;
+  color: var(--vx-console-brand);
+}
+
+:where(.vx-members-page) {
+  --vx-members-text-size: var(--vx-platform-text-size-md);
+  --vx-members-meta-size: var(--vx-platform-text-size-xs);
+}
+
+:where(.vx-roles-page) {
+  --vx-roles-text-size: var(--vx-platform-text-size-md);
+  --vx-roles-meta-size: var(--vx-platform-text-size-xs);
+}
+
 @import "./platform-access-identity-role-permissions.css";

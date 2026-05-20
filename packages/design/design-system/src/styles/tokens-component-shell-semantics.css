@@ -7,9 +7,97 @@
  * @date 2026-05-17
  */
 
-@import "./tokens-component-shell-tools-semantics.css";
-@import "./tokens-component-shell-preferences-semantics.css";
-@import "./tokens-component-shell-segmented-semantics.css";
-@import "./tokens-component-shell-user-menu-semantics.css";
-@import "./tokens-component-shell-footer-switch-semantics.css";
-@import "./tokens-component-fullscreen-semantics.css";
+:root {
+  --vx-shell-brand-color: var(--vx-color-shell-text);
+  --vx-shell-brand-gap: 0.5rem;
+  --vx-shell-brand-logo-size: 1.5rem;
+  --vx-shell-tool-button-color: var(--vx-color-shell-muted);
+  --vx-shell-tool-button-hover-background: color-mix(in srgb, var(--vx-color-shell-brand) 9%, transparent);
+  --vx-shell-tool-button-hover-color: var(--vx-color-shell-brand);
+  --vx-shell-tool-button-focus-ring: var(--vx-color-ring);
+  --vx-shell-tool-button-size: 2rem;
+  --vx-shell-tool-button-radius: 8px;
+}
+
+:root {
+  --vx-shell-locale-popover-offset: 0.5rem;
+  --vx-shell-locale-popover-min-width: 10rem;
+  --vx-shell-preferences-gap: 0.5rem;
+  --vx-shell-preferences-title-margin-bottom: 0.15rem;
+  --vx-shell-preferences-title-size: 0.85rem;
+  --vx-shell-preferences-row-height: 2.5rem;
+  --vx-shell-preferences-row-gap: 0.75rem;
+  --vx-shell-preferences-icon-size: 1.25rem;
+  --vx-shell-preferences-select-height: 2.25rem;
+  --vx-shell-preferences-select-radius: 8px;
+  --vx-shell-preferences-select-padding-start: 0.75rem;
+  --vx-shell-preferences-select-padding-end: 2rem;
+  --vx-shell-preferences-select-size: 0.82rem;
+  --vx-shell-preferences-select-icon-inset: 0.65rem;
+  --vx-shell-preferences-select-icon-size: 1rem;
+}
+
+:root {
+  --vx-shell-segmented-radius: 8px;
+  --vx-shell-segmented-padding: 0.125rem;
+  --vx-shell-segmented-item-radius: 6px;
+  --vx-shell-segmented-item-padding-y: 0.42rem;
+  --vx-shell-segmented-item-padding-x: 0.5rem;
+  --vx-shell-segmented-item-size: 0.76rem;
+  --vx-shell-segmented-active-shadow-y: 1px;
+  --vx-shell-segmented-active-shadow-blur: 3px;
+}
+
+:root {
+  --vx-shell-user-trigger-size: 2.5rem;
+  --vx-shell-user-trigger-hover-ring: 2px;
+  --vx-shell-user-status-offset: 0.125rem;
+  --vx-shell-user-status-size: 0.75rem;
+  --vx-shell-user-status-border-width: 2px;
+  --vx-shell-user-avatar-size: 2.5rem;
+  --vx-shell-user-avatar-lg-size: 3.5rem;
+  --vx-shell-user-avatar-shadow-y: 2px;
+  --vx-shell-user-avatar-shadow-blur: 6px;
+  --vx-shell-user-menu-width: 20rem;
+  --vx-shell-user-menu-radius: 10px;
+  --vx-shell-user-menu-shadow-y: 18px;
+  --vx-shell-user-menu-shadow-blur: 45px;
+  --vx-shell-user-menu-profile-gap: 0.75rem;
+  --vx-shell-user-menu-padding: 1rem;
+  --vx-shell-user-menu-name-size: 0.96rem;
+  --vx-shell-user-menu-line-margin-top: 0.2rem;
+  --vx-shell-user-menu-line-size: 0.84rem;
+  --vx-shell-user-menu-meta-margin-top: 0.12rem;
+  --vx-shell-user-menu-meta-size: 0.76rem;
+  --vx-shell-user-menu-badge-gap: 0.5rem;
+  --vx-shell-user-menu-badge-indent: 4.25rem;
+  --vx-shell-user-badge-padding-y: 0.25rem;
+  --vx-shell-user-badge-padding-x: 0.62rem;
+  --vx-shell-user-badge-size: 0.75rem;
+  --vx-shell-user-menu-action-gap: 0.65rem;
+  --vx-shell-user-menu-action-radius: 8px;
+  --vx-shell-user-menu-action-padding-y: 0.62rem;
+  --vx-shell-user-menu-action-padding-x: 0.75rem;
+  --vx-shell-user-menu-action-size: 0.85rem;
+  --vx-shell-user-menu-action-icon-size: 1rem;
+  --vx-shell-user-menu-return-gap: 0.4rem;
+  --vx-shell-user-menu-dismiss-size: 1.25rem;
+  --vx-shell-user-menu-dismiss-radius: 6px;
+}
+
+:root {
+  --vx-shell-legal-footer-gap: 1rem;
+  --vx-shell-legal-footer-link-gap: 0.85rem;
+  --vx-switch-width: 3.1rem;
+  --vx-switch-height: 1.9rem;
+  --vx-switch-thumb-inset: 0.2rem;
+  --vx-switch-thumb-size: 1.5rem;
+  --vx-switch-thumb-shadow-y: 1px;
+  --vx-switch-thumb-shadow-blur: 3px;
+  --vx-switch-checked-translate: 1.2rem;
+}
+
+:root {
+  --vx-fullscreen-viewport-width: 100vw;
+  --vx-fullscreen-viewport-height: 100vh;
+}

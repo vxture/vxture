@@ -593,6 +593,7 @@ rg -n "@phosphor-icons/react|lucide-react|react-icons|@radix-ui/" portals busine
 53. 已完成：应用侧动态 style 收口守卫；`ds/no-inline-design-style` 扩展到 `const *Style = { ... }` 与返回 `CSSProperties` 的 `*Style()` helper，防止固定颜色、字体、间距、圆角、阴影等设计值通过间接 style 对象绕过 inline 检查。当前保留的 `style=` 命中均为主题启动脚本、坐标、transform、进度、背景图片、CSS 变量或调试面板位置这类运行时动态值。
 54. 已完成：DS 迁移素材回流守卫；新增 `ds/no-design-migration-artifacts`，禁止 `packages/design/*.css` 迁移输入文件和 `packages/design/vxture-v*-components/` 素材包重新长期保留。正常新增 design package 不受该规则影响，但迁入完成的素材必须只落到 `design-system/src/styles`、`src/tokens` 和正式组件源码。
 55. 已完成：Token leaf 温和归并；将 `tokens-admin-base-track-effect.css` 下 6 个单父 token leaf、`tokens-console-size-effect.css` 下 4 个单父 token leaf、`tokens-platform-semantics.css` 下 6 个 access 语义 token leaf 内联到父文件，删除 16 个无独立入口的碎片文件。变量名、运行时值和公共入口保持不变；DS 样式文件数从 303 降到 287。
+56. 已完成：同域样式 leaf 温和归并；将 Console shell surface 3 个 leaf、Console tenant switcher panel 3 个 leaf、Platform access identity 2 个 leaf、Component shell semantic 6 个 leaf 内联到各自父文件，删除 14 个无独立入口的碎片文件。选择器、变量名、运行时值和公共入口保持不变；`platform-notifications.css` 因稳定 style pack 入口规则保持 import-only；DS 样式文件数从 287 降到 273。
 
 ## 后续验收清单
 

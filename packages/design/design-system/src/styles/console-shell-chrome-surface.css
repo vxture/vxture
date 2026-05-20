@@ -7,7 +7,90 @@
  * @date 2026-05-17
  */
 
-@import "./console-shell-chrome-surface-page.css";
+.dark html,
+.dark body,
+html.dark,
+body.dark {
+  background: var(--vx-color-shell-bg);
+}
+
+.vx-shell {
+  letter-spacing: 0;
+  background: var(--vx-console-bg);
+}
+
+.dark .vx-shell {
+  background: var(--vx-console-bg);
+}
+
+.vx-shell__header-slot {
+  border-bottom: var(--vx-control-border-width) solid var(--vx-console-border);
+  background: color-mix(in srgb, var(--vx-color-white) 88%, transparent);
+  backdrop-filter: blur(var(--vx-console-effect-16p));
+}
+
+.dark .vx-shell__header-slot {
+  background: color-mix(in srgb, var(--vx-color-shell-bg) 88%, transparent);
+}
+
 @import "./console-shell-chrome-surface-header.css";
-@import "./console-shell-chrome-surface-sidebar.css";
-@import "./console-shell-chrome-surface-assistant.css";
+.vx-shell__body {
+  gap: 0;
+}
+
+.vx-shell-sidebar {
+  gap: var(--vx-console-space-065r);
+  padding: var(--vx-console-space-065r) 0 var(--vx-console-space-08r);
+  border-right: var(--vx-control-border-width) solid transparent;
+  background: transparent;
+  overflow: hidden;
+  transition: none;
+  z-index: 18;
+}
+
+.dark .vx-shell-sidebar {
+  background: transparent;
+}
+
+.vx-shell-sidebar__topbar,
+.vx-shell-sidebar__rail {
+  min-height: var(--vx-console-size-24r);
+  padding-left: var(--vx-console-space-065r);
+}
+
+.vx-shell-sidebar__tenant-switcher {
+  padding: 0 var(--vx-console-space-08r) 0 var(--vx-shell-sidebar-content-inset);
+}
+
+.vx-shell-nav {
+  gap: var(--vx-console-space-085r);
+  padding: 0 var(--vx-console-space-065r) 0 var(--vx-shell-sidebar-content-inset);
+}
+
+.vx-shell-sidebar--collapsed {
+  width: var(--vx-shell-sidebar-collapsed-width);
+  min-width: var(--vx-shell-sidebar-collapsed-width);
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__tenant-switcher,
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__footer {
+  max-height: 0;
+  min-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(calc(var(--vx-console-motion-8p) * -1));
+}
+
+.vx-assistant-panel {
+  border-left: var(--vx-control-border-width) solid var(--vx-console-border);
+  background: color-mix(in srgb, var(--vx-color-white) 94%, transparent);
+  box-shadow: var(--vx-console-assistant-panel-shadow);
+}
+
+.dark .vx-assistant-panel {
+  background: color-mix(in srgb, var(--vx-color-background) 96%, transparent);
+  box-shadow: var(--vx-console-assistant-panel-shadow-dark);
+}

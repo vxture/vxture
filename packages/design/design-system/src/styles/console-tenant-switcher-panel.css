@@ -7,7 +7,83 @@
  * @date 2026-05-15
  */
 
-@import "./console-tenant-switcher-panel-shell.css";
-@import "./console-tenant-switcher-panel-header.css";
-@import "./console-tenant-switcher-panel-current.css";
+.vx-tenant-switcher__panel {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + var(--vx-console-space-055r));
+  left: 0;
+  width: min(var(--vx-console-size-360p), var(--vx-console-tenant-panel-width-available));
+  max-height: min(var(--vx-console-popover-max-height), var(--vx-console-tenant-panel-max-height-available));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  gap: var(--vx-console-space-065r);
+  padding: var(--vx-console-space-075r);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-600) 12%, transparent);
+  border-radius: var(--vx-console-radius-16p);
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent), transparent var(--vx-console-pattern-12r-large)),
+    color-mix(in srgb, var(--vx-color-white) 97%, transparent);
+  box-shadow: var(--vx-console-tenant-panel-shadow);
+  backdrop-filter: blur(var(--vx-console-effect-18p));
+}
+
+.vx-tenant-switcher__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-console-space-1r);
+  padding: var(--vx-console-space-015r) var(--vx-console-space-015r) var(--vx-console-space-005r) var(--vx-console-space-025r);
+}
+
+.vx-tenant-switcher__panel-header strong {
+  font-size: var(--vx-console-text-size-09r);
+  letter-spacing: calc(var(--vx-console-text-tracking-001e) * -1);
+}
+
+.vx-tenant-switcher__close,
+.vx-tenant-dialog__close {
+  display: inline-grid;
+  width: var(--vx-console-size-185r);
+  height: var(--vx-console-size-185r);
+  place-items: center;
+  border: 0;
+  border-radius: var(--vx-radius-full);
+  background: transparent;
+  color: color-mix(in srgb, var(--vx-color-gray-500) 82%, transparent);
+  cursor: pointer;
+}
+
+.vx-tenant-switcher__close:hover,
+.vx-tenant-dialog__close:hover {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 8%, transparent);
+  color: var(--vx-console-text);
+}
+
+.vx-tenant-switcher__current {
+  display: grid;
+  gap: var(--vx-console-space-042r);
+  padding: var(--vx-console-space-055r);
+  border-radius: var(--vx-console-radius-14p);
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 5.5%, transparent);
+}
+
+.vx-tenant-switcher__current p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  font-size: var(--vx-console-text-size-068r);
+  font-weight: 700;
+  letter-spacing: var(--vx-console-text-tracking-008e);
+  text-transform: uppercase;
+}
+
+.vx-tenant-switcher__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--vx-console-space-034r);
+  padding-left: var(--vx-console-space-222r);
+  color: var(--vx-console-brand);
+  font-size: var(--vx-console-text-size-072r);
+  font-weight: 650;
+}
+
 @import "./console-tenant-switcher-panel-list.css";
