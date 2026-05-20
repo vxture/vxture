@@ -29,7 +29,7 @@ import { HealthRouter } from "./routers/health.router";
 
 @Module({
   imports: [
-    VxConfigModule.register({ domains: ["app", "auth", "redis"] }),
+    VxConfigModule.register({ domains: ["app", "auth", "redis", "platform"] }),
     JwtModule.register({}),
   ],
   controllers: [HealthRouter, ChatRouter, ConfirmRouter],

@@ -33,6 +33,7 @@ import {
 } from "@nestjs/common";
 import type { Response } from "express";
 import { resolveInternalAuthToken } from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
 import { PhoneCodeService } from "@vxture/service-sms";
 import { PlatformAuthService } from "../auth/auth.service";
 import { LoginRateLimiterService } from "../auth/login-rate-limiter.service";
@@ -48,13 +49,6 @@ import type { RequestContext } from "../types/console.types";
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
-function resolveAuthBffUrl(): string {
-  const configured = process.env["AUTH_BFF_URL"]?.trim();
-  if (configured) return configured.replace(/\/+$/, "");
-  return "http://localhost:3090";
-}
-
-const AUTH_BFF = resolveAuthBffUrl();
 const logger = new Logger("AdminAuthRouter");
 const ADMIN_PHONE_CODE_SCOPE = "admin-auth";
 const PHONE_PATTERN = /^1[3-9]\d{9}$/;
@@ -108,6 +102,8 @@ function assertPhoneCode(code: string): void {
 
 @Controller("api/auth")
 export class AuthRouter {
+  private readonly authBffUrl: string;
+
   constructor(
     @Inject(PlatformAuthService)
     private readonly platformAuthService: PlatformAuthService,
@@ -116,7 +112,13 @@ export class AuthRouter {
     @Inject(CaptchaService) private readonly captchaService: CaptchaService,
     @Inject(PhoneCodeService)
     private readonly phoneCodeService: PhoneCodeService,
-  ) {}
+    configService: VxConfigService,
+  ) {
+    this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+  }
 
   /** 获取滑块验证码挑战令牌，前端在打开滑块前调用 */
   @Post("captcha/challenge")
@@ -262,7 +264,7 @@ export class AuthRouter {
     res: Response,
   ): Promise<void> {
     // Part B：委托 auth-bff 签发 Cookie（内部接口，无需传输密码）
-    const signResponse = await fetch(AUTH_BFF + "/auth/internal/sign", {
+    const signResponse = await fetch(this.authBffUrl + "/auth/internal/sign", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -299,10 +301,13 @@ export class AuthRouter {
   ) {
     // 将 cookie 转发给 auth-bff 完成登出
     const cookieHeader = req.headers["cookie"];
-    const response = await fetch(AUTH_BFF + "/auth/logout?source=admin", {
-      method: "POST",
-      headers: cookieHeader ? { Cookie: String(cookieHeader) } : {},
-    });
+    const response = await fetch(
+      this.authBffUrl + "/auth/logout?source=admin",
+      {
+        method: "POST",
+        headers: cookieHeader ? { Cookie: String(cookieHeader) } : {},
+      },
+    );
 
     const data = await response.json();
     forwardSetCookie(res, response);

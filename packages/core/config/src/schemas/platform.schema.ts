@@ -22,8 +22,12 @@ export const platformSchema = z.object({
   ADMIN_BASE_URL: z.string().url().default("http://localhost:3002"),
   /** AI Gateway internal base URL */
   AI_GATEWAY_URL: z.string().url().default("http://localhost:3100"),
-  /** Auth BFF internal base URL (used by ruyin-bff to proxy logout) */
+  /** Auth BFF internal base URL (used by proxy BFFs to delegate auth operations) */
   AUTH_BFF_URL: z.string().url().default("http://localhost:3090"),
+  /** Vela agent-server internal base URL (used by vela-bff to proxy chat/confirm) */
+  VELA_SERVER_INTERNAL_URL: z.string().url().default("http://localhost:3122"),
+  /** Ruyin product surface base URL (used for post-SSO redirects) */
+  RUYIN_BASE_URL: z.string().url().default("http://localhost:3080"),
   /**
    * Cookie domain shared across platform surfaces (website / console / admin).
    * Omit for localhost development (browser ignores explicit localhost domain).

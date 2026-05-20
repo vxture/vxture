@@ -23,6 +23,7 @@ import {
   Req,
 } from "@nestjs/common";
 import type { Request } from "express";
+import { VxConfigService } from "@vxture/core-config";
 import type { VelaRequest } from "../types/chat.types";
 
 // ============================================================================
@@ -41,6 +42,16 @@ interface ConfirmBffRequestDto {
 
 @Controller("vela")
 export class ConfirmRouter {
+  private readonly velaServerUrl: string;
+
+  constructor(configService: VxConfigService) {
+    this.velaServerUrl =
+      configService.platform.VELA_SERVER_INTERNAL_URL.trim().replace(
+        /\/+$/,
+        "",
+      );
+  }
+
   @Post("confirm")
   @HttpCode(200)
   async confirm(
@@ -65,12 +76,9 @@ export class ConfirmRouter {
     const ctx = (req as VelaRequest).callerContext;
     const encoded = Buffer.from(JSON.stringify(ctx)).toString("base64");
 
-    const serverUrl =
-      process.env["VELA_SERVER_INTERNAL_URL"] ?? "http://localhost:3122";
-
     let upstream: globalThis.Response;
     try {
-      upstream = await fetch(`${serverUrl}/internal/vela/confirm`, {
+      upstream = await fetch(`${this.velaServerUrl}/internal/vela/confirm`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
