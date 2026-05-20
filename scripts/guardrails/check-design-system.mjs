@@ -30,8 +30,6 @@ const IGNORED_PARTS = new Set([
   "node_modules",
   "out",
   "storybook-static",
-  "foundation-v1.3.0-complete.css",
-  "vxture-v1.3.0-components",
 ]);
 
 const DS_ROOT = normalize("packages/design/design-system");
@@ -40,10 +38,13 @@ const DS_TOKEN_PATHS = [
   normalize("packages/design/design-system/src/styles/tokens.css"),
 ];
 const DS_RUNTIME_TOKEN_STYLE_PATTERN = /^packages\/design\/design-system\/src\/styles\/tokens(?:-[\w-]+)?\.css$/;
+const DS_RUNTIME_SCALE_BRIDGE_VAR_PATTERN = /var\(--vx-(?:scale|platform-scale|auth-scale|console-scale|component-scale)-/;
+const DS_RUNTIME_COMPONENT_METRIC_VAR_PATTERN = /var\(--vx-component-metric-/;
 const LEGACY_SCALE_TOKEN_STYLE_PATHS = new Set(
   [
     "tokens-auth-controls-scale.css",
     "tokens-auth-experience-scale.css",
+    "tokens-auth-scale-core.css",
     "tokens-component-scale.css",
     "tokens-console-scale.css",
     "tokens-platform-access-scale.css",
@@ -52,8 +53,26 @@ const LEGACY_SCALE_TOKEN_STYLE_PATHS = new Set(
     "tokens-platform-layout-scale.css",
     "tokens-platform-models-scale.css",
     "tokens-platform-notifications-scale.css",
+    "tokens-platform-scale.css",
+    "tokens-platform-scale-core.css",
+    "tokens-platform-scale-layout.css",
     "tokens-platform-shell-scale.css",
     "tokens-platform-tenant-settings-scale.css",
+    "tokens-scale-flow.css",
+    "tokens-scale-px.css",
+    "tokens-scale-rem.css",
+  ].map((name) => normalize(`${DS_ROOT}/src/styles/${name}`)),
+);
+const LEGACY_COMPONENT_METRIC_TOKEN_STYLE_PATHS = new Set(
+  [
+    "tokens-component-metrics.css",
+    "tokens-component-metrics-em.css",
+    "tokens-component-metrics-px.css",
+    "tokens-component-metrics-rem.css",
+    "tokens-component-metrics-rem-controls.css",
+    "tokens-component-metrics-rem-fine.css",
+    "tokens-component-metrics-rem-layout.css",
+    "tokens-component-metrics-rem-ui.css",
   ].map((name) => normalize(`${DS_ROOT}/src/styles/${name}`)),
 );
 const DS_SEMANTIC_STYLE_PATHS = new Set([
@@ -76,13 +95,10 @@ const DS_EFFECT_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/console-assistant.css"),
   normalize("packages/design/design-system/src/styles/console-shell-layout-nav.css"),
   normalize("packages/design/design-system/src/styles/platform-shell-assistant.css"),
-  normalize("packages/design/design-system/src/styles/platform-shell-bindings.css"),
   normalize("packages/design/design-system/src/styles/platform-shell-header-buttons.css"),
   normalize("packages/design/design-system/src/styles/platform-access-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-access-shared-panels.css"),
   normalize("packages/design/design-system/src/styles/platform-models-actions.css"),
   normalize("packages/design/design-system/src/styles/platform-models-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-notifications-table.css"),
 ]);
 const DS_SHADOW_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/auth-actions-social.css"),
@@ -96,10 +112,8 @@ const DS_SHADOW_LOCKED_STYLE_PATHS = new Set([
   normalize("packages/design/design-system/src/styles/components-shell-preferences.css"),
   normalize("packages/design/design-system/src/styles/components-shell-user-menu.css"),
   normalize("packages/design/design-system/src/styles/platform-access-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-access-shared-panels.css"),
   normalize("packages/design/design-system/src/styles/platform-models-actions.css"),
   normalize("packages/design/design-system/src/styles/platform-models-list.css"),
-  normalize("packages/design/design-system/src/styles/platform-notifications-table.css"),
 ]);
 const IMPORT_ONLY_STYLE_ENTRIES = new Map([
   [normalize("agent-studio/vela/src/app/globals.css"), "Vela globals.css"],
@@ -162,21 +176,70 @@ const DIRECT_UI_ENGINE_DEPENDENCIES = [
   "react-icons",
   /^@radix-ui\//,
 ];
-const ALLOWED_DS_IMPORTS = new Set([
-  "@vxture/design-system",
-  "@vxture/design-system/tokens",
-  "@vxture/design-system/types",
-  "@vxture/design-system/server",
-  "@vxture/design-system/styles/auth.css",
-  "@vxture/design-system/styles/components.css",
-  "@vxture/design-system/styles/console.css",
-  "@vxture/design-system/styles/fullscreen.css",
-  "@vxture/design-system/styles/globals.css",
-  "@vxture/design-system/styles/tokens.css",
-  "@vxture/design-system/styles/typography.css",
+const DS_PACKAGE_JSON = normalize("packages/design/design-system/package.json");
+const DS_PACKAGE_MANIFEST = readJsonFile(DS_PACKAGE_JSON);
+const DS_PACKAGE_VERSION = DS_PACKAGE_MANIFEST.version;
+const ALLOWED_DS_IMPORTS = readAllowedDesignSystemImports(DS_PACKAGE_MANIFEST);
+const DS_EXPORTED_STYLE_PATHS = readDesignSystemExportedStylePaths(DS_PACKAGE_MANIFEST);
+const DS_README_DOC = normalize("packages/design/design-system/README.md");
+const DS_PACKAGE_DOC = normalize("docs/packages/design/design-system.md");
+const DS_STANDARD_DOC = normalize("docs/standards/design-system.md");
+const DS_PUBLIC_ENTRY_DOC_PATHS = new Set([
+  DS_README_DOC,
+  DS_PACKAGE_DOC,
 ]);
+const DS_VERSION_DOC_PATHS = new Set([
+  ...DS_PUBLIC_ENTRY_DOC_PATHS,
+  DS_STANDARD_DOC,
+]);
+const EXTRA_SCAN_FILES = [...DS_VERSION_DOC_PATHS].map((file) => path.join(ROOT, file));
 
 const rules = [
+  {
+    id: "ds/no-stale-component-doc-count",
+    description: "DS 组件文档中的数量必须与实际导出组件目录保持一致。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!DS_PUBLIC_ENTRY_DOC_PATHS.has(normalized)) return [];
+      return collectComponentDocCountViolations(file);
+    },
+  },
+  {
+    id: "ds/no-stale-version-docs",
+    description: "DS 文档首部版本必须与 package.json 保持一致。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!DS_VERSION_DOC_PATHS.has(normalized)) return [];
+      return collectVersionDocViolations(file);
+    },
+  },
+  {
+    id: "ds/no-stale-package-style-exports",
+    description: "DS package.json 暴露的样式入口必须指向真实文件。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (normalized !== DS_PACKAGE_JSON) return [];
+      return collectPackageStyleExportViolations(file);
+    },
+  },
+  {
+    id: "ds/no-design-migration-artifacts",
+    description: "packages/design 下不得长期保留迁移输入 CSS 或 vxture-v*-components 素材包。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (normalized !== DS_PACKAGE_JSON) return [];
+      return collectDesignMigrationArtifactViolations(file);
+    },
+  },
+  {
+    id: "ds/no-stale-public-entry-docs",
+    description: "DS 公共入口文档必须与 package exports 保持一致。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (!DS_PUBLIC_ENTRY_DOC_PATHS.has(normalized)) return [];
+      return collectPublicEntryDocViolations(file);
+    },
+  },
   {
     id: "ds/no-app-components-ui",
     description: "应用层不能创建 components/ui 或 components/primitives 基础组件目录；基础 UI 必须进入 DS。",
@@ -569,7 +632,7 @@ const rules = [
     description: "应用 src/styles 中承载具体规则的叶子文件不能继续膨胀为大入口。",
     checkFile(file) {
       if (!isExtractedPortalStyleModule(file) || isGeneratedOrAsset(file)) return [];
-      if (statSync(file).size <= 8000) return [];
+      if (normalizedTextSize(file) <= 8000) return [];
       const content = readFileSync(file, "utf8");
       if (isImportOnlyStyleContent(content)) return [];
       return [
@@ -587,7 +650,7 @@ const rules = [
     checkFile(file) {
       const normalized = normalize(file);
       if (!/^packages\/design\/design-system\/src\/styles\/platform-[^/]+\.css$/.test(normalized)) return [];
-      if (statSync(file).size <= 8000) return [];
+      if (normalizedTextSize(file) <= 8000) return [];
       const content = readFileSync(file, "utf8");
       if (isImportOnlyStyleContent(content)) return [];
       return [
@@ -605,7 +668,7 @@ const rules = [
     checkFile(file) {
       const normalized = normalize(file);
       if (!/^packages\/design\/design-system\/src\/styles\/console-[^/]+\.css$/.test(normalized)) return [];
-      if (statSync(file).size <= 8000) return [];
+      if (normalizedTextSize(file) <= 8000) return [];
       const content = readFileSync(file, "utf8");
       if (isImportOnlyStyleContent(content)) return [];
       return [
@@ -623,7 +686,7 @@ const rules = [
     checkFile(file) {
       const normalized = normalize(file);
       if (!/^packages\/design\/design-system\/src\/styles\/components-[^/]+\.css$/.test(normalized)) return [];
-      if (statSync(file).size <= 8000) return [];
+      if (normalizedTextSize(file) <= 8000) return [];
       const content = readFileSync(file, "utf8");
       if (isImportOnlyStyleContent(content)) return [];
       return [
@@ -641,7 +704,7 @@ const rules = [
     checkFile(file) {
       const normalized = normalize(file);
       if (!/^packages\/design\/design-system\/src\/styles\/auth-[^/]+\.css$/.test(normalized)) return [];
-      if (statSync(file).size <= 8000) return [];
+      if (normalizedTextSize(file) <= 8000) return [];
       const content = readFileSync(file, "utf8");
       if (isImportOnlyStyleContent(content)) return [];
       return [
@@ -659,7 +722,7 @@ const rules = [
     checkFile(file) {
       const normalized = normalize(file);
       if (!/^packages\/design\/design-system\/src\/styles\/tokens-[^/]+\.css$/.test(normalized)) return [];
-      if (statSync(file).size <= 8000) return [];
+      if (normalizedTextSize(file) <= 8000) return [];
       return [
         violation(
           file,
@@ -788,10 +851,10 @@ const rules = [
   },
   {
     id: "ds/no-inline-design-style",
-    description: "应用层 inline style 只能承载动态变量或坐标，不能承载颜色、字体、间距、圆角、阴影等设计值。",
+    description: "应用层 inline style 和间接 style 对象只能承载动态变量或坐标，不能承载颜色、字体、间距、圆角、阴影等设计值。",
     checkContent(file, content) {
       if (!isFrontendSource(file) || isGeneratedOrAsset(file)) return [];
-      return findInlineStyleViolations(file, content);
+      return [...findInlineStyleViolations(file, content), ...findNamedStyleObjectViolations(file, content)];
     },
   },
   {
@@ -854,9 +917,12 @@ const rules = [
   },
 ];
 
-const files = SCAN_ROOTS.flatMap((root) => collectFiles(path.join(ROOT, root))).filter((file) =>
-  SOURCE_EXTENSIONS.has(path.extname(file)),
-);
+const files = [
+  ...SCAN_ROOTS.flatMap((root) => collectFiles(path.join(ROOT, root))),
+  ...EXTRA_SCAN_FILES.filter(exists),
+]
+  .filter((file) => SOURCE_EXTENSIONS.has(path.extname(file)))
+  .filter((file, index, allFiles) => allFiles.indexOf(file) === index);
 
 const violations = [];
 
@@ -920,6 +986,30 @@ for (const item of collectLegacyScaleTokenStyleViolations(files)) {
   violations.push({ rule: legacyScaleTokenStyleRule, ...item });
 }
 
+const legacyComponentMetricTokenStyleRule = {
+  id: "ds/no-legacy-component-metric-token-style",
+  description: "已清零的 component metric token 文件不能恢复或重新导入。",
+};
+for (const item of collectLegacyComponentMetricTokenStyleViolations(files)) {
+  violations.push({ rule: legacyComponentMetricTokenStyleRule, ...item });
+}
+
+const runtimeScaleBridgeVarRule = {
+  id: "ds/no-runtime-scale-bridge-var-usage",
+  description: "DS 样式层不得重新通过 var() 消费 scale bridge token；运行时值应在 token 层直接落到实际值。",
+};
+for (const item of collectRuntimeScaleBridgeVarViolations(files)) {
+  violations.push({ rule: runtimeScaleBridgeVarRule, ...item });
+}
+
+const runtimeComponentMetricVarRule = {
+  id: "ds/no-runtime-component-metric-var-usage",
+  description: "DS 样式层不得重新通过 var() 消费 component metric 兜底 token；运行时值应在 token 层直接落到实际值。",
+};
+for (const item of collectRuntimeComponentMetricVarViolations(files)) {
+  violations.push({ rule: runtimeComponentMetricVarRule, ...item });
+}
+
 const unreachableAppStyleRule = {
   id: "ds/no-unreachable-app-style-module",
   description: "应用 src/styles 下的样式模块必须能从对应 app/globals.css 的 @import 图谱到达。",
@@ -928,12 +1018,28 @@ for (const item of collectUnreachableAppStyleViolations(files)) {
   violations.push({ rule: unreachableAppStyleRule, ...item });
 }
 
+const unreachableDsStyleRule = {
+  id: "ds/no-unreachable-ds-style-module",
+  description: "DS src/styles 下的样式模块必须能从 package exports 暴露的公共样式入口到达。",
+};
+for (const item of collectUnreachableDsStyleViolations(files)) {
+  violations.push({ rule: unreachableDsStyleRule, ...item });
+}
+
 const redundantStyleWrapperRule = {
   id: "ds/no-redundant-style-wrapper",
   description: "应用 src/styles 非顶层样式 wrapper 不能只转发一个子模块。",
 };
 for (const item of collectRedundantStyleWrapperViolations(files)) {
   violations.push({ rule: redundantStyleWrapperRule, ...item });
+}
+
+const redundantDsStyleWrapperRule = {
+  id: "ds/no-redundant-ds-style-wrapper",
+  description: "DS 内部样式 wrapper 不能只转发一个子模块，公开样式入口除外。",
+};
+for (const item of collectRedundantDsStyleWrapperViolations(files)) {
+  violations.push({ rule: redundantDsStyleWrapperRule, ...item });
 }
 
 const dsStyleHardcodedScaleBudgetRule = {
@@ -953,7 +1059,7 @@ if (dsStyleHardcodedScaleCount > DS_STYLE_HARDCODED_SCALE_BUDGET) {
 
 const dsStyleScaleBridgeRule = {
   id: "ds/no-ds-style-scale-bridge-usage",
-  description: "DS 非 token owner 样式不能直接消费 --vx-scale-* 桥接 token；必须先提升到域语义 token。",
+  description: "DS 非 token owner 样式不能重新消费 --vx-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleScaleBridgeViolations(files)) {
   violations.push({ rule: dsStyleScaleBridgeRule, ...item });
@@ -961,7 +1067,7 @@ for (const item of collectDsStyleScaleBridgeViolations(files)) {
 
 const dsStylePlatformScaleBridgeRule = {
   id: "ds/no-ds-style-platform-scale-bridge-usage",
-  description: "DS platform 具体样式不能直接消费 --vx-platform-scale-* 总桥接 token；必须先提升到平台子域 token。",
+  description: "DS platform 具体样式不能重新消费 --vx-platform-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStylePlatformScaleBridgeViolations(files)) {
   violations.push({ rule: dsStylePlatformScaleBridgeRule, ...item });
@@ -969,7 +1075,7 @@ for (const item of collectDsStylePlatformScaleBridgeViolations(files)) {
 
 const dsStyleConsoleScaleBridgeRule = {
   id: "ds/no-ds-style-console-scale-bridge-usage",
-  description: "DS console 具体样式不能直接消费 --vx-console-scale-* 总桥接 token；必须先提升到 Console 子域 token。",
+  description: "DS console 具体样式不能重新消费 --vx-console-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleDomainScaleBridgeViolations(files, "console", "assistant / shell / tenant-switcher / responsive / common")) {
   violations.push({ rule: dsStyleConsoleScaleBridgeRule, ...item });
@@ -977,7 +1083,7 @@ for (const item of collectDsStyleDomainScaleBridgeViolations(files, "console", "
 
 const dsStyleAuthScaleBridgeRule = {
   id: "ds/no-ds-style-auth-scale-bridge-usage",
-  description: "DS auth 具体样式不能直接消费 --vx-auth-scale-* 总桥接 token；必须先提升到 Auth 子域 token。",
+  description: "DS auth 具体样式不能重新消费 --vx-auth-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleDomainScaleBridgeViolations(files, "auth", "actions / captcha / fields / form / responsive / signup / tabs / visual")) {
   violations.push({ rule: dsStyleAuthScaleBridgeRule, ...item });
@@ -985,7 +1091,7 @@ for (const item of collectDsStyleDomainScaleBridgeViolations(files, "auth", "act
 
 const dsStyleComponentScaleBridgeRule = {
   id: "ds/no-ds-style-component-scale-bridge-usage",
-  description: "DS component 具体样式不能直接消费 --vx-component-scale-* 总桥接 token；必须先提升到组件子域 token。",
+  description: "DS component 具体样式不能重新消费 --vx-component-scale-* 历史桥接 token。",
 };
 for (const item of collectDsStyleDomainScaleBridgeViolations(files, "component", "fullscreen / ai / button / shell / common")) {
   violations.push({ rule: dsStyleComponentScaleBridgeRule, ...item });
@@ -1244,7 +1350,7 @@ function collectLegacyScaleTokenStyleViolations(sourceFiles) {
         violation(
           file,
           1,
-          "已收敛的叶子 scale token 文件不得恢复；请使用 tokens-auth-scale.css 或 tokens-platform-scale.css 的 core 尺度入口。",
+          "已清零的 scale bridge token 文件不得恢复；请在具体 token owner 中直接定义运行时值。",
           normalized,
         ),
       );
@@ -1260,11 +1366,87 @@ function collectLegacyScaleTokenStyleViolations(sourceFiles) {
         violation(
           file,
           item.line,
-          `${item.specifier} 指向已淘汰的叶子 scale token 文件；请改用 auth/platform core scale 或更具体的语义 token。`,
+          `${item.specifier} 指向已清零的 scale bridge token 文件；请直接使用具体 token owner 的运行时值。`,
           item.source,
         ),
       );
     }
+  }
+  return items;
+}
+
+function collectLegacyComponentMetricTokenStyleViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (LEGACY_COMPONENT_METRIC_TOKEN_STYLE_PATHS.has(normalized)) {
+      items.push(
+        violation(
+          file,
+          1,
+          "已清零的 component metric token 文件不得恢复；请在具体 token owner 中直接定义运行时值。",
+          normalized,
+        ),
+      );
+    }
+
+    if (path.extname(file) !== ".css" || isGeneratedOrAsset(file)) continue;
+    const content = readFileSync(file, "utf8");
+    for (const item of findCssImports(content)) {
+      if (!item.specifier.startsWith(".")) continue;
+      const target = normalize(path.relative(ROOT, path.resolve(path.dirname(file), item.specifier)));
+      if (!LEGACY_COMPONENT_METRIC_TOKEN_STYLE_PATHS.has(target)) continue;
+      items.push(
+        violation(
+          file,
+          item.line,
+          `${item.specifier} 指向已清零的 component metric token 文件；请直接使用具体 token owner 的运行时值。`,
+          item.source,
+        ),
+      );
+    }
+  }
+  return items;
+}
+
+function collectRuntimeScaleBridgeVarViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!normalized.startsWith(`${DS_ROOT}/src/styles/`) || !normalized.endsWith(".css")) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!DS_RUNTIME_SCALE_BRIDGE_VAR_PATTERN.test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          "DS 样式层 scale bridge 已清零；新增尺度请在 token owner 中直接定义运行时值，不要重新使用 var(--vx-*-scale-*)。",
+          line.trim(),
+        ),
+      );
+    });
+  }
+  return items;
+}
+
+function collectRuntimeComponentMetricVarViolations(sourceFiles) {
+  const items = [];
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!normalized.startsWith(`${DS_ROOT}/src/styles/`) || !normalized.endsWith(".css")) continue;
+    const lines = readFileSync(file, "utf8").split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!DS_RUNTIME_COMPONENT_METRIC_VAR_PATTERN.test(stripLineComment(line))) return;
+      items.push(
+        violation(
+          file,
+          index + 1,
+          "DS 样式层 component metric bridge 已清零；新增尺度请在 token owner 中直接定义运行时值，不要重新使用 var(--vx-component-metric-*)。",
+          line.trim(),
+        ),
+      );
+    });
   }
   return items;
 }
@@ -1306,6 +1488,30 @@ function collectUnreachableAppStyleViolations(sourceFiles) {
   return items;
 }
 
+function collectUnreachableDsStyleViolations(sourceFiles) {
+  const fileByPath = new Map(sourceFiles.map((file) => [normalize(path.relative(ROOT, file)), file]));
+  const dsStyleFiles = [...fileByPath.keys()].filter(
+    (file) => file.startsWith(`${DS_ROOT}/src/styles/`) && file.endsWith(".css"),
+  );
+  const reachable = new Set();
+  for (const entry of DS_EXPORTED_STYLE_PATHS) {
+    for (const item of collectReachableCssFiles(entry, fileByPath)) {
+      reachable.add(item);
+    }
+  }
+
+  return dsStyleFiles
+    .filter((file) => !reachable.has(file))
+    .map((file) =>
+      violation(
+        fileByPath.get(file),
+        1,
+        "该 DS 样式模块无法从 package exports 的公共样式入口 @import 图谱到达；请接入稳定入口或移除陈旧文件。",
+        file,
+      ),
+    );
+}
+
 function collectRedundantStyleWrapperViolations(sourceFiles) {
   const fileByPath = new Map(sourceFiles.map((file) => [normalize(path.relative(ROOT, file)), file]));
   const globalsStyleEntries = collectGlobalsStyleEntries(sourceFiles);
@@ -1330,6 +1536,37 @@ function collectRedundantStyleWrapperViolations(sourceFiles) {
         file,
         1,
         "非 globals 直连的 import-only 样式 wrapper 不能只转发一个子模块；请折叠该层或补充真实语义聚合职责。",
+        normalized,
+      ),
+    );
+  }
+
+  return items;
+}
+
+function collectRedundantDsStyleWrapperViolations(sourceFiles) {
+  const fileByPath = new Map(sourceFiles.map((file) => [normalize(path.relative(ROOT, file)), file]));
+  const items = [];
+
+  for (const file of sourceFiles) {
+    const normalized = normalize(path.relative(ROOT, file));
+    if (!normalized.startsWith(`${DS_ROOT}/src/styles/`) || !normalized.endsWith(".css")) continue;
+    if (DS_EXPORTED_STYLE_PATHS.has(normalized)) continue;
+
+    const content = readFileSync(file, "utf8");
+    if (!isImportOnlyStyleContent(content)) continue;
+
+    const localImports = findCssImports(content)
+      .filter((item) => item.specifier.startsWith("."))
+      .map((item) => normalize(path.relative(ROOT, path.resolve(path.dirname(file), item.specifier))))
+      .filter((target) => fileByPath.has(target));
+
+    if (localImports.length !== 1) continue;
+    items.push(
+      violation(
+        file,
+        1,
+        "DS 内部 import-only 样式 wrapper 不能只转发一个子模块；请折叠该层，公开 styles/* 入口除外。",
         normalized,
       ),
     );
@@ -1363,7 +1600,7 @@ function collectDsStyleScaleBridgeViolations(sourceFiles) {
         violation(
           file,
           index + 1,
-          "非 token owner 不得直接消费 --vx-scale-*；请改为 --vx-auth-scale-*、--vx-platform-scale-*、--vx-console-scale-* 或更具体的组件语义 token。",
+          "非 token owner 不得重新消费 --vx-scale-* 历史桥接 token；新增尺度请落到具体语义 token。",
           line.trim(),
         ),
       );
@@ -1385,7 +1622,7 @@ function collectDsStylePlatformScaleBridgeViolations(sourceFiles) {
         violation(
           file,
           index + 1,
-          "Platform 具体样式不得直接消费 --vx-platform-scale-*；请改为 --vx-platform-access-scale-*、--vx-platform-account-scale-*、--vx-platform-models-scale-*、--vx-platform-shell-scale-*、--vx-platform-layout-scale-*、--vx-platform-notifications-scale-*、--vx-platform-tenant-settings-scale-* 或 --vx-platform-common-scale-*。",
+          "Platform 具体样式不得重新消费 --vx-platform-scale-* 历史桥接 token；新增尺度请落到对应 platform 语义 token。",
           line.trim(),
         ),
       );
@@ -1406,7 +1643,7 @@ function collectDsStyleDomainScaleBridgeViolations(sourceFiles, prefix, domains)
         violation(
           file,
           index + 1,
-          `${prefix} 具体样式不得直接消费 --vx-${prefix}-scale-*；请改为 ${domains} 对应的子域 scale token，或继续提升为组件语义 token。`,
+          `${prefix} 具体样式不得重新消费 --vx-${prefix}-scale-* 历史桥接 token；新增尺度请落到 ${domains} 对应语义 token。`,
           line.trim(),
         ),
       );
@@ -1633,6 +1870,36 @@ function findInlineStyleViolations(file, content) {
   return items;
 }
 
+function findNamedStyleObjectViolations(file, content) {
+  const lines = content.split(/\r?\n/);
+  const items = [];
+  let block = null;
+
+  lines.forEach((line, index) => {
+    const lineNumber = index + 1;
+    if (!block && isNamedStyleObjectStart(lines, index)) {
+      block = {
+        line: lineNumber,
+        lines: [line],
+      };
+      if (line.includes("}") || line.includes("};")) {
+        pushNamedStyleObjectViolation(file, block, items);
+        block = null;
+      }
+      return;
+    }
+
+    if (!block) return;
+    block.lines.push(line);
+    if (line.includes("}") || block.lines.length >= 80) {
+      pushNamedStyleObjectViolation(file, block, items);
+      block = null;
+    }
+  });
+
+  return items;
+}
+
 function pushInlineStyleViolation(file, block, items) {
   const text = block.lines.join("\n");
   if (!hasInlineDesignValue(text)) return;
@@ -1644,6 +1911,33 @@ function pushInlineStyleViolation(file, block, items) {
       text,
     ),
   );
+}
+
+function pushNamedStyleObjectViolation(file, block, items) {
+  const text = block.lines.join("\n");
+  if (!hasInlineDesignValue(text)) return;
+  items.push(
+    violation(
+      file,
+      block.line,
+      "间接 style 对象只能用于 CSS 变量、坐标、transform、背景图片等动态值；固定设计值必须进入 DS token 或语义 CSS。",
+      text,
+    ),
+  );
+}
+
+function isNamedStyleObjectStart(lines, index) {
+  const line = lines[index] ?? "";
+  if (/\b(?:const|let|var)\s+\w*Style\w*\s*=\s*\{/.test(line)) return true;
+  if (/\bconst\s+\w*Style\w*\s*=.*:\s*(?:React\.)?CSSProperties\b.*=>\s*\(\s*\{/.test(line)) return true;
+  if (/\(\)\s*=>\s*\(\s*\{/.test(line)) {
+    const memoScope = lines.slice(Math.max(0, index - 4), index + 1).join("\n");
+    return /\bconst\s+\w*Style\w*\s*=\s*useMemo<(?:(?:React\.)?CSSProperties)>/.test(memoScope);
+  }
+  if (!/\breturn\s+\{/.test(line)) return false;
+
+  const scope = lines.slice(Math.max(0, index - 6), index + 1).join("\n");
+  return /\bfunction\s+\w*Style\w*\s*\([^)]*\)\s*:\s*(?:React\.)?CSSProperties\b/.test(scope);
 }
 
 function hasInlineDesignValue(text) {
@@ -1697,6 +1991,179 @@ function findLineNumber(content, pattern) {
   const index = content.indexOf(pattern);
   if (index < 0) return 1;
   return content.slice(0, index).split(/\r?\n/).length;
+}
+
+function normalizedTextSize(file) {
+  return readFileSync(file, "utf8").replace(/\r\n/g, "\n").length;
+}
+
+function readJsonFile(file) {
+  return JSON.parse(readFileSync(path.join(ROOT, file), "utf8"));
+}
+
+function readAllowedDesignSystemImports(manifest) {
+  const exportsMap = manifest.exports ?? {};
+  return new Set(
+    Object.keys(exportsMap).map((key) =>
+      key === "." ? "@vxture/design-system" : `@vxture/design-system/${key.replace(/^\.\//, "")}`,
+    ),
+  );
+}
+
+function readDesignSystemExportedStylePaths(manifest) {
+  return new Set(
+    Object.entries(manifest.exports ?? {})
+      .filter(([key, value]) => key.startsWith("./styles/") && typeof value === "string")
+      .map(([, value]) => normalize(`${DS_ROOT}/${value.replace(/^\.\//, "")}`)),
+  );
+}
+
+function collectPublicEntryDocViolations(file) {
+  const normalized = normalize(file);
+  const content = readFileSync(file, "utf8");
+  const entries = [...ALLOWED_DS_IMPORTS].sort((a, b) => a.localeCompare(b));
+  const section = publicEntryDocSection(normalized, content);
+  const documentedEntries = findDocumentedPublicEntries(section);
+  const missingEntries = entries
+    .filter((entry) => !hasPublicEntryDocLine(normalized, content, entry))
+    .map((entry) =>
+      violation(file, findLineNumber(content, "公共入口"), `公共入口文档缺少 package exports 暴露的入口：${entry}`),
+    );
+  const staleEntries = documentedEntries
+    .filter((entry) => !ALLOWED_DS_IMPORTS.has(entry))
+    .map((entry) =>
+      violation(file, findLineNumber(content, entry), `公共入口文档声明了 package exports 未暴露的入口：${entry}`),
+    );
+
+  return [...missingEntries, ...staleEntries];
+}
+
+function hasPublicEntryDocLine(file, content, entry) {
+  if (file === DS_README_DOC) {
+    return content.includes(`- \`${entry}\``);
+  }
+  return content.includes(`| \`${entry}\``);
+}
+
+function collectVersionDocViolations(file) {
+  const normalized = normalize(file);
+  const content = readFileSync(file, "utf8");
+  const expected =
+    normalized === DS_PACKAGE_DOC
+      ? `| 版本   | \`${DS_PACKAGE_VERSION}\``
+      : `版本：${DS_PACKAGE_VERSION}`;
+  if (content.includes(expected)) return [];
+  return [
+    violation(
+      file,
+      findLineNumber(content, "版本"),
+      `DS 文档版本必须与 packages/design/design-system/package.json 保持一致，期望：${expected}`,
+    ),
+  ];
+}
+
+function collectPackageStyleExportViolations(file) {
+  const content = readFileSync(file, "utf8");
+  const entries = Object.entries(DS_PACKAGE_MANIFEST.exports ?? {});
+  return entries.flatMap(([key, value]) => {
+    if (!key.startsWith("./styles/")) return [];
+    if (typeof value !== "string") {
+      return [violation(file, findLineNumber(content, `"${key}"`), `${key} 样式入口必须直接指向 CSS 文件。`)];
+    }
+    const target = path.join(ROOT, "packages/design/design-system", value);
+    if (exists(target)) return [];
+    return [
+      violation(
+        file,
+        findLineNumber(content, `"${key}"`),
+        `${key} 指向的样式文件不存在：${value}`,
+      ),
+    ];
+  });
+}
+
+function collectDesignMigrationArtifactViolations(file) {
+  const designRoot = path.join(ROOT, "packages/design");
+  if (!exists(designRoot)) return [];
+
+  return readdirSync(designRoot, { withFileTypes: true }).flatMap((entry) => {
+    const normalized = normalize(`packages/design/${entry.name}`);
+    if (entry.isFile() && entry.name.endsWith(".css")) {
+      return [
+        violation(
+          file,
+          1,
+          `packages/design 根目录不得保留迁移 CSS：${entry.name}；正式实现应进入 design-system/src/styles。`,
+          normalized,
+        ),
+      ];
+    }
+    if (entry.isDirectory() && /^vxture-v[\d.]+-components$/.test(entry.name)) {
+      return [
+        violation(
+          file,
+          1,
+          `packages/design 根目录不得保留迁移素材包：${entry.name}；迁入完成后只保留正式 DS 源码。`,
+          normalized,
+        ),
+      ];
+    }
+    return [];
+  });
+}
+
+function publicEntryDocSection(file, content) {
+  if (file === DS_README_DOC) {
+    return sliceBetween(content, "允许的公共入口：", "禁止从");
+  }
+  return sliceBetween(content, "## 公共入口", "其他 `@vxture/design-system/*`");
+}
+
+function findDocumentedPublicEntries(content) {
+  return [...content.matchAll(/`(@vxture\/design-system(?:\/[^`]+)?)`/g)]
+    .map((match) => match[1])
+    .filter((entry) => !entry.includes("*"));
+}
+
+function sliceBetween(content, startMarker, endMarker) {
+  const start = content.indexOf(startMarker);
+  if (start < 0) return "";
+  const end = content.indexOf(endMarker, start + startMarker.length);
+  return end < 0 ? content.slice(start) : content.slice(start, end);
+}
+
+function collectComponentDocCountViolations(file) {
+  const normalized = normalize(file);
+  const content = readFileSync(file, "utf8");
+  const uiCount = countDsComponentFiles("ui");
+  const aiCount = countDsComponentFiles("ai");
+  const totalCount = uiCount + aiCount;
+  const expectations =
+    normalized === DS_README_DOC
+      ? [
+          { pattern: `### UI 组件（${uiCount} 个）`, message: `README UI 组件数量应为 ${uiCount}。` },
+          { pattern: `### AI 组件（${aiCount} 个）`, message: `README AI 组件数量应为 ${aiCount}。` },
+        ]
+      : [
+          {
+            pattern: `│   ├── ui/       # ${uiCount} 个 UI primitive 和平台 pattern`,
+            message: `包说明目录结构中的 UI 组件数量应为 ${uiCount}。`,
+          },
+          { pattern: `│   ├── ai/       # ${aiCount} 个 AI 组件`, message: `包说明目录结构中的 AI 组件数量应为 ${aiCount}。` },
+          {
+            pattern: `当前公共组件共 ${totalCount} 个：\`src/components/ui\` ${uiCount} 个 \`.tsx\` 组件，\`src/components/ai\` ${aiCount} 个 AI 组件。`,
+            message: `包说明公共组件总数应为 ${totalCount}，其中 UI ${uiCount}、AI ${aiCount}。`,
+          },
+        ];
+
+  return expectations
+    .filter(({ pattern }) => !content.includes(pattern))
+    .map(({ pattern, message }) => violation(file, findLineNumber(content, "UI 组件"), `${message} 缺少期望文本：${pattern}`));
+}
+
+function countDsComponentFiles(group) {
+  const directory = path.join(ROOT, "packages/design/design-system/src/components", group);
+  return readdirSync(directory).filter((name) => name.endsWith(".tsx")).length;
 }
 
 function violation(file, line, message, source = "") {

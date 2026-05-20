@@ -9,15 +9,15 @@
 
 :root {
   /* Agent Studio 语义尺度。 */
-  --vx-vela-sidebar-width: var(--vx-component-metric-360p);
-  --vx-vela-border-width: var(--vx-component-metric-1p);
-  --vx-vela-float-bottom: var(--vx-component-metric-80p);
-  --vx-vela-float-width: var(--vx-component-metric-380p);
-  --vx-vela-float-height: var(--vx-component-metric-560p);
-  --vx-vela-float-button-size: var(--vx-component-metric-48p);
-  --vx-vela-input-min-height: var(--vx-component-metric-40p);
-  --vx-vela-input-max-height: var(--vx-component-metric-120p);
-  --vx-vela-confirm-border-width: var(--vx-component-metric-15p);
-  --vx-vela-tool-label-letter-spacing: var(--vx-component-metric-005e);
-  --vx-vela-tool-code-padding: var(--vx-component-metric-1p) var(--vx-space-sm);
+  --vx-vela-sidebar-width: 360px;
+  --vx-vela-border-width: 1px;
+  --vx-vela-float-bottom: 80px;
+  --vx-vela-float-width: 380px;
+  --vx-vela-float-height: 560px;
+  --vx-vela-float-button-size: 48px;
+  --vx-vela-input-min-height: 40px;
+  --vx-vela-input-max-height: 120px;
+  --vx-vela-confirm-border-width: 1.5px;
+  --vx-vela-tool-label-letter-spacing: 0.05em;
+  --vx-vela-tool-code-padding: 1px var(--vx-space-sm);
 }

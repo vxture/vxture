@@ -7,6 +7,220 @@
  * @date 2026-05-18
  */
 
-@import "./console-assistant-shell.css";
-@import "./console-assistant-output.css";
-@import "./console-assistant-composer.css";
+.vx-shell__content {
+  min-width: 0;
+  min-height: var(--vx-console-assistant-available-height);
+}
+
+.vx-shell-sidebar__toggle-icon {
+  width: var(--vx-shell-sidebar-icon-size);
+  min-width: var(--vx-shell-sidebar-icon-size);
+  height: var(--vx-shell-sidebar-icon-size);
+  display: inline-grid;
+  gap: var(--vx-console-space-022r);
+  align-items: center;
+  justify-items: center;
+  transform: translateY(0);
+}
+
+.vx-shell-sidebar__toggle-icon span {
+  display: block;
+  width: 100%;
+  height: var(--vx-console-size-15p);
+  border-radius: var(--vx-radius-full);
+  background: currentColor;
+}
+
+.vx-shell-sidebar__toggle-icon span:nth-child(2) {
+  width: 82%;
+}
+
+.vx-shell-sidebar__toggle-icon span:nth-child(3) {
+  width: 92%;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__tenant-switcher,
+.vx-shell-sidebar--collapsed .vx-shell-nav,
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__footer {
+  opacity: 0;
+  transform: translateX(calc(var(--vx-console-motion-10p) * -1));
+  pointer-events: none;
+}
+
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__tenant-switcher,
+.vx-shell-sidebar--collapsed .vx-shell-nav,
+.vx-shell-sidebar--collapsed .vx-shell-sidebar__footer {
+  overflow: hidden;
+  max-height: 0;
+  min-height: 0;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top-color: transparent;
+}
+
+.vx-assistant-block h3 {
+  margin: 0;
+  font-size: var(--vx-console-text-size-092r);
+  line-height: 1;
+  letter-spacing: calc(var(--vx-console-text-tracking-002e) * -1);
+}
+
+.vx-assistant-panel__divider {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: row-resize;
+  touch-action: none;
+}
+
+.vx-assistant-panel__divider::before {
+  content: "";
+  position: absolute;
+  inset: calc(50% - var(--vx-console-space-05p)) 0 auto;
+  height: var(--vx-control-border-width);
+  background: var(--vx-color-border-muted);
+}
+
+.vx-assistant-panel__divider span {
+  position: relative;
+  z-index: 1;
+  width: var(--vx-console-size-25r);
+  height: var(--vx-console-size-4p);
+  border-radius: var(--vx-radius-full);
+  background: var(--vx-color-scrollbar);
+  transition: background var(--vx-shell-control-transition);
+}
+
+.vx-assistant-panel__divider:hover span,
+.vx-assistant-panel__divider--active span {
+  background: color-mix(in srgb, var(--vx-color-shell-brand) 40%, transparent);
+}
+
+.vx-assistant-panel__output-head {
+  display: grid;
+  gap: var(--vx-console-space-045r);
+  padding-bottom: var(--vx-console-space-075r);
+  border-bottom: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+}
+
+.vx-assistant-panel__output-head p,
+.vx-assistant-block p {
+  margin: 0;
+  color: var(--vx-console-muted);
+  line-height: 1.5;
+}
+
+.vx-assistant-drafts,
+.vx-assistant-actions {
+  display: grid;
+  gap: var(--vx-console-space-075r);
+}
+
+.vx-assistant-block {
+  display: grid;
+  gap: var(--vx-console-space-075r);
+  padding: var(--vx-console-space-01r) 0 var(--vx-console-space-095r);
+  border-bottom: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+}
+
+.vx-assistant-block:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.vx-assistant-action,
+.vx-assistant-draft {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--vx-console-space-085r) var(--vx-console-space-095r);
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  border-radius: var(--vx-radius-xl);
+  background: color-mix(in srgb, var(--vx-color-white) 52%, transparent);
+  color: var(--vx-console-text);
+  font-weight: 600;
+  transition:
+    border-color var(--vx-shell-control-transition),
+    background var(--vx-shell-control-transition),
+    color var(--vx-shell-control-transition);
+}
+
+.vx-assistant-action:hover,
+.vx-assistant-draft:hover {
+  border-color: color-mix(in srgb, var(--vx-color-shell-brand) 18%, transparent);
+  background: color-mix(in srgb, var(--vx-color-white) 78%, transparent);
+  color: var(--vx-console-brand);
+}
+
+.vx-assistant-list {
+  margin: 0;
+  padding-left: var(--vx-console-space-1r);
+  color: var(--vx-console-muted);
+  display: grid;
+  gap: var(--vx-console-space-045r);
+  line-height: 1.5;
+}
+
+.dark .vx-assistant-action,
+.dark .vx-assistant-draft {
+  background: var(--vx-color-gray-900);
+}
+
+.vx-assistant-panel__composer-head,
+.vx-assistant-panel__composer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--vx-console-space-075r);
+}
+
+.vx-assistant-panel__composer-actions {
+  flex-wrap: wrap;
+}
+
+.vx-assistant-panel__composer-head span,
+.vx-assistant-panel__composer-hint {
+  color: var(--vx-console-muted);
+  font-size: var(--vx-console-text-size-08r);
+}
+
+.vx-assistant-panel__composer-hint {
+  flex: 1 1 var(--vx-console-size-11r-large);
+}
+
+.vx-assistant-panel__composer-input {
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  resize: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--vx-color-scrollbar) transparent;
+  border: var(--vx-control-border-width) solid color-mix(in srgb, var(--vx-color-gray-900) 6%, transparent);
+  border-radius: var(--vx-console-radius-14p);
+  background: color-mix(in srgb, var(--vx-color-white) 92%, transparent);
+  color: var(--vx-console-text);
+  padding: var(--vx-console-space-085r) var(--vx-console-space-09r);
+  font: inherit;
+  line-height: 1.55;
+}
+
+.vx-assistant-panel__composer-input:focus {
+  outline: var(--vx-console-line-width-2p) solid color-mix(in srgb, var(--vx-color-auth-accent-light) 18%, transparent);
+  outline-offset: 0;
+  border-color: var(--vx-color-brand-300);
+}
+
+.dark .vx-assistant-panel__composer-input {
+  background: var(--vx-color-gray-900);
+}

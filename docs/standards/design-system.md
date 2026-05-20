@@ -1,7 +1,7 @@
 # Design System 使用规范
 
 版本：1.3.0
-日期：2026-05-15
+日期：2026-05-19
 范围：`portals/*`、`business/*`、`agent-studio/*` 以及其他前端消费者
 
 Design System 是平台 UI 的规则层、基准层和通用能力层。应用端负责业务语义组装，不负责重新定义基础控件、底层 UI 引擎、设计 token 或通用模式。
@@ -73,15 +73,13 @@ DS 已在 `@vxture/design-system/tokens` 暴露 `colors.semantic.ai*` 与 `gradi
 
 ## 5. Foundation 尺度、阴影与动效
 
-Foundation patch 已正式迁入 DS，临时 patch 文件不再保留为源码。`--vx-space-3xl/4xl`、`--vx-radius-xs/2xl/3xl`、`--vx-shadow-xs/xl/2xl/glow/focus-ring/focus-ring-ai`、`--vx-duration-*`、`--vx-ease-*`、`--vx-motion-*` 和 `--animate-vx-*` 由 `tokens-foundation.css` 统一维护，并通过 `tokens-theme-foundation.css` 映射为 Tailwind `vx-*` 工具能力。
+Foundation patch 已正式迁入 DS，临时 patch 文件不再保留为源码。`--vx-space-3xl/4xl`、`--vx-radius-xs/2xl/3xl`、`--vx-shadow-xs/xl/2xl/glow/focus-ring/focus-ring-ai`、`--vx-duration-*`、`--vx-ease-*`、`--vx-motion-*` 和 `--animate-vx-*` 由 `tokens-foundation-radius-space.css`、`tokens-foundation-shadow.css`、`tokens-foundation-motion.css` 与 `tokens-foundation-type-layout.css` 分层维护，并通过 `tokens-theme-foundation.css` 映射为 Tailwind `vx-*` 工具能力。
 
 应用端只能消费这些语义 token、Tailwind `vx-*` 映射或 DS 组件封装；不得在应用 CSS 中重新定义阴影、圆角、动效曲线、动画关键帧或发光基线。`--vx-shadow-glow`、`--vx-motion-ai-pop`、`--animate-vx-shimmer` 属于 AI / 生成态视觉语义，只能用于 AI 入口、生成中状态、模型徽章和 DS 授权的 AI 组件组装。
 
 Reduced motion 已在 DS Foundation 层处理，应用端不需要重复写全局 `prefers-reduced-motion` 基线；业务确需动态延迟、坐标或进度时，保留在 L5 Runtime Dynamic，不能借此承载固定设计值。
 
 `packages/design/*.css` 下的迁移 patch 文件只允许作为短期输入。迁入完成后必须删除，正式事实来源只允许是 `packages/design/design-system/src/styles/*`、`packages/design/design-system/src/tokens/*` 和本规范文档。
-
-## 6. DS 不足时的处理
 
 ## 6. Motion / Z-index / Breakpoint
 
@@ -117,6 +115,7 @@ AI 修改前端代码时必须：
 ```bash
 pnpm lint:design
 pnpm --filter @vxture/design-system lint
+pnpm --filter @vxture/design-system type-check
 pnpm --filter @vxture/design-system build
 ```
 

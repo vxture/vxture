@@ -37,7 +37,7 @@
   --vx-admin-dialog-width-md: min(100%, 40rem);
   --vx-admin-dialog-width-lg: min(100%, 42rem);
   --vx-admin-dialog-width-xl: min(58rem, 100%);
-  --vx-admin-dialog-max-width-xl: min(58rem, calc(100vw - var(--vx-component-metric-2r)));
+  --vx-admin-dialog-max-width-xl: min(58rem, calc(100vw - 2rem));
   --vx-admin-panel-max-height-md: 42rem;
   --vx-admin-panel-max-height-lg: 44rem;
   --vx-admin-pattern-dot-size: 0.38rem;
