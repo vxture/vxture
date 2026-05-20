@@ -223,6 +223,15 @@ const rules = [
     },
   },
   {
+    id: "ds/no-design-migration-artifacts",
+    description: "packages/design 下不得长期保留迁移输入 CSS 或 vxture-v*-components 素材包。",
+    checkFile(file) {
+      const normalized = normalize(file);
+      if (normalized !== DS_PACKAGE_JSON) return [];
+      return collectDesignMigrationArtifactViolations(file);
+    },
+  },
+  {
     id: "ds/no-stale-public-entry-docs",
     description: "DS 公共入口文档必须与 package exports 保持一致。",
     checkFile(file) {
@@ -2070,6 +2079,36 @@ function collectPackageStyleExportViolations(file) {
         `${key} 指向的样式文件不存在：${value}`,
       ),
     ];
+  });
+}
+
+function collectDesignMigrationArtifactViolations(file) {
+  const designRoot = path.join(ROOT, "packages/design");
+  if (!exists(designRoot)) return [];
+
+  return readdirSync(designRoot, { withFileTypes: true }).flatMap((entry) => {
+    const normalized = normalize(`packages/design/${entry.name}`);
+    if (entry.isFile() && entry.name.endsWith(".css")) {
+      return [
+        violation(
+          file,
+          1,
+          `packages/design 根目录不得保留迁移 CSS：${entry.name}；正式实现应进入 design-system/src/styles。`,
+          normalized,
+        ),
+      ];
+    }
+    if (entry.isDirectory() && /^vxture-v[\d.]+-components$/.test(entry.name)) {
+      return [
+        violation(
+          file,
+          1,
+          `packages/design 根目录不得保留迁移素材包：${entry.name}；迁入完成后只保留正式 DS 源码。`,
+          normalized,
+        ),
+      ];
+    }
+    return [];
   });
 }
 
