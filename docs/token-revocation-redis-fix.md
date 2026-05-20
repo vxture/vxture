@@ -23,7 +23,7 @@
 | 3   | 从 `session/index.ts` 及包 `index.ts` 导出新 token/接口             | ✅ 完成 |                                          |
 | 4   | 更新 5 个 BFF `AppModule` 提供 `REDIS_REVOCATION_CONFIG`            | ✅ 完成 | admin / console / ruyin / vela / website |
 | 5   | 类型检查：core-auth + 5 个 BFF                                      | ✅ 完成 | 全部 0 错误                              |
-| 6   | Commit + Push + PR                                                  | 🔲 待做 | 目标分支 `develop`                       |
+| 6   | Commit + Push + PR                                                  | ✅ 完成 | 追加到 PR #20（fix/session-auth-gaps）   |
 
 ## 文件变更清单
 
