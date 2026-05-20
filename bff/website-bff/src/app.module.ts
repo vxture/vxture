@@ -20,8 +20,11 @@ import {
   RequestMethod,
 } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
-import { AccessTokenRevocationService } from "@vxture/core-auth";
-import { VxConfigModule } from "@vxture/core-config";
+import {
+  AccessTokenRevocationService,
+  REDIS_REVOCATION_CONFIG,
+} from "@vxture/core-auth";
+import { VxConfigModule, VxConfigService } from "@vxture/core-config";
 import { IamModule } from "@vxture/service-iam";
 import { OrganizationModule } from "@vxture/service-organization";
 import { MailModule } from "@vxture/service-mail";
@@ -55,6 +58,11 @@ import { PhoneAuthRouter } from "./routers/phone-auth.router";
   providers: [
     WebsiteAuthService,
     SessionAggregator,
+    {
+      provide: REDIS_REVOCATION_CONFIG,
+      useFactory: (c: VxConfigService) => c.redis,
+      inject: [VxConfigService],
+    },
     AccessTokenRevocationService,
   ],
 })
