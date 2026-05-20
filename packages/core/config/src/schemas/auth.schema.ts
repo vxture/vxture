@@ -40,6 +40,12 @@ export const authSchema = z.object({
 
   /** BCRYPT password hash rounds, higher is safer but slower */
   BCRYPT_ROUNDS: z.coerce.number().int().min(10).max(14).default(12),
+
+  /**
+   * Shared secret for internal service-to-service requests (X-Vxture-Internal-Auth header).
+   * Required in production; defaults to a non-secret fallback for local development.
+   */
+  AUTH_INTERNAL_TOKEN: z.string().min(1).optional(),
 });
 
 export type AuthConfig = z.infer<typeof authSchema>;

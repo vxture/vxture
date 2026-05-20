@@ -75,9 +75,10 @@ export class WebsiteAuthService {
     const result = await this.accountAuthService.requestPasswordReset(email);
     if (!result) return null;
 
-    const baseUrl =
-      process.env["WEBSITE_BASE_URL"]?.replace(/\/$/, "") ??
-      "http://localhost:3010";
+    const baseUrl = this.configService.platform.WEBSITE_BASE_URL.replace(
+      /\/$/,
+      "",
+    );
     const resetUrl = `${baseUrl}/reset-password?token=${result}`;
 
     await this.mailService.sendPasswordReset(email, resetUrl);

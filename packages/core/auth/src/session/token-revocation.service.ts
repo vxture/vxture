@@ -8,6 +8,7 @@
  */
 
 import {
+  Inject,
   Injectable,
   Logger,
   OnModuleDestroy,
@@ -17,6 +18,10 @@ import {
 } from "@nestjs/common";
 import Redis from "ioredis";
 import { JwtAuthScope, JwtUserType, type JwtAccessPayload } from "../types";
+import {
+  REDIS_REVOCATION_CONFIG,
+  type RedisRevocationConfig,
+} from "./redis-revocation-config";
 
 export type AccessRevocationSurface = "tenant" | "operator";
 
@@ -55,6 +60,11 @@ export class AccessTokenRevocationService
   private client: Redis | null = null;
   private keyPrefix = "vx:";
 
+  constructor(
+    @Inject(REDIS_REVOCATION_CONFIG)
+    private readonly redisConfig: RedisRevocationConfig,
+  ) {}
+
   async onModuleInit(): Promise<void> {
     const {
       REDIS_URL,
@@ -63,7 +73,7 @@ export class AccessTokenRevocationService
       REDIS_PASSWORD,
       REDIS_DB,
       REDIS_KEY_PREFIX,
-    } = resolveRedisRuntimeConfig();
+    } = this.redisConfig;
 
     this.keyPrefix = REDIS_KEY_PREFIX ?? "vx:";
     this.client = REDIS_URL
@@ -164,30 +174,4 @@ export class AccessTokenRevocationService
     }
     return this.client;
   }
-}
-
-function resolveRedisRuntimeConfig(): {
-  REDIS_URL?: string;
-  REDIS_HOST: string;
-  REDIS_PORT: number;
-  REDIS_PASSWORD?: string;
-  REDIS_DB: number;
-  REDIS_KEY_PREFIX: string;
-} {
-  const url = process.env.REDIS_URL?.trim();
-  const password = process.env.REDIS_PASSWORD?.trim();
-  return {
-    ...(url ? { REDIS_URL: url } : {}),
-    REDIS_HOST: process.env.REDIS_HOST?.trim() || "localhost",
-    REDIS_PORT: parseInteger(process.env.REDIS_PORT, 6379),
-    ...(password ? { REDIS_PASSWORD: password } : {}),
-    REDIS_DB: parseInteger(process.env.REDIS_DB, 0),
-    REDIS_KEY_PREFIX: process.env.REDIS_KEY_PREFIX?.trim() || "vx:",
-  };
-}
-
-function parseInteger(value: string | undefined, fallback: number): number {
-  if (!value?.trim()) return fallback;
-  const parsed = Number(value);
-  return Number.isInteger(parsed) ? parsed : fallback;
 }

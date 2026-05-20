@@ -21,6 +21,7 @@ import {
   Res,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
+import { VxConfigService } from "@vxture/core-config";
 
 // ─── DTO ──────────────────────────────────────────────────────────────────────
 
@@ -36,14 +37,6 @@ class PhoneLoginDto {
 }
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
-
-function resolveAuthBffUrl(): string {
-  const configured = process.env["AUTH_BFF_URL"]?.trim();
-  if (configured) return configured.replace(/\/+$/, "");
-  return "http://localhost:3090";
-}
-
-const AUTH_BFF = resolveAuthBffUrl();
 
 function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
   const setCookie = readSetCookie(upstream);
@@ -87,6 +80,15 @@ function forwardJsonHeaders(req: Request): Record<string, string> {
 
 @Controller("api/auth")
 export class PhoneAuthRouter {
+  private readonly authBffUrl: string;
+
+  constructor(configService: VxConfigService) {
+    this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+  }
+
   /** 发送手机验证码 → 代理到 auth-bff */
   @Post("send-phone-code")
   @HttpCode(HttpStatus.OK)
@@ -95,7 +97,7 @@ export class PhoneAuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const response = await fetch(AUTH_BFF + "/auth/send-phone-code", {
+    const response = await fetch(this.authBffUrl + "/auth/send-phone-code", {
       method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({
@@ -115,7 +117,7 @@ export class PhoneAuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const response = await fetch(AUTH_BFF + "/auth/login-with-phone", {
+    const response = await fetch(this.authBffUrl + "/auth/login-with-phone", {
       method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({

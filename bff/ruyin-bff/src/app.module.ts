@@ -18,8 +18,11 @@ import {
   RequestMethod,
 } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
-import { AccessTokenRevocationService } from "@vxture/core-auth";
-import { VxConfigModule } from "@vxture/core-config";
+import {
+  AccessTokenRevocationService,
+  REDIS_REVOCATION_CONFIG,
+} from "@vxture/core-auth";
+import { VxConfigModule, VxConfigService } from "@vxture/core-config";
 import { RuyinAggregator } from "./aggregators/ruyin.aggregator";
 import { AgentAuthService } from "./auth/auth.service";
 import { AuthMiddleware } from "./middleware/auth.middleware";
@@ -35,7 +38,16 @@ import { SessionRouter } from "./routers/session.router";
     JwtModule.register({}),
   ],
   controllers: [AuthRouter, CrossDomainRouter, SessionRouter],
-  providers: [AgentAuthService, RuyinAggregator, AccessTokenRevocationService],
+  providers: [
+    AgentAuthService,
+    RuyinAggregator,
+    {
+      provide: REDIS_REVOCATION_CONFIG,
+      useFactory: (c: VxConfigService) => c.redis,
+      inject: [VxConfigService],
+    },
+    AccessTokenRevocationService,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -1,6 +1,6 @@
 # 技术债登记表
 
-**版本**: 1.1.0
+**版本**: 1.2.0
 **更新**: 2026-05-20
 **维护人**: 架构组
 
@@ -55,21 +55,24 @@
 
 ## 汇总表
 
-| ID                                                                        | 标题                                       | 分类               | 状态     | 优先级  |
-| ------------------------------------------------------------------------- | ------------------------------------------ | ------------------ | -------- | ------- |
-| [TD-001](#td-001--bff-层结构待大版本重构)                                 | BFF 层结构待大版本重构                     | Architecture       | Open     |         |
-| [TD-002](#td-002--prisma-schema-集中管理待重构)                           | Prisma schema 集中管理待重构               | Architecture       | Open     |         |
-| [TD-003](#td-003--business-bff-认证流程未实现)                            | Business BFF 认证流程未实现                | Implementation Gap | Open     |         |
-| [TD-004](#td-004--会话空闲超时未实现)                                     | 会话空闲超时未实现                         | Implementation Gap | Open     |         |
-| [TD-005](#td-005--ai-gateway-流式响应未实现)                              | AI Gateway 流式响应未实现                  | Implementation Gap | Open     |         |
-| [TD-006](#td-006--ai-gateway-provider-api-key-无轮换机制)                 | AI Gateway Provider API Key 无轮换机制     | Security           | Open     |         |
-| [TD-007](#td-007--ai-gateway-provider-重试--降级未实现)                   | AI Gateway Provider 重试 / 降级未实现      | Implementation Gap | Open     |         |
-| [TD-008](#td-008--ai-gateway-provider-合同价格为占位数据)                 | AI Gateway Provider 合同价格为占位数据     | Implementation Gap | Open     |         |
-| [TD-009](#td-009--surface-命名方案待定)                                   | surface 命名方案待定                       | Design Pending     | Open     |         |
-| [TD-010](#td-010--platform-sdk-部分模块计划中未实现)                      | Platform SDK 部分模块计划中未实现          | Implementation Gap | Open     |         |
-| [TD-011](#td-011--agent-server-直接读取-process.env-绕过-vxconfigservice) | agent-server 直接读取 process.env          | Security           | Resolved | 🔴 HIGH |
-| [TD-012](#td-012--bff-oauth-provider-凭据未入-core-config-schema)         | BFF OAuth provider 凭据未入 schema         | Security           | Resolved | 🔴 HIGH |
-| [TD-013](#td-013--bff-跨服务-url--cookie-domain-未入-core-config-schema)  | BFF 跨服务 URL / cookie domain 未入 schema | Implementation Gap | Resolved | 🟡 MED  |
+| ID                                                                          | 标题                                            | 分类               | 状态     | 优先级  |
+| --------------------------------------------------------------------------- | ----------------------------------------------- | ------------------ | -------- | ------- |
+| [TD-001](#td-001--bff-层结构待大版本重构)                                   | BFF 层结构待大版本重构                          | Architecture       | Open     |         |
+| [TD-002](#td-002--prisma-schema-集中管理待重构)                             | Prisma schema 集中管理待重构                    | Architecture       | Open     |         |
+| [TD-003](#td-003--business-bff-认证流程未实现)                              | Business BFF 认证流程未实现                     | Implementation Gap | Open     |         |
+| [TD-004](#td-004--会话空闲超时未实现)                                       | 会话空闲超时未实现                              | Implementation Gap | Open     |         |
+| [TD-005](#td-005--ai-gateway-流式响应未实现)                                | AI Gateway 流式响应未实现                       | Implementation Gap | Open     |         |
+| [TD-006](#td-006--ai-gateway-provider-api-key-无轮换机制)                   | AI Gateway Provider API Key 无轮换机制          | Security           | Open     |         |
+| [TD-007](#td-007--ai-gateway-provider-重试--降级未实现)                     | AI Gateway Provider 重试 / 降级未实现           | Implementation Gap | Open     |         |
+| [TD-008](#td-008--ai-gateway-provider-合同价格为占位数据)                   | AI Gateway Provider 合同价格为占位数据          | Implementation Gap | Open     |         |
+| [TD-009](#td-009--surface-命名方案待定)                                     | surface 命名方案待定                            | Design Pending     | Open     |         |
+| [TD-010](#td-010--platform-sdk-部分模块计划中未实现)                        | Platform SDK 部分模块计划中未实现               | Implementation Gap | Open     |         |
+| [TD-011](#td-011--agent-server-直接读取-process.env-绕过-vxconfigservice)   | agent-server 直接读取 process.env               | Security           | Resolved | 🔴 HIGH |
+| [TD-012](#td-012--bff-oauth-provider-凭据未入-core-config-schema)           | BFF OAuth provider 凭据未入 schema              | Security           | Resolved | 🔴 HIGH |
+| [TD-013](#td-013--bff-跨服务-url--cookie-domain-未入-core-config-schema)    | BFF 跨服务 URL / cookie domain 未入 schema      | Implementation Gap | Resolved | 🟡 MED  |
+| [TD-014](#td-014--vela-server-操作配置直读-processenv-无-zod-验证)          | vela-server 操作配置直读 process.env            | Implementation Gap | Open     | 🟡 MED  |
+| [TD-015](#td-015--admin-bff-reporting_ro_database_url-未入-schema)          | admin-bff REPORTING_RO_DATABASE_URL 未入 schema | Implementation Gap | Open     | 🟡 MED  |
+| [TD-016](#td-016--gateway-client-ai_gateway_url-库级-fallback-无-fail-fast) | gateway-client AI_GATEWAY_URL 库级 fallback     | Implementation Gap | Open     | 🟢 LOW  |
 
 ---
 
@@ -208,6 +211,60 @@
 **影响**：毛利分析报表和 Provider 结算数据不可信；超额用量无法正确计费；商务决策依赖失准数据。
 
 **解决方向**：商务确认各 Provider 合同单价后替换 seed 数据；在 `commerce` 域实现 overage 计费规则、add-on 定价逻辑和客户账单生成。上生产前完成此项。
+
+---
+
+### TD-014 — vela-server 操作配置直读 process.env 无 Zod 验证
+
+| 字段         | 内容                                               |
+| ------------ | -------------------------------------------------- |
+| **分类**     | Implementation Gap                                 |
+| **状态**     | Open                                               |
+| **优先级**   | 🟡 MED                                             |
+| **登记日期** | 2026-05-20                                         |
+| **来源**     | `agent-server/vela/src/chat/chat.service.ts:40-47` |
+
+**描述**：`chat.service.ts` 在模块顶层直接读取三个操作配置变量作为模块级常量：`VELA_PLATFORM_LLM_TENANT_ID`（LLM 计费追踪用租户 UUID，缺失时静默使用硬编码占位 UUID）、`VELA_DEFAULT_MODEL_CODE`（默认模型代码，缺失时使用硬编码 doubao 型号）、`VELA_LLM_AGENT_ID`（LLM agent 过滤器，可选）。三个变量均无 Zod 格式校验，在模块加载时一次性求值，后续无法通过 DI 覆盖，也不参与 `VxConfigModule` 的 fail-fast 验证流程。
+
+**影响**：`VELA_PLATFORM_LLM_TENANT_ID` 缺失时会使用占位 UUID，计费数据归属混乱；`VELA_DEFAULT_MODEL_CODE` 未配置时可能引用已停用的模型；变量配置错误在运行时才暴露，无法在启动阶段发现。
+
+**解决方向**：在 `agent-server/vela` 的 NestJS 模块中注册 `VxConfigModule.register({ domains: ['app', 'vela'] })`，新建 `vela.schema.ts` 声明上述三个字段（`VELA_PLATFORM_LLM_TENANT_ID` 为必填 UUID 格式，`VELA_DEFAULT_MODEL_CODE` 为必填字符串，`VELA_LLM_AGENT_ID` 为 optional）；`ChatService` 通过构造函数注入 `VxConfigService` 读取，移除模块级 `const` 直读。
+
+---
+
+### TD-015 — admin-bff REPORTING_RO_DATABASE_URL 未入 schema
+
+| 字段         | 内容                                             |
+| ------------ | ------------------------------------------------ |
+| **分类**     | Implementation Gap                               |
+| **状态**     | Open                                             |
+| **优先级**   | 🟡 MED                                           |
+| **登记日期** | 2026-05-20                                       |
+| **来源**     | `bff/admin-bff/src/providers/pools.module.ts:41` |
+
+**描述**：`AdminBffPoolsModule` 为只读报表数据库连接池直接读取 `process.env["REPORTING_RO_DATABASE_URL"]`，该变量未在 `database.schema.ts` 或任何其他 schema 中声明。读写池（`ADMIN_BFF_RW_POOL`）已通过 `VxConfigService.database` 正确注入；只读报表池游离于类型系统之外，缺失时静默降级至主库连接（`makePool(undefined, config.database)`），无 fail-fast 保护。
+
+**影响**：报表查询静默落回主库 RW 连接，高负荷报表查询可能影响主库性能；`REPORTING_RO_DATABASE_URL` 配置错误（如 URL 格式不合法）在启动时不报错，而是在首次数据库操作时抛出运行时异常。
+
+**解决方向**：在 `database.schema.ts` 中新增 `REPORTING_RO_DATABASE_URL: z.string().url().optional()`；`AdminBffPoolsModule` 通过 `VxConfigService.database.REPORTING_RO_DATABASE_URL` 读取，移除直接的 `process.env` 访问。
+
+---
+
+### TD-016 — gateway-client AI_GATEWAY_URL 库级 fallback 无 fail-fast 保护
+
+| 字段         | 内容                                              |
+| ------------ | ------------------------------------------------- |
+| **分类**     | Implementation Gap                                |
+| **状态**     | Open                                              |
+| **优先级**   | 🟢 LOW                                            |
+| **登记日期** | 2026-05-20                                        |
+| **来源**     | `packages/ai/gateway-client/src/llm/client.ts:85` |
+
+**描述**：`GatewayLLMClient` 构造函数在 `options.gatewayUrl` 未传入时以 `process.env.AI_GATEWAY_URL` 作为 fallback。该包是纯库包（无 NestJS DI），只能通过 `process.env` 读取环境变量。问题在于：`AI_GATEWAY_URL` 在此处仅做字符串读取，未经 Zod 的 URL 格式校验；而调用方（vela-server `chat.service.ts`）在实例化时总是传入 `options.gatewayUrl`，此 fallback 实际上是一个死代码路径，但可能给未来调用方制造误解，认为不传 gatewayUrl 是安全的。
+
+**影响**：若未来调用方省略 `gatewayUrl` 参数，会在运行时以未经验证的 URL 发起请求；当前影响有限（vela-server 始终传入配置值）。
+
+**解决方向**：移除 `process.env.AI_GATEWAY_URL` fallback，改为 `options.gatewayUrl` 为必填项；或在 constructor 中加入 URL 格式断言（`new URL(...)` 抛出则 fail-fast）。优先级低，不阻塞功能。
 
 ---
 

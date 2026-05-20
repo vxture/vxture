@@ -5,8 +5,11 @@ import {
   RequestMethod,
 } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
-import { AccessTokenRevocationService } from "@vxture/core-auth";
-import { VxConfigModule } from "@vxture/core-config";
+import {
+  AccessTokenRevocationService,
+  REDIS_REVOCATION_CONFIG,
+} from "@vxture/core-auth";
+import { VxConfigModule, VxConfigService } from "@vxture/core-config";
 import { MailModule } from "@vxture/core-mail";
 import { SmsModule } from "@vxture/service-sms";
 import { AdminBffPoolsModule } from "./providers/pools.module";
@@ -78,6 +81,11 @@ import { TicketsRouter } from "./routers/tickets.router";
     LoginRateLimiterService,
     CaptchaService,
     SessionAggregator,
+    {
+      provide: REDIS_REVOCATION_CONFIG,
+      useFactory: (c: VxConfigService) => c.redis,
+      inject: [VxConfigService],
+    },
     AccessTokenRevocationService,
   ],
 })

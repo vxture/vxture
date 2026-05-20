@@ -61,8 +61,9 @@ export {
   buildAccessTokenBlacklistKey,
   buildSubjectRevokedBeforeKey,
   resolveAccessRevocationSurface,
+  REDIS_REVOCATION_CONFIG,
 } from "./session";
-export type { AccessRevocationSurface } from "./session";
+export type { AccessRevocationSurface, RedisRevocationConfig } from "./session";
 
 // Human verification
 export { TurnstileVerifier, TurnstileVerificationError } from "./turnstile";
