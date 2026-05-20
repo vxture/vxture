@@ -27,31 +27,26 @@ import {
 } from "@nestjs/common";
 import type { Request, Response } from "express";
 import { AUTH_CONSTANTS } from "@vxture/shared";
+import { VxConfigService } from "@vxture/core-config";
 import type { RequestContext } from "../types/auth.types";
-
-function resolveAuthBffUrl(): string {
-  const configured = process.env["AUTH_BFF_URL"]?.trim();
-  if (configured) return configured.replace(/\/+$/, "");
-  return "http://localhost:3090";
-}
-
-function resolveRuyinCookieDomain(): string | undefined {
-  const domain =
-    process.env.COOKIE_DOMAIN_RUYIN?.trim() ||
-    process.env.RUYIN_COOKIE_DOMAIN?.trim();
-  if (!domain || domain === "localhost") return undefined;
-  return domain;
-}
 
 function forwardCookie(req: Request): string {
   const raw = req.headers.cookie;
   return Array.isArray(raw) ? raw.join("; ") : (raw ?? "");
 }
 
-const AUTH_BFF = resolveAuthBffUrl();
-
 @Controller("api/auth")
 export class AuthRouter {
+  private readonly authBffUrl: string;
+  private readonly ruyinCookieDomain: string | undefined;
+
+  constructor(configService: VxConfigService) {
+    const cfg = configService.platform;
+    this.authBffUrl = cfg.AUTH_BFF_URL.trim().replace(/\/+$/, "");
+    const domain = cfg.COOKIE_DOMAIN_RUYIN?.trim();
+    this.ruyinCookieDomain =
+      domain && domain !== "localhost" ? domain : undefined;
+  }
   @Get("session")
   getSession(@Req() req: Request & RequestContext) {
     if (!req.user) {
@@ -80,12 +75,15 @@ export class AuthRouter {
     let data: unknown = { status: "logged_out" };
 
     try {
-      const response = await fetch(AUTH_BFF + "/auth/logout?source=ruyin", {
-        method: "POST",
-        headers: {
-          Cookie: forwardCookie(req),
+      const response = await fetch(
+        this.authBffUrl + "/auth/logout?source=ruyin",
+        {
+          method: "POST",
+          headers: {
+            Cookie: forwardCookie(req),
+          },
         },
-      });
+      );
       status = response.status;
       data = await response.json().catch(() => ({
         status: response.ok ? "logged_out" : "logout_failed",
@@ -98,7 +96,7 @@ export class AuthRouter {
       };
     }
 
-    const domain = resolveRuyinCookieDomain();
+    const domain = this.ruyinCookieDomain;
     res.clearCookie(AUTH_CONSTANTS.RUYIN_COOKIE_KEYS.ACCESS_TOKEN, {
       path: "/",
       domain,

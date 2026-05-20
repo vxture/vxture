@@ -16,6 +16,9 @@ import type {
   RedisConfig,
   AuthConfig,
   AiConfig,
+  MailEnvConfig,
+  OauthConfig,
+  PlatformConfig,
 } from "../schemas";
 import { CONFIG_TOKEN } from "../types";
 
@@ -39,6 +42,15 @@ export class VxConfigService {
     private readonly _redis: RedisConfig,
     @Optional() @Inject(CONFIG_TOKEN.AUTH) private readonly _auth: AuthConfig,
     @Optional() @Inject(CONFIG_TOKEN.AI) private readonly _ai: AiConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.MAIL)
+    private readonly _mail: MailEnvConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.OAUTH)
+    private readonly _oauth: OauthConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.PLATFORM)
+    private readonly _platform: PlatformConfig,
   ) {}
 
   get app(): AppConfig {
@@ -65,6 +77,24 @@ export class VxConfigService {
   get ai(): AiConfig {
     this.assertLoaded(this._ai, "ai");
     return this._ai;
+  }
+
+  /** SMTP mail config. Available only when mail domain is registered. */
+  get mail(): MailEnvConfig {
+    this.assertLoaded(this._mail, "mail");
+    return this._mail;
+  }
+
+  /** OAuth provider credentials. Available only when oauth domain is registered. */
+  get oauth(): OauthConfig {
+    this.assertLoaded(this._oauth, "oauth");
+    return this._oauth;
+  }
+
+  /** Cross-service URLs and cookie domains. Available only when platform domain is registered. */
+  get platform(): PlatformConfig {
+    this.assertLoaded(this._platform, "platform");
+    return this._platform;
   }
 
   /** Whether current environment is production */

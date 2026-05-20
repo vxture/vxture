@@ -13,6 +13,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import type { Request } from "express";
+import { VxConfigService } from "@vxture/core-config";
 
 import type {
   AiModelGrantRecord,
@@ -28,13 +29,29 @@ interface GatewayErrorBody {
 
 @Controller("api/ai-gateway")
 export class AiGatewayRouter {
+  private readonly gatewayUrl: string;
+
+  constructor(configService: VxConfigService) {
+    this.gatewayUrl = configService.platform.AI_GATEWAY_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+  }
+
+  private request<T>(
+    path: string,
+    options?: { method?: "GET" | "POST" | "PUT" | "DELETE"; body?: JsonObject },
+  ): Promise<T> {
+    return gatewayRequest<T>(path, options, this.gatewayUrl);
+  }
+
   @Get("models")
   listModels(
     @Req() req: Request & RequestContext,
     @Query("includeInactive") includeInactive?: string,
   ): Promise<AiModelRecord[]> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord[]>(
+    return this.request<AiModelRecord[]>(
       `/ai/gateway/admin/models?includeInactive=${includeInactive === "false" ? "false" : "true"}`,
     );
   }
@@ -45,7 +62,7 @@ export class AiGatewayRouter {
     @Body() body: JsonObject,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>("/ai/gateway/admin/models", {
+    return this.request<AiModelRecord>("/ai/gateway/admin/models", {
       method: "POST",
       body,
     });
@@ -58,7 +75,7 @@ export class AiGatewayRouter {
     @Body() body: JsonObject,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(
+    return this.request<AiModelRecord>(
       `/ai/gateway/admin/models/${encodeURIComponent(modelId)}`,
       {
         method: "PUT",
@@ -73,7 +90,7 @@ export class AiGatewayRouter {
     @Param("modelId") modelId: string,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(
+    return this.request<AiModelRecord>(
       `/ai/gateway/admin/models/${encodeURIComponent(modelId)}/activate`,
       {
         method: "POST",
@@ -87,7 +104,7 @@ export class AiGatewayRouter {
     @Param("modelId") modelId: string,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(
+    return this.request<AiModelRecord>(
       `/ai/gateway/admin/models/${encodeURIComponent(modelId)}/deactivate`,
       {
         method: "POST",
@@ -101,7 +118,7 @@ export class AiGatewayRouter {
     @Param("modelId") modelId: string,
   ): Promise<AiModelRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelRecord>(
+    return this.request<AiModelRecord>(
       `/ai/gateway/admin/models/${encodeURIComponent(modelId)}`,
       {
         method: "DELETE",
@@ -121,7 +138,7 @@ export class AiGatewayRouter {
     if (tenantId) params.set("tenantId", tenantId);
     if (modelId) params.set("modelId", modelId);
 
-    return gatewayRequest<AiModelGrantRecord[]>(
+    return this.request<AiModelGrantRecord[]>(
       `/ai/gateway/admin/grants${params.size ? `?${params.toString()}` : ""}`,
     );
   }
@@ -132,7 +149,7 @@ export class AiGatewayRouter {
     @Body() body: JsonObject,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>("/ai/gateway/admin/grants", {
+    return this.request<AiModelGrantRecord>("/ai/gateway/admin/grants", {
       method: "POST",
       body,
     });
@@ -145,7 +162,7 @@ export class AiGatewayRouter {
     @Body() body: JsonObject,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>(
+    return this.request<AiModelGrantRecord>(
       `/ai/gateway/admin/grants/${encodeURIComponent(grantId)}`,
       {
         method: "PUT",
@@ -160,7 +177,7 @@ export class AiGatewayRouter {
     @Param("grantId") grantId: string,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>(
+    return this.request<AiModelGrantRecord>(
       `/ai/gateway/admin/grants/${encodeURIComponent(grantId)}/activate`,
       {
         method: "POST",
@@ -174,7 +191,7 @@ export class AiGatewayRouter {
     @Param("grantId") grantId: string,
   ): Promise<AiModelGrantRecord> {
     assertCanManageModels(req);
-    return gatewayRequest<AiModelGrantRecord>(
+    return this.request<AiModelGrantRecord>(
       `/ai/gateway/admin/grants/${encodeURIComponent(grantId)}`,
       {
         method: "DELETE",
@@ -199,11 +216,12 @@ async function gatewayRequest<TResponse>(
     method?: "GET" | "POST" | "PUT" | "DELETE";
     body?: JsonObject;
   } = {},
+  baseUrl: string = "http://localhost:3100",
 ): Promise<TResponse> {
   let response: Response;
 
   try {
-    response = await fetch(`${gatewayBaseUrl()}${path}`, {
+    response = await fetch(`${baseUrl}${path}`, {
       method: options.method ?? "GET",
       ...(options.body
         ? { headers: { "content-type": "application/json" } }
@@ -227,12 +245,6 @@ async function gatewayRequest<TResponse>(
   }
 
   return JSON.parse(responseText) as TResponse;
-}
-
-function gatewayBaseUrl(): string {
-  return (process.env.AI_GATEWAY_URL ?? "http://localhost:3100")
-    .trim()
-    .replace(/\/+$/, "");
 }
 
 function parseGatewayError(responseText: string, status: number): string {

@@ -25,7 +25,7 @@ import { HealthRouter } from "./routers/health.router";
 @Module({
   imports: [
     VxConfigModule.register({
-      domains: ["app", "auth", "database", "redis"],
+      domains: ["app", "auth", "database", "redis", "oauth", "platform"],
     }),
     JwtModule.register({}),
     RedisModule,
