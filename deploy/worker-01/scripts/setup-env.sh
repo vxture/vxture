@@ -68,6 +68,7 @@ echo "[OK] Redis password ready"
 
 # ── 3. 平台共享密钥 ──────────────────────────────────────────────────────────
 JWT_SECRET=$(env_get_or_generate "JWT_SECRET" 32)
+JWT_REFRESH_SECRET=$(env_get_or_generate "JWT_REFRESH_SECRET" 32)
 AUTH_INTERNAL_TOKEN=$(env_get_or_generate "AUTH_INTERNAL_TOKEN" 24)
 
 # 补充 platform.env 中的 composite URL（幂等：已存在则跳过）
