@@ -17,6 +17,7 @@ import type {
   OauthConfig,
   PlatformConfig,
   MailEnvConfig,
+  VelaConfig,
 } from "../schemas";
 
 // ============================================================================
@@ -32,6 +33,7 @@ export interface VxConfig {
   oauth: OauthConfig;
   platform: PlatformConfig;
   mail: MailEnvConfig;
+  vela: VelaConfig;
 }
 
 export const CONFIG_TOKEN = {
@@ -43,6 +45,7 @@ export const CONFIG_TOKEN = {
   OAUTH: Symbol("VX_CONFIG_OAUTH"),
   PLATFORM: Symbol("VX_CONFIG_PLATFORM"),
   MAIL: Symbol("VX_CONFIG_MAIL"),
+  VELA: Symbol("VX_CONFIG_VELA"),
 } as const;
 
 export interface ConfigLoadResult {

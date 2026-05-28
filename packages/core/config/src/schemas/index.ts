@@ -33,3 +33,6 @@ export { oauthSchema } from "./oauth.schema";
 
 export type { PlatformConfig } from "./platform.schema";
 export { platformSchema } from "./platform.schema";
+
+export type { VelaConfig } from "./vela.schema";
+export { velaSchema } from "./vela.schema";

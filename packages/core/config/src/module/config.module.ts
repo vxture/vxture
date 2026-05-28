@@ -22,6 +22,7 @@ import {
   mailSchema,
   oauthSchema,
   platformSchema,
+  velaSchema,
 } from "../schemas";
 import { VxConfigService } from "../service";
 
@@ -41,6 +42,7 @@ const CONFIG_DOMAINS = [
   { token: CONFIG_TOKEN.MAIL, schema: mailSchema, name: "mail" },
   { token: CONFIG_TOKEN.OAUTH, schema: oauthSchema, name: "oauth" },
   { token: CONFIG_TOKEN.PLATFORM, schema: platformSchema, name: "platform" },
+  { token: CONFIG_TOKEN.VELA, schema: velaSchema, name: "vela" },
 ] as const;
 
 // ============================================================================
@@ -55,7 +57,7 @@ export interface VxConfigModuleOptions {
    * - Unregistered domains won't be parsed or injectable
    */
   domains?: Array<
-    "app" | "database" | "redis" | "auth" | "ai" | "mail" | "oauth" | "platform"
+    "app" | "database" | "redis" | "auth" | "ai" | "mail" | "oauth" | "platform" | "vela"
   >;
 
   /**

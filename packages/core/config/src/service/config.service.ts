@@ -19,6 +19,7 @@ import type {
   MailEnvConfig,
   OauthConfig,
   PlatformConfig,
+  VelaConfig,
 } from "../schemas";
 import { CONFIG_TOKEN } from "../types";
 
@@ -51,6 +52,9 @@ export class VxConfigService {
     @Optional()
     @Inject(CONFIG_TOKEN.PLATFORM)
     private readonly _platform: PlatformConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.VELA)
+    private readonly _vela: VelaConfig,
   ) {}
 
   get app(): AppConfig {
@@ -95,6 +99,12 @@ export class VxConfigService {
   get platform(): PlatformConfig {
     this.assertLoaded(this._platform, "platform");
     return this._platform;
+  }
+
+  /** Vela agent-server 运行配置，仅在注册 vela domain 后可用 */
+  get vela(): VelaConfig {
+    this.assertLoaded(this._vela, "vela");
+    return this._vela;
   }
 
   /** Whether current environment is production */

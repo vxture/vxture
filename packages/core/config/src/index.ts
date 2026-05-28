@@ -21,6 +21,7 @@ export {
   toSmtpConfig,
   oauthSchema,
   platformSchema,
+  velaSchema,
 } from "./schemas";
 
 // Type exports (explicit listing for maintainability)
@@ -33,6 +34,7 @@ export type {
   MailEnvConfig,
   OauthConfig,
   PlatformConfig,
+  VelaConfig,
 } from "./schemas";
 
 export type {
