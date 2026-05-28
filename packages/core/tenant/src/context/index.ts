@@ -4,4 +4,5 @@
  */
 
 export { TenantContext } from "./tenant.context";
+export { TenantAlsService } from "./tenant-als.service";
 export { TenantModule, TENANT_OPTIONS } from "./tenant.module";

@@ -23,6 +23,8 @@ import { IsString, Length, Matches } from "class-validator";
 import type { Request, Response } from "express";
 import { AUTH_CONSTANTS } from "@vxture/shared";
 import { TurnstileVerifier } from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
+import type { PlatformConfig } from "@vxture/core-config";
 import { PhoneCodeService } from "@vxture/service-sms";
 import { AuthService, type LoginSource } from "../auth/auth.service";
 import {
@@ -87,18 +89,14 @@ function normalizeCookieDomain(domain: string | undefined): string | undefined {
   return domain;
 }
 
-function resolveCookieDomain(source: LoginSource): string | undefined {
+function resolveCookieDomain(
+  source: LoginSource,
+  cfg: PlatformConfig,
+): string | undefined {
   if (source === "ruyin") {
-    return normalizeCookieDomain(
-      process.env.COOKIE_DOMAIN_RUYIN?.trim() ||
-        process.env.RUYIN_COOKIE_DOMAIN?.trim(),
-    );
+    return normalizeCookieDomain(cfg.COOKIE_DOMAIN_RUYIN?.trim());
   }
-
-  return normalizeCookieDomain(
-    process.env.COOKIE_DOMAIN_PLATFORM?.trim() ||
-      process.env.AUTH_COOKIE_DOMAIN?.trim(),
-  );
+  return normalizeCookieDomain(cfg.COOKIE_DOMAIN_PLATFORM?.trim());
 }
 
 function resolveTenantRefreshSurface(
@@ -134,6 +132,7 @@ export class PhoneAuthRouter {
     private readonly phoneCodeService: PhoneCodeService,
     @Inject(AuthService) private readonly authService: AuthService,
     @Inject(RedisService) private readonly redis: RedisService,
+    private readonly configService: VxConfigService,
   ) {}
 
   /** 发送手机验证码（含限流） */
@@ -174,7 +173,7 @@ export class PhoneAuthRouter {
     }
 
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolveCookieDomain(source);
+    const domain = resolveCookieDomain(source, this.configService.platform);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,

@@ -17,6 +17,11 @@ export {
   redisSchema,
   authSchema,
   aiSchema,
+  mailSchema,
+  toSmtpConfig,
+  oauthSchema,
+  platformSchema,
+  velaSchema,
 } from "./schemas";
 
 // Type exports (explicit listing for maintainability)
@@ -26,6 +31,10 @@ export type {
   DatabaseConfig,
   RedisConfig,
   AuthConfig,
+  MailEnvConfig,
+  OauthConfig,
+  PlatformConfig,
+  VelaConfig,
 } from "./schemas";
 
 export type {
@@ -44,8 +53,4 @@ export { VxConfigModule } from "./module";
 
 export { VxConfigService } from "./service";
 
-// ============================================
-// Utils
-// ============================================
-
-export { deepMerge, deepClone, isPlainObject } from "./utils";
+// object utils (deepMerge / deepClone / isPlainObject) → import from @vxture/shared

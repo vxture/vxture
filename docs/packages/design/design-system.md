@@ -41,7 +41,8 @@ src/
 ├── density/      # density 配置、类型与导出
 ├── icons/        # Icon 组件、字典和注册表
 ├── components/
-│   ├── ui/       # 28 个 UI primitive 和平台 pattern
+│   ├── ui/       # 47 个 UI primitive 和平台 pattern
+│   ├── ai/       # 5 个 AI 组件
 │   ├── auth/     # 统一认证模板组件
 │   ├── shell/    # ShellChrome
 │   └── layout/   # Container / Stack / Grid / Fullscreen
@@ -57,18 +58,16 @@ src/
 
 ## UI 组件清单
 
-当前公共组件共 33 个：`src/components/ui` 28 个 `.tsx` 组件，`src/components/ai` 5 个 AI 组件。
+当前公共组件共 52 个：`src/components/ui` 47 个 `.tsx` 组件，`src/components/ai` 5 个 AI 组件。
 
-`ActionMenu`、`Avatar`、`Badge`、`Breadcrumb`、`Button`、`Card`、`Checkbox`、`DataTable`、`Dialog`、`DialogForm`、`DropdownMenu`、`FilterBar`、`Input`、`Label`、`MetricCard`、`NativeSelect`、`Pagination`、`Popover`、`Select`、`Separator`、`StatusBadge`、`Switch`、`Tabs`、`Textarea`、`Tooltip`。
+UI：`ActionButton`、`ActionMenu`、`Avatar`、`Badge`、`Breadcrumb`、`BulkActionBar`、`Button`、`Card`、`Checkbox`、`DataTable`、`DetailDrawer`、`DetailPanel`、`DetailSectionHeading`、`Dialog`、`DialogForm`、`Drawer`、`DropdownMenu`、`EmptyState`、`EntityListPage`、`EntityTableSection`、`FilterBar`、`Input`、`Label`、`MetricCard`、`MetricGrid`、`NativeSelect`、`PageActions`、`PageHeader`、`PageSection`、`PageSizePicker`、`PageStack`、`Pagination`、`Popover`、`SectionCard`、`SectionNav`、`Select`、`Separator`、`SettingsSplitPage`、`Skeleton`、`StatusBadge`、`Switch`、`TableToolbar`、`Tabs`、`Textarea`、`Toast`、`Tooltip`、`ViewModeSwitch`。
 
-新增 UI：`Toast`、`Drawer`、`Skeleton`。
-
-新增 AI：`ModelBadge`、`GenerationStream`、`PromptInput`、`AIAssistantBubble`、`TokenCounter`。
+AI：`AIAssistantBubble`、`GenerationStream`、`ModelBadge`、`PromptInput`、`TokenCounter`。
 
 ## CSS 分层
 
 - `tokens.css` 是 token runtime 稳定入口，只聚合 `tokens-*` 分层模块；外部消费者不得直接引用 `tokens-*`。
-- `tokens-foundation.css` 持有 spacing、radius、shadow、motion、keyframes 与默认字号运行时值；`tokens-density.css` 只覆盖密度相关尺度；`tokens-theme-foundation.css` 只负责 Tailwind spacing/radius/shadow/text/animate 映射。
+- `tokens-foundation-radius-space.css`、`tokens-foundation-shadow.css`、`tokens-foundation-motion.css` 与 `tokens-foundation-type-layout.css` 持有 spacing、radius、shadow、motion、keyframes 与默认字号运行时值；`tokens-density.css` 只覆盖密度相关尺度；`tokens-theme-foundation.css` 只负责 Tailwind spacing/radius/shadow/text/animate 映射。
 - `tokens-colors-primitives.css` 持有品牌、状态和 AI primitive 色阶；`tokens-colors-semantic.css` 才是应用消费边界。
 - `tokens-gradients.css` 只定义品牌和 AI 场景渐变 token，不承载组件结构规则；`tokens-theme-gradients.css` 只负责 Tailwind `bg-vx-gradient-*` 映射。
 - `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。

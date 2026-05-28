@@ -14,6 +14,7 @@
  */
 
 import { OAuthProviderType } from "@vxture/core-auth";
+import type { OauthConfig } from "@vxture/core-config";
 
 // ============================================================================
 // 类型
@@ -72,12 +73,12 @@ export interface OAuthUserProfileResponse {
 export class FeishuProvider {
   readonly name = "feishu";
 
-  private get appId(): string {
-    return process.env.FEISHU_APP_ID ?? "";
-  }
+  private readonly appId: string;
+  private readonly appSecret: string;
 
-  private get appSecret(): string {
-    return process.env.FEISHU_APP_SECRET ?? "";
+  constructor(cfg: OauthConfig) {
+    this.appId = cfg.FEISHU_APP_ID ?? "";
+    this.appSecret = cfg.FEISHU_APP_SECRET ?? "";
   }
 
   /**

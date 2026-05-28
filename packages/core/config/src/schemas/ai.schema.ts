@@ -20,8 +20,8 @@ import { z } from "zod";
 // Doubao (豆包) — ByteDance LLM
 // ----------------------------------------------------------------------------
 const doubaoSchema = z.object({
-  /** Doubao API Key */
-  DOUBAO_API_KEY: z.string().min(1),
+  /** Doubao API Key — optional; agent-server must assert presence before invoking Doubao */
+  DOUBAO_API_KEY: z.string().min(1).optional(),
 
   /** Doubao API Endpoint, defaults to official address */
   DOUBAO_API_URL: z
@@ -43,8 +43,8 @@ const doubaoSchema = z.object({
 // Claude (Anthropic)
 // ----------------------------------------------------------------------------
 const claudeSchema = z.object({
-  /** Anthropic API Key */
-  ANTHROPIC_API_KEY: z.string().min(1),
+  /** Anthropic API Key — optional; agent-server must assert presence before invoking Claude */
+  ANTHROPIC_API_KEY: z.string().min(1).optional(),
 
   /** Anthropic API Base URL, can be overridden for private deployments */
   ANTHROPIC_API_URL: z.string().url().default("https://api.anthropic.com"),
@@ -57,8 +57,8 @@ const claudeSchema = z.object({
 // ChatGPT (OpenAI)
 // ----------------------------------------------------------------------------
 const chatgptSchema = z.object({
-  /** OpenAI API Key */
-  OPENAI_API_KEY: z.string().min(1),
+  /** OpenAI API Key — optional; agent-server must assert presence before invoking OpenAI */
+  OPENAI_API_KEY: z.string().min(1).optional(),
 
   /** OpenAI API Base URL, can be overridden for private deployments */
   OPENAI_API_URL: z.string().url().default("https://api.openai.com/v1"),
@@ -74,8 +74,8 @@ const chatgptSchema = z.object({
 // Qwen (Tongyi Qianwen)
 // ----------------------------------------------------------------------------
 const qwenSchema = z.object({
-  /** Tongyi Qianwen API Key */
-  QWEN_API_KEY: z.string().min(1),
+  /** Tongyi Qianwen API Key — optional; agent-server must assert presence before invoking Qwen */
+  QWEN_API_KEY: z.string().min(1).optional(),
 
   /** Tongyi Qianwen API Base URL, can be overridden for private deployments */
   QWEN_API_URL: z

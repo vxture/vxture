@@ -16,6 +16,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { GatewayLLMClient } from "@vxture/ai-gateway-client/llm";
 import type { LLMMessage } from "@vxture/ai-gateway-client/llm";
+import { VxConfigService } from "@vxture/core-config";
 import type { CallerContext } from "../context/caller-context.types";
 import {
   MessageRepository,
@@ -36,16 +37,6 @@ import type { ChatStreamEvent } from "./chat.types";
 
 const MAX_TOOL_ITERATIONS = 5;
 
-/** admin surface 无 tenantId，使用平台/运营租户 UUID 用于 LLM 网关计费追踪 */
-const PLATFORM_LLM_TENANT_ID =
-  process.env["VELA_PLATFORM_LLM_TENANT_ID"] ??
-  "82cf3e39-f7f0-4597-bb55-b1303ca19d46";
-
-const DEFAULT_MODEL_CODE =
-  process.env["VELA_DEFAULT_MODEL_CODE"] ?? "doubao-seed-2-0-lite-260215";
-
-const VELA_LLM_AGENT_ID = process.env["VELA_LLM_AGENT_ID"]?.trim() || undefined;
-
 // ============================================================================
 // ChatService
 // ============================================================================
@@ -58,6 +49,7 @@ export class ChatService {
     private readonly sessionRepository: SessionRepository,
     @Inject(MessageRepository)
     private readonly messageRepository: MessageRepository,
+    private readonly configService: VxConfigService,
   ) {}
 
   async *chat(
@@ -65,11 +57,12 @@ export class ChatService {
     sessionId: string | null,
     ctx: CallerContext,
   ): AsyncGenerator<ChatStreamEvent> {
-    const llmTenantId = ctx.tenantId ?? PLATFORM_LLM_TENANT_ID;
+    const velaCfg = this.configService.vela;
+    const llmTenantId = ctx.tenantId ?? velaCfg.VELA_PLATFORM_LLM_TENANT_ID;
 
     const client = new GatewayLLMClient(
-      VELA_LLM_AGENT_ID
-        ? { tenantId: llmTenantId, agentId: VELA_LLM_AGENT_ID }
+      velaCfg.VELA_LLM_AGENT_ID
+        ? { tenantId: llmTenantId, agentId: velaCfg.VELA_LLM_AGENT_ID }
         : { tenantId: llmTenantId },
     );
 
@@ -118,7 +111,7 @@ export class ChatService {
       try {
         for await (const chunk of client.chatStream(
           messages,
-          { model: DEFAULT_MODEL_CODE, temperature: 0.7 },
+          { model: velaCfg.VELA_DEFAULT_MODEL_CODE, temperature: 0.7 },
           {
             ...(llmTools.length > 0 ? { tools: llmTools } : {}),
             toolChoice: "auto" as const,

@@ -24,6 +24,7 @@ import {
   Res,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
+import { VxConfigService } from "@vxture/core-config";
 import type { ChatRequestDto, VelaRequest } from "../types/chat.types";
 
 // ============================================================================
@@ -41,6 +42,16 @@ function writeSseError(res: Response, message: string): void {
 
 @Controller("vela")
 export class ChatRouter {
+  private readonly velaServerUrl: string;
+
+  constructor(configService: VxConfigService) {
+    this.velaServerUrl =
+      configService.platform.VELA_SERVER_INTERNAL_URL.trim().replace(
+        /\/+$/,
+        "",
+      );
+  }
+
   @Post("chat")
   async chat(
     @Req() req: Request,
@@ -62,9 +73,6 @@ export class ChatRouter {
     const ctx = (req as VelaRequest).callerContext;
     const encoded = Buffer.from(JSON.stringify(ctx)).toString("base64");
 
-    const serverUrl =
-      process.env["VELA_SERVER_INTERNAL_URL"] ?? "http://localhost:3122";
-
     // SSE 响应头，Nginx 需配置 proxy_buffering off
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
@@ -73,7 +81,7 @@ export class ChatRouter {
 
     let upstream: globalThis.Response;
     try {
-      upstream = await fetch(`${serverUrl}/internal/vela/chat`, {
+      upstream = await fetch(`${this.velaServerUrl}/internal/vela/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

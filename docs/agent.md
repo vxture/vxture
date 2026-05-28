@@ -60,6 +60,19 @@ docs/
 
 ---
 
+## 🔴 高优先修复项（接任务前必看）
+
+以下债务存在**安全或启动静默失效风险**，优先于常规功能开发处理。
+详情见 → [`docs/tech-debt.md`](tech-debt.md)
+
+| ID     | 位置                                  | 风险                                                            | 详情链接                                                                               |
+| ------ | ------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| TD-011 | `agent-server/ruyin/src/index.ts:296` | `JWT_SECRET` 直接读 process.env，缺失时静默 undefined，认证漏洞 | [→ TD-011](tech-debt.md#td-011--agent-server-直接读取-processenv-绕过-vxconfigservice) |
+| TD-012 | `bff/auth-bff/src/providers/dingtalk  | feishu.provider.ts`                                             | OAuth 凭据未入 schema，缺失时空字符串静默通过                                          | [→ TD-012](tech-debt.md#td-012--bff-oauth-provider-凭据未入-core-config-schema) |
+| TD-013 | `bff/auth-bff/src/routers/` 多处      | 跨服务 URL / cookie domain 未入 schema，配置错误无 fail-fast    | [→ TD-013](tech-debt.md#td-013--bff-跨服务-url--cookie-domain-未入-core-config-schema) |
+
+---
+
 ## 任务路由表
 
 | 任务类型                            | 必读文档                                                           |
@@ -100,4 +113,4 @@ docs/
 
 ---
 
-_版本：2.1.0 | 2026-05-14_
+_版本：2.2.0 | 2026-05-20_

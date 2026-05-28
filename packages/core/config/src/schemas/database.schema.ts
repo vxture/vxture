@@ -33,6 +33,9 @@ export const databaseSchema = z.object({
 
   /** SSL mode: should be require in production */
   DB_SSL: z.enum(["disable", "allow", "prefer", "require"]).default("prefer"),
+
+  /** admin-bff 报表查询只读连接，缺省时降级使用主库连接 */
+  REPORTING_RO_DATABASE_URL: z.string().url().optional(),
 });
 
 export type DatabaseConfig = z.infer<typeof databaseSchema>;

@@ -16,6 +16,10 @@ import type {
   RedisConfig,
   AuthConfig,
   AiConfig,
+  MailEnvConfig,
+  OauthConfig,
+  PlatformConfig,
+  VelaConfig,
 } from "../schemas";
 import { CONFIG_TOKEN } from "../types";
 
@@ -39,6 +43,18 @@ export class VxConfigService {
     private readonly _redis: RedisConfig,
     @Optional() @Inject(CONFIG_TOKEN.AUTH) private readonly _auth: AuthConfig,
     @Optional() @Inject(CONFIG_TOKEN.AI) private readonly _ai: AiConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.MAIL)
+    private readonly _mail: MailEnvConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.OAUTH)
+    private readonly _oauth: OauthConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.PLATFORM)
+    private readonly _platform: PlatformConfig,
+    @Optional()
+    @Inject(CONFIG_TOKEN.VELA)
+    private readonly _vela: VelaConfig,
   ) {}
 
   get app(): AppConfig {
@@ -65,6 +81,30 @@ export class VxConfigService {
   get ai(): AiConfig {
     this.assertLoaded(this._ai, "ai");
     return this._ai;
+  }
+
+  /** SMTP mail config. Available only when mail domain is registered. */
+  get mail(): MailEnvConfig {
+    this.assertLoaded(this._mail, "mail");
+    return this._mail;
+  }
+
+  /** OAuth provider credentials. Available only when oauth domain is registered. */
+  get oauth(): OauthConfig {
+    this.assertLoaded(this._oauth, "oauth");
+    return this._oauth;
+  }
+
+  /** Cross-service URLs and cookie domains. Available only when platform domain is registered. */
+  get platform(): PlatformConfig {
+    this.assertLoaded(this._platform, "platform");
+    return this._platform;
+  }
+
+  /** Vela agent-server 运行配置，仅在注册 vela domain 后可用 */
+  get vela(): VelaConfig {
+    this.assertLoaded(this._vela, "vela");
+    return this._vela;
   }
 
   /** Whether current environment is production */

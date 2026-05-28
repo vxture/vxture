@@ -29,6 +29,7 @@ import {
 } from "@nestjs/common";
 import type { Response } from "express";
 import { resolveInternalAuthToken } from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
 
@@ -36,14 +37,6 @@ type RedirectResponse = Response & {
   setHeader(name: string, value: string | string[]): void;
   redirect(status: number, url: string): void;
 };
-
-function resolveAuthBffUrl(): string {
-  const configured = process.env["AUTH_BFF_URL"]?.trim();
-  if (configured) return configured.replace(/\/+$/, "");
-  return "http://localhost:3090";
-}
-
-const AUTH_BFF = resolveAuthBffUrl();
 
 function forwardSetCookie(
   res: RedirectResponse,
@@ -67,6 +60,20 @@ function readSetCookie(upstream: globalThis.Response): string[] {
 
 @Controller("api/auth")
 export class CrossDomainRouter {
+  private readonly authBffUrl: string;
+  private readonly ruyinBaseUrl: string;
+
+  constructor(configService: VxConfigService) {
+    this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+    this.ruyinBaseUrl = configService.platform.RUYIN_BASE_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+  }
+
   /**
    * 跨域 SSO 回调
    * GET /api/auth/callback?token=...
@@ -85,14 +92,17 @@ export class CrossDomainRouter {
     }
 
     // Step 1: 调用 auth-bff verify 接口，校验一次性 token
-    const verifyResponse = await fetch(`${AUTH_BFF}/auth/crossdomain/verify`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-vxture-internal-auth": resolveInternalAuthToken(),
+    const verifyResponse = await fetch(
+      `${this.authBffUrl}/auth/crossdomain/verify`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-vxture-internal-auth": resolveInternalAuthToken(),
+        },
+        body: JSON.stringify({ token, source: "ruyin.ai" }),
       },
-      body: JSON.stringify({ token, source: "ruyin.ai" }),
-    });
+    );
 
     if (!verifyResponse.ok) {
       const err = (await verifyResponse
@@ -111,7 +121,7 @@ export class CrossDomainRouter {
     };
 
     // Step 2: 委托 auth-bff 签发 ruyin domain Cookie
-    const signResponse = await fetch(`${AUTH_BFF}/auth/internal/sign`, {
+    const signResponse = await fetch(`${this.authBffUrl}/auth/internal/sign`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -133,8 +143,6 @@ export class CrossDomainRouter {
     forwardSetCookie(res, signResponse);
 
     // Step 3: 重定向到 ruyin 首页
-    const ruyinBase =
-      (process.env["RUYIN_BASE_URL"] ?? "").replace(/\/$/, "") || "/";
-    res.redirect(302, ruyinBase);
+    res.redirect(302, this.ruyinBaseUrl || "/");
   }
 }

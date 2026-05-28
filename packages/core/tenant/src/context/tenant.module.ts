@@ -18,6 +18,7 @@ import {
 
 import { TenantMiddleware } from "../middleware/tenant.middleware";
 import { TenantContext } from "./tenant.context";
+import { TenantAlsService } from "./tenant-als.service";
 import type { TenantResolveOptions } from "../types/tenant.types";
 
 export const TENANT_OPTIONS = Symbol("TENANT_OPTIONS");
@@ -28,12 +29,14 @@ export class TenantModule implements NestModule {
   static register(options: TenantResolveOptions = {}): DynamicModule {
     return {
       module: TenantModule,
+      global: true,
       providers: [
         { provide: TENANT_OPTIONS, useValue: options },
+        TenantAlsService,
         TenantMiddleware,
         TenantContext,
       ],
-      exports: [TenantContext],
+      exports: [TenantAlsService, TenantContext],
     };
   }
 

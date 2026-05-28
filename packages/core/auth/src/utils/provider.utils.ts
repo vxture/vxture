@@ -70,6 +70,5 @@ export function buildOAuthProfile(params: {
  * Used for Redis key storage and blacklist comparison
  */
 export function generateJti(userId: string): string {
-  const random = Math.random().toString(36).slice(2, 10);
-  return `${userId}:${Date.now()}:${random}`;
+  return `${userId}:${Date.now()}:${crypto.randomUUID().replace(/-/g, "")}`;
 }

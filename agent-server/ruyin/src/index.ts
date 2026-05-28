@@ -17,6 +17,7 @@
 
 import { createServer } from "http";
 import type { IncomingMessage, ServerResponse } from "http";
+import { z } from "zod";
 import { JwtService } from "@nestjs/jwt";
 import type { JwtAccessPayload } from "@vxture/core-auth";
 import { extractBearerTokenFromHeaders } from "@vxture/core-auth";
@@ -31,6 +32,14 @@ import type {
 // ============================================================================
 // 服务器配置
 // ============================================================================
+
+// Fail-fast: JWT_SECRET must be present and ≥32 chars before the server starts.
+// Direct process.env.JWT_SECRET is intentional here — ruyin runs as a plain
+// HTTP server (not NestJS), so VxConfigService DI is not available.
+const JWT_SECRET = z
+  .string()
+  .min(32, "JWT_SECRET must be at least 32 characters for security")
+  .parse(process.env["JWT_SECRET"]);
 
 const DEFAULT_PORT = 3112;
 const jwtService = new JwtService();
@@ -293,14 +302,15 @@ function resolveRequestContext(
   req: IncomingMessage,
 ): AgentRequestContext | null {
   const token = extractBearerTokenFromHeaders(req.headers);
-  const secret = process.env.JWT_SECRET;
 
-  if (!token || !secret) {
+  if (!token) {
     return null;
   }
 
   try {
-    const payload = jwtService.verify<JwtAccessPayload>(token, { secret });
+    const payload = jwtService.verify<JwtAccessPayload>(token, {
+      secret: JWT_SECRET,
+    });
     return {
       userId: payload.sub,
       tenantId: payload.tenantId,

@@ -28,6 +28,7 @@ import {
   HttpStatus,
   Inject,
   Post,
+  Query,
   Req,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -46,6 +47,9 @@ class VerifyDto {
   source!: string;
 }
 
+const DEFAULT_TARGET_DOMAIN = "ruyin.ai";
+const ALLOWED_TARGET_DOMAINS = new Set([DEFAULT_TARGET_DOMAIN]);
+
 // ─── Router ───────────────────────────────────────────────────────────────
 
 @Controller("auth/crossdomain")
@@ -63,6 +67,7 @@ export class CrossDomainRouter {
   @HttpCode(HttpStatus.OK)
   async generateToken(
     @Req() req: Request,
+    @Query("targetDomain") targetDomain: string | undefined,
   ): Promise<{ token: string; expiresIn: number }> {
     // 从 cookie 读取 access token
     const accessToken =
@@ -98,11 +103,13 @@ export class CrossDomainRouter {
       throw new UnauthorizedException("Session has been revoked");
     }
 
+    const resolvedTargetDomain = resolveTargetDomain(targetDomain);
+
     const crossPayload: CrossDomainPayload = {
       sub: payload.sub,
       userType: payload.userType,
       tenantId: payload.tenantId ?? "",
-      targetDomain: "ruyin.ai",
+      targetDomain: resolvedTargetDomain,
       provider: payload.provider,
     };
 
@@ -137,4 +144,13 @@ export class CrossDomainRouter {
 
     return payload;
   }
+}
+
+function resolveTargetDomain(value: string | undefined): string {
+  const targetDomain = value?.trim() || DEFAULT_TARGET_DOMAIN;
+  if (!ALLOWED_TARGET_DOMAINS.has(targetDomain)) {
+    throw new UnauthorizedException("Cross-domain target is not allowed");
+  }
+
+  return targetDomain;
 }

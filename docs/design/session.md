@@ -1,7 +1,7 @@
 ---
 title: Session 管理设计
 category: design
-updated: 2026-05-10
+updated: 2026-05-28
 ---
 
 # Session 管理设计
@@ -93,26 +93,93 @@ POST /api/auth/logout
 
 ---
 
-## 跨域 SSO（vxture.com ↔ ruyin.ai）
+## 跨域 SSO（Vxture Console ↔ 业务应用）
 
-两个根域之间无法共享 Cookie，通过**一次性令牌中转**实现：
+不同根域之间无法共享 Cookie，通过**Console SSO start endpoint + 一次性令牌中转**实现。同域应用也使用同一协议，便于后续新增业务应用时保持入口一致。
+
+### 调用协议
+
+业务应用跳转到 Console 的 SSO start endpoint，并通过既有跨 Portal `ctx` 参数传递来源上下文：
+
+```text
+GET https://console.vxture.com/{locale}/sso/start?ctx=<urlencoded-json>
+```
+
+`ctx` 使用 `PortalNavContext` 结构：
+
+```json
+{
+  "from": "ruyin",
+  "returnTo": "https://vpn.ruyin.ai/auth/callback",
+  "caller": "Ruyin",
+  "state": "optional-random-state"
+}
+```
+
+字段约定：
+
+| 字段       | 必填 | 说明                                                          |
+| ---------- | ---- | ------------------------------------------------------------- |
+| `from`     | 是   | 来源应用标识，用于 Console 侧做 `returnTo` origin 白名单校验  |
+| `returnTo` | 是   | 业务应用 SSO callback 绝对 URL                                |
+| `caller`   | 是   | 来源应用展示名，用于 Console 顶栏/返回入口                    |
+| `state`    | 否   | 业务应用生成的随机值，Vxture 原样带回，用于防 CSRF 或恢复状态 |
+
+`ctx.from` 是安全策略标识，必须命中 Vxture 侧白名单；`ctx.caller` 是展示名称，可由业务应用按品牌传入。`ctx` 参数必须使用 `URLSearchParams` 写入，避免手写 JSON 转义。
+
+### 流程
 
 ```
-1. 用户在 vxture.com 已登录
-2. 点击跳转 ruyin.ai
+1. 用户在业务应用点击「使用 Vxture 登录」
    ↓
-3. auth-bff 生成 crossdomain token（随机字符串）
-   Redis SET crossdomain:{token} → userId（TTL 30s）
+2. 业务应用跳转 Console SSO start endpoint，并携带 ctx
    ↓
-4. 重定向到 ruyin.ai?sso_token={token}
+3. Console 验证登录态；未登录时先进入 Console 登录页，登录完成后继续 SSO start
    ↓
-5. ruyin.ai 前端携带 sso_token 调 auth-bff
+4. Console 按 ctx.from 校验 ctx.returnTo 的 origin 白名单
+   ↓
+5. Console 调用 auth-bff 生成 crossdomain token（随机字符串），并传入受白名单保护的 targetDomain
+   Redis SET crossdomain:{token} → payload（TTL 30s）
+   ↓
+6. Console 重定向到 ctx.returnTo，并追加 token 与可选 state
+   https://vpn.ruyin.ai/auth/callback?token=...&state=...
+   ↓
+7. 业务应用 callback 在服务端调用 auth-bff /auth/crossdomain/verify
    Redis GETDEL crossdomain:{token}（原子操作，只能消费一次）
    ↓
-6. 签发 ry_access_token / ry_refresh_token，Set-Cookie
+8. 业务应用委托 auth-bff /auth/internal/sign 签发本域 Cookie
 ```
 
 TTL 30s + GETDEL 原子操作确保令牌单次有效，防止重放。
+
+### 安全边界
+
+- Console SSO start endpoint 必须按 `ctx.from` 校验 `ctx.returnTo` 的 origin 白名单，禁止开放重定向。
+- auth-bff `GET /auth/crossdomain/token` 必须校验 `targetDomain` 白名单，禁止调用方自行生成任意目标域 token。
+- `ctx.returnTo` 必须是绝对 URL，禁止相对路径、`javascript:`、`data:` 等非 HTTP(S) scheme。
+- `state` 由业务应用生成并校验，Vxture 只负责原样带回，不解释其内容。
+- crossdomain token 不得写入日志，不得进入长期存储，TTL 不得超过 30 秒。
+- 业务应用 callback 必须在服务端消费 token，禁止在浏览器端直接调用 `auth-bff` 内部接口。
+
+### 首个应用：Ruyin
+
+`ruyin` 是对 Vxture 暴露的整体应用标识，VPN 等能力属于 ruyin.ai 内部子应用，不拆分为独立 SSO app。首个生产回调地址：
+
+```text
+https://vpn.ruyin.ai/auth/callback
+```
+
+对应 SSO start endpoint：
+
+```text
+https://console.vxture.com/zh-CN/sso/start
+```
+
+对应 `ctx.from` 白名单至少包含：
+
+```text
+ruyin → https://vpn.ruyin.ai
+```
 
 ---
 

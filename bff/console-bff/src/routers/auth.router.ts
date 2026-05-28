@@ -25,6 +25,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
+import { VxConfigService } from "@vxture/core-config";
 import type { RequestContext } from "../types/console.types";
 
 // ─── DTO ──────────────────────────────────────────────────────────────────────
@@ -49,14 +50,6 @@ class ResetPasswordDto {
 }
 
 // ─── 工具 ─────────────────────────────────────────────────────────────────────
-
-function resolveAuthBffUrl(): string {
-  const configured = process.env["AUTH_BFF_URL"]?.trim();
-  if (configured) return configured.replace(/\/+$/, "");
-  return "http://localhost:3090";
-}
-
-const AUTH_BFF = resolveAuthBffUrl();
 
 function forwardSetCookie(res: Response, upstream: globalThis.Response): void {
   const setCookie = readSetCookie(upstream);
@@ -100,6 +93,15 @@ function forwardJsonHeaders(req: Request): Record<string, string> {
 
 @Controller("api/auth")
 export class AuthRouter {
+  private readonly authBffUrl: string;
+
+  constructor(configService: VxConfigService) {
+    this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+  }
+
   /**
    * 密码登录 → 代理到 auth-bff
    * POST /api/auth/login
@@ -111,7 +113,7 @@ export class AuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    const response = await fetch(AUTH_BFF + "/auth/login", {
+    const response = await fetch(this.authBffUrl + "/auth/login", {
       method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({
@@ -134,12 +136,15 @@ export class AuthRouter {
   @Post("logout")
   @HttpCode(HttpStatus.OK)
   async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + "/auth/logout?source=console", {
-      method: "POST",
-      headers: {
-        Cookie: forwardCookie(req),
+    const response = await fetch(
+      this.authBffUrl + "/auth/logout?source=console",
+      {
+        method: "POST",
+        headers: {
+          Cookie: forwardCookie(req),
+        },
       },
-    });
+    );
 
     const data = await response.json();
     forwardSetCookie(res, response);
@@ -153,12 +158,15 @@ export class AuthRouter {
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
   async refresh(@Req() req: Request, @Res() res: Response): Promise<void> {
-    const response = await fetch(AUTH_BFF + "/auth/refresh?source=console", {
-      method: "POST",
-      headers: {
-        Cookie: forwardCookie(req),
+    const response = await fetch(
+      this.authBffUrl + "/auth/refresh?source=console",
+      {
+        method: "POST",
+        headers: {
+          Cookie: forwardCookie(req),
+        },
       },
-    });
+    );
 
     const data = await response.json();
     forwardSetCookie(res, response);
@@ -176,7 +184,7 @@ export class AuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    const response = await fetch(AUTH_BFF + "/auth/tenant/switch", {
+    const response = await fetch(this.authBffUrl + "/auth/tenant/switch", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -204,7 +212,7 @@ export class AuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    const response = await fetch(AUTH_BFF + "/auth/forgot-password", {
+    const response = await fetch(this.authBffUrl + "/auth/forgot-password", {
       method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({ email: body.email, source: "console" }),
@@ -225,7 +233,7 @@ export class AuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<void> {
-    const response = await fetch(AUTH_BFF + "/auth/reset-password", {
+    const response = await fetch(this.authBffUrl + "/auth/reset-password", {
       method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({

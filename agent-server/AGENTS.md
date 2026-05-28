@@ -12,3 +12,9 @@
 | 4. 包实现上下文 | `docs/packages/agents/{agent}/{server                                             | studio}.md` |
 
 > 每个 agent-server 独立治理，禁止跨 agent-server import。
+
+## ⚠️ 未解决技术债务
+
+| ID     | 位置                        | 问题                                                                | 详情                                                                                               |
+| ------ | --------------------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| TD-011 | `ruyin/src/index.ts:296` 🔴 | `JWT_SECRET` 直接读 `process.env`，缺失时静默 `undefined`，认证漏洞 | [tech-debt.md](../docs/tech-debt.md#td-011--agent-server-直接读取-processenv-绕过-vxconfigservice) |

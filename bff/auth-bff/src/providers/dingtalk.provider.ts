@@ -15,6 +15,7 @@
  */
 
 import { OAuthProviderType } from "@vxture/core-auth";
+import type { OauthConfig } from "@vxture/core-config";
 
 // ============================================================================
 // 类型
@@ -59,14 +60,13 @@ export interface OAuthUserProfileResponse {
 export class DingtalkProvider {
   readonly name = "dingtalk";
 
-  private get clientId(): string {
-    return process.env.DINGTALK_APP_KEY ?? process.env.DINGTALK_SUITE_KEY ?? "";
-  }
+  private readonly clientId: string;
+  private readonly clientSecret: string;
 
-  private get clientSecret(): string {
-    return (
-      process.env.DINGTALK_APP_SECRET ?? process.env.DINGTALK_SUITE_SECRET ?? ""
-    );
+  constructor(cfg: OauthConfig) {
+    this.clientId = cfg.DINGTALK_APP_KEY ?? cfg.DINGTALK_SUITE_KEY ?? "";
+    this.clientSecret =
+      cfg.DINGTALK_APP_SECRET ?? cfg.DINGTALK_SUITE_SECRET ?? "";
   }
 
   async exchangeCode(code: string, _redirectUri: string): Promise<OAuthTokens> {

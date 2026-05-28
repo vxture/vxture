@@ -26,18 +26,10 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import type { Request, Response } from "express";
+import { VxConfigService } from "@vxture/core-config";
 import type { RequestContext } from "../types/console.types";
 
 // ─── 配置 ─────────────────────────────────────────────────────────────────────
-
-function resolveGatewayUrl(): string {
-  return (
-    process.env["AI_GATEWAY_URL"]?.trim() ?? "http://localhost:3100"
-  ).replace(/\/+$/, "");
-}
-
-const AI_GATEWAY = resolveGatewayUrl();
-const ADMIN_BASE = `${AI_GATEWAY}/ai/gateway/admin`;
 
 // ─── 守卫 ─────────────────────────────────────────────────────────────────────
 
@@ -61,13 +53,15 @@ async function readJson(response: globalThis.Response): Promise<unknown> {
 }
 
 async function proxyGet(
+  adminBase: string,
   path: string,
 ): Promise<{ status: number; data: unknown }> {
-  const response = await fetch(ADMIN_BASE + path);
+  const response = await fetch(adminBase + path);
   return { status: response.status, data: await readJson(response) };
 }
 
 async function proxyPost(
+  adminBase: string,
   path: string,
   body?: unknown,
 ): Promise<{ status: number; data: unknown }> {
@@ -76,15 +70,16 @@ async function proxyPost(
     headers: { "Content-Type": "application/json" },
   };
   if (body !== undefined) init.body = JSON.stringify(body);
-  const response = await fetch(ADMIN_BASE + path, init);
+  const response = await fetch(adminBase + path, init);
   return { status: response.status, data: await readJson(response) };
 }
 
 async function proxyPut(
+  adminBase: string,
   path: string,
   body: unknown,
 ): Promise<{ status: number; data: unknown }> {
-  const response = await fetch(ADMIN_BASE + path, {
+  const response = await fetch(adminBase + path, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -93,9 +88,10 @@ async function proxyPut(
 }
 
 async function proxyDelete(
+  adminBase: string,
   path: string,
 ): Promise<{ status: number; data: unknown }> {
-  const response = await fetch(ADMIN_BASE + path, { method: "DELETE" });
+  const response = await fetch(adminBase + path, { method: "DELETE" });
   return { status: response.status, data: await readJson(response) };
 }
 
@@ -103,6 +99,16 @@ async function proxyDelete(
 
 @Controller("api/ai-gateway")
 export class AiGatewayRouter {
+  private readonly adminBase: string;
+
+  constructor(configService: VxConfigService) {
+    const gatewayUrl = configService.platform.AI_GATEWAY_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+    this.adminBase = `${gatewayUrl}/ai/gateway/admin`;
+  }
+
   // ── 模型列表 ──────────────────────────────────────────────────────────────
 
   @Get("models")
@@ -113,7 +119,7 @@ export class AiGatewayRouter {
   ): Promise<void> {
     requireModelManageCapability(req);
     const qs = `?includeInactive=${includeInactive === "false" ? "false" : "true"}`;
-    const { status, data } = await proxyGet(`/models${qs}`);
+    const { status, data } = await proxyGet(this.adminBase, `/models${qs}`);
     res.status(status).json(data);
   }
 
@@ -138,7 +144,7 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPost("/models", body);
+    const { status, data } = await proxyPost(this.adminBase, "/models", body);
     res.status(status).json(data);
   }
 
@@ -164,7 +170,11 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPut(`/models/${id}`, body);
+    const { status, data } = await proxyPut(
+      this.adminBase,
+      `/models/${id}`,
+      body,
+    );
     res.status(status).json(data);
   }
 
@@ -178,7 +188,10 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPost(`/models/${id}/activate`);
+    const { status, data } = await proxyPost(
+      this.adminBase,
+      `/models/${id}/activate`,
+    );
     res.status(status).json(data);
   }
 
@@ -190,7 +203,10 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPost(`/models/${id}/deactivate`);
+    const { status, data } = await proxyPost(
+      this.adminBase,
+      `/models/${id}/deactivate`,
+    );
     res.status(status).json(data);
   }
 
@@ -204,7 +220,7 @@ export class AiGatewayRouter {
   ): Promise<void> {
     requireModelManageCapability(req);
     const qs = modelId ? `?modelId=${encodeURIComponent(modelId)}` : "";
-    const { status, data } = await proxyGet(`/grants${qs}`);
+    const { status, data } = await proxyGet(this.adminBase, `/grants${qs}`);
     res.status(status).json(data);
   }
 
@@ -227,7 +243,7 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPost("/grants", body);
+    const { status, data } = await proxyPost(this.adminBase, "/grants", body);
     res.status(status).json(data);
   }
 
@@ -248,7 +264,11 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPut(`/grants/${id}`, body);
+    const { status, data } = await proxyPut(
+      this.adminBase,
+      `/grants/${id}`,
+      body,
+    );
     res.status(status).json(data);
   }
 
@@ -262,7 +282,10 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyPost(`/grants/${id}/activate`);
+    const { status, data } = await proxyPost(
+      this.adminBase,
+      `/grants/${id}/activate`,
+    );
     res.status(status).json(data);
   }
 
@@ -276,7 +299,7 @@ export class AiGatewayRouter {
     @Res() res: Response,
   ): Promise<void> {
     requireModelManageCapability(req);
-    const { status, data } = await proxyDelete(`/grants/${id}`);
+    const { status, data } = await proxyDelete(this.adminBase, `/grants/${id}`);
     res.status(status).json(data);
   }
 }

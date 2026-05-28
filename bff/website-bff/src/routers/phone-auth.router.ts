@@ -21,6 +21,7 @@ import {
 } from "@nestjs/common";
 import { IsString, Length, Matches } from "class-validator";
 import type { Request, Response } from "express";
+import { VxConfigService } from "@vxture/core-config";
 
 class SendSmsCodeDto {
   @IsString()
@@ -42,14 +43,6 @@ class SmsLoginDto {
   turnstileToken?: string;
 }
 
-function resolveAuthBffUrl(): string {
-  const configured = process.env["AUTH_BFF_URL"]?.trim();
-  if (configured) return configured.replace(/\/+$/, "");
-  return "http://localhost:3090";
-}
-
-const AUTH_BFF = resolveAuthBffUrl();
-
 function forwardJsonHeaders(req: Request): Record<string, string> {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
@@ -70,6 +63,15 @@ function forwardJsonHeaders(req: Request): Record<string, string> {
 
 @Controller("api/auth")
 export class PhoneAuthRouter {
+  private readonly authBffUrl: string;
+
+  constructor(configService: VxConfigService) {
+    this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
+      /\/+$/,
+      "",
+    );
+  }
+
   @Post("send-phone-code")
   @HttpCode(HttpStatus.OK)
   async sendPhoneCode(
@@ -77,7 +79,7 @@ export class PhoneAuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const response = await fetch(AUTH_BFF + "/auth/send-phone-code", {
+    const response = await fetch(this.authBffUrl + "/auth/send-phone-code", {
       method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({
@@ -96,7 +98,7 @@ export class PhoneAuthRouter {
     @Req() req: Request,
     @Res() res: Response,
   ) {
-    const response = await fetch(AUTH_BFF + "/auth/login-with-phone", {
+    const response = await fetch(this.authBffUrl + "/auth/login-with-phone", {
       method: "POST",
       headers: forwardJsonHeaders(req),
       body: JSON.stringify({

@@ -19,6 +19,10 @@ import {
   redisSchema,
   authSchema,
   aiSchema,
+  mailSchema,
+  oauthSchema,
+  platformSchema,
+  velaSchema,
 } from "../schemas";
 import { VxConfigService } from "../service";
 
@@ -35,6 +39,10 @@ const CONFIG_DOMAINS = [
   { token: CONFIG_TOKEN.REDIS, schema: redisSchema, name: "redis" },
   { token: CONFIG_TOKEN.AUTH, schema: authSchema, name: "auth" },
   { token: CONFIG_TOKEN.AI, schema: aiSchema, name: "ai" },
+  { token: CONFIG_TOKEN.MAIL, schema: mailSchema, name: "mail" },
+  { token: CONFIG_TOKEN.OAUTH, schema: oauthSchema, name: "oauth" },
+  { token: CONFIG_TOKEN.PLATFORM, schema: platformSchema, name: "platform" },
+  { token: CONFIG_TOKEN.VELA, schema: velaSchema, name: "vela" },
 ] as const;
 
 // ============================================================================
@@ -48,7 +56,17 @@ export interface VxConfigModuleOptions {
    * - agent-server adds: 'ai'
    * - Unregistered domains won't be parsed or injectable
    */
-  domains?: Array<"app" | "database" | "redis" | "auth" | "ai">;
+  domains?: Array<
+    | "app"
+    | "database"
+    | "redis"
+    | "auth"
+    | "ai"
+    | "mail"
+    | "oauth"
+    | "platform"
+    | "vela"
+  >;
 
   /**
    * Whether to throw and exit process on missing required variables

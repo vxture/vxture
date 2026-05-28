@@ -27,6 +27,8 @@ import { randomBytes } from "node:crypto";
 import type { Response } from "express";
 import { AUTH_CONSTANTS } from "@vxture/shared";
 import type { OAuthProviderType } from "@vxture/core-auth";
+import { VxConfigService } from "@vxture/core-config";
+import type { OauthConfig, PlatformConfig } from "@vxture/core-config";
 import { AuthService } from "../auth/auth.service";
 import { RedisService } from "../redis/redis.service";
 import { DingtalkProvider } from "../providers/dingtalk.provider";
@@ -64,10 +66,13 @@ function parseOAuthStateData(
   }
 }
 
-function sanitizeReturnTo(returnTo: string | undefined): string {
-  const websiteBase = (process.env.WEBSITE_BASE_URL ?? "").replace(/\/$/, "");
-  const consoleBase = (process.env.CONSOLE_BASE_URL ?? "").replace(/\/$/, "");
-  const adminBase = (process.env.ADMIN_BASE_URL ?? "").replace(/\/$/, "");
+function sanitizeReturnTo(
+  returnTo: string | undefined,
+  cfg: PlatformConfig,
+): string {
+  const websiteBase = cfg.WEBSITE_BASE_URL.replace(/\/$/, "");
+  const consoleBase = cfg.CONSOLE_BASE_URL.replace(/\/$/, "");
+  const adminBase = cfg.ADMIN_BASE_URL.replace(/\/$/, "");
   const fallback = websiteBase || "/";
   if (!returnTo) return fallback;
   if (returnTo.startsWith("/") && !returnTo.startsWith("//")) return returnTo;
@@ -77,10 +82,8 @@ function sanitizeReturnTo(returnTo: string | undefined): string {
   return fallback;
 }
 
-function resolveCookieDomain(): string | undefined {
-  const domain =
-    process.env.COOKIE_DOMAIN_PLATFORM?.trim() ||
-    process.env.AUTH_COOKIE_DOMAIN?.trim();
+function resolveCookieDomain(cfg: PlatformConfig): string | undefined {
+  const domain = cfg.COOKIE_DOMAIN_PLATFORM?.trim();
   if (!domain || domain === "localhost") return undefined;
   return domain;
 }
@@ -105,12 +108,15 @@ interface OAuthProvider {
   }>;
 }
 
-function createProvider(providerName: string): OAuthProvider {
+function createProvider(
+  providerName: string,
+  oauthCfg: OauthConfig,
+): OAuthProvider {
   switch (providerName) {
     case "dingtalk":
-      return new DingtalkProvider();
+      return new DingtalkProvider(oauthCfg);
     case "feishu":
-      return new FeishuProvider();
+      return new FeishuProvider(oauthCfg);
     default:
       throw new ServiceUnavailableException(
         `不支持的 OAuth 提供方: ${providerName}`,
@@ -118,12 +124,19 @@ function createProvider(providerName: string): OAuthProvider {
   }
 }
 
-function resolveRedirectUri(providerName: string): string {
-  const envVar = `${providerName.toUpperCase()}_REDIRECT_URI`;
-  const configured = process.env[envVar]?.trim();
-  if (configured) return configured;
-  // 开发环境默认值
-  return `http://localhost:3090/auth/oauth/${providerName}/callback`;
+function resolveRedirectUri(
+  providerName: string,
+  oauthCfg: OauthConfig,
+): string {
+  const fallback = `http://localhost:3090/auth/oauth/${providerName}/callback`;
+  switch (providerName) {
+    case "dingtalk":
+      return oauthCfg.DINGTALK_REDIRECT_URI ?? fallback;
+    case "feishu":
+      return oauthCfg.FEISHU_REDIRECT_URI ?? fallback;
+    default:
+      return fallback;
+  }
 }
 
 // ============================================================================
@@ -135,6 +148,7 @@ export class OAuthRouter {
   constructor(
     @Inject(AuthService) private readonly authService: AuthService,
     @Inject(RedisService) private readonly redis: RedisService,
+    private readonly configService: VxConfigService,
   ) {}
 
   /**
@@ -154,14 +168,16 @@ export class OAuthRouter {
       );
     }
 
-    const safeReturnTo = sanitizeReturnTo(returnTo);
+    const platformCfg = this.configService.platform;
+    const oauthCfg = this.configService.oauth;
+    const safeReturnTo = sanitizeReturnTo(returnTo, platformCfg);
     const state = buildState();
     await this.redis.storeOAuthState(
       state,
       encodeOAuthStateData(providerName, safeReturnTo),
     );
-    const redirectUri = resolveRedirectUri(providerName);
-    const provider = createProvider(providerName);
+    const redirectUri = resolveRedirectUri(providerName, oauthCfg);
+    const provider = createProvider(providerName, oauthCfg);
     const authUrl = provider.buildAuthorizationUrl(redirectUri, state);
 
     return { url: authUrl, statusCode: 302 };
@@ -188,8 +204,10 @@ export class OAuthRouter {
       throw new BadRequestException("state 与 OAuth provider 不匹配");
     }
 
-    const redirectUri = resolveRedirectUri(providerName);
-    const provider = createProvider(providerName);
+    const platformCfg = this.configService.platform;
+    const oauthCfg = this.configService.oauth;
+    const redirectUri = resolveRedirectUri(providerName, oauthCfg);
+    const provider = createProvider(providerName, oauthCfg);
 
     let tokens: Awaited<ReturnType<OAuthProvider["exchangeCode"]>>;
     try {
@@ -208,7 +226,7 @@ export class OAuthRouter {
     const result = await this.authService.loginWithOAuth(profile);
 
     const secure = process.env.NODE_ENV === "production";
-    const domain = resolveCookieDomain();
+    const domain = resolveCookieDomain(platformCfg);
     const cookieBase = {
       httpOnly: true,
       sameSite: "lax" as const,
@@ -243,19 +261,17 @@ export class OAuthRouter {
       },
     );
 
-    const returnTo = sanitizeReturnTo(parsed.returnTo);
+    const returnTo = sanitizeReturnTo(parsed.returnTo, platformCfg);
     res.redirect(returnTo || "/");
   }
 
-  // 为简化 keep 现有 provider 代码复用，clientId 的检测逻辑保持一致
   private resolveClientId(providerName: string): string | null {
+    const cfg = this.configService.oauth;
     switch (providerName) {
       case "dingtalk":
-        return (
-          process.env.DINGTALK_APP_KEY ?? process.env.DINGTALK_SUITE_KEY ?? null
-        );
+        return cfg.DINGTALK_APP_KEY ?? cfg.DINGTALK_SUITE_KEY ?? null;
       case "feishu":
-        return process.env.FEISHU_APP_ID ?? null;
+        return cfg.FEISHU_APP_ID ?? null;
       default:
         return null;
     }

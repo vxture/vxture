@@ -234,6 +234,20 @@ WEBSITE_BASE_URL=https://vxture.com
 
 ---
 
+### T16 · Umbra / ruyin.ai 跨域 SSO 启动入口
+
+- [x] Vxture 侧补齐 `VXTURE_SSO_URL` 对应的 SSO start endpoint
+- [x] SSO start endpoint 复用既有跨 Portal `ctx` 参数，解析 `from`、`returnTo`、`caller`、可选 `state`
+- [x] Vxture 侧按 `ctx.from` 校验允许的 `ctx.returnTo` origin，兼容跨域名与同域名应用
+- [x] 启动页在 Vxture 登录态下调用 auth-bff 生成 crossdomain one-time token
+- [x] auth-bff 按 `targetDomain` 白名单生成 crossdomain token，避免目标域硬编码
+- [x] 生成 token 后自动回到 `ctx.returnTo`，并追加 `token` 与可选 `state`
+- [ ] 部署后将 Umbra `VXTURE_SSO_URL` 配置为 `https://console.vxture.com/zh-CN/sso/start`
+
+**代码入口：** `portals/console/src/app/[locale]/sso/start/route.ts`、`bff/auth-bff/src/routers/crossdomain.router.ts`
+
+---
+
 ## 附：部署待完成事项
 
 > 架构背景见 [`docs/deployment/00-overview.md`](deployment/00-overview.md)。

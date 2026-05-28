@@ -14,6 +14,10 @@ import type {
   DatabaseConfig,
   RedisConfig,
   AiConfig,
+  OauthConfig,
+  PlatformConfig,
+  MailEnvConfig,
+  VelaConfig,
 } from "../schemas";
 
 // ============================================================================
@@ -26,6 +30,10 @@ export interface VxConfig {
   redis: RedisConfig;
   auth: AuthConfig;
   ai: AiConfig;
+  oauth: OauthConfig;
+  platform: PlatformConfig;
+  mail: MailEnvConfig;
+  vela: VelaConfig;
 }
 
 export const CONFIG_TOKEN = {
@@ -34,6 +42,10 @@ export const CONFIG_TOKEN = {
   REDIS: Symbol("VX_CONFIG_REDIS"),
   AUTH: Symbol("VX_CONFIG_AUTH"),
   AI: Symbol("VX_CONFIG_AI"),
+  OAUTH: Symbol("VX_CONFIG_OAUTH"),
+  PLATFORM: Symbol("VX_CONFIG_PLATFORM"),
+  MAIL: Symbol("VX_CONFIG_MAIL"),
+  VELA: Symbol("VX_CONFIG_VELA"),
 } as const;
 
 export interface ConfigLoadResult {
