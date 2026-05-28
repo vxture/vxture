@@ -258,7 +258,8 @@ POST /auth/login-with-phone    — 手机号 + 验证码登录
 ### `/auth/crossdomain` — 跨域 token（ruyin.ai 双域 SSO）
 
 ```
-GET  /auth/crossdomain/token   — 生成 30s 有效的一次性 token（Redis GETDEL）
+GET  /auth/crossdomain/token?targetDomain=ruyin.ai
+  — 校验当前租户登录态与 targetDomain 白名单，生成 30s 有效的一次性 token（Redis GETDEL）
 POST /auth/crossdomain/verify  — 验证 token，在 ruyin domain 写入 Cookie
 ```
 

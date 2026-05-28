@@ -67,7 +67,7 @@ function resolveLocale(request: NextRequest, pathname: string): string {
 // ─── 中间件主逻辑 ──────────────────────────────────────────────────────────────
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, search } = request.nextUrl;
   const localePath = stripLocale(pathname);
 
   // /signin 是唯一公开路由，其余全部需要认证
@@ -80,8 +80,8 @@ export function middleware(request: NextRequest) {
 
     if (!hasSession) {
       const locale = resolveLocale(request, pathname);
-      // next 传递去 locale 的路径；登录后 next-intl router 自动补回 locale 前缀
-      const next = localePath === "/" ? "/" : localePath;
+      // next 传递去 locale 的路径；SSO 入口必须保留 ctx 查询参数才能完成回跳。
+      const next = localePath === "/" ? "/" : `${localePath}${search}`;
       return NextResponse.redirect(
         new URL(
           `/${locale}/signin?next=${encodeURIComponent(next)}`,

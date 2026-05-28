@@ -32,6 +32,8 @@ export interface PortalNavContext {
   returnTo: string;
   /** 来源 Portal 显示名称，console 顶栏展示 */
   caller: string;
+  /** 调用方生成的状态值，SSO 场景中原样带回调用方 */
+  state?: string;
   /** 来源 Portal Logo URL（可选），相对路径或绝对 URL */
   callerLogo?: string;
 }

@@ -261,12 +261,14 @@ GET  /auth/oauth/{provider}/callback
   查或建 OAuth 关联及租户数据，签发 JWT，跳回前端
 
 GET  /auth/crossdomain/token
-  验证当前登录态，生成 30 秒有效一次性 token，返回供前端跳转使用
+  验证当前登录态，按 targetDomain 白名单生成 30 秒有效一次性 token，返回供前端跳转使用
 
 POST /auth/crossdomain/verify
   原子性取出并删除 Redis 中的一次性 token
   校验 userType / authScope / targetDomain，返回用户信息和 tenantId，由目标域 BFF 签发自己的 Cookie
 ```
+
+Console 侧还需要提供浏览器可访问的 SSO start endpoint（`/{locale}/sso/start?ctx=...`）。该 endpoint 不签发 JWT，只负责解析跨 Portal `ctx`、按 `ctx.from` 校验 `returnTo` 白名单、在已登录态下调用 `auth-bff` 生成 crossdomain token，并将浏览器重定向回业务应用 callback。
 
 > 登出边界（单域 / 跨域 / logout_all 边界规则）及跨域 SSO 完整流程详见 [`docs/design/session.md`](session.md) — §登出与 Token 吊销 / §跨域 SSO。
 
