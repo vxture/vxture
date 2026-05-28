@@ -26,6 +26,8 @@ jobs:
           source: "deploy/worker-01/compose.platform.yml,deploy/worker-01/compose.nginx.yml,deploy/worker-01/scripts"
           target: "/tmp/vxture-worker-01-deploy"
           rm: true
+          timeout: 120s
+          command_timeout: 10m
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
