@@ -57,7 +57,15 @@ export interface VxConfigModuleOptions {
    * - Unregistered domains won't be parsed or injectable
    */
   domains?: Array<
-    "app" | "database" | "redis" | "auth" | "ai" | "mail" | "oauth" | "platform" | "vela"
+    | "app"
+    | "database"
+    | "redis"
+    | "auth"
+    | "ai"
+    | "mail"
+    | "oauth"
+    | "platform"
+    | "vela"
   >;
 
   /**
