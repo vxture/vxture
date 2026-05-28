@@ -1,6 +1,6 @@
 name: Deploy worker-01
 
-# Docker Build & Push 全部成功后自动触发
+# Automatically deploy worker-01 after all Docker images are built successfully.
 on:
   workflow_run:
     workflows: ["Docker Build & Push"]
@@ -14,6 +14,19 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
+      - name: Checkout deploy files
+        uses: actions/checkout@v4
+
+      - name: Upload worker-01 deploy files
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.WORKER01_HOST }}
+          username: ${{ secrets.WORKER01_USER }}
+          key: ${{ secrets.WORKER01_SSH_KEY }}
+          source: "deploy/worker-01/compose.platform.yml,deploy/worker-01/compose.nginx.yml,deploy/worker-01/scripts"
+          target: "/tmp/vxture-worker-01-deploy"
+          rm: true
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -24,18 +37,22 @@ jobs:
           script: |
             set -e
 
-            # 1. 同步最新配置
-            git -C /srv/vxture/repo pull
+            # Sync compose/scripts uploaded by GitHub Actions. No server-side git pull.
+            DEPLOY_DIR=/srv/vxture/repo/deploy/worker-01
+            mkdir -p "$DEPLOY_DIR"
+            cp -f /tmp/vxture-worker-01-deploy/deploy/worker-01/compose.platform.yml "$DEPLOY_DIR/compose.platform.yml"
+            cp -f /tmp/vxture-worker-01-deploy/deploy/worker-01/compose.nginx.yml "$DEPLOY_DIR/compose.nginx.yml"
+            rm -rf "$DEPLOY_DIR/scripts"
+            cp -R /tmp/vxture-worker-01-deploy/deploy/worker-01/scripts "$DEPLOY_DIR/scripts"
 
-            # 2. 可选登录 GHCR，私有包需要 WORKER01_GHCR_USERNAME / WORKER01_GHCR_TOKEN
+            # Optional GHCR login for private packages.
             if [ -n "${{ secrets.WORKER01_GHCR_USERNAME }}" ] && [ -n "${{ secrets.WORKER01_GHCR_TOKEN }}" ]; then
               echo "${{ secrets.WORKER01_GHCR_TOKEN }}" | docker login ghcr.io -u "${{ secrets.WORKER01_GHCR_USERNAME }}" --password-stdin
             fi
 
-            # 3. 拉取新镜像并滚动重启平台栈
-            cd /srv/vxture/repo/deploy/worker-01
+            # Pull new images and restart the platform stack.
+            cd "$DEPLOY_DIR"
             COMPOSE_PARALLEL_LIMIT=1 docker compose -f compose.platform.yml pull
             docker compose -f compose.platform.yml up -d
 
-            # 4. 输出最终状态
             docker compose -f compose.platform.yml ps

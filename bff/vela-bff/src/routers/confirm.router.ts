@@ -19,6 +19,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  Inject,
   Post,
   Req,
 } from "@nestjs/common";
@@ -44,7 +45,7 @@ interface ConfirmBffRequestDto {
 export class ConfirmRouter {
   private readonly velaServerUrl: string;
 
-  constructor(configService: VxConfigService) {
+  constructor(@Inject(VxConfigService) configService: VxConfigService) {
     this.velaServerUrl =
       configService.platform.VELA_SERVER_INTERNAL_URL.trim().replace(
         /\/+$/,

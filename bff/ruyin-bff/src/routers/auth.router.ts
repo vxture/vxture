@@ -20,6 +20,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
   Res,
@@ -40,7 +41,7 @@ export class AuthRouter {
   private readonly authBffUrl: string;
   private readonly ruyinCookieDomain: string | undefined;
 
-  constructor(configService: VxConfigService) {
+  constructor(@Inject(VxConfigService) configService: VxConfigService) {
     const cfg = configService.platform;
     this.authBffUrl = cfg.AUTH_BFF_URL.trim().replace(/\/+$/, "");
     const domain = cfg.COOKIE_DOMAIN_RUYIN?.trim();

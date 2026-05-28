@@ -23,6 +23,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Query,
   Res,
   UnauthorizedException,
@@ -63,7 +64,7 @@ export class CrossDomainRouter {
   private readonly authBffUrl: string;
   private readonly ruyinBaseUrl: string;
 
-  constructor(configService: VxConfigService) {
+  constructor(@Inject(VxConfigService) configService: VxConfigService) {
     this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
       /\/+$/,
       "",

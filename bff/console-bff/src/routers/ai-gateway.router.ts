@@ -17,6 +17,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Param,
   Post,
   Put,
@@ -101,7 +102,7 @@ async function proxyDelete(
 export class AiGatewayRouter {
   private readonly adminBase: string;
 
-  constructor(configService: VxConfigService) {
+  constructor(@Inject(VxConfigService) configService: VxConfigService) {
     const gatewayUrl = configService.platform.AI_GATEWAY_URL.trim().replace(
       /\/+$/,
       "",
