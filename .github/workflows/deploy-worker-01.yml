@@ -20,6 +20,7 @@ jobs:
           host: ${{ secrets.WORKER01_HOST }}
           username: ${{ secrets.WORKER01_USER }}
           key: ${{ secrets.WORKER01_SSH_KEY }}
+          command_timeout: 30m
           script: |
             set -e
 
@@ -33,7 +34,7 @@ jobs:
 
             # 3. 拉取新镜像并滚动重启平台栈
             cd /srv/vxture/repo/deploy/worker-01
-            docker compose -f compose.platform.yml pull
+            COMPOSE_PARALLEL_LIMIT=1 docker compose -f compose.platform.yml pull
             docker compose -f compose.platform.yml up -d
 
             # 4. 输出最终状态
