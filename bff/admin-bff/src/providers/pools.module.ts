@@ -38,7 +38,7 @@ function makePool(
       provide: ADMIN_BFF_RO_POOL,
       inject: [VxConfigService],
       useFactory: (config: VxConfigService) =>
-        makePool(process.env["REPORTING_RO_DATABASE_URL"], config.database),
+        makePool(config.database.REPORTING_RO_DATABASE_URL, config.database),
     },
   ],
   exports: [ADMIN_BFF_RO_POOL, ADMIN_BFF_RW_POOL],
