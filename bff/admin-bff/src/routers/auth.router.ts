@@ -112,7 +112,7 @@ export class AuthRouter {
     @Inject(CaptchaService) private readonly captchaService: CaptchaService,
     @Inject(PhoneCodeService)
     private readonly phoneCodeService: PhoneCodeService,
-    configService: VxConfigService,
+    @Inject(VxConfigService) configService: VxConfigService,
   ) {
     this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
       /\/+$/,

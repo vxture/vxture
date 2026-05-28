@@ -13,10 +13,9 @@
  * @date 2026-05-03
  */
 
-import { Injectable, Logger, Inject } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import nodemailer from "nodemailer";
 import type { MailPayload, SmtpConfig } from "./mail.types";
-import { MAIL_SMTP_OPTIONS } from "./mail.module";
 
 // ============================================================================
 // MailService
@@ -30,7 +29,9 @@ export class MailService {
   > | null;
   private readonly from: string;
 
-  constructor(@Inject(MAIL_SMTP_OPTIONS) smtp: SmtpConfig | null) {
+  constructor() {
+    const smtp = resolveSmtpConfig();
+
     if (!smtp) {
       this.transporter = null;
       this.from = "";
@@ -85,4 +86,23 @@ export class MailService {
       `邮件已发送：subject="${payload.subject}" to="${[payload.to].flat().join(", ")}"`,
     );
   }
+}
+
+function resolveSmtpConfig(): SmtpConfig | null {
+  const host = process.env["SMTP_HOST"];
+  const user = process.env["SMTP_USER"];
+  const pass = process.env["SMTP_PASS"];
+
+  if (!host || !user || !pass) {
+    return null;
+  }
+
+  return {
+    host,
+    port: Number(process.env["SMTP_PORT"] ?? 465),
+    secure: process.env["SMTP_SECURE"] !== "false",
+    user,
+    pass,
+    from: process.env["SMTP_FROM"] ?? `Vxture Studio <no-reply@${host}>`,
+  };
 }
