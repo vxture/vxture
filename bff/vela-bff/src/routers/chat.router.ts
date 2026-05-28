@@ -19,6 +19,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Inject,
   Post,
   Req,
   Res,
@@ -44,7 +45,7 @@ function writeSseError(res: Response, message: string): void {
 export class ChatRouter {
   private readonly velaServerUrl: string;
 
-  constructor(configService: VxConfigService) {
+  constructor(@Inject(VxConfigService) configService: VxConfigService) {
     this.velaServerUrl =
       configService.platform.VELA_SERVER_INTERNAL_URL.trim().replace(
         /\/+$/,

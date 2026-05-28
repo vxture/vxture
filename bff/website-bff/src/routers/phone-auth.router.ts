@@ -15,6 +15,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
   Res,
@@ -65,7 +66,7 @@ function forwardJsonHeaders(req: Request): Record<string, string> {
 export class PhoneAuthRouter {
   private readonly authBffUrl: string;
 
-  constructor(configService: VxConfigService) {
+  constructor(@Inject(VxConfigService) configService: VxConfigService) {
     this.authBffUrl = configService.platform.AUTH_BFF_URL.trim().replace(
       /\/+$/,
       "",

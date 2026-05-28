@@ -5,6 +5,7 @@ import {
   Delete,
   ForbiddenException,
   Get,
+  Inject,
   Param,
   Post,
   Put,
@@ -31,7 +32,7 @@ interface GatewayErrorBody {
 export class AiGatewayRouter {
   private readonly gatewayUrl: string;
 
-  constructor(configService: VxConfigService) {
+  constructor(@Inject(VxConfigService) configService: VxConfigService) {
     this.gatewayUrl = configService.platform.AI_GATEWAY_URL.trim().replace(
       /\/+$/,
       "",
