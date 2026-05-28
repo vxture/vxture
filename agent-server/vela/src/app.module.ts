@@ -21,7 +21,7 @@ import { ToolsModule } from "./tools/tools.module";
 
 @Module({
   imports: [
-    VxConfigModule.register({ domains: ["app", "auth"] }),
+    VxConfigModule.register({ domains: ["app", "auth", "vela"] }),
     BillingModule,
     SubscriptionModule,
     TicketModule,
