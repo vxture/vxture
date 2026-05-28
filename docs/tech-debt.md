@@ -70,8 +70,8 @@
 | [TD-011](#td-011--agent-server-直接读取-process.env-绕过-vxconfigservice)   | agent-server 直接读取 process.env               | Security           | Resolved | 🔴 HIGH |
 | [TD-012](#td-012--bff-oauth-provider-凭据未入-core-config-schema)           | BFF OAuth provider 凭据未入 schema              | Security           | Resolved | 🔴 HIGH |
 | [TD-013](#td-013--bff-跨服务-url--cookie-domain-未入-core-config-schema)    | BFF 跨服务 URL / cookie domain 未入 schema      | Implementation Gap | Resolved | 🟡 MED  |
-| [TD-014](#td-014--vela-server-操作配置直读-processenv-无-zod-验证)          | vela-server 操作配置直读 process.env            | Implementation Gap | Open     | 🟡 MED  |
-| [TD-015](#td-015--admin-bff-reporting_ro_database_url-未入-schema)          | admin-bff REPORTING_RO_DATABASE_URL 未入 schema | Implementation Gap | Open     | 🟡 MED  |
+| [TD-014](#td-014--vela-server-操作配置直读-processenv-无-zod-验证)          | vela-server 操作配置直读 process.env            | Implementation Gap | Resolved | 🟡 MED  |
+| [TD-015](#td-015--admin-bff-reporting_ro_database_url-未入-schema)          | admin-bff REPORTING_RO_DATABASE_URL 未入 schema | Implementation Gap | Resolved | 🟡 MED  |
 | [TD-016](#td-016--gateway-client-ai_gateway_url-库级-fallback-无-fail-fast) | gateway-client AI_GATEWAY_URL 库级 fallback     | Implementation Gap | Open     | 🟢 LOW  |
 
 ---
@@ -219,9 +219,10 @@
 | 字段         | 内容                                               |
 | ------------ | -------------------------------------------------- |
 | **分类**     | Implementation Gap                                 |
-| **状态**     | Open                                               |
+| **状态**     | ✅ Resolved                                        |
 | **优先级**   | 🟡 MED                                             |
 | **登记日期** | 2026-05-20                                         |
+| **解决日期** | 2026-05-28                                         |
 | **来源**     | `agent-server/vela/src/chat/chat.service.ts:40-47` |
 
 **描述**：`chat.service.ts` 在模块顶层直接读取三个操作配置变量作为模块级常量：`VELA_PLATFORM_LLM_TENANT_ID`（LLM 计费追踪用租户 UUID，缺失时静默使用硬编码占位 UUID）、`VELA_DEFAULT_MODEL_CODE`（默认模型代码，缺失时使用硬编码 doubao 型号）、`VELA_LLM_AGENT_ID`（LLM agent 过滤器，可选）。三个变量均无 Zod 格式校验，在模块加载时一次性求值，后续无法通过 DI 覆盖，也不参与 `VxConfigModule` 的 fail-fast 验证流程。
@@ -237,9 +238,10 @@
 | 字段         | 内容                                             |
 | ------------ | ------------------------------------------------ |
 | **分类**     | Implementation Gap                               |
-| **状态**     | Open                                             |
+| **状态**     | ✅ Resolved                                      |
 | **优先级**   | 🟡 MED                                           |
 | **登记日期** | 2026-05-20                                       |
+| **解决日期** | 2026-05-28                                       |
 | **来源**     | `bff/admin-bff/src/providers/pools.module.ts:41` |
 
 **描述**：`AdminBffPoolsModule` 为只读报表数据库连接池直接读取 `process.env["REPORTING_RO_DATABASE_URL"]`，该变量未在 `database.schema.ts` 或任何其他 schema 中声明。读写池（`ADMIN_BFF_RW_POOL`）已通过 `VxConfigService.database` 正确注入；只读报表池游离于类型系统之外，缺失时静默降级至主库连接（`makePool(undefined, config.database)`），无 fail-fast 保护。
