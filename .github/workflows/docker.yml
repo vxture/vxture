@@ -13,6 +13,10 @@ permissions:
   contents: read
   packages: write   # 推送到 GHCR 需要
 
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: ${{ matrix.name }}
