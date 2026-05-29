@@ -165,6 +165,7 @@ htmlcov/
 .vscode/*.bak
 .vscode/*.local
 .vscode/settings.json.bak
+.claude/
 .claude/settings.local.json
 .claude/*.bak-*
 
