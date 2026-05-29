@@ -19,12 +19,12 @@ jobs:
 
     steps:
       - name: Checkout deploy files
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Upload worker-01 deploy files
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.WORKER01_HOST }}
           username: ${{ secrets.WORKER01_USER }}
@@ -36,7 +36,7 @@ jobs:
           command_timeout: 10m
 
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.WORKER01_HOST }}
           username: ${{ secrets.WORKER01_USER }}
