@@ -41,6 +41,7 @@
 - 所有工作分支必须从 `develop` 创建（`hotfix/` 例外，从 `main` 创建）
 - 禁止直接推送到 `main` / `beta` / `develop`
 - 分支名使用小写 kebab-case，描述具体内容
+- 普通工作分支禁止直接 PR 到 `beta` 或 `main`
 
 ---
 
@@ -69,8 +70,18 @@ main
  │                 beta
  │                  │
  │                  ▼
- └──────────────── develop
+└──────────────── develop
 ```
+
+**强制目标分支规则**：
+
+| PR 目标分支 | 允许来源分支                                                | 说明                       |
+| ----------- | ----------------------------------------------------------- | -------------------------- |
+| `develop`   | `feature/*` / `fix/*` / `refactor/*` / `docs/*` / `chore/*` | 日常开发、修复、文档和维护 |
+| `beta`      | `develop`                                                   | 预发晋升                   |
+| `main`      | `beta` / `hotfix/*`                                         | 正式发布或紧急生产修复     |
+
+除 `hotfix/*` 紧急生产修复外，任何工作分支都不得直接进入 `main`。
 
 ---
 
@@ -78,14 +89,14 @@ main
 
 以下分支均从 `develop` 创建，完成后 PR 回 `develop`：
 
-| 分支                            | 内容                                                                 | 优先级 |
-| ------------------------------- | -------------------------------------------------------------------- | ------ |
-| `fix/ds-context-split`          | density / theme context 拆分；DensityProvider 反模式重构             | P2     |
-| `feat/ds-button-danger-variant` | DS Button 增加正式 `variant="danger"` 扩展点，清理 admin CSS 补丁    | P2     |
-| `fix/ds-layout-tokens`          | 布局组件 gap / padding 间距 token 设计对齐；FullscreenContainer 重构 | P2     |
-| `refactor/portal-rsc-pages`     | website 落地页 / admin 首页改为 Server Component                     | P2     |
-| `refactor/portal-shared-ui`     | ActionButton / EmptyState 提取到共享包                               | P3     |
-| `fix/admin-token-dark-mode`     | admin `--tenant-*` scale token 语义化；补充 gray-950 CSS 变量        | P3     |
+| 分支                               | 内容                                                                 | 优先级 |
+| ---------------------------------- | -------------------------------------------------------------------- | ------ |
+| `fix/ds-context-split`             | density / theme context 拆分；DensityProvider 反模式重构             | P2     |
+| `feature/ds-button-danger-variant` | DS Button 增加正式 `variant="danger"` 扩展点，清理 admin CSS 补丁    | P2     |
+| `fix/ds-layout-tokens`             | 布局组件 gap / padding 间距 token 设计对齐；FullscreenContainer 重构 | P2     |
+| `refactor/portal-rsc-pages`        | website 落地页 / admin 首页改为 Server Component                     | P2     |
+| `refactor/portal-shared-ui`        | ActionButton / EmptyState 提取到共享包                               | P3     |
+| `fix/admin-token-dark-mode`        | admin `--tenant-*` scale token 语义化；补充 gray-950 CSS 变量        | P3     |
 
 ---
 
