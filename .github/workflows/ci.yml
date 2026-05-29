@@ -61,7 +61,7 @@ jobs:
 
   # ── 3. Check (type · lint · guardrail · boundaries) ───────────────────────
   check:
-    name: Type Check · Lint · Guardrail · Boundaries
+    name: Type Check · Lint · Boundaries
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
