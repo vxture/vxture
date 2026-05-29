@@ -111,7 +111,7 @@ const SERVICES = [
     port: 3122,
     priority: 0,
     url: 'http://localhost:3122',
-    command: 'pnpm --filter vela-server dev',
+    command: 'pnpm --filter @vxture/agent-server-vela dev',
     env: {
       AI_GATEWAY_URL:               'http://localhost:3100',
       VELA_SERVER_PORT:             '3122',
