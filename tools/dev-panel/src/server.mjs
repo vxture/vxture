@@ -465,6 +465,13 @@ async function killProcessTree(pid) {
 }
 
 function checkPort(port) {
+  return Promise.all([
+    checkPortOnHost(port, '127.0.0.1'),
+    checkPortOnHost(port, '::1'),
+  ]).then((results) => results.some(Boolean));
+}
+
+function checkPortOnHost(port, host) {
   return new Promise((resolve) => {
     const socket = new net.Socket();
     let settled = false;
@@ -473,7 +480,7 @@ function checkPort(port) {
     socket.once('connect', () => { settled = true; socket.end(); resolve(true); });
     socket.once('timeout', () => finish(false));
     socket.once('error',   () => finish(false));
-    socket.connect(port, '127.0.0.1');
+    socket.connect(port, host);
   });
 }
 
