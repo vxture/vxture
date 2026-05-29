@@ -26,6 +26,7 @@ import "@vxture/design-system/styles/globals.css";
 - `@vxture/design-system/types`
 - `@vxture/design-system/server`
 - `@vxture/design-system/styles/auth.css`
+- `@vxture/design-system/styles/brand.css`
 - `@vxture/design-system/styles/components.css`
 - `@vxture/design-system/styles/console.css`
 - `@vxture/design-system/styles/fullscreen.css`
@@ -144,6 +145,12 @@ Foundation 层统一维护 spacing、radius、shadow、motion 和 animation keyf
 已开放的新增能力包括 `--vx-space-3xl/4xl`、`--vx-radius-xs/2xl/3xl`、`--vx-shadow-xs/xl/2xl/glow/focus-ring/focus-ring-ai`、`--vx-duration-*`、`--vx-ease-*`、`--vx-motion-*` 和 `--animate-vx-*`。应用端不得重新定义阴影、圆角、动效曲线或关键帧；AI 发光、shimmer 和 pop 动效只能通过 DS 语义 token 或 DS 组件组合使用。
 
 临时迁移 patch 文件不得作为 DS 长期源码保留。Foundation 与字体迁入完成后，正式来源只认 `src/styles/*`、`src/tokens/*`、`docs/standards/design-system.md` 和 `docs/standards/font-system.md`。
+
+### 品牌标识组合
+
+`styles/brand.css` 提供轻量品牌标识组合基线，并已由 `styles/globals.css` 聚合。应用可直接组合 `.vx-brand-lockup`、`.vx-brand-mark`、`.vx-brand-name`、`.vx-brand-local-name` 与 `.vx-brand-separator` 表达产品名、子品牌和本地化名称；这些类只承载字体、间距、颜色和图标尺寸基线，不绑定具体文案、链接目标或业务上下文。
+
+需要单独引入品牌标识基线且不加载完整全局样式时，可以使用 `@vxture/design-system/styles/brand.css`。应用不得在本地重新定义品牌字体、字号、间距或颜色，应通过这些类和 DS token 组合。
 
 ## CSS 分层
 
