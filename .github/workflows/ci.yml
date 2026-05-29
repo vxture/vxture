@@ -7,10 +7,13 @@ on:
       - main
       - beta
       - develop
+      - "docs/**"
       - "fix/**"
-      - "refactor/**"
       - "feature/**"
+      - "hotfix/**"
+      - "chore/**"
       - "merge/**"
+      - "refactor/**"
 
 concurrency:
   group: ci-${{ github.ref }}
