@@ -2,7 +2,7 @@
   "name": "@vxture/design-system",
   "version": "1.3.0",
   "description": "Vxture platform — design tokens, UI components, theme, icons",
-  "private": true,
+  "private": false,
   "license": "MIT",
   "type": "module",
   "exports": {
@@ -32,13 +32,18 @@
     "./styles/fullscreen.css": "./src/styles/fullscreen.css",
     "./styles/globals.css": "./src/styles/globals.css",
     "./styles/tokens.css": "./src/styles/tokens.css",
-    "./styles/typography.css": "./src/styles/typography.css"
+    "./styles/typography.css": "./src/styles/typography.css",
+    "./styles/brands/vxture.css": "./src/styles/brands/vxture.css",
+    "./styles/brands/ruyin.css": "./src/styles/brands/ruyin.css"
   },
   "files": [
     "dist",
     "src/styles",
     "assets"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "build": "rimraf dist && tsup",
     "dev": "tsup --watch",
@@ -46,7 +51,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@vxture/shared": "workspace:*",
+    "@vxture/shared": "workspace:^",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.15",
