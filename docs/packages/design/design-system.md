@@ -1,6 +1,7 @@
 # @vxture/design-system
 
 > 使用规范：[`docs/standards/design-system.md`](../../standards/design-system.md)
+> 发布规范：[`docs/standards/design-system-release.md`](../../standards/design-system-release.md)
 > 审计记录：[`docs/audit/checklist-ds.md`](../../audit/checklist-ds.md)
 
 ## 包信息
