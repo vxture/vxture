@@ -65,8 +65,8 @@ jobs:
 
   # ── 3. Check (type · lint · guardrail · boundaries) ───────────────────────
   check:
-    # 该名称被 main ruleset 作为 required status check 引用；改名必须同步更新仓库 ruleset。
-    name: Type Check · Lint · Boundaries
+    # 该名称是 ruleset required status check 的稳定契约；内部步骤可演进，名称不得随意变更。
+    name: Quality Gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
