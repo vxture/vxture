@@ -35,7 +35,7 @@ jobs:
 
           if [[ "$BASE" == "beta" ]]; then
             if [[ "$HEAD" == "develop" ]]; then
-              echo "::notice::beta 只接受 develop 晋升，合并按钮必须使用 Create a merge commit。"
+              echo "::notice::beta 只接受 develop 晋升；晋升 PR 仅用于评审和 CI，最终必须由 fast-forward promotion 执行。"
               exit 0
             fi
             echo "::error::beta 只接受 develop 晋升；禁止工作分支、main 或 sync 分支直接进入。"
@@ -44,11 +44,11 @@ jobs:
 
           if [[ "$BASE" == "main" ]]; then
             if [[ "$HEAD" == "beta" ]]; then
-              echo "::notice::main 只接受 beta 晋升，合并按钮必须使用 Create a merge commit。"
+              echo "::notice::main 只接受 beta 晋升；晋升 PR 仅用于评审和 CI，最终必须由 fast-forward promotion 执行。"
               exit 0
             fi
             if [[ "$HEAD" =~ ^hotfix/[a-z0-9][a-z0-9-]*$ ]]; then
-              echo "::notice::main 允许 hotfix/* 紧急修复，合并按钮必须使用 Create a merge commit。"
+              echo "::notice::main 允许 hotfix/* 紧急修复；完成后必须补同等修复回 develop 并恢复标准晋升链路。"
               exit 0
             fi
             echo "::error::main 只接受 beta 晋升；紧急生产修复仅允许 hotfix/*；禁止 sync 分支直接进入。"
