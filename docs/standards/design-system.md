@@ -228,4 +228,5 @@ pnpm --filter @vxture/design-system build
 - `packages/design/design-system/README.md`
 - `docs/packages/design/design-system.md`
 - `docs/standards/design-system-release.md`
+- `docs/standards/design-system-consumer-trial.md`
 - `docs/audit/checklist-ds.md`
