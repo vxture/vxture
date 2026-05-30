@@ -91,5 +91,6 @@ pnpm view @vxture/design-system dependencies --registry=https://npm.pkg.github.c
 
 - `docs/standards/design-system.md`
 - `docs/standards/design-system-release.md`
+- `docs/standards/design-system-package-convergence.md`
 - `docs/packages/design/design-system.md`
 - `packages/design/design-system/README.md`
