@@ -14,6 +14,7 @@ on:
       - "chore/**"
       - "merge/**"
       - "refactor/**"
+      - "sync/**"
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -31,7 +32,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: "22"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -51,7 +52,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: "22"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -64,7 +65,8 @@ jobs:
 
   # ── 3. Check (type · lint · guardrail · boundaries) ───────────────────────
   check:
-    name: Type Check · Lint · Guardrail · Boundaries
+    # 该名称被 main ruleset 作为 required status check 引用；改名必须同步更新仓库 ruleset。
+    name: Type Check · Lint · Boundaries
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -73,7 +75,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: "22"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -111,7 +113,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: "22"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -143,7 +145,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: "22"
           cache: "pnpm"
 
       - name: Install dependencies
@@ -168,7 +170,7 @@ jobs:
         run: pnpm --filter @vxture/service-ai-gateway test:coverage
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-report
           path: services/ai/gateway/coverage/lcov.info
@@ -190,12 +192,14 @@ jobs:
           fetch-depth: 0
 
       - name: Download coverage report
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: coverage-report
           path: services/ai/gateway/coverage/
 
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v7.1.0
+        uses: SonarSource/sonarqube-scan-action@v7
+        with:
+          skipSignatureVerification: false
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

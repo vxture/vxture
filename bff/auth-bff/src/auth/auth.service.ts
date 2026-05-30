@@ -129,7 +129,7 @@ export class AuthService {
       expiresIn: this.configService.auth.JWT_ACCESS_EXPIRES_IN as never,
     });
     const refreshToken = this.jwtService.sign(refreshPayload, {
-      secret: this.configService.auth.JWT_SECRET,
+      secret: this.configService.auth.JWT_REFRESH_SECRET,
       expiresIn: this.configService.auth.JWT_REFRESH_EXPIRES_IN as never,
     });
     return {
@@ -583,7 +583,7 @@ export class AuthService {
 
   verifyRefreshToken(token: string): JwtRefreshPayload {
     return this.jwtService.verify<JwtRefreshPayload>(token, {
-      secret: this.configService.auth.JWT_SECRET,
+      secret: this.configService.auth.JWT_REFRESH_SECRET,
     });
   }
 }
