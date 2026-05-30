@@ -1,6 +1,7 @@
 # @vxture/design-system
 
 > 使用规范：[`docs/standards/design-system.md`](../../standards/design-system.md)
+> 发布规范：[`docs/standards/design-system-release.md`](../../standards/design-system-release.md)
 > 审计记录：[`docs/audit/checklist-ds.md`](../../audit/checklist-ds.md)
 
 ## 包信息
@@ -15,22 +16,26 @@
 
 ## 公共入口
 
-| 入口                                          | 用途                                       |
-| --------------------------------------------- | ------------------------------------------ |
-| `@vxture/design-system`                       | 客户端组件、Icon、主题、密度、hooks、utils |
-| `@vxture/design-system/tokens`                | server-safe token 引用                     |
-| `@vxture/design-system/types`                 | server-safe 类型                           |
-| `@vxture/design-system/server`                | server-safe 工具入口                       |
-| `@vxture/design-system/styles/globals.css`    | 标准全局样式入口                           |
-| `@vxture/design-system/styles/auth.css`       | 认证模板样式                               |
-| `@vxture/design-system/styles/brand.css`      | 品牌标识组合基础样式                       |
-| `@vxture/design-system/styles/components.css` | 基础组件语义类                             |
-| `@vxture/design-system/styles/console.css`    | Console portal style pack                  |
-| `@vxture/design-system/styles/fullscreen.css` | 全屏基础设施样式                           |
-| `@vxture/design-system/styles/tokens.css`     | token 运行时值源                           |
-| `@vxture/design-system/styles/typography.css` | 字体和排版基线                             |
+| 入口                                             | 用途                                       |
+| ------------------------------------------------ | ------------------------------------------ |
+| `@vxture/design-system`                          | 客户端组件、Icon、主题、密度、hooks、utils |
+| `@vxture/design-system/tokens`                   | server-safe token 引用                     |
+| `@vxture/design-system/types`                    | server-safe 类型                           |
+| `@vxture/design-system/server`                   | server-safe 工具入口                       |
+| `@vxture/design-system/styles/globals.css`       | 标准全局样式入口                           |
+| `@vxture/design-system/styles/auth.css`          | 认证模板样式                               |
+| `@vxture/design-system/styles/brand.css`         | 品牌标识组合基础样式                       |
+| `@vxture/design-system/styles/components.css`    | 基础组件语义类                             |
+| `@vxture/design-system/styles/console.css`       | Console portal style pack                  |
+| `@vxture/design-system/styles/fullscreen.css`    | 全屏基础设施样式                           |
+| `@vxture/design-system/styles/tokens.css`        | token 运行时值源                           |
+| `@vxture/design-system/styles/typography.css`    | 字体和排版基线                             |
+| `@vxture/design-system/styles/brands/vxture.css` | Vxture 平台级品牌入口                      |
+| `@vxture/design-system/styles/brands/ruyin.css`  | Ruyin 产品级品牌入口                       |
 
 其他 `@vxture/design-system/*` 路径默认禁止。
+
+跨仓库消费方式见 `docs/standards/design-system.md` 的“跨仓库消费最小标准”。消费项目优先显式依赖 `@vxture/design-system`；仅当业务代码直接使用 shared 类型、常量或工具时，才额外声明 `@vxture/shared`。
 
 ## 目录结构
 

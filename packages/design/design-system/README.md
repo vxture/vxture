@@ -33,8 +33,12 @@ import "@vxture/design-system/styles/globals.css";
 - `@vxture/design-system/styles/globals.css`
 - `@vxture/design-system/styles/tokens.css`
 - `@vxture/design-system/styles/typography.css`
+- `@vxture/design-system/styles/brands/vxture.css`
+- `@vxture/design-system/styles/brands/ruyin.css`
 
 禁止从 `@vxture/design-system/src/**` 或其他未导出的子路径导入。
+
+跨仓库消费项目应先引入 `styles/globals.css`，再选择一个品牌入口。平台级应用使用 `brands/vxture.css`，如影产品级应用使用 `brands/ruyin.css`；禁止同时引入两个品牌入口。完整接入标准见 `docs/standards/design-system.md`。
 
 ## Root Layout
 
