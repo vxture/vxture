@@ -1,6 +1,6 @@
 # Vxture Git Workflow Specification
 
-> 版本：2.0.0 | 更新：2026-05-17
+> 版本：2.1.0 | 更新：2026-05-30
 
 ---
 
@@ -53,10 +53,10 @@ feature/* / fix/* / refactor/* / docs/* / chore/*
         ▼  PR → squash merge
     develop   ←─── 日常集成，CI 验证
         │
-        ▼  PR → squash merge（集成测试通过后）
+        ▼  PR → merge commit（集成测试通过后）
       beta    ←─── 业务 beta 自动更新，公测验证
         │
-        ▼  PR → squash merge（公测通过 / 发版窗口）
+        ▼  PR → merge commit（公测通过 / 发版窗口）
       main    ←─── 正式镜像构建 + 手动部署 prod
 ```
 
@@ -66,7 +66,7 @@ feature/* / fix/* / refactor/* / docs/* / chore/*
 main
  ├──▶ hotfix/* ──▶ main  （紧急修复，squash merge）
  │                  │
- │                  ▼ back-merge（保持三支同步）
+ │                  ▼ back-merge（merge commit，保持三支同步）
  │                 beta
  │                  │
  │                  ▼
@@ -143,8 +143,17 @@ chore(deps): upgrade pnpm to 10.x
 2. 开发完成后发起 PR，目标分支按 §1.3 晋升流程确定
 3. PR 标题遵循 Conventional Commits 格式
 4. PR 描述说明：变更内容、测试方式、相关 issue / 设计文档
-5. 合并方式：**Squash merge**（保持各主干分支历史整洁）
+5. 合并方式按 PR 类型选择：
+   - 工作 PR：`feature/*` / `fix/*` / `docs/*` / `chore/*` / `refactor/*` → **Squash merge**
+   - 晋升 PR：`develop -> beta`、`beta -> main` → **Create a merge commit**
+   - 回灌 PR：`main -> beta`、`main -> develop`、`beta -> develop` → **Create a merge commit**
 6. 合并后删除工作分支
+
+**禁止事项**：
+
+- 禁止对晋升 PR 和回灌 PR 使用 Squash merge；否则内容可能同步，但 Git 历史不会包含源分支提交，三条主干会再次分叉。
+- 禁止用本地强推、reset 或直接 push 对齐 `main` / `beta` / `develop`。
+- 若 UI 只显示 Squash merge，先检查 Repository Rulesets 是否允许 `merge`，不要继续合并。
 
 ---
 
