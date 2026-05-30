@@ -1,6 +1,6 @@
 # Vxture Git Workflow Specification
 
-> 版本：2.1.0 | 更新：2026-05-30
+> 版本：2.2.0 | 更新：2026-05-30
 
 ---
 
@@ -64,13 +64,11 @@ feature/* / fix/* / refactor/* / docs/* / chore/*
 
 ```
 main
- ├──▶ hotfix/* ──▶ main  （紧急修复，squash merge）
- │                  │
- │                  ▼ back-merge（merge commit，保持三支同步）
- │                 beta
- │                  │
- │                  ▼
-└──────────────── develop
+ └──▶ hotfix/* ──▶ main  （紧急修复，merge commit）
+
+develop
+ └──▶ fix/* ──▶ develop ──▶ beta ──▶ main
+      （补同等修复，继续走标准晋升链路）
 ```
 
 **强制目标分支规则**：
@@ -82,6 +80,15 @@ main
 | `main`      | `beta` / `hotfix/*`                                         | 正式发布或紧急生产修复     |
 
 除 `hotfix/*` 紧急生产修复外，任何工作分支都不得直接进入 `main`。
+
+**强制合并方式**：
+
+| PR 目标分支 | 允许合并方式                          | GitHub 约束来源                              |
+| ----------- | ------------------------------------- | -------------------------------------------- |
+| `develop`   | Squash merge                          | `protect-develop` ruleset                    |
+| `beta`      | Create a merge commit                 | `protect-beta` ruleset                       |
+| `main`      | Create a merge commit                 | `protect-main` ruleset                       |
+| 所有 PR     | 禁止 Rebase merge；必须通过分支流检查 | Repository merge settings + PR Branch Policy |
 
 ---
 
@@ -146,14 +153,15 @@ chore(deps): upgrade pnpm to 10.x
 5. 合并方式按 PR 类型选择：
    - 工作 PR：`feature/*` / `fix/*` / `docs/*` / `chore/*` / `refactor/*` → **Squash merge**
    - 晋升 PR：`develop -> beta`、`beta -> main` → **Create a merge commit**
-   - 回灌 PR：`main -> beta`、`main -> develop`、`beta -> develop` → **Create a merge commit**
+   - 紧急修复 PR：`hotfix/* -> main` → **Create a merge commit**
 6. 合并后删除工作分支
 
 **禁止事项**：
 
-- 禁止对晋升 PR 和回灌 PR 使用 Squash merge；否则内容可能同步，但 Git 历史不会包含源分支提交，三条主干会再次分叉。
+- 禁止对晋升 PR 和 hotfix PR 使用 Squash merge；否则内容可能同步，但 Git 历史不会包含源分支提交，三条主干会再次分叉。
 - 禁止用本地强推、reset 或直接 push 对齐 `main` / `beta` / `develop`。
-- 若 UI 只显示 Squash merge，先检查 Repository Rulesets 是否允许 `merge`，不要继续合并。
+- 禁止用 `sync/*`、`main -> beta`、`main -> develop` 或 `beta -> develop` 直接回灌；需要补同等修复时，从 `develop` 创建 `fix/*` 后继续走标准晋升链路。
+- 若 UI 显示的合并按钮与目标分支约定不一致，先检查 Repository Rulesets，不要继续合并。
 
 ---
 
