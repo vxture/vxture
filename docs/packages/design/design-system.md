@@ -24,6 +24,7 @@
 | `@vxture/design-system/server`                   | server-safe 工具入口                       |
 | `@vxture/design-system/styles/globals.css`       | 标准全局样式入口                           |
 | `@vxture/design-system/styles/auth.css`          | 认证模板样式                               |
+| `@vxture/design-system/styles/brand.css`         | 品牌标识组合基础样式                       |
 | `@vxture/design-system/styles/components.css`    | 基础组件语义类                             |
 | `@vxture/design-system/styles/console.css`       | Console portal style pack                  |
 | `@vxture/design-system/styles/fullscreen.css`    | 全屏基础设施样式                           |
@@ -75,6 +76,7 @@ AI：`AIAssistantBubble`、`GenerationStream`、`ModelBadge`、`PromptInput`、`
 - `tokens-foundation-radius-space.css`、`tokens-foundation-shadow.css`、`tokens-foundation-motion.css` 与 `tokens-foundation-type-layout.css` 持有 spacing、radius、shadow、motion、keyframes 与默认字号运行时值；`tokens-density.css` 只覆盖密度相关尺度；`tokens-theme-foundation.css` 只负责 Tailwind spacing/radius/shadow/text/animate 映射。
 - `tokens-colors-primitives.css` 持有品牌、状态和 AI primitive 色阶；`tokens-colors-semantic.css` 才是应用消费边界。
 - `tokens-gradients.css` 只定义品牌和 AI 场景渐变 token，不承载组件结构规则；`tokens-theme-gradients.css` 只负责 Tailwind `bg-vx-gradient-*` 映射。
+- `brand.css` 是品牌标识组合基线，提供 `.vx-brand-*` 语义类，并由 `globals.css` 默认聚合；单独使用时通过 `@vxture/design-system/styles/brand.css` 引入。
 - `platform.css` 是 L2 平台模式稳定入口，只聚合 `platform-*` 模块。
 - `console.css` 是 Console portal style pack 稳定入口，只聚合 `console-*` 模块。
 - `globals.css` 是标准消费者入口，聚合 DS 全局基线。
@@ -104,6 +106,7 @@ AI：`AIAssistantBubble`、`GenerationStream`、`ModelBadge`、`PromptInput`、`
 - Foundation 尺度、阴影和动效只能在 DS token owner 中定义；应用端只能消费 `--vx-space-*`、`--vx-radius-*`、`--vx-shadow-*`、`--vx-motion-*`、`--animate-vx-*` 或对应 Tailwind `vx-*` 映射，不得复制固定视觉值。
 - AI 色彩的 primitive 色阶只允许 DS 内部组装；应用只能消费 `--vx-color-ai`、`--vx-color-ai-soft`、`--vx-color-ai-cyan`、`--vx-color-spark`、`--vx-gradient-aurora` 等语义 token。
 - Quantum AI 已完整迁入 DS：brand ramp、AI primitive、AI semantic、gradient、Tailwind bridge、auth visual、shell brand 与 guardrail 同步收敛。
+- 品牌标识使用 `.vx-brand-lockup`、`.vx-brand-mark`、`.vx-brand-name`、`.vx-brand-local-name`、`.vx-brand-separator` 组合；应用不得在本地复制品牌字体、字号、间距和颜色基线。
 - DS semantic CSS 不直接消费 `--vx-component-metric-*` 兜底 token。
 - 新增公共能力必须同步 `package.json` exports、guardrail 白名单和使用文档。
 - 基础组件和跨应用 pattern 从 DS 导出；应用侧只做业务组装。

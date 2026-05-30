@@ -1,0 +1,55 @@
+name: PR Branch Policy
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+concurrency:
+  group: pr-branch-policy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  branch-policy:
+    name: Enforce Branch Flow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR source and target
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          BASE="${{ github.base_ref }}"
+          HEAD="${{ github.head_ref }}"
+
+          echo "HEAD=$HEAD"
+          echo "BASE=$BASE"
+
+          if [[ "$BASE" == "develop" ]]; then
+            if [[ "$HEAD" =~ ^(feature|fix|refactor|docs|chore)/[a-z0-9][a-z0-9-]*$ ]]; then
+              exit 0
+            fi
+            if [[ "$HEAD" == "main" || "$HEAD" == "beta" || "$HEAD" =~ ^sync/(main|beta)-into-develop$ ]]; then
+              exit 0
+            fi
+            echo "::error::develop 只接受工作分支，或 main/beta 回灌分支。"
+            exit 1
+          fi
+
+          if [[ "$BASE" == "beta" ]]; then
+            if [[ "$HEAD" == "develop" || "$HEAD" == "main" || "$HEAD" =~ ^sync/(develop|main)-into-beta$ ]]; then
+              exit 0
+            fi
+            echo "::error::beta 只接受 develop 晋升或 main 回灌。"
+            exit 1
+          fi
+
+          if [[ "$BASE" == "main" ]]; then
+            if [[ "$HEAD" == "beta" || "$HEAD" =~ ^hotfix/[a-z0-9][a-z0-9-]*$ || "$HEAD" =~ ^sync/beta-into-main$ ]]; then
+              exit 0
+            fi
+            echo "::error::main 只接受 beta 晋升；紧急生产修复仅允许 hotfix/*。"
+            exit 1
+          fi
+
+          echo "::error::不支持的 PR 目标分支：$BASE。请使用 develop、beta 或 main。"
+          exit 1

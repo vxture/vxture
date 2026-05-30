@@ -1,11 +1,12 @@
 /**
- * brand.css - Lightweight brand lockup primitives.
+ * brand.css - 品牌标识组合基础样式
  * @package @vxture/design-system
  * @layer Presentation
  * @category styles
+ * @author AI-Generated
+ * @date 2026-05-29
  *
- * These classes define the visual baseline for product and sub-brand marks.
- * They intentionally do not prescribe content or required composition.
+ * 这些类只定义产品与子品牌标识的视觉基线，不限定内容结构或业务组合方式。
  */
 
 .vx-brand-lockup {
