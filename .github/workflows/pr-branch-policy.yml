@@ -26,28 +26,32 @@ jobs:
 
           if [[ "$BASE" == "develop" ]]; then
             if [[ "$HEAD" =~ ^(feature|fix|refactor|docs|chore)/[a-z0-9][a-z0-9-]*$ ]]; then
+              echo "::notice::develop 只接受工作分支，合并按钮必须使用 Squash merge。"
               exit 0
             fi
-            if [[ "$HEAD" == "main" || "$HEAD" == "beta" || "$HEAD" =~ ^sync/(main|beta)-into-develop$ ]]; then
-              exit 0
-            fi
-            echo "::error::develop 只接受工作分支，或 main/beta 回灌分支。"
+            echo "::error::develop 只接受 feature/fix/refactor/docs/chore 工作分支；禁止主干或 sync 分支直接回灌。"
             exit 1
           fi
 
           if [[ "$BASE" == "beta" ]]; then
-            if [[ "$HEAD" == "develop" || "$HEAD" == "main" || "$HEAD" =~ ^sync/(develop|main)-into-beta$ ]]; then
+            if [[ "$HEAD" == "develop" ]]; then
+              echo "::notice::beta 只接受 develop 晋升，合并按钮必须使用 Create a merge commit。"
               exit 0
             fi
-            echo "::error::beta 只接受 develop 晋升或 main 回灌。"
+            echo "::error::beta 只接受 develop 晋升；禁止工作分支、main 或 sync 分支直接进入。"
             exit 1
           fi
 
           if [[ "$BASE" == "main" ]]; then
-            if [[ "$HEAD" == "beta" || "$HEAD" =~ ^hotfix/[a-z0-9][a-z0-9-]*$ || "$HEAD" =~ ^sync/beta-into-main$ ]]; then
+            if [[ "$HEAD" == "beta" ]]; then
+              echo "::notice::main 只接受 beta 晋升，合并按钮必须使用 Create a merge commit。"
               exit 0
             fi
-            echo "::error::main 只接受 beta 晋升；紧急生产修复仅允许 hotfix/*。"
+            if [[ "$HEAD" =~ ^hotfix/[a-z0-9][a-z0-9-]*$ ]]; then
+              echo "::notice::main 允许 hotfix/* 紧急修复，合并按钮必须使用 Create a merge commit。"
+              exit 0
+            fi
+            echo "::error::main 只接受 beta 晋升；紧急生产修复仅允许 hotfix/*；禁止 sync 分支直接进入。"
             exit 1
           fi
 
