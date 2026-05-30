@@ -32,6 +32,27 @@
 | `8000` | API Gateway（唯一公共入口，NN 规则之外） |
 | `8090` | Dev Panel（开发工具面板）                |
 
+**外部项目预留：**
+
+| 端口   | 用途                                                |
+| ------ | --------------------------------------------------- |
+| `3210` | ruyin.ai 网站外部项目预留，Vxture 本地服务不得占用  |
+| `3220` | ruyin.ai 网站外部项目预留，本地 SSO callback/origin |
+| `3281` | ruyin.ai 网站外部项目预留，Vxture 本地服务不得占用  |
+
+> ruyin.ai 网站端口不属于 Vxture Ruyin Agent 三端口，外部预留优先于 `3NNX` 自动分配规则。Vxture 内的 Ruyin Agent 仍使用 `3110/3111/3112`。
+
+### ruyin.ai 网站本地接口要求
+
+| 项              | 要求                                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| 本地 origin     | `http://localhost:3220`                                                                                            |
+| SSO start       | `http://localhost:3020/{locale}/sso/start?ctx=...`，生产为 `https://console.vxture.com/{locale}/sso/start?ctx=...` |
+| `ctx.from`      | 固定为 `ruyin`                                                                                                     |
+| `ctx.returnTo`  | 必须落在 `http://localhost:3220` origin 下，Vxture 会追加 `token` 和可选 `state` 查询参数                          |
+| token 交换      | 必须由服务端/BFF 处理，不允许浏览器直接调用 `auth-bff` 内部 verify/sign 接口                                       |
+| 当前 Vxture BFF | `GET /api/auth/callback?token=...`、`GET /api/auth/session`、`POST /api/auth/logout`                               |
+
 ---
 
 ## 二、Platform Portals（NN = 01~03）
@@ -109,6 +130,10 @@
 3120   vela-studio（Next.js）
 3121   vela-bff（NestJS）
 3122   vela-server（NestJS）
+
+3210   ruyin.ai 网站外部项目预留（Vxture 不占用）
+3220   ruyin.ai 网站外部项目预留 / 本地 SSO callback origin（Vxture 不占用）
+3281   ruyin.ai 网站外部项目预留（Vxture 不占用）
 ```
 
 ---
@@ -164,7 +189,11 @@ await app.listen(3121);
 
 Platform（NN=01~09）和 Agent（NN=11~99）区间已明确隔离，不得跨区使用。
 
-### R5 — 变更流程
+### R5 — 禁止占用外部项目预留端口
+
+`3210`、`3220`、`3281` 由 ruyin.ai 网站外部项目使用，Vxture 本地服务、Agent、BFF、Portal、Dev Panel 均不得占用。
+
+### R6 — 变更流程
 
 1. 修改本文件（登记新端口或标记迁移）
 2. 修改 `.env.local.template`

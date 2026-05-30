@@ -40,6 +40,8 @@ const SSO_POLICIES: Record<string, SsoAppPolicy> = {
 const DEV_ALLOWED_ORIGINS = new Set([
   "http://localhost:3000",
   "http://localhost:3110",
+  // 外部 ruyin.ai 网站本地 SSO callback/origin，区别于 Vxture 内的 Ruyin Agent UI。
+  "http://localhost:3220",
   "http://localhost:8081",
 ]);
 
